@@ -1,0 +1,111 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+DEBDIR = ..
+CFLAGS = -Wall -Werror -g
+
+comma :=,
+empty :=
+space := $(empty) $(empty)
+
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+    INSTALL_PROGRAM += -s
+endif
+
+TMP_BUILD_OPTS = $(subst $(comma),$(space),$(DEB_BUILD_OPTIONS))
+
+ARCH = $(shell dpkg --print-architecture)
+
+ifneq (,$(filter parallel=%,$(TMP_BUILD_OPTS)))
+    ifneq (,$(findstring arm,$(ARCH)))
+        NUMJOBS = 1
+    else
+        NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(TMP_BUILD_OPTS)))
+    endif
+    PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
+endif
+
+QMAKE_OPTIONS = COV_OPTION=off
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	qmake $(QMAKE_OPTIONS)
+
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp 
+	dh_testdir
+
+	make $(PARALLEL_MAKEFLAGS)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	rm -f build-stamp configure-stamp
+
+	make  $(PARALLEL_MAKEFLAGS) clean || true
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	# Add here commands to install the package into debian/tmp
+	INSTALL_ROOT=$(CURDIR)/debian/tmp make  $(PARALLEL_MAKEFLAGS) install
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_install --sourcedir=debian/tmp -v 
+#	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_installman
+	dh_link
+	dh_strip 
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb --destdir=$(DEBDIR)
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

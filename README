@@ -1,0 +1,24 @@
+
+Cellurar User Interface
+=======================
+
+authors:
+   Ossi Jormakka
+   Matti Katila
+   Carita Kautto
+   Miikka Kulmala
+   Jan Lapinkataja
+
+
+PIN and PUK code query
+----------------------
+
+A view that allows user to type PIN and/or PUK code.
+
+
+
+SIM card notifications
+----------------------
+
+A notification of SIM card insert.
+
