@@ -2,9 +2,10 @@
 #define BUSINESSLOGIC_H
 
 #include <QObject>
+#include <SIM>
+
 #include "pincodequery.h"
 #include "notifier.h"
-#include "sim.h"
 
 using namespace Cellular;
 
@@ -12,14 +13,47 @@ class BusinessLogic : public QObject
 {
     Q_OBJECT
 public:
-    BusinessLogic(PinCodeQuery *pin, Notifier *notif);
+
+    /** Sub states are mini states to keep user interface going while
+     * SIM state does not change.
+     */
+    enum SubStates {
+        SubNothing,
+        // State: -1 (bootstrap)
+        // State: UnknownStatus,
+        // State: Ok,
+        SubEnterNewPIN,
+        SubReEnterNewPIN,
+        // State: NoSIM,
+        // State: PermanentlyBlocked,
+        // State: NotReady,
+        // State: PINRequired,
+        SubFirstTry,
+        SubFailedTry,
+        // State: PUKRequired,
+        // State: Rejected
+        // State: SIMLockReject
+        SubUnlocked, //kytkykauppa
+        /*
+        UIPINState,
+        UIPIN2AttemptsLeftState,
+        UIPIN1AttemptLeftState,
+        UIPUKState,
+        */
+    };
+
+
+    explicit BusinessLogic();
     virtual ~BusinessLogic();
 
-private:
+private: // attributes
+    DuiApplicationWindow *win;
     PinCodeQuery *uiPin;
     Notifier *uiNotif;
     QString newPinCode;
 
+    bool SIMhotswapped;
+    int subState;
     int previousSimState;
 
     SIM* sim;
@@ -27,18 +61,40 @@ private:
     SIMSecurity* simSec;
     //SIMPhonebook* simPb;
 
-private:
-    void mapSIMError(SIMError error, Notifier::Notification &notification, PinCodeQuery::UIState uiState);
+private: // methods
+
+
+
+    void checkSIMError(SIMError error);
+
+    // "empty" state changes.
+    void nothing();
+
+    void ui2SIMLocked();
+    void ui2firstPINAttempt();
+    void ui2PINFailedNowPUK();
+    void ui2PINFailed(int attemptsLeft);
+    void ui2firstPUKAttempt();
+    void ui2PUKFailed(int attemptsLeft);
+    void ui2PUKFailedPermanently();
+    void ui2PUKOk();
+    void ui2disappear();
+    void ui2disappearWithNotification(Notifier::Notification);
+    void ui2reenterPIN();
+
 
 private slots:
+
+    void uiCodeChanged();
+    void uiButtonReleased();
+
     void simStatusChanged(SIM::SIMStatus status);
     void simStatusComplete(SIM::SIMStatus status, SIMError error);
-    void PINCodeVerified(bool success, SIMError error);
-    void PUKCodeVerified(bool success, SIMError error);
-    void codeEntered(PinCodeQuery::UIState uiState, QString code);
-    void PINAttemptsLeft(int attempts, SIMError error);
-    void PUKAttemptsLeft(int attempts, SIMError error);
-    void PINCodeChanged(bool success, SIMError error);
+    void simPINCodeVerified(bool success, SIMError error);
+    void simPUKCodeVerified(bool success, SIMError error);
+    void simPINAttemptsLeft(int attempts, SIMError error);
+    void simPUKAttemptsLeft(int attempts, SIMError error);
+    void simPINCodeChanged(bool success, SIMError error);
 
 
 };

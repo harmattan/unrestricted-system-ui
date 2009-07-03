@@ -21,12 +21,10 @@ namespace {
     const QStringList EmergencyCallPhoneNumbers = (QStringList() << "112" << "911");
 }
 
-PinCodeQuery::PinCodeQuery(Notifier *notifier)
+PinCodeQuery::PinCodeQuery()
 {
-    this->notifier = notifier;
     setFullscreen(true);
     setTitle("PIN code query:");
-    checkDigitCount = true;
     createContent();
 }
 
@@ -100,6 +98,28 @@ void PinCodeQuery::createContent()
     
 }
 
+DuiButton *PinCodeQuery::getEmergencyBtn()
+{
+    return emergencyCallButton;
+}
+DuiButton *PinCodeQuery::getCancelBtn()
+{
+    return cancelButton;
+}
+DuiButton *PinCodeQuery::getEnterBtn()
+{
+    return enterButton;
+}
+DuiTextEdit *PinCodeQuery::getCodeEntry()
+{
+    return entryTextEdit;
+}
+void PinCodeQuery::setHeader(QString header)
+{
+    headerLabel->setText(header);
+}
+
+
 void PinCodeQuery::createWidgetItems()
 {    
     emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")), 0 );
@@ -108,13 +128,16 @@ void PinCodeQuery::createWidgetItems()
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
+    entryTextEdit->setObjectName("codeEntry");
     entryTextEdit->setMaskedInput(true);
 
     enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), 0);
     enterButton->setObjectName("enterButton");
-    connect(enterButton, SIGNAL(released()), this, SLOT(buttonReleased()));    
+    connect(enterButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    cancelButton = new DuiButton(QString(trid("[qtn_comm_cancel]", "Cancel")), 0);
+    cancelButton = new DuiButton(QString(trid("qtn_comm_cancel", "Cancel")), 0);
+    cancelButton->setObjectName("cancelButton");
+    connect(cancelButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     backspaceButton = new DuiButton(0);
     backspaceButton->setObjectName("backspaceButton");
@@ -158,9 +181,6 @@ void PinCodeQuery::createNumpad()
 
 void PinCodeQuery::buttonReleased()
 {
-    if(entryTextEdit == NULL)
-        return;
-
     DuiButton* button = static_cast<DuiButton*>(this->sender());
 
     //Check if the button was a numpad button       
@@ -175,15 +195,7 @@ void PinCodeQuery::buttonReleased()
         checkEntry(); //Check the current entry
     }
 
-    //Check if the button was emergency call button
-    else if(button->objectName() == QString("emergencyCallButton")) {
-        notifier->showNotification(Notifier::EmergencyCallStarting);
-    }
 
-    //Check if the button was enter button
-    else if(button->objectName() == QString("enterButton")) {
-        emit codeEntered(uiState, entryTextEdit->text());
-    }
 }
 
 void PinCodeQuery::checkEntry()
@@ -203,15 +215,6 @@ void PinCodeQuery::checkEntry()
         entryTextEdit->setMaskedInput(true);
     }
 
-    qDebug() << "checkEntry";
-    if(checkDigitCount) {
-        qDebug() << "checkDigitalCount";
-        //check if there is at least 4 digits, so that the Enter button can be enabled
-        if(pinCode.length() >= 4 )
-            enterButton->setEnabled(true);
-        else
-            enterButton->setEnabled(false);
-    }
 }
 
 void PinCodeQuery::orientationChanged(const Dui::Orientation &orientation)
@@ -221,45 +224,5 @@ void PinCodeQuery::orientationChanged(const Dui::Orientation &orientation)
     } else {
         landscapePolicy->activate();
     }
-}
-
-void PinCodeQuery::changeUIState(UIState uiState)
-{
-    this->uiState = uiState;
-    checkDigitCount = false;
-    enterButton->setEnabled(false);
-    cancelButton->setEnabled(true);
-
-    switch(uiState)
-    {
-    case UIPINState:
-        headerLabel->setText(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
-        checkDigitCount = true;
-        break;
-    case UIPIN2AttemptsLeftState:
-        headerLabel->setText(trid("qtn_cell_enter_pin_code_2", "Enter PIN code. 2 attempts remaining."));
-        checkDigitCount = true;
-        break;
-    case UIPIN1AttemptLeftState:
-        headerLabel->setText(trid("qtn_cell_enter_pin_code_1", "Enter PIN code. 1 attempt remaining."));
-        checkDigitCount = true;
-        break;
-    case UIPUKState:
-        headerLabel->setText(trid("qtn_cell_enter_puk_code", "Enter PUK code"));
-        enterButton->setEnabled(true);
-        break;
-    case UIEnterNewPINState:
-        headerLabel->setText(trid("qtn_cell_enter_new_pin", "Enter new PIN code"));
-        checkDigitCount = true;
-        cancelButton->setEnabled(false);
-        break;
-    case UIReEnterNewPINState:
-        headerLabel->setText(trid("qtn_cell_reenter_new_pin", "Re-enter new PIN code"));
-        checkDigitCount = true;
-        break;
-    default: //UIUnlockState
-        headerLabel->setText(trid("qtn_cell_enter_unlock_code", "Enter code for unlocking SIM card"));
-    }
-    checkEntry();
 }
 

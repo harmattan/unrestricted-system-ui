@@ -15,23 +15,18 @@ class PinCodeQuery : public DuiApplicationPage
     Q_OBJECT
 public:
 
-    enum UIState {
-        UIPINState,
-        UIPIN2AttemptsLeftState,
-        UIPIN1AttemptLeftState,
-        UIPUKState,
-        UIEnterNewPINState,
-        UIReEnterNewPINState,        
-        UIUnlockState //kytkykauppa
-    };
-
-    PinCodeQuery(Notifier *notifier);
+    PinCodeQuery();
     virtual ~PinCodeQuery();
     virtual void createContent();
-    void changeUIState(UIState uiState);
 
-signals:
-    void codeEntered(PinCodeQuery::UIState uiState, QString code);
+
+
+    DuiButton *getEmergencyBtn();
+    DuiButton *getCancelBtn();
+    DuiButton *getEnterBtn();
+    DuiTextEdit *getCodeEntry();
+
+    void setHeader(QString);
 
 private slots:
     void buttonReleased();
@@ -52,9 +47,6 @@ private:
     DuiLayout *numpadLayout;
     DuiGridLayoutPolicy *portraitPolicy;
     DuiGridLayoutPolicy *landscapePolicy;
-    Notifier *notifier;
-    bool checkDigitCount;
-    UIState uiState;
 
 };
 

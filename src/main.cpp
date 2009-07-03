@@ -2,6 +2,7 @@
 #include "notifier.h"
 #include "businesslogic.h"
 #include "main.h"
+
 #include <QTimer>
 #include <DuiSceneManager>
 
@@ -10,6 +11,7 @@
 #include <DuiMenu>
 #include <DuiNavigationBar>
 #include <DuiTheme>
+
 
 TestObj::TestObj() : QObject()
 {
@@ -31,27 +33,23 @@ int main(int argc, char** argv)
 {
     DuiApplication app(argc, argv);
 
+    // qDebug and qWarning are filttered off.
+    qInstallMsgHandler(0);
+
+
     DuiTheme::addPixmapDirectory("./");
     DuiTheme::loadCSS("pinquery.css");
 
     DuiApplicationWindow w;
     w.menu()->disappear();
     w.navigationBar()->disappear();
-    w.show();
+    //w.show();
 
-    Notifier *notifier = NULL;
-    notifier = new Notifier();
-    notifier->showNotification(Notifier::SIMCardInserted);
-
-    PinCodeQuery *pinCodeQuery = NULL;
-    pinCodeQuery = new PinCodeQuery(notifier);
-    //pinCodeQuery->appearNow();
-
-    BusinessLogic logic(pinCodeQuery, notifier);
+    BusinessLogic logic;
 
     TestObj obj;
     QTimer *rotation = new QTimer(0);
-    rotation->setInterval(3*1000);
+    rotation->setInterval(5*1000);
     rotation->start();
     //QObject::connect(rotation, SIGNAL(timeout()), &obj, SLOT(doRotation()));
 

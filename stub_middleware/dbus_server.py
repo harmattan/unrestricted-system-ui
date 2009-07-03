@@ -73,6 +73,13 @@ class WrongPassword(dbus.DBusException):
 class Server(dbus.service.Object):
     def __init__ (self, bus_name, path=PATH):
         dbus.service.Object.__init__(self, bus_name, path)
+
+        self.Reset()
+
+    
+    @dbus.service.method('com.nokia.csd.SIM')
+    def Reset(self):
+        print 'reset'
         self.SIM_MODES = [
             'Unknown',
             'Ok',
@@ -83,14 +90,23 @@ class Server(dbus.service.Object):
             'PINRequired',
             'PUKRequired',
             'Rejected',
+            'SIMLockRejected',
             ]
-        self.mode_idx = -1
+        self.mode_idx = 0
 
         self.pin_attempts_left = 3
         self.puk_attempts_left = 10
 
         self.pin = '4321'
 
+        return True
+
+    @dbus.service.method('com.nokia.csd.SIM')
+    def SetState(self, param):
+        for idx in range(len(self.SIM_MODES)):
+            if self.SIM_MODES[idx] == param:
+                self.mode_idx = idx
+        
 
     # interface: com.nokia.csd.SIM
     # ============================
