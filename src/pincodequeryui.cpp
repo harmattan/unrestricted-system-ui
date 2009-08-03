@@ -1,4 +1,4 @@
-#include "pincodequery.h"
+#include "pincodequeryui.h"
 
 #include <DuiWidget>
 #include <DuiLayout>
@@ -21,18 +21,18 @@ namespace {
     const QStringList EmergencyCallPhoneNumbers = (QStringList() << "112" << "911");
 }
 
-PinCodeQuery::PinCodeQuery()
+PinCodeQueryUI::PinCodeQueryUI()
 {
     setFullscreen(true);
     setTitle("PIN code query:");
     createContent();
 }
 
-PinCodeQuery::~PinCodeQuery()
+PinCodeQueryUI::~PinCodeQueryUI()
 {
 }
 
-void PinCodeQuery::createContent()
+void PinCodeQueryUI::createContent()
 {
     DuiApplicationPage::createContent();
     DuiWidget *panel = centralWidget();
@@ -98,29 +98,29 @@ void PinCodeQuery::createContent()
     
 }
 
-DuiButton *PinCodeQuery::getEmergencyBtn()
+DuiButton *PinCodeQueryUI::getEmergencyBtn()
 {
     return emergencyCallButton;
 }
-DuiButton *PinCodeQuery::getCancelBtn()
+DuiButton *PinCodeQueryUI::getCancelBtn()
 {
     return cancelButton;
 }
-DuiButton *PinCodeQuery::getEnterBtn()
+DuiButton *PinCodeQueryUI::getEnterBtn()
 {
     return enterButton;
 }
-DuiTextEdit *PinCodeQuery::getCodeEntry()
+DuiTextEdit *PinCodeQueryUI::getCodeEntry()
 {
     return entryTextEdit;
 }
-void PinCodeQuery::setHeader(QString header)
+void PinCodeQueryUI::setHeader(QString header)
 {
     headerLabel->setText(header);
 }
 
 
-void PinCodeQuery::createWidgetItems()
+void PinCodeQueryUI::createWidgetItems()
 {    
     emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")), 0 );
     emergencyCallButton->setObjectName("emergencyCallButton");
@@ -150,7 +150,7 @@ void PinCodeQuery::createWidgetItems()
     createNumpad();
 }
 
-void PinCodeQuery::createNumpad()
+void PinCodeQueryUI::createNumpad()
 {
     //create numpadLayout and policy for that
     numpadLayout = new DuiLayout(0);
@@ -179,13 +179,14 @@ void PinCodeQuery::createNumpad()
     }
 }
 
-void PinCodeQuery::buttonReleased()
+void PinCodeQueryUI::buttonReleased()
 {
     DuiButton* button = static_cast<DuiButton*>(this->sender());
 
     //Check if the button was a numpad button       
     if(button->objectName().left(button->objectName().length()-1) == "numpadButton") {
         entryTextEdit->insert(button->objectName().right(1));
+        qDebug() << "text now: " << entryTextEdit->text();
         checkEntry(); //Check the current entry
     }
 
@@ -198,7 +199,7 @@ void PinCodeQuery::buttonReleased()
 
 }
 
-void PinCodeQuery::checkEntry()
+void PinCodeQueryUI::checkEntry()
 {
     if(emergencyCallButton == NULL)
         return;
@@ -217,7 +218,7 @@ void PinCodeQuery::checkEntry()
 
 }
 
-void PinCodeQuery::orientationChanged(const Dui::Orientation &orientation)
+void PinCodeQueryUI::orientationChanged(const Dui::Orientation &orientation)
 {
     if (orientation == Dui::Portrait) {
         portraitPolicy->activate();

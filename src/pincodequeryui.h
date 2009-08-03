@@ -1,5 +1,5 @@
-#ifndef PINCODEQUERY_H
-#define PINCODEQUERY_H
+#ifndef  PINCODEQUERYUI_H
+#define  PINCODEQUERYUI_H
 
 #include <DuiApplicationPage>
 #include <DuiLayout>
@@ -10,13 +10,13 @@ class DuiLabel;
 class DuiTextEdit;
 class DuiGridLayoutPolicy;
 
-class PinCodeQuery : public DuiApplicationPage
+class  PinCodeQueryUI : public DuiApplicationPage
 {
     Q_OBJECT
 public:
 
-    PinCodeQuery();
-    virtual ~PinCodeQuery();
+     PinCodeQueryUI();
+    virtual ~ PinCodeQueryUI();
     virtual void createContent();
 
 
@@ -50,4 +50,4 @@ private:
 
 };
 
-#endif // PINCODEQUERY_H
+#endif //  PINCODEQUERYUI_H

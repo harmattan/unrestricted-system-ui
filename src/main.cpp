@@ -1,16 +1,9 @@
-#include "pincodequery.h"
-#include "notifier.h"
-#include "businesslogic.h"
+#include "sysuid.h"
 #include "main.h"
 
 #include <QTimer>
 #include <DuiSceneManager>
-
 #include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiMenu>
-#include <DuiNavigationBar>
-#include <DuiTheme>
 
 
 TestObj::TestObj() : QObject()
@@ -36,16 +29,7 @@ int main(int argc, char** argv)
     // qDebug and qWarning are filttered off.
     qInstallMsgHandler(0);
 
-
-    DuiTheme::addPixmapDirectory("./");
-    DuiTheme::loadCSS("pinquery.css");
-
-    DuiApplicationWindow w;
-    w.menu()->disappear();
-    w.navigationBar()->disappear();
-    //w.show();
-
-    BusinessLogic logic;
+    Sysuid daemon;
 
     TestObj obj;
     QTimer *rotation = new QTimer(0);

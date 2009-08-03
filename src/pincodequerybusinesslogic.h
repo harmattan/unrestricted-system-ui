@@ -1,15 +1,15 @@
-#ifndef BUSINESSLOGIC_H
-#define BUSINESSLOGIC_H
+#ifndef PINCODEQUERYBUSINESSLOGIC_H
+#define PINCODEQUERYBUSINESSLOGIC_H
 
 #include <QObject>
 #include <SIM>
 
-#include "pincodequery.h"
+#include "pincodequeryui.h"
 #include "notifier.h"
 
 using namespace Cellular;
 
-class BusinessLogic : public QObject
+class PinCodeQueryBusinessLogic : public QObject
 {
     Q_OBJECT
 public:
@@ -43,12 +43,12 @@ public:
     };
 
 
-    explicit BusinessLogic();
-    virtual ~BusinessLogic();
+    explicit PinCodeQueryBusinessLogic();
+    virtual ~PinCodeQueryBusinessLogic();
 
 private: // attributes
     DuiApplicationWindow *win;
-    PinCodeQuery *uiPin;
+    PinCodeQueryUI *uiPin;
     Notifier *uiNotif;
     QString newPinCode;
 
@@ -99,4 +99,4 @@ private slots:
 
 };
 
-#endif // BUSINESSLOGIC_H
+#endif // PINCODEQUERYBUSINESSLOGIC_H
