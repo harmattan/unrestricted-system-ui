@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "pincodequerybusinesslogic.h"
-//#include "batterybusinesslogic.h"
+#include "batterybusinesslogic.h"
 
 class Sysuid : public QObject
 {
@@ -15,7 +15,7 @@ public:
 
 private:
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
-    //BatteryBusinessLogic *batteryLogic;
+    BatteryBusinessLogic *batteryLogic;
 
 };
 

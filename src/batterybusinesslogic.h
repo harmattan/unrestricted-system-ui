@@ -2,11 +2,11 @@
 #define BATTERYBUSINESSLOGIC_H
 
 #include <QObject>
-#include <QmBattery>
+#include <qmsystem/qmbattery.h>
 
 #include "notifier.h"
-//get rid of the path -- this doesn't work yet
-//#include "/targets/harmattan_i386/usr/include/qmsystem/qmbattery.h"
+
+using namespace Maemo;
 
 class BatteryBusinessLogic : public QObject
 {
@@ -18,15 +18,16 @@ public:
 private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;
+    bool powerSaveMode;
 
 private: //methos
     void checkRemainingTime();
     void checkChargingState();
-    void setPowerSaveMode(bool toggle);    
+    void togglePowerSaveMode(bool toggle);
 
 private slots:
     void batteryLevelChanged(QmBattery::Level level);
-    void chargerStateChanged(QmBattery::State state);
+    void batteryStateChanged(QmBattery::State state);
 
 };
 

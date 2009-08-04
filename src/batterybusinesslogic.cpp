@@ -38,7 +38,7 @@ void BatteryBusinessLogic::checkRemainingTime()
 {
     int powerSaveTimeSetByUser = 5; //dummy
 
-    if( battery->remainingTime() <= powerSaveTime) { //is this seconds minutes or what?
+    if( battery->remainingTime() <= powerSaveTimeSetByUser) { //is this seconds minutes or what?
         //also is this remaining speaking time or stand-by time?
         if(!powerSaveMode)
             togglePowerSaveMode(true);
@@ -47,7 +47,7 @@ void BatteryBusinessLogic::checkRemainingTime()
         togglePowerSaveMode(false);
 }
 
-void BatteryBusinessLogic::setPowerSaveMode(bool toggle)
+void BatteryBusinessLogic::togglePowerSaveMode(bool toggle)
 {
     powerSaveMode = toggle;
     if(powerSaveMode) {
@@ -65,16 +65,16 @@ void BatteryBusinessLogic::checkChargingState()
     QmBattery::State state = QmBattery::StateNotCharging;
     if( battery->isCharging() )
         state = QmBattery::StateCharging;
-    emit batteryStateChanged(state);
+    batteryStateChanged(state);
 }
 
 void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
-{
+{    
     switch(state) {        
-        case StateCharging:
+        case QmBattery::StateCharging:
             //send signal to indicate battery charging
         break;        
-        default: //StateNotCharging
+        default: //QmBattery::StateNotCharging
             //send signal to stop indicating battery charging
         break;
     }    

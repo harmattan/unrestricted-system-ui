@@ -2,17 +2,18 @@ include(duiconfig.pri)
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
-CONFIG += dui \
+CONFIG += dui \ 
     cellular-qt
+#LIBS += qmsystem
 SOURCES += main.cpp \
     notifier.cpp \
-    #batterybusinesslogic.cpp \
+    batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp
 HEADERS += main.h \
     notifier.h \
-    #batterybusinesslogic.h \
+    batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h

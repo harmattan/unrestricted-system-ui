@@ -20,8 +20,6 @@ Sysuid::~Sysuid()
 {
     delete pinCodeQueryLogic;
     pinCodeQueryLogic = NULL;
-    /*
-    delete batteryLogic;
-    batteryLogic = NULL;
-    */
+    //delete batteryLogic;
+    //batteryLogic = NULL;
 }
