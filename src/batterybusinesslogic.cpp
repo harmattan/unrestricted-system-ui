@@ -79,3 +79,4 @@ void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
         break;
     }    
 }
+

@@ -4,7 +4,7 @@ TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \ 
     cellular-qt
-#LIBS += qmsystem
+LIBS += qmsystem
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \

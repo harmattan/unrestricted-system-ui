@@ -33,3 +33,4 @@ private slots:
 
 
 #endif // BATTERYBUSINESSLOGIC_H
+
