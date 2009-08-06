@@ -19,8 +19,6 @@ public:
     virtual ~ PinCodeQueryUI();
     virtual void createContent();
 
-
-
     DuiButton *getEmergencyBtn();
     DuiButton *getCancelBtn();
     DuiButton *getEnterBtn();

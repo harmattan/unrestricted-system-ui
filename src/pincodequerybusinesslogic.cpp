@@ -67,6 +67,8 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
     connect(simSec, SIGNAL(changePINComplete(bool, SIMError)),
             this, SLOT(simPINCodeChanged(bool, SIMError)), Qt::QueuedConnection);
 
+
+
     // bootstrap the state machine
     previousSimState = -1;
     connect(sim, SIGNAL(statusComplete(SIM::SIMStatus, SIMError)),
@@ -125,6 +127,7 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
     win->show();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
+    uiPin->getEmergencyBtn()->hide();
 }
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {

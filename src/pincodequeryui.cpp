@@ -88,14 +88,17 @@ void PinCodeQueryUI::createContent()
 //    DuiTheme::loadCSS("pinquery.css");
 
     // HACK: make all buttons visible :)
+    /*
     requestPageMove(QPointF(0, -1), QPointF(0, 1), false);
     restorePageMove();
+   */
+
 
     // Get informed about orientation changes
     connect(DuiSceneManager::instance(),
             SIGNAL(orientationChanged(const Dui::Orientation &)),
             this, SLOT(orientationChanged(const Dui::Orientation &)));
-    
+
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
@@ -124,8 +127,9 @@ void PinCodeQueryUI::createWidgetItems()
 {    
     emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")), 0 );
     emergencyCallButton->setObjectName("emergencyCallButton");
-    emergencyCallButton->setVisible(false);
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
+    qDebug() << "hiding emergenceCall button" ;
+   emergencyCallButton->setVisible(false);
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
     entryTextEdit->setObjectName("codeEntry");
@@ -220,6 +224,7 @@ void PinCodeQueryUI::checkEntry()
 
 void PinCodeQueryUI::orientationChanged(const Dui::Orientation &orientation)
 {
+     qDebug() << "OrientationChanged" ;
     if (orientation == Dui::Portrait) {
         portraitPolicy->activate();
     } else {
