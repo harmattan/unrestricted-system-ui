@@ -14,6 +14,7 @@
 #include <DuiGrid>
 #include <QStringList>
 #include <QSizePolicy>
+#include <QTimer>
 #include <QDebug>
 
 //TODO: fetch the data elsewhere
@@ -99,6 +100,7 @@ void PinCodeQueryUI::createContent()
             SIGNAL(orientationChanged(const Dui::Orientation &)),
             this, SLOT(orientationChanged(const Dui::Orientation &)));
 
+    backspaceTimer = NULL;
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
@@ -147,6 +149,7 @@ void PinCodeQueryUI::createWidgetItems()
     backspaceButton->setObjectName("backspaceButton");
     backspaceButton->setIconID("Icon-back");
     connect(backspaceButton, SIGNAL(released()), this, SLOT(buttonReleased()));
+    connect(backspaceButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
 
     headerLabel = new DuiLabel(0);
     headerLabel->setAlignment(Qt::AlignCenter);    
@@ -184,7 +187,7 @@ void PinCodeQueryUI::createNumpad()
 }
 
 void PinCodeQueryUI::buttonReleased()
-{
+{    
     DuiButton* button = static_cast<DuiButton*>(this->sender());
 
     //Check if the button was a numpad button       
@@ -196,11 +199,37 @@ void PinCodeQueryUI::buttonReleased()
 
     //Check if the button was backspace
     else if(button->objectName() == QString("backspaceButton")) {
+        if(backspaceTimer != NULL) {
+            //we stop timing the press event
+            backspaceTimer->stop();
+            delete backspaceTimer;
+            backspaceTimer = NULL;
+        }
         entryTextEdit->setText(entryTextEdit->text().left(entryTextEdit->text().length()-1));
         checkEntry(); //Check the current entry
     }
+}
 
+void PinCodeQueryUI::buttonPressed()
+{    
+    DuiButton* button = static_cast<DuiButton*>(this->sender());
+    //Check if the button was backspace
+    if(button->objectName() == QString("backspaceButton")) {
+        //we check if the user holds the button down for 1 second or longer
+        backspaceTimer = new QTimer(0);        
+        connect(backspaceTimer, SIGNAL(timeout()), this, SLOT(removeText()));
+        backspaceTimer->start(1000);
+    }
+}
 
+void PinCodeQueryUI::removeText()
+{
+    if(backspaceTimer != NULL) {
+        backspaceTimer->stop();
+        delete backspaceTimer;
+        backspaceTimer = NULL;
+    }
+    entryTextEdit->setText("");
 }
 
 void PinCodeQueryUI::checkEntry()

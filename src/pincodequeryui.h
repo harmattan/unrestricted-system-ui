@@ -9,6 +9,7 @@ class DuiButton;
 class DuiLabel;
 class DuiTextEdit;
 class DuiGridLayoutPolicy;
+class QTimer;
 
 class  PinCodeQueryUI : public DuiApplicationPage
 {
@@ -28,7 +29,9 @@ public:
 
 private slots:
     void buttonReleased();
+    void buttonPressed();
     void orientationChanged(const Dui::Orientation &orientation);
+    void removeText();
 
 private:
     void createWidgetItems();
@@ -45,6 +48,7 @@ private:
     DuiLayout *numpadLayout;
     DuiGridLayoutPolicy *portraitPolicy;
     DuiGridLayoutPolicy *landscapePolicy;
+    QTimer *backspaceTimer;
 
 };
 

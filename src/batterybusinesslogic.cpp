@@ -10,6 +10,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     connect(battery, SIGNAL( batteryStateChanged(QmBattery::State state)),
             this, SLOT( batteryStateChanged(QmBattery::State state)));
 
+//    charging = false;
     checkRemainingTime();
     checkChargingState();
 }
@@ -30,7 +31,9 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
 
     // Anyway, the level can be LevelCritical, LevelFull or LevelLow
 
-    checkRemainingTime();    
+    checkRemainingTime();
+
+    //if(level == QmBattery::LevelFull && charging)
 
 }
 
@@ -61,20 +64,21 @@ void BatteryBusinessLogic::togglePowerSaveMode(bool toggle)
 }
 
 void BatteryBusinessLogic::checkChargingState()
-{
+{    
     QmBattery::State state = QmBattery::StateNotCharging;
-    if( battery->isCharging() )
+    if(battery->isCharging())
         state = QmBattery::StateCharging;
     batteryStateChanged(state);
 }
 
 void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
-{    
+{
     switch(state) {        
-        case QmBattery::StateCharging:
+        case QmBattery::StateCharging:            
             //send signal to indicate battery charging
+            //show a notification about charging
         break;        
-        default: //QmBattery::StateNotCharging
+        default: //QmBattery::StateNotCharging            
             //send signal to stop indicating battery charging
         break;
     }    

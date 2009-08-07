@@ -2,9 +2,10 @@ include(duiconfig.pri)
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
-CONFIG += dui \ 
+CONFIG += dui \    
     cellular-qt
-LIBS += -lsystem
+LIBS += -lsystem \
+    -lduihome
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \
