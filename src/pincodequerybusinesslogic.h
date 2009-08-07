@@ -79,7 +79,7 @@ private: // methods
     void ui2PUKFailedPermanently();
     void ui2PUKOk();
     void ui2disappear();
-    void ui2disappearWithNotification(Notifier::Notification);
+    void ui2disappearWithNotification(QString notifText);
     void ui2reenterPIN();
 
 

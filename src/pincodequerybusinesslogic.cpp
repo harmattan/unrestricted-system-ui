@@ -22,6 +22,28 @@
  *  'sim' prefix is for SIM DBus callbacks.
  */
 
+//Notification texts
+namespace {
+    QString SIMCardInserted = trid("NOT DOCUMENTED YET", "SIM card inserted.");
+    QString SIMCardNotInserted = trid("NOT DOCUMENTED YET" , "SIM card not inserted.");
+    QString SIMCardRemoved = trid("NOT DOCUMENTED YET" , "SIM card removed.");
+    QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");
+    QString SIMCardPermanentlyBlocked = trid("NOT DOCUMENTED YET" , "SIM card permanently blocked.");
+    QString EmergencyCallStarting = trid("qtn_cell_emergency_start" , "Starting emergency call.");
+    QString EmergencyCallEnded = trid("qtn_cell_emergency_end" , "Emergency call ended.");
+
+    /* At the moment this contains several error case that may pop up from SIM library.
+       It needs to be clarified, which of those and how are they going to be reported
+       to end user. */
+    QString TechnicalProblem = trid("NOT DOCUMENTED YET" , "Technical problem.");
+    QString PINCodeIncorrect2AttemptsLeft = trid("qtn_cell_incorrect_pin_2" , "Incorrect PIN code. 2 attempts remaining.");
+    QString PINCodeIncorrect1AttemptLeft = trid("qtn_cell_incorrect_pin_1" , "Incorrect PIN code. 1 attempt remaining.");
+    QString PINCodeIncorrectPUKCodeRequired = trid("qtn_cell_incorrect_pin_0" , "Incorrect PIN code. SIM locked with PUK code.");
+    QString PUKCodeIncorrect = trid("qtn_cell_incorrect_puk" , "Incorrect PUK code.");
+    QString PUKCodeIncorrectSIMCardPermanentlyBlocked = trid("qtn_cell_sim_rejected" , "SIM card rejected."); //Should this be different?
+    QString PINCodeChanged = trid("qtn_cell_pin_code_changed" , "PIN code changed.");
+    QString PINCodesDoNotMatch = trid("qtn_cell_codes_not_match" , "Codes do not match.");
+}
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
@@ -109,7 +131,7 @@ void PinCodeQueryBusinessLogic::nothing()
 void PinCodeQueryBusinessLogic::ui2SIMLocked()
 {
     if (SIMhotswapped)
-        uiNotif->showNotification(Notifier::SIMCardInserted);
+        uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
     win->show();
@@ -121,7 +143,7 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 {
     qDebug() << "ui2first...";
     if (SIMhotswapped)
-        uiNotif->showNotification(Notifier::SIMCardInserted);
+        uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
     win->show();
@@ -133,12 +155,12 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
     switch (attemptsLeft) {
     case 2:
-        uiNotif->showNotification(Notifier::PINCodeIncorrect2AttemptsLeft);
+        uiNotif->showNotification(PINCodeIncorrect2AttemptsLeft);
         uiPin->setHeader(trid("qtn_cell_enter_pin_code_2",
                               "Enter PIN code. 2 attempts remaining."));
         break;
     case 1:
-        uiNotif->showNotification(Notifier::PINCodeIncorrect1AttemptLeft);
+        uiNotif->showNotification(PINCodeIncorrect1AttemptLeft);
         uiPin->setHeader(trid("qtn_cell_enter_pin_code_1",
                               "Enter PIN code. 1 attempt remaining."));
         break;
@@ -146,13 +168,13 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 }
 void PinCodeQueryBusinessLogic::ui2PINFailedNowPUK()
 {
-    uiNotif->showNotification(Notifier::PINCodeIncorrectPUKCodeRequired);
+    uiNotif->showNotification(PINCodeIncorrectPUKCodeRequired);
     uiPin->setHeader(trid("qtn_cell_enter_puk_code", "Enter PUK code"));
 }
 void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
 {
     if (SIMhotswapped)
-        uiNotif->showNotification(Notifier::SIMCardInserted);
+        uiNotif->showNotification(SIMCardInserted);
 
     win->show();
     uiPin->appear();
@@ -162,11 +184,11 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 {
     attemptsLeft++; // warnings off
-    uiNotif->showNotification(Notifier::PUKCodeIncorrect);
+    uiNotif->showNotification(PUKCodeIncorrect);
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 {
-    uiNotif->showNotification(Notifier::SIMCardPermanentlyBlocked);
+    uiNotif->showNotification(SIMCardPermanentlyBlocked);
     ui2disappear();
 }
 void PinCodeQueryBusinessLogic::ui2PUKOk()
@@ -183,10 +205,10 @@ void PinCodeQueryBusinessLogic::ui2disappear()
     //win->hide();
     uiPin->disappear();
 }
-void PinCodeQueryBusinessLogic::ui2disappearWithNotification(Notifier::Notification n)
+void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 {
     ui2disappear();
-    uiNotif->showNotification(n);
+    uiNotif->showNotification(notifText);
 }
 
 
@@ -212,7 +234,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
     DuiButton* button = static_cast<DuiButton*>(this->sender());
     if(button->objectName() == QString("emergencyCallButton")) {
-        uiNotif->showNotification(Notifier::EmergencyCallStarting);
+        uiNotif->showNotification(EmergencyCallStarting);
     }
     else if(button->objectName() == QString("enterButton")) {
         switch(previousSimState) {
@@ -325,7 +347,7 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         else if (next == SIM::SIMLockRejected)
             ui2SIMLocked();
         else if (next == SIM::Ok)
-            ui2disappearWithNotification(Notifier::SIMCardInserted);
+            ui2disappearWithNotification(SIMCardInserted);
         break;
     case SIM::PINRequired:
         if (next == SIM::PUKRequired)
@@ -333,7 +355,7 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         else if(next == SIM::Ok)
             ui2disappear();
         else if (next == SIM::NoSIM)
-            ui2disappearWithNotification(Notifier::SIMCardRemoved);
+            ui2disappearWithNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             // XXX technical problem?
             ui2disappear();
@@ -344,34 +366,34 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         else if(next == SIM::PermanentlyBlocked)
             ui2PUKFailedPermanently();
         else if (next == SIM::NoSIM)
-            ui2disappearWithNotification(Notifier::SIMCardRemoved);
+            ui2disappearWithNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             // XXX technical problem?
             ui2disappear();
         break;
     case SIM::PermanentlyBlocked:
         if (next == SIM::NoSIM)
-            ui2disappearWithNotification(Notifier::SIMCardRemoved);
+            ui2disappearWithNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             // XXX technical problem?
             ui2disappear();
         break;
     case SIM::SIMLockRejected:
         if (next == SIM::NoSIM)
-            ui2disappearWithNotification(Notifier::SIMCardRemoved);
+            ui2disappearWithNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             nothing();
         break;
     case SIM::Rejected:
         if (next == SIM::NoSIM)
-            ui2disappearWithNotification(Notifier::SIMCardRemoved);
+            ui2disappearWithNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             // XXX technical problem?
             ui2disappear();
         break;
     case SIM::Ok:
         if (next == SIM::NoSIM)
-            uiNotif->showNotification(Notifier::SIMCardRemoved);
+            uiNotif->showNotification(SIMCardRemoved);
         else if (next == SIM::NotReady)
             // XXX technical problem?
             ui2disappear();
@@ -432,7 +454,7 @@ void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
     // warnings...
     attempts++;
 
-    uiNotif->showNotification(Notifier::PUKCodeIncorrect);
+    uiNotif->showNotification(PUKCodeIncorrect);
 }
 
 void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
@@ -440,7 +462,7 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
     checkSIMError(error);
 
     if(success) {
-        uiNotif->showNotification(Notifier::PINCodeChanged);
+        uiNotif->showNotification(PINCodeChanged);
         uiPin->disappear();
     }
 }
@@ -451,7 +473,7 @@ void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
     case SIMErrorNone:
         break;
     case SIMErrorNoSIM:
-        uiNotif->showNotification(Notifier::SIMCardNotInserted);
+        uiNotif->showNotification(SIMCardNotInserted);
         break;        
     case SIMErrorPINDisabled:
     case SIMErrorCodeBlocked:
@@ -459,7 +481,7 @@ void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
         // not a real error case.
         break;
     case SIMErrorSIMRejected:
-        uiNotif->showNotification(Notifier::SIMCardRejected);
+        uiNotif->showNotification(SIMCardRejected);
         break;
 
     //TODO: What to do with these???
@@ -473,7 +495,7 @@ void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
     case SIMErrorUnknown:
     default:
         //not necessarily to be shown to end user
-        uiNotif->showNotification(Notifier::TechnicalProblem);
+        uiNotif->showNotification(TechnicalProblem);
         break;
     }
 }

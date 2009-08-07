@@ -4,6 +4,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
 {
     uiNotif = new Notifier();
     battery = new QmBattery();
+    deviceMode = new QmDeviceMode();
 
     connect(battery, SIGNAL( batteryLevelChanged(QmBattery::Level level) ),
             this, SLOT( batteryLevelChanged(QmBattery::Level level)));
@@ -39,28 +40,17 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
 
 void BatteryBusinessLogic::checkRemainingTime()
 {
-    int powerSaveTimeSetByUser = 5; //dummy
+    int powerSaveTimeSetByUser = 600; //dummy 600 seconds == 10 minutes
 
-    if( battery->remainingTime() <= powerSaveTimeSetByUser) { //is this seconds minutes or what?
-        //also is this remaining speaking time or stand-by time?
-        if(!powerSaveMode)
-            togglePowerSaveMode(true);
+    if( battery->remainingTime() <= powerSaveTimeSetByUser) {
+        /* replace with this when implemented in QmBattery
+    if( battery->remainingTalkTime() <= powerSaveTimeSetByUser) {
+    */
+        if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOff)
+            deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
     }
-    else if(powerSaveMode)
-        togglePowerSaveMode(false);
-}
-
-void BatteryBusinessLogic::togglePowerSaveMode(bool toggle)
-{
-    powerSaveMode = toggle;
-    if(powerSaveMode) {
-        //send power save mode signal somewhere
-        //set the power save mode icon on top of the home button
-    }
-    else {
-        //send power save mode signal somewhere
-        //unset the power save mode icon on top of the home button
-    }
+    else if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOn)
+        deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
 }
 
 void BatteryBusinessLogic::checkChargingState()

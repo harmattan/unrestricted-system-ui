@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <qmsystem/qmbattery.h>
+#include <qmsystem/qmdevicemode.h>
 
 #include "notifier.h"
 
@@ -18,12 +19,12 @@ public:
 private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;
+    QmDeviceMode *deviceMode;
     bool powerSaveMode;
 
 private: //methos
     void checkRemainingTime();
     void checkChargingState();
-    void togglePowerSaveMode(bool toggle);
 
 private slots:
     void batteryLevelChanged(QmBattery::Level level);
