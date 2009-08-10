@@ -16,6 +16,9 @@ public:
     BatteryBusinessLogic();
     virtual ~BatteryBusinessLogic();
 
+    // This method should be called also when the device is returned from sleep mode
+    void checkBattery();
+
 private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;
@@ -23,12 +26,14 @@ private: //attributes
     bool powerSaveMode;
 
 private: //methos
-    void checkRemainingTime();
+    void checkRemainingTime(); //TEMP
     void checkChargingState();
+    void checkBatteryLevel();
 
 private slots:
     void batteryLevelChanged(QmBattery::Level level);
     void batteryStateChanged(QmBattery::State state);
+    void remainingTalkTimeChanged(int secondsLeft);
 
 };
 

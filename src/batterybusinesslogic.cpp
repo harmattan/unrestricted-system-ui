@@ -1,4 +1,5 @@
 #include "batterybusinesslogic.h"
+#include <DuiLocale>
 
 BatteryBusinessLogic::BatteryBusinessLogic()
 {
@@ -6,14 +7,17 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     battery = new QmBattery();
     deviceMode = new QmDeviceMode();
 
-    connect(battery, SIGNAL( batteryLevelChanged(QmBattery::Level level) ),
-            this, SLOT( batteryLevelChanged(QmBattery::Level level)));
-    connect(battery, SIGNAL( batteryStateChanged(QmBattery::State state)),
-            this, SLOT( batteryStateChanged(QmBattery::State state)));
+    connect(battery, SIGNAL(batteryLevelChanged(QmBattery::Level level)),
+            this, SLOT(batteryLevelChanged(QmBattery::Level level)));
+    connect(battery, SIGNAL(batteryStateChanged(QmBattery::State state)),
+            this, SLOT(batteryStateChanged(QmBattery::State state)));
 
-//    charging = false;
-    checkRemainingTime();
-    checkChargingState();
+    /* Not yet implemented in QmBattery
+    connect(battery, SIGNAL(remainingTalkTimeChanged(int secondsLeft)),
+            this, SLOT(remainingTalkTimeChanged(int secondsLeft)));
+            */
+
+    checkBattery();
 }
 
 BatteryBusinessLogic::~BatteryBusinessLogic()
@@ -24,28 +28,18 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
     battery = NULL;
 }
 
-void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
+// This method should be called also when the device is returned from sleep mode
+void BatteryBusinessLogic::checkBattery()
 {
-    // Actually we don't do anything with the level in it's current format.
-    // The level to turn on the power saving should be adjustable by the user.
-    // Also user can switch off the power saving completely.
-
-    // Anyway, the level can be LevelCritical, LevelFull or LevelLow
-
-    checkRemainingTime();
-
-    //if(level == QmBattery::LevelFull && charging)
-
+    checkChargingState();
+    checkBatteryLevel();
 }
 
-void BatteryBusinessLogic::checkRemainingTime()
+void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
 {
     int powerSaveTimeSetByUser = 600; //dummy 600 seconds == 10 minutes
 
-    if( battery->remainingTime() <= powerSaveTimeSetByUser) {
-        /* replace with this when implemented in QmBattery
-    if( battery->remainingTalkTime() <= powerSaveTimeSetByUser) {
-    */
+    if( secondsLeft <= powerSaveTimeSetByUser) {   
         if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOff)
             deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
     }
@@ -61,16 +55,54 @@ void BatteryBusinessLogic::checkChargingState()
     batteryStateChanged(state);
 }
 
+void BatteryBusinessLogic::checkBatteryLevel()
+{
+    int chargeLevelPercentage = battery->chargeLevelPercentage();
+    QmBattery::Level level;
+
+    if(chargeLevelPercentage >= 85)
+        level = QmBattery::LevelFull;
+
+    /* Not yet implemented in QmBattery (not necessarily even needed)
+    else if(chargeLevelPercentage < 85 && chargeLevelPercentage >= 60)
+        level = QmBattery::Level75;
+    else if(chargeLevelPercentage < 60 && chargeLevelPercentage >= 35)
+        level = QmBattery::Level50;
+    else if(chargeLevelPercentage < 35 && chargeLevelPercentage >= 15)
+        level = QmBattery::Level25;
+        */
+    else if(chargeLevelPercentage < 15 && chargeLevelPercentage >= 5)
+        level = QmBattery::LevelLow;
+    else //chargeLevelPercentage < 5
+        level = QmBattery::LevelCritical;
+
+    batteryLevelChanged(level);
+
+}
+
 void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
 {
     switch(state) {        
         case QmBattery::StateCharging:            
-            //send signal to indicate battery charging
-            //show a notification about charging
+            uiNotif->showNotification(trid("qtn_ener_char", "Charging"));
         break;        
-        default: //QmBattery::StateNotCharging            
-            //send signal to stop indicating battery charging
+        default: //QmBattery::StateNotCharging
         break;
     }    
 }
 
+void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
+{
+    switch(level) {
+        case QmBattery::LevelFull:
+            if(battery->isCharging()) {
+                uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));
+                uiNotif->showNotification(trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy"));
+            }            
+        break;
+        case QmBattery::LevelLow:
+            uiNotif->showNotification(trid("qtn_ener_lowbatt", "Low battery"));
+        default:
+        break;
+   }
+}
