@@ -2,7 +2,7 @@ include(duiconfig.pri)
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
-CONFIG += dui \    
+CONFIG += dui \
     cellular-qt
 LIBS += -lsystem \
     -lduihome
@@ -11,13 +11,17 @@ SOURCES += main.cpp \
     batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
-    sysuid.cpp
+    sysuid.cpp \
+    lockscreenbusinesslogic.cpp \
+    lockscreenui.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
-    sysuid.h
+    sysuid.h \
+    lockscreenbusinesslogic.h \
+    lockscreenui.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery
