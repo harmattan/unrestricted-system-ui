@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     sysuid.cpp \
     cancellablenotification.cpp
     lockscreenbusinesslogic.cpp \
-    lockscreenui.cpp
+    lockscreenui.cpp \
+    eventeater.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -23,7 +24,8 @@ HEADERS += main.h \
     sysuid.h \
     cancellablenotification.h
     lockscreenbusinesslogic.h \
-    lockscreenui.h
+    lockscreenui.h \
+    eventeater.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery

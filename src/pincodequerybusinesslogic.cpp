@@ -50,6 +50,12 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
     qDebug() << "business logic";
 
     win = new DuiApplicationWindow();
+
+    Qt::WindowFlags flags = 0;
+	flags |= Qt::FramelessWindowHint;
+
+    win->setWindowFlags(flags);
+    
     win->menu()->disappear();
     win->navigationBar()->disappear();
     win->setWindowOpacity(0);
@@ -147,6 +153,8 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 
     uiPin->getCancelBtn()->setEnabled(true);
     win->show();
+    win->menu()->disappear();
+    win->navigationBar()->disappear();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
     uiPin->getEmergencyBtn()->hide();
@@ -202,8 +210,9 @@ void PinCodeQueryBusinessLogic::ui2PUKOk()
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
-    //win->hide();
-    uiPin->disappear();
+    win->hide();
+    uiPin->hide();
+    //uiPin->disappear();
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 {
@@ -423,6 +432,10 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
         if (error == SIMErrorWrongPassword)
             simSec->pinAttemptsLeft(SIMSecurity::PIN);
         // else if sim locked is handled in status change
+    }
+    else
+    {
+    	ui2disappear();
     }
 }
 
