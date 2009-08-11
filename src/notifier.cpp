@@ -1,9 +1,11 @@
 #include "notifier.h"
+#include "cancellablenotification.h"
 
 #include <DuiNotification>
 #include <DuiLocale>
 #include <QTimer>
-#include <QStringList>
+#include <QHash>
+#include <QObject>
 
 
 // TODO.: Use the logical names when available
@@ -16,6 +18,8 @@ Notifier::Notifier() : QObject()
 
 Notifier::~Notifier()
 {
+    delete cancellableNotification;
+    cancellableNotification = NULL;
 }
 
 void Notifier::showNotification(QString notifText)
@@ -41,4 +45,36 @@ void Notifier::notificationTimeout()
             dn->disappear();
         }
     }
+}
+
+void Notifier::showCancellableNotification(QString notifText,
+                                           int appearTime,
+                                           QString appearTimeVariable,
+                                           const QHash<QString,QString> &staticVariables)
+{        
+    DuiNotification* n = new DuiNotification(DuiNotification::Information,
+                                             "Icon-close",
+                                             QString( "<font color=\"white\">temptext</font>"),
+                                             "");
+
+    connect(n, SIGNAL(clicked()), this, SLOT(cancellableNotificationCancelled()));
+
+    cancellableNotification = new CancellableNotification(n, notifText, appearTime, appearTimeVariable, staticVariables);
+    connect(cancellableNotification, SIGNAL(notifTimeout()), this, SLOT(cancellableNotificationTimeout()));
+    n->appear(DuiSceneWindow::DestroyWhenDone);
+}
+
+void Notifier::cancellableNotificationTimeout()
+{
+    delete cancellableNotification;
+    cancellableNotification = NULL;
+    emit notifTimeout();
+}
+
+void Notifier::cancellableNotificationCancelled()
+{    
+    delete cancellableNotification;
+    cancellableNotification = NULL;
+    DuiNotification *dn = qobject_cast<DuiNotification *>(sender());
+    dn->disappear();
 }

@@ -13,7 +13,7 @@ Sysuid::Sysuid() : QObject()
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery variables */
-    //batteryLogic = new BatteryBusinessLogic(); //not yet working
+    batteryLogic = new BatteryBusinessLogic(); //not yet working
 }
 
 Sysuid::~Sysuid()

@@ -12,6 +12,7 @@ SOURCES += main.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
+    cancellablenotification.cpp
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp
 HEADERS += main.h \
@@ -20,6 +21,7 @@ HEADERS += main.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
+    cancellablenotification.h
     lockscreenbusinesslogic.h \
     lockscreenui.h
 style_sheet.path = /usr/share/themes/dui/pinquery

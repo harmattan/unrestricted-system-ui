@@ -2,9 +2,11 @@
 #define NOTIFIER_H
 
 #include <QObject>
-#include <QString>
+#include <QHash>
 
-class Notifier : QObject
+class CancellableNotification;
+
+class Notifier : public QObject
 {
     Q_OBJECT
 
@@ -12,11 +14,23 @@ public:
     Notifier();
     virtual ~Notifier();
 
+signals:
+    void notifTimeout();    
+
 public slots:    
     void showNotification(QString notifText);
+    void showCancellableNotification(QString notifText,
+                                     int appearTime,
+                                     QString appearTimeVariable,
+                                     const QHash<QString,QString> &staticVariables);
 
 private slots:
     void notificationTimeout();
+    void cancellableNotificationTimeout();
+    void cancellableNotificationCancelled();
+
+private:    
+    CancellableNotification *cancellableNotification;
 
 };
 

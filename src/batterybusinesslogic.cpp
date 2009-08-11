@@ -1,5 +1,6 @@
 #include "batterybusinesslogic.h"
 #include <DuiLocale>
+#include <DuiApplicationWindow>
 
 BatteryBusinessLogic::BatteryBusinessLogic()
 {
@@ -10,12 +11,26 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     connect(battery, SIGNAL(batteryLevelChanged(QmBattery::Level level)),
             this, SLOT(batteryLevelChanged(QmBattery::Level level)));
     connect(battery, SIGNAL(batteryStateChanged(QmBattery::State state)),
-            this, SLOT(batteryStateChanged(QmBattery::State state)));
+            this, SLOT(batteryStateChanged(QmBattery::State state)));    
 
     /* Not yet implemented in QmBattery
     connect(battery, SIGNAL(remainingTalkTimeChanged(int secondsLeft)),
             this, SLOT(remainingTalkTimeChanged(int secondsLeft)));
             */
+
+    DuiApplicationWindow *win = new DuiApplicationWindow();    
+    win->setWindowOpacity(0);
+    win->show();
+
+    /* just testing */
+    connect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));    
+    QHash<QString,QString> staticVariables;
+    staticVariables.insert(QString("%a"), QString("10"));
+
+            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "%a%, %b Battery charge level less than %a%. Switching to power save in %b seconds"),
+                                                 10,
+                                                 QString("%b"),
+                                                 staticVariables);
 
     checkBattery();
 }
@@ -33,18 +48,6 @@ void BatteryBusinessLogic::checkBattery()
 {
     checkChargingState();
     checkBatteryLevel();
-}
-
-void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
-{
-    int powerSaveTimeSetByUser = 600; //dummy 600 seconds == 10 minutes
-
-    if( secondsLeft <= powerSaveTimeSetByUser) {   
-        if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOff)
-            deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
-    }
-    else if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOn)
-        deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
 }
 
 void BatteryBusinessLogic::checkChargingState()
@@ -80,6 +83,30 @@ void BatteryBusinessLogic::checkBatteryLevel()
 
 }
 
+void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
+{
+    int powerSaveTimeSetByUser = 600; //dummy 600 seconds == 10 minutes
+
+    if(secondsLeft <= powerSaveTimeSetByUser) {
+        if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOff) {
+            // Send a notification that can be cancelled.
+            // If it's not cancelled, after certain time the notifier emits a signal.
+            // We catch this signal to set the PSM                       
+            connect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
+
+            QHash<QString,QString> staticVariables;
+            QString number;
+            staticVariables.insert(QString("%a"), number.setNum(battery->chargeLevelPercentage()));
+            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
+                                                 10,
+                                                 QString("%b"),
+                                                 staticVariables);
+        }            
+    }
+    else if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOn)
+        deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
+}
+
 void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
 {
     switch(state) {        
@@ -105,4 +132,10 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
         default:
         break;
    }
+}
+
+void BatteryBusinessLogic::activatePSM()
+{
+    disconnect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
+    deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
 }
