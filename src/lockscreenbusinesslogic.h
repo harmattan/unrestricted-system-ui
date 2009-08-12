@@ -10,6 +10,9 @@ public:
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
 
+signals:
+    void lockScreenOff();
+
 private slots:
 /*
     -incoming events

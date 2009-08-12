@@ -12,8 +12,13 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS("pinquery.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Battery variables */
-    batteryLogic = new BatteryBusinessLogic(); //not yet working
+    /* Energy UI */
+    batteryLogic = new BatteryBusinessLogic();
+
+    /* Lockscreen */
+    lockScreenLogic = new LockScreenBusinessLogic();
+    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
+
 }
 
 Sysuid::~Sysuid()

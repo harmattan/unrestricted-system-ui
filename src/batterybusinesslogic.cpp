@@ -11,7 +11,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     connect(battery, SIGNAL(batteryLevelChanged(QmBattery::Level level)),
             this, SLOT(batteryLevelChanged(QmBattery::Level level)));
     connect(battery, SIGNAL(batteryStateChanged(QmBattery::State state)),
-            this, SLOT(batteryStateChanged(QmBattery::State state)));    
+            this, SLOT(batteryStateChanged(QmBattery::State state)));
 
     /* Not yet implemented in QmBattery
     connect(battery, SIGNAL(remainingTalkTimeChanged(int secondsLeft)),
@@ -123,7 +123,8 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
     switch(level) {
         case QmBattery::LevelFull:
             if(battery->isCharging()) {
-                uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));
+                //how to show these? combined or right after each other?
+                uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));                
                 uiNotif->showNotification(trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy"));
             }            
         break;

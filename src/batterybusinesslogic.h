@@ -14,21 +14,21 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 public:
     BatteryBusinessLogic();
-    virtual ~BatteryBusinessLogic();
-
-    // This method should be called also when the device is returned from sleep mode
-    void checkBattery();
+    virtual ~BatteryBusinessLogic();        
 
 private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;
     QmDeviceMode *deviceMode;
-    bool powerSaveMode;
+    bool powerSaveMode;    
 
 private: //methos
     void checkRemainingTime(); //TEMP
     void checkChargingState();
     void checkBatteryLevel();
+
+public slots:
+    void checkBattery();
 
 private slots:
     void batteryLevelChanged(QmBattery::Level level);

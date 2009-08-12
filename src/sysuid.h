@@ -5,6 +5,7 @@
 
 #include "pincodequerybusinesslogic.h"
 #include "batterybusinesslogic.h"
+#include "lockscreenbusinesslogic.h";
 
 class Sysuid : public QObject
 {
@@ -16,6 +17,7 @@ public:
 private:
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
     BatteryBusinessLogic *batteryLogic;
+    LockScreenBusinessLogic *lockScreenLogic;
 
 };
 
