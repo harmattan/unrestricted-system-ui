@@ -14,6 +14,10 @@ class LockScreenUI : public DuiApplicationPage
 public:
     LockScreenUI();
     virtual ~LockScreenUI();
+    bool screenLock();
+    void toggleScreenLock(bool toggle);
+    bool sleepMode();
+    void toggleSleepMode(bool toggle);
 
 private:
     DuiLabel *timeLabel; // qtn_scrlock_current_time

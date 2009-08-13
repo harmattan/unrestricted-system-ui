@@ -1,18 +1,29 @@
 #ifndef EventEater_H
 #define EventEater_H
 
-#include <DuiApplicationPage>
+#include <qmsystem/qmkeys.h>
+#include "lockscreenbusinesslogic.h"
 
-class EventEater : public DuiApplicationPage
+using namespace Maemo;
+
+class EventEater : public QObject
 {
     Q_OBJECT
 
 public:
-    EventEater();
+    EventEater(LockScreenBusinessLogic *lockScreenLogic);
     virtual ~EventEater();
 
-private:
-	int tummy;
+private slots:
+    void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
+
+private: //methods
+    void shortPowerKeyPressOccured();
+
+private: //atributes
+    LockScreenBusinessLogic *lockScreenLogic;
+    QmKeys *keys;
+
 };
 
 #endif // LOCKSCREENUI_H
