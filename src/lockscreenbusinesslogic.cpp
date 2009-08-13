@@ -18,7 +18,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic()
     QTimer *t = new QTimer();
     connect(t, SIGNAL(timeout()), this, SLOT(timeout()));
     t->setSingleShot(false);
-    t->start(2000);
+
+    toggleSleepMode(false);
+
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
