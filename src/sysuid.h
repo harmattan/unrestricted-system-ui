@@ -6,7 +6,7 @@
 #include "pincodequerybusinesslogic.h"
 #include "batterybusinesslogic.h"
 #include "lockscreenbusinesslogic.h"
-#include "eventeater.h"
+#include "eventhandler.h"
 
 class Sysuid : public QObject
 {
@@ -19,7 +19,7 @@ private:
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
     BatteryBusinessLogic *batteryLogic;
     LockScreenBusinessLogic *lockScreenLogic;
-    EventEater *eventEater;
+    EventHandler *eventHandler;
 
 };
 

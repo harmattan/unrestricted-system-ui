@@ -1,6 +1,6 @@
-#include "eventeater.h"
+#include "eventhandler.h"
 
-EventEater::EventEater(LockScreenBusinessLogic *lockScreenLogic)
+EventHandler::EventHandler(LockScreenBusinessLogic *lockScreenLogic)
 {
     this->lockScreenLogic = lockScreenLogic;
 
@@ -11,11 +11,11 @@ EventEater::EventEater(LockScreenBusinessLogic *lockScreenLogic)
             this, SLOT(keyPressed(QmKeys::Key key, QmKeys::HowPressed how)));
 }
 
-EventEater::~EventEater()
+EventHandler::~EventHandler()
 {
 }
 
-void EventEater::keyPressed(QmKeys::Keys key, QmKeys::HowPressed how)
+void EventHandler::keyPressed(QmKeys::Keys key, QmKeys::HowPressed how)
 {
     if( lockScreenLogic == NULL)
         return;
@@ -43,7 +43,7 @@ void EventEater::keyPressed(QmKeys::Keys key, QmKeys::HowPressed how)
     lockScreenLogic->startMonitroringIdleTime();
 }
 
-void EventEater::shortPowerKeyPressOccured()
+void EventHandler::shortPowerKeyPressOccured()
 {
     if(lockScreenLogic->screenLockOn()) {
         if(lockScreenLogic->sleepModeOn())

@@ -20,8 +20,8 @@ Sysuid::Sysuid() : QObject()
     lockScreenLogic = new LockScreenBusinessLogic();
     connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
 
-    /* Event eater */
-    eventEater = new EventEater(lockScreenLogic);
+    /* Event handler */
+    eventHandler = new EventHandler(lockScreenLogic);
 
 
 }

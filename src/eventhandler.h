@@ -1,18 +1,18 @@
-#ifndef EventEater_H
-#define EventEater_H
+#ifndef EVENTHANDLER_H
+#define EVENTHANDLER_H
 
 #include <qmsystem/qmkeys.h>
 #include "lockscreenbusinesslogic.h"
 
 using namespace Maemo;
 
-class EventEater : public QObject
+class EventHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    EventEater(LockScreenBusinessLogic *lockScreenLogic);
-    virtual ~EventEater();
+    EventHandler(LockScreenBusinessLogic *lockScreenLogic);
+    virtual ~EventHandler();
 
 private slots:
     void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
@@ -26,4 +26,4 @@ private: //atributes
 
 };
 
-#endif // LOCKSCREENUI_H
+#endif // EVENTHANDLER_H
