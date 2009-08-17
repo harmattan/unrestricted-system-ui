@@ -1,4 +1,5 @@
 #include "lockscreenbusinesslogic.h"
+#include <QDebug>
 
 //these are temp values
 namespace {
@@ -7,7 +8,7 @@ namespace {
     int idleTimeToSleepFromUnlockScreen = 2000; // 2 seconds
 }
 
-LockScreenBusinessLogic::LockScreenBusinessLogic()
+LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
 {
     screenLock = false,
     sleepMode = false;
@@ -15,12 +16,11 @@ LockScreenBusinessLogic::LockScreenBusinessLogic()
     touchPadLocker = new QmLocks();
     display = new QmDisplayState();
 
-    QTimer *t = new QTimer();
-    connect(t, SIGNAL(timeout()), this, SLOT(timeout()));
-    t->setSingleShot(false);
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    timer->setSingleShot(false);
 
-    toggleSleepMode(false);
-
+    toggleSleepMode(false);    
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -84,9 +84,9 @@ void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
         timer->stop(); //no need to monitor idle time
     }
     else  {
-        //if not, we unlock the touchpad and turn on the display
-        touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
-        display->set(QmDisplayState::On);        
+        //if not, we unlock the touchpad and turn on the display        
+        touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);        
+        display->set(QmDisplayState::On);                
         timer->start(idleTimeToSleepFromUnlockScreen); //monitoring idle time and go back to sleep if nothing happens
     }
 }

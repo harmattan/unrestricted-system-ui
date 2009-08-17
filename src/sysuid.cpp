@@ -16,11 +16,13 @@ Sysuid::Sysuid() : QObject()
     batteryLogic = new BatteryBusinessLogic();
 
     /* Lockscreen */
+
     lockScreenLogic = new LockScreenBusinessLogic();
     connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
 
     /* Event eater */
     eventEater = new EventEater(lockScreenLogic);
+
 
 }
 
