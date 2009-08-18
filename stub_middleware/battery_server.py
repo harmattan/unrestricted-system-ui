@@ -73,7 +73,7 @@ class ServerReq(dbus.service.Object):
         if key == 'battery.charge_level.percentage':
             return dbus.Int32(self.obj.charge_level_percentage, variant_level=1)
         elif key == 'battery.rechargeable.is_charging':
-            return dbus.Int32(1-self.obj.state_idx, variant_level=1)
+            return dbus.Boolean(self.obj.state_idx==0, variant_level=1)
             #dbus.Struct(('', 42), signature='su')
             #return 1 - self.obj.state_idx
 
