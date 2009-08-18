@@ -11,17 +11,16 @@ class EventHandler : public QObject
     Q_OBJECT
 
 public:
-    EventHandler(LockScreenBusinessLogic *lockScreenLogic);
+    EventHandler();
     virtual ~EventHandler();
 
 private slots:
     void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
 
-private: //methods
+signals:
     void shortPowerKeyPressOccured();
 
-private: //atributes
-    LockScreenBusinessLogic *lockScreenLogic;
+private: //atributes    
     QmKeys *keys;
 
 };

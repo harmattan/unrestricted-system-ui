@@ -3,38 +3,41 @@
 
 #include "qmsystem/qmlocks.h"
 #include "qmsystem/qmdisplaystate.h"
+#include "eventeater.h"
+
 #include <QObject>
-#include <QTimer>
+
 
 using namespace Maemo;
 
 class LockScreenBusinessLogic : public QObject
 {
     Q_OBJECT
+
 public:
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
 
-    bool screenLockOn();
-    void toggleScreenLock(bool toggle);
-    bool sleepModeOn();
-    void toggleSleepMode(bool toggle);
-    void stopMonitroringIdleTime();
-    void startMonitroringIdleTime();
-
 signals:
     void lockScreenOff();
 
+public slots:
+    void shortPowerKeyPressOccured();
+
 private slots:
-    void timeout();
+    void displayStateChanged(QmDisplayState::DisplayState state);
+
+private: //methods
+    void toggleScreenLock(bool toggle);
+    void toggleSleepMode(bool toggle);
+    void toggleDisplayStateListener(bool toggle);
 
 private: //attributes
+    EventEater *eventEater;
     bool screenLock;
     bool sleepMode;
     QmLocks *touchPadLocker;
-    QmDisplayState *display;
-    QTimer *timer;
-
+    QmDisplayState *display;    
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H

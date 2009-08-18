@@ -5,6 +5,7 @@
 
 Sysuid::Sysuid() : QObject()
 {    
+
     qDebug() << "starting sysuidaemon";
 
     /* Pincode query variables */
@@ -16,13 +17,12 @@ Sysuid::Sysuid() : QObject()
     batteryLogic = new BatteryBusinessLogic();
 
     /* Lockscreen */
-
     lockScreenLogic = new LockScreenBusinessLogic();
     connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
 
     /* Event handler */
-    eventHandler = new EventHandler(lockScreenLogic);
-
+    eventHandler = new EventHandler();
+    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
 
 }
 

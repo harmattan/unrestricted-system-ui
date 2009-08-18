@@ -12,11 +12,8 @@ BatteryBusinessLogic::BatteryBusinessLogic()
             this, SLOT(batteryLevelChanged(QmBattery::Level level)));
     connect(battery, SIGNAL(batteryStateChanged(QmBattery::State state)),
             this, SLOT(batteryStateChanged(QmBattery::State state)));
-
-    /* Not yet implemented in QmBattery
     connect(battery, SIGNAL(remainingTalkTimeChanged(int secondsLeft)),
-            this, SLOT(remainingTalkTimeChanged(int secondsLeft)));
-            */
+            this, SLOT(remainingTalkTimeChanged(int secondsLeft)));            
 
     DuiApplicationWindow *win = new DuiApplicationWindow();    
     win->setWindowOpacity(0);
@@ -24,13 +21,6 @@ BatteryBusinessLogic::BatteryBusinessLogic()
 
     /* just testing */
     connect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));    
-    QHash<QString,QString> staticVariables;
-    staticVariables.insert(QString("%a"), QString("10"));
-
-            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "%a%, %b Battery charge level less than %a%. Switching to power save in %b seconds"),
-                                                 10,
-                                                 QString("%b"),
-                                                 staticVariables);
 
     checkBattery();
 }

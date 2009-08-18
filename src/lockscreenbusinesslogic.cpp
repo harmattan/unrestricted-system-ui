@@ -1,24 +1,17 @@
 #include "lockscreenbusinesslogic.h"
-#include <QDebug>
 
-//these are temp values
-namespace {
-    int idleTimeToDim = 10000; //10 seconds
-    int idleTimeToSleepFromDim = 10000; //10seconds
-    int idleTimeToSleepFromUnlockScreen = 2000; // 2 seconds
-}
 
 LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
 {
+    eventEater = new EventEater();
+
     screenLock = false,
     sleepMode = false;
 
     touchPadLocker = new QmLocks();
     display = new QmDisplayState();
 
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    timer->setSingleShot(false);
+    toggleDisplayStateListener(true);
 
     toggleSleepMode(false);    
 }
@@ -29,64 +22,86 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
     touchPadLocker = NULL;
     delete display;
     display = NULL;
+    delete eventEater;
+    eventEater = NULL;
 }
 
-bool LockScreenBusinessLogic::screenLockOn()
-{
-    return screenLock;
+void LockScreenBusinessLogic::shortPowerKeyPressOccured()
+{    
+    if(screenLock) {
+        if(sleepMode)
+            toggleSleepMode(false);
+        else
+            toggleSleepMode(true);
+    }
+    else {
+        toggleScreenLock(true);
+        toggleSleepMode(true);
+    }
 }
 
 void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
 {
+    if(!toggle)
+        emit lockScreenOff();
+
     screenLock = toggle;
 }
 
-bool LockScreenBusinessLogic::sleepModeOn()
+void LockScreenBusinessLogic::displayStateChanged(QmDisplayState::DisplayState state)
 {
-    return sleepMode;
-}
-
-void LockScreenBusinessLogic::timeout()
-{
-    if(screenLock)
-        toggleSleepMode(true);
-    else {
-        if(display->get() == QmDisplayState::Dimmed) {
-            toggleScreenLock(true);
+    switch(state) {
+        case QmDisplayState::Off:
+            //idle timer turns off the display, so we will turn on sleep mode and screen lock
             toggleSleepMode(true);
-        }
-        else
-            display->set(QmDisplayState::Dimmed);
+            toggleScreenLock(true);
+        break;
+        case QmDisplayState::Dimmed:
+            //we turn on the eventeater
+            eventEater->toggle(true);
+        break;
+        case QmDisplayState::On:
+            //we trun off the event eater
+            eventEater->toggle(false);
+        break;
     }
-}
 
-void LockScreenBusinessLogic::stopMonitroringIdleTime()
-{    
-    timer->stop();
-}
-
-void LockScreenBusinessLogic::startMonitroringIdleTime()
-{
-    if(screenLock)
-        timer->start(idleTimeToSleepFromUnlockScreen);
-    else
-        timer->start(idleTimeToDim);       
 }
 
 void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
 {
-    sleepMode = toggle;
-
-    if(sleepMode) {
-        //if we are now in sleep mode, we lock the touchpad and turn off the display        
+    if(toggle) {
+        //we turn on the sleep mode and lock the touchpad + turn off the display
         touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Locked);
-        display->set(QmDisplayState::Off);
-        timer->stop(); //no need to monitor idle time
+
+        if(display->get() != QmDisplayState::Off) {
+            //we don't need to listen display signals when we change the state by ourself
+            toggleDisplayStateListener(false);
+            display->set(QmDisplayState::Off);
+            toggleDisplayStateListener(true);
+        }
     }
     else  {
-        //if not, we unlock the touchpad and turn on the display        
-        touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);        
-        display->set(QmDisplayState::On);                
-        timer->start(idleTimeToSleepFromUnlockScreen); //monitoring idle time and go back to sleep if nothing happens
+        //we turn off the the sleep mode and unlock the touchpad + turn on the display
+        touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+
+        if(display->get() != QmDisplayState::On) {
+            //we don't need to listen display signals when we change the state by ourself
+            toggleDisplayStateListener(false);
+            display->set(QmDisplayState::On);
+            toggleDisplayStateListener(true);
+        }
     }
+
+    sleepMode = toggle;
+}
+
+void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
+{
+    if(toggle)
+        connect(display, SIGNAL(displayStateChanged(QmDisplayState::DisplayState state)),
+            this, SLOT(displayStateChanged(QmDisplayState::DisplayState state)));
+    else
+        disconnect(display, SIGNAL(displayStateChanged(QmDisplayState::DisplayState state)),
+            this, SLOT(displayStateChanged(QmDisplayState::DisplayState state)));
 }

@@ -5,7 +5,8 @@ target.path = /usr/bin
 CONFIG += dui \
     cellular-qt
 LIBS += -lsystem \
-    -lduihome
+    -lduihome \
+    -lX11
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \
@@ -15,7 +16,8 @@ SOURCES += main.cpp \
     cancellablenotification.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
-    eventhandler.cpp
+    eventhandler.cpp \
+    eventeater.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -25,7 +27,8 @@ HEADERS += main.h \
     cancellablenotification.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
-    eventhandler.h
+    eventhandler.h \
+    eventeater.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery
