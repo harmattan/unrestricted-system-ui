@@ -31,8 +31,8 @@ public slots:
     void checkBattery();
 
 private slots:
-    void batteryLevelChanged(QmBattery::Level level);
-    void batteryStateChanged(QmBattery::State state);
+    void batteryLevelChanged(Maemo::QmBattery::Level level);
+    void batteryStateChanged(Maemo::QmBattery::State state);
     void remainingTalkTimeChanged(int secondsLeft);
     void activatePSM();
 

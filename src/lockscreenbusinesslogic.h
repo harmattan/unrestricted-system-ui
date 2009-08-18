@@ -25,7 +25,7 @@ public slots:
     void shortPowerKeyPressOccured();
 
 private slots:
-    void displayStateChanged(QmDisplayState::DisplayState state);
+    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
 
 private: //methods
     void toggleScreenLock(bool toggle);

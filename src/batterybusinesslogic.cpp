@@ -8,20 +8,28 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     battery = new QmBattery();
     deviceMode = new QmDeviceMode();
 
-    connect(battery, SIGNAL(batteryLevelChanged(QmBattery::Level level)),
-            this, SLOT(batteryLevelChanged(QmBattery::Level level)));
-    connect(battery, SIGNAL(batteryStateChanged(QmBattery::State state)),
-            this, SLOT(batteryStateChanged(QmBattery::State state)));
-    connect(battery, SIGNAL(remainingTalkTimeChanged(int secondsLeft)),
-            this, SLOT(remainingTalkTimeChanged(int secondsLeft)));            
+
+    connect(battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
+            this, SLOT(batteryLevelChanged(Maemo::QmBattery::Level)));
+    connect(battery, SIGNAL(batteryStateChanged(Maemo::QmBattery::State)),
+            this, SLOT(batteryStateChanged(Maemo::QmBattery::State)));
+    connect(battery, SIGNAL(remainingTalkTimeChanged(int)),
+            this, SLOT(remainingTalkTimeChanged(int)));
 
     DuiApplicationWindow *win = new DuiApplicationWindow();    
     win->setWindowOpacity(0);
     win->show();
 
-    /* just testing */
+    /* just testing
     connect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));    
+    QHash<QString,QString> staticVariables;
+    staticVariables.insert(QString("%a"), QString("10"));
 
+            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
+                                                 10,
+                                                 QString("%b"),
+                                                 staticVariables);
+*/
     checkBattery();
 }
 
@@ -97,10 +105,10 @@ void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
         deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
 }
 
-void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
+void BatteryBusinessLogic::batteryStateChanged(Maemo::QmBattery::State state)
 {
     switch(state) {        
-        case QmBattery::StateCharging:            
+        case QmBattery::StateCharging:
             uiNotif->showNotification(trid("qtn_ener_char", "Charging"));
         break;        
         default: //QmBattery::StateNotCharging
@@ -108,11 +116,13 @@ void BatteryBusinessLogic::batteryStateChanged(QmBattery::State state)
     }    
 }
 
-void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
+void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 {
     switch(level) {
         case QmBattery::LevelFull:
+        qDebug() << "FULL";
             if(battery->isCharging()) {
+                qDebug() << "FULL2";
                 //how to show these? combined or right after each other?
                 uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));                
                 uiNotif->showNotification(trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy"));
@@ -120,6 +130,25 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
         break;
         case QmBattery::LevelLow:
             uiNotif->showNotification(trid("qtn_ener_lowbatt", "Low battery"));
+        break;
+
+
+        //TEMPORARILY HERE FOR DEMO. REMOVE THIS CASE .......
+        case QmBattery::LevelCritical:
+        {            
+            connect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
+            QHash<QString,QString> staticVariables;
+            QString number;
+            staticVariables.insert(QString("%a"), number.setNum(battery->chargeLevelPercentage()));
+            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
+                                                 10,
+                                                 QString("%b"),
+                                                 staticVariables);
+        }
+        break;
+        // .... TEMPORARILY HERE FOR DEMO. REMOVE THIS CASE
+
+
         default:
         break;
    }
@@ -127,6 +156,7 @@ void BatteryBusinessLogic::batteryLevelChanged(QmBattery::Level level)
 
 void BatteryBusinessLogic::activatePSM()
 {
-    disconnect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
+    qDebug() << "Activate PSM";
+    disconnect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));
     deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
 }

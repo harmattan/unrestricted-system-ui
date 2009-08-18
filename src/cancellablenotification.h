@@ -4,30 +4,34 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
+#include <QTimer>
+#include <DuiMessageBox>
 
-class DuiNotification;
 
 class CancellableNotification : public QObject
 {
     Q_OBJECT
 
 public:
-    CancellableNotification(DuiNotification *n,
-                            const QString &notifTextPattern,
+    explicit CancellableNotification(const QString &notifTextPattern,
                             const int &appearTime,
                             const QString &appearTimeVariable,
                             const QHash<QString,QString> &staticVariables);
+
     virtual ~CancellableNotification();
+    void show();
 
 signals:
-    void notifTimeout();
+    void cancelled();
+    void timeout();
 
-private slots:
+public slots:
     void updateText();
 
 private: //attributes
-    DuiNotification *n;
+    QTimer *t;
     QString notifTextPattern;
+    DuiMessageBox *mb;
     int appearTime;
     QString appearTimeVariable;
     QHash<QString,QString> staticVariables;

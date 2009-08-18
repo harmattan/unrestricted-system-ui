@@ -48,7 +48,7 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
     screenLock = toggle;
 }
 
-void LockScreenBusinessLogic::displayStateChanged(QmDisplayState::DisplayState state)
+void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
     switch(state) {
         case QmDisplayState::Off:
@@ -99,9 +99,9 @@ void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
 void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
 {
     if(toggle)
-        connect(display, SIGNAL(displayStateChanged(QmDisplayState::DisplayState state)),
-            this, SLOT(displayStateChanged(QmDisplayState::DisplayState state)));
+        connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     else
-        disconnect(display, SIGNAL(displayStateChanged(QmDisplayState::DisplayState state)),
-            this, SLOT(displayStateChanged(QmDisplayState::DisplayState state)));
+        disconnect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
 }

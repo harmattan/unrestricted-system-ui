@@ -15,7 +15,7 @@ public:
     virtual ~Notifier();
 
 signals:
-    void notifTimeout();    
+    void notifTimeout();
 
 public slots:    
     void showNotification(QString notifText);
@@ -26,8 +26,8 @@ public slots:
 
 private slots:
     void notificationTimeout();
-    void cancellableNotificationTimeout();
     void cancellableNotificationCancelled();
+    void cancellableNotificationTimeout();
 
 private:    
     CancellableNotification *cancellableNotification;
