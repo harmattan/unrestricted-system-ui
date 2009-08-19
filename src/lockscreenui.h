@@ -6,6 +6,8 @@
 class DuiLabel;
 class DuiImage;
 class DuiButton;
+class DuiGridLayoutPolicy;
+class UnlockSlider;
 
 class LockScreenUI : public DuiApplicationPage
 {
@@ -14,21 +16,34 @@ class LockScreenUI : public DuiApplicationPage
 public:
     LockScreenUI();
     virtual ~LockScreenUI();
+    virtual void createContent();
+
     bool screenLock();
     void toggleScreenLock(bool toggle);
     bool sleepMode();
     void toggleSleepMode(bool toggle);
 
+public slots:
+    void buttonReleased();
+    void buttonPressed();
+    void orientationChanged(const Dui::Orientation &orientation);
+
 private:
+/*
     DuiLabel *timeLabel; // qtn_scrlock_current_time
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
     DuiImage *missedCallsImage;
     DuiImage *unreadMessagesImage;
     DuiImage *unreadChatMessagesImage;
-    DuiButton *unlockSliderButton;
+*/
+    UnlockSlider *slider;
+/*
     DuiImage *unlockIconImage;
     DuiImage *deviceLockIconImage;
     DuiImage *defaultBackgroundImage;
+*/
+    DuiGridLayoutPolicy *p_policy;
+    DuiGridLayoutPolicy *l_policy;
 };
 
 #endif // LOCKSCREENUI_H

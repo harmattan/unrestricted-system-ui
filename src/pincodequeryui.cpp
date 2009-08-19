@@ -131,7 +131,7 @@ void PinCodeQueryUI::createWidgetItems()
     emergencyCallButton->setObjectName("emergencyCallButton");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
     qDebug() << "hiding emergenceCall button" ;
-   emergencyCallButton->setVisible(false);
+    emergencyCallButton->setVisible(false);
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
     entryTextEdit->setObjectName("codeEntry");

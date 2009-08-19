@@ -16,6 +16,7 @@ SOURCES += main.cpp \
     cancellablenotification.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
+    unlockslider.cpp \
     eventhandler.cpp \
     eventeater.cpp
 HEADERS += main.h \
@@ -27,6 +28,7 @@ HEADERS += main.h \
     cancellablenotification.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
+    unlockslider.h \
     eventhandler.h \
     eventeater.h
 style_sheet.path = /usr/share/themes/dui/pinquery
