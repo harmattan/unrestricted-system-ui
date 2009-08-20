@@ -83,7 +83,7 @@ void BatteryBusinessLogic::checkBatteryLevel()
 
 void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
 {
-    int powerSaveTimeSetByUser = 600; //dummy 600 seconds == 10 minutes
+    int powerSaveTimeSetByUser = 600; //dummy value 600 seconds == 10 minutes
 
     if(secondsLeft <= powerSaveTimeSetByUser) {
         if(deviceMode->getPSMState() != QmDeviceMode::PSMStateOff) {
@@ -129,26 +129,9 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
             }            
         break;
         case QmBattery::LevelLow:
-            uiNotif->showNotification(trid("qtn_ener_lowbatt", "Low battery"));
-        break;
-
-
-        //TEMPORARILY HERE FOR DEMO. REMOVE THIS CASE .......
-        case QmBattery::LevelCritical:
-        {            
-            connect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
-            QHash<QString,QString> staticVariables;
-            QString number;
-            staticVariables.insert(QString("%a"), number.setNum(battery->chargeLevelPercentage()));
-            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
-                                                 10,
-                                                 QString("%b"),
-                                                 staticVariables);
-        }
-        break;
-        // .... TEMPORARILY HERE FOR DEMO. REMOVE THIS CASE
-
-
+            if(!battery->isCharging())
+                uiNotif->showNotification(trid("qtn_ener_lowbatt", "Low battery"));
+        break;      
         default:
         break;
    }
