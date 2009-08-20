@@ -11,14 +11,16 @@ Sysuid::Sysuid() : QObject()
     /* Pincode query variables */
     DuiTheme::addPixmapDirectory("./");
     DuiTheme::loadCSS("pinquery.css");
-//    pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
+    pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Energy UI */
-//    batteryLogic = new BatteryBusinessLogic();
+    batteryLogic = new BatteryBusinessLogic();    
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();
-//    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
+    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
+    connect(batteryLogic, SIGNAL(charging()), lockScreenLogic, SLOT(sleepModeOff()));
+
     /* Event handler */
     eventHandler = new EventHandler();
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));

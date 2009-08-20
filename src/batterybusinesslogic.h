@@ -16,6 +16,9 @@ public:
     BatteryBusinessLogic();
     virtual ~BatteryBusinessLogic();        
 
+signals:
+    void charging();
+
 private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;

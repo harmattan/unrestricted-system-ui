@@ -68,6 +68,12 @@ void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::Display
 
 }
 
+void LockScreenBusinessLogic::sleepModeOff()
+{
+    if(sleepMode)
+        toggleSleepMode(false);
+}
+
 void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
 {
     if(toggle) {
@@ -81,10 +87,9 @@ void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
             toggleDisplayStateListener(true);
         }
     }
-    else  {
-        //we turn off the the sleep mode and unlock the touchpad + turn on the display
+    else {
+        //we turn off the sleep mode and unlock the touchpad + turn on the display
         touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
-
         if(display->get() != QmDisplayState::On) {
             //we don't need to listen display signals when we change the state by ourself
             toggleDisplayStateListener(false);
@@ -92,7 +97,6 @@ void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
             toggleDisplayStateListener(true);
         }
     }
-
     sleepMode = toggle;
 }
 

@@ -110,6 +110,7 @@ void BatteryBusinessLogic::batteryStateChanged(Maemo::QmBattery::State state)
     switch(state) {        
         case QmBattery::StateCharging:
             uiNotif->showNotification(trid("qtn_ener_char", "Charging"));
+            emit charging();
         break;        
         default: //QmBattery::StateNotCharging
         break;

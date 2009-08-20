@@ -23,8 +23,9 @@ signals:
 
 public slots:
     void shortPowerKeyPressOccured();
+    void sleepModeOff();
 
-private slots:
+private slots:    
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
 
 private: //methods

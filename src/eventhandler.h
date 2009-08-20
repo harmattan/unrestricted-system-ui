@@ -1,8 +1,9 @@
 #ifndef EVENTHANDLER_H
 #define EVENTHANDLER_H
 
-#include <qmsystem/qmkeys.h>
 #include "lockscreenbusinesslogic.h"
+#include <qmsystem/qmalarm.h>
+#include <qmsystem/qmkeys.h>
 
 using namespace Maemo;
 
@@ -14,14 +15,17 @@ public:
     EventHandler();
     virtual ~EventHandler();
 
-private slots:
-    void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
-
 signals:
     void shortPowerKeyPressOccured();
 
-private: //atributes    
+private slots:
+    void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
+    void alarmClockEvent(qmAlarmCookie);
+
+private: //attributes
     QmKeys *keys;
+    //QmAlarm *alarm;
+
 
 };
 
