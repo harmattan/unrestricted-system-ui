@@ -106,7 +106,7 @@ class Server(dbus.service.Object):
         for idx in range(len(self.SIM_MODES)):
             if self.SIM_MODES[idx] == param:
                 self.mode_idx = idx
-        
+                self.SIMStatus(self.SIM_MODES[idx])
 
     # interface: com.nokia.csd.SIM
     # ============================
@@ -133,8 +133,11 @@ class Server(dbus.service.Object):
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def VerifyPIN(self, type, code):
         self.on_verifypin(self.verifypin)
+        self.pin_attempts_left -= 1
         if code == self.pin:
             return True
+        if self.pin_attempts_left == 0:
+            self.SetState('PUKRequired')
         raise WrongPassword('')
 
     def on_verifypuk(label): pass
@@ -142,9 +145,13 @@ class Server(dbus.service.Object):
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def VerifyPUK(self, type, code, newpin):
         self.on_verifypuk(self.verifypuk)
+
+        self.puk_attempts_left -= 1
         if code == '007':
             self.pin = newpin
             return True
+        if self.puk_attempts_left == 0:
+            self.SetState('PermanentlyBlocked')
         raise WrongPassword('')
 
     @dbus.service.signal(dbus_interface='com.nokia.csd.SIM.Security',
@@ -160,7 +167,6 @@ class Server(dbus.service.Object):
         self.on_pinattemptsleft(self.pinattemptsleft)
         if not self.SIM_MODES[self.mode_idx] == 'PINRequired':
             return -1
-        self.pin_attempts_left -= 1
         return self.pin_attempts_left
 
     def on_pukattemptsleft(label): pass
@@ -170,7 +176,6 @@ class Server(dbus.service.Object):
         self.on_pukattemptsleft(self.pukattemptsleft)
         if not self.SIM_MODES[self.mode_idx] == 'PUKRequired':
             return -1
-        self.puk_attempts_left -= 1
         return self.puk_attempts_left
 
     @dbus.service.method('com.nokia.csd.SIM.Security')
