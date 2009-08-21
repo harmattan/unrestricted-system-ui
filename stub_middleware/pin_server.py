@@ -63,11 +63,25 @@ bus = dbus.SystemBus()
 bus_name = dbus.service.BusName('com.nokia.csd.SIM', bus)
 PATH = '/com/nokia/csd/sim'
 
+# emergency
+bus_name_emerg = dbus.service.BusName('com.nokia.csd.Call', bus)
+PATH_emerg = '/com/nokia/csd/call'
+
 TIMEOUT = 1*1000
 
 class WrongPassword(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
 
+
+
+class EmergencyServer(dbus.service.Object):
+    def __init__ (self, bus_name, path=PATH_emerg):
+        dbus.service.Object.__init__(self, bus_name, path)
+
+    @dbus.service.method('com.nokia.csd.Call')
+    def GetEmergencyNumbers(self):
+        #self.on_getsimstatus(self.getsimstatus)
+        return [ "112", "911" ]
 
 
 class Server(dbus.service.Object):
@@ -134,6 +148,9 @@ class Server(dbus.service.Object):
         self.on_verifypin(self.verifypin)
         self.pin_attempts_left -= 1
         if code == self.pin:
+	    if self.SIM_MODES[self.mode_idx] == 'PINRequired':
+                self.pin_attempts_left = 3
+                self.SetState('Ok')
             return True
         if self.pin_attempts_left == 0:
             self.SetState('PUKRequired')
@@ -148,6 +165,9 @@ class Server(dbus.service.Object):
         self.puk_attempts_left -= 1
         if code == '007':
             self.pin = newpin
+	    if self.SIM_MODES[self.mode_idx] == 'PUKRequired':
+                self.puk_attempts_left = 10
+                self.SetState('Ok')
             return True
         if self.puk_attempts_left == 0:
             self.SetState('PermanentlyBlocked')
@@ -287,6 +307,7 @@ class UserInterface:
 
     def __init__(self):
         self.server = Server(bus_name)
+        self.server_emerg = EmergencyServer(bus_name_emerg)
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete_event", self.delete_event)
