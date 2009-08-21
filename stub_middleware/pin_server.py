@@ -84,7 +84,6 @@ class Server(dbus.service.Object):
             'Unknown',
             'Ok',
             'NoSIM',
-            'Removed',
             'PermanentlyBlocked',
             'NotReady',
             'PINRequired',
