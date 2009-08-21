@@ -1,29 +1,20 @@
 #include "pincodequeryui.h"
 
 #include <DuiWidget>
-#include <DuiLayout>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiButton>
-#include <DuiLabel>
+
 #include <DuiLocale>
 #include <DuiTextEdit>
 #include <DuiTheme>
 #include <DuiSceneManager>
-#include <DuiContainer>
 #include <DuiGrid>
 #include <QStringList>
 #include <QSizePolicy>
 #include <QTimer>
 #include <QDebug>
 
-//TODO: fetch the data elsewhere
-namespace {
-    const QStringList EmergencyCallPhoneNumbers = (QStringList() << "112" << "911");
-}
-
-PinCodeQueryUI::PinCodeQueryUI()
+PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers)
 {
+    this->emergencyNumbers = emergencyNumbers;   
     setFullscreen(true);
     setTitle("PIN code query:");
     createContent();
@@ -240,7 +231,7 @@ void PinCodeQueryUI::checkEntry()
     QString pinCode = entryTextEdit->text();
 
     //check if the entered opin code is an emergency call phone number
-    if( EmergencyCallPhoneNumbers.contains(pinCode)) {
+    if( emergencyNumbers.contains(pinCode) ) {
         emergencyCallButton->setVisible(true);
         entryTextEdit->setMaskedInput(false);
     }

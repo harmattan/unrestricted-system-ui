@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <SIM>
+#include <EmergencyNumbers>
 
 #include "pincodequeryui.h"
 #include "notifier.h"
@@ -59,12 +60,8 @@ private: // attributes
     SIM* sim;
     SIMIdentity* simId;
     SIMSecurity* simSec;
-    //SIMPhonebook* simPb;
 
 private: // methods
-
-
-
     void checkSIMError(SIMError error);
 
     // "empty" state changes.

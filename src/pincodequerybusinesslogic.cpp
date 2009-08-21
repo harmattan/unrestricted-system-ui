@@ -61,8 +61,11 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
     win->setWindowOpacity(0);
     win->setVisible(false);
 
+    EmergencyNumbers emeNums;
+    QStringList emergencyNumbers = emeNums.numbers();
+
     uiNotif = new Notifier();
-    uiPin = new PinCodeQueryUI();
+    uiPin = new PinCodeQueryUI(emergencyNumbers);
     DuiButton *uiPinEmergency = uiPin->getEmergencyBtn();
     DuiButton *uiPinCancel = uiPin->getCancelBtn();
     DuiButton *uiPinEnter = uiPin->getEnterBtn();
@@ -76,8 +79,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 
     sim = new SIM();
     simId = new SIMIdentity();
-    simSec = new SIMSecurity();
-    //simPb = new SIMPhonebook();
+    simSec = new SIMSecurity();        
 
     qRegisterMetaType<SIM::SIMStatus>("SIM::SIMStatus");
     qRegisterMetaType<SIMError>("SIMError");
@@ -120,8 +122,7 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
     delete simId;
     simId = NULL;
     delete simSec;
-    simSec = NULL;
-
+    simSec = NULL;    
 }
 
 void PinCodeQueryBusinessLogic::nothing()
@@ -210,9 +211,9 @@ void PinCodeQueryBusinessLogic::ui2PUKOk()
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
-    win->hide();
-    uiPin->hide();
-    //uiPin->disappear();
+    //win->hide();
+    //uiPin->hide();    
+    uiPin->disappear();
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 {
@@ -317,7 +318,7 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         */
         break;
     }
-    case SIM::UnknownStatus: {
+    case SIM::UnknownStatus: {            
         if (next == SIM::NotReady)
             nothing();
         else if (next == SIM::SIMLockRejected)
@@ -434,9 +435,7 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
         // else if sim locked is handled in status change
     }
     else
-    {
-    	ui2disappear();
-    }
+        ui2disappear();
 }
 
 void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
@@ -448,6 +447,8 @@ void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
     if(!success && error == SIMErrorWrongPassword) {
         simSec->pukAttemptsLeft(SIMSecurity::PUK);
     }
+    else
+        ui2disappear();
 }
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)

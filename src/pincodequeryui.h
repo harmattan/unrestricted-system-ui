@@ -1,22 +1,25 @@
 #ifndef  PINCODEQUERYUI_H
 #define  PINCODEQUERYUI_H
 
+#include "notifier.h"
 #include <DuiApplicationPage>
 #include <DuiLayout>
-#include "notifier.h"
+#include <DuiGridLayoutPolicy>
+#include <DuiButton>
+#include <DuiLabel>
+#include <DuiTextEdit>
 
-class DuiButton;
-class DuiLabel;
-class DuiTextEdit;
-class DuiGridLayoutPolicy;
+
+
 class QTimer;
+class QStringList;
 
 class  PinCodeQueryUI : public DuiApplicationPage
 {
     Q_OBJECT
-public:
 
-     PinCodeQueryUI();
+public:
+    PinCodeQueryUI(QStringList emergencyNumbers);
     virtual ~ PinCodeQueryUI();
     virtual void createContent();
 
@@ -33,12 +36,12 @@ private slots:
     void orientationChanged(const Dui::Orientation &orientation);
     void removeText();
 
-private:
+private: //methods
     void createWidgetItems();
     void createNumpad();
     void checkEntry();
 
-private:
+private: //attributes
     DuiButton *emergencyCallButton;
     DuiButton *enterButton;
     DuiButton *cancelButton;
@@ -49,6 +52,7 @@ private:
     DuiGridLayoutPolicy *portraitPolicy;
     DuiGridLayoutPolicy *landscapePolicy;
     QTimer *backspaceTimer;
+    QStringList emergencyNumbers;
 
 };
 
