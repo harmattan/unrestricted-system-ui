@@ -69,7 +69,7 @@ class ServerReq(dbus.service.Object):
     #def on_getdisplaystatus(label): pass
 
     @dbus.service.method('org.freedesktop.Hal.Device')
-    def GetProperty(self, key):
+    def GetProperty(self, key, type):
         if key == 'battery.charge_level.percentage':
             print 'percentage query'
             return dbus.Int32(self.obj.charge_level_percentage, variant_level=0)
@@ -80,6 +80,7 @@ class ServerReq(dbus.service.Object):
             #return 1 - self.obj.state_idx
 	else:
 	    print 'nothing'
+
 class ServerSig(dbus.service.Object):
     def __init__ (self, bus_name, server, path=PATH_SIG):
         dbus.service.Object.__init__(self, bus_name, path)
