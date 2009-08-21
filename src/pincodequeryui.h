@@ -1,16 +1,14 @@
 #ifndef  PINCODEQUERYUI_H
 #define  PINCODEQUERYUI_H
 
-#include "notifier.h"
 #include <DuiApplicationPage>
-#include <DuiLayout>
-#include <DuiGridLayoutPolicy>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTextEdit>
 
-
-
+class DuiButton;
+class DuiLabel;
+class DuiTextEdit;
+class DuiLayout;
+class DuiGridLayoutPolicy;
+class DuiSceneManager;
 class QTimer;
 class QStringList;
 

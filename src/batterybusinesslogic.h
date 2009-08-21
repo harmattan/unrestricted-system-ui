@@ -1,11 +1,12 @@
 #ifndef BATTERYBUSINESSLOGIC_H
 #define BATTERYBUSINESSLOGIC_H
 
-#include <QObject>
+#include "notifier.h"
 #include <qmsystem/qmbattery.h>
 #include <qmsystem/qmdevicemode.h>
 
-#include "notifier.h"
+#include <QObject>
+
 
 using namespace Maemo;
 

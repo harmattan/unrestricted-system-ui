@@ -1,12 +1,16 @@
 #include "pincodequeryui.h"
 
 #include <DuiWidget>
-
 #include <DuiLocale>
 #include <DuiTextEdit>
 #include <DuiTheme>
 #include <DuiSceneManager>
 #include <DuiGrid>
+#include <DuiGridLayoutPolicy>
+#include <DuiButton>
+#include <DuiLabel>
+#include <DuiTextEdit>
+
 #include <QStringList>
 #include <QSizePolicy>
 #include <QTimer>

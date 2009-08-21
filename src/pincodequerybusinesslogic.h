@@ -1,12 +1,14 @@
 #ifndef PINCODEQUERYBUSINESSLOGIC_H
 #define PINCODEQUERYBUSINESSLOGIC_H
 
+#include "pincodequeryui.h"
+#include "notifier.h"
+
 #include <QObject>
 #include <SIM>
 #include <EmergencyNumbers>
 
-#include "pincodequeryui.h"
-#include "notifier.h"
+class DuiApplicationWindow;
 
 using namespace Cellular;
 

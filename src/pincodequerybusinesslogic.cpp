@@ -1,4 +1,5 @@
 #include "pincodequerybusinesslogic.h"
+#include <SIM>
 #include <DuiLocale>
 #include <DuiButton>
 #include <DuiTextEdit>
