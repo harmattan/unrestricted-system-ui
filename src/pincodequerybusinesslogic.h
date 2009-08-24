@@ -6,6 +6,7 @@
 
 #include <QObject>
 #include <SIM>
+#include <SIMLock>
 #include <EmergencyNumbers>
 
 class DuiApplicationWindow;
@@ -62,9 +63,11 @@ private: // attributes
     SIM* sim;
     SIMIdentity* simId;
     SIMSecurity* simSec;
+    SIMLock *simLock;
 
 private: // methods
-    void checkSIMError(SIMError error);
+    bool handleSIMError(SIMError error);
+    bool handleSIMLockError(SIMLockError error);
 
     // "empty" state changes.
     void nothing();
@@ -79,7 +82,7 @@ private: // methods
     void ui2PUKOk();
     void ui2disappear();
     void ui2disappearWithNotification(QString notifText);
-    void ui2reenterPIN();
+    void ui2reenterPIN();    
 
 
 private slots:
@@ -94,7 +97,7 @@ private slots:
     void simPINAttemptsLeft(int attempts, SIMError error);
     void simPUKAttemptsLeft(int attempts, SIMError error);
     void simPINCodeChanged(bool success, SIMError error);
-
+    void simLockUnlockCodeVerified(SIMLockError error);
 
 };
 

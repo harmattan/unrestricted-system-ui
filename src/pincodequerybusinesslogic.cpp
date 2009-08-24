@@ -1,5 +1,6 @@
 #include "pincodequerybusinesslogic.h"
 #include <SIM>
+#include <SIMLock>
 #include <DuiLocale>
 #include <DuiButton>
 #include <DuiTextEdit>
@@ -44,6 +45,7 @@ namespace {
     QString PUKCodeIncorrectSIMCardPermanentlyBlocked = trid("qtn_cell_sim_rejected" , "SIM card rejected."); //Should this be different?
     QString PINCodeChanged = trid("qtn_cell_pin_code_changed" , "PIN code changed.");
     QString PINCodesDoNotMatch = trid("qtn_cell_codes_not_match" , "Codes do not match.");
+    QString SIMUnlocked = trid("qtn_cell_sim_unlocked" , "SIM card unlocked");
 }
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
@@ -81,6 +83,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
     sim = new SIM();
     simId = new SIMIdentity();
     simSec = new SIMSecurity();        
+    simLock = new SIMLock();
 
     qRegisterMetaType<SIM::SIMStatus>("SIM::SIMStatus");
     qRegisterMetaType<SIMError>("SIMError");
@@ -97,8 +100,8 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
             this, SLOT(simPUKAttemptsLeft(int, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(changePINComplete(bool, SIMError)),
             this, SLOT(simPINCodeChanged(bool, SIMError)), Qt::QueuedConnection);
-
-
+    connect(simLock, SIGNAL(simLockUnlockComplete(SIMLockError)),
+            this, SLOT(simLockUnlockCodeVerified(SIMLockError)));
 
     // bootstrap the state machine
     previousSimState = -1;
@@ -123,7 +126,9 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
     delete simId;
     simId = NULL;
     delete simSec;
-    simSec = NULL;    
+    simSec = NULL;
+    delete simLock;
+    simLock = NULL;
 }
 
 void PinCodeQueryBusinessLogic::nothing()
@@ -203,6 +208,7 @@ void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 }
 void PinCodeQueryBusinessLogic::ui2PUKOk()
 {
+    qDebug() << "PUK OK";
     // new pin needed!
     subState = SubEnterNewPIN;
 
@@ -250,7 +256,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     else if(button->objectName() == QString("enterButton")) {
         switch(previousSimState) {
         case SIM::SIMLockRejected:
-            ; // XXX simSec->
+            simLock->simLockUnlock(SIMLock::LevelGlobal, uiPin->getCodeEntry()->text());
         break;
         case SIM::PINRequired:            
             simSec->verifyPIN(SIMSecurity::PIN, uiPin->getCodeEntry()->text());
@@ -419,16 +425,14 @@ void PinCodeQueryBusinessLogic::simStatusComplete(SIM::SIMStatus status, SIMErro
 {
     qDebug() << "sim status completed" << status;
 
-    checkSIMError(error);
-
-    if (error == SIMErrorNone)
+    if (handleSIMError(error))
         simStatusChanged(status);
 }
 
 
 void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
 {   
-    checkSIMError(error);       
+    handleSIMError(error);
 
     if(!success) {
         if (error == SIMErrorWrongPassword)
@@ -443,20 +447,24 @@ void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 {
     qDebug() << "puk code verified ";
 
-    checkSIMError(error);
+    handleSIMError(error);
 
     if(!success && error == SIMErrorWrongPassword) {
         simSec->pukAttemptsLeft(SIMSecurity::PUK);
-    }
-    else
-        ui2disappear();
+    }  
+}
+
+void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
+{
+    if(handleSIMLockError(error))
+        uiNotif->showNotification(SIMUnlocked);
+
+    //what is the next SIMStatus?
 }
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 {
-    checkSIMError(error);
-
-    if(error == SIMErrorNone)
+    if(handleSIMError(error))
         ui2PINFailed(attempts);
     //else
     //    ; // XXX
@@ -464,7 +472,7 @@ void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
 {
-    checkSIMError(error);
+    handleSIMError(error);
 
     // warnings...
     attempts++;
@@ -474,7 +482,7 @@ void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
 {
-    checkSIMError(error);
+    handleSIMError(error);
 
     if(success) {
         uiNotif->showNotification(PINCodeChanged);
@@ -482,10 +490,13 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
     }
 }
 
-void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
+bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
 {
+    bool success = false;
+
     switch(error) {
     case SIMErrorNone:
+        success = true;
         break;
     case SIMErrorNoSIM:
         uiNotif->showNotification(SIMCardNotInserted);
@@ -493,7 +504,7 @@ void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
     case SIMErrorPINDisabled:
     case SIMErrorCodeBlocked:
     case SIMErrorWrongPassword:
-        // not a real error case.
+        // no need to show notification
         break;
     case SIMErrorSIMRejected:
         uiNotif->showNotification(SIMCardRejected);
@@ -513,4 +524,34 @@ void PinCodeQueryBusinessLogic::checkSIMError(SIMError error)
         uiNotif->showNotification(TechnicalProblem);
         break;
     }
+    return success;
+}
+
+bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
+{
+    bool success = false;
+
+    switch(error) {
+    case SIMLockErrorNone: /*!< Returned when no error happened and operation completed successfully */
+    case SIMLockErrorAlreadyOpened: /*!< SIMlock already opened */
+        success = true;
+        break;
+    case SIMLockErrorWrongPassword: /*!< Incorrect unlock code */
+
+        // NOTIFICATION NEEDED. VAPPU WILL PROVIDE.
+
+        break;
+    case SIMLockErrorBusCommunication: /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
+    case SIMLockErrorInvalidParameter: /*!< Invalid parameter values */
+    case SIMLockErrorModemNotReady: /*!< Cellular modem not ready */
+    case SIMLockErrorWrongLevel: /*!< Requested level not found */
+    case SIMLockErrorNotAllowed: /*!< Action not allowed. E.g. the lock does not exist */
+    case SIMLockErrorTimerNotElapsed: /*!< Unlocking timer not elapsed (too fast retry) */
+    case SIMLockErrorUnknown: /*!< General SIM lock unlocking failure */
+    default:
+        //not necessarily to be shown to end user
+        uiNotif->showNotification(TechnicalProblem);
+        break;
+    }
+    return success;
 }
