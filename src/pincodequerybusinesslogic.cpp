@@ -280,6 +280,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
                     subState = SubEnterNewPIN;
                     uiPin->setHeader(trid("qtn_cell_enter_new_pin",
                                           "Enter new PIN code"));
+                    uiNotif->showNotification(PINCodesDoNotMatch);
                 }
             }
         break;
