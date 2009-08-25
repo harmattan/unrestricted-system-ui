@@ -46,6 +46,7 @@ namespace {
     QString PINCodeChanged = trid("qtn_cell_pin_code_changed" , "PIN code changed.");
     QString PINCodesDoNotMatch = trid("qtn_cell_codes_not_match" , "Codes do not match.");
     QString SIMUnlocked = trid("qtn_cell_sim_unlocked" , "SIM card unlocked");
+    QString SIMLocked = trid("qtn_cell_sim_lock_notification", "This SIM card can not be qtn_cell_sim_lock_notification used in the device.");
 }
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
@@ -142,15 +143,13 @@ void PinCodeQueryBusinessLogic::nothing()
 // =======================================
 
 void PinCodeQueryBusinessLogic::ui2SIMLocked()
-{
-    if (SIMhotswapped)
-        uiNotif->showNotification(SIMCardInserted);
-
+{    
     uiPin->getCancelBtn()->setEnabled(true);
     win->show();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
+    uiNotif->showNotification(SIMLocked);
 }
 void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 {
