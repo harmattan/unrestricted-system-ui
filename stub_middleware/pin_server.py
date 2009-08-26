@@ -72,6 +72,11 @@ TIMEOUT = 1*1000
 class WrongPassword(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
 
+class  AlreadyOpened(dbus.DBusException):
+    _dbus_error_name = 'com.nokia.csd.SIM.Error.AlreadyOpened'
+
+class  WrongLevel(dbus.DBusException):
+    _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongLevel'
 
 
 class EmergencyServer(dbus.service.Object):
@@ -112,6 +117,16 @@ class Server(dbus.service.Object):
 
         self.pin = '4321'
 
+        self.LOCK_STATES = [
+            'Unknown',
+            'Ok',
+            'Restricted',
+            'RestrictionPending',
+            'RestrictionOn',
+            ]
+        self.lock_idx = 1
+
+
         return True
 
     @dbus.service.method('com.nokia.csd.SIM')
@@ -121,9 +136,9 @@ class Server(dbus.service.Object):
                 self.mode_idx = idx
                 self.SIMStatus(self.SIM_MODES[idx])
 
+
     # interface: com.nokia.csd.SIM
     # ============================
-
 
     def on_getsimstatus(label): pass
 
@@ -205,6 +220,26 @@ class Server(dbus.service.Object):
             return True
         raise WrongPassword('')
 
+    # interface: com.nokia.csd.SIM.SIMLock
+    # =====================================
+
+    @dbus.service.method('com.nokia.csd.SIM.SIMLock')
+    def GetSIMLockStatus(self):
+        return self.LOCK_STATES[self.lock_idx]
+
+    @dbus.service.method('com.nokia.csd.SIM.SIMLock')
+    def UnlockSIMLock(self, level, code):
+        print 'unlock sim', level, code
+        if level != 7: # 'Global?'
+            raise WrongLevel('')
+        if code != '987':
+            raise WrongPassword('')
+        if self.SIM_MODES[self.mode_idx] == 'SIMLockRejected':
+            self.SetState('NotReady')
+            self.SetState('PINRequired')
+        print 'ok'
+        return True
+
 
 def set_text_color(widget, color):
     widget.modify_fg (gtk.STATE_NORMAL ,
@@ -242,7 +277,6 @@ class UserInterface:
         frame.add(tmp)
         frame = tmp
         
-        liststore = gtk.ListStore(gobject.TYPE_STRING)
         mode = gtk.combo_box_new_text()
         for m in self.server.SIM_MODES:
             mode.append_text(m)
@@ -261,6 +295,22 @@ class UserInterface:
         verify.connect('clicked', cb_verify_code_req)
         frame.add(verify)
 
+        lock = gtk.CheckButton('SIM lock')
+        def callback(widget):
+            lock = False
+            if self.server.LOCK_STATES[self.server.lock_idx] == 'Ok':
+                self.server.lock_idx += 1
+                lock = True
+            else:
+                self.server.lock_idx -= 1
+                
+            self.server.Reset()
+            if lock:
+                self.server.SetState('SIMLockRejected')
+            else:
+                self.server.SetState('PINRequired')
+        lock.connect('toggled', callback) 
+        frame.add(lock)
 
         # methods
         # =======
