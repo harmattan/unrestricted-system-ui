@@ -474,8 +474,8 @@ void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
 
     // warnings...
     attempts++;
-
-    uiNotif->showNotification(PUKCodeIncorrect);
+    if(attempts > 0) //if no more attempts, showing only the rejected notification
+        uiNotif->showNotification(PUKCodeIncorrect);
 }
 
 void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
