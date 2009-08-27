@@ -29,8 +29,7 @@ namespace {
     QString SIMCardInserted = trid("NOT DOCUMENTED YET", "SIM card inserted.");
     QString SIMCardNotInserted = trid("NOT DOCUMENTED YET" , "SIM card not inserted.");
     QString SIMCardRemoved = trid("NOT DOCUMENTED YET" , "SIM card removed.");
-    QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");
-    QString SIMCardPermanentlyBlocked = trid("NOT DOCUMENTED YET" , "SIM card permanently blocked.");
+    QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");    
     QString EmergencyCallStarting = trid("qtn_cell_emergency_start" , "Starting emergency call.");
     QString EmergencyCallEnded = trid("qtn_cell_emergency_end" , "Emergency call ended.");
 
@@ -42,7 +41,6 @@ namespace {
     QString PINCodeIncorrect1AttemptLeft = trid("qtn_cell_incorrect_pin_1" , "Incorrect PIN code. 1 attempt remaining.");
     QString PINCodeIncorrectPUKCodeRequired = trid("qtn_cell_incorrect_pin_0" , "Incorrect PIN code. SIM locked with PUK code.");
     QString PUKCodeIncorrect = trid("qtn_cell_incorrect_puk" , "Incorrect PUK code.");
-    QString PUKCodeIncorrectSIMCardPermanentlyBlocked = trid("qtn_cell_sim_rejected" , "SIM card rejected."); //Should this be different?
     QString PINCodeChanged = trid("qtn_cell_pin_code_changed" , "PIN code changed.");
     QString PINCodesDoNotMatch = trid("qtn_cell_codes_not_match" , "Codes do not match.");
     QString SIMUnlocked = trid("qtn_cell_sim_unlocked" , "SIM card unlocked");
@@ -202,7 +200,7 @@ void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 {
-    uiNotif->showNotification(SIMCardPermanentlyBlocked);
+    uiNotif->showNotification(SIMCardRejected);
     ui2disappear();
 }
 void PinCodeQueryBusinessLogic::ui2PUKOk()
