@@ -2,6 +2,7 @@
 #define UNLOCKSLIDER_H
 
 #include <DuiSlider>
+#include <QBasicTimer>
 
 class UnlockSlider : public DuiSlider
 {
@@ -13,11 +14,19 @@ public:
 
 public slots:
     void reset();
+    void pressed();
     void released();
     void moved(int val);
 
 signals:
     void unlocked();
+
+protected:
+    void timerEvent(QTimerEvent *event);
+
+private:
+    QBasicTimer timer;
+    int resetVelocity;
 };
 
 #endif // UNLOCKSLIDER_H

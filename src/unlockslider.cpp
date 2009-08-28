@@ -1,7 +1,11 @@
 #include "unlockslider.h"
 
+const int RESET_RATE(15);
+const int RESET_TIME(300);
+
 UnlockSlider::UnlockSlider(DuiWidget *parent, const QString &viewType) :
-        DuiSlider(parent, viewType)
+        DuiSlider(parent, viewType),
+        resetVelocity(0)
 {
     setRange(0, 100);
     setValue(0);
@@ -16,17 +20,42 @@ UnlockSlider::~UnlockSlider()
 
 void UnlockSlider::reset()
 {
+    resetVelocity = 0;
+    timer.stop();
     setValue(0);
+}
+
+void UnlockSlider::pressed()
+{
+    timer.stop();
 }
 
 void UnlockSlider::released()
 {
-    reset();
+    resetVelocity = -1;
+    timer.start(RESET_RATE, this);
 }
 
 void UnlockSlider::moved(int val)
 {
     if (val > 99) {
+        qDebug() << "unlocked";
         emit unlocked();
     }
 }
+
+void UnlockSlider::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == timer.timerId()) {
+        resetVelocity *= 2;
+        int pos = value() + resetVelocity;
+
+        if (pos < 1)  {
+            reset();
+        }
+
+        setValue(pos);
+        update();
+    }
+}
+
