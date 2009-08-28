@@ -2,6 +2,7 @@
 #define LOCKSCREENUI_H
 
 #include <DuiApplicationPage>
+#include <QBasicTimer>
 
 class DuiLabel;
 class DuiImage;
@@ -24,14 +25,18 @@ public:
     void toggleSleepMode(bool toggle);
 
 public slots:
-    void buttonReleased();
-    void buttonPressed();
+    void unlocked();
     void orientationChanged(const Dui::Orientation &orientation);
 
 private:
-/*
+    void timerEvent(QTimerEvent *event);
+    void updateDateTime();
+
+private:
+
     DuiLabel *timeLabel; // qtn_scrlock_current_time
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
+/*
     DuiImage *missedCallsImage;
     DuiImage *unreadMessagesImage;
     DuiImage *unreadChatMessagesImage;
@@ -44,6 +49,9 @@ private:
 */
     DuiGridLayoutPolicy *p_policy;
     DuiGridLayoutPolicy *l_policy;
+
+    QBasicTimer timer;
+    bool timerAdjusting;
 };
 
 #endif // LOCKSCREENUI_H
