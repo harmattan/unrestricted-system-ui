@@ -7,7 +7,7 @@
 #include <QDebug>
 
 namespace {    
-    QString Dir = "/tmp"; //TODO: Change the dir  value
+    QString Dir = "/battery/settings"; //TODO: Change the dir value if necessary
 }
 
 BatteryGConf::BatteryGConf()

@@ -26,18 +26,7 @@ BatteryWidget::~BatteryWidget()
 void BatteryWidget::initWidget()
 {
     //create gconf if
-    batteryGConf = new BatteryGConf();
-    connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey, QVariant)),
-            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));
-
-    //testing purposes
-    batteryGConf->setValue(BatteryGConf::RemainingTalkTimeKey, QVariant(140));
-    batteryGConf->setValue(BatteryGConf::RemainingStandByTimeKey, QVariant(300));
-    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(20));
-    QList<QVariant> values;
-    values << QVariant(10) << QVariant(20) << QVariant(30) << QVariant(60) << QVariant(90) << QVariant(120) << QVariant(150) << QVariant(180) << QVariant(210);
-    batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, values);
-    batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(true));
+    batteryGConf = new BatteryGConf();    
 
     //create talkTimeLayout
     DuiLayout *talkTimeLayout = new DuiLayout(0);
@@ -120,6 +109,21 @@ void BatteryWidget::initWidget()
     connect(disablePSMButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 
+    // catch system actions
+    connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey, QVariant)),
+            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));
+
+    // for testing purposes
+    /*
+    batteryGConf->setValue(BatteryGConf::RemainingTalkTimeKey, QVariant(140));
+    batteryGConf->setValue(BatteryGConf::RemainingStandByTimeKey, QVariant(300));
+    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(20));
+    QList<QVariant> values;
+    values << QVariant(10) << QVariant(20) << QVariant(30) << QVariant(60) << QVariant(90) << QVariant(120) << QVariant(150) << QVariant(180) << QVariant(210);
+    batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, values);
+    batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(true));
+    */
+
     this->setLayout(mainLayout);
 }
 
@@ -137,7 +141,7 @@ void BatteryWidget::initSlider()
 
 void BatteryWidget::sliderValueChanged(int newValue)
 {    
-    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, sliderValues.at(newValue)); 
+    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, sliderValues.at(newValue));
 }
 
 void BatteryWidget::buttonPressed()
@@ -158,7 +162,7 @@ void BatteryWidget::buttonPressed()
 }
 
 void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value)
-{
+{   
     switch(key) {
         case BatteryGConf::PSMToggleKey:
             updateButton(PSMButton, value.toBool());
@@ -166,7 +170,7 @@ void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value
         case BatteryGConf::PSMDisabledKey:
             updateButton(disablePSMButton, value.toBool());
             break;
-        case BatteryGConf::PSMThresholdKey:            
+        case BatteryGConf::PSMThresholdKey: 
             updateSliderLabel(minutesInString(value.toInt(), DcpBattery::PSMThresholdValueText));            
             break;
         case BatteryGConf::RemainingTalkTimeKey:
@@ -183,11 +187,11 @@ void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value
             break;
         default:
             break;
-    }
+    }    
 }
 
-QString BatteryWidget::minutesInString(int time, QString pattern)
-{    
+QString BatteryWidget::minutesInString(int mins, QString pattern)
+{       
     //removing possible extra "!! " from in front
     QString patternCut = pattern.right(pattern.length() - pattern.indexOf("%1"));
     //saving possible extra "!! " from in front
@@ -195,13 +199,13 @@ QString BatteryWidget::minutesInString(int time, QString pattern)
 
     QStringList list = patternCut.split("%1", QString::SkipEmptyParts);
 
-    if(time < 60)
-        return QString("%1%2%3").arg(prefix).arg(time).arg(list.at(0).trimmed());
+    if(mins < 60)
+        return QString("%1%2%3").arg(prefix).arg(mins).arg(list.at(0).trimmed());
     else {
-        QVariant minutes = time%60;
+        QVariant minutes = mins%60;
         if(minutes.toInt() == 0)
             minutes = "00";
-        return QString("%1%2:%3%4").arg(prefix).arg(time/60).arg(minutes.toString()).arg(list.at(1).trimmed());
+        return QString("%1%2:%3%4").arg(prefix).arg(mins/60).arg(minutes.toString()).arg(list.at(1).trimmed());
     }
 }
 
@@ -217,7 +221,7 @@ void BatteryWidget::updateButton(DuiButton *button, bool toggle)
 
 void BatteryWidget::updateSliderLabel(const QString &text)
 {    
-    slider->setThumbLabel(text); 
+    slider->setThumbLabel(text);
     //temp duiLabel (as long as the duiSlider doesn't support thumbLabel)
     sliderLabel->setText(text);    
 }
@@ -229,5 +233,5 @@ void BatteryWidget::updateLabel(DuiLabel *label, const QString &text)
 
 void BatteryWidget::updateBatteryIcon(bool charging, int level)
 {
+    //TODO: implement the battery icon
 }
-
