@@ -7,6 +7,9 @@
 #include <DuiApplicationWindow>
 #include <DuiMenu>
 #include <DuiNavigationBar>
+#include <call-ui/calluiserviceapi.h>
+
+using namespace CallUi;
 
 /*! The pincode query business logic object is the glue object between
  * SIM and pincode query UI widgets. It knows something about both ends.
@@ -248,7 +251,9 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
     DuiButton* button = static_cast<DuiButton*>(this->sender());
     if(button->objectName() == QString("emergencyCallButton")) {
-        uiNotif->showNotification(EmergencyCallStarting);
+        CallUiServiceApi* callUi = new CallUiServiceApi();
+        callUi->Call(NULL, code);
+        delete callUi;
     }
     else if(button->objectName() == QString("enterButton")) {
         switch(previousSimState) {

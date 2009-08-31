@@ -6,7 +6,8 @@ CONFIG += dui \
     cellular-qt
 LIBS += -lsystem \
     -lduihome \
-    -lX11
+    -lX11 \
+    -lcallui0
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \
