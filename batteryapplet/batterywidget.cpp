@@ -2,7 +2,6 @@
 #include "batterytranslation.h"
 #include "dcpbattery.h"
 #include "dcpspaceritem.h"
-#include "batterygconf.h"
 
 #include <DuiButton>
 #include <DuiLayout>
@@ -27,30 +26,32 @@ BatteryWidget::~BatteryWidget()
 void BatteryWidget::initWidget()
 {
     //create gconf if
-    initBatteryGConf();
+    batteryGConf = new BatteryGConf();
+    connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey, QVariant)),
+            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));
 
     //testing purposes
-    batteryGConf->setRemainingTalkTime(140);
-    batteryGConf->setRemainingStandByTime(340);
-    batteryGConf->setPSMThreshold(20);
-    QList<int> values;
-    values << 10 << 20 << 30 << 60 << 90 << 120 << 150 << 180 << 210;
-    batteryGConf->setPSMThresholdValues(values);
-    batteryGConf->setPSMToggle(true);
+    batteryGConf->setValue(BatteryGConf::RemainingTalkTimeKey, QVariant(140));
+    batteryGConf->setValue(BatteryGConf::RemainingStandByTimeKey, QVariant(300));
+    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(20));
+    QList<QVariant> values;
+    values << QVariant(10) << QVariant(20) << QVariant(30) << QVariant(60) << QVariant(90) << QVariant(120) << QVariant(150) << QVariant(180) << QVariant(210);
+    batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, values);
+    batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(true));
 
     //create talkTimeLayout
     DuiLayout *talkTimeLayout = new DuiLayout(0);
     DuiGridLayoutPolicy *talkTimeLayoutPolicy = new DuiGridLayoutPolicy(talkTimeLayout);
     //TODO add the charging icon to position 0, 0, 1, 2
     talkTimeLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::TalkTimeText), 0, 1);
-    talkTimeLabel = new DuiLabel(timeInString(batteryGConf->remainingTalkTime(), DcpBattery::TalkTimeValueText));
+    talkTimeLabel = new DuiLabel(minutesInString(batteryGConf->value(BatteryGConf::RemainingTalkTimeKey).toInt(), DcpBattery::TalkTimeValueText));
     talkTimeLayoutPolicy->addItemAtPosition(talkTimeLabel, 1, 1);
 
     //create standByTimeLayout
     DuiLayout *standByTimeLayout = new DuiLayout(0);
     DuiLinearLayoutPolicy *standByTimeLayoutPolicy = new DuiLinearLayoutPolicy(standByTimeLayout, Qt::Vertical);
     standByTimeLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::StandByTimeText), 0);
-    standByTimeLabel = new DuiLabel(timeInString(batteryGConf->remainingStandByTime(), DcpBattery::StandByTimeValueText));
+    standByTimeLabel = new DuiLabel(minutesInString(batteryGConf->value(BatteryGConf::RemainingStandByTimeKey).toInt(), DcpBattery::StandByTimeValueText));
     standByTimeLayoutPolicy->addItemAtPosition(standByTimeLabel, 1);
 
     //create PSMLayout
@@ -60,7 +61,7 @@ void BatteryWidget::initWidget()
     PSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::NBCText), 1, 0);
     PSMButton = new DuiButton();
     PSMButton->setCheckable(true);
-    updateButton(PSMButton, batteryGConf->PSMToggle());
+    updateButton(PSMButton, batteryGConf->value(BatteryGConf::PSMToggleKey).toBool());
     PSMLayoutPolicy->addItemAtPosition(PSMButton, 0, 1, 2, 1);   
 
     //create upperLayout and put talkTimeLayot, standByTimeLayout and PSMLayout into it
@@ -75,7 +76,7 @@ void BatteryWidget::initWidget()
     DuiLinearLayoutPolicy *disablePSMLayoutPolicy = new DuiLinearLayoutPolicy(disablePSMLayout, Qt::Horizontal);
     disablePSMButton = new DuiButton();
     disablePSMButton->setCheckable(true);
-    updateButton(disablePSMButton, batteryGConf->PSMDisabled());
+    updateButton(disablePSMButton, batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool());
     disablePSMLayoutPolicy->addItemAtPosition(disablePSMButton, 0);
     disablePSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::DisablePSMText), 1);
 
@@ -87,7 +88,7 @@ void BatteryWidget::initWidget()
     lowerLayoutPolicy->addItemAtPosition(disablePSMLayout, 2);
     
     //temp duiLabel (as long as the duiSlider doesn't support thumbLabel)
-    sliderLabel = new DuiLabel(timeInString(batteryGConf->PSMThreshold(), DcpBattery::PSMThresholdValueText));
+    sliderLabel = new DuiLabel(minutesInString(batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt(), DcpBattery::PSMThresholdValueText));
     lowerLayoutPolicy->addItemAtPosition(sliderLabel, 3);
 
     initSlider();    
@@ -116,41 +117,37 @@ void BatteryWidget::initWidget()
     this->setLayout(mainLayout);    
 }
 
-void BatteryWidget::initBatteryGConf()
-{
-    //define the slots that catch the changing GConf key values
-    QHash<BatteryGConf::GConfKey, QString> keysAndSlots;
-    keysAndSlots.insert(BatteryGConf::RemainingTalkTimeKey, "RemainingTalkTimeChanged");
-    keysAndSlots.insert(BatteryGConf::RemainingStandByTimeKey, "RemainingTalkStandByChanged");
-    keysAndSlots.insert(BatteryGConf::BatteryLevelKey, "BatteryLevelChanged");
-    keysAndSlots.insert(BatteryGConf::ChargingKey, "ChargingChanged");
-
-    batteryGConf = new BatteryGConf(this, keysAndSlots);
-}
-
 void BatteryWidget::initSlider()
 {
     slider = new DuiSlider();
 
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 
-    sliderValues = batteryGConf->PSMThresholdValues();
+    sliderValues = (batteryGConf->value(BatteryGConf::PSMThresholdValuesKey)).toList();
     slider->setRange(0,sliderValues.size()-1);
-    slider->setValue(sliderValues.indexOf(batteryGConf->PSMThreshold()));        
-    slider->setThumbLabel(timeInString(batteryGConf->PSMThreshold(), DcpBattery::PSMThresholdValueText));
+    slider->setValue(sliderValues.indexOf(batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()));
+    slider->setThumbLabel(minutesInString(batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt(), DcpBattery::PSMThresholdValueText));
     slider->setThumbLabelVisible(true);
     slider->setOrientation(Qt::Horizontal);
 }
 
 void BatteryWidget::sliderValueChanged(int newValue)
 {
-    slider->setThumbLabel(timeInString(sliderValues.at(newValue), DcpBattery::PSMThresholdValueText));
+    slider->setThumbLabel(minutesInString(sliderValues.at(newValue).toInt(), DcpBattery::PSMThresholdValueText));
 
     //temp duiLabel (as long as the duiSlider doesn't support thumbLabel)
-    sliderLabel->setText(timeInString(sliderValues.at(newValue), DcpBattery::PSMThresholdValueText));
+    sliderLabel->setText(minutesInString(sliderValues.at(newValue).toInt(), DcpBattery::PSMThresholdValueText));
+
+}
+void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value)        
+{
+    switch(key) {
+        default:
+        break;
+    }
 }
 
-QString BatteryWidget::timeInString(int time, QString pattern)
+QString BatteryWidget::minutesInString(int time, QString pattern)
 {
     //removing possible extra "!! " from in front
     QString patternCut = pattern.right(pattern.length() - pattern.indexOf("%1"));
@@ -177,8 +174,4 @@ void BatteryWidget::updateButton(DuiButton *button, bool toggle)
     else
         button->setText("OFF");
     button->setChecked(toggle);
-}
-
-void BatteryWidget::BatteryPSMToggleChanged(QString key, bool value)
-{
 }

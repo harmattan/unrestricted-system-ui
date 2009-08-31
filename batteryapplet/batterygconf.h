@@ -1,57 +1,45 @@
 #ifndef BATTERYGCONF_H
 #define BATTERYGCONF_H
 
-#include <QList>
 #include <QHash>
 #include <QObject>
+#include <QVariant>
 
-class DuiConf;
+class DuiGConfItem;
 
-class BatteryGConf
+class BatteryGConf : public QObject
 {
-
+    Q_OBJECT
 public:
 
     enum GConfKey {
         PSMToggleKey,
         PSMDisabledKey,
-        PSMThresholdKey,
-        PSMThresholdValueCountKey,
-        PSMThresholdValueNKey,
+        PSMThresholdKey,        
+        PSMThresholdValuesKey,
         RemainingTalkTimeKey,
         RemainingStandByTimeKey,
         BatteryLevelKey,
-        ChargingKey
-
-        //PSMThersholdValues are set only once and won't be changed
+        ChargingKey   
     };
 
-    BatteryGConf(QObject *listener, QHash<BatteryGConf::GConfKey, QString> &keysAndSlots);
+    BatteryGConf();
     virtual ~BatteryGConf();
 
-    void setPSMToggle(bool toggle);
-    void setPSMDisabled(bool disabled);
-    void setPSMThreshold(int threshold);
-    void setPSMThresholdValues(QList<int> values);
-    void setRemainingTalkTime(int time);
-    void setRemainingStandByTime(int time);
-    void setBatteryLevel(int level);
-    void setCharging(bool charging);    
+    void setValue(BatteryGConf::GConfKey, QVariant value);
+    QVariant value(BatteryGConf::GConfKey);
 
-    bool PSMToggle();
-    bool PSMDisabled();
-    int PSMThreshold();
-    QList<int> PSMThresholdValues();
-    int remainingTalkTime();
-    int remainingStandByTime();
-    int batteryLevel();
-    bool charging();
+signals:    
+    void valueChanged(BatteryGConf::GConfKey key, QVariant value);
+
+private slots:
+    void keyValueChanged();
 
 private: //methods
     QString mapGConfKey(BatteryGConf::GConfKey key);
 
 private: //attributes
-    DuiConf *duiConf;    
+    QHash <BatteryGConf::GConfKey, DuiGConfItem *> duiGConfItems;
 
 };
 

@@ -2,11 +2,11 @@
 #define BATTERYWIDGET_H
 
 #include "dcpwidget.h" 
+#include "batterygconf.h"
 
 class DuiLabel;
 class DuiButton;
 class DuiSlider;
-class BatteryGConf;
 
 class BatteryWidget : public DcpWidget
 {
@@ -19,16 +19,13 @@ public:
 protected:
     void initWidget();
 
-public slots:    
-    void BatteryPSMToggleChanged(QString key, bool value);
-
 private slots:
     void sliderValueChanged(int newValue);
+    void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
 
 private: //methods
-    void initSlider();
-    void initBatteryGConf();
-    QString timeInString(int time, QString pattern);
+    void initSlider();    
+    QString minutesInString(int time, QString pattern);
     void updateButton(DuiButton *button, bool toggle);    
 
 private: //attributes
@@ -38,7 +35,7 @@ private: //attributes
     DuiButton *PSMButton;
     DuiButton *disablePSMButton;   
     DuiSlider *slider;
-    QList<int> sliderValues;
+    QList<QVariant> sliderValues;
     BatteryGConf *batteryGConf;
 
 };

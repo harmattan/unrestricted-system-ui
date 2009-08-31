@@ -3,141 +3,53 @@
 //temp
 #include "batterygconflistener.h"
 
-#include <DuiConf>
-#include <QVariant>
+#include <DuiGConfItem>
 #include <QDebug>
 
 namespace {    
     QString Dir = "/tmp"; //TODO: Change the dir  value
 }
 
-BatteryGConf::BatteryGConf(QObject *listener, QHash<BatteryGConf::GConfKey, QString> &keysAndSlots)
-{
-    duiConf = new DuiConf(Dir,true);
+BatteryGConf::BatteryGConf()
+{    
+    // init the gconf keys
+    duiGConfItems.insert(BatteryGConf::PSMToggleKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMToggleKey)));
+    duiGConfItems.insert(BatteryGConf::PSMDisabledKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMDisabledKey)));
+    duiGConfItems.insert(BatteryGConf::PSMThresholdKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdKey)));
+    duiGConfItems.insert(BatteryGConf::PSMThresholdValuesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdValuesKey)));
+    duiGConfItems.insert(BatteryGConf::RemainingTalkTimeKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingTalkTimeKey)));
+    duiGConfItems.insert(BatteryGConf::RemainingStandByTimeKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingStandByTimeKey)));
+    duiGConfItems.insert(BatteryGConf::BatteryLevelKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatteryLevelKey)));
+    duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));
 
-    //temp
-    BatteryGConfListener *listener2 = new BatteryGConfListener();
-    duiConf->notifyAdd("/tmp/zuke", listener2, "test");
-    float jaakko = 2.0;
-    duiConf->set("/tmp/zuke", jaakko);
-
-    QHash<BatteryGConf::GConfKey,QString>::const_iterator i;
-    for (i = keysAndSlots.begin(); i != keysAndSlots.end(); ++i)
-        duiConf->notifyAdd(mapGConfKey(i.key()), listener, i.value().toLatin1());
+    QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
+    for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
+        connect( i.value(), SIGNAL(valueChanged()), this, SLOT(keyValueChanged()));
 }
 
 BatteryGConf::~BatteryGConf()
 {    
-    delete duiConf;
-    duiConf = NULL;    
+    QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
+    for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i) {
+        delete i.value();
+        i.value() = NULL;
+    }  
 }
 
-void BatteryGConf::setPSMToggle(bool toggle)
-{    
-    duiConf->set(mapGConfKey(BatteryGConf::PSMToggleKey), toggle);
-}
-
-void BatteryGConf::setPSMDisabled(bool disabled)
+void BatteryGConf::keyValueChanged()
 {
-    duiConf->set(mapGConfKey(BatteryGConf::PSMDisabledKey), disabled);
+    DuiGConfItem *duiGConfItem = static_cast<DuiGConfItem*>(this->sender());
+    emit valueChanged(duiGConfItems.key(duiGConfItem), duiGConfItem->value());
 }
 
-void BatteryGConf::setPSMThreshold(int threshold)
+void BatteryGConf::setValue(BatteryGConf::GConfKey key, QVariant value)
 {
-    duiConf->set(mapGConfKey(BatteryGConf::PSMThresholdKey), threshold);
+    duiGConfItems[key]->set(value);
 }
 
-void BatteryGConf::setPSMThresholdValues(QList<int> values)
-{    
-    duiConf->set(mapGConfKey(BatteryGConf::PSMThresholdValueCountKey), values.size());
-    QString key(mapGConfKey(BatteryGConf::PSMThresholdValueNKey));
-    for (int i = 0; i < values.size(); ++i)
-        duiConf->set(key.arg(i), values.at(i));        
-
-}
-
-void BatteryGConf::setRemainingTalkTime(int time)
+QVariant BatteryGConf::value(BatteryGConf::GConfKey key)
 {
-    duiConf->set(mapGConfKey(BatteryGConf::RemainingTalkTimeKey), time);
-}
-
-void BatteryGConf::setRemainingStandByTime(int time)
-{
-    duiConf->set(mapGConfKey(BatteryGConf::RemainingStandByTimeKey), time);
-}
-
-void BatteryGConf::setBatteryLevel(int level)
-{
-    duiConf->set(mapGConfKey(BatteryGConf::BatteryLevelKey), level);
-}
-
-void BatteryGConf::setCharging(bool charging)
-{
-    duiConf->set(mapGConfKey(BatteryGConf::ChargingKey), charging);
-}
-
-bool BatteryGConf::PSMToggle()
-{
-    QVariant toggle;
-    duiConf->getValue(mapGConfKey(BatteryGConf::PSMToggleKey), toggle);
-    return toggle.toBool();
-}
-
-bool BatteryGConf::PSMDisabled()
-{
-    QVariant disabled;
-    duiConf->getValue(mapGConfKey(BatteryGConf::PSMDisabledKey), disabled);
-    return disabled.toBool();
-}
-
-int BatteryGConf::PSMThreshold()
-{
-    QVariant threshold;
-    duiConf->getValue(mapGConfKey(BatteryGConf::PSMThresholdKey), threshold);
-    return threshold.toInt();
-}
-
-QList<int> BatteryGConf::PSMThresholdValues()
-{
-    QVariant count;
-    QVariant value;
-    QList<int> values;
-
-    duiConf->getValue(mapGConfKey(BatteryGConf::PSMThresholdValueCountKey), count);
-    QString key(mapGConfKey(BatteryGConf::PSMThresholdValueNKey));
-    for (int i = 0; i < count.toInt(); ++i) {
-        duiConf->getValue(key.arg(i), value);
-        values << value.toInt();
-    }
-    return values;
-}
-
-int BatteryGConf::remainingTalkTime()
-{
-    QVariant time;
-    duiConf->getValue(mapGConfKey(BatteryGConf::RemainingTalkTimeKey), time);
-    return time.toInt();
-}
-
-int BatteryGConf::remainingStandByTime()
-{
-    QVariant time;
-    duiConf->getValue(mapGConfKey(BatteryGConf::RemainingStandByTimeKey), time);
-    return time.toInt();
-}
-
-int BatteryGConf::batteryLevel()
-{
-    QVariant level;
-    duiConf->getValue(mapGConfKey(BatteryGConf::BatteryLevelKey), level);
-    return level.toInt();
-}
-
-bool BatteryGConf::charging()
-{
-    QVariant charging;
-    duiConf->getValue(mapGConfKey(BatteryGConf::ChargingKey), charging);
-    return charging.toBool();
+    return duiGConfItems[key]->value();
 }
 
 QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
@@ -153,12 +65,9 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
         case BatteryGConf::PSMThresholdKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMThreshold");
         break;
-        case BatteryGConf::PSMThresholdValueCountKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryPSMThresholdValueCount");
-        break;
-        case BatteryGConf::PSMThresholdValueNKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryPSMThresholdValue%1");
-        break;
+        case BatteryGConf::PSMThresholdValuesKey:
+            keyStr = keyStr.arg(Dir).arg("/BatteryPSMThresholdValues");
+        break;        
         case BatteryGConf::RemainingTalkTimeKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryTalkTime");
             break;
