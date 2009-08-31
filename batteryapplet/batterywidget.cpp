@@ -181,5 +181,4 @@ void BatteryWidget::updateButton(DuiButton *button, bool toggle)
 
 void BatteryWidget::BatteryPSMToggleChanged(QString key, bool value)
 {
-    qDebug() << "JAKAKAKAKKA: " << key << " JAKJKAJKJJKA " << value;
 }
