@@ -132,6 +132,7 @@ void PinCodeQueryBusinessLogic::nothing()
 void PinCodeQueryBusinessLogic::ui2SIMLocked()
 {    
     uiPin->getCancelBtn()->setEnabled(true);
+    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
@@ -144,9 +145,9 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
         uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
+    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
-    uiPin->getEmergencyBtn()->hide();
 }
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
@@ -173,9 +174,10 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
     if (SIMhotswapped)
         uiNotif->showNotification(SIMCardInserted);
 
+    uiPin->getCancelBtn()->setEnabled(true);
+    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
-    uiPin->getCancelBtn()->setEnabled(true);
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 {
@@ -235,6 +237,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
         delete callUi;
     }
     else if(button->objectName() == QString("enterButton")) {
+        uiPin->getEmergencyBtn()->hide();
         switch(previousSimState) {
         case SIM::SIMLockRejected:
             simLock->simLockUnlock(SIMLock::LevelGlobal, uiPin->getCodeEntry()->text());
