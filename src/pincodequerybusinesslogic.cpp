@@ -201,6 +201,7 @@ void PinCodeQueryBusinessLogic::ui2PUKOk()
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
+    uiPin->getCodeEntry()->setText("");
     uiPin->disappear();
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
@@ -274,7 +275,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     }
     else if(button->objectName() == QString("cancelButton")) {
         // regardless of the state - just exit.
-        uiPin->disappear();
+        ui2disappear();
     }
 }
 
@@ -471,7 +472,7 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
 
     if(success) {
         uiNotif->showNotification(PINCodeChanged);
-        uiPin->disappear();
+        ui2disappear();
     }
 }
 
@@ -523,6 +524,7 @@ bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
         break;
     case SIMLockErrorWrongPassword: /*!< Incorrect unlock code */
 
+        uiNotif->showNotification("NOTIFICATION NEEDED. VAPPU WILL PROVIDE.");
         // NOTIFICATION NEEDED. VAPPU WILL PROVIDE.
 
         break;
