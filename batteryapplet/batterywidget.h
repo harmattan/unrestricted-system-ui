@@ -7,6 +7,7 @@
 class DuiLabel;
 class DuiButton;
 class DuiSlider;
+class DuiImage;
 
 class BatteryWidget : public DcpWidget
 {
@@ -39,6 +40,7 @@ private: //attributes
     DuiButton *PSMButton;
     DuiButton *disablePSMButton;   
     DuiSlider *slider;
+    DuiImage *chargingImage;
     QList<QVariant> sliderValues;
     BatteryGConf *batteryGConf;
 
