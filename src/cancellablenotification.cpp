@@ -55,7 +55,7 @@ void CancellableNotification::updateText()
         appearTime--;
         QString notifText = notifTextPattern;
         notifText.replace(appearTimeVariable, number);
-        mb = new DuiMessageBox(notifText, DuiMessageBoxModel::Cancel);
+        mb = new DuiMessageBox(notifText, DuiMessageBox::Cancel);
         connect(mb, SIGNAL(rejected()), this, SIGNAL(cancelled()));
         mb->appear();
     }
