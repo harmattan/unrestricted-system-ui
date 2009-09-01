@@ -51,7 +51,6 @@ public:
     virtual ~PinCodeQueryBusinessLogic();
 
 private: // attributes
-    DuiApplicationWindow *win;
     PinCodeQueryUI *uiPin;
     Notifier *uiNotif;
     QString newPinCode;

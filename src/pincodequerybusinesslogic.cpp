@@ -54,18 +54,6 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
     qDebug() << "business logic";
 
-    win = new DuiApplicationWindow();
-
-    Qt::WindowFlags flags = 0;
-	flags |= Qt::FramelessWindowHint;
-
-    win->setWindowFlags(flags);
-    
-    win->menu()->disappear();
-    win->navigationBar()->disappear();
-    win->setWindowOpacity(0);
-    win->setVisible(false);
-
     EmergencyNumbers emeNums;
     QStringList emergencyNumbers = emeNums.numbers();
 
@@ -121,8 +109,6 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
     uiNotif = NULL;
     delete uiPin;
     uiPin = NULL;
-    delete win;
-    win = NULL;
     delete sim;
     sim = NULL;
     delete simId;
@@ -146,7 +132,6 @@ void PinCodeQueryBusinessLogic::nothing()
 void PinCodeQueryBusinessLogic::ui2SIMLocked()
 {    
     uiPin->getCancelBtn()->setEnabled(true);
-    win->show();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
@@ -159,9 +144,6 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
         uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
-    win->show();
-    win->menu()->disappear();
-    win->navigationBar()->disappear();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
     uiPin->getEmergencyBtn()->hide();
@@ -191,7 +173,6 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
     if (SIMhotswapped)
         uiNotif->showNotification(SIMCardInserted);
 
-    win->show();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
     uiPin->getCancelBtn()->setEnabled(true);
@@ -218,8 +199,6 @@ void PinCodeQueryBusinessLogic::ui2PUKOk()
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
-    //win->hide();
-    //uiPin->hide();    
     uiPin->disappear();
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
@@ -301,7 +280,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
 void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
 {
-    qDebug() << "sim status changed" << next;
+    qDebug() << "sim status changed" << next << "from" << previousSimState;
 
     switch (previousSimState) {
     case -1: { // bootstrap

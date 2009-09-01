@@ -20,6 +20,7 @@ PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers)
 {
     this->emergencyNumbers = emergencyNumbers;   
     setFullscreen(true);
+    setNavigationBarVisible(false);
     setTitle("PIN code query:");
     createContent();
 }
