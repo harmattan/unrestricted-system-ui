@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QHash>
 #include <QObject>
+#include <QDebug>
 
 
 // TODO.: Use the logical names when available
