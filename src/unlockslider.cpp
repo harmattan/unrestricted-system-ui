@@ -1,5 +1,7 @@
 #include "unlockslider.h"
 
+#include <QDebug>
+
 const int RESET_RATE(15);
 const int RESET_TIME(300);
 
