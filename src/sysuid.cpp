@@ -1,6 +1,8 @@
 #include <DuiLocale>
 #include <DuiTheme>
 
+#include <QDebug>
+
 #include "sysuid.h"
 
 Sysuid::Sysuid() : QObject()
