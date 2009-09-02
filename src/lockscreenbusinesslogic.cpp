@@ -1,5 +1,5 @@
+#include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
-
 
 LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
 {
@@ -24,6 +24,10 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
     display = NULL;
     delete eventEater;
     eventEater = NULL;
+    if (lockUI) {
+        delete lockUI;
+        lockUI = NULL;
+    }
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
@@ -42,8 +46,17 @@ void LockScreenBusinessLogic::shortPowerKeyPressOccured()
 
 void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
 {
-    if(!toggle)
+    if(!toggle) {
         emit lockScreenOff();
+        if (lockUI) {
+            delete lockUI;
+            lockUI = NULL;
+        }
+    }
+    else {
+        lockUI = new LockScreenUI;
+        connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
+    }
 
     screenLock = toggle;
 }
@@ -73,6 +86,12 @@ void LockScreenBusinessLogic::sleepModeOff()
     if(sleepMode)
         toggleSleepMode(false);
 }
+
+void LockScreenBusinessLogic::unlockScreen()
+{
+    toggleScreenLock(false);
+}
+
 
 void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
 {

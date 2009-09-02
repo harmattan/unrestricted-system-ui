@@ -18,14 +18,17 @@ public:
     LockScreenUI();
     virtual ~LockScreenUI();
     virtual void createContent();
-
+/*
     bool screenLock();
     void toggleScreenLock(bool toggle);
     bool sleepMode();
     void toggleSleepMode(bool toggle);
+*/
+signals:
+    void unlocked();
 
 public slots:
-    void unlocked();
+    void sliderUnlocked();
     void orientationChanged(const Dui::Orientation &orientation);
 
 private:

@@ -41,7 +41,7 @@ void UnlockSlider::released()
 void UnlockSlider::moved(int val)
 {
     if (val > 99) {
-        qDebug() << "unlocked";
+//        qDebug() << "unlocked";
         emit unlocked();
     }
 }

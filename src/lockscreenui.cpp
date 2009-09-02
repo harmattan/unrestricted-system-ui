@@ -20,6 +20,7 @@ LockScreenUI::LockScreenUI()
     setNavigationBarVisible(false);
     setPannableAreaInteractive(false);
     createContent();
+    appear();
 }
 
 LockScreenUI::~LockScreenUI()
@@ -42,6 +43,7 @@ void LockScreenUI::createContent()
     slider->setVisible(true);
 
     timeLabel = new DuiLabel(this);
+    timeLabel->setObjectName("lockscreenTimeLabel");
     dateLabel = new DuiLabel(this);
     updateDateTime();
 
@@ -50,8 +52,8 @@ void LockScreenUI::createContent()
     l_policy->addItemAtPosition(dateLabel, 2, 1, 1, 2);
     l_policy->addItemAtPosition(slider,    5, 2, 1, 5);
 
-    int w = DuiSceneManager::instance()->visibleSceneRect().width();
-    int h = DuiSceneManager::instance()->visibleSceneRect().height();
+    int w = DuiSceneManager::instance()->visibleSceneSize().width();
+    int h = DuiSceneManager::instance()->visibleSceneSize().height();
 
     for (int i=0; i<9; i++) {
         l_policy->setColumnFixedWidth(i, w/9);
@@ -60,9 +62,10 @@ void LockScreenUI::createContent()
         l_policy->setRowFixedHeight(i, h/7);
     }
 
-    orientationChanged(DuiSceneManager::instance()->orientation());
+    l_policy->activate();
+    //    orientationChanged(DuiSceneManager::instance()->orientation());
 
-    connect(slider, SIGNAL(unlocked()), this, SLOT(unlocked()));
+    connect(slider, SIGNAL(unlocked()), this, SLOT(sliderUnlocked()));
 
     connect(DuiSceneManager::instance(),
         SIGNAL(orientationChanged(const Dui::Orientation &)),
@@ -70,12 +73,13 @@ void LockScreenUI::createContent()
 
     QTime t(QTime::currentTime());
     timerAdjusting = true;
-    timer.start((60 - t.second()) * 1000 + 1100, this);
+    timer.start((60 - t.second()) + 1000, this);
 }
 
-void LockScreenUI::unlocked()
+void LockScreenUI::sliderUnlocked()
 {
     disappear();
+    emit unlocked();
 }
 
 void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)

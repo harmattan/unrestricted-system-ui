@@ -7,6 +7,7 @@
 
 #include <QObject>
 
+class LockScreenUI;
 
 using namespace Maemo;
 
@@ -24,6 +25,7 @@ signals:
 public slots:
     void shortPowerKeyPressOccured();
     void sleepModeOff();
+    void unlockScreen();
 
 private slots:    
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
@@ -38,7 +40,9 @@ private: //attributes
     bool screenLock;
     bool sleepMode;
     QmLocks *touchPadLocker;
-    QmDisplayState *display;    
+    QmDisplayState *display;
+
+    LockScreenUI *lockUI;
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H
