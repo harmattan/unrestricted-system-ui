@@ -238,7 +238,17 @@ void PinCodeQueryUI::checkEntry()
     //check if the entered opin code is an emergency call phone number
     if( emergencyNumbers.contains(pinCode) ) {
         emergencyCallButton->setVisible(true);
-        entryTextEdit->setMaskedInput(false);
+/*
+        (2.9.2009 / tt) temporary fix for
+
+        Program received signal SIGSEGV, Segmentation fault.
+        0xb7288c4a in ?? () from /usr/lib/libQtGui.so.4
+        (gdb) bt
+        #0  0xb7288c4a in ?? () from /usr/lib/libQtGui.so.4
+        #1  0xbff1e228 in ?? ()
+        #2  0xb727bedc in QTextDocument::docHandle () from /usr/lib/libQtGui.so.4
+*/
+        //entryTextEdit->setMaskedInput(false);
     }
     else if(emergencyCallButton->isVisible()) {
         emergencyCallButton->setVisible(false);
