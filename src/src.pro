@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     lockscreenui.cpp \
     unlockslider.cpp \
     eventhandler.cpp \
-    eventeater.cpp
+    eventeater.cpp \
+    ../batteryapplet/batterygconf.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -31,7 +32,8 @@ HEADERS += main.h \
     lockscreenui.h \
     unlockslider.h \
     eventhandler.h \
-    eventeater.h
+    eventeater.h \
+    ../batteryapplet/batterygconf.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery

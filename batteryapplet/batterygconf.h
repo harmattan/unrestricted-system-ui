@@ -20,7 +20,8 @@ public:
         RemainingTalkTimeKey,
         RemainingStandByTimeKey,
         BatteryLevelKey,
-        ChargingKey   
+        ChargingKey,
+        BatterySystemSettingInUseKey
     };
 
     BatteryGConf();

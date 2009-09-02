@@ -29,9 +29,10 @@ private: //methods
     void initSlider();    
     QString minutesInString(int mins, QString pattern);
     void updateButton(DuiButton *button, bool toggle);
-    void updateSliderLabel(const QString &text);
+    void updateSlider(const QString &text);
     void updateLabel(DuiLabel *label, const QString &text);
     void updateBatteryIcon(bool charging, int level);
+    void togglePSMWidgets(bool enable);
 
 private: //attributes
     DuiLabel *talkTimeLabel;
@@ -43,6 +44,8 @@ private: //attributes
     DuiImage *chargingImage;
     QList<QVariant> sliderValues;
     BatteryGConf *batteryGConf;
+
+    DuiLabel *chLabel; //temp
 
 };
 #endif // BATTERYWIDGET_H

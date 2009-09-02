@@ -2,6 +2,8 @@
 
 #include "unlockslider.h"
 
+#include <QDebug>
+
 #include <DuiLabel>
 #include <DuiImage>
 #include <DuiButton>

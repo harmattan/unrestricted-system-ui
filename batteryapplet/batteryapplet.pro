@@ -12,13 +12,11 @@ HEADERS = batteryapplet.h \
     batterywidget.h \
     batterytranslation.h \
     batterybrief.h \
-    batterygconf.h \
-    batterygconflistener.h
+    batterygconf.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
-    batterygconf.cpp \
-    batterygconflistener.cpp
+    batterygconf.cpp 
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

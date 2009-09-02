@@ -1,8 +1,5 @@
 #include "batterygconf.h"
 
-//temp
-#include "batterygconflistener.h"
-
 #include <DuiGConfItem>
 #include <QDebug>
 
@@ -21,6 +18,7 @@ BatteryGConf::BatteryGConf()
     duiGConfItems.insert(BatteryGConf::RemainingStandByTimeKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingStandByTimeKey)));
     duiGConfItems.insert(BatteryGConf::BatteryLevelKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatteryLevelKey)));
     duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));
+    duiGConfItems.insert(BatteryGConf::BatterySystemSettingInUseKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatterySystemSettingInUseKey)));
 
     QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -79,6 +77,11 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
             break;
         case BatteryGConf::ChargingKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryCharging");
+            break;
+        case BatteryGConf::BatterySystemSettingInUseKey:
+            keyStr = keyStr.arg(Dir).arg("/BatteryBatterySystemSettingInUse");
+            break;
+        default:
             break;
     }
     return keyStr;
