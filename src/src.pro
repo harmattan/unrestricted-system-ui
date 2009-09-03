@@ -5,7 +5,6 @@ target.path = /usr/bin
 CONFIG += dui \
     cellular-qt
 LIBS += -lsystem \
-    -lduihome \
     -lX11 \
     -lcallui0
 SOURCES += main.cpp \
