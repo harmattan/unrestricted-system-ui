@@ -1,3 +1,12 @@
+cellular-ui (0.1.0-3) unstable; urgency=low
+
+  * Fixes: NB#134117 - PIN is not rejected after 3 tries
+  * Fixes: NB#134119 - PUK is not rejected after 10 tries
+  * Fixes: NB#134122 - Correct PUK does not do anything
+  * Fixes: NB#135824 - The upper bar of the window that contains the X..
+
+ -- Matti Katila <matti.katila@ixonos.com>  Thu, 03 Sep 2009 12:21:57 +0300
+
 cellular-ui (0.1.0-2) unstable; urgency=low
 
   * Non-maintainer upload.

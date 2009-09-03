@@ -1,8 +1,8 @@
 Source: cellular-ui
 Section: devel
 Priority: optional
-Maintainer: Ossi Jormakka <ossi.jormakka@ixonos.com>
-Build-Depends: debhelper (>= 5), libcellular-qt-dev, libdui-dev
+Maintainer: Matti Katila <matti.katila@ixonos.com>
+Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev, libqmsystem-dev
 Standards-Version: 3.7.3
 
 Package: cellular-ui
