@@ -16,9 +16,9 @@
 #include <QTimer>
 #include <QDebug>
 
-PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers)
+PinCodeQueryUI::PinCodeQueryUI()
 {
-    this->emergencyNumbers = emergencyNumbers;   
+    qDebug() << "PinCodeQueryUI()";
     setFullscreen(true);
     setNavigationBarVisible(false);
     setTitle("PIN code query:");
@@ -27,6 +27,33 @@ PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers)
 
 PinCodeQueryUI::~PinCodeQueryUI()
 {
+    qDebug() << "~PinCodeQueryUI";
+
+    if(backspaceTimer != NULL) {
+        //we stop timing the press event
+        backspaceTimer->stop();
+        delete backspaceTimer;
+        backspaceTimer = NULL;
+    }
+
+    delete emergencyCallButton;
+    emergencyCallButton = NULL;
+    delete enterButton;
+    enterButton = NULL;
+    delete cancelButton;
+    cancelButton = NULL;
+    delete backspaceButton;
+    backspaceButton = NULL;
+    delete headerLabel;
+    headerLabel = NULL;
+    delete entryTextEdit;
+    entryTextEdit = NULL;
+    delete numpadLayout;
+    numpadLayout = NULL;
+    delete portraitPolicy;
+    portraitPolicy = NULL;
+    delete landscapePolicy;
+    landscapePolicy = NULL;
 }
 
 void PinCodeQueryUI::createContent()
@@ -47,7 +74,7 @@ void PinCodeQueryUI::createContent()
 
     //attach widget items to landscape and portrait policies
     landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
-    landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
+    landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 2);
     landscapePolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     landscapePolicy->addItemAtPosition(backspaceButton, 2, 3, 1, 1);
     landscapePolicy->addItemAtPosition(enterButton, 3, 0, 1, 2);
@@ -126,8 +153,6 @@ void PinCodeQueryUI::createWidgetItems()
     emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")), 0 );
     emergencyCallButton->setObjectName("emergencyCallButton");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
-    qDebug() << "hiding emergenceCall button" ;
-    emergencyCallButton->setVisible(false);
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
     entryTextEdit->setObjectName("codeEntry");
@@ -190,7 +215,6 @@ void PinCodeQueryUI::buttonReleased()
     if(button->objectName().left(button->objectName().length()-1) == "numpadButton") {
         entryTextEdit->insert(button->objectName().right(1));
         qDebug() << "text now: " << entryTextEdit->text();
-        checkEntry(); //Check the current entry
     }
 
     //Check if the button was backspace
@@ -202,7 +226,6 @@ void PinCodeQueryUI::buttonReleased()
             backspaceTimer = NULL;
         }
         entryTextEdit->setText(entryTextEdit->text().left(entryTextEdit->text().length()-1));
-        checkEntry(); //Check the current entry
     }
 }
 
@@ -228,38 +251,9 @@ void PinCodeQueryUI::removeText()
     entryTextEdit->setText("");
 }
 
-void PinCodeQueryUI::checkEntry()
-{
-    if(emergencyCallButton == NULL)
-        return;
-
-    QString pinCode = entryTextEdit->text();
-
-    //check if the entered opin code is an emergency call phone number
-    if( emergencyNumbers.contains(pinCode) ) {
-        emergencyCallButton->setVisible(true);
-/*
-        (2.9.2009 / tt) temporary fix for
-
-        Program received signal SIGSEGV, Segmentation fault.
-        0xb7288c4a in ?? () from /usr/lib/libQtGui.so.4
-        (gdb) bt
-        #0  0xb7288c4a in ?? () from /usr/lib/libQtGui.so.4
-        #1  0xbff1e228 in ?? ()
-        #2  0xb727bedc in QTextDocument::docHandle () from /usr/lib/libQtGui.so.4
-*/
-        //entryTextEdit->setMaskedInput(false);
-    }
-    else if(emergencyCallButton->isVisible()) {
-        emergencyCallButton->setVisible(false);
-        entryTextEdit->setMaskedInput(true);
-    }
-
-}
-
 void PinCodeQueryUI::orientationChanged(const Dui::Orientation &orientation)
 {
-     qDebug() << "OrientationChanged" ;
+    qDebug() << "orientationChanged";
     if (orientation == Dui::Portrait) {
         portraitPolicy->activate();
     } else {

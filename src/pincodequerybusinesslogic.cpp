@@ -8,6 +8,7 @@
 #include <DuiMenu>
 #include <DuiNavigationBar>
 #include <call-ui/calluiserviceapi.h>
+//#include <DuiQueryDialog>
 
 using namespace CallUi;
 
@@ -35,6 +36,9 @@ namespace {
     QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");    
     QString EmergencyCallStarting = trid("qtn_cell_emergency_start" , "Starting emergency call.");
     QString EmergencyCallEnded = trid("qtn_cell_emergency_end" , "Emergency call ended.");
+    QString EmergencyCallHeader = trid("NOT DOCUMENTED YET" , "Start Emergency call?");
+    QString EmergencyCallYes = trid("NOT DOCUMENTED YET" , "Yes");
+    QString EmergencyCallNo = trid("NOT DOCUMENTED YET" , "No");
 
     /* At the moment this contains several error case that may pop up from SIM library.
        It needs to be clarified, which of those and how are they going to be reported
@@ -54,11 +58,8 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
     qDebug() << "business logic";
 
-    EmergencyNumbers emeNums;
-    QStringList emergencyNumbers = emeNums.numbers();
-
     uiNotif = new Notifier();
-    uiPin = new PinCodeQueryUI(emergencyNumbers);
+    uiPin = new PinCodeQueryUI();
     DuiButton *uiPinEmergency = uiPin->getEmergencyBtn();
     DuiButton *uiPinCancel = uiPin->getCancelBtn();
     DuiButton *uiPinEnter = uiPin->getEnterBtn();
@@ -123,6 +124,23 @@ void PinCodeQueryBusinessLogic::nothing()
 {
 }
 
+void PinCodeQueryBusinessLogic::doEmergencyCall()
+{
+/*  Temporarily disabled. See bug 137103
+
+    DuiQueryDialog* query = new DuiQueryDialog(EmergencyCallHeader);
+    DuiButton yes = query->addButton(EmergencyCallYes);
+    DuiButton no = query->addButton(EmergencyCallNo);
+    query->exec();
+    if(yes == query->clickedButton())
+*/    {
+        CallUiServiceApi* callUi = new CallUiServiceApi();
+        callUi->Call(NULL, NULL);
+        delete callUi;
+    }
+//    delete query;
+}
+
 
 
 // =======================================
@@ -132,7 +150,6 @@ void PinCodeQueryBusinessLogic::nothing()
 void PinCodeQueryBusinessLogic::ui2SIMLocked()
 {    
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
@@ -145,7 +162,6 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
         uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
 }
@@ -175,7 +191,6 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
         uiNotif->showNotification(SIMCardInserted);
 
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->getEmergencyBtn()->hide();
     uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
 }
@@ -233,12 +248,9 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
     DuiButton* button = static_cast<DuiButton*>(this->sender());
     if(button->objectName() == QString("emergencyCallButton")) {
-        CallUiServiceApi* callUi = new CallUiServiceApi();
-        callUi->Call(NULL, code);
-        delete callUi;
+        doEmergencyCall();
     }
     else if(button->objectName() == QString("enterButton")) {
-        uiPin->getEmergencyBtn()->hide();
         switch(previousSimState) {
         case SIM::SIMLockRejected:
             simLock->simLockUnlock(SIMLock::LevelGlobal, uiPin->getCodeEntry()->text());

@@ -17,7 +17,7 @@ class  PinCodeQueryUI : public DuiApplicationPage
     Q_OBJECT
 
 public:
-    PinCodeQueryUI(QStringList emergencyNumbers);
+    PinCodeQueryUI();
     virtual ~ PinCodeQueryUI();
     virtual void createContent();
 
@@ -37,7 +37,6 @@ private slots:
 private: //methods
     void createWidgetItems();
     void createNumpad();
-    void checkEntry();
 
 private: //attributes
     DuiButton *emergencyCallButton;
@@ -50,8 +49,6 @@ private: //attributes
     DuiGridLayoutPolicy *portraitPolicy;
     DuiGridLayoutPolicy *landscapePolicy;
     QTimer *backspaceTimer;
-    QStringList emergencyNumbers;
-
 };
 
 #endif //  PINCODEQUERYUI_H

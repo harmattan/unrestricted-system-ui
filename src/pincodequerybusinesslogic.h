@@ -70,6 +70,7 @@ private: // methods
 
     // "empty" state changes.
     void nothing();
+    void doEmergencyCall();
 
     void ui2SIMLocked();
     void ui2firstPINAttempt();
