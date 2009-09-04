@@ -8,6 +8,7 @@ class DuiLabel;
 class DuiButton;
 class DuiSlider;
 class DuiImage;
+class QTimer;
 
 class BatteryWidget : public DcpWidget
 {
@@ -24,28 +25,29 @@ private slots:
     void sliderValueChanged(int newValue);
     void buttonPressed();
     void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
+    void updateImage(bool charging = true, int level = -1);
 
 private: //methods
-    void initSlider();    
+    void initSlider();
+    void initImage();
     QString minutesInString(int mins, QString pattern);
     void updateButton(DuiButton *button, bool toggle);
     void updateSlider(const QString &text);
-    void updateLabel(DuiLabel *label, const QString &text);
-    void updateBatteryIcon(bool charging, int level);
+    void updateLabel(DuiLabel *label, const QString &text);    
     void togglePSMWidgets(bool enable);
 
 private: //attributes
     DuiLabel *talkTimeLabel;
-    DuiLabel *standByTimeLabel;
-    DuiLabel *sliderLabel;//temp duiLabel (as long as the duiSlider doesn't support thumbLabel)
+    DuiLabel *standByTimeLabel;    
     DuiButton *PSMButton;
     DuiButton *disablePSMButton;   
     DuiSlider *slider;
-    DuiImage *chargingImage;
+    DuiImage *image;
     QList<QVariant> sliderValues;
-    BatteryGConf *batteryGConf;
-
-    DuiLabel *chLabel; //temp
+    QStringList batteryImages;
+    QStringList batteryChargingImages;
+    QTimer *imageUpdateTimer;
+    BatteryGConf *batteryGConf;    
 
 };
 #endif // BATTERYWIDGET_H

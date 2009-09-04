@@ -16,7 +16,7 @@ HEADERS = batteryapplet.h \
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
-    batterygconf.cpp 
+    batterygconf.cpp
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

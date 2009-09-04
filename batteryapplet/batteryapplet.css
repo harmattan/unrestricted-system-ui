@@ -1,24 +1,34 @@
-#LabelBrightness {
-        color: #FFFFFF;
-        font: font("Nokia Sans Cn", 16);
+#PSMButton {
+	preferred-size: size(35, 35);
+	minimum-size: size(35, 35);
+	maximum-size: size(35, 35);
 }
 
-#LabelScreen {
-        color: #FFFFFF;
-        font: font("Nokia Sans Cn", 16);
+#disablePSMButton {
+	preferred-size: size(35, 35);
+	minimum-size: size(35, 35);
+	maximum-size: size(35, 35);
 }
 
-#LabelScreenLight {
-        color: #FFFFFF;
-        font: font("Nokia Sans Cn", 16);
+#layoutWidget1 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: size(400, 50);
+	minimum-size: size(400, 50);
+	maximum-size: size(400, 50);
+}
+#layoutWidget2 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: size(807, 150);
+	minimum-size: size(807, 150);
+	maximum-size: size(807, 150);
+}
+#layoutWidget3 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: size(807, 150);	
+	minimum-size: size(807, 150);
+	maximum-size: size(807, 150);
 }
 
-#ScreenToggleButton {
-        preferredSize: size(35, 35);
-
-        minsize: size(35, 35);
-        maxsize: size(35, 35);
-
-        normal-background-image: scalable(Toggle-on,0,0,0,0);
-        pressed-background-image: scalable(Toggle-off,0,0,0,0);
-}
