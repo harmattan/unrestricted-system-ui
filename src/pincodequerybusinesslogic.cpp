@@ -8,7 +8,6 @@
 #include <DuiMenu>
 #include <DuiNavigationBar>
 #include <call-ui/calluiserviceapi.h>
-//#include <DuiQueryDialog>
 
 using namespace CallUi;
 
@@ -37,8 +36,6 @@ namespace {
     QString EmergencyCallStarting = trid("qtn_cell_emergency_start" , "Starting emergency call.");
     QString EmergencyCallEnded = trid("qtn_cell_emergency_end" , "Emergency call ended.");
     QString EmergencyCallHeader = trid("NOT DOCUMENTED YET" , "Start Emergency call?");
-    QString EmergencyCallYes = trid("NOT DOCUMENTED YET" , "Yes");
-    QString EmergencyCallNo = trid("NOT DOCUMENTED YET" , "No");
 
     /* At the moment this contains several error case that may pop up from SIM library.
        It needs to be clarified, which of those and how are they going to be reported
@@ -69,7 +66,6 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
     connect(uiPinEmergency, SIGNAL(released()), this, SLOT(uiButtonReleased()));
     connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
     connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
-
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -126,19 +122,16 @@ void PinCodeQueryBusinessLogic::nothing()
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-/*  Temporarily disabled. See bug 137103
-
-    DuiQueryDialog* query = new DuiQueryDialog(EmergencyCallHeader);
-    DuiButton yes = query->addButton(EmergencyCallYes);
-    DuiButton no = query->addButton(EmergencyCallNo);
-    query->exec();
-    if(yes == query->clickedButton())
-*/    {
+    boolean call = false;
+    /*  TODO:
+     *  Yes - No dialog required: EmergencyCallHeader
+     */
+    if(call)
+    {
         CallUiServiceApi* callUi = new CallUiServiceApi();
         callUi->Call(NULL, NULL);
         delete callUi;
     }
-//    delete query;
 }
 
 
