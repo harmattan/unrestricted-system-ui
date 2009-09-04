@@ -5,6 +5,7 @@
 #include "notifier.h"
 
 #include <QObject>
+#include <QPointer>
 #include <SIM>
 #include <SIMLock>
 #include <EmergencyNumbers>
@@ -20,6 +21,8 @@ public:
 
     /** Sub states are mini states to keep user interface going while
      * SIM state does not change.
+     * enum SIMStatus { UnknownStatus, Ok, NoSIM, PermanentlyBlocked,
+     *                  NotReady, PINRequired, PUKRequired, Rejected, SIMLockRejected };
      */
     enum SubStates {
         SubNothing,
@@ -51,7 +54,7 @@ public:
     virtual ~PinCodeQueryBusinessLogic();
 
 private: // attributes
-    PinCodeQueryUI *uiPin;
+    QPointer<PinCodeQueryUI> uiPin;
     Notifier *uiNotif;
     QString newPinCode;
 
@@ -68,6 +71,7 @@ private: // methods
     bool handleSIMError(SIMError error);
     bool handleSIMLockError(SIMLockError error);
 
+    void createUi();
     // "empty" state changes.
     void nothing();
     void doEmergencyCall();
