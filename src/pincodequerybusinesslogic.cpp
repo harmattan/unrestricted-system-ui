@@ -122,7 +122,7 @@ void PinCodeQueryBusinessLogic::nothing()
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-    boolean call = false;
+    bool call = false;
     /*  TODO:
      *  Yes - No dialog required: EmergencyCallHeader
      */
