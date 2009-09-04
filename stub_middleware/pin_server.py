@@ -182,6 +182,7 @@ class Server(dbus.service.Object):
             self.pin = newpin
 	    if self.SIM_MODES[self.mode_idx] == 'PUKRequired':
                 self.puk_attempts_left = 10
+                self.pin_attempts_left = 3
                 self.SetState('Ok')
             return True
         if self.puk_attempts_left == 0:
