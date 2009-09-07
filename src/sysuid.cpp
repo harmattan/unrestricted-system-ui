@@ -20,12 +20,19 @@ Sysuid::Sysuid() : QObject()
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();
-    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(checkBattery()));
-    connect(batteryLogic, SIGNAL(charging()), lockScreenLogic, SLOT(sleepModeOff()));
+    connect(lockScreenLogic, SIGNAL(lockScreenOff()),
+            batteryLogic, SLOT(checkBattery()));
+    connect(batteryLogic, SIGNAL(charging()),
+            lockScreenLogic, SLOT(sleepModeOff()));
 
     /* Event handler */
     eventHandler = new EventHandler();
-    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
+    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()),
+            lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
+
+    shutdownLogic = new ShutdownDialogBusinessLogic();
+    connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
+            shutdownLogic, SLOT(openDialog(bool)));
 
 }
 
@@ -37,4 +44,7 @@ Sysuid::~Sysuid()
     batteryLogic = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
+
+    delete shutdownLogic;
+    shutdownLogic = NULL;
 }

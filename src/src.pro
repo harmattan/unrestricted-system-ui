@@ -19,7 +19,9 @@ SOURCES += main.cpp \
     unlockslider.cpp \
     eventhandler.cpp \
     eventeater.cpp \
-    ../batteryapplet/batterygconf.cpp
+    ../batteryapplet/batterygconf.cpp \
+    shutdowndialog.cpp \
+    shutdowndialogbusinesslogic.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -32,7 +34,9 @@ HEADERS += main.h \
     unlockslider.h \
     eventhandler.h \
     eventeater.h \
-    ../batteryapplet/batterygconf.h
+    ../batteryapplet/batterygconf.h \
+    shutdowndialog.h \
+    shutdowndialogbusinesslogic.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery

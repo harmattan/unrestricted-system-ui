@@ -49,7 +49,7 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
     if(!toggle) {
         emit lockScreenOff();
         if (lockUI) {
-            delete lockUI;
+            lockUI->deleteLater();
             lockUI = NULL;
         }
     }
