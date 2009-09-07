@@ -35,6 +35,8 @@ import gtk
 import gtk.gdk
 import gobject
 
+from time import sleep
+
 bus = dbus.SystemBus()
 #bus = dbus.SessionBus()
 
@@ -74,7 +76,10 @@ class ServerSig(dbus.service.Object):
         print 'signal emit: display_status_ind:', status
 
 
-
+    @dbus.service.signal(dbus_interface='com.nokia.mce.signal',
+                         signature='si')
+    def sig_hardware_key_state_ind(self, str, integer):
+        print 'signal emit: hw key ind', str, integer
 
 def set_text_color(widget, color):
     widget.modify_fg (gtk.STATE_NORMAL ,
@@ -126,6 +131,33 @@ class UserInterface:
             radio.connect('toggled', cb_display) 
 
             frame.add(radio)
+
+        short = gtk.Button('Short power btn press')
+        def cb_power(widget):
+            # mce-dev -> mce-modes.h -> "up" / "down"
+            # 0 might be power key code.
+            self.serverSig.sig_hardware_key_state_ind('down', 0)
+            sleep(1)
+            self.serverSig.sig_hardware_key_state_ind('up', 0)
+        short.connect('clicked', cb_power)
+        frame.add(short)
+
+        llong = gtk.Button('Long power btn press')
+        def cb_power(widget):
+            self.serverSig.sig_hardware_key_state_ind('down', 0)
+            sleep(3)
+            self.serverSig.sig_hardware_key_state_ind('up', 0)
+        llong.connect('clicked', cb_power)
+        frame.add(llong)
+
+        pwr = gtk.Button('Power btn')
+        def cb_pressed(widget):
+            self.serverSig.sig_hardware_key_state_ind('down', 0)
+        pwr.connect('pressed', cb_pressed)
+        def cb_released(widget):
+            self.serverSig.sig_hardware_key_state_ind('up', 0)
+        pwr.connect('released', cb_released)
+        frame.add(pwr)
 
 
         # methods
