@@ -87,7 +87,11 @@ void BatteryBusinessLogic::initBatteryGConfKeys()
                 //<< QVariant(batteryLevels.value(QmBattery::Level50))
                 //<< QVariant(batteryLevels.value(QmBattery::Level75))
                 << QVariant(batteryLevels.value(QmBattery::LevelFull));
-        batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, levelValues);         
+        batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, levelValues);
+
+        QList<QVariant> timeValues;
+        timeValues << QVariant(0) << QVariant(0);
+        batteryGConf->setValue(BatteryGConf::RemainingTimesKey, timeValues);
     }
     updateRemainingTimes();
 }
