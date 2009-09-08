@@ -35,7 +35,7 @@ void BatteryWidget::initWidget()
     //create gconf if
     batteryGConf = new BatteryGConf();    
 
-    int fullWidth = DuiSceneManager::instance()->visibleSceneRect().width();        
+    int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
 
     /*
      * talkTimeLayoutWidget

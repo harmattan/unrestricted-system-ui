@@ -89,8 +89,8 @@ void PinCodeQueryUI::createContent()
     portraitPolicy->addItemAtPosition(cancelButton, 4, 2, 1, 2);
 
     //set column and row sizes
-    int fullWidth = DuiSceneManager::instance()->visibleSceneRect().width();
-    int fullHeight = DuiSceneManager::instance()->visibleSceneRect().height();
+    int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
+    int fullHeight = DuiSceneManager::instance()->visibleSceneSize().height();
     for(int lsCol=0; lsCol<5; ++lsCol) {
 	if(lsCol < 4)
             landscapePolicy->setColumnFixedWidth(lsCol, fullWidth/8);
