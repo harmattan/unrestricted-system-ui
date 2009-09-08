@@ -174,14 +174,15 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 }
 
 void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
-{       
+{
+    qDebug() << "checkPSMThresghold";
     if(level <= batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()) {
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
            && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
             // Send a notification that can be cancelled.
             // If it's not cancelled, after certain time the notifier emits a signal.
             // We catch this signal to set the PSM
-            connect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
+            connect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));
 
             QHash<QString,QString> staticVariables;
             QString number;
@@ -210,7 +211,7 @@ void BatteryBusinessLogic::togglePSM(bool toggle)
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
            && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
             qDebug() << "Turn ON The PSM";
-            deviceMode->setPSMState(QmDeviceMode::PSMStateOn);            
+            deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
         }
     }
     else { //turn off the PSM
@@ -219,6 +220,8 @@ void BatteryBusinessLogic::togglePSM(bool toggle)
             deviceMode->setPSMState(QmDeviceMode::PSMStateOff);            
         }
     }
+    forceUpdateRemainingTimes = true;
+    updateRemainingTimes();
 }
 
 void  BatteryBusinessLogic::updateRemainingTimes()
@@ -227,13 +230,17 @@ void  BatteryBusinessLogic::updateRemainingTimes()
 
     QList<QVariant> newValues;
 
-    if(batteryGConf->value(BatteryGConf::RemainingTimesKey).toList().at(0).toInt() == -1) {
-        //battery system setting window still in use
+    if(batteryGConf->value(BatteryGConf::RemainingTimesKey).toList().at(0).toInt() == -1 || forceUpdateRemainingTimes) {
+        //battery system setting window still in use        
         updateRemainingTimesBusy = true;
         //TODO: remove the stub values when remaining-methods are in use
         newValues << QVariant(120)/*battery->remainingTalkTime() * 60*/ << QVariant(300) /*battery->remainingStandByTime() * 60 */;
         batteryGConf->setValue(BatteryGConf::RemainingTimesKey, newValues);
-        QTimer::singleShot(10000, this, SLOT(updateRemainingTimes()));
+
+        if(!forceUpdateRemainingTimes) //if we forced, timer already running
+            QTimer::singleShot(10000, this, SLOT(updateRemainingTimes()));
+
+        forceUpdateRemainingTimes = false;
     }
     else {        
         newValues << QVariant(0) << QVariant(0);

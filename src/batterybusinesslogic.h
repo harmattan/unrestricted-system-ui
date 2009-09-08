@@ -30,6 +30,7 @@ private: //attributes
     BatteryGConf *batteryGConf;        
     QHash<QmBattery::Level, int> batteryLevels;
     bool updateRemainingTimesBusy;
+    bool forceUpdateRemainingTimes;
 
 private: //methods
     void initBatteryGConfKeys();
