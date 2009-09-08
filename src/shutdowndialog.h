@@ -9,7 +9,7 @@ class ShutdownDialog : public DuiDialog
     Q_OBJECT
 
 public:
-    ShutdownDialog();
+    ShutdownDialog(const QString &title, StandardButton buttons = NoButton);
     virtual ~ShutdownDialog();
 };
 

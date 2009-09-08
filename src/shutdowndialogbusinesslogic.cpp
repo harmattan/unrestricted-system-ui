@@ -1,4 +1,3 @@
-
 #include <QDebug>
 
 #include "shutdowndialogbusinesslogic.h"
@@ -21,7 +20,8 @@ void ShutdownDialogBusinessLogic::openDialog(bool btnDown)
     if (shutdownDlg != NULL)
         return;
 
-    shutdownDlg = new ShutdownDialog();
+    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"), DuiDialog::NoButton);
+
     qDebug() << "exec";
     shutdownDlg->exec();
 
