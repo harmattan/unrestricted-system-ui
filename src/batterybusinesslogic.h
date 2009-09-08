@@ -27,19 +27,16 @@ private: //attributes
     Notifier *uiNotif;
     QmBattery *battery;
     QmDeviceMode *deviceMode;
-    BatteryGConf *batteryGConf;
-    bool powerSaveMode;
-    QTimer *timer;
+    BatteryGConf *batteryGConf;        
     QHash<QmBattery::Level, int> batteryLevels;
+    bool updateRemainingTimesBusy;
 
 private: //methods
     void initBatteryGConfKeys();
     void checkChargingState();
     void checkBatteryLevel();
-    void togglePSM(bool toggle);
-    void updateTimes();
-    void checkPSMThreshold(Maemo::QmBattery::Level level);
-    void pollTimes(bool toggle);
+    void togglePSM(bool toggle);    
+    void checkPSMThreshold(Maemo::QmBattery::Level level);    
 
 public slots:
     void checkBattery();
@@ -49,6 +46,7 @@ private slots:
     void batteryStateChanged(Maemo::QmBattery::State state);    
     void activatePSM();
     void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
+    void updateRemainingTimes();
 
 };
 

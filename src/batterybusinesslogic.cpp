@@ -11,6 +11,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     battery = new QmBattery();
     deviceMode = new QmDeviceMode();
     batteryGConf = new BatteryGConf();
+    updateRemainingTimesBusy = false;
 
     /* init the battery levels */
     batteryLevels.insert(QmBattery::LevelFull, 100);
@@ -21,9 +22,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     batteryLevels.insert(QmBattery::LevelCritical, 5);
 
     /* check if gconfvalues need to initialized */
-    initBatteryGConfKeys();
-
-    qDebug() << "JAKE: " << batteryLevels.value(QmBattery::LevelFull);
+    initBatteryGConfKeys();    
 
     /* connect to QmSystem signals */
     connect(battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
@@ -67,15 +66,16 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
 
 void BatteryBusinessLogic::initBatteryGConfKeys()
 {
-    if(batteryGConf->value(BatteryGConf::PSMThresholdValuesKey).toList().empty()) {
-        batteryGConf->setValue(BatteryGConf::BatteryLevelKey, QVariant(battery->chargeLevel()));
-        batteryGConf->setValue(BatteryGConf::BatterySystemSettingInUseKey, QVariant(false));
+    if(batteryGConf->keyCount() < 7) {        
+        /* GConf keys have not yet been set. */
+        batteryGConf->setValue(BatteryGConf::BatteryLevelKey, QVariant(battery->chargeLevel()));        
         batteryGConf->setValue(BatteryGConf::ChargingKey, QVariant(battery->isCharging()));
         batteryGConf->setValue(BatteryGConf::PSMDisabledKey, QVariant(false));
-       batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(batteryLevels.value(QmBattery::LevelLow)));
+        batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(batteryLevels.value(QmBattery::LevelLow)));
         batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(deviceMode->getPSMState() == Maemo::QmDeviceMode::PSMStateOn ? true : false));
-        QList<QVariant> values;
-        values << QVariant(batteryLevels.value(QmBattery::LevelCritical))
+
+        QList<QVariant> levelValues;
+        levelValues << QVariant(batteryLevels.value(QmBattery::LevelCritical))
                 << QVariant(batteryLevels.value(QmBattery::LevelLow))
 
                 // TEMP
@@ -87,11 +87,9 @@ void BatteryBusinessLogic::initBatteryGConfKeys()
                 //<< QVariant(batteryLevels.value(QmBattery::Level50))
                 //<< QVariant(batteryLevels.value(QmBattery::Level75))
                 << QVariant(batteryLevels.value(QmBattery::LevelFull));
-
-        batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, QVariant(values));
-
-        updateTimes();
+        batteryGConf->setValue(BatteryGConf::PSMThresholdValuesKey, levelValues);         
     }
+    updateRemainingTimes();
 }
 
 
@@ -134,34 +132,6 @@ void BatteryBusinessLogic::checkBatteryLevel()
     batteryLevelChanged(level);
 
 }
-
-/*
-void BatteryBusinessLogic::remainingTalkTimeChanged(int secondsLeft)
-{  
-    batteryGConf->setValue(BatteryGConf::PSMremainingTalkTime, secondsLeft / 60);
-
-    if(secondsLeft <= batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt() * 60) {
-        if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
-           && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
-            // Send a notification that can be cancelled.
-            // If it's not cancelled, after certain time the notifier emits a signal.
-            // We catch this signal to set the PSM                       
-            connect(uiNotif, SIGNAL(notifTimedOut()), this, SLOT(activatePSM()));
-
-            QHash<QString,QString> staticVariables;
-            QString number;
-            staticVariables.insert(QString("%a"), number.setNum(battery->chargeLevelPercentage()));
-            uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
-                                                 10,
-                                                 QString("%b"),
-                                                 staticVariables);
-        }            
-    }
-    else {
-        togglePSM(false);
-    }
-}
-*/
 
 void BatteryBusinessLogic::batteryStateChanged(Maemo::QmBattery::State state)
 {
@@ -251,27 +221,25 @@ void BatteryBusinessLogic::togglePSM(bool toggle)
     }
 }
 
-void BatteryBusinessLogic::pollTimes(bool toggle)
-{    
-    if(toggle) {
-        updateTimes();
-        timer = new QTimer(0);
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateTimes()));
-        timer->start(10000); //update times every 10th second
-    }
-    else {
-        timer->stop();
-        delete timer;
-        timer = NULL;
-    }
-}
+void  BatteryBusinessLogic::updateRemainingTimes()
+{          
+    qDebug() << "BatteryBusinessLogic::updateRemainingTimes()";
 
-void  BatteryBusinessLogic::updateTimes()
-{
-    //TODO: remove the stub values when remaining-methods are in use
-    qDebug() << "Update TIMES";
-    batteryGConf->setValue(BatteryGConf::RemainingTalkTimeKey, 120/*battery->remainingTalkTime() * 60*/);
-    batteryGConf->setValue(BatteryGConf::RemainingStandByTimeKey, 300 /*battery->remainingStandByTime() * 60 */);
+    QList<QVariant> newValues;
+
+    if(batteryGConf->value(BatteryGConf::RemainingTimesKey).toList().at(0).toInt() == -1) {
+        //battery system setting window still in use
+        updateRemainingTimesBusy = true;
+        //TODO: remove the stub values when remaining-methods are in use
+        newValues << QVariant(120)/*battery->remainingTalkTime() * 60*/ << QVariant(300) /*battery->remainingStandByTime() * 60 */;
+        batteryGConf->setValue(BatteryGConf::RemainingTimesKey, newValues);
+        QTimer::singleShot(10000, this, SLOT(updateRemainingTimes()));
+    }
+    else {        
+        newValues << QVariant(0) << QVariant(0);
+        batteryGConf->setValue(BatteryGConf::RemainingTimesKey, newValues);
+        updateRemainingTimesBusy = false;
+    }
 }
 
 void BatteryBusinessLogic::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value)
@@ -289,11 +257,10 @@ void BatteryBusinessLogic::gConfValueChanged(BatteryGConf::GConfKey key, QVarian
         case BatteryGConf::PSMThresholdKey: // threshold value was changed
             checkPSMThreshold((Maemo::QmBattery::Level)battery->chargeLevel());
             break;
-        case BatteryGConf::BatterySystemSettingInUseKey: // battery system setting is in use
-            if(value.toBool())
-                pollTimes(true);
-            else
-                pollTimes(false);
+        case BatteryGConf::RemainingTimesKey:
+            if(value.toList().at(0).toInt() == -1 && !updateRemainingTimesBusy)
+                updateRemainingTimes();
+            break;
         default:
             break;
     }

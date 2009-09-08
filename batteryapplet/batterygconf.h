@@ -12,23 +12,22 @@ class BatteryGConf : public QObject
     Q_OBJECT
 public:
 
-    enum GConfKey {
+    enum GConfKey {        
         PSMToggleKey,
         PSMDisabledKey,
         PSMThresholdKey,        
         PSMThresholdValuesKey,
-        RemainingTalkTimeKey,
-        RemainingStandByTimeKey,
+        RemainingTimesKey,
         BatteryLevelKey,
-        ChargingKey,
-        BatterySystemSettingInUseKey
-    };
+        ChargingKey
+   };
 
     BatteryGConf();
     virtual ~BatteryGConf();
 
     void setValue(BatteryGConf::GConfKey, QVariant value);
     QVariant value(BatteryGConf::GConfKey);
+    int keyCount();
 
 signals:    
     void valueChanged(BatteryGConf::GConfKey key, QVariant value);

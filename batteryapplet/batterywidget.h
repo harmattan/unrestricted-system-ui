@@ -33,8 +33,9 @@ private: //methods
     QString minutesInString(int mins, QString pattern);
     void updateButton(DuiButton *button, bool toggle);
     void updateSlider(const QString &text);
-    void updateLabel(DuiLabel *label, const QString &text);    
+    void updateLabels(const QList<QVariant> &value);
     void togglePSMWidgets(bool enable);
+    void indicateNeedForUpdatingLabels();
 
 private: //attributes
     DuiLabel *talkTimeLabel;
@@ -45,8 +46,7 @@ private: //attributes
     DuiImage *image;
     QList<QVariant> sliderValues;
     QStringList batteryImages;
-    QStringList batteryChargingImages;
-    QTimer *imageUpdateTimer;
+    QStringList batteryChargingImages;    
     BatteryGConf *batteryGConf;    
 
 };

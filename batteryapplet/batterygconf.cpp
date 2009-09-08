@@ -9,16 +9,14 @@ namespace {
 
 BatteryGConf::BatteryGConf()
 {    
-    // init the gconf keys
+    // init the gconf keys    
     duiGConfItems.insert(BatteryGConf::PSMToggleKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMToggleKey)));
     duiGConfItems.insert(BatteryGConf::PSMDisabledKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMDisabledKey)));
     duiGConfItems.insert(BatteryGConf::PSMThresholdKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdKey)));
     duiGConfItems.insert(BatteryGConf::PSMThresholdValuesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdValuesKey)));
-    duiGConfItems.insert(BatteryGConf::RemainingTalkTimeKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingTalkTimeKey)));
-    duiGConfItems.insert(BatteryGConf::RemainingStandByTimeKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingStandByTimeKey)));
+    duiGConfItems.insert(BatteryGConf::RemainingTimesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingTimesKey)));
     duiGConfItems.insert(BatteryGConf::BatteryLevelKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatteryLevelKey)));
     duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));
-    duiGConfItems.insert(BatteryGConf::BatterySystemSettingInUseKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatterySystemSettingInUseKey)));
 
     QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -32,6 +30,13 @@ BatteryGConf::~BatteryGConf()
         delete i.value();
         i.value() = NULL;
     }  
+}
+
+int BatteryGConf::keyCount()
+{
+    DuiGConfItem duiGConfItem(Dir);
+    QList<QString> list = duiGConfItem.listEntries();
+    return list.size();
 }
 
 void BatteryGConf::keyValueChanged()
@@ -56,31 +61,25 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
     switch(key) {
         case BatteryGConf::PSMToggleKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMToggle");
-        break;
+            break;
         case BatteryGConf::PSMDisabledKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMDisabled");
-        break;
+            break;
         case BatteryGConf::PSMThresholdKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMThreshold");
-        break;
+            break;
         case BatteryGConf::PSMThresholdValuesKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMThresholdValues");
-        break;        
-        case BatteryGConf::RemainingTalkTimeKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryTalkTime");
             break;
-        case BatteryGConf::RemainingStandByTimeKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryStandByTime");
-            break;
+        case BatteryGConf::RemainingTimesKey:
+            keyStr = keyStr.arg(Dir).arg("/BatteryRemainingTimes");
+            break;        
         case BatteryGConf::BatteryLevelKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryLevel");
             break;
         case BatteryGConf::ChargingKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryCharging");
-            break;
-        case BatteryGConf::BatterySystemSettingInUseKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryBatterySystemSettingInUse");
-            break;
+            break;        
         default:
             break;
     }
