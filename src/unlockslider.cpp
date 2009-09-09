@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-const int RESET_RATE(15);
+const int RESET_RATE(200); //15);
 const int RESET_TIME(300);
 
 UnlockSlider::UnlockSlider(DuiWidget *parent, const QString &viewType) :
@@ -49,7 +49,7 @@ void UnlockSlider::moved(int val)
 void UnlockSlider::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == timer.timerId()) {
-        resetVelocity *= 2;
+        resetVelocity *= 1.2;
         int pos = value() + resetVelocity;
 
         if (pos < 1)  {

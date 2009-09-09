@@ -26,7 +26,7 @@ protected:
 
 private:
     QBasicTimer timer;
-    int resetVelocity;
+    float resetVelocity;
 };
 
 #endif // UNLOCKSLIDER_H
