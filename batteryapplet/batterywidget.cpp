@@ -189,7 +189,7 @@ void BatteryWidget::initImage()
 
 
     //Currently the images are hard-coded
-    QString path("/scratchbox/users/jan/targets/harmattan_i386/usr/share/themes/base/dui/libdui/svg/");
+    QString path("/usr/share/themes/base/dui/libdui/svg/");
     batteryImages << QString("%1icon-s-battery-100.svg").arg(path)
             << QString("%1icon-s-battery-80.svg").arg(path)
             << QString("%1icon-s-battery-60.svg").arg(path)

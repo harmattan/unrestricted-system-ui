@@ -3,7 +3,7 @@
 
 QString BatteryBrief::valueText() const
 {
-    return "not yet implemented";
+    return "Implemented";
 }
 
 
