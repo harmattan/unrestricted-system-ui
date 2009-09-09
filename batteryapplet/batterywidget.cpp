@@ -33,9 +33,10 @@ BatteryWidget::~BatteryWidget()
 void BatteryWidget::initWidget()
 {
     //create gconf if
-    batteryGConf = new BatteryGConf();    
+    batteryGConf = new BatteryGConf();
 
     int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
+    updateChargingImageTimer = NULL;
 
     /*
      * talkTimeLayoutWidget
@@ -207,7 +208,7 @@ void BatteryWidget::initImage()
     image = new DuiImage();
 
     if(batteryGConf->value(BatteryGConf::ChargingKey).toBool()) //is charging
-        QTimer::singleShot(200, this, SLOT(updateImage()));
+        startUpdatingChargingImage();
     else
         updateImage(false, batteryGConf->value(BatteryGConf::BatteryLevelKey).toInt());
 }
@@ -263,7 +264,8 @@ void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value
             updateLabels(value.toList());
             break;        
         case BatteryGConf::BatteryLevelKey:
-            updateImage(batteryGConf->value(BatteryGConf::ChargingKey).toBool(), value.toInt());
+            if(!batteryGConf->value(BatteryGConf::ChargingKey).toBool()) //only update, if not charging
+                updateImage(false, value.toInt());
             break;
         case BatteryGConf::ChargingKey:            
             updateImage(value.toBool(), batteryGConf->value(BatteryGConf::BatteryLevelKey).toInt());
@@ -332,15 +334,38 @@ void BatteryWidget::updateImage(bool charging, int level)
 {    
     static int chargingImageIndex = 5;   
 
-    if(charging) {        
+    if(charging) {
+        startUpdatingChargingImage();
         if(chargingImageIndex < 0)
             chargingImageIndex = 5;
-        QTimer::singleShot(200, this, SLOT(updateImage()));
         image->setImage(QImage(batteryChargingImages.at(chargingImageIndex--)));
     }
-    else {        
+    else {
+        stopUpdatingChargingImage();
+
         if(level > 0)
-            image->setImage(QImage(batteryImages.at(level)));            
+            image->setImage(QImage(batteryImages.at(level)));
         chargingImageIndex = 5;
     }    
+}
+
+void BatteryWidget::startUpdatingChargingImage()
+{
+    qDebug() << "startUpdatingChargingImage()";
+    if(updateChargingImageTimer == NULL) {
+        updateChargingImageTimer = new QTimer(this);
+        connect(updateChargingImageTimer, SIGNAL(timeout()), this, SLOT(updateImage()));
+        updateChargingImageTimer->setInterval(400);
+        updateChargingImageTimer->start();
+    }
+}
+
+void BatteryWidget::stopUpdatingChargingImage()
+{
+    qDebug() << "stopUpdatingChargingImage()";
+    if(updateChargingImageTimer != NULL) {
+        updateChargingImageTimer->stop();
+        delete updateChargingImageTimer;
+        updateChargingImageTimer = NULL;
+    }
 }

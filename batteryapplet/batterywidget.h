@@ -36,6 +36,8 @@ private: //methods
     void updateLabels(const QList<QVariant> &value);
     void togglePSMWidgets(bool enable);
     void indicateNeedForUpdatingLabels();
+    void startUpdatingChargingImage();
+    void stopUpdatingChargingImage();
 
 private: //attributes
     DuiLabel *talkTimeLabel;
@@ -47,7 +49,8 @@ private: //attributes
     QList<QVariant> sliderValues;
     QStringList batteryImages;
     QStringList batteryChargingImages;    
-    BatteryGConf *batteryGConf;    
+    BatteryGConf *batteryGConf;
+    QTimer *updateChargingImageTimer;
 
 };
 #endif // BATTERYWIDGET_H
