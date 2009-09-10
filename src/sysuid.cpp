@@ -45,9 +45,9 @@ Sysuid::Sysuid(DuiApplicationWindow& window) : QObject()
 
 Sysuid::~Sysuid()
 {
-//    delete pinCodeQueryLogic;
+    delete pinCodeQueryLogic;
     pinCodeQueryLogic = NULL;
-//    delete batteryLogic;
+    delete batteryLogic;
     batteryLogic = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
