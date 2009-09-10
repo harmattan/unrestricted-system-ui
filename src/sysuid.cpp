@@ -16,7 +16,19 @@ Sysuid::Sysuid() : QObject()
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Energy UI */
-    batteryLogic = new BatteryBusinessLogic();    
+    batteryLogic = new BatteryBusinessLogic();
+
+    /* Event handler */
+    eventHandler = new EventHandler();
+
+    /* Shutdown dialog */
+    shutdownLogic = new ShutdownDialogBusinessLogic();
+    connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
+            shutdownLogic, SLOT(openDialog(bool)));
+    connect(eventHandler, SIGNAL(powerKeyDownOccured()),
+            shutdownLogic, SLOT(powerKeyDown()));
+    connect(eventHandler, SIGNAL(powerKeyUpOccured()),
+            shutdownLogic, SLOT(powerKeyUp()));
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();
@@ -24,15 +36,10 @@ Sysuid::Sysuid() : QObject()
             batteryLogic, SLOT(checkBattery()));
     connect(batteryLogic, SIGNAL(charging()),
             lockScreenLogic, SLOT(sleepModeOff()));
-
-    /* Event handler */
-    eventHandler = new EventHandler();
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()),
             lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
-
-    shutdownLogic = new ShutdownDialogBusinessLogic();
-    connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
-            shutdownLogic, SLOT(openDialog(bool)));
+    connect(shutdownLogic, SIGNAL(dialogOpen(bool)),
+            lockScreenLogic, SLOT(disable(bool)));
 
 }
 

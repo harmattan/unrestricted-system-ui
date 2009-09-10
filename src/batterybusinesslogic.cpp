@@ -234,6 +234,8 @@ void  BatteryBusinessLogic::updateRemainingTimes()
 
     QList<QVariant> newValues;
 
+    //TODO: Correct bug: If Gconf init fails, the toLits will fail and cause seg fault.
+
     if(batteryGConf->value(BatteryGConf::RemainingTimesKey).toList().at(0).toInt() == -1 || forceUpdateRemainingTimes) {
         //battery system setting window still in use        
         updateRemainingTimesBusy = true;

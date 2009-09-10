@@ -60,11 +60,13 @@ void EventHandler::pwrKeyHold()
     int currentTime = ++pwrCheckCount * timer->interval();
     qDebug() << currentTime;
     if (currentTime > SHORT2LONG) {
-        emit longPowerKeyPressOccured(false);
+        emit longPowerKeyPressOccured(true);
     }
 }
+
 void EventHandler::hwBtnDown(int code)
-{
+{  
+    emit powerKeyDownOccured();
     if (powerPressTimer) {
         powerPressTimer->stop();
         powerPressTimer->deleteLater();
@@ -80,6 +82,7 @@ void EventHandler::hwBtnDown(int code)
 
 void EventHandler::hwBtnUp(int code)
 {
+    emit powerKeyUpOccured();
     if (powerPressTimer == NULL)
         return;
 

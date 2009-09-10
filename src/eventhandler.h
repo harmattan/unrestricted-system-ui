@@ -25,6 +25,9 @@ public:
 signals:
     void shortPowerKeyPressOccured();
     void longPowerKeyPressOccured(bool btnDown);
+    void powerKeyDownOccured();
+    void powerKeyUpOccured();
+
 private slots:
     void keyPressed(QmKeys::Keys key, QmKeys::HowPressed how);
     void alarmClockEvent(qmAlarmCookie);

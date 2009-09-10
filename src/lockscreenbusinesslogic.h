@@ -26,6 +26,7 @@ public slots:
     void shortPowerKeyPressOccured();
     void sleepModeOff();
     void unlockScreen();
+    void disable(bool disable);
 
 private slots:    
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
@@ -39,9 +40,9 @@ private: //attributes
     EventEater *eventEater;
     bool screenLock;
     bool sleepMode;
+    bool isDisabled;
     QmLocks *touchPadLocker;
     QmDisplayState *display;
-
     LockScreenUI *lockUI;
 };
 

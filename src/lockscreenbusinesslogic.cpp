@@ -7,6 +7,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
 
     screenLock = false,
     sleepMode = false;
+    isDisabled = false;
 
     touchPadLocker = new QmLocks();
     display = new QmDisplayState();
@@ -31,16 +32,18 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
-{    
-    if(screenLock) {
-        if(sleepMode)
-            toggleSleepMode(false);
-        else
+{
+    if(!isDisabled) {
+        if(screenLock) {
+            if(sleepMode)
+                toggleSleepMode(false);
+            else
+                toggleSleepMode(true);
+        }
+        else {
+            toggleScreenLock(true);
             toggleSleepMode(true);
-    }
-    else {
-        toggleScreenLock(true);
-        toggleSleepMode(true);
+        }
     }
 }
 
@@ -127,4 +130,9 @@ void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
     else
         disconnect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
+}
+
+void LockScreenBusinessLogic::disable(bool disable)
+{    
+    isDisabled = disable;
 }
