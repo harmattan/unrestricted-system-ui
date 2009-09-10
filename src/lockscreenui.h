@@ -7,7 +7,7 @@
 class DuiLabel;
 class DuiImage;
 class DuiButton;
-class DuiGridLayoutPolicy;
+class DuiFreestyleLayoutPolicy;
 class UnlockSlider;
 
 class LockScreenUI : public DuiApplicationPage
@@ -45,13 +45,8 @@ private:
     DuiImage *unreadChatMessagesImage;
 */
     UnlockSlider *slider;
-/*
-    DuiImage *unlockIconImage;
-    DuiImage *deviceLockIconImage;
-    DuiImage *defaultBackgroundImage;
-*/
-    DuiGridLayoutPolicy *p_policy;
-    DuiGridLayoutPolicy *l_policy;
+    DuiFreestyleLayoutPolicy *p_policy;
+    DuiFreestyleLayoutPolicy *l_policy;
 
     QBasicTimer timer;
     bool timerAdjusting;

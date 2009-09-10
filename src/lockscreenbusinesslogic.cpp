@@ -16,7 +16,10 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(DuiApplicationWindow& window) :
 
     toggleDisplayStateListener(true);
 
-    toggleSleepMode(false);    
+    toggleSleepMode(false);
+
+    lockUI = new LockScreenUI;
+    connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -53,16 +56,11 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
 {
     if(!toggle) {
         emit lockScreenOff();
-        if (lockUI) {
-            lockUI->deleteLater();
-            lockUI = NULL;
-        }
-       win.hide();
+        win.hide();
     }
     else {
-        lockUI = new LockScreenUI;
-        connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
         win.show();
+        lockUI->appear();
     }
 
     screenLock = toggle;

@@ -13,6 +13,11 @@
 }
 
 #lockscreenTimeLabel {
-    normal-text-color: #00AA00;
+    color: #00DD00;
+    font: font(Nokia Sans Wide, 52);
+}
+
+#lockscreenDateLabel {
+    color: #EEEEEE;
     font: font(Nokia Sans Wide, 24);
 }
