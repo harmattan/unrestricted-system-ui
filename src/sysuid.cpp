@@ -26,7 +26,7 @@ Sysuid::Sysuid(DuiApplicationWindow& window) : QObject()
     eventHandler = new EventHandler();
 
     /* Shutdown dialog */
-    shutdownLogic = new ShutdownDialogBusinessLogic();
+    shutdownLogic = new ShutdownDialogBusinessLogic(window);
     connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
             shutdownLogic, SLOT(openDialog(bool)));
     connect(eventHandler, SIGNAL(powerKeyDownOccured()),

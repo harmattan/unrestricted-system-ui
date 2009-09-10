@@ -6,12 +6,14 @@
 
 #include "shutdowndialog.h"
 
+class DuiApplicationWindow;
+
 class ShutdownDialogBusinessLogic : public QObject
 {
     Q_OBJECT
 
 public:
-    ShutdownDialogBusinessLogic();
+    ShutdownDialogBusinessLogic(DuiApplicationWindow& window);
     virtual ~ShutdownDialogBusinessLogic();
 
 private: //attributes
@@ -19,6 +21,10 @@ private: //attributes
     QTimer *powerKeyPressTimer;
     QTimer *idleTimer;
     QTime t;
+    bool shuttingDown;
+    int currentPosInTime;
+    int currentPos;
+    DuiApplicationWindow& win;
 
 private: //methods
     void startPowerKeyPressTimer();
@@ -29,6 +35,7 @@ private slots:
     void closeDialog();
     void resetIdleTimer();
     void updateSlider();
+    void shutdown();
 
 signals:
     void dialogOpen(bool open);

@@ -55,7 +55,8 @@ void UnlockSlider::moved(int val)
 }
 
 void UnlockSlider::updateValue(int newValue)
-{    
+{
+    pressed();
     setValue(newValue);
 }
 
