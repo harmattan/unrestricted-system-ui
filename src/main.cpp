@@ -6,6 +6,8 @@
 #include <DuiSceneManager>
 #include <DuiApplication>
 
+#include "signal.h"
+
 
 TestObj::TestObj() : QObject()
 {
@@ -23,9 +25,22 @@ void TestObj::doRotation()
     DuiSceneManager::instance()->setOrientationAngle((Dui::OrientationAngle) orientation);
 }
 
+
+DuiApplication *globalExitPtr;
+void sysuid_exit(int sig)
+{
+    Q_UNUSED(sig);
+    if (globalExitPtr) {
+        globalExitPtr->quit();
+        globalExitPtr = NULL;
+    }
+}
+
+
 int main(int argc, char** argv)
 {
     DuiApplication app(argc, argv);
+    globalExitPtr = &app;
 
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
@@ -35,6 +50,8 @@ int main(int argc, char** argv)
 
     // qDebug and qWarning are filttered off.
     qInstallMsgHandler(0);
+
+    signal(SIGINT, sysuid_exit);
 
     Sysuid daemon(win);
 

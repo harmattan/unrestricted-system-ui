@@ -6,6 +6,13 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui
+
+contains(cov, true) {
+   message("Coverage options enabled")
+   QMAKE_CXXFLAGS += --coverage
+   QMAKE_LFLAGS += --coverage
+}
+
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = batteryapplet.h \

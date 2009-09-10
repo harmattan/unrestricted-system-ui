@@ -7,6 +7,13 @@ CONFIG += dui \
 LIBS += -lsystem \
     -lX11 \
     -lcallui0
+
+contains(cov, true) {
+    message("Coverage options enabled")
+    QMAKE_CXXFLAGS += --coverage
+    QMAKE_LFLAGS += --coverage
+}
+
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \
@@ -22,6 +29,7 @@ SOURCES += main.cpp \
     ../batteryapplet/batterygconf.cpp \
     shutdowndialog.cpp \
     shutdowndialogbusinesslogic.cpp
+
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -37,6 +45,7 @@ HEADERS += main.h \
     ../batteryapplet/batterygconf.h \
     shutdowndialog.h \
     shutdowndialogbusinesslogic.h
+
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery
