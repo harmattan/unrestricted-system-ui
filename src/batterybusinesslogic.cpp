@@ -22,7 +22,9 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     batteryLevels.insert(QmBattery::LevelCritical, 5);
 
     /* check if gconfvalues need to initialized */
-    initBatteryGConfKeys();    
+    initGConfSuccess = initBatteryGConfKeys();
+    if(!initGConfSuccess)
+        return;
 
     /* connect to QmSystem signals */
     connect(battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
@@ -60,7 +62,12 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
     battery = NULL;       
 }
 
-void BatteryBusinessLogic::initBatteryGConfKeys()
+bool BatteryBusinessLogic::initGConfSucceeded()
+{
+    return initGConfSuccess;
+}
+
+bool BatteryBusinessLogic::initBatteryGConfKeys()
 {
     if(batteryGConf->keyCount() < 7) {        
         /* GConf keys have not yet been set. */
@@ -89,7 +96,12 @@ void BatteryBusinessLogic::initBatteryGConfKeys()
         timeValues << QVariant(0) << QVariant(0);
         batteryGConf->setValue(BatteryGConf::RemainingTimesKey, timeValues);
     }
+    if(batteryGConf->keyCount() < 7) {
+        qDebug() << "Failure with GConf.";
+        return false;
+    }
     updateRemainingTimes();
+    return true;
 }
 
 
@@ -175,7 +187,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
 void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
 {
-    qDebug() << "checkPSMThresghold";
+    qDebug() << "checkPSMThreshold";
     if(level <= batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()) {
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
            && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
@@ -229,8 +241,6 @@ void  BatteryBusinessLogic::updateRemainingTimes()
     qDebug() << "BatteryBusinessLogic::updateRemainingTimes()";
 
     QList<QVariant> newValues;
-
-    //TODO: Correct bug: If Gconf init fails, the toLits will fail and cause seg fault.
 
     if(batteryGConf->value(BatteryGConf::RemainingTimesKey).toList().at(0).toInt() == -1 || forceUpdateRemainingTimes) {
         //battery system setting window still in use        

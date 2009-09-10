@@ -11,7 +11,7 @@ class ShutdownDialog : public DuiDialog
     Q_OBJECT
 
 public:
-    ShutdownDialog(const QString &title, StandardButton buttons = NoButton, int sliderRange = 100);
+    ShutdownDialog(const QString &title, const QString &bnextEvent, StandardButton buttons = NoButton, int sliderRange = 100);
     virtual ~ShutdownDialog();
 
     UnlockSlider* slider();

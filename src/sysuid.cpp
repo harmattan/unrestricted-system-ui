@@ -17,6 +17,10 @@ Sysuid::Sysuid(DuiApplicationWindow& window) : QObject()
 
     /* Energy UI */
     batteryLogic = new BatteryBusinessLogic();
+    if(!batteryLogic->initGConfSucceeded()) {
+        delete batteryLogic;
+        batteryLogic = NULL;
+    }
 
     /* Event handler */
     eventHandler = new EventHandler();

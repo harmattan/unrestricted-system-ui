@@ -18,7 +18,9 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 public:
     BatteryBusinessLogic();
-    virtual ~BatteryBusinessLogic();        
+    virtual ~BatteryBusinessLogic();
+
+    bool initGConfSucceeded();
 
 signals:
     void charging();
@@ -31,9 +33,10 @@ private: //attributes
     QHash<QmBattery::Level, int> batteryLevels;
     bool updateRemainingTimesBusy;
     bool forceUpdateRemainingTimes;
+    bool initGConfSuccess;
 
 private: //methods
-    void initBatteryGConfKeys();
+    bool initBatteryGConfKeys();
     void checkChargingState();
     void checkBatteryLevel();
     void togglePSM(bool toggle);    

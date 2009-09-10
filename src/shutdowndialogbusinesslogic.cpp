@@ -31,7 +31,7 @@ void ShutdownDialogBusinessLogic::openDialog(bool btnDown)
     powerKeyPressTimer = NULL;
     idleTimer = NULL;
 
-    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"), DuiDialog::NoButton, SLIDER_RANGE);
+    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"), QString("next alarm event"), DuiDialog::NoButton, SLIDER_RANGE);
     connect(shutdownDlg->slider(), SIGNAL(unlocked()), this, SLOT(closeDialog()));
     connect(shutdownDlg->slider(), SIGNAL(valueChanged()), this, SLOT(resetIdleTimer()));
 

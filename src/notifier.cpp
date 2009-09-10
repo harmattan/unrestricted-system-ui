@@ -18,9 +18,7 @@ Notifier::Notifier() : QObject()
 }
 
 Notifier::~Notifier()
-{
-    delete cancellableNotification;
-    cancellableNotification = NULL;
+{    
 }
 
 void Notifier::showNotification(QString notifText)
