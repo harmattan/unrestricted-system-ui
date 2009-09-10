@@ -50,7 +50,7 @@ public:
     };
 
 
-    explicit PinCodeQueryBusinessLogic();
+    explicit PinCodeQueryBusinessLogic(DuiApplicationWindow& window);
     virtual ~PinCodeQueryBusinessLogic();
 
 private: // attributes
@@ -66,6 +66,7 @@ private: // attributes
     SIMIdentity* simId;
     SIMSecurity* simSec;
     SIMLock *simLock;
+    DuiApplicationWindow& win;
 
 private: // methods
     bool handleSIMError(SIMError error);

@@ -1,3 +1,4 @@
+#include <DuiApplicationWindow>
 #include "sysuid.h"
 #include "main.h"
 
@@ -26,10 +27,16 @@ int main(int argc, char** argv)
 {
     DuiApplication app(argc, argv);
 
+    DuiApplicationWindow win;
+    Qt::WindowFlags flags = 0;
+        flags |= Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
+    win.setWindowOpacity(0);
+    win.setWindowFlags(flags);
+
     // qDebug and qWarning are filttered off.
     qInstallMsgHandler(0);
 
-    Sysuid daemon;
+    Sysuid daemon(win);
 
     TestObj obj;
     QTimer *rotation = new QTimer(0);

@@ -39,10 +39,6 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey,QVariant)),
             this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));
 
-    DuiApplicationWindow *win = new DuiApplicationWindow();    
-    win->setWindowOpacity(0);
-    win->show();
-
     /* just testing
     connect(uiNotif, SIGNAL(notifTimeout()), this, SLOT(activatePSM()));    
     QHash<QString,QString> staticVariables;

@@ -13,7 +13,7 @@ class Sysuid : public QObject
 {
     Q_OBJECT
 public:
-    Sysuid();
+    Sysuid(DuiApplicationWindow& win);
     virtual ~Sysuid();
 
 private:

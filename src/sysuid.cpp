@@ -5,7 +5,7 @@
 
 #include "sysuid.h"
 
-Sysuid::Sysuid() : QObject()
+Sysuid::Sysuid(DuiApplicationWindow& window) : QObject()
 {    
 
     qDebug() << "starting sysuidaemon";
@@ -13,7 +13,7 @@ Sysuid::Sysuid() : QObject()
     /* Pincode query variables */
     DuiTheme::addPixmapDirectory("./");
     DuiTheme::loadCSS("pinquery.css");
-    pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
+    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(window);
 
     /* Energy UI */
     batteryLogic = new BatteryBusinessLogic();
@@ -31,7 +31,7 @@ Sysuid::Sysuid() : QObject()
             shutdownLogic, SLOT(powerKeyUp()));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic();
+    lockScreenLogic = new LockScreenBusinessLogic(window);
     connect(lockScreenLogic, SIGNAL(lockScreenOff()),
             batteryLogic, SLOT(checkBattery()));
     connect(batteryLogic, SIGNAL(charging()),

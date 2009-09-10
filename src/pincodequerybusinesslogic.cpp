@@ -51,15 +51,12 @@ namespace {
     QString SIMLocked = trid("qtn_cell_sim_lock_notification", "This SIM card can not be used in the device.");
 }
 
-PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
+PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(DuiApplicationWindow& window) : QObject(), win(window)
 {    
     qDebug() << "business logic";
 
-    DuiApplicationWindow win;
-    win.show();
-
     uiNotif = new Notifier();
-    createUi();
+//    createUi();
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -117,7 +114,7 @@ void PinCodeQueryBusinessLogic::nothing()
 
 void PinCodeQueryBusinessLogic::createUi()
 {
-    qDebug() << "createUi()" << static_cast<QObject*> (uiPin);
+    qDebug() << "createUi() existing:" << static_cast<QObject*> (uiPin);
     if(!uiPin)
     {
         uiPin = new PinCodeQueryUI();
@@ -130,7 +127,24 @@ void PinCodeQueryBusinessLogic::createUi()
         connect(uiPinEmergency, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
+
+        win.show();
+        uiPin->setPannableAreaInteractive(false);
+        uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
         qDebug() << "createUi() created:" << static_cast<QObject*> (uiPin);
+    }
+    // temporary else here until the flag DuiSceneWindow::DestroyWhenDone can be taken in use at
+    // DuiApplicationPage::appearNow(). See bug #137469
+    else
+    {
+        if(win.isHidden()) {
+            qDebug() << "win.isHidden()";
+            win.show();
+        }
+        if(!uiPin->isVisible()) {
+            qDebug() << "uiPin->isVisible()";
+            uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
+        }
     }
 }
 
@@ -156,7 +170,6 @@ void PinCodeQueryBusinessLogic::ui2SIMLocked()
 {    
     createUi();
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
     uiNotif->showNotification(SIMLocked);
@@ -170,7 +183,6 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
     subState = SubFirstTry;
     createUi();
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
 }
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
@@ -200,7 +212,6 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
 
     createUi();
     uiPin->getCancelBtn()->setEnabled(true);
-    uiPin->appear();
     uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
@@ -231,6 +242,7 @@ void PinCodeQueryBusinessLogic::ui2disappear()
     {
         uiPin->getCodeEntry()->setText("");
         uiPin->disappearNow();
+        win.hide();
     }
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)

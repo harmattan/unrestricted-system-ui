@@ -1,7 +1,9 @@
+#include <DuiApplicationWindow>
+
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
+LockScreenBusinessLogic::LockScreenBusinessLogic(DuiApplicationWindow& window) : QObject(), win(window)
 {
     eventEater = new EventEater();
 
@@ -55,10 +57,12 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
             lockUI->deleteLater();
             lockUI = NULL;
         }
+       win.hide();
     }
     else {
         lockUI = new LockScreenUI;
         connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
+        win.show();
     }
 
     screenLock = toggle;
