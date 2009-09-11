@@ -1,4 +1,5 @@
 #include "batterybusinesslogic.h"
+#include <qmsystem/qmled.h>
 
 #include <QTimer>
 
@@ -6,10 +7,10 @@
 #include <DuiApplicationWindow>
 
 BatteryBusinessLogic::BatteryBusinessLogic()
-{
-    uiNotif = new Notifier();
+{    
     battery = new QmBattery();
-    deviceMode = new QmDeviceMode();
+    deviceMode = new QmDeviceMode();    
+    uiNotif = new Notifier();
     batteryGConf = new BatteryGConf();
     updateRemainingTimesBusy = false;
 
@@ -150,11 +151,13 @@ void BatteryBusinessLogic::batteryStateChanged(Maemo::QmBattery::State state)
     switch(state) {        
         case QmBattery::StateCharging:
             qDebug() << "Charging";
-            batteryGConf->setValue(BatteryGConf::ChargingKey, QVariant(true));
+            utiliseLED(true, QString("PatternBatteryCharging"));
+            batteryGConf->setValue(BatteryGConf::ChargingKey, QVariant(true));            
             uiNotif->showNotification(trid("qtn_ener_char", "Charging"));            
             emit charging();
             break;
         case QmBattery::StateNotCharging:
+            utiliseLED(false, QString("PatternBatteryCharging"));
             batteryGConf->setValue(BatteryGConf::ChargingKey, QVariant(false));
             break;
         default:
@@ -170,10 +173,12 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
     switch(level) {
         case QmBattery::LevelFull:        
-            if(battery->isCharging()) {                
-                //how to show these? combined or right after each other?
+            if(battery->isCharging()) {
+                utiliseLED(true, QString("PatternBatteryFull"));
+                QTimer::singleShot(5000, this, SLOT(utiliseLED(false, QString("PatternBatteryFull"))));
                 uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));                
                 uiNotif->showNotification(trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy"));
+
             }            
         break;
         case QmBattery::LevelLow:
@@ -261,6 +266,15 @@ void  BatteryBusinessLogic::updateRemainingTimes()
     }
 }
 
+void BatteryBusinessLogic::utiliseLED(bool activate, const QString &pattern)
+{
+    QmLED led;
+    if(activate)
+        led.activate(pattern);
+    else
+        led.deactivate(pattern);
+}
+
 void BatteryBusinessLogic::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value)
 {
     switch(key) {
@@ -284,3 +298,4 @@ void BatteryBusinessLogic::gConfValueChanged(BatteryGConf::GConfKey key, QVarian
             break;
     }
 }
+

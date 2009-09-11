@@ -25,11 +25,13 @@ public:
 signals:
     void charging();
 
-private: //attributes
-    Notifier *uiNotif;
+private: //attributes    
     QmBattery *battery;
-    QmDeviceMode *deviceMode;
-    BatteryGConf *batteryGConf;        
+    QmDeviceMode *deviceMode;    
+
+    Notifier *uiNotif;
+    BatteryGConf *batteryGConf;
+
     QHash<QmBattery::Level, int> batteryLevels;
     bool updateRemainingTimesBusy;
     bool forceUpdateRemainingTimes;
@@ -51,6 +53,7 @@ private slots:
     void activatePSM();
     void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
     void updateRemainingTimes();
+    void utiliseLED(bool activate, const QString &pattern);
 
 };
 
