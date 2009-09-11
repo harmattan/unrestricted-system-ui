@@ -63,9 +63,6 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(DuiApplicationWindow& windo
     simSec = new SIMSecurity();        
     simLock = new SIMLock();
 
-    qRegisterMetaType<SIM::SIMStatus>("SIM::SIMStatus");
-    qRegisterMetaType<SIMError>("SIMError");
-
     connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
             this, SLOT(simStatusChanged(SIM::SIMStatus)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
