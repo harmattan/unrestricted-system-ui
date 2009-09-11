@@ -1,7 +1,7 @@
 import os
 
 
-cc = os.popen('find -name "*.cpp" | xargs pmccabe | sort -nr')
+cc = os.popen('find -name "*.cpp" |grep -v moc_ | xargs pmccabe | sort -nr')
 results = {}
 for l in cc:
     nro = l.split('\t')[0]
