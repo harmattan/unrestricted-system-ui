@@ -4,6 +4,7 @@
 
 #include "shutdowndialogbusinesslogic.h"
 #include <qmsystem/qmsystemstate.h>
+#include <qmsystem/qmled.h>
 
 const int SHUTDOWN_TIME = 8000/*ms*/;
 const int UPDATE_INTERVAL = 50;/*ms*/
@@ -159,6 +160,10 @@ void ShutdownDialogBusinessLogic::shutdown()
     stopPowerKeyPressTimer();
     stopIdleTimer();
     shuttingDown = true;
+
+    QmLED led;
+    led.activate(QString("PatternShutDown"));
+
     QmSystemState state;
-    state.set(QmSystemState::Shutdown);    
+    state.set(QmSystemState::Shutdown);
 }
