@@ -4,6 +4,7 @@ TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
     cellular-qt
+QT += dbus
 LIBS += -lsystem \
     -lX11 \
     -lcallui0

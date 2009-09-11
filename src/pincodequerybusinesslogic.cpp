@@ -9,6 +9,9 @@
 #include <DuiNavigationBar>
 #include <call-ui/calluiserviceapi.h>
 
+#include <QtDBus>
+#include <ssc-dbus-names.h>
+
 using namespace CallUi;
 
 /*! The pincode query business logic object is the glue object between
@@ -313,6 +316,10 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     else if(button->objectName() == QString("cancelButton")) {
         // regardless of the state - just exit.
         ui2disappear();
+        // Well, let's put the radio and cellular off.
+        QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
+                           QDBusConnection::systemBus());
+        ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
     }
 }
 
