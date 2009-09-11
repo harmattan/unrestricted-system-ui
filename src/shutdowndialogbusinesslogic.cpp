@@ -165,9 +165,12 @@ void ShutdownDialogBusinessLogic::shutdown()
     stopPowerKeyPressTimer();
     stopIdleTimer();
     shuttingDown = true;
-    if(shutdownDlg != NULL)
-        if(shutdownDlg->slider() != NULL)
+    if(shutdownDlg != NULL) {
+        if(shutdownDlg->slider() != NULL) {
             shutdownDlg->slider()->setEnabled(false);
+            shutdownDlg->slider()->pressed();
+        }
+    }
 
     QmLED led;
     led.activate(QString("PatternShutDown"));
