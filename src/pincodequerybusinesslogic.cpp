@@ -150,7 +150,7 @@ void PinCodeQueryBusinessLogic::createUi()
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-    bool call = false;
+    bool call = true;
     /*  TODO:
      *  Yes - No dialog required: EmergencyCallHeader
      */
