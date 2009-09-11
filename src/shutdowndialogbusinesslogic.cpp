@@ -123,6 +123,7 @@ void ShutdownDialogBusinessLogic::stopPowerKeyPressTimer()
 
 void ShutdownDialogBusinessLogic::stopIdleTimer()
 {
+    qDebug() << "stopIdleTimer()";
     if(idleTimer != NULL) {
         idleTimer->stop();
         idleTimer->deleteLater();
@@ -132,6 +133,9 @@ void ShutdownDialogBusinessLogic::stopIdleTimer()
 
 void ShutdownDialogBusinessLogic::resetIdleTimer()
 {
+    if(shuttingDown)
+        return;
+
     if(idleTimer == NULL) {
         idleTimer = new QTimer(this);
         connect(idleTimer, SIGNAL(timeout()), this, SLOT(closeDialog()));
@@ -157,13 +161,17 @@ void ShutdownDialogBusinessLogic::updateSlider()
 
 void ShutdownDialogBusinessLogic::shutdown()
 {
+    qDebug() << "shutdown()";
     stopPowerKeyPressTimer();
     stopIdleTimer();
     shuttingDown = true;
+    if(shutdownDlg != NULL)
+        if(shutdownDlg->slider() != NULL)
+            shutdownDlg->slider()->setEnabled(false);
 
     QmLED led;
     led.activate(QString("PatternShutDown"));
 
     QmSystemState state;
-    state.set(QmSystemState::Shutdown);
+    state.set(QmSystemState::Shutdown);        
 }

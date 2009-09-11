@@ -13,7 +13,7 @@ public:
     virtual ~UnlockSlider();
 
     void hwKeyDown(bool down);
-    void updateValue(int newValue);
+    void updateValue(int newValue);    
 
 public slots:
     void reset();
