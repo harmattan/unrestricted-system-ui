@@ -5,8 +5,7 @@
 #include <DuiButton>
 #include <DuiTextEdit>
 #include <DuiApplicationWindow>
-#include <DuiMenu>
-#include <DuiNavigationBar>
+#include <DuiApplication>
 #include <call-ui/calluiserviceapi.h>
 
 #include <QtDBus>
@@ -54,12 +53,11 @@ namespace {
     QString SIMLocked = trid("qtn_cell_sim_lock_notification", "This SIM card can not be used in the device.");
 }
 
-PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(DuiApplicationWindow& window) : QObject(), win(window)
+PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
-    qDebug() << "business logic";
+    qDebug() << "PinCodeQueryBusinessLogic()";
 
     uiNotif = new Notifier();
-//    createUi();
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -128,7 +126,7 @@ void PinCodeQueryBusinessLogic::createUi()
         connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
 
-        win.show();
+        DuiApplication::instance()->applicationWindow()->show();
         uiPin->setPannableAreaInteractive(false);
         uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
         qDebug() << "createUi() created:" << static_cast<QObject*> (uiPin);
@@ -137,12 +135,12 @@ void PinCodeQueryBusinessLogic::createUi()
     // DuiApplicationPage::appearNow(). See bug #137469
     else
     {
-        if(win.isHidden()) {
-            qDebug() << "win.isHidden()";
-            win.show();
+        qDebug() << "PinCodeQueryBusinessLogic::createUi() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
+        if(DuiApplication::instance()->applicationWindow()->isHidden()) {
+            DuiApplication::instance()->applicationWindow()->show();
         }
+        qDebug() << "PinCodeQueryBusinessLogic::createUi() uiPin->isVisible():" << uiPin->isVisible();
         if(!uiPin->isVisible()) {
-            qDebug() << "uiPin->isVisible()";
             uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
         }
     }
@@ -240,10 +238,12 @@ void PinCodeQueryBusinessLogic::ui2disappear()
     subState = SubNothing;
     if(uiPin)
     {
+        qDebug() << "PinCodeQueryBusinessLogic::ui2disappear()";
         uiPin->getCodeEntry()->setText("");
         uiPin->disappearNow();
-        win.hide();
+        DuiApplication::instance()->applicationWindow()->hide();
     }
+        qDebug() << "PinCodeQueryBusinessLogic::ui2disappear() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
 }
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 {
@@ -262,9 +262,10 @@ void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
     uiPin->getEnterBtn()->setEnabled(true);
     if (previousSimState == SIM::PINRequired
+        || previousSimState == SIM::PUKRequired
         || previousSimState == SIM::Ok) { // new pin or re-enter new pin
-        uiPin->getEnterBtn()->setEnabled(
-            uiPin->getCodeEntry()->text().length() >= 4);
+        int len = uiPin->getCodeEntry()->text().length();
+        uiPin->getEnterBtn()->setEnabled( (len >= 4 && len <= 8) );
     }
 }
 

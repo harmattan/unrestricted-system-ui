@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <DuiApplicationWindow>
+#include <DuiApplication>
 
 #include "shutdowndialogbusinesslogic.h"
 #include <qmsystem/qmsystemstate.h>
@@ -13,7 +14,7 @@ const int SLIDER_RANGE = 1000;
 
 using namespace Maemo;
 
-ShutdownDialogBusinessLogic::ShutdownDialogBusinessLogic(DuiApplicationWindow& window) : QObject(), win(window)
+ShutdownDialogBusinessLogic::ShutdownDialogBusinessLogic() : QObject()
 {
     shutdownDlg = NULL;
     shuttingDown = false;
@@ -33,12 +34,12 @@ void ShutdownDialogBusinessLogic::openDialog(bool btnDown)
 {
     qDebug() << "openDialog";
     if (shutdownDlg != NULL || shuttingDown) {
-        qDebug() << "won't open";
+        qDebug() << "won't open shuttingDown:" << shuttingDown;
         return;
     }
     emit dialogOpen(true);
 
-    win.show();
+    DuiApplication::instance()->applicationWindow()->show();
 
     shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"), QString("next alarm event"), DuiDialog::NoButton, SLIDER_RANGE);
     connect(shutdownDlg->slider(), SIGNAL(unlocked()), this, SLOT(shutdown()));
@@ -63,7 +64,7 @@ void ShutdownDialogBusinessLogic::closeDialog()
     shutdownDlg->reject();
     shutdownDlg->deleteLater();
     shutdownDlg = NULL;
-    win.hide();
+    DuiApplication::instance()->applicationWindow()->hide();
     emit dialogOpen(false);
 }
 

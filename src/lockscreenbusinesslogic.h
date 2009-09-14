@@ -8,7 +8,6 @@
 #include <QObject>
 
 class LockScreenUI;
-class DuiApplicationWindow;
 
 using namespace Maemo;
 
@@ -17,7 +16,7 @@ class LockScreenBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    LockScreenBusinessLogic(DuiApplicationWindow& window);
+    LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
 
 signals:
@@ -44,7 +43,6 @@ private: //attributes
     bool isDisabled;
     QmLocks *touchPadLocker;
     QmDisplayState *display;
-    DuiApplicationWindow& win;
     LockScreenUI *lockUI;
 };
 

@@ -178,7 +178,7 @@ class Server(dbus.service.Object):
         self.on_verifypuk(self.verifypuk)
 
         self.puk_attempts_left -= 1
-        if code == '007':
+        if code == '0007':
             self.pin = newpin
 	    if self.SIM_MODES[self.mode_idx] == 'PUKRequired':
                 self.puk_attempts_left = 10

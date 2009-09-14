@@ -13,7 +13,7 @@ class ShutdownDialogBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    ShutdownDialogBusinessLogic(DuiApplicationWindow& window);
+    ShutdownDialogBusinessLogic();
     virtual ~ShutdownDialogBusinessLogic();
 
 private: //attributes
@@ -24,7 +24,6 @@ private: //attributes
     bool shuttingDown;
     int currentPosInTime;
     int currentPos;
-    DuiApplicationWindow& win;
 
 private: //methods
     void startPowerKeyPressTimer();

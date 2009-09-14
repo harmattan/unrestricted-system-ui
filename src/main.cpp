@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
-        flags |= Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
+        flags |= Qt::FramelessWindowHint;// | Qt::WindowStaysOnTopHint;
     win.setWindowOpacity(0);
     win.setWindowFlags(flags);
 
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
     signal(SIGINT, sysuid_exit);
 
-    Sysuid daemon(win);
+    Sysuid daemon;
 
     TestObj obj;
     QTimer *rotation = new QTimer(0);
