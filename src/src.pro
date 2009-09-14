@@ -28,6 +28,7 @@ SOURCES += main.cpp \
     eventhandler.cpp \
     eventeater.cpp \
     ../batteryapplet/batterygconf.cpp \
+    ../batteryapplet/batterygconfvaluesetter.cpp \
     shutdowndialog.cpp \
     shutdowndialogbusinesslogic.cpp
 
@@ -44,6 +45,7 @@ HEADERS += main.h \
     eventhandler.h \
     eventeater.h \
     ../batteryapplet/batterygconf.h \
+    ../batteryapplet/batterygconfvaluesetter.h \
     shutdowndialog.h \
     shutdowndialogbusinesslogic.h
 
