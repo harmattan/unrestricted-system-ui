@@ -34,6 +34,7 @@ signals:
 
 private slots:
     void keyValueChanged();
+    void deleteSetterThread();
 
 private: //methods
     QString mapGConfKey(BatteryGConf::GConfKey key);

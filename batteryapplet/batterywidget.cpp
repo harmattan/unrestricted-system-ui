@@ -33,7 +33,7 @@ BatteryWidget::~BatteryWidget()
 void BatteryWidget::initWidget()
 {
     //create gconf if
-    batteryGConf = new BatteryGConf();
+    batteryGConf = new BatteryGConf();   
 
     int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
     updateChargingImageTimer = NULL;
@@ -324,7 +324,8 @@ void BatteryWidget::updateLabels(const QList<QVariant> &values)
 }
 
 void BatteryWidget::indicateNeedForUpdatingLabels()
-{    
+{
+    qDebug() << "Indicate need";
     QList<QVariant> newValues;
     newValues << QVariant(-1) << QVariant(-1);
     batteryGConf->setValue(BatteryGConf::RemainingTimesKey, newValues);
@@ -350,9 +351,9 @@ void BatteryWidget::updateImage(bool charging, int level)
 }
 
 void BatteryWidget::startUpdatingChargingImage()
-{
-    qDebug() << "startUpdatingChargingImage()";
+{    
     if(updateChargingImageTimer == NULL) {
+        qDebug() << "startUpdatingChargingImage()";
         updateChargingImageTimer = new QTimer(this);
         connect(updateChargingImageTimer, SIGNAL(timeout()), this, SLOT(updateImage()));
         updateChargingImageTimer->setInterval(400);
@@ -361,9 +362,9 @@ void BatteryWidget::startUpdatingChargingImage()
 }
 
 void BatteryWidget::stopUpdatingChargingImage()
-{
-    qDebug() << "stopUpdatingChargingImage()";
+{    
     if(updateChargingImageTimer != NULL) {
+        qDebug() << "stopUpdatingChargingImage()";
         updateChargingImageTimer->stop();
         delete updateChargingImageTimer;
         updateChargingImageTimer = NULL;

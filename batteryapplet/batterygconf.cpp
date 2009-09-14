@@ -1,4 +1,5 @@
 #include "batterygconf.h"
+#include "batterygconfvaluesetter.h"
 
 #include <DuiGConfItem>
 #include <QDebug>
@@ -47,7 +48,11 @@ void BatteryGConf::keyValueChanged()
 
 void BatteryGConf::setValue(BatteryGConf::GConfKey key, QVariant value)
 {
-    duiGConfItems[key]->set(value);
+    BatteryGConfValueSetter *setter = new BatteryGConfValueSetter(duiGConfItems[key], value);
+    setter->start();
+    connect(setter, SIGNAL(finished()), this, SLOT(deleteSetterThread()));
+
+    //duiGConfItems[key]->set(value);
 }
 
 QVariant BatteryGConf::value(BatteryGConf::GConfKey key)
@@ -84,4 +89,11 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
             break;
     }
     return keyStr;
+}
+
+void BatteryGConf::deleteSetterThread()
+{
+    BatteryGConfValueSetter *sender = static_cast<BatteryGConfValueSetter*>(this->sender());
+    delete sender;
+    sender = NULL;
 }
