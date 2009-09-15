@@ -22,19 +22,12 @@ LockScreenUI::LockScreenUI()
 
 LockScreenUI::~LockScreenUI()
 {
+
 }
 
 void LockScreenUI::createContent()
 {
     DuiApplicationPage::createContent();
-
-    DuiLayout *layout = new DuiLayout();
-    centralWidget()->setLayout(layout);
-
-    l_policy = new DuiFreestyleLayoutPolicy(layout);
-    p_policy = new DuiFreestyleLayoutPolicy(layout);
-    l_policy->setSpacing(2);
-    p_policy->setSpacing(2);
 
     slider = new UnlockSlider(this, "continuous");
     slider->setOrientation(Qt::Horizontal);
@@ -44,27 +37,24 @@ void LockScreenUI::createContent()
 
     timeLabel = new DuiLabel(this);
     timeLabel->setObjectName("lockscreenTimeLabel");
+    timeLabel->setAlignment(Qt::AlignLeft);
+
     dateLabel = new DuiLabel(this);
     dateLabel->setObjectName("lockscreenDateLabel");
+    dateLabel->setAlignment(Qt::AlignLeft);
     updateDateTime();
 
-    int w = DuiSceneManager::instance()->visibleSceneSize().width();
-    int h = DuiSceneManager::instance()->visibleSceneSize().height();
+    DuiLayout *layout = new DuiLayout(centralWidget());
+    centralWidget()->setLayout(layout);
 
-    // p_policy settings are just temporary!
+    QRect timeRect, dateRect, sliderRect;
+    calculateRects(layout, timeRect, dateRect, sliderRect);
 
-    l_policy->addItemAtGeometry(timeLabel, QRect(QPoint(w*0.05f, h*0.17f), QPoint(w*0.95f, h*0.28f)));
-    p_policy->addItemAtGeometry(timeLabel, QRect(QPoint(h*0.05f, w*0.17f), QPoint(h*0.95f, w*0.28f)));
-    timeLabel->setAlignment(Qt::AlignLeft);
-    l_policy->addItemAtGeometry(dateLabel, QRect(QPoint(w*0.05f, h*0.3f), QPoint(w*0.95f, h*0.35f)));
-    p_policy->addItemAtGeometry(dateLabel, QRect(QPoint(h*0.05f, w*0.3f), QPoint(h*0.95f, w*0.35f)));
-    dateLabel->setAlignment(Qt::AlignLeft);
-
-    l_policy->addItemAtGeometry(slider, QRect(QPoint(40, h*0.81f), QPoint(760, h*0.95f)));
-    p_policy->addItemAtGeometry(slider, QRect(QPoint(40, w*0.81f), QPoint(760, w*0.95f)));
-
-    l_policy->activate();
-    orientationChanged(DuiSceneManager::instance()->orientation());
+    DuiFreestyleLayoutPolicy* policy = new DuiFreestyleLayoutPolicy(layout);
+    policy->setSpacing(2);
+    policy->addItemAtGeometry(timeLabel, timeRect);
+    policy->addItemAtGeometry(dateLabel, dateRect);
+    policy->addItemAtGeometry(slider, sliderRect);
 
     connect(slider, SIGNAL(unlocked()), this, SLOT(sliderUnlocked()));
 
@@ -84,13 +74,33 @@ void LockScreenUI::sliderUnlocked()
     emit unlocked();
 }
 
+void LockScreenUI::calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect, QRect& sliderRect)
+{
+    qreal left,top,right,bottom;
+    layout->getContentsMargins(&left,&top,&right,&bottom);
+    qDebug() << "LockScreenUI::calculateRects() margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
+
+    QSize size = DuiSceneManager::instance()->visibleSceneSize();
+    int w = size.width() - (left + right);
+    int h = size.height() - (top + bottom);
+    qDebug() << "LockScreenUI::calculateRects() w:" << w << "h:" << h;
+
+    timeRect = QRect(QPoint(w*0.05f, h*0.17f), QPoint(w*0.95f, h*0.28f));
+    dateRect = QRect(QPoint(w*0.05f, h*0.3f), QPoint(w*0.95f, h*0.35f));
+    sliderRect = QRect(QPoint(40, h*0.81f), QPoint(w-40, h*0.95f));
+}
+
 void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)
 {
-    if (orientation == Dui::Portrait) {
-        p_policy->activate();
-    } else {
-        l_policy->activate();
-    }
+    DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());
+
+    QRect timeRect, dateRect, sliderRect;
+    calculateRects(layout, timeRect, dateRect, sliderRect);
+
+    DuiFreestyleLayoutPolicy* policy = (DuiFreestyleLayoutPolicy*)layout->policy();
+    policy->setItemGeometry(timeLabel, timeRect);
+    policy->setItemGeometry(dateLabel, dateRect);
+    policy->setItemGeometry(slider, sliderRect);
 }
 
 void LockScreenUI::timerEvent(QTimerEvent *event)

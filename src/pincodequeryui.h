@@ -31,7 +31,6 @@ public:
 private slots:
     void buttonReleased();
     void buttonPressed();
-    void orientationChanged(const Dui::Orientation &orientation);
     void removeText();
 
 private: //methods
@@ -46,8 +45,6 @@ private: //attributes
     DuiLabel *headerLabel;
     DuiTextEdit *entryTextEdit;
     DuiLayout *numpadLayout;
-    DuiGridLayoutPolicy *portraitPolicy;
-    DuiGridLayoutPolicy *landscapePolicy;
     QTimer *backspaceTimer;
 };
 

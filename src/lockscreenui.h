@@ -7,7 +7,7 @@
 class DuiLabel;
 class DuiImage;
 class DuiButton;
-class DuiFreestyleLayoutPolicy;
+class DuiLayout;
 class UnlockSlider;
 
 class LockScreenUI : public DuiApplicationPage
@@ -34,6 +34,7 @@ public slots:
 private:
     void timerEvent(QTimerEvent *event);
     void updateDateTime();
+    void calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect, QRect& sliderRect);
 
 private:
 
@@ -45,8 +46,6 @@ private:
     DuiImage *unreadChatMessagesImage;
 */
     UnlockSlider *slider;
-    DuiFreestyleLayoutPolicy *p_policy;
-    DuiFreestyleLayoutPolicy *l_policy;
 
     QBasicTimer timer;
     bool timerAdjusting;

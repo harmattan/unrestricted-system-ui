@@ -15,6 +15,7 @@
 #include <QSizePolicy>
 #include <QTimer>
 #include <QDebug>
+#include <QIntValidator>
 
 PinCodeQueryUI::PinCodeQueryUI()
 {
@@ -32,10 +33,9 @@ PinCodeQueryUI::~PinCodeQueryUI()
     if(backspaceTimer != NULL) {
         //we stop timing the press event
         backspaceTimer->stop();
-        delete backspaceTimer;
-        backspaceTimer = NULL;
     }
-
+    delete backspaceTimer;
+    backspaceTimer = NULL;
     delete emergencyCallButton;
     emergencyCallButton = NULL;
     delete enterButton;
@@ -50,29 +50,28 @@ PinCodeQueryUI::~PinCodeQueryUI()
     entryTextEdit = NULL;
     delete numpadLayout;
     numpadLayout = NULL;
-    delete portraitPolicy;
-    portraitPolicy = NULL;
-    delete landscapePolicy;
-    landscapePolicy = NULL;
 }
 
 void PinCodeQueryUI::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
 
     //create the widgets and numpad.
     createWidgetItems();
 
     //create mainLayout
-    DuiLayout *mainLayout = new DuiLayout(panel);
-    //mainLayout->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    DuiLayout *layout = new DuiLayout();
+    centralWidget()->setLayout(layout); // ownership transferred
 
-    //create landscapePolicy and portraitPolicy for mainLayout
-    landscapePolicy = new DuiGridLayoutPolicy(mainLayout);
-    portraitPolicy = new DuiGridLayoutPolicy(mainLayout);
+    //create landscapePolicy and portraitPolicy for layout
+    DuiGridLayoutPolicy* landscapePolicy = new DuiGridLayoutPolicy(layout);
+    DuiGridLayoutPolicy* portraitPolicy = new DuiGridLayoutPolicy(layout);
+
+    layout->setLandscapePolicy(landscapePolicy); // ownership transferred
+    layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
     //attach widget items to landscape and portrait policies
+    // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
     landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
     landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 2);
     landscapePolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
@@ -80,53 +79,53 @@ void PinCodeQueryUI::createContent()
     landscapePolicy->addItemAtPosition(enterButton, 3, 0, 1, 2);
     landscapePolicy->addItemAtPosition(cancelButton, 3, 2, 1, 2);
     landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 3, 1);
+
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
     portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 2);
     portraitPolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     portraitPolicy->addItemAtPosition(backspaceButton, 2, 3);
-    portraitPolicy->addItemAtPosition(numpadLayout, 3, 0, 3, 4);
-    portraitPolicy->addItemAtPosition(enterButton, 6, 0, 1, 2);
-    portraitPolicy->addItemAtPosition(cancelButton, 6, 2, 1, 2);
+    portraitPolicy->addItemAtPosition(numpadLayout, 3, 0, 1, 4);
+    portraitPolicy->addItemAtPosition(enterButton, 4, 0, 1, 2);
+    portraitPolicy->addItemAtPosition(cancelButton, 4, 2, 1, 2);
 
     //set column and row sizes
     qreal left,top,right,bottom;
-    mainLayout->getContentsMargins(&left,&top,&right,&bottom);
+    layout->getContentsMargins(&left,&top,&right,&bottom);
     qDebug() << "PinCodeQueryUI::createContent() margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
 
-    int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width() - (left + right);
-    int fullHeight = DuiSceneManager::instance()->visibleSceneSize().height() - (top + bottom);
-    for(int lsCol=0; lsCol<5; ++lsCol) {
-	if(lsCol < 4)
-            landscapePolicy->setColumnFixedWidth(lsCol, fullWidth/8);
-	else
-	    landscapePolicy->setColumnFixedWidth(lsCol, fullWidth/2);
+    QSize size = DuiSceneManager::instance()->visibleSceneSize();
+    int longSide = size.width();
+    int shortSide = size.height();
+    if(longSide < shortSide)
+    {
+        int tmp = longSide;
+        longSide = shortSide;
+        shortSide = longSide;
     }
-    for(int lsRow=0; lsRow<4;++lsRow) {
-	landscapePolicy->setRowFixedHeight(lsRow, fullHeight/4);
+    longSide -= left + right;
+    shortSide -= top + bottom;
+
+    int half = longSide/2;
+    int quarter = shortSide/4;
+    int eight = longSide/8;
+    for(int i=0; i<5; ++i) {
+        if(i < 4){
+            landscapePolicy->setColumnFixedWidth(i, eight);
+        }
+        else {
+            landscapePolicy->setColumnFixedWidth(i, half);
+        }
+        if(i == 3 ) {
+            portraitPolicy->setRowFixedHeight(i, half);
+        }
+        else {
+            portraitPolicy->setRowFixedHeight(i, eight);
+        }
     }
-    for(int ptCol=0; ptCol<4; ++ptCol) {
-	portraitPolicy->setColumnFixedWidth(ptCol, fullHeight/4);
+    for(int i=0; i<4;++i) {
+        landscapePolicy->setRowFixedHeight(i, quarter);
+        portraitPolicy->setColumnFixedWidth(i, quarter);
     }
-    for(int ptRow=0; ptRow<7; ++ptRow) {
-        portraitPolicy->setRowFixedHeight(ptRow, fullWidth/7);
-    }
-	    
-    orientationChanged(DuiSceneManager::instance()->orientation());
-
-//    DuiTheme::loadCSS("pinquery.css");
-
-    // HACK: make all buttons visible :)
-    /*
-    requestPageMove(QPointF(0, -1), QPointF(0, 1), false);
-    restorePageMove();
-   */
-
-
-    // Get informed about orientation changes
-    connect(DuiSceneManager::instance(),
-            SIGNAL(orientationChanged(const Dui::Orientation &)),
-            this, SLOT(orientationChanged(const Dui::Orientation &)));
-
     backspaceTimer = NULL;
 }
 
@@ -161,6 +160,8 @@ void PinCodeQueryUI::createWidgetItems()
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
     entryTextEdit->setObjectName("codeEntry");
     entryTextEdit->setMaskedInput(true);
+    QIntValidator *validator = new QIntValidator(0, 99999999, entryTextEdit);
+    entryTextEdit->setValidator(validator);
 
     enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), 0);
     enterButton->setObjectName("enterButton");
@@ -255,13 +256,4 @@ void PinCodeQueryUI::removeText()
     entryTextEdit->setText("");
 }
 
-void PinCodeQueryUI::orientationChanged(const Dui::Orientation &orientation)
-{
-    qDebug() << "PinCodeQueryUI::orientationChanged:" << orientation;
-    if (orientation == Dui::Portrait) {
-        portraitPolicy->activate();
-    } else {
-        landscapePolicy->activate();
-    }
-}
-
+// eof
