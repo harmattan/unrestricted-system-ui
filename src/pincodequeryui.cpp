@@ -100,7 +100,7 @@ void PinCodeQueryUI::createContent()
     {
         int tmp = longSide;
         longSide = shortSide;
-        shortSide = longSide;
+        shortSide = tmp;
     }
     longSide -= left + right;
     shortSide -= top + bottom;
