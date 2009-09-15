@@ -6,6 +6,8 @@
 #include "shutdowndialogbusinesslogic.h"
 #include <qmsystem/qmsystemstate.h>
 #include <qmsystem/qmled.h>
+#include <qmsystem/qmalarm.h>
+#include <qmsystem/qmalarmevent.h>
 
 const int SHUTDOWN_TIME = 8000/*ms*/;
 const int UPDATE_INTERVAL = 50;/*ms*/
@@ -178,4 +180,12 @@ void ShutdownDialogBusinessLogic::shutdown()
 
     QmSystemState state;
     state.set(QmSystemState::Shutdown);        
+}
+
+void ShutdownDialogBusinessLogic::setAlarmLabelText()
+{
+    /*
+    QmAlarm alarm;
+    QList<qmAlarmCookie> alarmList = alarm.query(0,0,QmAlarmEvent::Disabled, 0, QString("CLOCK_APP"));
+    */
 }

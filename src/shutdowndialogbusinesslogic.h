@@ -29,6 +29,7 @@ private: //methods
     void startPowerKeyPressTimer();
     void stopPowerKeyPressTimer();
     void stopIdleTimer();
+    void setAlarmLabelText();
 
 private slots:
     void closeDialog();
