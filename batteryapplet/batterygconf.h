@@ -29,18 +29,17 @@ public:
     QVariant value(BatteryGConf::GConfKey);
     int keyCount();
 
-signals:    
+signals:
     void valueChanged(BatteryGConf::GConfKey key, QVariant value);
 
 private slots:
     void keyValueChanged();
-    void deleteSetterThread();
 
 private: //methods
     QString mapGConfKey(BatteryGConf::GConfKey key);
 
 private: //attributes
-    QHash <BatteryGConf::GConfKey, DuiGConfItem *> duiGConfItems;
+    QHash<BatteryGConf::GConfKey, DuiGConfItem *> duiGConfItems;    
 
 };
 

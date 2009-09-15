@@ -1,5 +1,4 @@
 #include "batterygconf.h"
-#include "batterygconfvaluesetter.h"
 
 #include <DuiGConfItem>
 #include <QDebug>
@@ -9,7 +8,7 @@ namespace {
 }
 
 BatteryGConf::BatteryGConf()
-{    
+{
     // init the gconf keys    
     duiGConfItems.insert(BatteryGConf::PSMToggleKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMToggleKey)));
     duiGConfItems.insert(BatteryGConf::PSMDisabledKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMDisabledKey)));
@@ -17,20 +16,22 @@ BatteryGConf::BatteryGConf()
     duiGConfItems.insert(BatteryGConf::PSMThresholdValuesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdValuesKey)));
     duiGConfItems.insert(BatteryGConf::RemainingTimesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingTimesKey)));
     duiGConfItems.insert(BatteryGConf::BatteryLevelKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatteryLevelKey)));
-    duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));
+    duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));    
+
 
     QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
-        connect( i.value(), SIGNAL(valueChanged()), this, SLOT(keyValueChanged()));
+        connect( i.value(), SIGNAL(valueChanged()), this, SLOT(keyValueChanged()));    
+
 }
 
 BatteryGConf::~BatteryGConf()
-{    
+{ 
     QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i) {
         delete i.value();
         i.value() = NULL;
-    }  
+    } 
 }
 
 int BatteryGConf::keyCount()
@@ -40,24 +41,20 @@ int BatteryGConf::keyCount()
     return list.size();
 }
 
-void BatteryGConf::keyValueChanged()
-{
-    DuiGConfItem *duiGConfItem = static_cast<DuiGConfItem*>(this->sender());
-    emit valueChanged(duiGConfItems.key(duiGConfItem), duiGConfItem->value());
-}
-
 void BatteryGConf::setValue(BatteryGConf::GConfKey key, QVariant value)
 {
-    BatteryGConfValueSetter *setter = new BatteryGConfValueSetter(duiGConfItems[key], value);
-    setter->start();
-    connect(setter, SIGNAL(finished()), this, SLOT(deleteSetterThread()));
-
-    //duiGConfItems[key]->set(value);
+    duiGConfItems.value(key)->set(value);
 }
 
 QVariant BatteryGConf::value(BatteryGConf::GConfKey key)
+{    
+    return duiGConfItems.value(key)->value();
+}
+
+void BatteryGConf::keyValueChanged()
 {
-    return duiGConfItems[key]->value();
+    DuiGConfItem *item = static_cast<DuiGConfItem *>(this->sender());
+    emit valueChanged(duiGConfItems.key(item), item->value());
 }
 
 QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
@@ -89,11 +86,4 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
             break;
     }
     return keyStr;
-}
-
-void BatteryGConf::deleteSetterThread()
-{
-    BatteryGConfValueSetter *sender = static_cast<BatteryGConfValueSetter*>(this->sender());
-    delete sender;
-    sender = NULL;
 }

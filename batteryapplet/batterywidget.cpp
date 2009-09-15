@@ -159,7 +159,7 @@ void BatteryWidget::initWidget()
     
     // catch system actions
     connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey, QVariant)),
-            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));
+            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));        
 
     //disable the PSM widgets if PSM is disabled
     togglePSMWidgets(!batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool());
@@ -313,7 +313,7 @@ void BatteryWidget::updateSlider(const QString &text)
 
 void BatteryWidget::updateLabels(const QList<QVariant> &values)
 {
-    qDebug() << "BatteryWidget::updateLabels()";
+    qDebug() << "BatteryWidget::updateLabels()" << values.at(0).toInt();
     if(values.at(0).toInt() == -1) // self-set
         return;
 
