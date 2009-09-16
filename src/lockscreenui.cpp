@@ -92,6 +92,13 @@ void LockScreenUI::calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dat
 
 void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)
 {
+    // This is temprary solution, see bug #130452
+    // As far as I understand:
+    //      Like DuiGridLayoutPolicy, DuiFreestyleLayoutPolicy doesn't support automatic
+    //      portrait / landscape switching and it's needed to be done manually.
+    //      Feature will be implemented later(?).
+    // 16-Sep-2009 /tt
+    //
     DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());
 
     QRect timeRect, dateRect, sliderRect;
