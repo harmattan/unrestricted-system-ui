@@ -1,14 +1,15 @@
 #include "batterydbusinterface.h"
 #include <QtDBus>
 #include <QDebug>
+#include <QVariant>
 
 BatteryDBusInterface::BatteryDBusInterface()
 {
     dbusIf = new QDBusInterface("org.freedesktop.DBus.Battery", "/", "", QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
     connect(dbusIf, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
-    connect(dbusIf, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueChanged(int)));
-    connect(dbusIf, SIGNAL(PSMToggleValueChanged(bool)), this, SIGNAL(PSMToggleValueChanged(bool)));
+    connect(dbusIf, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueReceived(int)));
+    connect(dbusIf, SIGNAL(PSMToggleValueChanged(bool)), this, SIGNAL(PSMToggleValueReceived(bool)));
 }
 
 BatteryDBusInterface::~BatteryDBusInterface()
@@ -21,36 +22,24 @@ void BatteryDBusInterface::PSMToggleValueRequired()
 {
     qDebug() << "BatteryDBusInterface::PSMToggleValueRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("PSMToggleValue"), list, this, SLOT(PSMToggleValueReceived(bool)), SLOT(DBusMessagingFailure()));
-}
-
-void BatteryDBusInterface::PSMToggleValueReceived(bool value)
-{
-    qDebug() << "BatteryDBusInterface::PSMToggleValueReceived(" << value << ")";
-    emit PSMToggleValueChanged(value);
+    dbusIf->callWithCallback(QString("PSMToggleValue"), list, this, SIGNAL(PSMToggleValueReceived(bool)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::PSMDisabledValueRequired()
 {
     qDebug() << "BatteryDBusInterface::PSMDisabledValueRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("PSMDisabledValue"), list, this, SLOT(PSMDisabledValueReceived(bool)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("PSMDisabledValue"), list, this, SIGNAL(PSMDisabledValueReceived(bool)), SLOT(DBusMessagingFailure()));
 }
 
-void BatteryDBusInterface::PSMDisabledValueReceived(bool value)
-{
-    qDebug() << "BatteryDBusInterface::PSMDisabledValueReceived(" << value << ")";
-    emit PSMDisabledValueChanged(value);
-}
-
-void BatteryDBusInterface::BatteryChargingStateRequired()
+void BatteryDBusInterface::batteryChargingStateRequired()
 {
     qDebug() << "BatteryDBusInterface::BatteryChargingValueRequired()";
     QList<QVariant> list;
     dbusIf->callWithCallback(QString("batteryChargingState"), list, this, SLOT(BatteryChargingStateReceived(bool)), SLOT(DBusMessagingFailure()));
 }
 
-void BatteryDBusInterface::BatteryChargingStateReceived(bool state)
+void BatteryDBusInterface::batteryChargingStateReceived(bool state)
 {
     qDebug() << "BatteryDBusInterface::BatteryChargingStateReceived(" << state << ")";
     if(state)
@@ -63,52 +52,28 @@ void BatteryDBusInterface::PSMThresholdValuesRequired()
 {
     qDebug() << "BatteryDBusInterface::PSMThresholdValuesRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("PSMThresholdValues"), list, this, SLOT(PSMThresholdValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
-}
-
-void BatteryDBusInterface::PSMThresholdValuesReceived(const QStringList &values)
-{
-    qDebug() << "BatteryDBusInterface::PSMThresholdValuesReceived(QStringList values)";
-    emit PSMThresholdValuesAvailable(values);
+    dbusIf->callWithCallback(QString("PSMThresholdValues"), list, this, SIGNAL(PSMThresholdValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::PSMThresholdValueRequired()
 {
     qDebug() << "BatteryDBusInterface::PSMThresholdValueRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("PSMThresholdValue"), list, this, SLOT(PSMThresholdValueReceived(QString)), SLOT(DBusMessagingFailure()));
-}
-
-void BatteryDBusInterface::PSMThresholdValueReceived(const QString &value)
-{
-    qDebug() << "BatteryDBusInterface::PSMThresholdValueReceived(" << value << ")";
-    emit PSMThresholdValueAvailable(value);
+    dbusIf->callWithCallback(QString("PSMThresholdValue"), list, this, SIGNAL(PSMThresholdValueReceived(QString)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::remainingTimeValuesRequired()
 {
     qDebug() << "BatteryDBusInterface::remainingTimeValuesRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("remainingTimeValues"), list, this, SLOT(remainingTimeValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
-}
-
-void BatteryDBusInterface::remainingTimeValuesReceived(const QStringList &values)
-{
-    qDebug() << "BatteryDBusInterface::remainingTimeValuesReceived(const QStringList &values)";
-    emit remainingTimeValuesAvailable(values);
+    dbusIf->callWithCallback(QString("remainingTimeValues"), list, this, SIGNAL(remainingTimeValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::batteryLevelValueRequired()
 {
     qDebug() << "BatteryDBusInterface::BatteryLevelValueRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("batteryLevelValue"), list, this, SLOT(batteryLevelValueReceived(QStringList)), SLOT(DBusMessagingFailure()));
-}
-
-void BatteryDBusInterface::batteryLevelValueReceived(int value)
-{
-    qDebug() << "BatteryDBusInterface::batteryLevelValueReceived(" << value << ")";
-    emit batteryLevelValueAvailable(value);
+    dbusIf->callWithCallback(QString("batteryLevelValue"), list, this, SIGNAL(batteryLevelValueReceived(int)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::setPSMThresholdValue(const QString &value)
@@ -143,43 +108,4 @@ void BatteryDBusInterface::valueSet()
 void BatteryDBusInterface::DBusMessagingFailure()
 {
     qDebug() << "BatteryDBusInterface::DBusMessagingFailure()";
-}
-//TODO when setting PSM DIsabled to true, set PSM Toggle to false
-
-QVariant BatteryDBusInterface::call(const QString &method, BatteryDBusInterface::DBusDataType dataType, const QVariant &param1,
-                                    const QVariant &param2, const QVariant &param3, const QVariant &param4)
-{
-    qDebug() << "BatteryDBusInterface::call(" << method << ", " << dataType << ", " << param1 << ", " << param2 << ", " << param3 << ", " << param4 << ")";
-    switch(dataType) {
-        case DBusDataTypeVoid: {
-            dbusIf->call(method, param1, param2, param3, param4);
-            return QVariant();
-        }
-        case DBusDataTypeBool: {            
-            QDBusReply<bool> reply = dbusIf->call(method, param1, param2, param3, param4);            
-            if(reply.isValid())
-                return QVariant(reply.value());
-            return QVariant();
-        }
-        case DBusDataTypeInt: {
-            QDBusReply<int> reply = dbusIf->call(method, param1, param2, param3, param4);
-            if(reply.isValid())
-                return QVariant(reply.value());
-            return QVariant();
-        }
-        case DBusDataTypeQString: {
-            QDBusReply<QString> reply = dbusIf->call(method, param1, param2, param3, param4);
-            if(reply.isValid())
-                return QVariant(reply.value());
-            return QVariant();
-        }
-        case DBusDataTypeQStringList: {
-            QDBusReply<QStringList> reply = dbusIf->call(method, param1, param2, param3, param4);
-            if(reply.isValid())
-                return QVariant(reply.value());
-            return QVariant();
-        }
-        default:
-            return QVariant();
-    }    
 }

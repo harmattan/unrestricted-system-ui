@@ -8,7 +8,6 @@ class DuiButton;
 class DuiSlider;
 class DuiImage;
 class QTimer;
-class QDBusInterface;
 class BatteryDBusInterface;
 
 class BatteryWidget : public DcpWidget
@@ -34,7 +33,7 @@ private slots:
     void startUpdatingChargingImage();
     void stopUpdatingChargingImage();
     void updateLabels(const QStringList &timeValues);
-    void initSlider(QStringList values);
+    void initSlider(const QStringList &values);
     void updateSlider(const QString &text);
 
 private: //methods    

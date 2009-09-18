@@ -2,7 +2,7 @@
 #include "batterytranslation.h"
 #include "batterydbusinterface.h"
 #include "dcpbattery.h"
-#include "dcpspaceritem.h"
+//#include "dcpspaceritem.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -37,13 +37,12 @@ void BatteryWidget::initWidget()
     // catch battery If actions
     connect(batteryIf, SIGNAL(batteryCharging()), this, SLOT(startUpdatingChargingImage()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), this, SLOT(stopUpdatingChargingImage()));
-    connect(batteryIf, SIGNAL(batteryLevelValueChanged(int)), this, SLOT(batteryLevelValueChanged(int)));
-    connect(batteryIf, SIGNAL(PSMToggleValueChanged(bool)), this, SLOT(updatePSMToggleButton(bool)));
-    connect(batteryIf, SIGNAL(PSMDisabledValueChanged(bool)), this, SLOT(updatePSMDisableButton(bool)));
-    connect(batteryIf, SIGNAL(PSMThresholdValuesAvailable(QStringList)), this, SLOT(initSlider(QStringList)));
-    connect(batteryIf, SIGNAL(PSMThresholdValueAvailable(QString)), this, SLOT(updateSlider(QString)));
-    connect(batteryIf, SIGNAL(remainingTimeValuesAvailable(QStringList)), this, SLOT(updateLabels(QStringList)));
-    connect(batteryIf, SIGNAL(batteryLevelValueAvailable(int)), this, SLOT(updateNotChargingImage(int)));
+    connect(batteryIf, SIGNAL(batteryLevelValueReceived(int)), this, SLOT(batteryLevelValueChanged(int)));
+    connect(batteryIf, SIGNAL(PSMToggleValueReceived(bool)), this, SLOT(updatePSMToggleButton(bool)));
+    connect(batteryIf, SIGNAL(PSMDisabledValueReceived(bool)), this, SLOT(updatePSMDisableButton(bool)));
+    connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), this, SLOT(initSlider(QStringList)));
+    connect(batteryIf, SIGNAL(PSMThresholdValuereceived(QString)), this, SLOT(updateSlider(QString)));
+    connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(updateLabels(QStringList)));
 
     int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
     updateChargingImageTimer = NULL;
@@ -213,13 +212,12 @@ void BatteryWidget::initImage()
 
     image = new DuiImage();
 
-    batteryIf->BatteryChargingStateRequired();    
+    batteryIf->batteryChargingStateRequired();
 }
 
-void BatteryWidget::initSlider(QStringList values)
+void BatteryWidget::initSlider(const QStringList &values)
 {    
-    sliderValues = QStringList(values);
-    //sliderValues << values.at(0) << values.at(1) << values.at(2); 
+    sliderValues = QStringList(values);    
     slider->setRange(0,sliderValues.size()-1);    
     slider->setOrientation(Qt::Horizontal);
 
@@ -308,11 +306,6 @@ void BatteryWidget::updateLabels(const QStringList &timeValues)
     QTimer::singleShot(10000, batteryIf, SLOT(remainingTimeValuesRequired()));
 }
 
-void BatteryWidget::updateNotChargingImage(int level)
-{
-    updateImage(false, level);
-}
-
 void BatteryWidget::updateImage(bool charging, int level)
 {    
     static int chargingImageIndex = 5;   
@@ -348,8 +341,7 @@ void BatteryWidget::stopUpdatingChargingImage()
         delete updateChargingImageTimer;
         updateChargingImageTimer = NULL;        
     }
-    batteryIf->batteryLevelValueRequired();
-    updateImage(false, (batteryIf->call("batteryLevelValue", BatteryDBusInterface::DBusDataTypeInt)).toInt());
+    batteryIf->batteryLevelValueRequired();    
 }
 
 void BatteryWidget::batteryLevelValueChanged(int value)
