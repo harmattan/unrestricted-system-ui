@@ -1,11 +1,12 @@
 #include "batterywidget.h"
 #include "batterytranslation.h"
+#include "batterydbusinterface.h"
 #include "dcpbattery.h"
 #include "dcpspaceritem.h"
 
 #include <QDebug>
 #include <QTimer>
-#include <QColor>
+
 
 #include <DuiButton>
 #include <DuiLayout>
@@ -25,15 +26,24 @@ BatteryWidget::BatteryWidget(QGraphicsWidget *parent)
 }
 
 BatteryWidget::~BatteryWidget()
-{
-    delete batteryGConf;
-    batteryGConf = NULL;
+{    
 }
 
 void BatteryWidget::initWidget()
 {
-    //create gconf if
-    batteryGConf = new BatteryGConf();   
+    //create dbus if
+    batteryIf = new BatteryDBusInterface();
+
+    // catch battery If actions
+    connect(batteryIf, SIGNAL(batteryCharging()), this, SLOT(startUpdatingChargingImage()));
+    connect(batteryIf, SIGNAL(batteryNotCharging()), this, SLOT(stopUpdatingChargingImage()));
+    connect(batteryIf, SIGNAL(batteryLevelValueChanged(int)), this, SLOT(batteryLevelValueChanged(int)));
+    connect(batteryIf, SIGNAL(PSMToggleValueChanged(bool)), this, SLOT(updatePSMToggleButton(bool)));
+    connect(batteryIf, SIGNAL(PSMDisabledValueChanged(bool)), this, SLOT(updatePSMDisableButton(bool)));
+    connect(batteryIf, SIGNAL(PSMThresholdValuesAvailable(QStringList)), this, SLOT(initSlider(QStringList)));
+    connect(batteryIf, SIGNAL(PSMThresholdValueAvailable(QString)), this, SLOT(updateSlider(QString)));
+    connect(batteryIf, SIGNAL(remainingTimeValuesAvailable(QStringList)), this, SLOT(updateLabels(QStringList)));
+    connect(batteryIf, SIGNAL(batteryLevelValueAvailable(int)), this, SLOT(updateNotChargingImage(int)));
 
     int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
     updateChargingImageTimer = NULL;
@@ -73,10 +83,10 @@ void BatteryWidget::initWidget()
     DuiGridLayoutPolicy *PSMLayoutPolicy = new DuiGridLayoutPolicy(PSMLayout);
     PSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::PSMText), 0, 0);
     PSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::NBCText), 1, 0);
-    PSMButton = new DuiButton();
+    PSMButton = new DuiButton();    
     PSMButton->setCheckable(true);    
-    PSMButton->setObjectName("PSMButton");
-    updateButton(PSMButton, batteryGConf->value(BatteryGConf::PSMToggleKey).toBool());
+    PSMButton->setObjectName("PSMToggleButton");    
+    batteryIf->PSMToggleValueRequired();
     PSMLayoutPolicy->addItemAtPosition(PSMButton, 0, 1, 2, 1, Qt::AlignRight);
 
     DuiStylableWidget *PSMLayoutWidget = new DuiStylableWidget();
@@ -105,7 +115,8 @@ void BatteryWidget::initWidget()
     DuiGridLayoutPolicy *sliderLayoutPolicy = new DuiGridLayoutPolicy(sliderLayout);
     sliderLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::AutoPSMText), 0, 0);
     sliderLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::AutoPSMDescText), 1, 0);
-    initSlider();
+    slider = new DuiSlider(0, "continuous");
+    batteryIf->PSMThresholdValuesRequired();
     sliderLayoutPolicy->addItemAtPosition(slider, 2, 0);    
 
     DuiStylableWidget *sliderLayoutWidget = new DuiStylableWidget();
@@ -117,11 +128,11 @@ void BatteryWidget::initWidget()
      */
     DuiLayout *disablePSMLayout = new DuiLayout(0);
     DuiGridLayoutPolicy *disablePSMLayoutPolicy = new DuiGridLayoutPolicy(disablePSMLayout);
-    disablePSMButton = new DuiButton();
-    disablePSMButton->setCheckable(true);    
-    disablePSMButton->setObjectName("disablePSMButton");
-    updateButton(disablePSMButton, batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool());
-    disablePSMLayoutPolicy->addItemAtPosition(disablePSMButton, 0, 0);
+    PSMDisableButton = new DuiButton();    
+    PSMDisableButton->setCheckable(true);
+    PSMDisableButton->setObjectName("PSMDisableButton");    
+    batteryIf->PSMDisabledValueRequired();
+    disablePSMLayoutPolicy->addItemAtPosition(PSMDisableButton, 0, 0);
     disablePSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::DisablePSMText), 0, 1);
     disablePSMLayoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::AutoPSMAdv1Text), 1, 0, 1, 2);
     disablePSMLayoutPolicy->addItemAtPosition(new DuiLabel(QString("- " + DcpBattery::AutoPSMAdv2Text)), 2, 0, 1, 2);
@@ -154,18 +165,13 @@ void BatteryWidget::initWidget()
 
     // catch user actions
     connect(PSMButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
-    connect(disablePSMButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
+    connect(PSMDisableButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
-    
-    // catch system actions
-    connect(batteryGConf, SIGNAL(valueChanged(BatteryGConf::GConfKey, QVariant)),
-            this, SLOT(gConfValueChanged(BatteryGConf::GConfKey, QVariant)));        
+        
+    //update labels
+    batteryIf->remainingTimeValuesRequired();
 
-    //disable the PSM widgets if PSM is disabled
-    togglePSMWidgets(!batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool());
-
-    //indicate that the talkTimeLabel and standByTime labels need to be updated
-    indicateNeedForUpdatingLabels();
+    //TODO: Before setting, be sure that UI is initialized
 
     this->setLayout(mainLayout);
 }
@@ -207,72 +213,39 @@ void BatteryWidget::initImage()
 
     image = new DuiImage();
 
-    if(batteryGConf->value(BatteryGConf::ChargingKey).toBool()) //is charging
-        startUpdatingChargingImage();
-    else
-        updateImage(false, batteryGConf->value(BatteryGConf::BatteryLevelKey).toInt());
+    batteryIf->BatteryChargingStateRequired();    
 }
 
-void BatteryWidget::initSlider()
-{
-    slider = new DuiSlider(0, "continuous");
-
-    sliderValues = batteryGConf->value(BatteryGConf::PSMThresholdValuesKey).toList();
-    slider->setRange(0,sliderValues.size()-1);
-    slider->setValue(sliderValues.indexOf(batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()));
-    slider->setThumbLabel(QString("%1%").arg(batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()));
-    slider->setThumbLabelVisible(true);
+void BatteryWidget::initSlider(QStringList values)
+{    
+    sliderValues = QStringList(values);
+    //sliderValues << values.at(0) << values.at(1) << values.at(2); 
+    slider->setRange(0,sliderValues.size()-1);    
     slider->setOrientation(Qt::Horizontal);
+
+    batteryIf->PSMThresholdValueRequired();
 }
 
-void BatteryWidget::sliderValueChanged(int newValue)
+void BatteryWidget::sliderValueChanged(int value)
 {  
-    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(sliderValues.at(newValue)));
+    qDebug() << "BatteryWidget::sliderValueChanged(" << value << ")";
+    batteryIf->setPSMThresholdValue(sliderValues.at(value));    
+    updateSlider(sliderValues.at(value));
 }
 
 void BatteryWidget::buttonPressed()
 {    
+    qDebug() << "BatteryWidget::buttonPressed()";
     DuiButton *duiButton = static_cast<DuiButton*>(this->sender());
-    BatteryGConf::GConfKey key;
-    QVariant value;
 
-    if(duiButton->objectName() == "PSMButton") {
-        key = BatteryGConf::PSMToggleKey;
-        value = batteryGConf->value(key).toBool() ? QVariant(false) : QVariant(true);
-    }
-    else if(duiButton->objectName() == "disablePSMButton") {
-        key = BatteryGConf::PSMDisabledKey;
-        value = batteryGConf->value(key).toBool() ? QVariant(false) : QVariant(true);
-    }
-    batteryGConf->setValue(key, value);
-}
-
-void BatteryWidget::gConfValueChanged(BatteryGConf::GConfKey key, QVariant value)
-{    
-    switch(key) {
-        case BatteryGConf::PSMToggleKey:
-            updateButton(PSMButton, value.toBool());
-            break;
-        case BatteryGConf::PSMDisabledKey:
-            updateButton(disablePSMButton, value.toBool());
-            togglePSMWidgets(!value.toBool());
-            break;
-        case BatteryGConf::PSMThresholdKey:
-            updateSlider(QString("%1%").arg(value.toInt()));
-            break;
-        case BatteryGConf::RemainingTimesKey:
-            updateLabels(value.toList());
-            break;        
-        case BatteryGConf::BatteryLevelKey:
-            if(!batteryGConf->value(BatteryGConf::ChargingKey).toBool()) //only update, if not charging
-                updateImage(false, value.toInt());
-            break;
-        case BatteryGConf::ChargingKey:            
-            updateImage(value.toBool(), batteryGConf->value(BatteryGConf::BatteryLevelKey).toInt());
-            break;
-        default:
-            break;
-    }   
+    if(duiButton->objectName() == "PSMToggleButton")
+        batteryIf->setPSMToggleValue(duiButton->isChecked());
+    else if(duiButton->objectName() == "PSMDisableButton") {        
+        batteryIf->setPSMDisabledValue(duiButton->isChecked());
+        if(duiButton->isChecked())
+            batteryIf->setPSMToggleValue(false);
+        togglePSMWidgets(!duiButton->isChecked());
+    }    
 }
 
 QString BatteryWidget::minutesInString(int mins, QString pattern)
@@ -297,53 +270,59 @@ QString BatteryWidget::minutesInString(int mins, QString pattern)
 void BatteryWidget::togglePSMWidgets(bool enable)
 {
     PSMButton->setEnabled(enable);
-    updateButton(PSMButton, false);
     slider->setEnabled(enable);
 }
 
-void BatteryWidget::updateButton(DuiButton *button, bool toggle)
-{        
+void BatteryWidget::updatePSMToggleButton(bool toggle)
+{
+    updateButton(toggle, PSMButton);
+}
+
+void BatteryWidget::updatePSMDisableButton(bool toggle)
+{    
+    updateButton(toggle, PSMDisableButton);
+    if(toggle) //PSM disabled
+        togglePSMWidgets(false);
+}
+
+void BatteryWidget::updateButton(bool toggle, DuiButton *button)
+{    
     button->setChecked(toggle);
 }
 
-void BatteryWidget::updateSlider(const QString &text)
+void BatteryWidget::updateSlider(const QString &value)
 {    
-    slider->setThumbLabel(text);    
+    if( slider != NULL) {       
+        slider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
+        slider->setThumbLabel(QString("%1%").arg(value));
+    }
 }
 
-void BatteryWidget::updateLabels(const QList<QVariant> &values)
+void BatteryWidget::updateLabels(const QStringList &timeValues)
 {
-    qDebug() << "BatteryWidget::updateLabels()" << values.at(0).toInt();
-    if(values.at(0).toInt() == -1) // self-set
-        return;
+    qDebug() << "BatteryWidget::updateLabels(const QStringList &timeValues)";
 
-    talkTimeLabel->setText(minutesInString(values.at(0).toInt(), DcpBattery::TalkTimeValueText));
-    standByTimeLabel->setText(minutesInString(values.at(1).toInt(), DcpBattery::StandByTimeValueText));
+    talkTimeLabel->setText(minutesInString(timeValues.at(0).toInt(), DcpBattery::TalkTimeValueText));
+    standByTimeLabel->setText(minutesInString(timeValues.at(1).toInt(), DcpBattery::StandByTimeValueText));
 
-    indicateNeedForUpdatingLabels();
+    QTimer::singleShot(10000, batteryIf, SLOT(remainingTimeValuesRequired()));
 }
 
-void BatteryWidget::indicateNeedForUpdatingLabels()
+void BatteryWidget::updateNotChargingImage(int level)
 {
-    qDebug() << "Indicate need";
-    QList<QVariant> newValues;
-    newValues << QVariant(-1) << QVariant(-1);
-    batteryGConf->setValue(BatteryGConf::RemainingTimesKey, newValues);
+    updateImage(false, level);
 }
 
 void BatteryWidget::updateImage(bool charging, int level)
 {    
     static int chargingImageIndex = 5;   
 
-    if(charging) {
-        startUpdatingChargingImage();
+    if(charging) {        
         if(chargingImageIndex < 0)
             chargingImageIndex = 5;
         image->setImage(QImage(batteryChargingImages.at(chargingImageIndex--)));
     }
-    else {
-        stopUpdatingChargingImage();
-
+    else {        
         if(level > 0)
             image->setImage(QImage(batteryImages.at(level)));
         chargingImageIndex = 5;
@@ -367,6 +346,14 @@ void BatteryWidget::stopUpdatingChargingImage()
         qDebug() << "stopUpdatingChargingImage()";
         updateChargingImageTimer->stop();
         delete updateChargingImageTimer;
-        updateChargingImageTimer = NULL;
+        updateChargingImageTimer = NULL;        
     }
+    batteryIf->batteryLevelValueRequired();
+    updateImage(false, (batteryIf->call("batteryLevelValue", BatteryDBusInterface::DBusDataTypeInt)).toInt());
+}
+
+void BatteryWidget::batteryLevelValueChanged(int value)
+{
+    if(updateChargingImageTimer == NULL)
+        updateImage(false, value);
 }

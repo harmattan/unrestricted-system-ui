@@ -15,12 +15,8 @@ public:
     enum GConfKey {        
         PSMToggleKey,
         PSMDisabledKey,
-        PSMThresholdKey,        
-        PSMThresholdValuesKey,
-        RemainingTimesKey,
-        BatteryLevelKey,
-        ChargingKey
-   };
+        PSMThresholdKey
+    };
 
     BatteryGConf();
     virtual ~BatteryGConf();

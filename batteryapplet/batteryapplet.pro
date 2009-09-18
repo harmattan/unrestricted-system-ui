@@ -6,24 +6,23 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui
-
-contains(cov, true) {
-   message("Coverage options enabled")
-   QMAKE_CXXFLAGS += --coverage
-   QMAKE_LFLAGS += --coverage
+QT += dbus
+contains(cov, true) { 
+    message("Coverage options enabled")
+    QMAKE_CXXFLAGS += --coverage
+    QMAKE_LFLAGS += --coverage
 }
-
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = batteryapplet.h \
     batterywidget.h \
     batterytranslation.h \
-    batterybrief.h \
-    batterygconf.h
+    batterybrief.h \    
+    batterydbusinterface.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
-    batterybrief.cpp \
-    batterygconf.cpp
+    batterybrief.cpp \    
+    batterydbusinterface.cpp
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

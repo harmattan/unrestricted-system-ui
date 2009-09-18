@@ -1,10 +1,10 @@
-#PSMButton {
+#PSMToggleButton {
 	preferred-size: size(35, 35);
 	minimum-size: size(35, 35);
 	maximum-size: size(35, 35);
 }
 
-#disablePSMButton {
+#PSMDisableButton {
 	preferred-size: size(35, 35);
 	minimum-size: size(35, 35);
 	maximum-size: size(35, 35);

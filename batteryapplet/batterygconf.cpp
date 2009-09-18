@@ -13,11 +13,6 @@ BatteryGConf::BatteryGConf()
     duiGConfItems.insert(BatteryGConf::PSMToggleKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMToggleKey)));
     duiGConfItems.insert(BatteryGConf::PSMDisabledKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMDisabledKey)));
     duiGConfItems.insert(BatteryGConf::PSMThresholdKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdKey)));
-    duiGConfItems.insert(BatteryGConf::PSMThresholdValuesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::PSMThresholdValuesKey)));
-    duiGConfItems.insert(BatteryGConf::RemainingTimesKey, new DuiGConfItem(mapGConfKey(BatteryGConf::RemainingTimesKey)));
-    duiGConfItems.insert(BatteryGConf::BatteryLevelKey, new DuiGConfItem(mapGConfKey(BatteryGConf::BatteryLevelKey)));
-    duiGConfItems.insert(BatteryGConf::ChargingKey, new DuiGConfItem(mapGConfKey(BatteryGConf::ChargingKey)));    
-
 
     QHash<BatteryGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -69,18 +64,6 @@ QString BatteryGConf::mapGConfKey(BatteryGConf::GConfKey key)
             break;
         case BatteryGConf::PSMThresholdKey:
             keyStr = keyStr.arg(Dir).arg("/BatteryPSMThreshold");
-            break;
-        case BatteryGConf::PSMThresholdValuesKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryPSMThresholdValues");
-            break;
-        case BatteryGConf::RemainingTimesKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryRemainingTimes");
-            break;        
-        case BatteryGConf::BatteryLevelKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryLevel");
-            break;
-        case BatteryGConf::ChargingKey:
-            keyStr = keyStr.arg(Dir).arg("/BatteryCharging");
             break;        
         default:
             break;

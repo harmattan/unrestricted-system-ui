@@ -8,13 +8,11 @@ QT += dbus
 LIBS += -lsystem \
     -lX11 \
     -lcallui0
-
-contains(cov, true) {
+contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
     QMAKE_LFLAGS += --coverage
 }
-
 SOURCES += main.cpp \
     notifier.cpp \
     batterybusinesslogic.cpp \
@@ -27,10 +25,10 @@ SOURCES += main.cpp \
     unlockslider.cpp \
     eventhandler.cpp \
     eventeater.cpp \
-    ../batteryapplet/batterygconf.cpp \
+    batterygconf.cpp \
     shutdowndialog.cpp \
-    shutdowndialogbusinesslogic.cpp
-
+    shutdowndialogbusinesslogic.cpp \
+    batterybusinesslogicadaptor.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -43,10 +41,10 @@ HEADERS += main.h \
     unlockslider.h \
     eventhandler.h \
     eventeater.h \
-    ../batteryapplet/batterygconf.h \    
+    batterygconf.h \
     shutdowndialog.h \
-    shutdowndialogbusinesslogic.h
-
+    shutdowndialogbusinesslogic.h \
+    batterybusinesslogicadaptor.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery

@@ -20,39 +20,39 @@ public:
     BatteryBusinessLogic();
     virtual ~BatteryBusinessLogic();
 
-    bool initGConfSucceeded();
+    void togglePSMDisabled(bool disabled);
+    void setPSMThreshold(QString threshold);
+    void togglePSM(bool toggle);    
+    int batteryLevelValue();
+    bool batteryChargingState();
+    QVariant GConfItemValue(BatteryGConf::GConfKey key);
+    QStringList remainingTimeValues();
+    QStringList PSMThresholdValues();
 
 signals:
-    void charging();
+    void batteryCharging();
+    void batteryNotCharging();
+    void batteryLevelValueChanged(int level);
+    void PSMToggleValueChanged(bool toggle);
+
+public slots:
+    void initBattery();
 
 private: //attributes    
     QmBattery *battery;
     QmDeviceMode *deviceMode;    
-
     Notifier *uiNotif;
     BatteryGConf *batteryGConf;
-
-    QHash<QmBattery::Level, int> batteryLevels;
-    bool updateRemainingTimesBusy;
-    bool forceUpdateRemainingTimes;
-    bool initGConfSuccess;
+    QHash<QmBattery::Level, QString> batteryLevels;
 
 private: //methods
-    bool initBatteryGConfKeys();
-    void checkChargingState();
-    void checkBatteryLevel();
-    void togglePSM(bool toggle);    
+    void initBatteryGConfKeys();    
     void checkPSMThreshold(Maemo::QmBattery::Level level);    
-
-public slots:
-    void checkBattery();
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);
     void batteryStateChanged(Maemo::QmBattery::State state);    
     void activatePSM();
-    void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
-    void updateRemainingTimes();
     void utiliseLED(bool activate, const QString &pattern);
 
 };

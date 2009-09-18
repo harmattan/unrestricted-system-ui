@@ -5,6 +5,7 @@
 
 #include "pincodequerybusinesslogic.h"
 #include "batterybusinesslogic.h"
+#include "batterybusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "shutdowndialogbusinesslogic.h"
 #include "eventhandler.h"
@@ -19,6 +20,7 @@ public:
 private:
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
     BatteryBusinessLogic *batteryLogic;
+    BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownDialogBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;

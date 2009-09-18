@@ -1,6 +1,7 @@
 #include <DuiLocale>
 #include <DuiTheme>
 
+#include <QDBusConnection>
 #include <QDebug>
 
 #include "sysuid.h"
@@ -15,12 +16,14 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS("pinquery.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Energy UI */
-    batteryLogic = new BatteryBusinessLogic();
-    if(!batteryLogic->initGConfSucceeded()) {
-        delete batteryLogic;
-        batteryLogic = NULL;
+    /* Battery */
+    batteryLogic = new BatteryBusinessLogic();    
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);
+    if (!QDBusConnection::sessionBus().registerService("org.freedesktop.DBus.Battery")) {
+        qDebug() << "failed to register dbus service";
+        exit(1);
     }
+    QDBusConnection::sessionBus().registerObject(QString("/"), batteryLogic);
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -37,8 +40,8 @@ Sysuid::Sysuid() : QObject()
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();
     connect(lockScreenLogic, SIGNAL(lockScreenOff()),
-            batteryLogic, SLOT(checkBattery()));
-    connect(batteryLogic, SIGNAL(charging()),
+            batteryLogic, SLOT(initBattery()));
+    connect(batteryLogic, SIGNAL(batteryCharging()),
             lockScreenLogic, SLOT(sleepModeOff()));
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()),
             lockScreenLogic, SLOT(shortPowerKeyPressOccured()));

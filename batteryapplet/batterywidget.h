@@ -2,13 +2,14 @@
 #define BATTERYWIDGET_H
 
 #include "dcpwidget.h" 
-#include "batterygconf.h"
 
 class DuiLabel;
 class DuiButton;
 class DuiSlider;
 class DuiImage;
 class QTimer;
+class QDBusInterface;
+class BatteryDBusInterface;
 
 class BatteryWidget : public DcpWidget
 {
@@ -22,35 +23,37 @@ protected:
     void initWidget();
 
 private slots:
-    void sliderValueChanged(int newValue);
+    void sliderValueChanged(int value);
     void buttonPressed();
-    void gConfValueChanged(BatteryGConf::GConfKey key, QVariant value);
+    void updateNotChargingImage(int level);
     void updateImage(bool charging = true, int level = -1);
-
-private: //methods
-    void initSlider();
-    void initImage();
-    QString minutesInString(int mins, QString pattern);
-    void updateButton(DuiButton *button, bool toggle);
-    void updateSlider(const QString &text);
-    void updateLabels(const QList<QVariant> &value);
-    void togglePSMWidgets(bool enable);
-    void indicateNeedForUpdatingLabels();
+    void updatePSMToggleButton(bool toggle);
+    void updatePSMDisableButton(bool toggle);
+    void updateButton(bool toggle, DuiButton *button);
+    void batteryLevelValueChanged(int value);
     void startUpdatingChargingImage();
     void stopUpdatingChargingImage();
+    void updateLabels(const QStringList &timeValues);
+    void initSlider(QStringList values);
+    void updateSlider(const QString &text);
+
+private: //methods    
+    void initImage();
+    QString minutesInString(int mins, QString pattern);
+    void togglePSMWidgets(bool enable);        
 
 private: //attributes
     DuiLabel *talkTimeLabel;
     DuiLabel *standByTimeLabel;    
     DuiButton *PSMButton;
-    DuiButton *disablePSMButton;   
+    DuiButton *PSMDisableButton;
     DuiSlider *slider;
-    DuiImage *image;
-    QList<QVariant> sliderValues;
+    DuiImage *image;    
     QStringList batteryImages;
-    QStringList batteryChargingImages;    
-    BatteryGConf *batteryGConf;
+    QStringList batteryChargingImages;
+    QStringList sliderValues;
     QTimer *updateChargingImageTimer;
+    BatteryDBusInterface *batteryIf;
 
 };
 #endif // BATTERYWIDGET_H
