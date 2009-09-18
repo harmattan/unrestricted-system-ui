@@ -5,12 +5,22 @@
 #include <QHash>
 
 class CancellableNotification;
+class QDBusInterface;
 
 class Notifier : public QObject
 {
     Q_OBJECT
 
 public:
+    // temporary event-types for notifications, defined as "what I want".
+    // correct types aren't specified yet by duihome.
+    // type is always mapped to 'new-message' --> shows envelope icon in info banner.
+    enum NotificationType {
+        error,
+        info,
+        warning
+    };
+
     Notifier();
     virtual ~Notifier();
 
@@ -18,7 +28,7 @@ signals:
     void notifTimeout();
 
 public slots:    
-    void showNotification(QString notifText);
+    void showNotification(QString notifText, Notifier::NotificationType type = info);
     void showCancellableNotification(QString notifText,
                                      int appearTime,
                                      QString appearTimeVariable,
@@ -29,8 +39,14 @@ private slots:
     void cancellableNotificationCancelled();
     void cancellableNotificationTimeout();
 
+private:
+    void showDBusNotification(QString notifText, QString evetType);
+    void removeNotification(unsigned int id);
+
 private:    
     CancellableNotification *cancellableNotification;
+    QDBusInterface* managerIf;
+    unsigned int notifId;
 
 };
 

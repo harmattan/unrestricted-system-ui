@@ -170,13 +170,13 @@ void PinCodeQueryBusinessLogic::ui2SIMLocked()
     uiPin->getCancelBtn()->setEnabled(true);
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
-    uiNotif->showNotification(SIMLocked);
+    uiNotif->showNotification(SIMLocked, Notifier::error);
 }
 void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 {
     qDebug() << "ui2first...";
     if (SIMhotswapped)
-        uiNotif->showNotification(SIMCardInserted);
+        uiNotif->showNotification(SIMCardInserted, Notifier::info);
 
     subState = SubFirstTry;
     createUi();
@@ -187,12 +187,12 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
     switch (attemptsLeft) {
     case 2:
-        uiNotif->showNotification(PINCodeIncorrect2AttemptsLeft);
+        uiNotif->showNotification(PINCodeIncorrect2AttemptsLeft, Notifier::error);
         uiPin->setHeader(trid("qtn_cell_enter_pin_code_2",
                               "Enter PIN code. 2 attempts remaining."));
         break;
     case 1:
-        uiNotif->showNotification(PINCodeIncorrect1AttemptLeft);
+        uiNotif->showNotification(PINCodeIncorrect1AttemptLeft, Notifier::error);
         uiPin->setHeader(trid("qtn_cell_enter_pin_code_1",
                               "Enter PIN code. 1 attempt remaining."));
         break;
@@ -200,13 +200,13 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 }
 void PinCodeQueryBusinessLogic::ui2PINFailedNowPUK()
 {
-    uiNotif->showNotification(PINCodeIncorrectPUKCodeRequired);
+    uiNotif->showNotification(PINCodeIncorrectPUKCodeRequired, Notifier::error);
     uiPin->setHeader(trid("qtn_cell_enter_puk_code", "Enter PUK code"));
 }
 void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
 {
     if (SIMhotswapped)
-        uiNotif->showNotification(SIMCardInserted);
+        uiNotif->showNotification(SIMCardInserted, Notifier::info);
 
     createUi();
     uiPin->getCancelBtn()->setEnabled(true);
@@ -215,11 +215,11 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 {
     attemptsLeft++; // warnings off
-    uiNotif->showNotification(PUKCodeIncorrect);
+    uiNotif->showNotification(PUKCodeIncorrect, Notifier::error);
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 {
-    uiNotif->showNotification(SIMCardRejected);
+    uiNotif->showNotification(SIMCardRejected, Notifier::error);
     ui2disappear();
 }
 void PinCodeQueryBusinessLogic::ui2PUKOk()
@@ -248,7 +248,7 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 {
     ui2disappear();
-    uiNotif->showNotification(notifText);
+    uiNotif->showNotification(notifText, Notifier::info);
 }
 
 
@@ -306,7 +306,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
                     subState = SubEnterNewPIN;
                     uiPin->setHeader(trid("qtn_cell_enter_new_pin",
                                           "Enter new PIN code"));
-                    uiNotif->showNotification(PINCodesDoNotMatch);
+                    uiNotif->showNotification(PINCodesDoNotMatch, Notifier::error);
                 }
             }
         break;
@@ -488,7 +488,7 @@ void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 {
     if(handleSIMLockError(error))
-        uiNotif->showNotification(SIMUnlocked);
+        uiNotif->showNotification(SIMUnlocked, Notifier::info);
 
     //what is the next SIMStatus?
 }
@@ -508,7 +508,7 @@ void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
     // warnings...
     attempts++;
     if(attempts > 0) //if no more attempts, showing only the rejected notification
-        uiNotif->showNotification(PUKCodeIncorrect);
+        uiNotif->showNotification(PUKCodeIncorrect, Notifier::error);
 }
 
 void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
@@ -516,7 +516,7 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
     handleSIMError(error);
 
     if(success) {
-        uiNotif->showNotification(PINCodeChanged);
+        uiNotif->showNotification(PINCodeChanged, Notifier::info);
         ui2disappear();
     }
 }
@@ -530,7 +530,7 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
         success = true;
         break;
     case SIMErrorNoSIM:
-        uiNotif->showNotification(SIMCardNotInserted);
+        uiNotif->showNotification(SIMCardNotInserted, Notifier::error);
         break;        
     case SIMErrorPINDisabled:
     case SIMErrorCodeBlocked:
@@ -538,7 +538,7 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
         // no need to show notification
         break;
     case SIMErrorSIMRejected:
-        uiNotif->showNotification(SIMCardRejected);
+        uiNotif->showNotification(SIMCardRejected, Notifier::error);
         break;
 
     //TODO: What to do with these???
@@ -552,7 +552,7 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
     case SIMErrorUnknown:
     default:
         //not necessarily to be shown to end user
-        uiNotif->showNotification(TechnicalProblem);
+        uiNotif->showNotification(TechnicalProblem, Notifier::error);
         break;
     }
     return success;
@@ -569,7 +569,7 @@ bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
         break;
     case SIMLockErrorWrongPassword: /*!< Incorrect unlock code */
 
-        uiNotif->showNotification("NOTIFICATION NEEDED. VAPPU WILL PROVIDE.");
+        uiNotif->showNotification("NOTIFICATION NEEDED. VAPPU WILL PROVIDE.", Notifier::error);
 
         break;
     case SIMLockErrorBusCommunication: /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
@@ -581,7 +581,7 @@ bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
     case SIMLockErrorUnknown: /*!< General SIM lock unlocking failure */
     default:
         //not necessarily to be shown to end user
-        uiNotif->showNotification(TechnicalProblem);
+        uiNotif->showNotification(TechnicalProblem, Notifier::error);
         break;
     }
     return success;
