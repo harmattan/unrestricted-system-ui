@@ -12,7 +12,6 @@
 #include <DuiLinearLayoutPolicy>
 #include <DuiLabel>
 #include <DuiSlider>
-#include <DuiSceneManager>
 #include <DuiStylableWidget>
 
 DisplayWidget::DisplayWidget(QGraphicsWidget *parent)
@@ -36,9 +35,7 @@ void DisplayWidget::initWidget()
     connect(displayIf, SIGNAL(brightnessValueReceived(QString)), this, SLOT(updateBrightnessSlider(QString)));
     connect(displayIf, SIGNAL(screenLightsValuesReceived(QStringList)), this, SLOT(initScreenLightsSlider(QStringList)));
     connect(displayIf, SIGNAL(screenLightsValueReceived(QString)), this, SLOT(updateScreenLightsSlider(QString)));
-    connect(displayIf, SIGNAL(screenLightsToggleValueReceived(bool)), this, SLOT(updateScreenLightsButton(bool)));
-
-    int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();    
+    connect(displayIf, SIGNAL(screenLightsToggleValueReceived(bool)), this, SLOT(updateScreenLightsButton(bool)));    
 
     /*
      * brightnessLayoutWidget
