@@ -38,7 +38,7 @@ private slots:
 
 private: //methods    
     void initImage();
-    QString minutesInString(int mins, QString pattern);
+    QString minutesInString(int mins, const QString &pattern);
     void togglePSMWidgets(bool enable);        
 
 private: //attributes

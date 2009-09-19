@@ -17,6 +17,7 @@
 	minimum-size: size(400, 50);
 	maximum-size: size(400, 50);
 }
+
 #layoutWidget2 {
 	background-opacity: 255;
     	background-color: #141414;
@@ -24,6 +25,7 @@
 	minimum-size: size(807, 150);
 	maximum-size: size(807, 150);
 }
+
 #layoutWidget3 {
 	background-opacity: 255;
     	background-color: #141414;

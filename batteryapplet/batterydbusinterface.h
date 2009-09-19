@@ -35,13 +35,13 @@ private slots:
 signals:
     void batteryCharging();
     void batteryNotCharging();
-    void batteryLevelValueChanged(int level);
-    void PSMToggleValueReceived(bool value);
-    void PSMDisabledValueReceived(bool value);
-    void PSMThresholdValuesReceived(const QStringList &values);
-    void PSMThresholdValueReceived(const QString &value);
-    void remainingTimeValuesReceived(const QStringList &values);
-    void batteryLevelValueReceived(int value);
+    void batteryLevelValueChanged(int);
+    void PSMToggleValueReceived(bool);
+    void PSMDisabledValueReceived(bool);
+    void PSMThresholdValuesReceived(QStringList);
+    void PSMThresholdValueReceived(QString);
+    void remainingTimeValuesReceived(QStringList);
+    void batteryLevelValueReceived(int);
 
 private:
     QDBusInterface *dbusIf;

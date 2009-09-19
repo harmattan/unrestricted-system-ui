@@ -246,7 +246,7 @@ void BatteryWidget::buttonPressed()
     }    
 }
 
-QString BatteryWidget::minutesInString(int mins, QString pattern)
+QString BatteryWidget::minutesInString(int mins, const QString &pattern)
 {    
     //removing possible extra "!! " from in front
     QString patternCut = pattern.right(pattern.length() - pattern.indexOf("%1"));
