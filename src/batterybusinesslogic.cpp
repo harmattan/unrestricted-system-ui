@@ -6,12 +6,12 @@
 #include <DuiLocale>
 #include <DuiApplicationWindow>
 
-BatteryBusinessLogic::BatteryBusinessLogic()
+BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf) :
+        systemUIGConf(systemUIGConf)
 {    
     battery = new QmBattery();
     deviceMode = new QmDeviceMode();    
-    uiNotif = new Notifier();
-    batteryGConf = new BatteryGConf();
+    uiNotif = new Notifier();    
 
     /* init the battery levels */
     batteryLevels.insert(QmBattery::LevelFull, QString("100"));
@@ -22,7 +22,7 @@ BatteryBusinessLogic::BatteryBusinessLogic()
     batteryLevels.insert(QmBattery::LevelCritical, QString("5"));
 
     /* check if gconfvalues need to initialized */
-    initBatteryGConfKeys();
+    initSystemUIGConfKeys();
 
     /* connect to QmSystem signals */
     connect(battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
@@ -42,13 +42,13 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
 }
 
 
-void BatteryBusinessLogic::initBatteryGConfKeys()
+void BatteryBusinessLogic::initSystemUIGConfKeys()
 {
-    if(batteryGConf->keyCount() < 3) {
+    if(systemUIGConf->keyCount(SystemUIGConf::Battery) < 3) {
         /* GConf keys have not yet been set. */
-        batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(deviceMode->getPSMState() == Maemo::QmDeviceMode::PSMStateOn ? true : false));
-        batteryGConf->setValue(BatteryGConf::PSMDisabledKey, QVariant(false));
-        batteryGConf->setValue(BatteryGConf::PSMThresholdKey, QVariant(batteryLevels.value(QmBattery::LevelLow)));     
+        systemUIGConf->setValue(SystemUIGConf::BatteryPSMToggleKey, QVariant(deviceMode->getPSMState() == Maemo::QmDeviceMode::PSMStateOn ? true : false));
+        systemUIGConf->setValue(SystemUIGConf::BatteryPSMDisabledKey, QVariant(false));
+        systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant(batteryLevels.value(QmBattery::LevelLow)));
     }    
 }
 
@@ -132,9 +132,9 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
 {
     qDebug() << "BatteryBusinessLogic::checkPSMThreshold(" << level << ")";
-    if(level <= batteryGConf->value(BatteryGConf::PSMThresholdKey).toInt()) {
+    if(level <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()) {
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
-           && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
+           && systemUIGConf->value(SystemUIGConf::BatteryPSMDisabledKey).toBool() == false) {
             // Send a notification that can be cancelled.
             // If it's not cancelled, after certain time the notifier emits a signal.
             // We catch this signal to set the PSM
@@ -166,10 +166,10 @@ void BatteryBusinessLogic::togglePSM(bool toggle)
     qDebug() << "BatteryBusinessLogic::togglePSM(" << toggle << ")";    
     if(toggle) { //turn on the PSM
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff
-           && batteryGConf->value(BatteryGConf::PSMDisabledKey).toBool() == false) {
+           && systemUIGConf->value(SystemUIGConf::BatteryPSMDisabledKey).toBool() == false) {
             qDebug() << "Turn ON The PSM";
             deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
-            batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(toggle));
+            systemUIGConf->setValue(SystemUIGConf::BatteryPSMToggleKey, QVariant(toggle));
             emit PSMToggleValueChanged(toggle);
         }
     }
@@ -177,7 +177,7 @@ void BatteryBusinessLogic::togglePSM(bool toggle)
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOn) {
             qDebug() << "Turn OFF The PSM";
             deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
-            batteryGConf->setValue(BatteryGConf::PSMToggleKey, QVariant(toggle));
+            systemUIGConf->setValue(SystemUIGConf::BatteryPSMToggleKey, QVariant(toggle));
             emit PSMToggleValueChanged(toggle);
         }
     }    
@@ -214,23 +214,23 @@ void BatteryBusinessLogic::utiliseLED(bool activate, const QString &pattern)
 void BatteryBusinessLogic::togglePSMDisabled(bool disabled)
 {    
     qDebug() << "BatteryBusinessLogic::togglePSMDisabled(" << disabled << ")";
-    batteryGConf->setValue(BatteryGConf::PSMDisabledKey, disabled);
+    systemUIGConf->setValue(SystemUIGConf::BatteryPSMDisabledKey, QVariant(disabled));
     if(disabled) //PSM disabled
         togglePSM(false);
     else
         checkPSMThreshold((Maemo::QmBattery::Level)battery->chargeLevel());
 }
 
-void BatteryBusinessLogic::setPSMThreshold(QString threshold)
+void BatteryBusinessLogic::setPSMThreshold(const QString &threshold)
 {
     qDebug() << "BatteryBusinessLogic::setPSMthreshold(" << threshold << ")";
-    batteryGConf->setValue(BatteryGConf::PSMThresholdKey, threshold);
+    systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant(threshold));
     checkPSMThreshold((Maemo::QmBattery::Level)battery->chargeLevel());
 }
 
-QVariant BatteryBusinessLogic::GConfItemValue(BatteryGConf::GConfKey key)
+QVariant BatteryBusinessLogic::GConfItemValue(SystemUIGConf::GConfKey key)
 {
-    return batteryGConf->value(key);
+    return systemUIGConf->value(key);
 }
 
 QStringList BatteryBusinessLogic::PSMThresholdValues()

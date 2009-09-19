@@ -35,13 +35,13 @@ void BatteryBusinessLogicAdaptor::setPSMThresholdValue(const QString &value)
 bool BatteryBusinessLogicAdaptor::PSMToggleValue()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMToggleValue()";
-    return batteryLogic->GConfItemValue(BatteryGConf::PSMToggleKey).toBool();
+    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMToggleKey).toBool();
 }
 
 bool BatteryBusinessLogicAdaptor::PSMDisabledValue()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMDisabled()";
-    return batteryLogic->GConfItemValue(BatteryGConf::PSMDisabledKey).toBool();
+    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMDisabledKey).toBool();
 }
 
 bool BatteryBusinessLogicAdaptor::batteryChargingState()
@@ -52,8 +52,8 @@ bool BatteryBusinessLogicAdaptor::batteryChargingState()
 
 QString BatteryBusinessLogicAdaptor::PSMThresholdValue()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue(" << batteryLogic->GConfItemValue(BatteryGConf::PSMThresholdKey).toString() << ")";
-    return batteryLogic->GConfItemValue(BatteryGConf::PSMThresholdKey).toString();
+    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue(" << batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMThresholdKey).toString() << ")";
+    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMThresholdKey).toString();
 }
 
 int BatteryBusinessLogicAdaptor::batteryLevelValue()

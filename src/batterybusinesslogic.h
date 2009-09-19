@@ -2,7 +2,7 @@
 #define BATTERYBUSINESSLOGIC_H
 
 #include "notifier.h"
-#include "../batteryapplet/batterygconf.h"
+#include "systemuigconf.h"
 #include <qmsystem/qmbattery.h>
 #include <qmsystem/qmdevicemode.h>
 
@@ -17,15 +17,15 @@ class BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
 public:
-    BatteryBusinessLogic();
+    BatteryBusinessLogic(SystemUIGConf *systemUIGConf);
     virtual ~BatteryBusinessLogic();
 
     void togglePSMDisabled(bool disabled);
-    void setPSMThreshold(QString threshold);
+    void setPSMThreshold(const QString &threshold);
     void togglePSM(bool toggle);    
     int batteryLevelValue();
     bool batteryChargingState();
-    QVariant GConfItemValue(BatteryGConf::GConfKey key);
+    QVariant GConfItemValue(SystemUIGConf::GConfKey key);
     QStringList remainingTimeValues();
     QStringList PSMThresholdValues();
 
@@ -42,11 +42,11 @@ private: //attributes
     QmBattery *battery;
     QmDeviceMode *deviceMode;    
     Notifier *uiNotif;
-    BatteryGConf *batteryGConf;
+    SystemUIGConf *systemUIGConf;
     QHash<QmBattery::Level, QString> batteryLevels;
 
 private: //methods
-    void initBatteryGConfKeys();    
+    void initSystemUIGConfKeys();
     void checkPSMThreshold(Maemo::QmBattery::Level level);    
 
 private slots:

@@ -3,9 +3,11 @@
 
 #include <QObject>
 
+#include "systemuigconf.h"
 #include "pincodequerybusinesslogic.h"
 #include "batterybusinesslogic.h"
 #include "batterybusinesslogicadaptor.h"
+#include "displaybusinesslogic.h"
 #include "lockscreenbusinesslogic.h"
 #include "shutdowndialogbusinesslogic.h"
 #include "eventhandler.h"
@@ -18,12 +20,16 @@ public:
     virtual ~Sysuid();
 
 private:
+    SystemUIGConf *systemUIGConf;
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
     BatteryBusinessLogic *batteryLogic;
     BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
+    DisplayBusinessLogic *displayLogic;
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownDialogBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
+
+
 
 };
 

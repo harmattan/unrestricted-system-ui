@@ -8,8 +8,10 @@
 
 Sysuid::Sysuid() : QObject()
 {    
-
     qDebug() << "starting sysuidaemon";
+
+    /* GConf interface */
+    systemUIGConf = new SystemUIGConf();
 
     /* Pincode query variables */
     DuiTheme::addPixmapDirectory("./");
@@ -17,7 +19,7 @@ Sysuid::Sysuid() : QObject()
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery */
-    batteryLogic = new BatteryBusinessLogic();    
+    batteryLogic = new BatteryBusinessLogic(systemUIGConf);
     batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);
     if (!QDBusConnection::sessionBus().registerService("org.freedesktop.DBus.Battery")) {
         qDebug() << "failed to register dbus service";
@@ -25,10 +27,13 @@ Sysuid::Sysuid() : QObject()
     }
     QDBusConnection::sessionBus().registerObject(QString("/"), batteryLogic);
 
+    /* Display */
+    displayLogic = new DisplayBusinessLogic(systemUIGConf);    
+
     /* Event handler */
     eventHandler = new EventHandler();
 
-    /* Shutdown dialog */
+    /* Shutdown */
     shutdownLogic = new ShutdownDialogBusinessLogic();
     connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
             shutdownLogic, SLOT(openDialog(bool)));
@@ -52,13 +57,18 @@ Sysuid::Sysuid() : QObject()
 
 Sysuid::~Sysuid()
 {
+    delete systemUIGConf;
+    systemUIGConf = NULL;
     delete pinCodeQueryLogic;
     pinCodeQueryLogic = NULL;
     delete batteryLogic;
     batteryLogic = NULL;
+    delete batteryLogicAdaptor;
+    batteryLogicAdaptor = NULL;
+    delete displayLogic;
+    displayLogic = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
-
     delete shutdownLogic;
     shutdownLogic = NULL;
 }

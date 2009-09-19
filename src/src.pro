@@ -24,11 +24,12 @@ SOURCES += main.cpp \
     lockscreenui.cpp \
     unlockslider.cpp \
     eventhandler.cpp \
-    eventeater.cpp \
-    batterygconf.cpp \
+    eventeater.cpp \    
     shutdowndialog.cpp \
     shutdowndialogbusinesslogic.cpp \
-    batterybusinesslogicadaptor.cpp
+    batterybusinesslogicadaptor.cpp \
+    displaybusinesslogic.cpp \    
+    systemuigconf.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -40,11 +41,12 @@ HEADERS += main.h \
     lockscreenui.h \
     unlockslider.h \
     eventhandler.h \
-    eventeater.h \
-    batterygconf.h \
+    eventeater.h \    
     shutdowndialog.h \
     shutdowndialogbusinesslogic.h \
-    batterybusinesslogicadaptor.h
+    batterybusinesslogicadaptor.h \
+    displaybusinesslogic.h \    
+    systemuigconf.h
 style_sheet.path = /usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = /usr/share/themes/dui/pinquery
