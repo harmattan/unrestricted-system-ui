@@ -9,7 +9,7 @@
 UnlockSliderView::UnlockSliderView(UnlockSlider *controller) :
     DuiWidgetView(controller)
 {
-    buttonSize = QSize(64, 32);
+    handleSize = QSize(64, 32);
 }
 
 UnlockSliderView::~UnlockSliderView()
@@ -37,95 +37,92 @@ void UnlockSliderView::setGeometry(const QRectF &rect)
 
     int vCenter = size().height() / 2;
 
-    sliderArea = QRectF(    QPointF(0, vCenter - buttonSize.height() / 2),
-                            QPointF(size().width(), vCenter + buttonSize.height() / 2));
-    setButtonPos(0);
-/*
-    qreal sliderLength = model()->orientation() == Qt::Vertical ? d->slideArea.height() : d->slideArea.width();
-    d->tileCount = d->tileSize.height() == 0 ? 0 : sliderLength / d->tileSize.height();
+    sliderArea = QRectF(    QPointF(0, vCenter - handleSize.height() / 2),
+                            QPointF(size().width(), vCenter + handleSize.height() / 2));
+    setHandlePos(0);
 
-    int range = model()->maximum() - model()->minimum();
-
-    // the 'handle' is the the number of tiles currently selected
-    if(range > 0 && model()->value() > model()->minimum()) {
-        d->handlePos = (model()->value() - model()->minimum()) * d->tileCount / range + 1;
-    }
-    else {
-        // value == minimum --> handlePos = 0
-        d->handlePos = 0;
-    }
-
-    if (d->handlePos > d->tileCount) { // true, if value == maximum
-        d->handlePos = d->tileCount;
-    }
-*/
     update();
 }
 
-void UnlockSliderView::drawContents (QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void UnlockSliderView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
 
-    painter->drawLine(0, 0, size().width(), size().height());
-    painter->drawLine(0, size().height(), size().width(), 0);
+//    const DuiScalableImage* handleImage(style()->handleImage());
+}
 
-    const QPixmap* buttonImage = DuiTheme::pixmap("sadfasdf", buttonSize);
-    painter->drawPixmap(buttonPos, *buttonImage);
-    //painter->drawRect(buttonPos.x(), buttonPos.y(), buttonSize.width(), buttonSize.height());
+void UnlockSliderView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_UNUSED(option);
+
+    const DuiScalableImage* handleImage(style()->handleImage());
+
+    if (handleImage) {
+        handleImage->draw(handlePos.toPoint(), handleSize, painter);
+    }
+    else {
+        QRect r(handlePos.x(), handlePos.y(), handleSize.width(), handleSize.height());
+        painter->fillRect(r, QBrush(Qt::blue));
+    }
 }
 
 void UnlockSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (isButtonHit(event->pos())) {
-        setButtonPos(event->pos().x());
+    if (isHandleHit(event->pos())) {
+        setHandlePos(event->pos().x());
     }
 }
 
 void UnlockSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
-    if (isButtonHit(event->pos())) {
-        setButtonPos(event->pos().x());
+    if (isHandleHit(event->pos(), true)) {
+        setHandlePos(event->pos().x());
     } else {
-        resetButtonPos();
+        resetHandlePos();
     }
 }
 
 void UnlockSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
-    resetButtonPos();
+    //resetHandlePos();
 }
 
-bool UnlockSliderView::isButtonHit(QPointF pos)
+bool UnlockSliderView::isHandleHit(QPointF pos, bool isMoving)
 {
-    if (pos.x() < buttonPos.x() ||
-        pos.x() > (buttonPos.x() + buttonSize.width()) ||
-        pos.y() < sliderArea.top() ||
+    if (pos.y() < sliderArea.top() ||
         pos.y() > sliderArea.bottom() ) {
+        return false;
+    }
+
+    int help = isMoving ? (handleSize.width() / 2) : 0;
+
+    if (pos.x() < (handlePos.x() - help) ||
+        pos.x() > (handlePos.x() + handleSize.width() + help)) {
         return false;
     }
 
     return true;
 }
 
-void UnlockSliderView::setButtonPos(qreal centerx)
+void UnlockSliderView::setHandlePos(qreal centerx)
 {
-    qreal x = centerx - (buttonSize.width() / 2);
+    qreal x = centerx - (handleSize.width() / 2);
 
     if (x < sliderArea.left()) {
         x = sliderArea.left();
     }
-    else if (x >= sliderArea.right() - buttonSize.width()) {
-        x = sliderArea.right() - buttonSize.width();
+    else if (x >= sliderArea.right() - handleSize.width()) {
+        x = sliderArea.right() - handleSize.width();
     }
 
-    buttonPos = QPointF(x, sliderArea.top());
+    handlePos = QPointF(x, sliderArea.top());
     update();
 }
 
-void UnlockSliderView::resetButtonPos()
+void UnlockSliderView::resetHandlePos()
 {
-//    buttonPos = QPointF(sliderArea.topLeft());
-    setButtonPos(0);
+//    handlePos = QPointF(sliderArea.topLeft());
+    setHandlePos(0);
     // release model state
 }

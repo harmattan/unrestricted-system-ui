@@ -23,7 +23,7 @@ protected:
 
     virtual void setGeometry(const QRectF &rect);
 //    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
-//    virtual void drawBackground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawBackground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawContents (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
 //    virtual void drawForeground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -31,14 +31,14 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    bool isButtonHit(QPointF pos);
-    void setButtonPos(qreal centerx);
-    void resetButtonPos();
+    bool isHandleHit(QPointF pos, bool isMoving = false);
+    void setHandlePos(qreal centerx);
+    void resetHandlePos();
 
 private:
     QRectF sliderArea;
-    QSize buttonSize;
-    QPointF buttonPos;
+    QSize handleSize;
+    QPointF handlePos;
 
 /*    int sliderPos;
     int sliderMax;

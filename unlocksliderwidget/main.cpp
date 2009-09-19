@@ -16,10 +16,8 @@ int main(int argc, char** argv)
     DuiApplicationPage p;
     p.appear();
 
+    DuiTheme::addPixmapDirectory("./");
     DuiTheme::loadCSS("unlocksliderstyle.css");
-
-    DuiSlider *s = new DuiSlider(&p, "continuous");
-    s->setGeometry(QRectF(100, 100, 500, 100));
 
     // Create widget controller and view.
     UnlockSlider slider;
@@ -33,7 +31,5 @@ int main(int argc, char** argv)
     slider.setParentItem(p.centralWidget());
 
     return app.exec();
-
-    delete s;
 }
 
