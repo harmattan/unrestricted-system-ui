@@ -1,0 +1,22 @@
+#screenLightsButton {
+	preferred-size: size(35, 35);
+	minimum-size: size(35, 35);
+	maximum-size: size(35, 35);
+}
+
+#layoutWidget1 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: size(807, 100);
+	minimum-size: size(807, 100);
+	maximum-size: size(807, 100);
+}
+
+#layoutWidget2 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: size(807, 50);
+	minimum-size: size(807, 50);
+	maximum-size: size(807, 50);
+}
+

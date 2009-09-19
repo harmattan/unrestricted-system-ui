@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=DUIApplet
+Name=Display
+Icon=
+Exec=
+X-logical-id=qtn_NOT_DEFINED
+X-translation-catalog=duisettings
+
+[DUI]
+X-DUIApplet-Applet=libdisplayapplet.so
+X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
+X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
+
+[DCP]
+Category= Device system
+Order=1
+WidgetType= DcpLabel2
+
