@@ -30,7 +30,7 @@ public:
     virtual ~SystemUIGConf();
 
     void setValue(SystemUIGConf::GConfKey key, QVariant value);
-    QVariant value(SystemUIGConf::GConfKey);
+    const QVariant& value(SystemUIGConf::GConfKey);
     int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);
 
 signals:
