@@ -44,7 +44,6 @@ void BatteryWidget::initWidget()
     connect(batteryIf, SIGNAL(PSMThresholdValueReceived(QString)), this, SLOT(updateSlider(QString)));
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(updateLabels(QStringList)));
 
-    int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
     updateChargingImageTimer = NULL;
 
     /*
@@ -75,6 +74,9 @@ void BatteryWidget::initWidget()
     standByTimeLayoutWidget->setObjectName("batteryLayoutWidget1");
     standByTimeLayoutWidget->setLayout(standByTimeLayout);
 
+    //update labels
+    batteryIf->remainingTimeValuesRequired();
+
     /*
      * PSMLayoutWidget
      */
@@ -103,7 +105,7 @@ void BatteryWidget::initWidget()
     upperLayoutPolicy->addItemAtPosition(PSMLayoutWidget, 2, 0);
 
     //adjust the size parameters of upperLayout
-    talkTimeLayoutPolicy->setColumnFixedWidth(0, fullWidth/15); //battery image        
+    talkTimeLayoutPolicy->setColumnFixedWidth(0, DuiSceneManager::instance()->visibleSceneSize().width()/15); //battery image
     upperLayoutPolicy->setColumnFixedWidth(1, 5); //empty column        
     upperLayoutPolicy->setRowFixedHeight(1, 5); //empty row        
 
@@ -154,24 +156,26 @@ void BatteryWidget::initWidget()
     /* 
      * MainLayout
      * (includes lowerLayout and upperLayout)
-     */
-    //TODO create portraitLayoutPolicy and listen the orientation change signals
+     */    
     DuiLayout *mainLayout = new DuiLayout(this);
+
     DuiLinearLayoutPolicy *landscapeLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);    
-    landscapeLayoutPolicy->addItemAtPosition(upperLayout, 0);    
-    landscapeLayoutPolicy->addItemAtPosition(lowerLayout, 2);
+    landscapeLayoutPolicy->addItemAtPosition(upperLayout, 0);
+    landscapeLayoutPolicy->addItemAtPosition(lowerLayout, 1);    
     landscapeLayoutPolicy->setSpacing(20);
+    mainLayout->setLandscapePolicy(landscapeLayoutPolicy);
+
+    DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
+    portraitLayoutPolicy->addItemAtPosition(upperLayout, 0);
+    portraitLayoutPolicy->addItemAtPosition(lowerLayout, 1);
+    portraitLayoutPolicy->setSpacing(20);
+    mainLayout->setPortraitPolicy(portraitLayoutPolicy);
 
     // catch user actions
     connect(PSMButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
     connect(PSMDisableButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
-        
-    //update labels
-    batteryIf->remainingTimeValuesRequired();
-
-    //TODO: Before setting, be sure that UI is initialized
-
+            
     this->setLayout(mainLayout);
 }
 
@@ -289,14 +293,8 @@ void BatteryWidget::updateButton(bool toggle, DuiButton *button)
 }
 
 void BatteryWidget::updateSlider(const QString &value)
-{    
-    qDebug() << "JAKE";
-        qDebug() << "JAKE";
-            qDebug() << "JAKE";
-                qDebug() << "JAKE";
-                    qDebug() << "JAKE";
-    if( slider != NULL) {       
-            qDebug() << "KAKE" << value;
+{        
+    if( slider != NULL) {
         slider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
         slider->setThumbLabel(QString("%1%").arg(value));
     }
