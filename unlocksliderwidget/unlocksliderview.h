@@ -16,33 +16,33 @@ class UnlockSliderView : public DuiWidgetView
 public:
     UnlockSliderView(UnlockSlider* controller);
     virtual ~UnlockSliderView();
+    virtual void resizeEvent(QGraphicsSceneResizeEvent * event);
 
 protected:
     virtual void modelModified(const QList<const char*>& modifications);
     virtual void modelChanged();
 
-    virtual void setGeometry(const QRectF &rect);
-//    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
     virtual void drawBackground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawContents (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-//    virtual void drawForeground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    bool isHandleHit(QPointF pos, bool isMoving = false);
-    void setHandlePos(qreal centerx);
-    void resetHandlePos();
+    bool handleHit(const QPointF& pos);
+    void setHandlePos(const QPointF& center);
+
+    bool grabHandle(const QPointF& pos);
+    void moveHandle(const QPointF& pos);
+    void releaseHandle();
+
+    inline QRectF handleRect() const;
+    void recalcRects();
 
 private:
-    QRectF sliderArea;
-    QSize handleSize;
+    QRectF sliderRect;
+    QRectF iconRect;
     QPointF handlePos;
-
-/*    int sliderPos;
-    int sliderMax;
-    int sliderMin;*/
 };
 
 #endif // UNLOCKSLIDERVIEW_H

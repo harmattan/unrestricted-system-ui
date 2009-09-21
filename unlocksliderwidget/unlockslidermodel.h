@@ -9,19 +9,10 @@ class UnlockSliderModel : public DuiWidgetModel
     DUI_MODEL(UnlockSliderModel)
 
 public:
-    enum SliderState
-    {
-        Pressed,
-        Released
-    };
-
-    DUI_MODEL_PROPERTY(UnlockSliderModel::SliderState, state, State, true, UnlockSliderModel::Released)
+    DUI_MODEL_PROPERTY(bool, handlePressed, HandlePressed, true, false)
     DUI_MODEL_PROPERTY(qreal, position, Position, false, 0)
-    DUI_MODEL_PROPERTY(bool, lockIconVisible, LockIconVisible, true, true)
+    DUI_MODEL_PROPERTY(bool, iconVisible, IconVisible, true, true)
     // TODO: blink/hilight/whatever
-
-    // I guess orientation is not needed in our case?
-    // DUI_MODEL_PROPERTY(Qt::Orientation, orientation, Orientation, true, Qt::Vertical)
 };
 
 #endif // UNLOCKSLIDERMODEL_H

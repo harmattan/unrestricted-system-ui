@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     p.appear();
 
     DuiTheme::addPixmapDirectory("./");
-    DuiTheme::loadCSS("unlocksliderstyle.css");
+    qDebug() << "DuiTheme::loadCSS(\"./unlocksliderstyle.css\"); " << DuiTheme::loadCSS("./unlocksliderstyle.css");
 
     // Create widget controller and view.
     UnlockSlider slider;
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     slider.setView(&view);
 
     // Set geometry (active area) of widget.
-    slider.setGeometry(QRectF(100, 200, 500, 120));
+    slider.setGeometry(QRectF(100, 200, 480, 120));
 
     // Attach widget to parent widget so it will be drawn and run dui application.
     slider.setParentItem(p.centralWidget());

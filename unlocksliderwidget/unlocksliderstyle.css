@@ -1,11 +1,11 @@
-UnlockSliderStyle : DuiWidgetStyle {
-
-    handle-image: scalable(unlockslider_handle, 0, 0, 0, 0);
-    handle-hilighted-image: scalable(unlockslider_handle, 0, 0, 0, 0);
-    background-tile-image: scalable(unlockslider_handle, 0, 0, 0, 0);
-    lock-icon-image: scalable(unlockslider_handle, 0, 0, 0, 0);
+/* UnlockSliderStyle : DuiWidgetStyle */
+UnlockSliderStyle {
+    handle-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
+    handle-hilighted-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
+    background-tile-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
+    icon-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
 
     handle-size: size(32, 32);
     background-tile-size: size(32, 32);
-    lock-icon-size: size(32, 32);
+    icon-size: size(32, 32);
 }
