@@ -73,13 +73,13 @@ void PinCodeQueryUI::createContent()
 
     //attach widget items to landscape and portrait policies
     // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
-    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 3);
-    landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 4);
+    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 6);
+    landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 6);
     landscapePolicy->addItemAtPosition(entryTextEdit, 3, 0, 1, 3);
     landscapePolicy->addItemAtPosition(backspaceButton, 3, 3);
     landscapePolicy->addItemAtPosition(enterButton, 5, 0, 1, 2);
     landscapePolicy->addItemAtPosition(cancelButton, 5, 2, 1, 2);
-    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 1);
+    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 6);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
     portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 3);
@@ -115,13 +115,10 @@ void PinCodeQueryUI::createContent()
         landscapePolicy->setRowFixedHeight(i, sixth);
     }
 
+    for(int i=0; i<8; ++i) {
+        landscapePolicy->setColumnFixedWidth(i, eight);
+    }
     for(int i=0; i<5; ++i) {
-        if(i < 4){
-            landscapePolicy->setColumnFixedWidth(i, eight);
-        }
-        else {
-            landscapePolicy->setColumnFixedWidth(i, half);
-        }
         if(i == 3 ) {
             portraitPolicy->setRowFixedHeight(i, half);
         }
@@ -149,7 +146,7 @@ void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLa
     QSizeF size(side, side);
     emergencyCallButton->setMinimumSize( iconSide, iconSide );
     emergencyCallButton->setMaximumSize( size );
-    lPolicy->setColumnAlignment(4, Qt::AlignRight);
+    lPolicy->setColumnAlignment(6, Qt::AlignRight);
 
     // backspace button layout
     side = entryTextEdit->size().height();
