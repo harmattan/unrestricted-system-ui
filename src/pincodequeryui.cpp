@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <QIntValidator>
 
+
 PinCodeQueryUI::PinCodeQueryUI()
 {
     qDebug() << "PinCodeQueryUI()";
@@ -72,16 +73,16 @@ void PinCodeQueryUI::createContent()
 
     //attach widget items to landscape and portrait policies
     // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
-    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
-    landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 2);
-    landscapePolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
-    landscapePolicy->addItemAtPosition(backspaceButton, 2, 3, 1, 1);
-    landscapePolicy->addItemAtPosition(enterButton, 3, 0, 1, 2);
-    landscapePolicy->addItemAtPosition(cancelButton, 3, 2, 1, 2);
-    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 3, 1);
+    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 3);
+    landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 4);
+    landscapePolicy->addItemAtPosition(entryTextEdit, 3, 0, 1, 3);
+    landscapePolicy->addItemAtPosition(backspaceButton, 3, 3);
+    landscapePolicy->addItemAtPosition(enterButton, 5, 0, 1, 2);
+    landscapePolicy->addItemAtPosition(cancelButton, 5, 2, 1, 2);
+    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 1);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
-    portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 2);
+    portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 3);
     portraitPolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     portraitPolicy->addItemAtPosition(backspaceButton, 2, 3);
     portraitPolicy->addItemAtPosition(numpadLayout, 3, 0, 1, 4);
@@ -108,6 +109,12 @@ void PinCodeQueryUI::createContent()
     int half = longSide/2;
     int quarter = shortSide/4;
     int eight = longSide/8;
+
+    int sixth = shortSide/6;
+    for(int i=0; i<6;++i) {
+        landscapePolicy->setRowFixedHeight(i, sixth);
+    }
+
     for(int i=0; i<5; ++i) {
         if(i < 4){
             landscapePolicy->setColumnFixedWidth(i, eight);
@@ -123,10 +130,47 @@ void PinCodeQueryUI::createContent()
         }
     }
     for(int i=0; i<4;++i) {
-        landscapePolicy->setRowFixedHeight(i, quarter);
         portraitPolicy->setColumnFixedWidth(i, quarter);
     }
+    createWidgetLayouts(landscapePolicy, portraitPolicy);
     backspaceTimer = NULL;
+}
+
+void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy)
+{
+    const int iconSide = 32; // icon size specified to be 32 pix
+    // emergency button layout
+    int side = lPolicy->rowMinimumHeight(0) < pPolicy->rowMinimumHeight(0) ?
+               lPolicy->rowMinimumHeight(0) : pPolicy->rowMinimumHeight(0);
+    int margin = (side - iconSide) / 2;
+    if(margin >= 0) {
+        side -= margin;
+    }
+    QSizeF size(side, side);
+    emergencyCallButton->setMinimumSize( iconSide, iconSide );
+    emergencyCallButton->setMaximumSize( size );
+    lPolicy->setColumnAlignment(4, Qt::AlignRight);
+
+    // backspace button layout
+    side = entryTextEdit->size().height();
+    margin = (side - iconSide) / 2;
+    if(margin >= 0) {
+        backspaceButton->setContentsMargins( margin, margin, margin, margin );
+    }
+    backspaceButton->setMinimumSize( iconSide, iconSide );
+    backspaceButton->setMaximumSize( side, side );
+
+    // enter button layout
+    QSizeF minSize(lPolicy->columnMinimumWidth(0), side);
+    QSizeF maxSize(DuiSceneManager::instance()->visibleSceneSize().width(), side);
+    qDebug() << "enter col width:" << minSize.width() << "-" << maxSize.width();
+    lPolicy->setRowAlignment(5, Qt::AlignBottom);
+    pPolicy->setRowAlignment(4, Qt::AlignBottom);
+
+    enterButton->setMinimumSize( minSize );
+    enterButton->setMaximumSize( maxSize );
+    cancelButton->setMinimumSize( minSize );
+    cancelButton->setMaximumSize( maxSize );
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
@@ -153,8 +197,9 @@ void PinCodeQueryUI::setHeader(QString header)
 
 void PinCodeQueryUI::createWidgetItems()
 {    
-    emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")), 0 );
+    emergencyCallButton = new DuiButton(0);
     emergencyCallButton->setObjectName("emergencyCallButton");
+    emergencyCallButton->setIconID("Icon-emergency-call");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
@@ -196,19 +241,18 @@ void PinCodeQueryUI::createNumpad()
         0
     };
 
-    int colSpan = 1;
-    for (unsigned int i=0; i<sizeof(values)/sizeof(values[0]); ++i) {
-	
-	if(values[i] == 0)
-	    colSpan = 3;
-
+    for (unsigned int i=0; i<sizeof(values)/sizeof(values[0]); ++i) {	
         QString str1 = QString("qtn_cell_dialer_").append(QString::number(values[i]));
         QString str2 = QString::number(values[i]);
         QString str3 = QString("numpadButton" + str2);
         DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())), 0);
         num->setObjectName(str3);
         connect(num, SIGNAL(released()), this, SLOT(buttonReleased()));
-        numpadLayoutPolicy->addItemAtPosition(num, (i/3), i%3, 1, colSpan); 
+        if(values[i] == 0) {
+            numpadLayoutPolicy->addItemAtPosition(num, (i/3), 1, 1, 1);
+        } else {
+            numpadLayoutPolicy->addItemAtPosition(num, (i/3), i%3, 1, 1);
+        }
     }
 }
 

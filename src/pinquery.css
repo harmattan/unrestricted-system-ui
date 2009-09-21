@@ -1,16 +1,3 @@
-#eme {
-    cloud-duration: 200;
-    cloud-start-opacity: 0.8;
-    cloud-color: #00ffff;
-    normal-text-color: #8FAFFF;
-    font: font(Nokia Sans Wide, 12);
-}
-
-#emergencyCallButton {
-    normal-text-color: #FFFFFF;
-    font: font(Nokia Sans Wide, 18);
-    normal-background-image : scalable(EmgTest, 10, 10, 0, 0);
-}
 
 #lockscreenTimeLabel {
     color: #00DD00;

@@ -36,6 +36,7 @@ private slots:
 private: //methods
     void createWidgetItems();
     void createNumpad();
+    void createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy);
 
 private: //attributes
     DuiButton *emergencyCallButton;
