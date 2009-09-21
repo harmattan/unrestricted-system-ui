@@ -5,7 +5,8 @@
 DisplayBusinessLogic::DisplayBusinessLogic(SystemUIGConf *systemUIGConf) :
         systemUIGConf(systemUIGConf)
 {
-    displayState = new QmDisplayState();    
+    displayState = new QmDisplayState();
+    initSystemUIGConfKeys();
 }
 
 DisplayBusinessLogic::~DisplayBusinessLogic()
@@ -13,7 +14,7 @@ DisplayBusinessLogic::~DisplayBusinessLogic()
 }
 
 void DisplayBusinessLogic::initSystemUIGConfKeys()
-{
+{    
     if(systemUIGConf->keyCount(SystemUIGConf::Display) < 3) {
         /* GConf keys have not yet been set. */                
         systemUIGConf->setValue(SystemUIGConf::DisplayBrightnessKey, QVariant("50") /*QVariant(displayState->getBrightness() )*/);
@@ -45,7 +46,7 @@ void DisplayBusinessLogic::setScreenLightsToggleValue(bool value)
     systemUIGConf->setValue(SystemUIGConf::DisplayScreenLightsToggleKey, QVariant(value));
 }
 
-const QStringList& DisplayBusinessLogic::brightnessValues()
+QStringList DisplayBusinessLogic::brightnessValues()
 {
     QStringList values;
     for(int i=1; i<11; ++i)
@@ -54,7 +55,7 @@ const QStringList& DisplayBusinessLogic::brightnessValues()
     //TODO: replace hardcoded values when QmDisplayState completely implemented
 }
 
-const QStringList& DisplayBusinessLogic::screenLightsValues()
+QStringList DisplayBusinessLogic::screenLightsValues()
 {
     QStringList values;
     for(int i=1; i<11; ++i)
@@ -63,7 +64,7 @@ const QStringList& DisplayBusinessLogic::screenLightsValues()
     //TODO: replace hardcoded values when UI spec ready
 }
 
-const QVariant& DisplayBusinessLogic::GConfItemValue(SystemUIGConf::GConfKey key)
+QVariant DisplayBusinessLogic::GConfItemValue(SystemUIGConf::GConfKey key)
 {
     return systemUIGConf->value(key);
 }

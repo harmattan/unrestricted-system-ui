@@ -27,7 +27,7 @@ public:
 public slots:
     void remainingTimeValuesRequired();
 
-private slots:
+public slots:
     void batteryChargingStateReceived(bool state);
     void DBusMessagingFailure();
     void valueSet();

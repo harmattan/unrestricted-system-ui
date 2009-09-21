@@ -4,7 +4,7 @@
 	maximum-size: size(35, 35);
 }
 
-#layoutWidget1 {
+#displayLayoutWidget1 {
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 100);
@@ -12,7 +12,7 @@
 	maximum-size: size(807, 100);
 }
 
-#layoutWidget2 {
+#displayLayoutWidget2 {
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 50);

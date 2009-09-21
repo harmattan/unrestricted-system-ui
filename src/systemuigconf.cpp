@@ -57,7 +57,7 @@ void SystemUIGConf::setValue(SystemUIGConf::GConfKey key, QVariant value)
     duiGConfItems.value(key)->set(value);
 }
 
-const QVariant& SystemUIGConf::value(SystemUIGConf::GConfKey key)
+QVariant SystemUIGConf::value(SystemUIGConf::GConfKey key)
 {
     return duiGConfItems.value(key)->value();
 }

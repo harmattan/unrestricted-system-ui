@@ -5,7 +5,7 @@
 
 BatteryDBusInterface::BatteryDBusInterface()
 {
-    dbusIf = new QDBusInterface("org.freedesktop.DBus.Battery", "/", "", QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("org.freedesktop.DBus.Battery", "/systemui/battery", "", QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
     connect(dbusIf, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(dbusIf, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueReceived(int)));
@@ -36,7 +36,7 @@ void BatteryDBusInterface::batteryChargingStateRequired()
 {
     qDebug() << "BatteryDBusInterface::BatteryChargingValueRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("batteryChargingState"), list, this, SLOT(BatteryChargingStateReceived(bool)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("batteryChargingState"), list, this, SLOT(batteryChargingStateReceived(bool)), SLOT(DBusMessagingFailure()));
 }
 
 void BatteryDBusInterface::batteryChargingStateReceived(bool state)

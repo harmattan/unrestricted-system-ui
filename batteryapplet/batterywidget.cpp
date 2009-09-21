@@ -41,7 +41,7 @@ void BatteryWidget::initWidget()
     connect(batteryIf, SIGNAL(PSMToggleValueReceived(bool)), this, SLOT(updatePSMToggleButton(bool)));
     connect(batteryIf, SIGNAL(PSMDisabledValueReceived(bool)), this, SLOT(updatePSMDisableButton(bool)));
     connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), this, SLOT(initSlider(QStringList)));
-    connect(batteryIf, SIGNAL(PSMThresholdValuereceived(QString)), this, SLOT(updateSlider(QString)));
+    connect(batteryIf, SIGNAL(PSMThresholdValueReceived(QString)), this, SLOT(updateSlider(QString)));
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(updateLabels(QStringList)));
 
     int fullWidth = DuiSceneManager::instance()->visibleSceneSize().width();
@@ -59,7 +59,7 @@ void BatteryWidget::initWidget()
     talkTimeLayoutPolicy->addItemAtPosition(talkTimeLabel, 1, 1);    
 
     DuiStylableWidget *talkTimeLayoutWidget = new DuiStylableWidget();
-    talkTimeLayoutWidget->setObjectName("layoutWidget1");
+    talkTimeLayoutWidget->setObjectName("batteryLayoutWidget1");
     talkTimeLayoutWidget->setLayout(talkTimeLayout);
 
     /*
@@ -72,7 +72,7 @@ void BatteryWidget::initWidget()
     standByTimeLayoutPolicy->addItemAtPosition(standByTimeLabel, 1);
 
     DuiStylableWidget *standByTimeLayoutWidget = new DuiStylableWidget();
-    standByTimeLayoutWidget->setObjectName("layoutWidget1");
+    standByTimeLayoutWidget->setObjectName("batteryLayoutWidget1");
     standByTimeLayoutWidget->setLayout(standByTimeLayout);
 
     /*
@@ -89,7 +89,7 @@ void BatteryWidget::initWidget()
     PSMLayoutPolicy->addItemAtPosition(PSMButton, 0, 1, 2, 1, Qt::AlignRight);
 
     DuiStylableWidget *PSMLayoutWidget = new DuiStylableWidget();
-    PSMLayoutWidget->setObjectName("layoutWidget1");
+    PSMLayoutWidget->setObjectName("batteryLayoutWidget1");
     PSMLayoutWidget->setLayout(PSMLayout);
 
     /*
@@ -119,7 +119,7 @@ void BatteryWidget::initWidget()
     sliderLayoutPolicy->addItemAtPosition(slider, 2, 0);    
 
     DuiStylableWidget *sliderLayoutWidget = new DuiStylableWidget();
-    sliderLayoutWidget->setObjectName("layoutWidget2");
+    sliderLayoutWidget->setObjectName("batteryLayoutWidget2");
     sliderLayoutWidget->setLayout(sliderLayout);
 
     /*
@@ -138,7 +138,7 @@ void BatteryWidget::initWidget()
     disablePSMLayoutPolicy->addItemAtPosition(new DuiLabel(QString("- " + DcpBattery::AutoPSMAdv3Text)), 3, 0, 1, 2);
 
     DuiStylableWidget *disablePSMLayoutWidget = new DuiStylableWidget();
-    disablePSMLayoutWidget->setObjectName("layoutWidget3");
+    disablePSMLayoutWidget->setObjectName("batteryLayoutWidget3");
     disablePSMLayoutWidget->setLayout(disablePSMLayout);
 
     /*
@@ -290,7 +290,13 @@ void BatteryWidget::updateButton(bool toggle, DuiButton *button)
 
 void BatteryWidget::updateSlider(const QString &value)
 {    
+    qDebug() << "JAKE";
+        qDebug() << "JAKE";
+            qDebug() << "JAKE";
+                qDebug() << "JAKE";
+                    qDebug() << "JAKE";
     if( slider != NULL) {       
+            qDebug() << "KAKE" << value;
         slider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
         slider->setThumbLabel(QString("%1%").arg(value));
     }

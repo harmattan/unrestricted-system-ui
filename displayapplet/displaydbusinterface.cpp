@@ -4,7 +4,7 @@
 
 DisplayDBusInterface::DisplayDBusInterface()
 {
-    dbusIf = new QDBusInterface("org.freedesktop.DBus.Display", "/", "", QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("org.freedesktop.DBus.Display", "/systemui/display", "", QDBusConnection::sessionBus());
 }
 
 DisplayDBusInterface::~DisplayDBusInterface()
@@ -16,29 +16,29 @@ DisplayDBusInterface::~DisplayDBusInterface()
 void DisplayDBusInterface::brightnessValuesRequired()
 {
     qDebug() << "DisplayDBusInterface::brightnessValuesRequired()";
-    QList<QVariant> list;
-    dbusIf->callWithCallback(QString("brightnessValues"), list, this, SIGNAL(brightnessSliderValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
+    QList<QVariant> list;    
+    dbusIf->callWithCallback(QString("brightnessValues"), list, this, SIGNAL(brightnessValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::brightnessValueRequired()
 {
     qDebug() << "DisplayDBusInterface::brightnessValueRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("brightnessValue"), list, this, SIGNAL(brightnessSliderValueReceived(QString)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("brightnessValue"), list, this, SIGNAL(brightnessValueReceived(QString)), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::screenLightsValuesRequired()
 {
     qDebug() << "DisplayDBusInterface::screenLightsValuesRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("screenLightsValues"), list, this, SIGNAL(screenLightsSliderValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("screenLightsValues"), list, this, SIGNAL(screenLightsValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::screenLightsValueRequired()
 {
     qDebug() << "DisplayDBusInterface::screenLightsValueRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("screenLightsValue"), list, this, SIGNAL(screenLightsSliderValueReceived(QString)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("screenLightsValue"), list, this, SIGNAL(screenLightsValueReceived(QString)), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::screenLightsToggleValueRequired()
@@ -70,4 +70,14 @@ void DisplayDBusInterface:: setScreenLightsToggleValue(bool value)
     QList<QVariant> list;
     list << QVariant(value);
     dbusIf->callWithCallback(QString("setScreenLightsToggleValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void DisplayDBusInterface::valueSet()
+{
+    qDebug() << "DisplayDBusInterface::valueSet()";
+}
+
+void DisplayDBusInterface::DBusMessagingFailure()
+{
+    qDebug() << "DisplayDBusInterface::DBusMessagingFailure()";
 }

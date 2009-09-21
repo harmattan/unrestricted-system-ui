@@ -10,7 +10,7 @@
 	maximum-size: size(35, 35);
 }
 
-#layoutWidget1 {
+#batteryLayoutWidget1 {
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(400, 50);
@@ -18,7 +18,7 @@
 	maximum-size: size(400, 50);
 }
 
-#layoutWidget2 {
+#batteryLayoutWidget2 {
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 150);
@@ -26,7 +26,7 @@
 	maximum-size: size(807, 150);
 }
 
-#layoutWidget3 {
+#batteryLayoutWidget3 {
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 150);	

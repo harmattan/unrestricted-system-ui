@@ -24,8 +24,8 @@ public:
     void setScreenLightsToggleValue(bool value);
 
 private slots:
-    void DBusMessagingFailure();
     void valueSet();
+    void DBusMessagingFailure();    
 
 signals:
     void brightnessValuesReceived(QStringList);

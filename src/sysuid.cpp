@@ -25,10 +25,16 @@ Sysuid::Sysuid() : QObject()
         qDebug() << "failed to register dbus service";
         exit(1);
     }
-    QDBusConnection::sessionBus().registerObject(QString("/"), batteryLogic);
+    QDBusConnection::sessionBus().registerObject(QString("/systemui/battery"), batteryLogic);
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic(systemUIGConf);    
+    displayLogic = new DisplayBusinessLogic(systemUIGConf);
+    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);
+    if (!QDBusConnection::sessionBus().registerService("org.freedesktop.DBus.Display")) {
+        qDebug() << "failed to register dbus service";
+        exit(1);
+    }
+    QDBusConnection::sessionBus().registerObject(QString("/systemui/display"), displayLogic);    
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -65,8 +71,10 @@ Sysuid::~Sysuid()
     batteryLogic = NULL;
     delete batteryLogicAdaptor;
     batteryLogicAdaptor = NULL;
-    delete displayLogic;
+    delete displayLogic;    
     displayLogic = NULL;
+    delete displayLogicAdaptor;
+    displayLogicAdaptor = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
     delete shutdownLogic;

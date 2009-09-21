@@ -2,7 +2,6 @@
 #include "displaytranslation.h"
 #include "displaydbusinterface.h"
 #include "dcpdisplay.h"
-//#include "dcpspaceritem.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -49,7 +48,7 @@ void DisplayWidget::initWidget()
     brightnessLayoutPolicy->addItemAtPosition(brightnessSlider, 1, Qt::AlignLeft);
 
     DuiStylableWidget *brightnessLayoutWidget = new DuiStylableWidget();
-    brightnessLayoutWidget->setObjectName("layoutWidget1");
+    brightnessLayoutWidget->setObjectName("displayLayoutWidget1");
     brightnessLayoutWidget->setLayout(brightnessLayout);
 
     /*
@@ -64,7 +63,7 @@ void DisplayWidget::initWidget()
     screenLightsLayoutPolicy->addItemAtPosition(screenLightsSlider, 1, Qt::AlignLeft);
 
     DuiStylableWidget *screenLightsLayoutWidget = new DuiStylableWidget();
-    screenLightsLayoutWidget->setObjectName("layoutWidget1");
+    screenLightsLayoutWidget->setObjectName("displayLayoutWidget1");
     screenLightsLayoutWidget->setLayout(screenLightsLayout);
 
     /*
@@ -80,7 +79,7 @@ void DisplayWidget::initWidget()
     screenLightsButtonLayoutPolicy->addItemAtPosition(screenLightsButton, 1, Qt::AlignRight);
 
     DuiStylableWidget *screenLightsButtonLayoutWidget = new DuiStylableWidget();
-    screenLightsButtonLayoutWidget->setObjectName("layoutWidget2");
+    screenLightsButtonLayoutWidget->setObjectName("displayLayoutWidget2");
     screenLightsButtonLayoutWidget->setLayout(screenLightsButtonLayout);
 
     /*
@@ -91,7 +90,7 @@ void DisplayWidget::initWidget()
     noteLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::NoteText), 0, Qt::AlignLeft);
 
     DuiStylableWidget *noteLayoutWidget = new DuiStylableWidget();
-    noteLayoutWidget->setObjectName("layoutWidget2");
+    noteLayoutWidget->setObjectName("displayLayoutWidget2");
     noteLayoutWidget->setLayout(noteLayout);
 
     /* 

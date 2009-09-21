@@ -17,9 +17,9 @@ public:
     void setBrightnessValue(const QString &value);
     void setScreenLightsValue(const QString &value);
     void setScreenLightsToggleValue(bool value);
-    const QStringList& brightnessValues();
-    const QStringList& screenLightsValues();
-    const QVariant& GConfItemValue(SystemUIGConf::GConfKey key);
+    QStringList brightnessValues();
+    QStringList screenLightsValues();
+    QVariant GConfItemValue(SystemUIGConf::GConfKey key);
 
 private: //methods
     void initSystemUIGConfKeys();
