@@ -6,6 +6,8 @@
 class DuiSlider;
 class DuiButton;
 class DisplayDBusInterface;
+class DuiLinearLayoutPolicy;
+class DuiStylableWidget;
 
 class DisplayWidget : public DcpWidget
 {
@@ -29,6 +31,7 @@ private slots:
     void screenLightsButtonPressed();
 
 private: //methods
+    void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiStylableWidget*> &widgets);
     void initSlider(DuiSlider *slider, const QStringList &values);
 
 private: //attributes        

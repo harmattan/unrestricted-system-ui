@@ -12,6 +12,7 @@
 #include <DuiLabel>
 #include <DuiSlider>
 #include <DuiStylableWidget>
+#include <DuiSceneManager>
 
 DisplayWidget::DisplayWidget(QGraphicsWidget *parent)
 	    :DcpWidget(parent)
@@ -39,12 +40,13 @@ void DisplayWidget::initWidget()
     /*
      * brightnessLayoutWidget
      */    
-    DuiLayout *brightnessLayout = new DuiLayout(0);
-    DuiLinearLayoutPolicy *brightnessLayoutPolicy = new DuiLinearLayoutPolicy(brightnessLayout, Qt::Vertical);
-    brightnessLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BrightnessText), 0, Qt::AlignLeft);
     brightnessSlider = new DuiSlider(0, "continuous");
     displayIf->brightnessValuesRequired();
-    displayIf->brightnessValueRequired();
+    displayIf->brightnessValueRequired();   
+
+    DuiLayout *brightnessLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *brightnessLayoutPolicy = new DuiLinearLayoutPolicy(brightnessLayout, Qt::Vertical);
+    brightnessLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BrightnessText), 0, Qt::AlignLeft);
     brightnessLayoutPolicy->addItemAtPosition(brightnessSlider, 1, Qt::AlignLeft);
 
     DuiStylableWidget *brightnessLayoutWidget = new DuiStylableWidget();
@@ -53,13 +55,14 @@ void DisplayWidget::initWidget()
 
     /*
      * screenLightsLayoutWidget
-     */
-    DuiLayout *screenLightsLayout = new DuiLayout(0);
-    DuiLinearLayoutPolicy *screenLightsLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsLayout, Qt::Vertical);
-    screenLightsLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsText), 0, Qt::AlignLeft);
+     */    
     screenLightsSlider = new DuiSlider(0, "continuous");
     displayIf->screenLightsValuesRequired();
     displayIf->screenLightsValueRequired();
+
+    DuiLayout *screenLightsLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *screenLightsLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsLayout, Qt::Vertical);
+    screenLightsLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsText), 0, Qt::AlignLeft);
     screenLightsLayoutPolicy->addItemAtPosition(screenLightsSlider, 1, Qt::AlignLeft);
 
     DuiStylableWidget *screenLightsLayoutWidget = new DuiStylableWidget();
@@ -68,14 +71,15 @@ void DisplayWidget::initWidget()
 
     /*
      * screenLightsButtonLayoutWidget
-     */
-    DuiLayout *screenLightsButtonLayout = new DuiLayout(0);
-    DuiLinearLayoutPolicy *screenLightsButtonLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsButtonLayout, Qt::Horizontal);
-    screenLightsButtonLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsButtonText), 0, Qt::AlignLeft);
+     */    
     screenLightsButton = new DuiButton();
     screenLightsButton->setCheckable(true);
     screenLightsButton->setObjectName("screenLightsButton");
-    displayIf->screenLightsToggleValueRequired();    
+    displayIf->screenLightsToggleValueRequired();
+
+    DuiLayout *screenLightsButtonLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *screenLightsButtonLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsButtonLayout, Qt::Horizontal);
+    screenLightsButtonLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsButtonText), 0, Qt::AlignLeft);
     screenLightsButtonLayoutPolicy->addItemAtPosition(screenLightsButton, 1, Qt::AlignRight);
 
     DuiStylableWidget *screenLightsButtonLayoutWidget = new DuiStylableWidget();
@@ -84,8 +88,8 @@ void DisplayWidget::initWidget()
 
     /*
      * NoteLayoutWidget
-     */
-    DuiLayout *noteLayout = new DuiLayout(0);
+     */    
+    DuiLayout *noteLayout = new DuiLayout();
     DuiLinearLayoutPolicy *noteLayoutPolicy = new DuiLinearLayoutPolicy(noteLayout, Qt::Horizontal);
     noteLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::NoteText), 0, Qt::AlignLeft);
 
@@ -96,23 +100,32 @@ void DisplayWidget::initWidget()
     /* 
      * MainLayout     
      */
-    //TODO create portraitLayoutPolicy and listen the orientation change signals
+    QList<DuiStylableWidget*> widgets;
+    widgets << brightnessLayoutWidget << screenLightsLayoutWidget << screenLightsButtonLayoutWidget << noteLayoutWidget;
+
     DuiLayout *mainLayout = new DuiLayout(this);
+
     DuiLinearLayoutPolicy *landscapeLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);    
-    landscapeLayoutPolicy->addItemAtPosition(brightnessLayoutWidget, 0);
-    landscapeLayoutPolicy->addItemAtPosition(screenLightsLayoutWidget, 1);
-    landscapeLayoutPolicy->addItemAtPosition(screenLightsButtonLayoutWidget, 2);
-    landscapeLayoutPolicy->addItemAtPosition(noteLayoutWidget, 3);
-    landscapeLayoutPolicy->setSpacing(20);
+    addLayoutWidgets(landscapeLayoutPolicy, widgets);    
+    mainLayout->setLandscapePolicy(landscapeLayoutPolicy);
+
+    DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
+    addLayoutWidgets(portraitLayoutPolicy, widgets);
+    mainLayout->setPortraitPolicy(portraitLayoutPolicy);
 
     // catch user actions
     connect(screenLightsButton, SIGNAL(pressed()), this, SLOT(screenLightsButtonPressed()));
     connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(brightnessSliderValueChanged(int)));
     connect(screenLightsSlider, SIGNAL(valueChanged(int)), this, SLOT(screenLightsSliderValueChanged(int)));           
 
-    //TODO: Before setting, be sure that UI is initialized
+    this->setLayout(mainLayout);    
+}
 
-    this->setLayout(mainLayout);
+void DisplayWidget::addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiStylableWidget*> &widgets)
+{
+    for(int i=0; i<widgets.size(); ++i)
+        policy->addItemAtPosition(widgets.at(i), i);            
+    policy->setSpacing(20);
 }
 
 

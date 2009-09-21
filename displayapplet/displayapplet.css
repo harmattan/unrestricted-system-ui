@@ -8,7 +8,7 @@
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 100);
-	minimum-size: size(807, 100);
+	minimum-size: size(400, 100);
 	maximum-size: size(807, 100);
 }
 
@@ -16,7 +16,7 @@
 	background-opacity: 255;
     	background-color: #141414;
 	preferred-size: size(807, 50);
-	minimum-size: size(807, 50);
+	minimum-size: size(400, 50);
 	maximum-size: size(807, 50);
 }
 

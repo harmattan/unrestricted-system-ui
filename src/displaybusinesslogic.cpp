@@ -5,12 +5,14 @@
 DisplayBusinessLogic::DisplayBusinessLogic(SystemUIGConf *systemUIGConf) :
         systemUIGConf(systemUIGConf)
 {
-    displayState = new QmDisplayState();
+    displayState = new QmDisplayState();    
     initSystemUIGConfKeys();
 }
 
 DisplayBusinessLogic::~DisplayBusinessLogic()
 {
+    delete displayState;
+    displayState = NULL;   
 }
 
 void DisplayBusinessLogic::initSystemUIGConfKeys()

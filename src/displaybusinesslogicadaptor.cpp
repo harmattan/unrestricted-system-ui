@@ -4,7 +4,7 @@
 
 DisplayBusinessLogicAdaptor::DisplayBusinessLogicAdaptor(DisplayBusinessLogic *displayLogic)
         : QDBusAbstractAdaptor(displayLogic), displayLogic(displayLogic)
-{
+{   
 }
 
 DisplayBusinessLogicAdaptor::~DisplayBusinessLogicAdaptor()
