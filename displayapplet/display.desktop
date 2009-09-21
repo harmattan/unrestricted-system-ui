@@ -12,7 +12,7 @@ X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
 X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 
 [DCP]
-Category= Device system
+Category= Look & Feel
 Order=1
 WidgetType= DcpLabel2
 
