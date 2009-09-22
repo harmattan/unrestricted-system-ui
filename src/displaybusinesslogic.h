@@ -15,14 +15,18 @@ public:
     virtual ~DisplayBusinessLogic();
 
     void setBrightnessValue(const QString &value);
-    void setScreenLightsValue(const QString &value);
-    void setScreenLightsToggleValue(bool value);
+    void setBlankTimeoutValue(const QString &value);
+    void setDimTimeoutValue(const QString &value);
+    void setBlankInhibitValue(bool value);    
     QStringList brightnessValues();
-    QStringList screenLightsValues();
+    QStringList blankTimeoutValues();
+    QStringList dimTimeoutValues();
     QVariant GConfItemValue(SystemUIGConf::GConfKey key);
 
+
 private: //methods
-    void initSystemUIGConfKeys();
+    QVariant defaultValue(SystemUIGConf::GConfKey key);
+
 
 private: //attributes
     QmDisplayState *displayState;

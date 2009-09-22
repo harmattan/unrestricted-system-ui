@@ -18,16 +18,16 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS("pinquery.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Battery */         
+    /* Battery */    
     batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);    
-    registerDBusServiceAndObject(QString("org.freedesktop.DBus.Battery"), QString("/systemui/battery"), static_cast<QObject*>(batteryLogic));
+    //batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);
+    //registerDBusServiceAndObject(QString("com.nokia.systemui"), QString("/"), static_cast<QObject*>(batteryLogic));
     // TODO: how to handle the unseccessfull registering
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic(systemUIGConf);
-    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);    
-    registerDBusServiceAndObject(QString("org.freedesktop.DBus.Display"), QString("/systemui/display"), static_cast<QObject*>(displayLogic));    
+    displayLogic = new DisplayBusinessLogic(systemUIGConf);    
+    //displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);
+    //registerDBusServiceAndObject(QString("com.nokia.systemui"), QString("/"), static_cast<QObject*>(displayLogic));
     // TODO: how to handle the unseccessfull registering
 
     /* Event handler */

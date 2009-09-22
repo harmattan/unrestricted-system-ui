@@ -21,17 +21,22 @@ public:
         BatteryPSMToggleKey,
         BatteryPSMDisabledKey,
         BatteryPSMThresholdKey,
+        DisplayBrightnessMaxLevelKey,
+        DisplayBrightnessLevelStepKey,
         DisplayBrightnessKey,
-        DisplayScreenLightsKey,
-        DisplayScreenLightsToggleKey
+        DisplayBlankTimeoutsKey,
+        DisplayBlankTimeoutKey,
+        DisplayDimTimeoutsKey,
+        DisplayDimTimeoutKey,
+        DisplayBlankInhibitKey
     };   
 
     SystemUIGConf();
     virtual ~SystemUIGConf();
 
     void setValue(SystemUIGConf::GConfKey key, QVariant value);
-    QVariant value(SystemUIGConf::GConfKey);
-    int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);
+    QVariant value(SystemUIGConf::GConfKey, QVariant def = NULL);
+    int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);    
 
 signals:
     void valueChanged(SystemUIGConf::GConfKey key, QVariant value);
@@ -40,6 +45,7 @@ private slots:
     void keyValueChanged();
 
 private: //methods
+    QString mapGConfKeyGroup(SystemUIGConf::GConfKeyGroup keyGroup);
     QString mapGConfKey(SystemUIGConf::GConfKey key);
 
 private: //attributes

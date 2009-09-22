@@ -4,7 +4,7 @@
 
 DisplayDBusInterface::DisplayDBusInterface()
 {
-    dbusIf = new QDBusInterface("org.freedesktop.DBus.Display", "/systemui/display", "", QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("com.nokia.systemui", "/", "com.nokia.systemui.display", QDBusConnection::sessionBus());
 }
 
 DisplayDBusInterface::~DisplayDBusInterface()

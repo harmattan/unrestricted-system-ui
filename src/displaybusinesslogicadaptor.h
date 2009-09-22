@@ -9,7 +9,7 @@ class DisplayBusinessLogic;
 class DisplayBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.DBus.DisplayBusinessLogic")
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.display")
 
 public:
     DisplayBusinessLogicAdaptor(DisplayBusinessLogic *displayLogic);
@@ -17,13 +17,16 @@ public:
 
 public slots:
     Q_NOREPLY void setBrightnessValue(const QString &value);
-    Q_NOREPLY void setScreenLightsValue(const QString &value);
-    Q_NOREPLY void setScreenLightsToggleValue(bool value);
+    Q_NOREPLY void setBlankTimeoutValue(const QString &value);
+    Q_NOREPLY void setDimTimeoutValue(const QString &value);
+    Q_NOREPLY void setBlankInhibitValue(bool value);
     QString brightnessValue();
-    QString screenLightsValue();
-    bool screenLightsToggleValue();
+    QString blankTimeoutValue();
+    QString dimTimeoutValue();
+    bool blankInhibitValue();    
     QStringList brightnessValues();
-    QStringList screenLightsValues();
+    QStringList blankTimeoutValues();
+    QStringList dimTimeoutValues();
 
 private: //attributes
     DisplayBusinessLogic *displayLogic;
