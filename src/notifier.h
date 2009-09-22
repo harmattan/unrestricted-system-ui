@@ -29,6 +29,7 @@ signals:
 
 public slots:    
     void showNotification(QString notifText, Notifier::NotificationType type = info);
+    void showConfirmation(QString notifText, QString buttonText);
     void showCancellableNotification(QString notifText,
                                      int appearTime,
                                      QString appearTimeVariable,
@@ -40,7 +41,7 @@ private slots:
     void cancellableNotificationTimeout();
 
 private:
-    void showDBusNotification(QString notifText, QString evetType);
+    void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"));
     void removeNotification(unsigned int id);
 
 private:    

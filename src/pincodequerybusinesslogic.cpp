@@ -31,26 +31,29 @@ using namespace CallUi;
 
 //Notification texts
 namespace {
-    QString SIMCardInserted = trid("NOT DOCUMENTED YET", "SIM card inserted.");
+    QString SIMCardInserted = trid("qtn_cell_sim_inserted", "SIM card inserted.");
     QString SIMCardNotInserted = trid("NOT DOCUMENTED YET" , "SIM card not inserted.");
-    QString SIMCardRemoved = trid("NOT DOCUMENTED YET" , "SIM card removed.");
+    QString SIMCardRemoved = trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available.");
     QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");    
-    QString EmergencyCallStarting = trid("qtn_cell_emergency_start" , "Starting emergency call.");
-    QString EmergencyCallEnded = trid("qtn_cell_emergency_end" , "Emergency call ended.");
-    QString EmergencyCallHeader = trid("NOT DOCUMENTED YET" , "Start Emergency call?");
+
+    QString EmergencyCallHeader = trid("qtn_cell_start_emergency_call" , "Start Emergency call?");
 
     /* At the moment this contains several error case that may pop up from SIM library.
-       It needs to be clarified, which of those and how are they going to be reported
-       to end user. */
-    QString TechnicalProblem = trid("NOT DOCUMENTED YET" , "Technical problem.");
+       It needs to be clarified, how are they going to be reported to end user. */
+    QString TechnicalProblem = trid("qtn_cell_general_sim_error", "Error with SIM card. Continue without SIM?");;
+    QString PINCodeIncorrectSettings = trid("qtn_cell_incorrect_pin_settings" , "Incorrect PIN code.");
+
     QString PINCodeIncorrect2AttemptsLeft = trid("qtn_cell_incorrect_pin_2" , "Incorrect PIN code. 2 attempts remaining.");
     QString PINCodeIncorrect1AttemptLeft = trid("qtn_cell_incorrect_pin_1" , "Incorrect PIN code. 1 attempt remaining.");
     QString PINCodeIncorrectPUKCodeRequired = trid("qtn_cell_incorrect_pin_0" , "Incorrect PIN code. SIM locked with PUK code.");
     QString PUKCodeIncorrect = trid("qtn_cell_incorrect_puk" , "Incorrect PUK code.");
     QString PINCodeChanged = trid("qtn_cell_pin_code_changed" , "PIN code changed.");
     QString PINCodesDoNotMatch = trid("qtn_cell_codes_not_match" , "Codes do not match.");
+
     QString SIMUnlocked = trid("qtn_cell_sim_unlocked" , "SIM card unlocked");
     QString SIMLocked = trid("qtn_cell_sim_lock_notification", "This SIM card can not be used in the device.");
+    QString SIMLockIncorrect = trid("qtn_cell_sim_lock_incorrect", "Incorrect unlock code.");
+    QString SIMLockTooFast = trid("qtn_cell_too_fast_entry", "Error with unlock code. Trying again might help.");
 }
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
@@ -150,7 +153,10 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
     bool call = true;
     /*  TODO:
-     *  Yes - No dialog required: EmergencyCallHeader
+     *  dialog required: EmergencyCallHeader
+     *
+     * Button trid("qtn_cell_emergency_call_number", "Call %1");
+     * Button trid("[qtn_comm_cancel]", "Cancel");
      */
     if(call)
     {
@@ -276,7 +282,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     DuiButton* button = static_cast<DuiButton*>(this->sender());
     if(button->objectName() == QString("emergencyCallButton")) {
         doEmergencyCall();
-    }
+   }
     else if(button->objectName() == QString("enterButton")) {
         switch(previousSimState) {
         case SIM::SIMLockRejected:
@@ -489,7 +495,6 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 {
     if(handleSIMLockError(error))
         uiNotif->showNotification(SIMUnlocked, Notifier::info);
-
     //what is the next SIMStatus?
 }
 
@@ -541,7 +546,6 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
         uiNotif->showNotification(SIMCardRejected, Notifier::error);
         break;
 
-    //TODO: What to do with these???
     case SIMErrorSecurityCodeRequired:
     case SIMErrorBusCommunication:
     case SIMErrorInvalidParameter:
@@ -551,8 +555,8 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
     case SIMErrorDataNotAvailable:
     case SIMErrorUnknown:
     default:
-        //not necessarily to be shown to end user
-        uiNotif->showNotification(TechnicalProblem, Notifier::error);
+        qDebug() << "PinCodeQueryBusinessLogic::handleSIMError(" << error << ")";
+        informTechnicalProblem();
         break;
     }
     return success;
@@ -567,22 +571,38 @@ bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
     case SIMLockErrorAlreadyOpened: /*!< SIMlock already opened */
         success = true;
         break;
-    case SIMLockErrorWrongPassword: /*!< Incorrect unlock code */
-
-        uiNotif->showNotification("NOTIFICATION NEEDED. VAPPU WILL PROVIDE.", Notifier::error);
-
+    case SIMLockErrorWrongPassword:
+        uiNotif->showNotification(SIMLockIncorrect, Notifier::error);
+        break;
+    case SIMLockErrorTimerNotElapsed: /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
+        simLockRetry();
         break;
     case SIMLockErrorBusCommunication: /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
     case SIMLockErrorInvalidParameter: /*!< Invalid parameter values */
     case SIMLockErrorModemNotReady: /*!< Cellular modem not ready */
     case SIMLockErrorWrongLevel: /*!< Requested level not found */
     case SIMLockErrorNotAllowed: /*!< Action not allowed. E.g. the lock does not exist */
-    case SIMLockErrorTimerNotElapsed: /*!< Unlocking timer not elapsed (too fast retry) */
     case SIMLockErrorUnknown: /*!< General SIM lock unlocking failure */
     default:
-        //not necessarily to be shown to end user
-        uiNotif->showNotification(TechnicalProblem, Notifier::error);
+        qDebug() << "PinCodeQueryBusinessLogic::handleSIMLockError(" << error << ")";
+        informTechnicalProblem();
         break;
     }
     return success;
 }
+
+void PinCodeQueryBusinessLogic::informTechnicalProblem()
+{
+    uiNotif->showConfirmation(TechnicalProblem, trid("qtn_cell_continue", "Continue"));
+    // TODO: Tapping the button cancels the PIN query. SIM card information won’t be used and cellular
+    // network connection is not established.
+
+}
+
+void PinCodeQueryBusinessLogic::simLockRetry()
+{
+    uiNotif->showConfirmation(SIMLockTooFast, trid("qtn_cell_try_again", "Try again"));
+    // TODO: Offers an option for user to try enter the unlock code again.
+    // Tapping the button should try to enter the already typed unlock code directly again.
+}
+

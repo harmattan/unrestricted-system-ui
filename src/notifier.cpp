@@ -25,6 +25,7 @@ Notifier::Notifier() : QObject(), notifId(0)
 
 Notifier::~Notifier()
 {    
+    notificationTimeout(); // what if the notification requires user input???
     delete managerIf;
     managerIf = NULL;
 }
@@ -44,6 +45,12 @@ void Notifier::showNotification(QString notifText, Notifier::NotificationType ty
             break;
     }
 }
+
+void Notifier::showConfirmation(QString notifText, QString buttonText)
+{
+    showDBusNotification(notifText, QString("confirmation"), QString(""), 0, buttonText);
+}
+
 
 void Notifier::notificationTimeout()
 {
@@ -82,15 +89,15 @@ void Notifier::removeNotification(unsigned int id)
 
 }
 
-void Notifier::showDBusNotification(QString notifText, QString evetType)
+void Notifier::showDBusNotification(QString notifText, QString evetType, QString summary, int expireTimeout, QString action)
 {
     QDBusMessage reply = managerIf->call(
                QString("addNotification"),
                QVariant((unsigned int)0),
-               QVariant(QString(evetType)), // temporary; correct types not specified yet; always shows envelope in info banner.
-               QVariant(QString()),
+               QVariant(evetType), // temporary; correct types not specified yet; always shows envelope in info banner.
+               QVariant(summary),
                QVariant(notifText),
-               QVariant(QString("removeNotification")),
+               QVariant(action),
                QVariant(QString("Icon-close")));
 
     if(reply.type() == QDBusMessage::ErrorMessage) {
@@ -104,10 +111,10 @@ void Notifier::showDBusNotification(QString notifText, QString evetType)
             notifId = args[0].toUInt();
             qDebug() << "Notifier::showDBusNotification(): notifId:" << notifId << "msg:" << notifText;
         }
-        QTimer *t = new QTimer();
-        connect(t, SIGNAL(timeout()), this, SLOT(notificationTimeout()));
-        t->setSingleShot(true);
-        t->start(3000);
+        if(expireTimeout > 0)
+        {
+            QTimer::singleShot(expireTimeout, this, SLOT(notificationTimeout()));
+        }
     }
     else {
         qDebug() << "Notifier::showDBusNotification() reply type:" << reply.type();

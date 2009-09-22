@@ -75,6 +75,8 @@ private: // methods
     // "empty" state changes.
     void nothing();
     void doEmergencyCall();
+    void informTechnicalProblem();
+    void simLockRetry();
 
     void ui2SIMLocked();
     void ui2firstPINAttempt();
@@ -87,7 +89,6 @@ private: // methods
     void ui2disappear();
     void ui2disappearWithNotification(QString notifText);
     void ui2reenterPIN();    
-
 
 private slots:
 
