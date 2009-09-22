@@ -1,7 +1,6 @@
 """
 A graphical suite to test dbus bindings for SIM.
 
-
 Written by Matti Katila
 
 [in scracthbox]
@@ -13,12 +12,17 @@ dbus-monitor --system
 export DBUS_SYSTEM_BUS_ADDRESS=`cat /tmp/dbus-address`
 python dbus_server.py
 
+Codes:
+------
+PIN = '4321'
+PUK = '0007'
+SIM unlock code = '987'
+Code to generate SIM unlock timer error = '111'
+Code to generate (SIM unlock) general error = '000'
 
 https://dvcs.projects.maemo.org/git/?p=cellular/libsim;a=blob;f=csd-sim/DBUS-INTERFACE;h=d9d58aeb0e0e1a723984a179690d63905e950f23;hb=HEAD
 
 Examples:
-
-
 
 dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com.nokia.csd.SIM.GetSIMStatus
 
@@ -68,6 +72,11 @@ bus_name_emerg = dbus.service.BusName('com.nokia.csd.Call', bus)
 PATH_emerg = '/com/nokia/csd/call'
 
 TIMEOUT = 1*1000
+PIN = '4321'
+PUK = '0007'
+SEC = '987'
+SEC_INVALID_CODE = '000'
+SEC_TIMER_ON = '111'
 
 class WrongPassword(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
@@ -78,6 +87,11 @@ class  AlreadyOpened(dbus.DBusException):
 class  WrongLevel(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongLevel'
 
+class  TimerNotElapsed(dbus.DBusException):
+    _dbus_error_name = 'com.nokia.csd.SIM.Error.TimerNotElapsed'
+
+class  InvalidParameter(dbus.DBusException):
+    _dbus_error_name = 'com.nokia.csd.SIM.Error.InvalidParameter'
 
 class EmergencyServer(dbus.service.Object):
     def __init__ (self, bus_name, path=PATH_emerg):
@@ -115,7 +129,7 @@ class Server(dbus.service.Object):
         self.pin_attempts_left = 3
         self.puk_attempts_left = 10
 
-        self.pin = '4321'
+        self.pin = PIN
 
         self.LOCK_STATES = [
             'Unknown',
@@ -178,7 +192,7 @@ class Server(dbus.service.Object):
         self.on_verifypuk(self.verifypuk)
 
         self.puk_attempts_left -= 1
-        if code == '0007':
+        if code == PUK:
             self.pin = newpin
 	    if self.SIM_MODES[self.mode_idx] == 'PUKRequired':
                 self.puk_attempts_left = 10
@@ -233,14 +247,17 @@ class Server(dbus.service.Object):
         print 'unlock sim', level, code
         if level != 7: # 'Global?'
             raise WrongLevel('')
-        if code != '987':
+        if code == SEC_TIMER_ON:
+            raise TimerNotElapsed('')
+        if code == SEC_INVALID_CODE:
+            raise InvalidParameter('')
+        if code != SEC:
             raise WrongPassword('')
         if self.SIM_MODES[self.mode_idx] == 'SIMLockRejected':
             self.SetState('NotReady')
             self.SetState('PINRequired')
         print 'ok'
         return True
-
 
 def set_text_color(widget, color):
     widget.modify_fg (gtk.STATE_NORMAL ,
