@@ -8,4 +8,6 @@ UnlockSliderStyle {
     handle-size: size(32, 32);
     background-tile-size: size(32, 32);
     icon-size: size(32, 32);
+    blink-time: 300;
+    blink-count: 2;
 }

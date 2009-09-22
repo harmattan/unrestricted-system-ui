@@ -9,10 +9,11 @@ class UnlockSliderModel : public DuiWidgetModel
     DUI_MODEL(UnlockSliderModel)
 
 public:
-    DUI_MODEL_PROPERTY(bool, handlePressed, HandlePressed, true, false)
-    DUI_MODEL_PROPERTY(qreal, position, Position, false, 0)
-    DUI_MODEL_PROPERTY(bool, iconVisible, IconVisible, true, true)
-    // TODO: blink/hilight/whatever
+    DUI_MODEL_PROPERTY(bool,  handlePressed, HandlePressed, true,  false)
+    DUI_MODEL_PROPERTY(qreal, position,      Position,      false, 0)
+    DUI_MODEL_PROPERTY(bool,  iconVisible,   IconVisible,   true,  true)
+    DUI_MODEL_PROPERTY(bool,  magnetic,      Magnetic,      true,  true)
+    DUI_MODEL_PROPERTY(bool,  blinking,      Blinking,      true,  false)
 };
 
 #endif // UNLOCKSLIDERMODEL_H
