@@ -1,13 +1,13 @@
 /* UnlockSliderStyle : DuiWidgetStyle */
 UnlockSliderStyle {
-    handle-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
-    handle-hilighted-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
-    background-tile-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
-    icon-image: scalable(UnlockSliderTemp, 0, 0, 0, 0);
+    handle-image: UnlockSliderTemp 0 0 0 0;
+    handle-hilighted-image: UnlockSliderTemp 0 0 0 0;
+    background-tile-image: UnlockSliderTemp 0 0 0 0;
+    icon-image: UnlockSliderTemp 0 0 0 0;
 
-    handle-size: size(32, 32);
-    background-tile-size: size(32, 32);
-    icon-size: size(32, 32);
+    handle-size: 32 32;
+    background-tile-size: 32 32;
+    icon-size: 32 32;
     blink-time: 300;
     blink-count: 2;
 }

@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     p.appear();
 
     DuiTheme::addPixmapDirectory("./");
-    qDebug() << "DuiTheme::loadCSS(\"./unlocksliderstyle.css\"); " << DuiTheme::loadCSS("./unlocksliderstyle.css");
+    DuiTheme::loadCSS("./unlocksliderstyle.css");
 
     // Create widget controller and view.
     UnlockSlider slider;
