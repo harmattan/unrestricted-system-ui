@@ -18,23 +18,17 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS("pinquery.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Battery */
+    /* Battery */         
     batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);
-    if (!QDBusConnection::sessionBus().registerService("org.freedesktop.DBus.Battery")) {
-        qDebug() << "failed to register dbus service";
-        exit(1);
-    }
-    QDBusConnection::sessionBus().registerObject(QString("/systemui/battery"), batteryLogic);
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);    
+    registerDBusServiceAndObject(QString("org.freedesktop.DBus.Battery"), QString("/systemui/battery"), static_cast<QObject*>(batteryLogic));
+    // TODO: how to handle the unseccessfull registering
 
     /* Display */
     displayLogic = new DisplayBusinessLogic(systemUIGConf);
-    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);
-    if (!QDBusConnection::sessionBus().registerService("org.freedesktop.DBus.Display")) {
-        qDebug() << "failed to register dbus service";
-        exit(1);
-    }
-    QDBusConnection::sessionBus().registerObject(QString("/systemui/display"), displayLogic);    
+    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);    
+    registerDBusServiceAndObject(QString("org.freedesktop.DBus.Display"), QString("/systemui/display"), static_cast<QObject*>(displayLogic));    
+    // TODO: how to handle the unseccessfull registering
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -59,6 +53,19 @@ Sysuid::Sysuid() : QObject()
     connect(shutdownLogic, SIGNAL(dialogOpen(bool)),
             lockScreenLogic, SLOT(disable(bool)));
 
+}
+
+bool Sysuid::registerDBusServiceAndObject(const QString &service, const QString &objectPath, QObject *object)
+{
+    if(!QDBusConnection::sessionBus().registerService(service)) {
+        qDebug() << "failed to register dbus service";
+        return false;
+    }
+    if(!QDBusConnection::sessionBus().registerObject(objectPath, object)) {
+        qDebug() << "failed to register dbus object";
+        return false;
+    }
+    return true;
 }
 
 Sysuid::~Sysuid()

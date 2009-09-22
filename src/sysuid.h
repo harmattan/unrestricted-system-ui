@@ -21,6 +21,9 @@ public:
     virtual ~Sysuid();
 
 private:
+    bool registerDBusServiceAndObject(const QString &service, const QString &objectPath, QObject *object);
+
+private:
     SystemUIGConf *systemUIGConf;
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
     BatteryBusinessLogic *batteryLogic;
