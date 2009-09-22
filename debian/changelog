@@ -1,3 +1,9 @@
+system-ui (0.6.0-1) unstable; urgency=low
+
+  * Build fixes
+
+ -- Matti Katila <matti.katila@ixonos.com>  Tue, 22 Sep 2009 15:24:13 +0300
+
 cellular-ui (0.1.0-3) unstable; urgency=low
 
   * Fixes: NB#134117 - PIN is not rejected after 3 tries

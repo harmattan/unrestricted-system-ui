@@ -1,11 +1,28 @@
-Source: cellular-ui
+Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: Matti Katila <matti.katila@ixonos.com>
 Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev, libqmsystem-dev
 Standards-Version: 3.7.3
 
-Package: cellular-ui
+Package: system-ui
+Replaces: cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Cellular user interface: pin/puk query, sim notifications
+Description: Various system user interfaces.
+  System user interface package contains various user interfaces, e.g:
+  - pin/puk query, sim notifications
+  - battery notifications
+  - screenlock
+  - shutdown dialog
+
+Package: duicontrolpanel-batteryapplet
+Architecture: any
+Depends: system-ui, libduicontrolpanel
+Description: Battery settings applet.
+
+Package: duicontrolpanel-displayapplet
+Architecture: any
+Depends: system-ui, libduicontrolpanel
+Description: Battery settings applet.
+

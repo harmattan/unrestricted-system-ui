@@ -9,10 +9,10 @@ class BatteryBusinessLogic;
 class BatteryBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.DBus.BatteryBusinessLogic")
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.battery")
 
 public:
-    BatteryBusinessLogicAdaptor(BatteryBusinessLogic *batteryLogic);    
+    BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic);
 
 signals:
     void batteryCharging();

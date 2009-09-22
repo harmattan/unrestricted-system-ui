@@ -1,12 +1,8 @@
-#include "main.h"
 #include <QTimer>
-#include <DuiSceneManager>
 #include <DuiButton>
 #include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiMenu>
-#include <DuiNavigationBar>
-#include <DuiToolBar>
+
+#include "main.h"
 
 
 TestObj::TestObj(DuiApplicationWindow &w) : QObject() {
@@ -22,7 +18,6 @@ void TestObj::doStuff()
         this->win->show();
     else
         this->win->hide();
-
 }
 
 int main(int argc, char** argv)
@@ -32,7 +27,8 @@ int main(int argc, char** argv)
     DuiApplicationWindow w;
 
     DuiApplicationPage p;
-    DuiButton *b = new DuiButton(QString("Just another widget"), &p);
+    DuiButton button(QString("Just another widget"), &p);
+
     p.appear();
 
     TestObj obj(w);

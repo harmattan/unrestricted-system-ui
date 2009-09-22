@@ -49,9 +49,9 @@ HEADERS += main.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h
-style_sheet.path = /usr/share/themes/dui/pinquery
+style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
-style_svg.path = /usr/share/themes/dui/pinquery
+style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery
 style_svg.files = *.svg
 INSTALLS += target \
     style_sheet \

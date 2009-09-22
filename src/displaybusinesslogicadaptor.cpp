@@ -2,8 +2,8 @@
 #include "displaybusinesslogic.h"
 #include <QDebug>
 
-DisplayBusinessLogicAdaptor::DisplayBusinessLogicAdaptor(DisplayBusinessLogic *displayLogic)
-        : QDBusAbstractAdaptor(displayLogic), displayLogic(displayLogic)
+DisplayBusinessLogicAdaptor::DisplayBusinessLogicAdaptor(QObject *obj, DisplayBusinessLogic *displayLogic)
+        : QDBusAbstractAdaptor(obj), displayLogic(displayLogic)
 {   
 }
 

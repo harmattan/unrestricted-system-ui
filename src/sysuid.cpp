@@ -18,17 +18,13 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS("pinquery.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Battery */    
+    /* Battery */         
     batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    //batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(batteryLogic);
-    //registerDBusServiceAndObject(QString("com.nokia.systemui"), QString("/"), static_cast<QObject*>(batteryLogic));
-    // TODO: how to handle the unseccessfull registering
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(this, batteryLogic);
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic(systemUIGConf);    
-    //displayLogicAdaptor = new DisplayBusinessLogicAdaptor(displayLogic);
-    //registerDBusServiceAndObject(QString("com.nokia.systemui"), QString("/"), static_cast<QObject*>(displayLogic));
-    // TODO: how to handle the unseccessfull registering
+    displayLogic = new DisplayBusinessLogic(systemUIGConf);
+    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(this, displayLogic);
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -53,19 +49,16 @@ Sysuid::Sysuid() : QObject()
     connect(shutdownLogic, SIGNAL(dialogOpen(bool)),
             lockScreenLogic, SLOT(disable(bool)));
 
-}
-
-bool Sysuid::registerDBusServiceAndObject(const QString &service, const QString &objectPath, QObject *object)
-{
-    if(!QDBusConnection::sessionBus().registerService(service)) {
+    // D-Bus registration and stuff.
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if(!bus.registerService(QString("com.nokia.systemui"))) {
         qDebug() << "failed to register dbus service";
-        return false;
+        abort();
     }
-    if(!QDBusConnection::sessionBus().registerObject(objectPath, object)) {
-        qDebug() << "failed to register dbus object";
-        return false;
+    if(!bus.registerObject(QString("/"), this)) {
+        qDebug() << "failed to register dbus objects";
+        abort();
     }
-    return true;
 }
 
 Sysuid::~Sysuid()

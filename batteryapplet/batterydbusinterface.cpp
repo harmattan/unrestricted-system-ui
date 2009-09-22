@@ -5,7 +5,9 @@
 
 BatteryDBusInterface::BatteryDBusInterface()
 {
-    dbusIf = new QDBusInterface("org.freedesktop.DBus.Battery", "/systemui/battery", "", QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("com.nokia.systemui", "/", 
+				"com.nokia.systemui.battery", 
+				QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
     connect(dbusIf, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(dbusIf, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueReceived(int)));

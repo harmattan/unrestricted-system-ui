@@ -1,6 +1,3 @@
 usr/bin/sysuid
 usr/share/themes/dui/pinquery/*.svg
 usr/share/themes/dui/pinquery/*.css
-usr/lib/duicontrolpanel/applets/libbatteryapplet.so
-usr/lib/duicontrolpanel/battery.desktop
-

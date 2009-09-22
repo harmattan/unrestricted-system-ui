@@ -12,7 +12,7 @@ class DisplayBusinessLogicAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.display")
 
 public:
-    DisplayBusinessLogicAdaptor(DisplayBusinessLogic *displayLogic);
+    DisplayBusinessLogicAdaptor(QObject *obj, DisplayBusinessLogic *displayLogic);
     virtual ~DisplayBusinessLogicAdaptor();
 
 public slots:

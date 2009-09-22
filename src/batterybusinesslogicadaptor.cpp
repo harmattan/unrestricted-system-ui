@@ -3,8 +3,8 @@
 
 #include <QDebug>
 
-BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(BatteryBusinessLogic *batteryLogic)
-    : QDBusAbstractAdaptor(batteryLogic), batteryLogic(batteryLogic)
+BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic)
+    : QDBusAbstractAdaptor(obj), batteryLogic(batteryLogic)
 {
     connect(batteryLogic, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
     connect(batteryLogic, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
