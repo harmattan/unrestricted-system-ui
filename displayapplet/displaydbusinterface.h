@@ -16,12 +16,15 @@ public:
 
     void brightnessValuesRequired();
     void brightnessValueRequired();
-    void screenLightsValuesRequired();
-    void screenLightsValueRequired();
-    void screenLightsToggleValueRequired();
+    void blankTimeoutValuesRequired();
+    void blankTimeoutValueRequired();
+    void dimTimeoutValuesRequired();
+    void dimTimeoutValueRequired();
+    void blankInhibitValueRequired();
     void setBrightnessValue(const QString &value);
-    void setScreenLightsValue(const QString &value);    
-    void setScreenLightsToggleValue(bool value);
+    void setBlankTimeoutValue(const QString &value);
+    void setDimTimeoutValue(const QString &value);
+    void setBlankInhibitValue(bool value);
 
 private slots:
     void valueSet();
@@ -30,13 +33,14 @@ private slots:
 signals:
     void brightnessValuesReceived(QStringList);
     void brightnessValueReceived(QString);
-    void screenLightsValuesReceived(QStringList);
-    void screenLightsValueReceived(QString);
-    void screenLightsToggleValueReceived(bool);
+    void blankTimeoutValuesReceived(QStringList);
+    void blankTimeoutValueReceived(QString);
+    void dimTimeoutValuesReceived(QStringList);
+    void dimTimeoutValueReceived(QString);
+    void blankInhibitValueReceived(bool);
 
 private:
     QDBusInterface *dbusIf;
-
 
 };
 

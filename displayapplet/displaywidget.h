@@ -22,24 +22,34 @@ protected:
 
 private slots:
     void initBrightnessSlider(const QStringList &values);
-    void initScreenLightsSlider(const QStringList &values);    
-    void updateBrightnessSlider(const QString &value);
-    void updateScreenLightsSlider(const QString &value);
+    void initBlankTimeoutSlider(const QStringList &values);
+    void initDimTimeoutSlider(const QStringList &values);
+    void initBrightnessSliderValue(const QString &value);
+    void initBlankTimeoutSliderValue(const QString &value);
+    void initDimTimeoutSliderValue(const QString &value);    
     void brightnessSliderValueChanged(int value);
-    void screenLightsSliderValueChanged(int value);
-    void updateScreenLightsButton(bool toggle);
-    void screenLightsButtonPressed();
+    void blankTimeoutSliderValueChanged(int value);
+    void dimTimeoutSliderValueChanged(int value);
+    void initBlankInhibitButtonValue(bool toggle);
+    void blankInhibitButtonPressed();
 
 private: //methods
     void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiStylableWidget*> &widgets);
     void initSlider(DuiSlider *slider, const QStringList &values);
+    void initSliderValue(DuiSlider *slider, const QStringList &values, const QString &value);
+    void updateBrightnessSliderThumbLabel(const QString &value);
+    void updateBlankTimeoutSliderThumbLabel(const QString &value);
+    void updateDimTimeoutSliderThumbLabel(const QString &value);
+    void updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern = QString(""));
 
 private: //attributes        
     DuiSlider *brightnessSlider;
-    DuiSlider *screenLightsSlider;
-    DuiButton *screenLightsButton;
+    DuiSlider *blankTimeoutSlider;
+    DuiSlider *dimTimeoutSlider;
+    DuiButton *blankInhibitButton;
     QStringList brightnessSliderValues;
-    QStringList screenLightsSliderValues;
-    DisplayDBusInterface *displayIf;
+    QStringList blankTimeoutSliderValues;
+    QStringList dimTimeoutSliderValues;
+    DisplayDBusInterface *displayIf;    
 };
 #endif // DISPLAYWIDGET_H

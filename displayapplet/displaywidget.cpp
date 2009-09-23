@@ -32,10 +32,12 @@ void DisplayWidget::initWidget()
 
     // catch display If actions
     connect(displayIf, SIGNAL(brightnessValuesReceived(QStringList)), this, SLOT(initBrightnessSlider(QStringList)));
-    connect(displayIf, SIGNAL(brightnessValueReceived(QString)), this, SLOT(updateBrightnessSlider(QString)));
-    connect(displayIf, SIGNAL(screenLightsValuesReceived(QStringList)), this, SLOT(initScreenLightsSlider(QStringList)));
-    connect(displayIf, SIGNAL(screenLightsValueReceived(QString)), this, SLOT(updateScreenLightsSlider(QString)));
-    connect(displayIf, SIGNAL(screenLightsToggleValueReceived(bool)), this, SLOT(updateScreenLightsButton(bool)));    
+    connect(displayIf, SIGNAL(brightnessValueReceived(QString)), this, SLOT(initBrightnessSliderValue(QString)));
+    connect(displayIf, SIGNAL(blankTimeoutValuesReceived(QStringList)), this, SLOT(initBlankTimeoutSlider(QStringList)));
+    connect(displayIf, SIGNAL(blankTimeoutValueReceived(QString)), this, SLOT(initBlankTimeoutSliderValue(QString)));
+    connect(displayIf, SIGNAL(dimTimeoutValuesReceived(QStringList)), this, SLOT(initDimTimeoutSlider(QStringList)));
+    connect(displayIf, SIGNAL(dimTimeoutValueReceived(QString)), this, SLOT(initDimTimeoutSliderValue(QString)));
+    connect(displayIf, SIGNAL(blankInhibitValueReceived(bool)), this, SLOT(initBlankInhibitButtonValue(bool)));
 
     /*
      * brightnessLayoutWidget
@@ -54,37 +56,53 @@ void DisplayWidget::initWidget()
     brightnessLayoutWidget->setLayout(brightnessLayout);
 
     /*
-     * screenLightsLayoutWidget
+     * blankTimeoutLayoutWidget
      */    
-    screenLightsSlider = new DuiSlider(0, "continuous");
-    displayIf->screenLightsValuesRequired();
-    displayIf->screenLightsValueRequired();
+    blankTimeoutSlider = new DuiSlider(0, "continuous");
+    displayIf->blankTimeoutValuesRequired();
+    displayIf->blankTimeoutValueRequired();
 
-    DuiLayout *screenLightsLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *screenLightsLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsLayout, Qt::Vertical);
-    screenLightsLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsText), 0, Qt::AlignLeft);
-    screenLightsLayoutPolicy->addItemAtPosition(screenLightsSlider, 1, Qt::AlignLeft);
+    DuiLayout *blankTimeoutLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *blankTimeoutLayoutPolicy = new DuiLinearLayoutPolicy(blankTimeoutLayout, Qt::Vertical);
+    blankTimeoutLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BlankTimeoutText), 0, Qt::AlignLeft);
+    blankTimeoutLayoutPolicy->addItemAtPosition(blankTimeoutSlider, 1, Qt::AlignLeft);
 
-    DuiStylableWidget *screenLightsLayoutWidget = new DuiStylableWidget();
-    screenLightsLayoutWidget->setObjectName("displayLayoutWidget1");
-    screenLightsLayoutWidget->setLayout(screenLightsLayout);
+    DuiStylableWidget *blankTimeoutLayoutWidget = new DuiStylableWidget();
+    blankTimeoutLayoutWidget->setObjectName("displayLayoutWidget1");
+    blankTimeoutLayoutWidget->setLayout(blankTimeoutLayout);
 
     /*
-     * screenLightsButtonLayoutWidget
+     * dimTimeoutLayoutWidget
+     */
+    dimTimeoutSlider = new DuiSlider(0, "continuous");
+    displayIf->dimTimeoutValuesRequired();
+    displayIf->dimTimeoutValueRequired();
+
+    DuiLayout *dimTimeoutLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *dimTimeoutLayoutPolicy = new DuiLinearLayoutPolicy(dimTimeoutLayout, Qt::Vertical);
+    dimTimeoutLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::DimTimeoutText), 0, Qt::AlignLeft);
+    dimTimeoutLayoutPolicy->addItemAtPosition(dimTimeoutSlider, 1, Qt::AlignLeft);
+
+    DuiStylableWidget *dimTimeoutLayoutWidget = new DuiStylableWidget();
+    dimTimeoutLayoutWidget->setObjectName("displayLayoutWidget1");
+    dimTimeoutLayoutWidget->setLayout(dimTimeoutLayout);
+
+    /*
+     * blankInhibitButtonLayoutWidget
      */    
-    screenLightsButton = new DuiButton();
-    screenLightsButton->setCheckable(true);
-    screenLightsButton->setObjectName("screenLightsButton");
-    displayIf->screenLightsToggleValueRequired();
+    blankInhibitButton = new DuiButton();
+    blankInhibitButton->setCheckable(true);
+    blankInhibitButton->setObjectName("blankInhibitButton");
+    displayIf->blankInhibitValueRequired();
 
-    DuiLayout *screenLightsButtonLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *screenLightsButtonLayoutPolicy = new DuiLinearLayoutPolicy(screenLightsButtonLayout, Qt::Horizontal);
-    screenLightsButtonLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::ScreenLightsButtonText), 0, Qt::AlignLeft);
-    screenLightsButtonLayoutPolicy->addItemAtPosition(screenLightsButton, 1, Qt::AlignRight);
+    DuiLayout *blankInhibitButtonLayout = new DuiLayout();
+    DuiLinearLayoutPolicy *blankInhibitButtonLayoutPolicy = new DuiLinearLayoutPolicy(blankInhibitButtonLayout, Qt::Horizontal);
+    blankInhibitButtonLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BlankInhibitButtonText), 0, Qt::AlignLeft);
+    blankInhibitButtonLayoutPolicy->addItemAtPosition(blankInhibitButton, 1, Qt::AlignRight);
 
-    DuiStylableWidget *screenLightsButtonLayoutWidget = new DuiStylableWidget();
-    screenLightsButtonLayoutWidget->setObjectName("displayLayoutWidget2");
-    screenLightsButtonLayoutWidget->setLayout(screenLightsButtonLayout);
+    DuiStylableWidget *blankInhibitButtonLayoutWidget = new DuiStylableWidget();
+    blankInhibitButtonLayoutWidget->setObjectName("displayLayoutWidget2");
+    blankInhibitButtonLayoutWidget->setLayout(blankInhibitButtonLayout);
 
     /*
      * NoteLayoutWidget
@@ -101,7 +119,8 @@ void DisplayWidget::initWidget()
      * MainLayout     
      */
     QList<DuiStylableWidget*> widgets;
-    widgets << brightnessLayoutWidget << screenLightsLayoutWidget << screenLightsButtonLayoutWidget << noteLayoutWidget;
+    widgets << brightnessLayoutWidget << blankTimeoutLayoutWidget << dimTimeoutLayoutWidget
+            << blankInhibitButtonLayoutWidget << noteLayoutWidget;
 
     DuiLayout *mainLayout = new DuiLayout(this);
 
@@ -114,9 +133,11 @@ void DisplayWidget::initWidget()
     mainLayout->setPortraitPolicy(portraitLayoutPolicy);
 
     // catch user actions
-    connect(screenLightsButton, SIGNAL(pressed()), this, SLOT(screenLightsButtonPressed()));
-    connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(brightnessSliderValueChanged(int)));
-    connect(screenLightsSlider, SIGNAL(valueChanged(int)), this, SLOT(screenLightsSliderValueChanged(int)));           
+
+    connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(brightnessSliderValueChanged(int)));    
+    connect(blankTimeoutSlider, SIGNAL(valueChanged(int)), this, SLOT(blankTimeoutSliderValueChanged(int)));
+    connect(dimTimeoutSlider, SIGNAL(valueChanged(int)), this, SLOT(dimTimeoutSliderValueChanged(int)));
+    connect(blankInhibitButton, SIGNAL(pressed()), this, SLOT(blankInhibitButtonPressed()));
 
     this->setLayout(mainLayout);    
 }
@@ -134,64 +155,102 @@ void DisplayWidget::initBrightnessSlider(const QStringList &values)
     initSlider(brightnessSlider, values);
 }
 
-void DisplayWidget::initScreenLightsSlider(const QStringList &values)
+void DisplayWidget::initBlankTimeoutSlider(const QStringList &values)
 {
-    initSlider(screenLightsSlider, values);
+    initSlider(blankTimeoutSlider, values);
+}
+
+void DisplayWidget::initDimTimeoutSlider(const QStringList &values)
+{
+    initSlider(dimTimeoutSlider, values);
 }
 
 void DisplayWidget::initSlider(DuiSlider *slider, const QStringList &values)
-{
+{    
     if(slider == brightnessSlider)
         brightnessSliderValues = QStringList(values);
-    else
-        screenLightsSliderValues = QStringList(values);
+    else if(slider == blankTimeoutSlider)
+        blankTimeoutSliderValues = QStringList(values);
+    else if (slider == dimTimeoutSlider)
+        dimTimeoutSliderValues = QStringList(values);
 
     slider->setRange(0,values.size()-1);
     slider->setOrientation(Qt::Horizontal);    
 }
 
-void DisplayWidget::updateBrightnessSlider(const QString &value)
+void DisplayWidget::initBrightnessSliderValue(const QString &value)
 {
-    static bool firstCall = true;
-    if(brightnessSlider != NULL) {
-        if(firstCall) {
-            brightnessSlider->setValue(brightnessSliderValues.indexOf(value)); //in case this is the first call, we need to set the value
-            firstCall = false;
-        }
-        brightnessSlider->setThumbLabel(QString("%1%").arg(value));
-    }
+    initSliderValue(brightnessSlider, brightnessSliderValues, value);
+    updateBrightnessSliderThumbLabel(value);
 }
 
-void DisplayWidget::updateScreenLightsSlider(const QString &value)
+void DisplayWidget::initBlankTimeoutSliderValue(const QString &value)
 {
-    static bool firstCall = true;
-    if(screenLightsSlider != NULL) {
-        if(firstCall) {
-            screenLightsSlider->setValue(brightnessSliderValues.indexOf(value)); //in case this is the first call, we need to set the value
-            firstCall = false;
-        }
-        screenLightsSlider->setThumbLabel((DcpDisplay::ScreenLightsValueText).arg(value));
+    initSliderValue(blankTimeoutSlider, blankTimeoutSliderValues, value);
+    updateBlankTimeoutSliderThumbLabel(value);
+}
+
+void DisplayWidget::initDimTimeoutSliderValue(const QString &value)
+{
+    initSliderValue(dimTimeoutSlider, dimTimeoutSliderValues, value);
+    updateDimTimeoutSliderThumbLabel(value);
+}
+
+void DisplayWidget::initSliderValue(DuiSlider *slider, const QStringList &values, const QString &value)
+{
+    if(slider != NULL)
+        slider->setValue(values.indexOf(value));
+}
+
+void DisplayWidget::updateBrightnessSliderThumbLabel(const QString &value)
+{
+    updateSliderThumbLabel(brightnessSlider, value);
+}
+
+void DisplayWidget::updateBlankTimeoutSliderThumbLabel(const QString &value)
+{
+    updateSliderThumbLabel(blankTimeoutSlider, value, DcpDisplay::BlankTimeoutValueText);
+}
+
+void DisplayWidget::updateDimTimeoutSliderThumbLabel(const QString &value)
+{
+    updateSliderThumbLabel(dimTimeoutSlider, value, DcpDisplay::DimTimeoutValueText);
+}
+
+void DisplayWidget::updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern)
+{
+    if(slider != NULL) {
+        if(!pattern.isEmpty())
+            slider->setThumbLabel(pattern.arg(value));
+        else
+            slider->setThumbLabel(value);
     }
 }
 
 void DisplayWidget::brightnessSliderValueChanged(int value)
 {      
     displayIf->setBrightnessValue(brightnessSliderValues.at(value));
-    updateBrightnessSlider(brightnessSliderValues.at(value));
+    updateBrightnessSliderThumbLabel(brightnessSliderValues.at(value));
 }
 
-void DisplayWidget::screenLightsSliderValueChanged(int value)
+void DisplayWidget::blankTimeoutSliderValueChanged(int value)
 {
-    displayIf->setScreenLightsValue(screenLightsSliderValues.at(value));
-    updateScreenLightsSlider(screenLightsSliderValues.at(value));
+    displayIf->setBlankTimeoutValue(blankTimeoutSliderValues.at(value));
+    updateBlankTimeoutSliderThumbLabel(blankTimeoutSliderValues.at(value));
 }
 
-void DisplayWidget::updateScreenLightsButton(bool toggle)
+void DisplayWidget::dimTimeoutSliderValueChanged(int value)
 {
-    screenLightsButton->setChecked(toggle);
+    displayIf->setDimTimeoutValue(dimTimeoutSliderValues.at(value));
+    updateDimTimeoutSliderThumbLabel(dimTimeoutSliderValues.at(value));
 }
 
-void DisplayWidget::screenLightsButtonPressed()
+void DisplayWidget::initBlankInhibitButtonValue(bool toggle)
 {
-    displayIf->setScreenLightsToggleValue(screenLightsButton->isChecked());
+    blankInhibitButton->setChecked(toggle);
+}
+
+void DisplayWidget::blankInhibitButtonPressed()
+{
+    displayIf->setBlankInhibitValue(blankInhibitButton->isChecked());
 }

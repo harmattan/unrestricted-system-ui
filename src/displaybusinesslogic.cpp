@@ -46,7 +46,7 @@ QStringList DisplayBusinessLogic::brightnessValues()
                                          defaultValue(SystemUIGConf::DisplayBrightnessKey)).toString();    
 
     for(int i=maxValue; i>=valueStep; ) {
-        values << QString("%1").arg(i);
+        values.prepend(QString("%1").arg(i));
         i -= valueStep;
     }
     if(!values.contains(value))
