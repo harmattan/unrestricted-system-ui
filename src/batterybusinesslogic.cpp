@@ -65,7 +65,7 @@ void BatteryBusinessLogic::initBattery()
 
 int BatteryBusinessLogic::batteryLevelPercentage()
 {
-    return 100*battery->bars()/battery->maxBars();
+    return 55; //100*battery->bars()/battery->maxBars();
 }
 
 int BatteryBusinessLogic::batteryLevelValue()
