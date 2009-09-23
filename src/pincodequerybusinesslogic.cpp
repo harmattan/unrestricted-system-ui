@@ -11,6 +11,8 @@
 #include <QtDBus>
 #include <ssc-dbus-names.h>
 
+#include "sysuid.h"
+
 using namespace CallUi;
 
 /*! The pincode query business logic object is the glue object between
@@ -60,7 +62,9 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
     qDebug() << "PinCodeQueryBusinessLogic()";
 
-    uiNotif = new Notifier();
+    uiNotif = Sysuid::notifier();
+    qDebug() << "PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic connected to " << uiNotif;
+
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -94,8 +98,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 
 PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
 {
-    delete uiNotif;
-    uiNotif = NULL;
+    uiNotif = NULL; // don't delete, not owned!
     delete uiPin;
     uiPin = NULL;
     delete sim;
@@ -170,14 +173,17 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 // User Interface drivers by state machine
 // =======================================
 
-void PinCodeQueryBusinessLogic::ui2SIMLocked()
+void PinCodeQueryBusinessLogic::ui2SIMLocked(bool showNote)
 {    
     createUi();
     uiPin->getCancelBtn()->setEnabled(true);
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
-    uiNotif->showNotification(SIMLocked, Notifier::error);
+    if(showNote) {
+        uiNotif->showNotification(SIMLocked, Notifier::error);
+    }
 }
+
 void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 {
     qDebug() << "ui2first...";
@@ -286,7 +292,8 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     else if(button->objectName() == QString("enterButton")) {
         switch(previousSimState) {
         case SIM::SIMLockRejected:
-            simLock->simLockUnlock(SIMLock::LevelGlobal, uiPin->getCodeEntry()->text());
+            simLockCode = uiPin->getCodeEntry()->text();
+            simLock->simLockUnlock(SIMLock::LevelGlobal, simLockCode);
         break;
         case SIM::PINRequired:            
             simSec->verifyPIN(SIMSecurity::PIN, uiPin->getCodeEntry()->text());
@@ -321,12 +328,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
         uiPin->getCodeEntry()->setText("");
     }
     else if(button->objectName() == QString("cancelButton")) {
-        // regardless of the state - just exit.
-        ui2disappear();
-        // Well, let's put the radio and cellular off.
-        QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
-                           QDBusConnection::systemBus());
-        ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
+        cancelQuery();
     }
 }
 
@@ -336,6 +338,11 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
 {
     qDebug() << "sim status changed" << next << "from" << previousSimState << "subState" << subState;
+
+    // clear simLockCode
+    if (next != SIM::SIMLockRejected) {
+        simLockCode = "";
+    }
 
     switch (previousSimState) {
     case -1: { // bootstrap
@@ -495,7 +502,11 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 {
     if(handleSIMLockError(error))
         uiNotif->showNotification(SIMUnlocked, Notifier::info);
+
     //what is the next SIMStatus?
+    if(SIMLockErrorTimerNotElapsed != error) {
+        simLockCode = "";
+    }
 }
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
@@ -593,16 +604,44 @@ bool PinCodeQueryBusinessLogic::handleSIMLockError(SIMLockError error)
 
 void PinCodeQueryBusinessLogic::informTechnicalProblem()
 {
+    connect(uiNotif->responseObject(), SIGNAL(pinQueryCanceled()), this, SLOT(cancelQuery()));
     uiNotif->showConfirmation(TechnicalProblem, trid("qtn_cell_continue", "Continue"));
-    // TODO: Tapping the button cancels the PIN query. SIM card information won’t be used and cellular
-    // network connection is not established.
-
 }
 
+// Offers an option for user to try enter the unlock code again.
+// Tapping the button should try to enter the already typed unlock code directly again.
 void PinCodeQueryBusinessLogic::simLockRetry()
 {
+    connect(uiNotif->responseObject(), SIGNAL(doSimLockRetry()), this, SLOT(resendSimLockCode()));
     uiNotif->showConfirmation(SIMLockTooFast, trid("qtn_cell_try_again", "Try again"));
-    // TODO: Offers an option for user to try enter the unlock code again.
-    // Tapping the button should try to enter the already typed unlock code directly again.
+    if(uiPin)
+        uiPin->getCodeEntry()->setText(simLockCode);
 }
 
+void PinCodeQueryBusinessLogic::cancelQuery()
+{
+    qDebug() << "PinCodeQueryBusinessLogic::cancelQuery()";
+    disconnect(uiNotif->responseObject(), SIGNAL(pinQueryCanceled()), this, SLOT(cancelQuery()));
+    // regardless of the state - just exit.
+    ui2disappear();
+    // Well, let's put the radio and cellular off.
+    QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
+                       QDBusConnection::systemBus());
+    ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
+    // just in case before the uiPin is not deleted when hidden
+    if(uiPin)
+    {
+        uiPin->getCodeEntry()->setText("");
+    }
+}
+
+void PinCodeQueryBusinessLogic::resendSimLockCode()
+{
+    qDebug() << "PinCodeQueryBusinessLogic::resendSimLockCode()";
+    disconnect(uiNotif->responseObject(), SIGNAL(doSimLockRetry()), this, SLOT(resendSimLockCode()));
+    ui2SIMLocked(false);
+    uiPin->getCodeEntry()->setText(simLockCode);
+    if(!simLockCode.isEmpty() && SIM::SIMLockRejected == previousSimState) {
+        simLock->simLockUnlock(SIMLock::LevelGlobal, simLockCode);
+    }
+}

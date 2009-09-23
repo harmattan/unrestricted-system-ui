@@ -3,6 +3,7 @@
 
 #include <QDBusConnection>
 #include <QDebug>
+#include <QPointer>
 
 #include "sysuid.h"
 
@@ -51,14 +52,44 @@ Sysuid::Sysuid() : QObject()
 
     // D-Bus registration and stuff.
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if(!bus.registerService(QString("com.nokia.systemui"))) {
+    if(!bus.registerService(dbusService())) {
         qDebug() << "failed to register dbus service";
         abort();
     }
-    if(!bus.registerObject(QString("/"), this)) {
+    if(!bus.registerObject(dbusPath(), dbusObject())) {
         qDebug() << "failed to register dbus objects";
         abort();
     }
+}
+
+QPointer<QObject> Sysuid::dbusObject()
+{
+    static QPointer<QObject> o = NULL;
+    if(o.isNull())
+    {
+        o = new QObject();
+    }
+    return o;
+}
+
+QPointer<Notifier> Sysuid::notifier()
+{
+    static QPointer<Notifier> n = NULL;
+    if(n.isNull())
+    {
+        n = new Notifier();
+    }
+    return n;
+}
+
+QString Sysuid::dbusService()
+{
+    return QString("com.nokia.systemui");
+}
+
+QString Sysuid::dbusPath()
+{
+    return QString("/");
 }
 
 Sysuid::~Sysuid()
@@ -79,4 +110,8 @@ Sysuid::~Sysuid()
     lockScreenLogic = NULL;
     delete shutdownLogic;
     shutdownLogic = NULL;
+    if(NULL != notifier())
+        delete notifier();
+    if(NULL != dbusObject())
+        delete dbusObject();
 }

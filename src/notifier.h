@@ -6,10 +6,17 @@
 
 class CancellableNotification;
 class QDBusInterface;
+class NotifierDBusAdaptor;
+class Sysuid;
 
+/**
+  * Class to create notifications
+  */
 class Notifier : public QObject
 {
     Q_OBJECT
+
+   friend class Sysuid;
 
 public:
     // temporary event-types for notifications, defined as "what I want".
@@ -21,8 +28,8 @@ public:
         warning
     };
 
-    Notifier();
     virtual ~Notifier();
+    QObject* responseObject();
 
 signals:
     void notifTimeout();
@@ -40,6 +47,9 @@ private slots:
     void cancellableNotificationCancelled();
     void cancellableNotificationTimeout();
 
+protected:
+    Notifier();
+
 private:
     void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"));
     void removeNotification(unsigned int id);
@@ -47,8 +57,8 @@ private:
 private:    
     CancellableNotification *cancellableNotification;
     QDBusInterface* managerIf;
+    NotifierDBusAdaptor* dbus;
     unsigned int notifId;
-
 };
 
 

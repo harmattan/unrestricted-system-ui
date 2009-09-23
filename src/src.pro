@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     batterybusinesslogicadaptor.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
-    displaybusinesslogicadaptor.cpp
+    displaybusinesslogicadaptor.cpp \
+    notifierdbusadaptor.cpp 
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -50,7 +51,8 @@ HEADERS += main.h \
     batterybusinesslogicadaptor.h \
     displaybusinesslogic.h \
     systemuigconf.h \
-    displaybusinesslogicadaptor.h
+    displaybusinesslogicadaptor.h \
+    notifierdbusadaptor.h 
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery
 style_sheet.files = pinquery.css
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery

@@ -2,6 +2,7 @@
 #define SYSUID_H
 
 #include <QObject>
+#include <QPointer>
 
 #include "systemuigconf.h"
 #include "pincodequerybusinesslogic.h"
@@ -12,13 +13,19 @@
 #include "lockscreenbusinesslogic.h"
 #include "shutdowndialogbusinesslogic.h"
 #include "eventhandler.h"
+#include "notifier.h"
 
 class Sysuid : public QObject
 {
     Q_OBJECT
+
 public:
     Sysuid();
     virtual ~Sysuid();
+    static QPointer<QObject> dbusObject();
+    static QString dbusService();
+    static QString dbusPath();
+    static QPointer<Notifier> notifier();
 
 private:
     SystemUIGConf *systemUIGConf;
@@ -30,7 +37,6 @@ private:
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownDialogBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
-
 };
 
 #endif // SYSUID_H

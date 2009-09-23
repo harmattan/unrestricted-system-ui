@@ -53,10 +53,16 @@ public:
     explicit PinCodeQueryBusinessLogic();
     virtual ~PinCodeQueryBusinessLogic();
 
+public slots:
+    void cancelQuery();
+    void resendSimLockCode();
+
+
 private: // attributes
     QPointer<PinCodeQueryUI> uiPin;
     Notifier *uiNotif;
     QString newPinCode;
+    QString simLockCode;
 
     bool SIMhotswapped;
     int subState;
@@ -78,7 +84,7 @@ private: // methods
     void informTechnicalProblem();
     void simLockRetry();
 
-    void ui2SIMLocked();
+    void ui2SIMLocked(bool showNote = true);
     void ui2firstPINAttempt();
     void ui2PINFailedNowPUK();
     void ui2PINFailed(int attemptsLeft);
@@ -103,7 +109,6 @@ private slots:
     void simPUKAttemptsLeft(int attempts, SIMError error);
     void simPINCodeChanged(bool success, SIMError error);
     void simLockUnlockCodeVerified(SIMLockError error);
-
 };
 
 #endif // PINCODEQUERYBUSINESSLOGIC_H

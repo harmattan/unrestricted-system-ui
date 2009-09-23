@@ -6,12 +6,14 @@
 #include <DuiLocale>
 #include <DuiApplicationWindow>
 
+#include "sysuid.h"
+
 BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf) :
         systemUIGConf(systemUIGConf)
 {    
     battery = new QmBattery();
     deviceMode = new QmDeviceMode();    
-    uiNotif = new Notifier();    
+    uiNotif = Sysuid::notifier();
 
     /* init the battery levels */
     batteryLevels.insert(QmBattery::LevelFull, QString("100"));
@@ -35,8 +37,7 @@ BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf) :
 
 BatteryBusinessLogic::~BatteryBusinessLogic()
 {
-    delete uiNotif;
-    uiNotif = NULL;
+    uiNotif = NULL; // don't delete, not owned!
     delete battery;
     battery = NULL;       
 }

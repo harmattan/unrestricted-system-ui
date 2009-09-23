@@ -1,7 +1,4 @@
-#include "notifier.h"
-#include "cancellablenotification.h"
 
-//#include <DuiNotification>
 #include <DuiLocale>
 #include <QTimer>
 #include <QHash>
@@ -9,6 +6,10 @@
 #include <QDebug>
 #include <QDBusInterface>
 
+#include "notifier.h"
+#include "sysuid.h"
+#include "cancellablenotification.h"
+#include "notifierdbusadaptor.h"
 
 // TODO.: Use the logical names when available
 
@@ -20,14 +21,23 @@
 
 Notifier::Notifier() : QObject(), notifId(0)
 {
+    dbus = new NotifierDBusAdaptor();
     managerIf = new QDBusInterface ( "org.maemo.dui.NotificationManager", "/", "org.maemo.dui.NotificationManager");
 }
 
 Notifier::~Notifier()
 {    
-    notificationTimeout(); // what if the notification requires user input???
+    if(NULL != dbus)
+        delete dbus;
+
+    dbus = NULL;
     delete managerIf;
     managerIf = NULL;
+}
+
+QObject* Notifier::responseObject()
+{
+    return (QObject*)dbus;
 }
 
 void Notifier::showNotification(QString notifText, Notifier::NotificationType type)
@@ -48,7 +58,26 @@ void Notifier::showNotification(QString notifText, Notifier::NotificationType ty
 
 void Notifier::showConfirmation(QString notifText, QString buttonText)
 {
-    showDBusNotification(notifText, QString("confirmation"), QString(""), 0, buttonText);
+/*
+	// from DuiRemoteAction:
+     
+	QStringList l = string.split(' ');
+    if (l.count() > 3) {
+        d->serviceName = l.at(0);
+        d->objectPath = l.at(1);
+        d->interface = l.at(2);
+        d->methodName = l.at(3);
+    }
+*/
+    QString action(Sysuid::dbusService() + " " + Sysuid::dbusPath() + " " + NotifierDBusAdaptor::dbusInterfaceName() + " ");
+
+    if (trid("qtn_cell_continue", "Continue") == buttonText)
+        action += "pinQueryCancel";
+    else if (trid("qtn_cell_try_again", "Try again") == buttonText)
+        action += "simLockRetry";
+
+    qDebug() << "Notifier::showConfirmation() action:" << action;
+    showDBusNotification(notifText, QString("confirmation"), QString(""), 0, action);
 }
 
 
@@ -57,18 +86,6 @@ void Notifier::notificationTimeout()
     if(0 < notifId) {
         removeNotification(notifId);
         notifId = 0;
-    }
-    else {
-        /*
-        QTimer *t = qobject_cast<QTimer *>(sender());
-        if (t != NULL) {
-            DuiNotification *dn = qobject_cast<DuiNotification *>(t->parent());
-            if (dn != NULL) {
-                dn->disappear();
-            }
-
-        }
-        */
     }
 }
 
