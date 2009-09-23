@@ -3,11 +3,13 @@ TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
-    cellular-qt
+    cellular-qt \
+    qmsystem
 QT += dbus
-LIBS += -lsystem \
-    -lX11 \
+LIBS += -lX11 \
     -lcallui0
+INCLUDEPATH += /usr/include/alarmd
+
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage

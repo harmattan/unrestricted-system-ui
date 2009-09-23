@@ -57,18 +57,20 @@ void BatteryBusinessLogic::initSystemUIGConfKeys()
 void BatteryBusinessLogic::initBattery()
 {
     //init the charging status
-    QmBattery::State state = QmBattery::StateNotCharging;
-    if(battery->isCharging())
-        state = QmBattery::StateCharging;
-    batteryStateChanged(state);
+    batteryStateChanged(battery->getState());
 
     //init the battery level
     batteryLevelChanged((QmBattery::Level)batteryLevelValue());
 }
 
+int BatteryBusinessLogic::batteryLevelPercentage()
+{
+    return 100*battery->bars()/battery->maxBars();
+}
+
 int BatteryBusinessLogic::batteryLevelValue()
 {
-    int chargeLevelPercentage = battery->chargeLevelPercentage();
+    int chargeLevelPercentage = batteryLevelPercentage();
     QmBattery::Level level;
     if(chargeLevelPercentage >= 85)
         level = QmBattery::LevelFull;
@@ -112,8 +114,8 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
     checkPSMThreshold(level);
 
     switch(level) {
-        case QmBattery::LevelFull:        
-            if(battery->isCharging()) {
+        case QmBattery::LevelFull:
+            if(battery->getState() == QmBattery::StateCharging) {
                 utiliseLED(true, QString("PatternBatteryFull"));
                 QTimer::singleShot(5000, this, SLOT(utiliseLED(false, QString("PatternBatteryFull"))));
                 uiNotif->showNotification(trid("qtn_ener_charcomp", "Charging complete"));                
@@ -121,7 +123,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
             }            
             break;
         case QmBattery::LevelLow:
-            if(!battery->isCharging())
+            if(battery->getState() != QmBattery::StateCharging)
                 uiNotif->showNotification(trid("qtn_ener_lowbatt", "Low battery"));
             break;
         default:
@@ -142,7 +144,7 @@ void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
 
             QHash<QString,QString> staticVariables;
             QString number;
-            staticVariables.insert(QString("%a"), number.setNum(battery->chargeLevelPercentage()));
+            staticVariables.insert(QString("%a"), number.setNum(batteryLevelPercentage()));
             uiNotif->showCancellableNotification(trid("qtn_ener_psnote", "Battery charge level less than %a%. Switching to power save in %b seconds"),
                                                  10,
                                                  QString("%b"),
@@ -218,14 +220,14 @@ void BatteryBusinessLogic::togglePSMDisabled(bool disabled)
     if(disabled) //PSM disabled
         togglePSM(false);
     else
-        checkPSMThreshold((Maemo::QmBattery::Level)battery->chargeLevel());
+        checkPSMThreshold((Maemo::QmBattery::Level)battery->bars());
 }
 
 void BatteryBusinessLogic::setPSMThreshold(const QString &threshold)
 {
     qDebug() << "BatteryBusinessLogic::setPSMthreshold(" << threshold << ")";
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant(threshold));
-    checkPSMThreshold((Maemo::QmBattery::Level)battery->chargeLevel());
+    checkPSMThreshold((Maemo::QmBattery::Level)battery->bars());
 }
 
 QVariant BatteryBusinessLogic::GConfItemValue(SystemUIGConf::GConfKey key)
@@ -250,7 +252,5 @@ QStringList BatteryBusinessLogic::PSMThresholdValues()
 
 bool BatteryBusinessLogic::batteryChargingState()
 {
-    if(battery->isCharging())
-        return true;
-    return false;
+    return battery->getState() == QmBattery::StateCharging;
 }

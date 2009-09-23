@@ -48,6 +48,7 @@ private: //attributes
 private: //methods
     void initSystemUIGConfKeys();
     void checkPSMThreshold(Maemo::QmBattery::Level level);    
+    int batteryLevelPercentage();
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);

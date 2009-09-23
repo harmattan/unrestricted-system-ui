@@ -1,7 +1,7 @@
 #include "notifier.h"
 #include "cancellablenotification.h"
 
-#include <DuiNotification>
+//#include <DuiNotification>
 #include <DuiLocale>
 #include <QTimer>
 #include <QHash>
@@ -59,6 +59,7 @@ void Notifier::notificationTimeout()
         notifId = 0;
     }
     else {
+        /*
         QTimer *t = qobject_cast<QTimer *>(sender());
         if (t != NULL) {
             DuiNotification *dn = qobject_cast<DuiNotification *>(t->parent());
@@ -67,6 +68,7 @@ void Notifier::notificationTimeout()
             }
 
         }
+        */
     }
 }
 
