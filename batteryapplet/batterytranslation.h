@@ -30,5 +30,5 @@ namespace DcpBattery {
     const QString BatteryImageChargingLow = trid("dui_ener_m_low", "");
     const QString BatteryImageChargingVeryLow = trid("dui_ener_m_verylow", "");
 
-};
+}
 #endif // DISPLAYTRANSLATION_H

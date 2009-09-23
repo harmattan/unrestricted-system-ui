@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=DUIApplet
+Name=Phone network
+Icon=
+Exec=
+X-logical-id=qtn_NOT_DEFINED
+X-translation-catalog=duisettings
+
+[DUI]
+X-DUIApplet-Applet=libnetworkapplet.so
+X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
+X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
+
+[DCP]
+Category= Look & Feel
+Order=1
+WidgetType= DcpLabel2
+

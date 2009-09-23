@@ -1,0 +1,54 @@
+#basicNetworkButton {
+	preferred-size: 35 35;
+	minimum-size: 35 35;
+	maximum-size: 35 35;
+}
+
+#dataCounterButton {
+	preferred-size: 100 35;
+	minimum-size: 100 35;
+	maximum-size: 100 35;
+}
+
+#networkLayoutWidget1 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 50;
+	minimum-size: 400 50;
+	maximum-size: 807 50;
+}
+#networkLayoutWidget2 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 300;
+	minimum-size: 400 100;
+	maximum-size: 807 300;
+}
+#networkLayoutWidget3 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 300;
+	minimum-size: 400 100;
+	maximum-size: 807 300;
+}
+#networkLayoutWidget4 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 300;
+	minimum-size: 400 100;
+	maximum-size: 807 300;
+}
+#networkLayoutWidget5 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 300;
+	minimum-size: 400 100;
+	maximum-size: 807 300;
+}
+#networkLayoutWidget6 {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 807 300;
+	minimum-size: 807 300;
+	maximum-size: 807 1000;
+}
