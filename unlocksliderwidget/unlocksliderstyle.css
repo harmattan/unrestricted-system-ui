@@ -1,12 +1,12 @@
 /* UnlockSliderStyle : DuiWidgetStyle */
 UnlockSliderStyle {
-    handle-image: UnlockSliderTemp 0 0 0 0;
-    handle-hilighted-image: UnlockSliderTemp 0 0 0 0;
-    background-tile-image: UnlockSliderTemp 0 0 0 0;
+    handle-image: UnlockSliderArrow 0 0 0 0;
+    handle-hilighted-image: UnlockSliderArrow 0 0 0 0;
+    background-tile-image: UnlockSliderBG 0 0 0 0;
     icon-image: UnlockSliderTemp 0 0 0 0;
 
-    handle-size: 32 32;
-    background-tile-size: 32 32;
+    handle-size: 50 48;
+    background-tile-size: 56 52;
     icon-size: 32 32;
     blink-time: 300;
     blink-count: 2;

@@ -178,20 +178,19 @@ void UnlockSliderView::timeStep()
 // Checks if pos is inside the handle area
 bool UnlockSliderView::handleHit(const QPointF& pos)
 {
+    // vertical check
     if (pos.y() < handlePos.y() ||
         pos.y() >= (handlePos.y() + style()->handleSize().height())) {
         return false;
     }
 
-    // Give a little horizontal tolerance if moving the handle so it wont release so easily
-    qreal help = model()->handlePressed() ? style()->handleSize().width() : 0;
+    // check horizontally if hit is within handle.
+    if (model()->handlePressed())
+        // slight approximation =)
+        return true;
 
-    if (pos.x() < (handlePos.x() - help) ||
-        pos.x() >= (handlePos.x() + style()->handleSize().width() + help)) {
-        return false;
-    }
-
-    return true;
+    return handlePos.x() < pos.x()
+            && pos.x() < (handlePos.x() + style()->handleSize().width());
 }
 
 // Sets the handle position to model from widget coordinates

@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     slider.setView(&view);
 
     // Set geometry (active area) of widget.
-    slider.setGeometry(QRectF(100, 200, 480, 120));
+    slider.setGeometry(QRectF(100, 200, 480, 200));
 
     // Attach widget to parent widget so it will be drawn and run dui application.
     slider.setParentItem(p.centralWidget());
