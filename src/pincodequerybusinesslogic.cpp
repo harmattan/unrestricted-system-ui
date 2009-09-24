@@ -124,7 +124,9 @@ void PinCodeQueryBusinessLogic::createUi()
         uiPin = new PinCodeQueryUI();
         DuiButton *uiPinEmergency = uiPin->getEmergencyBtn();
         DuiButton *uiPinCancel = uiPin->getCancelBtn();
+        uiPinCancel->setEnabled(true);
         DuiButton *uiPinEnter = uiPin->getEnterBtn();
+        uiPinEnter->setEnabled(false);
         DuiTextEdit *uiPinEntry = uiPin->getCodeEntry();
 
         connect(uiPinEntry, SIGNAL(textChanged()), this, SLOT(uiCodeChanged()));
@@ -149,6 +151,9 @@ void PinCodeQueryBusinessLogic::createUi()
         if(!uiPin->isVisible()) {
             uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
         }
+        // update button enablity
+        uiCodeChanged();
+        uiPin->getCancelBtn()->setEnabled(true);
     }
 }
 
@@ -176,7 +181,6 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 void PinCodeQueryBusinessLogic::ui2SIMLocked(bool showNote)
 {    
     createUi();
-    uiPin->getCancelBtn()->setEnabled(true);
     uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
     if(showNote) {
@@ -192,7 +196,6 @@ void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
 
     subState = SubFirstTry;
     createUi();
-    uiPin->getCancelBtn()->setEnabled(true);
     uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
 }
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
@@ -221,7 +224,6 @@ void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
         uiNotif->showNotification(SIMCardInserted, Notifier::info);
 
     createUi();
-    uiPin->getCancelBtn()->setEnabled(true);
     uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
 }
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
@@ -272,13 +274,15 @@ void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
 
 void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
-    uiPin->getEnterBtn()->setEnabled(true);
+    int len = uiPin->getCodeEntry()->text().length();
     if (previousSimState == SIM::PINRequired
         || previousSimState == SIM::PUKRequired
         || previousSimState == SIM::Ok) { // new pin or re-enter new pin
-        int len = uiPin->getCodeEntry()->text().length();
         uiPin->getEnterBtn()->setEnabled( (len >= 4 && len <= 8) );
+    } else {
+        uiPin->getEnterBtn()->setEnabled(len > 0);
     }
+
 }
 
 void PinCodeQueryBusinessLogic::uiButtonReleased()
