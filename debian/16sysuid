@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Get and export the address of user's D-Bus session bus
+. /tmp/session_bus_address.user                           
+
+# Use the local display
+export DISPLAY=:0
+
+# Sleep until duihome is started. 
+# Temporary workaround before final implementation & integration is ready
+sleep 20
+
+# Run the home screen as user
+/usr/sbin/dsmetool -c 3 -T 180 -U user -t "/usr/bin/sysuid"
