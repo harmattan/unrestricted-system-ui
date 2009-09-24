@@ -4,5 +4,5 @@
 
 
 TEMPLATE = subdirs
-SUBDIRS = src batteryapplet displayapplet
+SUBDIRS = src batteryapplet displayapplet networkapplet
 
