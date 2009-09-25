@@ -1,3 +1,4 @@
 usr/bin/sysuid
+etc/X11/Xsession.post/16sysuid
 usr/share/themes/dui/pinquery/*.svg
 usr/share/themes/dui/pinquery/*.css
