@@ -57,12 +57,13 @@ HEADERS += main.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h 
 
+style_sheet.files += sysuid.css
+style_svg.files += *.svg
+
 include(unlocksliderwidget/unlocksliderwidget.pri)
 
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
-style_sheet.files = sysuid.css
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
-style_svg.files = *.svg
 INSTALLS += target \
     style_sheet \
     style_svg
