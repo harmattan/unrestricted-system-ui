@@ -253,5 +253,6 @@ void DisplayWidget::initBlankInhibitButtonValue(bool toggle)
 
 void DisplayWidget::blankInhibitButtonPressed()
 {
-    displayIf->setBlankInhibitValue(blankInhibitButton->isChecked());
+    //NOTE: DuiButton->isChecked() method returns the state before the press at this point
+    displayIf->setBlankInhibitValue(!blankInhibitButton->isChecked());
 }

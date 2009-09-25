@@ -17,6 +17,7 @@
 #include <DuiSceneManager>
 #include <DuiButtonGroup>
 #include <QSignalMapper>
+#include <QSizePolicy>
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent)
 	    :DcpWidget(parent)
@@ -39,14 +40,17 @@ void NetworkWidget::initWidget()
     availableNetworksButtonGroup = new DuiButtonGroup(this);
 
     // catch network If actions
+    connect(networkIf, SIGNAL(phoneNetworkValueReceived(bool)), this, SLOT(initPhoneNetworkButton(bool)));
+    connect(networkIf, SIGNAL(enableRoamingValueReceived(bool)), this, SLOT(initEnableRoamingButton(bool)));
+    connect(networkIf, SIGNAL(enableRoaminginitsValueReceived(bool)), this, SLOT(initEnableRoamingUpdatesButton(bool)));
     connect(networkIf, SIGNAL(availableNetworksReceived(QStringList)), this, SLOT(toggleAvailableNetworks(QStringList)));
 
     /*
      * phoneNetworkLayoutWidget
      */    
     phoneNetworkButton = new DuiButton(this);
-    phoneNetworkButton->setObjectName("basicNetworkButton");
-    //networkIf->phoneNetworkValueRequired();
+    phoneNetworkButton->setCheckable(true);
+    phoneNetworkButton->setObjectName("basicNetworkButton");    
 
     DuiLayout *phoneNetworkLayout = new DuiLayout();
     DuiLinearLayoutPolicy *phoneNetworkLayoutPolicy = new DuiLinearLayoutPolicy(phoneNetworkLayout, Qt::Horizontal);
@@ -59,13 +63,14 @@ void NetworkWidget::initWidget()
 
     /*
      * roamingLayoutWidgetContainer
-     */        
-    enableRoamingButton = new DuiButton(this);
-    enableRoamingButton->setObjectName("basicNetworkButton");
-    //networkIf->enableRoamingValueRequired();
+     */
     enableRoamingUpdatesButton = new DuiButton(this);
     enableRoamingUpdatesButton->setObjectName("basicNetworkButton");
-    //networkIf->enableRoamingUpdatesValueRequired();
+    enableRoamingUpdatesButton->setCheckable(true);    
+
+    enableRoamingButton = new DuiButton(this);
+    enableRoamingButton->setObjectName("basicNetworkButton");
+    enableRoamingButton->setCheckable(true);
 
     DuiLayout *roamingLeftLayout = new DuiLayout();
     DuiLinearLayoutPolicy *roamingLeftLayoutPolicy = new DuiLinearLayoutPolicy(roamingLeftLayout, Qt::Horizontal);
@@ -79,21 +84,27 @@ void NetworkWidget::initWidget()
     DuiLinearLayoutPolicy *roamingRightLayoutPolicy = new DuiLinearLayoutPolicy(roamingRightLayout, Qt::Horizontal);
     roamingRightLayoutPolicy->addItem(new DuiLabel(DcpNetwork::EnableRoamingUpdatesText), Qt::AlignLeft);
     roamingRightLayoutPolicy->addItem(enableRoamingUpdatesButton, Qt::AlignRight);
-    DuiStylableWidget *roamingRightLayoutWidget = new DuiStylableWidget(this);
+    roamingRightLayoutWidget = new DuiStylableWidget(this);
     roamingRightLayoutWidget->setLayout(roamingRightLayout);
     roamingRightLayoutWidget->setObjectName("networkLayoutWidget2");
 
     DuiLayout *roamingLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *roamingLayoutPolicy = new DuiLinearLayoutPolicy(roamingLayout, Qt::Horizontal);
+    roamingLayoutPolicy = new DuiLinearLayoutPolicy(roamingLayout, Qt::Horizontal);
     roamingLayoutPolicy->addItem(roamingLeftLayoutWidget, Qt::AlignLeft);
-    roamingLayoutPolicy->addItem(roamingRightLayoutWidget, Qt::AlignLeft);
+
+    networkIf->enableRoamingUpdatesValueRequired();
+    networkIf->enableRoamingValueRequired();
+
     DuiStylableWidget *roamingLayoutWidget = new DuiStylableWidget(this);
     roamingLayoutWidget->setLayout(roamingLayout);
 
     roamingLayoutWidgetContainer = new DuiContainer(this);
     roamingLayoutWidgetContainer->setTitle(DcpNetwork::RoamingText);
     roamingLayoutWidgetContainer->setCentralWidget(roamingLayoutWidget);
+    roamingLayoutWidgetContainer->setExpand(true);
     roamingLayoutWidgetContainer->setObjectName("networkLayoutWidgetContainer");
+
+ //   roamingLayoutWidgetContainer->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     /*
      * dataCounterButton
@@ -101,20 +112,6 @@ void NetworkWidget::initWidget()
     dataCounterButton = new DuiButton(DcpNetwork::DataCounterText, this);
     dataCounterButton->setObjectName("dataCounterButton");
 
-    /*
-     * availableNetworksContainer
-
-    availableNetworkButtons = new DuiButtonGroup(this);
-
-    DuiLayout *availableNetworksLayout = new DuiLayout();
-    availableNetworksLayoutPolicy = new DuiLinearLayoutPolicy(availableNetworksLayout, Qt::Vertical);
-    DuiStylableWidget *availableNetworksLayoutWidget = new DuiStylableWidget(this);
-    availableNetworksLayoutWidget->setLayout(availableNetworksLayout);
-    //availableNetworksLayoutWidget->setObjectName("networkLayoutWidget");
-    availableNetworksContainer = new DuiContainer(this);
-    availableNetworksContainer->setCentralWidget(availableNetworksLayoutWidget);
-    //roamingLayoutWidgetContainer->setObjectName("networkLayoutWidgetContainer");
-*/
     /*
      * networkLayoutWidgetContainer
      */
@@ -144,36 +141,35 @@ void NetworkWidget::initWidget()
 
     DuiStylableWidget *networkLayoutWidget = new DuiStylableWidget(this);
     networkLayoutWidget->setLayout(networkLayout);
-   // networkLayoutWidget->setObjectName("networkLayoutWidget1");
+    //networkLayoutWidget->setObjectName("networkLayoutWidget1");
 
     networkLayoutWidgetContainer = new DuiContainer(this);
     networkLayoutWidgetContainer->setCentralWidget(networkLayoutWidget);
     networkLayoutWidgetContainer->setTitle(DcpNetwork::NetworkText);
+    networkLayoutWidgetContainer->setExpand(false);
     //networkLayoutWidgetContainer->setObjectName("networkLayoutWidgetContainer");
 
     /* 
      * contentLayoutWidgetContainer
      */        
     DuiLayout *contentLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *contentLayoutPolicy = new DuiLinearLayoutPolicy(contentLayout, Qt::Vertical);
-    contentLayoutPolicy->addItem(phoneNetworkLayoutWidget);
-    contentLayoutPolicy->addItem(roamingLayoutWidgetContainer);
-    contentLayoutPolicy->addItem(dataCounterButton);
-    contentLayoutPolicy->addItem(networkLayoutWidgetContainer);
-    contentLayoutPolicy->setSpacing(10);
+    contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
+    contentLayoutPolicy->addItemAtPosition(phoneNetworkLayoutWidget, 0, 0);
+    //contentLayoutPolicy->setColumnFixedWidth(0, DuiSceneManager::instance()->visibleSceneSize().width());
 
     DuiStylableWidget *contentLayoutWidget = new DuiStylableWidget(this);
     contentLayoutWidget->setLayout(contentLayout);
-    contentLayoutWidget->setObjectName("networkLayoutWidget1");
+    contentItems << roamingLayoutWidgetContainer << dataCounterButton << networkLayoutWidgetContainer;
+    networkIf->phoneNetworkValueRequired();
 
     DuiContainer *contentLayoutWidgetContainer = new DuiContainer(this);
-    contentLayoutWidgetContainer->setCentralWidget(contentLayoutWidget);
-    //contentLayoutWidgetContainer->setObjectName("networkLayoutWidgetContainer");
+    contentLayoutWidgetContainer->setCentralWidget(contentLayoutWidget);        
+
 
     /*
      * mainLayout
      */
-    DuiLayout *mainLayout = new DuiLayout(this);
+    DuiLayout *mainLayout = new DuiLayout(this);    
 
     DuiLinearLayoutPolicy *landscapeLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
     landscapeLayoutPolicy->addItem(contentLayoutWidgetContainer);
@@ -191,6 +187,8 @@ void NetworkWidget::initWidget()
     connect(dataCounterButton, SIGNAL(pressed()), signalMapper, SLOT(map()));
     connect(networkModeComboBox, SIGNAL(currentIndexChanged(QString)), networkIf, SLOT(setNetworkModeValue(QString)));
     connect(networkSelectionComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(networkSelectionValueChanged(QString)));
+    connect(roamingLayoutWidgetContainer, SIGNAL(headerClicked()), roamingLayoutWidgetContainer, SLOT(toggleExpand()));    
+    connect(networkLayoutWidgetContainer, SIGNAL(headerClicked()), networkLayoutWidgetContainer, SLOT(toggleExpand()));
 
     signalMapper->setMapping(phoneNetworkButton, DcpNetwork::PhoneNetworkText);
     signalMapper->setMapping(enableRoamingButton, DcpNetwork::EnableRoamingText);
@@ -202,14 +200,71 @@ void NetworkWidget::initWidget()
     this->setLayout(mainLayout);    
 }
 
-void NetworkWidget::buttonPressed(const QString &text)
+void NetworkWidget::toggleSettings(bool toggle)
 {
-    if(text == DcpNetwork::PhoneNetworkText)
-        networkIf->setPhoneNetworkValue(phoneNetworkButton->isChecked());
-    else if(text == DcpNetwork::EnableRoamingText)
-        networkIf->setEnableRoamingValue(enableRoamingButton->isChecked());
+    if(toggle) {
+        for(int i=0; i<contentItems.size(); ++i)
+            contentLayoutPolicy->addItemAtPosition(contentItems.at(i), i+1, 0);
+        contentLayoutPolicy->setSpacing(10);
+    }
+    else {
+        for(int i=0; i<contentItems.size(); ++i)
+            contentLayoutPolicy->removeItem(contentItems.at(i));
+        contentLayoutPolicy->setSpacing(0);
+    }
+}
+
+void NetworkWidget::toggleEnableRoamingUpdates(bool toggle)
+{    
+    if(toggle) {
+        roamingLayoutPolicy->addItem(roamingRightLayoutWidget, Qt::AlignLeft);
+    }
+    else {
+        if(enableRoamingUpdatesButton->isChecked()) {
+            enableRoamingUpdatesButton->setChecked(false);
+            networkIf->setEnableRoamingUpdatesValue(false);
+        }
+        roamingLayoutPolicy->removeItem(roamingRightLayoutWidget);
+    }
+}
+
+void NetworkWidget::initPhoneNetworkButton(bool toggle)
+{
+    phoneNetworkButton->setChecked(toggle);
+    toggleSettings(toggle);
+}
+
+void NetworkWidget::initEnableRoamingButton(bool toggle)
+{
+    enableRoamingButton->setChecked(toggle);
+    toggleEnableRoamingUpdates(toggle);
+}
+
+void NetworkWidget::initEnableRoamingUpdatesButton(bool toggle)
+{    
+    enableRoamingUpdatesButton->setChecked(toggle);
+}
+
+void NetworkWidget::buttonPressed(const QString &text)
+{   
+    //NOTE: DuiButton->isChecked() method returns the state before the press at this point    
+
+    if(text == DcpNetwork::PhoneNetworkText) {
+        bool checked = !phoneNetworkButton->isChecked();
+        networkIf->setPhoneNetworkValue(checked);
+        toggleSettings(checked);
+    }
+
+    else if(text == DcpNetwork::EnableRoamingText) {
+        bool checked = !enableRoamingButton->isChecked();
+
+        networkIf->setEnableRoamingValue(checked);
+        toggleEnableRoamingUpdates(checked);        
+    }
+
     else if(text == DcpNetwork::EnableRoamingUpdatesText)
-        networkIf->setEnableRoamingUpdatesValue(enableRoamingUpdatesButton->isChecked());
+        networkIf->setEnableRoamingUpdatesValue(!enableRoamingUpdatesButton->isChecked());
+
     else if(text == DcpNetwork::DataCounterText)
         qDebug() << "Show dialog";
 }

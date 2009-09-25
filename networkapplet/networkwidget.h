@@ -8,7 +8,9 @@ class DuiButtonGroup;
 class DuiComboBox;
 class DuiContainer;
 class DuiLabel;
+class DuiGridLayoutPolicy;
 class DuiLinearLayoutPolicy;
+class DuiStylableWidget;
 class NetworkDBusInterface;
 class QSignalMapper;
 
@@ -24,7 +26,12 @@ protected:
     void initWidget();
 
 private slots:
-    void buttonPressed(const QString &text);
+    void toggleSettings(bool toggle);
+    void toggleEnableRoamingUpdates(bool toggle);
+    void initPhoneNetworkButton(bool toggle);
+    void initEnableRoamingButton(bool value);
+    void initEnableRoamingUpdatesButton(bool value);
+    void buttonPressed(const QString &text);    
     void networkSelectionValueChanged(const QString &value);
     void toggleAvailableNetworks(const QStringList &networks, bool toggle = true);
     void availableNetworksButtonPressed(DuiButton* button);
@@ -39,14 +46,16 @@ private: //attributes
     DuiButtonGroup *availableNetworksButtonGroup;
     DuiComboBox *networkModeComboBox;
     DuiComboBox *networkSelectionComboBox;
-    DuiContainer *roamingLayoutWidgetContainer;
-    //DuiContainer *availableNetworksContainer;
+    DuiContainer *roamingLayoutWidgetContainer;   
     DuiContainer *networkLayoutWidgetContainer;
     DuiLabel *noAvailableNetworksLabel;
-    DuiLabel *availableNetworksLabel;    
-    //DuiLinearLayoutPolicy *availableNetworksLayoutPolicy;
-    DuiLinearLayoutPolicy *networkLayoutPolicy;    
+    DuiLabel *availableNetworksLabel;
+    DuiLinearLayoutPolicy *networkLayoutPolicy;
+    DuiLinearLayoutPolicy *roamingLayoutPolicy;
+    DuiGridLayoutPolicy *contentLayoutPolicy;
+    DuiStylableWidget *roamingRightLayoutWidget;
     NetworkDBusInterface *networkIf;    
     QSignalMapper *signalMapper;
+    QList<QGraphicsLayoutItem*> contentItems;
 };
 #endif // NETWORKWIDGET_H

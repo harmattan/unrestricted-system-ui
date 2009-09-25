@@ -14,9 +14,9 @@
 #networkLayoutWidget1 {
 	background-opacity: 255;
     	background-color: #141414;
-	preferred-size: 95% -1;
-	minimum-size: 95% 50;
-	maximum-size: 95% -1;
+	preferred-size: 800 -1;
+	minimum-size: 800 50;
+	maximum-size: 800 -1;
 }
 #networkLayoutWidget2 {
 	background-opacity: 255;

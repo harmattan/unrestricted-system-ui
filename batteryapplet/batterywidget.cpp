@@ -240,13 +240,14 @@ void BatteryWidget::buttonPressed()
     qDebug() << "BatteryWidget::buttonPressed()";
     DuiButton *duiButton = static_cast<DuiButton*>(this->sender());
 
+    //NOTE: DuiButton->isChecked() method returns the state before the press at this point
     if(duiButton->objectName() == "PSMToggleButton")
-        batteryIf->setPSMToggleValue(duiButton->isChecked());
+        batteryIf->setPSMToggleValue(!duiButton->isChecked());
     else if(duiButton->objectName() == "PSMDisableButton") {        
-        batteryIf->setPSMDisabledValue(duiButton->isChecked());
-        if(duiButton->isChecked())
+        batteryIf->setPSMDisabledValue(!duiButton->isChecked());
+        if(!duiButton->isChecked())
             batteryIf->setPSMToggleValue(false);
-        togglePSMWidgets(!duiButton->isChecked());
+        togglePSMWidgets(duiButton->isChecked());
     }    
 }
 
