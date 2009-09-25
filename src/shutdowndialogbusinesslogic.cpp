@@ -9,10 +9,9 @@
 #include <qmsystem/qmalarm.h>
 #include <qmsystem/qmalarmevent.h>
 
-const int SHUTDOWN_TIME = 8000/*ms*/;
+const int SHUTDOWN_TIME = 2000/*ms*/;
 const int UPDATE_INTERVAL = 50;/*ms*/
 const int IDLE_TIME = 10000/*ms*/;
-const int SLIDER_RANGE = 1000;
 
 using namespace Maemo;
 
@@ -43,9 +42,10 @@ void ShutdownDialogBusinessLogic::openDialog(bool btnDown)
 
     DuiApplication::instance()->applicationWindow()->show();
 
-    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"), QString("next alarm event"), DuiDialog::NoButton, SLIDER_RANGE);
+    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"),
+                                     QString("next alarm event"), DuiDialog::NoButton);
     connect(shutdownDlg->slider(), SIGNAL(unlocked()), this, SLOT(shutdown()));
-    connect(shutdownDlg->slider(), SIGNAL(valueChanged()), this, SLOT(resetIdleTimer()));
+    connect(shutdownDlg->slider(), SIGNAL(released()), this, SLOT(resetIdleTimer()));
 
     if(btnDown)
         startPowerKeyPressTimer();        
@@ -76,6 +76,8 @@ void ShutdownDialogBusinessLogic::powerKeyDown()
     if(shuttingDown)
         return;
 
+    resetIdleTimer();
+
     if(powerKeyPressTimer == NULL)
         startPowerKeyPressTimer();
     if(shutdownDlg != NULL)
@@ -102,8 +104,8 @@ void ShutdownDialogBusinessLogic::startPowerKeyPressTimer()
 
     if(shutdownDlg != NULL) {
         if(shutdownDlg->slider() != NULL) {
-            currentPosInTime = (int)(SHUTDOWN_TIME * (double)(shutdownDlg->slider()->value()/(double)SLIDER_RANGE));
-            currentPos = shutdownDlg->slider()->value();
+            currentPosInTime = (int)(SHUTDOWN_TIME * shutdownDlg->slider()->position());
+            currentPos = shutdownDlg->slider()->position();
         }
     }
 
@@ -151,8 +153,8 @@ void ShutdownDialogBusinessLogic::updateSlider()
     qDebug() << "updateSlider";
     if(shutdownDlg != NULL) {
         if(shutdownDlg->slider() != NULL) {
-            shutdownDlg->slider()->updateValue(
-                    (double)(t.elapsed()/(double)(SHUTDOWN_TIME-currentPosInTime)) * (SLIDER_RANGE - currentPos) + currentPos
+            shutdownDlg->slider()->setPosition(
+                    (double)(t.elapsed()/(double)(SHUTDOWN_TIME-currentPosInTime)) * (1 - currentPos)
                     );
         }
     }
@@ -171,7 +173,7 @@ void ShutdownDialogBusinessLogic::shutdown()
     if(shutdownDlg != NULL) {
         if(shutdownDlg->slider() != NULL) {
             shutdownDlg->slider()->setEnabled(false);
-            shutdownDlg->slider()->pressed();
+            //shutdownDlg->slider()->pressed();
         }
     }
 

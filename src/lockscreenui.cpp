@@ -1,5 +1,5 @@
 #include "lockscreenui.h"
-#include "unlockslider.h"
+#include "unlocksliderwidget/unlockslider.h"
 
 #include <QDebug>
 
@@ -29,8 +29,7 @@ void LockScreenUI::createContent()
 {
     DuiApplicationPage::createContent();
 
-    slider = new UnlockSlider(this, "continuous");
-    slider->setOrientation(Qt::Horizontal);
+    slider = new UnlockSlider(this);
     slider->setMaximumHeight(70);
     slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     slider->setVisible(true);

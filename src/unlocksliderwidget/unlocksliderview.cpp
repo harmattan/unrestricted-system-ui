@@ -201,9 +201,10 @@ void UnlockSliderView::setHandleModelPos(const QPointF& center)
     const qreal xmax = sliderRect.right() - halfwidth;
 
     // Prevent possible division by zero
-    if (xmax-xmin) {
+    if (xmax-xmin != 0) {
         // Scale x to 0..1 range and set the value to model which causes modelModified to be called
         model()->setPosition((clamp(center.x(), xmin, xmax) - xmin) / (xmax - xmin));
+        resetVelocity = 0;
     }
     else {
         model()->setPosition(0);
@@ -244,6 +245,7 @@ void UnlockSliderView::moveHandle(const QPointF& pos)
 void UnlockSliderView::releaseHandle()
 {
     model()->setHandlePressed(false);
+    resetVelocity = 0;
     if (!timer.isActive()) {
         timer.start();
     }

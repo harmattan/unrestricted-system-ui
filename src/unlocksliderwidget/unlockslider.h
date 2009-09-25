@@ -3,6 +3,7 @@
 
 #include <DuiWidgetController>
 #include "unlockslidermodel.h"
+#include "unlocksliderview.h"
 
 class UnlockSlider : public DuiWidgetController
 {
@@ -14,9 +15,14 @@ class UnlockSlider : public DuiWidgetController
     Q_PROPERTY(bool iconVisible READ isIconVisible WRITE setIconVisible)
     Q_PROPERTY(bool magnetic READ isMagnetic WRITE setMagnetic)
 
+private:
+    UnlockSliderView *view;
+
 public:
-    UnlockSlider();
+    UnlockSlider(QGraphicsItem *parent = 0);
     virtual ~UnlockSlider();
+
+    void hwKeyDown(bool down);
 
     /*!
       \brief Returns true if the slider handle is pressed down
@@ -49,11 +55,18 @@ public:
       */
     void setMagnetic(bool);
 
+    void reset();
+
 signals:
     /*!
       \brief This signal is emitted when the slider is dragged to the end
       */
     void unlocked();
+
+    /*!
+      \brief This signal is emitted when handle of the slider is released.
+      */
+    void released();
 
 public Q_SLOTS:
     /*!

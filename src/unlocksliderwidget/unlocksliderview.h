@@ -19,6 +19,7 @@ public:
     UnlockSliderView(UnlockSlider* controller);
     virtual ~UnlockSliderView();
     virtual void resizeEvent(QGraphicsSceneResizeEvent * event);
+    void releaseHandle();
 
 protected:
     virtual void modelModified(const QList<const char*>& modifications);
@@ -42,7 +43,6 @@ private:
 
     bool grabHandle(const QPointF& pos);
     void moveHandle(const QPointF& pos);
-    void releaseHandle();
 
     QRectF handleRect() const;
     void recalcRects();

@@ -1,14 +1,30 @@
-#include "unlockslider.h"
+#include <QDebug>
 
-UnlockSlider::UnlockSlider() :
-        DuiWidgetController(NULL, new UnlockSliderModel)
+#include "unlockslider.h"
+#include "unlocksliderview.h"
+
+UnlockSlider::UnlockSlider(QGraphicsItem *parent) :
+        DuiWidgetController(parent, new UnlockSliderModel)
 {
+    this->setView(view = new UnlockSliderView(this));
 }
 
 UnlockSlider::~UnlockSlider()
 {
+    view->deleteLater();
+    view = NULL;
 }
 
+void UnlockSlider::hwKeyDown(bool down)
+{
+    qDebug() << "hwKeyDown " << down;
+    //aHWKeyDown = down;
+    if(!down) //hw button released
+    {
+        view->releaseHandle();
+        emit released();
+    }
+}
 
 bool UnlockSlider::isHandlePressed() const
 {
@@ -45,6 +61,11 @@ void UnlockSlider::setPosition(const qreal& position)
     model()->setPosition(position);
 }
 
+void UnlockSlider::reset()
+{
+    model()->setPosition(0);
+}
+
 void UnlockSlider::blink()
 {
     model()->setBlinking(true);
@@ -60,6 +81,11 @@ void UnlockSlider::modelModified(const QList<const char*>& modifications)
             if (model()->position() > 0.99f) {
                 emit unlocked();
             }
+        }
+        if (member == UnlockSliderModel::HandlePressed) {
+            qDebug() << "released " << model()->handlePressed();
+            if (!model()->handlePressed())
+                emit released();
         }
     }
 }

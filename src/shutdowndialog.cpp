@@ -8,8 +8,9 @@
 #include <DuiProgressIndicator>
 #include <DuiStylableWidget>
 
-ShutdownDialog::ShutdownDialog(const QString &title, const QString &nextEvent, StandardButton buttons, int sliderRange) : DuiDialog(title, buttons),
-    sliderRange(sliderRange)
+ShutdownDialog::ShutdownDialog(const QString &title, const QString &nextEvent,
+                               StandardButton buttons)
+    : DuiDialog(title, buttons)
 { 
 
     DuiLayout *centralLayout = new DuiLayout(0);
@@ -17,8 +18,9 @@ ShutdownDialog::ShutdownDialog(const QString &title, const QString &nextEvent, S
     centralLayoutPolicy->addItemAtPosition(new DuiLabel(QString("BYE")), 0);        
     centralLayoutPolicy->addItemAtPosition(new DuiLabel(nextEvent), 0);
 
-    aSlider = new UnlockSlider(this, "continuous", sliderRange);
-    aSlider->setOrientation(Qt::Horizontal);
+    aSlider = new UnlockSlider(this);
+    aSlider->setMagnetic(true);
+    //aSlider->setOrientation(Qt::Horizontal);
     aSlider->setMaximumHeight(70);
     aSlider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     aSlider->setVisible(true);

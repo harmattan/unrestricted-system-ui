@@ -63,6 +63,8 @@ int main(int argc, char** argv)
     QObject::connect(rotation, SIGNAL(timeout()), &obj, SLOT(doRotation()));
     **/
 
-    return app.exec();
+    int ret = app.exec();
+    qDebug() << "Bye!";
+    return ret;
 }
 

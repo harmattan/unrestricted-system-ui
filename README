@@ -22,3 +22,10 @@ SIM card notifications
 
 A notification of SIM card insert.
 
+
+Release
+-------
+
+ dpkg-buildpackage -rfakeroot
+
+ svn copy https://projects.maemo.org/svn/har-systemui/cellular-ui/trunk https://projects.maemo.org/svn/har-systemui/cellular-ui/tags/system-ui-0.6.0-1 -m "try release"

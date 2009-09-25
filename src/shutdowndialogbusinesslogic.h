@@ -23,7 +23,7 @@ private: //attributes
     QTime t;
     bool shuttingDown;
     int currentPosInTime;
-    int currentPos;
+    qreal currentPos;
 
 private: //methods
     void startPowerKeyPressTimer();

@@ -27,7 +27,6 @@ SOURCES += main.cpp \
     cancellablenotification.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
-    unlockslider.cpp \
     eventhandler.cpp \
     eventeater.cpp \
     usbhal.cpp \
@@ -47,7 +46,6 @@ HEADERS += main.h \
     cancellablenotification.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
-    unlockslider.h \
     eventhandler.h \
     eventeater.h \
     usbhal.h \
@@ -58,6 +56,9 @@ HEADERS += main.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h 
+
+include(unlocksliderwidget/unlocksliderwidget.pri)
+
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_sheet.files = sysuid.css
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
