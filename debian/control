@@ -26,3 +26,7 @@ Architecture: any
 Depends: system-ui, libduicontrolpanel
 Description: Display settings applet.
 
+Package: duicontrolpanel-networkapplet
+Architecture: any
+Depends: system-ui, libduicontrolpanel
+Description: Cellular network settings applet.
