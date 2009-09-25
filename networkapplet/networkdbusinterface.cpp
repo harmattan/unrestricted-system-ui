@@ -15,19 +15,54 @@ NetworkDBusInterface::~NetworkDBusInterface()
     dbusIf = NULL;
 }
 
-void NetworkDBusInterface::someValueRequired()
+void NetworkDBusInterface::availableNetworksRequired()
 {
-    qDebug() << "NetworkDBusInterface::someValueRequired()";
-    QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("someValue"), list, this, SIGNAL(someValueReceived(QStringList)), SLOT(DBusMessagingFailure()));
+    qDebug() << "NetworkDBusInterface::availableNetworksRequired()";
+    //QList<QVariant> list;
+    //dbusIf->callWithCallback(QString("availableNetworks"), list, this, SIGNAL(availableNetworksReceived(QStringList)), SLOT(DBusMessagingFailure()));
+    QStringList test;
+    test << "jake" << "kake" << "make";
+    emit availableNetworksReceived(test);
 }
 
-void NetworkDBusInterface::setSomeValue(const QString &value)
+void NetworkDBusInterface::setPhoneNetworkValue(bool value)
 {
-    qDebug() << "DisplayDBusInterface::setSomeValue(" << value << ")";
+    qDebug() << "NetworkDBusInterface::setPhoneNetworkValue(" << value << ")";
     QList<QVariant> list;
     list << QVariant(value);
-    dbusIf->callWithCallback(QString("setSomeValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("setPhoneNetworkValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::setEnableRoamingValue(bool value)
+{
+    qDebug() << "NetworkDBusInterface::setEnableRoamingValue(" << value << ")";
+    QList<QVariant> list;
+    list << QVariant(value);
+    dbusIf->callWithCallback(QString("setEnableRoamingValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::setEnableRoamingUpdatesValue(bool value)
+{
+    qDebug() << "NetworkDBusInterface::setEnableRoamingUpdatesValue(" << value << ")";
+    QList<QVariant> list;
+    list << QVariant(value);
+    dbusIf->callWithCallback(QString("setEnableRoamingUpdatesValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::setNetworkModeValue(const QString &value)
+{
+    qDebug() << "NetworkDBusInterface::setNetworkModeValue(" << value << ")";
+    QList<QVariant> list;
+    list << QVariant(value);
+    dbusIf->callWithCallback(QString("setNetworkModeValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::setNetworkSelectionValue(const QString &value)
+{
+    qDebug() << "NetworkDBusInterface::setNetworkSelectionValue(" << value << ")";
+    QList<QVariant> list;
+    list << QVariant(value);
+    //dbusIf->callWithCallback(QString("setNetworkSelectionValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
 void NetworkDBusInterface::valueSet()

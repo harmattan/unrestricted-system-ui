@@ -4,11 +4,13 @@
 #include "dcpwidget.h" 
 
 class DuiButton;
+class DuiButtonGroup;
 class DuiComboBox;
 class DuiContainer;
+class DuiLabel;
 class DuiLinearLayoutPolicy;
 class NetworkDBusInterface;
-
+class QSignalMapper;
 
 class NetworkWidget : public DcpWidget
 {
@@ -22,6 +24,10 @@ protected:
     void initWidget();
 
 private slots:
+    void buttonPressed(const QString &text);
+    void networkSelectionValueChanged(const QString &value);
+    void toggleAvailableNetworks(const QStringList &networks, bool toggle = true);
+    void availableNetworksButtonPressed(DuiButton* button);
 
 private: //methods
 
@@ -30,13 +36,17 @@ private: //attributes
     DuiButton *enableRoamingButton;
     DuiButton *enableRoamingUpdatesButton;
     DuiButton *dataCounterButton;
+    DuiButtonGroup *availableNetworksButtonGroup;
     DuiComboBox *networkModeComboBox;
     DuiComboBox *networkSelectionComboBox;
     DuiContainer *roamingLayoutWidgetContainer;
-    DuiContainer *networkWidgetContainer;
-    DuiContainer *availableNetworksContainer;
+    //DuiContainer *availableNetworksContainer;
     DuiContainer *networkLayoutWidgetContainer;
-    DuiLinearLayoutPolicy *availableNetworksLayoutPolicy;
-    NetworkDBusInterface *networkIf;
+    DuiLabel *noAvailableNetworksLabel;
+    DuiLabel *availableNetworksLabel;    
+    //DuiLinearLayoutPolicy *availableNetworksLayoutPolicy;
+    DuiLinearLayoutPolicy *networkLayoutPolicy;    
+    NetworkDBusInterface *networkIf;    
+    QSignalMapper *signalMapper;
 };
 #endif // NETWORKWIDGET_H

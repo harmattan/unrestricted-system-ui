@@ -17,6 +17,7 @@
 DisplayWidget::DisplayWidget(QGraphicsWidget *parent)
 	    :DcpWidget(parent)
 {
+    qDebug() << "TEST";
     setReferer(DcpDisplay::None);
     initWidget();
 }
@@ -48,8 +49,8 @@ void DisplayWidget::initWidget()
 
     DuiLayout *brightnessLayout = new DuiLayout();
     DuiLinearLayoutPolicy *brightnessLayoutPolicy = new DuiLinearLayoutPolicy(brightnessLayout, Qt::Vertical);
-    brightnessLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BrightnessText), 0, Qt::AlignLeft);
-    brightnessLayoutPolicy->addItemAtPosition(brightnessSlider, 1, Qt::AlignLeft);
+    brightnessLayoutPolicy->addItem(new DuiLabel(DcpDisplay::BrightnessText), Qt::AlignLeft);
+    brightnessLayoutPolicy->addItem(brightnessSlider, Qt::AlignLeft);
 
     DuiStylableWidget *brightnessLayoutWidget = new DuiStylableWidget();
     brightnessLayoutWidget->setObjectName("displayLayoutWidget1");
@@ -64,8 +65,8 @@ void DisplayWidget::initWidget()
 
     DuiLayout *blankTimeoutLayout = new DuiLayout();
     DuiLinearLayoutPolicy *blankTimeoutLayoutPolicy = new DuiLinearLayoutPolicy(blankTimeoutLayout, Qt::Vertical);
-    blankTimeoutLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BlankTimeoutText), 0, Qt::AlignLeft);
-    blankTimeoutLayoutPolicy->addItemAtPosition(blankTimeoutSlider, 1, Qt::AlignLeft);
+    blankTimeoutLayoutPolicy->addItem(new DuiLabel(DcpDisplay::BlankTimeoutText), Qt::AlignLeft);
+    blankTimeoutLayoutPolicy->addItem(blankTimeoutSlider, Qt::AlignLeft);
 
     DuiStylableWidget *blankTimeoutLayoutWidget = new DuiStylableWidget();
     blankTimeoutLayoutWidget->setObjectName("displayLayoutWidget1");
@@ -80,8 +81,8 @@ void DisplayWidget::initWidget()
 
     DuiLayout *dimTimeoutLayout = new DuiLayout();
     DuiLinearLayoutPolicy *dimTimeoutLayoutPolicy = new DuiLinearLayoutPolicy(dimTimeoutLayout, Qt::Vertical);
-    dimTimeoutLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::DimTimeoutText), 0, Qt::AlignLeft);
-    dimTimeoutLayoutPolicy->addItemAtPosition(dimTimeoutSlider, 1, Qt::AlignLeft);
+    dimTimeoutLayoutPolicy->addItem(new DuiLabel(DcpDisplay::DimTimeoutText), Qt::AlignLeft);
+    dimTimeoutLayoutPolicy->addItem(dimTimeoutSlider, Qt::AlignLeft);
 
     DuiStylableWidget *dimTimeoutLayoutWidget = new DuiStylableWidget();
     dimTimeoutLayoutWidget->setObjectName("displayLayoutWidget1");
@@ -97,8 +98,8 @@ void DisplayWidget::initWidget()
 
     DuiLayout *blankInhibitButtonLayout = new DuiLayout();
     DuiLinearLayoutPolicy *blankInhibitButtonLayoutPolicy = new DuiLinearLayoutPolicy(blankInhibitButtonLayout, Qt::Horizontal);
-    blankInhibitButtonLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::BlankInhibitButtonText), 0, Qt::AlignLeft);
-    blankInhibitButtonLayoutPolicy->addItemAtPosition(blankInhibitButton, 1, Qt::AlignRight);
+    blankInhibitButtonLayoutPolicy->addItem(new DuiLabel(DcpDisplay::BlankInhibitButtonText), Qt::AlignLeft);
+    blankInhibitButtonLayoutPolicy->addItem(blankInhibitButton, Qt::AlignRight);
 
     DuiStylableWidget *blankInhibitButtonLayoutWidget = new DuiStylableWidget();
     blankInhibitButtonLayoutWidget->setObjectName("displayLayoutWidget2");
@@ -109,7 +110,7 @@ void DisplayWidget::initWidget()
      */    
     DuiLayout *noteLayout = new DuiLayout();
     DuiLinearLayoutPolicy *noteLayoutPolicy = new DuiLinearLayoutPolicy(noteLayout, Qt::Horizontal);
-    noteLayoutPolicy->addItemAtPosition(new DuiLabel(DcpDisplay::NoteText), 0, Qt::AlignLeft);
+    noteLayoutPolicy->addItem(new DuiLabel(DcpDisplay::NoteText), Qt::AlignLeft);
 
     DuiStylableWidget *noteLayoutWidget = new DuiStylableWidget();
     noteLayoutWidget->setObjectName("displayLayoutWidget2");
@@ -145,7 +146,7 @@ void DisplayWidget::initWidget()
 void DisplayWidget::addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiStylableWidget*> &widgets)
 {
     for(int i=0; i<widgets.size(); ++i)
-        policy->addItemAtPosition(widgets.at(i), i);            
+        policy->addItem(widgets.at(i), Qt::AlignLeft);
     policy->setSpacing(20);
 }
 

@@ -14,15 +14,21 @@ public:
     NetworkDBusInterface();
     virtual ~NetworkDBusInterface();
 
-    void someValueRequired();    
-    void setSomeValue(const QString &value);
+    void availableNetworksRequired();
+    void setPhoneNetworkValue(bool value);
+    void setEnableRoamingValue(bool value);
+    void setEnableRoamingUpdatesValue(bool value);
+    void setNetworkSelectionValue(const QString &value);
+
+public slots:
+    void setNetworkModeValue(const QString &value);
 
 private slots:
     void valueSet();
     void DBusMessagingFailure();    
 
 signals:
-    void someValueReceived(QString);
+    void availableNetworksReceived(QStringList);
 
 private:
     QDBusInterface *dbusIf;

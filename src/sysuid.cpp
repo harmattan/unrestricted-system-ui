@@ -21,11 +21,11 @@ Sysuid::Sysuid() : QObject()
 
     /* Battery */         
     batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(this, batteryLogic);
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     /* Display */
     displayLogic = new DisplayBusinessLogic(systemUIGConf);
-    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(this, displayLogic);
+    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
 
     /* Event handler */
     eventHandler = new EventHandler();

@@ -19,5 +19,6 @@ namespace DcpNetwork {
     const QString AutomaticText = trid("qtn_cell_automatic", "Automatic");
     const QString ManualText = trid("qtn_cell_manual", "Manual");
     const QString AvailableNetworksText = trid("qtn_cell_network_available", "Available networks");
+    const QString NoAvailableNetworksText = trid("qtn_cell_no_networks_found", "No networks found");
 }
 #endif // NETWORKTRANSLATION_H
