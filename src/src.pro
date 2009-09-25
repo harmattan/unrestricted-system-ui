@@ -53,9 +53,9 @@ HEADERS += main.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h 
-style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery
-style_sheet.files = pinquery.css
-style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/themes/dui/pinquery
+style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
+style_sheet.files = sysuid.css
+style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
 style_svg.files = *.svg
 INSTALLS += target \
     style_sheet \

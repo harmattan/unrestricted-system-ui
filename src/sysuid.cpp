@@ -15,8 +15,8 @@ Sysuid::Sysuid() : QObject()
     systemUIGConf = new SystemUIGConf();
 
     /* Pincode query variables */
-    DuiTheme::addPixmapDirectory("./");
-    DuiTheme::loadCSS("pinquery.css");
+    DuiTheme::addPixmapDirectory("/usr/share/sysuid/themes/");
+    DuiTheme::loadCSS("sysuid.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery */         
