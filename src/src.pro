@@ -7,8 +7,11 @@ CONFIG += dui \
     qmsystem
 QT += dbus
 LIBS += -lX11 \
-    -lcallui0
-INCLUDEPATH += /usr/include/alarmd
+    -lcallui0 \
+    -lhal
+INCLUDEPATH += /usr/include/alarmd \
+    /usr/include/dbus-1.0 \
+    /usr/lib/dbus-1.0/include
 
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -27,6 +30,7 @@ SOURCES += main.cpp \
     unlockslider.cpp \
     eventhandler.cpp \
     eventeater.cpp \
+    usbhal.cpp \
     shutdowndialog.cpp \
     shutdowndialogbusinesslogic.cpp \
     batterybusinesslogicadaptor.cpp \
@@ -46,6 +50,7 @@ HEADERS += main.h \
     unlockslider.h \
     eventhandler.h \
     eventeater.h \
+    usbhal.h \
     shutdowndialog.h \
     shutdowndialogbusinesslogic.h \
     batterybusinesslogicadaptor.h \
