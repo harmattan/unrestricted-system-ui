@@ -1,3 +1,10 @@
+#emergencyCallButton {
+    icon-size: 32 32;
+}
+
+#backspaceButton {
+    icon-size: 32 32;
+}
 
 #lockscreenTimeLabel {
     color: #00DD00;

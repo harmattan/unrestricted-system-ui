@@ -196,7 +196,9 @@ void PinCodeQueryUI::createWidgetItems()
 {    
     emergencyCallButton = new DuiButton(0);
     emergencyCallButton->setObjectName("emergencyCallButton");
-    emergencyCallButton->setIconID("Icon-emergency-call");
+    // TODO: icon ID to be updated when correct ID provided by Vappu
+    // Check also if the libdui icon dir adding needed anymore at Sysuid::Sysuid()
+    emergencyCallButton->setIconID("icon-m-call_2_");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
@@ -215,7 +217,9 @@ void PinCodeQueryUI::createWidgetItems()
 
     backspaceButton = new DuiButton(0);
     backspaceButton->setObjectName("backspaceButton");
-    backspaceButton->setIconID("Icon-back");
+    // TODO: icon ID to be updated when correct ID available
+    // backspaceButton->setIconID("icon-m-keyboard-backspace");
+    backspaceButton->setIconID("Icon-Qwerty-Delete");
     connect(backspaceButton, SIGNAL(released()), this, SLOT(buttonReleased()));
     connect(backspaceButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
 
