@@ -63,9 +63,11 @@ void ShutdownDialogBusinessLogic::closeDialog()
     qDebug() << "closeDialog()";
     stopPowerKeyPressTimer();
     stopIdleTimer();
-    shutdownDlg->reject();
-    shutdownDlg->deleteLater();
-    shutdownDlg = NULL;
+    if (shutdownDlg) {
+        shutdownDlg->reject();
+        shutdownDlg->deleteLater();
+        shutdownDlg = NULL;
+    }
     DuiApplication::instance()->applicationWindow()->hide();
     emit dialogOpen(false);
 }
