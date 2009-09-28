@@ -7,17 +7,25 @@
 
 #include "sysuid.h"
 
+namespace {
+    const QString themeDir = "/usr/share/sysuid/themes/";
+    const QString styleDir = themeDir + "style/";
+    const QString svgDir = themeDir + "svg/";
+}
+
 Sysuid::Sysuid() : QObject()
 {    
     qDebug() << "starting sysuidaemon";
+
+    /* themes */
+    DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
+    DuiTheme::loadCSS(styleDir + "sysuid.css");
+    DuiTheme::loadCSS(styleDir + "unlocksliderstyle.css");
 
     /* GConf interface */
     systemUIGConf = new SystemUIGConf();
 
     /* Pincode query variables */
-    DuiTheme::addPixmapDirectory("/usr/share/sysuid/themes/", true);
-    DuiTheme::loadCSS("sysuid.css");
-    DuiTheme::loadCSS("/usr/share/sysuid/themes/style/unlocksliderstyle.css");
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery */         
