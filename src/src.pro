@@ -64,6 +64,8 @@ include(unlocksliderwidget/unlocksliderwidget.pri)
 
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
+style_images.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/images
 INSTALLS += target \
     style_sheet \
-    style_svg
+    style_svg \
+    style_images
