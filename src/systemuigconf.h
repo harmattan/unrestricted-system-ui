@@ -14,7 +14,8 @@ public:
 
     enum GConfKeyGroup {
         Battery,
-        Display
+        Display,
+        Network
     };
 
     enum GConfKey {        
@@ -27,7 +28,12 @@ public:
         DisplayBlankTimeoutKey,
         DisplayDimTimeoutsKey,
         DisplayDimTimeoutKey,
-        DisplayBlankInhibitKey
+        DisplayBlankInhibitKey,
+        NetworkModeKey,
+        NetworkRoamingKey,
+        NetworkRoamingUpdatesKey,
+        NetworkSelectedNetworkKey,
+        NetworkSelectionKey
     };   
 
     SystemUIGConf();

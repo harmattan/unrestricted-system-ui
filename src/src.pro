@@ -12,7 +12,6 @@ LIBS += -lX11 \
 INCLUDEPATH += /usr/include/alarmd \
     /usr/include/dbus-1.0 \
     /usr/lib/dbus-1.0/include
-
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
@@ -36,7 +35,8 @@ SOURCES += main.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
-    notifierdbusadaptor.cpp 
+    notifierdbusadaptor.cpp \
+    phonenetworkbusinesslogic.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -55,13 +55,11 @@ HEADERS += main.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
-    notifierdbusadaptor.h 
-
+    notifierdbusadaptor.h \
+    phonenetworkbusinesslogic.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg
-
 include(unlocksliderwidget/unlocksliderwidget.pri)
-
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
 style_images.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/images

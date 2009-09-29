@@ -318,8 +318,7 @@ void BatteryWidget::startUpdatingChargingImage()
 void BatteryWidget::stopUpdatingChargingImage()
 {
     qDebug() << "BatteryWidget::stopUpdatingChargingImage()";
-    if(updateChargingImageTimer != NULL) {
-        qDebug() << "stopUpdatingChargingImage()";
+    if(updateChargingImageTimer != NULL) {        
         updateChargingImageTimer->stop();
         delete updateChargingImageTimer;
         updateChargingImageTimer = NULL;        

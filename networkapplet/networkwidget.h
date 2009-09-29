@@ -36,8 +36,7 @@ private slots:
 
 private: //methods
     void toggleSettings(bool toggle);
-    void toggleEnableRoamingUpdates(bool toggle);
-    void initRoamingRightLayoutWidget();
+    void toggleEnableRoamingUpdates(bool toggle);    
 
 private: //attributes        
     DuiButton *phoneNetworkButton;

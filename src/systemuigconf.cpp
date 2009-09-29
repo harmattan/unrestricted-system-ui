@@ -16,6 +16,11 @@ SystemUIGConf::SystemUIGConf()
     duiGConfItems.insert(SystemUIGConf::DisplayDimTimeoutsKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayDimTimeoutsKey)));
     duiGConfItems.insert(SystemUIGConf::DisplayDimTimeoutKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayDimTimeoutKey)));
     duiGConfItems.insert(SystemUIGConf::DisplayBlankInhibitKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBlankInhibitKey)));
+    duiGConfItems.insert(SystemUIGConf::NetworkModeKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkModeKey)));
+    duiGConfItems.insert(SystemUIGConf::NetworkRoamingKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingKey)));
+    duiGConfItems.insert(SystemUIGConf::NetworkRoamingUpdatesKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingUpdatesKey)));    
+    duiGConfItems.insert(SystemUIGConf::NetworkSelectedNetworkKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkSelectedNetworkKey)));
+    duiGConfItems.insert(SystemUIGConf::NetworkSelectionKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkSelectionKey)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -68,6 +73,9 @@ QString SystemUIGConf::mapGConfKeyGroup(SystemUIGConf::GConfKeyGroup keyGroup)
         case SystemUIGConf::Display:
             keyGroupStr = "/system/osso/dsm/display";
             break;
+        case SystemUIGConf::Network:
+            keyGroupStr = "/systemui/settings/network";
+            break;
         default:
             break;
     }
@@ -107,6 +115,21 @@ QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
             break;
         case SystemUIGConf::DisplayBlankInhibitKey:
             keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/inhibit_blank_mode");
+            break;
+        case SystemUIGConf::NetworkModeKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkMode");
+            break;
+        case SystemUIGConf::NetworkRoamingKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoaming");
+            break;
+        case SystemUIGConf::NetworkRoamingUpdatesKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoamingUpdates");
+            break;
+        case SystemUIGConf::NetworkSelectedNetworkKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkSelectedNetwork");
+            break;
+        case SystemUIGConf::NetworkSelectionKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkSelection");
             break;
         default:
             break;

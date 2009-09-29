@@ -228,14 +228,6 @@ void NetworkWidget::toggleEnableRoamingUpdates(bool toggle)
     }
 }
 
-void NetworkWidget::initRoamingRightLayoutWidget()
-{
-    qDebug() << "INIT\n\n\n";
-    if(roamingRightLayoutWidget == NULL) {
-
-    }
-}
-
 void NetworkWidget::initPhoneNetworkButton(bool toggle)
 {
     phoneNetworkButton->setChecked(toggle);
