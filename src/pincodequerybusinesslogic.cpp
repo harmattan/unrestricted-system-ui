@@ -160,8 +160,6 @@ void PinCodeQueryBusinessLogic::createUi()
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-    QString num("");
-
     DuiDialog* dlg = new DuiDialog();
     dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
     DuiButton* callButton = dlg->addButton(QString(trid("qtn_cell_emergency_call_number", "Call")));
@@ -173,9 +171,8 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
         dlg->accept();
 
         // do call
-        qDebug() << "call" << num;
         CallUiServiceApi* callUi = new CallUiServiceApi();
-        callUi->Call(num, NULL);
+        callUi->Call(NULL, NULL);
         delete callUi;
     } else {
         dlg->reject();
