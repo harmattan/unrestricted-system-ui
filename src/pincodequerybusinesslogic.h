@@ -8,7 +8,6 @@
 #include <QPointer>
 #include <SIM>
 #include <SIMLock>
-#include <EmergencyNumbers>
 
 class DuiApplicationWindow;
 
