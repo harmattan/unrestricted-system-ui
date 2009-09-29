@@ -56,7 +56,7 @@ void NetworkDBusInterface::availableNetworksRequired()
     QList<QVariant> list;
     //dbusIf->callWithCallback(QString("availableNetworks"), list, this, SIGNAL(availableNetworksReceived(QStringList)), SLOT(DBusMessagingFailure()));
     QStringList test;
-    test << "jake" << "kake" << "make";
+    test << "Elisa" << "Sonera" << "DNA";
     emit availableNetworksReceived(test);
 }
 

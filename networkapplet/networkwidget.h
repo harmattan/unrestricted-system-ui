@@ -25,9 +25,7 @@ public:
 protected:
     void initWidget();
 
-private slots:
-    void toggleSettings(bool toggle);
-    void toggleEnableRoamingUpdates(bool toggle);
+private slots:        
     void initPhoneNetworkButton(bool toggle);
     void initEnableRoamingButton(bool value);
     void initEnableRoamingUpdatesButton(bool value);
@@ -37,6 +35,9 @@ private slots:
     void availableNetworksButtonPressed(DuiButton* button);
 
 private: //methods
+    void toggleSettings(bool toggle);
+    void toggleEnableRoamingUpdates(bool toggle);
+    void initRoamingRightLayoutWidget();
 
 private: //attributes        
     DuiButton *phoneNetworkButton;
@@ -46,12 +47,13 @@ private: //attributes
     DuiButtonGroup *availableNetworksButtonGroup;
     DuiComboBox *networkModeComboBox;
     DuiComboBox *networkSelectionComboBox;
-    DuiContainer *roamingLayoutWidgetContainer;   
-    DuiContainer *networkLayoutWidgetContainer;
+    DuiContainer *roamingContainer;
+    DuiContainer *networkContainer;
     DuiLabel *noAvailableNetworksLabel;
     DuiLabel *availableNetworksLabel;
     DuiLinearLayoutPolicy *networkLayoutPolicy;
-    DuiLinearLayoutPolicy *roamingLayoutPolicy;
+    DuiLinearLayoutPolicy *roamingLandscapeLayoutPolicy;
+    DuiLinearLayoutPolicy *roamingPortraitLayoutPolicy;
     DuiGridLayoutPolicy *contentLayoutPolicy;
     DuiStylableWidget *roamingRightLayoutWidget;
     NetworkDBusInterface *networkIf;    
