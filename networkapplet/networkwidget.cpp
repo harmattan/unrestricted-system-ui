@@ -150,18 +150,17 @@ void NetworkWidget::initWidget()
      */
     DuiLayout *contentLayout = new DuiLayout();
 
-    DuiGridLayoutPolicy *contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
+    contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
     contentLayoutPolicy->addItemAtPosition(phoneNetworkLabel, 0, 0);
-    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);
-    contentLayoutPolicy->addItemAtPosition(roamingContainer, 1, 0, 1, 2);
-    contentLayoutPolicy->addItemAtPosition(dataCounterButton, 2, 0, 1, 2);
-    contentLayoutPolicy->addItemAtPosition(networkContainer, 3, 0, 1, 2);
-    contentLayoutPolicy->setSpacing(20);
+    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);    
+    contentItems << roamingContainer << dataCounterButton << networkContainer;
 
     DuiStylableWidget *contentWidget = new DuiStylableWidget(this);
     contentWidget->setLayout(contentLayout);
     DuiContainer *contentContainer = new DuiContainer(this);
     contentContainer->setCentralWidget(contentWidget);
+
+    networkIf->phoneNetworkValueRequired();
 
     /*
      * mainLayout
@@ -194,14 +193,18 @@ void NetworkWidget::initWidget()
 void NetworkWidget::toggleSettings(bool toggle)
 {
     if(toggle) {
-        for(int i=0; i<contentItems.size(); ++i)
-            contentLayoutPolicy->addItemAtPosition(contentItems.at(i), i+1, 0);
-        contentLayoutPolicy->setSpacing(10);
+        if(contentLayoutPolicy->indexOf(contentItems.at(0)) == -1) {
+            for(int i=0; i<contentItems.size(); ++i)
+                contentLayoutPolicy->addItemAtPosition(contentItems.at(i), i+1, 0, 1, 2);
+            contentLayoutPolicy->setSpacing(10);
+        }
     }
     else {
-        for(int i=0; i<contentItems.size(); ++i)
-            contentLayoutPolicy->removeItem(contentItems.at(i));
-        contentLayoutPolicy->setSpacing(0);
+        if(contentLayoutPolicy->indexOf(contentItems.at(0)) != -1) {
+            for(int i=0; i<contentItems.size(); ++i)
+                contentLayoutPolicy->removeItem(contentItems.at(i));
+            contentLayoutPolicy->setSpacing(0);
+        }
     }
 }
 
