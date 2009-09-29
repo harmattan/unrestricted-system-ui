@@ -3,6 +3,7 @@
 #include <SIMLock>
 #include <DuiLocale>
 #include <DuiButton>
+#include <DuiDialog>
 #include <DuiTextEdit>
 #include <DuiApplicationWindow>
 #include <DuiApplication>
@@ -159,19 +160,41 @@ void PinCodeQueryBusinessLogic::createUi()
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-    bool call = true;
-    /*  TODO:
-     *  dialog required: EmergencyCallHeader
-     *
-     * Button trid("qtn_cell_emergency_call_number", "Call %1");
-     * Button trid("[qtn_comm_cancel]", "Cancel");
-     */
-    if(call)
-    {
-        CallUiServiceApi* callUi = new CallUiServiceApi();
-        callUi->Call(NULL, NULL);
-        delete callUi;
+    QString num("");
+
+///// TODO: how to get correct number?
+    EmergencyNumbers emeNums;
+    QStringList emergencyNumbers = emeNums.numbers();
+
+    for(int i = 0; i < emergencyNumbers.count(); ++i){
+        qDebug() << "em number["<<i<<"]:" << emergencyNumbers[i];
+        if(i == 0)
+            num = emergencyNumbers[i];
     }
+///// end of TODO
+
+    DuiDialog* dlg = new DuiDialog();
+    dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
+    QString callText(trid("qtn_cell_emergency_call_number", "Call %1"));
+    DuiButton* callButton = dlg->addButton(callText.arg(num));
+    dlg->addButton(DuiDialog::Cancel);
+    dlg->exec();
+
+    if(dlg->clickedButton() == callButton)
+    {
+        dlg->accept();
+
+        // do call
+        qDebug() << "call" << num;
+        CallUiServiceApi* callUi = new CallUiServiceApi();
+        callUi->Call(num, NULL);
+        delete callUi;
+    } else {
+        dlg->reject();
+    }
+
+    dlg->deleteLater();
+    dlg = NULL;
 }
 
 // =======================================
