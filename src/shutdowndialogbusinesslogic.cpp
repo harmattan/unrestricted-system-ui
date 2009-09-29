@@ -75,7 +75,7 @@ void ShutdownDialogBusinessLogic::closeDialog()
 void ShutdownDialogBusinessLogic::powerKeyDown()
 {       
     qDebug() << "powerKeyDown()";
-    if(shuttingDown)
+    if(shuttingDown || shutdownDlg == NULL)
         return;
 
     resetIdleTimer();
@@ -90,7 +90,7 @@ void ShutdownDialogBusinessLogic::powerKeyDown()
 void ShutdownDialogBusinessLogic::powerKeyUp()
 {
     qDebug() << "powerKeyUp()";
-    if(shuttingDown)
+    if(shuttingDown || shutdownDlg == NULL)
         return;
 
     stopPowerKeyPressTimer();

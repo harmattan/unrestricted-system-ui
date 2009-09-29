@@ -34,17 +34,26 @@ public slots:
 private:
     void timerEvent(QTimerEvent *event);
     void updateDateTime();
-    void calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect, QRect& sliderRect);
+    void calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect,
+                        QRect& a, QRect& b, QRect& c,
+                        QRect& a2, QRect& b2, QRect& c2,
+                        QRect& sliderRect);
 
 private:
 
     DuiLabel *timeLabel; // qtn_scrlock_current_time
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
-/*
-    DuiImage *missedCallsImage;
-    DuiImage *unreadMessagesImage;
-    DuiImage *unreadChatMessagesImage;
-*/
+
+    DuiImage
+        *missedCallsImage,
+        *unreadMessagesImage,
+        *unreadChatMessagesImage;
+
+    DuiLabel
+        *missedCallsLbl,
+        *unreadMessagesLbl,
+        *unreadChatMessagesLbl;
+
     UnlockSlider *slider;
 
     QBasicTimer timer;
