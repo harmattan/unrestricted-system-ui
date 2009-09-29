@@ -5,9 +5,8 @@
 
 SystemUIGConf::SystemUIGConf()
 {
-    // init the gconf keys
-    duiGConfItems.insert(SystemUIGConf::BatteryPSMToggleKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMToggleKey)));
-    duiGConfItems.insert(SystemUIGConf::BatteryPSMDisabledKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMDisabledKey)));
+    // init the gconf keys    
+    duiGConfItems.insert(SystemUIGConf::BatteryPSMAutoKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));
     duiGConfItems.insert(SystemUIGConf::BatteryPSMThresholdKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
     duiGConfItems.insert(SystemUIGConf::DisplayBrightnessMaxLevelKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBrightnessMaxLevelKey)));
     duiGConfItems.insert(SystemUIGConf::DisplayBrightnessLevelStepKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBrightnessLevelStepKey)));
@@ -78,12 +77,9 @@ QString SystemUIGConf::mapGConfKeyGroup(SystemUIGConf::GConfKeyGroup keyGroup)
 QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
 {
     QString keyStr("%1%2");
-    switch(key) {
-        case SystemUIGConf::BatteryPSMToggleKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg("/batteryPSMToggle");
-            break;
-        case SystemUIGConf::BatteryPSMDisabledKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg("/batteryPSMDisabled");
+    switch(key) {        
+        case SystemUIGConf::BatteryPSMAutoKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg("/batteryPSMAuto");
             break;
         case SystemUIGConf::BatteryPSMThresholdKey:
             keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg("/batteryPSMThreshold");

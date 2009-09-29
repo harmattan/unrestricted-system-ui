@@ -3,12 +3,13 @@
 
 #include "dcpwidget.h" 
 
+class BatteryDBusInterface;
 class DuiLabel;
 class DuiButton;
-class DuiSlider;
+class DuiGridLayoutPolicy;
 class DuiImage;
+class DuiSlider;
 class QTimer;
-class BatteryDBusInterface;
 
 class BatteryWidget : public DcpWidget
 {
@@ -23,12 +24,12 @@ protected:
 
 private slots:
     void sliderValueChanged(int value);
-    void buttonPressed();
+    void PSMButtonPressed();
+    void PSMAutoButtonPressed();
     void updateNotChargingImage(int level);
-    void updateImage(bool charging = true, int level = -1);
-    void updatePSMToggleButton(bool toggle);
-    void updatePSMDisableButton(bool toggle);
-    void updateButton(bool toggle, DuiButton *button);
+    void updateImage(bool charging = true);
+    void updatePSMButton(bool toggle);
+    void updatePSMAutoButton(bool toggle);
     void batteryLevelValueChanged(int value);
     void startUpdatingChargingImage();
     void stopUpdatingChargingImage();
@@ -39,20 +40,21 @@ private slots:
 private: //methods    
     void initImage();
     QString minutesInString(int mins, const QString &pattern);
-    void togglePSMWidgets(bool enable);        
+    void toggleSliderVisibility(bool toggle);
 
 private: //attributes
+    int batteryLevel;
+    BatteryDBusInterface *batteryIf;
     DuiLabel *talkTimeLabel;
     DuiLabel *standByTimeLabel;    
     DuiButton *PSMButton;
-    DuiButton *PSMDisableButton;
+    DuiButton *PSMAutoButton;
+    DuiGridLayoutPolicy *sliderLayoutPolicy;
+    DuiImage *image;
     DuiSlider *slider;
-    DuiImage *image;    
     QStringList batteryImages;
     QStringList batteryChargingImages;
     QStringList sliderValues;
     QTimer *updateChargingImageTimer;
-    BatteryDBusInterface *batteryIf;
-
 };
 #endif // BATTERYWIDGET_H

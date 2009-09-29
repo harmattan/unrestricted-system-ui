@@ -13,5 +13,5 @@ namespace DcpDisplay {
     const QString BlankInhibitButtonText = trid("NOT_DEFINED", "Screen lights on during the charging");
     const QString NoteText = trid("NOT_DEFINED", "In the power save mode, screen light settings are affected.");
 
-};
+}
 #endif // DISPLAYTRANSLATION_H

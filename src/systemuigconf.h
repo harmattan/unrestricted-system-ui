@@ -17,9 +17,8 @@ public:
         Display
     };
 
-    enum GConfKey {
-        BatteryPSMToggleKey,
-        BatteryPSMDisabledKey,
+    enum GConfKey {        
+        BatteryPSMAutoKey,
         BatteryPSMThresholdKey,
         DisplayBrightnessMaxLevelKey,
         DisplayBrightnessLevelStepKey,

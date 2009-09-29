@@ -9,21 +9,19 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBu
     connect(batteryLogic, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
     connect(batteryLogic, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(batteryLogic, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueChanged(int)));
-    connect(batteryLogic, SIGNAL(PSMToggleValueChanged(bool)), this, SIGNAL(PSMToggleValueChanged(bool)));
+    connect(batteryLogic, SIGNAL(PSMValueChanged(bool)), this, SIGNAL(PSMValueChanged(bool)));
 }
 
-void BatteryBusinessLogicAdaptor::setPSMToggleValue(bool toggle)
+void BatteryBusinessLogicAdaptor::setPSMValue(bool toggle)
 {    
-    qDebug() << "BatteryBusinessLogicAdaptor::setPSMToggleValue(" << toggle << ")";
-    disconnect(batteryLogic, SIGNAL(PSMToggleValueChanged(bool)), this, SIGNAL(PSMToggleValueChanged(bool)));
-    batteryLogic->togglePSM(toggle);
-    connect(batteryLogic, SIGNAL(PSMToggleValueChanged(bool)), this, SIGNAL(PSMToggleValueChanged(bool)));
+    qDebug() << "BatteryBusinessLogicAdaptor::setPSMValue(" << toggle << ")";    
+    batteryLogic->togglePSM(toggle);    
 }
 
-void BatteryBusinessLogicAdaptor::setPSMDisabledValue(bool disabled)
+void BatteryBusinessLogicAdaptor::setPSMAutoValue(bool toggle)
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::setPSMDisabled(" << disabled << ")";
-    batteryLogic->togglePSMDisabled(disabled);
+    qDebug() << "BatteryBusinessLogicAdaptor::setPSMAutoValue(" << toggle << ")";
+    batteryLogic->togglePSMAuto(toggle);
 }
 
 void BatteryBusinessLogicAdaptor::setPSMThresholdValue(const QString &value)
@@ -32,16 +30,16 @@ void BatteryBusinessLogicAdaptor::setPSMThresholdValue(const QString &value)
     batteryLogic->setPSMThreshold(value);   
 }
 
-bool BatteryBusinessLogicAdaptor::PSMToggleValue()
+bool BatteryBusinessLogicAdaptor::PSMValue()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMToggleValue()";
-    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMToggleKey).toBool();
+    qDebug() << "BatteryBusinessLogicAdaptor::PSMValue()";
+    return batteryLogic->PSMValue();
 }
 
-bool BatteryBusinessLogicAdaptor::PSMDisabledValue()
+bool BatteryBusinessLogicAdaptor::PSMAutoValue()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMDisabled()";
-    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMDisabledKey).toBool();
+    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMAutoKey).toBool();
 }
 
 bool BatteryBusinessLogicAdaptor::batteryChargingState()

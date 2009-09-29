@@ -14,15 +14,15 @@ public:
     BatteryDBusInterface();
     virtual ~BatteryDBusInterface();
 
-    void PSMToggleValueRequired();
-    void PSMDisabledValueRequired();
+    void PSMValueRequired();
+    void PSMAutoValueRequired();
     void batteryChargingStateRequired();
     void PSMThresholdValuesRequired();
     void PSMThresholdValueRequired();
     void batteryLevelValueRequired();
     void setPSMThresholdValue(const QString &value);
-    void setPSMToggleValue(bool toggle);
-    void setPSMDisabledValue(bool disabled);
+    void setPSMValue(bool toggle);
+    void setPSMAutoValue(bool toggle);        
 
 public slots:
     void remainingTimeValuesRequired();
@@ -36,8 +36,8 @@ signals:
     void batteryCharging();
     void batteryNotCharging();
     void batteryLevelValueChanged(int);
-    void PSMToggleValueReceived(bool);
-    void PSMDisabledValueReceived(bool);
+    void PSMValueReceived(bool);
+    void PSMAutoValueReceived(bool);
     void PSMThresholdValuesReceived(QStringList);
     void PSMThresholdValueReceived(QString);
     void remainingTimeValuesReceived(QStringList);

@@ -20,10 +20,11 @@ public:
     BatteryBusinessLogic(SystemUIGConf *systemUIGConf);
     virtual ~BatteryBusinessLogic();
 
-    void togglePSMDisabled(bool disabled);
     void setPSMThreshold(const QString &threshold);
-    void togglePSM(bool toggle);    
+    void togglePSM(bool toggle);
+    void togglePSMAuto(bool toggle);
     int batteryLevelValue();
+    bool PSMValue();
     bool batteryChargingState();
     QVariant GConfItemValue(SystemUIGConf::GConfKey key);
     QStringList remainingTimeValues();
@@ -33,7 +34,7 @@ signals:
     void batteryCharging();
     void batteryNotCharging();
     void batteryLevelValueChanged(int level);
-    void PSMToggleValueChanged(bool toggle);
+    void PSMValueChanged(bool toggle);
 
 public slots:
     void initBattery();
@@ -47,13 +48,12 @@ private: //attributes
 
 private: //methods
     void initSystemUIGConfKeys();
-    void checkPSMThreshold(Maemo::QmBattery::Level level);    
-    int batteryLevelPercentage();
+    void checkPSMThreshold(int bars);    
 
 private slots:
-    void batteryLevelChanged(Maemo::QmBattery::Level level);
-    void batteryStateChanged(Maemo::QmBattery::State state);    
-    void activatePSM();
+    void batteryLevelChanged(int bars, int maxBars);
+    void batteryStatusChanged(Maemo::QmBattery::State state);
+    void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);    
     void utiliseLED(bool activate, const QString &pattern);
 
 };
