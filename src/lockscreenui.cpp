@@ -9,6 +9,8 @@
 #include <DuiLayout>
 #include <DuiFreestyleLayoutPolicy>
 #include <DuiSceneManager>
+#include <DuiTheme>
+#include <QTime>
 
 #include <QDateTime>
 
@@ -43,9 +45,13 @@ void LockScreenUI::createContent()
     dateLabel->setAlignment(Qt::AlignLeft);
     updateDateTime();
 
-    unreadMessagesImage = new DuiImage("icon-m-unread-messages", this);
-    missedCallsImage = new DuiImage("icon-m-call-missed", this);
-    unreadChatMessagesImage = new DuiImage("icon-m-unread-chat-messages", this);
+    // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
+    unreadMessagesImage = new DuiImage(/*"icon-m-unread-messages",*/ this);
+    unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
+    missedCallsImage = new DuiImage(/*"icon-m-call-missed", */this);
+    missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
+    unreadChatMessagesImage = new DuiImage(/*"icon-m-unread-chat-messages",*/ this);
+    unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
 
     unreadMessagesLbl = new DuiLabel("2", this);
     missedCallsLbl = new DuiLabel("1", this);
@@ -107,6 +113,7 @@ void LockScreenUI::calculateRects(DuiLayout* layout,
 
     float x,y;
     unreadMessagesImage->setGeometry(QRect(0,0, w*0.15f, h*0.1f));
+    unreadMessagesImage->zoomFactor(&x, &y);
     unreadMessagesImage->zoomFactor(&x, &y);
     QSizeF s = unreadMessagesImage->imageSize();
     s *= x;

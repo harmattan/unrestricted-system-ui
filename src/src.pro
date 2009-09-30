@@ -58,7 +58,8 @@ HEADERS += main.h \
     notifierdbusadaptor.h \
     phonenetworkbusinesslogic.h
 style_sheet.files += sysuid.css
-style_svg.files += *.svg
+style_svg.files += *.svg \
+                ../data/*.svg
 include(unlocksliderwidget/unlocksliderwidget.pri)
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
