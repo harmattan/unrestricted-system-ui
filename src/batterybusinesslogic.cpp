@@ -245,7 +245,6 @@ QStringList BatteryBusinessLogic::PSMThresholdValues()
 }
 
 bool BatteryBusinessLogic::batteryChargingState()
-{
-    return true;
+{    
     return battery->getState() == QmBattery::StateCharging;
 }
