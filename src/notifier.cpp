@@ -13,12 +13,12 @@
 #include "notifierdbusadaptor.h"
 
 
-NotifTimer::NotifTimer(int msec, QObject *receiver, const char *member, unsigned int notifId) :
+NotifTimer::NotifTimer(int expireTimeout, QObject *receiver, const char *member, unsigned int notifId) :
     QObject(QAbstractEventDispatcher::instance()),
     notifId(notifId)
 {
     connect(this, SIGNAL(timeout(unsigned int)), receiver, member);
-    timerId = startTimer(msec);
+    timerId = startTimer(expireTimeout);
 }
 
 NotifTimer::~NotifTimer()
