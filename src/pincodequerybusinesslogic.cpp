@@ -512,13 +512,12 @@ void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 
 void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 {
-    if(handleSIMLockError(error))
+    if(handleSIMLockError(error)) {
         uiNotif->showNotification(SIMUnlocked, Notifier::info);
-
-    //what is the next SIMStatus?
-    if(SIMLockErrorTimerNotElapsed != error) {
         simLockCode = "";
     }
+
+    //what is the next SIMStatus?
 }
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
