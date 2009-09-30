@@ -44,6 +44,7 @@ private:
     bool grabHandle(const QPointF& pos);
     void moveHandle(const QPointF& pos);
 
+    void drawImage(const DuiScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle = 0.0f) const;
     QRectF handleRect() const;
     void recalcRects();
 

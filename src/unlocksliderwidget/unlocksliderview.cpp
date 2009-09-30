@@ -15,9 +15,9 @@ const qreal RESETACCEL(1.0f/25.0f);
 
 UnlockSliderView::UnlockSliderView(UnlockSlider *controller) :
     DuiWidgetView(controller),
-    sliderRect(1, 1, 1, 1),
-    iconRect(1, 1, 1, 1),
-    handlePos(0, 0),
+    sliderRect(-1, -1, -1, -1),
+    iconRect(-1, -1, -1, -1),
+    handlePos(-1, -1),
     resetVelocity(0),
     blinkCount(0),
     blinkTime(0),
@@ -67,6 +67,9 @@ void UnlockSliderView::modelModified(const QList<const char*>& modifications)
                 blinkTime = 0;
             }
         }
+        else if (member == UnlockSliderModel::Orientation) {
+            recalcRects();
+        }
     }
 
     update();
@@ -90,36 +93,46 @@ void UnlockSliderView::drawBackground(QPainter *painter, const QStyleOptionGraph
 {
     Q_UNUSED(option);
 
-    const qreal tilewidth = style()->backgroundTileSize().width();
+    const qreal tilestep(style()->backgroundTileSize().width());
+    const qreal angle(model()->orientation() == Qt::Horizontal ? 0.0f : 90.0f);
     QRectF tile(sliderRect.topLeft(), style()->backgroundTileSize());
+    if (model()->orientation() == Qt::Vertical) {
+        qreal tmp = tile.width();
+        tile.setWidth(tile.height());
+        tile.setHeight(tmp);
+    }
+
+    drawImage(NULL, sliderRect.toRect(), painter);
+
+    const DuiScalableImage* image = style()->backgroundTileImage();
 
     for (int i = 0; i < backgroundTileCount; i++) {
-        style()->backgroundTileImage()->draw(tile.toRect(), painter);
-        tile.adjust(tilewidth, 0, tilewidth, 0);
+        qDebug() << i;
+        drawImage(image, tile.toRect(), painter, angle);
+
+        if (model()->orientation() == Qt::Horizontal) {
+            tile.adjust(tilestep, 0, tilestep, 0);
+        }
+        else { // vertical
+            tile.adjust(0, tilestep, 0, tilestep);
+        }
     }
 
     if (model()->iconVisible()) {
-        style()->iconImage()->draw(iconRect.toRect(), painter);
+        drawImage(style()->iconImage(), iconRect.toRect(), painter);
     }
 }
 
-void UnlockSliderView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void UnlockSliderView::drawContents(QPainter* painter, const QStyleOptionGraphicsItem* option) const
 {
     Q_UNUSED(option);
 
-    // TODO: is this check needed? if there's no image, we're pretty much screwed anyways :)
-    const DuiScalableImage* handleImage(style()->handleImage());
+    const qreal angle = model()->orientation() == Qt::Horizontal ? 0.0f : 90.0f;
 
-    if (handleImage) {
-        handleImage->draw(handlePos.toPoint(), style()->handleSize(), painter);
+    drawImage(style()->handleImage(), handleRect().toRect(), painter, angle);
 
-        if (model()->blinking() && !(blinkCount & 1)) {
-            //style()->handleHilightedImage()->draw(handlePos.toPoint(), style()->handleSize(), painter);
-            painter->fillRect(QRect(handlePos.toPoint(), style()->handleSize()), QBrush(Qt::white));
-        }
-    }
-    else {
-        painter->fillRect(QRect(handlePos.toPoint(), style()->handleSize()), QBrush(Qt::red));
+    if (model()->blinking() && !(blinkCount & 1)) {
+        drawImage(style()->handleHilightedImage(), handleRect().toRect(), painter, angle);
     }
 }
 
@@ -178,32 +191,48 @@ void UnlockSliderView::timeStep()
 // Checks if pos is inside the handle area
 bool UnlockSliderView::handleHit(const QPointF& pos)
 {
-    // vertical check
-    if (pos.y() < handlePos.y() ||
-        pos.y() >= (handlePos.y() + style()->handleSize().height())) {
+    if (model()->orientation() == Qt::Horizontal &&
+        (pos.y() < handlePos.y() || pos.y() >= (handlePos.y() + style()->handleSize().height()))) {
+        return false;
+    }
+    else if (model()->orientation() == Qt::Vertical &&
+            (pos.x() < handlePos.x() || pos.x() >= (handlePos.x() + style()->handleSize().height()))) {
+        // handle height used because it's rotated in vertical mode                      --^
         return false;
     }
 
-    // check horizontally if hit is within handle.
-    if (model()->handlePressed())
+    // at this point, the slider area his hit, so..
+    // ..if the handle is pressed, we are moving the slider so true is returned
+    if (model()->handlePressed()) {
         // slight approximation =)
         return true;
+    }
 
-    return handlePos.x() < pos.x()
-            && pos.x() < (handlePos.x() + style()->handleSize().width());
+    if (model()->orientation() == Qt::Horizontal) {
+        return pos.x() >= handlePos.x() && pos.x() < (handlePos.x() + style()->handleSize().width());
+    }
+    else { // vertical (handle width used because of rotation)
+        return pos.y() >= handlePos.y() && pos.y() < (handlePos.y() + style()->handleSize().width());
+    }
 }
 
 // Sets the handle position to model from widget coordinates
 void UnlockSliderView::setHandleModelPos(const QPointF& center)
 {
-    const qreal halfwidth = style()->handleSize().width() * 0.5f;
-    const qreal xmin = sliderRect.left() + halfwidth;
-    const qreal xmax = sliderRect.right() - halfwidth;
+    const bool h = model()->orientation() == Qt::Horizontal;
 
-    // Prevent possible division by zero
-    if (xmax-xmin != 0) {
-        // Scale x to 0..1 range and set the value to model which causes modelModified to be called
-        model()->setPosition((clamp(center.x(), xmin, xmax) - xmin) / (xmax - xmin));
+    // center pos
+    const qreal c = (h == true ? center.x() : center.y());
+
+    // hhs = half of the handle size
+    const qreal hhs = style()->handleSize().width() * 0.5f;
+    const qreal min = (h == true ? sliderRect.left() : sliderRect.top()) + hhs;
+    const qreal max = (h == true ? sliderRect.right() : sliderRect.bottom()) - hhs;
+
+    // Prevent possible(?) division by zero
+    if (max-min != 0) {
+        // Scale c to 0..1 range and set the value to model which causes modelModified to be called
+        model()->setPosition((clamp(c, min, max) - min) / (max - min));
         resetVelocity = 0;
     }
     else {
@@ -214,13 +243,21 @@ void UnlockSliderView::setHandleModelPos(const QPointF& center)
 // Sets the handle position in (0..1) range
 void UnlockSliderView::setHandleScreenPos(const qreal& percent)
 {
-    const qreal xmin = sliderRect.left();
-    const qreal xmax = sliderRect.right() - style()->handleSize().width();
+    if (model()->orientation() == Qt::Horizontal) {
+        const qreal min = sliderRect.left();
+        const qreal max = sliderRect.right() - style()->handleSize().width();
 
-    qreal x = clamp(percent * (xmax - xmin) + xmin, xmin, xmax);
+        handlePos.setX(clamp(percent * (max - min) + min, min, max));
+        handlePos.setY(sliderRect.top());
+    }
+    else { // vertical
+        const qreal min = sliderRect.top();
+        // handle is rotated, use width here
+        const qreal max = sliderRect.bottom() - style()->handleSize().width();
 
-    handlePos.setX(x);
-    handlePos.setY(sliderRect.top());
+        handlePos.setX(sliderRect.left());
+        handlePos.setY(clamp(percent * (max - min) + min, min, max));
+    }
 }
 
 bool UnlockSliderView::grabHandle(const QPointF& pos)
@@ -251,30 +288,89 @@ void UnlockSliderView::releaseHandle()
     }
 }
 
+void UnlockSliderView::drawImage(const DuiScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle) const
+{
+    if (image != NULL) {
+        if (angle < -0.1f || angle > 0.1f) {
+            painter->save();
+            painter->translate(rect.center());
+            painter->rotate(angle);
+            QRect r(QPoint(-rect.width() / 2, -rect.height() / 2), rect.size());
+            image->draw(r, painter);
+            painter->restore();
+        }
+        else {
+            image->draw(rect, painter);
+        }
+    }
+    else {
+        painter->fillRect(rect, QBrush(Qt::red));
+    }
+}
+
 // Generate a rect for current handle position
 QRectF UnlockSliderView::handleRect() const
 {
-    return QRectF(handlePos, style()->handleSize());
+    QRectF rect;
+
+    if (model()->orientation() == Qt::Horizontal) {
+        rect = QRectF(handlePos, style()->handleSize());
+    }
+    else { // vertical
+        rect.setTopLeft(handlePos);
+        rect.setWidth(style()->handleSize().height());
+        rect.setHeight(style()->handleSize().width());
+    }
+
+    return rect;
 }
 
 // Recalculate the slider and icon area
 void UnlockSliderView::recalcRects()
 {
-    // slider + icon fills the whole widget width
-    qreal sliderwidth = size().width() - (model()->iconVisible() ? style()->iconSize().width() : 0);
-    // centered vertically
-    qreal slidertop = (size().height() / 2) - (style()->handleSize().height() / 2);
+    if (model()->orientation() == Qt::Horizontal) {
+        // slider + icon fills the whole widget width
+        qreal sliderwidth = size().width() - (model()->iconVisible() ? style()->iconSize().width() : 0);
+        // centered vertically
+        qreal slidertop = (size().height() / 2) - (style()->handleSize().height() / 2);
 
-    qreal leftover = fmod(sliderwidth, style()->backgroundTileSize().width());
+        qreal leftover = fmod(sliderwidth, style()->backgroundTileSize().width());
 
-    sliderRect.setWidth(sliderwidth - leftover);
-    sliderRect.setHeight(style()->handleSize().height());
-    sliderRect.setTopLeft(QPoint(leftover, slidertop));
+        sliderRect.setWidth(sliderwidth - leftover);
+        sliderRect.setHeight(style()->handleSize().height());
+        sliderRect.setTopLeft(QPoint(leftover, slidertop));
 
-    backgroundTileCount = sliderRect.width() / style()->backgroundTileSize().width();
+        backgroundTileCount = sliderRect.width() / style()->backgroundTileSize().width();
 
-    iconRect.setTopLeft(QPoint(sliderRect.right(), (size().height() / 2) - (style()->iconSize().height() / 2)));
-    iconRect.setSize(style()->iconSize());
+        iconRect.setTopLeft(QPoint(sliderRect.right(), (size().height() / 2) - (style()->iconSize().height() / 2)));
+        iconRect.setSize(style()->iconSize());
+    }
+    else { // vertical
+        // Note: only icon is kept in same orientaton towards the user,
+        // handle and background images are rotated 90 degrees
+
+        // slider + icon fills the whole widget height (icon not rotated, so using its height)
+        qreal sliderheight = size().height() - (model()->iconVisible() ? style()->iconSize().height() : 0);
+        // centered horizontally
+        qreal sliderleft = (size().width() / 2) - (style()->handleSize().height() / 2);
+
+        // background is rotated, so use width
+        qreal leftover = fmod(sliderheight, style()->backgroundTileSize().width());
+
+        sliderRect.setWidth(style()->handleSize().height()); // handle is rotated, so use height here
+        sliderRect.setHeight(sliderheight - leftover);
+        sliderRect.setTopLeft(QPoint(sliderleft, leftover));
+
+        qDebug() << sliderRect;
+
+        // background rotated -> use width
+        backgroundTileCount = sliderRect.height() / style()->backgroundTileSize().width();
+
+        qDebug() << backgroundTileCount << style()->backgroundTileSize().width();
+
+        iconRect.setTopLeft(QPoint((size().width() / 2) - (style()->iconSize().width() / 2), sliderheight + leftover));
+        iconRect.setSize(style()->iconSize());
+    }
 
     setHandleScreenPos(model()->position());
 

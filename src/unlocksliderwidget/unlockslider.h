@@ -14,6 +14,7 @@ class UnlockSlider : public DuiWidgetController
     Q_PROPERTY(qreal position READ position WRITE setPosition)
     Q_PROPERTY(bool iconVisible READ isIconVisible WRITE setIconVisible)
     Q_PROPERTY(bool magnetic READ isMagnetic WRITE setMagnetic)
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
 
 private:
     UnlockSliderView *view;
@@ -54,6 +55,16 @@ public:
       The magnetic effect pulls the slider handle back to starting position if released.
       */
     void setMagnetic(bool);
+
+    /*!
+      \brief Sets the slider orientation
+      */
+    void setOrientation(Qt::Orientation&);
+
+    /*!
+      \brief Returns the slider orientation
+      */
+    const Qt::Orientation& orientation();
 
     void reset();
 
