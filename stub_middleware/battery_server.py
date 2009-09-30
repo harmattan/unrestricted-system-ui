@@ -11,7 +11,7 @@ dbus-monitor --system
 
 [run the server outside of scratchbox (because of broken pygtk package)]
 export DBUS_SYSTEM_BUS_ADDRESS=`cat /tmp/dbus-address`
-python dbus_server.py
+python battery_server.py
 
 https://projects.maemo.org/svn/dsm/QtAPI/trunk/system/msystemdbus.h
 
