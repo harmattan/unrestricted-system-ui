@@ -9,6 +9,23 @@ class QDBusInterface;
 class NotifierDBusAdaptor;
 class Sysuid;
 
+/* Class to keep track of each notification shown in homescreen */
+class NotifTimer : public QObject
+{
+    Q_OBJECT
+    int timerId;
+public:
+    ~NotifTimer();
+    NotifTimer(int expireTimeout, QObject *receiver, const char *member, unsigned int notifId);
+signals:
+    void timeout(unsigned int notifId);
+protected:
+    void timerEvent(QTimerEvent *);
+private:
+    unsigned int notifId;
+};
+
+
 /**
   * Class to create notifications
   */
@@ -43,7 +60,7 @@ public slots:
                                      const QHash<QString,QString> &staticVariables);
 
 private slots:
-    void notificationTimeout();
+    void notificationTimeout(unsigned int notifId);
     void cancellableNotificationCancelled();
     void cancellableNotificationTimeout();
 
@@ -56,12 +73,12 @@ private:
      */
     void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 5000, QString action = QString("removeNotification"));
     void removeNotification(unsigned int id);
+    void notifTimer(int msec, unsigned int notifId);
 
 private:    
     CancellableNotification *cancellableNotification;
     QDBusInterface* managerIf;
     NotifierDBusAdaptor* dbus;
-    unsigned int notifId;
 };
 
 

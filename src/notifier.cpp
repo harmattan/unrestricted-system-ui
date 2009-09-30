@@ -5,11 +5,38 @@
 #include <QObject>
 #include <QDebug>
 #include <QDBusInterface>
+#include <QAbstractEventDispatcher>
 
 #include "notifier.h"
 #include "sysuid.h"
 #include "cancellablenotification.h"
 #include "notifierdbusadaptor.h"
+
+
+NotifTimer::NotifTimer(int msec, QObject *receiver, const char *member, unsigned int notifId) :
+    QObject(QAbstractEventDispatcher::instance()),
+    notifId(notifId)
+{
+    connect(this, SIGNAL(timeout(unsigned int)), receiver, member);
+    timerId = startTimer(msec);
+}
+
+NotifTimer::~NotifTimer()
+{
+    if (timerId > 0)
+        killTimer(timerId);
+}
+
+void NotifTimer::timerEvent(QTimerEvent *)
+{
+    // need to kill the timer _before_ we emit timeout() in case the
+    // slot connected to timeout calls processEvents()
+    if (timerId > 0)
+        killTimer(timerId);
+    timerId = -1;
+    emit timeout(notifId);
+    delete this;
+}
 
 // TODO.: Use the logical names when available
 
@@ -17,9 +44,7 @@
 // See messge formats from af/duihome:home/notifications/notificationmanager.xml;
 // example message to test notificationManager:
 //  dbus-send --print-reply --dest=org.maemo.dui.NotificationManager / org.maemo.dui.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello DUI' string:'link' string:'Icon-close'
-
-
-Notifier::Notifier() : QObject(), notifId(0)
+Notifier::Notifier() : QObject()
 {
     dbus = new NotifierDBusAdaptor();
     managerIf = new QDBusInterface ( "org.maemo.dui.NotificationManager", "/", "org.maemo.dui.NotificationManager");
@@ -81,11 +106,10 @@ void Notifier::showConfirmation(QString notifText, QString buttonText)
 }
 
 
-void Notifier::notificationTimeout()
+void Notifier::notificationTimeout(unsigned int notifId)
 {
     if(0 < notifId) {
         removeNotification(notifId);
-        notifId = 0;
     }
 }
 
@@ -124,16 +148,14 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
     }
     else if(reply.type() == QDBusMessage::ReplyMessage)
     {
+        unsigned int notifId(0);
         QList<QVariant> args = reply.arguments();
         if(args.count() >= 1)
         {
             notifId = args[0].toUInt();
             qDebug() << "Notifier::showDBusNotification(): notifId:" << notifId << "msg:" << notifText;
         }
-        if(expireTimeout > 0)
-        {
-            QTimer::singleShot(expireTimeout, this, SLOT(notificationTimeout()));
-        }
+        notifTimer(expireTimeout, notifId);
     }
     else {
         qDebug() << "Notifier::showDBusNotification() reply type:" << reply.type();
@@ -163,4 +185,10 @@ void Notifier::cancellableNotificationTimeout()
     delete cancellableNotification;
     cancellableNotification = NULL;
     emit notifTimeout();
+}
+
+void Notifier::notifTimer(int expireTimeout, unsigned int notifId)
+{
+    if(0 < expireTimeout)
+        (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(unsigned int)), notifId);
 }
