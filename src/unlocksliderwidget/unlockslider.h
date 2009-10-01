@@ -57,14 +57,14 @@ public:
     void setMagnetic(bool);
 
     /*!
-      \brief Sets the slider orientation
-      */
-    void setOrientation(Qt::Orientation&);
+     * \brief Sets the slider orientation
+     */
+    void setOrientation(Qt::Orientation);
 
     /*!
-      \brief Returns the slider orientation
-      */
-    const Qt::Orientation& orientation();
+     * \brief Returns the current slider orientation
+     */
+    Qt::Orientation orientation() const;
 
     void reset();
 

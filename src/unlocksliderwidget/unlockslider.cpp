@@ -56,12 +56,12 @@ void UnlockSlider::setMagnetic(bool magnetic)
     model()->setMagnetic(magnetic);
 }
 
-void UnlockSlider::setOrientation(Qt::Orientation& orientation)
+void UnlockSlider::setOrientation(Qt::Orientation orientation)
 {
     model()->setOrientation(orientation);
 }
 
-const Qt::Orientation& UnlockSlider::orientation()
+Qt::Orientation UnlockSlider::orientation() const
 {
     return model()->orientation();
 }

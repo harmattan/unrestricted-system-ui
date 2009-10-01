@@ -37,7 +37,7 @@ private slots:
     void timeStep();
 
 private:
-    bool handleHit(const QPointF& pos);
+    bool handleHit(const QPointF& pos) const;
     void setHandleModelPos(const QPointF& center);
     void setHandleScreenPos(const qreal& percent);
 
@@ -52,7 +52,6 @@ private:
 
 private:
     QRectF sliderRect;
-    QRectF iconRect;
     QPointF handlePos;
     QTimer timer;
     qreal resetVelocity;
