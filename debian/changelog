@@ -1,7 +1,14 @@
 system-ui (0.6.2-0) unstable; urgency=low
 
-  * Non-maintainer upload.
-  * 
+  * Implemented: SWP#SUI-115, SWP#SUI-91
+
+  * Fixes: NB#135824 - The upper bar of the window that contains the X should be removed
+  * Fixes: NB#136748 - Emergency call numbers are replaced with asterisk
+  * Fixes: NB#139177 - If Toggle button "Do not switch automatically.." is tapped then battery icon is not updated anymore
+  * Fixes: NB#134117 - PIN is not rejected after 3 tries
+  * Fixes: NB#134119 - PUK is not rejected after 10 tries
+  * Fixes: NB#134122 - Correct PUK does not do anything
+  * Fixes: NB#135824 - The upper bar of the window that contains the X..
 
  -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 01 Oct 2009 13:06:48 +0300
 
