@@ -18,15 +18,15 @@ Description: Various system user interfaces.
 
 Package: duicontrolpanel-batteryapplet
 Architecture: any
-Depends: system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
 Description: Battery settings applet.
 
 Package: duicontrolpanel-displayapplet
 Architecture: any
-Depends: system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
 Description: Display settings applet.
 
 Package: duicontrolpanel-networkapplet
 Architecture: any
-Depends: system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
 Description: Cellular network settings applet.
