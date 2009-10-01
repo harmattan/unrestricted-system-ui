@@ -68,10 +68,10 @@ protected:
     Notifier();
 
 private:
-    /* expireTimeout tells when the note is removed (also from home screen). Value 5000 = 5 sec seems to be the time
-     * the notification is removed from the visible view.
+    /* expireTimeout tells when the note is removed (also from home screen).
+     * Refer to duihome: NotificationManager::NotificationManager(int relayInterval = 3000, uint maxWaitQueueSize = 100);.
      */
-    void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 5000, QString action = QString("removeNotification"));
+    void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"));
     void removeNotification(unsigned int id);
     void notifTimer(int msec, unsigned int notifId);
 
