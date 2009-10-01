@@ -1,3 +1,9 @@
+system-ui (0.6.3-0) unstable; urgency=low
+
+  * Fix release depencies.
+
+ -- Matti Katila <matti.katila@ixonos.com>  Thu, 01 Oct 2009 20:04:17 +0300
+
 system-ui (0.6.2-0) unstable; urgency=low
 
   * Implemented: SWP#SUI-115, SWP#SUI-91
