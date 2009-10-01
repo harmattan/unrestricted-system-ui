@@ -28,12 +28,9 @@ public:
         DisplayBlankTimeoutKey,
         DisplayDimTimeoutsKey,
         DisplayDimTimeoutKey,
-        DisplayBlankInhibitKey,
-        NetworkModeKey,
+        DisplayBlankInhibitKey,        
         NetworkRoamingKey,
-        NetworkRoamingUpdatesKey,
-        NetworkSelectedNetworkKey,
-        NetworkSelectionKey
+        NetworkRoamingUpdatesKey        
     };   
 
     SystemUIGConf();

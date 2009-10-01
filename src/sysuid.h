@@ -10,6 +10,8 @@
 #include "batterybusinesslogicadaptor.h"
 #include "displaybusinesslogic.h"
 #include "displaybusinesslogicadaptor.h"
+#include "phonenetworkbusinesslogic.h"
+#include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "shutdowndialogbusinesslogic.h"
 #include "eventhandler.h"
@@ -34,6 +36,8 @@ private:
     BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
     DisplayBusinessLogic *displayLogic;
     DisplayBusinessLogicAdaptor *displayLogicAdaptor;
+    PhoneNetworkBusinessLogic *networkLogic;
+    PhoneNetworkBusinessLogicAdaptor *networkLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownDialogBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;

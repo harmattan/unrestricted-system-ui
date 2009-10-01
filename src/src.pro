@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
     notifierdbusadaptor.cpp \
-    phonenetworkbusinesslogic.cpp
+    phonenetworkbusinesslogic.cpp \
+    phonenetworkbusinesslogicadaptor.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -56,7 +57,8 @@ HEADERS += main.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h \
-    phonenetworkbusinesslogic.h
+    phonenetworkbusinesslogic.h \
+    phonenetworkbusinesslogicadaptor.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
                 ../data/*.svg

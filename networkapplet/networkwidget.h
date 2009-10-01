@@ -14,6 +14,8 @@ class DuiStylableWidget;
 class NetworkDBusInterface;
 class QSignalMapper;
 
+#include <QDebug>
+
 class NetworkWidget : public DcpWidget
 {
     Q_OBJECT
@@ -27,21 +29,22 @@ protected:
 
 private slots:        
     void initPhoneNetworkButton(bool toggle);
-    void initEnableRoamingButton(bool value);
-    void initEnableRoamingUpdatesButton(bool value);
-    void buttonPressed(const QString &text);    
-    void networkSelectionValueChanged(const QString &value);
-    void toggleAvailableNetworks(const QStringList &networks, bool toggle = true);
+    void initRoamingButton(bool value);
+    void initRoamingUpdatesButton(bool value);
+    void initNetworkModeComboBox(int selected, const QStringList &values);
+    void initNetworkSelectionComboBox(int selected, const QStringList &values);
+    void buttonPressed(const QString &text);        
+    void toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle = true);
     void availableNetworksButtonPressed(DuiButton* button);
 
 private: //methods
     void toggleSettings(bool toggle);
-    void toggleEnableRoamingUpdates(bool toggle);    
+    void toggleRoamingUpdatesButton(bool toggle);
 
 private: //attributes        
     DuiButton *phoneNetworkButton;
-    DuiButton *enableRoamingButton;
-    DuiButton *enableRoamingUpdatesButton;
+    DuiButton *roamingButton;
+    DuiButton *roamingUpdatesButton;
     DuiButton *dataCounterButton;
     DuiButtonGroup *availableNetworksButtonGroup;
     DuiComboBox *networkModeComboBox;

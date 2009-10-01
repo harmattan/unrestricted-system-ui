@@ -38,6 +38,10 @@ Sysuid::Sysuid() : QObject()
     displayLogic = new DisplayBusinessLogic(systemUIGConf);
     displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
 
+    /* Network */
+    networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf);
+    networkLogicAdaptor = new PhoneNetworkBusinessLogicAdaptor(dbusObject(), networkLogic);
+
     /* Event handler */
     eventHandler = new EventHandler();
 
