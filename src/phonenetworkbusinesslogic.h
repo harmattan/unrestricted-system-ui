@@ -30,10 +30,12 @@ public:
     void toggleRoaming(bool toggle);
     void toggleRoamingUpdates(bool toggle);
     void queryNetworkModes();
-    void queryNetworkSelectionValues();    
-    QVariant GConfItemValue(SystemUIGConf::GConfKey key);
+    void queryNetworkSelectionValues();
+    void networkAppletClosing();
+    QVariant GConfItemValue(SystemUIGConf::GConfKey key);    
 
 private slots:
+    void selectNetworkCompleted(bool success, const QString &reason);
     void availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
 
 signals:
@@ -49,6 +51,7 @@ private: //attributes
     NetworkRegistration *networkRegistration;
     QHash<RadioAccess::Mode, QString> networkModes;
     QHash<NetworkRegistration::Mode, QString> networkSelectionValues;
+    QList<AvailableOperator*> operators;
 
 };
 

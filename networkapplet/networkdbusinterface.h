@@ -25,6 +25,7 @@ public:
     void setRoamingValue(bool value);
     void setRoamingUpdatesValue(bool value);
     void setSelectedNetworkValue(const QString &value);
+    void networkAppletClosing();
 
 public slots:
     void setNetworkModeValue(const QString &value);

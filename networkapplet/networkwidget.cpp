@@ -27,7 +27,10 @@ NetworkWidget::NetworkWidget(QGraphicsWidget *parent)
 }
 
 NetworkWidget::~NetworkWidget()
-{    
+{
+     networkIf->networkAppletClosing();
+     delete networkIf;
+     networkIf = NULL;
 }
 
 void NetworkWidget::initWidget()

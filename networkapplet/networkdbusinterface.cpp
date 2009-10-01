@@ -112,6 +112,13 @@ void NetworkDBusInterface::setSelectedNetworkValue(const QString &value)
     dbusIf->callWithCallback(QString("setSelectedNetworkValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
+void NetworkDBusInterface::networkAppletClosing()
+{
+    qDebug() << "NetworkDBusInterface::networkAppletClosing()";
+    QList<QVariant> list;    
+    dbusIf->callWithCallback(QString("networkAppletClosing"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
 void NetworkDBusInterface::valueSet()
 {
     qDebug() << "DisplayDBusInterface::valueSet()";

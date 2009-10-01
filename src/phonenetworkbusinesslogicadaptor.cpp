@@ -41,6 +41,11 @@ void PhoneNetworkBusinessLogicAdaptor::setSelectedNetworkValue(const QString &va
     networkLogic->selectNetwork(value);
 }
 
+void PhoneNetworkBusinessLogicAdaptor::networkAppletClosing()
+{
+    networkLogic->networkAppletClosing();
+}
+
 void PhoneNetworkBusinessLogicAdaptor::networkModeValues()
 {
     return networkLogic->queryNetworkModes();

@@ -43,21 +43,43 @@ bool PhoneNetworkBusinessLogic::roamingUpdatesEnabled()
 
 void PhoneNetworkBusinessLogic::setNetworkMode(const QString &value)
 {
-    //TODO: use API to set the value for real    
+    qDebug() << "PhoneNetworkBusinessLogic::setNetworkMode(" << value << ")";
+    RadioAccess ra;
+    ra.setMode(networkModes.key(value));    
 }
 
 void PhoneNetworkBusinessLogic::setNetworkSelection(const QString &value)
 {    
-    qDebug() << "\n\n\nPhoneNetworkBusinessLogic::setNetworkSelection(" << value << ")";
+    qDebug() << "PhoneNetworkBusinessLogic::setNetworkSelection(" << value << ")";
     NetworkRegistration nr;
     nr.setMode(networkSelectionValues.key(value));
+    operators.clear(); //remove old operators
     if(networkSelectionValues.key(value) == NetworkRegistration::Manual)
-        queryAvailableNetworks();
+        queryAvailableNetworks();    
 }
 
 void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
 {
-    //TODO: use API to set the value for real    
+    for(int i=0; i<operators.size(); ++i) {
+        if(operators.at(i)->name() == value) {
+            connect(operators.at(i), SIGNAL(selectionCompleted(bool, const QString &)),
+                    this, SLOT(selectNetworkCompleted(bool, const QString &)));
+            operators.at(i)->select();
+            break;
+        }
+    } 
+}
+
+void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QString &reason)
+{
+    if(success) {
+        qDebug() << "Selection completed succesfully";
+        //TODO: show a note
+    }
+    else {
+        qDebug() << "Selection failed, reason: " << reason;
+        //TODO: show a note
+    }
 }
 
 void PhoneNetworkBusinessLogic::toggleNetwork(bool toggle)
@@ -127,7 +149,7 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
         networkRegistration = NULL;
     }
     if(!success) {
-        //TODO: show note based on the reason
+        //TODO: show note based on the reason        
         emit availableNetworksAvailable(-1, QStringList());
         return;
     }
@@ -136,12 +158,20 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
     int selectedNetwork = -1;
 
     for(int i=0; operators.size(); ++i) {
-        if(operators.at(i)->availability() != AvailableOperator::NotAvailable)
+        if(operators.at(i)->availability() != AvailableOperator::NotAvailable) {
             networks << operators.at(i)->name();
+            this->operators << operators.at(i);
+        }
         if(operators.at(i)->availability() == AvailableOperator::Current)
             selectedNetwork = i;
     }
     emit availableNetworksAvailable(selectedNetwork, networks);
+}
+
+void PhoneNetworkBusinessLogic::networkAppletClosing()
+{
+    qDebug() << "\n\n\nCLOSED";
+    operators.clear();
 }
 
 QVariant PhoneNetworkBusinessLogic::GConfItemValue(SystemUIGConf::GConfKey key)

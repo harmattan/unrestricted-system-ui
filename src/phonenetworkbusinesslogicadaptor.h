@@ -25,8 +25,9 @@ public slots:
     Q_NOREPLY void setNetworkModeValue(const QString &value);
     Q_NOREPLY void setNetworkSelectionValue(const QString &value);
     Q_NOREPLY void setSelectedNetworkValue(const QString &value);
+    Q_NOREPLY void networkAppletClosing();
     Q_NOREPLY void networkModeValues();
-    Q_NOREPLY void networkSelectionValues();    
+    Q_NOREPLY void networkSelectionValues();
     bool phoneNetworkValue();
     bool roamingValue();
     bool roamingUpdatesValue();
