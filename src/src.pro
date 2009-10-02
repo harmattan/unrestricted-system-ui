@@ -29,8 +29,8 @@ SOURCES += main.cpp \
     eventhandler.cpp \
     eventeater.cpp \
     usbhal.cpp \
-    shutdowndialog.cpp \
-    shutdowndialogbusinesslogic.cpp \
+    shutdownui.cpp \
+    shutdownbusinesslogic.cpp \
     batterybusinesslogicadaptor.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
@@ -50,8 +50,8 @@ HEADERS += main.h \
     eventhandler.h \
     eventeater.h \
     usbhal.h \
-    shutdowndialog.h \
-    shutdowndialogbusinesslogic.h \
+    shutdownui.h \
+    shutdownbusinesslogic.h \
     batterybusinesslogicadaptor.h \
     displaybusinesslogic.h \
     systemuigconf.h \

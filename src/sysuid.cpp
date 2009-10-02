@@ -46,7 +46,7 @@ Sysuid::Sysuid() : QObject()
     eventHandler = new EventHandler();
 
     /* Shutdown */
-    shutdownLogic = new ShutdownDialogBusinessLogic();
+    shutdownLogic = new ShutdownBusinessLogic();
     connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
             shutdownLogic, SLOT(openDialog(bool)));
     connect(eventHandler, SIGNAL(powerKeyDownOccured()),
