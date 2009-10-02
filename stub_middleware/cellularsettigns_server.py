@@ -21,6 +21,7 @@ dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com
 """
 
 import pygtk, dbus, dbus.service
+import time
 
 # this is needed or main loop is not binded by default
 import dbus.glib
@@ -154,6 +155,8 @@ class NetworkServer(ExtendedObject):
             ]
         self.registration_mode_idx = 2
 
+        self.registration_fails = False
+
         self.dbus_prop('com.nokia.csd.CSNet.NetworkRegistration',
                        'SelectionMode', 's', 'read')
 
@@ -170,11 +173,71 @@ class NetworkServer(ExtendedObject):
             if self.REGISTRATION_MODES[i] == mode:
                 self.registration_mode_idx = i
                 self.SelectionModeChanged(self.RADIO_MODES[i])
-    
+
     @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
     def SelectionModeChanged(self, mode):
         print 'network selection mode changed', mode
 
+    @dbus.service.method('com.nokia.csd.CSNet.NetworkRegistration')
+    def QueryNetworks(self):
+        print 'query nets'
+        time.sleep(2)
+
+        #enum Availability
+        # UnknownAvailability = -1, //!< Availability unknown
+        # Available, //!< Operator is available
+        # Current, //!< Operator is the current registered operator
+        # NotAvailable //!< Operator is not available
+        
+        avails = [
+            dbus.Struct([
+            'Elisa','Available','Home','GSM_900_180','12','34',True ],
+            signature='(ssssssb)'),
+            dbus.Struct([
+            'TDC','Available','Forbidden','AllSupported','12','34',False ],
+            signature='(ssssssb)'),
+            dbus.Struct([
+            'Sonera','Current','Preferred','GSM_850_1900','12','34',True ],
+            signature='(ssssssb)'),
+        ]
+        
+        self.AvailableNetworks(avails)
+
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
+    def QueryFailed(self,message):
+        pass
+    
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='a(ssssssb)')
+    def AvailableNetworks(self,avails):
+        # arrays of:
+        #, &name)
+        #, &status) "Available","Current","Forbidden"
+        #, &type) "Home",Preferred","Forbidden"
+        #, &band) "AllSupported", "GSM_900_1800", "GSM_850_1900"
+        #, &mnc)
+        #, &mcc)
+        #, &umts)
+        print 'networks available', avails
+
+    @dbus.service.method('com.nokia.csd.CSNet.NetworkRegistration', in_signature='uu')
+    def Register(self, mcc, mnc):
+        if self.registration_fails:
+            self.RegisterFailed('no reason')
+        else:
+            self.Registered()
+
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
+    def RegisterFailed(self, message):
+        print 'reg failed'
+    
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='')
+    def Registered(self):
+        print 'reg'
+        self.RegistrationChanged('asdf')
+
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
+    def RegistrationChanged(self, m):
+        print 'reg chg'
 
 def set_text_color(widget, color):
     widget.modify_fg (gtk.STATE_NORMAL ,
@@ -241,6 +304,12 @@ class UserInterface:
 
         # methods
         # =======
+
+        registration = gtk.CheckButton('Registration fails')
+        def callback(widget):
+            self.network_server.registration_fails = widget.get_active()
+        registration.connect('toggled', callback) 
+        frame.add(registration)
 
 
         return main_box
