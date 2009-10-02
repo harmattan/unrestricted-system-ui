@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     displaybusinesslogicadaptor.cpp \
     notifierdbusadaptor.cpp \
     phonenetworkbusinesslogic.cpp \
-    phonenetworkbusinesslogicadaptor.cpp
+    phonenetworkbusinesslogicadaptor.cpp \
+    pincodequerydbusadaptor.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -58,10 +59,11 @@ HEADERS += main.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h \
     phonenetworkbusinesslogic.h \
-    phonenetworkbusinesslogicadaptor.h
+    phonenetworkbusinesslogicadaptor.h \
+    pincodequerydbusadaptor.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
-                ../data/*.svg
+    ../data/*.svg
 include(unlocksliderwidget/unlocksliderwidget.pri)
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg

@@ -60,6 +60,8 @@ void PinCodeQueryUI::createContent()
     //create the widgets and numpad.
     createWidgetItems();
 
+    // TODO: create exit-button and hide it by default!!
+
     //create mainLayout
     DuiLayout *layout = new DuiLayout();
     centralWidget()->setLayout(layout); // ownership transferred

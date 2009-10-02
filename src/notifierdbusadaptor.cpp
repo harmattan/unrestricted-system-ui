@@ -2,7 +2,6 @@
 #include <QDBusConnection>
 
 #include "notifierdbusadaptor.h"
-#include "notifier.h"
 #include "sysuid.h"
 
 NotifierDBusAdaptor::NotifierDBusAdaptor() :
