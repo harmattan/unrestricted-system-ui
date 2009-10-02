@@ -93,8 +93,11 @@ void DisplayWidget::initWidget()
 
 }
 
-DuiContainer* DisplayWidget::createContainer(QList<DuiWidgetController *> widgets, QMap<DuiWidgetController *, Qt::Alignment> alignments,
-                                             Qt::Orientation policyOrientation, QString widgetObjectName, int policySpacing)
+DuiContainer* DisplayWidget::createContainer(const QList<DuiWidgetController *> &widgets,
+                                             const QMap<DuiWidgetController *, Qt::Alignment> &alignments,
+                                             Qt::Orientation policyOrientation,
+                                             const QString &widgetObjectName,
+                                             int policySpacing)
 {
     DuiLayout *layout = new DuiLayout();
     DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, policyOrientation);

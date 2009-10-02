@@ -6,9 +6,9 @@
 
 #dataCounterButton {
 	font: "Nokia Sans" 12;
-	preferred-size: 45% 60;
-	minimum-size: 45% 60;
-	maximum-size: 45% 60;
+	preferred-size: 44% 60;
+	minimum-size: 44% 60;
+	maximum-size: 44% 60;
 }
 
 #networkLayoutWidget1 {
@@ -21,7 +21,7 @@
 #networkLayoutWidget2 {
 	background-opacity: 255;
     	background-color: #141414;
-	preferred-size: 45% 50;
-	minimum-size: 45% 50;
-	maximum-size: 45% 50;
+	preferred-size: 44% 50;
+	minimum-size: 44% 50;
+	maximum-size: 44% 50;
 }

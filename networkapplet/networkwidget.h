@@ -7,10 +7,12 @@ class DuiButton;
 class DuiButtonGroup;
 class DuiComboBox;
 class DuiContainer;
-class DuiLabel;
 class DuiGridLayoutPolicy;
+class DuiLabel;
+class DuiLayout;
 class DuiLinearLayoutPolicy;
 class DuiStylableWidget;
+class DuiWidgetController;
 class NetworkDBusInterface;
 class QSignalMapper;
 
@@ -38,6 +40,11 @@ private slots:
     void availableNetworksButtonPressed(DuiButton* button);
 
 private: //methods
+    void clearWidgetLists();
+    DuiLinearLayoutPolicy* createLinearLayoutPolicy(DuiLayout *layout, Qt::Orientation policyOrientation, int policySpacing = 0);
+    DuiStylableWidget* createStylableWidget(Qt::Orientation policyOrientation, const QString &widgetObjectName = "", int policySpacing = 0);    
+    DuiContainer* createContainer(DuiLayout *layout, const QString &title = "", bool expandable = false);
+
     void toggleSettings(bool toggle);
     void toggleRoamingUpdatesButton(bool toggle);
 
@@ -61,5 +68,7 @@ private: //attributes
     NetworkDBusInterface *networkIf;    
     QSignalMapper *signalMapper;
     QList<QGraphicsLayoutItem*> contentItems;
+    QList<DuiWidgetController *> widgets;
+    QMap<DuiWidgetController *, Qt::Alignment> alignments;    
 };
 #endif // NETWORKWIDGET_H

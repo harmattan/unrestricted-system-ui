@@ -16,6 +16,7 @@
 #include <DuiStylableWidget>
 #include <DuiSceneManager>
 #include <DuiButtonGroup>
+#include <DuiWidgetController>
 #include <QSignalMapper>
 #include <QSizePolicy>
 
@@ -50,6 +51,8 @@ void NetworkWidget::initWidget()
     connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, QStringList)), this, SLOT(initNetworkSelectionComboBox(int, QStringList)));
     connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList)), this, SLOT(toggleAvailableNetworks(int, QStringList)));    
 
+
+
     /*
      * phoneNetworkLabel and phoneNetworkButton
      */
@@ -61,51 +64,34 @@ void NetworkWidget::initWidget()
     /*
      * roamingContainer
      */
-    roamingUpdatesButton = new DuiButton(this);
-    roamingUpdatesButton->setObjectName("basicNetworkButton");
-    roamingUpdatesButton->setCheckable(true);
-
     roamingButton = new DuiButton(this);
     roamingButton->setObjectName("basicNetworkButton");
     roamingButton->setCheckable(true);
+    roamingUpdatesButton = new DuiButton(this);
+    roamingUpdatesButton->setObjectName("basicNetworkButton");
+    roamingUpdatesButton->setCheckable(true);        
 
-    DuiLayout *roamingLeftLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *roamingLeftLayoutPolicy = new DuiLinearLayoutPolicy(roamingLeftLayout, Qt::Horizontal);
-    roamingLeftLayoutPolicy->addItem(new DuiLabel(DcpNetwork::RoamingButtonText), Qt::AlignLeft);
-    roamingLeftLayoutPolicy->addItem(roamingButton, Qt::AlignRight);
-    DuiStylableWidget *roamingLeftLayoutWidget = new DuiStylableWidget(this);
-    roamingLeftLayoutWidget->setLayout(roamingLeftLayout);
-    roamingLeftLayoutWidget->setObjectName("networkLayoutWidget2");
+    widgets << new DuiLabel(DcpNetwork::RoamingButtonText) << roamingButton;
+    alignments.insert(roamingButton, Qt::AlignRight);
+    DuiStylableWidget *roamingLeftLayoutWidget = createStylableWidget(Qt::Horizontal, QString("networkLayoutWidget2"));
 
-    DuiLayout *roamingRightLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *roamingRightLayoutPolicy = new DuiLinearLayoutPolicy(roamingRightLayout, Qt::Horizontal);
-    roamingRightLayoutPolicy->addItem(new DuiLabel(DcpNetwork::RoamingUpdatesButtonText), Qt::AlignLeft);
-    roamingRightLayoutPolicy->addItem(roamingUpdatesButton, Qt::AlignRight);
-    roamingRightLayoutWidget = new DuiStylableWidget(this);
-    roamingRightLayoutWidget->setLayout(roamingRightLayout);
-    roamingRightLayoutWidget->setObjectName("networkLayoutWidget2");
+    clearWidgetLists();
+    widgets << new DuiLabel(DcpNetwork::RoamingUpdatesButtonText) << roamingUpdatesButton;
+    alignments.insert(roamingUpdatesButton, Qt::AlignRight);
+    roamingRightLayoutWidget = createStylableWidget(Qt::Horizontal, QString(""));
 
     DuiLayout *roamingLayout = new DuiLayout();
-    roamingLandscapeLayoutPolicy = new DuiLinearLayoutPolicy(roamingLayout, Qt::Horizontal);
-    roamingLandscapeLayoutPolicy->addItem(roamingLeftLayoutWidget, Qt::AlignLeft);
-    roamingLandscapeLayoutPolicy->addItem(roamingRightLayoutWidget, Qt::AlignLeft);
-    roamingPortraitLayoutPolicy = new DuiLinearLayoutPolicy(roamingLayout, Qt::Vertical);
-    roamingPortraitLayoutPolicy->addItem(roamingLeftLayoutWidget, Qt::AlignLeft);
-    roamingPortraitLayoutPolicy->addItem(roamingRightLayoutWidget, Qt::AlignLeft);
+    clearWidgetLists();
+    widgets << roamingLeftLayoutWidget << roamingRightLayoutWidget;
+    roamingLandscapeLayoutPolicy = createLinearLayoutPolicy(roamingLayout, Qt::Horizontal);
     roamingLayout->setLandscapePolicy(roamingLandscapeLayoutPolicy);
+    roamingPortraitLayoutPolicy = createLinearLayoutPolicy(roamingLayout, Qt::Vertical);
     roamingLayout->setPortraitPolicy(roamingPortraitLayoutPolicy);
 
     networkIf->roamingUpdatesValueRequired();
     networkIf->roamingValueRequired();
 
-    DuiStylableWidget *roamingLayoutWidget = new DuiStylableWidget(this);
-    roamingLayoutWidget->setLayout(roamingLayout);
-
-    roamingContainer = new DuiContainer(this);
-    roamingContainer->setTitle(DcpNetwork::RoamingText);
-    roamingContainer->setCentralWidget(roamingLayoutWidget);
-    roamingContainer->setExpand(true);
-    roamingContainer->setObjectName("networkContainer");
+    roamingContainer = createContainer(roamingLayout, DcpNetwork::RoamingText, true);
 
     /*
      * dataCounterButton
@@ -123,8 +109,8 @@ void NetworkWidget::initWidget()
     availableNetworksLabel = NULL; //init to null to prevent from showing behind the other widgets
     noAvailableNetworksLabel = NULL; //init to null to prevent from showing behind the other widgets
 
-    DuiLayout *networkComboBoxLayout = new DuiLayout();
-    DuiGridLayoutPolicy *networkComboBoxLayoutPolicy = new DuiGridLayoutPolicy(networkComboBoxLayout);
+    DuiLayout *networkComboBoxLayout = new DuiLayout();    
+    DuiGridLayoutPolicy *networkComboBoxLayoutPolicy = new DuiGridLayoutPolicy(networkComboBoxLayout);    
     networkComboBoxLayoutPolicy->addItemAtPosition(new DuiLabel(DcpNetwork::NetworkModeText), 0, 0);
     networkComboBoxLayoutPolicy->addItemAtPosition(new DuiLabel(DcpNetwork::NetworkSelectionText), 0, 1);
     networkComboBoxLayoutPolicy->addItemAtPosition(networkModeComboBox, 1, 0);
@@ -134,15 +120,7 @@ void NetworkWidget::initWidget()
     networkLayoutPolicy = new DuiLinearLayoutPolicy(networkLayout, Qt::Vertical);
     networkLayoutPolicy->addItem(networkComboBoxLayout, Qt::AlignLeft);
 
-    DuiStylableWidget *networkLayoutWidget = new DuiStylableWidget(this);
-    networkLayoutWidget->setLayout(networkLayout);
-    //networkLayoutWidget->setObjectName("networkLayoutWidget1");
-
-    networkContainer = new DuiContainer(this);
-    networkContainer->setCentralWidget(networkLayoutWidget);
-    networkContainer->setTitle(DcpNetwork::NetworkText);
-    networkContainer->setExpand(false);
-    //networkContainer->setObjectName("networkContainer");
+    networkContainer = createContainer(networkLayout, DcpNetwork::NetworkText, false);
 
     /*
      * contentContainer
@@ -154,10 +132,7 @@ void NetworkWidget::initWidget()
     contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);    
     contentItems << roamingContainer << dataCounterButton << networkContainer;
 
-    DuiStylableWidget *contentWidget = new DuiStylableWidget(this);
-    contentWidget->setLayout(contentLayout);
-    DuiContainer *contentContainer = new DuiContainer(this);
-    contentContainer->setCentralWidget(contentWidget);
+    DuiContainer *contentContainer = createContainer(contentLayout);    
 
     networkIf->phoneNetworkValueRequired();
 
@@ -165,8 +140,10 @@ void NetworkWidget::initWidget()
      * mainLayout
      */
     DuiLayout *mainLayout = new DuiLayout(this);
-    DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Horizontal);
-    mainLayoutPolicy->addItem(contentContainer);
+    clearWidgetLists();
+    widgets << contentContainer;
+    DuiLinearLayoutPolicy *mainLayoutPolicy = createLinearLayoutPolicy(mainLayout, Qt::Horizontal);
+    Q_UNUSED(mainLayoutPolicy);
 
     // catch user actions
     signalMapper = new QSignalMapper(this);    
@@ -188,6 +165,45 @@ void NetworkWidget::initWidget()
 
     this->setLayout(mainLayout);    
 }
+
+void NetworkWidget::clearWidgetLists()
+{
+    widgets.clear();
+    alignments.clear();
+}
+
+DuiStylableWidget* NetworkWidget::createStylableWidget(Qt::Orientation policyOrientation, const QString &widgetObjectName, int policySpacing)
+{
+    DuiLayout *layout = new DuiLayout();
+    DuiLinearLayoutPolicy *layoutPolicy = createLinearLayoutPolicy(layout, policyOrientation, policySpacing);
+    Q_UNUSED(layoutPolicy);
+    DuiStylableWidget *stylableWidget = new DuiStylableWidget(this);
+    stylableWidget->setLayout(layout);
+    stylableWidget->setObjectName(widgetObjectName);
+    return stylableWidget;
+}
+
+DuiLinearLayoutPolicy* NetworkWidget::createLinearLayoutPolicy(DuiLayout *layout, Qt::Orientation policyOrientation, int policySpacing)
+{
+    DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, policyOrientation);
+    for(int i=0; i<widgets.size(); ++i)
+        layoutPolicy->addItem(widgets.at(i), (alignments.value(widgets.at(i)) == 0 ? Qt::AlignLeft : alignments.value(widgets.at(i))));
+    layoutPolicy->setSpacing(policySpacing);
+    return layoutPolicy;
+}
+
+DuiContainer* NetworkWidget::createContainer(DuiLayout *layout, const QString &title, bool expandable)
+{
+    DuiStylableWidget *stylableWidget = new DuiStylableWidget(this);
+    stylableWidget->setLayout(layout);
+    DuiContainer *container = new DuiContainer(this);
+    container->setCentralWidget(stylableWidget);
+    if(!title.isEmpty())
+        container->setTitle(title);
+    container->setExpand(expandable);
+    return container;
+}
+
 
 void NetworkWidget::initPhoneNetworkButton(bool toggle)
 {
