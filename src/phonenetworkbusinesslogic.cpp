@@ -157,7 +157,7 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
     QStringList networks;
     int selectedNetwork = -1;
 
-    for(int i=0; operators.size(); ++i) {
+    for(int i=0; i<operators.size(); ++i) {
         if(operators.at(i)->availability() != AvailableOperator::NotAvailable) {
             networks << operators.at(i)->name();
             this->operators << operators.at(i);
