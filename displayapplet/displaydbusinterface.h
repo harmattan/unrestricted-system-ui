@@ -14,16 +14,11 @@ public:
     DisplayDBusInterface();
     virtual ~DisplayDBusInterface();
 
-    void brightnessValuesRequired();
-    void brightnessValueRequired();
-    void blankTimeoutValuesRequired();
-    void blankTimeoutValueRequired();
-    void dimTimeoutValuesRequired();
-    void dimTimeoutValueRequired();
+    void brightnessValuesRequired();    
+    void screenLightsValuesRequired();    
     void blankInhibitValueRequired();
     void setBrightnessValue(const QString &value);
-    void setBlankTimeoutValue(const QString &value);
-    void setDimTimeoutValue(const QString &value);
+    void setScreenLightsValue(const QString &value);
     void setBlankInhibitValue(bool value);
 
 private slots:
@@ -31,12 +26,8 @@ private slots:
     void DBusMessagingFailure();    
 
 signals:
-    void brightnessValuesReceived(QStringList);
-    void brightnessValueReceived(QString);
-    void blankTimeoutValuesReceived(QStringList);
-    void blankTimeoutValueReceived(QString);
-    void dimTimeoutValuesReceived(QStringList);
-    void dimTimeoutValueReceived(QString);
+    void brightnessValuesReceived(int, QStringList);
+    void screenLightsValuesReceived(int, QStringList);
     void blankInhibitValueReceived(bool);
 
 private:

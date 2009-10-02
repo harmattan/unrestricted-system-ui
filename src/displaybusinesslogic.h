@@ -2,35 +2,28 @@
 #define DISPLAYBUSINESSLOGIC_H
 
 #include "systemuigconf.h"
-#include <qmsystem/qmdisplaystate.h>
 
 #include <QObject>
-
-using namespace Maemo;
+#include <QStringList>
 
 class DisplayBusinessLogic : public QObject
 {
+    Q_OBJECT
+
 public:
-    DisplayBusinessLogic(SystemUIGConf *systemUIGConf);
+    DisplayBusinessLogic();
     virtual ~DisplayBusinessLogic();
 
+    void queryBrightnessValues();
+    void queryScreenLightsValues();
+    bool blankInhibitValue();
     void setBrightnessValue(const QString &value);
-    void setBlankTimeoutValue(const QString &value);
-    void setDimTimeoutValue(const QString &value);
-    void setBlankInhibitValue(bool value);    
-    QStringList brightnessValues();
-    QStringList blankTimeoutValues();
-    QStringList dimTimeoutValues();
-    QVariant GConfItemValue(SystemUIGConf::GConfKey key);
+    void setScreenLightsValue(const QString &value);
+    void setBlankInhibitValue(bool value);
 
-
-private: //methods
-    QVariant defaultValue(SystemUIGConf::GConfKey key);
-
-
-private: //attributes
-    QmDisplayState *displayState;
-    SystemUIGConf *systemUIGConf;
+signals:
+    void brightnessValuesAvailable(int, QStringList);
+    void screenLightsValuesAvailable(int, QStringList);
 
 };
 

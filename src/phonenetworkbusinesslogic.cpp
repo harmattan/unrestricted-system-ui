@@ -169,8 +169,7 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
 }
 
 void PhoneNetworkBusinessLogic::networkAppletClosing()
-{
-    qDebug() << "\n\n\nCLOSED";
+{   
     operators.clear();
 }
 

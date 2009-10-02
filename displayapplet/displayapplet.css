@@ -7,16 +7,16 @@
 #displayLayoutWidget1 {
 	background-opacity: 255;
     	background-color: #141414;
-	preferred-size: 95% 100;
-	minimum-size: 45% 100;
-	maximum-size: 95% 100;
+	preferred-size: 90% 100;
+	minimum-size: 90% 100;
+	maximum-size: 90% 100;
 }
 
 #displayLayoutWidget2 {
 	background-opacity: 255;
     	background-color: #141414;
-	preferred-size: 95% 50;
-	minimum-size: 45% 50;
-	maximum-size: 95% 50;
+	preferred-size: 90% 50;
+	minimum-size: 90% 50;
+	maximum-size: 90% 50;
 }
 

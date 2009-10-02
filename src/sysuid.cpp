@@ -35,7 +35,7 @@ Sysuid::Sysuid() : QObject()
     batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic(systemUIGConf);
+    displayLogic = new DisplayBusinessLogic();
     displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
 
     /* Network */

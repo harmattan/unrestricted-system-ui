@@ -16,17 +16,16 @@ public:
     virtual ~DisplayBusinessLogicAdaptor();
 
 public slots:
+    Q_NOREPLY void brightnessValues();
+    Q_NOREPLY void screenLightsValues();
     Q_NOREPLY void setBrightnessValue(const QString &value);
-    Q_NOREPLY void setBlankTimeoutValue(const QString &value);
-    Q_NOREPLY void setDimTimeoutValue(const QString &value);
-    Q_NOREPLY void setBlankInhibitValue(bool value);
-    QString brightnessValue();
-    QString blankTimeoutValue();
-    QString dimTimeoutValue();
-    bool blankInhibitValue();    
-    QStringList brightnessValues();
-    QStringList blankTimeoutValues();
-    QStringList dimTimeoutValues();
+    Q_NOREPLY void setScreenLightsValue(const QString &value);
+    Q_NOREPLY void setBlankInhibitValue(bool value);    
+    bool blankInhibitValue();
+
+signals:
+    void brightnessValuesReceived(int, QStringList);
+    void screenLightsValuesReceived(int, QStringList);
 
 private: //attributes
     DisplayBusinessLogic *displayLogic;

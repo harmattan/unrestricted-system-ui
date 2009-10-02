@@ -3,11 +3,12 @@
 
 #include "dcpwidget.h" 
 
-class DuiSlider;
-class DuiButton;
 class DisplayDBusInterface;
+class DuiButton;
+class DuiContainer;
 class DuiLinearLayoutPolicy;
-class DuiStylableWidget;
+class DuiSlider;
+class DuiWidgetController;
 
 class DisplayWidget : public DcpWidget
 {
@@ -21,35 +22,26 @@ protected:
     void initWidget();
 
 private slots:
-    void initBrightnessSlider(const QStringList &values);
-    void initBlankTimeoutSlider(const QStringList &values);
-    void initDimTimeoutSlider(const QStringList &values);
-    void initBrightnessSliderValue(const QString &value);
-    void initBlankTimeoutSliderValue(const QString &value);
-    void initDimTimeoutSliderValue(const QString &value);    
-    void brightnessSliderValueChanged(int value);
-    void blankTimeoutSliderValueChanged(int value);
-    void dimTimeoutSliderValueChanged(int value);
-    void initBlankInhibitButtonValue(bool toggle);
+    void initBrightnessSlider(int index, const QStringList &values);
+    void initScreenLightsSlider(int index, const QStringList &values);    
+    void initBlankInhibitButton(bool toggle);
+    void sliderValueChanged(int index);
     void blankInhibitButtonPressed();
 
 private: //methods
-    void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiStylableWidget*> &widgets);
-    void initSlider(DuiSlider *slider, const QStringList &values);
-    void initSliderValue(DuiSlider *slider, const QStringList &values, const QString &value);
-    void updateBrightnessSliderThumbLabel(const QString &value);
-    void updateBlankTimeoutSliderThumbLabel(const QString &value);
-    void updateDimTimeoutSliderThumbLabel(const QString &value);
+    DuiContainer* createContainer(QList<DuiWidgetController *> widgets, QMap<DuiWidgetController *, Qt::Alignment> alignments,
+                                  Qt::Orientation policyOrientation, QString widgetObjectName = "", int policySpacing = 0);
+
+    void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiContainer*> &containers);
+    void initSlider(DuiSlider *slider, int index, const QStringList &values);
     void updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern = QString(""));
 
 private: //attributes        
     DuiSlider *brightnessSlider;
-    DuiSlider *blankTimeoutSlider;
-    DuiSlider *dimTimeoutSlider;
+    DuiSlider *screenLightsSlider;
     DuiButton *blankInhibitButton;
-    QStringList brightnessSliderValues;
-    QStringList blankTimeoutSliderValues;
-    QStringList dimTimeoutSliderValues;
+    QStringList brightnessValues;
+    QStringList screenLightsValues;
     DisplayDBusInterface *displayIf;    
 };
 #endif // DISPLAYWIDGET_H

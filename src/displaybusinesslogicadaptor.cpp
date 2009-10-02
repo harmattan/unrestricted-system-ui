@@ -4,11 +4,25 @@
 
 DisplayBusinessLogicAdaptor::DisplayBusinessLogicAdaptor(QObject *obj, DisplayBusinessLogic *displayLogic)
         : QDBusAbstractAdaptor(obj), displayLogic(displayLogic)
-{   
+{
+    connect(displayLogic, SIGNAL(brightnessValuesAvailable(int, QStringList)), this, SIGNAL(brightnessValuesReceived(int,QStringList)));
+    connect(displayLogic, SIGNAL(screenLightsValuesAvailable(int, QStringList)), this, SIGNAL(screenLightsValuesReceived(int,QStringList)));
 }
 
 DisplayBusinessLogicAdaptor::~DisplayBusinessLogicAdaptor()
 {
+}
+
+void DisplayBusinessLogicAdaptor::brightnessValues()
+{
+    qDebug() << "DisplayBusinessLogicAdaptor::brightnessValues()";
+    displayLogic->queryBrightnessValues();
+}
+
+void DisplayBusinessLogicAdaptor::screenLightsValues()
+{
+    qDebug() << "DisplayBusinessLogicAdaptor::screenLightsValues()";
+    displayLogic->queryScreenLightsValues();
 }
 
 void DisplayBusinessLogicAdaptor::setBrightnessValue(const QString &value)
@@ -17,16 +31,10 @@ void DisplayBusinessLogicAdaptor::setBrightnessValue(const QString &value)
     displayLogic->setBrightnessValue(value);        
 }
 
-void DisplayBusinessLogicAdaptor::setBlankTimeoutValue(const QString &value)
+void DisplayBusinessLogicAdaptor::setScreenLightsValue(const QString &value)
 {
-    qDebug() << "DisplayBusinessLogicAdaptor::setBlankTimeoutValue(" << value << ")";
-    displayLogic->setBlankTimeoutValue(value);
-}
-
-void DisplayBusinessLogicAdaptor::setDimTimeoutValue(const QString &value)
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::setDimTimeoutValue(" << value << ")";
-    displayLogic->setDimTimeoutValue(value);
+    qDebug() << "DisplayBusinessLogicAdaptor::setScreenLightsValue(" << value << ")";
+    displayLogic->setScreenLightsValue(value);
 }
 
 void DisplayBusinessLogicAdaptor::setBlankInhibitValue(bool value)
@@ -35,44 +43,8 @@ void DisplayBusinessLogicAdaptor::setBlankInhibitValue(bool value)
     displayLogic->setBlankInhibitValue(value);
 }
 
-QString DisplayBusinessLogicAdaptor::brightnessValue()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::brightnessValue()";
-    return displayLogic->GConfItemValue(SystemUIGConf::DisplayBrightnessKey).toString();
-}
-
-QString DisplayBusinessLogicAdaptor::blankTimeoutValue()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::blankTimeoutValue()";
-    return displayLogic->GConfItemValue(SystemUIGConf::DisplayBlankTimeoutKey).toString();
-}
-
-QString DisplayBusinessLogicAdaptor::dimTimeoutValue()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::dimTimeoutValue()";
-    return displayLogic->GConfItemValue(SystemUIGConf::DisplayDimTimeoutKey).toString();
-}
-
 bool DisplayBusinessLogicAdaptor::blankInhibitValue()
 {
     qDebug() << "DisplayBusinessLogicAdaptor::blankInhibitValue()";
-    return displayLogic->GConfItemValue(SystemUIGConf::DisplayBlankInhibitKey).toBool();
-}
-
-QStringList DisplayBusinessLogicAdaptor::brightnessValues()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::brightnessValues()";
-    return displayLogic->brightnessValues();
-}
-
-QStringList DisplayBusinessLogicAdaptor::blankTimeoutValues()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::blankTimeoutValues()";
-    return displayLogic->blankTimeoutValues();
-}
-
-QStringList DisplayBusinessLogicAdaptor::dimTimeoutValues()
-{
-    qDebug() << "DisplayBusinessLogicAdaptor::dimTimeoutValues()";
-    return displayLogic->dimTimeoutValues();
+    return displayLogic->blankInhibitValue();
 }

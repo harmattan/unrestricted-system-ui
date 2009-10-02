@@ -7,6 +7,8 @@ DisplayDBusInterface::DisplayDBusInterface()
     dbusIf = new QDBusInterface("com.nokia.systemui", "/", 
 				"com.nokia.systemui.display", 
 				QDBusConnection::sessionBus());
+    connect(dbusIf, SIGNAL(brightnessValuesReceived(int, QStringList)), this, SIGNAL(brightnessValuesReceived(int, QStringList)));
+    connect(dbusIf, SIGNAL(screenLightsValuesReceived(int, QStringList)), this, SIGNAL(screenLightsValuesReceived(int, QStringList)));
 }
 
 DisplayDBusInterface::~DisplayDBusInterface()
@@ -19,42 +21,14 @@ void DisplayDBusInterface::brightnessValuesRequired()
 {
     qDebug() << "DisplayDBusInterface::brightnessValuesRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("brightnessValues"), list, this, SIGNAL(brightnessValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("brightnessValues"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 
-void DisplayDBusInterface::brightnessValueRequired()
+void DisplayDBusInterface::screenLightsValuesRequired()
 {
-    qDebug() << "DisplayDBusInterface::brightnessValueRequired()";
+    qDebug() << "DisplayDBusInterface::screenLightsValuesRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("brightnessValue"), list, this, SIGNAL(brightnessValueReceived(QString)), SLOT(DBusMessagingFailure()));
-}
-
-void DisplayDBusInterface::blankTimeoutValuesRequired()
-{
-    qDebug() << "DisplayDBusInterface::blankTimeoutValuesRequired()";
-    QList<QVariant> list;
-    dbusIf->callWithCallback(QString("blankTimeoutValues"), list, this, SIGNAL(blankTimeoutValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
-}
-
-void DisplayDBusInterface::blankTimeoutValueRequired()
-{
-    qDebug() << "DisplayDBusInterface::blankTimeoutValueRequired()";
-    QList<QVariant> list;
-    dbusIf->callWithCallback(QString("blankTimeoutValue"), list, this, SIGNAL(blankTimeoutValueReceived(QString)), SLOT(DBusMessagingFailure()));
-}
-
-void DisplayDBusInterface::dimTimeoutValuesRequired()
-{
-    qDebug() << "DisplayDBusInterface::dimTimeoutValuesRequired()";
-    QList<QVariant> list;
-    dbusIf->callWithCallback(QString("dimTimeoutValues"), list, this, SIGNAL(dimTimeoutValuesReceived(QStringList)), SLOT(DBusMessagingFailure()));
-}
-
-void DisplayDBusInterface::dimTimeoutValueRequired()
-{
-    qDebug() << "DisplayDBusInterface::dimTimeoutValueRequired()";
-    QList<QVariant> list;
-    dbusIf->callWithCallback(QString("dimTimeoutValue"), list, this, SIGNAL(dimTimeoutValueReceived(QString)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("screenLightsValues"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::blankInhibitValueRequired()
@@ -72,20 +46,12 @@ void DisplayDBusInterface::setBrightnessValue(const QString &value)
     dbusIf->callWithCallback(QString("setBrightnessValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
-void DisplayDBusInterface::setBlankTimeoutValue(const QString &value)
+void DisplayDBusInterface::setScreenLightsValue(const QString &value)
 {
-    qDebug() << "DisplayDBusInterface::setBlankTimeoutValue(" << value << ")";
+    qDebug() << "DisplayDBusInterface::setScreenLightsValue(" << value << ")";
     QList<QVariant> list;
     list << QVariant(value);
-    dbusIf->callWithCallback(QString("setBlankTimeoutValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
-}
-
-void DisplayDBusInterface::setDimTimeoutValue(const QString &value)
-{
-    qDebug() << "DisplayDBusInterface::setDimTimeoutValue(" << value << ")";
-    QList<QVariant> list;
-    list << QVariant(value);
-    dbusIf->callWithCallback(QString("setDimTimeoutValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("setScreenLightsValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
 void DisplayDBusInterface::setBlankInhibitValue(bool value)
