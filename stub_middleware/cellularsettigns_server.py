@@ -35,13 +35,13 @@ bus = dbus.SystemBus()
 
 # /usr/include/csd/csd-csnet.h
 bus_name = dbus.service.BusName("com.nokia.csd.CSNet", bus)
-PATH = "/com/nokia/csd/csnet/radio"
+RADIO_PATH = "/com/nokia/csd/csnet/radio"
+NETWORK_PATH = "/com/nokia/csd/csnet/network"
 
 TIMEOUT = 1*1000
 
 class WrongPassword(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
-
 
 
 class ExtendedObject(dbus.service.Object):
@@ -73,71 +73,6 @@ class ExtendedObject(dbus.service.Object):
         if not iface in self.properties:
             self.properties[iface] = []
         self.properties[iface].append(self.DBusProp(name, signature, access))
-        
-    
-
-
-# https://dvcs.projects.maemo.org/git/?p=cellular/libcsnet;a=blob;f=csd-csnet/Radio.xml;h=87be1e5308712ffffb91b96ed5791bcf9b12fd95;hb=HEAD
-class Server(ExtendedObject):
-    def __init__ (self, bus_name, path=PATH):
-        ExtendedObject.__init__(self)
-        dbus.service.Object.__init__(self, bus_name, path)
-
-        self.RADIO_MODES = [
-            '', #Unknown',
-            'Dual',
-            'GSM',
-            'UMTS'
-            ]
-        self.radio_mode_idx = 1
-
-        self.dbus_prop('com.nokia.csd.CSNet.RadioAccess',
-                       'SelectionMode', 's', 'read')
-        print dir(self)
-
-    
-    @dbus.service.method("org.freedesktop.DBus.Properties")
-    def GetAll(self, iface):
-        print 'get all', iface
-
-    @dbus.service.method("org.freedesktop.DBus.Properties",  out_signature='v')
-    def Get(self, iface, key):
-        print 'get', key
-        if key == 'SelectionMode':
-            return dbus.String(self.RADIO_MODES[self.radio_mode_idx], variant_level=0)
-        else:
-            print 'get property', key, typee
-
-    @dbus.service.method("org.freedesktop.DBus.Properties")
-    def Set(self, iface, key, val):
-        print 'set', key
-        if key == 'SelectionMode':
-            for i in range(len(self.RADIO_MODES)):
-                if self.RADIO_MODES[i] == val:
-                    self.radio_mode_idx = i
-                    self.SelectionModeChanged(self.RADIO_MODES[i])
-
-    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
-    def SetSelectionMode(self, mode):
-        print 'mode set', mode
-        for i in range(len(self.RADIO_MODES)):
-            if self.RADIO_MODES[i] == mode:
-                self.radio_mode_idx = i
-                self.SelectionModeChanged(self.RADIO_MODES[i])
-
-    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
-    def SelectionMode(self):
-        print 'mode get'
-        return self.RADIO_MODES[self.radio_mode_idx]
-    
-    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
-    def GetSelectionMode(self):
-        print 'mode get'
-        return self.RADIO_MODES[self.radio_mode_idx]
-
-    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.RadioAccess', signature='s')
-    def SelectionModeChanged(self, mode):
-        print 'selection mode changed', mode
 
     @dbus.service.method('org.freedesktop.DBus.Introspectable', in_signature='', out_signature='s')
     def Introspect(self):
@@ -164,6 +99,81 @@ class Server(ExtendedObject):
         reflection_data += '</node>\n'
 
         return reflection_data
+
+        
+    def _message_cb(self, connection, message):
+        #print '_message cb', message.get_member(), message.get_interface()
+        return dbus.service.Object._message_cb(self, connection, message)
+
+
+# https://dvcs.projects.maemo.org/git/?p=cellular/libcsnet;a=blob;f=csd-csnet/Radio.xml;h=87be1e5308712ffffb91b96ed5791bcf9b12fd95;hb=HEAD
+class RadioServer(ExtendedObject):
+    def __init__ (self, bus_name, path=RADIO_PATH):
+        ExtendedObject.__init__(self)
+        dbus.service.Object.__init__(self, bus_name, path)
+
+        self.RADIO_MODES = [
+            '', #Unknown',
+            'Dual',
+            'GSM',
+            'UMTS'
+            ]
+        self.radio_mode_idx = 1
+
+        self.dbus_prop('com.nokia.csd.CSNet.RadioAccess',
+                       'SelectionMode', 's', 'read')
+
+
+    @dbus.service.method("org.freedesktop.DBus.Properties",  out_signature='v')
+    def Get(self, iface, key):
+        if key == 'SelectionMode':
+            return dbus.String(self.RADIO_MODES[self.radio_mode_idx], variant_level=0)
+        else:
+            print 'get property', key, typee
+
+    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
+    def SetSelectionMode(self, mode):
+        for i in range(len(self.RADIO_MODES)):
+            if self.RADIO_MODES[i] == mode:
+                self.radio_mode_idx = i
+                self.SelectionModeChanged(self.RADIO_MODES[i])
+
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.RadioAccess', signature='s')
+    def SelectionModeChanged(self, mode):
+        print 'radio selection mode changed', mode
+
+class NetworkServer(ExtendedObject):
+    def __init__ (self, bus_name, path=NETWORK_PATH):
+        ExtendedObject.__init__(self)
+        dbus.service.Object.__init__(self, bus_name, path)
+
+        self.REGISTRATION_MODES = [
+            '',
+            'Auto',
+            'Manual',
+            ]
+        self.registration_mode_idx = 2
+
+        self.dbus_prop('com.nokia.csd.CSNet.NetworkRegistration',
+                       'SelectionMode', 's', 'read')
+
+    @dbus.service.method("org.freedesktop.DBus.Properties",  out_signature='v')
+    def Get(self, iface, key):
+        if key == 'SelectionMode':
+            return dbus.String(self.REGISTRATION_MODES[self.registration_mode_idx], variant_level=0)
+        else:
+            print 'get property', key, typee
+
+    @dbus.service.method('com.nokia.csd.CSNet.NetworkRegistration')
+    def SetSelectionMode(self, mode):
+        for i in range(len(self.REGISTRATION_MODES)):
+            if self.REGISTRATION_MODES[i] == mode:
+                self.registration_mode_idx = i
+                self.SelectionModeChanged(self.RADIO_MODES[i])
+    
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
+    def SelectionModeChanged(self, mode):
+        print 'network selection mode changed', mode
 
 
 def set_text_color(widget, color):
@@ -196,23 +206,37 @@ class UserInterface:
         # signals
         # =======
 
-        frame = gtk.Frame('Radio signals')
+        frame = gtk.Frame('Signals')
         main_box.add(frame)
         tmp = gtk.VBox()
         frame.add(tmp)
         frame = tmp
-        
+
+        frame.add(gtk.Label('Radio mode:'))
         mode = gtk.combo_box_new_text()
-        for m in self.server.RADIO_MODES:
+        for m in self.radio_server.RADIO_MODES:
             mode.append_text(m)
         frame.add(mode)
-        mode.set_active(self.server.radio_mode_idx)
-        def cb_sim_mode_changed(widget):
+        mode.set_active(self.radio_server.radio_mode_idx)
+        def cb_mode_changed(widget):
             print 'mode changed', widget.get_active()
-            self.server.radio_mode_idx = widget.get_active()
-            self.server.SIMStatus(
-                self.server.RADIO_MODES[self.server.radio_mode_idx])
-        mode.connect('changed', cb_sim_mode_changed) 
+            self.radio_server.radio_mode_idx = widget.get_active()
+            self.radio_server.SIMStatus(
+                self.radio_server.RADIO_MODES[self.radio_server.radio_mode_idx])
+        mode.connect('changed', cb_mode_changed) 
+
+        frame.add(gtk.Label('Network registration mode:'))
+        mode = gtk.combo_box_new_text()
+        for m in self.network_server.REGISTRATION_MODES:
+            mode.append_text(m)
+        frame.add(mode)
+        mode.set_active(self.network_server.registration_mode_idx)
+        def cb_mode_changed(widget):
+            print 'mode changed', widget.get_active()
+            self.network_server.registration_mode_idx = widget.get_active()
+            self.network_server.SIMStatus(
+                self.network_server.REGISTRATION_MODES[self.network_server.registration_mode_idx])
+        mode.connect('changed', cb_mode_changed) 
 
 
         # methods
@@ -222,7 +246,10 @@ class UserInterface:
         return main_box
 
     def __init__(self):
-        self.server = Server(bus_name)
+        self.radio_server = RadioServer(bus_name)
+        self.network_server = NetworkServer(bus_name)
+        print self.radio_server.Introspect()
+        print self.network_server.Introspect()
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete_event", self.delete_event)
