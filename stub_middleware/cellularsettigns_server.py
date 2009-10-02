@@ -1,0 +1,245 @@
+"""
+A graphical suite to test dbus bindings for SIM.
+
+Written by Matti Katila
+
+[in scracthbox]
+dbus-daemon --session --print-address > /tmp/dbus-address &
+export DBUS_SYSTEM_BUS_ADDRESS=`cat /tmp/dbus-address`
+dbus-monitor --system
+
+[run the server outside of scratchbox (because of broken pygtk package)]
+export DBUS_SYSTEM_BUS_ADDRESS=`cat /tmp/dbus-address`
+python dbus_server.py
+
+
+Examples:
+
+dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com.nokia.csd.SIM.GetSIMStatus
+
+
+"""
+
+import pygtk, dbus, dbus.service
+
+# this is needed or main loop is not binded by default
+import dbus.glib
+
+pygtk.require('2.0')
+import gtk
+import gtk.gdk
+import gobject
+
+bus = dbus.SystemBus()
+#bus = dbus.SessionBus()
+
+# /usr/include/csd/csd-csnet.h
+bus_name = dbus.service.BusName("com.nokia.csd.CSNet", bus)
+PATH = "/com/nokia/csd/csnet/radio"
+
+TIMEOUT = 1*1000
+
+class WrongPassword(dbus.DBusException):
+    _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
+
+
+
+class ExtendedObject(dbus.service.Object):
+    """ 
+    Extended dbus service property to creates dbus properties
+    for the introspection schema. For example:
+
+    self.property('org.freedesktop.SampleInterface',
+                  'Bar', 'y', 'readwrite')
+
+       <interface name="org.freedesktop.SampleInterface">
+           <property name="Bar" type="y" access="readwrite"/>
+       </interface>
+    """
+    class DBusProp(object):
+        def __init__(self, name, signature, access):
+            self.name = name
+            self.sign = signature
+            self.access = access
+        def __str__(self):
+            return '    <property name="%s" type="%s" access="%s"/>\n' % \
+                   (self.name, self.sign, self.access)
+
+    def __init__(self):
+        print 'inited'
+        self.properties = {}
+
+    def dbus_prop(self, iface, name, signature, access):
+        if not iface in self.properties:
+            self.properties[iface] = []
+        self.properties[iface].append(self.DBusProp(name, signature, access))
+        
+    
+
+
+# https://dvcs.projects.maemo.org/git/?p=cellular/libcsnet;a=blob;f=csd-csnet/Radio.xml;h=87be1e5308712ffffb91b96ed5791bcf9b12fd95;hb=HEAD
+class Server(ExtendedObject):
+    def __init__ (self, bus_name, path=PATH):
+        ExtendedObject.__init__(self)
+        dbus.service.Object.__init__(self, bus_name, path)
+
+        self.RADIO_MODES = [
+            '', #Unknown',
+            'Dual',
+            'GSM',
+            'UMTS'
+            ]
+        self.radio_mode_idx = 1
+
+        self.dbus_prop('com.nokia.csd.CSNet.RadioAccess',
+                       'SelectionMode', 's', 'read')
+        print dir(self)
+
+    
+    @dbus.service.method("org.freedesktop.DBus.Properties")
+    def GetAll(self, iface):
+        print 'get all', iface
+
+    @dbus.service.method("org.freedesktop.DBus.Properties",  out_signature='v')
+    def Get(self, iface, key):
+        print 'get', key
+        if key == 'SelectionMode':
+            return dbus.String(self.RADIO_MODES[self.radio_mode_idx], variant_level=0)
+        else:
+            print 'get property', key, typee
+
+    @dbus.service.method("org.freedesktop.DBus.Properties")
+    def Set(self, iface, key, val):
+        print 'set', key
+        if key == 'SelectionMode':
+            for i in range(len(self.RADIO_MODES)):
+                if self.RADIO_MODES[i] == val:
+                    self.radio_mode_idx = i
+                    self.SelectionModeChanged(self.RADIO_MODES[i])
+
+    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
+    def SetSelectionMode(self, mode):
+        print 'mode set', mode
+        for i in range(len(self.RADIO_MODES)):
+            if self.RADIO_MODES[i] == mode:
+                self.radio_mode_idx = i
+                self.SelectionModeChanged(self.RADIO_MODES[i])
+
+    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
+    def SelectionMode(self):
+        print 'mode get'
+        return self.RADIO_MODES[self.radio_mode_idx]
+    
+    @dbus.service.method('com.nokia.csd.CSNet.RadioAccess')
+    def GetSelectionMode(self):
+        print 'mode get'
+        return self.RADIO_MODES[self.radio_mode_idx]
+
+    @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.RadioAccess', signature='s')
+    def SelectionModeChanged(self, mode):
+        print 'selection mode changed', mode
+
+    @dbus.service.method('org.freedesktop.DBus.Introspectable', in_signature='', out_signature='s')
+    def Introspect(self):
+        """Return a string of XML encoding this object's supported interfaces,
+        methods and signals.
+        """
+        reflection_data = '<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">\n'
+        reflection_data += '<node name="%s">\n' % (self._object_path)
+
+        interfaces = self._dbus_class_table[self.__class__.__module__ + '.' + self.__class__.__name__]
+        for (name, funcs) in interfaces.iteritems():
+            reflection_data += '  <interface name="%s">\n' % (name)
+
+            for func in funcs.values():
+                if getattr(func, '_dbus_is_method', False):
+                    reflection_data += self.__class__._reflect_on_method(func)
+                elif getattr(func, '_dbus_is_signal', False):
+                    reflection_data += self.__class__._reflect_on_signal(func)
+            if name in self.properties:
+                for prop in self.properties[name]:
+                    reflection_data += str(prop)
+            reflection_data += '  </interface>\n'
+
+        reflection_data += '</node>\n'
+
+        return reflection_data
+
+
+def set_text_color(widget, color):
+    widget.modify_fg (gtk.STATE_NORMAL ,
+                      gtk.gdk.color_parse(color))
+    
+def method_cb(label):
+    set_text_color(label, "red")
+    def unset(label):
+        set_text_color(label, "black")
+        return False
+    gobject.timeout_add(TIMEOUT, unset, label)
+
+
+class UserInterface:
+    def delete_event(self, widget, event, data=None):
+        return False
+
+    def destroy(self, widget, data=None):
+        print "destroy signal occurred"
+        gtk.main_quit()
+
+    def hello(self, widget, data):
+        print 'hello'
+
+    def create_widgets(self):
+        main_box = gtk.VBox()
+
+
+        # signals
+        # =======
+
+        frame = gtk.Frame('Radio signals')
+        main_box.add(frame)
+        tmp = gtk.VBox()
+        frame.add(tmp)
+        frame = tmp
+        
+        mode = gtk.combo_box_new_text()
+        for m in self.server.RADIO_MODES:
+            mode.append_text(m)
+        frame.add(mode)
+        mode.set_active(self.server.radio_mode_idx)
+        def cb_sim_mode_changed(widget):
+            print 'mode changed', widget.get_active()
+            self.server.radio_mode_idx = widget.get_active()
+            self.server.SIMStatus(
+                self.server.RADIO_MODES[self.server.radio_mode_idx])
+        mode.connect('changed', cb_sim_mode_changed) 
+
+
+        # methods
+        # =======
+
+
+        return main_box
+
+    def __init__(self):
+        self.server = Server(bus_name)
+
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.connect("delete_event", self.delete_event)
+        self.window.connect("destroy", self.destroy)
+        self.window.set_border_width(30)
+
+        self.window.add(self.create_widgets())
+    
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    ui = UserInterface()
+    ui.main()
+
+
+
+
