@@ -19,8 +19,6 @@ Sysuid::Sysuid() : QObject()
 
     /* themes */
     DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
-    // TODO: libdui icons directory needed for icon-m-call_2_ at PinCodeQueryUI::createWidgetItems()
-    DuiTheme::addPixmapDirectory("/usr/share/themes/base/dui/libdui/icons/");
     DuiTheme::loadCSS(styleDir + "sysuid.css");
     DuiTheme::loadCSS(styleDir + "unlocksliderstyle.css");
 

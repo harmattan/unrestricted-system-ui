@@ -1,4 +1,5 @@
 #include "pincodequerybusinesslogic.h"
+#include "pincodequerydbusadaptor.h"
 #include <SIM>
 #include <SIMLock>
 #include <DuiLocale>
@@ -8,6 +9,7 @@
 #include <DuiApplicationWindow>
 #include <DuiApplication>
 #include <call-ui/calluiserviceapi.h>
+#include <QRegExpValidator>
 
 #include <QtDBus>
 #include <ssc-dbus-names.h>
@@ -34,12 +36,11 @@ using namespace CallUi;
 
 //Notification texts
 namespace {
-    QString SIMCardInserted = trid("qtn_cell_sim_inserted", "SIM card inserted.");
     QString SIMCardNotInserted = trid("NOT DOCUMENTED YET" , "SIM card not inserted.");
-    QString SIMCardRemoved = trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available.");
     QString SIMCardRejected = trid("qtn_cell_sim_rejected" , "SIM card rejected.");    
 
     QString EmergencyCallHeader = trid("qtn_cell_start_emergency_call" , "Start Emergency call?");
+    QString HeaderEnterPinCode = trid("qtn_cell_enter_pin_code", "Enter PIN code");
 
     /* At the moment this contains several error case that may pop up from SIM library.
        It needs to be clarified, how are they going to be reported to end user. */
@@ -57,15 +58,18 @@ namespace {
     QString SIMLocked = trid("qtn_cell_sim_lock_notification", "This SIM card can not be used in the device.");
     QString SIMLockIncorrect = trid("qtn_cell_sim_lock_incorrect", "Incorrect unlock code.");
     QString SIMLockTooFast = trid("qtn_cell_too_fast_entry", "Error with unlock code. Trying again might help.");
+
 }
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
 {    
     qDebug() << "PinCodeQueryBusinessLogic()";
 
-    uiNotif = Sysuid::notifier();
-    qDebug() << "PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic connected to " << uiNotif;
+    dbus = new PinCodeQueryDBusAdaptor();
 
+    connect(dbus, SIGNAL(changePinCodeRequested()), this, SLOT(changePinCode()));
+
+    uiNotif = Sysuid::notifier();
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -94,7 +98,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
             Qt::QueuedConnection);
     sim->status();
 
-    SIMhotswapped = false;
+    subState = SubNothing;
 }
 
 PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
@@ -112,12 +116,7 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
     simLock = NULL;
 }
 
-void PinCodeQueryBusinessLogic::nothing()
-{
-    qDebug() << "nothing()";
-}
-
-void PinCodeQueryBusinessLogic::createUi()
+void PinCodeQueryBusinessLogic::createUi(bool enableBack)
 {
     qDebug() << "createUi() existing:" << static_cast<QObject*> (uiPin);
     if(!uiPin)
@@ -135,27 +134,45 @@ void PinCodeQueryBusinessLogic::createUi()
         connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
 
+
+        /* Unfortunately no effect with libdui-dev version 0.11.1-1+0rebuild1+0m6 */
+        DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
+        Qt::WindowFlags flags = win->windowFlags();
+        flags |= Qt::WindowStaysOnTopHint;
+        win->setWindowFlags(flags);
+
+
+
         DuiApplication::instance()->applicationWindow()->show();
         uiPin->setPannableAreaInteractive(false);
-        uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
+        uiPin->appearNow(DuiSceneWindow::DestroyWhenDone);
         qDebug() << "createUi() created:" << static_cast<QObject*> (uiPin);
     }
-    // temporary else here until the flag DuiSceneWindow::DestroyWhenDone can be taken in use at
-    // DuiApplicationPage::appearNow(). See bug #137469
-    else
-    {
-        qDebug() << "PinCodeQueryBusinessLogic::createUi() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
-        if(DuiApplication::instance()->applicationWindow()->isHidden()) {
-            DuiApplication::instance()->applicationWindow()->show();
-        }
-        qDebug() << "PinCodeQueryBusinessLogic::createUi() uiPin->isVisible():" << uiPin->isVisible();
-        if(!uiPin->isVisible()) {
-            uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
-        }
-        // update button enablity
-        uiCodeChanged();
-        uiPin->getCancelBtn()->setEnabled(true);
+
+    if(enableBack) {
+        // TODO: create exit-button and hide it by default!!
     }
+}
+
+void PinCodeQueryBusinessLogic::closeUi()
+{
+    subState = SubNothing;
+    oldPinCode = "";
+    newPinCode = "";
+    if(uiPin)
+    {
+        qDebug() << "PinCodeQueryBusinessLogic::closeUi()";
+        uiPin->getCodeEntry()->setText("");
+        uiPin->disappearNow();
+        DuiApplication::instance()->applicationWindow()->hide();
+    }
+    qDebug() << "PinCodeQueryBusinessLogic::closeUi() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
+}
+
+void PinCodeQueryBusinessLogic::setUiHeader(QString headerText)
+{
+    if(uiPin)
+        uiPin->setHeader(headerText);
 }
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
@@ -189,92 +206,72 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 void PinCodeQueryBusinessLogic::ui2SIMLocked(bool showNote)
 {    
     createUi();
-    uiPin->setHeader(trid("qtn_cell_enter_unlock_code",
+    uiPin->getEnterBtn()->setEnabled(true);
+    setUiHeader(trid("qtn_cell_enter_unlock_code",
                           "Enter code for unlocking SIM card"));
+    QRegExp rx("\\d{0,15}", Qt::CaseInsensitive);
+    uiPin->getCodeEntry()->setValidator(new QRegExpValidator(rx, uiPin->getCodeEntry()));
+
     if(showNote) {
         uiNotif->showNotification(SIMLocked, Notifier::error);
     }
 }
-
-void PinCodeQueryBusinessLogic::ui2firstPINAttempt()
+void PinCodeQueryBusinessLogic::ui2PINQuery()
 {
-    qDebug() << "ui2first...";
-    if (SIMhotswapped)
-        uiNotif->showNotification(SIMCardInserted, Notifier::info);
-
     subState = SubFirstTry;
     createUi();
-    uiPin->setHeader(trid("qtn_cell_enter_pin_code", "Enter PIN code"));
+    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
+    setUiHeader(HeaderEnterPinCode);
 }
+
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
     switch (attemptsLeft) {
     case 2:
-        uiNotif->showNotification(PINCodeIncorrect2AttemptsLeft, Notifier::error);
-        uiPin->setHeader(trid("qtn_cell_enter_pin_code_2",
+        if(subState != SubEnterOldPIN)
+            uiNotif->showNotification(PINCodeIncorrect2AttemptsLeft, Notifier::error);
+        setUiHeader(trid("qtn_cell_enter_pin_code_2",
                               "Enter PIN code. 2 attempts remaining."));
         break;
     case 1:
-        uiNotif->showNotification(PINCodeIncorrect1AttemptLeft, Notifier::error);
-        uiPin->setHeader(trid("qtn_cell_enter_pin_code_1",
+        if(subState != SubEnterOldPIN)
+            uiNotif->showNotification(PINCodeIncorrect1AttemptLeft, Notifier::error);
+        setUiHeader(trid("qtn_cell_enter_pin_code_1",
                               "Enter PIN code. 1 attempt remaining."));
         break;
     };
 }
-void PinCodeQueryBusinessLogic::ui2PINFailedNowPUK()
+void PinCodeQueryBusinessLogic::ui2PUKQuery()
 {
-    uiNotif->showNotification(PINCodeIncorrectPUKCodeRequired, Notifier::error);
-    uiPin->setHeader(trid("qtn_cell_enter_puk_code", "Enter PUK code"));
-}
-void PinCodeQueryBusinessLogic::ui2firstPUKAttempt()
-{
-    if (SIMhotswapped)
-        uiNotif->showNotification(SIMCardInserted, Notifier::info);
-
     createUi();
-    uiPin->setHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
+    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
+    setUiHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
 }
+
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 {
     attemptsLeft++; // warnings off
     uiNotif->showNotification(PUKCodeIncorrect, Notifier::error);
 }
+
 void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 {
     uiNotif->showNotification(SIMCardRejected, Notifier::error);
     ui2disappear();
 }
-void PinCodeQueryBusinessLogic::ui2PUKOk()
+void PinCodeQueryBusinessLogic::ui2enterNewPin()
 {
-    qDebug() << "PUK OK";
-    // new pin needed!
+    qDebug() << "ui2enterNewPin";
     subState = SubEnterNewPIN;
-
     createUi();
-    uiPin->setHeader(trid("qtn_cell_enter_new_pin", "Enter new PIN code"));
+    setUiHeader(trid("qtn_cell_enter_new_pin", "Enter new PIN code"));
     uiPin->getCancelBtn()->setEnabled(false);
 }
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
-    subState = SubNothing;
-    if(uiPin)
-    {
-        qDebug() << "PinCodeQueryBusinessLogic::ui2disappear()";
-        uiPin->getCodeEntry()->setText("");
-        uiPin->disappearNow();
-        DuiApplication::instance()->applicationWindow()->hide();
-    }
-        qDebug() << "PinCodeQueryBusinessLogic::ui2disappear() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
+    closeUi();
 }
-void PinCodeQueryBusinessLogic::ui2disappearWithNotification(QString notifText)
-{
-    ui2disappear();
-    uiNotif->showNotification(notifText, Notifier::info);
-}
-
-
-
 
 // ==========================
 // Slots
@@ -287,10 +284,11 @@ void PinCodeQueryBusinessLogic::uiCodeChanged()
         || previousSimState == SIM::PUKRequired
         || previousSimState == SIM::Ok) { // new pin or re-enter new pin
         uiPin->getEnterBtn()->setEnabled( (len >= 4 && len <= 8) );
-    } else {
-        uiPin->getEnterBtn()->setEnabled(len > 0);
+    } else{
+        uiPin->getEnterBtn()->setEnabled(true);
     }
-
+    qDebug() << "PinCodeQueryBusinessLogic::uiCodeChanged() state:" << previousSimState << "len:" << len <<
+            "enter enabled:" << uiPin->getEnterBtn()->isEnabled();
 }
 
 void PinCodeQueryBusinessLogic::uiButtonReleased()
@@ -307,36 +305,34 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
             simLockCode = uiPin->getCodeEntry()->text();
             simLock->simLockUnlock(SIMLock::LevelGlobal, simLockCode);
         break;
-        case SIM::PINRequired:            
+        case SIM::PINRequired:
             simSec->verifyPIN(SIMSecurity::PIN, uiPin->getCodeEntry()->text());
         break;
         case SIM::PUKRequired:
-            simSec->verifyPUK(SIMSecurity::PUK, uiPin->getCodeEntry()->text(), "1234");
+            oldPinCode = "1234";
+            simSec->verifyPUK(SIMSecurity::PUK, uiPin->getCodeEntry()->text(), oldPinCode);
         break;
         case SIM::Ok:
-            if (subState == SubEnterNewPIN) {
+           if (subState == SubEnterOldPIN) {
+                oldPinCode = uiPin->getCodeEntry()->text();
+                simSec->verifyPIN(SIMSecurity::PIN, oldPinCode);
+            } else if (subState == SubEnterNewPIN) {
                 subState = SubReEnterNewPIN;
                 newPinCode = uiPin->getCodeEntry()->text();
-
-                uiPin->setHeader(trid("qtn_cell_reenter_new_pin",
-                                      "Re-enter new PIN code"));
+                setUiHeader(trid("qtn_cell_reenter_new_pin", "Re-enter new PIN code"));
             } else if (subState == SubReEnterNewPIN) {
                 if (newPinCode == uiPin->getCodeEntry()->text()) {
-                    subState = SubNothing;
-                    simSec->changePIN(SIMSecurity::PIN, "1234", newPinCode);
+                    simSec->changePIN(SIMSecurity::PIN, oldPinCode, newPinCode);
                     ui2disappear();
-                    // no need for cleanings anymore, just close
                     return;
                 } else {
                     subState = SubEnterNewPIN;
-                    uiPin->setHeader(trid("qtn_cell_enter_new_pin",
-                                          "Enter new PIN code"));
+                    setUiHeader(trid("qtn_cell_enter_new_pin", "Enter new PIN code"));
                     uiNotif->showNotification(PINCodesDoNotMatch, Notifier::error);
                 }
             }
         break;
         }
-
         uiPin->getCodeEntry()->setText("");
     }
     else if(button->objectName() == QString("cancelButton")) {
@@ -344,136 +340,69 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
     }
 }
 
-
-
-
 void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
 {
     qDebug() << "sim status changed" << next << "from" << previousSimState << "subState" << subState;
 
     // clear simLockCode
-    if (next != SIM::SIMLockRejected) {
+    if (SIM::SIMLockRejected != next) {
         simLockCode = "";
     }
 
-    switch (previousSimState) {
-    case -1: { // bootstrap
-      /* When UI is launched up we may start in any state.
-       */
-        if (next == SIM::Ok)
-            ; // XXX
-        else if (next == SIM::NotReady)
-            nothing();
-        else if (next == SIM::SIMLockRejected)
-            ui2SIMLocked();
-        else if (next == SIM::PINRequired) {
-            ui2firstPINAttempt();
-        } else if (next == SIM::PUKRequired)
-            ui2firstPUKAttempt();
-        /*
-        else if (next == SIM::NoSIM)
-            ; // XXX (notification?)
-        else if (next == SIM::Rejected)
-            ; // XXX (notification?)
-        else if (next == SIM::PermanentlyBlocked)
-            ; // XXX (notification?)
-        */
-        break;
+    // sim inserted
+    if (SIM::NoSIM == previousSimState && SIM::NoSIM != next) {
+        uiNotif->showNotification(trid("qtn_cell_sim_inserted", "SIM card inserted."));
     }
-    case SIM::UnknownStatus: {            
-        if (next == SIM::NotReady)
-            nothing();
-        else if (next == SIM::SIMLockRejected)
-            ui2SIMLocked();
-        else if(next == SIM::NoSIM)
-            nothing();
-        break;
-    }
-    case SIM::NotReady: {
-        if (next == SIM::Ok)
-            ui2disappear();
-        else if (next == SIM::SIMLockRejected)
-            ui2SIMLocked();
-        else if (next == SIM::PINRequired)
-            ui2firstPINAttempt();
-        else if (next == SIM::PUKRequired)
-            ui2firstPUKAttempt();
-        else if (next == SIM::NoSIM)
-            nothing(); // XXX (notification?)
-        /*
-        else if (next == SIM::Rejected)
-            ; // XXX (notification?)
-        else if (next == SIM::PermanentlyBlocked)
-            ; // XXX (notification?)
-        */
-        break;
-    }
-    case SIM::NoSIM:
 
-        SIMhotswapped = true;
+    stateOperation(next, previousSimState);
 
-        if (next == SIM::PINRequired)
-            ui2firstPINAttempt();
-        else if (next == SIM::PUKRequired)
-            ui2firstPUKAttempt();
-        else if (next == SIM::SIMLockRejected)
-            ui2SIMLocked();
-        else if (next == SIM::Ok)
-            ui2disappearWithNotification(SIMCardInserted);
-        break;
-    case SIM::PINRequired:
-        if (next == SIM::PUKRequired)
-            ui2PINFailedNowPUK();
-        else if(next == SIM::Ok)
-            ui2disappear();
-        else if (next == SIM::NoSIM)
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            // XXX technical problem?
-            ui2disappear();
-        break;
-    case SIM::PUKRequired:
-        if(next == SIM::Ok )
-            ui2PUKOk();
-        else if(next == SIM::PermanentlyBlocked)
-            ui2PUKFailedPermanently();
-        else if (next == SIM::NoSIM)
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            // XXX technical problem?
-            ui2disappear();
-        break;
-    case SIM::PermanentlyBlocked:
-        if (next == SIM::NoSIM)
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            // XXX technical problem?
-            ui2disappear();
-        break;
-    case SIM::SIMLockRejected:
-        if (next == SIM::NoSIM)
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            nothing();
-        break;
-    case SIM::Rejected:
-        if (next == SIM::NoSIM)
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            // XXX technical problem?
-            ui2disappear();
-        break;
-    case SIM::Ok:
-        if (next == SIM::NoSIM)
-            // if new PIN after PUK asked the UI is open here
-            ui2disappearWithNotification(SIMCardRemoved);
-        else if (next == SIM::NotReady)
-            // XXX technical problem?
-            ui2disappear();
-        break;
-
-    }
     previousSimState = next;
+}
+
+void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
+{
+    qDebug() << "PinCodeQueryBusinessLogic::stateOperation(" << status << ", " << relationState << ")";
+
+    switch(status)
+    {
+        case (SIM::Ok):
+            if(SIM::PUKRequired == relationState) {
+                ui2enterNewPin();
+            } else {
+                ui2disappear();
+            }
+            break;
+        case (SIM::PINRequired):
+            ui2PINQuery();
+            break;
+        case (SIM::PUKRequired):
+            if(SIM::PINRequired == relationState){
+                uiNotif->showNotification(PINCodeIncorrectPUKCodeRequired, Notifier::error);
+            }
+            ui2PUKQuery();
+            break;
+        case (SIM::NoSIM):
+            if (-1 != relationState &&
+                SIM::UnknownStatus != relationState &&
+                SIM::NotReady != relationState
+                ) {
+                uiNotif->showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
+                ui2disappear();
+            }
+            break;
+        case (SIM::SIMLockRejected):
+            ui2SIMLocked();
+            break;
+        case (SIM::Rejected):
+            // notification??
+        case (SIM::PermanentlyBlocked):
+            uiNotif->showNotification(SIMCardRejected, Notifier::error);
+        case (SIM::UnknownStatus):
+        case (SIM::NotReady):
+        default:
+            ui2disappear();
+            break;
+    }
 }
 
 // called only in bootstrap
@@ -491,12 +420,22 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
     handleSIMError(error);
 
     if(!success) {
-        if (error == SIMErrorWrongPassword)
-            simSec->pinAttemptsLeft(SIMSecurity::PIN);
+        if (error == SIMErrorWrongPassword) {
+            if(SubEnterOldPIN == subState) {
+                uiNotif->showNotification(PINCodeIncorrectSettings, Notifier::error);
+                ui2disappear();
+            } else {
+                simSec->pinAttemptsLeft(SIMSecurity::PIN);
+            }
+        }
         // else if sim locked is handled in status change
     }
-    else
+    else if(SubEnterOldPIN == subState) {
+        ui2enterNewPin();
+    }
+    else {
         ui2disappear();
+    }
 }
 
 void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
@@ -543,7 +482,7 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
     handleSIMError(error);
 
     if(success) {
-        uiNotif->showNotification(PINCodeChanged, Notifier::info);
+        uiNotif->showNotification(PINCodeChanged);
         ui2disappear();
     }
 }
@@ -639,20 +578,28 @@ void PinCodeQueryBusinessLogic::cancelQuery()
     QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
                        QDBusConnection::systemBus());
     ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
-    // just in case before the uiPin is not deleted when hidden
-    if(uiPin)
-    {
-        uiPin->getCodeEntry()->setText("");
-    }
 }
 
 void PinCodeQueryBusinessLogic::resendSimLockCode()
 {
-    qDebug() << "PinCodeQueryBusinessLogic::resendSimLockCode()";
+    qDebug() << "PinCodeQueryBusinessLogic::resendSimLockCode():" << simLockCode;
     disconnect(uiNotif->responseObject(), SIGNAL(doSimLockRetry()), this, SLOT(resendSimLockCode()));
     ui2SIMLocked(false);
     uiPin->getCodeEntry()->setText(simLockCode);
     if(!simLockCode.isEmpty() && SIM::SIMLockRejected == previousSimState) {
         simLock->simLockUnlock(SIMLock::LevelGlobal, simLockCode);
+    }
+}
+
+// PIN code can be changed onli if SIM state is ok.
+void PinCodeQueryBusinessLogic::changePinCode()
+{
+    qDebug() << "PinCodeQueryBusinessLogic::changePinCode():" << previousSimState;
+
+    subState = SubEnterOldPIN;
+    if(SIM::Ok == previousSimState) {
+        createUi(true);
+        uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
+       setUiHeader(HeaderEnterPinCode);
     }
 }

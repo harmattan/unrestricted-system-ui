@@ -10,6 +10,7 @@
 #include <SIMLock>
 
 class DuiApplicationWindow;
+class PinCodeQueryDBusAdaptor;
 
 using namespace Cellular;
 
@@ -28,6 +29,7 @@ public:
         // State: -1 (bootstrap)
         // State: UnknownStatus,
         // State: Ok,
+        SubEnterOldPIN,
         SubEnterNewPIN,
         SubReEnterNewPIN,
         // State: NoSIM,
@@ -60,11 +62,12 @@ public slots:
 private: // attributes
     QPointer<PinCodeQueryUI> uiPin;
     Notifier *uiNotif;
+    PinCodeQueryDBusAdaptor* dbus;
     QString newPinCode;
+    QString oldPinCode;
     QString simLockCode;
 
-    bool SIMhotswapped;
-    int subState;
+    SubStates subState;
     int previousSimState;
 
     SIM* sim;
@@ -76,26 +79,29 @@ private: // methods
     bool handleSIMError(SIMError error);
     bool handleSIMLockError(SIMLockError error);
 
-    void createUi();
-    // "empty" state changes.
-    void nothing();
+    void createUi(bool enableBack = false);
+    void closeUi();
+    void setUiHeader(QString headerText);
+    void stateOperation(int status, int relationState);
+
     void doEmergencyCall();
     void informTechnicalProblem();
     void simLockRetry();
 
+    //  states
     void ui2SIMLocked(bool showNote = true);
-    void ui2firstPINAttempt();
-    void ui2PINFailedNowPUK();
+    void ui2PINQuery();
     void ui2PINFailed(int attemptsLeft);
-    void ui2firstPUKAttempt();
+
+    void ui2PUKQuery();
     void ui2PUKFailed(int attemptsLeft);
     void ui2PUKFailedPermanently();
-    void ui2PUKOk();
-    void ui2disappear();
-    void ui2disappearWithNotification(QString notifText);
+    void ui2enterNewPin();
     void ui2reenterPIN();    
+    void ui2disappear();
 
 private slots:
+    void changePinCode();
 
     void uiCodeChanged();
     void uiButtonReleased();

@@ -199,15 +199,12 @@ void PinCodeQueryUI::createWidgetItems()
     emergencyCallButton = new DuiButton(0);
     emergencyCallButton->setObjectName("emergencyCallButton");
     // TODO: icon ID to be updated when correct ID provided by Vappu
-    // Check also if the libdui icon dir adding needed anymore at Sysuid::Sysuid()
-    emergencyCallButton->setIconID("icon-m-call_2_");
+    emergencyCallButton->setIconID("to-be-defined");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
     entryTextEdit->setObjectName("codeEntry");
     entryTextEdit->setMaskedInput(true);
-    QIntValidator *validator = new QIntValidator(0, 99999999, entryTextEdit);
-    entryTextEdit->setValidator(validator);
 
     enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), 0);
     enterButton->setObjectName("enterButton");
@@ -219,9 +216,7 @@ void PinCodeQueryUI::createWidgetItems()
 
     backspaceButton = new DuiButton(0);
     backspaceButton->setObjectName("backspaceButton");
-    // TODO: icon ID to be updated when correct ID available
-    // backspaceButton->setIconID("icon-m-keyboard-backspace");
-    backspaceButton->setIconID("Icon-Qwerty-Delete");
+    backspaceButton->setIconID("icon-m-keyboard-backspace");
     connect(backspaceButton, SIGNAL(released()), this, SLOT(buttonReleased()));
     connect(backspaceButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
 
