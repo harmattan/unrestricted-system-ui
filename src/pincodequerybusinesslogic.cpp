@@ -161,10 +161,12 @@ void PinCodeQueryBusinessLogic::closeUi()
     newPinCode = "";
     if(uiPin)
     {
-        qDebug() << "PinCodeQueryBusinessLogic::closeUi()";
-        uiPin->getCodeEntry()->setText("");
-        uiPin->disappearNow();
+        qDebug() << "PinCodeQueryBusinessLogic::closeUi() NULL uiPin";
+        PinCodeQueryUI* tmp = uiPin.data();
+        uiPin = NULL;
         DuiApplication::instance()->applicationWindow()->hide();
+        qDebug() << "PinCodeQueryBusinessLogic::closeUi() ->disappear";
+        tmp->disappearNow();
     }
     qDebug() << "PinCodeQueryBusinessLogic::closeUi() win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
 }
