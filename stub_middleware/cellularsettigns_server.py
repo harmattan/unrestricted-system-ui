@@ -142,6 +142,8 @@ class RadioServer(ExtendedObject):
     @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.RadioAccess', signature='s')
     def SelectionModeChanged(self, mode):
         print 'radio selection mode changed', mode
+        self.on_selectionmodechanged(self, mode)
+    def on_selectionmodechanged(self, mode): pass
 
 class NetworkServer(ExtendedObject):
     def __init__ (self, bus_name, path=NETWORK_PATH):
@@ -172,11 +174,14 @@ class NetworkServer(ExtendedObject):
         for i in range(len(self.REGISTRATION_MODES)):
             if self.REGISTRATION_MODES[i] == mode:
                 self.registration_mode_idx = i
-                self.SelectionModeChanged(self.RADIO_MODES[i])
+                self.SelectionModeChanged(self.REGISTRATION_MODES[i])
 
     @dbus.service.signal(dbus_interface='com.nokia.csd.CSNet.NetworkRegistration', signature='s')
     def SelectionModeChanged(self, mode):
         print 'network selection mode changed', mode
+        self.on_selectionmodechanged(self, mode)
+    def on_selectionmodechanged(self, mode): pass
+
 
     @dbus.service.method('com.nokia.csd.CSNet.NetworkRegistration')
     def QueryNetworks(self):
@@ -276,17 +281,23 @@ class UserInterface:
         frame = tmp
 
         frame.add(gtk.Label('Radio mode:'))
-        mode = gtk.combo_box_new_text()
+        rmode = gtk.combo_box_new_text()
         for m in self.radio_server.RADIO_MODES:
-            mode.append_text(m)
-        frame.add(mode)
-        mode.set_active(self.radio_server.radio_mode_idx)
-        def cb_mode_changed(widget):
-            print 'mode changed', widget.get_active()
+            rmode.append_text(m)
+        frame.add(rmode)
+        rmode.set_active(self.radio_server.radio_mode_idx)
+        def cb_rmode_changed(widget):
             self.radio_server.radio_mode_idx = widget.get_active()
             self.radio_server.SetSelectionMode(
                 self.radio_server.RADIO_MODES[self.radio_server.radio_mode_idx])
-        mode.connect('changed', cb_mode_changed) 
+        rmode.cid = rmode.connect('changed', cb_rmode_changed)
+        def on_selectionrmodechg(self, new_mode):
+            for i in range(len(self.RADIO_MODES)):
+                if self.RADIO_MODES[i] == new_mode:
+                    rmode.disconnect(rmode.cid)
+                    rmode.set_active(i)
+                    rmode.cid = rmode.connect('changed', cb_rmode_changed) 
+        self.radio_server.on_selectionmodechanged = on_selectionrmodechg
 
         frame.add(gtk.Label('Network registration mode:'))
         mode = gtk.combo_box_new_text()
@@ -299,7 +310,14 @@ class UserInterface:
             self.network_server.registration_mode_idx = widget.get_active()
             self.network_server.SetSelectionMode(
                 self.network_server.REGISTRATION_MODES[self.network_server.registration_mode_idx])
-        mode.connect('changed', cb_mode_changed) 
+        mode.cid = mode.connect('changed', cb_mode_changed) 
+        def on_selectionmodechg(self, new_mode):
+            for i in range(len(self.REGISTRATION_MODES)):
+                if self.REGISTRATION_MODES[i] == new_mode:
+                    mode.disconnect(mode.cid)
+                    mode.set_active(i)
+                    mode.cid = mode.connect('changed', cb_mode_changed) 
+        self.network_server.on_selectionmodechanged = on_selectionmodechg
 
 
         # methods
