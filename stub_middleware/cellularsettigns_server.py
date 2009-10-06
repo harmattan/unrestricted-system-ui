@@ -284,7 +284,7 @@ class UserInterface:
         def cb_mode_changed(widget):
             print 'mode changed', widget.get_active()
             self.radio_server.radio_mode_idx = widget.get_active()
-            self.radio_server.SIMStatus(
+            self.radio_server.SetSelectionMode(
                 self.radio_server.RADIO_MODES[self.radio_server.radio_mode_idx])
         mode.connect('changed', cb_mode_changed) 
 
@@ -297,7 +297,7 @@ class UserInterface:
         def cb_mode_changed(widget):
             print 'mode changed', widget.get_active()
             self.network_server.registration_mode_idx = widget.get_active()
-            self.network_server.SIMStatus(
+            self.network_server.SetSelectionMode(
                 self.network_server.REGISTRATION_MODES[self.network_server.registration_mode_idx])
         mode.connect('changed', cb_mode_changed) 
 
