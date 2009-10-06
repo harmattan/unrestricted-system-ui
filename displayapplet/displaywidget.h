@@ -29,8 +29,11 @@ private slots:
     void blankInhibitButtonPressed();
 
 private: //methods
-    DuiContainer* createContainer(QList<DuiWidgetController *> widgets, QMap<DuiWidgetController *, Qt::Alignment> alignments,
-                                  Qt::Orientation policyOrientation, QString widgetObjectName = "", int policySpacing = 0);
+    DuiContainer* createContainer(const QList<DuiWidgetController *> &widgets,
+                                  const QMap<DuiWidgetController *, Qt::Alignment> &alignments,
+                                  Qt::Orientation policyOrientation,
+                                  const QString &widgetObjectName = "",
+                                  int policySpacing = 0);
 
     void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiContainer*> &containers);
     void initSlider(DuiSlider *slider, int index, const QStringList &values);
