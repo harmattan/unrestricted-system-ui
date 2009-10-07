@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="0.1">
+  <suite name="unlockslider-tests"> <!-- domain="system-ui" --> 
+    <set name="unlockslidertestset" description="API tests">
+      <case name="API" type="unit" description="Test the unlock slider API">
+        <step expected_result="0">ut_unlockslider</step>
+      </case>
+ 
+      <!-- Environments optional - tells where the tests are run -->
+<!--      
+      <environments>
+        <scratchbox>false</scratchbox>
+        <hardware>true</hardware>    
+      </environments>
+-->
+    </set>
+  </suite>
+</testdefinition>
+
