@@ -3,27 +3,30 @@
 #include "networkdbusinterface.h"
 #include "dcpnetwork.h"
 
-#include <QDebug>
-#include <QTimer>
-
 #include <DuiButton>
 #include <DuiComboBox>
 #include <DuiContainer>
+#include <DuiDialog>
 #include <DuiGridLayoutPolicy>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
+#include <DuiList>
 #include <DuiStylableWidget>
 #include <DuiSceneManager>
 #include <DuiButtonGroup>
 #include <DuiWidgetController>
+#include <DuiWidgetFactory>
+#include <DuiWidgetListModel>
+#include <QDebug>
+#include <QModelIndex>
 #include <QSignalMapper>
 #include <QSizePolicy>
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent)
 	    :DcpWidget(parent)
 {
-    setReferer(DcpNetwork::None);
+    setReferer(DcpNetwork::None);    
     initWidget();
 }
 
@@ -34,29 +37,64 @@ NetworkWidget::~NetworkWidget()
      networkIf = NULL;
 }
 
+bool NetworkWidget::back()
+{
+    //check that the user has selected a network before closing the window
+    if(!networkSelected) {
+        qDebug() << "No selection made!\n\n\n";
+        changeSelection();
+        return false;
+    }
+
+    if (referer() > -1) { // emit the changewidget signal if there is a referer set
+        emit changeWidget(referer());
+        return false;
+    }
+    else
+        return true; // back is handled by main window by default    
+}
+
+void NetworkWidget::changeSelection()
+{
+    DuiDialog* dlg = new DuiDialog();
+    dlg->setTitle(DcpNetwork::NoNetworkSelectedText);
+    DuiButton* changeButton = dlg->addButton(DcpNetwork::ChangeText);    
+    dlg->exec();
+
+    if(dlg->clickedButton() == changeButton) {        
+        networkSelectionComboBox->setCurrentIndex(networkSelectionComboBoxDefaultIndex);
+        dlg->accept();
+    }
+    else
+        dlg->reject();
+
+    dlg->deleteLater();
+    dlg = NULL;        
+}
+
 void NetworkWidget::initWidget()
-{    
+{
     //DuiSceneManager::instance()->setOrientationAngle((Dui::OrientationAngle) 90);
 
     //create dbus if
     networkIf = new NetworkDBusInterface();
 
-    availableNetworksButtonGroup = new DuiButtonGroup(this);
+    availableNetworksList = NULL;
+    networkSelected = false;
 
     // catch network If actions    
     connect(networkIf, SIGNAL(phoneNetworkValueReceived(bool)), this, SLOT(initPhoneNetworkButton(bool)));
     connect(networkIf, SIGNAL(roamingValueReceived(bool)), this, SLOT(initRoamingButton(bool)));
     connect(networkIf, SIGNAL(roamingUpdatesValueReceived(bool)), this, SLOT(initRoamingUpdatesButton(bool)));
     connect(networkIf, SIGNAL(networkModeValuesReceived(int, QStringList)), this, SLOT(initNetworkModeComboBox(int, QStringList)));
-    connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, QStringList)), this, SLOT(initNetworkSelectionComboBox(int, QStringList)));
-    connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList)), this, SLOT(toggleAvailableNetworks(int, QStringList)));    
-
-
+    connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), this, SLOT(initNetworkSelectionComboBox(int, int, QStringList)));
+    connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), this, SLOT(toggleAvailableNetworks(int, QStringList, bool)));
+    connect(networkIf, SIGNAL(networkSelected(bool)), this, SLOT(toggleNetworkSelected(bool)));
 
     /*
      * phoneNetworkLabel and phoneNetworkButton
      */
-    DuiLabel *phoneNetworkLabel = new DuiLabel(DcpNetwork::PhoneNetworkText);
+    DuiLabel *phoneNetworkLabel = new DuiLabel(DcpNetwork::PhoneNetworkText);    
     phoneNetworkButton = new DuiButton(this);
     phoneNetworkButton->setCheckable(true);
     phoneNetworkButton->setObjectName("basicNetworkButton");    
@@ -129,8 +167,10 @@ void NetworkWidget::initWidget()
 
     contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
     contentLayoutPolicy->addItemAtPosition(phoneNetworkLabel, 0, 0);
-    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);    
-    contentItems << roamingContainer << dataCounterButton << networkContainer;
+    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);
+    contentLayoutPolicy->addItemAtPosition(roamingContainer, 1, 0, 1, 2);
+    contentLayoutPolicy->addItemAtPosition(dataCounterButton, 2, 0, 1, 2);
+    contentLayoutPolicy->setSpacing(10);
 
     DuiContainer *contentContainer = createContainer(contentLayout);    
 
@@ -208,7 +248,7 @@ DuiContainer* NetworkWidget::createContainer(DuiLayout *layout, const QString &t
 void NetworkWidget::initPhoneNetworkButton(bool toggle)
 {
     phoneNetworkButton->setChecked(toggle);
-    toggleSettings(toggle);
+    toggleNetworkSettings(toggle);
 }
 
 void NetworkWidget::initRoamingButton(bool toggle)
@@ -232,8 +272,9 @@ void NetworkWidget::initNetworkModeComboBox(int selected, const QStringList &val
     }
 }
 
-void NetworkWidget::initNetworkSelectionComboBox(int selected, const QStringList &values)
-{    
+void NetworkWidget::initNetworkSelectionComboBox(int defaultIndex, int selected, const QStringList &values)
+{
+    networkSelectionComboBoxDefaultIndex = defaultIndex;
     networkSelectionComboBox->addItems(values);
     if (selected != -1) {
         disconnect(networkSelectionComboBox, SIGNAL(currentIndexChanged(QString)), networkIf, SLOT(setNetworkSelectionValue(QString)));
@@ -242,23 +283,13 @@ void NetworkWidget::initNetworkSelectionComboBox(int selected, const QStringList
     }
 }
 
-void NetworkWidget::toggleSettings(bool toggle)
+void NetworkWidget::toggleNetworkSettings(bool toggle)
 {
-    qDebug() << "NetworkWidget::toggleSettings(" << toggle << ")";
-    if(toggle) {
-        if(contentLayoutPolicy->indexOf(contentItems.at(0)) == -1) {
-            for(int i=0; i<contentItems.size(); ++i)
-                contentLayoutPolicy->addItemAtPosition(contentItems.at(i), i+1, 0, 1, 2);            
-            contentLayoutPolicy->setSpacing(10);
-        }
-    }
-    else {
-        if(contentLayoutPolicy->indexOf(contentItems.at(0)) != -1) {
-            for(int i=0; i<contentItems.size(); ++i)
-                contentLayoutPolicy->removeItem(contentItems.at(i));
-            contentLayoutPolicy->setSpacing(0);
-        }
-    }
+    qDebug() << "NetworkWidget::toggleNetworkSettings(" << toggle << ")";
+    if(toggle)
+        contentLayoutPolicy->addItemAtPosition(networkContainer, 3, 0, 1, 2);
+    else
+        contentLayoutPolicy->removeItem(networkContainer);       
 }
 
 void NetworkWidget::toggleRoamingUpdatesButton(bool toggle)
@@ -290,7 +321,7 @@ void NetworkWidget::buttonPressed(const QString &text)
     if(text == DcpNetwork::PhoneNetworkText) {
         bool checked = !phoneNetworkButton->isChecked();
         networkIf->setPhoneNetworkValue(checked);
-        toggleSettings(checked);
+        toggleNetworkSettings(checked);
     }
 
     else if(text == DcpNetwork::RoamingButtonText) {
@@ -308,55 +339,73 @@ void NetworkWidget::buttonPressed(const QString &text)
 }
 
 void NetworkWidget::toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle)
-{        
+{
+    qDebug() << "NetworkWidget::toggleAvailableNetworks(" << selected << ", " << networks << ", " << toggle << ")";
     if(toggle) {
-        if(availableNetworksButtonGroup->buttons().size() == 0) { //no buttons on the screen
+        if(availableNetworksList == NULL) {
             if(networks.size() > 0) { //some networks available
+
+                //create the header label
                 if(availableNetworksLabel == NULL)
                     availableNetworksLabel = new DuiLabel(DcpNetwork::AvailableNetworksText, this);
                 networkLayoutPolicy->addItem(availableNetworksLabel, Qt::AlignLeft);
+
+                //create the list of available networks
+                availableNetworksList = new DuiList(this);
+                availableNetworksList->setObjectName("availableNetworksList");
+                availableNetworksList->enableItemSelection(true);
+                availableNetworksListModel = new DuiWidgetListModel;
                 for(int i=0; i<networks.size(); ++i) {
-                    DuiButton *button = new DuiButton(networks.at(i), this);
-                    button->setCheckable(true);
-                    if(i==selected)
-                        button->setChecked(true);
-                    availableNetworksButtonGroup->addButton(button);
-                    networkLayoutPolicy->addItem(button, Qt::AlignLeft);
+                    DuiLabel *label = new DuiLabel(networks.at(i));
+                    availableNetworksListModel->appendWidget(label);
                 }
-                connect(availableNetworksButtonGroup, SIGNAL(buttonPressed(DuiButton*)),
-                        this, SLOT(availableNetworksButtonPressed(DuiButton*)));
+                availableNetworksList->setItemModel(availableNetworksListModel);
+                if(selected != -1)
+                    availableNetworksList->selectItem(availableNetworksListModel->index(selected));
+                networkLayoutPolicy->addItem(availableNetworksList, Qt::AlignLeft);
+
+                connect(availableNetworksList, SIGNAL(itemClicked(const QModelIndex &)),
+                        this, SLOT(availableNetworkSelected(const QModelIndex &)));
             }
             else {
                 if(noAvailableNetworksLabel == NULL)
                     noAvailableNetworksLabel = new DuiLabel(DcpNetwork::NoAvailableNetworksText, this);
-                networkLayoutPolicy->addItem(noAvailableNetworksLabel, Qt::AlignLeft);
+                networkLayoutPolicy->addItem(noAvailableNetworksLabel, Qt::AlignLeft);                
             }
         }       
     }
     else {
-        if(availableNetworksButtonGroup->buttons().size() > 0) {
-            if(availableNetworksLabel == NULL)
-                availableNetworksLabel = new DuiLabel(DcpNetwork::AvailableNetworksText, this);
-            networkLayoutPolicy->removeItem(availableNetworksLabel);
-            QList<DuiButton *> buttons = availableNetworksButtonGroup->buttons();
-            while(!buttons.isEmpty()) {
-                DuiButton *button = buttons.takeLast();
-                availableNetworksButtonGroup->removeButton(button);
-                networkLayoutPolicy->removeItem(button);
-                delete button;
-                button = NULL;
-            }            
+        if(availableNetworksList != NULL) {
+            networkLayoutPolicy->removeItem(availableNetworksList);            
+            delete availableNetworksList;
+            availableNetworksList = NULL;      
+            delete availableNetworksListModel;
+            availableNetworksListModel = NULL;
         }
-        else {
-            if(noAvailableNetworksLabel == NULL)
-                noAvailableNetworksLabel = new DuiLabel(DcpNetwork::NoAvailableNetworksText, this);
+        if(availableNetworksLabel != NULL) {
+            networkLayoutPolicy->removeItem(availableNetworksLabel);
+            delete availableNetworksLabel;
+            availableNetworksLabel = NULL;
+        }
+        if(noAvailableNetworksLabel != NULL) {
             networkLayoutPolicy->removeItem(noAvailableNetworksLabel);
+            delete noAvailableNetworksLabel;
+            noAvailableNetworksLabel = NULL;
         }
     }
-
 }
 
-void NetworkWidget::availableNetworksButtonPressed(DuiButton *button)
+void NetworkWidget::availableNetworkSelected(const QModelIndex &index)
 {
-    networkIf->setNetworkSelectionValue(button->text());
+    qDebug() << "NetworkWidget::availableNetworkSelected(" << index << ")";
+    availableNetworksList->selectItem(index);
+    DuiWidgetFactory* factory = DuiWidgetFactory::instance();
+    DuiLabel* label = static_cast<DuiLabel*>(factory->create(availableNetworksListModel, index.row()));    
+    networkIf->setNetworkSelectionValue(label->text());
+}
+
+void NetworkWidget::toggleNetworkSelected(bool toggle)
+{
+    qDebug() << "NetworkWidget::toggleNetworkSelected(" << toggle << ")";
+    networkSelected = toggle;
 }

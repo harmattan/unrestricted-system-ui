@@ -34,8 +34,9 @@ public slots:
 
 signals:
     void networkModeValuesReceived(int, QStringList);
-    void networkSelectionValuesReceived(int, QStringList);
-    void availableNetworksReceived(int, QStringList);    
+    void networkSelectionValuesReceived(int, int, QStringList);
+    void availableNetworksReceived(int, QStringList, bool);
+    void networkSelected(bool);
 
 private:
     PhoneNetworkBusinessLogic *networkLogic;    

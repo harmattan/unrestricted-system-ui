@@ -54,8 +54,15 @@ void PhoneNetworkBusinessLogic::setNetworkSelection(const QString &value)
     NetworkRegistration nr;
     nr.setMode(networkSelectionValues.key(value));
     operators.clear(); //remove old operators
-    if(networkSelectionValues.key(value) == NetworkRegistration::Manual)
-        queryAvailableNetworks();    
+
+    if(networkSelectionValues.key(value) == NetworkRegistration::Manual) {
+        emit networkSelected(false);
+        queryAvailableNetworks();
+    }
+    else {
+        emit availableNetworksAvailable(-1, QStringList(), false);
+        emit networkSelected(true);
+    }
 }
 
 void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
@@ -74,10 +81,12 @@ void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QStri
 {
     if(success) {
         qDebug() << "Selection completed succesfully";
+        emit networkSelected(true);
         //TODO: show a note
     }
     else {
         qDebug() << "Selection failed, reason: " << reason;
+        emit networkSelected(false);
         //TODO: show a note
     }
 }
@@ -117,12 +126,19 @@ void PhoneNetworkBusinessLogic::queryNetworkSelectionValues()
     QHash<NetworkRegistration::Mode, QString>::iterator i;
     for (i = networkSelectionValues.begin(); i != networkSelectionValues.end(); ++i)
         values << i.value();
+    values.sort();
 
     NetworkRegistration nr;
-    int index = (nr.mode() == NetworkRegistration::UnknownMode ? -1 : values.indexOf(networkSelectionValues.value(nr.mode())));
-    emit networkSelectionValuesAvailable(index, values);
-    if(nr.mode() == NetworkRegistration::Manual)
+    int defaultIndex = values.indexOf(networkSelectionValues.value(NetworkRegistration::Automatic)); ///automatic is default
+    int currentIndex = (nr.mode() == NetworkRegistration::UnknownMode ? -1 : values.indexOf(networkSelectionValues.value(nr.mode())));
+    emit networkSelectionValuesAvailable(defaultIndex, currentIndex, values);
+
+    if(nr.mode() == NetworkRegistration::Manual) {
+        emit networkSelected(false);
         queryAvailableNetworks();
+    }
+    else
+        emit networkSelected(true);    
 }
 
 void PhoneNetworkBusinessLogic::queryAvailableNetworks()
@@ -131,7 +147,7 @@ void PhoneNetworkBusinessLogic::queryAvailableNetworks()
     if(networkRegistration == NULL) {
         networkRegistration = new NetworkRegistration();
         connect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
-            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));    
+            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));        
         networkRegistration->queryAvailableOperators();
     }
 
@@ -144,13 +160,13 @@ void PhoneNetworkBusinessLogic::queryAvailableNetworks()
 
 void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
-    if(networkRegistration == NULL) {
+    if(networkRegistration != NULL) {
         delete networkRegistration;
         networkRegistration = NULL;
     }
     if(!success) {
         //TODO: show note based on the reason        
-        emit availableNetworksAvailable(-1, QStringList());
+        emit availableNetworksAvailable(-1, QStringList(), true);
         return;
     }
 
@@ -162,14 +178,16 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
             networks << operators.at(i)->name();
             this->operators << operators.at(i);
         }
-        if(operators.at(i)->availability() == AvailableOperator::Current)
+        if(operators.at(i)->availability() == AvailableOperator::Current) {
             selectedNetwork = i;
+            emit networkSelected(true);
+        }
     }
-    emit availableNetworksAvailable(selectedNetwork, networks);
+    emit availableNetworksAvailable(selectedNetwork, networks, true);
 }
 
 void PhoneNetworkBusinessLogic::networkAppletClosing()
-{   
+{
     operators.clear();
 }
 

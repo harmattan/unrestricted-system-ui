@@ -25,3 +25,33 @@
 	minimum-size: 44% 50;
 	maximum-size: 44% 50;
 }
+
+#availableNetwork {
+	font: "Nokia Sans" 18;
+}
+
+#availableNetwork:selected {
+	color: #141414;
+	font: "Nokia Sans" 6;
+}
+
+#availableNetworksList {
+	normal-background-image:;
+	
+	margin-left: 0;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+
+	item-spacing: 0;
+			    
+	preferred-size: size(90%, 50);
+	minimum-size: size(90%, 50);
+	maximum-size: size(90%, 1000);
+
+	container-object-name: "wgListContainer";
+	group-header-object-name: "wgListGroupHeaders";	
+	item-object-name: "availableNetwork";
+}
+						    
+		

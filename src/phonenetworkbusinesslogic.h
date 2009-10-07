@@ -40,8 +40,9 @@ private slots:
 
 signals:
     void networkModeValuesAvailable(int, QStringList);
-    void networkSelectionValuesAvailable(int, QStringList);
-    void availableNetworksAvailable(int, QStringList);
+    void networkSelectionValuesAvailable(int, int, QStringList);
+    void availableNetworksAvailable(int, QStringList, bool);
+    void networkSelected(bool);
 
 private: //methods
     void queryAvailableNetworks();

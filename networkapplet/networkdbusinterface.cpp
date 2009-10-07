@@ -12,8 +12,9 @@ NetworkDBusInterface::NetworkDBusInterface()
                                 QDBusConnection::sessionBus());
 
     connect(dbusIf, SIGNAL(networkModeValuesReceived(int, QStringList)), this, SIGNAL(networkModeValuesReceived(int, QStringList)));
-    connect(dbusIf, SIGNAL(networkSelectionValuesReceived(int, QStringList)), this, SIGNAL(networkSelectionValuesReceived(int, QStringList)));
-    connect(dbusIf, SIGNAL(availableNetworksReceived(int, QStringList)), this, SIGNAL(availableNetworksReceived(int, QStringList)));    
+    connect(dbusIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), this, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)));
+    connect(dbusIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), this, SIGNAL(availableNetworksReceived(int, QStringList, bool)));
+    connect(dbusIf, SIGNAL(networkSelected(bool)), this, SIGNAL(networkSelected(bool)));
 }
 
 NetworkDBusInterface::~NetworkDBusInterface()
@@ -110,6 +111,13 @@ void NetworkDBusInterface::setSelectedNetworkValue(const QString &value)
     QList<QVariant> list;
     list << QVariant(value);
     dbusIf->callWithCallback(QString("setSelectedNetworkValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::setAutoNetworkSelection()
+{
+    qDebug() << "NetworkDBusInterface::setAutoNetworkSelection()";
+    QList<QVariant> list;
+    dbusIf->callWithCallback(QString("setAutoNetworkSelection"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
 void NetworkDBusInterface::networkAppletClosing()

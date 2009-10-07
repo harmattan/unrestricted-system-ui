@@ -25,7 +25,9 @@ public:
     void setRoamingValue(bool value);
     void setRoamingUpdatesValue(bool value);
     void setSelectedNetworkValue(const QString &value);
+    void setAutoNetworkSelection();
     void networkAppletClosing();
+
 
 public slots:
     void setNetworkModeValue(const QString &value);
@@ -41,8 +43,9 @@ signals:
     void roamingValueReceived(bool);
     void roamingUpdatesValueReceived(bool);    
     void networkModeValuesReceived(int, QStringList);
-    void networkSelectionValuesReceived(int, QStringList);
-    void availableNetworksReceived(int, QStringList);    
+    void networkSelectionValuesReceived(int, int, QStringList);
+    void availableNetworksReceived(int, QStringList, bool);
+    void networkSelected(bool);
 
 private:
     QDBusInterface *dbusIf;

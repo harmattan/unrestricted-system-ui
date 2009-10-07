@@ -42,7 +42,7 @@ DcpWidget* NetworkApplet::pageMain()
 
 QString NetworkApplet::title() const
 {
-    return DcpNetwork::AppletTitle;
+    return DcpNetwork::PhoneNetworkText;
 }
 
 QVector<DuiAction*> NetworkApplet::viewMenuItems()
