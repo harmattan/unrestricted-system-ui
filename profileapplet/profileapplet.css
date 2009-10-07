@@ -1,0 +1,50 @@
+#vibrationButton {
+	preferred-size: 35 35;
+        minimum-size: 90% 35;
+        maximum-size: 90% 35;
+}
+
+#speakerIcon {
+        preferred-size: 32 32;
+        minimum-size: 32 32;
+        maximum-size: 32 32;
+}
+
+#slider {
+        preferred-size: 32 0;
+        minimum-size: 32 0;
+        maximum-size: 32 100%;
+}
+
+#profileContainerLayout.Landscape {
+	background-opacity: 255;
+    	background-color: #141414;
+        preferred-size: 43% 20%;
+        minimum-size: 43% 20%;
+        maximum-size: 43% 20%;
+}
+
+#profileContainerLayout.Portrait {
+        background-opacity: 255;
+        background-color: #141414;
+        preferred-size: 43% 20%;
+        minimum-size: 43% 20%;
+        maximum-size: 43% 20%;
+}
+
+#profileWidgetLayout.Portrait {
+        background-opacity: 255;
+        background-color: #141414;
+        preferred-size: 90% 100;
+        minimum-size: 90% 100;
+        maximum-size: 90% 100;
+}
+
+#profileWidgetLayout.Landscape {
+	background-opacity: 255;
+    	background-color: #141414;
+	preferred-size: 90% 50;
+	minimum-size: 90% 50;
+	maximum-size: 90% 50;
+}
+

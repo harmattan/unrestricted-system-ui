@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=DUIApplet
+Name=Profile
+X-logical-id=qtn_NOT_DEFINED #qtn_sett_main_profile
+X-translation-catalog=duisettings
+Icon=
+Exec=
+
+[DUI]
+X-DUIApplet-Applet=libprofileapplet.so
+X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
+X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
+
+[DCP]
+Category= Sound
+Order=2
+WidgetType= DcpLabel2
+Text2= Kissakala

@@ -62,4 +62,9 @@ cp displayapplet/lib/libdisplayapplet.so /usr/lib/duicontrolpanel/applets/
 cp networkapplet/network.desktop /usr/lib/duicontrolpanel/
 cp networkapplet/networkapplet.css /usr/share/duicontrolpanel/themes/style/
 cp networkapplet/lib/libnetworkapplet.so /usr/lib/duicontrolpanel/applets/
+
+# Copy network applet files
+cp profileapplet/profile.desktop /usr/lib/duicontrolpanel/
+cp profileapplet/profileapplet.css /usr/share/duicontrolpanel/themes/style/
+cp profileapplet/lib/libprofileapplet.so /usr/lib/duicontrolpanel/applets/
 echo "Files copied!"
