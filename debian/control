@@ -30,3 +30,8 @@ Package: duicontrolpanel-networkapplet
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
 Description: Cellular network settings applet.
+
+Package: duicontrolpanel-profileapplet
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
+Description: Profiles settings applet.
