@@ -15,8 +15,8 @@ class Ut_UnlockSlider : public QObject
 private slots:
     void init();
     void cleanup();
-    //void initTestCase();
-    //void cleanupTestCase();
+    void initTestCase();
+    void cleanupTestCase();
 
     void testConstructionAndDestruction();
     void testHandlePressed();

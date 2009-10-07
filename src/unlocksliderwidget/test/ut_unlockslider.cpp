@@ -1,5 +1,8 @@
 #include "ut_unlockslider.h"
 
+#include <DuiApplication>
+#include <DuiTheme>
+
 void Ut_UnlockSlider::init()
 {
     m_tmp = NULL;
@@ -10,6 +13,19 @@ void Ut_UnlockSlider::cleanup()
 {
     delete m_subject;
     m_subject = NULL;
+}
+
+DuiApplication *app;
+void Ut_UnlockSlider::initTestCase()
+{
+    int argc = 1;
+    char* app_name = (char*) "./ut_unlockslider";
+    app = new DuiApplication(argc, &app_name);
+}
+
+void Ut_UnlockSlider::cleanupTestCase()
+{
+    delete app;
 }
 
 void Ut_UnlockSlider::testConstructionAndDestruction()
@@ -70,4 +86,4 @@ void Ut_UnlockSlider::testReset()
     QVERIFY(m_subject->position() == 0);
 }
 
-QTEST_MAIN(Ut_UnlockSlider)
+QTEST_APPLESS_MAIN(Ut_UnlockSlider)
