@@ -19,7 +19,7 @@ contains(cov, true) {
 }
 SOURCES += main.cpp \
     notifier.cpp \
-    batterybusinesslogic.cpp \
+    #batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
@@ -31,17 +31,18 @@ SOURCES += main.cpp \
     usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
-    batterybusinesslogicadaptor.cpp \
+    #batterybusinesslogicadaptor.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
     notifierdbusadaptor.cpp \
     phonenetworkbusinesslogic.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
-    pincodequerydbusadaptor.cpp
+    pincodequerydbusadaptor.cpp \
+    lockscreenbusinesslogicadaptor.cpp
 HEADERS += main.h \
     notifier.h \
-    batterybusinesslogic.h \
+    #batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
@@ -53,14 +54,15 @@ HEADERS += main.h \
     usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
-    batterybusinesslogicadaptor.h \
+    #batterybusinesslogicadaptor.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
     notifierdbusadaptor.h \
     phonenetworkbusinesslogic.h \
     phonenetworkbusinesslogicadaptor.h \
-    pincodequerydbusadaptor.h
+    pincodequerydbusadaptor.h \
+    lockscreenbusinesslogicadaptor.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

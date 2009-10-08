@@ -6,13 +6,14 @@
 
 #include "systemuigconf.h"
 #include "pincodequerybusinesslogic.h"
-#include "batterybusinesslogic.h"
-#include "batterybusinesslogicadaptor.h"
+//#include "batterybusinesslogic.h"
+//#include "batterybusinesslogicadaptor.h"
 #include "displaybusinesslogic.h"
 #include "displaybusinesslogicadaptor.h"
 #include "phonenetworkbusinesslogic.h"
 #include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
+#include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 #include "eventhandler.h"
 #include "notifier.h"
@@ -32,13 +33,14 @@ public:
 private:
     SystemUIGConf *systemUIGConf;
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
-    BatteryBusinessLogic *batteryLogic;
-    BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
+    //BatteryBusinessLogic *batteryLogic;
+    //BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
     DisplayBusinessLogic *displayLogic;
     DisplayBusinessLogicAdaptor *displayLogicAdaptor;
     PhoneNetworkBusinessLogic *networkLogic;
     PhoneNetworkBusinessLogicAdaptor *networkLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
+    LockScreenBusinessLogicAdaptor *lockScreenLogicAdaptor;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
 };

@@ -29,8 +29,8 @@ Sysuid::Sysuid() : QObject()
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery */         
-    batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
+    //batteryLogic = new BatteryBusinessLogic(systemUIGConf);
+    //batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     /* Display */
     displayLogic = new DisplayBusinessLogic();
@@ -54,14 +54,11 @@ Sysuid::Sysuid() : QObject()
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();
-    connect(lockScreenLogic, SIGNAL(lockScreenOff()),
-            batteryLogic, SLOT(initBattery()));
-    connect(batteryLogic, SIGNAL(batteryCharging()),
-            lockScreenLogic, SLOT(sleepModeOff()));
-    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()),
-            lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
-    connect(shutdownLogic, SIGNAL(dialogOpen(bool)),
-            lockScreenLogic, SLOT(disable(bool)));
+    lockScreenLogicAdaptor = new LockScreenBusinessLogicAdaptor(dbusObject(), lockScreenLogic);
+    //connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));
+    //connect(batteryLogic, SIGNAL(batteryCharging()), lockScreenLogic, SLOT(sleepModeOff()));
+    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
+    connect(shutdownLogic, SIGNAL(dialogOpen(bool)), lockScreenLogic, SLOT(disable(bool)));
 
     // D-Bus registration and stuff.
     QDBusConnection bus = QDBusConnection::sessionBus();
@@ -111,10 +108,10 @@ Sysuid::~Sysuid()
     systemUIGConf = NULL;
     delete pinCodeQueryLogic;
     pinCodeQueryLogic = NULL;
-    delete batteryLogic;
-    batteryLogic = NULL;
-    delete batteryLogicAdaptor;
-    batteryLogicAdaptor = NULL;
+    //delete batteryLogic;
+    //batteryLogic = NULL;
+    //delete batteryLogicAdaptor;
+    //batteryLogicAdaptor = NULL;
     delete displayLogic;    
     displayLogic = NULL;
     delete displayLogicAdaptor;
