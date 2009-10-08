@@ -14,7 +14,7 @@
 #include <DuiList>
 #include <DuiStylableWidget>
 #include <DuiSceneManager>
-#include <DuiButtonGroup>
+#include <DuiPopupList>
 #include <DuiWidgetController>
 #include <DuiWidgetFactory>
 #include <DuiWidgetListModel>
@@ -22,6 +22,7 @@
 #include <QModelIndex>
 #include <QSignalMapper>
 #include <QSizePolicy>
+#include <QStringListModel>
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent)
 	    :DcpWidget(parent)
@@ -289,7 +290,15 @@ void NetworkWidget::toggleNetworkSettings(bool toggle)
     if(toggle)
         contentLayoutPolicy->addItemAtPosition(networkContainer, 3, 0, 1, 2);
     else
-        contentLayoutPolicy->removeItem(networkContainer);       
+        contentLayoutPolicy->removeItem(networkContainer);
+
+    DuiPopupList *popuplist = new DuiPopupList();
+    QStringListModel *model = new QStringListModel(this);
+    QStringList stringList;
+    stringList << "Item 1" << "Item 2";
+    model->setStringList(stringList);
+    popuplist->setItemModel(model);
+    contentLayoutPolicy->addItemAtPosition(popuplist, 4, 0, 1, 2);
 }
 
 void NetworkWidget::toggleRoamingUpdatesButton(bool toggle)
