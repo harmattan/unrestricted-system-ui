@@ -11,6 +11,7 @@ class DuiGridLayoutPolicy;
 class DuiSlider;
 class DuiWidgetController;
 class ProfileContainer;
+class ProfileButtons;
 
 class ProfileWidget : public DcpWidget
 {
@@ -26,6 +27,7 @@ protected:
     void initWidget();
 
 private slots:
+    void profileSelected(int id);
     void sliderValueChanged(int index);
     void vibrationChanged(bool on);
     void orientationChanged(const Dui::Orientation &);
@@ -36,7 +38,9 @@ private: //methods
     void initSlider(DuiSlider *slider, int index, const QStringList &values);
     void updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern = QString(""));
 
-private: //attributes        
+private: //attributes
+
+    ProfileButtons* profileButtons;
     ProfileContainer* ringingContainer;
     ProfileContainer* loudContainer;
     ProfileContainer* beepContainer;

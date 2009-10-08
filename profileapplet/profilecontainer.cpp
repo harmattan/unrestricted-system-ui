@@ -24,7 +24,9 @@ ProfileContainer::ProfileContainer(const QString &title, const QStringList& volu
     connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
 
     button = new DuiButton(DcpProfile::VibrationText, this);
+    button->setCheckable(true);
     setVibration(vibrationEnabled);
+    connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 
     setLayout();
@@ -84,22 +86,7 @@ void ProfileContainer::setLayout()
     DuiStylableWidget *layoutWidget = new DuiStylableWidget();
     layoutWidget->setLayout(layout);
     layoutWidget->setObjectName("profileContainerLayout");
-/*
-    QSize size = DuiSceneManager::instance()->visibleSceneSize();
-    int longSide = size.width();
-    int shortSide = size.height();
-    if(longSide < shortSide)
-    {
-        int tmp = longSide;
-        longSide = shortSide;
-        shortSide = tmp;
-    }
 
-    int top = size.width() / 2;
-    size.width() < size.height() ? size.width() < size.height();
-
-    layoutWidget->setMinimumSize ( const QSizeF & size )
-*/
     setCentralWidget(layoutWidget);
 }
 

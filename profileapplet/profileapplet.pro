@@ -6,7 +6,7 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
-	/usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -20,12 +20,14 @@ HEADERS = profileapplet.h \
     profilebrief.h \
     profiledbusinterface.h \
     profilecontainer.h \
-    profiletranslation.h
+    profiletranslation.h \
+    profilebuttons.h
 SOURCES = profileapplet.cpp \
     profilewidget.cpp \
     profilebrief.cpp \
     profiledbusinterface.cpp \
-    profilecontainer.cpp
+    profilecontainer.cpp \
+    profilebuttons.cpp
 css.files = profileapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

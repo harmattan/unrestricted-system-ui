@@ -3,6 +3,7 @@
 #include "profiledbusinterface.h"
 #include "profilecontainer.h"
 #include "dcpprofile.h"
+#include "profilebuttons.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -41,28 +42,36 @@ void ProfileWidget::initWidget()
 
     // catch profile If actions
 
-    // tmp!!!!
+    ////// tmp!!!!
     QList<QString> l;
     l.append(QString("1"));
     l.append(QString("5"));
     l.append(QString("10"));
     QStringList volumeLevels(l);
 
+    ProfileButtons::ProfileId defProfile = ProfileButtons::ringing;
+    ////// end of tmp
+
+
+    profileButtons = new ProfileButtons(defProfile, this);
+    connect(profileButtons, SIGNAL(profileSelected(ProfileButtons::ProfileId)),
+            this, SLOT(profileSelected(ProfileButtons::ProfileId)));
+
     // create profile containers
     ringingContainer = new ProfileContainer(DcpProfile::RingingText, volumeLevels, 0, true, this);
     connect(ringingContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
-    connect(ringingContainer, SIGNAL(setVibration(bool)), this, SLOT(vibrationChanged(bool)));
+    connect(ringingContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
     loudContainer = new ProfileContainer(DcpProfile::LoudText, volumeLevels, 1, true, this);
     connect(loudContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
-    connect(loudContainer, SIGNAL(setVibration(bool)), this, SLOT(vibrationChanged(bool)));
+    connect(loudContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
     beepContainer = new ProfileContainer(DcpProfile::BeepText, volumeLevels, 2, true, this);
     connect(beepContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
-    connect(beepContainer, SIGNAL(setVibration(bool)), this, SLOT(vibrationChanged(bool)));
+    connect(beepContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
     silentContainer = new ProfileContainer(DcpProfile::SilentText, volumeLevels, -1, false, this);
-    connect(silentContainer, SIGNAL(setVibration(bool)), this, SLOT(vibrationChanged(bool)));
+    connect(silentContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
     DuiContainer *contentContainer = createContainer();
 
@@ -81,22 +90,26 @@ DuiContainer* ProfileWidget::createContainer()
 {
     DuiLayout *layout = new DuiLayout();
 
-    DuiLabel* header = new DuiLabel(DcpProfile::SettingsHeaderText,this);
-    header->setObjectName("kissa");
+    DuiLabel* currentHeader = new DuiLabel(DcpProfile::CurrentText,this);
+    DuiLabel* settingsHeader = new DuiLabel(DcpProfile::SettingsHeaderText,this);
 
     DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->addItem(header, Qt::AlignLeft);
+    portraitPolicy->addItem(currentHeader, Qt::AlignLeft);
+    portraitPolicy->addItem(profileButtons, Qt::AlignCenter);
+    portraitPolicy->addItem(settingsHeader, Qt::AlignLeft);
     portraitPolicy->addItem(ringingContainer, Qt::AlignLeft);
     portraitPolicy->addItem(silentContainer, Qt::AlignLeft);
     portraitPolicy->addItem(beepContainer, Qt::AlignLeft);
     portraitPolicy->addItem(loudContainer, Qt::AlignLeft);
 
     DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy(layout);
-    landscapePolicy->addItemAtPosition(header, 0, 0, 1, 2);
-    landscapePolicy->addItemAtPosition(ringingContainer, 1,0);
-    landscapePolicy->addItemAtPosition(silentContainer, 1,1);
-    landscapePolicy->addItemAtPosition(beepContainer, 2,0);
-    landscapePolicy->addItemAtPosition(loudContainer, 2,1);
+    landscapePolicy->addItemAtPosition(currentHeader, 0, 0, 1, 2);
+    landscapePolicy->addItemAtPosition(profileButtons, 1, 0, 1, 2, Qt::AlignCenter);
+    landscapePolicy->addItemAtPosition(settingsHeader, 2, 0, 1, 2);
+    landscapePolicy->addItemAtPosition(ringingContainer, 3,0);
+    landscapePolicy->addItemAtPosition(silentContainer, 3,1);
+    landscapePolicy->addItemAtPosition(beepContainer, 4,0);
+    landscapePolicy->addItemAtPosition(loudContainer, 4,1);
 
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
@@ -151,6 +164,22 @@ void ProfileWidget::vibrationChanged(bool on)
 QString ProfileWidget::currentProfile()
 {
     return "[TODO: Current profile name]";
+}
+
+void ProfileWidget::profileSelected(int id)
+{
+    qDebug() << "ProfileWidget::profileSelected():" << id;
+    switch (id)
+    {
+        case ProfileButtons::ringing:
+            break;
+        case ProfileButtons::silent:
+            break;
+        case ProfileButtons::beep:
+            break;
+        case ProfileButtons::loud:
+            break;
+    }
 }
 
 void ProfileWidget::orientationChanged(const Dui::Orientation &orientation)

@@ -40,11 +40,11 @@ void ProfileApplet::init(QString part)
     Q_UNUSED(part);
     DuiTheme::loadCSS(cssDir + "profileapplet.css");
 
-    /* Un/comment this for rotation *
+    /* Un/comment this for rotation */
 
     startRotation();
 
-    **/
+    /**/
 }
 
 DcpWidget* ProfileApplet::constructWidget(int widgetId)
@@ -62,6 +62,7 @@ DcpWidget* ProfileApplet::constructWidget(int widgetId)
 
 DcpWidget* ProfileApplet::pageMain()
 {
+    qDebug() << "ProfileApplet::pageMain" << (QObject*)main;
     if(main == NULL)
         main = new ProfileWidget();
     return main;
