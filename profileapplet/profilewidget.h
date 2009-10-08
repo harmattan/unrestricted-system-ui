@@ -2,6 +2,7 @@
 #define PROFILEWIDGET_H
 
 #include "dcpwidget.h" 
+#include "profilebuttons.h"
 
 
 class profileDBusInterface;
@@ -11,7 +12,6 @@ class DuiGridLayoutPolicy;
 class DuiSlider;
 class DuiWidgetController;
 class ProfileContainer;
-class ProfileButtons;
 
 class ProfileWidget : public DcpWidget
 {
@@ -27,7 +27,7 @@ protected:
     void initWidget();
 
 private slots:
-    void profileSelected(int id);
+    void profileSelected(ProfileButtons::ProfileId id);
     void sliderValueChanged(int index);
     void vibrationChanged(bool on);
     void orientationChanged(const Dui::Orientation &);

@@ -166,7 +166,7 @@ QString ProfileWidget::currentProfile()
     return "[TODO: Current profile name]";
 }
 
-void ProfileWidget::profileSelected(int id)
+void ProfileWidget::profileSelected(ProfileButtons::ProfileId id)
 {
     qDebug() << "ProfileWidget::profileSelected():" << id;
     switch (id)
