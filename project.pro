@@ -4,7 +4,7 @@
 
 
 TEMPLATE = subdirs
-SUBDIRS = src batteryapplet displayapplet networkapplet profileapplet
+SUBDIRS = src batteryapplet displayapplet networkapplet profileapplet tests
 
 QMAKE_CLEAN += configure-stamp build-stamp \
 

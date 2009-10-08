@@ -16,6 +16,13 @@ Description: Various system user interfaces.
   - screenlock
   - shutdown dialog
 
+Package: system-ui-tests
+Section: tests
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Test package for system-ui
+
 Package: duicontrolpanel-batteryapplet
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
