@@ -24,6 +24,10 @@ public:
     bool sleepMode();
     void toggleSleepMode(bool toggle);
 */
+    void updateUnreadMessages(int amount);
+    void updateMissedCalls(int amount);
+    void updateUnreadChatMessages(int amount);
+
 signals:
     void unlocked();
 

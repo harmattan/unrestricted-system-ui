@@ -14,9 +14,9 @@ public:
     LockScreenBusinessLogicAdaptor(QObject *obj, LockScreenBusinessLogic *lockScreenLogic);
 
 public slots:
-    Q_NOREPLY void addMissedCall();
-    Q_NOREPLY void addUnreadMessage();
-    Q_NOREPLY void addUnreadChatMessage();
+    Q_NOREPLY void unreadMessagesAmountChanged(int amount);
+    Q_NOREPLY void missedCallsAmountChanged(int amount);
+    Q_NOREPLY void unreadChatMessagesAmountChanged(int amount);
 
 private:
     LockScreenBusinessLogic *lockScreenLogic;

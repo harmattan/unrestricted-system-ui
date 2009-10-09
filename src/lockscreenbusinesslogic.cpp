@@ -59,7 +59,7 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
         emit lockScreenOff();
         DuiApplication::instance()->applicationWindow()->hide();
     }
-    else {
+    else {        
         DuiApplication::instance()->applicationWindow()->show();
         lockUI->appear();
     }
@@ -138,4 +138,19 @@ void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
 void LockScreenBusinessLogic::disable(bool disable)
 {    
     isDisabled = disable;
+}
+
+void LockScreenBusinessLogic::unreadMessagesAmountChanged(int amount)
+{
+    lockUI->updateUnreadMessages(amount);
+}
+
+void LockScreenBusinessLogic::missedCallsAmountChanged(int amount)
+{
+    lockUI->updateMissedCalls(amount);
+}
+
+void LockScreenBusinessLogic::unreadChatMessagesAmountChanged(int amount)
+{
+    lockUI->updateUnreadChatMessages(amount);
 }

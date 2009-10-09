@@ -3,17 +3,20 @@
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor(QObject *obj, LockScreenBusinessLogic *lockScreenLogic)
         : QDBusAbstractAdaptor(obj), lockScreenLogic(lockScreenLogic)
-{
+{    
 }
 
-void LockScreenBusinessLogicAdaptor::addMissedCall()
+void LockScreenBusinessLogicAdaptor::unreadMessagesAmountChanged(int amount)
 {
+    lockScreenLogic->unreadMessagesAmountChanged(amount);
 }
 
-void LockScreenBusinessLogicAdaptor::addUnreadMessage()
+void LockScreenBusinessLogicAdaptor::missedCallsAmountChanged(int amount)
 {
+    lockScreenLogic->missedCallsAmountChanged(amount);
 }
 
-void LockScreenBusinessLogicAdaptor::addUnreadChatMessage()
+void LockScreenBusinessLogicAdaptor::unreadChatMessagesAmountChanged(int amount)
 {
+    lockScreenLogic->unreadChatMessagesAmountChanged(amount);
 }

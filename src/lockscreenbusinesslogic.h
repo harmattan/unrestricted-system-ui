@@ -19,8 +19,12 @@ public:
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
 
+    void unreadMessagesAmountChanged(int amount);
+    void missedCallsAmountChanged(int amount);
+    void unreadChatMessagesAmountChanged(int amount);
+
 signals:
-    void lockScreenOff();
+    void lockScreenOff();    
 
 public slots:
     void shortPowerKeyPressOccured();

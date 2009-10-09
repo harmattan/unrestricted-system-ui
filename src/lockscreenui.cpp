@@ -200,3 +200,24 @@ void LockScreenUI::updateDateTime()
     timeLabel->setText(dt.time().toString("!! hh:mm A"));
     dateLabel->setText(dt.date().toString("!! dddd, d MMMM"));
 }
+
+void LockScreenUI::updateUnreadMessages(int amount)
+{
+    //will change when localizable strings available
+    QString word = amount > 1 ? "messages" : "message";
+    unreadMessagesLbl->setText(QString("%1 unread %2").arg(amount).arg(word));
+}
+
+void LockScreenUI::updateMissedCalls(int amount)
+{
+    //will change when localizable strings available
+    QString word = amount > 1 ? "calls" : "call";
+    missedCallsLbl->setText(QString("%1 unread %2").arg(amount).arg(word));
+}
+
+void LockScreenUI::updateUnreadChatMessages(int amount)
+{    
+    //will change when localizable strings available
+    QString word = amount > 1 ? "messages" : "message";
+    unreadChatMessagesLbl->setText(QString("%1 unread chat %2").arg(amount).arg(word));
+}
