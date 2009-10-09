@@ -4,8 +4,8 @@
 #include <DuiLocale>
 
 namespace DcpProfile {
-    const QString AppletTitle = trid("NOT_DEFINED", "Profiles");
     const QString ProfilesText = trid("qtn_prof_profile", "Profiles");
+    const QString AppletTitle = AppletTitle;
     const QString MenuHelpText = trid("qtn_comm_help", "Help");
 
     const QString CurrentText = trid("qtn_prof_currprof", "Current profile");
