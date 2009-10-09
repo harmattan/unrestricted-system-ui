@@ -114,9 +114,8 @@ DuiContainer* ProfileWidget::createContainer()
 
     DuiStylableWidget *layoutWidget = new DuiStylableWidget();
     layoutWidget->setLayout(layout);
-    layoutWidget->setObjectName("kissa");
 
-    DuiContainer *container = new DuiContainer(DcpProfile::SettingsHeaderText, this);
+    DuiContainer *container = new DuiContainer(this);
     container->setCentralWidget(layoutWidget);
 
     return container;
