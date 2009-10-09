@@ -6,29 +6,31 @@
 
 class QDBusInterface;
 
-class profileDBusInterface : public QObject
+class ProfileDBusInterface : public QObject
 {
     Q_OBJECT
 
 public:
-    profileDBusInterface();
-    virtual ~profileDBusInterface();
+    ProfileDBusInterface();
+    virtual ~ProfileDBusInterface();
 
-    void brightnessValuesRequired();    
-    void screenLightsValuesRequired();    
-    void blankInhibitValueRequired();
-    void setBrightnessValue(const QString &value);
-    void setScreenLightsValue(const QString &value);
-    void setBlankInhibitValue(bool value);
+    void currentProfileRequired();
+    void volumeLevelsRequired();
+    void vibrationValuesRequired();
+    void setProfile(int profileId);
+    void setVibration(int profileId, bool enabled);
+    void setVolumeLevel(int profileId, int valueIndex);
 
 private slots:
     void valueSet();
-    void DBusMessagingFailure();    
+    void querySent();
+    void DBusMessagingFailure();
 
 signals:
-    void brightnessValuesReceived(int, QStringList);
-    void screenLightsValuesReceived(int, QStringList);
-    void blankInhibitValueReceived(bool);
+    void currentProfile(int profileId);
+    void volumeLevels(QStringList valueList);
+    void volumeLevel(int profileId, int valueIndex);
+    void vibrationValue(int profileId, bool enabled);
 
 private:
     QDBusInterface *dbusIf;

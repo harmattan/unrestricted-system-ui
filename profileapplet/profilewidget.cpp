@@ -38,39 +38,37 @@ ProfileWidget::~ProfileWidget()
 void ProfileWidget::initWidget()
 {
     //create dbus if
-    profileIf = new profileDBusInterface();
+    profileIf = new ProfileDBusInterface();
 
     // catch profile If actions
+    connect(profileIf, SIGNAL(currentProfile(int)), this, SLOT(setProfile(int)));
+    connect(profileIf, SIGNAL(volumeLevels(QStringList)), this, SLOT(setVolumeLevels(QStringList)));
+    connect(profileIf, SIGNAL(volumeLevel(int, int)), this, SLOT(setVolume(int, int)));
+    connect(profileIf, SIGNAL(vibrationValue(int, bool)), this, SLOT(setVibration(int, bool)));
 
-    ////// tmp!!!!
-    QList<QString> l;
-    l.append(QString("1"));
-    l.append(QString("5"));
-    l.append(QString("10"));
-    QStringList volumeLevels(l);
+    // get init values
+    profileIf->currentProfileRequired();
+    profileIf->volumeLevelsRequired();
+    profileIf->vibrationValuesRequired();
 
-    ProfileButtons::ProfileId defProfile = ProfileButtons::ringing;
-    ////// end of tmp
-
-
-    profileButtons = new ProfileButtons(defProfile, this);
+    profileButtons = new ProfileButtons(this);
     connect(profileButtons, SIGNAL(profileSelected(ProfileButtons::ProfileId)),
             this, SLOT(profileSelected(ProfileButtons::ProfileId)));
 
     // create profile containers
-    ringingContainer = new ProfileContainer(DcpProfile::RingingText, volumeLevels, 0, true, this);
+    ringingContainer = new ProfileContainer(ProfileButtons::ringing, DcpProfile::RingingText, this);
     connect(ringingContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
     connect(ringingContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
-    loudContainer = new ProfileContainer(DcpProfile::LoudText, volumeLevels, 1, true, this);
+    loudContainer = new ProfileContainer(ProfileButtons::loud, DcpProfile::LoudText, this);
     connect(loudContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
     connect(loudContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
-    beepContainer = new ProfileContainer(DcpProfile::BeepText, volumeLevels, 2, true, this);
+    beepContainer = new ProfileContainer(ProfileButtons::beep, DcpProfile::BeepText, this);
     connect(beepContainer, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
     connect(beepContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
-    silentContainer = new ProfileContainer(DcpProfile::SilentText, volumeLevels, -1, false, this);
+    silentContainer = new ProfileContainer(ProfileButtons::silent, DcpProfile::SilentText, this);
     connect(silentContainer, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
 
     DuiContainer *contentContainer = createContainer();
@@ -124,65 +122,96 @@ DuiContainer* ProfileWidget::createContainer()
     return container;
 }
 
-void ProfileWidget::initSlider(DuiSlider* /*slider*/, int /*index*/, const QStringList& /*values*/)
-{
-/*    slider->setOrientation(Qt::Horizontal);
-    slider->setRange(0,values.size()-1);
-    slider->setValue(index);
-
-    QString pattern = (slider == screenLightsSlider ? DcpProfile::ScreenLightsValueText : QString(""));
-    updateSliderThumbLabel(slider, values.at(index), pattern);
-*/}
-
-void ProfileWidget::updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern)
-{    
-    slider->setThumbLabel((pattern.isEmpty() ? value : pattern.arg(value)));
-}
-
 void ProfileWidget::sliderValueChanged(int index)
 {      
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
     qDebug() << "ProfileWidget::sliderValueChanged() for" << profile->title() << ":" << index;
-/*
-    if(profile == silentContainer) {
-        profileIf->setBrightnessValue(brightnessValues.at(index));
-        updateSliderThumbLabel(slider, brightnessValues.at(index));
-    }
-    else {
-        profileIf->setScreenLightsValue(screenLightsValues.at(index));
-        updateSliderThumbLabel(slider, screenLightsValues.at(index), DcpProfile::ScreenLightsValueText);
-    }
-*/}
+    profileIf->setVolumeLevel(profile->id(), index);
+}
 
-void ProfileWidget::vibrationChanged(bool on)
+void ProfileWidget::vibrationChanged(bool enabled)
 {
     //NOTE: DuiButton->isChecked() method returns the state before the press at this point
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
-    qDebug() << "ProfileWidget::vibrationChanged() for" << profile->title() << ":" << on;
+    qDebug() << "ProfileWidget::vibrationChanged() for" << profile->title() << ":" << enabled;
+    profileIf->setVibration(profile->id(), enabled);
 }
 
 QString ProfileWidget::currentProfile()
 {
-    return "[TODO: Current profile name]";
+    if(profileButtons) {
+        return profileButtons->selectedProfileName();
+    }
+    return "";
 }
 
 void ProfileWidget::profileSelected(ProfileButtons::ProfileId id)
 {
     qDebug() << "ProfileWidget::profileSelected():" << id;
-    switch (id)
-    {
-        case ProfileButtons::ringing:
-            break;
-        case ProfileButtons::silent:
-            break;
-        case ProfileButtons::beep:
-            break;
-        case ProfileButtons::loud:
-            break;
-    }
+    profileIf->setProfile(id);
 }
 
 void ProfileWidget::orientationChanged(const Dui::Orientation &orientation)
 {
     qDebug() << "ProfileWidget::orientationChanged() to" << orientation;
 }
+
+void ProfileWidget::setProfile(int profileId)
+{
+    qDebug() << "ProfileWidget::setProfile():" << profileId;
+    profileButtons->selectProfile((ProfileButtons::ProfileId)profileId);
+}
+
+void ProfileWidget::setVolumeLevels(QStringList volumeLevels)
+{
+    qDebug() << "ProfileWidget::setVolumeLevels() >>>>>>>>>>>>>>>>>>>>>>>>";
+    ringingContainer->initSlider(volumeLevels);
+    beepContainer->initSlider(volumeLevels);
+    loudContainer->initSlider(volumeLevels);
+}
+
+void ProfileWidget::setVolume(int profileId, int level)
+{
+     qDebug() << "ProfileWidget::setVolume() for profile" << profileId << ":" << level;
+    switch (profileId)
+    {
+        case ProfileButtons::ringing:
+            ringingContainer->setLevel(level);
+            break;
+        case ProfileButtons::beep:
+            beepContainer->setLevel(level);
+            break;
+        case ProfileButtons::loud:
+            loudContainer->setLevel(level);
+            break;
+        case ProfileButtons::silent:
+        case ProfileButtons::none:
+        default:
+            break;
+    }
+}
+
+void ProfileWidget::setVibration(int profileId, bool enabled)
+{
+   qDebug() << "ProfileWidget::setVibration() for profile" << profileId << ":" << enabled;
+   switch (profileId)
+    {
+        case ProfileButtons::ringing:
+            ringingContainer->setVibration(enabled);
+            break;
+        case ProfileButtons::silent:
+            silentContainer->setVibration(enabled);
+            break;
+        case ProfileButtons::beep:
+            beepContainer->setVibration(enabled);
+            break;
+        case ProfileButtons::loud:
+            loudContainer->setVibration(enabled);
+            break;
+        case ProfileButtons::none:
+        default:
+            break;
+    }
+
+}
+

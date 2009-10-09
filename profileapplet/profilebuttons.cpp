@@ -9,11 +9,11 @@
 #include <DuiStylableWidget>
 #include <QDebug>
 
-ProfileButtons::ProfileButtons(ProfileButtons::ProfileId selectedProfile, DuiWidget *parent) :
+ProfileButtons::ProfileButtons(DuiWidget *parent) :
         DuiContainer(parent),
         selected(ProfileButtons::none)
 {
-    createProfileButtons(selectedProfile);
+    createProfileButtons();
     setLayout();
 }
 
@@ -21,13 +21,12 @@ ProfileButtons::~ProfileButtons()
 {
 }
 
-void ProfileButtons::createProfileButtons(ProfileButtons::ProfileId selectedProfile)
+void ProfileButtons::createProfileButtons()
 {
     addButton(DcpProfile::RingingText, ProfileButtons::ringing);
     addButton(DcpProfile::SilentText, ProfileButtons::silent);
     addButton(DcpProfile::BeepText, ProfileButtons::beep);
     addButton(DcpProfile::LoudText, ProfileButtons::loud);
-    selectProfile(selectedProfile);
 }
 
 void  ProfileButtons::addButton(QString name, ProfileButtons::ProfileId id)
@@ -59,6 +58,14 @@ ProfileButtons::ProfileId ProfileButtons::selectedProfile()
 {
 
     return selected;
+}
+
+QString ProfileButtons::selectedProfileName()
+{
+    DuiButton* btn = buttons.value(selected);
+    if(btn)
+        return btn->text();
+    return QString("");
 }
 
 void ProfileButtons::buttonToggled(bool checked)

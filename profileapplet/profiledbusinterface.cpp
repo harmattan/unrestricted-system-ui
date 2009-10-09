@@ -2,72 +2,83 @@
 #include <QtDBus>
 #include <QDebug>
 
-profileDBusInterface::profileDBusInterface()
+ProfileDBusInterface::ProfileDBusInterface()
 {
     dbusIf = new QDBusInterface("com.nokia.systemui", "/", 
 				"com.nokia.systemui.profile", 
 				QDBusConnection::sessionBus());
-    connect(dbusIf, SIGNAL(brightnessValuesReceived(int, QStringList)), this, SIGNAL(brightnessValuesReceived(int, QStringList)));
-    connect(dbusIf, SIGNAL(screenLightsValuesReceived(int, QStringList)), this, SIGNAL(screenLightsValuesReceived(int, QStringList)));
+    connect(dbusIf, SIGNAL(currentProfile(int)), this, SIGNAL(currentProfile(int)));
+    connect(dbusIf, SIGNAL(volumeLevels(QStringList)), this, SIGNAL(volumeLevels(QStringList)));
+    connect(dbusIf, SIGNAL(volumeLevel(int, int)), this, SIGNAL(volumeLevel(int, int)));
+    connect(dbusIf, SIGNAL(vibrationValue(int, bool)), this, SIGNAL(vibrationValue(int, bool)));
 }
 
-profileDBusInterface::~profileDBusInterface()
+ProfileDBusInterface::~ProfileDBusInterface()
 {
     delete dbusIf;
     dbusIf = NULL;
 }
 
-void profileDBusInterface::brightnessValuesRequired()
+void ProfileDBusInterface::currentProfileRequired()
 {
-    qDebug() << "profileDBusInterface::brightnessValuesRequired()";
+    qDebug() << "ProfileDBusInterface::currentProfileRequired()";
     QList<QVariant> list;    
-    dbusIf->callWithCallback(QString("brightnessValues"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("getCurrentProfile"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::screenLightsValuesRequired()
+void ProfileDBusInterface::volumeLevelsRequired()
 {
-    qDebug() << "profileDBusInterface::screenLightsValuesRequired()";
+    qDebug() << "ProfileDBusInterface::volumeLevelsRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("screenLightsValues"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("getVolumeLevels"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::blankInhibitValueRequired()
+void ProfileDBusInterface::vibrationValuesRequired()
 {
-    qDebug() << "profileDBusInterface::blankInhibitValueRequired()";
+    qDebug() << "ProfileDBusInterface::vibrationValuesRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("blankInhibitValue"), list, this, SIGNAL(blankInhibitValueReceived(bool)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("getVibrationValues"), list, this, SIGNAL(querySent()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::setBrightnessValue(const QString &value)
+void ProfileDBusInterface::setProfile(int profileId)
 {
-    qDebug() << "profileDBusInterface::setBrightnessValue(" << value << ")";
+    qDebug() << "ProfileDBusInterface::setProfile(" << profileId << ")";
     QList<QVariant> list;
-    list << QVariant(value);
-    dbusIf->callWithCallback(QString("setBrightnessValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+    list << QVariant(profileId);
+    dbusIf->callWithCallback(QString("setProfile"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::setScreenLightsValue(const QString &value)
+
+void ProfileDBusInterface::setVibration(int profileId, bool enabled)
 {
-    qDebug() << "profileDBusInterface::setScreenLightsValue(" << value << ")";
+    qDebug() << "ProfileDBusInterface::setVibration(" << profileId << ", " << enabled << ")";
     QList<QVariant> list;
-    list << QVariant(value);
-    dbusIf->callWithCallback(QString("setScreenLightsValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+    list << QVariant(profileId);
+    list << QVariant(enabled);
+    dbusIf->callWithCallback(QString("setVibration"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::setBlankInhibitValue(bool value)
+void ProfileDBusInterface::setVolumeLevel(int profileId, int levelIndex)
 {
-    qDebug() << "profileDBusInterface::setBlankInhibitValue(" << value << ")";
+    qDebug() << "ProfileDBusInterface::setVolumeLevel(" << profileId << ", " << levelIndex << ")";
     QList<QVariant> list;
-    list << QVariant(value);
-    dbusIf->callWithCallback(QString("setBlankInhibitValue"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
+    list << QVariant(profileId);
+    list << QVariant(levelIndex);
+    dbusIf->callWithCallback(QString("setVolumeLevel"), list, this, SLOT(valueSet()), SLOT(DBusMessagingFailure()));
 }
 
-void profileDBusInterface::valueSet()
+void ProfileDBusInterface::valueSet()
 {
-    qDebug() << "profileDBusInterface::valueSet()";
+    qDebug() << "ProfileDBusInterface::valueSet()";
 }
 
-void profileDBusInterface::DBusMessagingFailure()
+void ProfileDBusInterface::querySent()
 {
-    qDebug() << "profileDBusInterface::DBusMessagingFailure()";
+    qDebug() << "ProfileDBusInterface::querySent()";
 }
+
+void ProfileDBusInterface::DBusMessagingFailure()
+{
+    qDebug() << "ProfileDBusInterface::DBusMessagingFailure()";
+}
+

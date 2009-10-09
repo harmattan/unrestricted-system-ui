@@ -5,7 +5,7 @@
 #include "profilebuttons.h"
 
 
-class profileDBusInterface;
+class ProfileDBusInterface;
 class DuiButton;
 class DuiContainer;
 class DuiGridLayoutPolicy;
@@ -27,16 +27,18 @@ protected:
     void initWidget();
 
 private slots:
+    void setProfile(int profileId);
+    void setVolumeLevels(QStringList volumeLevels);
+    void setVolume(int profileId, int level);
+    void setVibration(int profileId, bool enabled);
+
     void profileSelected(ProfileButtons::ProfileId id);
     void sliderValueChanged(int index);
-    void vibrationChanged(bool on);
+    void vibrationChanged(bool enabled);
     void orientationChanged(const Dui::Orientation &);
 
 private: //methods
     DuiContainer* createContainer();
-
-    void initSlider(DuiSlider *slider, int index, const QStringList &values);
-    void updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern = QString(""));
 
 private: //attributes
 
@@ -46,9 +48,6 @@ private: //attributes
     ProfileContainer* beepContainer;
     ProfileContainer* silentContainer;
 
-    // DuiButtonGroup* btnGroup;
-
-    QStringList volumeValues;
-    profileDBusInterface *profileIf;    
+    ProfileDBusInterface *profileIf;
 };
 #endif // PROFILEWIDGET_H

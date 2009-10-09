@@ -1,4 +1,5 @@
 #include "profilecontainer.h"
+#include "profilebuttons.h"
 #include "profiletranslation.h"
 
 #include <DuiButton>
@@ -10,22 +11,24 @@
 #include <DuiStylableWidget>
 #include <QDebug>
 
-ProfileContainer::ProfileContainer(const QString &title, const QStringList& volumeLevels, int levelIndex, bool vibrationEnabled, DuiWidget *parent) :
+ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *parent) :
     DuiContainer(title, parent),
-    volumeLevels(volumeLevels),
     slider(NULL),
-    levelIndex(-2)
+    levelIndex(-2),
+    profileId(id)
 {
     qDebug() << "ProfileContainer::ProfileContainer()" << title;
 
-    slider = new DuiSlider(this, "continuous");
-    slider->setOrientation(Qt::Horizontal);
-    setLevel(levelIndex);
-    connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
+    if(profileId != ProfileButtons::silent) {
+        slider = new DuiSlider(this, "continuous");
+        slider->setOrientation(Qt::Horizontal);
+        slider->setThumbLabelVisible(false);
+        connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
+    }
 
     button = new DuiButton(DcpProfile::VibrationText, this);
     button->setCheckable(true);
-    setVibration(vibrationEnabled);
+    setVibration(true);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 
@@ -52,10 +55,12 @@ void ProfileContainer::setLayout()
     DuiImage* img = NULL;
     QGraphicsLayoutItem* item = NULL;
 
-    if(slider->isVisible())
+    if(slider)
     {
         img = new DuiImage("Icon-back", this);
         item = slider;
+        qDebug() << "slider height" << slider->size().height();
+        slider->setMaximumHeight(32);
     }
     else
     {
@@ -68,9 +73,6 @@ void ProfileContainer::setLayout()
     portraitPolicy->setColumnFixedWidth(0, img->imageSize().width());
     landscapePolicy->setRowFixedHeight(0, img->imageSize().height());
     portraitPolicy->setRowFixedHeight(0, img->imageSize().height());
-
-    qDebug() << "slider height" << slider->size().height();
-    slider->setMaximumHeight(32);
 
     // set objects
     landscapePolicy->addItemAtPosition(img, 0, 0);
@@ -90,34 +92,52 @@ void ProfileContainer::setLayout()
     setCentralWidget(layoutWidget);
 }
 
+void ProfileContainer::initSlider(const QStringList& volumeLevels)
+{
+    qDebug() << "ProfileContainer::initSlider for" << title();
+    this->volumeLevels = QStringList(volumeLevels);
+
+    if(!slider )
+        return;
+
+    qDebug() << "ProfileContainer::initSlider" << volumeLevels.length();
+    int max = volumeLevels.length();
+    if( max > 0)
+    {
+        slider->setRange(0, volumeLevels[max-1].toInt());
+    }
+    int level = 0;
+    if(levelIndex >= 0 && levelIndex < max)
+    {
+        level = volumeLevels[levelIndex].toInt();
+    }
+    slider->setValue(level);
+    qDebug() << "ProfileContainer::initSlider value:" << slider->value();
+}
+
 void ProfileContainer::setLevel(int index)
 {
-    qDebug() << "ProfileContainer::setLevel" << index;
-    if(index == levelIndex)
+    qDebug() << "ProfileContainer::setLevel for " << title() << ":" << index;
+    if(!slider || index == levelIndex)
         return;
 
     levelIndex = index;
-    if(levelIndex >= 0)
+    if(levelIndex >= 0 && levelIndex < volumeLevels.length())
     {
         int level;
-        int max = volumeLevels.length();
-        if( max > 0)
-        {
-            slider->setRange(0, max-1);
-            if(levelIndex < max)
-                level = volumeLevels[levelIndex].toInt();
-        }
+        level = volumeLevels[levelIndex].toInt();
         slider->setValue(level);
-        slider->setThumbLabelVisible(false);
     }
-    else
-    {
-        slider->hide();
-    }
-
+    qDebug() << "ProfileContainer::setLevel done:" << slider->value();
 }
 
 void ProfileContainer::setVibration(bool enabled)
 {
+    qDebug() << "ProfileContainer::setVibration for " << title() << ":" << enabled;
     button->setChecked(enabled);
+}
+
+int ProfileContainer::id()
+{
+    return profileId;
 }

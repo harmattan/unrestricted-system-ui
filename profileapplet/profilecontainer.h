@@ -11,11 +11,13 @@ class ProfileContainer: public DuiContainer
     Q_OBJECT
 
 public:
-    ProfileContainer(const QString &title, const QStringList& volumeLevels, int levelIndex, bool vibrationEnabled, DuiWidget *parent);
+    ProfileContainer(int id, const QString &title, DuiWidget *parent);
     virtual ~ProfileContainer();
 
+    void initSlider(const QStringList& volumeLevels);
     void setLevel(int levelIndex);
     void setVibration(bool enabled);
+    int id();
 
 signals:
     void sliderValueChanged(int newValue);
@@ -25,10 +27,11 @@ private:
     void setLayout();
 
 private:
-    const QStringList& volumeLevels;
+    QStringList volumeLevels;
     DuiSlider* slider;
     DuiButton* button;
     int levelIndex;
+    const int profileId;
 };
 
 #endif // PROFILECONTAINER_H

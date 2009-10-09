@@ -18,6 +18,9 @@
 #include "eventhandler.h"
 #include "notifier.h"
 
+class ProfileBusinessLogic;
+class ProfileBusinessLogicAdaptor;
+
 class Sysuid : public QObject
 {
     Q_OBJECT
@@ -39,6 +42,8 @@ private:
     DisplayBusinessLogicAdaptor *displayLogicAdaptor;
     PhoneNetworkBusinessLogic *networkLogic;
     PhoneNetworkBusinessLogicAdaptor *networkLogicAdaptor;
+    ProfileBusinessLogic* profileLogic;
+    ProfileBusinessLogicAdaptor* profileLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
     LockScreenBusinessLogicAdaptor *lockScreenLogicAdaptor;
     ShutdownBusinessLogic *shutdownLogic;

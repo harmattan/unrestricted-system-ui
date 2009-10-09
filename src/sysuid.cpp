@@ -6,6 +6,8 @@
 #include <QPointer>
 
 #include "sysuid.h"
+#include "profilebusinesslogic.h"
+#include "profilebusinesslogicadaptor.h"
 
 namespace {
     const QString themeDir = "/usr/share/sysuid/themes/";
@@ -39,6 +41,10 @@ Sysuid::Sysuid() : QObject()
     /* Network */
     networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf);
     networkLogicAdaptor = new PhoneNetworkBusinessLogicAdaptor(dbusObject(), networkLogic);
+
+    /* Profile */
+    profileLogic = new ProfileBusinessLogic();
+    profileLogicAdaptor = new ProfileBusinessLogicAdaptor(dbusObject(), profileLogic);
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -116,6 +122,10 @@ Sysuid::~Sysuid()
     displayLogic = NULL;
     delete displayLogicAdaptor;
     displayLogicAdaptor = NULL;
+    delete profileLogic;
+    profileLogic = NULL;
+    delete profileLogicAdaptor;
+    profileLogicAdaptor = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
     delete shutdownLogic;
