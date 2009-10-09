@@ -5,7 +5,7 @@
 
 namespace DcpProfile {
     const QString ProfilesText = trid("qtn_prof_profile", "Profiles");
-    const QString AppletTitle = AppletTitle;
+    const QString AppletTitle = ProfilesText;
     const QString MenuHelpText = trid("qtn_comm_help", "Help");
 
     const QString CurrentText = trid("qtn_prof_currprof", "Current profile");
