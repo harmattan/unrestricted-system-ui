@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     pincodequerydbusadaptor.cpp \
     lockscreenbusinesslogicadaptor.cpp \
     profilebusinesslogic.cpp \
-    profilebusinesslogicadaptor.cpp
+    profilebusinesslogicadaptor.cpp \
+    profiles.cpp
 HEADERS += main.h \
     notifier.h \
     #batterybusinesslogic.h \
@@ -66,7 +67,8 @@ HEADERS += main.h \
     pincodequerydbusadaptor.h \
     lockscreenbusinesslogicadaptor.h \
     profilebusinesslogic.h \
-    profilebusinesslogicadaptor.h
+    profilebusinesslogicadaptor.h \
+    profiles.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg
