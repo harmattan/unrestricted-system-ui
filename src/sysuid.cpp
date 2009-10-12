@@ -59,8 +59,7 @@ Sysuid::Sysuid() : QObject()
             shutdownLogic, SLOT(powerKeyUp()));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic();
-    lockScreenLogicAdaptor = new LockScreenBusinessLogicAdaptor(dbusObject(), lockScreenLogic);
+    lockScreenLogic = new LockScreenBusinessLogic();    
     //connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));
     //connect(batteryLogic, SIGNAL(batteryCharging()), lockScreenLogic, SLOT(sleepModeOff()));
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));

@@ -1,5 +1,7 @@
 #include <DuiApplicationWindow>
 #include <DuiApplication>
+#include <QDBusInterface>
+#include <QDebug>
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
@@ -21,6 +23,14 @@ LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
 
     lockUI = new LockScreenUI;
     connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
+
+    dbusIf = new QDBusInterface("org.maemo.dui.NotificationManager", "/systemui",
+                                "org.maemo.dui.NotificationManager.MissedEvents",
+                                QDBusConnection::sessionBus());
+    connect(dbusIf, SIGNAL(missedEventAmountsChanged(int, int, int, int)),
+            this, SLOT(updateMissedEventAmounts(int, int, int, int)));
+    dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
+
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -140,17 +150,8 @@ void LockScreenBusinessLogic::disable(bool disable)
     isDisabled = disable;
 }
 
-void LockScreenBusinessLogic::unreadMessagesAmountChanged(int amount)
+void LockScreenBusinessLogic::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
 {
-    lockUI->updateUnreadMessages(amount);
-}
-
-void LockScreenBusinessLogic::missedCallsAmountChanged(int amount)
-{
-    lockUI->updateMissedCalls(amount);
-}
-
-void LockScreenBusinessLogic::unreadChatMessagesAmountChanged(int amount)
-{
-    lockUI->updateUnreadChatMessages(amount);
+    qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts(" << calls << ", " << messages << ", " << emails << ", " << chatMessages << ")";
+    lockUI->updateMissedEventAmounts(calls, messages, emails, chatMessages);
 }

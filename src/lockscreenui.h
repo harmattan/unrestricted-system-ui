@@ -24,9 +24,7 @@ public:
     bool sleepMode();
     void toggleSleepMode(bool toggle);
 */
-    void updateUnreadMessages(int amount);
-    void updateMissedCalls(int amount);
-    void updateUnreadChatMessages(int amount);
+    void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
 
 signals:
     void unlocked();

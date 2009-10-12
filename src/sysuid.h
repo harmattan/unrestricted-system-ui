@@ -13,7 +13,6 @@
 #include "phonenetworkbusinesslogic.h"
 #include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
-#include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 #include "eventhandler.h"
 #include "notifier.h"
@@ -45,7 +44,6 @@ private:
     ProfileBusinessLogic* profileLogic;
     ProfileBusinessLogicAdaptor* profileLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
-    LockScreenBusinessLogicAdaptor *lockScreenLogicAdaptor;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
 };

@@ -8,6 +8,7 @@
 #include <QObject>
 
 class LockScreenUI;
+class QDBusInterface;
 
 using namespace Maemo;
 
@@ -18,10 +19,6 @@ class LockScreenBusinessLogic : public QObject
 public:
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
-
-    void unreadMessagesAmountChanged(int amount);
-    void missedCallsAmountChanged(int amount);
-    void unreadChatMessagesAmountChanged(int amount);
 
 signals:
     void lockScreenOff();    
@@ -34,6 +31,7 @@ public slots:
 
 private slots:    
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
 
 private: //methods
     void toggleScreenLock(bool toggle);
@@ -48,6 +46,7 @@ private: //attributes
     QmLocks *touchPadLocker;
     QmDisplayState *display;
     LockScreenUI *lockUI;
+    QDBusInterface *dbusIf;
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H

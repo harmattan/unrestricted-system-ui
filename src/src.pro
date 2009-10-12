@@ -19,7 +19,7 @@ contains(cov, true) {
 }
 SOURCES += main.cpp \
     notifier.cpp \
-    #batterybusinesslogic.cpp \
+    \ \ # batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
@@ -31,7 +31,7 @@ SOURCES += main.cpp \
     usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
-    #batterybusinesslogicadaptor.cpp \
+    \ \ # batterybusinesslogicadaptor.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
@@ -39,13 +39,13 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogic.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
-    lockscreenbusinesslogicadaptor.cpp \
     profilebusinesslogic.cpp \
     profilebusinesslogicadaptor.cpp \
     profiles.cpp
+
 HEADERS += main.h \
     notifier.h \
-    #batterybusinesslogic.h \
+    \ \ # batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
@@ -57,7 +57,7 @@ HEADERS += main.h \
     usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
-    #batterybusinesslogicadaptor.h \
+    \ \ # batterybusinesslogicadaptor.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
@@ -65,10 +65,10 @@ HEADERS += main.h \
     phonenetworkbusinesslogic.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
-    lockscreenbusinesslogicadaptor.h \
     profilebusinesslogic.h \
     profilebusinesslogicadaptor.h \
     profiles.h
+
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

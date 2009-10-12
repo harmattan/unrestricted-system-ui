@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     **/
 
     int ret = app.exec();
-    qDebug() << "Bye!";
+    //qDebug() << "Bye!";
     return ret;
 }
 

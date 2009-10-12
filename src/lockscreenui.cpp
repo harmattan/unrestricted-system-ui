@@ -201,23 +201,29 @@ void LockScreenUI::updateDateTime()
     dateLabel->setText(dt.date().toString("!! dddd, d MMMM"));
 }
 
-void LockScreenUI::updateUnreadMessages(int amount)
+void LockScreenUI::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
 {
+    qDebug() << "LockScreenUI::updateMissedEventAmounts(" << calls << ", " << messages << ", " <<  emails << ", " << chatMessages << ")";
     //will change when localizable strings available
-    QString word = amount > 1 ? "messages" : "message";
-    unreadMessagesLbl->setText(QString("%1 unread %2").arg(amount).arg(word));
-}
+    QString word = calls > 1 ? "calls" : "call";
+    calls > 0 ? missedCallsLbl->setVisible(false) : missedCallsLbl->setVisible(true);
+    missedCallsLbl->setText(QString("%1 unanswered %2").arg(calls).arg(word));
 
-void LockScreenUI::updateMissedCalls(int amount)
-{
     //will change when localizable strings available
-    QString word = amount > 1 ? "calls" : "call";
-    missedCallsLbl->setText(QString("%1 unread %2").arg(amount).arg(word));
-}
+    word = messages > 1 ? "messages" : "message";
+    messages > 0 ? unreadMessagesLbl->setVisible(false) : unreadMessagesLbl->setVisible(true);
+    unreadMessagesLbl->setText(QString("%1 unread %2").arg(messages).arg(word));
 
-void LockScreenUI::updateUnreadChatMessages(int amount)
-{    
     //will change when localizable strings available
-    QString word = amount > 1 ? "messages" : "message";
-    unreadChatMessagesLbl->setText(QString("%1 unread chat %2").arg(amount).arg(word));
+    /*
+    word = emails > 1 ? "emails" : "email";
+    emails > 0 ? unreadEmailsLbl->setVisible(false) : unreadEmailsLbl->setVisible(true);
+    unreadEmailsLbl->setText(QString("%1 unread %2").arg(emails).arg(word));
+    */
+
+    //will change when localizable strings available
+    word = chatMessages > 1 ? "messages" : "message";
+    chatMessages > 0 ? unreadChatMessagesLbl->setVisible(false) : unreadChatMessagesLbl->setVisible(true);
+    unreadChatMessagesLbl->setText(QString("%1 unread chat %2").arg(chatMessages).arg(word));
+
 }

@@ -6,7 +6,7 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
-	/usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -18,11 +18,11 @@ OBJECTS_DIR = .objects
 HEADERS = batteryapplet.h \
     batterywidget.h \
     batterytranslation.h \
-    batterybrief.h \    
+    batterybrief.h \
     batterydbusinterface.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
-    batterybrief.cpp \    
+    batterybrief.cpp \
     batterydbusinterface.cpp
 css.files = batteryapplet.css
 DESTDIR = lib

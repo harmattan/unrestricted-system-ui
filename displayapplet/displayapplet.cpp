@@ -47,7 +47,7 @@ QString DisplayApplet::title() const
 
 QVector<DuiAction*> DisplayApplet::viewMenuItems()
 {
-    QVector<DuiAction*> vector;
+    QVector<DuiAction*> vector;    
     return vector;
 }
 

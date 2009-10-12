@@ -48,6 +48,8 @@ QString NetworkApplet::title() const
 QVector<DuiAction*> NetworkApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
+    DuiAction* helpAction = new DuiAction(DcpNetwork::HelpText, pageMain());
+    vector.append(helpAction);
     return vector;
 }
 
