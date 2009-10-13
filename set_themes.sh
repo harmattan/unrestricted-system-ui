@@ -26,6 +26,10 @@ elif [ "$1" = "-d" ] || [ "$1" = "--delete" ]; then
     rm /usr/lib/duicontrolpanel/network.desktop > /dev/null 2>&1
     rm /usr/share/duicontrolpanel/themes/style/networkapplet.css > /dev/null 2>&1
     rm /usr/lib/duicontrolpanel/applets/libnetworkapplet.so > /dev/null 2>&1
+
+    rm /usr/lib/libprofile-qt.so* > /dev/null 2>&1
+    rm /usr/include/profile-qt/Profile > /dev/null 2>&1
+    rm /usr/include/profile-qt/profile.h > /dev/null 2>&1
     echo "Files deleted!"
     exit;
 elif [ "$1" != "" ]; then
@@ -67,4 +71,12 @@ cp networkapplet/lib/libnetworkapplet.so /usr/lib/duicontrolpanel/applets/
 cp profileapplet/profile.desktop /usr/lib/duicontrolpanel/
 cp profileapplet/profileapplet.css /usr/share/duicontrolpanel/themes/style/
 cp profileapplet/lib/libprofileapplet.so /usr/lib/duicontrolpanel/applets/
-echo "Files copied!"
+echo "Theme Files copied!"
+
+echo "Copy profile API files..."
+mkdir -p /usr/include/profile-qt/
+cp ../../profile-qt/trunk/lib/libprofile-qt.so* /usr/lib/
+cp ../../profile-qt/trunk/Profile /usr/include/profile-qt/
+cp ../../profile-qt/trunk/profile.h /usr/include/profile-qt/
+echo "API files copied!"
+
