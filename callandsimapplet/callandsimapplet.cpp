@@ -26,10 +26,9 @@ DcpWidget* CallAndSimApplet::constructWidget(int widgetId)
         case DcpCallAndSim::Main:
             return pageMain();
         break;
-        default:
-            return 0;
-        break;
     }
+
+    return 0;
 }
 
 DcpWidget* CallAndSimApplet::pageMain()

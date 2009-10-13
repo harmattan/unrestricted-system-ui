@@ -3,6 +3,9 @@
 
 #include "dcpwidget.h"
 
+class CallContainer;
+class SimContainer;
+
 class CallAndSimWidget : public DcpWidget
 {
     Q_OBJECT
@@ -13,6 +16,10 @@ public:
 
 protected:
     void initWidget();
+
+private:
+    CallContainer* callContainer;
+    SimContainer* simContainer;
 };
 
 #endif // CALLANDSIMWIDGET_H
