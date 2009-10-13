@@ -8,10 +8,12 @@ CONFIG += dui \
 QT += dbus
 LIBS += -lX11 \
     -lcallui0 \
-    -lhal
+    -lhal \
+    -lprofile-qt
 INCLUDEPATH += /usr/include/alarmd \
     /usr/include/dbus-1.0 \
-    /usr/lib/dbus-1.0/include
+    /usr/lib/dbus-1.0/include \
+    /usr/include/profile-qt
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
@@ -19,7 +21,7 @@ contains(cov, true) {
 }
 SOURCES += main.cpp \
     notifier.cpp \
-    \ \ # batterybusinesslogic.cpp \
+    # batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
@@ -31,7 +33,7 @@ SOURCES += main.cpp \
     usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
-    \ \ # batterybusinesslogicadaptor.cpp \
+    # batterybusinesslogicadaptor.cpp \
     displaybusinesslogic.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
@@ -40,12 +42,11 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
     profilebusinesslogic.cpp \
-    profilebusinesslogicadaptor.cpp \
-    profiles.cpp
+    profilebusinesslogicadaptor.cpp
 
 HEADERS += main.h \
     notifier.h \
-    \ \ # batterybusinesslogic.h \
+    # batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
@@ -57,7 +58,7 @@ HEADERS += main.h \
     usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
-    \ \ # batterybusinesslogicadaptor.h \
+    # batterybusinesslogicadaptor.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
@@ -66,8 +67,7 @@ HEADERS += main.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
     profilebusinesslogic.h \
-    profilebusinesslogicadaptor.h \
-    profiles.h
+    profilebusinesslogicadaptor.h
 
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \

@@ -8,7 +8,6 @@ ProfileDBusInterface::ProfileDBusInterface()
 				"com.nokia.systemui.profile", 
 				QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(currentProfile(int)), this, SIGNAL(currentProfile(int)));
-    connect(dbusIf, SIGNAL(volumeLevels(QStringList)), this, SIGNAL(volumeLevels(QStringList)));
     connect(dbusIf, SIGNAL(volumeLevel(int, int)), this, SIGNAL(volumeLevel(int, int)));
     connect(dbusIf, SIGNAL(vibrationValue(int, bool)), this, SIGNAL(vibrationValue(int, bool)));
 }

@@ -14,23 +14,21 @@ public:
     ProfileContainer(int id, const QString &title, DuiWidget *parent);
     virtual ~ProfileContainer();
 
-    void initSlider(const QStringList& volumeLevels);
-    void setLevel(int levelIndex);
+    void setLevel(int value);
     void setVibration(bool enabled);
     int id();
 
 signals:
     void sliderValueChanged(int newValue);
-    void vibrationChanged(bool on);
+    void vibrationChanged(bool enabled);
 
 private:
     void setLayout();
 
 private:
-    QStringList volumeLevels;
     DuiSlider* slider;
     DuiButton* button;
-    int levelIndex;
+    int level;
     const int profileId;
 };
 

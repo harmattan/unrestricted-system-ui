@@ -42,7 +42,6 @@ void ProfileWidget::initWidget()
 
     // catch profile If actions
     connect(profileIf, SIGNAL(currentProfile(int)), this, SLOT(setProfile(int)));
-    connect(profileIf, SIGNAL(volumeLevels(QStringList)), this, SLOT(setVolumeLevels(QStringList)));
     connect(profileIf, SIGNAL(volumeLevel(int, int)), this, SLOT(setVolume(int, int)));
     connect(profileIf, SIGNAL(vibrationValue(int, bool)), this, SLOT(setVibration(int, bool)));
 
@@ -159,14 +158,6 @@ void ProfileWidget::setProfile(int profileId)
 {
     qDebug() << "ProfileWidget::setProfile():" << profileId;
     profileButtons->selectProfile((ProfileButtons::ProfileId)profileId);
-}
-
-void ProfileWidget::setVolumeLevels(QStringList volumeLevels)
-{
-    qDebug() << "ProfileWidget::setVolumeLevels() >>>>>>>>>>>>>>>>>>>>>>>>";
-    ringingContainer->initSlider(volumeLevels);
-    beepContainer->initSlider(volumeLevels);
-    loudContainer->initSlider(volumeLevels);
 }
 
 void ProfileWidget::setVolume(int profileId, int level)

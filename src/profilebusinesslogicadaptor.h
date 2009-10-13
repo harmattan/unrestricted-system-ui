@@ -28,7 +28,6 @@ public slots:
 
 signals:
     void currentProfile(int id);
-    void volumeLevels(QStringList levels);
     void vibrationValue(int id, bool value);
     void volumeLevel(int id, int value);
 

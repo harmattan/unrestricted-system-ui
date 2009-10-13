@@ -28,7 +28,6 @@ protected:
 
 private slots:
     void setProfile(int profileId);
-    void setVolumeLevels(QStringList volumeLevels);
     void setVolume(int profileId, int level);
     void setVibration(int profileId, bool enabled);
 

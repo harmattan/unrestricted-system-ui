@@ -11,10 +11,15 @@
 #include <DuiStylableWidget>
 #include <QDebug>
 
+namespace ProfileApplet{
+    const int sliderMin = 0;
+    const int sliderMax = 100;
+}
+
 ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *parent) :
     DuiContainer(title, parent),
     slider(NULL),
-    levelIndex(-2),
+    level(-2),
     profileId(id)
 {
     qDebug() << "ProfileContainer::ProfileContainer()" << title;
@@ -22,6 +27,7 @@ ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *pare
     if(profileId != ProfileButtons::silent) {
         slider = new DuiSlider(this, "continuous");
         slider->setOrientation(Qt::Horizontal);
+        slider->setRange(ProfileApplet::sliderMin, ProfileApplet::sliderMax);
         slider->setThumbLabelVisible(false);
         connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
     }
@@ -29,7 +35,6 @@ ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *pare
     button = new DuiButton(DcpProfile::VibrationText, this);
     button->setCheckable(true);
     setVibration(true);
-    connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 
     setLayout();
@@ -92,41 +97,17 @@ void ProfileContainer::setLayout()
     setCentralWidget(layoutWidget);
 }
 
-void ProfileContainer::initSlider(const QStringList& volumeLevels)
+void ProfileContainer::setLevel(int value)
 {
-    qDebug() << "ProfileContainer::initSlider for" << title();
-    this->volumeLevels = QStringList(volumeLevels);
-
-    if(!slider )
+    qDebug() << "ProfileContainer::setLevel for " << title() << ":" << value << "(old:" << level << ")";
+    if(!slider || value == level)
         return;
 
-    qDebug() << "ProfileContainer::initSlider" << volumeLevels.length();
-    int max = volumeLevels.length();
-    if( max > 0)
+    level = value;
+    if(ProfileApplet::sliderMin < level && ProfileApplet::sliderMax >= level)
     {
-        slider->setRange(0, volumeLevels[max-1].toInt());
-    }
-    int level = 0;
-    if(levelIndex >= 0 && levelIndex < max)
-    {
-        level = volumeLevels[levelIndex].toInt();
-    }
-    slider->setValue(level);
-    qDebug() << "ProfileContainer::initSlider value:" << slider->value();
-}
-
-void ProfileContainer::setLevel(int index)
-{
-    qDebug() << "ProfileContainer::setLevel for " << title() << ":" << index;
-    if(!slider || index == levelIndex)
-        return;
-
-    levelIndex = index;
-    if(levelIndex >= 0 && levelIndex < volumeLevels.length())
-    {
-        int level;
-        level = volumeLevels[levelIndex].toInt();
         slider->setValue(level);
+        qDebug() << "ProfileContainer::setLevel done:" << slider->value();
     }
     qDebug() << "ProfileContainer::setLevel done:" << slider->value();
 }

@@ -6,7 +6,6 @@ ProfileBusinessLogicAdaptor::ProfileBusinessLogicAdaptor(QObject *obj, ProfileBu
         logic(logic)
 {
     connect(logic, SIGNAL(currentProfile(int)), this, SIGNAL(currentProfile(int)));
-    connect(logic, SIGNAL(volumeLevels(QStringList)), this, SIGNAL(volumeLevels(QStringList)));
     connect(logic, SIGNAL(vibrationValue(int, bool)), this, SIGNAL(vibrationValue(int, bool)));
     connect(logic, SIGNAL(volumeLevel(int, int)), this, SIGNAL(volumeLevel(int, int)));
 }
