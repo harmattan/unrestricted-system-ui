@@ -20,6 +20,4 @@ HEADERS += ut_unlockslider.h \
 MODEL_HEADERS += $$SLIDER_PREFIX/unlockslidermodel.h
 STYLE_HEADERS += $$SLIDER_PREFIX/unlocksliderstyle.h
 
-target.files += ut_unlockslider
-
 INSTALLS += target
