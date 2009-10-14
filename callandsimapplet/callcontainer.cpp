@@ -37,8 +37,13 @@ void CallContainer::setLayout()
     // send caller id
 
     sendCallerIdComboBox = new DuiComboBox();
-    // TODO: init combo box
-    sendCallerIdComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//    sendCallerIdComboBox->setObjectName("sendCallerIdComboBox");
+    sendCallerIdComboBox->addItem(DcpCallAndSim::LetNetworkChooseText);
+    sendCallerIdComboBox->addItem(DcpCallAndSim::YesText);
+    sendCallerIdComboBox->addItem(DcpCallAndSim::NoText);
+    sendCallerIdComboBox->setIconVisible(false);
+    sendCallerIdComboBox->setCurrentIndex(0);
+//    sendCallerIdComboBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     QGraphicsLinearLayout* sendCallerIdLayout = new QGraphicsLinearLayout(Qt::Vertical);
     // TODO: some const value here some day
@@ -48,13 +53,11 @@ void CallContainer::setLayout()
 
     // call waiting checkbox
 
-    QGraphicsLinearLayout* callWaitingLayout =
-            createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton, QString("callWaitingButton"));
+    QGraphicsLinearLayout* callWaitingLayout = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
 
     // call forwarding checkbox
 
-    QGraphicsLinearLayout* callFwdLayout =
-            createCheckBox(DcpCallAndSim::CallForwardingText, callFwdButton, QString("callForwardingButton"));
+    QGraphicsLinearLayout* callFwdLayout = createCheckBox(DcpCallAndSim::CallForwardingText, callFwdButton);
 
     // call forwarding number
 
@@ -62,36 +65,39 @@ void CallContainer::setLayout()
     // TODO: init textedit
 
     pickerButton = new DuiButton();
-    pickerButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+//    pickerButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     pickerButton->setObjectName("peoplePickerButton");
 
     QGraphicsGridLayout* fwdNumberLayout = new QGraphicsGridLayout();
     fwdNumberLayout->addItem(createLabel(DcpCallAndSim::ForwardToText), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     fwdNumberLayout->addItem(pickerButton, 0, 1, 2, 1, Qt::AlignCenter);
-    fwdNumberLayout->addItem(numberEdit, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    fwdNumberLayout->addItem(numberEdit, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
     // landscape policy
 
+    lp->setSpacing(5);
+    lp->setColumnMaximumWidth(0, 400);
+    lp->setColumnMaximumWidth(1, 400);
     lp->addItemAtPosition(sendCallerIdLayout, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     lp->addItemAtPosition(callWaitingLayout, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
     lp->addItemAtPosition(callFwdLayout, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
     lp->addItemAtPosition(fwdNumberLayout, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
-    lp->setSpacing(5);
 
     // portrait policy
 
-    lp->addItemAtPosition(sendCallerIdLayout, 0, 0, Qt::AlignCenter);
-    lp->addItemAtPosition(callWaitingLayout, 1, 0, Qt::AlignCenter);
-    lp->addItemAtPosition(callFwdLayout, 2, 0, Qt::AlignCenter);
-    lp->addItemAtPosition(fwdNumberLayout, 3, 0, Qt::AlignCenter);
     pp->setSpacing(5);
+    pp->setColumnMaximumWidth(0, 480);
+    pp->addItemAtPosition(sendCallerIdLayout, 0, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(callWaitingLayout, 1, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(callFwdLayout, 2, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(fwdNumberLayout, 3, 0, Qt::AlignCenter);
 
     // layout
 
     centralWidget()->setLayout(layout);
 }
 
-DuiLabel* createLabel(const QString& text)
+DuiLabel* CallContainer::createLabel(const QString& text)
 {
     DuiLabel* label = new DuiLabel(text);
     label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -99,17 +105,20 @@ DuiLabel* createLabel(const QString& text)
     return label;
 }
 
-QGraphicsLinearLayout* CallContainer::createCheckBox(const QString& text, DuiButton*& button, const QString& name)
+QGraphicsLinearLayout* CallContainer::createCheckBox(const QString& text, DuiButton*& button)
 {
     button = new DuiButton();
-    button->setObjectName(name);
+    button->setObjectName("checkBoxButton");
     button->setCheckable(true);
 
+    DuiLabel* label = createLabel(text);
+
     QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    // TODO: some const value here some day
-    layout->setContentsMargins(10, 10, 10, 10);
-    layout->addItem(createLabel(text));
+
+    layout->addItem(label);
+    layout->setAlignment(label, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addItem(button);
+    layout->setAlignment(button, Qt::AlignRight | Qt::AlignVCenter);
 
     return layout;
 }

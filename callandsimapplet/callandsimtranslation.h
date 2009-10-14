@@ -8,6 +8,8 @@ namespace DcpCallAndSim
     const QString CallText =                trid("qtn_cell_call",                "Call");
     const QString SendCallerIdText =        trid("qtn_cell_send_caller_id",      "Send my caller ID");
     const QString LetNetworkChooseText =    trid("qtn_cell_let_network_choose",  "Let network choose");
+    const QString YesText =                 trid("qtn_comm_yes",                 "Yes");
+    const QString NoText =                  trid("qtn_comm_no",                  "No");
     const QString CallWaitingText =         trid("qtn_cell_call_waiting",        "Call waiting");
     const QString CallForwardingText =      trid("qtn_cell_call_forwarding",     "Call forwarding");
     const QString ForwardToText =           trid("qtn_cell_forward_to",          "Forward to");

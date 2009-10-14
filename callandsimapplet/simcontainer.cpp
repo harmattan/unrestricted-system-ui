@@ -33,10 +33,10 @@ void SimContainer::setLayout()
 
     pinRequestLabel = new DuiLabel(DcpCallAndSim::SimCardText);
     pinRequestLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    pinRequestLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//    pinRequestLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     pinRequestButton = new DuiButton();
-    pinRequestButton->setObjectName("pinRequestButton");
+    pinRequestButton->setObjectName("checkBoxButton");
     pinRequestButton->setCheckable(true);
 
     QGraphicsLinearLayout* pinRequestLayout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -52,15 +52,18 @@ void SimContainer::setLayout()
 
     // landscape policy
 
-    lp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    lp->addItemAtPosition(changePinButton, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
     lp->setSpacing(5);
+    lp->setColumnMaximumWidth(0, 390);
+    lp->setColumnMaximumWidth(1, 390);
+    lp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    lp->addItemAtPosition(changePinButton, 0, 1, Qt::AlignCenter);
 
     // portrait policy
 
-    pp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft);
-    pp->addItemAtPosition(changePinButton, 1, 0, Qt::AlignLeft);
     pp->setSpacing(5);
+    pp->setColumnMaximumWidth(0, 480);
+    pp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft);
+    pp->addItemAtPosition(changePinButton, 1, 0, Qt::AlignCenter);
 
     // layout
 

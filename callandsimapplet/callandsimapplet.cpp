@@ -11,24 +11,18 @@ Q_EXPORT_PLUGIN2(callandsimapplet, CallAndSimApplet)
 
 namespace DcpCallAndSim
 {
-    const QString css("/usr/share/duicontrolpanel/themes/style/networkapplet.css");
+    const QString css("/usr/share/duicontrolpanel/themes/style/callandsimapplet.css");
 }
 
-void CallAndSimApplet::init(QString part)
+void CallAndSimApplet::init()
 {
-    Q_UNUSED(part);
     DuiTheme::loadCSS(DcpCallAndSim::css);
 }
 
 DcpWidget* CallAndSimApplet::constructWidget(int widgetId)
 {
-    switch (widgetId) {
-        case DcpCallAndSim::Main:
-            return pageMain();
-        break;
-    }
-
-    return 0;
+    Q_UNUSED(widgetId);
+    return pageMain();
 }
 
 DcpWidget* CallAndSimApplet::pageMain()
@@ -53,8 +47,9 @@ QVector<DuiAction*> CallAndSimApplet::viewMenuItems()
     return vector;
 }
 
-DcpBrief* CallAndSimApplet::constructBrief()
+DcpBrief* CallAndSimApplet::constructBrief(int partId)
 {
+    Q_UNUSED(partId);
     return new CallAndSimBrief();
 }
 

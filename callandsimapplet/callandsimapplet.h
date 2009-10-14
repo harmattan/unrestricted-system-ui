@@ -13,14 +13,12 @@ class CallAndSimApplet : public QObject, public DcpAppletIf
     Q_INTERFACES(DcpAppletIf)
 
 public:
-    CallAndSimApplet();
-
-    virtual void init(QString part = "");
+    virtual void init();
     virtual DcpWidget* constructWidget(int widgetId);
     virtual DcpWidget* pageMain();
     virtual QString title() const;
     virtual QVector<DuiAction*> viewMenuItems();
-    virtual DcpBrief* constructBrief();
+    virtual DcpBrief* constructBrief(int partId);
 
 private:
     QPointer<CallAndSimWidget> main;

@@ -19,7 +19,7 @@ private:
     void setLayout();
 
     DuiLabel* createLabel(const QString& text);
-    QGraphicsLinearLayout* createCheckBox(const QString& text, DuiButton*& button, const QString& name);
+    QGraphicsLinearLayout* createCheckBox(const QString& text, DuiButton*& button);
 
 private:
 //    DuiLabel* sendCallerIdLabel;
