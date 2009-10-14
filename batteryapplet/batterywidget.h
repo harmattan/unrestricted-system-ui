@@ -9,7 +9,12 @@ class DuiButton;
 class DuiGridLayoutPolicy;
 class DuiImage;
 class DuiSlider;
+
 class QTimer;
+
+class TalkTimeContainer;
+class StandByTimeContainer;
+class SliderContainer;
 
 class BatteryWidget : public DcpWidget
 {
@@ -17,44 +22,23 @@ class BatteryWidget : public DcpWidget
 		
 public:
     BatteryWidget(QGraphicsWidget *parent = 0);
-    virtual ~BatteryWidget();
+    virtual ~BatteryWidget();    
 
 protected:
     void initWidget();
 
 private slots:
-    void sliderValueChanged(int value);
     void PSMButtonPressed();
-    void PSMAutoButtonPressed();
     void updateNotChargingImage(int level);
-    void updateImage(bool charging = true);
     void updatePSMButton(bool toggle);
-    void updatePSMAutoButton(bool toggle);
-    void batteryLevelValueChanged(int value);
-    void startUpdatingChargingImage();
-    void stopUpdatingChargingImage();
-    void updateLabels(const QStringList &timeValues);
-    void initSlider(const QStringList &values);
-    void updateSlider(const QString &text);
-
-private: //methods    
-    void initImage();
-    QString minutesInString(int mins, const QString &pattern);
-    void toggleSliderVisibility(bool toggle);
+    void remainingTimeValuesReceived(const QStringList &timeValues);
 
 private: //attributes
-    int batteryLevel;
+    TalkTimeContainer *talkTimeContainer;
+    StandByTimeContainer *standByTimeContainer;
+    SliderContainer *sliderContainer;
     BatteryDBusInterface *batteryIf;
-    DuiLabel *talkTimeLabel;
-    DuiLabel *standByTimeLabel;    
     DuiButton *PSMButton;
-    DuiButton *PSMAutoButton;
-    DuiGridLayoutPolicy *sliderLayoutPolicy;
-    DuiImage *image;
-    DuiSlider *slider;
-    QStringList batteryImages;
-    QStringList batteryChargingImages;
-    QStringList sliderValues;
-    QTimer *updateChargingImageTimer;
+
 };
 #endif // BATTERYWIDGET_H

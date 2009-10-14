@@ -17,15 +17,15 @@ public:
     void PSMValueRequired();
     void PSMAutoValueRequired();
     void batteryChargingStateRequired();
-    void PSMThresholdValuesRequired();
-    void PSMThresholdValueRequired();
-    void batteryLevelValueRequired();
-    void setPSMThresholdValue(const QString &value);
-    void setPSMValue(bool toggle);
-    void setPSMAutoValue(bool toggle);        
+    void PSMThresholdValuesRequired();        
+    void setPSMValue(bool toggle);    
 
 public slots:
     void remainingTimeValuesRequired();
+    void batteryLevelValueRequired();
+    void PSMThresholdValueRequired();
+    void setPSMAutoValue(bool toggle);
+    void setPSMThresholdValue(const QString &value);
 
 public slots:
     void batteryChargingStateReceived(bool state);

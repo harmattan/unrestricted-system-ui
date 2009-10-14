@@ -19,11 +19,19 @@ HEADERS = batteryapplet.h \
     batterywidget.h \
     batterytranslation.h \
     batterybrief.h \
-    batterydbusinterface.h
+    batterydbusinterface.h \
+    talktimecontainer.h \
+    standbytimecontainer.h \
+    timecontainer.h \
+    slidercontainer.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
-    batterydbusinterface.cpp
+    batterydbusinterface.cpp \
+    talktimecontainer.cpp \
+    standbytimecontainer.cpp \
+    timecontainer.cpp \
+    slidercontainer.cpp
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop
