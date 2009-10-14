@@ -35,9 +35,8 @@ void ProfileApplet::startRotation()
 }
 ///////////////////////////
 
-void ProfileApplet::init(QString part)
+void ProfileApplet::init()
 {
-    Q_UNUSED(part);
     DuiTheme::loadCSS(cssDir + "profileapplet.css");
 
     /* Un/comment this for rotation *
@@ -81,7 +80,8 @@ QVector<DuiAction*> ProfileApplet::viewMenuItems()
     return vector;
 }
 
-DcpBrief* ProfileApplet::constructBrief()
+DcpBrief* ProfileApplet::constructBrief(int partId)
 {
+    Q_UNUSED(partId);
     return new ProfileBrief((ProfileWidget*)pageMain());
 }

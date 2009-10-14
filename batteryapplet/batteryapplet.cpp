@@ -16,11 +16,10 @@ Q_EXPORT_PLUGIN2(batteryapplet, BatteryApplet)
 
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
-void BatteryApplet::init(QString part)
-{
-    Q_UNUSED(part);
+void BatteryApplet::init()
+{   
     DuiTheme::loadCSS(cssDir + "batteryapplet.css");    
-};
+}
 
 DcpWidget* BatteryApplet::constructWidget(int widgetId)
 {
@@ -51,7 +50,8 @@ QVector<DuiAction*> BatteryApplet::viewMenuItems()
     return vector;
 }
 
-DcpBrief* BatteryApplet::constructBrief()
+DcpBrief* BatteryApplet::constructBrief(int partId)
 {
+    Q_UNUSED(partId);
     return new BatteryBrief();
 }

@@ -16,11 +16,10 @@ Q_EXPORT_PLUGIN2(displayapplet, DisplayApplet)
 
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
-void DisplayApplet::init(QString part)
-{
-    Q_UNUSED(part);
+void DisplayApplet::init()
+{    
     DuiTheme::loadCSS(cssDir + "displayapplet.css");
-};
+}
 
 DcpWidget* DisplayApplet::constructWidget(int widgetId)
 {
@@ -51,7 +50,8 @@ QVector<DuiAction*> DisplayApplet::viewMenuItems()
     return vector;
 }
 
-DcpBrief* DisplayApplet::constructBrief()
+DcpBrief* DisplayApplet::constructBrief(int partId)
 {
+    Q_UNUSED(partId);
     return new DisplayBrief();
 }

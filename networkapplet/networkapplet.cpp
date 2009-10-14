@@ -16,9 +16,8 @@ Q_EXPORT_PLUGIN2(networkapplet, NetworkApplet)
 
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
-void NetworkApplet::init(QString part)
+void NetworkApplet::init()
 {
-    Q_UNUSED(part);
     DuiTheme::loadCSS(cssDir + "networkapplet.css");
 };
 
@@ -53,7 +52,8 @@ QVector<DuiAction*> NetworkApplet::viewMenuItems()
     return vector;
 }
 
-DcpBrief* NetworkApplet::constructBrief()
+DcpBrief* NetworkApplet::constructBrief(int partId)
 {
+    Q_UNUSED(int partId);
     return new NetworkBrief();
 }
