@@ -4,21 +4,20 @@
 #include <QObject>
 #include <QPointer>
 
-#include "systemuigconf.h"
-#include "pincodequerybusinesslogic.h"
-//#include "batterybusinesslogic.h"
-//#include "batterybusinesslogicadaptor.h"
-#include "displaybusinesslogic.h"
-#include "displaybusinesslogicadaptor.h"
-#include "phonenetworkbusinesslogic.h"
-#include "phonenetworkbusinesslogicadaptor.h"
-#include "lockscreenbusinesslogic.h"
-#include "shutdownbusinesslogic.h"
-#include "eventhandler.h"
-#include "notifier.h"
-
+class SystemUIGConf;
+class PinCodeQueryBusinessLogic;
+class BatteryBusinessLogic;
+class BatteryBusinessLogicAdaptor;
+class DisplayBusinessLogic;
+class DisplayBusinessLogicAdaptor;
+class PhoneNetworkBusinessLogic;
+class PhoneNetworkBusinessLogicAdaptor;
+class LockScreenBusinessLogic;
+class ShutdownBusinessLogic;
+class EventHandler;
 class ProfileBusinessLogic;
 class ProfileBusinessLogicAdaptor;
+class Notifier;
 
 class Sysuid : public QObject
 {
@@ -35,8 +34,8 @@ public:
 private:
     SystemUIGConf *systemUIGConf;
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
-    //BatteryBusinessLogic *batteryLogic;
-    //BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
+    BatteryBusinessLogic *batteryLogic;
+    BatteryBusinessLogicAdaptor *batteryLogicAdaptor;
     DisplayBusinessLogic *displayLogic;
     DisplayBusinessLogicAdaptor *displayLogicAdaptor;
     PhoneNetworkBusinessLogic *networkLogic;

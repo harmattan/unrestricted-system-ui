@@ -3,11 +3,22 @@
 
 #include <QDBusConnection>
 #include <QDebug>
-#include <QPointer>
 
 #include "sysuid.h"
 #include "profilebusinesslogic.h"
 #include "profilebusinesslogicadaptor.h"
+#include "systemuigconf.h"
+#include "pincodequerybusinesslogic.h"
+#include "batterybusinesslogic.h"
+#include "batterybusinesslogicadaptor.h"
+#include "displaybusinesslogic.h"
+#include "displaybusinesslogicadaptor.h"
+#include "phonenetworkbusinesslogic.h"
+#include "phonenetworkbusinesslogicadaptor.h"
+#include "lockscreenbusinesslogic.h"
+#include "shutdownbusinesslogic.h"
+#include "eventhandler.h"
+#include "notifier.h"
 
 namespace {
     const QString themeDir = "/usr/share/sysuid/themes/";
@@ -31,8 +42,8 @@ Sysuid::Sysuid() : QObject()
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
     /* Battery */         
-    //batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    //batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
+    batteryLogic = new BatteryBusinessLogic(systemUIGConf);
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     /* Display */
     displayLogic = new DisplayBusinessLogic();
@@ -60,8 +71,8 @@ Sysuid::Sysuid() : QObject()
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();    
-    //connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));
-    //connect(batteryLogic, SIGNAL(batteryCharging()), lockScreenLogic, SLOT(sleepModeOff()));
+    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));
+    connect(batteryLogic, SIGNAL(batteryCharging()), lockScreenLogic, SLOT(sleepModeOff()));
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
     connect(shutdownLogic, SIGNAL(dialogOpen(bool)), lockScreenLogic, SLOT(disable(bool)));
 
@@ -113,10 +124,10 @@ Sysuid::~Sysuid()
     systemUIGConf = NULL;
     delete pinCodeQueryLogic;
     pinCodeQueryLogic = NULL;
-    //delete batteryLogic;
-    //batteryLogic = NULL;
-    //delete batteryLogicAdaptor;
-    //batteryLogicAdaptor = NULL;
+    delete batteryLogic;
+    batteryLogic = NULL;
+    delete batteryLogicAdaptor;
+    batteryLogicAdaptor = NULL;
     delete displayLogic;    
     displayLogic = NULL;
     delete displayLogicAdaptor;

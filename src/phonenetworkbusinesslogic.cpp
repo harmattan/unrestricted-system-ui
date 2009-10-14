@@ -50,28 +50,30 @@ void PhoneNetworkBusinessLogic::setNetworkMode(const QString &value)
 
 void PhoneNetworkBusinessLogic::setNetworkSelection(const QString &value)
 {    
-    qDebug() << "PhoneNetworkBusinessLogic::setNetworkSelection(" << value << ")";
-    NetworkRegistration nr;
-    nr.setMode(networkSelectionValues.key(value));
-    operators.clear(); //remove old operators
+    qDebug() << "PhoneNetworkBusinessLogic::setNetworkSelection(" << value << ")";    
 
     if(networkSelectionValues.key(value) == NetworkRegistration::Manual) {
         emit networkSelected(false);
         queryAvailableNetworks();
     }
-    else {
+    else { //Automatic
+        NetworkRegistration nr;
+        nr.selectOperator();
+        operators.clear(); //remove old operators
         emit availableNetworksAvailable(-1, QStringList(), false);
         emit networkSelected(true);
     }
 }
 
 void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
-{
+{    
     for(int i=0; i<operators.size(); ++i) {
         if(operators.at(i)->name() == value) {
-            connect(operators.at(i), SIGNAL(selectionCompleted(bool, const QString &)),
+            if(networkRegistration == NULL)
+                networkRegistration = new NetworkRegistration();
+            connect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
                     this, SLOT(selectNetworkCompleted(bool, const QString &)));
-            operators.at(i)->select();
+            networkRegistration->selectOperator(operators.at(i)->mnc(), operators.at(i)->mcc());
             break;
         }
     } 
@@ -79,6 +81,10 @@ void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
 
 void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QString &reason)
 {
+    if(networkRegistration != NULL) {
+        delete networkRegistration;
+        networkRegistration = NULL;
+    }
     if(success) {
         qDebug() << "Selection completed succesfully";
         emit networkSelected(true);

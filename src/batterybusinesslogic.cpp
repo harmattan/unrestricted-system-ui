@@ -2,6 +2,7 @@
 #include <qmsystem/qmled.h>
 
 #include <QTimer>
+#include <QDebug>
 
 #include <DuiLocale>
 #include <DuiApplicationWindow>
