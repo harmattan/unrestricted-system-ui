@@ -54,6 +54,6 @@ QVector<DuiAction*> NetworkApplet::viewMenuItems()
 
 DcpBrief* NetworkApplet::constructBrief(int partId)
 {
-    Q_UNUSED(int partId);
+    Q_UNUSED(partId);
     return new NetworkBrief();
 }
