@@ -7,6 +7,8 @@
 #include <DuiLayout>
 #include <DuiSlider>
 
+#include <QDebug>
+
 SliderContainer::SliderContainer(DuiWidget *parent) :
         DuiContainer(parent),
         PSMAutoButton(NULL),
@@ -26,8 +28,8 @@ void SliderContainer::setLayout()
     PSMAutoButton->setObjectName("PSMAutoButton");    
     PSMSlider = new DuiSlider(this, "continuous");
 
-    connect(PSMAutoButton, SIGNAL(toggled()), this, SLOT(PSMAutoButtonToggled()));
-    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanegd(int)));
+    connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
+    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiGridLayoutPolicy(layout);
@@ -47,8 +49,9 @@ void SliderContainer::initSlider(const QStringList &values)
 
 void SliderContainer::updateSlider(const QString &value)
 {    
+    qDebug() << "SliderContainer::updateSlider(" << value << ")";
     PSMSlider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
-    PSMSlider->setThumbLabel(QString("%1%").arg(value));
+    PSMSlider->setThumbLabel(QString("%1 bars").arg(value)); //replace with %
 }
 
 void SliderContainer::sliderValueChanged(int value)
@@ -57,9 +60,10 @@ void SliderContainer::sliderValueChanged(int value)
     emit PSMThresholdValueChanged(sliderValues.at(value));
 }
 
-void SliderContainer::toggleSliderExistence()
+void SliderContainer::toggleSliderExistence(bool toggle)
 {
-    if(PSMAutoButton->isChecked()) {
+    qDebug() << "SliderContainer::toggleSliderExistence(" << toggle << ")";
+    if(toggle) {
         if(layoutPolicy->itemAt(1, 0) != PSMSlider)
             layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
     }
@@ -72,11 +76,12 @@ void SliderContainer::toggleSliderExistence()
 void SliderContainer::initPSMAutoButton(bool toggle)
 {
     PSMAutoButton->setChecked(toggle);
-    toggleSliderExistence();
+    toggleSliderExistence(toggle);
 }
 
-void SliderContainer::PSMAutoButtonToggled()
+void SliderContainer::PSMAutoButtonToggled(bool toggle)
 {
-    toggleSliderExistence();
-    emit PSMToggled(PSMAutoButton->isChecked());
+    qDebug() << "SliderContainer::PSMAutoButtonToggled(" << toggle << ")";
+    toggleSliderExistence(toggle);
+    emit PSMAutoToggled(toggle);
 }

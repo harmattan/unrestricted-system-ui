@@ -11,13 +11,8 @@ public:
     StandByTimeContainer(DuiWidget *parent);
     virtual ~StandByTimeContainer();
 
-
-
 private: //methods
     void setLayout();
-
-private: //attributes
-    DuiLabel *timeLabel;
 
 };
 

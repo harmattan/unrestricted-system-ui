@@ -23,15 +23,8 @@ void BatteryApplet::init()
 
 DcpWidget* BatteryApplet::constructWidget(int widgetId)
 {
-    switch (widgetId) {
-        case DcpBattery::Main:
-            return pageMain();
-        break;
-        default:
-            qDebug() << "Page Unknown";
-            return 0;
-        break;
-    }
+    Q_UNUSED(widgetId);
+    return pageMain();    
 }
 
 DcpWidget* BatteryApplet::pageMain()

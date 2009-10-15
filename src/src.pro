@@ -42,8 +42,9 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
     profilebusinesslogic.cpp \
-    profilebusinesslogicadaptor.cpp
-
+    profilebusinesslogicadaptor.cpp \
+    devicemodestub.cpp \
+    batterystub.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -67,8 +68,9 @@ HEADERS += main.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
     profilebusinesslogic.h \
-    profilebusinesslogicadaptor.h
-
+    profilebusinesslogicadaptor.h \
+    devicemodestub.h \
+    batterystub.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

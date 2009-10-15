@@ -28,9 +28,9 @@ protected:
     void initWidget();
 
 private slots:
-    void PSMButtonPressed();
+    void PSMButtonReleased();
     void updateNotChargingImage(int level);
-    void updatePSMButton(bool toggle);
+    void updatePSMButton(const QString &value);
     void remainingTimeValuesReceived(const QStringList &timeValues);
 
 private: //attributes

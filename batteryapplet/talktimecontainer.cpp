@@ -11,8 +11,8 @@
 TalkTimeContainer::TalkTimeContainer(DuiWidget *parent) :
         TimeContainer(parent),
         image(NULL),
-        batteryImages(NULL),
-        batteryChargingImages(NULL),
+        batteryImages(QStringList()),
+        batteryChargingImages(QStringList()),
         batteryLevel(0),
         timer(NULL)
 {
@@ -32,7 +32,7 @@ void TalkTimeContainer::setLayout()
     layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::TalkTimeText), 0, 1);
     timeLabel = new DuiLabel();
     layoutPolicy->addItemAtPosition(timeLabel, 1, 1);
-    layoutPolicy->setColumnFixedWidth(0, image->imageSize().width()); //battery image
+    layoutPolicy->setColumnFixedWidth(0, 50); //battery image
     centralWidget()->setLayout(layout);
 }
 
@@ -59,14 +59,14 @@ void TalkTimeContainer::initImage()
     QString path("/usr/share/themes/base/dui/libdui/svg/");
     batteryImages << QString("%1icon-s-battery-0.svg").arg(path)
             << QString("%1icon-s-battery-20.svg").arg(path)
-            << QString("%1icon-s-battery-40.svg").arg(path)
+            << QString("%1icon-s-battery-40.svg").arg(path)            
             << QString("%1icon-s-battery-60.svg").arg(path)
             << QString("%1icon-s-battery-80.svg").arg(path)
             << QString("%1icon-s-battery-100.svg").arg(path);
 
     batteryChargingImages << QString("%1icon-s-battery-0.svg").arg(path)
             << QString("%1icon-s-battery-20.svg").arg(path)
-            << QString("%1icon-s-battery-40.svg").arg(path)
+            << QString("%1icon-s-battery-40.svg").arg(path)            
             << QString("%1icon-s-battery-60.svg").arg(path)
             << QString("%1icon-s-battery-80.svg").arg(path)
             << QString("%1icon-s-battery-100.svg").arg(path);
@@ -83,12 +83,11 @@ void TalkTimeContainer::updateBattery(int level)
 }
 
 void TalkTimeContainer::updateImage(bool charging)
-{
-    qDebug() << "TalkTimeContainer::updateImage(" << charging << ")";
+{    
     static int chargingImageIndex = batteryLevel;
     if(charging) {
         if(chargingImageIndex > 5)
-            chargingImageIndex = batteryLevel;
+            chargingImageIndex = batteryLevel;        
         image->setImage(QImage(batteryChargingImages.at(chargingImageIndex++)));
     }
     else {

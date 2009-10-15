@@ -8,7 +8,8 @@ class DuiLabel;
 class QTimer;
 
 class TalkTimeContainer : public TimeContainer
-{    
+{
+    Q_OBJECT
 public:
     TalkTimeContainer(DuiWidget *parent);
     virtual ~TalkTimeContainer();
@@ -18,10 +19,12 @@ public slots:
     void startCharging();
     void stopCharging();
 
+private slots:
+    void updateImage(bool charging = true);
+
 private: //methods
     void setLayout();
     void initImage();
-    void updateImage(bool charging = true);
 
 private: //attributes
     DuiImage *image;    

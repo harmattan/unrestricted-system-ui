@@ -23,15 +23,8 @@ void DisplayApplet::init()
 
 DcpWidget* DisplayApplet::constructWidget(int widgetId)
 {
-    switch (widgetId) {
-        case DcpDisplay::Main:
-            return pageMain();
-        break;
-        default:
-            qDebug() << "Page Unknown";
-            return 0;
-        break;
-    }
+    Q_UNUSED(widgetId);
+    return pageMain();
 }
 
 DcpWidget* DisplayApplet::pageMain()

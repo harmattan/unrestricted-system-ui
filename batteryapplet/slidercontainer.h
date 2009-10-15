@@ -10,6 +10,8 @@ class DuiSlider;
 
 class SliderContainer : public DuiContainer
 {
+    Q_OBJECT
+
 public:
     SliderContainer(DuiWidget *parent);
     virtual ~SliderContainer();
@@ -20,16 +22,16 @@ public slots:
     void initPSMAutoButton(bool toggle);
 
 private slots:
-    void PSMAutoButtonToggled();
+    void PSMAutoButtonToggled(bool toggle);
     void sliderValueChanged(int value);
 
 signals:
-    void PSMToggled(bool);
+    void PSMAutoToggled(bool);
     void PSMThresholdValueChanged(QString);
 
 private: //methods
     void setLayout();
-    void toggleSliderExistence();
+    void toggleSliderExistence(bool toggle);
 
 private: //attributes
     DuiButton *PSMAutoButton;
