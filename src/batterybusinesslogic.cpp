@@ -142,8 +142,11 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
 
 void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
 {
-    qDebug() << "BatteryBusinessLogic::checkPSMThreshold(" << batteryLevels.value(level) << ")";
-    if(batteryLevels.value(level) <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()) {
+    qDebug() << "BatteryBusinessLogic::checkPSMThreshold(" << batteryLevels.value(level) << ", "
+            << systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt() << ", "
+            << systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool() << ")";
+    if(batteryLevels.value(level) <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()
+        && systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool()) {
         if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff)
             deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
     }

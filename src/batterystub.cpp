@@ -25,11 +25,11 @@ void QmBattery::initValues()
 
 void QmBattery::updateValues()
 {
+    levelIndex += levelIndexIncrease;
     if ( levelIndex == 6 ) {
         levelIndexIncrease = -1;
         emit batteryStatusChanged(QmBattery::StateCharging);
-        charging = true;
-        levelIndex = 5;
+        charging = true;        
         QTimer::singleShot(10000, this, SLOT(updateValues()));
         return;
     }
@@ -42,8 +42,7 @@ void QmBattery::updateValues()
         return;
     }    
 
-    emit batteryLevelChanged(levels.at(levelIndex));
-    levelIndex += levelIndexIncrease;
+    emit batteryLevelChanged(levels.at(levelIndex));    
 
     QTimer::singleShot(10000, this, SLOT(updateValues()));
 }
