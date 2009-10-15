@@ -34,6 +34,7 @@ ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *pare
 
     button = new DuiButton(DcpProfile::VibrationText, this);
     button->setCheckable(true);
+    button->setMaximumHeight(36);
     setVibration(true);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 

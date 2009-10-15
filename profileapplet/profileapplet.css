@@ -16,6 +16,12 @@
         maximum-size: 32 100%;
 }
 
+#vibraButton {
+        preferred-size: 36 50%;
+        minimum-size: 36 36;
+        maximum-size: 36 100%;
+}
+
 #profileContainerLayout.Landscape {
 	background-opacity: 255;
     	background-color: #141414;
