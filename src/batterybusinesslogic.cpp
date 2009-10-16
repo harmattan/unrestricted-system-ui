@@ -9,6 +9,15 @@
 
 #include "sysuid.h"
 
+/* TODO List
+
+   1) Create notification for RechargeBatteryText (have to get signal to know when the device is turned off coz of the
+      too low battery)
+   2) Show low battery notification every 30 minutes in normal mode and every 2 hours in sleep mode
+   3) Find out what is the correct gap to show the ChargingCompleteText and DisconnectChargerText notes
+
+*/
+
 namespace {
     const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
     const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
@@ -16,7 +25,9 @@ namespace {
     const QString ChargingCompleteText = trid("qtn_ener_charcomp", "Charging complete");
     const QString DisconnectChargerText = trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy");
     const QString LowBatteryText = trid("qtn_ener_lowbatt", "Low battery");
-
+    const QString EnterPSMText = trid("qtn_ener_ent_psnote", "Entering power save mode");
+    const QString ExitPSMText = trid("qtn_ener_exit_psnote", "Exiting power save mode");
+    const QString RechargeBatteryText = trid("qtn_ener_rebatt", "Recharge battery");
 }
 
 BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf) :
@@ -134,10 +145,14 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
 void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState)
 {    
-    if(PSMState == QmDeviceMode::PSMStateOff)
-        PSMValueChanged(PSMActivateText);
-    else if(PSMState == QmDeviceMode::PSMStateOn)
-        PSMValueChanged(PSMDeactivateText);
+    if(PSMState == QmDeviceMode::PSMStateOff) {
+        uiNotif->showNotification(ExitPSMText);
+        emit PSMValueChanged(PSMActivateText);
+    }
+    else if(PSMState == QmDeviceMode::PSMStateOn) {
+        uiNotif->showNotification(EnterPSMText);
+        emit PSMValueChanged(PSMDeactivateText);
+    }
 }
 
 void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
