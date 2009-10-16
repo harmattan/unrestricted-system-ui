@@ -6,5 +6,5 @@ CallAndSimBrief::CallAndSimBrief()
 
 QString CallAndSimBrief::valueText() const
 {
-    return "RUIKULI";
+    return "Not implemented";
 }

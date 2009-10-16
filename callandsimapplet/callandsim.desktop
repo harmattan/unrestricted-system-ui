@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=DUIApplet
+Name=Call & SIM card
+Icon=
+Exec=
+X-logical-id=qtn_NOT_DEFINED
+X-translation-catalog=duisettings
+
+[DUI]
+X-DUIApplet-Applet=libcallandsimapplet.so
+X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
+X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
+
+[DCP]
+Category= Device system
+Order=2
+WidgetType=DcpLabel2
+
