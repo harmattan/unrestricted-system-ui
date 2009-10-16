@@ -10,13 +10,10 @@ class DuiGridLayoutPolicy;
 class DuiLabel;
 class DuiLayout;
 class DuiLinearLayoutPolicy;
-class DuiList;
 class DuiStylableWidget;
 class DuiWidgetController;
-class DuiWidgetListModel;
 class NetworkDBusInterface;
-class QModelIndex;
-class QSignalMapper;
+class NetworkContainer;
 
 #include <QDebug>
 
@@ -38,44 +35,24 @@ private slots:
     void initRoamingUpdatesButton(bool value);
     void initNetworkModeComboBox(int selected, const QStringList &values);
     void initNetworkSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
-    void buttonPressed(const QString &text);        
-    void toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle);
-    void availableNetworkSelected(const QModelIndex &index);
+    void dataCounterButtonPressed();
     void toggleNetworkSelected(bool toggle);
-
-private: //methods
-    void changeSelection();
-    void clearWidgetLists();
-    DuiLinearLayoutPolicy* createLinearLayoutPolicy(DuiLayout *layout, Qt::Orientation policyOrientation, int policySpacing = 0);
-    DuiStylableWidget* createStylableWidget(Qt::Orientation policyOrientation, const QString &widgetObjectName = "", int policySpacing = 0);    
-    DuiContainer* createContainer(DuiLayout *layout, const QString &title = "", bool expandable = false);
-
     void toggleNetworkSettings(bool toggle);
     void toggleRoamingUpdatesButton(bool toggle);
+
+private: //methods
+    void changeSelection();    
 
 private: //attributes        
     DuiButton *phoneNetworkButton;
     DuiButton *roamingButton;
     DuiButton *roamingUpdatesButton;
     DuiButton *dataCounterButton;    
-    DuiComboBox *networkModeComboBox;
-    DuiComboBox *networkSelectionComboBox;
-    DuiContainer *roamingContainer;
-    DuiContainer *networkContainer;
     DuiGridLayoutPolicy *contentLayoutPolicy;
-    DuiLabel *noAvailableNetworksLabel;
-    DuiLabel *availableNetworksLabel;
-    DuiLinearLayoutPolicy *networkLayoutPolicy;
-    DuiLinearLayoutPolicy *roamingLandscapeLayoutPolicy;
-    DuiLinearLayoutPolicy *roamingPortraitLayoutPolicy;
-    DuiList *availableNetworksList;
-    DuiStylableWidget *roamingRightLayoutWidget;
-    DuiWidgetListModel *availableNetworksListModel;
-    NetworkDBusInterface *networkIf;    
-    QSignalMapper *signalMapper;    
-    QList<DuiWidgetController *> widgets;
-    QMap<DuiWidgetController *, Qt::Alignment> alignments;    
-    int networkSelectionComboBoxDefaultIndex;
+    DuiLabel *roamingUpdatesLabel;
     bool networkSelected;
+    NetworkContainer *networkContainer;
+    NetworkDBusInterface *networkIf;
+
 };
 #endif // NETWORKWIDGET_H

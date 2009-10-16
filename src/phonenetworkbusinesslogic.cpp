@@ -115,7 +115,7 @@ void PhoneNetworkBusinessLogic::toggleRoamingUpdates(bool toggle)
 }
 
 void PhoneNetworkBusinessLogic::queryNetworkModes()
-{
+{    
     QStringList modes;
     QHash<RadioAccess::Mode, QString>::iterator i;
     for (i = networkModes.begin(); i != networkModes.end(); ++i)
@@ -123,6 +123,7 @@ void PhoneNetworkBusinessLogic::queryNetworkModes()
 
     RadioAccess ra;        
     int index = (ra.mode() == RadioAccess::UnknownMode ? -1 : modes.indexOf(networkModes.value(ra.mode())));
+    qDebug() << "PhoneNetworkBusinessLogic::queryNetworkModes( " << modes.size() << ")";
     emit networkModeValuesAvailable(index, modes);
 }
 

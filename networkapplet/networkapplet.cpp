@@ -23,20 +23,15 @@ void NetworkApplet::init()
 
 DcpWidget* NetworkApplet::constructWidget(int widgetId)
 {
-    switch (widgetId) {
-        case DcpNetwork::Main:
-            return pageMain();
-        break;
-        default:
-            qDebug() << "Page Unknown";
-            return 0;
-        break;
-    }
+    Q_UNUSED(widgetId);
+    return pageMain();
 }
 
 DcpWidget* NetworkApplet::pageMain()
 {
-    return new NetworkWidget();
+     if(main == NULL)
+        main = new NetworkWidget();
+    return main;    
 }
 
 QString NetworkApplet::title() const

@@ -11,9 +11,11 @@
 
 SliderContainer::SliderContainer(DuiWidget *parent) :
         DuiContainer(parent),
-        PSMAutoButton(NULL),
-        PSMSlider(NULL)
+        PSMAutoButton(new DuiButton(this)),
+        PSMSlider(new DuiSlider(this, "continuous"))
 {
+    connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
+    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
     setLayout();
 }
 
@@ -22,14 +24,9 @@ SliderContainer::~SliderContainer()
 }
 
 void SliderContainer::setLayout()
-{
-    PSMAutoButton = new DuiButton();
+{   
     PSMAutoButton->setCheckable(true);
-    PSMAutoButton->setObjectName("PSMAutoButton");    
-    PSMSlider = new DuiSlider(this, "continuous");
-
-    connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
-    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+    PSMAutoButton->setObjectName("PSMAutoButton");
 
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiGridLayoutPolicy(layout);

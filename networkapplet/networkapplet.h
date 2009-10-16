@@ -5,6 +5,7 @@
 #include <QObject>
 class DcpWidget;
 class DuiAction;
+class NetworkWidget;
 
 class NetworkApplet : public QObject, public DcpAppletIf
 {
@@ -18,6 +19,9 @@ public:
     virtual QString title() const;
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId);
+
+private:
+    QPointer<NetworkWidget> main;
 
 };
 #endif // NETWORKAPPLET_H

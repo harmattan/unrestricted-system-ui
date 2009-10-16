@@ -20,18 +20,18 @@ public:
     void roamingUpdatesValueRequired();    
     void networkModeValuesRequired();    
     void networkSelectionValuesRequired();    
-    void availableNetworksRequired();
-    void setPhoneNetworkValue(bool value);
-    void setRoamingValue(bool value);
-    void setRoamingUpdatesValue(bool value);
-    void setSelectedNetworkValue(const QString &value);
+    void availableNetworksRequired();    
     void setAutoNetworkSelection();
     void networkAppletClosing();
 
 
 public slots:
+    void setPhoneNetworkValue(bool value);
+    void setRoamingValue(bool value);
+    void setRoamingUpdatesValue(bool value);
     void setNetworkModeValue(const QString &value);
     void setNetworkSelectionValue(const QString &value);
+    void setSelectedNetworkValue(const QString &value);    
 
 private slots:
     void valueSet();

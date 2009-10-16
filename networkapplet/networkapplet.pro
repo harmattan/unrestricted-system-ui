@@ -6,7 +6,7 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
-	/usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -16,14 +16,18 @@ contains(cov, true) {
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = networkapplet.h \
-    networkwidget.h \    
+    networkwidget.h \
     networkbrief.h \
     networkdbusinterface.h \
-    networktranslation.h
+    networktranslation.h \
+    networkcontainer.h \
+    networklist.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
-    networkbrief.cpp \        
-    networkdbusinterface.cpp
+    networkbrief.cpp \
+    networkdbusinterface.cpp \
+    networkcontainer.cpp \
+    networklist.cpp
 css.files = networkapplet.css
 DESTDIR = lib
 desktop.files += *.desktop
