@@ -25,6 +25,5 @@ private slots:
 
 private:
     QPointer<ProfileWidget> main;
-
 };
 #endif // PROFILEAPPLET_H

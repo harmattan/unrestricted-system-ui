@@ -1,19 +1,17 @@
 #include "profilebrief.h"
-#include "profilewidget.h"
 #include "dcpwidgettypes.h"
+#include "profiledbusinterface.h"
 
-ProfileBrief::ProfileBrief(ProfileWidget* widget) : widget(widget)
+ProfileBrief::ProfileBrief()
 {
 }
 
 QString ProfileBrief::valueText() const
 {
-    if(widget)
-    {
-        return widget->currentProfile();
-    }
-    return "";
+    ProfileDBusInterface* profileIf = new ProfileDBusInterface();
+    QString name = profileIf->getCurrentProfileName();
+    delete profileIf;
+    return name;
 }
-
 
 

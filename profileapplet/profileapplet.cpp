@@ -54,7 +54,7 @@ DcpWidget* ProfileApplet::constructWidget(int widgetId)
 
 DcpWidget* ProfileApplet::pageMain()
 {
-    qDebug() << "ProfileApplet::pageMain" << (QObject*)main;
+    qDebug() << Q_FUNC_INFO << (QObject*)main;
     if(main == NULL)
         main = new ProfileWidget();
     return main;
@@ -76,5 +76,5 @@ QVector<DuiAction*> ProfileApplet::viewMenuItems()
 DcpBrief* ProfileApplet::constructBrief(int partId)
 {
     Q_UNUSED(partId);
-    return new ProfileBrief((ProfileWidget*)pageMain());
+    return new ProfileBrief();
 }
