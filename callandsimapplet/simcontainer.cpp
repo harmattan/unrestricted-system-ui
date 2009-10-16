@@ -31,7 +31,7 @@ void SimContainer::setLayout()
 
     // pin request
 
-    pinRequestLabel = new DuiLabel(DcpCallAndSim::SimCardText);
+    pinRequestLabel = new DuiLabel(DcpCallAndSim::PinCodeRequestText);
     pinRequestLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 //    pinRequestLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
