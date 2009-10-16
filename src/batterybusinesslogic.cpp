@@ -15,6 +15,7 @@
       too low battery)
    2) Show low battery notification every 30 minutes in normal mode and every 2 hours in sleep mode
    3) Find out what is the correct gap to show the ChargingCompleteText and DisconnectChargerText notes
+   4) What about charging with USB / normal way?
 
 */
 
@@ -160,14 +161,15 @@ void BatteryBusinessLogic::checkPSMThreshold(Maemo::QmBattery::Level level)
     qDebug() << "BatteryBusinessLogic::checkPSMThreshold(" << batteryLevels.value(level) << ", "
             << systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt() << ", "
             << systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool() << ")";
-    if(batteryLevels.value(level) <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()
-        && systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool()) {
-        if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff)
-            deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
-    }
-    else {
-        if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOn)
-            deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
+    if(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool()) { // we only handle this if the auto PSM is on
+        if(batteryLevels.value(level) <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()) {
+            if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOff)
+                deviceMode->setPSMState(QmDeviceMode::PSMStateOn);
+        }
+        else {
+            if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOn)
+                deviceMode->setPSMState(QmDeviceMode::PSMStateOff);
+        }
     }
 }
 
