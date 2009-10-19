@@ -20,6 +20,7 @@ signals:
     void volumeLevel(int id, int value);
 
 public:
+    QString getCurrentProfileName();
     void getCurrentProfile();
     void getVolumeLevels();
     void getVibrationValues();
@@ -30,6 +31,7 @@ public:
 private:
     static int name2Id(QString profileName);
     static QString id2Name(int profileId);
+    static QString id2LocName(QString id);
 
 private:
     Profile* api;

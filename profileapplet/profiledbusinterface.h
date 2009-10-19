@@ -14,6 +14,7 @@ public:
     ProfileDBusInterface();
     virtual ~ProfileDBusInterface();
 
+    QString getCurrentProfileName();
     void currentProfileRequired();
     void volumeLevelsRequired();
     void vibrationValuesRequired();

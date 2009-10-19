@@ -18,6 +18,25 @@ ProfileDBusInterface::~ProfileDBusInterface()
     dbusIf = NULL;
 }
 
+QString ProfileDBusInterface::getCurrentProfileName()
+{
+    qDebug() << Q_FUNC_INFO;
+    QString name = "";
+    QDBusMessage reply = dbusIf->call(QString("getCurrentProfileName"));
+
+    if(reply.type() == QDBusMessage::ErrorMessage) {
+        qDebug() << Q_FUNC_INFO << "error reply:" << reply.errorName();
+    }
+    else if(reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() > 0) {
+        name = reply.arguments().at(0).toString();
+    }
+    else {
+        qDebug() << Q_FUNC_INFO << "reply type:" << reply.type();
+    }
+    qDebug() << Q_FUNC_INFO << ":" << name;
+    return name;
+}
+
 void ProfileDBusInterface::currentProfileRequired()
 {
     qDebug() << "ProfileDBusInterface::currentProfileRequired()";

@@ -14,6 +14,11 @@ ProfileBusinessLogicAdaptor::~ProfileBusinessLogicAdaptor()
 {
 }
 
+QString ProfileBusinessLogicAdaptor::getCurrentProfileName()
+{
+    return logic->getCurrentProfileName();
+}
+
 void ProfileBusinessLogicAdaptor::getCurrentProfile()
 {
     logic->getCurrentProfile();

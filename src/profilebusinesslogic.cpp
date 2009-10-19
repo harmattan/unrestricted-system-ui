@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <QList>
+#include <DuiLocale>
 
 using namespace ProfileName;
 
@@ -16,6 +17,11 @@ namespace ProfileId{
         loud,
         none // none must be last to teel how many profiles there are available
     };
+
+    const QString RingingText = trid("qtn_prof_ringing", "Ringing");
+    const QString SilentText = trid("qtn_prof_silent", "Silent");
+    const QString BeepText = trid("qtn_prof_beep", "Beep");
+    const QString LoudText = trid("qtn_prof_loud", "Loud");
 }
 
 ProfileBusinessLogic::ProfileBusinessLogic()
@@ -27,6 +33,13 @@ ProfileBusinessLogic::ProfileBusinessLogic()
 
 ProfileBusinessLogic::~ProfileBusinessLogic()
 {
+}
+
+QString ProfileBusinessLogic::getCurrentProfileName()
+{
+    qDebug() << Q_FUNC_INFO;
+    QString prof = api->activeProfile();
+    return id2LocName(prof);
 }
 
 void ProfileBusinessLogic::getCurrentProfile()
@@ -88,6 +101,21 @@ void ProfileBusinessLogic::setVolumeLevel(int id, int value)
     if(!success){
         // TODO: what??
     }
+}
+
+QString ProfileBusinessLogic::id2LocName(QString id)
+{
+    QString localised = "";
+    if(ProfileName::ringing == id){
+        localised = ProfileId::RingingText;
+    }else if(ProfileName::silent == id){
+        localised = ProfileId::SilentText;
+    }else if(ProfileName::beep == id){
+        localised = ProfileId::BeepText;
+    }else if(ProfileName::loud == id){
+        localised = ProfileId::LoudText;
+    }
+    return localised;
 }
 
 int ProfileBusinessLogic::name2Id(QString profileName)

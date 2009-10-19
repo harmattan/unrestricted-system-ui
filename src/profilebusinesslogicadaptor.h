@@ -19,6 +19,7 @@ public:
     virtual ~ProfileBusinessLogicAdaptor();
 
 public slots:
+    QString getCurrentProfileName();
     Q_NOREPLY void getCurrentProfile();
     Q_NOREPLY void getVolumeLevels();
     Q_NOREPLY void getVibrationValues();
