@@ -44,7 +44,9 @@ SOURCES += main.cpp \
     profilebusinesslogic.cpp \
     profilebusinesslogicadaptor.cpp \
     devicemodestub.cpp \
-    batterystub.cpp
+    batterystub.cpp \
+    callandsimbusinesslogicadaptor.cpp \
+    callandsimbusinesslogic.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -70,7 +72,9 @@ HEADERS += main.h \
     profilebusinesslogic.h \
     profilebusinesslogicadaptor.h \
     devicemodestub.h \
-    batterystub.h
+    batterystub.h \
+    callandsimbusinesslogicadaptor.h \
+    callandsimbusinesslogic.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg
