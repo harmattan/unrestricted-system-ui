@@ -20,7 +20,7 @@
 
 PinCodeQueryUI::PinCodeQueryUI()
 {
-    qDebug() << "PinCodeQueryUI()";
+    qDebug() << Q_FUNC_INFO;
     setFullscreen(true);
     setNavigationBarVisible(false);
     setTitle("PIN code query:");
@@ -29,7 +29,7 @@ PinCodeQueryUI::PinCodeQueryUI()
 
 PinCodeQueryUI::~PinCodeQueryUI()
 {
-    qDebug() << "~PinCodeQueryUI";
+    qDebug() << Q_FUNC_INFO;
 
     if(backspaceTimer != NULL) {
         //we stop timing the press event
@@ -94,19 +94,33 @@ void PinCodeQueryUI::createContent()
     //set column and row sizes
     qreal left,top,right,bottom;
     layout->getContentsMargins(&left,&top,&right,&bottom);
-    qDebug() << "PinCodeQueryUI::createContent() margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
+    qDebug() << Q_FUNC_INFO << "margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
 
     QSize size = DuiSceneManager::instance()->visibleSceneSize();
-    int longSide = size.width();
-    int shortSide = size.height();
+    qDebug() << Q_FUNC_INFO << "size w x h:"<<size.width()<<"x"<<size.height();
+    int longSide = size.width() - (left + right);
+    int shortSide = size.height() - (top + bottom) - 28;
     if(longSide < shortSide)
     {
         int tmp = longSide;
         longSide = shortSide;
         shortSide = tmp;
     }
-    longSide -= left + right;
-    shortSide -= top + bottom;
+    qDebug() << Q_FUNC_INFO << "size l x s:"<<longSide<<"x"<<shortSide;
+//    longSide -= (left + right;
+//    shortSide -= top + bottom;
+
+ /*
+    qreal left,top,right,bottom;
+    layout->getContentsMargins(&left,&top,&right,&bottom);
+    qDebug() << "LockScreenUI::calculateRects() margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
+
+    QSize size = DuiSceneManager::instance()->visibleSceneSize();
+    int w = size.width() - (left + right);
+    int h = size.height() - (top + bottom);
+    qDebug() << "LockScreenUI::calculateRects() w:" << w << "h:" << h << ". "<< size;
+*/
+
 
     int half = longSide/2;
     int quarter = shortSide/4;
@@ -156,13 +170,16 @@ void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLa
     if(margin >= 0) {
         backspaceButton->setContentsMargins( margin, margin, margin, margin );
     }
+
+    // TODO: commented out for some changes in DUI after week 41
+    /*
     backspaceButton->setMinimumSize( iconSide, iconSide );
     backspaceButton->setMaximumSize( side, side );
 
     // enter button layout
     QSizeF minSize(lPolicy->columnMinimumWidth(0), side);
     QSizeF maxSize(DuiSceneManager::instance()->visibleSceneSize().width(), side);
-    qDebug() << "enter col width:" << minSize.width() << "-" << maxSize.width();
+    qDebug() Q_FUNC_INFO << "enter col width:" << minSize.width() << "-" << maxSize.width();
     lPolicy->setRowAlignment(5, Qt::AlignBottom);
     pPolicy->setRowAlignment(4, Qt::AlignBottom);
 
@@ -170,6 +187,7 @@ void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLa
     enterButton->setMaximumSize( maxSize );
     cancelButton->setMinimumSize( minSize );
     cancelButton->setMaximumSize( maxSize );
+    */
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
@@ -261,7 +279,7 @@ void PinCodeQueryUI::buttonReleased()
     //Check if the button was a numpad button       
     if(button->objectName().left(button->objectName().length()-1) == "numpadButton") {
         entryTextEdit->insert(button->objectName().right(1));
-        qDebug() << "text now: " << entryTextEdit->text();
+        qDebug() << Q_FUNC_INFO << "text now: " << entryTextEdit->text();
     }
 
     //Check if the button was backspace
