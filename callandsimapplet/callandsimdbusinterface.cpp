@@ -8,6 +8,12 @@ CallAndSimDBusInterface::CallAndSimDBusInterface()
     dbusIf = new QDBusInterface("com.nokia.systemui", "/",
                                 "com.nokia.systemui.callandsim",
                                 QDBusConnection::sessionBus());
+
+    connect(dbusIf, SIGNAL(callerIdSending(int)), this, SIGNAL(callerIdSending(int)));
+    connect(dbusIf, SIGNAL(callWaiting(bool)),    this, SIGNAL(callWaiting(bool)));
+    connect(dbusIf, SIGNAL(callForwarding(bool)), this, SIGNAL(callForwarding(bool)));
+    connect(dbusIf, SIGNAL(forwardTo(QString)),   this, SIGNAL(forwardTo(QString)));
+    connect(dbusIf, SIGNAL(pinRequest(bool)),     this, SIGNAL(pinRequest(bool)));
 }
 
 CallAndSimDBusInterface::~CallAndSimDBusInterface()
@@ -16,11 +22,22 @@ CallAndSimDBusInterface::~CallAndSimDBusInterface()
     dbusIf = NULL;
 }
 
+void CallAndSimDBusInterface::requestAllValues()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    callerIdSendingRequired();
+    callWaitingRequired();
+    callForwardingRequired();
+    forwardToRequired();
+    pinRequestRequired();
+}
+
 void CallAndSimDBusInterface::callerIdSendingRequired()
 {
     qDebug() << Q_FUNC_INFO;
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("getCallerIdSending"), list, this, SIGNAL(callerIdSending(CallerIdSending)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("getCallerIdSending"), list, this, SIGNAL(callerIdSending(int)), SLOT(DBusMessagingFailure()));
 }
 
 void CallAndSimDBusInterface::callWaitingRequired()
@@ -51,7 +68,7 @@ void CallAndSimDBusInterface::pinRequestRequired()
     dbusIf->callWithCallback(QString("getPinRequest"), list, this, SIGNAL(pinRequest(bool)), SLOT(DBusMessagingFailure()));
 }
 
-void CallAndSimDBusInterface::setCallerIdSending(CallerIdSending value)
+void CallAndSimDBusInterface::setCallerIdSending(int value)
 {
     qDebug() << Q_FUNC_INFO << (int)value;
     QList<QVariant> list;

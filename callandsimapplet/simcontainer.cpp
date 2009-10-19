@@ -7,6 +7,7 @@
 #include <DuiLabel>
 
 #include <QGraphicsLinearLayout>
+#include <QDebug>
 
 SimContainer::SimContainer(DuiWidget *parent) :
         DuiContainer(DcpCallAndSim::SimCardText, parent),
@@ -15,6 +16,25 @@ SimContainer::SimContainer(DuiWidget *parent) :
         changePinButton(NULL)
 {
     setLayout();
+}
+
+void SimContainer::setPinRequest(bool enabled)
+{
+    qDebug() << Q_FUNC_INFO << enabled;
+
+    if (pinRequestButton->isChecked() != enabled) {
+        pinRequestButton->setChecked(enabled);
+    } else {
+        changePinButton->setVisible(enabled);
+    }
+}
+
+void SimContainer::buttonToggled(bool checked)
+{
+    qDebug() << Q_FUNC_INFO << checked;
+
+    changePinButton->setVisible(checked);
+    emit valueChanged(checked);
 }
 
 void SimContainer::setLayout()
@@ -38,6 +58,7 @@ void SimContainer::setLayout()
     pinRequestButton = new DuiButton();
     pinRequestButton->setObjectName("checkBoxButton");
     pinRequestButton->setCheckable(true);
+    pinRequestButton->setChecked(false);
 
     QGraphicsLinearLayout* pinRequestLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     // TODO: some const value here some day
@@ -49,6 +70,8 @@ void SimContainer::setLayout()
 
     changePinButton = new DuiButton(DcpCallAndSim::ChangePinText);
     changePinButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//    changePinButton->setVisible(true); // TODO: wtf
+//    changePinButton->hide();
 
     // landscape policy
 
@@ -64,6 +87,10 @@ void SimContainer::setLayout()
     pp->setColumnMaximumWidth(0, 480);
     pp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft);
     pp->addItemAtPosition(changePinButton, 1, 0, Qt::AlignCenter);
+
+    // connect signals
+
+    connect(pinRequestButton, SIGNAL(toggled(bool)), this, SLOT(buttonToggled(bool)));
 
     // layout
 

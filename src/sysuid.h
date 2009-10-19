@@ -18,6 +18,8 @@ class EventHandler;
 class ProfileBusinessLogic;
 class ProfileBusinessLogicAdaptor;
 class Notifier;
+class CallAndSimBusinessLogic;
+class CallAndSimBusinessLogicAdaptor;
 
 class Sysuid : public QObject
 {
@@ -45,6 +47,8 @@ private:
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
+    CallAndSimBusinessLogic *callAndSimLogic;
+    CallAndSimBusinessLogicAdaptor *callAndSimLogicAdaptor;
 };
 
 #endif // SYSUID_H

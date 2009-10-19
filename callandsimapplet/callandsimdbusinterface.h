@@ -7,15 +7,14 @@ class QDBusInterface;
 
 class CallAndSimDBusInterface : public QObject
 {
-public:
-    enum CallerIdSending {
-        NetworkChoose = 0,
-        Yes,
-        No
-    };
+    Q_OBJECT
 
+public:
     CallAndSimDBusInterface();
     virtual ~CallAndSimDBusInterface();
+
+public:
+    void requestAllValues();
 
     void callerIdSendingRequired();
     void callWaitingRequired();
@@ -23,7 +22,8 @@ public:
     void forwardToRequired();
     void pinRequestRequired();
 
-    void setCallerIdSending(CallerIdSending value);
+public slots:
+    void setCallerIdSending(int value);
     void setCallWaiting(bool enabled);
     void setCallForwarding(bool enabled);
     void setForwardTo(const QString& number);
@@ -34,7 +34,7 @@ private slots:
     void DBusMessagingFailure();
 
 signals:
-    void callerIdSending(CallerIdSending);
+    void callerIdSending(int);
     void callWaiting(bool);
     void callForwarding(bool);
     void forwardTo(QString);

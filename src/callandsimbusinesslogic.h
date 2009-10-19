@@ -32,6 +32,11 @@ public:
     void setCallForwarding(bool enable);
     void setForwardTo(const QString& number);
     void setPinRequest(bool enable);
+
+private:
+    int i1;
+    bool b1, b2, b3;
+    QString s1;
 };
 
 #endif // CALLANDSIMBUSINESSLOGIC_H

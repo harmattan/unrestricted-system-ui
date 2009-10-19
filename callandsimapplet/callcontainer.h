@@ -12,8 +12,28 @@ class QGraphicsLinearLayout;
 
 class CallContainer : public DuiContainer
 {
+    Q_OBJECT
+
 public:
     CallContainer(DuiWidget *parent);
+
+signals:
+    void sendCallerIdChanged(int);
+    void callWaitingChanged(bool);
+    void callForwardingChanged(bool);
+    void forwardToChanged(const QString&);
+
+public slots:
+    void setSendCallerId(int value);
+    void setCallWaiting(bool enabled);
+    void setCallForwarding(bool enabled);
+    void setForwardTo(const QString& number);
+
+private slots:
+    void sendCallerIdSelected(int index);
+    void callWaitingToggled(bool checked);
+    void callForwardingToggled(bool checked);
+    void numberChanged();
 
 private:
     void setLayout();
@@ -28,7 +48,7 @@ private:
     DuiButton* callWaitingButton;
 //    DuiLabel* callForwardingLabel;
     DuiButton* callFwdButton;
-//    DuiLabel* numberLabel;
+    DuiLabel* numberLabel;
     DuiTextEdit* numberEdit;
     DuiButton* pickerButton;
 };
