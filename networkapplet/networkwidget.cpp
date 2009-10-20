@@ -11,6 +11,7 @@
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
+#include <DuiList>
 #include <DuiStylableWidget>
 #include <DuiWidgetController>
 #include <QDebug>
@@ -113,7 +114,7 @@ void NetworkWidget::initWidget()
     connect(roamingUpdatesButton, SIGNAL(toggled(bool)), networkIf, SLOT(setRoamingUpdatesValue(bool)));
     connect(dataCounterButton, SIGNAL(pressed()), this, SLOT(dataCounterButtonPressed()));
     connect(networkContainer, SIGNAL(networkModeChanged(QString)), networkIf, SLOT(setNetworkModeValue(QString)));
-    connect(networkContainer, SIGNAL(networkSelectionChanged(QString)), networkIf, SLOT(setNetworkModeValue(QString)));
+    connect(networkContainer, SIGNAL(networkSelectionChanged(QString)), networkIf, SLOT(setNetworkSelectionValue(QString)));
     connect(networkContainer, SIGNAL(availableNetworkSelected(QString)), networkIf, SLOT(setSelectedNetworkValue(QString)));
 
      // send value requests over dbus

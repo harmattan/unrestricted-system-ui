@@ -7,8 +7,6 @@
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
-#include <DuiList>
-#include <DuiWidgetListModel>
 
 #include <QDebug>
 
@@ -20,17 +18,18 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
         modeLabel(new DuiLabel(DcpNetwork::NetworkModeText, this)),
         selectionLabel(new DuiLabel(DcpNetwork::NetworkSelectionText, this)),
         selectionDefaultIndex(-1),
-        networkList(new NetworkList(parent))
-{
+        networkList(NULL)
+{        
     toggleComboBoxSignalConnection(modeComboBox);
-    toggleComboBoxSignalConnection(selectionComboBox);
-    connect(networkList, SIGNAL(availableNetworkSelected(QString)), this, SIGNAL(availableNetworkSelected(QString)));
+    toggleComboBoxSignalConnection(selectionComboBox);    
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
     setLayout();
 }
 
 NetworkContainer::~NetworkContainer()
 {
+    delete networkList;
+    networkList = NULL;
 }
 
 void NetworkContainer::setLayout()
@@ -84,10 +83,18 @@ void NetworkContainer::initComboBox(DuiComboBox *cb, int selected, const QString
 
 void NetworkContainer::toggleComboBoxSignalConnection(DuiComboBox *cb, bool toggle)
 {
-    if(toggle)
-        connect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
-    else
-        disconnect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
+    if(toggle) {
+        if(cb == modeComboBox)
+            connect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
+        else if(cb == selectionComboBox)
+            connect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
+    }
+    else {
+        if(cb == modeComboBox)
+            disconnect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
+        else if(cb == selectionComboBox)
+            disconnect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
+    }
 }
 
 void NetworkContainer::toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle)
@@ -95,13 +102,17 @@ void NetworkContainer::toggleAvailableNetworks(int selected, const QStringList &
     qDebug() << "NetworkWidget::toggleAvailableNetworks(" << selected << ", " << networks << ", " << toggle << ")";
     if(toggle) {
         if(infoLabel == NULL)
-            infoLabel = new DuiLabel(this); //create here to prevent the label from
+            infoLabel = new DuiLabel(this);
+        if(networkList == NULL) {
+            networkList = new NetworkList(this);
+            connect(networkList, SIGNAL(availableNetworkSelected(QString)), this, SIGNAL(availableNetworkSelected(QString)));
+        }
         if(networkList->insertNetworks(selected, networks)) {
             infoLabel->setText(DcpNetwork::AvailableNetworksText);
             if(layoutPolicy->indexOf(infoLabel) == -1)
                 layoutPolicy->addItem(infoLabel, Qt::AlignLeft);
             if(layoutPolicy->indexOf(networkList) == -1)
-                layoutPolicy->addItem(networkList, Qt::AlignLeft);            
+                layoutPolicy->addItem(networkList, Qt::AlignLeft);
         }
         else {
             infoLabel->setText(DcpNetwork::NoAvailableNetworksText);
@@ -110,9 +121,16 @@ void NetworkContainer::toggleAvailableNetworks(int selected, const QStringList &
         }
     }
     else {
-        if(infoLabel == NULL)
+        if(infoLabel != NULL) {
             layoutPolicy->removeItem(infoLabel);
-        layoutPolicy->removeItem(networkList);
+            delete infoLabel;
+            infoLabel = NULL;
+        }
+        if(networkList != NULL) {
+            layoutPolicy->removeItem(networkList);
+            delete networkList;
+            networkList = NULL;
+        }        
     }
 }
 

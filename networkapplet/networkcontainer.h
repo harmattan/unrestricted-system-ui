@@ -24,9 +24,6 @@ public slots:
     void initSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
     void toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle);
 
-private slots:
-
-
 signals:
     void networkModeChanged(QString);
     void networkSelectionChanged(QString);
@@ -45,7 +42,7 @@ private: //attributes
     DuiLabel *selectionLabel;
     DuiLinearLayoutPolicy *layoutPolicy;
     int selectionDefaultIndex;
-    NetworkList *networkList;
+    NetworkList *networkList;    
 
 };
 

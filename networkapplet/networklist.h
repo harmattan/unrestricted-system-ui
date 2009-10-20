@@ -4,6 +4,7 @@
 #include <DuiList>
 
 class DuiWidgetListModel;
+class QModelIndex;
 
 class NetworkList : public DuiList
 {
@@ -13,15 +14,16 @@ public:
     NetworkList(QGraphicsItem *parent = 0);
     virtual ~NetworkList();
 
-    bool insertNetworks(int selected, const QStringList &networks);
+    bool insertNetworks(int selected, const QStringList &networks);    
 
 signals:
     void availableNetworkSelected(QString);
 
 private slots:
-    void availableNetworkSelected(const QModelIndex &index);
+    void availableNetworkClicked(const QModelIndex &index);
 
-private:
+private:    
+    QGraphicsItem *parent;
     DuiWidgetListModel *listModel;
 };
 

@@ -7,8 +7,10 @@
 #include <QObject>
 #include <QStringList>
 
-#include <NetworkRegistration>
-#include <RadioAccess>
+//#include <NetworkRegistration>
+#include "networkregistrationstub.h" //replace when readioaccess really ready
+//#include <RadioAccess>
+#include "radioaccessstub.h" //replace when readioaccess really ready
 
 using namespace Cellular;
 
@@ -52,7 +54,7 @@ private: //attributes
     NetworkRegistration *networkRegistration;
     QHash<RadioAccess::Mode, QString> networkModes;
     QHash<NetworkRegistration::Mode, QString> networkSelectionValues;
-    QList<AvailableOperator*> operators;
+    QHash<QString, QStringList> operators;
 
 };
 

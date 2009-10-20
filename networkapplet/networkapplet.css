@@ -45,9 +45,9 @@
 
 	item-spacing: 0;
 			    
-	preferred-size: size(90%, 50);
-	minimum-size: size(90%, 50);
-	maximum-size: size(90%, 1000);
+        preferred-size: size(80%, 50);
+        minimum-size: size(80%, 50);
+        maximum-size: size(80%, 1000);
 
 	container-object-name: "wgListContainer";
 	group-header-object-name: "wgListGroupHeaders";	

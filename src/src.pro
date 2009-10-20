@@ -45,6 +45,8 @@ SOURCES += main.cpp \
     profilebusinesslogicadaptor.cpp \
     devicemodestub.cpp \
     batterystub.cpp \
+    radioaccessstub.cpp \
+    networkregistrationstub.cpp
     callandsimbusinesslogicadaptor.cpp \
     callandsimbusinesslogic.cpp
 HEADERS += main.h \
@@ -73,6 +75,8 @@ HEADERS += main.h \
     profilebusinesslogicadaptor.h \
     devicemodestub.h \
     batterystub.h \
+    radioaccessstub.h \
+    networkregistrationstub.h
     callandsimbusinesslogicadaptor.h \
     callandsimbusinesslogic.h
 style_sheet.files += sysuid.css
