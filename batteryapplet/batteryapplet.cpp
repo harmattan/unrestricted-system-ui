@@ -29,7 +29,9 @@ DcpWidget* BatteryApplet::constructWidget(int widgetId)
 
 DcpWidget* BatteryApplet::pageMain()
 {
-    return new BatteryWidget();
+    if(main == NULL)
+        main = new BatteryWidget();
+    return main;
 }
 
 QString BatteryApplet::title() const

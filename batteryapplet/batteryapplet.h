@@ -5,6 +5,7 @@
 #include <QObject>
 class DcpWidget;
 class DuiAction;
+class BatteryWidget;
 
 class BatteryApplet : public QObject, public DcpAppletIf
 {
@@ -18,6 +19,9 @@ public:
     virtual QString title() const;
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId = 0);    
+
+private:
+    QPointer<BatteryWidget> main;
 
 };
 #endif // BATTERYAPPLET_H
