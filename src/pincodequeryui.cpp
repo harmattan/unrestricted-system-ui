@@ -143,7 +143,6 @@ void PinCodeQueryUI::createContent()
 
 void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy)
 {
-    const int iconSide = 32; // icon size specified to be 32 pix
     int side = 36;
 
     // enter button layout
