@@ -188,11 +188,9 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     if(dlg->clickedButton() == callButton)
     {
         dlg->accept();
-
         // do call
-        CallUiServiceApi* callUi = new CallUiServiceApi();
-        callUi->Call(NULL, NULL);
-        delete callUi;
+        CallUi::CallUiServiceApi callApi;
+        callApi.RequestCellularCall("112");
     } else {
         dlg->reject();
     }
