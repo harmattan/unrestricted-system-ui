@@ -1,9 +1,15 @@
 #emergencyCallButton {
     icon-size: 32 32;
+    minimum-size: 36 36;
+    maximum-size: 36 36;
+    preferred-size: 36 36;
 }
 
 #backspaceButton {
     icon-size: 32 32;
+    minimum-size: 36 36;
+    maximum-size: 36 36;
+    preferred-size: 36 36;
 }
 
 #lockscreenTimeLabel {

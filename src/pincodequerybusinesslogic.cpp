@@ -140,7 +140,6 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
 
-
         /* Unfortunately no effect with libdui-dev version 0.11.1-1+0rebuild1+0m6 */
         DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
         Qt::WindowFlags flags = win->windowFlags();
@@ -152,7 +151,12 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         uiPin->appearNow(DuiSceneWindow::DestroyWhenDone);
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
     }
-    uiPin->setBackButtonEnabled(enableBack);
+    DuiApplicationPage::DisplayMode mod = 0;
+    if(enableBack){
+        uiPin->setBackButtonEnabled(enableBack);
+        mod = (DuiApplicationPage::EscapeButtonVisible);
+    }
+    uiPin->setDisplayMode( mod );
 }
 
 void PinCodeQueryBusinessLogic::closeUi()

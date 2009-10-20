@@ -18,11 +18,17 @@
 #include <QIntValidator>
 
 
+/*!
+ * TODOs:
+ * 1. Emergency call icon ID to be updated when provided by Vappu
+ *
+ */
 PinCodeQueryUI::PinCodeQueryUI()
 {
     qDebug() << Q_FUNC_INFO;
     setFullscreen(true);
-    setNavigationBarVisible(false);
+    setDisplayMode(0);
+    setBackButtonEnabled(false);
     setTitle("PIN code query:");
     createContent();
 }
@@ -60,8 +66,6 @@ void PinCodeQueryUI::createContent()
     //create the widgets and numpad.
     createWidgetItems();
 
-    // TODO: create exit-button and hide it by default!!
-
     //create mainLayout
     DuiLayout *layout = new DuiLayout();
     centralWidget()->setLayout(layout); // ownership transferred
@@ -75,13 +79,13 @@ void PinCodeQueryUI::createContent()
 
     //attach widget items to landscape and portrait policies
     // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
-    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 6);
+    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
     landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 6);
     landscapePolicy->addItemAtPosition(entryTextEdit, 3, 0, 1, 3);
     landscapePolicy->addItemAtPosition(backspaceButton, 3, 3);
     landscapePolicy->addItemAtPosition(enterButton, 5, 0, 1, 2);
     landscapePolicy->addItemAtPosition(cancelButton, 5, 2, 1, 2);
-    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 6);
+    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 7);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
     portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 3);
@@ -98,8 +102,8 @@ void PinCodeQueryUI::createContent()
 
     QSize size = DuiSceneManager::instance()->visibleSceneSize();
     qDebug() << Q_FUNC_INFO << "size w x h:"<<size.width()<<"x"<<size.height();
-    int longSide = size.width() - (left + right);
-    int shortSide = size.height() - (top + bottom) - 28;
+    int longSide = size.width();
+    int shortSide = size.height();
     if(longSide < shortSide)
     {
         int tmp = longSide;
@@ -107,20 +111,8 @@ void PinCodeQueryUI::createContent()
         shortSide = tmp;
     }
     qDebug() << Q_FUNC_INFO << "size l x s:"<<longSide<<"x"<<shortSide;
-//    longSide -= (left + right;
-//    shortSide -= top + bottom;
-
- /*
-    qreal left,top,right,bottom;
-    layout->getContentsMargins(&left,&top,&right,&bottom);
-    qDebug() << "LockScreenUI::calculateRects() margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
-
-    QSize size = DuiSceneManager::instance()->visibleSceneSize();
-    int w = size.width() - (left + right);
-    int h = size.height() - (top + bottom);
-    qDebug() << "LockScreenUI::calculateRects() w:" << w << "h:" << h << ". "<< size;
-*/
-
+    longSide -= left + right;
+    shortSide -= top + bottom;
 
     int half = longSide/2;
     int quarter = shortSide/4;
@@ -152,42 +144,17 @@ void PinCodeQueryUI::createContent()
 void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy)
 {
     const int iconSide = 32; // icon size specified to be 32 pix
-    // emergency button layout
-    int side = lPolicy->rowMinimumHeight(0) < pPolicy->rowMinimumHeight(0) ?
-               lPolicy->rowMinimumHeight(0) : pPolicy->rowMinimumHeight(0);
-    int margin = (side - iconSide) / 2;
-    if(margin >= 0) {
-        side -= margin;
-    }
-    QSizeF size(side, side);
-    emergencyCallButton->setMinimumSize( iconSide, iconSide );
-    emergencyCallButton->setMaximumSize( size );
-    lPolicy->setColumnAlignment(6, Qt::AlignRight);
-
-    // backspace button layout
-    side = entryTextEdit->size().height();
-    margin = (side - iconSide) / 2;
-    if(margin >= 0) {
-        backspaceButton->setContentsMargins( margin, margin, margin, margin );
-    }
-
-    // TODO: commented out for some changes in DUI after week 41
-    /*
-    backspaceButton->setMinimumSize( iconSide, iconSide );
-    backspaceButton->setMaximumSize( side, side );
+    int side = 36;
 
     // enter button layout
     QSizeF minSize(lPolicy->columnMinimumWidth(0), side);
     QSizeF maxSize(DuiSceneManager::instance()->visibleSceneSize().width(), side);
-    qDebug() Q_FUNC_INFO << "enter col width:" << minSize.width() << "-" << maxSize.width();
+    qDebug() << Q_FUNC_INFO << "enter col width:" << minSize.width() << "-" << maxSize.width();
     lPolicy->setRowAlignment(5, Qt::AlignBottom);
     pPolicy->setRowAlignment(4, Qt::AlignBottom);
 
     enterButton->setMinimumSize( minSize );
-    enterButton->setMaximumSize( maxSize );
     cancelButton->setMinimumSize( minSize );
-    cancelButton->setMaximumSize( maxSize );
-    */
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
