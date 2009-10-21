@@ -24,7 +24,8 @@ ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *pare
 {
     qDebug() << "ProfileContainer::ProfileContainer()" << title;
 
-    if(profileId != ProfileButtons::silent) {
+    // TODO: hardcoded silent value!!
+    if(profileId != 1) {
         slider = new DuiSlider(this, "continuous");
         slider->setOrientation(Qt::Horizontal);
         slider->setRange(ProfileApplet::sliderMin, ProfileApplet::sliderMax);
@@ -63,14 +64,14 @@ void ProfileContainer::setLayout()
 
     if(slider)
     {
-        img = new DuiImage("Icon-back", this);
+        img = new DuiImage("icon-m-volume-off", this);
         item = slider;
         qDebug() << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
     }
     else
     {
-        img = new DuiImage("Icon-Qwerty-Delete", this);
+        img = new DuiImage("icon-m-volume", this);
         item = new DuiLabel(DcpProfile::NoRingingText, this);
     }
     img->setObjectName("speakerIcon");
