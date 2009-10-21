@@ -42,8 +42,8 @@ QString CallAndSimApplet::title() const
 QVector<DuiAction*> CallAndSimApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
-//    DuiAction* helpAction = new DuiAction(DcpProfile::MenuHelpText, pageMain());
-//    vector.append(helpAction);
+    DuiAction* helpAction = new DuiAction(DcpCallAndSim::HelpText, pageMain());
+    vector.append(helpAction);
     return vector;
 }
 
