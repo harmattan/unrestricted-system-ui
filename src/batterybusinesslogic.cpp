@@ -15,7 +15,7 @@
       too low battery)
    2) Show low battery notification every 30 minutes in normal mode and every 2 hours in sleep mode
    3) Find out what is the correct gap to show the ChargingCompleteText and DisconnectChargerText notes
-   4) What about charging with USB / normal way?
+   4) What about charging with USB / normal way?   
 
 */
 
@@ -146,6 +146,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
 void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState)
 {    
+    qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if(PSMState == QmDeviceMode::PSMStateOff) {
         uiNotif->showNotification(ExitPSMText);
         emit PSMValueChanged(PSMActivateText);
@@ -182,23 +183,28 @@ QString BatteryBusinessLogic::PSMValue()
 void BatteryBusinessLogic::togglePSM(const QString &value)
 {
     qDebug() << "BatteryBusinessLogic::togglePSM(" << value << ")";
+
     if(value == PSMActivateText)
         deviceMode->setPSMState(QmDeviceMode::PSMStateOn); //turn on the PSM
     else
         deviceMode->setPSMState(QmDeviceMode::PSMStateOff); //turn off the PSM
 
     //when ever we toggle PSM manually, we turn off the automatic PSM
-    togglePSMAuto(false);
-    emit PSMAutoValueChanged(false);
-
+    systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(false));
+    emit PSMAutoValueChanged(false);    
 }
 
 void BatteryBusinessLogic::togglePSMAuto(bool toggle)
 {
     qDebug() << "BatteryBusinessLogic::togglePSMAuto(" << toggle << ")";
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(toggle));
-    if(toggle) // if we trun on the Auto PSM, we must check the threshold
+    if(toggle) // if we turn on the Auto PSM, we must check the threshold
         checkPSMThreshold(battery->getLevel());
+    else { // if we turn off the Auto PSM, we must disable the PSM in all cases
+        if(deviceMode->getPSMState() == QmDeviceMode::PSMStateOn)
+            deviceMode->setPSMState(QmDeviceMode::PSMStateOff);     
+    }
+
 }
 
 QStringList BatteryBusinessLogic::remainingTimeValues()

@@ -25,9 +25,17 @@ public:
     void setScreenLightsValue(const QString &value);
     void setBlankInhibitValue(bool value);
 
+public slots:
+    void toggleDisplay(bool toggle);
+
 signals:
     void brightnessValuesAvailable(int, QStringList);
     void screenLightsValuesAvailable(int, QStringList);
+    void displayOff();    
+    void displayOn();
+
+private slots:
+    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
 
 private:
     QmDisplayState *display;

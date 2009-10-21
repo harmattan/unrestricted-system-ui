@@ -15,6 +15,7 @@ NetworkDBusInterface::NetworkDBusInterface()
     connect(dbusIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), this, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)));
     connect(dbusIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), this, SIGNAL(availableNetworksReceived(int, QStringList, bool)));
     connect(dbusIf, SIGNAL(networkSelected(bool)), this, SIGNAL(networkSelected(bool)));
+    connect(dbusIf, SIGNAL(roamingUpdatesValueChanged(bool)), this, SIGNAL(roamingUpdatesValueReceived(bool)));
 }
 
 NetworkDBusInterface::~NetworkDBusInterface()

@@ -45,6 +45,7 @@ signals:
     void networkSelectionValuesAvailable(int, int, QStringList);
     void availableNetworksAvailable(int, QStringList, bool);
     void networkSelected(bool);
+    void roamingUpdatesValueChanged(bool);
 
 private: //methods
     void queryAvailableNetworks();

@@ -77,10 +77,11 @@ Sysuid::Sysuid() : QObject()
 
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic();    
-    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));
-    connect(batteryLogic, SIGNAL(batteryCharging()), lockScreenLogic, SLOT(sleepModeOff()));
-    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
-    connect(shutdownLogic, SIGNAL(dialogOpen(bool)), lockScreenLogic, SLOT(disable(bool)));
+    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));    
+    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));    
+    connect(displayLogic, SIGNAL(displayOff()), lockScreenLogic, SLOT(displayOff()));    
+    connect(displayLogic, SIGNAL(displayOn()), lockScreenLogic, SLOT(displayOn()));
+    connect(lockScreenLogic, SIGNAL(toggleDisplay(bool)), displayLogic, SLOT(toggleDisplay(bool)));
 
     // D-Bus registration and stuff.
     QDBusConnection bus = QDBusConnection::sessionBus();

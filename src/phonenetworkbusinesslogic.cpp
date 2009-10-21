@@ -6,7 +6,7 @@
 /*
     TODO:
     1) What to do when toggling "Enable phone network"-feature?
-    2) "Enable roaming updates"-feature. Is it wanted after all? Remove if not.
+    2) What to do when toggling "Enable roaming updates"-feature?
     3) When requesting available networks, an error can occur. Do we show note in this case?
     4) When selecting a network, an error can occur. Do we show note in this case?
     5) Can we trust that the network has unique name?
@@ -118,6 +118,10 @@ void PhoneNetworkBusinessLogic::toggleNetwork(bool toggle)
 void PhoneNetworkBusinessLogic::toggleRoaming(bool toggle)
 {    
     systemUIGConf->setValue(SystemUIGConf::NetworkRoamingKey, QVariant(toggle));
+    if(!toggle) {
+        emit roamingUpdatesValueChanged(false);
+        systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdatesKey, QVariant(false));
+    }
 }
 
 void PhoneNetworkBusinessLogic::toggleRoamingUpdates(bool toggle)

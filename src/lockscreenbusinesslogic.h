@@ -18,34 +18,36 @@ class LockScreenBusinessLogic : public QObject
     Q_OBJECT
 
 public:
+
+    enum ScreenLockPhase {
+        Off = 0, // screenlock is off
+        On, //screenlock is on
+        Sleep // screenlock sleep mode is on
+    };
+
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
 
 signals:
-    void lockScreenOff();    
+    void lockScreenOff();
+    void toggleDisplay(bool toggle);
 
 public slots:
     void shortPowerKeyPressOccured();
-    void sleepModeOff();
-    void unlockScreen();
-    void disable(bool disable);
+    void displayOn();
+    void displayOff();
 
-private slots:    
-    //void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+private slots:
+    void unlockScreen();
     void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
 
 private: //methods
-    void toggleScreenLock(bool toggle);
-    void toggleSleepMode(bool toggle);
-    //void toggleDisplayStateListener(bool toggle);
+    void toggleKeyPadLock(bool toggle);
+    void toggleScreenLockUI(bool toggle);    
 
 private: //attributes
-    EventEater *eventEater;
-    bool screenLock;
-    bool sleepMode;
-    bool isDisabled;
-    QmLocks *touchPadLocker;
-    //QmDisplayState *display; //this should be handled by the displaybusinesslogic
+    EventEater *eventEater;    
+    ScreenLockPhase phase;
     LockScreenUI *lockUI;
     QDBusInterface *dbusIf;
 };

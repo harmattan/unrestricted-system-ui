@@ -18,6 +18,8 @@ static int TIMEGAP = 5; // time gap between blanking and dimming
 DisplayBusinessLogic::DisplayBusinessLogic() :
         display(new QmDisplayState())
 {
+    connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
 }
 
 DisplayBusinessLogic::~DisplayBusinessLogic()
@@ -26,8 +28,16 @@ DisplayBusinessLogic::~DisplayBusinessLogic()
     display = NULL;
 }
 
+void DisplayBusinessLogic::toggleDisplay(bool toggle)
+{
+    qDebug() << "DisplayBusinessLogic::toggleDisplay(" << toggle << ")";
+    QmDisplayState::DisplayState state = (toggle ? QmDisplayState::On : QmDisplayState::Off);
+    display->set(state);
+}
+
 void DisplayBusinessLogic::queryBrightnessValues()
-{    
+{
+    qDebug() << "DisplayBusinessLogic::queryBrightnessValues()";
     QStringList values;
 
     for(int i=0; i<=display->getMaxDisplayBrightnessValue(); ++i)
@@ -39,7 +49,8 @@ void DisplayBusinessLogic::queryBrightnessValues()
 }
 
 void DisplayBusinessLogic::queryScreenLightsValues()
-{    
+{
+    qDebug() << "DisplayBusinessLogic::queryScreenLightsValues()";
     QStringList values;
 
     // are these OK?
@@ -60,22 +71,41 @@ void DisplayBusinessLogic::queryScreenLightsValues()
 }
 
 bool DisplayBusinessLogic::blankInhibitValue()
-{    
+{
+    qDebug() << "DisplayBusinessLogic::blankInhibitValue()";
     return display->getBlankingWhenCharging();
 }
 
 void DisplayBusinessLogic::setBrightnessValue(const QString &value)
-{    
+{
+    qDebug() << "DisplayBusinessLogic::setBrightnessValue(" << value << ")";
     display->setDisplayBrightnessValue(value.toInt());
 }
 
 void DisplayBusinessLogic::setScreenLightsValue(const QString &value)
 {
+    qDebug() << "DisplayBusinessLogic::setScreenLightsValue(" << value << ")";
     display->setDisplayBlankTimeout(value.toInt());
     display->setDisplayDimTimeout(value.toInt() - TIMEGAP);
 }
 
 void DisplayBusinessLogic::setBlankInhibitValue(bool value)
 {
+    qDebug() << "DisplayBusinessLogic::setBlankInhibitValue(" << value << ")";
     display->setBlankingWhenCharging(value);
+}
+
+void DisplayBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
+{
+    qDebug() << "DisplayBusinessLogic::displayStateChanged(" << state << ")";
+    switch(state) {
+        case Maemo::QmDisplayState::Off:
+            emit displayOff();
+            break;
+        case Maemo::QmDisplayState::Dimmed:
+            break;
+        case Maemo::QmDisplayState::On:
+            emit displayOn();
+            break;
+    }
 }

@@ -10,6 +10,7 @@ PhoneNetworkBusinessLogicAdaptor::PhoneNetworkBusinessLogicAdaptor(QObject *obj,
     connect(networkLogic, SIGNAL(networkSelectionValuesAvailable(int, int, QStringList)), this, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)));
     connect(networkLogic, SIGNAL(availableNetworksAvailable(int, QStringList, bool)), this, SIGNAL(availableNetworksReceived(int, QStringList, bool)));
     connect(networkLogic, SIGNAL(networkSelected(bool)), this, SIGNAL(networkSelected(bool)));
+    connect(networkLogic, SIGNAL(roamingUpdatesValueChanged(bool)), this, SIGNAL(roamingUpdatesValueChanged(bool)));
 }
 
 void PhoneNetworkBusinessLogicAdaptor::setPhoneNetworkValue(bool value)

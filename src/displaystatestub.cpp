@@ -9,7 +9,7 @@ QmDisplayState::QmDisplayState(QObject *parent) :
         blankTimeout(35),
         dimTimeout(30),
         blankingWhenCharging(true)
-{
+{    
 }
 
 QmDisplayState::~QmDisplayState()
@@ -19,6 +19,12 @@ QmDisplayState::~QmDisplayState()
 QmDisplayState::DisplayState QmDisplayState::get() const
 {
     return state;
+}
+
+bool QmDisplayState::set(DisplayState state)
+{
+    this->state = state;
+    return true;
 }
 
 int QmDisplayState::getMaxDisplayBrightnessValue()

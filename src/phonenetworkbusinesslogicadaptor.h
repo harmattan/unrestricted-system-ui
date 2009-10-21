@@ -37,6 +37,7 @@ signals:
     void networkSelectionValuesReceived(int, int, QStringList);
     void availableNetworksReceived(int, QStringList, bool);
     void networkSelected(bool);
+    void roamingUpdatesValueChanged(bool);
 
 private:
     PhoneNetworkBusinessLogic *networkLogic;    
