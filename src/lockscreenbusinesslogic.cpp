@@ -33,7 +33,6 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
-<<<<<<< .mine
 {    
     qDebug() << "LockScreenBusinessLogic::shortPowerKeyPressOccured()";
     switch(phase) {
@@ -55,28 +54,11 @@ void LockScreenBusinessLogic::shortPowerKeyPressOccured()
             toggleScreenLockUI(false); //turn off the UI
             emit toggleDisplay(false); //order display off
             break;
-=======
-{
-    qDebug() << Q_FUNC_INFO << "isDisabled:" << isDisabled << "screenLock:" << screenLock << "sleepMode:" << sleepMode;
-
-    if(!isDisabled) {
-        if(screenLock) {
-            if(sleepMode)
-                toggleSleepMode(false);
-            else
-                toggleSleepMode(true);
-        }
-        else {
-            toggleScreenLock(true);
-            toggleSleepMode(true);
-        }
->>>>>>> .r321
     }
 }
 
 void LockScreenBusinessLogic::displayOff()
 {
-<<<<<<< .mine
     qDebug() << "LockScreenBusinessLogic::displayOff()";
     switch(phase) {
         case LockScreenBusinessLogic::Off:
@@ -91,13 +73,6 @@ void LockScreenBusinessLogic::displayOff()
             phase = LockScreenBusinessLogic::Sleep;
             toggleScreenLockUI(false); //turn off the UI            
             break;
-=======
-    qDebug() << Q_FUNC_INFO << toggle;
-
-    if(!toggle) {
-        emit lockScreenOff();
-        DuiApplication::instance()->applicationWindow()->hide();
->>>>>>> .r321
     }
 }
 
