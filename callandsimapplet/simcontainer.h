@@ -6,6 +6,7 @@
 
 class DuiLabel;
 class DuiButton;
+class QDBusInterface;
 
 class SimContainer : public DuiContainer
 {
@@ -13,6 +14,7 @@ class SimContainer : public DuiContainer
 
 public:
     SimContainer(DuiWidget *parent);
+    virtual ~SimContainer();
 
 signals:
     void valueChanged(bool);
@@ -22,6 +24,7 @@ public slots:
 
 private slots:
     void buttonToggled(bool checked);
+    void launchPinQuery();
 
 private:
     void setLayout();
@@ -30,6 +33,9 @@ private:
     DuiLabel* pinRequestLabel;
     DuiButton* pinRequestButton;
     DuiButton* changePinButton;
+
+    // DBus interface for pin query launching
+    QDBusInterface *dbusIf;
 };
 
 #endif // SIMCONTAINER_H

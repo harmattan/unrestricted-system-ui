@@ -41,7 +41,7 @@ signals:
     void pinRequest(bool);
 
 private:
-    QDBusInterface *dbusIf;
+    QDBusInterface* dbusIf;
 };
 
 #endif // CALLANDSIMDBUSINTERFACE_H

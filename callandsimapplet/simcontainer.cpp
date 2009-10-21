@@ -7,15 +7,25 @@
 #include <DuiLabel>
 
 #include <QGraphicsLinearLayout>
+#include <QDBusInterface>
 #include <QDebug>
 
 SimContainer::SimContainer(DuiWidget *parent) :
         DuiContainer(DcpCallAndSim::SimCardText, parent),
         pinRequestLabel(NULL),
         pinRequestButton(NULL),
-        changePinButton(NULL)
+        changePinButton(NULL),
+        dbusIf(NULL)
 {
     setLayout();
+}
+
+SimContainer::~SimContainer()
+{
+    if (dbusIf) {
+        delete dbusIf;
+        dbusIf = NULL;
+    }
 }
 
 void SimContainer::setPinRequest(bool enabled)
@@ -35,6 +45,19 @@ void SimContainer::buttonToggled(bool checked)
 
     changePinButton->setVisible(checked);
     emit valueChanged(checked);
+}
+
+void SimContainer::launchPinQuery()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    if (!dbusIf) {
+        dbusIf = new QDBusInterface("com.nokia.systemui", "/",
+                                    "com.nokia.systemui.PinCodeQuery",
+                                    QDBusConnection::sessionBus());
+    }
+
+    dbusIf->call(QDBus::NoBlock, QString("changePinCode"));
 }
 
 void SimContainer::setLayout()
@@ -70,8 +93,6 @@ void SimContainer::setLayout()
 
     changePinButton = new DuiButton(DcpCallAndSim::ChangePinText);
     changePinButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-//    changePinButton->setVisible(true); // TODO: wtf
-//    changePinButton->hide();
 
     // landscape policy
 
@@ -91,6 +112,7 @@ void SimContainer::setLayout()
     // connect signals
 
     connect(pinRequestButton, SIGNAL(toggled(bool)), this, SLOT(buttonToggled(bool)));
+    connect(changePinButton, SIGNAL(clicked()), this, SLOT(launchPinQuery()));
 
     // layout
 
