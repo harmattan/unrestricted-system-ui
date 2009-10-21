@@ -64,14 +64,14 @@ void ProfileContainer::setLayout()
 
     if(slider)
     {
-        img = new DuiImage("icon-m-volume-off", this);
+        img = new DuiImage("icon-m-volume", this);
         item = slider;
         qDebug() << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
     }
     else
     {
-        img = new DuiImage("icon-m-volume", this);
+        img = new DuiImage("icon-m-volume-off", this);
         item = new DuiLabel(DcpProfile::NoRingingText, this);
     }
     img->setObjectName("speakerIcon");
