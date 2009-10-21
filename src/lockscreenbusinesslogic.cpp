@@ -49,6 +49,8 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
 {
+    qDebug() << Q_FUNC_INFO << "isDisabled:" << isDisabled << "screenLock:" << screenLock << "sleepMode:" << sleepMode;
+
     if(!isDisabled) {
         if(screenLock) {
             if(sleepMode)
@@ -65,6 +67,8 @@ void LockScreenBusinessLogic::shortPowerKeyPressOccured()
 
 void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
 {
+    qDebug() << Q_FUNC_INFO << toggle;
+
     if(!toggle) {
         emit lockScreenOff();
         DuiApplication::instance()->applicationWindow()->hide();
