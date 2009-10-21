@@ -6,7 +6,7 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
-	/usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -16,14 +16,16 @@ contains(cov, true) {
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = displayapplet.h \
-    displaywidget.h \    
+    displaywidget.h \
     displaybrief.h \
     displaydbusinterface.h \
-    displaytranslation.h
+    displaytranslation.h \
+    slidercontainer.h
 SOURCES = displayapplet.cpp \
     displaywidget.cpp \
-    displaybrief.cpp \        
-    displaydbusinterface.cpp
+    displaybrief.cpp \
+    displaydbusinterface.cpp \
+    slidercontainer.cpp
 css.files = displayapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

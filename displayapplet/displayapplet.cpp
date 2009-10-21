@@ -29,7 +29,9 @@ DcpWidget* DisplayApplet::constructWidget(int widgetId)
 
 DcpWidget* DisplayApplet::pageMain()
 {
-    return new DisplayWidget();
+     if(main == NULL)
+        main = new DisplayWidget();
+    return main;
 }
 
 QString DisplayApplet::title() const

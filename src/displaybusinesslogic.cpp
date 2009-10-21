@@ -1,78 +1,81 @@
 #include "displaybusinesslogic.h"
-#include <qmsystem/qmdisplaystate.h>
 
-#include <QStringList>
 #include <QDebug>
+
+/*
+    TODO:
+    1) Make sure the screen lights values are correct
+    2) Does the screen light off correcpond the blank or dim timeout?
+    3) What is the hard coded gap between dimming and switching off the display?
+    4) Does the timeout time really need to double if the display is tapped after it's dimmed?
+
+*/
 
 using namespace Maemo;
 
-DisplayBusinessLogic::DisplayBusinessLogic()        
+static int TIMEGAP = 5; // time gap between blanking and dimming
+
+DisplayBusinessLogic::DisplayBusinessLogic() :
+        display(new QmDisplayState())
 {
 }
 
 DisplayBusinessLogic::~DisplayBusinessLogic()
 {
+    delete display;
+    display = NULL;
 }
 
 void DisplayBusinessLogic::queryBrightnessValues()
-{
-    QmDisplayState display;
+{    
     QStringList values;
 
-    //TODO remove the hardcoded value when QmDisplayState is updated
-    for(int i=0; i<=5 /*display.getMaxDisplayBrightnessValue()*/; ++i)
+    for(int i=0; i<=display->getMaxDisplayBrightnessValue(); ++i)
         values << QString("%1").arg(i);
 
-    //TODO remove the hardcoded value when QmDisplayState is updated
-    int index = values.indexOf(QString("%1").arg(2/*display.getDisplayBrightness()*/));
+    int index = values.indexOf(QString("%1").arg(display->getDisplayBrightnessValue()));
 
     emit brightnessValuesAvailable(index, values);
 }
 
 void DisplayBusinessLogic::queryScreenLightsValues()
-{
-    QmDisplayState display;
+{    
     QStringList values;
 
-    //TODO: Make sure the values are the ones wanted
+    // are these OK?
     values << QString("10") << QString("30") << QString("60") << QString("120") << QString("300");
 
-    //TODO remove the hardcoded value when QmDisplayState is updated
-    QString value = QString("%1").arg(60/*display.getDisplayBlankTimeout()*/);
-    int index = (values.contains(value) ? values.indexOf(value) : 1);
+    QString value = QString("%1").arg(display->getDisplayBlankTimeout());
+    int index;
+    if(values.contains(value))
+        index = values.indexOf(value);
+    else {
+        index = 1;
+        int newBlankTimeout = values.at(index).toInt();
+        display->setDisplayBlankTimeout(newBlankTimeout);
+        display->setDisplayDimTimeout(newBlankTimeout - TIMEGAP);
+    }
 
     emit screenLightsValuesAvailable(index, values);
 }
 
 bool DisplayBusinessLogic::blankInhibitValue()
-{
-    QmDisplayState display;
-
-    //TODO remove the hardcoded value when QmDisplayState is updated
-    return true/*display.getBlankingWhenCharging()*/;
+{    
+    return display->getBlankingWhenCharging();
 }
 
 void DisplayBusinessLogic::setBrightnessValue(const QString &value)
 {    
-    QmDisplayState display;
-
-    //TODO uncomment when QmDisplayState is updated
-    //display.setDisplayBrightness(value.toInt());
+    display->setDisplayBrightnessValue(value.toInt());
 }
 
 void DisplayBusinessLogic::setScreenLightsValue(const QString &value)
 {
-    QmDisplayState display;
-
-    //TODO uncomment when QmDisplayState is updated
-    //display.setDisplayBlankTimeout(value.toInt());
-    //display.setDisplayDimTimeout(value.toInt() - 3);
+    display->setDisplayBlankTimeout(value.toInt());
+    display->setDisplayDimTimeout(value.toInt() - TIMEGAP);
 }
 
 void DisplayBusinessLogic::setBlankInhibitValue(bool value)
 {
-    QmDisplayState display;
-
-    //TODO uncomment when QmDisplayState is updated
-    //display.setBlankingWhenCharging(value);
+    display->setBlankingWhenCharging(value);
 }

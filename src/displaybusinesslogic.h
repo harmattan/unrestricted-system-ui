@@ -2,9 +2,13 @@
 #define DISPLAYBUSINESSLOGIC_H
 
 #include "systemuigconf.h"
+//#include <qmsystem/qmdisplaystate.h> // stub used
+#include "displaystatestub.h"
 
 #include <QObject>
 #include <QStringList>
+
+using namespace Maemo;
 
 class DisplayBusinessLogic : public QObject
 {
@@ -24,6 +28,9 @@ public:
 signals:
     void brightnessValuesAvailable(int, QStringList);
     void screenLightsValuesAvailable(int, QStringList);
+
+private:
+    QmDisplayState *display;
 
 };
 

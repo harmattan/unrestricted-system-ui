@@ -17,6 +17,8 @@ public:
     void brightnessValuesRequired();    
     void screenLightsValuesRequired();    
     void blankInhibitValueRequired();
+
+public slots:
     void setBrightnessValue(const QString &value);
     void setScreenLightsValue(const QString &value);
     void setBlankInhibitValue(bool value);

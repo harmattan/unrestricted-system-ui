@@ -3,12 +3,9 @@
 
 #include "dcpwidget.h" 
 
-class DisplayDBusInterface;
 class DuiButton;
-class DuiContainer;
-class DuiLinearLayoutPolicy;
-class DuiSlider;
-class DuiWidgetController;
+class DisplayDBusInterface;
+class SliderContainer;
 
 class DisplayWidget : public DcpWidget
 {
@@ -21,30 +18,13 @@ public:
 protected:
     void initWidget();
 
-private slots:
-    void initBrightnessSlider(int index, const QStringList &values);
-    void initScreenLightsSlider(int index, const QStringList &values);    
+private slots:    
     void initBlankInhibitButton(bool toggle);
-    void sliderValueChanged(int index);
-    void blankInhibitButtonPressed();
 
-private: //methods
-    DuiContainer* createContainer(const QList<DuiWidgetController *> &widgets,
-                                  const QMap<DuiWidgetController *, Qt::Alignment> &alignments,
-                                  Qt::Orientation policyOrientation,
-                                  const QString &widgetObjectName = "",
-                                  int policySpacing = 0);
-
-    void addLayoutWidgets(DuiLinearLayoutPolicy *policy, const QList<DuiContainer*> &containers);
-    void initSlider(DuiSlider *slider, int index, const QStringList &values);
-    void updateSliderThumbLabel(DuiSlider *slider, const QString &value, const QString &pattern = QString(""));
-
-private: //attributes        
-    DuiSlider *brightnessSlider;
-    DuiSlider *screenLightsSlider;
-    DuiButton *blankInhibitButton;
-    QStringList brightnessValues;
-    QStringList screenLightsValues;
-    DisplayDBusInterface *displayIf;    
+private: //attributes
+    DuiButton *blankInhibitButton;    
+    DisplayDBusInterface *displayIf;
+    SliderContainer *brightnessContainer;
+    SliderContainer *screenLightsContainer;
 };
 #endif // DISPLAYWIDGET_H

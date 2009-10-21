@@ -2,7 +2,8 @@
 #define LOCKSCREENBUSINESSLOGIC_H
 
 #include "qmsystem/qmlocks.h"
-#include "qmsystem/qmdisplaystate.h"
+//#include "qmsystem/qmdisplaystate.h" // stub used
+//#include "displaystatestub.h"
 #include "eventeater.h"
 
 #include <QObject>
@@ -30,13 +31,13 @@ public slots:
     void disable(bool disable);
 
 private slots:    
-    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    //void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
     void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
 
 private: //methods
     void toggleScreenLock(bool toggle);
     void toggleSleepMode(bool toggle);
-    void toggleDisplayStateListener(bool toggle);
+    //void toggleDisplayStateListener(bool toggle);
 
 private: //attributes
     EventEater *eventEater;
@@ -44,7 +45,7 @@ private: //attributes
     bool sleepMode;
     bool isDisabled;
     QmLocks *touchPadLocker;
-    QmDisplayState *display;
+    //QmDisplayState *display; //this should be handled by the displaybusinesslogic
     LockScreenUI *lockUI;
     QDBusInterface *dbusIf;
 };

@@ -15,9 +15,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic() : QObject()
     isDisabled = false;
 
     touchPadLocker = new QmLocks();
-    display = new QmDisplayState();
+    //display = new QmDisplayState(); //this should be handled by the displaybusinesslogic
 
-    toggleDisplayStateListener(true);
+    //toggleDisplayStateListener(true); //this should be handled by the displaybusinesslogic
 
     toggleSleepMode(false);
 
@@ -37,8 +37,8 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
     delete touchPadLocker;
     touchPadLocker = NULL;
-    delete display;
-    display = NULL;
+    //delete display; //this should be handled by the displaybusinesslogic
+    //display = NULL; //this should be handled by the displaybusinesslogic
     delete eventEater;
     eventEater = NULL;
     if (lockUI) {
@@ -77,6 +77,8 @@ void LockScreenBusinessLogic::toggleScreenLock(bool toggle)
     screenLock = toggle;
 }
 
+//this should be handled by the displaybusinesslogic
+/*
 void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
     switch(state) {
@@ -96,7 +98,7 @@ void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::Display
     }
 
 }
-
+*/
 void LockScreenBusinessLogic::sleepModeOff()
 {
     if(sleepMode)
@@ -115,26 +117,32 @@ void LockScreenBusinessLogic::toggleSleepMode(bool toggle)
         //we turn on the sleep mode and lock the touchpad + turn off the display
         touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Locked);
 
+        /*
         if(display->get() != QmDisplayState::Off) {
             //we don't need to listen display signals when we change the state by ourself
             toggleDisplayStateListener(false);
             display->set(QmDisplayState::Off);
             toggleDisplayStateListener(true);
         }
+        */
     }
     else {
         //we turn off the sleep mode and unlock the touchpad + turn on the display
         touchPadLocker->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+        /*
         if(display->get() != QmDisplayState::On) {
             //we don't need to listen display signals when we change the state by ourself
             toggleDisplayStateListener(false);
             display->set(QmDisplayState::On);
             toggleDisplayStateListener(true);
         }
+        */
     }
     sleepMode = toggle;
 }
 
+//this should be handled by the displaybusinesslogic
+/*
 void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
 {
     if(toggle)
@@ -144,6 +152,7 @@ void LockScreenBusinessLogic::toggleDisplayStateListener(bool toggle)
         disconnect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
 }
+*/
 
 void LockScreenBusinessLogic::disable(bool disable)
 {    
