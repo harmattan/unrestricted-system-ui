@@ -5,7 +5,7 @@ system-ui (0.6.4-0) jaunty; urgency=low
   * Fixes: NB#141157 - Battery low notification is not displayed
   * Fixes: NB#135824 - The upper bar of the window that contains the X should be removed 
 
---  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 22 Oct 2009 09:46:50 +0300
+ -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 22 Oct 2009 09:46:50 +0300
 
 system-ui (0.6.3-0) unstable; urgency=low
 
