@@ -9,7 +9,7 @@ namespace DcpDisplay {
     const QString ScreenLightsText = trid("qtn_disp_screenoff", "Screen lights off after:");
     const QString ScreenLightsValueText = trid("NOT_DEFINED", "%1sec");    
     const QString BlankInhibitText = trid("qtn_disp_screenon", "Keep screen lights on during the charging");
-    const QString NoteText = trid("qtn_disp_note", "In the power save mode, screen light settings are affected.");
+    const QString NoteText = trid("qtn_disp_note", "Note! In the power save mode, screen light settings are affected.");
 
 }
 #endif // DISPLAYTRANSLATION_H

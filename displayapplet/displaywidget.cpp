@@ -44,6 +44,7 @@ void DisplayWidget::initWidget()
     contentLayoutPolicy->addItem(brightnessContainer, Qt::AlignLeft);
     contentLayoutPolicy->addItem(screenLightsContainer, Qt::AlignLeft);
     contentLayoutPolicy->addItem(blankInhibitContainer, Qt::AlignLeft);
+    contentLayoutPolicy->addItem(new DuiLabel(DcpDisplay::NoteText, this), Qt::AlignLeft);
     contentLayoutPolicy->setSpacing(10);
     DuiContainer *contentContainer = new DuiContainer(this);
     contentContainer->centralWidget()->setLayout(contentLayout);
