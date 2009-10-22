@@ -3,7 +3,13 @@
 
 #include <QObject>
 
+#include <CallWaiting>
+#include <CallForwarding>
+#include <SIM>
+
 class QString;
+
+using namespace Cellular;
 
 class CallAndSimBusinessLogic : public QObject
 {
@@ -11,7 +17,15 @@ class CallAndSimBusinessLogic : public QObject
 
 public:
     CallAndSimBusinessLogic();
-    virtual ~CallAndSimBusinessLogic();
+
+private slots:
+    void waitingActivateComplete(CallWaiting::WaitingError);
+    void waitingCancelComplete(CallWaiting::WaitingError);
+    void waitingCheckComplete(bool active, CallWaiting::WaitingError);
+
+    void divertActivateComplete(CallForwarding::DivertError error);
+    void divertCancelComplete(CallForwarding::DivertError error);
+    void divertCheckComplete(bool active, QString number, CallForwarding::DivertError error);
 
 signals:
     void callerIdSending(int value);
@@ -35,8 +49,12 @@ public:
 
 private:
     int i1;
-    bool b1, b2, b3;
+    bool b2, b3;
     QString s1;
+
+    CallForwarding* callForwarding;
+    CallWaiting* callWaiting;
+    SIMSecurity *simSecurity;
 };
 
 #endif // CALLANDSIMBUSINESSLOGIC_H

@@ -6,13 +6,60 @@
 CallAndSimBusinessLogic::CallAndSimBusinessLogic() :
         i1(1),
         b1(false),
-        b2(false),
         b3(false),
         s1("+3581234567")
 {
+    callForwarding = new CallForwarding(this);
+    callWaiting = new CallWaiting(this);
+
+    connect(callWaiting, SIGNAL(waitingActivateComplete(CallWaiting::WaitingError)), this, SLOT(waitingActivateComplete(CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCheckComplete(bool, CallWaiting::WaitingError)), this, SLOT(waitingCheckComplete(bool, CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCancelComplete(CallWaiting::WaitingError)), this, SLOT(waitingCancelComplete(CallWaiting::WaitingError)));
+
+    connect(callForwarding, SIGNAL(divertActivateComplete(CallForwarding::DivertError)), this, SLOT(divertActivateComplete(CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertCheckComplete(bool, QString, CallForwarding::DivertError)), this, SLOT(divertCheckComplete(bool, QString, CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)), this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
 }
 
-CallAndSimBusinessLogic::~CallAndSimBusinessLogic()
+void CallAndSimBusinessLogic::waitingActivateComplete(CallWaiting::WaitingError)
+{
+    if (error != CallWaiting::NoError) {
+        // TODO: Error handling
+        return;
+    }
+
+    emit callWaiting(false);
+}
+
+void CallAndSimBusinessLogic::waitingCancelComplete(CallWaiting::WaitingError)
+{
+    if (error != CallWaiting::NoError) {
+        // TODO: Error handling
+        return;
+    }
+
+    emit callWaiting(false);
+}
+
+void CallAndSimBusinessLogic::waitingCheckComplete(bool active, CallWaiting::WaitingError)
+{
+    if (error != CallWaiting::NoError) {
+        // TODO: Error handling
+        return;
+    }
+
+    emit callWaiting(active);
+}
+
+void CallAndSimBusinessLogic::divertActivateComplete(CallForwarding::DivertError error)
+{
+}
+
+void CallAndSimBusinessLogic::divertCancelComplete(CallForwarding::DivertError error)
+{
+}
+
+void CallAndSimBusinessLogic::divertCheckComplete(bool active, QString number, CallForwarding::DivertError error)
 {
 }
 
@@ -25,13 +72,15 @@ void CallAndSimBusinessLogic::getCallerIdSending()
 void CallAndSimBusinessLogic::getCallWaiting()
 {
     qDebug() << Q_FUNC_INFO;
-    emit callWaiting(b1);
+
+    callWaiting->waitingCheck();
 }
 
 void CallAndSimBusinessLogic::getCallForwarding()
 {
     qDebug() << Q_FUNC_INFO;
-    emit callForwarding(b2);
+
+    callForwarding->callForwardingCheck();
 }
 
 void CallAndSimBusinessLogic::getForwardTo()
@@ -55,7 +104,13 @@ void CallAndSimBusinessLogic::setCallerIdSending(int value)
 void CallAndSimBusinessLogic::setCallWaiting(bool enabled)
 {
     qDebug() << Q_FUNC_INFO << enabled;
-    b1 = enabled;
+
+    if (enabled) {
+        callWaiting->waitingActivate();
+    }
+    else {
+        callWaiting->waitingCancel();
+    }
 }
 
 void CallAndSimBusinessLogic::setCallForwarding(bool enabled)

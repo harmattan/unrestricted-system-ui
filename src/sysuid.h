@@ -47,8 +47,6 @@ private:
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
-    CallAndSimBusinessLogic *callAndSimLogic;
-    CallAndSimBusinessLogicAdaptor *callAndSimLogicAdaptor;
 };
 
 #endif // SYSUID_H

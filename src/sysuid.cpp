@@ -19,8 +19,6 @@
 #include "shutdownbusinesslogic.h"
 #include "eventhandler.h"
 #include "notifier.h"
-#include "callandsimbusinesslogic.h"
-#include "callandsimbusinesslogicadaptor.h"
 
 namespace {
     const QString themeDir = "/usr/share/sysuid/themes/";
@@ -58,10 +56,6 @@ Sysuid::Sysuid() : QObject()
     /* Profile */
     profileLogic = new ProfileBusinessLogic();
     profileLogicAdaptor = new ProfileBusinessLogicAdaptor(dbusObject(), profileLogic);
-
-    /* Call & SIM */
-    callAndSimLogic = new CallAndSimBusinessLogic();
-    callAndSimLogicAdaptor = new CallAndSimBusinessLogicAdaptor(dbusObject(), callAndSimLogic);
 
     /* Event handler */
     eventHandler = new EventHandler();
@@ -143,10 +137,6 @@ Sysuid::~Sysuid()
     profileLogic = NULL;
     delete profileLogicAdaptor;
     profileLogicAdaptor = NULL;
-    delete callAndSimLogic;
-    callAndSimLogic = NULL;
-    delete callAndSimLogicAdaptor;
-    callAndSimLogicAdaptor = NULL;
     delete lockScreenLogic;
     lockScreenLogic = NULL;
     delete shutdownLogic;

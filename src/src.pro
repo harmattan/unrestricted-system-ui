@@ -47,8 +47,6 @@ SOURCES += main.cpp \
     batterystub.cpp \
     radioaccessstub.cpp \
     networkregistrationstub.cpp \
-    callandsimbusinesslogicadaptor.cpp \
-    callandsimbusinesslogic.cpp \
     displaystatestub.cpp
 HEADERS += main.h \
     notifier.h \
@@ -78,8 +76,6 @@ HEADERS += main.h \
     batterystub.h \
     radioaccessstub.h \
     networkregistrationstub.h \
-    callandsimbusinesslogicadaptor.h \
-    callandsimbusinesslogic.h \
     displaystatestub.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
