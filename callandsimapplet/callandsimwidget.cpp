@@ -3,7 +3,7 @@
 #include "callcontainer.h"
 #include "simcontainer.h"
 #include "callandsimtranslation.h"
-#include "callandsimdbusinterface.h"
+#include "callandsim.h"
 
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
@@ -11,8 +11,7 @@
 CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
         DcpWidget(parent),
         callContainer(NULL),
-        simContainer(NULL),
-        dbusIf(NULL)
+        simContainer(NULL)
 {
     setReferer(DcpCallAndSim::None);
     initWidget();
@@ -20,8 +19,8 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
 
 CallAndSimWidget::~CallAndSimWidget()
 {
-    delete dbusIf;
-    dbusIf = NULL;
+//    delete dbusIf;
+//    dbusIf = NULL;
 }
 
 void CallAndSimWidget::initWidget()
@@ -31,12 +30,12 @@ void CallAndSimWidget::initWidget()
     callContainer = new CallContainer(this);
     simContainer = new SimContainer(this);
 
-    // create dbus
+    // create logic
 
-    dbusIf = new CallAndSimDBusInterface();
+//    logic = new CallAndSimDBusInterface();
 
     // connect signals, containers -> dbusIf
-
+/*
     connect(callContainer, SIGNAL(sendCallerIdChanged(int)),    dbusIf, SLOT(setCallerIdSending(int)));
     connect(callContainer, SIGNAL(callWaitingChanged(bool)),    dbusIf, SLOT(setCallWaiting(bool)));
     connect(callContainer, SIGNAL(callForwardingChanged(bool)), dbusIf, SLOT(setCallForwarding(bool)));
@@ -52,7 +51,7 @@ void CallAndSimWidget::initWidget()
     connect(dbusIf, SIGNAL(pinRequest(bool)),     simContainer, SLOT(setPinRequest(bool)));
 
     dbusIf->requestAllValues();
-
+*/
     // main layout
 
     DuiLayout *mainLayout = new DuiLayout(this);

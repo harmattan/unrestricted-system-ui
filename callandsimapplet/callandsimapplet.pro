@@ -2,9 +2,11 @@ TEMPLATE = lib
 CONFIG += plugin \
     gui \
     dui \
+    cellular-qt \
     silent \
     debug
-LIBS += -lduicontrolpanel
+LIBS += -lduicontrolpanel \
+    -lcellular-qt
 INCLUDEPATH += /usr/include/qt4/dui \
     /usr/include/duicontrolpanel
 QT += dbus
@@ -22,13 +24,15 @@ HEADERS = callandsimapplet.h \
     simcontainer.h \
     callandsimtranslation.h \
     callandsimbrief.h \
-    callandsimdbusinterface.h
+    callandsimdbusinterface.h \
+    callandsim.h
 SOURCES = callandsimapplet.cpp \
     callandsimwidget.cpp \
     callcontainer.cpp \
     simcontainer.cpp \
     callandsimbrief.cpp \
-    callandsimdbusinterface.cpp
+    callandsimdbusinterface.cpp \
+    callandsim.cpp
 css.files = callandsimapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

@@ -5,7 +5,7 @@
 
 class CallContainer;
 class SimContainer;
-class CallAndSimDBusInterface;
+class CallAndSim;
 
 class CallAndSimWidget : public DcpWidget
 {
@@ -21,7 +21,7 @@ protected:
 private:
     CallContainer* callContainer;
     SimContainer* simContainer;
-    CallAndSimDBusInterface* dbusIf;
+    CallAndSim* logic;
 };
 
 #endif // CALLANDSIMWIDGET_H
