@@ -1,6 +1,6 @@
 #include "profilebrief.h"
 #include "dcpwidgettypes.h"
-#include "profiledbusinterface.h"
+#include "profiledatainterface.h"
 
 ProfileBrief::ProfileBrief()
 {
@@ -8,7 +8,7 @@ ProfileBrief::ProfileBrief()
 
 QString ProfileBrief::valueText() const
 {
-    ProfileDBusInterface* profileIf = new ProfileDBusInterface();
+    ProfileDataInterface* profileIf = new ProfileDataInterface();
     QString name = profileIf->getCurrentProfileName();
     delete profileIf;
     return name;

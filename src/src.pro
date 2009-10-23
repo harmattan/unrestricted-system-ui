@@ -8,12 +8,10 @@ CONFIG += dui \
 QT += dbus
 LIBS += -lX11 \
     -lcallui0 \
-    -lhal \
-    -lprofile-qt
+    -lhal
 INCLUDEPATH += /usr/include/alarmd \
     /usr/include/dbus-1.0 \
-    /usr/lib/dbus-1.0/include \
-    /usr/include/profile-qt
+    /usr/lib/dbus-1.0/include
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
@@ -41,8 +39,6 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogic.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
-    profilebusinesslogic.cpp \
-    profilebusinesslogicadaptor.cpp \
     devicemodestub.cpp \
     batterystub.cpp \
     radioaccessstub.cpp \
@@ -70,8 +66,6 @@ HEADERS += main.h \
     phonenetworkbusinesslogic.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
-    profilebusinesslogic.h \
-    profilebusinesslogicadaptor.h \
     devicemodestub.h \
     batterystub.h \
     radioaccessstub.h \

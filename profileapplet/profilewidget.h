@@ -3,9 +3,8 @@
 
 #include "dcpwidget.h" 
 #include "profilebuttons.h"
+#include "profiledatainterface.h"
 
-
-class ProfileDBusInterface;
 class DuiButton;
 class DuiContainer;
 class DuiGridLayoutPolicy;
@@ -27,11 +26,12 @@ protected:
     void initWidget();
 
 private slots:
+    void initProfiles();
     void setProfile(int profileId);
     void setVolume(int profileId, int level);
     void setVibration(int profileId, bool enabled);
 
-    void profileSelected(ProfileButtons::ProfileId id);
+    void profileSelected(int id);
     void sliderValueChanged(int index);
     void vibrationChanged(bool enabled);
     void orientationChanged(const Dui::Orientation &);
@@ -40,13 +40,9 @@ private: //methods
     DuiContainer* createContainer();
 
 private: //attributes
-
     ProfileButtons* profileButtons;
-    ProfileContainer* ringingContainer;
-    ProfileContainer* loudContainer;
-    ProfileContainer* beepContainer;
-    ProfileContainer* silentContainer;
+    QHash<int, ProfileContainer*> containers;
 
-    ProfileDBusInterface *profileIf;
+    ProfileDataInterface *profileIf;
 };
 #endif // PROFILEWIDGET_H

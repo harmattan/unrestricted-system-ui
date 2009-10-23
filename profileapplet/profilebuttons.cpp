@@ -11,7 +11,7 @@
 
 ProfileButtons::ProfileButtons(DuiWidget *parent) :
         DuiContainer(parent),
-        selected(ProfileButtons::none)
+        selected(-1)
 {
     createProfileButtons();
     setLayout();
@@ -21,15 +21,24 @@ ProfileButtons::~ProfileButtons()
 {
 }
 
-void ProfileButtons::createProfileButtons()
+void ProfileButtons::init(QMap<int, QString> data)
 {
-    addButton(DcpProfile::RingingText, ProfileButtons::ringing);
-    addButton(DcpProfile::SilentText, ProfileButtons::silent);
-    addButton(DcpProfile::BeepText, ProfileButtons::beep);
-    addButton(DcpProfile::LoudText, ProfileButtons::loud);
+    QList<int> ids = data.keys();
+    for(int i = 0; i < data.count(); ++i)
+    {
+        int id = ids.at(i);
+        addButton(data.value(id), id);
+        qDebug() << Q_FUNC_INFO << id << "," << data.value(id);
+    }
+    toggleSelected();
+    setLayout();
 }
 
-void  ProfileButtons::addButton(QString name, ProfileButtons::ProfileId id)
+void ProfileButtons::createProfileButtons()
+{
+}
+
+void  ProfileButtons::addButton(QString name, int id)
 {
     DuiButton* btn = new DuiButton(name, this);
     btn->setCheckable(true);
@@ -37,9 +46,20 @@ void  ProfileButtons::addButton(QString name, ProfileButtons::ProfileId id)
     buttons.insert(id, btn);
 }
 
-bool ProfileButtons::selectProfile(ProfileButtons::ProfileId id)
+void ProfileButtons::toggleSelected()
 {
-    qDebug() << "ProfileButtons::selectProfile:" << id << "vs." << selectedProfile();
+    qDebug() << Q_FUNC_INFO << selectedProfile();
+    if(0 <= selected) {
+        DuiButton* btn = buttons.value(selected);
+        if(btn)
+            btn->setChecked(true);
+        qDebug() << Q_FUNC_INFO << selectedProfile();
+    }
+}
+
+bool ProfileButtons::selectProfile(int id)
+{
+    qDebug() << Q_FUNC_INFO << id << "vs." << selectedProfile();
     if(id != selected) {
         DuiButton* btn = buttons.value(selected);
         if(btn)
@@ -48,15 +68,14 @@ bool ProfileButtons::selectProfile(ProfileButtons::ProfileId id)
         btn = buttons.value(id);
         if(btn)
             btn->setChecked(true);
-        qDebug() << "ProfileButtons::selectProfile:" << selectedProfile();
+        qDebug() << Q_FUNC_INFO << selectedProfile();
         return true;
     }
     return false;
 }
 
-ProfileButtons::ProfileId ProfileButtons::selectedProfile()
+int ProfileButtons::selectedProfile()
 {
-
     return selected;
 }
 
@@ -86,7 +105,7 @@ void ProfileButtons::buttonToggled(bool checked)
         if(checked == true)
         {
             // only one profile at a time can be checked
-            selected = (ProfileButtons::ProfileId)buttons.key(btn);
+            selected = (int)buttons.key(btn);
             if(old) {
                 old->setChecked(false);
             }
@@ -107,22 +126,20 @@ void ProfileButtons::setLayout()
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
     // set objects
-    DuiButton* btn = buttons.value(ringing);
-    landscapePolicy->addItem(btn);
-    portraitPolicy->addItemAtPosition(btn, 0, 0);
-
-    btn = buttons.value(silent);
-    landscapePolicy->addItem(btn);
-    portraitPolicy->addItemAtPosition(btn, 0, 1);
-
-    btn = buttons.value(beep);
-    landscapePolicy->addItem(btn);
-    portraitPolicy->addItemAtPosition(btn, 1,0);
-
-    btn = buttons.value(loud);
-    landscapePolicy->addItem(btn);
-    portraitPolicy->addItemAtPosition(btn, 1,1);
-
+    int col = 0;
+    int row = 0;
+    for(int i = 0; i < buttons.count(); ++i)
+    {
+        qDebug() << Q_FUNC_INFO << "row:" << row << "col:" << col;
+        DuiButton* btn = buttons.value(i);
+        landscapePolicy->addItem(btn);
+        portraitPolicy->addItemAtPosition(btn, row, col);
+        ++col;
+        if(1 < col){
+            ++row;
+            col=0;
+        }
+    }
     landscapePolicy->setSpacing(5);
     portraitPolicy->setSpacing(5);
 

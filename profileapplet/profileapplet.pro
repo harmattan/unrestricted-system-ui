@@ -4,9 +4,11 @@ CONFIG += plugin \
     dui \
     silent \
     debug
-LIBS += -lduicontrolpanel
+LIBS += -lduicontrolpanel \
+    -lprofile-qt
 INCLUDEPATH += /usr/include/qt4/dui \
-    /usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel \
+    /usr/include/profile-qt
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -18,16 +20,16 @@ OBJECTS_DIR = .objects
 HEADERS = profileapplet.h \
     profilewidget.h \
     profilebrief.h \
-    profiledbusinterface.h \
-    profilecontainer.h \
     profiletranslation.h \
-    profilebuttons.h
+    profilecontainer.h \
+    profilebuttons.h \
+    profiledatainterface.h
 SOURCES = profileapplet.cpp \
     profilewidget.cpp \
     profilebrief.cpp \
-    profiledbusinterface.cpp \
     profilecontainer.cpp \
-    profilebuttons.cpp
+    profilebuttons.cpp \
+    profiledatainterface.cpp
 css.files = profileapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

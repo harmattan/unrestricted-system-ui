@@ -16,7 +16,7 @@ namespace ProfileApplet{
     const int sliderMax = 100;
 }
 
-ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *parent) :
+ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool vibra, DuiWidget *parent) :
     DuiContainer(title, parent),
     slider(NULL),
     level(-2),
@@ -25,18 +25,19 @@ ProfileContainer::ProfileContainer(int id, const QString &title, DuiWidget *pare
     qDebug() << "ProfileContainer::ProfileContainer()" << title;
 
     // TODO: hardcoded silent value!!
-    if(profileId != 1) {
+    if(0 <= level) {
         slider = new DuiSlider(this, "continuous");
         slider->setOrientation(Qt::Horizontal);
         slider->setRange(ProfileApplet::sliderMin, ProfileApplet::sliderMax);
         slider->setThumbLabelVisible(false);
+        setLevel(level);
         connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
     }
 
     button = new DuiButton(DcpProfile::VibrationText, this);
     button->setCheckable(true);
     button->setMaximumHeight(36);
-    setVibration(true);
+    setVibration(vibra);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 
     setLayout();

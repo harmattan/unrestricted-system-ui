@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=DUIApplet
 Name=Profile
-X-logical-id=qtn_NOT_DEFINED #qtn_sett_main_profile
+X-logical-id=qtn_sett_main_profile
 X-translation-catalog=duisettings
 Icon=
 Exec=
@@ -15,4 +15,4 @@ X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 Category= Sound
 Order=2
 WidgetType= DcpLabel2
-Text2= Kissakala
+Text2= Not found

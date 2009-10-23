@@ -15,8 +15,6 @@ class PhoneNetworkBusinessLogicAdaptor;
 class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
 class EventHandler;
-class ProfileBusinessLogic;
-class ProfileBusinessLogicAdaptor;
 class Notifier;
 class CallAndSimBusinessLogic;
 class CallAndSimBusinessLogicAdaptor;
@@ -42,8 +40,6 @@ private:
     DisplayBusinessLogicAdaptor *displayLogicAdaptor;
     PhoneNetworkBusinessLogic *networkLogic;
     PhoneNetworkBusinessLogicAdaptor *networkLogicAdaptor;
-    ProfileBusinessLogic* profileLogic;
-    ProfileBusinessLogicAdaptor* profileLogicAdaptor;
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;

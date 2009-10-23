@@ -11,7 +11,7 @@ class ProfileContainer: public DuiContainer
     Q_OBJECT
 
 public:
-    ProfileContainer(int id, const QString &title, DuiWidget *parent);
+    ProfileContainer(int id, const QString &title, int level, bool vibra, DuiWidget *parent);
     virtual ~ProfileContainer();
 
     void setLevel(int value);

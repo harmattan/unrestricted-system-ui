@@ -10,37 +10,31 @@ class ProfileButtons : public DuiContainer
     Q_OBJECT
 
 public:
-    enum ProfileId {
-        ringing = 0,
-        silent,
-        beep,
-        loud,
-        none // none must be last to teel how many profiles there are available
-    };
-
     ProfileButtons(DuiWidget *parent=0);
     virtual ~ProfileButtons();
 
-    ProfileId selectedProfile();
+    void init(QMap<int, QString> data);
+    int selectedProfile();
     QString selectedProfileName();
 
 public slots:
     // returns false if selection won't change
-    bool selectProfile(ProfileButtons::ProfileId id);
+    bool selectProfile(int id);
 
 signals:
-    void profileSelected(ProfileButtons::ProfileId id);
+    void profileSelected(int id);
 
 private slots:
     void buttonToggled(bool checked);
 
 private:
     void createProfileButtons();
-    void addButton(QString name, ProfileButtons::ProfileId id);
+    void addButton(QString name, int id);
     void setLayout();
+    void toggleSelected();
 
 private:
-    ProfileId selected;
+    int selected;
     QHash<int, DuiButton*> buttons;
 };
 
