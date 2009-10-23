@@ -14,18 +14,9 @@ SimContainer::SimContainer(DuiWidget *parent) :
         DuiContainer(DcpCallAndSim::SimCardText, parent),
         pinRequestLabel(NULL),
         pinRequestButton(NULL),
-        changePinButton(NULL),
-        dbusIf(NULL)
+        changePinButton(NULL)
 {
     setLayout();
-}
-
-SimContainer::~SimContainer()
-{
-    if (dbusIf) {
-        delete dbusIf;
-        dbusIf = NULL;
-    }
 }
 
 void SimContainer::setPinRequest(bool enabled)
@@ -39,6 +30,21 @@ void SimContainer::setPinRequest(bool enabled)
     }
 }
 
+void SimContainer::requestFailed(DcpCallAndSim::Data data)
+{
+    qDebug() << Q_FUNC_INFO << data;
+
+    if (data == DcpCallAndSim::PinRequestData) {
+        pinRequestButton->blockSignals(true);
+        pinRequestButton->setChecked(false);
+        pinRequestButton->blockSignals(false);
+
+        changePinButton->blockSignals(true);
+        changePinButton->setVisible(false);
+        changePinButton->blockSignals(false);
+    }
+}
+
 void SimContainer::buttonToggled(bool checked)
 {
     qDebug() << Q_FUNC_INFO << checked;
@@ -47,17 +53,9 @@ void SimContainer::buttonToggled(bool checked)
     emit valueChanged(checked);
 }
 
-void SimContainer::launchPinQuery()
+void SimContainer::changePinClicked()
 {
-    qDebug() << Q_FUNC_INFO;
-
-    if (!dbusIf) {
-        dbusIf = new QDBusInterface("com.nokia.systemui", "/",
-                                    "com.nokia.systemui.PinCodeQuery",
-                                    QDBusConnection::sessionBus());
-    }
-
-    dbusIf->call(QDBus::NoBlock, QString("changePinCode"));
+    emit pinChangeRequested();
 }
 
 void SimContainer::setLayout()
@@ -105,14 +103,14 @@ void SimContainer::setLayout()
     // portrait policy
 
     pp->setSpacing(5);
-    pp->setColumnMaximumWidth(0, 480);
+    pp->setColumnMaximumWidth(0, 470);
     pp->addItemAtPosition(pinRequestLayout, 0, 0, Qt::AlignLeft);
     pp->addItemAtPosition(changePinButton, 1, 0, Qt::AlignCenter);
 
     // connect signals
 
     connect(pinRequestButton, SIGNAL(toggled(bool)), this, SLOT(buttonToggled(bool)));
-    connect(changePinButton, SIGNAL(clicked()), this, SLOT(launchPinQuery()));
+    connect(changePinButton, SIGNAL(clicked()), this, SLOT(changePinClicked()));
 
     // layout
 

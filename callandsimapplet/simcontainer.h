@@ -1,12 +1,14 @@
 #ifndef SIMCONTAINER_H
 #define SIMCONTAINER_H
 
+#include "dcpcallandsim.h"
+
 #include <DuiContainer>
+
 #include <QString>
 
 class DuiLabel;
 class DuiButton;
-class QDBusInterface;
 
 class SimContainer : public DuiContainer
 {
@@ -14,17 +16,18 @@ class SimContainer : public DuiContainer
 
 public:
     SimContainer(DuiWidget *parent);
-    virtual ~SimContainer();
 
 signals:
     void valueChanged(bool);
+    void pinChangeRequested();
 
 public slots:
     void setPinRequest(bool enabled);
+    void requestFailed(DcpCallAndSim::Data data);
 
 private slots:
     void buttonToggled(bool checked);
-    void launchPinQuery();
+    void changePinClicked();
 
 private:
     void setLayout();
@@ -33,9 +36,6 @@ private:
     DuiLabel* pinRequestLabel;
     DuiButton* pinRequestButton;
     DuiButton* changePinButton;
-
-    // DBus interface for pin query launching
-    QDBusInterface *dbusIf;
 };
 
 #endif // SIMCONTAINER_H

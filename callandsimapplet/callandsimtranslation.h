@@ -19,8 +19,6 @@ namespace DcpCallAndSim
     const QString CallAndSimText =          trid("qtn_cell_call_and_sim",        "Call and SIM card");
     const QString HelpText =                trid("qtn_comm_help",                "Help");
     const QString ExitText =                trid("qtn_comm_exit",                "Exit");
-    const QString NoNetworkSelectedText =   trid("qtn_cell_no_network_selected", "No network selected. Change network selection to automatic?");
-    const QString ChangeText =              trid("qtn_cell_change",              "Change");
 }
 
 #endif // CALLANDSIMTRANSLATION_H

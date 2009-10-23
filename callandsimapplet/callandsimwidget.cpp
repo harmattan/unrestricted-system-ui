@@ -14,17 +14,7 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
         simContainer(NULL)
 {
     setReferer(DcpCallAndSim::None);
-    initWidget();
-}
 
-CallAndSimWidget::~CallAndSimWidget()
-{
-//    delete dbusIf;
-//    dbusIf = NULL;
-}
-
-void CallAndSimWidget::initWidget()
-{
     // create containers
 
     callContainer = new CallContainer(this);
@@ -32,26 +22,30 @@ void CallAndSimWidget::initWidget()
 
     // create logic
 
-//    logic = new CallAndSimDBusInterface();
+    logic = new CallAndSim(this);
 
-    // connect signals, containers -> dbusIf
-/*
-    connect(callContainer, SIGNAL(sendCallerIdChanged(int)),    dbusIf, SLOT(setCallerIdSending(int)));
-    connect(callContainer, SIGNAL(callWaitingChanged(bool)),    dbusIf, SLOT(setCallWaiting(bool)));
-    connect(callContainer, SIGNAL(callForwardingChanged(bool)), dbusIf, SLOT(setCallForwarding(bool)));
-    connect(callContainer, SIGNAL(forwardToChanged(QString)),   dbusIf, SLOT(setForwardTo(QString)));
-    connect(simContainer,  SIGNAL(valueChanged(bool)),          dbusIf, SLOT(setPinRequest(bool)));
+    // connect signals, containers -> logic
 
-    // connect signals, dbusIf -> containers
+    connect(callContainer, SIGNAL(sendCallerIdChanged(int)),             logic, SLOT(setCallerIdSending(int)));
+    connect(callContainer, SIGNAL(callWaitingChanged(bool)),             logic, SLOT(setCallWaiting(bool)));
+    connect(callContainer, SIGNAL(callForwardingChanged(bool, QString)), logic, SLOT(setCallForwarding(bool, QString)));
+    connect(simContainer, SIGNAL(valueChanged(bool)),                    logic, SLOT(setPinRequest(bool)));
+    connect(simContainer, SIGNAL(pinChangeRequested()),                  logic, SLOT(changePinCode()));
 
-    connect(dbusIf, SIGNAL(callerIdSending(int)), callContainer, SLOT(setSendCallerId(int)));
-    connect(dbusIf, SIGNAL(callWaiting(bool)),    callContainer, SLOT(setCallWaiting(bool)));
-    connect(dbusIf, SIGNAL(callForwarding(bool)), callContainer, SLOT(setCallForwarding(bool)));
-    connect(dbusIf, SIGNAL(forwardTo(QString)),   callContainer, SLOT(setForwardTo(QString)));
-    connect(dbusIf, SIGNAL(pinRequest(bool)),     simContainer, SLOT(setPinRequest(bool)));
+    // connect signals, logic -> containers
 
-    dbusIf->requestAllValues();
-*/
+    connect(logic, SIGNAL(callerIdSendingComplete(int)),          callContainer, SLOT(setSendCallerId(int)));
+    connect(logic, SIGNAL(callWaitingComplete(bool)),             callContainer, SLOT(setCallWaiting(bool)));
+    connect(logic, SIGNAL(callForwardingComplete(bool, QString)), callContainer, SLOT(setCallForwarding(bool, QString)));
+    connect(logic, SIGNAL(pinRequestComplete(bool)),              simContainer, SLOT(setPinRequest(bool)));
+
+    connect(logic, SIGNAL(requestFailed(DcpCallAndSim::Data)),    callContainer, SLOT(requestFailed(DcpCallAndSim::Data)));
+    connect(logic, SIGNAL(requestFailed(DcpCallAndSim::Data)),    simContainer, SLOT(requestFailed(DcpCallAndSim::Data)));
+
+    // get data
+
+    logic->requestData(DcpCallAndSim::AllData);
+
     // main layout
 
     DuiLayout *mainLayout = new DuiLayout(this);

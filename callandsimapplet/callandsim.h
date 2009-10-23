@@ -1,11 +1,13 @@
 #ifndef CALLANDSIM_H
 #define CALLANDSIM_H
 
-#include <QObject>
+#include "dcpcallandsim.h"
 
 #include <cellular-qt/CallForwarding>
 #include <cellular-qt/CallWaiting>
 #include <cellular-qt/SIM>
+
+#include <QObject>
 
 class QDBusInterface;
 
@@ -15,15 +17,7 @@ class CallAndSim : public QObject
 {
     Q_OBJECT
 
-
 public:
-    enum Item {
-        ItemCallerIdSending = 0,
-        ItemCallWaiting,
-        ItemCallForwarding,
-        ItemPinRequest,
-        ItemAll
-    };
 
     CallAndSim(QObject* parent = 0);
 
@@ -32,7 +26,7 @@ signals:
     void callWaitingComplete(bool);
     void callForwardingComplete(bool, QString);
     void pinRequestComplete(bool);
-    void requestFailed(CallAndSim::Item item);
+    void requestFailed(DcpCallAndSim::Data data);
 
 public slots:
     void setCallerIdSending(int value);
@@ -41,7 +35,7 @@ public slots:
     void setPinRequest(bool enabled);
 
     void changePinCode();
-    void requestData(CallAndSim::Item item);
+    void requestData(DcpCallAndSim::Data data);
 
 private slots:
     void waitingActivateComplete(CallWaiting::WaitingError);
@@ -55,7 +49,6 @@ private slots:
 private:
     CallForwarding* callForwarding;
     CallWaiting* callWaiting;
-    SIMSecurity* simSecurity;
     QDBusInterface* dbusPinIf;
 };
 

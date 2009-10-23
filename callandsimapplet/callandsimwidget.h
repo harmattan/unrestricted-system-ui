@@ -13,10 +13,6 @@ class CallAndSimWidget : public DcpWidget
 
 public:
     CallAndSimWidget(QGraphicsWidget* parent = 0);
-    virtual ~CallAndSimWidget();
-
-protected:
-    void initWidget();
 
 private:
     CallContainer* callContainer;
