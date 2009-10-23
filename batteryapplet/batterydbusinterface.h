@@ -22,26 +22,26 @@ public:
 
 public slots:
     void remainingTimeValuesRequired();
-    void batteryLevelValueRequired();
+    void batteryBarValueRequired();
     void PSMThresholdValueRequired();
     void setPSMAutoValue(bool toggle);
     void setPSMThresholdValue(const QString &value);
 
-public slots:
-    void batteryChargingStateReceived(bool state);
+public slots:    
     void DBusMessagingFailure();
     void valueSet();
+    void querySent();
 
 signals:
-    void batteryCharging();
+    void batteryCharging(int);
     void batteryNotCharging();
-    void batteryLevelValueChanged(int);
+    void batteryBarValueChanged(int);
     void PSMValueReceived(QString);
     void PSMAutoValueReceived(bool);
     void PSMThresholdValuesReceived(QStringList);
     void PSMThresholdValueReceived(QString);
     void remainingTimeValuesReceived(QStringList);
-    void batteryLevelValueReceived(int);
+    void batteryBarValueReceived(int);
 
 private:
     QDBusInterface *dbusIf;

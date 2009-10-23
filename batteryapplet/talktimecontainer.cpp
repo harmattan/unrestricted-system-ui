@@ -28,7 +28,7 @@ void TalkTimeContainer::setLayout()
     DuiLayout *layout = new DuiLayout();
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
     initImage();
-    layoutPolicy->addItemAtPosition(image, 0, 0, 2, 1, Qt::AlignLeft);
+    layoutPolicy->addItemAtPosition(image, 0, 0, 2, 1, Qt::AlignLeft);    
     layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::TalkTimeText, this), 0, 1);
     timeLabel = new DuiLabel();
     layoutPolicy->addItemAtPosition(timeLabel, 1, 1);
@@ -37,41 +37,19 @@ void TalkTimeContainer::setLayout()
 }
 
 void TalkTimeContainer::initImage()
-{
-    /* Uncomment when logical names are in use
-    batteryImages << BatteryImageFull100
-            << BatteryImageFull75
-            << BatteryImageFull50
-            << BatteryImageFull25
-            << BatteryImageLow
-            << BatteryImageVeryLow;
-
-    batteryChargingImages << BatteryImageChargingFull100
-            << BatteryImageChargingFull75
-            << BatteryImageChargingFull50
-            << BatteryImageChargingFull25
-            << BatteryImageChargingLow
-            << BatteryImageChargingVeryLow;
-    */
-
-
-    //Currently the images are hard-coded
-    QString path("/usr/share/themes/base/dui/libdui/svg/");
-    batteryImages << QString("%1icon-s-battery-0.svg").arg(path)
-            << QString("%1icon-s-battery-20.svg").arg(path)
-            << QString("%1icon-s-battery-40.svg").arg(path)            
-            << QString("%1icon-s-battery-60.svg").arg(path)
-            << QString("%1icon-s-battery-80.svg").arg(path)
-            << QString("%1icon-s-battery-100.svg").arg(path);
-
-    batteryChargingImages << QString("%1icon-s-battery-0.svg").arg(path)
-            << QString("%1icon-s-battery-20.svg").arg(path)
-            << QString("%1icon-s-battery-40.svg").arg(path)            
-            << QString("%1icon-s-battery-60.svg").arg(path)
-            << QString("%1icon-s-battery-80.svg").arg(path)
-            << QString("%1icon-s-battery-100.svg").arg(path);
-
+{   
     image = new DuiImage();
+
+
+    batteryImages << QString("icon-m-battery-verylow") << QString("icon-m-battery-low") << QString("icon-m-battery-13")
+            << QString("icon-m-battery-25") << QString("icon-m-battery-38") << QString("icon-m-battery-50")
+            << QString("icon-m-battery-62") << QString("icon-m-battery-75") << QString("icon-m-battery-88")
+            << QString("icon-m-battery-100");
+
+    batteryChargingImages << QString("") << QString("") << QString("icon-s-battery-13")
+            << QString("icon-s-battery-25") << QString("icon-s-battery-38") << QString("icon-s-battery-50")
+            << QString("icon-s-battery-62") << QString("icon-s-battery-75") << QString("icon-s-battery-88")
+            << QString("icon-s-battery-100");    
 }
 
 void TalkTimeContainer::updateBattery(int level)
@@ -86,23 +64,23 @@ void TalkTimeContainer::updateImage(bool charging)
 {    
     static int chargingImageIndex = batteryLevel;
     if(charging) {
-        if(chargingImageIndex > 5)
-            chargingImageIndex = batteryLevel;        
-        image->setImage(QImage(batteryChargingImages.at(chargingImageIndex++)));
+        if(chargingImageIndex >= batteryChargingImages.size())
+            chargingImageIndex = (batteryLevel > 1 ? batteryLevel : 2);        
+        image->setImage(batteryChargingImages.at(chargingImageIndex++));
     }
     else {
-        image->setImage(QImage(batteryImages.at(batteryLevel)));
+        image->setImage(batteryImages.at(batteryLevel));
         chargingImageIndex = batteryLevel;
     }
 }
 
-void TalkTimeContainer::startCharging()
+void TalkTimeContainer::startCharging(int rate)
 {
-    qDebug() << "TalkTimeContainer::startUpdatingChargingImage()";
+    qDebug() << "TalkTimeContainer::startCharging(" << rate << ")";
     if(timer == NULL) {
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateImage()));
-        timer->setInterval(400);
+        timer->setInterval(rate);
         timer->start();
     }
 }

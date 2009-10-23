@@ -16,18 +16,32 @@ public:
     /** Battery charge level states */
     enum Level
     {
-        LevelFull = 0,        
-        Level4,
-        Level3,
-        Level2,
-        LevelLow,
-        LevelCritical
+        LevelFull = 0,       /**< Battery full */
+        LevelLow,            /**< Battery low */
+        LevelCritical        /**< Battery level critically low */
+    };
+
+    /** The mode in which the remaining time is to be calculated */
+    enum RemainingTimeMode
+    {
+        NormalMode,       /**< In normal mode */
+        PowersaveMode     /**< In powersave mode */
+    };
+
+    /** The type of charger connected */
+    enum ChargerType
+    {
+        Unknown = -1,        /**< Unknown charger */
+        None,                /**< No  charger connected */
+        Wall,                /**< Wall charger  */
+        USB_500mA,           /**< USB with 500mA output */
+        USB_100mA            /**< USB with 100mA output */
     };
 
     /** Battery charging states */
     enum State
     {
-        StateCharging = 0,   /**< Charging */
+        StateCharging = 0,    /**< Charging */
         StateNotCharging,     /**< Not charging */
         StateChargingFailed
     };
@@ -36,12 +50,17 @@ public:
     enum ChargerEvent
     {
         ChargerConnected,    /**< Charger connected */
-        ChargerDisconnected, /**< Charger disconnected */
-        ChargerNotCharging   /**< Charger not charging */
+        ChargerDisconnected, /**< Charger disconnected */        
     };
 
     QmBattery(QObject *parent = 0);
     virtual ~QmBattery();
+
+    /*
+    * Current battery charge level
+    * @return  QmBattery::Level whether battery is low/full/critical
+    */
+    QmBattery::Level getLevel();
 
     /*
     * Current battery state
@@ -49,11 +68,18 @@ public:
     */
     QmBattery::State getState();
 
+
     /*
-    * Current battery charge level
-    * @return  QmBattery::Level whether battery is low/full/critical
-    */
-    QmBattery::Level getLevel();
+     * Get current charger type
+     * @return  QmBattery::ChargerType charger type
+     */
+    QmBattery::ChargerType getChargerType();
+
+    /*
+     * Get current battery energy level.
+     * @return  Battery level in percentages
+     */
+    int getBatteryEnergyLevel();
 
     /*
     * Remaining battery time (idle), seconds, -1=not known
@@ -73,11 +99,6 @@ public:
 
 
 signals:
-    /**
-    * Sent when battery charging state has changed.
-    * @param state Current battery charging status.
-    */
-    void batteryStatusChanged(Maemo::QmBattery::State state);
 
     /**
     * Sent when battery charge level has changed. See enumeration of
@@ -93,11 +114,18 @@ signals:
     void chargerEvent(Maemo::QmBattery::ChargerEvent event);
 
     /**
-    * Sent when the number of bars indicating battery charge changes
-    * @param bars_now current number of bars remaining
-    * @param bars_max maximum number of bars
+     * Sent when the number of bars indicating battery charge changes
+     * @param percentages the battery energy level in percentages
+     * @param bars_max maximum number of bars
+     */
+    void batteryEnergyLevelChanged(int percentages);
+
+    /**
+    * Sent when battery charging state has changed.
+    * @param state Current battery charging status.
     */
-    void batteryStateChanged(int bars_now, int bars_max);
+    void batteryStatusChanged(Maemo::QmBattery::State state);
+
 
 private slots:
     void updateValues();
@@ -107,9 +135,12 @@ private: //methods
 
 private: //attributes
     QList<QmBattery::Level> levels;
+    QList<int> percentages;
     int levelIndex;
     int levelIndexIncrease;
-    bool charging;
+    int previousIndex;
+    QmBattery::State state;
+    QmBattery::ChargerType type;
 
 };
 }

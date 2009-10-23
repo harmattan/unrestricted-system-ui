@@ -16,7 +16,7 @@ public:
 
 public slots:
     void updateBattery(int level);
-    void startCharging();
+    void startCharging(int rate);
     void stopCharging();
 
 private slots:

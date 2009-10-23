@@ -13,10 +13,16 @@ TimeContainer::~TimeContainer()
 {
 }
 
-void TimeContainer::updateTimeLabel(int minutes)
+void TimeContainer::updateTimeLabel(const QString &value)
 {
     if(timeLabel == NULL)
         return;
+
+    if(value.toInt() == 0) {// a text, not minute value
+        timeLabel->setText(value);
+        return;
+    }
+    int minutes = value.toInt();
 
     QString minutesPrefix = DcpBattery::TimeValueText.section("%b", 1, 1).trimmed();
     QString hoursPrefix = (DcpBattery::TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();

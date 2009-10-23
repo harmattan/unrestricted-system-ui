@@ -48,7 +48,7 @@ void SliderContainer::updateSlider(const QString &value)
 {    
     qDebug() << "SliderContainer::updateSlider(" << value << ")";
     PSMSlider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
-    PSMSlider->setThumbLabel(QString("%1 bars").arg(value)); //replace with %
+    PSMSlider->setThumbLabel(QString("%1%").arg(value));
 }
 
 void SliderContainer::sliderValueChanged(int value)

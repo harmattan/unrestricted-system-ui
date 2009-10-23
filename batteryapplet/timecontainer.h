@@ -11,7 +11,7 @@ public:
     TimeContainer(DuiWidget *parent);
     virtual ~TimeContainer();
 
-    void updateTimeLabel(int mins);
+    void updateTimeLabel(const QString &text);
 
 protected: //methods
     virtual void setLayout() = 0;

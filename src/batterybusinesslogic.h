@@ -9,9 +9,7 @@
 #include "devicemodestub.h"
 
 #include <QObject>
-
-class QTimer;
-
+#include <QStringList>
 
 using namespace Maemo;
 
@@ -25,37 +23,42 @@ public:
     void setPSMThreshold(const QString &threshold);
     void togglePSM(const QString &value);
     void togglePSMAuto(bool toggle);
-    int batteryLevelValue();
+    int batteryBarValue(int percentage = -1);
     QString PSMValue();
-    bool isBatteryCharging();
+    void batteryStatus();
     QVariant GConfItemValue(SystemUIGConf::GConfKey key);
     QStringList remainingTimeValues();
     QStringList PSMThresholdValues();
+    QString PSMThresholdValue();
 
 signals:
-    void batteryCharging();
+    void batteryCharging(int);
     void batteryNotCharging();
-    void batteryLevelValueChanged(int);
+    void batteryBarValueChanged(int);
     void PSMValueChanged(QString);
     void PSMAutoValueChanged(bool);
+    void remainingTimeValuesChanged(QStringList);
 
 public slots:
     void initBattery();
 
-private: //attributes    
+private: //attributes
+    SystemUIGConf *systemUIGConf;
     QmBattery *battery;
     QmDeviceMode *deviceMode;    
-    Notifier *uiNotif;
-    SystemUIGConf *systemUIGConf;
-    QHash<QmBattery::Level, int> batteryLevels;
+    Notifier *uiNotif;        
+    QStringList PSMThresholds;
 
 private: //methods
     void initSystemUIGConfKeys();
-    void checkPSMThreshold(Maemo::QmBattery::Level level);
+    void checkPSMThreshold();
+    int animationRate();
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);
+    void batteryEnergyLevelChanged(int energyLevel);
     void batteryStatusChanged(Maemo::QmBattery::State state);
+    void batteryChargerEvent(Maemo::QmBattery::ChargerEvent event);
     void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);    
     void utiliseLED(bool activate, const QString &pattern);
 

@@ -15,11 +15,12 @@ public:
     BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic);
 
 signals:
-    void batteryCharging();
+    void batteryCharging(int);
     void batteryNotCharging();
-    void batteryLevelValueChanged(int);
+    void batteryBarValueChanged(int);
     void PSMValueChanged(QString);
     void PSMAutoValueChanged(bool);
+    void remainingTimeValuesChanged(QStringList);
 
 public slots:
     Q_NOREPLY void setPSMValue(const QString &value);
@@ -27,8 +28,8 @@ public slots:
     Q_NOREPLY void setPSMThresholdValue(const QString &value);
     QString PSMValue();
     bool PSMAutoValue();
-    bool batteryChargingState();   
-    int batteryLevelValue();
+    void batteryChargingState();
+    int batteryBarValue();
     QString PSMThresholdValue();
     QStringList PSMThresholdValues();
     QStringList remainingTimeValues();

@@ -30,11 +30,10 @@ TODO list:
 2) the battery images should be logical names instead of hard coded values
 3) There should be 8 normal and 8 charging battery images instead of 6
 4) The values in the slider should be percentage (QmBattery API provides)
-5) It should be confirmed that the PSMAuto button should be toggled off every time the PSM is switched manually
-6) The layout should be finalized
-7) It should be confirmed, how the remaining time labels should behave when the battery is charging.
+5) The layout should be finalized
+6) It should be confirmed, how the remaining time labels should behave when the battery is charging.
    Currently QmBattery API return -1 when charging.
-8) It should be confirmed that 10 seconds is correct interval to update the remaining time labels
+7) It should be confirmed that 10 seconds is correct interval to update the remaining time labels
 
 */
 
@@ -44,7 +43,8 @@ BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
         standByTimeContainer(NULL),
         sliderContainer(NULL),
         batteryIf(NULL),
-        PSMButton(NULL)
+        PSMButton(NULL),
+        remainingTimesTimer(NULL)
 {
     setReferer(DcpBattery::None);
     initWidget();
@@ -52,6 +52,11 @@ BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
 
 BatteryWidget::~BatteryWidget()
 {    
+}
+
+bool BatteryWidget::back()
+{
+    return true; // back is handled by main window by default
 }
 
 void BatteryWidget::initWidget()
@@ -100,8 +105,8 @@ void BatteryWidget::initWidget()
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));  
     connect(batteryIf, SIGNAL(batteryCharging()), talkTimeContainer, SLOT(startCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer, SLOT(stopCharging()));
-    connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryLevelValueRequired()));
-    connect(batteryIf, SIGNAL(batteryLevelValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));
+    connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
+    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));
     connect(batteryIf, SIGNAL(PSMValueReceived(QString)), this, SLOT(updatePSMButton(QString)));
     connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
     connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), sliderContainer, SLOT(initSlider(QStringList)));
@@ -110,7 +115,7 @@ void BatteryWidget::initWidget()
 
     // send value requests over dbus
     batteryIf->remainingTimeValuesRequired();
-    batteryIf->batteryLevelValueRequired();
+    batteryIf->batteryBarValueRequired();
     batteryIf->batteryChargingStateRequired();
     batteryIf->PSMValueRequired();
     batteryIf->PSMAutoValueRequired();
@@ -137,9 +142,14 @@ void BatteryWidget::updatePSMButton(const QString &value)
 
 void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
 {
-    qDebug() << "BatteryWidget::updateLabels(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";
-    talkTimeContainer->updateTimeLabel(timeValues.at(0).toInt());
-    standByTimeContainer->updateTimeLabel(timeValues.at(1).toInt());
+    qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";    
+    talkTimeContainer->updateTimeLabel(timeValues.at(0));
+    standByTimeContainer->updateTimeLabel(timeValues.at(1));
 
-    QTimer::singleShot(10000, batteryIf, SLOT(remainingTimeValuesRequired()));
+    if(remainingTimesTimer == NULL) {
+        // we don't use single shot, because the remaining time values are received also when PSM is toggled
+        remainingTimesTimer = new QTimer(this);
+        connect(remainingTimesTimer, SIGNAL(timeout()), batteryIf, SLOT(remainingTimeValuesRequired()));
+        remainingTimesTimer->start(10000);
+    }
 }

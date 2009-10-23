@@ -6,11 +6,12 @@
 BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic)
     : QDBusAbstractAdaptor(obj), batteryLogic(batteryLogic)
 {
-    connect(batteryLogic, SIGNAL(batteryCharging()), this, SIGNAL(batteryCharging()));
+    connect(batteryLogic, SIGNAL(batteryCharging(int)), this, SIGNAL(batteryCharging(int)));
     connect(batteryLogic, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
-    connect(batteryLogic, SIGNAL(batteryLevelValueChanged(int)), this, SIGNAL(batteryLevelValueChanged(int)));
+    connect(batteryLogic, SIGNAL(batteryBarValueChanged(int)), this, SIGNAL(batteryBarValueChanged(int)));
     connect(batteryLogic, SIGNAL(PSMValueChanged(QString)), this, SIGNAL(PSMValueChanged(QString)));
     connect(batteryLogic, SIGNAL(PSMAutoValueChanged(bool)), this, SIGNAL(PSMAutoValueChanged(bool)));
+    connect(batteryLogic, SIGNAL(remainingTimeValuesChanged(QStringList)), this, SIGNAL(remainingTimeValuesChanged(QStringList)));
 }
 
 void BatteryBusinessLogicAdaptor::setPSMValue(const QString &value)
@@ -43,22 +44,22 @@ bool BatteryBusinessLogicAdaptor::PSMAutoValue()
     return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMAutoKey).toBool();
 }
 
-bool BatteryBusinessLogicAdaptor::batteryChargingState()
+void BatteryBusinessLogicAdaptor::batteryChargingState()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::batteryChargingState()";
-    return batteryLogic->isBatteryCharging();
+    batteryLogic->batteryStatus();
 }
 
 QString BatteryBusinessLogicAdaptor::PSMThresholdValue()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue(" << batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMThresholdKey).toString() << ")";
-    return batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMThresholdKey).toString();
+    return batteryLogic->PSMThresholdValue();
 }
 
-int BatteryBusinessLogicAdaptor::batteryLevelValue()
+int BatteryBusinessLogicAdaptor::batteryBarValue()
 {
-    qDebug () << "BatteryBusinessLogicAdaptor::batteryLevelValue()";
-    return batteryLogic->batteryLevelValue();
+    qDebug () << "BatteryBusinessLogicAdaptor::batteryBarValue()";
+    return batteryLogic->batteryBarValue();
 }
 
 QStringList BatteryBusinessLogicAdaptor::PSMThresholdValues()

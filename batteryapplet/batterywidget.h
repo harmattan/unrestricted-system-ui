@@ -22,7 +22,8 @@ class BatteryWidget : public DcpWidget
 		
 public:
     BatteryWidget(QGraphicsWidget *parent = 0);
-    virtual ~BatteryWidget();    
+    virtual ~BatteryWidget();
+    bool back();
 
 protected:
     void initWidget();
@@ -39,6 +40,7 @@ private: //attributes
     SliderContainer *sliderContainer;
     BatteryDBusInterface *batteryIf;
     DuiButton *PSMButton;
+    QTimer *remainingTimesTimer;
 
 };
 #endif // BATTERYWIDGET_H
