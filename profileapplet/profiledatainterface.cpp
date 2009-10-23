@@ -60,7 +60,7 @@ QList<ProfileDataInterface::ProfileData> ProfileDataInterface::getProfilesData()
         QString id = ids.at(i);
         d.profileId = mapId(id);
         d.profileName = id2Name(id);
-        d.volumeLevel = api->volumeLevel(id);
+        d.volumeLevel = checkSilent(d.profileId, api->volumeLevel(id));
         d.vibrationEnabled = api->isVibrationEnabled(id);
         data.append(d);
     }
@@ -95,11 +95,12 @@ void ProfileDataInterface::setVolumeLevel(int id, int value)
     }
 }
 
-int ProfileDataInterface::checkSilent(QString id, int level)
+int ProfileDataInterface::checkSilent(int id, int level)
 {
-    if(0 == level){
-
+    if(id == ProfileId::silent){
+        level = -1;
     }
+    return level;
 }
 
 QString ProfileDataInterface::id2Name(QString id)

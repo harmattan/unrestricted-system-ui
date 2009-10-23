@@ -36,7 +36,7 @@ public:
     void setVolumeLevel(int id, int value);
 
 private:
-    int checkSilent(QString id, int level);
+    int checkSilent(int id, int level);
     static int mapId(QString id);
     static QString mapId(int id);
     static QString id2Name(QString id);
