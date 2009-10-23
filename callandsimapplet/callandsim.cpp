@@ -40,8 +40,7 @@ void CallAndSim::setCallWaiting(bool enabled)
 
     if (enabled) {
         callWaiting->waitingActivate();
-    }
-    else {
+    } else {
         callWaiting->waitingCancel();
     }
 }
@@ -52,8 +51,7 @@ void CallAndSim::setCallForwarding(bool enabled, QString number)
 
     if (enabled) {
         callForwarding->divertActivate(CallForwarding::Unconditional, number, FORWARDING_DELAY);
-    }
-    else {
+    } else {
         callForwarding->divertCancel(CallForwarding::CancelAll);
     }
 }
@@ -76,23 +74,23 @@ void CallAndSim::requestData(DcpCallAndSim::Data data)
     qDebug() << Q_FUNC_INFO << data;
 
     switch (data) {
-        case CallerIdSendingData:
-            // TODO
-            break;
-        case CallWaitingData:
-            callWaiting->waitingCheck();
-            break;
-        case CallForwardingData:
-            callForwarding->divertCheck(CallForwarding::Unconditional);
-            break;
-        case PinRequestData:
-            // TODO
-            break;
-        case AllData:
-            callWaiting->waitingCheck();
-            callForwarding->divertCheck(CallForwarding::Unconditional);
-            // TODO: Pin, CallerId sending
-            break;
+    case CallerIdSendingData:
+        // TODO
+        break;
+    case CallWaitingData:
+        callWaiting->waitingCheck();
+        break;
+    case CallForwardingData:
+        callForwarding->divertCheck(CallForwarding::Unconditional);
+        break;
+    case PinRequestData:
+        // TODO
+        break;
+    case AllData:
+        callWaiting->waitingCheck();
+        callForwarding->divertCheck(CallForwarding::Unconditional);
+        // TODO: Pin, CallerId sending
+        break;
     }
 }
 

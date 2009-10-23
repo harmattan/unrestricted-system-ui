@@ -11,7 +11,7 @@ Q_EXPORT_PLUGIN2(callandsimapplet, CallAndSimApplet)
 
 namespace DcpCallAndSim
 {
-    const QString css("/usr/share/duicontrolpanel/themes/style/callandsimapplet.css");
+const QString css("/usr/share/duicontrolpanel/themes/style/callandsimapplet.css");
 }
 
 void CallAndSimApplet::init()

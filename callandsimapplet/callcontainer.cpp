@@ -140,27 +140,27 @@ void CallContainer::requestFailed(DcpCallAndSim::Data data)
     qDebug() << Q_FUNC_INFO << data;
 
     switch (data) {
-        case DcpCallAndSim::CallerIdSendingData:
-            sendCallerIdComboBox->blockSignals(true);
-            sendCallerIdComboBox->setCurrentIndex(0);
-            sendCallerIdComboBox->blockSignals(false);
-            break;
-        case DcpCallAndSim::CallWaitingData:
-            callWaitingButton->blockSignals(true);
-            callWaitingButton->setChecked(false);
-            callWaitingButton->blockSignals(false);
-            break;
-        case DcpCallAndSim::CallForwardingData:
-            numberLabel->setVisible(false);
-            numberEdit->setVisible(false);
-            pickerButton->setVisible(false);
+    case DcpCallAndSim::CallerIdSendingData:
+        sendCallerIdComboBox->blockSignals(true);
+        sendCallerIdComboBox->setCurrentIndex(0);
+        sendCallerIdComboBox->blockSignals(false);
+        break;
+    case DcpCallAndSim::CallWaitingData:
+        callWaitingButton->blockSignals(true);
+        callWaitingButton->setChecked(false);
+        callWaitingButton->blockSignals(false);
+        break;
+    case DcpCallAndSim::CallForwardingData:
+        numberLabel->setVisible(false);
+        numberEdit->setVisible(false);
+        pickerButton->setVisible(false);
 
-            callFwdButton->blockSignals(true);
-            callFwdButton->setChecked(false);
-            callFwdButton->blockSignals(false);
-            break;
-        default:
-            break;
+        callFwdButton->blockSignals(true);
+        callFwdButton->setChecked(false);
+        callFwdButton->blockSignals(false);
+        break;
+    default:
+        break;
     }
 }
 
