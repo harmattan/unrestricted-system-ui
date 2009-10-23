@@ -13,9 +13,9 @@ class UnlockSliderStyle : public DuiWidgetStyle
     DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, handleHilightedImage,    HandleHilightedImage)
     DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, backgroundTileImage,     BackgroundTileImage)
     DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, iconImage,               IconImage)
-    DUI_STYLE_ATTRIBUTE(    qreal,             thickness,               Thickness)
-    DUI_STYLE_ATTRIBUTE(    int,               blinkTime,               BlinkTime)
-    DUI_STYLE_ATTRIBUTE(    int,               blinkCount,              BlinkCount)
+    DUI_STYLE_ATTRIBUTE(qreal,             thickness,               Thickness)
+    DUI_STYLE_ATTRIBUTE(int,               blinkTime,               BlinkTime)
+    DUI_STYLE_ATTRIBUTE(int,               blinkCount,              BlinkCount)
 };
 
 class UnlockSliderStyleContainer : public DuiWidgetStyleContainer

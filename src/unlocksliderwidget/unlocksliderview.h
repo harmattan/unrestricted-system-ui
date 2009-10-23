@@ -27,8 +27,8 @@ protected:
 
     virtual void styleChanged();
 
-    virtual void drawBackground (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void drawContents (QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

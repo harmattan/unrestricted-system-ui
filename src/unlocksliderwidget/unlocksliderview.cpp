@@ -9,18 +9,18 @@
 #include <math.h>
 
 // update 25 times per sec
-const int UPDATEFREQ(1000/25);
+const int UPDATEFREQ(1000 / 25);
 // reset speed acceleration
-const qreal RESETACCEL(1.0f/25.0f);
+const qreal RESETACCEL(1.0f / 25.0f);
 
 UnlockSliderView::UnlockSliderView(UnlockSlider *controller) :
-    DuiWidgetView(controller),
-    sliderRect(-1, -1, -1, -1),
-    handlePos(-1, -1),
-    resetVelocity(0),
-    blinkCount(0),
-    blinkTime(0),
-    backgroundTileCount(0)
+        DuiWidgetView(controller),
+        sliderRect(-1, -1, -1, -1),
+        handlePos(-1, -1),
+        resetVelocity(0),
+        blinkCount(0),
+        blinkTime(0),
+        backgroundTileCount(0)
 {
     connect(&timer, SIGNAL(timeout()), this, SLOT(timeStep()));
     timer.setInterval(UPDATEFREQ);
@@ -44,29 +44,24 @@ void UnlockSliderView::modelModified(const QList<const char*>& modifications)
     DuiWidgetView::modelModified(modifications);
 
     const char* member;
-    foreach (member, modifications) {
-        if (member == UnlockSliderModel::HandlePressed ) {
+    foreach(member, modifications) {
+        if (member == UnlockSliderModel::HandlePressed) {
             // this is a bit unclear... pressed state should only change according to touch events
             if (!model()->handlePressed()) {
                 releaseHandle();
             }
-        }
-        else if (member == UnlockSliderModel::Position ) {
+        } else if (member == UnlockSliderModel::Position) {
             setHandleScreenPos(model()->position());
-        }
-        else if (member == UnlockSliderModel::IconVisible) {
+        } else if (member == UnlockSliderModel::IconVisible) {
             recalcRects();
-        }
-        else if (member == UnlockSliderModel::Magnetic) {
+        } else if (member == UnlockSliderModel::Magnetic) {
             // TODO ...is there anything to do?
-        }
-        else if (member == UnlockSliderModel::Blinking) {
+        } else if (member == UnlockSliderModel::Blinking) {
             if (!model()->blinking()) {
                 blinkCount = 0;
                 blinkTime = 0;
             }
-        }
-        else if (member == UnlockSliderModel::Orientation) {
+        } else if (member == UnlockSliderModel::Orientation) {
             recalcRects();
         }
     }
@@ -100,8 +95,7 @@ void UnlockSliderView::drawBackground(QPainter *painter, const QStyleOptionGraph
     if (reverse) {
         if (model()->orientation() == Qt::Horizontal) {
             tile.adjust(sliderRect.width() - thickness, 0, sliderRect.width() - thickness, 0);
-        }
-        else { // vertical
+        } else { // vertical
             tile.adjust(0, sliderRect.height() - thickness, 0, sliderRect.height() - thickness);
         }
     }
@@ -115,8 +109,7 @@ void UnlockSliderView::drawBackground(QPainter *painter, const QStyleOptionGraph
 
         if (model()->orientation() == Qt::Horizontal) {
             tile.adjust(a, 0, a, 0);
-        }
-        else { // vertical
+        } else { // vertical
             tile.adjust(0, a, 0, a);
         }
     }
@@ -174,8 +167,7 @@ void UnlockSliderView::timeStep()
 
         if (blinkCount < 2 * style()->blinkCount()) {
             stoptimer = false;
-        }
-        else {
+        } else {
             model()->setBlinking(false);
         }
     }
@@ -198,11 +190,10 @@ bool UnlockSliderView::handleHit(const QPointF& pos) const
     const qreal thickness(style()->thickness());
 
     if (model()->orientation() == Qt::Horizontal &&
-        (pos.y() < handlePos.y() || pos.y() >= (handlePos.y() + thickness))) {
+            (pos.y() < handlePos.y() || pos.y() >= (handlePos.y() + thickness))) {
         return false;
-    }
-    else if (model()->orientation() == Qt::Vertical &&
-            (pos.x() < handlePos.x() || pos.x() >= (handlePos.x() + thickness))) {
+    } else if (model()->orientation() == Qt::Vertical &&
+               (pos.x() < handlePos.x() || pos.x() >= (handlePos.x() + thickness))) {
         // handle height used because it's rotated in vertical mode                      --^
         return false;
     }
@@ -216,8 +207,7 @@ bool UnlockSliderView::handleHit(const QPointF& pos) const
 
     if (model()->orientation() == Qt::Horizontal) {
         return pos.x() >= handlePos.x() && pos.x() < (handlePos.x() + thickness);
-    }
-    else { // vertical (handle width used because of rotation)
+    } else { // vertical (handle width used because of rotation)
         return pos.y() >= handlePos.y() && pos.y() < (handlePos.y() + thickness);
     }
 }
@@ -236,18 +226,17 @@ void UnlockSliderView::setHandleModelPos(const QPointF& center)
     const qreal max((h == true ? sliderRect.right() : sliderRect.bottom()) - hhs);
 
     // Prevent possible(?) division by zero
-    if (max-min != 0) {
+    if (max - min != 0) {
         // Scale c to 0..1 range and set the value to model which causes modelModified to be called
         qreal pos = (clamp(c, min, max) - min) / (max - min);
         if (qApp->isRightToLeft()) {
             pos = 1.0f - pos;
         }
         model()->setPosition(pos);
-    
+
         //model()->setPosition(pos);
         resetVelocity = 0;
-    }
-    else {
+    } else {
         model()->setPosition(0);
     }
 }
@@ -266,8 +255,7 @@ void UnlockSliderView::setHandleScreenPos(const qreal& percent)
 
         handlePos.setX(pct * (max - min) + min);
         handlePos.setY(sliderRect.top());
-    }
-    else { // vertical
+    } else { // vertical
         const qreal min = sliderRect.top();
         const qreal max = sliderRect.bottom() - style()->thickness();
 
@@ -289,8 +277,7 @@ void UnlockSliderView::moveHandle(const QPointF& pos)
     if (handleHit(pos)) {
         setHandleModelPos(pos);
         resetVelocity = 0;
-    }
-    else {
+    } else {
         releaseHandle();
     }
 }
@@ -314,12 +301,10 @@ void UnlockSliderView::drawImage(const DuiScalableImage* image, const QRect& rec
             QRect r(QPoint(-rect.width() / 2, -rect.height() / 2), rect.size());
             image->draw(r, painter);
             painter->restore();
-        }
-        else {
+        } else {
             image->draw(rect, painter);
         }
-    }
-    else {
+    } else {
         painter->fillRect(rect, QBrush(Qt::red));
     }
 }
@@ -347,16 +332,14 @@ void UnlockSliderView::recalcRects()
 
         if (!reverse) {
             sliderRect.setTopLeft(QPoint(leftover, slidertop));
-        }
-        else {
+        } else {
             sliderRect.setTopLeft(QPoint(model()->iconVisible() ? thickness : 0, slidertop));
         }
         sliderRect.setWidth(sliderwidth - leftover);
         sliderRect.setHeight(thickness);
 
         backgroundTileCount = sliderRect.width() / thickness;
-    }
-    else { // vertical
+    } else { // vertical
         // Note: only icon is kept in same orientaton towards the user,
         // handle and background images are rotated 90 degrees
 
@@ -368,8 +351,7 @@ void UnlockSliderView::recalcRects()
 
         if (!reverse) {
             sliderRect.setTopLeft(QPoint(sliderleft, leftover));
-        }
-        else {
+        } else {
             sliderRect.setTopLeft(QPoint(sliderleft, model()->iconVisible() ? thickness : 0));
         }
         sliderRect.setWidth(thickness); // handle is rotated, so use height here

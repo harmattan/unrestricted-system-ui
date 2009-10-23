@@ -19,8 +19,7 @@ void UnlockSlider::hwKeyDown(bool down)
 {
     qDebug() << "hwKeyDown " << down;
     //aHWKeyDown = down;
-    if(!down) //hw button released
-    {
+    if (!down) { //hw button released
         view->releaseHandle();
         emit released();
     }
@@ -86,8 +85,8 @@ void UnlockSlider::modelModified(const QList<const char*>& modifications)
     DuiWidgetController::modelModified(modifications);
 
     const char* member;
-    foreach (member, modifications) {
-        if (member == UnlockSliderModel::Position ) {
+    foreach(member, modifications) {
+        if (member == UnlockSliderModel::Position) {
             if (model()->position() > 0.99f) {
                 emit unlocked();
             }
