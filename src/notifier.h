@@ -68,6 +68,9 @@ private slots:
     void notificationTimeout(DuiInfoBanner* notification);
     void cancellableNotificationCancelled();
     void cancellableNotificationTimeout();
+    void localNotificationClose();
+    void localNotificationPinQueryCancel();
+    void localNotificationSimLockRetry();
 
 protected:
     Notifier();
@@ -76,11 +79,11 @@ private:
     /* expireTimeout tells when the note is removed (also from home screen).
      * Refer to duihome: NotificationManager::NotificationManager(int relayInterval = 3000, uint maxWaitQueueSize = 100);.
      */
-    void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"));
+    void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"), QString buttonText = QString(""));
     void removeNotification(unsigned int id);
     void notifTimer(int msec, unsigned int notifId);
     void notifTimer(int msec, DuiInfoBanner* notif);
-    void showLocalNotification(int expireTimeout, QString notifText);
+    void showLocalNotification(int expireTimeout, QString notifText, QString buttonText);
 
 private:    
     CancellableNotification *cancellableNotification;

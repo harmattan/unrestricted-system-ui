@@ -114,7 +114,7 @@ void Notifier::showConfirmation(QString notifText, QString buttonText)
         action += "simLockRetry";
 
     qDebug() << Q_FUNC_INFO << "action:" << action;
-    showDBusNotification(notifText, QString("confirmation"), QString(""), 0, action);
+    showDBusNotification(notifText, QString("confirmation"), QString(""), 0, action, buttonText);
 }
 
 
@@ -162,7 +162,7 @@ void Notifier::removeNotification(unsigned int id)
 
 }
 
-void Notifier::showDBusNotification(QString notifText, QString evetType, QString summary, int expireTimeout, QString action)
+void Notifier::showDBusNotification(QString notifText, QString evetType, QString summary, int expireTimeout, QString action, QString buttonText)
 {
     QDBusMessage reply = managerIf->call(
                QString("addNotification"),
@@ -175,7 +175,7 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
 
     if(reply.type() == QDBusMessage::ErrorMessage) {
         qDebug() << Q_FUNC_INFO << " error reply:" << reply.errorName();
-        showLocalNotification(expireTimeout, notifText);
+        showLocalNotification(expireTimeout, notifText, buttonText);
     }
     else if(reply.type() == QDBusMessage::ReplyMessage)
     {
@@ -229,19 +229,58 @@ void Notifier::notifTimer(int expireTimeout, DuiInfoBanner* notif)
     qDebug() << Q_FUNC_INFO << "expireTimeout:" << expireTimeout;
     if(0 < expireTimeout)
         (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(DuiInfoBanner*)), notif);
-    else
+    else if(0 >= notif->buttonText().length())
         notif->disappear();
 }
 
-void Notifier::showLocalNotification(int expireTimeout, QString notifText)
+void Notifier::showLocalNotification(int expireTimeout, QString notifText, QString buttonText)
 {
     qDebug() << Q_FUNC_INFO << notifText;
     // DuiInfoBanner(BannerType type, const QString& image, const QString& body, const QString& iconId);
     DuiInfoBanner* n = new DuiInfoBanner(DuiInfoBanner::Information,
-                                             "",
+                                             "Icon-close",
+                                             QString(notifText),
+                                             "Icon-close");
+/*    DuiInfoBanner* n = new DuiInfoBanner(DuiInfoBanner::Information,
+                                             "Icon-close",
                                              QString( "<font color=\"white\">" + notifText + "</font>"),
                                              "Icon-close");
+*/
+    if (trid("qtn_cell_continue", "Continue") == buttonText){
+        expireTimeout = 0;
+        n->setButtonText(buttonText);
+        connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationPinQueryCancel()));
+        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationPinQueryCancel()));
+    }
+    else if (trid("qtn_cell_try_again", "Try again") == buttonText){
+        expireTimeout = 0;
+        n->setButtonText(buttonText);
+        connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationSimLockRetry()));
+        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationSimLockRetry()));
+    } else {
+        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
+    }
     n->appear(DuiSceneWindow::DestroyWhenDone);
     notifTimer(expireTimeout, n);
 }
+
+void Notifier::localNotificationClose()
+{
+    DuiInfoBanner *ib = qobject_cast<DuiInfoBanner *>(sender());
+    if (ib != NULL) {
+        ib->disappear();
+    }
+}
+void Notifier::localNotificationPinQueryCancel()
+{
+    localNotificationClose();
+    dbus->pinQueryCancel();
+}
+
+void Notifier::localNotificationSimLockRetry()
+{
+    localNotificationClose();
+    dbus->simLockRetry();
+}
+
 
