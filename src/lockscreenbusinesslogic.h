@@ -27,10 +27,11 @@ public:
 
     LockScreenBusinessLogic();
     virtual ~LockScreenBusinessLogic();
+    LockScreenBusinessLogic::ScreenLockPhase screenLockPhase();
 
-signals:
-    void lockScreenOff();
-    void toggleDisplay(bool toggle);
+signals:    
+    void toggleDisplay(bool);
+    void screenLockPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase);
 
 public slots:
     void shortPowerKeyPressOccured();

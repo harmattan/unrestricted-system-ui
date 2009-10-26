@@ -30,9 +30,7 @@ public:
 
     /** The type of charger connected */
     enum ChargerType
-    {
-        Unknown = -1,        /**< Unknown charger */
-        None,                /**< No  charger connected */
+    {        
         Wall,                /**< Wall charger  */
         USB_500mA,           /**< USB with 500mA output */
         USB_100mA            /**< USB with 100mA output */

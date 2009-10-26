@@ -21,11 +21,12 @@ void QmBattery::initValues()
     levelIndex = 0;
     levelIndexIncrease = 1;
 
-    emit batteryLevelChanged(QmBattery::LevelFull);
+    //emit batteryLevelChanged(QmBattery::LevelFull);
+    batteryLevelChanged(QmBattery::LevelLow);
 
     state = QmBattery::StateNotCharging;
     type = QmBattery::Wall;
-    QTimer::singleShot(10000, this, SLOT(updateValues()));
+    //QTimer::singleShot(10000, this, SLOT(updateValues()));
 }
 
 void QmBattery::updateValues()

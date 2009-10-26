@@ -103,7 +103,7 @@ void BatteryWidget::initWidget()
 
     // connect the value receive signals
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));  
-    connect(batteryIf, SIGNAL(batteryCharging()), talkTimeContainer, SLOT(startCharging()));
+    connect(batteryIf, SIGNAL(batteryCharging(int)), talkTimeContainer, SLOT(startCharging(int)));
     connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer, SLOT(stopCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
     connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));

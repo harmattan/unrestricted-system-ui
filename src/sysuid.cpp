@@ -39,10 +39,6 @@ Sysuid::Sysuid() : QObject()
     /* Pincode query variables */
     pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
 
-    /* Battery */         
-    batteryLogic = new BatteryBusinessLogic(systemUIGConf);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
-
     /* Display */
     displayLogic = new DisplayBusinessLogic();
     displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
@@ -64,12 +60,15 @@ Sysuid::Sysuid() : QObject()
             shutdownLogic, SLOT(powerKeyUp()));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic();    
-    connect(lockScreenLogic, SIGNAL(lockScreenOff()), batteryLogic, SLOT(initBattery()));    
+    lockScreenLogic = new LockScreenBusinessLogic();
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));    
     connect(displayLogic, SIGNAL(displayOff()), lockScreenLogic, SLOT(displayOff()));    
     connect(displayLogic, SIGNAL(displayOn()), lockScreenLogic, SLOT(displayOn()));
     connect(lockScreenLogic, SIGNAL(toggleDisplay(bool)), displayLogic, SLOT(toggleDisplay(bool)));
+
+    /* Battery */
+    batteryLogic = new BatteryBusinessLogic(systemUIGConf, lockScreenLogic);
+    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     // D-Bus registration and stuff.
     QDBusConnection bus = QDBusConnection::sessionBus();

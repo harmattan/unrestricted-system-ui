@@ -1,7 +1,7 @@
 #include "batterybusinesslogicadaptor.h"
 #include "batterybusinesslogic.h"
 
-#include <QDebug>
+//#include <QDebug>
 
 BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic)
     : QDBusAbstractAdaptor(obj), batteryLogic(batteryLogic)

@@ -1,8 +1,11 @@
 #ifndef BATTERYBUSINESSLOGIC_H
 #define BATTERYBUSINESSLOGIC_H
 
+#include <QDebug>
+
 #include "notifier.h"
 #include "systemuigconf.h"
+#include "lockscreenbusinesslogic.h"
 //#include <qmsystem/qmbattery.h>
 #include "batterystub.h"
 //#include <qmsystem/qmdevicemode.h> //replaced with stub class
@@ -11,13 +14,40 @@
 #include <QObject>
 #include <QStringList>
 
+class QTimer;
+
 using namespace Maemo;
+
+class LowBatteryNotifier : public QObject
+{
+    Q_OBJECT
+public:
+    LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase);
+    virtual ~LowBatteryNotifier();
+
+    void start();
+    void stop();
+
+public slots:
+    void lockScreenPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase phase);
+
+private slots:
+    void updateElapsedTime();
+
+private:
+    Notifier *uiNotif;
+    int minsToElapse;
+    int minsElapsed;
+    bool showReminder;
+    QTimer *timer;
+
+};
 
 class BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
 public:
-    BatteryBusinessLogic(SystemUIGConf *systemUIGConf);
+    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic);
     virtual ~BatteryBusinessLogic();
 
     void setPSMThreshold(const QString &threshold);
@@ -40,13 +70,15 @@ signals:
     void remainingTimeValuesChanged(QStringList);
 
 public slots:
-    void initBattery();
+    void initBattery();    
 
 private: //attributes
     SystemUIGConf *systemUIGConf;
+    LockScreenBusinessLogic *lockScreenLogic;
     QmBattery *battery;
     QmDeviceMode *deviceMode;    
-    Notifier *uiNotif;        
+    Notifier *uiNotif;
+    LowBatteryNotifier *lowBatteryNotifier;
     QStringList PSMThresholds;
 
 private: //methods

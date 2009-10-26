@@ -6,6 +6,16 @@
         <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
       </case>
     </set>
+    <set name="batterybusinesslogic" description="middleware tests">
+      <case name="ut_batterybusinesslogic" type="unit" description="Test the BatteryBusinessLogic">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_batterybusinesslogic</step>
+      </case>
+    </set>
+    <set name="lowbatterynotifier" description="middleware tests">
+      <case name="ut_lowbatterynotifier" type="unit" description="Test the LowBatteryNotifier">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_lowbatterynotifier</step>
+      </case>
+    </set>
   </suite>
 </testdefinition>
 
