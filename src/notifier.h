@@ -8,6 +8,7 @@ class CancellableNotification;
 class QDBusInterface;
 class NotifierDBusAdaptor;
 class Sysuid;
+class DuiInfoBanner;
 
 /* Class to keep track of each notification shown in homescreen */
 class NotifTimer : public QObject
@@ -17,12 +18,15 @@ class NotifTimer : public QObject
 public:
     ~NotifTimer();
     NotifTimer(int expireTimeout, QObject *receiver, const char *member, unsigned int notifId);
+    NotifTimer(int expireTimeout, QObject *receiver, const char *member, DuiInfoBanner* notification);
 signals:
     void timeout(unsigned int notifId);
+    void timeout(DuiInfoBanner* notification);
 protected:
     void timerEvent(QTimerEvent *);
 private:
     unsigned int notifId;
+    DuiInfoBanner* notification;
 };
 
 
@@ -61,6 +65,7 @@ public slots:
 
 private slots:
     void notificationTimeout(unsigned int notifId);
+    void notificationTimeout(DuiInfoBanner* notification);
     void cancellableNotificationCancelled();
     void cancellableNotificationTimeout();
 
@@ -74,6 +79,8 @@ private:
     void showDBusNotification(QString notifText, QString evetType, QString summary = QString(), int expireTimeout = 3000, QString action = QString("removeNotification"));
     void removeNotification(unsigned int id);
     void notifTimer(int msec, unsigned int notifId);
+    void notifTimer(int msec, DuiInfoBanner* notif);
+    void showLocalNotification(int expireTimeout, QString notifText);
 
 private:    
     CancellableNotification *cancellableNotification;

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDBusInterface>
 #include <QAbstractEventDispatcher>
+#include <DuiInfoBanner>
 
 #include "notifier.h"
 #include "sysuid.h"
@@ -15,9 +16,19 @@
 
 NotifTimer::NotifTimer(int expireTimeout, QObject *receiver, const char *member, unsigned int notifId) :
     QObject(QAbstractEventDispatcher::instance()),
-    notifId(notifId)
+    notifId(notifId),
+    notification(NULL)
 {
     connect(this, SIGNAL(timeout(unsigned int)), receiver, member);
+    timerId = startTimer(expireTimeout);
+}
+
+NotifTimer::NotifTimer(int expireTimeout, QObject *receiver, const char *member, DuiInfoBanner* notification) :
+    QObject(QAbstractEventDispatcher::instance()),
+    notifId(-1),
+    notification(notification)
+{
+    connect(this, SIGNAL(timeout(DuiInfoBanner*)), receiver, member);
     timerId = startTimer(expireTimeout);
 }
 
@@ -34,6 +45,7 @@ void NotifTimer::timerEvent(QTimerEvent *)
     if (timerId > 0)
         killTimer(timerId);
     timerId = -1;
+    emit timeout(notification);
     emit timeout(notifId);
     delete this;
 }
@@ -101,7 +113,7 @@ void Notifier::showConfirmation(QString notifText, QString buttonText)
     else if (trid("qtn_cell_try_again", "Try again") == buttonText)
         action += "simLockRetry";
 
-    qDebug() << "Notifier::showConfirmation() action:" << action;
+    qDebug() << Q_FUNC_INFO << "action:" << action;
     showDBusNotification(notifText, QString("confirmation"), QString(""), 0, action);
 }
 
@@ -110,6 +122,24 @@ void Notifier::notificationTimeout(unsigned int notifId)
 {
     if(0 < notifId) {
         removeNotification(notifId);
+    }
+
+    QTimer *t = qobject_cast<QTimer *>(sender());
+    qDebug() << Q_FUNC_INFO << "timer:" << t;
+    if (t != NULL) {
+        DuiInfoBanner *dn = qobject_cast<DuiInfoBanner *>(t->parent());
+        qDebug() << Q_FUNC_INFO << "dn:" << (QObject*)dn;
+        if (dn != NULL) {
+            dn->disappear();
+        }
+    }
+}
+
+void Notifier::notificationTimeout(DuiInfoBanner* notif)
+{
+    qDebug() << Q_FUNC_INFO << "notif:" << (QObject*)notif;
+    if (notif != NULL) {
+        notif->disappear();
     }
 }
 
@@ -121,13 +151,13 @@ void Notifier::removeNotification(unsigned int id)
 
     // practically just debugging...
     if(reply.type() == QDBusMessage::ErrorMessage) {
-        qDebug() << "Notifier::removeNotification(" << id << ") error reply:" << reply.errorName();
+        qDebug() << Q_FUNC_INFO << "(" << id << ") error reply:" << reply.errorName();
     }
     else if(reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() > 0) {
-        qDebug() << "Notifier::removeNotification(" << id << ") result:" << reply.arguments()[0].toUInt();
+        qDebug() << Q_FUNC_INFO << "(" << id << ") result:" << reply.arguments()[0].toUInt();
     }
     else {
-        qDebug() << "Notifier::showDBusNotification(" << id << ") reply type:" << reply.type();
+        qDebug() << Q_FUNC_INFO << "(" << id << ") reply type:" << reply.type();
     }
 
 }
@@ -144,7 +174,8 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
                QVariant(QString("Icon-close")));
 
     if(reply.type() == QDBusMessage::ErrorMessage) {
-        qDebug() << "Notifier::showDBusNotification() error reply:" << reply.errorName();
+        qDebug() << Q_FUNC_INFO << " error reply:" << reply.errorName();
+        showLocalNotification(expireTimeout, notifText);
     }
     else if(reply.type() == QDBusMessage::ReplyMessage)
     {
@@ -153,12 +184,12 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
         if(args.count() >= 1)
         {
             notifId = args[0].toUInt();
-            qDebug() << "Notifier::showDBusNotification(): notifId:" << notifId << "msg:" << notifText;
+            qDebug() << Q_FUNC_INFO << ": notifId:" << notifId << "msg:" << notifText;
         }
         notifTimer(expireTimeout, notifId);
     }
     else {
-        qDebug() << "Notifier::showDBusNotification() reply type:" << reply.type();
+        qDebug() << Q_FUNC_INFO << "reply type:" << reply.type();
     }
 }
 
@@ -175,7 +206,7 @@ void Notifier::showCancellableNotification(QString notifText,
 
 void Notifier::cancellableNotificationCancelled()
 {        
-    qDebug() << "cancelled";
+    qDebug() << Q_FUNC_INFO << "cancelled";
     delete cancellableNotification;
     cancellableNotification = NULL;
 }
@@ -192,3 +223,25 @@ void Notifier::notifTimer(int expireTimeout, unsigned int notifId)
     if(0 < expireTimeout)
         (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(unsigned int)), notifId);
 }
+
+void Notifier::notifTimer(int expireTimeout, DuiInfoBanner* notif)
+{
+    qDebug() << Q_FUNC_INFO << "expireTimeout:" << expireTimeout;
+    if(0 < expireTimeout)
+        (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(DuiInfoBanner*)), notif);
+    else
+        notif->disappear();
+}
+
+void Notifier::showLocalNotification(int expireTimeout, QString notifText)
+{
+    qDebug() << Q_FUNC_INFO << notifText;
+    // DuiInfoBanner(BannerType type, const QString& image, const QString& body, const QString& iconId);
+    DuiInfoBanner* n = new DuiInfoBanner(DuiInfoBanner::Information,
+                                             "",
+                                             QString( "<font color=\"white\">" + notifText + "</font>"),
+                                             "Icon-close");
+    n->appear(DuiSceneWindow::DestroyWhenDone);
+    notifTimer(expireTimeout, n);
+}
+
