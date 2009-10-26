@@ -354,10 +354,11 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         simLockCode = "";
     }
 
+    /* removed when hot swapping not supported.
     // sim inserted
     if (SIM::NoSIM == previousSimState && SIM::NoSIM != next) {
         uiNotif->showNotification(trid("qtn_cell_sim_inserted", "SIM card inserted."));
-    }
+    } */
 
     stateOperation(next, previousSimState);
 
@@ -391,7 +392,8 @@ void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
                 SIM::UnknownStatus != relationState &&
                 SIM::NotReady != relationState
                 ) {
-                uiNotif->showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
+                // removed when hot swapping not supported.
+                // uiNotif->showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
                 ui2disappear();
             }
             break;
