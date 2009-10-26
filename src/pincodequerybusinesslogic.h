@@ -42,6 +42,9 @@ public:
         // State: Rejected
         // State: SIMLockReject
         SubUnlocked, //kytkykauppa
+        // any state
+        SubEnablePinQuery,
+        SubDisablePinQuery,
         /*
         UIPINState,
         UIPIN2AttemptsLeftState,
@@ -57,6 +60,7 @@ public:
 public slots:
     void cancelQuery();
     void resendSimLockCode();
+    void enablePinQueryRequested(bool enabled);
 
 
 private: // attributes
@@ -114,6 +118,8 @@ private slots:
     void simPUKAttemptsLeft(int attempts, SIMError error);
     void simPINCodeChanged(bool success, SIMError error);
     void simLockUnlockCodeVerified(SIMLockError error);
+    void simEnablePINQueryComplete(SIMError error);
+    void simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
 };
 
 #endif // PINCODEQUERYBUSINESSLOGIC_H
