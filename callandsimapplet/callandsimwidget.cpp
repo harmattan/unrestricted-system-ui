@@ -15,21 +15,21 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
 {
     setReferer(DcpCallAndSim::None);
 
+    // create logic
+
+    logic = new CallAndSim(this);
+
     // create containers
 
     callContainer = new CallContainer(this);
     simContainer = new SimContainer(this);
-
-    // create logic
-
-    logic = new CallAndSim(this);
 
     // connect signals, containers -> logic
 
     connect(callContainer, SIGNAL(sendCallerIdChanged(int)),             logic, SLOT(setCallerIdSending(int)));
     connect(callContainer, SIGNAL(callWaitingChanged(bool)),             logic, SLOT(setCallWaiting(bool)));
     connect(callContainer, SIGNAL(callForwardingChanged(bool, QString)), logic, SLOT(setCallForwarding(bool, QString)));
-    connect(simContainer, SIGNAL(valueChanged(bool)),                    logic, SLOT(setPinRequest(bool)));
+    connect(simContainer, SIGNAL(pinRequestChanged(bool)),               logic, SLOT(setPinRequest(bool)));
     connect(simContainer, SIGNAL(pinChangeRequested()),                  logic, SLOT(changePinCode()));
 
     // connect signals, logic -> containers

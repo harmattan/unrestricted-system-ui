@@ -10,14 +10,24 @@ CallAndSim::CallAndSim(QObject* parent) :
 {
     callForwarding = new CallForwarding(this);
     callWaiting = new CallWaiting(this);
+    simSecurity = new SIMSecurity(this);
 
-    connect(callWaiting, SIGNAL(waitingActivateComplete(CallWaiting::WaitingError)), this, SLOT(waitingActivateComplete(CallWaiting::WaitingError)));
-    connect(callWaiting, SIGNAL(waitingCheckComplete(bool, CallWaiting::WaitingError)), this, SLOT(waitingCheckComplete(bool, CallWaiting::WaitingError)));
-    connect(callWaiting, SIGNAL(waitingCancelComplete(CallWaiting::WaitingError)), this, SLOT(waitingCancelComplete(CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingActivateComplete(CallWaiting::WaitingError)),
+            this, SLOT(waitingActivateComplete(CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCheckComplete(bool, CallWaiting::WaitingError)),
+            this, SLOT(waitingCheckComplete(bool, CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCancelComplete(CallWaiting::WaitingError)),
+            this, SLOT(waitingCancelComplete(CallWaiting::WaitingError)));
 
-    connect(callForwarding, SIGNAL(divertActivateComplete(CallForwarding::DivertError)), this, SLOT(divertActivateComplete(CallForwarding::DivertError)));
-    connect(callForwarding, SIGNAL(divertCheckComplete(bool, QString, CallForwarding::DivertError)), this, SLOT(divertCheckComplete(bool, QString, CallForwarding::DivertError)));
-    connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)), this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertActivateComplete(CallForwarding::DivertError)),
+            this, SLOT(divertActivateComplete(CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertCheckComplete(bool, QString, CallForwarding::DivertError)),
+            this, SLOT(divertCheckComplete(bool, QString, CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)),
+            this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
+
+    connect(simSecurity, SIGNAL(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError error)),
+            this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
 
     // TODO: CallerId
 
@@ -59,7 +69,10 @@ void CallAndSim::setCallForwarding(bool enabled, QString number)
 void CallAndSim::setPinRequest(bool enabled)
 {
     qDebug() << Q_FUNC_INFO << enabled;
-    // TODO
+
+    QList<QVariant> list;
+    list << QVariant(enabled);
+    dbusPinIf->callWithCallback(QString("enablePinQuery"), list, this, SLOT(pinQueryEnabled(SIMSecurity::PINQuery)), SLOT(DBusMessagingFailure()));
 }
 
 void CallAndSim::changePinCode()
@@ -84,12 +97,14 @@ void CallAndSim::requestData(DcpCallAndSim::Data data)
         callForwarding->divertCheck(CallForwarding::Unconditional);
         break;
     case PinRequestData:
-        // TODO
+        simSecurity->pinQueryState(SIMSecurity::PIN);
         break;
     case AllData:
         callWaiting->waitingCheck();
         callForwarding->divertCheck(CallForwarding::Unconditional);
-        // TODO: Pin, CallerId sending
+        simSecurity->pinQueryState(SIMSecurity::PIN);
+        // TODO: CallerId sending
+        // TODO: Queuing needed also?
         break;
     }
 }
@@ -160,4 +175,29 @@ void CallAndSim::divertCheckComplete(bool active, QString number, CallForwarding
     }
 
     emit callForwardingComplete(active, number);
+}
+
+void CallAndSim::pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error)
+{
+    qDebug() << Q_FUNC_INFO << state << error;
+
+    pinQueryEnabled(error == SIMErrorNone ? state : SIMSecurity::UnknownState);
+}
+
+void CallAndSim::pinQueryEnabled(SIMSecurity::PINQuery queryState)
+{
+    qDebug() << Q_FUNC_INFO << queryState;
+
+    if (queryState != SIMSecurity::UnknownState) {
+        emit pinRequestComplete(queryState == SIMSecurity::Enabled ? true : false);
+    } else {
+        emit requestFailed(DcpCallAndSim::PinRequestData);
+    }
+}
+
+void CallAndSim::DBusMessagingFailure()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    emit requestFailed(DcpCallAndSim::PinRequestData);
 }

@@ -18,7 +18,6 @@ class CallAndSim : public QObject
     Q_OBJECT
 
 public:
-
     CallAndSim(QObject* parent = 0);
 
 signals:
@@ -33,7 +32,6 @@ public slots:
     void setCallWaiting(bool enabled);
     void setCallForwarding(bool enabled, QString number);
     void setPinRequest(bool enabled);
-
     void changePinCode();
     void requestData(DcpCallAndSim::Data data);
 
@@ -46,9 +44,15 @@ private slots:
     void divertCancelComplete(CallForwarding::DivertError error);
     void divertCheckComplete(bool active, QString number, CallForwarding::DivertError error);
 
+    void pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
+    void pinQueryEnabled(SIMSecurity::PINQuery queryState);
+
+    void DBusMessagingFailure();
+
 private:
     CallForwarding* callForwarding;
     CallWaiting* callWaiting;
+    SIMSecurity* simSecurity;
     QDBusInterface* dbusPinIf;
 };
 

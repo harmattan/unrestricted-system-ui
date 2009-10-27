@@ -18,7 +18,7 @@ public:
     SimContainer(DuiWidget *parent);
 
 signals:
-    void valueChanged(bool);
+    void pinRequestChanged(bool);
     void pinChangeRequested();
 
 public slots:

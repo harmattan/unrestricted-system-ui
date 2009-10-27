@@ -50,7 +50,7 @@ void SimContainer::buttonToggled(bool checked)
     qDebug() << Q_FUNC_INFO << checked;
 
     changePinButton->setVisible(checked);
-    emit valueChanged(checked);
+    emit pinRequestChanged(checked);
 }
 
 void SimContainer::changePinClicked()
