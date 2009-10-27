@@ -1,4 +1,4 @@
-system-ui (0.6.4-0) jaunty; urgency=low
+system-ui (0.6.4-0) harmattan; urgency=low
 
   * Implemented: SWP#SUI-120, SWP#SUI-125
 
@@ -7,13 +7,13 @@ system-ui (0.6.4-0) jaunty; urgency=low
 
  -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 22 Oct 2009 09:46:50 +0300
 
-system-ui (0.6.3-0) unstable; urgency=low
+system-ui (0.6.3-0) harmattan; urgency=low
 
   * Fix release depencies.
 
  -- Matti Katila <matti.katila@ixonos.com>  Thu, 01 Oct 2009 20:04:17 +0300
 
-system-ui (0.6.2-0) unstable; urgency=low
+system-ui (0.6.2-0) harmattan; urgency=low
 
   * Implemented: SWP#SUI-115, SWP#SUI-91
 
@@ -27,13 +27,13 @@ system-ui (0.6.2-0) unstable; urgency=low
 
  -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 01 Oct 2009 13:06:48 +0300
 
-system-ui (0.6.0-1) unstable; urgency=low
+system-ui (0.6.0-1) harmattan; urgency=low
 
   * Build fixes
 
  -- Matti Katila <matti.katila@ixonos.com>  Tue, 22 Sep 2009 15:24:13 +0300
 
-cellular-ui (0.1.0-3) unstable; urgency=low
+cellular-ui (0.1.0-3) harmattan; urgency=low
 
   * Fixes: NB#134117 - PIN is not rejected after 3 tries
   * Fixes: NB#134119 - PUK is not rejected after 10 tries
@@ -42,13 +42,13 @@ cellular-ui (0.1.0-3) unstable; urgency=low
 
  -- Matti Katila <matti.katila@ixonos.com>  Thu, 03 Sep 2009 12:21:57 +0300
 
-cellular-ui (0.1.0-2) unstable; urgency=low
+cellular-ui (0.1.0-2) harmattan; urgency=low
 
   * Non-maintainer upload.
 
  -- Matti Katila <matti.katila@ixonos.com>  Fri, 03 Jul 2009 15:37:25 +0300
 
-cellular-ui (0.1.0-1) unstable; urgency=low
+cellular-ui (0.1.0-1) harmattan; urgency=low
 
   * Initial release.
 
