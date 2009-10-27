@@ -58,16 +58,10 @@ signals:
 public slots:    
     void showNotification(QString notifText, Notifier::NotificationType type = info);
     void showConfirmation(QString notifText, QString buttonText);
-    void showCancellableNotification(QString notifText,
-                                     int appearTime,
-                                     QString appearTimeVariable,
-                                     const QHash<QString,QString> &staticVariables);
 
 private slots:
     void notificationTimeout(unsigned int notifId);
     void notificationTimeout(DuiInfoBanner* notification);
-    void cancellableNotificationCancelled();
-    void cancellableNotificationTimeout();
     void localNotificationClose();
     void localNotificationPinQueryCancel();
     void localNotificationSimLockRetry();

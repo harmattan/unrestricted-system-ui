@@ -10,7 +10,6 @@
 
 #include "notifier.h"
 #include "sysuid.h"
-#include "cancellablenotification.h"
 #include "notifierdbusadaptor.h"
 
 
@@ -191,31 +190,6 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
     else {
         qDebug() << Q_FUNC_INFO << "reply type:" << reply.type();
     }
-}
-
-void Notifier::showCancellableNotification(QString notifText,
-                                           int appearTime,
-                                           QString appearTimeVariable,
-                                           const QHash<QString,QString> &staticVariables)
-{
-    cancellableNotification = new CancellableNotification(notifText, appearTime, appearTimeVariable, staticVariables);
-    connect(cancellableNotification, SIGNAL(cancelled()), this, SLOT(cancellableNotificationCancelled()));
-    connect(cancellableNotification, SIGNAL(timeout()), this, SLOT(cancellableNotificationTimeout()));
-    cancellableNotification->show();
-}
-
-void Notifier::cancellableNotificationCancelled()
-{        
-    qDebug() << Q_FUNC_INFO << "cancelled";
-    delete cancellableNotification;
-    cancellableNotification = NULL;
-}
-
-void Notifier::cancellableNotificationTimeout()
-{
-    delete cancellableNotification;
-    cancellableNotification = NULL;
-    emit notifTimeout();
 }
 
 void Notifier::notifTimer(int expireTimeout, unsigned int notifId)

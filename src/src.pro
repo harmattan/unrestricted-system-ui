@@ -23,7 +23,6 @@ SOURCES += main.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
-    cancellablenotification.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
     eventhandler.cpp \
@@ -50,7 +49,6 @@ HEADERS += main.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
-    cancellablenotification.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
     eventhandler.h \

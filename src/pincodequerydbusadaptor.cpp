@@ -27,5 +27,5 @@ void  PinCodeQueryDBusAdaptor::enablePinQuery(bool enable)
 
 void PinCodeQueryDBusAdaptor::pinQueryEnabledResponse(SIMSecurity::PINQuery queryState)
 {
-    emit enablePinQuery(queryState);
+    emit pinQueryEnabled(queryState);
 }
