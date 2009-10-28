@@ -125,16 +125,6 @@ void Notifier::notificationTimeout(unsigned int notifId)
     if(0 < notifId) {
         removeNotification(notifId);
     }
-
-    QTimer *t = qobject_cast<QTimer *>(sender());
-    qDebug() << Q_FUNC_INFO << "timer:" << t;
-    if (t != NULL) {
-        DuiInfoBanner *dn = qobject_cast<DuiInfoBanner *>(t->parent());
-        qDebug() << Q_FUNC_INFO << "dn:" << (QObject*)dn;
-        if (dn != NULL) {
-            dn->disappear();
-        }
-    }
 }
 
 void Notifier::notificationTimeout(DuiInfoBanner* notif)
@@ -244,6 +234,7 @@ void Notifier::showLocalNotification(int expireTimeout, QString notifText, QStri
 void Notifier::localNotificationClose()
 {
     DuiInfoBanner *ib = qobject_cast<DuiInfoBanner *>(sender());
+    qDebug() << Q_FUNC_INFO << (QObject*) ib;
     if (ib != NULL) {
         ib->disappear();
     }
