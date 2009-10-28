@@ -29,3 +29,11 @@ void PinCodeQueryDBusAdaptor::pinQueryEnabledResponse(SIMSecurity::PINQuery quer
 {
     emit pinQueryEnabled(queryState);
 }
+
+bool PinCodeQueryDBusAdaptor::launchPinQuery(SIMSecurity::PINType pinType)
+{
+    // STUB: actual functionality missing
+    Q_UNUSED(pinType);
+    emit pinQueryDone(SIM::UnknownStatus, false);
+    return false;
+}
