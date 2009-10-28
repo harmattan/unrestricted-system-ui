@@ -14,6 +14,10 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBu
     connect(batteryLogic, SIGNAL(remainingTimeValuesChanged(QStringList)), this, SIGNAL(remainingTimeValuesChanged(QStringList)));
 }
 
+BatteryBusinessLogicAdaptor::~BatteryBusinessLogicAdaptor()
+{
+}
+
 void BatteryBusinessLogicAdaptor::setPSMValue(const QString &value)
 {    
     qDebug() << "BatteryBusinessLogicAdaptor::setPSMValue(" << value << ")";

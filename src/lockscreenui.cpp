@@ -24,7 +24,6 @@ LockScreenUI::LockScreenUI()
 
 LockScreenUI::~LockScreenUI()
 {
-
 }
 
 void LockScreenUI::createContent()

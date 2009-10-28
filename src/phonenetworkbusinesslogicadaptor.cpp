@@ -3,8 +3,9 @@
 
 #include <QDebug>
 
-PhoneNetworkBusinessLogicAdaptor::PhoneNetworkBusinessLogicAdaptor(QObject *obj, PhoneNetworkBusinessLogic *networkLogic)
-    : QDBusAbstractAdaptor(obj), networkLogic(networkLogic)
+PhoneNetworkBusinessLogicAdaptor::PhoneNetworkBusinessLogicAdaptor(QObject *obj, PhoneNetworkBusinessLogic *networkLogic) :
+        QDBusAbstractAdaptor(obj),
+        networkLogic(networkLogic)
 {    
     connect(networkLogic, SIGNAL(networkModeValuesAvailable(int, QStringList)), this, SIGNAL(networkModeValuesReceived(int, QStringList)));
     connect(networkLogic, SIGNAL(networkSelectionValuesAvailable(int, int, QStringList)), this, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)));

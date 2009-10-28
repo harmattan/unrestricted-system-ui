@@ -21,7 +21,8 @@ namespace {
     const QString ManualText = trid("qtn_cell_manual", "Manual");
 }
 
-PhoneNetworkBusinessLogic::PhoneNetworkBusinessLogic(SystemUIGConf *systemUIGConf) :
+PhoneNetworkBusinessLogic::PhoneNetworkBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent) :
+        QObject(parent),
         systemUIGConf(systemUIGConf),
         networkRegistration(NULL)
 {

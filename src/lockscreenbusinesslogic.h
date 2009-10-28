@@ -25,7 +25,7 @@ public:
         Sleep // screenlock sleep mode is on
     };
 
-    LockScreenBusinessLogic();
+    LockScreenBusinessLogic(QObject* parent = 0);
     virtual ~LockScreenBusinessLogic();
     LockScreenBusinessLogic::ScreenLockPhase screenLockPhase();
 

@@ -34,7 +34,8 @@ namespace {
     const int ChargingAnimationRateWall = 400; // 400 ms
 }
 
-LowBatteryNotifier::LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase) :
+LowBatteryNotifier::LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase, QObject* parent) :
+        QObject(parent),
         uiNotif(uiNotif),
         minsToElapse(LowBatteryActiveInterval),
         minsElapsed(0),
@@ -89,7 +90,8 @@ void LowBatteryNotifier::updateElapsedTime()
     }
 }
 
-BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic) :
+BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic, QObject* parent) :
+        QObject(parent),
         systemUIGConf(systemUIGConf),
         lockScreenLogic(lockScreenLogic),
         battery(new QmBattery()),
@@ -127,8 +129,6 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
     delete deviceMode;
     deviceMode = NULL;
     uiNotif = NULL; // not owned!
-    delete lowBatteryNotifier;
-    lowBatteryNotifier = NULL;    
 }
 
 

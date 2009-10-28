@@ -24,7 +24,8 @@ namespace {
     const QString svgDir = themeDir + "svg/";
 }
 
-Sysuid::Sysuid() : QObject()
+Sysuid::Sysuid() :
+        QObject()
 {    
     qDebug() << "starting sysuidaemon";
 
@@ -34,24 +35,24 @@ Sysuid::Sysuid() : QObject()
     DuiTheme::loadCSS(styleDir + "unlocksliderstyle.css");
 
     /* GConf interface */
-    systemUIGConf = new SystemUIGConf();
+    systemUIGConf = new SystemUIGConf(this);
 
     /* Pincode query variables */
-    pinCodeQueryLogic = new PinCodeQueryBusinessLogic();
+    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(this);
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic();
+    displayLogic = new DisplayBusinessLogic(this);
     displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
 
     /* Network */
-    networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf);
+    networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf, this);
     networkLogicAdaptor = new PhoneNetworkBusinessLogicAdaptor(dbusObject(), networkLogic);
 
     /* Event handler */
-    eventHandler = new EventHandler();
+    eventHandler = new EventHandler(this);
 
     /* Shutdown */
-    shutdownLogic = new ShutdownBusinessLogic();
+    shutdownLogic = new ShutdownBusinessLogic(this);
     connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
             shutdownLogic, SLOT(openDialog(bool)));
     connect(eventHandler, SIGNAL(powerKeyDownOccured()),
@@ -60,14 +61,14 @@ Sysuid::Sysuid() : QObject()
             shutdownLogic, SLOT(powerKeyUp()));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic();
+    lockScreenLogic = new LockScreenBusinessLogic(this);
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));    
     connect(displayLogic, SIGNAL(displayOff()), lockScreenLogic, SLOT(displayOff()));    
     connect(displayLogic, SIGNAL(displayOn()), lockScreenLogic, SLOT(displayOn()));
     connect(lockScreenLogic, SIGNAL(toggleDisplay(bool)), displayLogic, SLOT(toggleDisplay(bool)));
 
     /* Battery */
-    batteryLogic = new BatteryBusinessLogic(systemUIGConf, lockScreenLogic);
+    batteryLogic = new BatteryBusinessLogic(systemUIGConf, lockScreenLogic, this);
     batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     // D-Bus registration and stuff.
@@ -114,22 +115,6 @@ QString Sysuid::dbusPath()
 
 Sysuid::~Sysuid()
 {
-    delete systemUIGConf;
-    systemUIGConf = NULL;
-    delete pinCodeQueryLogic;
-    pinCodeQueryLogic = NULL;
-    delete batteryLogic;
-    batteryLogic = NULL;
-    delete batteryLogicAdaptor;
-    batteryLogicAdaptor = NULL;
-    delete displayLogic;    
-    displayLogic = NULL;
-    delete displayLogicAdaptor;
-    displayLogicAdaptor = NULL;
-    delete lockScreenLogic;
-    lockScreenLogic = NULL;
-    delete shutdownLogic;
-    shutdownLogic = NULL;
     if(NULL != notifier())
         delete notifier();
     if(NULL != dbusObject())

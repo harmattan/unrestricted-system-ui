@@ -15,7 +15,7 @@ class DisplayBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    DisplayBusinessLogic();
+    DisplayBusinessLogic(QObject* parent = 0);
     virtual ~DisplayBusinessLogic();
 
     void queryBrightnessValues();

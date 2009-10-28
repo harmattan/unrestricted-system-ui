@@ -13,7 +13,7 @@ class ShutdownBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    ShutdownBusinessLogic();
+    ShutdownBusinessLogic(QObject* parent = 0);
     virtual ~ShutdownBusinessLogic();
 
 private: //methods

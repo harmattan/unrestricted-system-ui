@@ -13,8 +13,8 @@ const int IDLE_TIME = 10000/*ms*/;
 
 using namespace Maemo;
 
-ShutdownBusinessLogic::ShutdownBusinessLogic() :
-        QObject(),
+ShutdownBusinessLogic::ShutdownBusinessLogic(QObject* parent) :
+        QObject(parent),
         ui(NULL),
         powerKeyPressTimer(NULL),
         idleTimer(NULL),

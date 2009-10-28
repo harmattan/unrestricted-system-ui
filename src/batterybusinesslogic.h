@@ -22,7 +22,7 @@ class LowBatteryNotifier : public QObject
 {
     Q_OBJECT
 public:
-    LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase);
+    LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase, QObject* parent = 0);
     virtual ~LowBatteryNotifier();
 
     void start();
@@ -47,7 +47,7 @@ class BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
 public:
-    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic);
+    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic, QObject* parent = 0);
     virtual ~BatteryBusinessLogic();
 
     void setPSMThreshold(const QString &threshold);

@@ -67,7 +67,8 @@ namespace {
 
 }
 
-PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic() : QObject()
+PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
+        QObject(parent)
 {    
     qDebug() << Q_FUNC_INFO;
 

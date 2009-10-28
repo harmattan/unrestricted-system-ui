@@ -15,7 +15,8 @@ using namespace Maemo;
 
 static int TIMEGAP = 5; // time gap between blanking and dimming
 
-DisplayBusinessLogic::DisplayBusinessLogic() :
+DisplayBusinessLogic::DisplayBusinessLogic(QObject* parent) :
+        QObject(parent),
         display(new QmDisplayState())
 {
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),

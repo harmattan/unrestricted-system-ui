@@ -54,7 +54,7 @@ public:
     };
 
 
-    explicit PinCodeQueryBusinessLogic();
+    explicit PinCodeQueryBusinessLogic(QObject* parent = 0);
     virtual ~PinCodeQueryBusinessLogic();
 
 public slots:

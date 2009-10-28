@@ -7,17 +7,31 @@
 #include "lockscreenbusinesslogic.h"
 #include "displaystatestub.h"
 
-LockScreenBusinessLogic::LockScreenBusinessLogic() :        
-        phase(LockScreenBusinessLogic::Off)
-{    
+LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
+        QObject(parent),
+        eventEater(NULL),
+        phase(LockScreenBusinessLogic::Off),
+        lockUI(NULL)
+{
+    qDebug() << Q_FUNC_INFO;
+
+    lockUI = new LockScreenUI();
+    eventEater = new EventEater();
+
+    connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
+
+    dbusIf = new QDBusInterface("org.maemo.dui.NotificationManager", "/systemui",
+                                "org.maemo.dui.NotificationManager.MissedEvents",
+                                QDBusConnection::sessionBus());
+    connect(dbusIf, SIGNAL(missedEventAmountsChanged(int, int, int, int)),
+            this, SLOT(updateMissedEventAmounts(int, int, int, int)));
+    dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 { 
     delete eventEater;
-    eventEater = NULL;
     delete lockUI;
-    lockUI = NULL;
 }
 
 LockScreenBusinessLogic::ScreenLockPhase LockScreenBusinessLogic::screenLockPhase()

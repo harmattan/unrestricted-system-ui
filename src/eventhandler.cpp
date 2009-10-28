@@ -7,7 +7,8 @@
 const int SHORT2LONG = 2000/*ms*/;
 
 
-EventHandler::EventHandler()
+EventHandler::EventHandler(QObject* parent) :
+        QObject(parent)
 {
     powerPressTimer = NULL;
 

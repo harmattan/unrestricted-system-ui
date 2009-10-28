@@ -58,6 +58,9 @@ void NotifTimer::timerEvent(QTimerEvent *)
 Notifier::Notifier() : QObject()
 {
     dbus = new NotifierDBusAdaptor();
+
+    connect(dbus, SIGNAL(showNotification(QString,Notifier::NotificationType)), this, SLOT(showNotification(QString,Notifier::NotificationType)));
+
     managerIf = new QDBusInterface ( "org.maemo.dui.NotificationManager", "/", "org.maemo.dui.NotificationManager");
 }
 

@@ -33,7 +33,7 @@ public:
         NetworkRoamingUpdatesKey        
     };   
 
-    SystemUIGConf();
+    SystemUIGConf(QObject* parent = 0);
     virtual ~SystemUIGConf();
 
     void setValue(SystemUIGConf::GConfKey key, QVariant value);

@@ -3,7 +3,8 @@
 #include <DuiGConfItem>
 #include <QDebug>
 
-SystemUIGConf::SystemUIGConf()
+SystemUIGConf::SystemUIGConf(QObject* parent) :
+        QObject(parent)
 {
     // init the gconf keys    
     duiGConfItems.insert(SystemUIGConf::BatteryPSMAutoKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));

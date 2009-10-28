@@ -19,7 +19,7 @@ class PhoneNetworkBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    PhoneNetworkBusinessLogic(SystemUIGConf *systemUIGConf);
+    PhoneNetworkBusinessLogic(SystemUIGConf* systemUIGConf, QObject* parent = 0);
     virtual ~PhoneNetworkBusinessLogic();
 
     bool phoneNetworkEnabled();

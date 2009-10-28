@@ -13,6 +13,7 @@ class BatteryBusinessLogicAdaptor : public QDBusAbstractAdaptor
 
 public:
     BatteryBusinessLogicAdaptor(QObject *obj, BatteryBusinessLogic *batteryLogic);
+    ~BatteryBusinessLogicAdaptor();
 
 signals:
     void batteryCharging(int);
