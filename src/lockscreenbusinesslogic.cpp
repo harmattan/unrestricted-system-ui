@@ -5,19 +5,17 @@
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
-#include "displaystatestub.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
         QObject(parent),
-        eventEater(NULL),
-        phase(LockScreenBusinessLogic::Off),
-        lockUI(NULL)
+        display(new QmDisplayState()),
+        eventEater(new EventEater()),
+        lockUI(new LockScreenUI())
 {
     qDebug() << Q_FUNC_INFO;
 
-    lockUI = new LockScreenUI();
-    eventEater = new EventEater();
-
+    connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
 
     dbusIf = new QDBusInterface("org.maemo.dui.NotificationManager", "/systemui",
@@ -29,106 +27,54 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
-{ 
-    delete eventEater;
-    delete lockUI;
-}
-
-LockScreenBusinessLogic::ScreenLockPhase LockScreenBusinessLogic::screenLockPhase()
 {
-    return phase;
-}\
+    delete display;
+    display = NULL;
+    delete eventEater;
+    eventEater = NULL;
+    delete lockUI;
+    lockUI = NULL;
+}
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
 {    
-    qDebug() << "LockScreenBusinessLogic::shortPowerKeyPressOccured()";
-    switch(phase) {
-        case LockScreenBusinessLogic::Off:        
-            //Screenlock is off. Put asleep.
-            phase = LockScreenBusinessLogic::Sleep;
+    qDebug() << Q_FUNC_INFO;
+    switch(display->get()) {
+        case Maemo::QmDisplayState::Off:
+            toggleScreenLockUI(true); //make sure the UI is on
+            toggleKeyPadLock(false);
+            display->set(Maemo::QmDisplayState::On);
+            break;
+        case Maemo::QmDisplayState::On:
+        case Maemo::QmDisplayState::Dimmed:
+            toggleKeyPadLock(true);
+            display->set(Maemo::QmDisplayState::Off);
+            toggleScreenLockUI(true);
+            break;        
+    }    
+}
+
+void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
+{
+    qDebug() << Q_FUNC_INFO;
+    switch(state) {
+        case Maemo::QmDisplayState::Off:
             toggleKeyPadLock(true); //lock the keypad
-            emit toggleDisplay(false); //order display off            
+            toggleScreenLockUI(true); //show UI
             break;
-        case LockScreenBusinessLogic::Sleep:
-            //Screenlock is in sleep mode. Wake up.
-            phase = LockScreenBusinessLogic::On;            
-            toggleScreenLockUI(true); //turn on the UI
-            emit toggleDisplay(true); //order display on
+        case Maemo::QmDisplayState::On:
+            toggleKeyPadLock(false); //unlock the keypad
             break;
-        case LockScreenBusinessLogic::On:
-            //Screenlock is on. Put asleep.
-            phase = LockScreenBusinessLogic::Sleep;
-            toggleScreenLockUI(false); //turn off the UI
-            emit toggleDisplay(false); //order display off
+        default:
             break;
     }
-    emit screenLockPhaseChanged(phase);
-}
-
-void LockScreenBusinessLogic::displayOff()
-{
-    qDebug() << "LockScreenBusinessLogic::displayOff()";
-    switch(phase) {
-        case LockScreenBusinessLogic::Off:
-            //Screenlock is off. Put asleep.
-            phase = LockScreenBusinessLogic::Sleep;
-            toggleKeyPadLock(true); //lock the keypad            
-            break;
-        case LockScreenBusinessLogic::Sleep:
-            break;
-        case LockScreenBusinessLogic::On:
-            //Screenlock is on. Put asleep.
-            phase = LockScreenBusinessLogic::Sleep;
-            toggleScreenLockUI(false); //turn off the UI            
-            break;
-    }
-    emit screenLockPhaseChanged(phase);
-}
-
-void LockScreenBusinessLogic::displayOn()
-{
-    qDebug() << "LockScreenBusinessLogic::displayOn()";
-    // This can happen e.g. when charger is connected
-
-    switch(phase) {
-        case LockScreenBusinessLogic::Off:
-        case LockScreenBusinessLogic::On:
-            break;
-        case LockScreenBusinessLogic::Sleep:
-            //Screenlock is in sleep mode. Wake up.
-            phase = LockScreenBusinessLogic::On;
-            toggleScreenLockUI(true); //turn on the UI
-            break;
-    }
-    emit screenLockPhaseChanged(phase);
-}
-
-void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
-{
-    qDebug() << "LockScreenBusinessLogic::toggleKeyPadLock(" << toggle << ")";
-    QmLocks::State newState = (toggle ? QmLocks::Locked : QmLocks::Unlocked);
-    QmLocks touchPadLocker;
-    touchPadLocker.setState(QmLocks::TouchAndKeyboard, newState);
-}
-
-void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
-{
-    qDebug() << "LockScreenBusinessLogic::toggleScreenLockUI(" << toggle << ")";
-    if(toggle) {
-        DuiApplication::instance()->applicationWindow()->show();
-        lockUI->appear();
-    }
-    else
-        DuiApplication::instance()->applicationWindow()->hide();
 }
 
 void LockScreenBusinessLogic::unlockScreen()
 {
-    qDebug() << "LockScreenBusinessLogic::unlockScreen()";
-    phase = LockScreenBusinessLogic::Off;
+    qDebug() << Q_FUNC_INFO;
     toggleScreenLockUI(false); //turn off the UI
-    toggleKeyPadLock(false); //unlock the keypad    
-    emit screenLockPhaseChanged(phase);
+    toggleKeyPadLock(false); //unlock the keypad
 }
 
 void LockScreenBusinessLogic::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
@@ -136,3 +82,24 @@ void LockScreenBusinessLogic::updateMissedEventAmounts(int calls, int messages, 
     qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts(" << calls << ", " << messages << ", " << emails << ", " << chatMessages << ")";
     lockUI->updateMissedEventAmounts(calls, messages, emails, chatMessages);
 }
+
+void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
+{
+    qDebug() << Q_FUNC_INFO;
+    QmLocks::State newState = (toggle ? QmLocks::Locked : QmLocks::Unlocked);
+    QmLocks touchPadLocker;
+    touchPadLocker.setState(QmLocks::TouchAndKeyboard, newState);
+}
+
+void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
+{
+    qDebug() << Q_FUNC_INFO;
+    if(toggle) {        
+        DuiApplication::instance()->applicationWindow()->show();
+        lockUI->appear();
+    }
+    else
+        DuiApplication::instance()->applicationWindow()->hide();
+}
+
+

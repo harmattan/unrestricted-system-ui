@@ -66,13 +66,10 @@ Sysuid::Sysuid() :
 */
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic(this);
-    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));    
-    connect(displayLogic, SIGNAL(displayOff()), lockScreenLogic, SLOT(displayOff()));    
-    connect(displayLogic, SIGNAL(displayOn()), lockScreenLogic, SLOT(displayOn()));
-    connect(lockScreenLogic, SIGNAL(toggleDisplay(bool)), displayLogic, SLOT(toggleDisplay(bool)));
+    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
 
     /* Battery */
-    batteryLogic = new BatteryBusinessLogic(systemUIGConf, lockScreenLogic, this);
+    batteryLogic = new BatteryBusinessLogic(systemUIGConf, this);
 
     // D-Bus registration and stuff.
     new DisplayBusinessLogicAdaptor(this, displayLogic);

@@ -34,9 +34,6 @@ signals:
     void displayOff();    
     void displayOn();
 
-private slots:
-    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
-
 private:
     QmDisplayState *display;
 

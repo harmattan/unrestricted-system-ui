@@ -5,6 +5,7 @@
 #include <DuiLocale>
 
 #include <QTimer>
+#include <QTime>
 
 /* TODO List
 
@@ -28,72 +29,74 @@ namespace {
     const QString EnterPSMText = trid("qtn_ener_ent_psnote", "Entering power save mode");
     const QString ExitPSMText = trid("qtn_ener_exit_psnote", "Exiting power save mode");
     const QString RechargeBatteryText = trid("qtn_ener_rebatt", "Recharge battery");
-    const int LowBatteryActiveInterval = 30; //30 mins
-    const int LowBatteryInactiveInterval = 120; //120 mins
+    const int LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
+    const int LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
     const int ChargingAnimationRateUSB = 800; // 800 ms
     const int ChargingAnimationRateWall = 400; // 400 ms
 }
 
-LowBatteryNotifier::LowBatteryNotifier(Notifier *uiNotif, LockScreenBusinessLogic::ScreenLockPhase phase, QObject* parent) :
+LowBatteryNotifier::LowBatteryNotifier(Notifier *uiNotif, QObject* parent) :
         QObject(parent),
-        uiNotif(uiNotif),
-        minsToElapse(LowBatteryActiveInterval),
-        minsElapsed(0),
-        showReminder(false),
+        display(new QmDisplayState()),
+        uiNotif(uiNotif),        
         timer(new QTimer(this))
 {
-    lockScreenPhaseChanged(phase);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateElapsedTime()));    
+    qDebug() << Q_FUNC_INFO;
+    sleep = ( display->get() == Maemo::QmDisplayState::Off ? true : false );
+    time.start();    
+    connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
+    connect(timer, SIGNAL(timeout()), this, SLOT(showNotification()));
 }
 
 LowBatteryNotifier::~LowBatteryNotifier()
-{    
+{
 }
 
-void LowBatteryNotifier::start()
+void LowBatteryNotifier::showNotification()
 {
+    qDebug() << Q_FUNC_INFO;    
     uiNotif->showNotification(LowBatteryText);
-    timer->start(60 * 1000); //signal every minute
-}
-
-void LowBatteryNotifier::stop()
-{
-    timer->stop();
-}
-
-void LowBatteryNotifier::lockScreenPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase phase)
-{
-    switch(phase) {
-        case LockScreenBusinessLogic::Off:
-        case LockScreenBusinessLogic::On:
-            if(showReminder) {                 
-                 uiNotif->showNotification(LowBatteryText);
-                 showReminder = false;
-            }
-            minsToElapse = LowBatteryActiveInterval;
+    time.start(); //restart time
+    switch(display->get()) {
+        case Maemo::QmDisplayState::On:
+        case Maemo::QmDisplayState::Dimmed:
+            sleep = false;
+            timer->start(LowBatteryActiveInterval);            
             break;
-        case LockScreenBusinessLogic::Sleep:
-            minsToElapse = LowBatteryInactiveInterval;
-            break;
-    }
-
+        case Maemo::QmDisplayState::Off:
+            sleep = true;
+            timer->start(LowBatteryInactiveInterval);            
+            break;        
+    }    
 }
 
-void LowBatteryNotifier::updateElapsedTime()
+void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
-    ++minsElapsed;
-    if(minsElapsed >= minsToElapse) {        
-        uiNotif->showNotification(LowBatteryText);
-        minsElapsed = 0;
-        if(minsToElapse == LowBatteryInactiveInterval) // currently in sleep mode
-            showReminder = true;
+    qDebug() << Q_FUNC_INFO;
+    switch(state) {
+        case Maemo::QmDisplayState::On:
+            if(!sleep)
+                break;
+            if(time.elapsed() < LowBatteryActiveInterval)
+                timer->setInterval(LowBatteryInactiveInterval - time.elapsed());
+            else
+                showNotification();
+            sleep = false;
+            break;
+        case Maemo::QmDisplayState::Dimmed:
+            sleep = false;
+            break;
+        case Maemo::QmDisplayState::Off:
+            timer->setInterval(LowBatteryInactiveInterval - time.elapsed());
+            sleep = true;
+            break;        
     }
 }
 
-BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, LockScreenBusinessLogic *lockScreenLogic, QObject* parent) :
+BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent) :
         QObject(parent),
-        systemUIGConf(systemUIGConf),
-        lockScreenLogic(lockScreenLogic),
+        systemUIGConf(systemUIGConf),        
         battery(new QmBattery()),
         deviceMode(new QmDeviceMode()),
         uiNotif(Sysuid::notifier()),
@@ -191,8 +194,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             emit batteryCharging(animationRate());
             utiliseLED(true, QString("PatternBatteryCharging"));            
             uiNotif->showNotification(ChargingText);
-            if(lowBatteryNotifier != NULL) {
-                lowBatteryNotifier->stop();
+            if(lowBatteryNotifier != NULL) {                
                 delete lowBatteryNotifier;
                 lowBatteryNotifier = NULL;
             }
@@ -226,11 +228,9 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
         case QmBattery::LevelLow:            
             if(!battery->getState() == QmBattery::StateCharging) {                
                 if(lowBatteryNotifier == NULL) {
-                    lowBatteryNotifier = new LowBatteryNotifier(uiNotif, lockScreenLogic->screenLockPhase());
-                    connect(lockScreenLogic, SIGNAL(screenLockPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase)),
-                            lowBatteryNotifier, SLOT(lockScreenPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase)));
+                    lowBatteryNotifier = new LowBatteryNotifier(uiNotif, this);
+                    lowBatteryNotifier->showNotification();
                 }
-                lowBatteryNotifier->start();
             }
             break;
         default:
@@ -258,7 +258,7 @@ void BatteryBusinessLogic::batteryChargerEvent(Maemo::QmBattery::ChargerEvent ev
 
 void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState)
 {    
-    ////qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
+    qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if(PSMState == QmDeviceMode::PSMStateOff) {
         uiNotif->showNotification(ExitPSMText);
         emit PSMValueChanged(PSMActivateText);
@@ -294,7 +294,7 @@ QString BatteryBusinessLogic::PSMValue()
 
 void BatteryBusinessLogic::togglePSM(const QString &value)
 {
-    ////qDebug() << "BatteryBusinessLogic::togglePSM(" << value << ")";
+    qDebug() << "BatteryBusinessLogic::togglePSM(" << value << ")";
 
     if(value == PSMActivateText)
         deviceMode->setPSMState(QmDeviceMode::PSMStateOn); //turn on the PSM

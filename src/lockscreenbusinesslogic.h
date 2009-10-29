@@ -3,7 +3,7 @@
 
 #include "qmsystem/qmlocks.h"
 //#include "qmsystem/qmdisplaystate.h" // stub used
-//#include "displaystatestub.h"
+#include "displaystatestub.h"
 #include "eventeater.h"
 
 #include <QObject>
@@ -18,27 +18,14 @@ class LockScreenBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-
-    enum ScreenLockPhase {
-        Off = 0, // screenlock is off
-        On, //screenlock is on
-        Sleep // screenlock sleep mode is on
-    };
-
     LockScreenBusinessLogic(QObject* parent = 0);
-    virtual ~LockScreenBusinessLogic();
-    LockScreenBusinessLogic::ScreenLockPhase screenLockPhase();
-
-signals:    
-    void toggleDisplay(bool);
-    void screenLockPhaseChanged(LockScreenBusinessLogic::ScreenLockPhase);
+    virtual ~LockScreenBusinessLogic();    
 
 public slots:
     void shortPowerKeyPressOccured();
-    void displayOn();
-    void displayOff();
 
 private slots:
+    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
     void unlockScreen();
     void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
 
@@ -47,8 +34,8 @@ private: //methods
     void toggleScreenLockUI(bool toggle);    
 
 private: //attributes
+    QmDisplayState *display;
     EventEater *eventEater;    
-    ScreenLockPhase phase;
     LockScreenUI *lockUI;
     QDBusInterface *dbusIf;
 };
