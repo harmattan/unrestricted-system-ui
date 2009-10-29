@@ -17,7 +17,7 @@
 LockScreenUI::LockScreenUI()
 {
     setFullscreen(true);
-    setNavigationBarVisible(false);
+    setDisplayMode(0);
     setPannableAreaInteractive(false);
     createContent();
 }
