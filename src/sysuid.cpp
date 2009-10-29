@@ -24,10 +24,14 @@ namespace {
     const QString svgDir = themeDir + "svg/";
 }
 
+Sysuid* Sysuid::sysuid = NULL;
+
 Sysuid::Sysuid() :
         QObject()
 {    
     qDebug() << "starting sysuidaemon";
+
+    sysuid = this;
 
     /* themes */
     DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
@@ -42,11 +46,9 @@ Sysuid::Sysuid() :
 
     /* Display */
     displayLogic = new DisplayBusinessLogic(this);
-    displayLogicAdaptor = new DisplayBusinessLogicAdaptor(dbusObject(), displayLogic);
 
     /* Network */
     networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf, this);
-    networkLogicAdaptor = new PhoneNetworkBusinessLogicAdaptor(dbusObject(), networkLogic);
 
     /* Event handler */
     eventHandler = new EventHandler(this);
@@ -71,9 +73,12 @@ Sysuid::Sysuid() :
 
     /* Battery */
     batteryLogic = new BatteryBusinessLogic(systemUIGConf, lockScreenLogic, this);
-    batteryLogicAdaptor = new BatteryBusinessLogicAdaptor(dbusObject(), batteryLogic);
 
     // D-Bus registration and stuff.
+    new DisplayBusinessLogicAdaptor(this, displayLogic);
+    new PhoneNetworkBusinessLogicAdaptor(this, networkLogic);
+    new BatteryBusinessLogicAdaptor(this, batteryLogic);
+
     QDBusConnection bus = QDBusConnection::sessionBus();
     if(!bus.registerService(dbusService())) {
         qDebug() << "failed to register dbus service";
@@ -85,14 +90,9 @@ Sysuid::Sysuid() :
     }
 }
 
-QPointer<QObject> Sysuid::dbusObject()
+Sysuid* Sysuid::dbusObject()
 {
-    static QPointer<QObject> o = NULL;
-    if(o.isNull())
-    {
-        o = new QObject();
-    }
-    return o;
+    return sysuid;
 }
 
 QPointer<Notifier> Sysuid::notifier()
@@ -117,6 +117,8 @@ QString Sysuid::dbusPath()
 
 Sysuid::~Sysuid()
 {
+    sysuid = NULL;
+
     if(NULL != notifier())
         delete notifier();
     if(NULL != dbusObject())
