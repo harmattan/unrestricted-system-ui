@@ -40,6 +40,9 @@ Sysuid::Sysuid() :
     DuiTheme::loadCSS(styleDir + "sysuid.css");
     DuiTheme::loadCSS(styleDir + "unlocksliderstyle.css");
 
+    /* Notifier */
+    _notifier = new Notifier(this);
+
     /* GConf interface */
     systemUIGConf = new SystemUIGConf(this);
 
@@ -91,10 +94,6 @@ Sysuid::Sysuid() :
 
 Sysuid::~Sysuid()
 {
-    if (_notifier) {
-        delete _notifier;
-    }
-
     _sysuid = NULL;
 }
 
@@ -115,10 +114,6 @@ QString Sysuid::dbusPath()
 
 Notifier* Sysuid::notifier()
 {
-    if (!sysuid()->_notifier) {
-        sysuid()->_notifier = new Notifier(sysuid());
-    }
-
     return sysuid()->_notifier;
 }
 
