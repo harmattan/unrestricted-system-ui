@@ -67,7 +67,7 @@ private slots:
     void localNotificationSimLockRetry();
 
 protected:
-    Notifier();
+    Notifier(QObject* parent = 0);
 
 private:
     /* expireTimeout tells when the note is removed (also from home screen).

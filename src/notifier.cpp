@@ -55,7 +55,8 @@ void NotifTimer::timerEvent(QTimerEvent *)
 // See messge formats from af/duihome:home/notifications/notificationmanager.xml;
 // example message to test notificationManager:
 //  dbus-send --print-reply --dest=org.maemo.dui.NotificationManager / org.maemo.dui.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello DUI' string:'link' string:'Icon-close'
-Notifier::Notifier() : QObject()
+Notifier::Notifier(QObject* parent) :
+        QObject(parent)
 {
     dbus = new NotifierDBusAdaptor();
 

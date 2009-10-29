@@ -2,7 +2,7 @@
 #include "sysuid.h"
 
 PinCodeQueryDBusAdaptor::PinCodeQueryDBusAdaptor() :
-        QDBusAbstractAdaptor(Sysuid::dbusObject())
+        QDBusAbstractAdaptor(Sysuid::sysuid())
 {
 }
 

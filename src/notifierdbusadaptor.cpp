@@ -5,7 +5,7 @@
 #include "sysuid.h"
 
 NotifierDBusAdaptor::NotifierDBusAdaptor() :
-        QDBusAbstractAdaptor(Sysuid::dbusObject())
+        QDBusAbstractAdaptor(Sysuid::sysuid())
 {
 }
 

@@ -18,20 +18,22 @@
 #include "eventhandler.h"
 #include "notifier.h"
 
-namespace {
-    const QString themeDir = "/usr/share/sysuid/themes/";
-    const QString styleDir = themeDir + "style/";
-    const QString svgDir = themeDir + "svg/";
+namespace
+{
+const QString themeDir = "/usr/share/sysuid/themes/";
+const QString styleDir = themeDir + "style/";
+const QString svgDir = themeDir + "svg/";
 }
 
-Sysuid* Sysuid::sysuid = NULL;
+Sysuid* Sysuid::_sysuid = NULL;
 
 Sysuid::Sysuid() :
-        QObject()
-{    
+        QObject(),
+        _notifier(NULL)
+{
     qDebug() << "starting sysuidaemon";
 
-    sysuid = this;
+    _sysuid = this;
 
     /* themes */
     DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
@@ -54,16 +56,16 @@ Sysuid::Sysuid() :
     eventHandler = new EventHandler(this);
 
     /* Shutdown */
-/*
-    shutdownLogic = new ShutdownBusinessLogic(this);
+    /*
+        shutdownLogic = new ShutdownBusinessLogic(this);
 
-    connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
-            shutdownLogic, SLOT(openDialog(bool)));
-    connect(eventHandler, SIGNAL(powerKeyDownOccured()),
-            shutdownLogic, SLOT(powerKeyDown()));
-    connect(eventHandler, SIGNAL(powerKeyUpOccured()),
-            shutdownLogic, SLOT(powerKeyUp()));
-*/
+        connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
+                shutdownLogic, SLOT(openDialog(bool)));
+        connect(eventHandler, SIGNAL(powerKeyDownOccured()),
+                shutdownLogic, SLOT(powerKeyDown()));
+        connect(eventHandler, SIGNAL(powerKeyUpOccured()),
+                shutdownLogic, SLOT(powerKeyUp()));
+    */
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic(this);
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
@@ -77,29 +79,28 @@ Sysuid::Sysuid() :
     new BatteryBusinessLogicAdaptor(this, batteryLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if(!bus.registerService(dbusService())) {
+    if (!bus.registerService(dbusService())) {
         qDebug() << "failed to register dbus service";
         abort();
     }
-    if(!bus.registerObject(dbusPath(), dbusObject())) {
+    if (!bus.registerObject(dbusPath(), sysuid())) {
         qDebug() << "failed to register dbus objects";
         abort();
     }
 }
 
-Sysuid* Sysuid::dbusObject()
+Sysuid::~Sysuid()
 {
-    return sysuid;
+    if (_notifier) {
+        delete _notifier;
+    }
+
+    _sysuid = NULL;
 }
 
-QPointer<Notifier> Sysuid::notifier()
+Sysuid* Sysuid::sysuid()
 {
-    static QPointer<Notifier> n = NULL;
-    if(n.isNull())
-    {
-        n = new Notifier();
-    }
-    return n;
+    return _sysuid;
 }
 
 QString Sysuid::dbusService()
@@ -112,12 +113,13 @@ QString Sysuid::dbusPath()
     return QString("/");
 }
 
-Sysuid::~Sysuid()
+Notifier* Sysuid::notifier()
 {
-    sysuid = NULL;
+    if (!sysuid()->_notifier) {
+        sysuid()->_notifier = new Notifier(sysuid());
+    }
 
-    if(NULL != notifier())
-        delete notifier();
-    if(NULL != dbusObject())
-        delete dbusObject();
+    return sysuid()->_notifier;
 }
+
+

@@ -22,11 +22,10 @@ class Sysuid : public QObject
 public:
     Sysuid();
     virtual ~Sysuid();
-    //static QPointer<QObject> dbusObject();
-    static Sysuid* dbusObject();
+    static Sysuid* sysuid();
     static QString dbusService();
     static QString dbusPath();
-    static QPointer<Notifier> notifier();
+    static Notifier* notifier();
 
 private:
     SystemUIGConf *systemUIGConf;
@@ -38,7 +37,8 @@ private:
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
 
-    static Sysuid* sysuid;
+    Notifier* _notifier;
+    static Sysuid* _sysuid;
 };
 
 #endif // SYSUID_H
