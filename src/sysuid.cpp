@@ -14,7 +14,7 @@
 #include "phonenetworkbusinesslogic.h"
 #include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
-#include "shutdownbusinesslogic.h"
+//#include "shutdownbusinesslogic.h"
 #include "eventhandler.h"
 #include "notifier.h"
 
@@ -52,14 +52,16 @@ Sysuid::Sysuid() :
     eventHandler = new EventHandler(this);
 
     /* Shutdown */
+/*
     shutdownLogic = new ShutdownBusinessLogic(this);
+
     connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
             shutdownLogic, SLOT(openDialog(bool)));
     connect(eventHandler, SIGNAL(powerKeyDownOccured()),
             shutdownLogic, SLOT(powerKeyDown()));
     connect(eventHandler, SIGNAL(powerKeyUpOccured()),
             shutdownLogic, SLOT(powerKeyUp()));
-
+*/
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic(this);
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));    
