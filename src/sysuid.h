@@ -25,7 +25,6 @@ public:
     static Sysuid* sysuid();
     static QString dbusService();
     static QString dbusPath();
-    static Notifier* notifier();
 
 private:
     SystemUIGConf *systemUIGConf;
@@ -36,8 +35,7 @@ private:
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;
-
-    Notifier* _notifier;
+    Notifier *notifier;   
     static Sysuid* _sysuid;
 };
 

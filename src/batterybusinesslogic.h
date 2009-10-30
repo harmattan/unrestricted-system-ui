@@ -3,7 +3,6 @@
 
 #include <QDebug>
 
-#include "notifier.h"
 #include "systemuigconf.h"
 //#include <qmsystem/qmbattery.h>
 #include "batterystub.h"
@@ -24,21 +23,31 @@ using namespace Maemo;
 class LowBatteryNotifier : public QObject
 {
     Q_OBJECT
+
 public:
-    LowBatteryNotifier(Notifier *uiNotif, QObject* parent = 0);
+    LowBatteryNotifier(QObject* parent = 0);
     virtual ~LowBatteryNotifier();
 
-    void showNotification();
+    void showLowBatteryNotification();
 
 private slots:
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
 
+signals:
+    void showNotification(QString);
+
 private:
-    QmDisplayState *display;
-    Notifier *uiNotif;    
+    QmDisplayState *display;    
     QTimer *timer;
     QTime time;
     bool sleep;
+    int activeInterval;
+    int inactiveInterval;
+
+#ifdef UNIT_TEST
+   friend class Ut_LowBatteryNotifier;
+#endif // UNIT_TEST
+
 
 };
 
@@ -67,6 +76,7 @@ signals:
     void PSMValueChanged(QString);
     void PSMAutoValueChanged(bool);
     void remainingTimeValuesChanged(QStringList);
+    void showNotification(QString);
 
 public slots:
     void initBattery();    
@@ -74,8 +84,7 @@ public slots:
 private: //attributes
     SystemUIGConf *systemUIGConf;    
     QmBattery *battery;
-    QmDeviceMode *deviceMode;    
-    Notifier *uiNotif;
+    QmDeviceMode *deviceMode;
     LowBatteryNotifier *lowBatteryNotifier;
     QStringList PSMThresholds;
 

@@ -30,15 +30,15 @@ void NotifierDBusAdaptor::simLockRetry()
 
 void NotifierDBusAdaptor::showErrorNotification(QString msg)
 {
-    emit showNotification(msg, Notifier::error);
+    emit showNotification(msg, NotificationType::error);
 }
 
 void NotifierDBusAdaptor::showWarningNotification(QString msg)
 {
-    emit showNotification(msg, Notifier::warning);
+    emit showNotification(msg, NotificationType::warning);
 }
 
 void NotifierDBusAdaptor::showInfoNotification(QString msg)
 {
-    emit showNotification(msg, Notifier::info);
+    emit showNotification(msg, NotificationType::info);
 }

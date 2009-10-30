@@ -1,4 +1,3 @@
-#include "sysuid.h"
 #include "batterybusinesslogic.h"
 #include <qmsystem/qmled.h>
 
@@ -35,38 +34,39 @@ namespace {
     const int ChargingAnimationRateWall = 400; // 400 ms
 }
 
-LowBatteryNotifier::LowBatteryNotifier(Notifier *uiNotif, QObject* parent) :
+LowBatteryNotifier::LowBatteryNotifier(QObject* parent) :
         QObject(parent),
-        display(new QmDisplayState()),
-        uiNotif(uiNotif),        
+        display(new QmDisplayState()),        
         timer(new QTimer(this))
 {
     qDebug() << Q_FUNC_INFO;
     sleep = ( display->get() == Maemo::QmDisplayState::Off ? true : false );
-    time.start();    
+    activeInterval = LowBatteryActiveInterval;
+    inactiveInterval = LowBatteryInactiveInterval;
+    time.start();
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect(timer, SIGNAL(timeout()), this, SLOT(showNotification()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(showLowBatteryNotification()));
 }
 
 LowBatteryNotifier::~LowBatteryNotifier()
 {
 }
 
-void LowBatteryNotifier::showNotification()
+void LowBatteryNotifier::showLowBatteryNotification()
 {
-    qDebug() << Q_FUNC_INFO;    
-    uiNotif->showNotification(LowBatteryText);
+    qDebug() << Q_FUNC_INFO;
+    emit showNotification(LowBatteryText);
     time.start(); //restart time
     switch(display->get()) {
         case Maemo::QmDisplayState::On:
         case Maemo::QmDisplayState::Dimmed:
             sleep = false;
-            timer->start(LowBatteryActiveInterval);            
+            timer->start(activeInterval);
             break;
         case Maemo::QmDisplayState::Off:
             sleep = true;
-            timer->start(LowBatteryInactiveInterval);            
+            timer->start(inactiveInterval);
             break;        
     }    
 }
@@ -78,17 +78,17 @@ void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState
         case Maemo::QmDisplayState::On:
             if(!sleep)
                 break;
-            if(time.elapsed() < LowBatteryActiveInterval)
-                timer->setInterval(LowBatteryInactiveInterval - time.elapsed());
+            if(time.elapsed() < activeInterval)
+                timer->setInterval(inactiveInterval - time.elapsed());
             else
-                showNotification();
+                showLowBatteryNotification();
             sleep = false;
             break;
         case Maemo::QmDisplayState::Dimmed:
             sleep = false;
             break;
         case Maemo::QmDisplayState::Off:
-            timer->setInterval(LowBatteryInactiveInterval - time.elapsed());
+            timer->setInterval(inactiveInterval - time.elapsed());
             sleep = true;
             break;        
     }
@@ -98,8 +98,7 @@ BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject
         QObject(parent),
         systemUIGConf(systemUIGConf),        
         battery(new QmBattery()),
-        deviceMode(new QmDeviceMode()),
-        uiNotif(Sysuid::notifier()),
+        deviceMode(new QmDeviceMode()),        
         lowBatteryNotifier(NULL)
 {
 
@@ -130,8 +129,7 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
     delete battery;
     battery = NULL;
     delete deviceMode;
-    deviceMode = NULL;
-    uiNotif = NULL; // not owned!
+    deviceMode = NULL;    
 }
 
 
@@ -193,7 +191,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             ////qDebug() << "Charging";
             emit batteryCharging(animationRate());
             utiliseLED(true, QString("PatternBatteryCharging"));            
-            uiNotif->showNotification(ChargingText);
+            emit showNotification(ChargingText);
             if(lowBatteryNotifier != NULL) {                
                 delete lowBatteryNotifier;
                 lowBatteryNotifier = NULL;
@@ -208,7 +206,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             ////qDebug() << "Charging not started";
             emit batteryNotCharging();
             utiliseLED(false, QString("PatternBatteryCharging"));
-            uiNotif->showNotification(ChargingNotStartedText);
+            emit showNotification(ChargingNotStartedText);
             break;
         default:
             break;
@@ -222,14 +220,14 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
     switch(level) {
         case QmBattery::LevelFull:            
-            uiNotif->showNotification(ChargingCompleteText);
+            emit showNotification(ChargingCompleteText);
             utiliseLED(true, QString("PatternBatteryFull"));
             break;
         case QmBattery::LevelLow:            
             if(!battery->getState() == QmBattery::StateCharging) {                
                 if(lowBatteryNotifier == NULL) {
-                    lowBatteryNotifier = new LowBatteryNotifier(uiNotif, this);
-                    lowBatteryNotifier->showNotification();
+                    lowBatteryNotifier = new LowBatteryNotifier();
+                    lowBatteryNotifier->showLowBatteryNotification();
                 }
             }
             break;
@@ -249,7 +247,7 @@ void BatteryBusinessLogic::batteryChargerEvent(Maemo::QmBattery::ChargerEvent ev
 {
     switch(event) {
         case QmBattery::ChargerDisconnected:
-            uiNotif->showNotification(DisconnectChargerText);
+            emit showNotification(DisconnectChargerText);
             break;
         default:
             break;
@@ -260,11 +258,11 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
 {    
     qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if(PSMState == QmDeviceMode::PSMStateOff) {
-        uiNotif->showNotification(ExitPSMText);
+        emit showNotification(ExitPSMText);
         emit PSMValueChanged(PSMActivateText);
     }
     else if(PSMState == QmDeviceMode::PSMStateOn) {
-        uiNotif->showNotification(EnterPSMText);
+        emit showNotification(EnterPSMText);
         emit PSMValueChanged(PSMDeactivateText);
     }
     emit remainingTimeValuesChanged(remainingTimeValues());

@@ -2,7 +2,7 @@
 #define PINCODEQUERYBUSINESSLOGIC_H
 
 #include "pincodequeryui.h"
-#include "notifier.h"
+#include "notificationtype.h"
 
 #include <QObject>
 #include <QPointer>
@@ -62,10 +62,12 @@ public slots:
     void resendSimLockCode();
     void enablePinQueryRequested(bool enabled);
 
+signals:
+    void showNotification(const QString &text, NotificationType::Type type);
+    void showConfirmation(const QString &text, const QString &buttonText);
 
 private: // attributes
-    QPointer<PinCodeQueryUI> uiPin;
-    Notifier *uiNotif;
+    QPointer<PinCodeQueryUI> uiPin;    
     PinCodeQueryDBusAdaptor* dbus;
     QString newPinCode;
     QString oldPinCode;

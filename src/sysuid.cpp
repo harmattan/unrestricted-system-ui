@@ -17,6 +17,7 @@
 //#include "shutdownbusinesslogic.h"
 #include "eventhandler.h"
 #include "notifier.h"
+#include "notificationtype.h"
 
 namespace
 {
@@ -29,11 +30,11 @@ Sysuid* Sysuid::_sysuid = NULL;
 
 Sysuid::Sysuid() :
         QObject(),
-        _notifier(NULL)
+        notifier(NULL)
 {
     qDebug() << "starting sysuidaemon";
 
-    _sysuid = this;
+    _sysuid = this;    
 
     /* themes */
     DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
@@ -41,13 +42,17 @@ Sysuid::Sysuid() :
     DuiTheme::loadCSS(styleDir + "unlocksliderstyle.css");
 
     /* Notifier */
-    _notifier = new Notifier(this);
+    notifier = new Notifier(this);
 
     /* GConf interface */
     systemUIGConf = new SystemUIGConf(this);
 
-    /* Pincode query variables */
-    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(this);
+    /* Pincode query variables */    
+    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(this);    
+    connect(notifier->responseObject(), SIGNAL(pinQueryCanceled()), pinCodeQueryLogic, SLOT(cancelQuery()));    
+    connect(notifier->responseObject(), SIGNAL(doSimLockRetry()), pinCodeQueryLogic, SLOT(resendSimLockCode()));
+    connect(pinCodeQueryLogic, SIGNAL(showNotification(QString, NotificationType::Type)), notifier, SLOT(showNotification(QString, NotificationType::Type)));
+    connect(pinCodeQueryLogic, SIGNAL(showConfirmation(QString, QString)), notifier, SLOT(showConfirmation(QString, QString)));
 
     /* Display */
     displayLogic = new DisplayBusinessLogic(this);
@@ -75,6 +80,7 @@ Sysuid::Sysuid() :
 
     /* Battery */
     batteryLogic = new BatteryBusinessLogic(systemUIGConf, this);
+    connect(batteryLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
 
     // D-Bus registration and stuff.
     new DisplayBusinessLogicAdaptor(this, displayLogic);
@@ -110,11 +116,6 @@ QString Sysuid::dbusService()
 QString Sysuid::dbusPath()
 {
     return QString("/");
-}
-
-Notifier* Sysuid::notifier()
-{
-    return sysuid()->_notifier;
 }
 
 

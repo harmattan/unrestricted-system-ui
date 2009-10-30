@@ -1,6 +1,8 @@
 #ifndef NOTIFIER_H
 #define NOTIFIER_H
 
+#include "notificationtype.h"
+
 #include <QObject>
 #include <QHash>
 
@@ -40,14 +42,6 @@ class Notifier : public QObject
    friend class Sysuid;
 
 public:
-    // temporary event-types for notifications, defined as "what I want".
-    // correct types aren't specified yet by duihome.
-    // type is always mapped to 'new-message' --> shows envelope icon in info banner.
-    enum NotificationType {
-        error,
-        info,
-        warning
-    };
 
     virtual ~Notifier();
     QObject* responseObject();
@@ -56,8 +50,8 @@ signals:
     void notifTimeout();
 
 public slots:    
-    void showNotification(QString notifText, Notifier::NotificationType type = info);
-    void showConfirmation(QString notifText, QString buttonText);
+    void showNotification(const QString &notifText, NotificationType::Type type = NotificationType::info);
+    void showConfirmation(const QString &notifText, const QString &buttonText);
 
 private slots:
     void notificationTimeout(unsigned int notifId);

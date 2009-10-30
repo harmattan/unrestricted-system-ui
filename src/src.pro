@@ -68,7 +68,8 @@ HEADERS += main.h \
     batterystub.h \
     radioaccessstub.h \
     networkregistrationstub.h \
-    displaystatestub.h
+    displaystatestub.h \
+    notificationtype.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

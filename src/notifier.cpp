@@ -60,7 +60,7 @@ Notifier::Notifier(QObject* parent) :
 {
     dbus = new NotifierDBusAdaptor();
 
-    connect(dbus, SIGNAL(showNotification(QString,Notifier::NotificationType)), this, SLOT(showNotification(QString,Notifier::NotificationType)));
+    connect(dbus, SIGNAL(showNotification(QString, NotificationType)), this, SLOT(showNotification(QString, NotificationType)));
 
     managerIf = new QDBusInterface ( "org.maemo.dui.NotificationManager", "/", "org.maemo.dui.NotificationManager");
 }
@@ -80,23 +80,23 @@ QObject* Notifier::responseObject()
     return (QObject*)dbus;
 }
 
-void Notifier::showNotification(QString notifText, Notifier::NotificationType type)
+void Notifier::showNotification(const QString &notifText, NotificationType::Type type)
 {
     switch (type)
     {
-        case error:
+        case NotificationType::error:
             showDBusNotification(notifText, QString("error"));
             break;
-        case warning:
+        case NotificationType::warning:
             showDBusNotification(notifText, QString("warning"));
             break;
-        default:
+        case NotificationType::info:
             showDBusNotification(notifText, QString("info"));
             break;
     }
 }
 
-void Notifier::showConfirmation(QString notifText, QString buttonText)
+void Notifier::showConfirmation(const QString &notifText, const QString &buttonText)
 {
 /*
 	// from DuiRemoteAction:

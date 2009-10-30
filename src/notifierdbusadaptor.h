@@ -2,6 +2,7 @@
 #define NOTIFIERDBUSADAPTOR_H
 
 #include "notifier.h"
+#include "notificationtype.h"
 
 #include <QDBusAbstractAdaptor>
 #include <QPointer>
@@ -22,7 +23,7 @@ public:
 signals:
     void pinQueryCanceled();
     void doSimLockRetry();
-    void showNotification(QString msg, Notifier::NotificationType type);
+    void showNotification(QString msg, NotificationType::Type type);
 
 public slots:
     Q_NOREPLY void pinQueryCancel();
