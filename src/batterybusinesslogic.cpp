@@ -46,7 +46,7 @@ LowBatteryNotifier::LowBatteryNotifier(QObject* parent) :
     time.start();
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect(timer, SIGNAL(timeout()), this, SLOT(showLowBatteryNotification()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(showLowBatteryNotification()));       
 }
 
 LowBatteryNotifier::~LowBatteryNotifier()
@@ -55,13 +55,13 @@ LowBatteryNotifier::~LowBatteryNotifier()
 
 void LowBatteryNotifier::showLowBatteryNotification()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;    
     emit showNotification(LowBatteryText);
     time.start(); //restart time
     switch(display->get()) {
         case Maemo::QmDisplayState::On:
         case Maemo::QmDisplayState::Dimmed:
-            sleep = false;
+            sleep = false;            
             timer->start(activeInterval);
             break;
         case Maemo::QmDisplayState::Off:

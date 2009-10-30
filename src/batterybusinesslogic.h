@@ -26,8 +26,9 @@ class LowBatteryNotifier : public QObject
 
 public:
     LowBatteryNotifier(QObject* parent = 0);
-    virtual ~LowBatteryNotifier();
+    virtual ~LowBatteryNotifier();   
 
+public slots:
     void showLowBatteryNotification();
 
 private slots:
