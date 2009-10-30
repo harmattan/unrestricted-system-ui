@@ -68,22 +68,21 @@ namespace {
 }
 
 PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
-        QObject(parent)
+        QObject(parent),
+        subState(SubNothing),
+        previousSimState(-1),
+        queryLaunch(false),
+        initialized(false)
 {    
     qDebug() << Q_FUNC_INFO;
 
-    dbus = new PinCodeQueryDBusAdaptor();
-
-    connect(dbus, SIGNAL(changePinCodeRequested()), this, SLOT(changePinCode()));
-    connect(dbus, SIGNAL(enablePinQueryRequested(bool)), this, SLOT(enablePinQueryRequested(bool)));
+    dbus = new PinCodeQueryDBusAdaptor(this);
 
     sim = new SIM();
     simId = new SIMIdentity();
     simSec = new SIMSecurity();        
     simLock = new SIMLock();
 
-    connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
-            this, SLOT(simStatusChanged(SIM::SIMStatus)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
             this, SLOT(simPINCodeVerified(bool, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(verifyPUKComplete(bool, SIMError)),
@@ -104,13 +103,16 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
             this, SLOT(simLockUnlockCodeVerified(SIMLockError)));
 
     // bootstrap the state machine
-    previousSimState = -1;
     connect(sim, SIGNAL(statusComplete(SIM::SIMStatus, SIMError)),
-            this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)),
-            Qt::QueuedConnection);
+        this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)),
+        Qt::QueuedConnection);
+    connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
+        this, SLOT(simStatusChanged(SIM::SIMStatus)),
+        Qt::QueuedConnection);
+
     sim->status();
 
-    subState = SubNothing;
+
 }
 
 PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
@@ -159,9 +161,12 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         flags &= ~Qt::WindowStaysOnTopHint;
     }
     uiPin->setDisplayMode( mod );
-
     win->setWindowFlags(flags);
+
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << win->isHidden();
     win->show();
+
+    qDebug() << Q_FUNC_INFO << "uiPin->isActive()" << uiPin->isActive();
     uiPin->setPannableAreaInteractive(false);
     uiPin->appearNow(DuiSceneWindow::DestroyWhenDone);
 }
@@ -282,6 +287,29 @@ void PinCodeQueryBusinessLogic::ui2enterNewPin()
 
 void PinCodeQueryBusinessLogic::ui2disappear()
 {
+    qDebug() << Q_FUNC_INFO << "queried:" << queryLaunch << "state:" << previousSimState;
+    if(queryLaunch){
+        bool ok = false;
+        switch(previousSimState){
+            case SIM::UnknownStatus:
+            case SIM::NoSIM:
+            case SIM::NotReady:
+                // what are these?? operation, in a way, succeeded because no errors received...
+                break;
+            case SIM::PINRequired:
+            case SIM::PUKRequired:
+            case SIM::SIMLockRejected:
+                break;
+            case SIM::Ok:
+            case SIM::PermanentlyBlocked:
+            case SIM::Rejected:
+                ok = true;
+                break;
+        }
+        dbus->pinQueryDoneResponse((SIM::SIMStatus)previousSimState, ok);
+        qDebug() << Q_FUNC_INFO << "ok:" << ok;
+    }
+    queryLaunch = false;
     closeUi();
 }
 
@@ -360,7 +388,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
 void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
 {
-    qDebug() << Q_FUNC_INFO << "sim status changed" << next << "from" << previousSimState << "subState" << subState;
+    qDebug() << Q_FUNC_INFO << "sim status changed to" << next << "from" << previousSimState << "subState" << subState;
 
     // clear simLockCode
     if (SIM::SIMLockRejected != next) {
@@ -373,14 +401,22 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         emit showNotification(trid("qtn_cell_sim_inserted", "SIM card inserted."));
     } */
 
-    stateOperation(next, previousSimState);
+    if(initialized){
+        bool closeUi = stateOperation(next, previousSimState);
+        if(closeUi){
+            previousSimState = next;
+            ui2disappear();
+        }
+    }
 
     previousSimState = next;
 }
 
-void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
+bool PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
 {
     qDebug() << Q_FUNC_INFO << "(" << status << ", " << relationState << ")";
+
+    bool closeUi = false;
 
     switch(status)
     {
@@ -388,7 +424,7 @@ void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
             if(SIM::PUKRequired == relationState) {
                 ui2enterNewPin();
             } else {
-                ui2disappear();
+                closeUi = true;
             }
             break;
         case (SIM::PINRequired):
@@ -407,7 +443,7 @@ void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
                 ) {
                 // removed when hot swapping not supported.
                 // emit showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
-                ui2disappear();
+                closeUi = true;
             }
             break;
         case (SIM::SIMLockRejected):
@@ -420,9 +456,10 @@ void PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
         case (SIM::UnknownStatus):
         case (SIM::NotReady):
         default:
-            ui2disappear();
+            closeUi = true;
             break;
     }
+    return closeUi;
 }
 
 // called only in bootstrap
@@ -430,13 +467,15 @@ void PinCodeQueryBusinessLogic::simStatusComplete(SIM::SIMStatus status, SIMErro
 {
     qDebug() << Q_FUNC_INFO << "sim status completed" << status;
 
-    if (handleSIMError(error))
+    if (handleSIMError(error)) {
         simStatusChanged(status);
+    }
 }
 
 
 void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
 {   
+    qDebug() << Q_FUNC_INFO << "sim status completed" << success;
     handleSIMError(error);
 
     if(!success) {
@@ -555,7 +594,6 @@ bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
     case SIMErrorSIMRejected:
         emit showNotification(SIMCardRejected, NotificationType::error);
         break;
-
     case SIMErrorSecurityCodeRequired:
     case SIMErrorBusCommunication:
     case SIMErrorInvalidParameter:
@@ -657,4 +695,29 @@ void PinCodeQueryBusinessLogic::enablePinQueryRequested(bool enabled)
         subState = SubDisablePinQuery;
     }
     simSec->pinQueryState(SIMSecurity::PIN);
+}
+
+bool PinCodeQueryBusinessLogic::launchPinQuery(SIMSecurity::PINType pinType)
+{
+    Q_UNUSED(pinType);
+    qDebug() << Q_FUNC_INFO << "state" << previousSimState << "subState" << subState;
+
+    initialized = true;
+    if(queryLaunch){
+        return false;
+    }
+
+    startLaunch();
+    return queryLaunch;
+}
+
+void PinCodeQueryBusinessLogic::startLaunch()
+{
+    if(!queryLaunch && (
+       SIM::PINRequired == previousSimState ||
+       SIM::PUKRequired == previousSimState ||
+       SIM::SIMLockRejected == previousSimState) ){
+        stateOperation(previousSimState, previousSimState);
+        queryLaunch = true;
+    }
 }

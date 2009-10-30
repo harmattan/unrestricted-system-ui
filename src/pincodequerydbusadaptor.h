@@ -7,29 +7,26 @@
 /**
   * DBus adaptor class for PIN code query
   */
-
+class PinCodeQueryBusinessLogic;
 using namespace Cellular;
 
 class PinCodeQueryDBusAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.PinCodeQuery")
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.pin.PinCodeQuery")
 
 public:
-    PinCodeQueryDBusAdaptor();
+    PinCodeQueryDBusAdaptor(PinCodeQueryBusinessLogic* logic);
     virtual ~PinCodeQueryDBusAdaptor();
     static QString dbusInterfaceName();
 
     //! Response to \sa enablePinQueryRequested(bool enabled)
     void pinQueryEnabledResponse(SIMSecurity::PINQuery queryState);
 
+        //! Response to \sa launchPinQueryRequested(SIMSecurity::PINType pinType)
+    void pinQueryDoneResponse(SIM::SIMStatus currentSimStatus, bool queryOk);
+
 signals:
-    //! Emitted to business logic to change PIN query
-    void changePinCodeRequested();
-
-    //! Emitted to business logic to enable/disable PIN query
-    void enablePinQueryRequested(bool enabled);
-
     /*!
      * Emits response to \sa enablePinQuery(bool enable).
      * Signal contains information if PIN query is enabled in device.
@@ -63,24 +60,27 @@ public slots:
      * \sa pinQueryEnabled(SIMSecurity::PINQuery queryState)
      *
      * \param enable Specifies the operation: \e true enable \e false disable.
+     * dbus-send --session --print-reply --dest=com.nokia.systemui / com.nokia.systemui.PinCodeQuery.enablePinQuery
      **/
     Q_NOREPLY void enablePinQuery(bool enable);
 
     /*!
      * Launches PIN query.
      *
-     * \param pinType Type of the pin to ask from user: PIN or PIN2. Parameter is not used.
+     * \param pinType Type of the pin to ask from user: PIN or PIN2.
+     *      Allowed values are defined in \sa SIMSecurity::PINType.
+     *      Parameter is not used.
      * \return action. If query is launched returns \e true, \e false otherways.
-     * SIM statuses when the query is not launched:
-     * \li \c SIM::UnknownStatus
-     * \li \c SIM::Ok
-     * \li \c SIM::NoSIM
-     * \li \c SIM::PermanentlyBlocked
-     * \li \c SIM::NotReady
-     * \li \c SIM::Rejected
+     * SIM statuses when only the query is launched:
+     * \li \c SIM::PINRequired
+     * \li \c SIM::PUKRequired
+     * \li \c SIM::SIMLockRejected
      * \sa SIM
      **/
-    bool launchPinQuery(SIMSecurity::PINType pinType);
+    bool launchPinQuery(int pinType);
+
+private:
+    PinCodeQueryBusinessLogic* logic;
 
 };
 

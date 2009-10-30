@@ -31,10 +31,10 @@ CallAndSim::CallAndSim(QObject* parent) :
 
     // TODO: CallerId
 
-    dbusPinIf = new QDBusInterface("com.nokia.systemui",
+    dbusPinIf = new QDBusInterface("com.nokia.systemui.pin",
                                    "/",
-                                   "com.nokia.systemui.PinCodeQuery",
-                                   QDBusConnection::sessionBus(),
+                                   "com.nokia.systemui.pin.PinCodeQuery",
+                                   QDBusConnection::systemBus(),
                                    this);
 }
 

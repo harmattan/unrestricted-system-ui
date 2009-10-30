@@ -53,14 +53,16 @@ public:
         */
     };
 
-
     explicit PinCodeQueryBusinessLogic(QObject* parent = 0);
     virtual ~PinCodeQueryBusinessLogic();
+
+    void enablePinQueryRequested(bool enabled);
+    bool launchPinQuery(SIMSecurity::PINType pinType);
+    void changePinCode();
 
 public slots:
     void cancelQuery();
     void resendSimLockCode();
-    void enablePinQueryRequested(bool enabled);
 
 signals:
     void showNotification(const QString &text, NotificationType::Type type);
@@ -75,6 +77,17 @@ private: // attributes
 
     SubStates subState;
     int previousSimState;
+    bool queryLaunch;
+    bool initialized;
+
+    enum LaunchState {
+        None,
+        Requested,
+        Ongoing,
+        DoneWithError,
+        DoneWithOk
+    };
+//    LaunchState queryState;
 
     SIM* sim;
     SIMIdentity* simId;
@@ -88,7 +101,8 @@ private: // methods
     void createUi(bool enableBack = false);
     void closeUi();
     void setUiHeader(QString headerText);
-    void stateOperation(int status, int relationState);
+    bool stateOperation(int status, int relationState);
+    void startLaunch();
 
     void doEmergencyCall();
     void informTechnicalProblem();
@@ -107,8 +121,6 @@ private: // methods
     void ui2disappear();
 
 private slots:
-    void changePinCode();
-
     void uiCodeChanged();
     void uiButtonReleased();
 
