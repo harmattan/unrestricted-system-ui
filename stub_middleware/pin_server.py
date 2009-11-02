@@ -78,9 +78,10 @@ bus_name_launch = 'com.nokia.systemui.pin'
 PATH_launch = '/'
 if_name_launch = 'com.nokia.systemui.pin.PinCodeQuery'
 
-TIMEOUT = 1*1000
+TIMEOUT = 1000
 PIN = '4321'
 PUK = '0007'
+PIN_ENABLED = True
 SEC = '987'
 SEC_INVALID_CODE = '000'
 SEC_TIMER_ON = '111'
@@ -137,6 +138,7 @@ class Server(dbus.service.Object):
         self.puk_attempts_left = 10
 
         self.pin = PIN
+        self.pin_enabled = PIN_ENABLED
 
         self.LOCK_STATES = [
             'Unknown',
@@ -245,6 +247,38 @@ class Server(dbus.service.Object):
         if self.pin == old_pin:
             self.pin = new_pin
             return True
+        raise WrongPassword('')
+
+    def on_disablepin(label): pass
+
+    @dbus.service.method('com.nokia.csd.SIM.Security')
+    def DisablePINQuery(self, type, pin):
+        self.on_disablepin(self.disablepin)
+        if self.pin == pin:
+            self.pin_enabled = False
+            return 0
+        raise WrongPassword('')
+
+    def on_getpinquerystate(label): pass
+
+    @dbus.service.method('com.nokia.csd.SIM.Security')
+    # SIMSecurity::PINQuery: enum{'Enabled, Disabled, UnknownState'}
+    def GetPINQueryState(self, type):
+        self.on_getpinquerystate(self.getpinquerystate)
+        print 'pin enabled state: ',self.pin_enabled
+        if self.pin_enabled == True:
+            return 0 
+        if self.pin_enabled == False:
+            return 1
+
+    def on_enablepin(label): pass
+
+    @dbus.service.method('com.nokia.csd.SIM.Security')
+    def EnablePINQuery(self, type, pin):
+        self.on_enablepin(self.enablepin)
+        if self.pin == pin:
+            self.pin_enabled = True
+            return 0
         raise WrongPassword('')
 
     # interface: com.nokia.csd.SIM.SIMLock
@@ -389,7 +423,20 @@ class UserInterface:
         methods.add(label)
         self.server.on_changepin = method_cb
 
-        
+        # method sec.DisablePINQuery
+        self.server.disablepin = label = gtk.Label('DisablePINQuery')
+        methods.add(label)
+        self.server.on_disablepin = method_cb
+
+        # method sec.GetPINQueryState
+        self.server.getpinquerystate = label = gtk.Label('GetPINQueryState')
+        methods.add(label)
+        self.server.on_getpinquerystate = method_cb
+
+        # method sec.EnablePINQuery
+        self.server.enablepin = label = gtk.Label('EnablePINQuery')
+        methods.add(label)
+        self.server.on_enablepin = method_cb
 
         return main_box
 
