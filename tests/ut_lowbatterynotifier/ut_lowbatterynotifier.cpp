@@ -32,12 +32,18 @@ void LowBatteryHelper::notificationShown()
 void Ut_LowBatteryNotifier::init()
 {            
     m_subject = new LowBatteryNotifier();
+    m_helper = new LowBatteryHelper();
+    connect(m_subject, SIGNAL(showNotification(QString)), m_helper, SLOT(notificationShown()));
+    m_subject->activeInterval = Act;
+    m_subject->inactiveInterval = Inact;
 }
 
 void Ut_LowBatteryNotifier::cleanup()
 {
     delete m_subject;
-    m_subject = NULL;    
+    m_subject = NULL;
+    delete m_helper;
+    m_helper = NULL;    
 }
 
 DuiApplication *app;
@@ -53,14 +59,8 @@ void Ut_LowBatteryNotifier::cleanupTestCase()
     delete app;
 }
 
-void Ut_LowBatteryNotifier::testShowNotification()
-{
-    m_helper = new LowBatteryHelper();
-    connect(m_subject, SIGNAL(showNotification(QString)), m_helper, SLOT(notificationShown()));
-    //QSignalSpy spy(m_subject, SIGNAL(showNotification(QString)));
-    m_subject->activeInterval = Act;
-    m_subject->inactiveInterval = Inact;
-
+void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
+{               
     /*
         1) Display is on
         2) Waiting [2 * Active timeout + 50]
@@ -85,7 +85,10 @@ void Ut_LowBatteryNotifier::testShowNotification()
             QVERIFY(m_helper->notificationTimes().at(i) >= 0);
         }
     }
+}
 
+void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
+{
     /*
         1) Display is on
         2) Waiting [Active timeout/2]
@@ -120,7 +123,10 @@ void Ut_LowBatteryNotifier::testShowNotification()
     QVERIFY(m_helper->notificationTimes().at(1) <= Act/2 + Act/2 + Act/4 + 100);
     QVERIFY(m_helper->notificationTimes().at(1) >= Act/2 + Act/2 + Act/4);
 
+}
 
+void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse()
+{
     /*
         1) Display is off
         2) Waiting [Inactive timeout + Active timeout /2]

@@ -38,7 +38,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testShowNotification();
+    void testShowNotificationInActiveUse();
+    void testShowNotificationInDiverseUse();
+    void testShowNotificationInInactiveUse();
 
 private: //attributes
     LowBatteryNotifier *m_subject;

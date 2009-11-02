@@ -21,4 +21,11 @@ HEADERS += ut_lowbatterynotifier.h \
     $$SLIDER_PREFIX/batterystub.h \
     $$SLIDER_PREFIX/systemuigconf.h
 
+contains(cov, true) {
+    message("Coverage options enabled")
+    QMAKE_CXXFLAGS += --coverage
+    QMAKE_LFLAGS += --coverage
+}
+
+
 INSTALLS += target
