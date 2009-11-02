@@ -1,5 +1,6 @@
 #include "batterystub.h"
 #include <QTimer>
+#include <QDebug>
 
 namespace Maemo {
 
@@ -69,20 +70,22 @@ void QmBattery::updateValues()
     QTimer::singleShot(10000, this, SLOT(updateValues()));
 }
 
-int QmBattery::remainingTime()
+int QmBattery::remainingTime(QmBattery::RemainingTimeMode mode)
 {
+    int factor = ( mode == QmBattery::PowersaveMode ? 1 : 2);
     if(!state ==  QmBattery::StateCharging) {
-        return (10 - levelIndex) * 60 * 60  + 60 * 20;
+        return (10 - levelIndex) * 60 * 60  + 60 * 20 * factor;
     }
     else {
         return -1;
     }
 }
 
-int QmBattery::remainingTalkTime()
+int QmBattery::remainingTalkTime(QmBattery::RemainingTimeMode mode)
 {
+    int factor = ( mode == QmBattery::PowersaveMode ? 1 : 2);    
     if(!state ==  QmBattery::StateCharging) {
-        return (10 - levelIndex) / 2 * 60 * 60 + 60 * 44;
+        return (10 - levelIndex) / 2 * 60 * 60 + 60 * 44 * factor;
     }
     else {
         return -1;

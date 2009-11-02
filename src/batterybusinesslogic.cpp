@@ -13,7 +13,7 @@
    2) What are correct animation rates when charging with USB / Wall?
    3) If USB 100 mA is used, do we show animation at all? In Fremantle not.
    4) Connect sounds with notifications
-   5) reminder notifications
+   5) Is there going to be note for critical battery level
 
 */
 
@@ -324,8 +324,22 @@ QStringList BatteryBusinessLogic::remainingTimeValues()
     QStringList values;
     if(battery->getState() == QmBattery::StateCharging)
         values << ChargingText << ChargingText;
-    else
-        values << QString("%1").arg(battery->remainingTalkTime() / 60) << QString("%1").arg(battery->remainingTime() / 60);
+    else {
+        Maemo::QmDeviceMode::PSMState state = deviceMode->getPSMState();
+        Maemo::QmBattery::RemainingTimeMode mode;
+        switch(state) {
+            case Maemo::QmDeviceMode::PSMStateOn:
+                mode = Maemo::QmBattery::PowersaveMode;
+                break;
+            case Maemo::QmDeviceMode::PSMStateOff:
+                mode = Maemo::QmBattery::NormalMode;
+                break;
+            default:
+                return QStringList() << "N/A" << "N/A";
+        }
+        values << QString("%1").arg(battery->remainingTalkTime(mode) / 60)
+                << QString("%1").arg(battery->remainingTime(mode) / 60);
+    }
     return values;
 }
 

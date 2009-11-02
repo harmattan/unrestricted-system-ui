@@ -79,22 +79,18 @@ public:
      */
     int getBatteryEnergyLevel();
 
-    /*
-    * Remaining battery time (idle), seconds, -1=not known
-    * @return battery time in seconds if its not charging
-    *	      -1 , if its charging
-    */
-    int  remainingTime();
+    /* Remaining battery time (idle), seconds
+     * @param mode The mode
+     * @return battery time in seconds, -1 if not available
+     */
+    int remainingTime(QmBattery::RemainingTimeMode mode);
 
     /*
-    * Remaining battery time (talk time), seconds, -1=not known
-    *  This will get changed after lower layer supports remaining talktime api
-    * @return battery time in seconds if its not charging
-    *	      -1 , if its charging
-    */
-    int  remainingTalkTime();
-
-
+     * Remaining battery time (talk time), seconds
+     * @param mode The mode
+     * @return battery time in seconds, -1 if not available
+     */
+    int remainingTalkTime(QmBattery::RemainingTimeMode mode);
 
 signals:
 
