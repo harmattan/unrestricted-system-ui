@@ -48,6 +48,8 @@ dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com
 
 dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com.nokia.csd.SIM.Security.PUKAttemptsLeft string:PIN
 
+To launch PIN query:
+dbus-send --system --print-reply --dest=com.nokia.systemui.pin / com.nokia.systemui.pin.PinCodeQuery.launchPinQuery int32:0
 
 """
 
@@ -208,7 +210,6 @@ class Server(dbus.service.Object):
     def VerifyCodeRequired(self, status):
         print 'signal emit: VerifyCodeRequired:', status
 
-
     def on_pinattemtpsleft(label): pass
 
     @dbus.service.method('com.nokia.csd.SIM.Security')
@@ -306,6 +307,14 @@ class UserInterface:
             self.server.SIMStatus(
                 self.server.SIM_MODES[self.server.mode_idx])
         mode.connect('changed', cb_sim_mode_changed) 
+
+        launch = gtk.Button('Launch query')
+        def cb_launch(widget):
+            obj = bus.get_object('com.nokia.systemui.pin','/')
+            query = dbus.Interface(obj, 'com.nokia.systemui.pin.PinCodeQuery')
+            print query.launchPinQuery(0)
+        launch.connect('clicked', cb_launch)
+        frame.add(launch)
 
         verify = gtk.Button('Verify code required')
         def cb_verify_code_req(widget):
