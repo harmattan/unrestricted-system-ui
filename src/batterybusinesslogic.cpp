@@ -54,7 +54,7 @@ LowBatteryNotifier::~LowBatteryNotifier()
 }
 
 void LowBatteryNotifier::showLowBatteryNotification()
-{
+{    
     qDebug() << Q_FUNC_INFO;    
     emit showNotification(LowBatteryText);
     time.start(); //restart time
@@ -72,14 +72,14 @@ void LowBatteryNotifier::showLowBatteryNotification()
 }
 
 void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
-{
+{    
     qDebug() << Q_FUNC_INFO;
     switch(state) {
         case Maemo::QmDisplayState::On:
             if(!sleep)
                 break;
             if(time.elapsed() < activeInterval)
-                timer->setInterval(inactiveInterval - time.elapsed());
+                timer->setInterval(activeInterval - time.elapsed());
             else
                 showLowBatteryNotification();
             sleep = false;
@@ -87,7 +87,7 @@ void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState
         case Maemo::QmDisplayState::Dimmed:
             sleep = false;
             break;
-        case Maemo::QmDisplayState::Off:
+        case Maemo::QmDisplayState::Off:           
             timer->setInterval(inactiveInterval - time.elapsed());
             sleep = true;
             break;        

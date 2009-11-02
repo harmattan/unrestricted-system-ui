@@ -24,6 +24,7 @@ QmDisplayState::DisplayState QmDisplayState::get() const
 bool QmDisplayState::set(DisplayState state)
 {
     this->state = state;
+    emit displayStateChanged(state);
     return true;
 }
 
