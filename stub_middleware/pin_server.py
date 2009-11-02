@@ -73,6 +73,11 @@ PATH = '/com/nokia/csd/sim'
 bus_name_emerg = dbus.service.BusName('com.nokia.csd.Call', bus)
 PATH_emerg = '/com/nokia/csd/call'
 
+# launch
+bus_name_launch = 'com.nokia.systemui.pin'
+PATH_launch = '/'
+if_name_launch = 'com.nokia.systemui.pin.PinCodeQuery'
+
 TIMEOUT = 1*1000
 PIN = '4321'
 PUK = '0007'
@@ -173,16 +178,22 @@ class Server(dbus.service.Object):
     # =====================================
 
     def on_verifypin(label): pass
-    
+
+    def setOkDelay(self, state):
+        self.SetState(state)
+        print 'timeout: state set:', state
+        return False
+
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def VerifyPIN(self, type, code):
         self.on_verifypin(self.verifypin)
         self.pin_attempts_left -= 1
         if code == self.pin:
-	    if self.SIM_MODES[self.mode_idx] == 'PINRequired':
+            if self.SIM_MODES[self.mode_idx] == 'PINRequired':
                 self.pin_attempts_left = 3
-                self.SetState('Ok')
-            return True
+                gobject.timeout_add(11*TIMEOUT, self.setOkDelay, 'Ok')
+                print 'start timer: Ok'
+                return True
         if self.pin_attempts_left == 0:
             self.SetState('PUKRequired')
         raise WrongPassword('')
@@ -310,8 +321,8 @@ class UserInterface:
 
         launch = gtk.Button('Launch query')
         def cb_launch(widget):
-            obj = bus.get_object('com.nokia.systemui.pin','/')
-            query = dbus.Interface(obj, 'com.nokia.systemui.pin.PinCodeQuery')
+            obj = bus.get_object(bus_name_launch, PATH_launch)
+            query = dbus.Interface(obj, if_name_launch)
             print query.launchPinQuery(0)
         launch.connect('clicked', cb_launch)
         frame.add(launch)
