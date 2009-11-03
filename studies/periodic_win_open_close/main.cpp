@@ -1,6 +1,7 @@
 #include <QTimer>
 #include <DuiButton>
 #include <DuiApplication>
+#include <QDebug>
 
 #include "main.h"
 
