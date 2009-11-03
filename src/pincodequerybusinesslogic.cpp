@@ -10,6 +10,7 @@
 #include <DuiApplication>
 #include <call-ui/calluiserviceapi.h>
 #include <QRegExpValidator>
+#include <QTimer>
 
 #include <QtDBus>
 #include <ssc-dbus-names.h>
@@ -47,6 +48,7 @@ namespace {
 
     QString EmergencyCallHeader = trid("qtn_cell_start_emergency_call" , "Start Emergency call?");
     QString HeaderEnterPinCode = trid("qtn_cell_enter_pin_code", "Enter PIN code");
+    QString HeaderEnterPukCode = trid("qtn_cell_enter_PUK_code", "Enter PUK code");
 
     /* At the moment this contains several error case that may pop up from SIM library.
        It needs to be clarified, how are they going to be reported to end user. */
@@ -77,6 +79,10 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
     qDebug() << Q_FUNC_INFO;
 
     dbus = new PinCodeQueryDBusAdaptor(this);
+
+    launchResponseTimer = new QTimer();
+    launchResponseTimer->setSingleShot(true);
+    connect(launchResponseTimer, SIGNAL(timeout()), this, SLOT(emitLaunchResponse()));
 
     sim = new SIM();
     simId = new SIMIdentity();
@@ -111,8 +117,6 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
         Qt::QueuedConnection);
 
     sim->status();
-
-
 }
 
 PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
@@ -134,9 +138,11 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
     qDebug() << Q_FUNC_INFO << "existing:" << static_cast<QObject*> (uiPin);
     DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
     Qt::WindowFlags flags = win->windowFlags();
+
     if(!uiPin)
     {
         uiPin = new PinCodeQueryUI();
+        uiPin->setPannableAreaInteractive(false);
         DuiButton *uiPinEmergency = uiPin->getEmergencyBtn();
         DuiButton *uiPinCancel = uiPin->getCancelBtn();
         uiPinCancel->setEnabled(true);
@@ -154,6 +160,7 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
 
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
     }
+
     DuiApplicationPage::DisplayMode mod = 0;
     if(enableBack){
         uiPin->setBackButtonEnabled(enableBack);
@@ -164,27 +171,28 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
     win->setWindowFlags(flags);
 
     qDebug() << Q_FUNC_INFO << "win->isHidden()" << win->isHidden();
-    win->show();
+    if(win->isHidden()){
+        win->show();
+    }
 
-    qDebug() << Q_FUNC_INFO << "uiPin->isActive()" << uiPin->isActive();
-    uiPin->setPannableAreaInteractive(false);
-    uiPin->appearNow(DuiSceneWindow::DestroyWhenDone);
+    qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << uiPin->isVisible();
+    if(!uiPin->isVisible()){
+        uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
+    }
 }
 
 void PinCodeQueryBusinessLogic::closeUi()
 {
+    qDebug() << Q_FUNC_INFO;
     subState = SubNothing;
     oldPinCode = "";
     newPinCode = "";
+    qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << uiPin->isVisible();
     if(uiPin)
     {
-        qDebug() << Q_FUNC_INFO << "NULL uiPin";
-        PinCodeQueryUI* tmp = uiPin.data();
-        uiPin = NULL;
-        DuiApplication::instance()->applicationWindow()->hide();
-        qDebug() << Q_FUNC_INFO << ">disappear";
-        tmp->disappearNow();
+        uiPin->disappearNow();
     }
+    DuiApplication::instance()->applicationWindow()->hide();
     qDebug() << Q_FUNC_INFO << "win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
 }
 
@@ -236,9 +244,7 @@ void PinCodeQueryBusinessLogic::ui2SIMLocked(bool showNote)
 void PinCodeQueryBusinessLogic::ui2PINQuery()
 {
     subState = SubFirstTry;
-    createUi();
-    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
-    setUiHeader(HeaderEnterPinCode);
+    getCode(false, HeaderEnterPinCode);
 }
 
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
@@ -260,9 +266,7 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 }
 void PinCodeQueryBusinessLogic::ui2PUKQuery()
 {
-    createUi();
-    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
-    setUiHeader(trid("qtn_cell_enter_PUK_code", "Enter PUK code"));
+    getCode(false, HeaderEnterPukCode);
 }
 
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
@@ -289,25 +293,27 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 {
     qDebug() << Q_FUNC_INFO << "queried:" << queryLaunch << "state:" << previousSimState;
     if(queryLaunch){
-        bool ok = false;
         switch(previousSimState){
             case SIM::UnknownStatus:
             case SIM::NoSIM:
             case SIM::NotReady:
                 // what are these?? operation, in a way, succeeded because no errors received...
+                emitLaunchResponse(false);
                 break;
             case SIM::PINRequired:
             case SIM::PUKRequired:
             case SIM::SIMLockRejected:
+                // failure case, timer not set
+                if(!launchResponseTimer->isActive()){
+                    emitLaunchResponse(false);
+                }
                 break;
             case SIM::Ok:
             case SIM::PermanentlyBlocked:
             case SIM::Rejected:
-                ok = true;
+                emitLaunchResponse(true);
                 break;
         }
-        dbus->pinQueryDoneResponse((SIM::SIMStatus)previousSimState, ok);
-        qDebug() << Q_FUNC_INFO << "ok:" << ok;
     }
     queryLaunch = false;
     closeUi();
@@ -493,6 +499,7 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
         ui2enterNewPin();
     }
     else {
+        startLaunchResponseTimer();
         ui2disappear();
     }
 }
@@ -505,7 +512,9 @@ void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 
     if(!success && error == SIMErrorWrongPassword) {
         simSec->pukAttemptsLeft(SIMSecurity::PUK);
-    }  
+    } else if (success){
+        startLaunchResponseTimer();
+    }
 }
 
 void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
@@ -513,8 +522,8 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
     if(handleSIMLockError(error)) {
         emit showNotification(SIMUnlocked, NotificationType::info);
         simLockCode = "";
+        startLaunchResponseTimer();
     }
-
     //what is the next SIMStatus?
 }
 
@@ -548,15 +557,14 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error)
 {
+    qDebug() << Q_FUNC_INFO << "state:" << state << "error" << error;
     if( SIMErrorNone != error ||
        (SIMSecurity::Enabled == state && SubEnablePinQuery == subState) ||
        (SIMSecurity::Disabled == state && SubDisablePinQuery == subState) ){
         dbus->pinQueryEnabledResponse(state);
         subState = SubNothing;
     } else {
-        createUi(true);
-        uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
-        setUiHeader(HeaderEnterPinCode);
+        getCode(true, HeaderEnterPinCode);
     }
 }
 
@@ -573,6 +581,7 @@ void PinCodeQueryBusinessLogic::simEnablePINQueryComplete(SIMError error)
         // TODO: will this be in loop with simPinQueryStateComplete?
         simSec->pinQueryState(SIMSecurity::PIN);
     }
+    qDebug() << Q_FUNC_INFO << state;
 }
 
 bool PinCodeQueryBusinessLogic::handleSIMError(SIMError error)
@@ -681,14 +690,13 @@ void PinCodeQueryBusinessLogic::changePinCode()
 
     subState = SubEnterOldPIN;
     if(SIM::Ok == previousSimState) {
-        createUi(true);
-        uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
-        setUiHeader(HeaderEnterPinCode);
+        getCode(true, HeaderEnterPinCode);
     }
 }
 
 void PinCodeQueryBusinessLogic::enablePinQueryRequested(bool enabled)
 {
+    qDebug() << Q_FUNC_INFO << enabled;
     if(enabled){
         subState = SubEnablePinQuery;
     } else {
@@ -719,5 +727,37 @@ void PinCodeQueryBusinessLogic::startLaunch()
        SIM::SIMLockRejected == previousSimState) ){
         stateOperation(previousSimState, previousSimState);
         queryLaunch = true;
+    }
+}
+
+void PinCodeQueryBusinessLogic::getCode(bool enableBack, QString header)
+{
+    createUi(enableBack);
+    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
+    setUiHeader(header);
+}
+
+void PinCodeQueryBusinessLogic::emitLaunchResponse()
+{
+    // TODO: is timeout ok case or not?
+    emitLaunchResponse(true /*false*/);
+}
+
+void PinCodeQueryBusinessLogic::emitLaunchResponse(bool ok)
+{
+    if(launchResponseTimer->isActive()){
+        launchResponseTimer->stop();
+    }
+    dbus->pinQueryDoneResponse((SIM::SIMStatus)previousSimState, ok);
+    qDebug() << Q_FUNC_INFO << "ok:" << ok;
+}
+
+void PinCodeQueryBusinessLogic::startLaunchResponseTimer()
+{
+    if(queryLaunch){
+        if(launchResponseTimer->isActive()){
+            launchResponseTimer->stop();
+        }
+        launchResponseTimer->start(60000); // wait one second
     }
 }

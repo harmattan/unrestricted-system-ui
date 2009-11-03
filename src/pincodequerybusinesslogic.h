@@ -11,6 +11,7 @@
 
 class DuiApplicationWindow;
 class PinCodeQueryDBusAdaptor;
+class QTimer;
 
 using namespace Cellular;
 
@@ -74,6 +75,7 @@ private: // attributes
     QString newPinCode;
     QString oldPinCode;
     QString simLockCode;
+    QTimer *launchResponseTimer;
 
     SubStates subState;
     int previousSimState;
@@ -103,6 +105,7 @@ private: // methods
     void setUiHeader(QString headerText);
     bool stateOperation(int status, int relationState);
     void startLaunch();
+    void getCode(bool enableBack, QString header);
 
     void doEmergencyCall();
     void informTechnicalProblem();
@@ -123,6 +126,9 @@ private: // methods
 private slots:
     void uiCodeChanged();
     void uiButtonReleased();
+    void startLaunchResponseTimer();
+    void emitLaunchResponse(bool ok);
+    void emitLaunchResponse();
 
     void simStatusChanged(SIM::SIMStatus status);
     void simStatusComplete(SIM::SIMStatus status, SIMError error);

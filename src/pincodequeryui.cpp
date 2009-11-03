@@ -26,6 +26,7 @@
 PinCodeQueryUI::PinCodeQueryUI()
 {
     qDebug() << Q_FUNC_INFO;
+    setVisible(false);
     setFullscreen(true);
     setDisplayMode(0);
     setBackButtonEnabled(false);
@@ -35,7 +36,7 @@ PinCodeQueryUI::PinCodeQueryUI()
 
 PinCodeQueryUI::~PinCodeQueryUI()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << (QObject*)this;
 
     if(backspaceTimer != NULL) {
         //we stop timing the press event
