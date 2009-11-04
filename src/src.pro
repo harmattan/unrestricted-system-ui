@@ -39,9 +39,7 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
     devicemodestub.cpp \
-    batterystub.cpp \
-    radioaccessstub.cpp \
-    networkregistrationstub.cpp \
+    batterystub.cpp \    
     displaystatestub.cpp
 HEADERS += main.h \
     notifier.h \
@@ -65,9 +63,7 @@ HEADERS += main.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
     devicemodestub.h \
-    batterystub.h \
-    radioaccessstub.h \
-    networkregistrationstub.h \
+    batterystub.h \        
     displaystatestub.h \
     notificationtype.h
 style_sheet.files += sysuid.css

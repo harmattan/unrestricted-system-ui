@@ -7,10 +7,10 @@
 #include <QObject>
 #include <QStringList>
 
-//#include <NetworkRegistration>
-#include "networkregistrationstub.h" //replace when readioaccess really ready
-//#include <RadioAccess>
-#include "radioaccessstub.h" //replace when readioaccess really ready
+#include <NetworkRegistration>
+//#include "networkregistrationstub.h"
+#include <RadioAccess>
+//#include "radioaccessstub.h"
 
 using namespace Cellular;
 
