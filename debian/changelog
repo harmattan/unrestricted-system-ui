@@ -1,3 +1,11 @@
+system-ui (0.8.1-0) harmattan; urgency=low
+
+  * Fixes: NB#144034 - "SIM card inserted" and "SIM card removed..." notifications are shown although hotswapping is not supported
+  * Fixes: NB#143865 - Number "0" disappears from key pad in PIN code query view when screen is rotated
+  * Fixes: NB#143869 - Sysuid crashes when correct operator SIM lock code is entered
+
+ --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Wed, 04 Nov 2009 16:07:17 +0200
+
 system-ui (0.8.0-0) harmattan; urgency=low
 
   * Fix buid dependency.
