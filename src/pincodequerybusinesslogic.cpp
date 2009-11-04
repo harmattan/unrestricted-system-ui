@@ -157,6 +157,7 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
     DuiApplicationPage::DisplayMode mod = 0;
     if(enableBack){
         uiPin->setBackButtonEnabled(enableBack);
+        connect(uiPin, SIGNAL(backButtonClicked ()), this, SLOT(cancelQuery()));
         mod = (DuiApplicationPage::EscapeButtonVisible);
         flags &= ~Qt::WindowStaysOnTopHint;
     }
@@ -685,9 +686,11 @@ void PinCodeQueryBusinessLogic::cancelQuery()
     // regardless of the state - just exit.
     ui2disappear();
     // Well, let's put the radio and cellular off.
+    /* Let's not. ssc takes care of it.
     QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
                        QDBusConnection::systemBus());
     ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
+    */
 }
 
 void PinCodeQueryBusinessLogic::resendSimLockCode()
