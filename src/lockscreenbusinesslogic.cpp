@@ -10,7 +10,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
         QObject(parent),
         display(new QmDisplayState()),
         eventEater(new EventEater()),
-        lockUI(new LockScreenUI())
+        lockUI(NULL/*new LockScreenUI()*/)
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -32,7 +32,7 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
     display = NULL;
     delete eventEater;
     eventEater = NULL;
-    delete lockUI;
+    //delete lockUI;
     lockUI = NULL;
 }
 
@@ -80,7 +80,7 @@ void LockScreenBusinessLogic::unlockScreen()
 void LockScreenBusinessLogic::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
 {
     qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts(" << calls << ", " << messages << ", " << emails << ", " << chatMessages << ")";
-    lockUI->updateMissedEventAmounts(calls, messages, emails, chatMessages);
+    //lockUI->updateMissedEventAmounts(calls, messages, emails, chatMessages);
 }
 
 void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
@@ -96,7 +96,7 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
     qDebug() << Q_FUNC_INFO;
     if(toggle) {        
         DuiApplication::instance()->applicationWindow()->show();
-        lockUI->appear();
+        //lockUI->appear();
     }
     else
         DuiApplication::instance()->applicationWindow()->hide();
