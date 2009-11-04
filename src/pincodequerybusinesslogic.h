@@ -8,12 +8,14 @@
 #include <QPointer>
 #include <SIM>
 #include <SIMLock>
+#include <call-ui/CallUiServiceApi>
 
 class DuiApplicationWindow;
 class PinCodeQueryDBusAdaptor;
 class QTimer;
 
 using namespace Cellular;
+using namespace CallUi;
 
 class PinCodeQueryBusinessLogic : public QObject
 {
@@ -96,6 +98,8 @@ private: // attributes
     SIMSecurity* simSec;
     SIMLock *simLock;
 
+    CallUiServiceApi *callUi;
+
 private: // methods
     bool handleSIMError(SIMError error);
     bool handleSIMLockError(SIMLockError error);
@@ -140,6 +144,8 @@ private slots:
     void simLockUnlockCodeVerified(SIMLockError error);
     void simEnablePINQueryComplete(SIMError error);
     void simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
+
+    void emergencyCallDone(CallUi::PendingCallRequest *req);
 };
 
 #endif // PINCODEQUERYBUSINESSLOGIC_H

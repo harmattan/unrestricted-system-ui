@@ -74,20 +74,21 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
         subState(SubNothing),
         previousSimState(-1),
         queryLaunch(false),
-        initialized(false)
+        initialized(false),
+        callUi(NULL)
 {    
     qDebug() << Q_FUNC_INFO;
 
     dbus = new PinCodeQueryDBusAdaptor(this);
 
-    launchResponseTimer = new QTimer();
+    launchResponseTimer = new QTimer(this);
     launchResponseTimer->setSingleShot(true);
     connect(launchResponseTimer, SIGNAL(timeout()), this, SLOT(emitLaunchResponse()));
 
-    sim = new SIM();
-    simId = new SIMIdentity();
-    simSec = new SIMSecurity();        
-    simLock = new SIMLock();
+    sim = new SIM(this);
+    simId = new SIMIdentity(this);
+    simSec = new SIMSecurity(this);
+    simLock = new SIMLock(this);
 
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
             this, SLOT(simPINCodeVerified(bool, SIMError)), Qt::QueuedConnection);
@@ -123,14 +124,6 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
 {    
     delete uiPin;
     uiPin = NULL;
-    delete sim;
-    sim = NULL;
-    delete simId;
-    simId = NULL;
-    delete simSec;
-    simSec = NULL;
-    delete simLock;
-    simLock = NULL;
 }
 
 void PinCodeQueryBusinessLogic::createUi(bool enableBack)
@@ -204,6 +197,14 @@ void PinCodeQueryBusinessLogic::setUiHeader(QString headerText)
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
+    qDebug() << Q_FUNC_INFO;
+
+    DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
+    Qt::WindowFlags flags = win->windowFlags();
+    Qt::WindowFlags tmp = flags;
+    //tmp &= ~Qt::WindowStaysOnTopHint;
+    win->setWindowFlags(tmp);
+
     DuiDialog* dlg = new DuiDialog();
     dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
     DuiButton* callButton = dlg->addButton(QString(trid("qtn_cell_emergency_call_number", "Call")));
@@ -213,15 +214,27 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     if(dlg->clickedButton() == callButton){
         dlg->accept();
         // do call
-        CallUiServiceApi* callUi = new CallUiServiceApi();
-        callUi->Call("/org/freedesktop/Telepathy/Account/ring/tel/ring", "urn:service:sos");
-        delete callUi;
+        if(!callUi){
+            callUi = new CallUiServiceApi(this);
+        }
+        if(callUi){
+            qDebug() << Q_FUNC_INFO << "call";
+            connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
+                    this, SLOT(emergencyCallDone(CallUi::PendingCallRequest *)));
+        }
     } else {
         dlg->reject();
     }
 
     dlg->deleteLater();
     dlg = NULL;
+    win->setWindowFlags(flags);
+    qDebug() << Q_FUNC_INFO << "out";
+}
+
+void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
+{
+    qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
 }
 
 // =======================================
@@ -299,6 +312,7 @@ void PinCodeQueryBusinessLogic::ui2disappear()
             case SIM::NotReady:
                 // what are these?? operation, in a way, succeeded because no errors received...
                 emitLaunchResponse(false);
+                queryLaunch = false;
                 break;
             case SIM::PINRequired:
             case SIM::PUKRequired:
@@ -306,16 +320,17 @@ void PinCodeQueryBusinessLogic::ui2disappear()
                 // failure case, timer not set
                 if(!launchResponseTimer->isActive()){
                     emitLaunchResponse(false);
+                    queryLaunch = false;
                 }
                 break;
             case SIM::Ok:
             case SIM::PermanentlyBlocked:
             case SIM::Rejected:
                 emitLaunchResponse(true);
+                queryLaunch = false;
                 break;
         }
     }
-    queryLaunch = false;
     closeUi();
 }
 
@@ -325,6 +340,8 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 
 void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
+                qDebug() << Q_FUNC_INFO << "call" << callUi;
+
     int len = uiPin->getCodeEntry()->text().length();
     if (previousSimState == SIM::PINRequired
         || previousSimState == SIM::PUKRequired
