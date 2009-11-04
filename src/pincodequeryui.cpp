@@ -42,21 +42,13 @@ PinCodeQueryUI::~PinCodeQueryUI()
         //we stop timing the press event
         backspaceTimer->stop();
     }
-    delete backspaceTimer;
     backspaceTimer = NULL;
-    delete emergencyCallButton;
     emergencyCallButton = NULL;
-    delete enterButton;
     enterButton = NULL;
-    delete cancelButton;
     cancelButton = NULL;
-    delete backspaceButton;
     backspaceButton = NULL;
-    delete headerLabel;
     headerLabel = NULL;
-    delete entryTextEdit;
     entryTextEdit = NULL;
-    delete numpadLayout;
     numpadLayout = NULL;
 }
 
@@ -181,31 +173,31 @@ void PinCodeQueryUI::setHeader(QString header)
 
 void PinCodeQueryUI::createWidgetItems()
 {    
-    emergencyCallButton = new DuiButton(0);
+    emergencyCallButton = new DuiButton(this);
     emergencyCallButton->setObjectName("emergencyCallButton");
     // TODO: icon ID to be updated when correct ID provided by Vappu
     emergencyCallButton->setIconID("to-be-defined");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", 0);
+    entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", this);
     entryTextEdit->setObjectName("codeEntry");
     entryTextEdit->setMaskedInput(true);
 
-    enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), 0);
+    enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), this);
     enterButton->setObjectName("enterButton");
     connect(enterButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    cancelButton = new DuiButton(QString(trid("qtn_comm_cancel", "Cancel")), 0);
+    cancelButton = new DuiButton(QString(trid("qtn_comm_cancel", "Cancel")), this);
     cancelButton->setObjectName("cancelButton");
     connect(cancelButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    backspaceButton = new DuiButton(0);
+    backspaceButton = new DuiButton(this);
     backspaceButton->setObjectName("backspaceButton");
     backspaceButton->setIconID("icon-m-keyboard-backspace");
     connect(backspaceButton, SIGNAL(released()), this, SLOT(buttonReleased()));
     connect(backspaceButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
 
-    headerLabel = new DuiLabel(0);
+    headerLabel = new DuiLabel(this);
     headerLabel->setAlignment(Qt::AlignCenter);    
     
     createNumpad();
@@ -214,7 +206,7 @@ void PinCodeQueryUI::createWidgetItems()
 void PinCodeQueryUI::createNumpad()
 {
     //create numpadLayout and policy for that
-    numpadLayout = new DuiLayout(0);
+    numpadLayout = new DuiLayout(this);
     DuiGridLayoutPolicy *numpadLayoutPolicy = new DuiGridLayoutPolicy(numpadLayout);
 
     int values[] = {
@@ -228,7 +220,7 @@ void PinCodeQueryUI::createNumpad()
         QString str1 = QString("qtn_cell_dialer_").append(QString::number(values[i]));
         QString str2 = QString::number(values[i]);
         QString str3 = QString("numpadButton" + str2);
-        DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())), 0);
+        DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())), this);
         num->setObjectName(str3);
         connect(num, SIGNAL(released()), this, SLOT(buttonReleased()));
         if(values[i] == 0) {
@@ -267,7 +259,7 @@ void PinCodeQueryUI::buttonPressed()
     //Check if the button was backspace
     if(button->objectName() == QString("backspaceButton")) {
         //we check if the user holds the button down for 1 second or longer
-        backspaceTimer = new QTimer(0);        
+        backspaceTimer = new QTimer(this);
         connect(backspaceTimer, SIGNAL(timeout()), this, SLOT(removeText()));
         backspaceTimer->start(1000);
     }
