@@ -4,7 +4,7 @@
 
 /*
     TODO:
-    1) Make sure the screen lights values are correct
+    1) Make sure the screen lights values and default index are correct
     2) Does the screen light off correcpond the blank or dim timeout?
     3) What is the hard coded gap between dimming and switching off the display?
     4) Does the timeout time really need to double if the display is tapped after it's dimmed?
@@ -19,12 +19,22 @@ DisplayBusinessLogic::DisplayBusinessLogic(QObject* parent) :
         QObject(parent),
         display(new QmDisplayState())
 {    
+    initScreenLightsValues();
 }
 
 DisplayBusinessLogic::~DisplayBusinessLogic()
 {
     delete display;
     display = NULL;
+}
+
+void DisplayBusinessLogic::initScreenLightsValues()
+{
+    qDebug() << "DisplayBusinessLogic::initScreenLightsValues()";
+
+    screenLightsValues << QString("10") << QString("30") << QString("60") << QString("120") << QString("300");   
+    display->setDisplayDimTimeout(screenLightsValues.at(1).toInt());
+    display->setDisplayBlankTimeout(screenLightsValues.at(1).toInt() + TIMEGAP);
 }
 
 void DisplayBusinessLogic::toggleDisplay(bool toggle)
@@ -49,24 +59,12 @@ void DisplayBusinessLogic::queryBrightnessValues()
 
 void DisplayBusinessLogic::queryScreenLightsValues()
 {
-    qDebug() << "DisplayBusinessLogic::queryScreenLightsValues()";
-    QStringList values;
+    qDebug() << "DisplayBusinessLogic::queryScreenLightsValues()";    
 
-    // are these OK?
-    values << QString("10") << QString("30") << QString("60") << QString("120") << QString("300");
-
-    QString value = QString("%1").arg(display->getDisplayBlankTimeout());
-    int index;
-    if(values.contains(value))
-        index = values.indexOf(value);
-    else {
-        index = 1;
-        int newBlankTimeout = values.at(index).toInt();
-        display->setDisplayBlankTimeout(newBlankTimeout);
-        display->setDisplayDimTimeout(newBlankTimeout - TIMEGAP);
-    }
-
-    emit screenLightsValuesAvailable(index, values);
+    QString value = QString("%1").arg(display->getDisplayDimTimeout());
+    int index = screenLightsValues.indexOf(value);
+    index = ( index == -1 ? 1 : index );
+    emit screenLightsValuesAvailable(index, screenLightsValues);
 }
 
 bool DisplayBusinessLogic::blankInhibitValue()
@@ -84,8 +82,8 @@ void DisplayBusinessLogic::setBrightnessValue(const QString &value)
 void DisplayBusinessLogic::setScreenLightsValue(const QString &value)
 {
     qDebug() << "DisplayBusinessLogic::setScreenLightsValue(" << value << ")";
-    display->setDisplayBlankTimeout(value.toInt());
-    display->setDisplayDimTimeout(value.toInt() - TIMEGAP);
+    display->setDisplayDimTimeout(value.toInt());
+    display->setDisplayBlankTimeout(value.toInt() + TIMEGAP);
 }
 
 void DisplayBusinessLogic::setBlankInhibitValue(bool value)

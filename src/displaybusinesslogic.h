@@ -34,8 +34,12 @@ signals:
     void displayOff();    
     void displayOn();
 
-private:
+private: //methods
+    void initScreenLightsValues();
+
+private: //attributes
     QmDisplayState *display;
+    QStringList screenLightsValues;    
 
 };
 

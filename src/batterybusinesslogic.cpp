@@ -185,10 +185,10 @@ int BatteryBusinessLogic::batteryBarValue(int percentage)
 
 void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
 {
-    //////qDebug() << "BatteryBusinessLogic::batteryStatusChanged(" << state << ")";
+    //qDebug() << "BatteryBusinessLogic::batteryStatusChanged(" << state << ")";
     switch(state) {        
         case QmBattery::StateCharging:
-            ////qDebug() << "Charging";
+            qDebug() << "Charging";
             emit batteryCharging(animationRate());
             utiliseLED(true, QString("PatternBatteryCharging"));            
             emit showNotification(ChargingText);
@@ -198,12 +198,12 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             }
             break;
         case QmBattery::StateNotCharging:
-            ////qDebug() << "Not charging";
+            qDebug() << "Not charging";
             emit batteryNotCharging();
             utiliseLED(false, QString("PatternBatteryCharging"));
             break;
         case QmBattery::StateChargingFailed:
-            ////qDebug() << "Charging not started";
+            qDebug() << "Charging not started";
             emit batteryNotCharging();
             utiliseLED(false, QString("PatternBatteryCharging"));
             emit showNotification(ChargingNotStartedText);
@@ -216,7 +216,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
 
 void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 {
-    ////qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
+    qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
 
     switch(level) {
         case QmBattery::LevelFull:            
@@ -238,7 +238,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 
 void BatteryBusinessLogic::batteryEnergyLevelChanged(int percentage)
 {
-    ////qDebug() << "BatteryBusinessLogic::batteryEnergyLevelChanged(" << percentage << ")";
+    qDebug() << "BatteryBusinessLogic::batteryEnergyLevelChanged(" << percentage << ")";
     emit batteryBarValueChanged(batteryBarValue(percentage));
     checkPSMThreshold();
 }
@@ -270,7 +270,7 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
 
 void BatteryBusinessLogic::checkPSMThreshold()
 {
-    ////qDebug() << "BatteryBusinessLogic::checkPSMThreshold()";
+    qDebug() << "BatteryBusinessLogic::checkPSMThreshold()";
     if(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool()) { // we only handle this if the auto PSM is on        
 
         if(batteryBarValue(battery->getBatteryEnergyLevel()) <= systemUIGConf->value(SystemUIGConf::BatteryPSMThresholdKey).toInt()) {
@@ -286,7 +286,7 @@ void BatteryBusinessLogic::checkPSMThreshold()
 
 QString BatteryBusinessLogic::PSMValue()
 {
-    ////qDebug() << "BatteryBusinessLogic::PSMValue()";
+    qDebug() << "BatteryBusinessLogic::PSMValue()";
     return ( deviceMode->getPSMState() == QmDeviceMode::PSMStateOn ? PSMDeactivateText : PSMActivateText );
 }
 
@@ -306,7 +306,7 @@ void BatteryBusinessLogic::togglePSM(const QString &value)
 
 void BatteryBusinessLogic::togglePSMAuto(bool toggle)
 {
-    ////qDebug() << "BatteryBusinessLogic::togglePSMAuto(" << toggle << ")";
+    qDebug() << "BatteryBusinessLogic::togglePSMAuto(" << toggle << ")";
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(toggle));
     if(toggle) // if we turn on the Auto PSM, we must check the threshold
         checkPSMThreshold();
@@ -319,7 +319,7 @@ void BatteryBusinessLogic::togglePSMAuto(bool toggle)
 
 QStringList BatteryBusinessLogic::remainingTimeValues()
 {          
-    ////qDebug() << "BatteryBusinessLogic::remainingTimeValues()";
+    qDebug() << "BatteryBusinessLogic::remainingTimeValues()";
 
     QStringList values;
     if(battery->getState() == QmBattery::StateCharging)
@@ -354,7 +354,7 @@ void BatteryBusinessLogic::utiliseLED(bool activate, const QString &pattern)
 
 void BatteryBusinessLogic::setPSMThreshold(const QString &threshold)
 {
-    ////qDebug() << "BatteryBusinessLogic::setPSMthreshold(" << threshold << ")";
+    qDebug() << "BatteryBusinessLogic::setPSMthreshold(" << threshold << ")";
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant(PSMThresholds.indexOf(threshold)));
     checkPSMThreshold();
 }
