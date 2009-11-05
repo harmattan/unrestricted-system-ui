@@ -175,8 +175,7 @@ void PinCodeQueryUI::createWidgetItems()
 {    
     emergencyCallButton = new DuiButton(this);
     emergencyCallButton->setObjectName("emergencyCallButton");
-    // TODO: icon ID to be updated when correct ID provided by Vappu
-    emergencyCallButton->setIconID("to-be-defined");
+    emergencyCallButton->setIconID("icon-m-common-emergency-call");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", this);
