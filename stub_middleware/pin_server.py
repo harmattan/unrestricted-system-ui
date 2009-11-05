@@ -189,13 +189,14 @@ class Server(dbus.service.Object):
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def VerifyPIN(self, type, code):
         self.on_verifypin(self.verifypin)
-        self.pin_attempts_left -= 1
+        if self.SIM_MODES[self.mode_idx] == 'PINRequired':
+            self.pin_attempts_left -= 1
         if code == self.pin:
             if self.SIM_MODES[self.mode_idx] == 'PINRequired':
                 self.pin_attempts_left = 3
                 gobject.timeout_add(11*TIMEOUT, self.setOkDelay, 'Ok')
                 print 'start timer: Ok'
-                return True
+            return True
         if self.pin_attempts_left == 0:
             self.SetState('PUKRequired')
         raise WrongPassword('')
