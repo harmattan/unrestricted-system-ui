@@ -3,6 +3,7 @@
 #include "main.h"
 
 #include <QTimer>
+#include <QDebug>
 #include <DuiSceneManager>
 #include <DuiApplication>
 
@@ -38,7 +39,7 @@ void sysuid_exit(int sig)
 
 
 int main(int argc, char** argv)
-{
+{    
     DuiApplication app(argc, argv);
     globalExitPtr = &app;
 
