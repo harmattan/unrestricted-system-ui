@@ -10,8 +10,6 @@ class DuiGridLayoutPolicy;
 class DuiImage;
 class DuiSlider;
 
-class QTimer;
-
 class TalkTimeContainer;
 class StandByTimeContainer;
 class SliderContainer;
@@ -39,8 +37,7 @@ private: //attributes
     StandByTimeContainer *standByTimeContainer;
     SliderContainer *sliderContainer;
     BatteryDBusInterface *batteryIf;
-    DuiButton *PSMButton;
-    QTimer *remainingTimesTimer;
+    DuiButton *PSMButton;    
 
 };
 #endif // BATTERYWIDGET_H

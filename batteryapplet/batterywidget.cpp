@@ -7,8 +7,6 @@
 #include "slidercontainer.h"
 
 #include <QDebug>
-#include <QTimer>
-
 
 #include <DuiButton>
 #include <DuiContainer>
@@ -27,13 +25,7 @@ TODO list:
 
 1) what is the correct interval for updating the battery image when charging? Is there a difference between
    USB and normal charging?
-2) the battery images should be logical names instead of hard coded values
-3) There should be 8 normal and 8 charging battery images instead of 6
-4) The values in the slider should be percentage (QmBattery API provides)
-5) The layout should be finalized
-6) It should be confirmed, how the remaining time labels should behave when the battery is charging.
-   Currently QmBattery API return -1 when charging.
-7) It should be confirmed that 10 seconds is correct interval to update the remaining time labels
+2) The layout should be finalized
 
 */
 
@@ -43,8 +35,7 @@ BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
         standByTimeContainer(NULL),
         sliderContainer(NULL),
         batteryIf(NULL),
-        PSMButton(NULL),
-        remainingTimesTimer(NULL)
+        PSMButton(NULL)
 {
     setReferer(DcpBattery::None);
     initWidget();
@@ -144,12 +135,5 @@ void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
 {
     qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";    
     talkTimeContainer->updateTimeLabel(timeValues.at(0));
-    standByTimeContainer->updateTimeLabel(timeValues.at(1));
-
-    if(remainingTimesTimer == NULL) {
-        // we don't use single shot, because the remaining time values are received also when PSM is toggled
-        remainingTimesTimer = new QTimer(this);
-        connect(remainingTimesTimer, SIGNAL(timeout()), batteryIf, SLOT(remainingTimeValuesRequired()));
-        remainingTimesTimer->start(10000);
-    }
+    standByTimeContainer->updateTimeLabel(timeValues.at(1));   
 }

@@ -8,8 +8,7 @@
 
 /* TODO List
 
-   1) Create notification for RechargeBatteryText (have to get signal to know when the device is turned off coz of the
-      too low battery)   
+   1) Create notification for RechargeBatteryText. Connect it to the signal from QmSystemState which inforsm the reason for shut down.
    2) What are correct animation rates when charging with USB / Wall?
    3) If USB 100 mA is used, do we show animation at all? In Fremantle not.
    4) Connect sounds with notifications
@@ -240,6 +239,7 @@ void BatteryBusinessLogic::batteryEnergyLevelChanged(int percentage)
 {
     qDebug() << "BatteryBusinessLogic::batteryEnergyLevelChanged(" << percentage << ")";
     emit batteryBarValueChanged(batteryBarValue(percentage));
+    emit remainingTimeValuesChanged(remainingTimeValues());
     checkPSMThreshold();
 }
 
