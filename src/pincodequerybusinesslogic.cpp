@@ -250,7 +250,10 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 
 void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
 {
-    qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
+    if(req)
+        qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
+    else
+        qDebug() << Q_FUNC_INFO << "call failure?";
 }
 
 // =======================================
@@ -355,8 +358,6 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 
 void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
-                qDebug() << Q_FUNC_INFO << "call" << callUi;
-
     int len = uiPin->getCodeEntry()->text().length();
     if (previousSimState == SIM::PINRequired
         || previousSimState == SIM::PUKRequired
