@@ -24,7 +24,6 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
 {
     qDebug() << "ProfileContainer::ProfileContainer()" << title;
 
-    // TODO: hardcoded silent value!!
     if(0 <= level) {
         slider = new DuiSlider(this, "continuous");
         slider->setOrientation(Qt::Horizontal);
