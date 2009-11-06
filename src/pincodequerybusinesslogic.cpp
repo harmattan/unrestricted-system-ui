@@ -8,7 +8,6 @@
 #include <DuiTextEdit>
 #include <DuiApplicationWindow>
 #include <DuiApplication>
-#include <call-ui/calluiserviceapi.h>
 #include <QRegExpValidator>
 #include <QTimer>
 
@@ -215,12 +214,6 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
     qDebug() << Q_FUNC_INFO;
 
-    DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
-    Qt::WindowFlags flags = win->windowFlags();
-    Qt::WindowFlags tmp = flags;
-    //tmp &= ~Qt::WindowStaysOnTopHint;
-    win->setWindowFlags(tmp);
-
     DuiDialog* dlg = new DuiDialog();
     dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
     DuiButton* callButton = dlg->addButton(QString(trid("qtn_cell_emergency_call_number", "Call")));
@@ -228,23 +221,19 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     dlg->exec();
 
     if(dlg->clickedButton() == callButton){
-        dlg->accept();
         // do call
         if(!callUi){
             callUi = new CallUiServiceApi(this);
         }
         if(callUi){
             qDebug() << Q_FUNC_INFO << "call";
+//            connect(callUi->RequestCellularCall("+3580405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
             connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
                     this, SLOT(emergencyCallDone(CallUi::PendingCallRequest *)));
         }
-    } else {
-        dlg->reject();
     }
 
     dlg->deleteLater();
-    dlg = NULL;
-    win->setWindowFlags(flags);
     qDebug() << Q_FUNC_INFO << "out";
 }
 
@@ -358,6 +347,8 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 
 void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
+                qDebug() << Q_FUNC_INFO << "call" << callUi;
+
     int len = uiPin->getCodeEntry()->text().length();
     if (previousSimState == SIM::PINRequired
         || previousSimState == SIM::PUKRequired
