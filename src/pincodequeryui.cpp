@@ -71,6 +71,12 @@ void PinCodeQueryUI::createContent()
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
     //attach widget items to landscape and portrait policies
+    /*
+    Note that the columns and rows are not equally wide or tall. If you want two
+    columns to have the same width, you must set their minimum widths and stretch
+    factors to be the same yourself. You do this using setColumnMinimumWidth() and
+    setColumnStretch().
+    */
     // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
     landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
     landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 6);

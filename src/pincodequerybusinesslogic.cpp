@@ -181,7 +181,7 @@ void PinCodeQueryBusinessLogic::closeUi()
     subState = SubNothing;
     oldPinCode = "";
     newPinCode = "";
-    qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << uiPin->isVisible();
+    qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << (uiPin ? uiPin->isVisible() : (bool)0);
     if(uiPin)
     {
         uiPin->disappearNow();
