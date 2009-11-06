@@ -20,7 +20,7 @@ signals:
     void batteryNotCharging();
     void batteryBarValueChanged(int);
     void PSMValueChanged(QString);
-    void PSMAutoValueChanged(bool);
+    void PSMAutoDisabled();
     void remainingTimeValuesChanged(QStringList);
 
 public slots:

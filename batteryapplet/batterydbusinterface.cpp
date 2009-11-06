@@ -12,7 +12,7 @@ BatteryDBusInterface::BatteryDBusInterface()
     connect(dbusIf, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(dbusIf, SIGNAL(batteryBarValueChanged(int)), this, SIGNAL(batteryBarValueReceived(int)));
     connect(dbusIf, SIGNAL(PSMValueChanged(QString)), this, SIGNAL(PSMValueReceived(QString)));
-    connect(dbusIf, SIGNAL(PSMAutoValueChanged(bool)), this, SIGNAL(PSMAutoValueReceived(bool)));
+    connect(dbusIf, SIGNAL(PSMAutoDisabled()), this, SIGNAL(PSMAutoDisabled()));
     connect(dbusIf, SIGNAL(remainingTimeValuesChanged(QStringList)), this, SIGNAL(remainingTimeValuesReceived(QStringList)));
 }
 

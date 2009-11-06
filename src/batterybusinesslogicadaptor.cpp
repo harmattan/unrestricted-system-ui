@@ -10,7 +10,7 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBu
     connect(batteryLogic, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(batteryLogic, SIGNAL(batteryBarValueChanged(int)), this, SIGNAL(batteryBarValueChanged(int)));
     connect(batteryLogic, SIGNAL(PSMValueChanged(QString)), this, SIGNAL(PSMValueChanged(QString)));
-    connect(batteryLogic, SIGNAL(PSMAutoValueChanged(bool)), this, SIGNAL(PSMAutoValueChanged(bool)));
+    connect(batteryLogic, SIGNAL(PSMAutoDisabled()), this, SIGNAL(PSMAutoDisabled()));
     connect(batteryLogic, SIGNAL(remainingTimeValuesChanged(QStringList)), this, SIGNAL(remainingTimeValuesChanged(QStringList)));
 }
 

@@ -36,8 +36,9 @@ signals:
     void batteryCharging(int);
     void batteryNotCharging();
     void batteryBarValueChanged(int);
-    void PSMValueReceived(QString);
+    void PSMValueReceived(QString);    
     void PSMAutoValueReceived(bool);
+    void PSMAutoDisabled();
     void PSMThresholdValuesReceived(QStringList);
     void PSMThresholdValueReceived(QString);
     void remainingTimeValuesReceived(QStringList);

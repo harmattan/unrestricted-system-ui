@@ -301,7 +301,7 @@ void BatteryBusinessLogic::togglePSM(const QString &value)
 
     //when ever we toggle PSM manually, we turn off the automatic PSM
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(false));
-    emit PSMAutoValueChanged(false);    
+    emit PSMAutoDisabled();
 }
 
 void BatteryBusinessLogic::togglePSMAuto(bool toggle)

@@ -76,6 +76,13 @@ void SliderContainer::initPSMAutoButton(bool toggle)
     toggleSliderExistence(toggle);
 }
 
+void SliderContainer::PSMAutoDisabled()
+{
+    PSMAutoButton->blockSignals(true);
+    initPSMAutoButton(false);
+    PSMAutoButton->blockSignals(false);
+}
+
 void SliderContainer::PSMAutoButtonToggled(bool toggle)
 {
     qDebug() << "SliderContainer::PSMAutoButtonToggled(" << toggle << ")";

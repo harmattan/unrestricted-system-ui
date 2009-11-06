@@ -53,6 +53,7 @@ bool BatteryWidget::back()
 
 void BatteryWidget::initWidget()
 {       
+    qDebug() << "Test";
     // proxy for dbus interface on remote object
     batteryIf = new BatteryDBusInterface();
 
@@ -74,11 +75,17 @@ void BatteryWidget::initWidget()
     // mainContainer
     DuiLayout *orientationLayout = new DuiLayout();
 
+    qDebug() << "Test";
     DuiGridLayoutPolicy *landscapeLayoutPolicy = new DuiGridLayoutPolicy(orientationLayout);
+    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(talkTimeContainer, 0, 0);
+    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(standByTimeContainer, 0, 1);
+    qDebug() << "Test2";
     landscapeLayoutPolicy->addItemAtPosition(PSMButton, 1, 0, 1, 2);
+    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(sliderContainer, 2, 0, 1, 2);
+    qDebug() << "Test";
     landscapeLayoutPolicy->setSpacing(20);
     orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
 
@@ -101,6 +108,7 @@ void BatteryWidget::initWidget()
     connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));
     connect(batteryIf, SIGNAL(PSMValueReceived(QString)), this, SLOT(updatePSMButton(QString)));
     connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
+    connect(batteryIf, SIGNAL(PSMAutoDisabled()), sliderContainer, SLOT(PSMAutoDisabled()));
     connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), sliderContainer, SLOT(initSlider(QStringList)));
     connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), batteryIf, SLOT(PSMThresholdValueRequired()));
     connect(batteryIf, SIGNAL(PSMThresholdValueReceived(QString)), sliderContainer, SLOT(updateSlider(QString)));

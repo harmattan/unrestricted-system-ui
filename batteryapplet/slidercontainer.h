@@ -20,6 +20,7 @@ public slots:
     void initSlider(const QStringList &values);
     void updateSlider(const QString &value);
     void initPSMAutoButton(bool toggle);
+    void PSMAutoDisabled();
 
 private slots:
     void PSMAutoButtonToggled(bool toggle);
