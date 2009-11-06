@@ -14,6 +14,7 @@ class DuiStylableWidget;
 class DuiWidgetController;
 class NetworkDBusInterface;
 class NetworkContainer;
+class RoamingContainer;
 
 #include <QDebug>
 
@@ -29,29 +30,24 @@ public:
 protected:
     void initWidget();
 
-private slots:        
+private slots:
     void initPhoneNetworkButton(bool toggle);
-    void initRoamingButton(bool value);
-    void initRoamingUpdatesButton(bool value);
     void initNetworkModeComboBox(int selected, const QStringList &values);
     void initNetworkSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
     void dataCounterButtonPressed();
     void toggleNetworkSelected(bool toggle);
-    void toggleNetworkSettings(bool toggle);
-    void toggleRoamingUpdatesButton(bool toggle);
+    void toggleNetworkSettings(bool toggle);    
 
 private: //methods
     void changeSelection();    
 
 private: //attributes        
-    DuiButton *phoneNetworkButton;
-    DuiButton *roamingButton;
-    DuiButton *roamingUpdatesButton;
+    DuiButton *phoneNetworkButton;    
     DuiButton *dataCounterButton;    
-    DuiGridLayoutPolicy *contentLayoutPolicy;
-    DuiLabel *roamingUpdatesLabel;
+    DuiGridLayoutPolicy *contentLayoutPolicy;    
     bool networkSelected;
     NetworkContainer *networkContainer;
+    RoamingContainer *roamingContainer;
     NetworkDBusInterface *networkIf;
 
 };

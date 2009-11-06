@@ -18,17 +18,20 @@ const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
 void NetworkApplet::init()
 {
+    qDebug() << "Test";
     DuiTheme::loadCSS(cssDir + "networkapplet.css");
 };
 
 DcpWidget* NetworkApplet::constructWidget(int widgetId)
 {
+    qDebug() << "Test";
     Q_UNUSED(widgetId);
     return pageMain();
 }
 
 DcpWidget* NetworkApplet::pageMain()
 {
+    qDebug() << "Test";
      if(main == NULL)
         main = new NetworkWidget();
     return main;    

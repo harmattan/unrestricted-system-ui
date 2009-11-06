@@ -21,13 +21,15 @@ HEADERS = networkapplet.h \
     networkdbusinterface.h \
     networktranslation.h \
     networkcontainer.h \
-    networklist.h
+    networklist.h \
+    roamingcontainer.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
     networkbrief.cpp \
     networkdbusinterface.cpp \
     networkcontainer.cpp \
-    networklist.cpp
+    networklist.cpp \
+    roamingcontainer.cpp
 css.files = networkapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

@@ -3,7 +3,7 @@ Type=DUIApplet
 Name=Phone network
 Icon=
 Exec=
-X-logical-id=qtn_NOT_DEFINED
+X-logical-id=qtn_cell_phone_network
 X-translation-catalog=duisettings
 
 [DUI]
@@ -15,4 +15,4 @@ X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 Category= Look & Feel
 Order=1
 WidgetType= DcpLabel2
-
+Text2= N/A

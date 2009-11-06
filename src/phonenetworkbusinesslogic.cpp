@@ -140,8 +140,7 @@ void PhoneNetworkBusinessLogic::queryNetworkModes()
 
     RadioAccess ra;        
     int index = (ra.mode() == RadioAccess::UnknownMode ? -1 : modes.indexOf(networkModes.value(ra.mode())));
-    qDebug() << "PhoneNetworkBusinessLogic::queryNetworkModes( " << modes.size() << ")";
-    qDebug() << "\n\n\nJAKE " << ra.mode() << "\n\n\n";
+    qDebug() << "PhoneNetworkBusinessLogic::queryNetworkModes( " << modes.size() << ")";    
     emit networkModeValuesAvailable(index, modes);
 }
 

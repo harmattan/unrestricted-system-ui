@@ -11,15 +11,19 @@
 #include <QDebug>
 
 NetworkContainer::NetworkContainer(DuiWidget *parent) :
-        DuiContainer(parent),        
-        modeComboBox(new DuiComboBox(this)),
-        selectionComboBox(new DuiComboBox(this)),
+        DuiContainer(DcpNetwork::NetworkTitleText, parent),
+        modeComboBox(NULL),
+        selectionComboBox(NULL),
         infoLabel(NULL),
-        modeLabel(new DuiLabel(DcpNetwork::NetworkModeText, this)),
-        selectionLabel(new DuiLabel(DcpNetwork::NetworkSelectionText, this)),
+        modeLabel(NULL),
+        selectionLabel(NULL),
         selectionDefaultIndex(-1),
         networkList(NULL)
-{        
+{    
+    modeComboBox = new DuiComboBox(this);
+    selectionComboBox = new DuiComboBox(this);
+    modeLabel = new DuiLabel(DcpNetwork::NetworkModeText, this);
+    selectionLabel = new DuiLabel(DcpNetwork::NetworkSelectionText, this);
     toggleComboBoxSignalConnection(modeComboBox);
     toggleComboBoxSignalConnection(selectionComboBox);    
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));

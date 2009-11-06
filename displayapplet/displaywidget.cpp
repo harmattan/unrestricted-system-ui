@@ -11,6 +11,10 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
+/* TODO:
+    1) Display header not yet defined (logical name)
+*/
+
 DisplayWidget::DisplayWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
         blankInhibitButton(new DuiButton(this)),
