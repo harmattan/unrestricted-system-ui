@@ -1,19 +1,19 @@
 #vibrationButton {
-	preferred-size: 35 35;
-        minimum-size: 90% 35;
-        maximum-size: 90% 35;
+        preferred-size: 36 36;
+        minimum-size: 90% 36;
+        maximum-size: 90% 36;
 }
 
 #speakerIcon {
-        preferred-size: 32 32;
-        minimum-size: 32 32;
-        maximum-size: 32 32;
+        preferred-size: 36 36;
+        minimum-size: 36 36;
+        maximum-size: 36 36;
 }
 
 #slider {
-        preferred-size: 32 0;
-        minimum-size: 32 0;
-        maximum-size: 32 100%;
+        preferred-size: 36 0;
+        minimum-size: 36 0;
+        maximum-size: 36 100%;
 }
 
 #vibraButton {
@@ -25,17 +25,17 @@
 #profileContainerLayout.Landscape {
 	background-opacity: 255;
     	background-color: #141414;
-        preferred-size: 43% 20%;
+        preferred-size: 43% 30%;
         minimum-size: 43% 20%;
-        maximum-size: 43% 20%;
+        maximum-size: 43% 40%;
 }
 
 #profileContainerLayout.Portrait {
         background-opacity: 255;
         background-color: #141414;
-        preferred-size: 43% 20%;
+        preferred-size: 87% 20%;
         minimum-size: 43% 20%;
-        maximum-size: 43% 20%;
+        maximum-size: 90% 40%;
 }
 
 #profileWidgetLayout.Portrait {
