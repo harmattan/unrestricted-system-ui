@@ -110,6 +110,7 @@ private: // methods
     bool stateOperation(int status, int relationState);
     void startLaunch();
     void getCode(bool enableBack, QString header);
+    void setPinHeader(int attemptsLeft);
 
     void doEmergencyCall();
     void informTechnicalProblem();

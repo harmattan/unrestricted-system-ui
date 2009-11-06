@@ -134,7 +134,7 @@ class Server(dbus.service.Object):
             ]
         self.mode_idx = 0
 
-        self.pin_attempts_left = 3
+        self.pin_attempts_left = 4
         self.puk_attempts_left = 10
 
         self.pin = PIN

@@ -196,6 +196,21 @@ void PinCodeQueryBusinessLogic::setUiHeader(QString headerText)
         uiPin->setHeader(headerText);
 }
 
+void PinCodeQueryBusinessLogic::setPinHeader(int attemptsLeft)
+{
+    qDebug() << Q_FUNC_INFO << attemptsLeft;
+    switch (attemptsLeft) {
+    case 2:
+        setUiHeader(trid("qtn_cell_enter_pin_code_2",
+                              "Enter PIN code. 2 attempts remaining."));
+        break;
+    case 1:
+        setUiHeader(trid("qtn_cell_enter_pin_code_1",
+                              "Enter PIN code. 1 attempt remaining."));
+        break;
+    };
+}
+
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
     qDebug() << Q_FUNC_INFO;
@@ -259,25 +274,24 @@ void PinCodeQueryBusinessLogic::ui2PINQuery()
 {
     subState = SubFirstTry;
     getCode(false, HeaderEnterPinCode);
+    simSec->pinAttemptsLeft(SIMSecurity::PIN);
 }
 
 void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
-    switch (attemptsLeft) {
+    qDebug() << Q_FUNC_INFO << attemptsLeft;
+    switch(attemptsLeft){
     case 2:
-        if(subState != SubEnterOldPIN)
-            emit showNotification(PINCodeIncorrect2AttemptsLeft, NotificationType::error);
-        setUiHeader(trid("qtn_cell_enter_pin_code_2",
-                              "Enter PIN code. 2 attempts remaining."));
+        emit showNotification(PINCodeIncorrect2AttemptsLeft, NotificationType::error);
         break;
     case 1:
-        if(subState != SubEnterOldPIN)
-            emit showNotification(PINCodeIncorrect1AttemptLeft, NotificationType::error);
-        setUiHeader(trid("qtn_cell_enter_pin_code_1",
-                              "Enter PIN code. 1 attempt remaining."));
+        emit showNotification(PINCodeIncorrect1AttemptLeft, NotificationType::error);
         break;
+    default:
+        emit showNotification(PINCodeIncorrectSettings, NotificationType::error);
     };
 }
+
 void PinCodeQueryBusinessLogic::ui2PUKQuery()
 {
     getCode(false, HeaderEnterPukCode);
@@ -285,7 +299,7 @@ void PinCodeQueryBusinessLogic::ui2PUKQuery()
 
 void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 {
-    attemptsLeft++; // warnings off
+    Q_UNUSED(attemptsLeft);
     emit showNotification(PUKCodeIncorrect, NotificationType::error);
 }
 
@@ -508,6 +522,9 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
                 emit showNotification(PINCodeIncorrectSettings, NotificationType::error);
                 ui2disappear();
             } else {
+                if(SubFirstTry == subState){
+                    subState = SubFailedTry;
+                }
                 simSec->pinAttemptsLeft(SIMSecurity::PIN);
             }
         }
@@ -547,8 +564,12 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 {
-    if(handleSIMError(error))
-        ui2PINFailed(attempts);
+    if(handleSIMError(error)){
+        setPinHeader(attempts);
+        if(SubFailedTry == subState){
+            ui2PINFailed(attempts);
+        }
+    }
     //else
     //    ; // XXX
 }
@@ -583,6 +604,7 @@ void PinCodeQueryBusinessLogic::simPinQueryStateComplete(SIMSecurity::PINQuery s
         subState = SubNothing;
     } else {
         getCode(true, HeaderEnterPinCode);
+        simSec->pinAttemptsLeft(SIMSecurity::PIN);
     }
 }
 
@@ -708,9 +730,10 @@ void PinCodeQueryBusinessLogic::changePinCode()
 {
     qDebug() << Q_FUNC_INFO << ":" << previousSimState;
 
-    subState = SubEnterOldPIN;
     if(SIM::Ok == previousSimState) {
+        subState = SubEnterOldPIN;
         getCode(true, HeaderEnterPinCode);
+        simSec->pinAttemptsLeft(SIMSecurity::PIN);
     }
 }
 
