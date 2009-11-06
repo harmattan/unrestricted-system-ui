@@ -1,8 +1,6 @@
 #include "batterybusinesslogic.h"
-#include <qmsystem/qmled.h>
 
 #include <DuiLocale>
-
 #include <QTimer>
 #include <QTime>
 

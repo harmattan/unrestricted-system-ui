@@ -1,4 +1,5 @@
 include(duiconfig.pri)
+STUB_PREFIX = ../tests/stubs/
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
@@ -38,9 +39,10 @@ SOURCES += main.cpp \
     phonenetworkbusinesslogic.cpp \
     phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
-    devicemodestub.cpp \
-    batterystub.cpp \    
-    displaystatestub.cpp
+    $$STUB_PREFIX/devicemodestub.cpp \
+    $$STUB_PREFIX/batterystub.cpp \
+    $$STUB_PREFIX/displaystatestub.cpp \
+    $$STUB_PREFIX/ledstub.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -63,9 +65,10 @@ HEADERS += main.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
     devicemodestub.h \
-    batterystub.h \        
-    displaystatestub.h \
-    notificationtype.h
+    $$STUB_PREFIX/batterystub.h \
+    $$STUB_PREFIX/displaystatestub.h \
+    $$STUB_PREFIX/notificationtype.h \
+    $$STUB_PREFIX/ledstub.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

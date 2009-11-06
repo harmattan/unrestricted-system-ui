@@ -1,5 +1,7 @@
-SLIDER_PREFIX = ../../src/
-INCLUDEPATH += $$SLIDER_PREFIX
+SRC_PREFIX = ../../src/
+STUB_PREFIX = ../stubs/
+INCLUDEPATH += $$SRC_PREFIX \
+    $$STUB_PREFIX
 QT += testlib \
     dbus
 TEMPLATE = app
@@ -10,16 +12,16 @@ CONFIG += dui \
     cellular-qt \
     qmsystem
 SOURCES += ut_lowbatterynotifier.cpp \
-    $$SLIDER_PREFIX/batterybusinesslogic.cpp \
-    $$SLIDER_PREFIX/displaystatestub.cpp \
-    $$SLIDER_PREFIX/batterystub.cpp \
-    $$SLIDER_PREFIX/systemuigconf.cpp
+    $$SRC_PREFIX/batterybusinesslogic.cpp \
+    $$STUB_PREFIX/displaystatestub.cpp \
+    $$STUB_PREFIX/batterystub.cpp \
+    $$STUB_PREFIX/gconfstub.cpp
 
 HEADERS += ut_lowbatterynotifier.h \
-    $$SLIDER_PREFIX/batterybusinesslogic.h \
-    $$SLIDER_PREFIX/displaystatestub.h \
-    $$SLIDER_PREFIX/batterystub.h \
-    $$SLIDER_PREFIX/systemuigconf.h
+    $$SRC_PREFIX/batterybusinesslogic.h \
+    $$STUB_PREFIX/displaystatestub.h \
+    $$STUB_PREFIX/batterystub.h \
+    $$STUB_PREFIX/gconfstub.h
 
 contains(cov, true) {
     message("Coverage options enabled")

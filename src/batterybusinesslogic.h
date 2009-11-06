@@ -3,20 +3,25 @@
 
 #include <QDebug>
 
-#include "systemuigconf.h"
-//#include <qmsystem/qmbattery.h>
+#ifdef UNIT_TEST
+#include "ledstub.h"
 #include "batterystub.h"
-//#include <qmsystem/qmdevicemode.h> //replaced with stub class
 #include "devicemodestub.h"
-//#include <qmsystem/qmdisplaystate.h> //replaced with stub class
 #include "displaystatestub.h"
+#include "gconfstub.h"
+#else
+#include "../tests/stubs/ledstub.h" //#include <qmsystem/qmled.h>
+#include "../tests/stubs/batterystub.h" //#include <qmsystem/qmbattery.h>
+#include "../tests/stubs/devicemodestub.h" //#include <qmsystem/qmdevicemode.h>
+#include "../tests/stubs/displaystatestub.h" //#include <qmsystem/qmdisplaystate.h>
+#include "systemuigconf.h"
+#endif
 
 #include <QObject>
 #include <QStringList>
 #include <QTime>
 
 class QTimer;
-
 
 using namespace Maemo;
 
@@ -101,6 +106,10 @@ private slots:
     void batteryChargerEvent(Maemo::QmBattery::ChargerEvent event);
     void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);    
     void utiliseLED(bool activate, const QString &pattern);
+
+#ifdef UNIT_TEST
+   friend class Ut_BatteryBusinessLogic;
+#endif // UNIT_TEST
 
 };
 

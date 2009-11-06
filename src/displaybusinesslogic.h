@@ -2,8 +2,7 @@
 #define DISPLAYBUSINESSLOGIC_H
 
 #include "systemuigconf.h"
-//#include <qmsystem/qmdisplaystate.h> // stub used
-#include "displaystatestub.h"
+#include "../tests/stubs/displaystatestub.h" //#include <qmsystem/qmdisplaystate.h>
 
 #include <QObject>
 #include <QStringList>

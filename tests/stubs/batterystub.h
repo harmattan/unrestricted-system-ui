@@ -77,7 +77,8 @@ public:
      * Get current battery energy level.
      * @return  Battery level in percentages
      */
-    int getBatteryEnergyLevel();
+    int getBatteryEnergyLevel();   
+    void setBatteryEnergyLevel(int level); //own addition
 
     /* Remaining battery time (idle), seconds
      * @param mode The mode
@@ -120,19 +121,12 @@ signals:
     */
     void batteryStatusChanged(Maemo::QmBattery::State state);
 
-
-private slots:
-    void updateValues();
-
 private: //methods
     void initValues();
 
 private: //attributes
     QList<QmBattery::Level> levels;
-    QList<int> percentages;
-    int levelIndex;
-    int levelIndexIncrease;
-    int previousIndex;
+    int energyLevel;
     QmBattery::State state;
     QmBattery::ChargerType type;
 

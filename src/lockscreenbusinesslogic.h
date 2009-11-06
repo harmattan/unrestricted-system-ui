@@ -1,9 +1,8 @@
 #ifndef LOCKSCREENBUSINESSLOGIC_H
 #define LOCKSCREENBUSINESSLOGIC_H
 
-#include "qmsystem/qmlocks.h"
-//#include "qmsystem/qmdisplaystate.h" // stub used
-#include "displaystatestub.h"
+#include <qmsystem/qmlocks.h>
+#include "../tests/stubs/displaystatestub.h" //#include "qmsystem/qmdisplaystate.h"
 #include "eventeater.h"
 
 #include <QObject>

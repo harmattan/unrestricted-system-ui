@@ -5,6 +5,10 @@
 #include <QObject>
 
 #include "batterybusinesslogic.h"
+#include "batterystub.h"
+#include "devicemodestub.h"
+#include "displaystatestub.h"
+#include "ledstub.h"
 
 class Ut_BatteryBusinessLogic : public QObject
 {
@@ -17,8 +21,7 @@ private slots:
     void cleanupTestCase();
 
     void testSetPSMThreshold();
-    void testTogglePSM();
-    void testPSMValue();
+    void testTogglePSM();    
     void testTogglePSMAuto();
 
 private:
