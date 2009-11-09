@@ -11,6 +11,12 @@ target.path = /usr/lib/system-ui-tests
 CONFIG += dui \
     cellular-qt \
     qmsystem
+contains(cov, true) {
+    message("Coverage options enabled")
+    QMAKE_CXXFLAGS += --coverage
+    QMAKE_LFLAGS += --coverage
+}
+
 SOURCES += ut_lowbatterynotifier.cpp \
     $$SRC_PREFIX/batterybusinesslogic.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \
