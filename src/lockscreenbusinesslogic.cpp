@@ -9,7 +9,6 @@
 LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
         QObject(parent),
         display(new QmDisplayState()),
-        eventEater(new EventEater()),
         lockUI(NULL/*new LockScreenUI()*/)
 {
     qDebug() << Q_FUNC_INFO;
@@ -18,20 +17,23 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
 
+
+    /*
     dbusIf = new QDBusInterface("org.maemo.dui.NotificationManager", "/systemui",
                                 "org.maemo.dui.NotificationManager.MissedEvents",
-                                QDBusConnection::sessionBus());
+                                QDBusConnection::sessionBus(), this);
     connect(dbusIf, SIGNAL(missedEventAmountsChanged(int, int, int, int)),
             this, SLOT(updateMissedEventAmounts(int, int, int, int)));
     dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
+    */
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
     delete display;
     display = NULL;
-    delete eventEater;
-    eventEater = NULL;
+    //delete eventEater;
+    //eventEater = NULL;
     //delete lockUI;
     lockUI = NULL;
 }
@@ -77,10 +79,11 @@ void LockScreenBusinessLogic::unlockScreen()
     toggleKeyPadLock(false); //unlock the keypad
 }
 
-void LockScreenBusinessLogic::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
+void LockScreenBusinessLogic::updateMissedEventAmounts(int a, int b, int c, int d)
 {
-    qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts(" << calls << ", " << messages << ", " << emails << ", " << chatMessages << ")";
-    //lockUI->updateMissedEventAmounts(calls, messages, emails, chatMessages);
+    qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts("
+            << a << ", " << b << ", " << c << ", " << d << ")";
+    lockUI->updateMissedEventAmounts(a, b, c, d);
 }
 
 void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)

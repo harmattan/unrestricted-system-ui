@@ -1,4 +1,5 @@
-#include <DuiApplicationWindow>
+#include <QDebug>
+
 #include "sysuid.h"
 #include "main.h"
 
@@ -6,6 +7,7 @@
 #include <QDebug>
 #include <DuiSceneManager>
 #include <DuiApplication>
+#include <DuiApplicationWindow>
 
 #include "signal.h"
 
@@ -27,13 +29,13 @@ void TestObj::doRotation()
 }
 
 
-DuiApplication *globalExitPtr;
+static DuiApplication *exitPtr;
 void sysuid_exit(int sig)
 {
     Q_UNUSED(sig);
-    if (globalExitPtr) {
-        globalExitPtr->quit();
-        globalExitPtr = NULL;
+    if (exitPtr) {
+        exitPtr->quit();
+        exitPtr = NULL;
     }
 }
 
@@ -41,7 +43,7 @@ void sysuid_exit(int sig)
 int main(int argc, char** argv)
 {    
     DuiApplication app(argc, argv);
-    globalExitPtr = &app;
+    exitPtr = &app;
 
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
@@ -56,13 +58,13 @@ int main(int argc, char** argv)
 
     Sysuid daemon;
 
-    /* Comment in if rotation test needed. *
+    /* Comment in if rotation test needed. */
     TestObj obj;
     QTimer *rotation = new QTimer(0);
     rotation->setInterval(5*1000);
     rotation->start();
     QObject::connect(rotation, SIGNAL(timeout()), &obj, SLOT(doRotation()));
-    **/
+    /**/
 
     int ret = app.exec();
     //qDebug() << "Bye!";

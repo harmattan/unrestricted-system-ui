@@ -14,7 +14,7 @@
 #include "phonenetworkbusinesslogic.h"
 #include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
-//#include "shutdownbusinesslogic.h"
+#include "lockscreenbusinesslogicadaptor.h"
 #include "eventhandler.h"
 #include "notifier.h"
 #include "notificationtype.h"
@@ -86,6 +86,7 @@ Sysuid::Sysuid() :
     new DisplayBusinessLogicAdaptor(this, displayLogic);
     new PhoneNetworkBusinessLogicAdaptor(this, networkLogic);
     new BatteryBusinessLogicAdaptor(this, batteryLogic);
+    new LockScreenBusinessLogicAdaptor(this, lockScreenLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus();
     if (!bus.registerService(dbusService())) {

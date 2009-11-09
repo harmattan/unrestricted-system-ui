@@ -18,13 +18,8 @@ public:
     LockScreenUI();
     virtual ~LockScreenUI();
     virtual void createContent();
-/*
-    bool screenLock();
-    void toggleScreenLock(bool toggle);
-    bool sleepMode();
-    void toggleSleepMode(bool toggle);
-*/
-    void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
+
+    void updateMissedEventAmounts(int a, int b, int c, int d);
 
 signals:
     void unlocked();
@@ -32,13 +27,13 @@ signals:
 public slots:
     void sliderUnlocked();
     void orientationChanged(const Dui::Orientation &orientation);
+    void updateDateTime();
 
 private:
     void timerEvent(QTimerEvent *event);
-    void updateDateTime();
     void calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect,
-                        QRect& a, QRect& b, QRect& c,
-                        QRect& a2, QRect& b2, QRect& c2,
+                        QRect& a, QRect& b, QRect& c, QRect& d,
+                        QRect& a2, QRect& b2, QRect& c2, QRect& d2,
                         QRect& sliderRect);
 
 private:
@@ -47,13 +42,15 @@ private:
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
 
     DuiImage
-        *missedCallsImage,
+        *unreadEmailsImage,
         *unreadMessagesImage,
+        *missedCallsImage,
         *unreadChatMessagesImage;
 
     DuiLabel
-        *missedCallsLbl,
+        *unreadEmailsLbl,
         *unreadMessagesLbl,
+        *missedCallsLbl,
         *unreadChatMessagesLbl;
 
     UnlockSlider *slider;

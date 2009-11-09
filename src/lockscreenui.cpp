@@ -45,13 +45,16 @@ void LockScreenUI::createContent()
     updateDateTime();
 
     // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
-    unreadMessagesImage = new DuiImage(/*"icon-m-unread-messages",*/ this);
-    unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
-    missedCallsImage = new DuiImage(/*"icon-m-call-missed", */this);
-    missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
-    unreadChatMessagesImage = new DuiImage(/*"icon-m-unread-chat-messages",*/ this);
-    unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
+    unreadEmailsImage = new DuiImage("icon-m-notification-email", this);
+    //unreadEmailsImage->setImage(QImage("/usr/share/sysuid/themes/svg/emails-missed.svg"));
+    unreadMessagesImage = new DuiImage("icon-m-notification-sms", this);
+    //unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
+    missedCallsImage = new DuiImage("icon-m-notification-call", this);
+    //missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
+    unreadChatMessagesImage = new DuiImage("icon-m-notification-im", this);
+    //unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
 
+    unreadEmailsLbl = new DuiLabel("0", this);
     unreadMessagesLbl = new DuiLabel("2", this);
     missedCallsLbl = new DuiLabel("1", this);
     unreadChatMessagesLbl = new DuiLabel("3", this);
@@ -61,17 +64,22 @@ void LockScreenUI::createContent()
     DuiFreestyleLayoutPolicy* policy = new DuiFreestyleLayoutPolicy(layout);
     policy->setSpacing(2);
 
-    QRect timeRect, dateRect, a,b,c, a2,b2,c2, sliderRect;
-    calculateRects(layout, timeRect, dateRect, a,b,c, a2,b2,c2, sliderRect);
+    QRect timeRect, dateRect, a,b,c,d, a2,b2,c2,d2, sliderRect;
+    calculateRects(layout, timeRect, dateRect, a,b,c,d, a2,b2,c2,d2, sliderRect);
 
     timeLabel->setGeometry(timeRect);
     dateLabel->setGeometry(dateRect);
-    unreadMessagesImage->setGeometry(a);
-    missedCallsImage->setGeometry(b);
-    unreadChatMessagesImage->setGeometry(c);
-    unreadMessagesLbl->setGeometry(a2);
-    missedCallsLbl->setGeometry(b2);
-    unreadChatMessagesLbl->setGeometry(c2);
+
+    unreadEmailsImage->setGeometry(a);
+    unreadMessagesImage->setGeometry(b);
+    missedCallsImage->setGeometry(c);
+    unreadChatMessagesImage->setGeometry(d);
+
+    unreadEmailsLbl->setGeometry(a2);
+    unreadMessagesLbl->setGeometry(b2);
+    missedCallsLbl->setGeometry(c2);
+    unreadChatMessagesLbl->setGeometry(d2);
+
     slider->setGeometry(sliderRect);
 
     connect(slider, SIGNAL(unlocked()), this, SLOT(sliderUnlocked()));
@@ -94,8 +102,8 @@ void LockScreenUI::sliderUnlocked()
 
 void LockScreenUI::calculateRects(DuiLayout* layout,
                                   QRect& timeRect, QRect& dateRect,
-                                  QRect& messagesRect, QRect& callsRect, QRect& chatsRect,
-                                  QRect& a2, QRect& b2, QRect& c2,
+                                  QRect& a, QRect& b, QRect& c, QRect& d,
+                                  QRect& a2, QRect& b2, QRect& c2, QRect& d2,
                                   QRect& sliderRect)
 {
     qreal left,top,right,bottom;
@@ -122,9 +130,10 @@ void LockScreenUI::calculateRects(DuiLayout* layout,
         imgH = s.height(),
         imgY = h*0.5f;
 
-    messagesRect = QRect(0.5f*imgW, imgY,   imgW, imgH);
-    callsRect = QRect(2*imgW,       imgY,   imgW, imgH);
-    chatsRect = QRect(3.5f*imgW,    imgY,   imgW, imgH);
+    a = QRect(0.5f*imgW,    imgY,   imgW, imgH);
+    b = QRect(2*imgW,       imgY,   imgW, imgH);
+    c = QRect(3.5f*imgW,    imgY,   imgW, imgH);
+    d = QRect(5*imgW,       imgY,   imgW, imgH);
 
     int orig = imgW;
     imgW *= 0.3;
@@ -132,6 +141,7 @@ void LockScreenUI::calculateRects(DuiLayout* layout,
     a2 = QRect(1.2f*orig,   imgY,   imgW, imgH);
     b2 = QRect(2.7*orig,    imgY,   imgW, imgH);
     c2 = QRect(4.2f*orig,   imgY,   imgW, imgH);
+    d2 = QRect(5.7f*orig,   imgY,   imgW, imgH);
 
     sliderRect = QRect(QPoint(40, h*0.81f), QPoint(w-40, h*0.95f));
 }
@@ -149,8 +159,8 @@ void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)
     //
     DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());
 
-    QRect timeRect, dateRect, a,b,c, a2,b2,c2, sliderRect;
-    calculateRects(layout, timeRect, dateRect, a,b,c, a2,b2,c2, sliderRect);
+    QRect timeRect, dateRect, a,b,c,d, a2,b2,c2,d2, sliderRect;
+    calculateRects(layout, timeRect, dateRect, a,b,c,d, a2,b2,c2,d2, sliderRect);
 /*
     // Animation not supported because of headache with freestyle layout policy.
 
@@ -170,11 +180,13 @@ void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)
 
     unreadMessagesImage->setGeometry(a);
     missedCallsImage->setGeometry(b);
-    unreadChatMessagesImage->setGeometry(c);
+    unreadEmailsImage->setGeometry(c);
+    unreadChatMessagesImage->setGeometry(d);
 
     unreadMessagesLbl->setGeometry(a2);
     missedCallsLbl->setGeometry(b2);
-    unreadChatMessagesLbl->setGeometry(c2);
+    unreadEmailsLbl->setGeometry(c2);
+    unreadChatMessagesLbl->setGeometry(d2);
 
     slider->setGeometry(sliderRect);
 
@@ -200,29 +212,13 @@ void LockScreenUI::updateDateTime()
     dateLabel->setText(dt.date().toString("!! dddd, d MMMM"));
 }
 
-void LockScreenUI::updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages)
+// Check dbus adaptor!
+//    Q_NOREPLY void SetMissedEvents(int emails, int messages, int calls, int im);
+void LockScreenUI::updateMissedEventAmounts(int emails, int messages, int calls, int chatMessages)
 {
     qDebug() << "LockScreenUI::updateMissedEventAmounts(" << calls << ", " << messages << ", " <<  emails << ", " << chatMessages << ")";
-    //will change when localizable strings available
-    QString word = calls > 1 ? "calls" : "call";
-    calls > 0 ? missedCallsLbl->setVisible(false) : missedCallsLbl->setVisible(true);
-    missedCallsLbl->setText(QString("%1 unanswered %2").arg(calls).arg(word));
-
-    //will change when localizable strings available
-    word = messages > 1 ? "messages" : "message";
-    messages > 0 ? unreadMessagesLbl->setVisible(false) : unreadMessagesLbl->setVisible(true);
-    unreadMessagesLbl->setText(QString("%1 unread %2").arg(messages).arg(word));
-
-    //will change when localizable strings available
-    /*
-    word = emails > 1 ? "emails" : "email";
-    emails > 0 ? unreadEmailsLbl->setVisible(false) : unreadEmailsLbl->setVisible(true);
-    unreadEmailsLbl->setText(QString("%1 unread %2").arg(emails).arg(word));
-    */
-
-    //will change when localizable strings available
-    word = chatMessages > 1 ? "messages" : "message";
-    chatMessages > 0 ? unreadChatMessagesLbl->setVisible(false) : unreadChatMessagesLbl->setVisible(true);
-    unreadChatMessagesLbl->setText(QString("%1 unread chat %2").arg(chatMessages).arg(word));
-
+    missedCallsLbl->setText(QString("%1").arg(calls));
+    unreadMessagesLbl->setText(QString("%1").arg(messages));
+    unreadEmailsLbl->setText(QString("%1").arg(emails));
+    unreadChatMessagesLbl->setText(QString("%1").arg(chatMessages));
 }

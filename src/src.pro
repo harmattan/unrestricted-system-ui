@@ -27,7 +27,6 @@ SOURCES += main.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
     eventhandler.cpp \
-    eventeater.cpp \
     usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
@@ -42,7 +41,9 @@ SOURCES += main.cpp \
     $$STUB_PREFIX/devicemodestub.cpp \
     $$STUB_PREFIX/batterystub.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \
-    $$STUB_PREFIX/ledstub.cpp
+    $$STUB_PREFIX/ledstub.cpp \
+    lockscreenbusinesslogicadaptor.cpp
+
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -52,7 +53,6 @@ HEADERS += main.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
     eventhandler.h \
-    eventeater.h \
     usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
@@ -68,7 +68,9 @@ HEADERS += main.h \
     $$STUB_PREFIX/batterystub.h \
     $$STUB_PREFIX/displaystatestub.h \
     $$STUB_PREFIX/notificationtype.h \
-    $$STUB_PREFIX/ledstub.h
+    $$STUB_PREFIX/ledstub.h \
+    lockscreenbusinesslogicadaptor.h
+
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

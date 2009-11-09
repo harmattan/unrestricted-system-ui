@@ -2,7 +2,6 @@
 #define MAIN_H
 
 #include <QObject>
-#include <QString>
 
 class TestObj : public QObject
 {

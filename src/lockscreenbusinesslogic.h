@@ -3,7 +3,7 @@
 
 #include <qmsystem/qmlocks.h>
 #include "../tests/stubs/displaystatestub.h" //#include "qmsystem/qmdisplaystate.h"
-#include "eventeater.h"
+//#include "eventeater.h"
 
 #include <QObject>
 
@@ -26,7 +26,7 @@ public slots:
 private slots:
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
     void unlockScreen();
-    void updateMissedEventAmounts(int calls, int messages, int emails, int chatMessages);
+    void updateMissedEventAmounts(int, int, int, int);
 
 private: //methods
     void toggleKeyPadLock(bool toggle);
@@ -34,7 +34,7 @@ private: //methods
 
 private: //attributes
     QmDisplayState *display;
-    EventEater *eventEater;    
+    //EventEater *eventEater;
     LockScreenUI *lockUI;
     QDBusInterface *dbusIf;
 };
