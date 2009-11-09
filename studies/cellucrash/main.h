@@ -2,7 +2,6 @@
 #define MAIN_H
 
 #include <QObject>
-#include <DuiApplicationWindow>
 #include <NetworkRegistration>
 
 using namespace Cellular;
@@ -11,20 +10,14 @@ class TestObj : public QObject
 {
     Q_OBJECT
 public:
-    TestObj(DuiApplicationWindow &win);
+    TestObj();
     virtual ~TestObj();
 
 private slots:
     void availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &);
-    void selectionCompleted(bool success, const QString &reason);
 
 private:
     NetworkRegistration *networkRegistration;    
-
-
-public slots:
-    void doStuff();
-
 
 };
 

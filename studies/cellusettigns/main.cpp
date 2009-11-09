@@ -6,22 +6,15 @@
 
 #include <RadioAccess>
 
+#include <QDBusInterface>
+#include <QDebug>
+
 
 TestObj::TestObj(DuiApplicationWindow &w) : QObject() {
-    this->win = &w;
-    this->visible = false;    
 }
 TestObj::~TestObj() { }
 void TestObj::doStuff()
 {
-    static int counter = 0;
-    qDebug() << this->visible << counter++;
-    if (this->visible = !this->visible)
-        this->win->show();
-    else
-        this->win->hide();
-
-
     RadioAccess ra;
     RadioAccess::Mode raMode;
     ra.setMode(RadioAccess::UnknownMode);
@@ -54,19 +47,23 @@ void TestObj::doStuff()
            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));
     networkRegistration->queryAvailableOperators();
 
-
 }
 
 void TestObj::availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
-    delete networkRegistration;
+    networkRegistration->deleteLater();
 
     if(!success) {
         qDebug() << "not succeded because of " << reason;
         return;
-    }
+    } else
+	qDebug() << "success";
 
-    for(int i=0; operators.size(); ++i) {
+
+
+
+    for(int i=0; i<operators.size(); ++i) {
+	qDebug() << i;
         if(operators.at(i)->availability() == AvailableOperator::NotAvailable)
             qDebug() << operators.at(i)->name() << " is not available";
         if(operators.at(i)->availability() == AvailableOperator::Current)
@@ -74,10 +71,13 @@ void TestObj::availableNetworksReceived(bool success, const QList<AvailableOpera
         if(operators.at(i)->availability() == AvailableOperator::Available)
             qDebug() << operators.at(i)->name() << " is available";
     }
-    if(operators.size() > 0) {        
+    qDebug() << "asdf";
+    if(operators.size() > 0) {
+	qDebug() << operators.at(0);
         connect(operators.at(0), SIGNAL(selectionCompleted(bool,const QString &)), this, SLOT(selectionCompleted(bool, const QString &)));
         operators.at(0)->select();
     }
+    qDebug() << "asdfas";
 
 }
 
@@ -99,12 +99,24 @@ int main(int argc, char** argv)
     DuiButton button(QString("Just another widget"), &p);
 
     p.appear();
+    w.show();
 
     TestObj obj(w);
-    QTimer *timer = new QTimer(&app);
-    timer->setInterval(3*1000);
-    timer->start();
-    QObject::connect(timer, SIGNAL(timeout()), &obj, SLOT(doStuff()));
+    //QTimer *timer = new QTimer(&app);
+    //Btimer->setInterval(3*1000);
+    //timer->start();
+    //QObject::connect(timer, SIGNAL(timeout()), &obj, SLOT(doStuff()));
+
+
+    QDBusInterface dbus("com.nokia.csd.CSNet",
+                        "/com/nokia/csd/csnet/radio",
+                       "com.nokia.csd.CSNet.RadioAccess",
+                       QDBusConnection::systemBus());
+    qDebug() << "Mode: " << dbus.property("SelectionMode");
+    qDebug() << dbus.lastError();
+
+    obj.doStuff();
+
 
     return app.exec();
 }
