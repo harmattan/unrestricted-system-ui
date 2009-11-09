@@ -8,10 +8,13 @@
 
 LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
         QObject(parent),
-        display(new QmDisplayState()),
-        lockUI(NULL/*new LockScreenUI()*/)
+        display(NULL),
+        lockUI(NULL)
 {
     qDebug() << Q_FUNC_INFO;
+
+    display = new QmDisplayState(this);
+    lockUI = new LockScreenUI();
 
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
@@ -30,12 +33,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
-    delete display;
-    display = NULL;
     //delete eventEater;
     //eventEater = NULL;
-    //delete lockUI;
-    lockUI = NULL;
+    delete lockUI;
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
@@ -99,10 +99,11 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
     qDebug() << Q_FUNC_INFO;
     if(toggle) {        
         DuiApplication::instance()->applicationWindow()->show();
-        //lockUI->appear();
+        lockUI->appear();
     }
-    else
+    else {
         DuiApplication::instance()->applicationWindow()->hide();
+    }
 }
 
 

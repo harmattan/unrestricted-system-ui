@@ -16,10 +16,11 @@
 
 LockScreenUI::LockScreenUI()
 {
+    qDebug() << Q_FUNC_INFO;
     setFullscreen(true);
     setDisplayMode(0);
     setPannableAreaInteractive(false);
-    createContent();
+//    createContent();
 }
 
 LockScreenUI::~LockScreenUI()
@@ -28,6 +29,8 @@ LockScreenUI::~LockScreenUI()
 
 void LockScreenUI::createContent()
 {
+    qDebug() << Q_FUNC_INFO;
+
     DuiApplicationPage::createContent();
 
     slider = new UnlockSlider(this);
@@ -149,6 +152,7 @@ void LockScreenUI::calculateRects(DuiLayout* layout,
 void LockScreenUI::orientationChanged(const Dui::Orientation &orientation)
 {
     Q_UNUSED(orientation);
+    qDebug() << Q_FUNC_INFO;
 
     // This is temprary solution, see bug #130452
     // As far as I understand:
