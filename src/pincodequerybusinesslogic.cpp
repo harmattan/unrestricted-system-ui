@@ -227,9 +227,17 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
         }
         if(callUi){
             qDebug() << Q_FUNC_INFO << "call";
-//            connect(callUi->RequestCellularCall("+3580405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
-            connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
+
+//            bool res = connect(callUi->RequestCellularCall("+3580405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
+            bool res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
                     this, SLOT(emergencyCallDone(CallUi::PendingCallRequest *)));
+            if(res){
+                /* TODO: commented out until fix for #129775 is available
+                 * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
+                 * at the moment same behaviour as with #129775
+                DuiApplication::instance()->applicationWindow()->hide();
+                */
+            }
         }
     }
 
@@ -239,6 +247,11 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 
 void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
 {
+    /* TODO: commented out until fix for #129775 is available
+     * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
+     * at the moment same behaviour as with #129775
+    DuiApplication::instance()->applicationWindow()->show();
+    */
     if(req)
         qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
     else
