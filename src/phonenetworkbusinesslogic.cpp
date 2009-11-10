@@ -113,6 +113,7 @@ void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QStri
 
 void PhoneNetworkBusinessLogic::toggleNetwork(bool toggle)
 {
+    Q_UNUSED(toggle);
     //TODO: use API to set the value for real
 }
 
@@ -184,7 +185,8 @@ void PhoneNetworkBusinessLogic::queryAvailableNetworks()
 
 void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
-    qDebug() << "PhoneNetworkBusinessLogic::availableNetworksReceived(" << operators.size() << ")";    
+    Q_UNUSED(reason);
+    qDebug() << "PhoneNetworkBusinessLogic::availableNetworksReceived(" << operators.size() << ")";
     if(!success) {
         //TODO: show note based on the reason        
         emit availableNetworksAvailable(-1, QStringList(), true);
