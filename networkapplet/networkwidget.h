@@ -36,7 +36,8 @@ private slots:
     void initNetworkSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
     void dataCounterButtonPressed();
     void toggleNetworkSelected(bool toggle);
-    void toggleNetworkSettings(bool toggle);    
+    void toggleNetworkSettings(bool toggle);
+    void networkIconValueChanged(const QString &value);
 
 private: //methods
     void changeSelection();    

@@ -16,14 +16,15 @@ public:
     virtual ~NetworkDBusInterface();
 
     void phoneNetworkValueRequired();
+    void currentOperatorValueRequired();
     void roamingValueRequired();
     void roamingUpdatesValueRequired();    
     void networkModeValuesRequired();    
     void networkSelectionValuesRequired();    
-    void availableNetworksRequired();    
+    void availableNetworksRequired();
+    void networkIconValueRequired();    
     void setAutoNetworkSelection();
     void networkAppletClosing();
-
 
 public slots:
     void setPhoneNetworkValue(bool value);
@@ -39,13 +40,15 @@ private slots:
     void DBusMessagingFailure();    
 
 signals:
-    void phoneNetworkValueReceived(bool);    
+    void phoneNetworkValueReceived(bool);
+    void currentOperatorValueReceived(QString);
     void roamingValueReceived(bool);
     void roamingUpdatesValueReceived(bool);    
     void networkModeValuesReceived(int, QStringList);
     void networkSelectionValuesReceived(int, int, QStringList);
     void availableNetworksReceived(int, QStringList, bool);
     void networkSelected(bool);
+    void networkIconValueChanged(QString);
 
 private:
     QDBusInterface *dbusIf;

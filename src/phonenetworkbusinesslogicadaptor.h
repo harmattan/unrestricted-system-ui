@@ -31,6 +31,7 @@ public slots:
     bool phoneNetworkValue();
     bool roamingValue();
     bool roamingUpdatesValue();
+    QString networkIconValue();
 
 signals:
     void networkModeValuesReceived(int, QStringList);
@@ -38,6 +39,7 @@ signals:
     void availableNetworksReceived(int, QStringList, bool);
     void networkSelected(bool);
     void roamingUpdatesValueChanged(bool);
+    void networkIconChanged(QString);
 
 private:
     PhoneNetworkBusinessLogic *networkLogic;    

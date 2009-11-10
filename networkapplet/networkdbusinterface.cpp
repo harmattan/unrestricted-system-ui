@@ -31,6 +31,13 @@ void NetworkDBusInterface::phoneNetworkValueRequired()
     dbusIf->callWithCallback(QString("phoneNetworkValue"), list, this, SIGNAL(phoneNetworkValueReceived(bool)), SLOT(DBusMessagingFailure()));
 }
 
+void NetworkDBusInterface::currentOperatorValueRequired()
+{
+    qDebug() << "NetworkDBusInterface::currentOperatorValueRequired()";
+    QList<QVariant> list;
+    dbusIf->callWithCallback(QString("currentOperatorValue"), list, this, SIGNAL(currentOperatorValueReceived(QString)), SLOT(DBusMessagingFailure()));
+}
+
 void NetworkDBusInterface::roamingValueRequired()
 {
     qDebug() << "NetworkDBusInterface::roamingValueRequired()";
@@ -64,6 +71,13 @@ void NetworkDBusInterface::availableNetworksRequired()
     qDebug() << "NetworkDBusInterface::availableNetworksRequired()";
     QList<QVariant> list;
     dbusIf->callWithCallback(QString("availableNetworks"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::networkIconValueRequired()
+{
+    qDebug() << "NetworkDBusInterface::networkIconValueRequired()";
+    QList<QVariant> list;
+    dbusIf->callWithCallback(QString("networkIconValue"), list, this, SIGNAL(networkIconValueChanged(QString)), SLOT(DBusMessagingFailure()));
 }
 
 void NetworkDBusInterface::setPhoneNetworkValue(bool value)

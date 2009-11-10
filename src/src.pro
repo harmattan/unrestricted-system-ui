@@ -64,10 +64,10 @@ HEADERS += main.h \
     phonenetworkbusinesslogic.h \
     phonenetworkbusinesslogicadaptor.h \
     pincodequerydbusadaptor.h \
-    devicemodestub.h \
+    notificationtype.h \
+    $$STUB_PREFIX/devicemodestub.h \
     $$STUB_PREFIX/batterystub.h \
-    $$STUB_PREFIX/displaystatestub.h \
-    $$STUB_PREFIX/notificationtype.h \
+    $$STUB_PREFIX/displaystatestub.h \    
     $$STUB_PREFIX/ledstub.h \
     lockscreenbusinesslogicadaptor.h
 

@@ -21,26 +21,97 @@ namespace {
     const QString ManualText = trid("qtn_cell_manual", "Manual");
 }
 
+PhoneNetworkTechnology::PhoneNetworkTechnology(RadioAccess *radioAccess, QObject *parent) :
+        QObject(parent),
+        radioAccess(radioAccess),
+        networkCell(NULL),
+        timer(NULL)
+{
+    /* Technology changes depend to the RadioAccess's techonology and NetworkCell's services.
+       The state changes of both of those have to be taken into account before we indicate any
+       changes to end-user. There will be 500 ms interval which makes it possible that both the
+       signals are catched before acting. */
+
+    timer = new QTimer(this);
+    timer->setInterval(500);
+    connect(timer, SIGNAL(timeout()), this, SLOT(checkTechnology()));
+    connect(radioAccess, SIGNAL(technologyChanged(int)), timer, SLOT(start()));
+    networkCell = new NetworkCell();        
+    connect(networkCell, SIGNAL(servicesChanged(NetworkCell::Services)), timer, SLOT(start()));    
+    updateTechnology();
+}
+
+PhoneNetworkTechnology::~PhoneNetworkTechnology()
+{ 
+    delete networkCell;
+    networkCell = NULL;
+}
+
+void PhoneNetworkTechnology::checkTechnology()
+{
+    PhoneNetworkTechnology::Technology previousTechnology = currentTechnology();
+    updateTechnology();
+    if(previousTechnology != currentTechnology())
+        emit technologyChanged(technology);
+}
+
+PhoneNetworkTechnology::Technology PhoneNetworkTechnology::currentTechnology()
+{
+    return technology;
+}
+
+void PhoneNetworkTechnology::updateTechnology()
+{
+    technology = PhoneNetworkTechnology::None;
+    switch(radioAccess->technology()) {
+        case RadioAccess::GSM:
+            technology = PhoneNetworkTechnology::TwoG;
+            if(networkCell->services() == NetworkCell::EGPRSSupport)
+                technology = PhoneNetworkTechnology::TwoPointFiveG;
+            break;
+        case RadioAccess::UMTS:
+            technology = PhoneNetworkTechnology::ThreeG;
+            if(networkCell->services() == NetworkCell::HSDPASupport && radioAccess->state() == RadioAccess::AllocatedHSDPA)
+                technology = PhoneNetworkTechnology::ThreePointFiveG;
+            break;
+        default:
+            break;
+    }
+}
+
 PhoneNetworkBusinessLogic::PhoneNetworkBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent) :
         QObject(parent),
         systemUIGConf(systemUIGConf),
-        networkRegistration(NULL)
+        networkRegistration(NULL),
+        radioAccess(NULL),
+        technology(NULL)
 {
+    networkRegistration = new NetworkRegistration();
+    radioAccess = new RadioAccess();    
+    technology = new PhoneNetworkTechnology(radioAccess);
+    connect(technology, SIGNAL(technologyChanged(PhoneNetworkTechnology::Technology)),
+            this, SLOT(technologyChanged(PhoneNetworkTechnology::Technology)));
     networkModes.insert(RadioAccess::DualMode, DualText);
     networkModes.insert(RadioAccess::GSMMode, GSMText);
     networkModes.insert(RadioAccess::UMTSMode, ThreeGText);    
     networkSelectionValues.insert(NetworkRegistration::Automatic, AutomaticText);
     networkSelectionValues.insert(NetworkRegistration::Manual, ManualText);
+
+    temp = true;
 }
 
 PhoneNetworkBusinessLogic::~PhoneNetworkBusinessLogic()
 {
+    delete networkRegistration;
+    networkRegistration = NULL,
+    delete radioAccess;
+    radioAccess = NULL;
 }
 
 bool PhoneNetworkBusinessLogic::phoneNetworkEnabled()
 {
     //TODO: use API to get the value for real
-    return true;
+    return temp;
 }
 
 bool PhoneNetworkBusinessLogic::roamingEnabled()
@@ -55,9 +126,8 @@ bool PhoneNetworkBusinessLogic::roamingUpdatesEnabled()
 
 void PhoneNetworkBusinessLogic::setNetworkMode(const QString &value)
 {
-    qDebug() << "PhoneNetworkBusinessLogic::setNetworkMode(" << value << ")";
-    RadioAccess ra;
-    ra.setMode(networkModes.key(value));    
+    qDebug() << "PhoneNetworkBusinessLogic::setNetworkMode(" << value << ")";    
+    radioAccess->setMode(networkModes.key(value));
 }
 
 void PhoneNetworkBusinessLogic::setNetworkSelection(const QString &value)
@@ -68,9 +138,8 @@ void PhoneNetworkBusinessLogic::setNetworkSelection(const QString &value)
         emit networkSelected(false);
         queryAvailableNetworks();
     }
-    else { //Automatic
-        NetworkRegistration nr;
-        nr.selectOperator();
+    else { //Automatic        
+        networkRegistration->selectOperator();
         this->operators.clear(); //remove old operators
         emit availableNetworksAvailable(-1, QStringList(), false);
         emit networkSelected(true);
@@ -82,9 +151,7 @@ void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
     QHashIterator<QString, QStringList> i(operators);
     while (i.hasNext()) {
         i.next();
-        if(value == i.key()) {
-            if(networkRegistration == NULL)
-                networkRegistration = new NetworkRegistration();
+        if(value == i.key()) {            
             connect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
                     this, SLOT(selectNetworkCompleted(bool, const QString &)));
             networkRegistration->selectOperator(i.value().at(0), i.value().at(1));
@@ -95,10 +162,9 @@ void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
 
 void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QString &reason)
 {
-    if(networkRegistration != NULL) {
-        delete networkRegistration;
-        networkRegistration = NULL;
-    }
+    disconnect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
+               this, SLOT(selectNetworkCompleted(bool, const QString &)));
+
     if(success) {
         qDebug() << "Selection completed succesfully";
         emit networkSelected(true);
@@ -115,6 +181,9 @@ void PhoneNetworkBusinessLogic::toggleNetwork(bool toggle)
 {
     Q_UNUSED(toggle);
     //TODO: use API to set the value for real
+    temp = toggle;
+    if(!temp)
+        emit networkIconChanged(QString("icon-s-network-0"));
 }
 
 void PhoneNetworkBusinessLogic::toggleRoaming(bool toggle)
@@ -139,8 +208,7 @@ void PhoneNetworkBusinessLogic::queryNetworkModes()
     for (i = networkModes.begin(); i != networkModes.end(); ++i)
         modes << i.value();    
 
-    RadioAccess ra;        
-    int index = (ra.mode() == RadioAccess::UnknownMode ? -1 : modes.indexOf(networkModes.value(ra.mode())));
+    int index = (radioAccess->mode() == RadioAccess::UnknownMode ? -1 : modes.indexOf(networkModes.value(radioAccess->mode())));
     qDebug() << "PhoneNetworkBusinessLogic::queryNetworkModes( " << modes.size() << ")";    
     emit networkModeValuesAvailable(index, modes);
 }
@@ -153,12 +221,12 @@ void PhoneNetworkBusinessLogic::queryNetworkSelectionValues()
         values << i.value();
     values.sort();
 
-    NetworkRegistration nr;
     int defaultIndex = values.indexOf(networkSelectionValues.value(NetworkRegistration::Automatic)); ///automatic is default
-    int currentIndex = (nr.mode() == NetworkRegistration::UnknownMode ? -1 : values.indexOf(networkSelectionValues.value(nr.mode())));
+    int currentIndex = (networkRegistration->mode() == NetworkRegistration::UnknownMode ?
+                        -1 : values.indexOf(networkSelectionValues.value(networkRegistration->mode())));
     emit networkSelectionValuesAvailable(defaultIndex, currentIndex, values);
 
-    if(nr.mode() == NetworkRegistration::Manual) {
+    if(networkRegistration->mode() == NetworkRegistration::Manual) {
         emit networkSelected(false);
         queryAvailableNetworks();
     }
@@ -169,26 +237,20 @@ void PhoneNetworkBusinessLogic::queryNetworkSelectionValues()
 void PhoneNetworkBusinessLogic::queryAvailableNetworks()
 {
     qDebug() << "PhoneNetworkBusinessLogic::queryAvailableNetworks()";
-    if(networkRegistration == NULL) {
-        networkRegistration = new NetworkRegistration();
-        connect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
-            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));        
-        networkRegistration->queryAvailableOperators();
-    }
-
-    /*
-    QStringList networks;
-    networks << QString("Radiolinja") << QString("Tele") << QString("Telia");
-    emit availableNetworksAvailable(0, networks);    
-    */
+    connect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
+        this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));
+    networkRegistration->queryAvailableOperators();
 }
 
 void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
     Q_UNUSED(reason);
     qDebug() << "PhoneNetworkBusinessLogic::availableNetworksReceived(" << operators.size() << ")";
+    disconnect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
+            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));
+
     if(!success) {
-        //TODO: show note based on the reason        
+        //TODO: show note based on the reason
         emit availableNetworksAvailable(-1, QStringList(), true);
         return;
     }
@@ -206,13 +268,41 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
             selectedNetwork = i;
             emit networkSelected(true);
         }
-    }
-    if(networkRegistration != NULL) {
-        delete networkRegistration;
-        networkRegistration = NULL;
-    }
-
+    }    
     emit availableNetworksAvailable(selectedNetwork, networks, true);
+}
+
+void PhoneNetworkBusinessLogic::technologyChanged(PhoneNetworkTechnology::Technology technology)
+{
+    emit networkIconChanged(mapTechnologyToIcon(technology));
+}
+
+QString PhoneNetworkBusinessLogic::networkIcon()
+{
+    return mapTechnologyToIcon(technology->currentTechnology());
+}
+
+QString PhoneNetworkBusinessLogic::mapTechnologyToIcon(PhoneNetworkTechnology::Technology technology)
+{
+    QString icon;
+    switch(technology) {
+        case PhoneNetworkTechnology::TwoG:
+            icon = QString("icon-s-gsm");
+            break;
+        case PhoneNetworkTechnology::TwoPointFiveG:
+            icon = QString("icon-s-25g");
+            break;
+        case PhoneNetworkTechnology::ThreeG:
+            icon = QString("icon-s-3g");
+            break;
+        case PhoneNetworkTechnology::ThreePointFiveG:
+            icon = QString("icon-s-35g");
+            break;
+        default:
+            icon = QString("icon-s-network-0");
+            break;
+    }
+    return icon;   
 }
 
 void PhoneNetworkBusinessLogic::networkAppletClosing()

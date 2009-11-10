@@ -16,7 +16,7 @@ public:
     virtual void init();
     virtual DcpWidget* constructWidget(int widgetId);
     virtual DcpWidget* pageMain();
-    virtual QString title() const;
+    virtual QString title() const;    
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId);
 

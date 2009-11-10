@@ -110,6 +110,7 @@ void NetworkWidget::initWidget()
     connect(networkIf, SIGNAL(networkModeValuesReceived(int, QStringList)), networkContainer, SLOT(initModeComboBox(int, QStringList)));
     connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), networkContainer, SLOT(initSelectionComboBox(int, int, QStringList)));
     connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableNetworks(int, QStringList, bool)));
+    connect(networkIf, SIGNAL(networkIconValueChanged(QString)), this, SLOT(networkIconValueChanged(QString)));
 
     // catch user actions
     connect(phoneNetworkButton, SIGNAL(toggled(bool)), this, SLOT(toggleNetworkSettings(bool)));
@@ -124,7 +125,8 @@ void NetworkWidget::initWidget()
     networkIf->roamingValueRequired();
     networkIf->roamingUpdatesValueRequired();    
     networkIf->networkModeValuesRequired();
-    networkIf->networkSelectionValuesRequired();    
+    networkIf->networkSelectionValuesRequired();
+    networkIf->networkIconValueRequired();
 
     // mainLayout
     DuiLayout *mainLayout = new DuiLayout(this);
@@ -159,4 +161,9 @@ void NetworkWidget::toggleNetworkSelected(bool toggle)
 {
     qDebug() << "NetworkWidget::toggleNetworkSelected(" << toggle << ")";
     networkSelected = toggle;
+}
+
+void NetworkWidget::networkIconValueChanged(const QString &value)
+{
+    phoneNetworkButton->setIconID(value);
 }
