@@ -1,11 +1,11 @@
 #include "lockscreenbusinesslogicadaptor.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor(
-        QObject *obj, LockScreenBusinessLogic *logic)
+    QObject *obj, LockScreenBusinessLogic *logic)
         : QDBusAbstractAdaptor(obj)
 {
-    connect(this, SIGNAL(delegateSetMissedEvents(int,int,int,int)),
-            logic, SLOT(updateMissedEventAmounts(int,int,int,int)));
+    connect(this, SIGNAL(delegateSetMissedEvents(int, int, int, int)),
+            logic, SLOT(updateMissedEventAmounts(int, int, int, int)));
 }
 
 LockScreenBusinessLogicAdaptor::~LockScreenBusinessLogicAdaptor()

@@ -14,7 +14,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     qDebug() << Q_FUNC_INFO;
 
     display = new QmDisplayState(this);
+    qDebug() << "lockUI = new LockScreenUI()";
     lockUI = new LockScreenUI();
+    qDebug() << "lockUI =" << (void*)lockUI;
 
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
@@ -39,36 +41,36 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
-{    
+{
     qDebug() << Q_FUNC_INFO;
-    switch(display->get()) {
-        case Maemo::QmDisplayState::Off:
-            toggleScreenLockUI(true); //make sure the UI is on
-            toggleKeyPadLock(false);
-            display->set(Maemo::QmDisplayState::On);
-            break;
-        case Maemo::QmDisplayState::On:
-        case Maemo::QmDisplayState::Dimmed:
-            toggleKeyPadLock(true);
-            display->set(Maemo::QmDisplayState::Off);
-            toggleScreenLockUI(true);
-            break;        
-    }    
+    switch (display->get()) {
+    case Maemo::QmDisplayState::Off:
+        toggleScreenLockUI(true); //make sure the UI is on
+        toggleKeyPadLock(false);
+        display->set(Maemo::QmDisplayState::On);
+        break;
+    case Maemo::QmDisplayState::On:
+    case Maemo::QmDisplayState::Dimmed:
+        toggleKeyPadLock(true);
+        display->set(Maemo::QmDisplayState::Off);
+        toggleScreenLockUI(true);
+        break;
+    }
 }
 
 void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
-    qDebug() << Q_FUNC_INFO;
-    switch(state) {
-        case Maemo::QmDisplayState::Off:
-            toggleKeyPadLock(true); //lock the keypad
-            toggleScreenLockUI(true); //show UI
-            break;
-        case Maemo::QmDisplayState::On:
-            toggleKeyPadLock(false); //unlock the keypad
-            break;
-        default:
-            break;
+    qDebug() << Q_FUNC_INFO << state;
+    switch (state) {
+    case Maemo::QmDisplayState::Off:
+        toggleKeyPadLock(true); //lock the keypad
+        toggleScreenLockUI(true); //show UI
+        break;
+    case Maemo::QmDisplayState::On:
+        toggleKeyPadLock(false); //unlock the keypad
+        break;
+    default:
+        break;
     }
 }
 
@@ -82,13 +84,13 @@ void LockScreenBusinessLogic::unlockScreen()
 void LockScreenBusinessLogic::updateMissedEventAmounts(int a, int b, int c, int d)
 {
     qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts("
-            << a << ", " << b << ", " << c << ", " << d << ")";
+    << a << ", " << b << ", " << c << ", " << d << ")";
     lockUI->updateMissedEventAmounts(a, b, c, d);
 }
 
 void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << toggle;
     QmLocks::State newState = (toggle ? QmLocks::Locked : QmLocks::Unlocked);
     QmLocks touchPadLocker;
     touchPadLocker.setState(QmLocks::TouchAndKeyboard, newState);
@@ -96,12 +98,11 @@ void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
 
 void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
 {
-    qDebug() << Q_FUNC_INFO;
-    if(toggle) {        
+    qDebug() << Q_FUNC_INFO << toggle;
+    if (toggle) {
         DuiApplication::instance()->applicationWindow()->show();
         lockUI->appear();
-    }
-    else {
+    } else {
         DuiApplication::instance()->applicationWindow()->hide();
     }
 }

@@ -18,7 +18,7 @@ class LockScreenBusinessLogic : public QObject
 
 public:
     LockScreenBusinessLogic(QObject* parent = 0);
-    virtual ~LockScreenBusinessLogic();    
+    virtual ~LockScreenBusinessLogic();
 
 public slots:
     void shortPowerKeyPressOccured();
@@ -30,7 +30,7 @@ private slots:
 
 private: //methods
     void toggleKeyPadLock(bool toggle);
-    void toggleScreenLockUI(bool toggle);    
+    void toggleScreenLockUI(bool toggle);
 
 private: //attributes
     QmDisplayState *display;

@@ -42,16 +42,16 @@ private:
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
 
     DuiImage
-        *unreadEmailsImage,
-        *unreadMessagesImage,
-        *missedCallsImage,
-        *unreadChatMessagesImage;
+    *unreadEmailsImage,
+    *unreadMessagesImage,
+    *missedCallsImage,
+    *unreadChatMessagesImage;
 
     DuiLabel
-        *unreadEmailsLbl,
-        *unreadMessagesLbl,
-        *missedCallsLbl,
-        *unreadChatMessagesLbl;
+    *unreadEmailsLbl,
+    *unreadMessagesLbl,
+    *missedCallsLbl,
+    *unreadChatMessagesLbl;
 
     UnlockSlider *slider;
 
