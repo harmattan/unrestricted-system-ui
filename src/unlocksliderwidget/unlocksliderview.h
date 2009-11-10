@@ -18,7 +18,7 @@ class UnlockSliderView : public DuiWidgetView
 public:
     UnlockSliderView(UnlockSlider* controller);
     virtual ~UnlockSliderView();
-    virtual void resizeEvent(QGraphicsSceneResizeEvent * event);
+    virtual void resizeEvent(QGraphicsSceneResizeEvent* event);
     void releaseHandle();
 
 protected:
@@ -27,11 +27,11 @@ protected:
 
     virtual void styleChanged();
 
-    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void drawBackground(QPainter* painter, const QStyleOptionGraphicsItem* option) const;
+    virtual void drawContents(QPainter* painter, const QStyleOptionGraphicsItem* option) const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 private slots:
     void timeStep();

@@ -5,6 +5,7 @@
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
+#include <QDebug>
 
 #include <math.h>
 
@@ -13,7 +14,7 @@ const int UPDATEFREQ(1000 / 25);
 // reset speed acceleration
 const qreal RESETACCEL(1.0f / 25.0f);
 
-UnlockSliderView::UnlockSliderView(UnlockSlider *controller) :
+UnlockSliderView::UnlockSliderView(UnlockSlider* controller) :
         DuiWidgetView(controller),
         sliderRect(-1, -1, -1, -1),
         handlePos(-1, -1),
@@ -31,7 +32,7 @@ UnlockSliderView::~UnlockSliderView()
     timer.stop();
 }
 
-void UnlockSliderView::resizeEvent(QGraphicsSceneResizeEvent * event)
+void UnlockSliderView::resizeEvent(QGraphicsSceneResizeEvent* event)
 {
     DuiWidgetView::resizeEvent(event);
 
@@ -46,7 +47,7 @@ void UnlockSliderView::modelModified(const QList<const char*>& modifications)
     const char* member;
     foreach(member, modifications) {
         if (member == UnlockSliderModel::HandlePressed) {
-            // this is a bit unclear... pressed state should only change according to touch events
+            // TODO: this is a bit unclear... pressed state should only change according to touch events
             if (!model()->handlePressed()) {
                 releaseHandle();
             }
@@ -83,7 +84,7 @@ void UnlockSliderView::styleChanged()
     recalcRects();
 }
 
-void UnlockSliderView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void UnlockSliderView::drawBackground(QPainter* painter, const QStyleOptionGraphicsItem* option) const
 {
     Q_UNUSED(option);
 
@@ -133,19 +134,19 @@ void UnlockSliderView::drawContents(QPainter* painter, const QStyleOptionGraphic
     }
 }
 
-void UnlockSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void UnlockSliderView::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (!grabHandle(event->pos())) {
         model()->setBlinking(true);
     }
 }
 
-void UnlockSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+void UnlockSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     moveHandle(event->pos());
 }
 
-void UnlockSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void UnlockSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_UNUSED(event);
     releaseHandle();
@@ -321,7 +322,6 @@ void UnlockSliderView::recalcRects()
 {
     const qreal thickness(style()->thickness());
     const bool reverse(qApp->isRightToLeft());
-
 
     if (model()->orientation() == Qt::Horizontal) {
         // slider + icon fills the whole widget width

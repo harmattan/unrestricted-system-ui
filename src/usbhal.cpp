@@ -1,8 +1,8 @@
 #include "usbhal.h"
 
 UsbHal::UsbHal() :
-    udi(NULL),
-    state(InitFailed)
+        udi(NULL),
+        state(InitFailed)
 {
     dbus_error_init(&error);
 
@@ -65,20 +65,15 @@ UsbHal::State UsbHal::getCableState()
     if (prop == NULL) {
         errorMsg.sprintf("Couldn't read 'usb_device.mode' from %s", udi);
         state = Invalid;
-    }
-    else if (strcmp(prop, "b_peripheral") == 0 || strcmp(prop, "a_peripheral") == 0) {
+    } else if (strcmp(prop, "b_peripheral") == 0 || strcmp(prop, "a_peripheral") == 0) {
         state = PeripheralWait;
-    }
-    else if (strcmp(prop, "a_host") == 0 || strcmp(prop, "b_host") == 0) {
+    } else if (strcmp(prop, "a_host") == 0 || strcmp(prop, "b_host") == 0) {
         state = Host;
-    }
-    else if (strcmp(prop, "b_idle") == 0 || strcmp(prop, "a_idle") == 0) {
+    } else if (strcmp(prop, "b_idle") == 0 || strcmp(prop, "a_idle") == 0) {
         state = CableDetached;
-    }
-    else if (strcmp(prop, "UNDEFINED") == 0) {
+    } else if (strcmp(prop, "UNDEFINED") == 0) {
         errorMsg == "'usb_device.mode' is UNDEFINED, not changing the state";
-    }
-    else {
+    } else {
         errorMsg.sprintf("Unknown USB cable type: %s", prop);
         state = CableDetached;
     }

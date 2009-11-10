@@ -27,7 +27,9 @@ public:
     /*!
       \brief Returns the latest error message
       */
-    const QString& lastError() const { return errorMsg; };
+    const QString& lastError() const {
+        return errorMsg;
+    };
 
 private:
     State initUdi();
