@@ -59,9 +59,6 @@ Notifier::Notifier(QObject* parent) :
         QObject(parent)
 {
     dbus = new NotifierDBusAdaptor();
-
-    connect(dbus, SIGNAL(showNotification(QString, NotificationType)), this, SLOT(showNotification(QString, NotificationType)));
-
     managerIf = new QDBusInterface ( "org.maemo.dui.NotificationManager", "/", "org.maemo.dui.NotificationManager");
 }
 
@@ -168,7 +165,13 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
 
     if(reply.type() == QDBusMessage::ErrorMessage) {
         qDebug() << Q_FUNC_INFO << " error reply:" << reply.errorName();
-        showLocalNotification(expireTimeout, notifText, buttonText);
+        // because of bootup order, connection can't be done in constructor.
+        bool res = connect(
+                dbus, SIGNAL(showNotification(QString, NotificationType)),
+                this, SLOT(showNotification(QString, NotificationType)));
+        if(!res){
+            showLocalNotification(expireTimeout, notifText, buttonText);
+        }
     }
     else if(reply.type() == QDBusMessage::ReplyMessage)
     {

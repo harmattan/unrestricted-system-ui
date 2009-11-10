@@ -9,7 +9,6 @@
 #include <DuiApplicationWindow>
 #include <DuiApplication>
 #include <QRegExpValidator>
-#include <QTimer>
 
 #include <QtDBus>
 #include <ssc-dbus-names.h>
@@ -79,10 +78,6 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
     qDebug() << Q_FUNC_INFO;
 
     dbus = new PinCodeQueryDBusAdaptor(this);
-
-    launchResponseTimer = new QTimer(this);
-    launchResponseTimer->setSingleShot(true);
-    connect(launchResponseTimer, SIGNAL(timeout()), this, SLOT(emitLaunchResponse()));
 
     sim = new SIM(this);
     simId = new SIMIdentity(this);
@@ -315,7 +310,7 @@ void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
 void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
 {
     emit showNotification(SIMCardRejected, NotificationType::error);
-    ui2disappear();
+    ui2disappear(false);
 }
 void PinCodeQueryBusinessLogic::ui2enterNewPin()
 {
@@ -326,35 +321,10 @@ void PinCodeQueryBusinessLogic::ui2enterNewPin()
     uiPin->getCancelBtn()->setEnabled(false);
 }
 
-void PinCodeQueryBusinessLogic::ui2disappear()
+void PinCodeQueryBusinessLogic::ui2disappear(bool operationOk)
 {
     qDebug() << Q_FUNC_INFO << "queried:" << queryLaunch << "state:" << previousSimState;
-    if(queryLaunch){
-        switch(previousSimState){
-            case SIM::UnknownStatus:
-            case SIM::NoSIM:
-            case SIM::NotReady:
-                // what are these?? operation, in a way, succeeded because no errors received...
-                emitLaunchResponse(false);
-                queryLaunch = false;
-                break;
-            case SIM::PINRequired:
-            case SIM::PUKRequired:
-            case SIM::SIMLockRejected:
-                // failure case, timer not set
-                if(!launchResponseTimer->isActive()){
-                    emitLaunchResponse(false);
-                    queryLaunch = false;
-                }
-                break;
-            case SIM::Ok:
-            case SIM::PermanentlyBlocked:
-            case SIM::Rejected:
-                emitLaunchResponse(true);
-                queryLaunch = false;
-                break;
-        }
-    }
+    emitLaunchResponse(operationOk);
     closeUi();
 }
 
@@ -413,7 +383,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
                 } else if (subState == SubReEnterNewPIN) {
                     if (newPinCode == uiPin->getCodeEntry()->text()) {
                         simSec->changePIN(SIMSecurity::PIN, oldPinCode, newPinCode);
-                        ui2disappear();
+                        ui2disappear(true);
                         return;
                     } else {
                         subState = SubEnterNewPIN;
@@ -450,7 +420,7 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
         bool closeUi = stateOperation(next, previousSimState);
         if(closeUi){
             previousSimState = next;
-            ui2disappear();
+            ui2disappear(true);
         }
     }
 
@@ -527,7 +497,7 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
         if (error == SIMErrorWrongPassword) {
             if(SubEnterOldPIN == subState) {
                 emit showNotification(PINCodeIncorrectSettings, NotificationType::error);
-                ui2disappear();
+                ui2disappear(false);
             } else {
                 if(SubFirstTry == subState){
                     subState = SubFailedTry;
@@ -541,21 +511,23 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
         ui2enterNewPin();
     }
     else {
-        startLaunchResponseTimer();
-        ui2disappear();
+        ui2disappear(true);
     }
 }
 
 void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO << success << ":" << error;
+    qDebug() << Q_FUNC_INFO << "puk code verified ";
 
     handleSIMError(error);
 
     if(!success && error == SIMErrorWrongPassword) {
         simSec->pukAttemptsLeft(SIMSecurity::PUK);
-    } else if (success){
-        startLaunchResponseTimer();
+    } else if (!success){
+        ui2disappear(false);
+    } else {
+        // in success case we just emit the signal and we'll ask the new PIN code
+        emitLaunchResponse(true);
     }
 }
 
@@ -564,7 +536,8 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
     if(handleSIMLockError(error)) {
         emit showNotification(SIMUnlocked, NotificationType::info);
         simLockCode = "";
-        startLaunchResponseTimer();
+    }else{
+        ui2disappear(false);
     }
     //what is the next SIMStatus?
 }
@@ -600,7 +573,7 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
 
     if(success) {
         emit showNotification(PINCodeChanged, NotificationType::info);
-        ui2disappear();
+        ui2disappear(true);
     }
 }
 
@@ -724,7 +697,7 @@ void PinCodeQueryBusinessLogic::cancelQuery()
 {
     qDebug() << Q_FUNC_INFO ;    
     // regardless of the state - just exit.
-    ui2disappear();
+    ui2disappear(false);
 
     // Well, let's put the radio and cellular off.
     /* Let's not. ssc takes care of it.
@@ -799,28 +772,12 @@ void PinCodeQueryBusinessLogic::getCode(bool enableBack, QString header)
     setUiHeader(header);
 }
 
-void PinCodeQueryBusinessLogic::emitLaunchResponse()
-{
-    // TODO: is timeout ok case or not?
-    emitLaunchResponse(true /*false*/);
-}
-
 void PinCodeQueryBusinessLogic::emitLaunchResponse(bool ok)
 {
-    if(launchResponseTimer->isActive()){
-        launchResponseTimer->stop();
-    }
-    dbus->pinQueryDoneResponse(ok);
-    qDebug() << Q_FUNC_INFO << "ok:" << ok;
-}
-
-void PinCodeQueryBusinessLogic::startLaunchResponseTimer()
-{
+    qDebug() << Q_FUNC_INFO << "emit:" << queryLaunch << "Response:" << ok;
     if(queryLaunch){
-        if(launchResponseTimer->isActive()){
-            launchResponseTimer->stop();
-        }
-        launchResponseTimer->start(60000); // wait one second
+        dbus->pinQueryDoneResponse(ok);
+        queryLaunch = false;
     }
 }
 

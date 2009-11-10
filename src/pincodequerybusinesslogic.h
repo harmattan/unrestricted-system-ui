@@ -66,7 +66,6 @@ private: // attributes
     QString newPinCode;
     QString oldPinCode;
     QString simLockCode;
-    QTimer *launchResponseTimer;
 
     SubStates subState;
     int previousSimState;
@@ -115,14 +114,12 @@ private: // methods
     void ui2PUKFailedPermanently();
     void ui2enterNewPin();
     void ui2reenterPIN();    
-    void ui2disappear();
+    void ui2disappear(bool oerationOk);
 
 private slots:
     void uiCodeChanged();
     void uiButtonReleased();
-    void startLaunchResponseTimer();
     void emitLaunchResponse(bool ok);
-    void emitLaunchResponse();
 
     void simStatusChanged(SIM::SIMStatus status);
     void simStatusComplete(SIM::SIMStatus status, SIMError error);
