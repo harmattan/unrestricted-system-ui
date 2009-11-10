@@ -59,6 +59,7 @@ Sysuid::Sysuid() :
 
     /* Network */
     networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf, this);
+    connect(networkLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
 
     /* Event handler */
     eventHandler = new EventHandler(this);

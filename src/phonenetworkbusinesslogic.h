@@ -88,6 +88,7 @@ signals:
     void networkSelected(bool);
     void roamingUpdatesValueChanged(bool);
     void networkIconChanged(QString);
+    void showNotification(QString);
 
 private: //methods
     void queryAvailableNetworks();

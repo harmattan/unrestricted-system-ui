@@ -19,6 +19,7 @@ namespace {
     const QString ThreeGText = trid("qtn_cell_network_3g", "3G");
     const QString AutomaticText = trid("qtn_cell_automatic", "Automatic");
     const QString ManualText = trid("qtn_cell_manual", "Manual");
+    const QString NoAccessText = trid("qtn_cell_error_no_access", "No access");
 }
 
 PhoneNetworkTechnology::PhoneNetworkTechnology(RadioAccess *radioAccess, QObject *parent) :
@@ -162,19 +163,16 @@ void PhoneNetworkBusinessLogic::selectNetwork(const QString &value)
 
 void PhoneNetworkBusinessLogic::selectNetworkCompleted(bool success, const QString &reason)
 {
+    Q_UNUSED(reason);
     disconnect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
                this, SLOT(selectNetworkCompleted(bool, const QString &)));
 
-    if(success) {
-        qDebug() << "Selection completed succesfully";
-        emit networkSelected(true);
-        //TODO: show a note
-    }
+    if(success)
+        emit networkSelected(true);            
     else {
-        qDebug() << "Selection failed, reason: " << reason;
+        emit showNotification(NoAccessText);
         emit networkSelected(false);
-        //TODO: show a note
-    }
+    }        
 }
 
 void PhoneNetworkBusinessLogic::toggleNetwork(bool toggle)
@@ -249,8 +247,7 @@ void PhoneNetworkBusinessLogic::availableNetworksReceived(bool success, const QL
     disconnect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
             this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));
 
-    if(!success) {
-        //TODO: show note based on the reason
+    if(!success || operators.size() == 0) {
         emit availableNetworksAvailable(-1, QStringList(), true);
         return;
     }
