@@ -29,36 +29,25 @@ public:
      */
     enum SubStates {
         SubNothing,
-        // State: -1 (bootstrap)
-        // State: UnknownStatus,
-        // State: Ok,
+        // PIN change
         SubEnterOldPIN,
+        // PIN change
+        // PUK ok - change PIN
         SubEnterNewPIN,
         SubReEnterNewPIN,
-        // State: NoSIM,
-        // State: PermanentlyBlocked,
-        // State: NotReady,
-        // State: PINRequired,
+        // PIN query
         SubFirstTry,
         SubFailedTry,
-        // State: PUKRequired,
-        // State: Rejected
-        // State: SIMLockReject
-        SubUnlocked, //kytkykauppa
-        // any state
+        // PIN query states
+        SubPinQueryState,
         SubEnablePinQuery,
         SubDisablePinQuery,
-        /*
-        UIPINState,
-        UIPIN2AttemptsLeftState,
-        UIPIN1AttemptLeftState,
-        UIPUKState,
-        */
     };
 
     explicit PinCodeQueryBusinessLogic(QObject* parent = 0);
     virtual ~PinCodeQueryBusinessLogic();
 
+    void pinQueryState(SIMSecurity::PINType pinType);
     void enablePinQueryRequested(bool enabled);
     bool launchPinQuery(SIMSecurity::PINType pinType);
     void changePinCode();

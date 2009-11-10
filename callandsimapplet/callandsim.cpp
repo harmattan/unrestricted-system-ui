@@ -26,16 +26,17 @@ CallAndSim::CallAndSim(QObject* parent) :
     connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)),
             this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
 
-    connect(simSecurity, SIGNAL(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError error)),
-            this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
-
     // TODO: CallerId
 
     dbusPinIf = new QDBusInterface("com.nokia.systemui.pin",
-                                   "/",
+                                   "/com/nokia/systemui/pin",
                                    "com.nokia.systemui.pin.PinCodeQuery",
                                    QDBusConnection::systemBus(),
                                    this);
+
+    connect(dbusPinIf, SIGNAL(PinQueryStateComplete(SIMSecurity::PINQuery)),
+            this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
+
 }
 
 void CallAndSim::setCallerIdSending(int value)
@@ -72,14 +73,14 @@ void CallAndSim::setPinRequest(bool enabled)
 
     QList<QVariant> list;
     list << QVariant(enabled);
-    dbusPinIf->callWithCallback(QString("enablePinQuery"), list, this, SLOT(pinQueryEnabled(SIMSecurity::PINQuery)), SLOT(DBusMessagingFailure()));
+    dbusPinIf->callWithCallback(QString("EnablePinQuery"), list, this, SLOT(pinQueryEnabled(SIMSecurity::PINQuery)), SLOT(DBusMessagingFailure()));
 }
 
 void CallAndSim::changePinCode()
 {
     qDebug() << Q_FUNC_INFO;
 
-    dbusPinIf->call(QDBus::NoBlock, QString("changePinCode"));
+    dbusPinIf->call(QDBus::NoBlock, QString("ChangePinCode"));
 }
 
 void CallAndSim::requestData(DcpCallAndSim::Data data)
@@ -97,12 +98,12 @@ void CallAndSim::requestData(DcpCallAndSim::Data data)
         callForwarding->divertCheck(CallForwarding::Unconditional);
         break;
     case PinRequestData:
-        simSecurity->pinQueryState(SIMSecurity::PIN);
+        dbusPinIf->call(QDBus::NoBlock, QString("PinQueryState"), QString("PIN"));
         break;
     case AllData:
         callWaiting->waitingCheck();
         callForwarding->divertCheck(CallForwarding::Unconditional);
-        simSecurity->pinQueryState(SIMSecurity::PIN);
+        dbusPinIf->call(QDBus::NoBlock, QString("PinQueryState"), QString("PIN"));
         // TODO: CallerId sending
         // TODO: Queuing needed also?
         break;

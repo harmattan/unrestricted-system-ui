@@ -12,10 +12,10 @@ PinCodeQueryDBusAdaptor::PinCodeQueryDBusAdaptor(PinCodeQueryBusinessLogic* logi
         logic(logic)
 {
     QDBusConnection busSystem = QDBusConnection::systemBus();
-    if(!busSystem.registerService("com.nokia.systemui.pin")) {
-        qDebug() << Q_FUNC_INFO << "failed to register busSystem service";
-    }else if(!busSystem.registerObject("/", logic)) {
+    if(!busSystem.registerObject(dbusObjectName(), logic)) {
         qDebug() << Q_FUNC_INFO << "failed to register busSystem objects";
+    } else if(!busSystem.registerService(dbusServiceName())) {
+        qDebug() << Q_FUNC_INFO << "failed to register busSystem service";
     }
 }
 
@@ -23,37 +23,50 @@ PinCodeQueryDBusAdaptor::~PinCodeQueryDBusAdaptor()
 {
 }
 
-QString PinCodeQueryDBusAdaptor::dbusInterfaceName()
-{
-    return QString("com.nokia.systemui.pin.PinCodeQuery");
-}
-
-void  PinCodeQueryDBusAdaptor::changePinCode()
+void  PinCodeQueryDBusAdaptor::ChangePinCode()
 {
     logic->changePinCode();
 }
 
-void  PinCodeQueryDBusAdaptor::enablePinQuery(bool enable)
+void PinCodeQueryDBusAdaptor::PinQueryState(const QString &pinType)
+{
+    Q_UNUSED(pinType);
+    logic->pinQueryState(SIMSecurity::PIN);
+}
+
+void PinCodeQueryDBusAdaptor::pinQueryStateCompletedResponse(SIMSecurity::PINQuery state, SIMError error)
+{
+    qDebug() << Q_FUNC_INFO;
+    QDBusMessage msg = QDBusMessage::createSignal(dbusObjectName(), dbusInterfaceName(), "PinQueryStateCompleted");
+    msg << state << error;
+    QDBusConnection::systemBus().send(msg);
+}
+
+void  PinCodeQueryDBusAdaptor::EnablePinQuery(bool enable)
 {
     logic->enablePinQueryRequested(enable);
 }
 
 void PinCodeQueryDBusAdaptor::pinQueryEnabledResponse(SIMSecurity::PINQuery queryState)
 {
-    emit pinQueryEnabled(queryState);
+    qDebug() << Q_FUNC_INFO;
+    QDBusMessage msg = QDBusMessage::createSignal(dbusObjectName(), dbusInterfaceName(), "PinQueryEnabled");
+    msg << queryState;
+    QDBusConnection::systemBus().send(msg);
 }
 
-bool PinCodeQueryDBusAdaptor::launchPinQuery(int pinType)
+bool PinCodeQueryDBusAdaptor::LaunchPinQuery(QString const & pinType)
 {
-    return logic->launchPinQuery((SIMSecurity::PINType)pinType);
+    Q_UNUSED(pinType); // pinType is ignored
+    return logic->launchPinQuery(SIMSecurity::PIN);
 }
 
-void PinCodeQueryDBusAdaptor::pinQueryDoneResponse(SIM::SIMStatus currentSimStatus, bool queryOk)
+void PinCodeQueryDBusAdaptor::pinQueryDoneResponse(bool queryOk)
 {
     qDebug() << Q_FUNC_INFO << "ok:" << queryOk;
 
-    QDBusMessage msg = QDBusMessage::createSignal("/", dbusInterfaceName(), "pinQueryDone");
-    msg << QVariant(currentSimStatus) << QVariant(queryOk);
+    QDBusMessage msg = QDBusMessage::createSignal(dbusObjectName(), dbusInterfaceName(), "pinQueryDone");
+    msg << queryOk;
     QDBusConnection::systemBus().send(msg);
 }
 

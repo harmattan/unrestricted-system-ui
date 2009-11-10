@@ -44,7 +44,7 @@ private slots:
     void divertCancelComplete(CallForwarding::DivertError error);
     void divertCheckComplete(bool active, QString number, CallForwarding::DivertError error);
 
-    void pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
+    void pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error = SIMErrorNone);
     void pinQueryEnabled(SIMSecurity::PINQuery queryState);
 
     void DBusMessagingFailure();

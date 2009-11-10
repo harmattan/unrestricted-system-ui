@@ -49,7 +49,7 @@ dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com
 dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com.nokia.csd.SIM.Security.PUKAttemptsLeft string:PIN
 
 To launch PIN query:
-dbus-send --system --print-reply --dest=com.nokia.systemui.pin / com.nokia.systemui.pin.PinCodeQuery.launchPinQuery int32:0
+dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.LaunchPinQuery string:"PIN"
 
 """
 
@@ -75,7 +75,7 @@ PATH_emerg = '/com/nokia/csd/call'
 
 # launch
 bus_name_launch = 'com.nokia.systemui.pin'
-PATH_launch = '/'
+PATH_launch = '/com/nokia/systemui/pin'
 if_name_launch = 'com.nokia.systemui.pin.PinCodeQuery'
 
 TIMEOUT = 1000
@@ -85,6 +85,8 @@ PIN_ENABLED = True
 SEC = '987'
 SEC_INVALID_CODE = '000'
 SEC_TIMER_ON = '111'
+PIN_ATTEMPTS = 4
+PUK_ATTEMPTS = 10
 
 class WrongPassword(dbus.DBusException):
     _dbus_error_name = 'com.nokia.csd.SIM.Error.WrongPassword'
@@ -134,8 +136,8 @@ class Server(dbus.service.Object):
             ]
         self.mode_idx = 0
 
-        self.pin_attempts_left = 4
-        self.puk_attempts_left = 10
+        self.pin_attempts_left = PIN_ATTEMPTS
+        self.puk_attempts_left = PUK_ATTEMPTS
 
         self.pin = PIN
         self.pin_enabled = PIN_ENABLED
@@ -193,7 +195,7 @@ class Server(dbus.service.Object):
             self.pin_attempts_left -= 1
         if code == self.pin:
             if self.SIM_MODES[self.mode_idx] == 'PINRequired':
-                self.pin_attempts_left = 3
+                self.pin_attempts_left = PIN_ATTEMPTS
                 gobject.timeout_add(11*TIMEOUT, self.setOkDelay, 'Ok')
                 print 'start timer: Ok'
             return True
@@ -211,8 +213,8 @@ class Server(dbus.service.Object):
         if code == PUK:
             self.pin = newpin
 	    if self.SIM_MODES[self.mode_idx] == 'PUKRequired':
-                self.puk_attempts_left = 10
-                self.pin_attempts_left = 3
+                self.puk_attempts_left = PUK_ATTEMPTS
+                self.pin_attempts_left = PIN_ATTEMPTS
                 self.SetState('Ok')
             return True
         if self.puk_attempts_left == 0:
@@ -358,7 +360,7 @@ class UserInterface:
         def cb_launch(widget):
             obj = bus.get_object(bus_name_launch, PATH_launch)
             query = dbus.Interface(obj, if_name_launch)
-            print query.launchPinQuery(0)
+            print query.LaunchPinQuery('PIN')
         launch.connect('clicked', cb_launch)
         frame.add(launch)
 

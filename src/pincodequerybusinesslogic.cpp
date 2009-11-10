@@ -151,6 +151,8 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         flags |= Qt::WindowStaysOnTopHint;
 
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
+    } else {
+        uiPin->getEnterBtn()->setEnabled(false);
     }
 
     DuiApplicationPage::DisplayMode mod = 0;
@@ -183,6 +185,7 @@ void PinCodeQueryBusinessLogic::closeUi()
     qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << (uiPin ? uiPin->isVisible() : (bool)0);
     if(uiPin)
     {
+        uiPin->getCodeEntry()->setText("");
         uiPin->disappearNow();
     }
     DuiApplication::instance()->applicationWindow()->hide();
@@ -295,6 +298,7 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
     default:
         emit showNotification(PINCodeIncorrectSettings, NotificationType::error);
     };
+    uiPin->getEnterBtn()->setEnabled(false);
 }
 
 void PinCodeQueryBusinessLogic::ui2PUKQuery()
@@ -360,8 +364,6 @@ void PinCodeQueryBusinessLogic::ui2disappear()
 
 void PinCodeQueryBusinessLogic::uiCodeChanged()
 {
-                qDebug() << Q_FUNC_INFO << "call" << callUi;
-
     int len = uiPin->getCodeEntry()->text().length();
     if (previousSimState == SIM::PINRequired
         || previousSimState == SIM::PUKRequired
@@ -546,7 +548,7 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO << "puk code verified ";
+    qDebug() << Q_FUNC_INFO << success << ":" << error;
 
     handleSIMError(error);
 
@@ -581,12 +583,15 @@ void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
 {
+    qDebug() << Q_FUNC_INFO << attempts << ":" << error;
     handleSIMError(error);
 
     // warnings...
     attempts++;
-    if(attempts > 0) //if no more attempts, showing only the rejected notification
+    if(attempts > 0) {//if no more attempts, showing only the rejected notification
+        uiPin->getEnterBtn()->setEnabled(false);
         emit showNotification(PUKCodeIncorrect, NotificationType::error);
+    }
 }
 
 void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
@@ -601,13 +606,21 @@ void PinCodeQueryBusinessLogic::simPINCodeChanged(bool success, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO << "state:" << state << "error" << error;
+    qDebug() << Q_FUNC_INFO << "at subState" << subState << "state:" << state << "error" << error;
+    // just queried, forward info
+    if(SubPinQueryState == subState){
+        dbus->pinQueryStateCompletedResponse(state, error);
+        return;
+    }
+
+    // response to query
     if( SIMErrorNone != error ||
        (SIMSecurity::Enabled == state && SubEnablePinQuery == subState) ||
        (SIMSecurity::Disabled == state && SubDisablePinQuery == subState) ){
         dbus->pinQueryEnabledResponse(state);
         subState = SubNothing;
     } else {
+        // ask PIN to change code
         getCode(true, HeaderEnterPinCode);
         simSec->pinAttemptsLeft(SIMSecurity::PIN);
     }
@@ -712,6 +725,7 @@ void PinCodeQueryBusinessLogic::cancelQuery()
     qDebug() << Q_FUNC_INFO ;    
     // regardless of the state - just exit.
     ui2disappear();
+
     // Well, let's put the radio and cellular off.
     /* Let's not. ssc takes care of it.
     QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
@@ -796,7 +810,7 @@ void PinCodeQueryBusinessLogic::emitLaunchResponse(bool ok)
     if(launchResponseTimer->isActive()){
         launchResponseTimer->stop();
     }
-    dbus->pinQueryDoneResponse((SIM::SIMStatus)previousSimState, ok);
+    dbus->pinQueryDoneResponse(ok);
     qDebug() << Q_FUNC_INFO << "ok:" << ok;
 }
 
@@ -808,4 +822,10 @@ void PinCodeQueryBusinessLogic::startLaunchResponseTimer()
         }
         launchResponseTimer->start(60000); // wait one second
     }
+}
+
+void PinCodeQueryBusinessLogic::pinQueryState(SIMSecurity::PINType pinType)
+{
+    subState = SubPinQueryState;
+    simSec->pinQueryState(pinType);
 }
