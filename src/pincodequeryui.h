@@ -35,7 +35,7 @@ private slots:
 
 private: //methods
     void createWidgetItems();
-    void createNumpad();
+    DuiLayout* createNumpad();
     void createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy);
 
 private: //attributes
@@ -45,7 +45,6 @@ private: //attributes
     DuiButton *backspaceButton;
     DuiLabel *headerLabel;
     DuiTextEdit *entryTextEdit;
-    DuiLayout *numpadLayout;
     QTimer *backspaceTimer;
 };
 

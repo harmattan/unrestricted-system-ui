@@ -42,14 +42,6 @@ PinCodeQueryUI::~PinCodeQueryUI()
         //we stop timing the press event
         backspaceTimer->stop();
     }
-    backspaceTimer = NULL;
-    emergencyCallButton = NULL;
-    enterButton = NULL;
-    cancelButton = NULL;
-    backspaceButton = NULL;
-    headerLabel = NULL;
-    entryTextEdit = NULL;
-    numpadLayout = NULL;
 }
 
 void PinCodeQueryUI::createContent()
@@ -60,8 +52,7 @@ void PinCodeQueryUI::createContent()
     createWidgetItems();
 
     //create mainLayout
-    DuiLayout *layout = new DuiLayout();
-    centralWidget()->setLayout(layout); // ownership transferred
+    DuiLayout *layout = new DuiLayout(centralWidget());
 
     //create landscapePolicy and portraitPolicy for layout
     DuiGridLayoutPolicy* landscapePolicy = new DuiGridLayoutPolicy(layout);
@@ -69,6 +60,8 @@ void PinCodeQueryUI::createContent()
 
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
+
+    DuiLayout* nums = createNumpad();
 
     //attach widget items to landscape and portrait policies
     /*
@@ -84,13 +77,13 @@ void PinCodeQueryUI::createContent()
     landscapePolicy->addItemAtPosition(backspaceButton, 3, 3);
     landscapePolicy->addItemAtPosition(enterButton, 5, 0, 1, 2);
     landscapePolicy->addItemAtPosition(cancelButton, 5, 2, 1, 2);
-    landscapePolicy->addItemAtPosition(numpadLayout, 1, 4, 5, 7);
+    landscapePolicy->addItemAtPosition(nums, 1, 4, 5, 7);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
     portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 3);
     portraitPolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     portraitPolicy->addItemAtPosition(backspaceButton, 2, 3);
-    portraitPolicy->addItemAtPosition(numpadLayout, 3, 0, 1, 4);
+    portraitPolicy->addItemAtPosition(nums, 3, 0, 1, 4);
     portraitPolicy->addItemAtPosition(enterButton, 4, 0, 1, 2);
     portraitPolicy->addItemAtPosition(cancelButton, 4, 2, 1, 2);
 
@@ -179,39 +172,37 @@ void PinCodeQueryUI::setHeader(QString header)
 
 void PinCodeQueryUI::createWidgetItems()
 {    
-    emergencyCallButton = new DuiButton(this);
+    emergencyCallButton = new DuiButton();
     emergencyCallButton->setObjectName("emergencyCallButton");
     emergencyCallButton->setIconID("icon-m-common-emergency-call");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "", this);
+    entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "");
     entryTextEdit->setObjectName("codeEntry");
     entryTextEdit->setMaskedInput(true);
 
-    enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")), this);
+    enterButton = new DuiButton(QString(trid("qtn_cell_enter", "Enter")));
     enterButton->setObjectName("enterButton");
     connect(enterButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    cancelButton = new DuiButton(QString(trid("qtn_comm_cancel", "Cancel")), this);
+    cancelButton = new DuiButton(QString(trid("qtn_comm_cancel", "Cancel")));
     cancelButton->setObjectName("cancelButton");
     connect(cancelButton, SIGNAL(released()), this, SLOT(buttonReleased()));
 
-    backspaceButton = new DuiButton(this);
+    backspaceButton = new DuiButton();
     backspaceButton->setObjectName("backspaceButton");
     backspaceButton->setIconID("icon-m-keyboard-backspace");
     connect(backspaceButton, SIGNAL(released()), this, SLOT(buttonReleased()));
     connect(backspaceButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
 
-    headerLabel = new DuiLabel(this);
+    headerLabel = new DuiLabel();
     headerLabel->setAlignment(Qt::AlignCenter);    
-    
-    createNumpad();
 }
 
-void PinCodeQueryUI::createNumpad()
+DuiLayout* PinCodeQueryUI::createNumpad()
 {
     //create numpadLayout and policy for that
-    numpadLayout = new DuiLayout(this);
+    DuiLayout *numpadLayout = new DuiLayout(this);
     DuiGridLayoutPolicy *numpadLayoutPolicy = new DuiGridLayoutPolicy(numpadLayout);
 
     int values[] = {
@@ -234,6 +225,7 @@ void PinCodeQueryUI::createNumpad()
             numpadLayoutPolicy->addItemAtPosition(num, (i/3), i%3, 1, 1);
         }
     }
+    return numpadLayout;
 }
 
 void PinCodeQueryUI::buttonReleased()
