@@ -1,6 +1,7 @@
 system-ui (0.8.1-1) harmattan; urgency=low
 
-* to run CITA test cases.
+  * to run CITA test cases.
+
  -- Chetak Marulasiddappa <ext-chetak.marulasiddappa@nokia.com>  Thu, 29 Oct 2009 10:49:50 +0300
 
 system-ui (0.8.1-0) harmattan; urgency=low
