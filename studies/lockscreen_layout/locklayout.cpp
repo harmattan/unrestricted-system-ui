@@ -52,12 +52,10 @@ int main(int argc, char** argv)
     date->setAlignment(Qt::AlignCenter);
 
     DuiSlider* slider = new DuiSlider(NULL, "dot");
-    //DuiLabel* slider = new DuiLabel("asdfasdfasdfasdfasdfasdfa");
-    //slider->setAlignment(Qt::AlignCenter);
     slider->setOrientation(Qt::Horizontal);
     slider->setObjectName("unlockslider");
-    slider->setMinimumWidth(380);
-    slider->setMaximumWidth(380);
+    slider->setMinimumWidth(450);
+    slider->setMaximumWidth(450);
     slider->setMaximumHeight(80);
 
     QGraphicsWidget* sl = new QGraphicsWidget;
@@ -85,10 +83,10 @@ int main(int argc, char** argv)
     1 |           time            |
       +---------------------------+
     2 |           date            |
-      +---+-----------------------+
-    3 |sl |      slider       |sr |
+      +---------------------------+
+    3 |          slider           |
       +---+----+----+----+----+---+
-    4 |s2 | i1 | i2 | i3 | i4 |s3 |
+    4 |sl | i1 | i2 | i3 | i4 |sr |
       +---+----+----+----+----+---+
 
       */
