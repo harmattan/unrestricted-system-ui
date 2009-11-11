@@ -19,10 +19,6 @@ public:
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId);
 
-private slots:
-    void doRotation();
-    void startRotation();
-
 private:
     QPointer<ProfileWidget> main;
 };

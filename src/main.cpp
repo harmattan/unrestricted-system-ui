@@ -58,14 +58,6 @@ int main(int argc, char** argv)
 
     Sysuid daemon;
 
-    /* Comment in if rotation test needed. *
-    TestObj obj;
-    QTimer *rotation = new QTimer(0);
-    rotation->setInterval(5*1000);
-    rotation->start();
-    QObject::connect(rotation, SIGNAL(timeout()), &obj, SLOT(doRotation()));
-    **/
-
     int ret = app.exec();
     //qDebug() << "Bye!";
     return ret;
