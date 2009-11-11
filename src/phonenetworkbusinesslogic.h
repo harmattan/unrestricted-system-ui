@@ -9,10 +9,10 @@
 #include <QTimer>
 
 #include <NetworkRegistration>
-//#include "networkregistrationstub.h"
 #include <RadioAccess>
-//#include "radioaccessstub.h"
 #include <NetworkCell>
+#include <NetworkOperator>
+#include <SignalStrength>
 
 using namespace Cellular;
 
@@ -73,6 +73,8 @@ public:
     void queryNetworkModes();
     void queryNetworkSelectionValues();
     QString networkIcon();
+    QString currentOperator();
+    QString signalStrengthIcon();
     void networkAppletClosing();    
     QVariant GConfItemValue(SystemUIGConf::GConfKey key);    
 
@@ -80,6 +82,7 @@ private slots:
     void selectNetworkCompleted(bool success, const QString &reason);
     void availableNetworksReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
     void technologyChanged(PhoneNetworkTechnology::Technology technology);
+    void signalStrengthChanged(int bars);
 
 signals:
     void networkModeValuesAvailable(int, QStringList);
@@ -88,16 +91,21 @@ signals:
     void networkSelected(bool);
     void roamingUpdatesValueChanged(bool);
     void networkIconChanged(QString);
+    void networkOperatorChanged(QString);
+    void signalStrengthIconChanged(QString);
     void showNotification(QString);
 
 private: //methods
     void queryAvailableNetworks();
     QString mapTechnologyToIcon(PhoneNetworkTechnology::Technology technology);
+    QString mapSignalStrengthToIcon(int bars);
 
 private: //attributes
     SystemUIGConf *systemUIGConf;
     NetworkRegistration *networkRegistration;
     RadioAccess *radioAccess;
+    NetworkOperator *networkOperator;
+    SignalStrength *signalStrength;
     PhoneNetworkTechnology *technology;
     QHash<RadioAccess::Mode, QString> networkModes;
     QHash<NetworkRegistration::Mode, QString> networkSelectionValues;

@@ -32,6 +32,8 @@ public slots:
     bool roamingValue();
     bool roamingUpdatesValue();
     QString networkIconValue();
+    QString currentOperatorValue();
+    QString signalStrengthIconValue();
 
 signals:
     void networkModeValuesReceived(int, QStringList);
@@ -40,6 +42,8 @@ signals:
     void networkSelected(bool);
     void roamingUpdatesValueChanged(bool);
     void networkIconChanged(QString);
+    void networkOperatorChanged(QString);
+    void signalStrengthIconChanged(QString);
 
 private:
     PhoneNetworkBusinessLogic *networkLogic;    

@@ -13,6 +13,8 @@ PhoneNetworkBusinessLogicAdaptor::PhoneNetworkBusinessLogicAdaptor(QObject *obj,
     connect(networkLogic, SIGNAL(networkSelected(bool)), this, SIGNAL(networkSelected(bool)));
     connect(networkLogic, SIGNAL(roamingUpdatesValueChanged(bool)), this, SIGNAL(roamingUpdatesValueChanged(bool)));
     connect(networkLogic, SIGNAL(networkIconChanged(QString)), this, SIGNAL(networkIconChanged(QString)));
+    connect(networkLogic, SIGNAL(networkOperatorChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
+    connect(networkLogic, SIGNAL(signalStrengthIconChanged(QString)), this, SIGNAL(signalStrengthIconChanged(QString)));
 }
 
 void PhoneNetworkBusinessLogicAdaptor::setPhoneNetworkValue(bool value)
@@ -78,4 +80,14 @@ bool PhoneNetworkBusinessLogicAdaptor::roamingUpdatesValue()
 QString PhoneNetworkBusinessLogicAdaptor::networkIconValue()
 {
     return networkLogic->networkIcon();
+}
+
+QString PhoneNetworkBusinessLogicAdaptor::currentOperatorValue()
+{
+    return networkLogic->currentOperator();
+}
+
+QString PhoneNetworkBusinessLogicAdaptor::signalStrengthIconValue()
+{
+    return networkLogic->signalStrengthIcon();
 }

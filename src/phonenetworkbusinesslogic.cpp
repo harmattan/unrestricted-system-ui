@@ -6,10 +6,7 @@
 /*
     TODO:
     1) What to do when toggling "Enable phone network"-feature?
-    2) What to do when toggling "Enable roaming updates"-feature?
-    3) When requesting available networks, an error can occur. Do we show note in this case?
-    4) When selecting a network, an error can occur. Do we show note in this case?
-    5) Can we trust that the network has unique name?
+    2) What to do when toggling "Enable roaming updates"-feature?        
 
 */
 
@@ -85,13 +82,20 @@ PhoneNetworkBusinessLogic::PhoneNetworkBusinessLogic(SystemUIGConf *systemUIGCon
         systemUIGConf(systemUIGConf),
         networkRegistration(NULL),
         radioAccess(NULL),
+        networkOperator(NULL),
+        signalStrength(NULL),
         technology(NULL)
 {
     networkRegistration = new NetworkRegistration();
-    radioAccess = new RadioAccess();    
+    radioAccess = new RadioAccess();
+    networkOperator = new NetworkOperator();
+    signalStrength = new SignalStrength();
     technology = new PhoneNetworkTechnology(radioAccess);
+
     connect(technology, SIGNAL(technologyChanged(PhoneNetworkTechnology::Technology)),
             this, SLOT(technologyChanged(PhoneNetworkTechnology::Technology)));
+    connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
+    connect(signalStrength, SIGNAL(levelChanged(int, int)), this, SLOT(signalStrengthChanged(int)));
     networkModes.insert(RadioAccess::DualMode, DualText);
     networkModes.insert(RadioAccess::GSMMode, GSMText);
     networkModes.insert(RadioAccess::UMTSMode, ThreeGText);    
@@ -279,6 +283,11 @@ QString PhoneNetworkBusinessLogic::networkIcon()
     return mapTechnologyToIcon(technology->currentTechnology());
 }
 
+QString PhoneNetworkBusinessLogic::currentOperator()
+{
+    return networkOperator->name();
+}
+
 QString PhoneNetworkBusinessLogic::mapTechnologyToIcon(PhoneNetworkTechnology::Technology technology)
 {
     QString icon;
@@ -300,6 +309,26 @@ QString PhoneNetworkBusinessLogic::mapTechnologyToIcon(PhoneNetworkTechnology::T
             break;
     }
     return icon;   
+}
+
+QString PhoneNetworkBusinessLogic::signalStrengthIcon()
+{
+    return mapSignalStrengthToIcon(signalStrength->bars());
+}
+
+void PhoneNetworkBusinessLogic::signalStrengthChanged(int bars)
+{    
+    emit signalStrengthIconChanged(mapSignalStrengthToIcon(bars));
+}
+
+QString PhoneNetworkBusinessLogic::mapSignalStrengthToIcon(int bars)
+{
+    QString icon;
+    if(bars % 20 == 0)
+        icon = QString("icon-s-network-%1").arg(bars);
+    else
+        icon = QString("icon-s-network-%1").arg(bars/20*20 + 20);
+    return icon;
 }
 
 void PhoneNetworkBusinessLogic::networkAppletClosing()

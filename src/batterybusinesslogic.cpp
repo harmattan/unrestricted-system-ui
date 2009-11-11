@@ -160,9 +160,9 @@ int BatteryBusinessLogic::batteryBarValue(int percentage)
         index = PSMThresholds.indexOf("100");
     else if(percentage < 88 && percentage >= 75)
         index = PSMThresholds.indexOf("85");
-    else if(percentage < 75 && percentage >= 63)
+    else if(percentage < 75 && percentage >= 62)
         index = PSMThresholds.indexOf("75");
-    else if(percentage < 63 && percentage >= 50)
+    else if(percentage < 62 && percentage >= 50)
         index = PSMThresholds.indexOf("60");
     else if(percentage < 50 && percentage >= 38)
         index = PSMThresholds.indexOf("50");

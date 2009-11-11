@@ -20,6 +20,7 @@
 /* TODO:
    1) Show data counter dialog
    2) Update the list so that the selected operator is indicated somehow
+   3) Update the list so that when selection fails teh list is updated accordingly
 */
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent) :
@@ -110,7 +111,7 @@ void NetworkWidget::initWidget()
     connect(networkIf, SIGNAL(networkModeValuesReceived(int, QStringList)), networkContainer, SLOT(initModeComboBox(int, QStringList)));
     connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), networkContainer, SLOT(initSelectionComboBox(int, int, QStringList)));
     connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableNetworks(int, QStringList, bool)));
-    connect(networkIf, SIGNAL(networkIconValueChanged(QString)), this, SLOT(networkIconValueChanged(QString)));
+    connect(networkIf, SIGNAL(networkIconValueReceived(QString)), this, SLOT(updateNetworkIcon(QString)));
 
     // catch user actions
     connect(phoneNetworkButton, SIGNAL(toggled(bool)), this, SLOT(toggleNetworkSettings(bool)));
@@ -129,7 +130,7 @@ void NetworkWidget::initWidget()
     networkIf->networkIconValueRequired();
 
     // mainLayout
-    DuiLayout *mainLayout = new DuiLayout(this);
+    DuiLayout *mainLayout = new DuiLayout();
     DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
     mainLayoutPolicy->addItem(mainContainer);
     this->setLayout(mainLayout);
@@ -160,10 +161,13 @@ void NetworkWidget::dataCounterButtonPressed()
 void NetworkWidget::toggleNetworkSelected(bool toggle)
 {
     qDebug() << "NetworkWidget::toggleNetworkSelected(" << toggle << ")";
+
+    //TODO update the DuiList
+
     networkSelected = toggle;
 }
 
-void NetworkWidget::networkIconValueChanged(const QString &value)
+void NetworkWidget::updateNetworkIcon(const QString &value)
 {
     phoneNetworkButton->setIconID(value);
 }

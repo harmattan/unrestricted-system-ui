@@ -22,7 +22,8 @@ public:
     void networkModeValuesRequired();    
     void networkSelectionValuesRequired();    
     void availableNetworksRequired();
-    void networkIconValueRequired();    
+    void networkIconValueRequired();
+    void signalStrengthIconValueRequired();
     void setAutoNetworkSelection();
     void networkAppletClosing();
 
@@ -48,7 +49,8 @@ signals:
     void networkSelectionValuesReceived(int, int, QStringList);
     void availableNetworksReceived(int, QStringList, bool);
     void networkSelected(bool);
-    void networkIconValueChanged(QString);
+    void networkIconValueReceived(QString);
+    void signalStrengthIconValueReceived(QString);
 
 private:
     QDBusInterface *dbusIf;

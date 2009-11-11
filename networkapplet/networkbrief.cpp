@@ -7,8 +7,9 @@ NetworkBrief::NetworkBrief()
     networkIf = new NetworkDBusInterface();    
     connect(networkIf, SIGNAL(currentOperatorValueReceived(QString)), this, SLOT(changeText(QString)));
     connect(networkIf, SIGNAL(phoneNetworkValueReceived(bool)), this, SLOT(changeToggle(bool)));
-    connect(networkIf, SIGNAL(networkIconValueChanged(QString)), this, SLOT(changeIcon(QString)));
+    connect(networkIf, SIGNAL(networkIconValueReceived(QString)), this, SLOT(changeIcon(QString)));
     networkToggle = false;
+    networkIf->currentOperatorValueRequired();
     networkIf->phoneNetworkValueRequired();
     networkIf->networkIconValueRequired();
 }

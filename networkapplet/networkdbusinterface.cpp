@@ -16,6 +16,9 @@ NetworkDBusInterface::NetworkDBusInterface()
     connect(dbusIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), this, SIGNAL(availableNetworksReceived(int, QStringList, bool)));
     connect(dbusIf, SIGNAL(networkSelected(bool)), this, SIGNAL(networkSelected(bool)));
     connect(dbusIf, SIGNAL(roamingUpdatesValueChanged(bool)), this, SIGNAL(roamingUpdatesValueReceived(bool)));
+    connect(dbusIf, SIGNAL(networkIconChanged(QString)), this, SIGNAL(networkIconValueReceived(QString)));
+    connect(dbusIf, SIGNAL(networkOperatorChanged(QString)), this, SIGNAL(currentOperatorValueReceived(QString)));
+    connect(dbusIf, SIGNAL(signalStrengthIconChanged(QString)), this, SIGNAL(signalStrengthIconValueReceived(QString)));
 }
 
 NetworkDBusInterface::~NetworkDBusInterface()
@@ -77,7 +80,14 @@ void NetworkDBusInterface::networkIconValueRequired()
 {
     qDebug() << "NetworkDBusInterface::networkIconValueRequired()";
     QList<QVariant> list;
-    dbusIf->callWithCallback(QString("networkIconValue"), list, this, SIGNAL(networkIconValueChanged(QString)), SLOT(DBusMessagingFailure()));
+    dbusIf->callWithCallback(QString("networkIconValue"), list, this, SIGNAL(networkIconValueReceived(QString)), SLOT(DBusMessagingFailure()));
+}
+
+void NetworkDBusInterface::signalStrengthIconValueRequired()
+{
+    qDebug() << "NetworkDBusInterface::signalStrengthIconValueRequired()";
+    QList<QVariant> list;
+    dbusIf->callWithCallback(QString("signalStrengthIconValue"), list, this, SIGNAL(signalStrengthIconValueReceived(QString)), SLOT(DBusMessagingFailure()));
 }
 
 void NetworkDBusInterface::setPhoneNetworkValue(bool value)

@@ -41,3 +41,4 @@ message("CSS path will be: " $$css.path)
 INSTALLS += target \
     css \
     desktop
+OTHER_FILES += networkapplet.css

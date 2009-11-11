@@ -37,7 +37,7 @@ private slots:
     void dataCounterButtonPressed();
     void toggleNetworkSelected(bool toggle);
     void toggleNetworkSettings(bool toggle);
-    void networkIconValueChanged(const QString &value);
+    void updateNetworkIcon(const QString &value);
 
 private: //methods
     void changeSelection();    

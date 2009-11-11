@@ -5,13 +5,20 @@ CONFIG += plugin \
     gui \
     dui \
     duistatusindicatormenu
-INCLUDEPATH += /usr/include/duistatusindicatormenu
+INCLUDEPATH += /usr/include/duistatusindicatormenu \
+    ../networkapplet
 QT += dbus
 HEADERS = networkplugin.h \
-    network.h
+    network.h \
+    ../networkapplet/networkdbusinterface.h
 SOURCES = networkplugin.cpp \
-    network.cpp
-TARGET = $$qtLibraryTarget(network)
+    network.cpp \
+    ../networkapplet/networkdbusinterface.cpp
+TARGET = $$qtLibraryTarget(connectivity)
+css.files = networkplugin.css
 DESTDIR = lib
 target.path += /usr/lib/duistatusindicatormenu/plugins
-INSTALLS += target
+css.path += /usr/share/duistatusindicatormenu/themes/style/
+INSTALLS += target \
+    css
+OTHER_FILES += networkplugin.css

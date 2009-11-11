@@ -3,7 +3,11 @@
 
 #include <DuiWidget>
 
+class DuiButton;
+class DuiImage;
+class DuiLabel;
 class DuiStatusIndicatorMenuInterface;
+class NetworkDBusInterface;
 
 class Network : public DuiWidget
 {
@@ -13,9 +17,21 @@ public:
     Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
     virtual ~Network();
 
-private:
-    //! Interface for controlling the status indicator menu
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
+private slots:
+    void updateButton(bool toggle);
+    void updateButtonImage(const QString &icon);
+    void updateSignalStrengthImage(const QString &icon);
+
+private: //methods
+    void toggleWidgetsVisibility(bool toggle);
+
+private: //attributes
+    NetworkDBusInterface *networkIf;
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu
+    DuiButton *toggleButton;
+    DuiImage *signalStrengthImage;
+    DuiLabel *networkLabel;
+    DuiLabel *operatorLabel;
 
 };
 
