@@ -1,3 +1,27 @@
+system-ui (0.9.0-0) harmattan; urgency=low
+
+  * Fixes: NB#141656 - Pin UI displays blank boxes instead of content
+  * Fixes: NB#141678 - Device becomes unusable when Power key is pressed while working
+  * Fixes: NB#143878 - "Disconnect charger from power supply to save energy" error message is not displayed
+  * Fixes: NB#143879 - Screen lock cannot be shown on the device
+  * Fixes: NB#143881 - "Roaming" and "Network" titles are missing from Phone network settings view.
+  * Fixes: NB#143884 - "No network selected. Change network selection to automatic?" error notification is not displayed
+  * Fixes: NB#143889 - Profile settings are not displayed correctly in portrait mode.
+  * Fixes: NB#143891 - Volume and vibration settings are not saved when settings view is closed
+  * Fixes: NB#144033 - Incorrect title is shown when incorrect PIN code is entered and device is rebooted
+  * Fixes: NB#145334 - PIN query view jams if emergency call button is tapped on the device
+  * Fixes: NB#134117 - PIN is not rejected after 3 tries
+  * Fixes: NB#134119 - PUK is not rejected after 10 tries
+  * Fixes: NB#134122 - Correct PUK does not do anything
+  * Fixes: NB#139177 - If Toggle button "Do not switch automatically.." is tapped then battery icon is not updated anymore
+  * Fixes: NB#141169 - Text "Note!" is missing from Display settings view.
+  * Fixes: NB#142662 - cellular-ui failed to build
+  * Fixes: NB#145400 - If correct PIN code is entered then "Incorrect PIN code" notification is shown when "Change PIN code" is selected from Settings.
+  * Fixes: NB#145403 - Manual power save mode switching does not work if automatic power save mode is set ON.
+  * Fixes: NB#145463 - Sysuid crashes when SIM status is changed after launch PIN query is sent 
+
+ --  Telle-Tiia Pitkänen <telle-tiia.pitkianen@ixonos.com>  Thu, 12 Nov 2009 12:10:09 +0200
+
 system-ui (0.8.1-1) harmattan; urgency=low
 
   * to run CITA test cases.
