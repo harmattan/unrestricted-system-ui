@@ -26,32 +26,25 @@ signals:
 
 public slots:
     void sliderUnlocked();
-    void orientationChanged(const Dui::Orientation &orientation);
     void updateDateTime();
 
 private:
+    DuiLayout* createWidgets();
     void timerEvent(QTimerEvent *event);
-    void calculateRects(DuiLayout* layout, QRect& timeRect, QRect& dateRect,
-                        QRect& a, QRect& b, QRect& c, QRect& d,
-                        QRect& a2, QRect& b2, QRect& c2, QRect& d2,
-                        QRect& sliderRect);
 
 private:
+    DuiLabel* timeLabel; // qtn_scrlock_current_time
+    DuiLabel* dateLabel; // qtn_scrlock_current_daydate
 
-    DuiLabel *timeLabel; // qtn_scrlock_current_time
-    DuiLabel *dateLabel; // qtn_scrlock_current_daydate
+    DuiImage* unreadEmailsImage;
+    DuiImage* unreadMessagesImage;
+    DuiImage* missedCallsImage;
+    DuiImage* unreadChatMessagesImage;
 
-    DuiImage
-    *unreadEmailsImage,
-    *unreadMessagesImage,
-    *missedCallsImage,
-    *unreadChatMessagesImage;
-
-    DuiLabel
-    *unreadEmailsLbl,
-    *unreadMessagesLbl,
-    *missedCallsLbl,
-    *unreadChatMessagesLbl;
+    DuiLabel* unreadEmailsLabel;
+    DuiLabel* unreadMessagesLabel;
+    DuiLabel* missedCallsLabel;
+    DuiLabel* unreadChatMessagesLabel;
 
     UnlockSlider *slider;
 
