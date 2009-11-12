@@ -1,9 +1,10 @@
-#screencentralwidget {
-    minimum-height: 300;
-    maximum-height: 300;
-    minimum-width: 400;
-    maximum-width: 400;
+#landscape_padding  {
+    minimum-height: 143;
+    maximum-height: 143;
 }
 
-#unlockslider  {
+#portrait_padding  {
+    minimum-height: 335;
+    maximum-height: 335;
 }
+

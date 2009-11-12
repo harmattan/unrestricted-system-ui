@@ -2,6 +2,7 @@
 #include <DuiApplicationWindow>
 #include <DuiLabel>
 #include <DuiGridLayoutPolicy>
+#include <DuiLinearLayoutPolicy>
 #include <DuiLayout>
 #include <DuiTheme>
 #include <DuiSceneManager>
@@ -10,40 +11,58 @@
 
 #include <QDebug>
 
+DuiLayout* createWidgets(DuiApplicationPage* p);
+
 int main(int argc, char** argv)
 {
     DuiApplication app(argc, argv);
-    qDebug() << Q_FUNC_INFO << DuiTheme::loadCSS("locklayout.css");
+    qDebug() << Q_FUNC_INFO << DuiTheme::loadCSS("./locklayout.css");
     DuiApplicationWindow window;
     DuiApplicationPage page;
-
-    page.centralWidget()->setGeometry(QRectF(0, 0, 300, 300));
     page.setFullscreen(true);
     page.setDisplayMode(0);
     page.setPannableAreaInteractive(false);
 
     DuiLayout* layout = new DuiLayout;
+    DuiLayout* widgets = createWidgets(&page);
+
+    QSize l_size = DuiSceneManager::instance()->visibleSceneSize(Dui::Landscape);
+    QSize p_size = DuiSceneManager::instance()->visibleSceneSize(Dui::Portrait);
 
     DuiGridLayoutPolicy* l_policy = new DuiGridLayoutPolicy(layout);
+    l_policy->setSpacing(10);
+    l_policy->setRowFixedHeight(1, l_size.height());
+    l_policy->setColumnFixedWidth(0, l_size.width());
+    l_policy->addItemAtPosition(widgets, 1, 0, Qt::AlignCenter);
+
     DuiGridLayoutPolicy* p_policy = new DuiGridLayoutPolicy(layout);
+    p_policy->setSpacing(10);
+    p_policy->setRowFixedHeight(1, p_size.height());
+    p_policy->setColumnFixedWidth(0, p_size.width());
+    p_policy->addItemAtPosition(widgets, 1, 0, Qt::AlignCenter);
 
-    l_policy->setSpacing(0);
-    p_policy->setSpacing(0);
+    layout->setLandscapePolicy(l_policy);
+    layout->setPortraitPolicy(p_policy);
 
-    for (int r = 0; r < 6; r++) {
-        l_policy->setRowAlignment(r, Qt::AlignCenter);
-        p_policy->setRowAlignment(r, Qt::AlignCenter);
-        l_policy->setColumnAlignment(r, Qt::AlignCenter);
-        p_policy->setColumnAlignment(r, Qt::AlignCenter);
-    }
+    page.centralWidget()->setLayout(layout);
 
-    QGraphicsWidget* s_l = new QGraphicsWidget;
-    s_l->setMinimumHeight((480 / 2) - (194 / 2));
-    s_l->setMaximumHeight((480 / 2) - (194 / 2));
+    window.show();
+    page.appearNow();
 
-    QGraphicsWidget* s_p = new QGraphicsWidget;
-    s_p->setMinimumHeight((864 / 2) - (194 / 2));
-    s_p->setMaximumHeight((864 / 2) - (194 / 2));
+    return app.exec();
+}
+
+DuiLayout* createWidgets(DuiApplicationPage* p)
+{
+    DuiLayout* layout = new DuiLayout(p);
+    DuiGridLayoutPolicy* policy = new DuiGridLayoutPolicy(layout);
+
+    policy->setSpacing(10);
+
+    policy->setColumnAlignment(0, Qt::AlignCenter);
+
+    QGraphicsWidget* spacert = new QGraphicsWidget;
+    spacert->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     DuiLabel* time = new DuiLabel("10:45PM");
     time->setAlignment(Qt::AlignCenter);
@@ -76,52 +95,36 @@ int main(int argc, char** argv)
     QGraphicsWidget* sr = new QGraphicsWidget;
     sr->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
+    QGraphicsWidget* spacerb = new QGraphicsWidget;
+    spacerb->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+
     /* 0   1    2    3    4    5
       +---------------------------+
-    0 |s_l/s_p                    |
+    0 |           time            |
       +---------------------------+
-    1 |           time            |
+    1 |           date            |
       +---------------------------+
-    2 |           date            |
-      +---------------------------+
-    3 |          slider           |
+    2 |          slider           |
       +---+----+----+----+----+---+
-    4 |sl | i1 | i2 | i3 | i4 |sr |
+    3 |sl | i1 | i2 | i3 | i4 |sr |
       +---+----+----+----+----+---+
+    */
 
-      */
 
     // row, column, rowspan, colspan
 
-    l_policy->addItemAtPosition(s_l,    0, 0, 1, 6);
-    l_policy->addItemAtPosition(time,   1, 0, 1, 6);
-    l_policy->addItemAtPosition(date,   2, 0, 1, 6);
-    l_policy->addItemAtPosition(slider, 3, 0, 1, 6);
-    l_policy->addItemAtPosition(sl,    4, 0);
-    l_policy->addItemAtPosition(i1,     4, 1);
-    l_policy->addItemAtPosition(i2,     4, 2);
-    l_policy->addItemAtPosition(i3,     4, 3);
-    l_policy->addItemAtPosition(i4,     4, 4);
-    l_policy->addItemAtPosition(sr,    4, 5);
+    policy->addItemAtPosition(spacert, 1, 0, 1, 6);
+    policy->addItemAtPosition(time,    2, 0, 1, 6);
+    policy->addItemAtPosition(date,    3, 0, 1, 6);
+    policy->addItemAtPosition(slider,  4, 0, 1, 6);
+    policy->addItemAtPosition(sl,      5, 0);
+    policy->addItemAtPosition(i1,      5, 1);
+    policy->addItemAtPosition(i2,      5, 2);
+    policy->addItemAtPosition(i3,      5, 3);
+    policy->addItemAtPosition(i4,      5, 4);
+    policy->addItemAtPosition(sr,      5, 5);
+    policy->addItemAtPosition(spacerb, 6, 0, 1, 6);
 
-    p_policy->addItemAtPosition(s_p,    0, 0, 1, 6);
-    p_policy->addItemAtPosition(time,   1, 0, 1, 6);
-    p_policy->addItemAtPosition(date,   2, 0, 1, 6);
-    p_policy->addItemAtPosition(slider, 3, 0, 1, 6);
-    p_policy->addItemAtPosition(sl,    4, 0);
-    p_policy->addItemAtPosition(i1,     4, 1);
-    p_policy->addItemAtPosition(i2,     4, 2);
-    p_policy->addItemAtPosition(i3,     4, 3);
-    p_policy->addItemAtPosition(i4,     4, 4);
-    p_policy->addItemAtPosition(sr,    4, 5);
-
-    layout->setLandscapePolicy(l_policy);
-    layout->setPortraitPolicy(p_policy);
-
-    /* Attach the layout to the page */
-    page.centralWidget()->setObjectName("screencentralwidget");
-    page.centralWidget()->setLayout(layout);
-    window.show();
-    page.appearNow();
-    return app.exec();
+    return layout;
 }
