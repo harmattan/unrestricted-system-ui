@@ -48,8 +48,19 @@ dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com
 
 dbus-send --system --print-reply --dest=com.nokia.csd.SIM /com/nokia/csd/sim com.nokia.csd.SIM.Security.PUKAttemptsLeft string:PIN
 
+---- Messages to PinCodeQuery ----
 To launch PIN query:
 dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.LaunchPinQuery string:"PIN"
+
+To change PIN code:
+dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.ChangePinCode
+
+To enable/disable PIN code query:
+dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.EnablePinQuery boolean:true
+
+To get the state (enable/disable/unknown) of PIN code query:
+dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.PinQueryState string:"PIN"
+
 
 """
 
