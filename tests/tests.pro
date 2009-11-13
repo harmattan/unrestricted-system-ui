@@ -3,6 +3,7 @@ SUBDIRS = \
     ut_unlockslider \
     ut_batterybusinesslogic \
     ut_lowbatterynotifier \
+    ut_pincodequerybusinesslogic \
 
 QMAKE_STRIP = echo
 #include(shell.pri)

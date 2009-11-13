@@ -6,8 +6,12 @@
 
 #include <QObject>
 #include <QPointer>
-#include <SIM>
-#include <SIMLock>
+#ifdef UNIT_TEST
+    #include "../tests/ut_pincodequerybusinesslogic/pinstubs.h"
+#else
+    #include <SIM>
+    #include <SIMLock>
+#endif
 #include <call-ui/CallUiServiceApi>
 
 class DuiApplicationWindow;
@@ -46,10 +50,6 @@ public:
 
     explicit PinCodeQueryBusinessLogic(QObject* parent = 0);
     virtual ~PinCodeQueryBusinessLogic();
-
-        // constructor for module tests...
-    explicit PinCodeQueryBusinessLogic(
-            SIM *sim, SIMSecurity *simSec, SIMLock *simLock, QObject* parent = 0);
 
     void pinQueryState(SIMSecurity::PINType pinType);
     void enablePinQueryRequested(bool enabled);
@@ -90,6 +90,7 @@ private: // attributes
     SIMLock *simLock;
 
     CallUiServiceApi *callUi;
+    const Qt::ConnectionType connType;
 
 private: // methods
     bool handleSIMError(SIMError error);

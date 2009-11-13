@@ -1,7 +1,7 @@
 #include "pincodequerybusinesslogic.h"
-#include "pincodequerydbusadaptor.h"
-#include <SIM>
-#include <SIMLock>
+#ifndef UNIT_TEST
+    #include "pincodequerydbusadaptor.h"
+#endif // UNIT_TEST
 #include <DuiLocale>
 #include <DuiButton>
 #include <DuiDialog>
@@ -76,7 +76,12 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
         previousSimState(-1),
         queryLaunch(false),
         initialized(false),
-        callUi(NULL)
+        callUi(NULL),
+        #ifdef UNIT_TEST
+           connType(Qt::AutoConnection)
+        #else
+           connType(Qt::QueuedConnection)
+        #endif // UNIT_TEST
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -84,58 +89,32 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
     simSec = new SIMSecurity(this);
     simLock = new SIMLock(this);
 
-    init();
-}
-
-PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(
-        SIM *sim, SIMSecurity *simSec, SIMLock *simLock, QObject* parent) :
-        QObject(parent),
-        subState(SubNothing),
-        previousSimState(-1),
-        queryLaunch(false),
-        initialized(false),
-        sim(sim),
-        simSec(simSec),
-        simLock(simLock),
-        callUi(NULL)
-{
-    qDebug() << Q_FUNC_INFO;
-
-    init();
-}
-
-void PinCodeQueryBusinessLogic::init()
-{
-    qDebug() << Q_FUNC_INFO;
-
     dbus = new PinCodeQueryDBusAdaptor(this);
 
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
-            this, SLOT(simPINCodeVerified(bool, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPINCodeVerified(bool, SIMError)), connType);
     connect(simSec, SIGNAL(verifyPUKComplete(bool, SIMError)),
-            this, SLOT(simPUKCodeVerified(bool, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPUKCodeVerified(bool, SIMError)), connType);
     connect(simSec, SIGNAL(pinAttemptsLeftComplete(int, SIMError)),
-            this, SLOT(simPINAttemptsLeft(int, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPINAttemptsLeft(int, SIMError)), connType);
     connect(simSec, SIGNAL(pukAttemptsLeftComplete(int, SIMError)),
-            this, SLOT(simPUKAttemptsLeft(int, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPUKAttemptsLeft(int, SIMError)), connType);
     connect(simSec, SIGNAL(changePINComplete(bool, SIMError)),
-            this, SLOT(simPINCodeChanged(bool, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPINCodeChanged(bool, SIMError)), connType);
     connect(simSec, SIGNAL(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)),
-            this, SLOT(simPinQueryStateComplete(SIMSecurity::PINQuery, SIMError)), Qt::QueuedConnection);
+            this, SLOT(simPinQueryStateComplete(SIMSecurity::PINQuery, SIMError)), connType);
     connect(simSec, SIGNAL(enablePINQueryComplete(SIMError)),
-            this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
+            this, SLOT(simEnablePINQueryComplete(SIMError)), connType);
     connect(simSec, SIGNAL(disablePINQueryComplete(SIMError)),
-            this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
+            this, SLOT(simEnablePINQueryComplete(SIMError)), connType);
     connect(simLock, SIGNAL(simLockUnlockComplete(SIMLockError)),
             this, SLOT(simLockUnlockCodeVerified(SIMLockError)));
 
     // bootstrap the state machine
     connect(sim, SIGNAL(statusComplete(SIM::SIMStatus, SIMError)),
-        this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)),
-        Qt::QueuedConnection);
+        this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)), connType);
     connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
-        this, SLOT(simStatusChanged(SIM::SIMStatus)),
-        Qt::QueuedConnection);
+        this, SLOT(simStatusChanged(SIM::SIMStatus)), connType);
 
     sim->status();
 }
@@ -372,12 +351,12 @@ void PinCodeQueryBusinessLogic::uiCodeChanged()
 void PinCodeQueryBusinessLogic::uiButtonReleased()
 {
     QString code = uiPin->getCodeEntry()->text();
+    const QString buttonName = this->sender()->objectName();
 
-    DuiButton* button = static_cast<DuiButton*>(this->sender());
-    if(button->objectName() == QString("emergencyCallButton")) {
+    if(buttonName == QString("emergencyCallButton")) {
         doEmergencyCall();
    }
-    else if(button->objectName() == QString("enterButton")) {
+    else if(buttonName == QString("enterButton")) {
         if(SubEnablePinQuery == subState){
             simSec->enablePINQuery(SIMSecurity::PIN, uiPin->getCodeEntry()->text());
         } else if(SubDisablePinQuery == subState){
@@ -419,7 +398,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
        }
         uiPin->getCodeEntry()->setText("");
     }
-    else if(button->objectName() == QString("cancelButton")) {
+    else if(buttonName == QString("cancelButton")) {
         cancelQuery();
     }
 }
@@ -503,7 +482,7 @@ bool PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
 // called only in bootstrap
 void PinCodeQueryBusinessLogic::simStatusComplete(SIM::SIMStatus status, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO << "sim status completed" << status;
+    qDebug() << Q_FUNC_INFO << status;
 
     if (handleSIMError(error)) {
         simStatusChanged(status);

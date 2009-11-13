@@ -65,7 +65,7 @@ void PinCodeQueryDBusAdaptor::pinQueryDoneResponse(bool queryOk)
 {
     qDebug() << Q_FUNC_INFO << "ok:" << queryOk;
 
-    QDBusMessage msg = QDBusMessage::createSignal(dbusObjectName(), dbusInterfaceName(), "pinQueryDone");
+    QDBusMessage msg = QDBusMessage::createSignal(dbusObjectName(), dbusInterfaceName(), "PinQueryDone");
     msg << queryOk;
     QDBusConnection::systemBus().send(msg);
 }

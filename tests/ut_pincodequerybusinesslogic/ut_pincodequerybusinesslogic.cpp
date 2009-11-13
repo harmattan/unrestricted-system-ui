@@ -1,8 +1,8 @@
 #include "ut_pincodequerybusinesslogic.h"
 #include "pincodequeryui.h"
-#include "pincodequerydbusadaptor.h"
 
 #include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiTextEdit>
 #include <DuiButton>
 #include <DuiLocale>
@@ -49,11 +49,13 @@ namespace {
 
 void Ut_PinCodeQueryBusinessLogic::init()
 {    
-    m_sim = new SIMStub(this);
-    m_simSec = new SIMSecurityStub(this);
-    m_simLock = new SIMLock(this);
+    m_subject = new PinCodeQueryBusinessLogic(this);
+    connect(this, SIGNAL(uiButtonReleased()), m_subject, SLOT(uiButtonReleased()));
 
-    m_subject = new PinCodeQueryBusinessLogic(m_sim, m_simSec, m_simLock, this);
+    m_sim = m_subject->sim;
+    m_simSec = m_subject->simSec;
+    m_simLock = m_subject->simLock;
+    m_dbus = m_subject->dbus;
 }
 
 void Ut_PinCodeQueryBusinessLogic::cleanup()
@@ -61,23 +63,27 @@ void Ut_PinCodeQueryBusinessLogic::cleanup()
     delete m_subject;
     m_subject = NULL;
 
-    delete m_sim;
     m_sim = NULL;
-    delete m_simSec;
     m_simSec = NULL;
-    delete m_simLock;
     m_simLock = NULL;
+    m_dbus = NULL;
 }
 
 DuiApplication *app;
+DuiApplicationWindow *win;
 void Ut_PinCodeQueryBusinessLogic::initTestCase()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_pincodequerybusinesslogic";
     app = new DuiApplication(argc, &app_name);
 
-    m_simSec->pinAttempts = 4;
-    m_simSec->pin = QString("1234");
+    win = new DuiApplicationWindow();
+    Qt::WindowFlags flags = 0;
+        flags |= Qt::FramelessWindowHint;// | Qt::WindowStaysOnTopHint;
+    win->setWindowOpacity(0);
+    win->setWindowFlags(flags);
+
+    qRegisterMetaType<NotificationType::Type>("NotificationType::Type");
 }
 
 void Ut_PinCodeQueryBusinessLogic::cleanupTestCase()
@@ -94,18 +100,30 @@ void Ut_PinCodeQueryBusinessLogic::stateChange(SIM::SIMStatus status)
     QCOMPARE(m_subject->previousSimState, (int)(m_sim->simStatus));
 }
 
+void Ut_PinCodeQueryBusinessLogic::emitButtonReleased(QString buttonName)
+{
+    QString tmp = this->objectName();
+    this->setObjectName(buttonName);
+    emit uiButtonReleased();
+    this->setObjectName(tmp);
+}
+
+void Ut_PinCodeQueryBusinessLogic::testUiClosed()
+{
+    QCOMPARE(m_subject->subState, PinCodeQueryBusinessLogic::SubNothing);
+    QCOMPARE(m_subject->uiPin->isVisible(), false);
+}
+
 ///////////////// TESTS ///////////////////
 
 void Ut_PinCodeQueryBusinessLogic::testStateChange()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << "m_sim" << (QObject*) m_sim;
 
     // test initial value; m_sim initialized to SIM::NotReady
     QCOMPARE(m_subject->previousSimState, (int)(m_sim->simStatus));
 
-    m_sim->simStatus = SIM::UnknownStatus;
-    m_sim->emitStatusChanged();
-    QCOMPARE(m_subject->previousSimState, (int)(m_sim->simStatus));
+    stateChange(SIM::UnknownStatus);
 
     SIM::SIMStatus newState = SIM::NotReady;
 
@@ -118,113 +136,152 @@ void Ut_PinCodeQueryBusinessLogic::testStateChange()
     QCOMPARE(m_subject->previousSimState, (int)newState);
 }
 
-void Ut_PinCodeQueryBusinessLogic::testLaunchPinQuery()
-{
-    m_simSec->pinAttempts = 4;
-    m_simSec->pin = QString("1234");
-
-    // Test no start
-    stateChange(SIM::NotReady);
-    bool resp = m_subject->launchPinQuery(SIMSecurity::PIN);
-    QCOMPARE(resp, false);
-
-    // Test start
-    stateChange(SIM::PINRequired);
-    resp = m_subject->launchPinQuery(SIMSecurity::PIN);
-    QCOMPARE(resp, true);
-
-    // Test nok signal
-    testPinNok(QString("4321"), PINCodeIncorrectSettings);
-
-    m_subject->uiPin->getCancelBtn()->click();
-
-    QSignalSpy spyNok(m_subject, SIGNAL(pinQueryDoneResponse(bool)));
-
-    QCOMPARE(spyNok.count(), 1); // make sure the signal was emitted exactly one time
-    QList<QVariant> arguments = spyNok.takeFirst(); // take the first signal
-    QVERIFY(arguments.at(0).toBool() == false); // verify the first argument
-
-    // Test ok signal
-    testPinOk(QString("1234"));
-
-    m_subject->uiPin->getCancelBtn()->click();
-
-    QSignalSpy spyOk(m_subject, SIGNAL(pinQueryDoneResponse(bool)));
-
-    QCOMPARE(spyOk.count(), 1); // make sure the signal was emitted exactly one time
-    arguments = spyOk.takeFirst(); // take the first signal
-    QVERIFY(arguments.at(0).toBool() == false); // verify the first argument
-}
-
 void Ut_PinCodeQueryBusinessLogic::testUiControls()
 {
-    stateChange(SIM::PINRequired);
+    // enable UI operations
+    m_subject->initialized = true;
 
+    // check button enability
+    stateChange(SIM::PINRequired);
     QCOMPARE(m_subject->uiPin.isNull(), false);
     DuiButton *enter = m_subject->uiPin.data()->getEnterBtn();
-
-    // init test data
-    m_simSec->pinAttempts = 4;
-    m_simSec->pin = QString("1234");
+    DuiButton *cancel = m_subject->uiPin.data()->getCancelBtn();
 
     // test enter button enablity
     QString pin("12");
     m_subject->uiPin->getCodeEntry()->setText(pin);
     QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
 
     m_subject->uiPin->getCodeEntry()->setText(pin+pin);
     QCOMPARE(enter->isEnabled(), true);
+    QCOMPARE(cancel->isEnabled(), true);
 
-    // test error note for wrong PIN
-    enter->click();
-    QSignalSpy spy(m_subject, SLOT(showNotification(QString, NotificationType::Type)));
+    // clean UI
+    emitButtonReleased("cancelButton");
 
-    QCOMPARE(spy.count(), 1); // make sure the signal was emitted exactly one time
-    QList<QVariant> arguments = spy.takeFirst(); // take the first signal
-    QVERIFY(arguments.at(0).toString() == PINCodeIncorrectSettings); // verify the first argument
+    stateChange(SIM::Ok);
+    m_subject->changePinCode();
+
+    QCOMPARE(m_subject->uiPin.isNull(), false);
+    enter = m_subject->uiPin.data()->getEnterBtn();
+    cancel = m_subject->uiPin.data()->getCancelBtn();
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
+
+    m_subject->uiPin->getCodeEntry()->setText(m_simSec->pin);
+    emitButtonReleased("enterButton");
+
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), false);
+
+    m_subject->uiPin->getCodeEntry()->setText(pin);
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), false);
 
     m_subject->uiPin->getCodeEntry()->setText(pin+pin);
+    QCOMPARE(enter->isEnabled(), true);
+    QCOMPARE(cancel->isEnabled(), false);
+}
+
+void Ut_PinCodeQueryBusinessLogic::testLaunchPinQuery()
+{
+    m_simSec->pinAttempts = 4;
+    m_simSec->pin = QString("1234");
+
+    m_dbus->queryStarted = false;
+
+    // Test no start
+    stateChange(SIM::NotReady);
+    bool resp = m_subject->launchPinQuery(SIMSecurity::PIN);
+    QCOMPARE(resp, false);
+    QCOMPARE(m_dbus->queryStarted, false);
+
+    // Test start
+    stateChange(SIM::PINRequired);
+    resp = m_subject->launchPinQuery(SIMSecurity::PIN);
+    QCOMPARE(resp, true);
+    QCOMPARE(m_dbus->queryStarted, false);
+
+    // Test nok signal
+    testPinNok(QString("4321"), PINCodeIncorrectSettings);
+    emitButtonReleased("cancelButton");
+    QCOMPARE(m_dbus->queryStarted, false);
+
+    // Test ok signal
+    resp = m_subject->launchPinQuery(SIMSecurity::PIN);
+    QCOMPARE(resp, true);
+    QCOMPARE(m_dbus->queryStarted, false);
+
+    testPinOk();
+    testUiClosed();
+    QCOMPARE(m_dbus->queryStarted, true);
 }
 
 void Ut_PinCodeQueryBusinessLogic::testEnablePinQuery()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
 void Ut_PinCodeQueryBusinessLogic::testPinQueryStateChanges()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
 void Ut_PinCodeQueryBusinessLogic::testChangePinCode()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
+
+    stateChange(SIM::Ok);
+    m_subject->changePinCode();
+
+    m_subject->uiPin->getCodeEntry()->setText(m_simSec->pin);
+    emitButtonReleased("enterButton");
+
+    QString newPin("1111");
+    m_subject->uiPin->getCodeEntry()->setText(newPin);
+    QCOMPARE(m_simSec->pin, newPin);
 }
 
 
 void Ut_PinCodeQueryBusinessLogic::testNotifications()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
 
 void Ut_PinCodeQueryBusinessLogic::testPin()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
-void Ut_PinCodeQueryBusinessLogic::testPinOk(QString code)
+void Ut_PinCodeQueryBusinessLogic::testPinOk()
 {
-    qDebug() << Q_FUNC_INFO << "dummy" << code;
     m_simSec->pin = QString("1234");
+    if(SIM::PINRequired != m_subject->previousSimState){
+        this->stateChange(SIM::PINRequired);
+    }
+    m_subject->initialized = true;
 
+    m_subject->uiPin->getCodeEntry()->setText(m_simSec->pin);
+    emitButtonReleased("enterButton");
+
+    testUiClosed();
 }
 
 void Ut_PinCodeQueryBusinessLogic::testPinNok(QString code, QString errorText)
 {
+    QSignalSpy spy(m_subject, SIGNAL(showNotification(QString, NotificationType::Type)));
+
+    if(SIM::PINRequired != m_subject->previousSimState){
+        this->stateChange(SIM::PINRequired);
+    }
+    m_subject->initialized = true;
+
     m_subject->uiPin->getCodeEntry()->setText(code);
-    m_subject->uiPin.data()->getEnterBtn()->click();
-    QSignalSpy spy(m_subject, SLOT(showNotification(QString, NotificationType::Type)));
+    emitButtonReleased("enterButton");
+
+    qDebug() << Q_FUNC_INFO << "spy.count()" << spy.count();
 
     QCOMPARE(spy.count(), 1); // make sure the signal was emitted exactly one time
     QList<QVariant> arguments = spy.takeFirst(); // take the first signal
@@ -233,12 +290,12 @@ void Ut_PinCodeQueryBusinessLogic::testPinNok(QString code, QString errorText)
 
 void Ut_PinCodeQueryBusinessLogic::testPuk()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
-void Ut_PinCodeQueryBusinessLogic::testPukOk(QString code)
+void Ut_PinCodeQueryBusinessLogic::testPukOk()
 {
-    qDebug() << Q_FUNC_INFO << "dummy" << code;
+    qDebug() << Q_FUNC_INFO << "dummy";
 }
 
 void Ut_PinCodeQueryBusinessLogic::testPukNok(QString code, QString errorText)
@@ -248,12 +305,12 @@ void Ut_PinCodeQueryBusinessLogic::testPukNok(QString code, QString errorText)
 
 void Ut_PinCodeQueryBusinessLogic::testSimLock()
 {
-    qDebug() << Q_FUNC_INFO << "dummy";
+    QSKIP("Not implemented", SkipSingle);
 }
 
-void Ut_PinCodeQueryBusinessLogic::testSimLockOk(QString code)
+void Ut_PinCodeQueryBusinessLogic::testSimLockOk()
 {
-    qDebug() << Q_FUNC_INFO << "dummy" << code;
+    qDebug() << Q_FUNC_INFO << "dummy";
 }
 
 void Ut_PinCodeQueryBusinessLogic::testSimLockNok(QString code, QString errorText)

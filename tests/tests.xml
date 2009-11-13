@@ -16,6 +16,11 @@
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lowbatterynotifier</step>
       </case>
     </set>
+    <set name="pincodequerybusinesslogic" description="middleware tests">
+      <case name="ut_pincodequerybusinesslogic" type="unit" description="Test the PinCodeQueryBusinessLogic">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_pincodequerybusinesslogic</step>
+      </case>
+    </set>
   </suite>
 </testdefinition>
 
