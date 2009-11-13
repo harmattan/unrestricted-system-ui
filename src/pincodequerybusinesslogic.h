@@ -47,6 +47,10 @@ public:
     explicit PinCodeQueryBusinessLogic(QObject* parent = 0);
     virtual ~PinCodeQueryBusinessLogic();
 
+        // constructor for module tests...
+    explicit PinCodeQueryBusinessLogic(
+            SIM *sim, SIMSecurity *simSec, SIMLock *simLock, QObject* parent = 0);
+
     void pinQueryState(SIMSecurity::PINType pinType);
     void enablePinQueryRequested(bool enabled);
     bool launchPinQuery(SIMSecurity::PINType pinType);
@@ -82,7 +86,6 @@ private: // attributes
 //    LaunchState queryState;
 
     SIM* sim;
-    SIMIdentity* simId;
     SIMSecurity* simSec;
     SIMLock *simLock;
 
@@ -92,6 +95,7 @@ private: // methods
     bool handleSIMError(SIMError error);
     bool handleSIMLockError(SIMLockError error);
 
+    void init();
     void createUi(bool enableBack = false);
     void closeUi();
     void setUiHeader(QString headerText);
@@ -133,6 +137,11 @@ private slots:
     void simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
 
     void emergencyCallDone(CallUi::PendingCallRequest *req);
+
+#ifdef UNIT_TEST
+   friend class Ut_PinCodeQueryBusinessLogic;
+#endif // UNIT_TEST
+
 };
 
 #endif // PINCODEQUERYBUSINESSLOGIC_H
