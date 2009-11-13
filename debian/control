@@ -20,7 +20,7 @@ Package: system-ui-tests
 Section: tests
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends},testrunner
 Description: Test package for system-ui
 
 Package: duicontrolpanel-batteryapplet
