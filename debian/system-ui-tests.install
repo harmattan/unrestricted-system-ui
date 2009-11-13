@@ -1,2 +1,2 @@
 usr/share/system-ui-tests/tests.xml
-usr/lib/system-ui-tests/ut_unlockslider
+usr/lib/system-ui-tests/ut_*
