@@ -7,7 +7,8 @@ class DuiButton;
 class DuiImage;
 class DuiLabel;
 class DuiStatusIndicatorMenuInterface;
-class NetworkDBusInterface;
+class NetworkBusinessLogic;
+
 
 class Network : public DuiWidget
 {
@@ -26,8 +27,8 @@ private: //methods
     void toggleWidgetsVisibility(bool toggle);
 
 private: //attributes
-    NetworkDBusInterface *networkIf;
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu
+    NetworkBusinessLogic *logic;
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu    
     DuiButton *toggleButton;
     DuiImage *signalStrengthImage;
     DuiLabel *networkLabel;

@@ -14,17 +14,19 @@ public:
     NetworkList(QGraphicsItem *parent = 0);
     virtual ~NetworkList();
 
-    bool insertNetworks(int selected, const QStringList &networks);    
+    bool insertOperators(int selected, const QStringList &operators);
+    bool itemSelected();
 
 signals:
-    void availableNetworkSelected(QString);
+    void availableOperatorSelected(int);
 
 private slots:
-    void availableNetworkClicked(const QModelIndex &index);
+    void availableOperatorClicked(const QModelIndex &index);
 
 private:    
     QGraphicsItem *parent;
     DuiWidgetListModel *listModel;
+    bool selected;
 };
 
 #endif // NETWORKLIST_H

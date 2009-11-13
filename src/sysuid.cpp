@@ -11,8 +11,6 @@
 #include "batterybusinesslogicadaptor.h"
 #include "displaybusinesslogic.h"
 #include "displaybusinesslogicadaptor.h"
-#include "phonenetworkbusinesslogic.h"
-#include "phonenetworkbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "eventhandler.h"
@@ -55,11 +53,7 @@ Sysuid::Sysuid() :
     connect(pinCodeQueryLogic, SIGNAL(showConfirmation(QString, QString)), notifier, SLOT(showConfirmation(QString, QString)));
 
     /* Display */
-    displayLogic = new DisplayBusinessLogic(this);
-
-    /* Network */
-    networkLogic = new PhoneNetworkBusinessLogic(systemUIGConf, this);
-    connect(networkLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
+    displayLogic = new DisplayBusinessLogic(this);   
 
     /* Event handler */
     eventHandler = new EventHandler(this);
@@ -84,8 +78,7 @@ Sysuid::Sysuid() :
     connect(batteryLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
 
     // D-Bus registration and stuff.
-    new DisplayBusinessLogicAdaptor(this, displayLogic);
-    new PhoneNetworkBusinessLogicAdaptor(this, networkLogic);
+    new DisplayBusinessLogicAdaptor(this, displayLogic);    
     new BatteryBusinessLogicAdaptor(this, batteryLogic);
     new LockScreenBusinessLogicAdaptor(this, lockScreenLogic);
 

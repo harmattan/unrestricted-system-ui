@@ -17,22 +17,23 @@ public:
     NetworkContainer(DuiWidget *parent);
     virtual ~NetworkContainer();
 
-    void setDefaultSelection();
+    void initModeComboBox(const QString &value, const QStringList &values);
+    void initSelectionComboBox(const QString &value, const QStringList &values);
+    void setDefaultSelection(const QString &value);
+    bool operatorSelected();
 
-public slots:
-    void initModeComboBox(int selected, const QStringList &values);
-    void initSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
-    void toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle);
+public slots:        
+    void toggleAvailableOperators(int selected, const QStringList &operators, bool toggle);
 
 signals:
     void networkModeChanged(QString);
     void networkSelectionChanged(QString);
-    void availableNetworkSelected(QString);
+    void availableOperatorSelected(int);
 
 private: //methods
     void setLayout();    
     void toggleComboBoxSignalConnection(DuiComboBox *cb, bool toggle = true);
-    void initComboBox(DuiComboBox *cb, int selected, const QStringList &values);
+    void initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values);
 
 private: //attributes
     DuiComboBox *modeComboBox;
@@ -40,8 +41,7 @@ private: //attributes
     DuiLabel *infoLabel;
     DuiLabel *modeLabel;
     DuiLabel *selectionLabel;
-    DuiLinearLayoutPolicy *layoutPolicy;
-    int selectionDefaultIndex;
+    DuiLinearLayoutPolicy *layoutPolicy;    
     NetworkList *networkList;    
 
 };

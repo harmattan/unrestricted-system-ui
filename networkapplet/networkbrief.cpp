@@ -1,23 +1,28 @@
 #include "networkbrief.h"
+#include "networkbusinesslogic.h"
 #include "dcpwidgettypes.h"
-#include "networkdbusinterface.h"
 
-NetworkBrief::NetworkBrief()
+NetworkBrief::NetworkBrief() :
+        DcpBrief(),
+        logic(NULL)
 {
-    networkIf = new NetworkDBusInterface();    
-    connect(networkIf, SIGNAL(currentOperatorValueReceived(QString)), this, SLOT(changeText(QString)));
-    connect(networkIf, SIGNAL(phoneNetworkValueReceived(bool)), this, SLOT(changeToggle(bool)));
-    connect(networkIf, SIGNAL(networkIconValueReceived(QString)), this, SLOT(changeIcon(QString)));
-    networkToggle = false;
-    networkIf->currentOperatorValueRequired();
-    networkIf->phoneNetworkValueRequired();
-    networkIf->networkIconValueRequired();
+    logic = new NetworkBusinessLogic();
+
+    connect(logic, SIGNAL(networkOperatorChanged(QString)), this, SLOT(updateOperatorLabel(QString)));
+    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateToggleIcon(QString)));
+
+    //TODO: catch the toggle signal and manipulate logic
+
+    updateToggle(logic->networkEnabled());
+    updateToggleIcon(logic->networkIcon());   
+    updateOperatorLabel(logic->currentOperator());
+    emit valuesChanged();
 }
 
 NetworkBrief::~NetworkBrief()
 {
-    delete networkIf;
-    networkIf = NULL;
+    delete logic;
+    logic = NULL;
 }
 
 QString NetworkBrief::valueText() const
@@ -35,21 +40,17 @@ int NetworkBrief::widgetTypeID() const
     return DCPLABEL2BUTTON;
 }
 
-void NetworkBrief::changeText(const QString &text)
+void NetworkBrief::updateOperatorLabel(const QString &text)
 {
     networkText = text;
-    emit valuesChanged();
 }
 
-void NetworkBrief::changeToggle(bool toggle)
+void NetworkBrief::updateToggle(bool toggle)
 {
-    networkToggle = toggle;
-    if(networkToggle)
-        networkIf->currentOperatorValueRequired();
-    emit valuesChanged();
+    networkToggle = toggle;    
 }
 
-void NetworkBrief::changeIcon(const QString &icon)
+void NetworkBrief::updateToggleIcon(const QString &icon)
 {
     Q_UNUSED(icon);
     // TODO: when DcpBried has support, change the toggle button icon

@@ -3,17 +3,19 @@ OBJECTS_DIR = .objects
 TEMPLATE = lib
 CONFIG += plugin \
     gui \
+    cellular-qt \
     dui \
     duistatusindicatormenu
+LIBS += -lcellular-qt
 INCLUDEPATH += /usr/include/duistatusindicatormenu \
     ../networkapplet
 QT += dbus
 HEADERS = networkplugin.h \
     network.h \
-    ../networkapplet/networkdbusinterface.h
+    ../networkapplet/networkbusinesslogic.h
 SOURCES = networkplugin.cpp \
     network.cpp \
-    ../networkapplet/networkdbusinterface.cpp
+    ../networkapplet/networkbusinesslogic.cpp
 TARGET = $$qtLibraryTarget(connectivity)
 css.files = networkplugin.css
 DESTDIR = lib

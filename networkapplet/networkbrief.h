@@ -3,7 +3,7 @@
 
 #include "dcpbrief.h"
 
-class NetworkDBusInterface;
+class NetworkBusinessLogic;
 
 class NetworkBrief: public DcpBrief
 {
@@ -17,12 +17,12 @@ public:
     virtual bool toggle() const;
 
 private slots:
-    void changeText(const QString &text);
-    void changeToggle(bool toggle);
-    void changeIcon(const QString &icon);
+    void updateOperatorLabel(const QString &text);
+    void updateToggle(bool toggle);
+    void updateToggleIcon(const QString &icon);
 
 private:
-    NetworkDBusInterface *networkIf;
+    NetworkBusinessLogic *logic;
     QString networkText;
     bool networkToggle;
 

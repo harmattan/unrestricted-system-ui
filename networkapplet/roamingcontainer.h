@@ -16,8 +16,6 @@ class RoamingContainer : public DuiContainer
 public:
     RoamingContainer(DuiWidget *parent);
     virtual ~RoamingContainer();
-
-public slots:    
     void initRoamingButton(bool value);
     void initRoamingUpdatesButton(bool value);
 

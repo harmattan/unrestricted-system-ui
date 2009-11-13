@@ -1,9 +1,10 @@
 #include "networkwidget.h"
+#include "networkbusinesslogic.h"
 #include "networktranslation.h"
 #include "networkcontainer.h"
 #include "roamingcontainer.h"
-#include "networkdbusinterface.h"
 #include "dcpnetwork.h"
+
 
 #include <DuiButton>
 #include <DuiContainer>
@@ -25,13 +26,13 @@
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
+        logic(NULL),
         phoneNetworkButton(NULL),        
         dataCounterButton(NULL),
         contentLayoutPolicy(NULL),        
         networkSelected(false),
         networkContainer(NULL),
-        roamingContainer(NULL),
-        networkIf(NULL)
+        roamingContainer(NULL)
 {    
     setReferer(DcpNetwork::None);
     initWidget();
@@ -39,15 +40,14 @@ NetworkWidget::NetworkWidget(QGraphicsWidget *parent) :
 
 NetworkWidget::~NetworkWidget()
 {
-     networkIf->networkAppletClosing();
-     delete networkIf;
-     networkIf = NULL;
+     delete logic;
+     logic = NULL;
 }
 
 bool NetworkWidget::back()
 {
     //check that the user has selected a network before closing the window
-    if(!networkSelected) {
+    if(logic->manualSelectionRequired() && !networkContainer->operatorSelected()) {
         qDebug() << "No selection made!\n\n\n";
         changeSelection();
         return false;
@@ -69,7 +69,7 @@ void NetworkWidget::changeSelection()
     dlg->exec();
 
     if(dlg->clickedButton() == changeButton) {
-        networkContainer->setDefaultSelection();        
+        networkContainer->setDefaultSelection(logic->defaultNetworkSelectionValue());
         dlg->accept();
     }
     else
@@ -81,16 +81,16 @@ void NetworkWidget::changeSelection()
 
 void NetworkWidget::initWidget()
 {
-    phoneNetworkButton = new DuiButton(this);
-    dataCounterButton = new DuiButton(DcpNetwork::DataCounterText, this);
-    networkContainer = new NetworkContainer(this); 
-    roamingContainer = new RoamingContainer(this);
-    networkIf = new NetworkDBusInterface();       
+    logic = new NetworkBusinessLogic(this);
 
     // widgets
+    phoneNetworkButton = new DuiButton(this);
     phoneNetworkButton->setCheckable(true);
-    phoneNetworkButton->setObjectName("basicNetworkButton");    
+    phoneNetworkButton->setObjectName("basicNetworkButton");
+    dataCounterButton = new DuiButton(DcpNetwork::DataCounterText, this);
     dataCounterButton->setObjectName("dataCounterButton");
+    networkContainer = new NetworkContainer(this); 
+    roamingContainer = new RoamingContainer(this);            
 
     // main container
     DuiLayout *contentLayout = new DuiLayout();
@@ -103,31 +103,26 @@ void NetworkWidget::initWidget()
     DuiContainer *mainContainer = new DuiContainer(this);
     mainContainer->centralWidget()->setLayout(contentLayout);
 
+    // set values
+    initPhoneNetworkButton(logic->networkEnabled());
+    updateNetworkIcon(logic->networkIcon());
+    roamingContainer->initRoamingButton(logic->roamingEnabled());
+    roamingContainer->initRoamingUpdatesButton(logic->roamingUpdatesEnabled());
+    networkContainer->initModeComboBox(logic->selectedNetworkMode(), logic->networkModes());
+    networkContainer->initSelectionComboBox(logic->selectedNetworkSelectionValue(), logic->networkSelectionValues());
+
     // connect the value receive signals
-    connect(networkIf, SIGNAL(phoneNetworkValueReceived(bool)), this, SLOT(initPhoneNetworkButton(bool)));
-    connect(networkIf, SIGNAL(roamingValueReceived(bool)), roamingContainer, SLOT(initRoamingButton(bool)));
-    connect(networkIf, SIGNAL(roamingUpdatesValueReceived(bool)), roamingContainer, SLOT(initRoamingUpdatesButton(bool)));
-    connect(networkIf, SIGNAL(networkSelected(bool)), this, SLOT(toggleNetworkSelected(bool)));
-    connect(networkIf, SIGNAL(networkModeValuesReceived(int, QStringList)), networkContainer, SLOT(initModeComboBox(int, QStringList)));
-    connect(networkIf, SIGNAL(networkSelectionValuesReceived(int, int, QStringList)), networkContainer, SLOT(initSelectionComboBox(int, int, QStringList)));
-    connect(networkIf, SIGNAL(availableNetworksReceived(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableNetworks(int, QStringList, bool)));
-    connect(networkIf, SIGNAL(networkIconValueReceived(QString)), this, SLOT(updateNetworkIcon(QString)));
+    connect(logic, SIGNAL(availableNetworkOperators(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableOperators(int, QStringList, bool)));
+    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateNetworkIcon(QString)));
+    connect(logic, SIGNAL(roamingUpdatesValueChanged(bool)), roamingContainer, SLOT(toggleRoamingUpdates(bool)));
 
     // catch user actions
     connect(phoneNetworkButton, SIGNAL(toggled(bool)), this, SLOT(toggleNetworkSettings(bool)));
-    connect(phoneNetworkButton, SIGNAL(toggled(bool)), networkIf, SLOT(setPhoneNetworkValue(bool)));    
+    connect(phoneNetworkButton, SIGNAL(toggled(bool)), logic, SLOT(toggleNetwork(bool)));
     connect(dataCounterButton, SIGNAL(pressed()), this, SLOT(dataCounterButtonPressed()));
-    connect(networkContainer, SIGNAL(networkModeChanged(QString)), networkIf, SLOT(setNetworkModeValue(QString)));
-    connect(networkContainer, SIGNAL(networkSelectionChanged(QString)), networkIf, SLOT(setNetworkSelectionValue(QString)));
-    connect(networkContainer, SIGNAL(availableNetworkSelected(QString)), networkIf, SLOT(setSelectedNetworkValue(QString)));
-
-     // send value requests over dbus
-    networkIf->phoneNetworkValueRequired();
-    networkIf->roamingValueRequired();
-    networkIf->roamingUpdatesValueRequired();    
-    networkIf->networkModeValuesRequired();
-    networkIf->networkSelectionValuesRequired();
-    networkIf->networkIconValueRequired();
+    connect(networkContainer, SIGNAL(networkModeChanged(QString)), logic, SLOT(setNetworkMode(QString)));
+    connect(networkContainer, SIGNAL(networkSelectionChanged(QString)), logic, SLOT(setNetworkSelectionValue(QString)));
+    connect(networkContainer, SIGNAL(availableOperatorSelected(int)), logic, SLOT(selectOperator(int)));
 
     // mainLayout
     DuiLayout *mainLayout = new DuiLayout();
@@ -137,7 +132,7 @@ void NetworkWidget::initWidget()
 }
 
 void NetworkWidget::initPhoneNetworkButton(bool toggle)
-{
+{    
     phoneNetworkButton->setChecked(toggle);
     toggleNetworkSettings(toggle);
 }
@@ -153,21 +148,12 @@ void NetworkWidget::toggleNetworkSettings(bool toggle)
 
 }
 
-void NetworkWidget::dataCounterButtonPressed()
-{   
-    qDebug() << "Show dialog";
-}
-
-void NetworkWidget::toggleNetworkSelected(bool toggle)
-{
-    qDebug() << "NetworkWidget::toggleNetworkSelected(" << toggle << ")";
-
-    //TODO update the DuiList
-
-    networkSelected = toggle;
-}
-
 void NetworkWidget::updateNetworkIcon(const QString &value)
 {
     phoneNetworkButton->setIconID(value);
+}
+
+void NetworkWidget::dataCounterButtonPressed()
+{   
+    qDebug() << "Show dialog";
 }

@@ -12,9 +12,9 @@ class DuiLayout;
 class DuiLinearLayoutPolicy;
 class DuiStylableWidget;
 class DuiWidgetController;
-class NetworkDBusInterface;
 class NetworkContainer;
 class RoamingContainer;
+class NetworkBusinessLogic;
 
 #include <QDebug>
 
@@ -31,25 +31,22 @@ protected:
     void initWidget();
 
 private slots:
-    void initPhoneNetworkButton(bool toggle);
-    void initNetworkModeComboBox(int selected, const QStringList &values);
-    void initNetworkSelectionComboBox(int defaultIndex, int selected, const QStringList &values);
-    void dataCounterButtonPressed();
-    void toggleNetworkSelected(bool toggle);
-    void toggleNetworkSettings(bool toggle);
     void updateNetworkIcon(const QString &value);
+    void toggleNetworkSettings(bool toggle);
+    void dataCounterButtonPressed();
 
 private: //methods
+    void initPhoneNetworkButton(bool toggle);
     void changeSelection();    
 
-private: //attributes        
+private: //attributes
+    NetworkBusinessLogic *logic;
     DuiButton *phoneNetworkButton;    
     DuiButton *dataCounterButton;    
     DuiGridLayoutPolicy *contentLayoutPolicy;    
     bool networkSelected;
     NetworkContainer *networkContainer;
-    RoamingContainer *roamingContainer;
-    NetworkDBusInterface *networkIf;
+    RoamingContainer *roamingContainer;    
 
 };
 #endif // NETWORKWIDGET_H

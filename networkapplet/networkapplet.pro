@@ -2,9 +2,11 @@ TEMPLATE = lib
 CONFIG += plugin \
     gui \
     dui \
+    cellular-qt \
     silent \
     debug
-LIBS += -lduicontrolpanel
+LIBS += -lduicontrolpanel \
+    -lcellular-qt
 INCLUDEPATH += /usr/include/qt4/dui \
     /usr/include/duicontrolpanel
 QT += dbus
@@ -22,14 +24,16 @@ HEADERS = networkapplet.h \
     networktranslation.h \
     networkcontainer.h \
     networklist.h \
-    roamingcontainer.h
+    roamingcontainer.h \
+    networkbusinesslogic.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
     networkbrief.cpp \
     networkdbusinterface.cpp \
     networkcontainer.cpp \
     networklist.cpp \
-    roamingcontainer.cpp
+    roamingcontainer.cpp \
+    networkbusinesslogic.cpp
 css.files = networkapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

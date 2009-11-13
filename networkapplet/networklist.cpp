@@ -14,7 +14,8 @@
 NetworkList::NetworkList(QGraphicsItem *parent) :
         DuiList(parent),
         parent(parent),
-        listModel(new DuiWidgetListModel(this))
+        listModel(new DuiWidgetListModel(this)),
+        selected(false)
 {            
     setObjectName("availableNetworksList");
     enableItemSelection(true);
@@ -26,23 +27,29 @@ NetworkList::~NetworkList()
 {
 }
 
-bool NetworkList::insertNetworks(int selected, const QStringList &networks)
-{        
-    if(networks.size() <= 0)
+bool NetworkList::insertOperators(int selected, const QStringList &operators)
+{
+    if(operators.size() <= 0)
         return false;
 
-    for(int i=0; i<networks.size(); ++i)
-        listModel->appendWidget(new DuiLabel(networks.at(i), parent));
+    for(int i=0; i<operators.size(); ++i)
+        listModel->appendWidget(new DuiLabel(operators.at(i), parent));
 
-    if(selected != -1)
-        selectItem(listModel->index(selected));    
+    if(selected != -1) {
+        selectItem(listModel->index(selected));
+        this->selected = true;
+    }
 
     return true;
 }
 
-void NetworkList::availableNetworkClicked(const QModelIndex &index)
+void NetworkList::availableOperatorClicked(const QModelIndex &index)
 {
-    qDebug() << "NetworkList::availableNetworkSelected(" << index << ")";
-    DuiLabel *label = static_cast<DuiLabel*>(DuiWidgetFactory::instance()->create(listModel, index.row()));
-    emit availableNetworkSelected(label->text());    
+    selected = true;
+    emit availableOperatorSelected(index.row());
+}
+
+bool NetworkList::itemSelected()
+{
+    return selected;
 }

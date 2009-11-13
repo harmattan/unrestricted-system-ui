@@ -16,8 +16,7 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
         selectionComboBox(NULL),
         infoLabel(NULL),
         modeLabel(NULL),
-        selectionLabel(NULL),
-        selectionDefaultIndex(-1),
+        selectionLabel(NULL),        
         networkList(NULL)
 {    
     modeComboBox = new DuiComboBox(this);
@@ -63,24 +62,22 @@ void NetworkContainer::setLayout()
     centralWidget()->setLayout(layout);
 }
 
-void NetworkContainer::initModeComboBox(int selected, const QStringList &values)
-{
-    qDebug() << "NetworkContainer::initModeComboBox("<< values.size() <<")";
-    initComboBox(modeComboBox, selected, values);
+void NetworkContainer::initModeComboBox(const QString &value, const QStringList &values)
+{    
+    initComboBox(modeComboBox, value, values);
 }    
 
-void NetworkContainer::initSelectionComboBox(int defaultIndex, int selected, const QStringList &values)
-{
-    selectionDefaultIndex = defaultIndex;
-    initComboBox(selectionComboBox, selected, values);
+void NetworkContainer::initSelectionComboBox(const QString &value, const QStringList &values)
+{    
+    initComboBox(selectionComboBox, value, values);
 }
 
-void NetworkContainer::initComboBox(DuiComboBox *cb, int selected, const QStringList &values)
+void NetworkContainer::initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values)
 {
     cb->addItems(values);
-    if (selected != -1) {
+    if(values.contains(value)) {
         toggleComboBoxSignalConnection(cb, false);
-        cb->setCurrentIndex(selected);
+        cb->setCurrentIndex(values.indexOf(value));
         toggleComboBoxSignalConnection(cb);
     }
 }
@@ -101,17 +98,16 @@ void NetworkContainer::toggleComboBoxSignalConnection(DuiComboBox *cb, bool togg
     }
 }
 
-void NetworkContainer::toggleAvailableNetworks(int selected, const QStringList &networks, bool toggle)
-{
-    qDebug() << "NetworkWidget::toggleAvailableNetworks(" << selected << ", " << networks << ", " << toggle << ")";
+void NetworkContainer::toggleAvailableOperators(int selected, const QStringList &operators, bool toggle)
+{    
     if(toggle) {
         if(infoLabel == NULL)
             infoLabel = new DuiLabel(this);
         if(networkList == NULL) {
             networkList = new NetworkList(this);
-            connect(networkList, SIGNAL(availableNetworkSelected(QString)), this, SIGNAL(availableNetworkSelected(QString)));
+            connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
         }
-        if(networkList->insertNetworks(selected, networks)) {
+        if(networkList->insertOperators(selected, operators)) {
             infoLabel->setText(DcpNetwork::AvailableNetworksText);
             if(layoutPolicy->indexOf(infoLabel) == -1)
                 layoutPolicy->addItem(infoLabel, Qt::AlignLeft);
@@ -138,7 +134,20 @@ void NetworkContainer::toggleAvailableNetworks(int selected, const QStringList &
     }
 }
 
-void NetworkContainer::setDefaultSelection()
+void NetworkContainer::setDefaultSelection(const QString &value)
 {
-    selectionComboBox->setCurrentIndex(selectionDefaultIndex);
+    for(int i=0; i<selectionComboBox->count(); ++i) {
+        if(selectionComboBox->itemText(i) == value) {
+            selectionComboBox->setCurrentIndex(i);
+            break;
+        }
+    }
+}
+
+bool NetworkContainer::operatorSelected()
+{
+    if(networkList != NULL)
+        if(!networkList->itemSelected())
+            return false;
+    return true;
 }

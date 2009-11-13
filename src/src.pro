@@ -35,8 +35,6 @@ SOURCES += main.cpp \
     systemuigconf.cpp \
     displaybusinesslogicadaptor.cpp \
     notifierdbusadaptor.cpp \
-    phonenetworkbusinesslogic.cpp \
-    phonenetworkbusinesslogicadaptor.cpp \
     pincodequerydbusadaptor.cpp \
     $$STUB_PREFIX/devicemodestub.cpp \
     $$STUB_PREFIX/batterystub.cpp \
@@ -60,9 +58,7 @@ HEADERS += main.h \
     displaybusinesslogic.h \
     systemuigconf.h \
     displaybusinesslogicadaptor.h \
-    notifierdbusadaptor.h \
-    phonenetworkbusinesslogic.h \
-    phonenetworkbusinesslogicadaptor.h \
+    notifierdbusadaptor.h \        
     pincodequerydbusadaptor.h \
     notificationtype.h \
     $$STUB_PREFIX/devicemodestub.h \
