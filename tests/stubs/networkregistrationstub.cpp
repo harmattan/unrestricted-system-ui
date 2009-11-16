@@ -1,11 +1,14 @@
 #include "networkregistrationstub.h"
 
+
 namespace Cellular
 {
 
 static NetworkRegistration::Mode currentMode = NetworkRegistration::Automatic;
 
-AvailableOperator::AvailableOperator(const QString &mnc, const QString &mcc, const QString &name, AvailableOperator::Availability availability)
+AvailableOperator::AvailableOperator(const QString &mnc, const QString &mcc, const QString &name,
+                                     AvailableOperator::Availability availability, QObject *parent) :
+        QObject(parent)
 {
     setMnc(mnc);
     setMcc(mcc);
@@ -58,11 +61,10 @@ AvailableOperator::Availability AvailableOperator::availability() const
 }
 
 NetworkRegistration::NetworkRegistration(QObject *parent) :
-        QObject(parent)
-{    
-    operators << (new AvailableOperator(QString("Radiolinja"), QString("Radiolinja"), QString("Radiolinja"), AvailableOperator::Available));
-    operators << (new AvailableOperator(QString("Tele"), QString("Tele"), QString("Tele"), AvailableOperator::Available));
-    operators << (new AvailableOperator(QString("DNA"), QString("DNA"), QString("DNA"), AvailableOperator::Current));
+        QObject(parent),        
+        success(true),
+        networkOperator(NULL)
+{
 }
 
 NetworkRegistration::~NetworkRegistration()
@@ -74,6 +76,11 @@ NetworkRegistration::~NetworkRegistration()
     }
 }
 
+void NetworkRegistration::init(NetworkOperator *networkOperator)
+{
+    this->networkOperator = networkOperator;
+}
+
 NetworkRegistration::Mode NetworkRegistration::mode() const
 {
     return currentMode;
@@ -82,24 +89,44 @@ NetworkRegistration::Mode NetworkRegistration::mode() const
 void NetworkRegistration::selectOperator()
 {
     currentMode = NetworkRegistration::Automatic;    
-    emit selectionCompleted(true, QString(""));    
+    emit selectionCompleted(true, QString(""));
 }
 
 void NetworkRegistration::selectOperator(const QString &mnc, const QString &mcc)
 {
     currentMode = NetworkRegistration::Manual;
     for(int i=0; i<operators.size(); ++i) {        
-        if(operators.at(i)->mnc() == mnc && operators.at(i)->mcc() == mcc)
+        if(operators.at(i)->mnc() == mnc && operators.at(i)->mcc() == mcc) {
             operators.at(i)->setAvailability(AvailableOperator::Current);
+            if(networkOperator != NULL) {
+                networkOperator->setName(operators.at(i)->name());
+                networkOperator->setMnc(operators.at(i)->mnc());
+                networkOperator->setMcc(operators.at(i)->mcc());
+            }
+        }
         else
             operators.at(i)->setAvailability(AvailableOperator::Available);
     }
+
     emit selectionCompleted(true, QString(""));
 }
 
 void NetworkRegistration::queryAvailableOperators()
 {    
-    emit availableOperators(true, operators, QString(""));
+    if(success)
+        emit availableOperators(true, operators, QString(""));
+    else
+        emit availableOperators(false, operators, QString("empty"));
+}
+
+void NetworkRegistration::addOperator(const QString &name, const QString &mnc, const QString &mcc, AvailableOperator::Availability availability)
+{
+    operators << new AvailableOperator(mnc, mcc, name, availability);
+}
+
+void NetworkRegistration::setQuerySuccess(bool success)
+{
+    this->success = success;
 }
 
 }

@@ -81,7 +81,7 @@ void NetworkWidget::changeSelection()
 
 void NetworkWidget::initWidget()
 {
-    logic = new NetworkBusinessLogic(this);
+    logic = new NetworkBusinessLogic();
 
     // widgets
     phoneNetworkButton = new DuiButton(this);

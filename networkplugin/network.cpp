@@ -53,7 +53,7 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     DuiContainer *container = new DuiContainer();
     container->centralWidget()->setLayout(layout);
 
-    logic = new NetworkBusinessLogic(this/*, true*/);
+    logic = new NetworkBusinessLogic();
     connect(logic, SIGNAL(networkOperatorChanged(QString)), operatorLabel, SLOT(setText(QString)));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateButtonIcon(QString)));
     connect(toggleButton, SIGNAL(toggled(bool)), logic, SLOT(toggleNetwork(bool)));    

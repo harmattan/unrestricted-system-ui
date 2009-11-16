@@ -7,11 +7,19 @@
 #include <QMultiMap>
 #include <QTimer>
 
+#ifdef UNIT_TEST
+#include "networkregistrationstub.h"
+#include "radioaccessstub.h"
+#include "networkcellstub.h"
+#include "networkoperatorstub.h"
+#include "signalstrengthstub.h"
+#else
 #include <NetworkRegistration>
 #include <RadioAccess>
 #include <NetworkCell>
 #include <NetworkOperator>
 #include <SignalStrength>
+#endif
 
 class NetworkDBusInterface;
 
@@ -31,18 +39,19 @@ public:
         ThreePointFiveG
     };
 
-    NetworkTechnology(RadioAccess *radioAccess, QObject *parent = 0);
+    NetworkTechnology(RadioAccess *radioAccess, QObject *parent = 0);    
     ~NetworkTechnology();
 
     NetworkTechnology::Technology currentTechnology();
 
-private slots:
+private slots:    
     void checkTechnology();
 
 signals:
     void technologyChanged(NetworkTechnology::Technology technology);
 
 private: //methods
+    void init();
     void updateTechnology();
 
 private: //attributes
@@ -50,6 +59,10 @@ private: //attributes
     NetworkCell *networkCell;
     NetworkTechnology::Technology technology;
     QTimer *timer;
+
+#ifdef UNIT_TEST
+   friend class Ut_NetworkBusinessLogic;
+#endif // UNIT_TEST
 
 };
 
@@ -59,7 +72,7 @@ class NetworkBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    NetworkBusinessLogic(QObject* parent = 0, bool monitorSignalStrength = false);
+    NetworkBusinessLogic(bool monitorSignalStrength = false, QObject* parent = 0);    
     virtual ~NetworkBusinessLogic();
 
     bool networkEnabled();
@@ -100,7 +113,7 @@ signals:
     void signalStrengthIconChanged(QString);
     void showNotification(QString);
 
-private: //methods
+private: //methods    
     void queryAvailableOperators();
     QString mapTechnologyToIcon(NetworkTechnology::Technology technology);
     QString mapSignalStrengthToIcon(int bars);
@@ -118,6 +131,10 @@ private: //attributes
     bool tempNetworkToggle; //for temp usage
     bool tempRoamingToggle; //for temp usage
     bool tempRoamingUpdatesToggle; //for temp usage
+
+#ifdef UNIT_TEST
+   friend class Ut_NetworkBusinessLogic;
+#endif // UNIT_TEST
 
 };
 

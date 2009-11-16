@@ -1,12 +1,14 @@
 #ifndef NETWORKREGISTRATION_H
 #define NETWORKREGISTRATION_H
 
+#include "networkoperatorstub.h"
+
 #include <QObject>
 
 namespace Cellular
 {
 //! The AvailableOperator class provides a network operator
-class AvailableOperator
+class AvailableOperator : public QObject
 {
 public:
 
@@ -18,7 +20,7 @@ public:
         NotAvailable //!< Operator is not available
     };
 
-    AvailableOperator(const QString &mnc, const QString &mcc, const QString &name, AvailableOperator::Availability availability);
+    AvailableOperator(const QString &mnc, const QString &mcc, const QString &name, AvailableOperator::Availability availability, QObject *parent=0);
     ~AvailableOperator();
 
      //! Set operator MNC
@@ -37,7 +39,7 @@ public:
     //! Get operator name
     QString name() const;
     //! Get operator availability
-    AvailableOperator::Availability availability() const;
+    AvailableOperator::Availability availability() const;    
 
 private:
     QString currentMnc;
@@ -71,6 +73,11 @@ public:
      //! Query for available networks
     void queryAvailableOperators();
 
+    // for unit test usage
+    void addOperator(const QString &name, const QString &mnc, const QString &mcc, AvailableOperator::Availability availability);
+    void setQuerySuccess(bool success);
+    void init(NetworkOperator *networkOperator);
+
 signals:
      //! Access selection mode changed
     void modeChanged(int mode);
@@ -80,7 +87,9 @@ signals:
     void selectionCompleted(bool success, const QString &reason);
 
 private:
-    QList<AvailableOperator*> operators;
+    bool success;
+    NetworkOperator *networkOperator;
+    QList<AvailableOperator*> operators;    
 
 };
 }

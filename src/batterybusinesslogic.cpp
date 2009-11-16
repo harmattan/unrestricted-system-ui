@@ -94,11 +94,41 @@ void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState
 BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent) :
         QObject(parent),
         systemUIGConf(systemUIGConf),        
-        battery(new QmBattery()),
-        deviceMode(new QmDeviceMode()),        
+        battery(NULL),
+        deviceMode(NULL),
+        led(NULL),
         lowBatteryNotifier(NULL)
 {
+    battery = new QmBattery();
+    deviceMode = new QmDeviceMode();
+    led = new QmLED();
+    init();
+}
 
+BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QmBattery *battery,
+                         QmDeviceMode *deviceMode, QmLED *led, QObject* parent) :
+        QObject(parent),
+        systemUIGConf(systemUIGConf),
+        battery(battery),
+        deviceMode(deviceMode),
+        led(led),
+        lowBatteryNotifier(NULL)
+{
+    init();
+}
+
+
+BatteryBusinessLogic::~BatteryBusinessLogic()
+{        
+    delete battery;
+    battery = NULL;
+    delete deviceMode;
+    deviceMode = NULL;    
+}
+
+
+void BatteryBusinessLogic::init()
+{
     /* init the PSM thresholds */
     PSMThresholds << QString("5") << QString("10") << QString("15") << QString("25") << QString("35")
             << QString("50") << QString("60") << QString("75") << QString("85") << QString("100");
@@ -120,15 +150,6 @@ BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject
 
     initBattery();
 }
-
-BatteryBusinessLogic::~BatteryBusinessLogic()
-{        
-    delete battery;
-    battery = NULL;
-    delete deviceMode;
-    deviceMode = NULL;    
-}
-
 
 void BatteryBusinessLogic::initSystemUIGConfKeys()
 {
@@ -342,12 +363,11 @@ QStringList BatteryBusinessLogic::remainingTimeValues()
 }
 
 void BatteryBusinessLogic::utiliseLED(bool activate, const QString &pattern)
-{
-    QmLED led;
+{    
     if(activate)
-        led.activate(pattern);
+        led->activate(pattern);
     else
-        led.deactivate(pattern);
+        led->deactivate(pattern);
 }
 
 void BatteryBusinessLogic::setPSMThreshold(const QString &threshold)

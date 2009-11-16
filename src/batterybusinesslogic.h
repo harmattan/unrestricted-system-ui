@@ -62,6 +62,11 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 public:
     BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent = 0);
+
+    // constructor for module tests
+    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QmBattery *battery,
+                         QmDeviceMode *deviceMode, QmLED *led, QObject* parent = 0);
+
     virtual ~BatteryBusinessLogic();
 
     void setPSMThreshold(const QString &threshold);
@@ -91,13 +96,15 @@ private: //attributes
     SystemUIGConf *systemUIGConf;    
     QmBattery *battery;
     QmDeviceMode *deviceMode;
+    QmLED *led;
     LowBatteryNotifier *lowBatteryNotifier;
     QStringList PSMThresholds;
 
 private: //methods
+    void init();
     void initSystemUIGConfKeys();
     void checkPSMThreshold();
-    int animationRate();
+    int animationRate();    
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);

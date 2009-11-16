@@ -19,6 +19,7 @@ namespace {
     const QString AutomaticText = trid("qtn_cell_automatic", "Automatic");
     const QString ManualText = trid("qtn_cell_manual", "Manual");
     const QString NoAccessText = trid("qtn_cell_error_no_access", "No access");
+    const int NetworkTechnologyCheckInterval = 500;
 }
 
 NetworkTechnology::NetworkTechnology(RadioAccess *radioAccess, QObject *parent) :
@@ -27,18 +28,18 @@ NetworkTechnology::NetworkTechnology(RadioAccess *radioAccess, QObject *parent) 
         networkCell(NULL),
         timer(NULL)
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;    
+    networkCell = new NetworkCell();
     /* Technology changes depend to the RadioAccess's techonology and NetworkCell's services.
        The state changes of both of those have to be taken into account before we indicate any
        changes to end-user. There will be 500 ms interval which makes it possible that both the
        signals are catched before acting. */
-
     timer = new QTimer(this);
-    timer->setInterval(500);
+    timer->setInterval(NetworkTechnologyCheckInterval);
     connect(timer, SIGNAL(timeout()), this, SLOT(checkTechnology()));
     connect(radioAccess, SIGNAL(technologyChanged(int)), timer, SLOT(start()));
-    networkCell = new NetworkCell();        
-    connect(networkCell, SIGNAL(servicesChanged(NetworkCell::Services)), timer, SLOT(start()));    
+    connect(radioAccess, SIGNAL(statusChanged(RadioAccess::Flags)), timer, SLOT(start()));
+    connect(networkCell, SIGNAL(servicesChanged(NetworkCell::Services)), timer, SLOT(start()));
     updateTechnology();
 }
 
@@ -52,6 +53,7 @@ NetworkTechnology::~NetworkTechnology()
 void NetworkTechnology::checkTechnology()
 {
     qDebug() << Q_FUNC_INFO;
+    timer->stop();
     NetworkTechnology::Technology previousTechnology = currentTechnology();
     updateTechnology();
     if(previousTechnology != currentTechnology())
@@ -66,7 +68,7 @@ NetworkTechnology::Technology NetworkTechnology::currentTechnology()
 
 void NetworkTechnology::updateTechnology()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << " " << radioAccess->technology() << " " << networkCell->services();
     technology = NetworkTechnology::None;
     switch(radioAccess->technology()) {
         case RadioAccess::GSM:
@@ -84,7 +86,7 @@ void NetworkTechnology::updateTechnology()
     }
 }
 
-NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent, bool monitorSignalStrength) :
+NetworkBusinessLogic::NetworkBusinessLogic(bool monitorSignalStrength, QObject* parent) :
         QObject(parent),        
         networkRegistration(NULL),
         radioAccess(NULL),
@@ -93,17 +95,27 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent, bool monitorSignalSt
         technology(NULL)
 {
     qDebug() << Q_FUNC_INFO;
+
+    //network registration
     networkRegistration = new NetworkRegistration();
     radioAccess = new RadioAccess();
+
+    // network operator
     networkOperator = new NetworkOperator();
     connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
-    technology = new NetworkTechnology(radioAccess);
-    connect(technology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
-            this, SLOT(technologyChanged(NetworkTechnology::Technology)));
+
+    // signal strength
     if(monitorSignalStrength) {
-        signalStrength = new SignalStrength();                                               
+        signalStrength = new SignalStrength();
         connect(signalStrength, SIGNAL(levelChanged(int, int)), this, SLOT(signalStrengthChanged(int)));
     }
+
+    // network technology
+    technology = new NetworkTechnology(radioAccess);    
+    connect(technology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
+            this, SLOT(technologyChanged(NetworkTechnology::Technology)));
+
+    // init mode and selection values
     modes.insert(RadioAccess::DualMode, DualText);
     modes.insert(RadioAccess::GSMMode, GSMText);
     modes.insert(RadioAccess::UMTSMode, ThreeGText);
@@ -222,14 +234,19 @@ void NetworkBusinessLogic::setNetworkSelectionValue(const QString &value)
 }
 
 void NetworkBusinessLogic::selectOperator(int index)
-{
-    qDebug() << Q_FUNC_INFO;
-    QMapIterator<QString, QStringList> i(operators);
-    while (0 < index--)
-        i.next();        
+{    
+
+    qDebug() << Q_FUNC_INFO;    
+    QMapIterator<QString, QStringList> iter(operators);    
+    while (iter.hasNext()) {
+        iter.next();        
+        if(--index < 0)
+            break;
+    }
+
     connect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
-        this, SLOT(selectOperatorCompleted(bool, const QString &)));
-    networkRegistration->selectOperator(i.value().at(0), i.value().at(1));
+        this, SLOT(selectOperatorCompleted(bool, const QString &)));    
+    networkRegistration->selectOperator(iter.value().at(0), iter.value().at(1));    
 }
 
 void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &reason)
@@ -276,38 +293,38 @@ void NetworkBusinessLogic::availableOperatorsReceived(bool success, const QList<
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(reason);    
     disconnect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
-            this, SLOT(availableNetworksReceived(bool, const QList<AvailableOperator*> &, const QString &)));
+            this, SLOT(availableOperatorsReceived(bool, const QList<AvailableOperator*> &, const QString &)));
 
     if(!success || operators.size() == 0) {
         emit availableNetworkOperators(-1, QStringList(), true);
         return;
     }    
 
-    int selectedOperatorMnc = -1;
-    int selectedOperatorMcc = -1;
+    QString selectedOperatorMnc;
+    QString selectedOperatorMcc;
     this->operators.clear(); //just to be sure
 
     for(int i=0; i<operators.size(); ++i) {
         if(operators.at(i)->availability() != AvailableOperator::NotAvailable)
             this->operators.insert(operators.at(i)->name(), QStringList() << operators.at(i)->mnc() << operators.at(i)->mcc());
         if(operators.at(i)->availability() == AvailableOperator::Current) {
-            selectedOperatorMnc = operators.at(i)->mnc().toInt();
-            selectedOperatorMcc = operators.at(i)->mcc().toInt();
+            selectedOperatorMnc = operators.at(i)->mnc();
+            selectedOperatorMcc = operators.at(i)->mcc();
         }
     }
 
     QStringList operatorNames;
-    int selectedOperatorIndex = 1;
+    int selectedOperatorIndex = -1;
     // operators (QMultiMap) is sorted by it's keys (operator names)
 
-    if(selectedOperatorMnc == -1) // no selected operator
+    if(selectedOperatorMnc.isEmpty()) // no selected operator
         operatorNames = this->operators.keys();
     else {        
         QMapIterator<QString, QStringList> iter(this->operators);        
         while (iter.hasNext()) {
             iter.next();
             operatorNames << iter.key();
-            if(iter.value().at(0).toInt() == selectedOperatorMnc && iter.value().at(1).toInt() == selectedOperatorMcc)
+            if(iter.value().at(0) == selectedOperatorMnc && iter.value().at(1) == selectedOperatorMcc)
                 selectedOperatorIndex = operatorNames.size() - 1;
         }
     }        
@@ -359,21 +376,26 @@ QString NetworkBusinessLogic::mapTechnologyToIcon(NetworkTechnology::Technology 
 
 QString NetworkBusinessLogic::signalStrengthIcon()
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;    
     return mapSignalStrengthToIcon(signalStrength->bars());
 }
 
 void NetworkBusinessLogic::signalStrengthChanged(int bars)
 {
     qDebug() << Q_FUNC_INFO;
-    emit signalStrengthIconChanged(mapSignalStrengthToIcon(bars));
+    static QString prevSSIcon;
+    QString newSSIcon = mapSignalStrengthToIcon(bars);    
+    if(prevSSIcon != newSSIcon) {
+        emit signalStrengthIconChanged(newSSIcon);
+        prevSSIcon = newSSIcon;
+    }
 }
 
 QString NetworkBusinessLogic::mapSignalStrengthToIcon(int bars)
 {
     qDebug() << Q_FUNC_INFO;
     QString icon;
-    if(bars % 20 == 0)
+    if(bars % 20 == 0 && bars > 0)
         icon = QString("icon-s-network-%1").arg(bars);
     else
         icon = QString("icon-s-network-%1").arg(bars/20*20 + 20);
