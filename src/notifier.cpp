@@ -198,6 +198,10 @@ void Notifier::notifTimer(int expireTimeout, unsigned int notifId)
 void Notifier::notifTimer(int expireTimeout, DuiInfoBanner* notif)
 {
     qDebug() << Q_FUNC_INFO << "expireTimeout:" << expireTimeout;
+    if(!notif){
+        return;
+    }
+
     if(0 < expireTimeout)
         (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(DuiInfoBanner*)), notif);
     else if(0 >= notif->buttonText().length())
