@@ -492,7 +492,7 @@ void PinCodeQueryBusinessLogic::simStatusComplete(SIM::SIMStatus status, SIMErro
 
 void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
 {   
-    qDebug() << Q_FUNC_INFO << "sim status completed" << success;
+    qDebug() << Q_FUNC_INFO << "sim status completed" << success << error;
     handleSIMError(error);
 
     if(!success) {
@@ -519,7 +519,7 @@ void PinCodeQueryBusinessLogic::simPINCodeVerified(bool success, SIMError error)
 
 void PinCodeQueryBusinessLogic::simPUKCodeVerified(bool success, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO << "puk code verified ";
+    qDebug() << Q_FUNC_INFO << success << error;
 
     handleSIMError(error);
 
@@ -538,14 +538,16 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
     if(handleSIMLockError(error)) {
         emit showNotification(SIMUnlocked, NotificationType::info);
         simLockCode = "";
+        // should we emit launch done signal here?
     }else{
-        ui2disappear(false);
+        //ui2disappear(false);
     }
     //what is the next SIMStatus?
 }
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 {
+    qDebug() << Q_FUNC_INFO;
     if(handleSIMError(error)){
         setPinHeader(attempts);
         if(SubFailedTry == subState){
@@ -592,9 +594,11 @@ void PinCodeQueryBusinessLogic::simPinQueryStateComplete(SIMSecurity::PINQuery s
     if( SIMErrorNone != error ||
        (SIMSecurity::Enabled == state && SubEnablePinQuery == subState) ||
        (SIMSecurity::Disabled == state && SubDisablePinQuery == subState) ){
+        qDebug() << Q_FUNC_INFO << "return: despiting error or state already requested one";
         dbus->pinQueryEnabledResponse(state);
         subState = SubNothing;
     } else {
+        qDebug() << Q_FUNC_INFO << "ask PIN to change code";
         // ask PIN to change code
         getCode(true, HeaderEnterPinCode);
         simSec->pinAttemptsLeft(SIMSecurity::PIN);
@@ -603,17 +607,22 @@ void PinCodeQueryBusinessLogic::simPinQueryStateComplete(SIMSecurity::PINQuery s
 
 void PinCodeQueryBusinessLogic::simEnablePINQueryComplete(SIMError error)
 {
-    SIMSecurity::PINQuery state;
-    if (SIMErrorNone == error) {
-        if( SubEnablePinQuery == subState )
+    SIMSecurity::PINQuery state = SIMSecurity::UnknownState;
+    bool success = handleSIMError(error);
+    if (success) {
+        if( SubEnablePinQuery == subState ){
             state = SIMSecurity::Enabled;
-        else if (SubDisablePinQuery == subState)
+        }
+        else if (SubDisablePinQuery == subState){
             state = SIMSecurity::Disabled;
-        dbus->pinQueryEnabledResponse(state);
+        }
     } else {
-        // TODO: will this be in loop with simPinQueryStateComplete?
-        simSec->pinQueryState(SIMSecurity::PIN);
+        if (error == SIMErrorWrongPassword) {
+            emit showNotification(PINCodeIncorrectSettings, NotificationType::error);
+        }
     }
+    dbus->pinQueryEnabledResponse(state);
+    this->ui2disappear(success);
     qDebug() << Q_FUNC_INFO << state;
 }
 

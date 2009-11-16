@@ -53,10 +53,12 @@ void SIMSecurity::changePIN(PINType type, const QString &oldCode, const QString 
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(type);
     if(oldCode != pin){
+        qDebug() << Q_FUNC_INFO << "nok";
         emit changePINComplete(false, SIMErrorWrongPassword);
     } else {
-        emit changePINComplete(true, SIMErrorNone);
+        qDebug() << Q_FUNC_INFO << "ok";
         pin = newCode;
+        emit changePINComplete(true, SIMErrorNone);
     }
 }
 
@@ -67,8 +69,8 @@ void SIMSecurity::disablePINQuery(PINType type, const QString &code)
     if(code != pin){
         emit enablePINQueryComplete(SIMErrorWrongPassword);
     } else {
-        emit enablePINQueryComplete(SIMErrorNone);
         queryState = SIMSecurity::Disabled;
+        emit enablePINQueryComplete(SIMErrorNone);
     }
 }
 
@@ -79,8 +81,8 @@ void SIMSecurity::enablePINQuery(PINType type, const QString &code)
     if(code != pin){
         emit enablePINQueryComplete(SIMErrorWrongPassword);
     } else {
-        emit enablePINQueryComplete(SIMErrorNone);
         queryState = SIMSecurity::Enabled;
+        emit enablePINQueryComplete(SIMErrorNone);
     }
 }
 
@@ -95,10 +97,10 @@ void SIMSecurity::verifyPIN(PINType type, const QString &code)
 {
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(type);
-    if(code != pin){
-        emit verifyPINComplete(false, SIMErrorWrongPassword);
+   if(SIMErrorNone == error && code != pin){
+       emit verifyPINComplete(false, SIMErrorWrongPassword);
     } else {
-        emit verifyPINComplete(true, SIMErrorNone);
+        emit verifyPINComplete(success, error);
     }
 }
 
@@ -110,8 +112,8 @@ void SIMSecurity::verifyPUK(PUKType type, const QString &PUKCode, const QString 
     if(PUKCode != puk){
         emit verifyPUKComplete(false, SIMErrorWrongPassword);
     } else {
-        emit verifyPUKComplete(true, SIMErrorNone);
         pin = newPINCode;
+        emit verifyPUKComplete(true, SIMErrorNone);
     }
 }
 
@@ -148,7 +150,7 @@ SIMLock::SIMLock(QObject *parent) :
         status(SimLockStatusOk),
         level(SIMLock::LevelGlobal),
         error(SIMLockErrorNone),
-        code(QString("1234"))
+        code(QString("12345678"))
 {
     qRegisterMetaType<SIMLock::SIMLockStatus>("SIMLock::SIMLockStatus");
     qRegisterMetaType<SIMLock::SIMLockLevel>("SIMLock::SIMLockLevel");

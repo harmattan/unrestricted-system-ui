@@ -267,6 +267,7 @@ class Server(dbus.service.Object):
 
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def DisablePINQuery(self, type, pin):
+        print 'DisablePINQuery: ',pin
         self.on_disablepin(self.disablepin)
         if self.pin == pin:
             self.pin_enabled = False
@@ -276,19 +277,16 @@ class Server(dbus.service.Object):
     def on_getpinquerystate(label): pass
 
     @dbus.service.method('com.nokia.csd.SIM.Security')
-    # SIMSecurity::PINQuery: enum{'Enabled, Disabled, UnknownState'}
     def GetPINQueryState(self, type):
         self.on_getpinquerystate(self.getpinquerystate)
         print 'pin enabled state: ',self.pin_enabled
-        if self.pin_enabled == True:
-            return 0 
-        if self.pin_enabled == False:
-            return 1
-
+        return self.pin_enabled 
+ 
     def on_enablepin(label): pass
 
     @dbus.service.method('com.nokia.csd.SIM.Security')
     def EnablePINQuery(self, type, pin):
+        print 'EnablePINQuery: ',pin
         self.on_enablepin(self.enablepin)
         if self.pin == pin:
             self.pin_enabled = True

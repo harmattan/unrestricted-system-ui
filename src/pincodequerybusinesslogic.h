@@ -90,6 +90,7 @@ private: // attributes
     SIMLock *simLock;
 
     CallUiServiceApi *callUi;
+    Qt::WindowFlags windowFlags;
     const Qt::ConnectionType connType;
 
 private: // methods

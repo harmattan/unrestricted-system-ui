@@ -34,18 +34,13 @@ private slots:
     void testPinQueryStateChanges();
     void testChangePinCode();
     void testNotifications();
-    void testPin();
-    void testPuk();
+    void testPinToPuk();
     void testSimLock();
 
 private:
     void stateChange(SIM::SIMStatus);
     void testPinOk();
     void testPinNok(QString code, QString errorText);
-    void testPukOk();
-    void testPukNok(QString code, QString errorText);
-    void testSimLockOk();
-    void testSimLockNok(QString code, QString errorText);
     void emitButtonReleased(QString buttonName);
     void testUiClosed();
 
