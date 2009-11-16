@@ -125,12 +125,12 @@ DuiLayout* LockScreenUI::createWidgets()
     unreadChatMessagesImage = new DuiImage("icon-m-notification-im");
     //unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
 
-    /*
-    unreadEmailsLabel = new DuiLabel("0", this);
-    unreadMessagesLabel = new DuiLabel("2", this);
-    missedCallsLabel = new DuiLabel("1", this);
-    unreadChatMessagesLabel = new DuiLabel("3", this);
-    */
+    // TODO: some suitable layout could be added to image and then the label to that layout
+
+    unreadEmailsLabel = new DuiLabel("0", unreadEmailsImage);
+    unreadMessagesLabel = new DuiLabel("2", unreadMessagesImage);
+    missedCallsLabel = new DuiLabel("1", missedCallsImage);
+    unreadChatMessagesLabel = new DuiLabel("3", unreadChatMessagesImage);
 
     QGraphicsWidget* spacerr = new QGraphicsWidget;
     spacerr->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
