@@ -14,7 +14,7 @@ class RoamingContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    RoamingContainer(DuiWidget *parent);
+    RoamingContainer(DuiWidget *parent = 0);
     virtual ~RoamingContainer();
     void initRoamingButton(bool value);
     void initRoamingUpdatesButton(bool value);

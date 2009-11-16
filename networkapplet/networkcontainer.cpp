@@ -19,12 +19,14 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
         selectionLabel(NULL),        
         networkList(NULL)
 {    
-    modeComboBox = new DuiComboBox(this);
-    selectionComboBox = new DuiComboBox(this);
-    modeLabel = new DuiLabel(DcpNetwork::NetworkModeText, this);
-    selectionLabel = new DuiLabel(DcpNetwork::NetworkSelectionText, this);
+    modeComboBox = new DuiComboBox();
+    selectionComboBox = new DuiComboBox();
+    modeLabel = new DuiLabel(DcpNetwork::NetworkModeText);
+    modeLabel->setObjectName("networkLabel");
+    selectionLabel = new DuiLabel(DcpNetwork::NetworkSelectionText);
+    selectionLabel->setObjectName("networkLabel");
     toggleComboBoxSignalConnection(modeComboBox);
-    toggleComboBoxSignalConnection(selectionComboBox);    
+    toggleComboBoxSignalConnection(selectionComboBox);
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
     setLayout();
 }
@@ -101,10 +103,12 @@ void NetworkContainer::toggleComboBoxSignalConnection(DuiComboBox *cb, bool togg
 void NetworkContainer::toggleAvailableOperators(int selected, const QStringList &operators, bool toggle)
 {    
     if(toggle) {
-        if(infoLabel == NULL)
-            infoLabel = new DuiLabel(this);
+        if(infoLabel == NULL) {
+            infoLabel = new DuiLabel();
+            infoLabel->setObjectName("networkLabel");
+        }
         if(networkList == NULL) {
-            networkList = new NetworkList(this);
+            networkList = new NetworkList();
             connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
         }
         if(networkList->insertOperators(selected, operators)) {

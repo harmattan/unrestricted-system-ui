@@ -84,32 +84,34 @@ void NetworkWidget::initWidget()
     logic = new NetworkBusinessLogic();
 
     // widgets
-    phoneNetworkButton = new DuiButton(this);
+    DuiLabel *headerLabel = new DuiLabel(DcpNetwork::PhoneNetworkText);
+    headerLabel->setObjectName("networkLabel");    
+    phoneNetworkButton = new DuiButton();
     phoneNetworkButton->setCheckable(true);
     phoneNetworkButton->setObjectName("basicNetworkButton");
-    dataCounterButton = new DuiButton(DcpNetwork::DataCounterText, this);
+    dataCounterButton = new DuiButton(DcpNetwork::DataCounterText);
     dataCounterButton->setObjectName("dataCounterButton");
-    networkContainer = new NetworkContainer(this); 
-    roamingContainer = new RoamingContainer(this);            
+    networkContainer = new NetworkContainer();
+    roamingContainer = new RoamingContainer();
 
     // main container
     DuiLayout *contentLayout = new DuiLayout();
     contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
-    contentLayoutPolicy->addItemAtPosition(new DuiLabel(DcpNetwork::PhoneNetworkText, this), 0, 0);
+    contentLayoutPolicy->addItemAtPosition(headerLabel, 0, 0);
     contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);    
     contentLayoutPolicy->addItemAtPosition(roamingContainer, 1, 0, 1, 2);
     contentLayoutPolicy->addItemAtPosition(dataCounterButton, 2, 0, 1, 2);
     contentLayoutPolicy->setSpacing(10);   
-    DuiContainer *mainContainer = new DuiContainer(this);
+    DuiContainer *mainContainer = new DuiContainer();
     mainContainer->centralWidget()->setLayout(contentLayout);
 
     // set values
-    initPhoneNetworkButton(logic->networkEnabled());
-    updateNetworkIcon(logic->networkIcon());
-    roamingContainer->initRoamingButton(logic->roamingEnabled());
-    roamingContainer->initRoamingUpdatesButton(logic->roamingUpdatesEnabled());
     networkContainer->initModeComboBox(logic->selectedNetworkMode(), logic->networkModes());
     networkContainer->initSelectionComboBox(logic->selectedNetworkSelectionValue(), logic->networkSelectionValues());
+    roamingContainer->initRoamingButton(logic->roamingEnabled());
+    roamingContainer->initRoamingUpdatesButton(logic->roamingUpdatesEnabled());
+    initPhoneNetworkButton(logic->networkEnabled());
+    updateNetworkIcon(logic->networkIcon());
 
     // connect the value receive signals
     connect(logic, SIGNAL(availableNetworkOperators(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableOperators(int, QStringList, bool)));
@@ -128,6 +130,7 @@ void NetworkWidget::initWidget()
     DuiLayout *mainLayout = new DuiLayout();
     DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
     mainLayoutPolicy->addItem(mainContainer);
+
     this->setLayout(mainLayout);
 }
 

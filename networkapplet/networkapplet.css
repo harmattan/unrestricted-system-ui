@@ -35,15 +35,6 @@
 	font: "Nokia Sans" 6;
 }
 
-#jake {
-        font: "Nokia Sans" 18;
-}
-
-#jake:selected {
-        color: #141414;
-        font: "Nokia Sans" 6;
-}
-
 #availableNetworksList {
 	normal-background-image:;
 	
@@ -63,4 +54,6 @@
 	item-object-name: "availableNetwork";
 }
 						    
-		
+#networkLabel {
+        color: white;
+}

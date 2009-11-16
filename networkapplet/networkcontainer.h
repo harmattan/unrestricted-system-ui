@@ -14,7 +14,7 @@ class NetworkContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    NetworkContainer(DuiWidget *parent);
+    NetworkContainer(DuiWidget *parent = 0);
     virtual ~NetworkContainer();
 
     void initModeComboBox(const QString &value, const QStringList &values);

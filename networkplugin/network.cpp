@@ -33,7 +33,7 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
 
     // init widgets    
     networkLabel = new DuiLabel(trid("qtn_cell_phone_network", "Phone network"));
-    networkLabel->setObjectName("networkLabel");
+    networkLabel->setObjectName("networkPluginLabel");
     toggleButton = new DuiButton();
     toggleButton->setCheckable(true);
     toggleButton->setObjectName("toggleButton");

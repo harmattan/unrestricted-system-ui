@@ -14,9 +14,10 @@
 NetworkList::NetworkList(QGraphicsItem *parent) :
         DuiList(parent),
         parent(parent),
-        listModel(new DuiWidgetListModel(this)),
+        listModel(NULL),
         selected(false)
-{            
+{
+    listModel = new DuiWidgetListModel(this);
     setObjectName("availableNetworksList");
     enableItemSelection(true);
     setItemModel(listModel);
@@ -33,7 +34,7 @@ bool NetworkList::insertOperators(int selected, const QStringList &operators)
         return false;
 
     for(int i=0; i<operators.size(); ++i)
-        listModel->appendWidget(new DuiLabel(operators.at(i), parent));
+        listModel->appendWidget(new DuiLabel(operators.at(i), parent)); // is parent necessary?
 
     if(selected != -1) {
         selectItem(listModel->index(selected));

@@ -14,15 +14,16 @@ RoamingContainer::RoamingContainer(DuiWidget *parent) :
         roamingButton(NULL),
         roamingUpdatesButton(NULL)
 {
-    roamingButton = new DuiButton(this);
+    roamingButton = new DuiButton();
     roamingButton->setCheckable(true);
     roamingButton->setObjectName("basicNetworkButton");
-    roamingUpdatesButton = new DuiButton(this);
+    roamingUpdatesButton = new DuiButton();
     roamingUpdatesButton->setCheckable(true);
     roamingUpdatesButton->setObjectName("basicNetworkButton");
-    roamingUpdatesButton->setVisible(false);
-    roamingUpdatesLabel = new DuiLabel(DcpNetwork::RoamingUpdatesText, this);
-    roamingUpdatesLabel->setVisible(false);
+    //roamingUpdatesButton->setVisible(false);
+    roamingUpdatesLabel = new DuiLabel(DcpNetwork::RoamingUpdatesText);
+    roamingUpdatesLabel->setObjectName("networkLabel");
+    //roamingUpdatesLabel->setVisible(false);
     connect(roamingButton, SIGNAL(toggled(bool)), this, SLOT(toggleRoamingUpdates(bool)));
     connect(roamingButton, SIGNAL(toggled(bool)), this, SIGNAL(roamingToggled(bool)));
     connect(roamingUpdatesButton, SIGNAL(toggled(bool)), this, SIGNAL(roamingUpdatesToggled(bool)));
@@ -39,7 +40,9 @@ void RoamingContainer::setLayout()
     // roamingLayout
     DuiLayout *roamingLayout = new DuiLayout();
     DuiLinearLayoutPolicy *roamingLayoutPolicy = new DuiLinearLayoutPolicy(roamingLayout, Qt::Horizontal);
-    roamingLayoutPolicy->addItem(new DuiLabel(DcpNetwork::RoamingText, this), Qt::AlignLeft);
+    DuiLabel *roamingLabel = new DuiLabel(DcpNetwork::RoamingText);
+    roamingLabel->setObjectName("networkLabel");
+    roamingLayoutPolicy->addItem(roamingLabel, Qt::AlignLeft);
     roamingLayoutPolicy->addItem(roamingButton, Qt::AlignRight);
 
     // roamingUpdatesLayout
@@ -76,14 +79,8 @@ void RoamingContainer::initRoamingUpdatesButton(bool toggle)
 void RoamingContainer::toggleRoamingUpdates(bool toggle)
 {
     qDebug() << Q_FUNC_INFO << toggle;
-    if(toggle) {
-        roamingUpdatesButton->setVisible(true);
-        roamingUpdatesLabel->setVisible(true);
-    }
-    else {
-        roamingUpdatesButton->setVisible(false);
-        roamingUpdatesLabel->setVisible(false);
-        if(roamingUpdatesButton->isChecked())
-            roamingUpdatesButton->toggle();
-    }
+    roamingUpdatesButton->setVisible(toggle);
+    roamingUpdatesLabel->setVisible(toggle);
+    if(!toggle && roamingUpdatesButton->isChecked())
+        roamingUpdatesButton->toggle();
 }
