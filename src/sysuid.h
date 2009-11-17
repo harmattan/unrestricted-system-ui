@@ -7,7 +7,6 @@
 class SystemUIGConf;
 class PinCodeQueryBusinessLogic;
 class BatteryBusinessLogic;
-class DisplayBusinessLogic;
 class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
 class EventHandler;
@@ -28,8 +27,7 @@ public:
 private:
     SystemUIGConf *systemUIGConf;
     PinCodeQueryBusinessLogic *pinCodeQueryLogic;
-    BatteryBusinessLogic *batteryLogic;
-    DisplayBusinessLogic *displayLogic;    
+    BatteryBusinessLogic *batteryLogic;    
     LockScreenBusinessLogic *lockScreenLogic;
     ShutdownBusinessLogic *shutdownLogic;
     EventHandler *eventHandler;

@@ -1,3 +1,4 @@
+STUB_PREFIX = ../tests/stubs/
 TEMPLATE = lib
 CONFIG += plugin \
     gui \
@@ -6,7 +7,8 @@ CONFIG += plugin \
     debug
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
-    /usr/include/duicontrolpanel
+    /usr/include/duicontrolpanel \
+    $$STUB_PREFIX
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -18,16 +20,16 @@ OBJECTS_DIR = .objects
 HEADERS = displayapplet.h \
     displaywidget.h \
     displaybrief.h \
-    displaydbusinterface.h \
     displaytranslation.h \
     displaybusinesslogic.h \
-    slidercontainer.h
+    slidercontainer.h \
+    $$STUB_PREFIX/displaystatestub.h
 SOURCES = displayapplet.cpp \
     displaywidget.cpp \
     displaybrief.cpp \
-    displaydbusinterface.cpp \
     displaybusinesslogic.cpp \
-    slidercontainer.cpp
+    slidercontainer.cpp \
+    $$STUB_PREFIX/displaystatestub.cpp
 css.files = displayapplet.css
 DESTDIR = lib
 desktop.files += *.desktop
@@ -39,3 +41,4 @@ message("CSS path will be: " $$css.path)
 INSTALLS += target \
     css \
     desktop
+OTHER_FILES += displayapplet.css

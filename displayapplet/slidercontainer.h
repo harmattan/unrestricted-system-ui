@@ -11,20 +11,19 @@ class SliderContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    SliderContainer(DuiWidget *parent, const QString &infoText, const QString &valuePattern = QString("%1"));
+    SliderContainer(const QString &infoText, const QString &valuePattern = QString("%1"), DuiWidget *parent = 0);
     virtual ~SliderContainer();
 
-public slots:
-    void initSlider(int index, const QStringList &values);    
+    void initSlider(const QList<int> &values, int index);
 
 private slots:    
-    void valueChanged(int value);
+    void valueChanged(int index);
 
 private:
-    void updateSlider(const QString &value);
+    void updateSlider(int value);
 
 signals:    
-    void sliderValueChanged(QString);
+    void sliderValueChanged(int);
 
 private: //methods
     void setLayout();   
@@ -33,7 +32,7 @@ private: //attributes
     DuiLabel *label;
     DuiSlider *slider;
     QString valuePattern;
-    QStringList sliderValues;
+    QList<int> sliderValues;
 
 };
 

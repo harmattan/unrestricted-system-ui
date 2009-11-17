@@ -4,7 +4,7 @@
 #include "dcpwidget.h" 
 
 class DuiButton;
-class DisplayDBusInterface;
+class DisplayBusinessLogic;
 class SliderContainer;
 
 class DisplayWidget : public DcpWidget
@@ -23,7 +23,7 @@ private slots:
 
 private: //attributes
     DuiButton *blankInhibitButton;    
-    DisplayDBusInterface *displayIf;
+    DisplayBusinessLogic *logic;
     SliderContainer *brightnessContainer;
     SliderContainer *screenLightsContainer;
 };

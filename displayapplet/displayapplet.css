@@ -4,19 +4,6 @@
 	maximum-size: 36 36;
 }
 
-#displayLayoutWidget1 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 90% 100;
-	minimum-size: 90% 100;
-	maximum-size: 90% 100;
+#displayLabel {
+    color: white;
 }
-
-#displayLayoutWidget2 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 90% 50;
-	minimum-size: 90% 50;
-	maximum-size: 90% 50;
-}
-

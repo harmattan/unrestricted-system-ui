@@ -30,10 +30,8 @@ SOURCES += main.cpp \
     usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
-    batterybusinesslogicadaptor.cpp \
-    displaybusinesslogic.cpp \
-    systemuigconf.cpp \
-    displaybusinesslogicadaptor.cpp \
+    batterybusinesslogicadaptor.cpp \    
+    systemuigconf.cpp \    
     notifierdbusadaptor.cpp \
     pincodequerydbusadaptor.cpp \
     $$STUB_PREFIX/devicemodestub.cpp \
@@ -54,10 +52,8 @@ HEADERS += main.h \
     usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
-    batterybusinesslogicadaptor.h \
-    displaybusinesslogic.h \
-    systemuigconf.h \
-    displaybusinesslogicadaptor.h \
+    batterybusinesslogicadaptor.h \    
+    systemuigconf.h \    
     notifierdbusadaptor.h \        
     pincodequerydbusadaptor.h \
     notificationtype.h \
