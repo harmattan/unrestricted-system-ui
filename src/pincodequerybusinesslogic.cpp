@@ -268,7 +268,7 @@ void PinCodeQueryBusinessLogic::ui2SIMLocked(bool showNote)
     createUi();
     uiPin->getEnterBtn()->setEnabled(true);
     setUiHeader(HeaderEnterSimLockCode);
-    QRegExp rx("\\d{0,15}", Qt::CaseInsensitive);
+    QRegExp rx("\\d{0,15}", Qt::CaseInsensitive); // max 15 digits
     uiPin->getCodeEntry()->setValidator(new QRegExpValidator(rx, uiPin->getCodeEntry()));
 
     if(showNote) {
@@ -303,17 +303,6 @@ void PinCodeQueryBusinessLogic::ui2PUKQuery()
     getCode(false, HeaderEnterPukCode);
 }
 
-void PinCodeQueryBusinessLogic::ui2PUKFailed(int attemptsLeft)
-{
-    Q_UNUSED(attemptsLeft);
-    emit showNotification(PUKCodeIncorrect, NotificationType::error);
-}
-
-void PinCodeQueryBusinessLogic::ui2PUKFailedPermanently()
-{
-    emit showNotification(SIMCardRejected, NotificationType::error);
-    ui2disappear(false);
-}
 void PinCodeQueryBusinessLogic::ui2enterNewPin()
 {
     qDebug() << Q_FUNC_INFO;
@@ -553,9 +542,9 @@ void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
         if(SubFailedTry == subState){
             ui2PINFailed(attempts);
         }
+    } else {
+        ui2disappear(false);
     }
-    //else
-    //    ; // XXX
 }
 
 void PinCodeQueryBusinessLogic::simPUKAttemptsLeft(int attempts, SIMError error)
@@ -709,13 +698,6 @@ void PinCodeQueryBusinessLogic::cancelQuery()
     qDebug() << Q_FUNC_INFO ;    
     // regardless of the state - just exit.
     ui2disappear(false);
-
-    // Well, let's put the radio and cellular off.
-    /* Let's not. ssc takes care of it.
-    QDBusInterface ssc(SSC_DBUS_NAME, SSC_DBUS_PATH, SSC_DBUS_IFACE,
-                       QDBusConnection::systemBus());
-    ssc.call(QDBus::NoBlock, QString(SSC_DBUS_METHOD_SET_RADIO), QString("off"));
-    */
 }
 
 void PinCodeQueryBusinessLogic::resendSimLockCode()
@@ -771,8 +753,8 @@ void PinCodeQueryBusinessLogic::startLaunch()
        SIM::PINRequired == previousSimState ||
        SIM::PUKRequired == previousSimState ||
        SIM::SIMLockRejected == previousSimState) ){
-        stateOperation(previousSimState, previousSimState);
         queryLaunch = true;
+        stateOperation(previousSimState, previousSimState);
     }
 }
 

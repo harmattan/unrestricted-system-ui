@@ -28,21 +28,24 @@ private slots:
     void cleanupTestCase();
 
     void testStateChange();
+    void testFailedLaunchPinQuery();
     void testLaunchPinQuery();
     void testUiControls();
     void testEnablePinQuery();
-    void testPinQueryStateChanges();
     void testChangePinCode();
-    void testNotifications();
     void testPinToPuk();
     void testSimLock();
+    // test notifications
+    void testErrorAtPUKQuery();
+    void testErrorAtPINQuery();
+    void testTechnicalProblem();
+    void testSIMLockRetry();
 
 private:
-    void stateChange(SIM::SIMStatus);
-    void testPinOk();
-    void testPinNok(QString code, QString errorText);
+    void doAndVerifyStateChange(SIM::SIMStatus);
+    void doAndVerifyPinOk();
+    void doAndVerifyPinNok(QString code, QString errorText);
     void emitButtonReleased(QString buttonName);
-    void testUiClosed();
 
 private:
     SIMStub *m_sim;

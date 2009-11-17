@@ -116,8 +116,6 @@ private: // methods
     void ui2PINFailed(int attemptsLeft);
 
     void ui2PUKQuery();
-    void ui2PUKFailed(int attemptsLeft);
-    void ui2PUKFailedPermanently();
     void ui2enterNewPin();
     void ui2reenterPIN();    
     void ui2disappear(bool oerationOk);

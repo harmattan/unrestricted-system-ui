@@ -109,11 +109,11 @@ void SIMSecurity::verifyPUK(PUKType type, const QString &PUKCode, const QString 
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(type);
 
-    if(PUKCode != puk){
+   if(SIMErrorNone == error && PUKCode != puk){
         emit verifyPUKComplete(false, SIMErrorWrongPassword);
     } else {
         pin = newPINCode;
-        emit verifyPUKComplete(true, SIMErrorNone);
+        emit verifyPUKComplete(success, error);
     }
 }
 
@@ -167,14 +167,14 @@ void SIMLock::simLockStatus()
     emit simLockStatusComplete(status, error);
 }
 
-void SIMLock::simLockUnlock(SIMLock::SIMLockLevel level, const QString &unlockCode)
+void SIMLock::simLockUnlock(SIMLock::SIMLockLevel level, const QString &code)
 {
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(level);
-    if(unlockCode != code){
+   if(SIMLockErrorNone == error && code != this->code){
         emit simLockUnlockComplete(SIMLockErrorWrongPassword);
     } else {
-        emit simLockUnlockComplete(SIMLockErrorNone);
+        emit simLockUnlockComplete(error);
     }
 }
 
@@ -196,15 +196,15 @@ void PinCodeQueryDBusAdaptor::pinQueryStateCompletedResponse(SIMSecurity::PINQue
     this->error = error;
 }
 
-void PinCodeQueryDBusAdaptor::pinQueryEnabledResponse(SIMSecurity::PINQuery queryState)
+void PinCodeQueryDBusAdaptor::pinQueryEnabledResponse(SIMSecurity::PINQuery state)
 {
-    qDebug() << Q_FUNC_INFO << queryState;
-    this->state = queryState;
+    qDebug() << Q_FUNC_INFO << state;
+    this->state = state;
 }
 
 void PinCodeQueryDBusAdaptor::pinQueryDoneResponse(bool queryOk)
 {
     qDebug() << Q_FUNC_INFO << queryOk;
-    this->queryStarted = queryOk;
+    this->queryDoneOk = queryOk;
 }
 

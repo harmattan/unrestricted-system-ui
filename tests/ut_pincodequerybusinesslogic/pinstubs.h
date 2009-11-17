@@ -14,10 +14,19 @@ namespace Cellular {
 
 //! Possible SIM errors
 enum SIMError { SIMErrorNone, /*!< Returned when no error happened and operation completed successfully */
-        SIMErrorBusCommunication, /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
-        SIMErrorInvalidParameter, SIMErrorModemNotReady, SIMErrorServiceBusy,
-        SIMErrorModem, SIMErrorDataNotAvailable, SIMErrorWrongPassword, SIMErrorPINDisabled, SIMErrorCodeBlocked,
-        SIMErrorNoSIM, SIMErrorSIMRejected, SIMErrorSecurityCodeRequired, SIMErrorUnknown
+                SIMErrorBusCommunication, /*!< Returned when a D-Bus communication error with the Cellular Services daemon occured */
+                SIMErrorInvalidParameter,
+                SIMErrorModemNotReady,
+                SIMErrorServiceBusy,
+                SIMErrorModem,
+                SIMErrorDataNotAvailable,
+                SIMErrorWrongPassword,
+                SIMErrorPINDisabled,
+                SIMErrorCodeBlocked,
+                SIMErrorNoSIM,
+                SIMErrorSIMRejected,
+                SIMErrorSecurityCodeRequired,
+                SIMErrorUnknown
   };
 
 //! Provides access to SIM status and status change notification
@@ -187,7 +196,7 @@ public slots: // METHODS
     void simLockStatus();
 
     //! unlocks SIM lock.
-    void simLockUnlock(SIMLock::SIMLockLevel level, const QString &unlockCode);
+    void simLockUnlock(SIMLock::SIMLockLevel level, const QString &code);
 
 signals: // SIGNALS
     //! Emitted when simLockStatus() call completes
@@ -216,22 +225,12 @@ class PinCodeQueryDBusAdaptor : public QObject
 public:
     PinCodeQueryDBusAdaptor(QObject* parent);
     virtual ~PinCodeQueryDBusAdaptor();
-/*
-    static QString dbusServiceName() {
-      return QString("com.nokia.systemui.pin");
-    }
-    static QString dbusObjectName() {
-      return QString("/com/nokia/systemui/pin");
-    }
-    static QString dbusInterfaceName() {
-      return QString("com.nokia.systemui.pin.PinCodeQuery");
-    }
-*/
+
     //! Response to \sa PinQueryState(bool enabled)
     void pinQueryStateCompletedResponse(SIMSecurity::PINQuery state, SIMError error);
 
     //! Response to \sa EnablePinQueryRequested(bool enabled)
-    void pinQueryEnabledResponse(SIMSecurity::PINQuery queryState);
+    void pinQueryEnabledResponse(SIMSecurity::PINQuery state);
 
         //! Response to \sa LaunchPinQueryRequested(SIMSecurity::PINType pinType)
     void pinQueryDoneResponse(bool queryOk);
@@ -239,7 +238,7 @@ public:
 public:
     SIMSecurity::PINQuery state;
     SIMError error;
-    bool queryStarted;
+    bool queryDoneOk;
 };
 
 
