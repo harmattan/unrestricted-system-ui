@@ -30,9 +30,11 @@ private: //methods
     void setLayout();    
 
 private: //attributes
+    QGraphicsWidget *roamingUpdatesWidget;
     DuiButton *roamingButton;
-    DuiButton *roamingUpdatesButton;
-    DuiLabel *roamingUpdatesLabel;        
+    DuiButton *roamingUpdatesButton;    
+    DuiLinearLayoutPolicy *landscapeLayoutPolicy;
+    DuiLinearLayoutPolicy *portraitLayoutPolicy;    
 
 };
 
