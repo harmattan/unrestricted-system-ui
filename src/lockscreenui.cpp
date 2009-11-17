@@ -76,7 +76,7 @@ void LockScreenUI::createContent()
 void LockScreenUI::sliderUnlocked()
 {
     disappear();
-//    slider->reset();
+    slider->reset();
     emit unlocked();
 }
 
