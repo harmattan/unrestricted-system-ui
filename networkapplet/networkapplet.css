@@ -35,25 +35,8 @@
 	font: "Nokia Sans" 6;
 }
 
-#availableNetworksList {
-	normal-background-image:;
-	
-	margin-left: 0;
-	margin-top: 0;
-	margin-right: 0;
-	margin-bottom: 0;
 
-	item-spacing: 0;
-			    
-        preferred-size: size(80%, 50);
-        minimum-size: size(80%, 50);
-        maximum-size: size(80%, 1000);
 
-	container-object-name: "wgListContainer";
-	group-header-object-name: "wgListGroupHeaders";	
-	item-object-name: "availableNetwork";
-}
-						    
 #networkLabel {
-        color: white;
+    color: white;
 }

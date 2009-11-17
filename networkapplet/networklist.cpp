@@ -7,21 +7,20 @@
 #include <QGraphicsWidget>
 #include <QModelIndex>
 #include <QDebug>
+#include <QStringListModel>
 
 
 // Class list cannot inherit DuiList because the signals are not inherited along
 
 NetworkList::NetworkList(QGraphicsItem *parent) :
-        DuiList(parent),
-        parent(parent),
-        listModel(NULL),
+        DuiList(parent),        
+        listModel(NULL),        
         selected(false)
 {
-    listModel = new DuiWidgetListModel(this);
     setObjectName("availableNetworksList");
     enableItemSelection(true);
-    setItemModel(listModel);
-    connect(this, SIGNAL(itemClicked(const QModelIndex &)), this, SLOT(availableNetworkClicked(const QModelIndex &)));
+    listModel = new QStringListModel;    
+    connect(this, SIGNAL(itemClicked(const QModelIndex &)), this, SLOT(availableOperatorClicked(const QModelIndex &)));
 }
 
 NetworkList::~NetworkList()
@@ -33,8 +32,8 @@ bool NetworkList::insertOperators(int selected, const QStringList &operators)
     if(operators.size() <= 0)
         return false;
 
-    for(int i=0; i<operators.size(); ++i)
-        listModel->appendWidget(new DuiLabel(operators.at(i), parent)); // is parent necessary?
+    listModel->setStringList(operators);
+    this->setItemModel(listModel);
 
     if(selected != -1) {
         selectItem(listModel->index(selected));
@@ -46,7 +45,7 @@ bool NetworkList::insertOperators(int selected, const QStringList &operators)
 
 void NetworkList::availableOperatorClicked(const QModelIndex &index)
 {
-    selected = true;
+    selected = true;    
     emit availableOperatorSelected(index.row());
 }
 

@@ -3,7 +3,7 @@
 
 #include <DuiList>
 
-class DuiWidgetListModel;
+class QStringListModel;
 class QModelIndex;
 
 class NetworkList : public DuiList
@@ -24,8 +24,7 @@ private slots:
     void availableOperatorClicked(const QModelIndex &index);
 
 private:    
-    QGraphicsItem *parent;
-    DuiWidgetListModel *listModel;
+    QStringListModel* listModel;    
     bool selected;
 };
 

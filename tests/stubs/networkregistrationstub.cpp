@@ -114,19 +114,7 @@ void NetworkRegistration::selectOperator(const QString &mnc, const QString &mcc)
 }
 
 void NetworkRegistration::queryAvailableOperators()
-{    
-    this->success = true;
-    //TEMP
-    QStringList names;
-    names << "Tele" << "Radiolinja" << "DNA" << "Radiolinja" << "Sonera";
-    QStringList mncs;
-    mncs << "TeleMNC" << "RadiolinjaMNC" << "DNAMNC" << "RadiolinjaMNC2" << "SoneraMNC";
-    QStringList mccs;
-    mccs << "TeleMCC" << "RadiolinjaMCC" << "DNAMCC" << "RadiolinjaMCC2" << "SoneraMCC";
-    QList<AvailableOperator::Availability> availabilities;
-    availabilities << AvailableOperator::Available << AvailableOperator::Available << AvailableOperator::Available
-            << AvailableOperator::Current << AvailableOperator::NotAvailable;
-
+{
     for(int i=0; i<names.size(); ++i)
         this->addOperator(names.at(i), mncs.at(i), mccs.at(i), availabilities.at(i));
 

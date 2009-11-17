@@ -37,7 +37,7 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     toggleButton = new DuiButton();
     toggleButton->setCheckable(true);
     toggleButton->setObjectName("toggleButton");
-    //signalStrengthImage = new DuiImage();
+    signalStrengthImage = new DuiImage();
     operatorLabel = new DuiLabel();
     operatorLabel->setObjectName("operatorLabel");
     toggleWidgetsVisibility(false);
@@ -47,7 +47,7 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
     layoutPolicy->addItemAtPosition(networkLabel, 0, 0, 1, 2);
     layoutPolicy->addItemAtPosition(toggleButton, 0, 2, 2, 1);
-    //layoutPolicy->addItemAtPosition(signalStrengthImage, 1, 0, 1, 1);
+    layoutPolicy->addItemAtPosition(signalStrengthImage, 1, 0, 1, 1);
     layoutPolicy->setColumnStretchFactor(1, 1);
     layoutPolicy->addItemAtPosition(operatorLabel, 1, 1, 1, 1);
     DuiContainer *container = new DuiContainer();
@@ -57,12 +57,12 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     connect(logic, SIGNAL(networkOperatorChanged(QString)), operatorLabel, SLOT(setText(QString)));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateButtonIcon(QString)));
     connect(toggleButton, SIGNAL(toggled(bool)), logic, SLOT(toggleNetwork(bool)));    
-    //connect(logic, SIGNAL(signalStrengthIconChanged(QString)), signalStrengthImage, SLOT(setImage(QString)));
+    connect(logic, SIGNAL(signalStrengthIconChanged(QString)), signalStrengthImage, SLOT(setImage(QString)));
 
     updateButton(logic->networkEnabled());
     updateButtonImage(logic->networkIcon());
     operatorLabel->setText(logic->currentOperator());
-    //signalStrengthImage->setImage(logic->signalStrengthIcon());
+    signalStrengthImage->setImage(logic->signalStrengthIcon());
 
     // mainLayout    
     DuiLayout *mainLayout = new DuiLayout();
@@ -94,7 +94,7 @@ void Network::updateButtonImage(const QString &icon)
 void Network::toggleWidgetsVisibility(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
-    //signalStrengthImage->setVisible(toggle);
+    signalStrengthImage->setVisible(toggle);
     operatorLabel->setVisible(toggle);
 }
 
