@@ -114,10 +114,7 @@ void NetworkRegistration::selectOperator(const QString &mnc, const QString &mcc)
 }
 
 void NetworkRegistration::queryAvailableOperators()
-{
-    for(int i=0; i<names.size(); ++i)
-        this->addOperator(names.at(i), mncs.at(i), mccs.at(i), availabilities.at(i));
-
+{    
     if(success)
         emit availableOperators(true, operators, QString(""));
     else
