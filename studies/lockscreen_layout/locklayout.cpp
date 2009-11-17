@@ -114,17 +114,17 @@ DuiLayout* createWidgets(DuiApplicationPage* p)
 
     // row, column, rowspan, colspan
 
-    policy->addItemAtPosition(spacert, 1, 0, 1, 6);
-    policy->addItemAtPosition(time,    2, 0, 1, 6);
-    policy->addItemAtPosition(date,    3, 0, 1, 6);
-    policy->addItemAtPosition(slider,  4, 0, 1, 6);
-    policy->addItemAtPosition(sl,      5, 0);
-    policy->addItemAtPosition(i1,      5, 1);
-    policy->addItemAtPosition(i2,      5, 2);
-    policy->addItemAtPosition(i3,      5, 3);
-    policy->addItemAtPosition(i4,      5, 4);
-    policy->addItemAtPosition(sr,      5, 5);
-    policy->addItemAtPosition(spacerb, 6, 0, 1, 6);
+    policy->addItemAtPosition(spacert, 0, 0, 1, 6);
+    policy->addItemAtPosition(time,    1, 0, 1, 6);
+    policy->addItemAtPosition(date,    2, 0, 1, 6);
+    policy->addItemAtPosition(slider,  3, 0, 1, 6);
+    policy->addItemAtPosition(sl,      4, 0);
+    policy->addItemAtPosition(i1,      4, 1);
+    policy->addItemAtPosition(i2,      4, 2);
+    policy->addItemAtPosition(i3,      4, 3);
+    policy->addItemAtPosition(i4,      4, 4);
+    policy->addItemAtPosition(sr,      4, 5);
+    policy->addItemAtPosition(spacerb, 5, 0, 1, 6);
 
     return layout;
 }

@@ -28,7 +28,7 @@ private: //methods
 
 private: //attributes
     NetworkBusinessLogic *logic;
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu    
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
     DuiButton *toggleButton;
     DuiImage *signalStrengthImage;
     DuiLabel *networkLabel;

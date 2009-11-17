@@ -14,9 +14,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     qDebug() << Q_FUNC_INFO;
 
     display = new QmDisplayState(this);
-    qDebug() << "lockUI = new LockScreenUI()";
     lockUI = new LockScreenUI();
-    qDebug() << "lockUI =" << (void*)lockUI;
 
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
@@ -31,6 +29,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
             this, SLOT(updateMissedEventAmounts(int, int, int, int)));
     dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
     */
+    shortPowerKeyPressOccured();
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
