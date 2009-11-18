@@ -1,6 +1,7 @@
 include(duiconfig.pri)
 STUB_PREFIX = ../tests/stubs/
 TEMPLATE = app
+#DEFINES += UTILISE_BATTERY_USER
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
