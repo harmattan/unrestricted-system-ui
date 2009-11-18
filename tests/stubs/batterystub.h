@@ -8,6 +8,22 @@
 
 namespace Maemo {
 
+#ifdef UTILISE_BATTERY_USER
+class QmBatteryUser : public QObject
+{
+    Q_OBJECT
+public:
+    QmBatteryUser() { ; }
+    virtual ~QmBatteryUser() { ; }
+
+public slots:
+    void start();
+
+signals:
+    void changeLevel();
+};
+#endif
+
 class QmBattery : public QObject
 {
     Q_OBJECT
@@ -58,7 +74,7 @@ public:
     * Current battery charge level
     * @return  QmBattery::Level whether battery is low/full/critical
     */
-    QmBattery::Level getLevel();
+    QmBattery::Level getLevel();    
 
     /*
     * Current battery state
@@ -77,8 +93,7 @@ public:
      * Get current battery energy level.
      * @return  Battery level in percentages
      */
-    int getBatteryEnergyLevel();   
-    void setBatteryEnergyLevel(int level); //own addition
+    int getBatteryEnergyLevel();       
 
     /* Remaining battery time (idle), seconds
      * @param mode The mode
@@ -121,14 +136,21 @@ signals:
     */
     void batteryStatusChanged(Maemo::QmBattery::State state);
 
+private slots:
+    void changeLevel(); //own addition
+
 private: //methods
     void initValues();
 
 private: //attributes
     QList<QmBattery::Level> levels;
-    int energyLevel;
+    int levelIndex;
+    int energyLevel;    
     QmBattery::State state;
     QmBattery::ChargerType type;
+#ifdef UTILISE_BATTERY_USER
+    QmBatteryUser *batteryUser;
+#endif
 
 };
 }

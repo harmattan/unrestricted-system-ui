@@ -4,10 +4,18 @@
 
 namespace Maemo {
 
+#ifdef UTILISE_BATTERY_USER
+void QmBatteryUser::start()
+{
+    emit changeLevel();
+    QTimer::singleShot(5000, this, SLOT(start()));
+}
+#endif
+
 QmBattery::QmBattery(QObject *parent) :
         QObject(parent)
 {
-    initValues();    
+    initValues();
 }
 
 QmBattery::~QmBattery()
@@ -17,7 +25,15 @@ QmBattery::~QmBattery()
 void QmBattery::initValues()
 {
     levels << QmBattery::LevelFull << QmBattery::LevelLow << QmBattery::LevelCritical;
+    levelIndex = 0;    
     energyLevel = 100;
+
+#ifdef UTILISE_BATTERY_USER
+    batteryUser = new QmBatteryUser();
+    connect(batteryUser, SIGNAL(changeLevel()), this, SLOT(changeLevel()));
+    batteryUser->start();
+#endif
+
 }
 
 int QmBattery::remainingTime(QmBattery::RemainingTimeMode mode)
@@ -46,11 +62,6 @@ int QmBattery::getBatteryEnergyLevel()
     return energyLevel;
 }
 
-void QmBattery::setBatteryEnergyLevel(int level)
-{
-    energyLevel = level;
-}
-
 QmBattery::State QmBattery::getState()
 {
     return state;
@@ -58,8 +69,28 @@ QmBattery::State QmBattery::getState()
 
 QmBattery::Level QmBattery::getLevel()
 {
-    return levels.at(0);
+    return levels.at(levelIndex);
 }
 
+void QmBattery::changeLevel()
+{
+    if(levelIndex < 2)
+        levelIndex++;
+    else
+        levelIndex = 0;
+    emit batteryLevelChanged(levels.at(levelIndex));
+
+    switch(levelIndex) {
+        case 0:
+            energyLevel = 90;
+        case 1:
+            energyLevel = 15;
+        default: //2
+            energyLevel = 5;
+    }
+    emit batteryEnergyLevelChanged(energyLevel);
 
 }
+
+}
+
