@@ -191,8 +191,9 @@ void Notifier::showDBusNotification(QString notifText, QString evetType, QString
 
 void Notifier::notifTimer(int expireTimeout, unsigned int notifId)
 {
-    if(0 < expireTimeout)
+    if(0 < expireTimeout){
         (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(unsigned int)), notifId);
+    }
 }
 
 void Notifier::notifTimer(int expireTimeout, DuiInfoBanner* notif)
@@ -202,10 +203,12 @@ void Notifier::notifTimer(int expireTimeout, DuiInfoBanner* notif)
         return;
     }
 
-    if(0 < expireTimeout)
+    if(0 < expireTimeout){
         (void) new NotifTimer(expireTimeout, this, SLOT(notificationTimeout(DuiInfoBanner*)), notif);
-    else if(0 >= notif->buttonText().length())
+    }
+    else if(0 >= notif->buttonText().length()){
         notif->disappear();
+    }
 }
 
 void Notifier::showLocalNotification(int expireTimeout, QString notifText, QString buttonText)
@@ -216,24 +219,23 @@ void Notifier::showLocalNotification(int expireTimeout, QString notifText, QStri
                                              "Icon-close",
                                              QString(notifText),
                                              "Icon-close");
-/*    DuiInfoBanner* n = new DuiInfoBanner(DuiInfoBanner::Information,
-                                             "Icon-close",
-                                             QString( "<font color=\"white\">" + notifText + "</font>"),
-                                             "Icon-close");
-*/
+
     if (trid("qtn_cell_continue", "Continue") == buttonText){
         expireTimeout = 0;
         n->setButtonText(buttonText);
         connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationPinQueryCancel()));
-        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationPinQueryCancel()));
+        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
     }
     else if (trid("qtn_cell_try_again", "Try again") == buttonText){
         expireTimeout = 0;
         n->setButtonText(buttonText);
         connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationSimLockRetry()));
-        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationSimLockRetry()));
-    } else {
         connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
+    } else {
+        // timer must be killed before localNotificationClose() can be called.
+        // otherways DuiInfoBanner::disappear() is called again from timer's timeout
+        //
+        // connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
     }
     n->appear(DuiSceneWindow::DestroyWhenDone);
     notifTimer(expireTimeout, n);
