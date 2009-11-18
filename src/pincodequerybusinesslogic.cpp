@@ -235,9 +235,9 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
             if(res){
                 /* TODO: commented out until fix for #129775 is available
                  * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
-                 * at the moment same behaviour as with #129775
+                 * at the moment same behaviour as with #129775*/
                 DuiApplication::instance()->applicationWindow()->hide();
-                */
+                /**/
             }
         }
     }
@@ -248,15 +248,14 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 
 void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
 {
-    /* TODO: commented out until fix for #129775 is available
-     * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
-     * at the moment same behaviour as with #129775
-    DuiApplication::instance()->applicationWindow()->show();
-    */
-    if(req)
+   if(DuiApplication::instance()->applicationWindow()->isHidden()) {
+        DuiApplication::instance()->applicationWindow()->show();
+    }
+    if(req){
         qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
-    else
+    } else {
         qDebug() << Q_FUNC_INFO << "call failure?";
+    }
 }
 
 // =======================================
@@ -443,14 +442,9 @@ bool PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
             ui2PUKQuery();
             break;
         case (SIM::NoSIM):
-            if (-1 != relationState &&
-                SIM::UnknownStatus != relationState &&
-                SIM::NotReady != relationState
-                ) {
-                // removed when hot swapping not supported.
-                // emit showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
-                closeUi = true;
-            }
+            // removed when hot swapping not supported.
+            // emit showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
+            closeUi = true;
             break;
         case (SIM::SIMLockRejected):
             ui2SIMLocked();

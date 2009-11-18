@@ -46,9 +46,6 @@ public:
     virtual ~Notifier();
     QObject* responseObject();
 
-signals:
-    void notifTimeout();
-
 public slots:    
     void showNotification(const QString &notifText, NotificationType::Type type = NotificationType::info);
     void showConfirmation(const QString &notifText, const QString &buttonText);
