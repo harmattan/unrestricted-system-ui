@@ -25,6 +25,7 @@ bool QmDeviceMode::setPSMState(QmDeviceMode::PSMState state)
     qDebug() << "QmDeviceMode::setPSMState( " << state << ")";
     this->state = state;
     emit devicePSMStateChanged(state);
+    return true;
 }
 
 }

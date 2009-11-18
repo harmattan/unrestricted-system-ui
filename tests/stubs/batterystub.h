@@ -146,7 +146,8 @@ private: //methods
 private: //attributes
     QList<QmBattery::Level> levels;
     int levelIndex;
-    int energyLevel;    
+    int energyLevel;
+    int levelIndexInc;
     QmBattery::State state;
     QmBattery::ChargerType type;
 #ifdef UTILISE_BATTERY_USER

@@ -25,8 +25,10 @@ QmBattery::~QmBattery()
 void QmBattery::initValues()
 {
     levels << QmBattery::LevelFull << QmBattery::LevelLow << QmBattery::LevelCritical;
-    levelIndex = 0;    
+    levelIndex = 0;
+    levelIndexInc = 1;
     energyLevel = 100;
+    state = QmBattery::StateNotCharging;
 
 #ifdef UTILISE_BATTERY_USER
     batteryUser = new QmBatteryUser();
@@ -74,22 +76,35 @@ QmBattery::Level QmBattery::getLevel()
 
 void QmBattery::changeLevel()
 {
-    if(levelIndex < 2)
-        levelIndex++;
-    else
-        levelIndex = 0;
+#ifndef UNIT_TEST
+    if(levelIndex == 2) {
+        levelIndexInc = -1;        
+    }    
+    else if(levelIndex == 0) {
+        levelIndexInc = 1;        
+    }
+
+    levelIndex += levelIndexInc;
+
     emit batteryLevelChanged(levels.at(levelIndex));
 
     switch(levelIndex) {
         case 0:
             energyLevel = 90;
+            state = QmBattery::StateNotCharging;
+            emit batteryStatusChanged(QmBattery::StateNotCharging);
+            break;
         case 1:
-            energyLevel = 15;
+            energyLevel = 15;            
+            break;
         default: //2
             energyLevel = 5;
+            state = QmBattery::StateCharging;
+            emit batteryStatusChanged(QmBattery::StateCharging);
+            break;
     }
     emit batteryEnergyLevelChanged(energyLevel);
-
+#endif
 }
 
 void QmBattery::setBatteryEnergyLevel(int level)
