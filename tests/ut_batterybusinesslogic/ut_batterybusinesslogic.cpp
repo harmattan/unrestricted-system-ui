@@ -86,7 +86,7 @@ void Ut_BatteryBusinessLogic::testTogglePSM()
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
 
     // turn off the PSM
-    m_subject->togglePSM(PSMActivateText);
+    m_subject->togglePSM(false);
 
     // check that the PSM auto is turned off
     QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
@@ -99,7 +99,7 @@ void Ut_BatteryBusinessLogic::testTogglePSM()
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
 
     // turn on the PSM
-    m_subject->togglePSM(PSMDeactivateText);
+    m_subject->togglePSM(true);
 
     // check that the PSM auto is turned off
     QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
