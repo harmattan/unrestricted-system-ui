@@ -13,9 +13,7 @@
 
 */
 
-namespace {
-    const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
-    const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
+namespace {    
     const QString ChargingText = trid("qtn_ener_char", "Charging");
     const QString ChargingNotStartedText = trid("qtn_ener_repcharger", "Charging not started. Replace charger.");
     const QString ChargingCompleteText = trid("qtn_ener_charcomp", "Charging complete");
@@ -277,11 +275,11 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
     qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if(PSMState == QmDeviceMode::PSMStateOff) {
         emit showNotification(ExitPSMText);
-        emit PSMValueChanged(PSMActivateText);
+        emit PSMValueChanged(false);
     }
     else if(PSMState == QmDeviceMode::PSMStateOn) {
         emit showNotification(EnterPSMText);
-        emit PSMValueChanged(PSMDeactivateText);
+        emit PSMValueChanged(true);
     }
     emit remainingTimeValuesChanged(remainingTimeValues());
 }
@@ -302,17 +300,17 @@ void BatteryBusinessLogic::checkPSMThreshold()
     }
 }
 
-QString BatteryBusinessLogic::PSMValue()
+bool BatteryBusinessLogic::PSMValue()
 {
-    qDebug() << "BatteryBusinessLogic::PSMValue()";
-    return ( deviceMode->getPSMState() == QmDeviceMode::PSMStateOn ? PSMDeactivateText : PSMActivateText );
+    qDebug() << "BatteryBusinessLogic::PSMValue()";    
+    return ( deviceMode->getPSMState() == QmDeviceMode::PSMStateOn ? true : false );
 }
 
-void BatteryBusinessLogic::togglePSM(const QString &value)
+void BatteryBusinessLogic::togglePSM(bool toggle)
 {
-    qDebug() << "BatteryBusinessLogic::togglePSM(" << value << ")";
+    qDebug() << "BatteryBusinessLogic::togglePSM(" << toggle << ")";
 
-    if(value == PSMActivateText)
+    if(toggle)
         deviceMode->setPSMState(QmDeviceMode::PSMStateOn); //turn on the PSM
     else
         deviceMode->setPSMState(QmDeviceMode::PSMStateOff); //turn off the PSM

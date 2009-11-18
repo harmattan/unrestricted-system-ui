@@ -29,6 +29,10 @@ TODO list:
 3) Battery header not yet defined (logical name)
 
 */
+namespace {
+    const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
+    const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
+}
 
 BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
@@ -75,17 +79,11 @@ void BatteryWidget::initWidget()
     // mainContainer
     DuiLayout *orientationLayout = new DuiLayout();
 
-    qDebug() << "Test";
     DuiGridLayoutPolicy *landscapeLayoutPolicy = new DuiGridLayoutPolicy(orientationLayout);
-    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(talkTimeContainer, 0, 0);
-    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(standByTimeContainer, 0, 1);
-    qDebug() << "Test2";
     landscapeLayoutPolicy->addItemAtPosition(PSMButton, 1, 0, 1, 2);
-    qDebug() << "Test";
     landscapeLayoutPolicy->addItemAtPosition(sliderContainer, 2, 0, 1, 2);
-    qDebug() << "Test";
     landscapeLayoutPolicy->setSpacing(20);
     orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
 
@@ -106,7 +104,7 @@ void BatteryWidget::initWidget()
     connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer, SLOT(stopCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
     connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));
-    connect(batteryIf, SIGNAL(PSMValueReceived(QString)), this, SLOT(updatePSMButton(QString)));
+    connect(batteryIf, SIGNAL(PSMValueReceived(bool)), this, SLOT(updatePSMButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoDisabled()), sliderContainer, SLOT(PSMAutoDisabled()));
     connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), sliderContainer, SLOT(initSlider(QStringList)));
@@ -131,12 +129,14 @@ void BatteryWidget::initWidget()
 void BatteryWidget::PSMButtonReleased()
 {
     PSMButton->setEnabled(false);
-    batteryIf->setPSMValue(PSMButton->text());
+    bool toggle = ( PSMButton->text() == PSMActivateText ? true : false);
+    batteryIf->setPSMValue(toggle);
 }
 
-void BatteryWidget::updatePSMButton(const QString &value)
-{    
-    PSMButton->setText(value);
+void BatteryWidget::updatePSMButton(bool toggle)
+{
+    QString text = ( toggle ? PSMDeactivateText : PSMActivateText );
+    PSMButton->setText(text);
     PSMButton->setEnabled(true);
 }
 

@@ -9,7 +9,7 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor(QObject *obj, BatteryBu
     connect(batteryLogic, SIGNAL(batteryCharging(int)), this, SIGNAL(batteryCharging(int)));
     connect(batteryLogic, SIGNAL(batteryNotCharging()), this, SIGNAL(batteryNotCharging()));
     connect(batteryLogic, SIGNAL(batteryBarValueChanged(int)), this, SIGNAL(batteryBarValueChanged(int)));
-    connect(batteryLogic, SIGNAL(PSMValueChanged(QString)), this, SIGNAL(PSMValueChanged(QString)));
+    connect(batteryLogic, SIGNAL(PSMValueChanged(bool)), this, SIGNAL(PSMValueChanged(bool)));
     connect(batteryLogic, SIGNAL(PSMAutoDisabled()), this, SIGNAL(PSMAutoDisabled()));
     connect(batteryLogic, SIGNAL(remainingTimeValuesChanged(QStringList)), this, SIGNAL(remainingTimeValuesChanged(QStringList)));
 }
@@ -18,10 +18,10 @@ BatteryBusinessLogicAdaptor::~BatteryBusinessLogicAdaptor()
 {
 }
 
-void BatteryBusinessLogicAdaptor::setPSMValue(const QString &value)
+void BatteryBusinessLogicAdaptor::setPSMValue(bool toggle)
 {    
-    qDebug() << "BatteryBusinessLogicAdaptor::setPSMValue(" << value << ")";
-    batteryLogic->togglePSM(value);
+    qDebug() << "BatteryBusinessLogicAdaptor::setPSMValue(" << toggle << ")";
+    batteryLogic->togglePSM(toggle);
 }
 
 void BatteryBusinessLogicAdaptor::setPSMAutoValue(bool toggle)
@@ -36,7 +36,7 @@ void BatteryBusinessLogicAdaptor::setPSMThresholdValue(const QString &value)
     batteryLogic->setPSMThreshold(value);   
 }
 
-QString BatteryBusinessLogicAdaptor::PSMValue()
+bool BatteryBusinessLogicAdaptor::PSMValue()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMValue()";
     return batteryLogic->PSMValue();

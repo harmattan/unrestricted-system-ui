@@ -70,10 +70,10 @@ public:
     virtual ~BatteryBusinessLogic();
 
     void setPSMThreshold(const QString &threshold);
-    void togglePSM(const QString &value);
+    void togglePSM(bool toggle);
     void togglePSMAuto(bool toggle);
     int batteryBarValue(int percentage = -1);
-    QString PSMValue();
+    bool PSMValue();
     void batteryStatus();
     QVariant GConfItemValue(SystemUIGConf::GConfKey key);
     QStringList remainingTimeValues();
@@ -84,7 +84,7 @@ signals:
     void batteryCharging(int);
     void batteryNotCharging();
     void batteryBarValueChanged(int);
-    void PSMValueChanged(QString);
+    void PSMValueChanged(bool);
     void PSMAutoDisabled();
     void remainingTimeValuesChanged(QStringList);
     void showNotification(QString);

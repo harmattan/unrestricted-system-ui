@@ -18,7 +18,7 @@ public:
     void PSMAutoValueRequired();
     void batteryChargingStateRequired();
     void PSMThresholdValuesRequired();        
-    void setPSMValue(const QString &value);
+    void setPSMValue(bool toggle);
 
 public slots:
     void remainingTimeValuesRequired();
@@ -36,7 +36,7 @@ signals:
     void batteryCharging(int);
     void batteryNotCharging();
     void batteryBarValueChanged(int);
-    void PSMValueReceived(QString);    
+    void PSMValueReceived(bool);
     void PSMAutoValueReceived(bool);
     void PSMAutoDisabled();
     void PSMThresholdValuesReceived(QStringList);

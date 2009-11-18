@@ -19,15 +19,15 @@ signals:
     void batteryCharging(int);
     void batteryNotCharging();
     void batteryBarValueChanged(int);
-    void PSMValueChanged(QString);
+    void PSMValueChanged(bool);
     void PSMAutoDisabled();
     void remainingTimeValuesChanged(QStringList);
 
 public slots:
-    Q_NOREPLY void setPSMValue(const QString &value);
+    Q_NOREPLY void setPSMValue(bool toggle);
     Q_NOREPLY void setPSMAutoValue(bool disabled);
     Q_NOREPLY void setPSMThresholdValue(const QString &value);
-    QString PSMValue();
+    bool PSMValue();
     bool PSMAutoValue();
     void batteryChargingState();
     int batteryBarValue();

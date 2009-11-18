@@ -29,7 +29,7 @@ protected:
 private slots:
     void PSMButtonReleased();
     void updateNotChargingImage(int level);
-    void updatePSMButton(const QString &value);
+    void updatePSMButton(bool toggle);
     void remainingTimeValuesReceived(const QStringList &timeValues);
 
 private: //attributes
