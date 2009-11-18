@@ -93,7 +93,8 @@ public:
      * Get current battery energy level.
      * @return  Battery level in percentages
      */
-    int getBatteryEnergyLevel();       
+    int getBatteryEnergyLevel();
+    void setBatteryEnergyLevel(int level);
 
     /* Remaining battery time (idle), seconds
      * @param mode The mode

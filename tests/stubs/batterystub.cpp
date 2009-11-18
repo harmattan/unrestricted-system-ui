@@ -92,5 +92,10 @@ void QmBattery::changeLevel()
 
 }
 
+void QmBattery::setBatteryEnergyLevel(int level)
+{
+    energyLevel = level;
+}
+
 }
 
