@@ -9,8 +9,7 @@
    1) Create notification for RechargeBatteryText. Connect it to the signal from QmSystemState which inforsm the reason for shut down.
    2) What are correct animation rates when charging with USB / Wall?
    3) If USB 100 mA is used, do we show animation at all? In Fremantle not.
-   4) Connect sounds with notifications
-   5) Is there going to be note for critical battery level
+   4) Connect sounds with notifications   
 
 */
 
@@ -235,18 +234,18 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
 void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
 {
     qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
-
     switch(level) {
         case QmBattery::LevelFull:            
             emit showNotification(ChargingCompleteText);
             utiliseLED(true, QString("PatternBatteryFull"));
             break;
-        case QmBattery::LevelLow:            
-            if(!battery->getState() == QmBattery::StateCharging) {                
+        case QmBattery::LevelLow:                           
+            if(battery->getState() != QmBattery::StateCharging) {
                 if(lowBatteryNotifier == NULL) {
                     lowBatteryNotifier = new LowBatteryNotifier();
-                    lowBatteryNotifier->showLowBatteryNotification();
+                    connect(lowBatteryNotifier, SIGNAL(showNotification(QString)), this, SIGNAL(showNotification(QString)));
                 }
+                lowBatteryNotifier->showLowBatteryNotification();
             }
             break;
         default:
