@@ -1,25 +1,22 @@
-#include <QDebug>
-#include <QTimer>
-#include <DuiApplicationWindow>
-#include <DuiApplication>
-
 #include "shutdownbusinesslogic.h"
-#include <qmsystem/qmsystemstate.h>
-#include <qmsystem/qmled.h>
+#include "shutdownui.h"
 
-const int SHUTDOWN_TIME = 2000/*ms*/;
-const int UPDATE_INTERVAL = 50;/*ms*/
-const int IDLE_TIME = 10000/*ms*/;
+#include <qmsystem/qmsystemstate.h>
+
+#include <DuiLocale>
+
+#include <QDebug>
 
 using namespace Maemo;
 
 ShutdownBusinessLogic::ShutdownBusinessLogic(QObject* parent) :
         QObject(parent),
         ui(NULL),
-        powerKeyPressTimer(NULL),
-        idleTimer(NULL),
-        shuttingDown(false)
+        state(NULL)
 {
+    state = new QmSystemState(this);
+    connect(state, SIGNAL(systemStateChanged(Maemo::QmSystemState::StateIndication)),
+            this, SLOT(systemStateChanged(Maemo::QmSystemState::StateIndication)));
 }
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic()
@@ -30,118 +27,51 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic()
     }
 }
 
-void ShutdownBusinessLogic::openDialog(bool btnDown)
+void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication what)
 {
-    qDebug() << "openDialog";
-/*    if (shutdownDlg != NULL || shuttingDown) {
-        qDebug() << "won't open shuttingDown:" << shuttingDown;
-        return;
-    }*/
-    emit dialogOpen(true);
+    switch (what) {
+    case QmSystemState::NormalShutdown:
+        normalShutdown();
+        break;
+    case QmSystemState::ThermalShutdown:
+        thermalShutdown();
+        break;
+/* These are not in the API yet
 
-    DuiApplication::instance()->applicationWindow()->show();
-
-//    shutdownDlg = new ShutdownDialog(QString("Shutdown dialog"),
-//                                     QString("next alarm event"), DuiDialog::NoButton);
-
-    if (btnDown)
-        startPowerKeyPressTimer();        
-
-    resetIdleTimer();
-
-    /* shutdownDlg->setSystemModal(); NOT YET IMPLEMENTED */
-//    shutdownDlg->exec();
-}
-
-void ShutdownBusinessLogic::closeDialog()
-{
-    /* Here we should turn off the device instead of just deleting the dialog */
-    qDebug() << "closeDialog()";
-    stopPowerKeyPressTimer();
-    stopIdleTimer();
-/*    if (shutdownDlg) {
-        shutdownDlg->reject();
-        shutdownDlg->deleteLater();
-        shutdownDlg = NULL;
-    }*/
-    DuiApplication::instance()->applicationWindow()->hide();
-    emit dialogOpen(false);
-}
-
-void ShutdownBusinessLogic::powerKeyDown()
-{       
-    qDebug() << "powerKeyDown()";
-//    if(shuttingDown || shutdownDlg == NULL)
-//        return;
-
-    resetIdleTimer();
-
-    if(powerKeyPressTimer == NULL)
-        startPowerKeyPressTimer();
-}
-
-void ShutdownBusinessLogic::powerKeyUp()
-{
-    qDebug() << "powerKeyUp()";
-//    if(shuttingDown || shutdownDlg == NULL)
-//        return;
-
-    stopPowerKeyPressTimer();
-}
-
-void ShutdownBusinessLogic::startPowerKeyPressTimer()
-{
-    qDebug() << "startPowerKeyPressTimer()";
-    t.start();
-
-    if(powerKeyPressTimer == NULL) {
-        powerKeyPressTimer = new QTimer(this);
-        powerKeyPressTimer->setInterval(UPDATE_INTERVAL);
-        powerKeyPressTimer->start();
+    case QmSystemState::ShutdownDeniedUSB:
+        shutdownDeniedUSB();
+        break;
+    case QmSystemState::
+        batteryShutdown();
+        break;
+*/
+    default:
+        break;
     }
 }
 
-void ShutdownBusinessLogic::stopPowerKeyPressTimer()
-{   
-    if(powerKeyPressTimer != NULL) { 
-        powerKeyPressTimer->stop();
-        powerKeyPressTimer->deleteLater();        
-        powerKeyPressTimer = NULL;        
+void ShutdownBusinessLogic::normalShutdown()
+{
+    if (!ui) {
+        ui = new ShutdownUI;
     }
+    ui->appear();
 }
 
-void ShutdownBusinessLogic::stopIdleTimer()
+void ShutdownBusinessLogic::thermalShutdown()
 {
-    qDebug() << "stopIdleTimer()";
-    if(idleTimer != NULL) {
-        idleTimer->stop();
-        idleTimer->deleteLater();
-        idleTimer = NULL;
-    }
+    const QString msg = trid("qtn_shut_high_temp", "Temperature too high. Device shutting down.");
+    emit showNotification(msg, NotificationType::warning);
 }
 
-void ShutdownBusinessLogic::resetIdleTimer()
+void ShutdownBusinessLogic::batteryShutdown()
 {
-    if(shuttingDown)
-        return;
-
-    if(idleTimer == NULL) {
-        idleTimer = new QTimer(this);
-        connect(idleTimer, SIGNAL(timeout()), this, SLOT(closeDialog()));
-    }
-    idleTimer->start(IDLE_TIME);
+    const QString msg = trid("qtn_shut_batt_empty", "Battery empty. Device shutting down.");
+    emit showNotification(msg, NotificationType::warning);
 }
 
-void ShutdownBusinessLogic::shutdown()
+void ShutdownBusinessLogic::shutdownDeniedUSB()
 {
-    qDebug() << "shutdown()";
-    stopPowerKeyPressTimer();
-    stopIdleTimer();
-    shuttingDown = true;
-
-    QmLED led;
-    led.activate(QString("PatternShutDown"));
-
-    QmSystemState state;
-    state.set(QmSystemState::Shutdown);        
+    const QString msg = trid("qtn_shut_unplug_usb", "USB cable plugged in. Unplug the USB cable to shutdown.");
+    emit showNotification(msg, NotificationType::warning);
 }

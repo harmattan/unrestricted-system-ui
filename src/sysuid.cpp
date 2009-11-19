@@ -14,6 +14,7 @@
 #include "eventhandler.h"
 #include "notifier.h"
 #include "notificationtype.h"
+#include "shutdownbusinesslogic.h"
 
 namespace
 {
@@ -30,7 +31,7 @@ Sysuid::Sysuid() :
 {
     qDebug() << "starting sysuidaemon";
 
-    _sysuid = this;    
+    _sysuid = this;
 
     /* themes */
     DuiTheme::addPixmapDirectory(svgDir); // or ..(themeDir, true); ?
@@ -43,9 +44,9 @@ Sysuid::Sysuid() :
     /* GConf interface */
     systemUIGConf = new SystemUIGConf(this);
 
-    /* Pincode query variables */    
-    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(this);    
-    connect(notifier->responseObject(), SIGNAL(pinQueryCanceled()), pinCodeQueryLogic, SLOT(cancelQuery()));    
+    /* Pincode query variables */
+    pinCodeQueryLogic = new PinCodeQueryBusinessLogic(this);
+    connect(notifier->responseObject(), SIGNAL(pinQueryCanceled()), pinCodeQueryLogic, SLOT(cancelQuery()));
     connect(notifier->responseObject(), SIGNAL(doSimLockRetry()), pinCodeQueryLogic, SLOT(resendSimLockCode()));
     connect(pinCodeQueryLogic, SIGNAL(showNotification(QString, NotificationType::Type)), notifier, SLOT(showNotification(QString, NotificationType::Type)));
     connect(pinCodeQueryLogic, SIGNAL(showConfirmation(QString, QString)), notifier, SLOT(showConfirmation(QString, QString)));
@@ -54,16 +55,10 @@ Sysuid::Sysuid() :
     eventHandler = new EventHandler(this);
 
     /* Shutdown */
-    /*
-        shutdownLogic = new ShutdownBusinessLogic(this);
+    shutdownLogic = new ShutdownBusinessLogic(this);
+    connect(shutdownLogic, SIGNAL(showNotification(QString, NotificationType::Type)),
+            notifier, SLOT(showNotification(QString, NotificationType::Type)));
 
-        connect(eventHandler, SIGNAL(longPowerKeyPressOccured(bool)),
-                shutdownLogic, SLOT(openDialog(bool)));
-        connect(eventHandler, SIGNAL(powerKeyDownOccured()),
-                shutdownLogic, SLOT(powerKeyDown()));
-        connect(eventHandler, SIGNAL(powerKeyUpOccured()),
-                shutdownLogic, SLOT(powerKeyUp()));
-    */
     /* Lockscreen */
     lockScreenLogic = new LockScreenBusinessLogic(this);
     connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
@@ -72,7 +67,7 @@ Sysuid::Sysuid() :
     batteryLogic = new BatteryBusinessLogic(systemUIGConf, this);
     connect(batteryLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
 
-    // D-Bus registration and stuff.    
+    // D-Bus registration and stuff.
     new BatteryBusinessLogicAdaptor(this, batteryLogic);
     new LockScreenBusinessLogicAdaptor(this, lockScreenLogic);
 

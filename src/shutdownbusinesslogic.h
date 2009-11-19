@@ -1,12 +1,13 @@
 #ifndef SHUTDOWNBUSINESSLOGIC_H
 #define SHUTDOWNBUSINESSLOGIC_H
 
+#include "notifier.h"
+
+#include <qmsystem/qmsystemstate.h>
+
 #include <QObject>
-#include <QTime>
 
-#include "shutdownui.h"
-
-class DuiApplicationWindow;
+class ShutdownUI;
 
 class ShutdownBusinessLogic : public QObject
 {
@@ -16,30 +17,21 @@ public:
     ShutdownBusinessLogic(QObject* parent = 0);
     virtual ~ShutdownBusinessLogic();
 
-private: //methods
-    void startPowerKeyPressTimer();
-    void stopPowerKeyPressTimer();
-    void stopIdleTimer();
-
-private slots:
-    void closeDialog();
-    void resetIdleTimer();
-    void shutdown();
+public slots:
+    void systemStateChanged(Maemo::QmSystemState::StateIndication what);
 
 signals:
-    void dialogOpen(bool open);
+    void showNotification(const QString& notifText, NotificationType::Type type);
 
-public slots:
-    void openDialog(bool buttonDown);
-    void powerKeyDown();
-    void powerKeyUp();    
+private:
+    void normalShutdown();
+    void thermalShutdown();
+    void batteryShutdown();
+    void shutdownDeniedUSB();
 
-    private: //attributes
+private:
     ShutdownUI* ui;
-    QTimer *powerKeyPressTimer;
-    QTimer *idleTimer;
-    QTime t;
-    bool shuttingDown;
+    Maemo::QmSystemState* state;
 };
 
 #endif // SHUTDOWNBUSINESSLOGIC_H
