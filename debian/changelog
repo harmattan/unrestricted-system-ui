@@ -1,3 +1,12 @@
+system-ui (0.9.1-0) harmattan; urgency=low
+
+  * Implemented: SWP#SUI-131, SWP#SUI-141
+
+  * Fixes: NB#141656 - Pin UI displays blank boxes instead of content
+  * Fixes: NB#145442 - Settings plug-ins cannot be shown on device
+
+ --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 19 Nov 2009 09:02:27 +0200
+
 system-ui (0.9.0-0) harmattan; urgency=low
 
   * Fixes: NB#141656 - Pin UI displays blank boxes instead of content
@@ -20,7 +29,7 @@ system-ui (0.9.0-0) harmattan; urgency=low
   * Fixes: NB#145403 - Manual power save mode switching does not work if automatic power save mode is set ON.
   * Fixes: NB#145463 - Sysuid crashes when SIM status is changed after launch PIN query is sent 
 
- --  Telle-Tiia Pitkänen <telle-tiia.pitkianen@ixonos.com>  Thu, 12 Nov 2009 12:10:09 +0200
+ --  Telle-Tiia Pitkänen <telle-tiia.pitianen@ixonos.com>  Thu, 12 Nov 2009 12:10:09 +0200
 
 system-ui (0.8.1-1) harmattan; urgency=low
 
