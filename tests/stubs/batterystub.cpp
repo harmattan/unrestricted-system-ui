@@ -29,6 +29,7 @@ void QmBattery::initValues()
     levelIndexInc = 1;
     energyLevel = 100;
     state = QmBattery::StateNotCharging;
+    type = QmBattery::Wall;
 
 #ifdef UTILISE_BATTERY_USER
     batteryUser = new QmBatteryUser();

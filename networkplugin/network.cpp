@@ -55,7 +55,7 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
 
     logic = new NetworkBusinessLogic();
     connect(logic, SIGNAL(networkOperatorChanged(QString)), operatorLabel, SLOT(setText(QString)));
-    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateButtonIcon(QString)));
+    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateButtonImage(QString)));
     connect(toggleButton, SIGNAL(toggled(bool)), logic, SLOT(toggleNetwork(bool)));    
     connect(logic, SIGNAL(signalStrengthIconChanged(QString)), signalStrengthImage, SLOT(setImage(QString)));
 

@@ -377,7 +377,7 @@ QString NetworkBusinessLogic::mapTechnologyToIcon(NetworkTechnology::Technology 
 QString NetworkBusinessLogic::signalStrengthIcon()
 {
     qDebug() << Q_FUNC_INFO;    
-    return mapSignalStrengthToIcon(signalStrength->bars());
+    return mapSignalStrengthToIcon(/*signalStrength->bars()*/ 90);
 }
 
 void NetworkBusinessLogic::signalStrengthChanged(int bars)

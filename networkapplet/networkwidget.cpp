@@ -20,8 +20,9 @@
 
 /* TODO:
    1) Show data counter dialog
-   2) Update the list so that the selected operator is indicated somehow
-   3) Update the list so that when selection fails teh list is updated accordingly
+   2) Toggle button, what to do?
+   3) Update the list so that the selected operator is indicated somehow
+   4) Update the list so that when selection fails teh list is updated accordingly
 */
 
 NetworkWidget::NetworkWidget(QGraphicsWidget *parent) :
