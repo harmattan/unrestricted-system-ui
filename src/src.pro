@@ -28,7 +28,6 @@ SOURCES += main.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
     eventhandler.cpp \
-    usbhal.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
     batterybusinesslogicadaptor.cpp \    
@@ -50,7 +49,6 @@ HEADERS += main.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
     eventhandler.h \
-    usbhal.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
     batterybusinesslogicadaptor.h \    
