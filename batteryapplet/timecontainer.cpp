@@ -24,8 +24,8 @@ void TimeContainer::updateTimeLabel(const QString &value)
     }
     int minutes = value.toInt();
 
-    QString minutesPrefix = DcpBattery::TimeValueText.section("%b", 1, 1).trimmed();
-    QString hoursPrefix = (DcpBattery::TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
+    const QString minutesPrefix = DcpBattery::TimeValueText.section("%b", 1, 1).trimmed();
+    const QString hoursPrefix = (DcpBattery::TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
     QString time;
 
     if(minutes < 60)
@@ -37,3 +37,4 @@ void TimeContainer::updateTimeLabel(const QString &value)
     }
     timeLabel->setText(time);
 }
+

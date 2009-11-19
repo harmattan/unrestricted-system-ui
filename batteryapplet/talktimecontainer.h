@@ -3,9 +3,8 @@
 
 #include "timecontainer.h"
 
-class DuiImage;
+class BatteryImage;
 class DuiLabel;
-class QTimer;
 
 class TalkTimeContainer : public TimeContainer
 {
@@ -13,6 +12,8 @@ class TalkTimeContainer : public TimeContainer
 public:
     TalkTimeContainer(DuiWidget *parent);
     virtual ~TalkTimeContainer();
+
+    BatteryImage * batteryImage();
 
 public slots:
     void updateBattery(int level);
@@ -27,11 +28,7 @@ private: //methods
     void initImage();
 
 private: //attributes
-    DuiImage *image;    
-    QStringList batteryImages;
-    QStringList batteryChargingImages;
-    int batteryLevel;
-    QTimer *timer;
+    BatteryImage *image;
 
 };
 

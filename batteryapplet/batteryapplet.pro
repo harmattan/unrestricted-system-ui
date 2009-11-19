@@ -23,7 +23,9 @@ HEADERS = batteryapplet.h \
     talktimecontainer.h \
     standbytimecontainer.h \
     timecontainer.h \
-    slidercontainer.h
+    slidercontainer.h \
+    dcpbattery.h \
+    batteryimage.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
@@ -31,7 +33,8 @@ SOURCES = batteryapplet.cpp \
     talktimecontainer.cpp \
     standbytimecontainer.cpp \
     timecontainer.cpp \
-    slidercontainer.cpp
+    slidercontainer.cpp \
+    batteryimage.cpp
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

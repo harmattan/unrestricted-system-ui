@@ -34,8 +34,7 @@ public slots:
 
 signals:
     void batteryCharging(int);
-    void batteryNotCharging();
-    void batteryBarValueChanged(int);
+    void batteryNotCharging();    
     void PSMValueReceived(bool);
     void PSMAutoValueReceived(bool);
     void PSMAutoDisabled();

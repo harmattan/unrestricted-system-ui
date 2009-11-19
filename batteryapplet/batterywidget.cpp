@@ -1,4 +1,5 @@
 #include "batterywidget.h"
+#include "batteryimage.h"
 #include "batterytranslation.h"
 #include "batterydbusinterface.h"
 #include "dcpbattery.h"
@@ -100,10 +101,10 @@ void BatteryWidget::initWidget()
 
     // connect the value receive signals
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));  
-    connect(batteryIf, SIGNAL(batteryCharging(int)), talkTimeContainer, SLOT(startCharging(int)));
-    connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer, SLOT(stopCharging()));
+    connect(batteryIf, SIGNAL(batteryCharging(int)), talkTimeContainer->batteryImage(), SLOT(startCharging(int)));
+    connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer->batteryImage(), SLOT(stopCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
-    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer, SLOT(updateBattery(int)));
+    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer->batteryImage(), SLOT(updateBatteryLevel(int)));
     connect(batteryIf, SIGNAL(PSMValueReceived(bool)), this, SLOT(updatePSMButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoDisabled()), sliderContainer, SLOT(PSMAutoDisabled()));
