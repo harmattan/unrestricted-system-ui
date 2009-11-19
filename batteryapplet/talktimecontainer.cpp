@@ -16,6 +16,8 @@ TalkTimeContainer::TalkTimeContainer(DuiWidget *parent) :
 
 TalkTimeContainer::~TalkTimeContainer()
 {
+    delete image;
+    image = NULL;
 }
 
 BatteryImage * TalkTimeContainer::batteryImage()
