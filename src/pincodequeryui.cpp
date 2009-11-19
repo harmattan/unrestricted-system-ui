@@ -1,6 +1,8 @@
 #include "pincodequeryui.h"
 
 #include <DuiWidget>
+#include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiLocale>
 #include <DuiTextEdit>
 #include <DuiTheme>
@@ -270,6 +272,84 @@ void PinCodeQueryUI::removeText()
         backspaceTimer = NULL;
     }
     entryTextEdit->setText("");
+}
+
+void PinCodeQueryUI::hideWindow()
+{
+    DuiApplication *app = DuiApplication::instance();
+    DuiApplicationWindow *win = NULL;
+    if(app){
+        win = app->applicationWindow();
+    }
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
+    if(win && !win->isHidden()){
+        win->hide();
+    }
+}
+void PinCodeQueryUI::showWindow()
+{
+    DuiApplication *app = DuiApplication::instance();
+    DuiApplicationWindow *win = NULL;
+    if(app){
+        win = app->applicationWindow();
+    }
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
+    if(win && win->isHidden()){
+        win->show();
+    }
+}
+void PinCodeQueryUI::setWindowOnTop(bool onTop)
+{
+    DuiApplication *app = DuiApplication::instance();
+    DuiApplicationWindow *win = NULL;
+    if(app){
+        win = app->applicationWindow();
+    }
+    if(!win){
+        return;
+    }
+
+    Qt::WindowFlags flags = win->windowFlags();
+    if(onTop && !(flags & Qt::WindowStaysOnTopHint) ){
+        flags |= Qt::WindowStaysOnTopHint;
+        win->setWindowFlags(flags);
+    } else if (flags & Qt::WindowStaysOnTopHint){
+        flags &= ~Qt::WindowStaysOnTopHint;
+        win->setWindowFlags(flags);
+    }
+    qDebug() << Q_FUNC_INFO << "win onTop" << onTop;
+}
+
+void PinCodeQueryUI::appear(DuiSceneWindow::DeletionPolicy policy)
+{
+    if(!isVisible()){
+        DuiApplicationPage::appear(policy);
+    }
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
+}
+
+void PinCodeQueryUI::appearNow(DuiSceneWindow::DeletionPolicy policy)
+{
+    if(!isVisible()){
+        DuiApplicationPage::appearNow(policy);
+    }
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
+}
+
+void PinCodeQueryUI::disappear()
+{
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
+    if(isVisible()){
+        DuiApplicationPage::disappear();
+    }
+}
+
+void PinCodeQueryUI::disappearNow()
+{
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
+    if(isVisible()){
+        DuiApplicationPage::disappearNow();
+    }
 }
 
 // eof

@@ -2,7 +2,6 @@
 #include "pincodequeryui.h"
 
 #include <DuiApplication>
-#include <DuiApplicationWindow>
 #include <DuiTextEdit>
 #include <DuiButton>
 #include <DuiLocale>
@@ -69,19 +68,11 @@ void Ut_PinCodeQueryBusinessLogic::cleanup()
 }
 
 DuiApplication *app;
-DuiApplicationWindow *win;
 void Ut_PinCodeQueryBusinessLogic::initTestCase()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_pincodequerybusinesslogic";
     app = new DuiApplication(argc, &app_name);
-
-    win = new DuiApplicationWindow();
-    Qt::WindowFlags flags = 0;
-        flags |= Qt::FramelessWindowHint;// | Qt::WindowStaysOnTopHint;
-    win->setWindowOpacity(0);
-    win->setWindowFlags(flags);
-
     qRegisterMetaType<NotificationType::Type>("NotificationType::Type");
 }
 

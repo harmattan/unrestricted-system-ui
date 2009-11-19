@@ -7,7 +7,6 @@
 #include <DuiDialog>
 #include <DuiTextEdit>
 #include <DuiApplicationWindow>
-#include <DuiApplication>
 #include <QRegExpValidator>
 
 #include <QtDBus>
@@ -79,6 +78,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
         callUi(NULL),
         #ifdef UNIT_TEST
            connType(Qt::AutoConnection)
+//           connType(Qt::QueuedConnection)
         #else
            connType(Qt::QueuedConnection)
         #endif // UNIT_TEST
@@ -128,8 +128,7 @@ PinCodeQueryBusinessLogic::~PinCodeQueryBusinessLogic()
 void PinCodeQueryBusinessLogic::createUi(bool enableBack)
 {
     qDebug() << Q_FUNC_INFO << "existing:" << static_cast<QObject*> (uiPin);
-    DuiApplicationWindow* win = DuiApplication::instance()->applicationWindow();
-    Qt::WindowFlags flags = win->windowFlags();
+    PinCodeQueryUI::setWindowOnTop(!enableBack);
 
     if(!uiPin)
     {
@@ -148,8 +147,6 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
 
         /* Unfortunately no effect with libdui-dev version 0.11.1-1+0rebuild1+0m6 */
-        flags |= Qt::WindowStaysOnTopHint;
-
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
     } else {
         uiPin->getEnterBtn()->setEnabled(false);
@@ -160,20 +157,10 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         uiPin->setBackButtonEnabled(enableBack);
         connect(uiPin, SIGNAL(backButtonClicked ()), this, SLOT(cancelQuery()));
         mod = (DuiApplicationPage::EscapeButtonVisible);
-        flags &= ~Qt::WindowStaysOnTopHint;
     }
     uiPin->setDisplayMode( mod );
-    win->setWindowFlags(flags);
-
-    qDebug() << Q_FUNC_INFO << "win->isHidden()" << win->isHidden();
-    if(win->isHidden()){
-        win->show();
-    }
-
-    qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << uiPin->isVisible();
-    if(!uiPin->isVisible()){
-        uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
-    }
+    uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
+    PinCodeQueryUI::showWindow();
 }
 
 void PinCodeQueryBusinessLogic::closeUi()
@@ -188,8 +175,7 @@ void PinCodeQueryBusinessLogic::closeUi()
         uiPin->getCodeEntry()->setText("");
         uiPin->disappearNow();
     }
-    DuiApplication::instance()->applicationWindow()->hide();
-    qDebug() << Q_FUNC_INFO << "win isHidden():" << DuiApplication::instance()->applicationWindow()->isHidden();
+    PinCodeQueryUI::hideWindow();
 }
 
 void PinCodeQueryBusinessLogic::setUiHeader(QString headerText)
@@ -236,7 +222,7 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
                 /* TODO: commented out until fix for #129775 is available
                  * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
                  * at the moment same behaviour as with #129775*/
-                DuiApplication::instance()->applicationWindow()->hide();
+                PinCodeQueryUI::hideWindow();
                 /**/
             }
         }
@@ -248,9 +234,7 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 
 void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
 {
-   if(DuiApplication::instance()->applicationWindow()->isHidden()) {
-        DuiApplication::instance()->applicationWindow()->show();
-    }
+   PinCodeQueryUI::showWindow();
     if(req){
         qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
     } else {
@@ -736,7 +720,6 @@ bool PinCodeQueryBusinessLogic::launchPinQuery(SIMSecurity::PINType pinType)
     if(queryLaunch){
         return false;
     }
-
     startLaunch();
     return queryLaunch;
 }

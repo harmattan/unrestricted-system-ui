@@ -27,6 +27,15 @@ public:
     DuiTextEdit *getCodeEntry();
 
     void setHeader(QString);
+    static void hideWindow();
+    static void showWindow();
+    static void setWindowOnTop(bool onTop = true);
+
+public slots:
+    virtual void appear(DuiSceneWindow::DeletionPolicy policy=KeepWhenDone);
+    virtual void appearNow(DuiSceneWindow::DeletionPolicy policy=KeepWhenDone);
+    virtual void disappear();
+    virtual void disappearNow();
 
 private slots:
     void buttonReleased();
