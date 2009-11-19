@@ -5,27 +5,41 @@
       <case name="ut_unlockslider" type="unit" description="Test the unlock slider API">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
       </case>
+          <get>
+            <file>/tmp/ut_unlockslider.txt</file>
+         </get>
     </set>
     <set name="batterybusinesslogic" description="middleware tests">
       <case name="ut_batterybusinesslogic" type="unit" description="Test the BatteryBusinessLogic">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_batterybusinesslogic</step>
       </case>
+          <get>
+            <file>/tmp/ut_batterybusinesslogic.txt</file>
+         </get>
     </set>
     <set name="lowbatterynotifier" description="middleware tests">
       <case name="ut_lowbatterynotifier" type="unit" description="Test the LowBatteryNotifier">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lowbatterynotifier</step>
       </case>
+          <get>
+            <file>/tmp/ut_lowbatterynotifier.txt</file>
+         </get>
     </set>
     <set name="networkbusinesslogic" description="middleware tests">
       <case name="ut_networkbusinesslogic" type="unit" description="Test the NetworkBusinessLogic">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_networkbusinesslogic</step>
       </case>
+          <get>
+            <file>/tmp/ut_networkbusinesslogic.txt</file>
+         </get>
     </set>
     <set name="pincodequerybusinesslogic" description="middleware tests">
       <case name="ut_pincodequerybusinesslogic" type="unit" description="Test the PinCodeQueryBusinessLogic">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_pincodequerybusinesslogic</step>
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_pincodequerybusinesslogic >> /tmp/ut_pincodequerybusinesslogic.txt </step>
       </case>
+          <get>
+            <file>/tmp/ut_pincodequerybusinesslogic.txt</file>
+         </get>
     </set>
   </suite>
 </testdefinition>
-
