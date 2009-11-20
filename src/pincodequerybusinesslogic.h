@@ -14,9 +14,7 @@
 #endif
 #include <call-ui/CallUiServiceApi>
 
-class DuiApplicationWindow;
 class PinCodeQueryDBusAdaptor;
-class QTimer;
 
 using namespace Cellular;
 using namespace CallUi;
@@ -90,8 +88,6 @@ private: // attributes
     SIMLock *simLock;
 
     CallUiServiceApi *callUi;
-    Qt::WindowFlags windowFlags;
-    const Qt::ConnectionType connType;
 
 private: // methods
     bool handleSIMError(SIMError error);

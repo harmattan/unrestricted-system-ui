@@ -75,13 +75,8 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
         previousSimState(-1),
         queryLaunch(false),
         initialized(false),
-        callUi(NULL),
-        #ifdef UNIT_TEST
-           connType(Qt::AutoConnection)
-//           connType(Qt::QueuedConnection)
-        #else
-           connType(Qt::QueuedConnection)
-        #endif // UNIT_TEST
+        callUi(NULL)
+
 {
     qDebug() << Q_FUNC_INFO;
 
@@ -92,29 +87,29 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
     dbus = new PinCodeQueryDBusAdaptor(this);
 
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
-            this, SLOT(simPINCodeVerified(bool, SIMError)), connType);
+            this, SLOT(simPINCodeVerified(bool, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(verifyPUKComplete(bool, SIMError)),
-            this, SLOT(simPUKCodeVerified(bool, SIMError)), connType);
+            this, SLOT(simPUKCodeVerified(bool, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(pinAttemptsLeftComplete(int, SIMError)),
-            this, SLOT(simPINAttemptsLeft(int, SIMError)), connType);
+            this, SLOT(simPINAttemptsLeft(int, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(pukAttemptsLeftComplete(int, SIMError)),
-            this, SLOT(simPUKAttemptsLeft(int, SIMError)), connType);
+            this, SLOT(simPUKAttemptsLeft(int, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(changePINComplete(bool, SIMError)),
-            this, SLOT(simPINCodeChanged(bool, SIMError)), connType);
+            this, SLOT(simPINCodeChanged(bool, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)),
-            this, SLOT(simPinQueryStateComplete(SIMSecurity::PINQuery, SIMError)), connType);
+            this, SLOT(simPinQueryStateComplete(SIMSecurity::PINQuery, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(enablePINQueryComplete(SIMError)),
-            this, SLOT(simEnablePINQueryComplete(SIMError)), connType);
+            this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(disablePINQueryComplete(SIMError)),
-            this, SLOT(simEnablePINQueryComplete(SIMError)), connType);
+            this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
     connect(simLock, SIGNAL(simLockUnlockComplete(SIMLockError)),
             this, SLOT(simLockUnlockCodeVerified(SIMLockError)));
 
     // bootstrap the state machine
     connect(sim, SIGNAL(statusComplete(SIM::SIMStatus, SIMError)),
-        this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)), connType);
+        this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)), Qt::QueuedConnection);
     connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
-        this, SLOT(simStatusChanged(SIM::SIMStatus)), connType);
+        this, SLOT(simStatusChanged(SIM::SIMStatus)), Qt::QueuedConnection);
 
     sim->status();
 }
@@ -514,7 +509,7 @@ void PinCodeQueryBusinessLogic::simLockUnlockCodeVerified(SIMLockError error)
 
 void PinCodeQueryBusinessLogic::simPINAttemptsLeft(int attempts, SIMError error)
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << attempts << error;
     if(handleSIMError(error)){
         setPinHeader(attempts);
         if(SubFailedTry == subState){
@@ -721,6 +716,7 @@ bool PinCodeQueryBusinessLogic::launchPinQuery(SIMSecurity::PINType pinType)
         return false;
     }
     startLaunch();
+    qDebug() << Q_FUNC_INFO << "return:" << queryLaunch;
     return queryLaunch;
 }
 
