@@ -396,6 +396,14 @@ class UserInterface:
         lock.connect('toggled', callback) 
         frame.add(lock)
 
+        # reset
+        # =======
+        frame = gtk.Frame('Reset')
+        main_box.add(frame)
+        tmp = gtk.VBox()
+        frame.add(tmp)
+        frame = tmp
+
         reset = gtk.Button('Reset states')
         def cb_reset(widget):
             self.server.Reset()
