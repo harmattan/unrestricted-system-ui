@@ -24,6 +24,8 @@ public:
 signals:
     void timeout(unsigned int notifId);
     void timeout(DuiInfoBanner* notification);
+private slots:
+    void doKillTimer();
 protected:
     void timerEvent(QTimerEvent *);
 private:

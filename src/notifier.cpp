@@ -28,6 +28,8 @@ NotifTimer::NotifTimer(int expireTimeout, QObject *receiver, const char *member,
     notification(notification)
 {
     connect(this, SIGNAL(timeout(DuiInfoBanner*)), receiver, member);
+    connect(notification, SIGNAL(buttonClicked()), this, SLOT(doKillTimer()));
+    connect(notification, SIGNAL(clicked()), this, SLOT(doKillTimer()));
     timerId = startTimer(expireTimeout);
 }
 
@@ -37,16 +39,21 @@ NotifTimer::~NotifTimer()
         killTimer(timerId);
 }
 
-void NotifTimer::timerEvent(QTimerEvent *)
+void NotifTimer::timerEvent(QTimerEvent *e)
 {
     // need to kill the timer _before_ we emit timeout() in case the
     // slot connected to timeout calls processEvents()
-    if (timerId > 0)
-        killTimer(timerId);
-    timerId = -1;
+    doKillTimer();
     emit timeout(notification);
     emit timeout(notifId);
     delete this;
+}
+
+void NotifTimer::doKillTimer()
+{
+    if (timerId > 0)
+        killTimer(timerId);
+    timerId = -1;
 }
 
 // TODO.: Use the logical names when available
@@ -224,19 +231,13 @@ void Notifier::showLocalNotification(int expireTimeout, QString notifText, QStri
         expireTimeout = 0;
         n->setButtonText(buttonText);
         connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationPinQueryCancel()));
-        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
     }
     else if (trid("qtn_cell_try_again", "Try again") == buttonText){
         expireTimeout = 0;
         n->setButtonText(buttonText);
         connect(n, SIGNAL(buttonClicked()), this, SLOT(localNotificationSimLockRetry()));
-        connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
-    } else {
-        // timer must be killed before localNotificationClose() can be called.
-        // otherways DuiInfoBanner::disappear() is called again from timer's timeout
-        //
-        // connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
     }
+    connect(n, SIGNAL(clicked()), this, SLOT(localNotificationClose()));
     n->appear(DuiSceneWindow::DestroyWhenDone);
     notifTimer(expireTimeout, n);
 }
