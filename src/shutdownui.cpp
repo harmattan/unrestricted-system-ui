@@ -2,6 +2,7 @@
 
 #include <DuiLabel>
 #include <DuiSceneManager>
+#include <DuiLocale>
 
 #include <QDebug>
 
@@ -24,7 +25,7 @@ void ShutdownUI::createContent()
 
     DuiWidget* panel = centralWidget();
 
-    text = new DuiLabel("Ruikku", panel);
+    text = new DuiLabel(trid("qtn_shut_down", "Shutting down, good bye!"), panel);
     text->setAlignment(Qt::AlignCenter);
 
     alignText();
