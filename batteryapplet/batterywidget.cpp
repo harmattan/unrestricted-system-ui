@@ -126,7 +126,7 @@ void BatteryWidget::initWidget()
 void BatteryWidget::PSMButtonReleased()
 {
     PSMButton->setEnabled(false);
-    bool toggle = ( PSMButton->text() == PSMActivateText ? true : false);
+    bool toggle = ( PSMButton->text() == DcpBattery::PSMActivateText ? true : false);
     batteryIf->setPSMValue(toggle);
 }
 
