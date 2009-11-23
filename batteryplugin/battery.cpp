@@ -5,6 +5,7 @@
 #include <DuiApplicationIfProxy>
 #include <DuiButton>
 #include <DuiContainer>
+#include <DuiControlPanelIf>
 #include <DuiGridLayoutPolicy>
 #include <DuiImage>
 #include <DuiLabel>
@@ -16,9 +17,6 @@
 #include <QGraphicsLinearLayout>
 #include <QDebug>
 
-const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
-const QString CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
-
 Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
         DuiWidget(parent),
         dbusIf(NULL),
@@ -27,11 +25,11 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
         timeLabel(NULL),
         batteryImage(NULL)
 {
-    qDebug() << Q_FUNC_INFO;
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    setLayout(mainLayout);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    DuiTheme::loadCSS(cssDir + "batteryplugin.css");
-
-    // init widgets    
+    // init widgets
     modeLabel = new DuiLabel();
     modeLabel->setObjectName("batteryModeLabel");
     timeLabel = new DuiLabel();
@@ -43,19 +41,17 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     DuiContainer *container = new DuiContainer;
     DuiWidget *widget = new DuiWidget;
     DuiLayout *layout = new DuiLayout;
-    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
-    layout->setLandscapePolicy(landscapePolicy);
-    layout->setPortraitPolicy(portraitPolicy);
+    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);    
     widget->setLayout(layout);
     container->setTitle(trid("qtn_ener_battery", "Battery"));
     container->setCentralWidget(widget);
-    connect(container, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
+    connect(container, SIGNAL(headerClicked()), this, SLOT(showBatteryModificationPage()));
     mainLayout->addItem(container);
 
-    // insert widgets    
+    // insert widgets
     layoutPolicy->addItemAtPosition(modeLabel, 0, 0, 1, 1);
     layoutPolicy->addItemAtPosition(timeLabel, 0, 1, 1, 2);
-    layoutPolicy->addItemAtPosition(batteryImage, 1, 0, 1, 2);            
+    layoutPolicy->addItemAtPosition(batteryImage, 1, 0, 1, 2);
 
     // get widget values
     dbusIf = new BatteryDBusInterface();
@@ -70,30 +66,21 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     dbusIf->batteryBarValueRequired();
     dbusIf->batteryChargingStateRequired();
 
-    // mainLayout
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout();
-    mainLayout->addItem(container);
-    this->setLayout(mainLayout);    
 }
 
 Battery::~Battery()
-{
-    qDebug() << Q_FUNC_INFO;
+{    
     delete dbusIf;
-    dbusIf = NULL;
-    delete batteryImage;
-    batteryImage = NULL;
+    dbusIf = NULL;    
 }
 
 void Battery::updateModeLabel(bool toggle)
-{
-    qDebug() << Q_FUNC_INFO;
+{   
     modeLabel->setText((toggle ? trid("qtn_ener_psmode", "Power save mode") : trid("qtn_ener_normal", "Normal mode")));    
 }
 
 void Battery::updateTimeLabel(const QStringList &times)
-{
-    qDebug() << Q_FUNC_INFO;
+{ 
     if(times.size() != 2)
         return;
 
@@ -118,4 +105,14 @@ QString Battery::timeValue(int minutes)
         time = QString("%1:%2%3").arg(minutes/60).arg(minsVar.toString()).arg(hoursPrefix);
     }
     return time;
+}
+
+void Battery::showBatteryModificationPage()
+{
+    // instantiate the interface
+    DuiControlPanelIf cpIf;
+    // check the interface is valid
+    if (!cpIf.isValid())
+        return;   
+    cpIf.appletPage("Battery");
 }

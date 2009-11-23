@@ -18,7 +18,8 @@ public:
 
 private slots:
     void updateModeLabel(bool toggle);
-    void updateTimeLabel(const QStringList &times);    
+    void updateTimeLabel(const QStringList &times);
+    void showBatteryModificationPage();
 
 private: //methods
     QString timeValue(int minutes);

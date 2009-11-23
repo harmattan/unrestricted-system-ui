@@ -25,7 +25,8 @@ HEADERS = networkapplet.h \
     networkcontainer.h \
     networklist.h \
     roamingcontainer.h \
-    networkbusinesslogic.h
+    networkbusinesslogic.h \
+    dcpnetwork.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
     networkbrief.cpp \

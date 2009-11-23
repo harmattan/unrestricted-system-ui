@@ -1,5 +1,6 @@
 #include "networkbusinesslogic.h"
 #include "networkdbusinterface.h"
+#include "networktranslation.h"
 
 #include <DuiLocale>
 #include <QDebug>
@@ -8,19 +9,12 @@
 /*
     TODO:
     1) What to do when toggling "Enable phone network"-feature?
-    2) What to do when toggling "Enable roaming updates"-feature?        
+    2) What to do when toggling "Enable roaming updates"-feature?
+    3) When user tries to toggle phone network on and there is no SIM card inserted, a note should be displayed
 
 */
 
-namespace {      
-    const QString DualText = trid("qtn_cell_network_dual", "Dual");    
-    const QString GSMText = trid("qtn_cell_network_gsm", "GSM");
-    const QString ThreeGText = trid("qtn_cell_network_3g", "3G");
-    const QString AutomaticText = trid("qtn_cell_automatic", "Automatic");
-    const QString ManualText = trid("qtn_cell_manual", "Manual");
-    const QString NoAccessText = trid("qtn_cell_error_no_access", "No access");
-    const int NetworkTechnologyCheckInterval = 500;
-}
+const int NetworkTechnologyCheckInterval = 500;
 
 NetworkTechnology::NetworkTechnology(RadioAccess *radioAccess, QObject *parent) :
         QObject(parent),
@@ -116,11 +110,11 @@ NetworkBusinessLogic::NetworkBusinessLogic(bool monitorSignalStrength, QObject* 
             this, SLOT(technologyChanged(NetworkTechnology::Technology)));
 
     // init mode and selection values
-    modes.insert(RadioAccess::DualMode, DualText);
-    modes.insert(RadioAccess::GSMMode, GSMText);
-    modes.insert(RadioAccess::UMTSMode, ThreeGText);
-    selectionValues.insert(NetworkRegistration::Automatic, AutomaticText);
-    selectionValues.insert(NetworkRegistration::Manual, ManualText);
+    modes.insert(RadioAccess::DualMode, DcpNetwork::DualText);
+    modes.insert(RadioAccess::GSMMode, DcpNetwork::GSMText);
+    modes.insert(RadioAccess::UMTSMode, DcpNetwork::ThreeGText);
+    selectionValues.insert(NetworkRegistration::Automatic, DcpNetwork::AutomaticText);
+    selectionValues.insert(NetworkRegistration::Manual, DcpNetwork::ManualText);
 
     tempNetworkToggle = true;
 }
@@ -213,6 +207,10 @@ void NetworkBusinessLogic::toggleNetwork(bool toggle)
     tempNetworkToggle = toggle;
     if(!tempNetworkToggle)
         emit networkIconChanged(QString("icon-s-network-0"));
+
+
+    //DcpNetwork::NoSIMText
+
 }
 
 void NetworkBusinessLogic::setNetworkMode(const QString &value)
@@ -258,7 +256,7 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
 
     if(!success) {
         NetworkDBusInterface networkIf;
-        networkIf.showNotification(NoAccessText);
+        networkIf.showNotification(DcpNetwork::NoAccessText);
     }
 }
 

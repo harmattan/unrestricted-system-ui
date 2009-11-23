@@ -17,6 +17,13 @@ namespace DcpNetwork {
     const QString NoNetworkSelectedText = trid("qtn_cell_no_network_selected", "No network selected. Change network selection to automatic?");
     const QString ChangeText = trid("qtn_cell_change", "Change");
     const QString HelpText = trid("qtn_comm_help", "Help");
+    const QString DualText = trid("qtn_cell_network_dual", "Dual");
+    const QString GSMText = trid("qtn_cell_network_gsm", "GSM");
+    const QString ThreeGText = trid("qtn_cell_network_3g", "3G");
+    const QString AutomaticText = trid("qtn_cell_automatic", "Automatic");
+    const QString ManualText = trid("qtn_cell_manual", "Manual");
+    const QString NoAccessText = trid("qtn_cell_error_no_access", "No access");
+    const QString NoSIMText = trid("qtn_cell_error_no_sim", "Phone network is not available because there is no SIM card inserted.");
 
 }
 #endif // NETWORKTRANSLATION_H
