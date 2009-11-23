@@ -36,15 +36,14 @@ void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication wh
     case QmSystemState::ThermalShutdown:
         thermalShutdown();
         break;
-/* These are not in the API yet
-
     case QmSystemState::ShutdownDeniedUSB:
         shutdownDeniedUSB();
         break;
-    case QmSystemState::
-        batteryShutdown();
-        break;
-*/
+        /* Not in the API yet
+            case QmSystemState::
+                batteryShutdown();
+                break;
+        */
     default:
         break;
     }
