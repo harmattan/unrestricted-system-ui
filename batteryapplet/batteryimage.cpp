@@ -21,6 +21,8 @@ BatteryImage::BatteryImage(QGraphicsItem *parent) :
 
 BatteryImage::~BatteryImage()
 {
+    delete timer;
+    timer = NULL;
 }
 
 void BatteryImage::updateBatteryLevel(int level)
