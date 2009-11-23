@@ -1,3 +1,10 @@
+system-ui (0.10.0-0) harmattan; urgency=low
+
+  * Updated against libdui 0.15.0-1 DuiApplicationWindow and related API changes
+  * NOTE: this version requires libdui version 0.15.0- or later!
+
+ --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Mon, 23 Nov 2009 16:08:50 +0200
+
 system-ui (0.9.1-0) harmattan; urgency=low
 
   * Implemented: SWP#SUI-131, SWP#SUI-141
