@@ -11,7 +11,6 @@
 #include "batterybusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
-#include "eventhandler.h"
 #include "notifier.h"
 #include "notificationtype.h"
 #include "shutdownbusinesslogic.h"
@@ -51,17 +50,13 @@ Sysuid::Sysuid() :
     connect(pinCodeQueryLogic, SIGNAL(showNotification(QString, NotificationType::Type)), notifier, SLOT(showNotification(QString, NotificationType::Type)));
     connect(pinCodeQueryLogic, SIGNAL(showConfirmation(QString, QString)), notifier, SLOT(showConfirmation(QString, QString)));
 
-    /* Event handler */
-    eventHandler = new EventHandler(this);
-
     /* Shutdown */
     shutdownLogic = new ShutdownBusinessLogic(this);
     connect(shutdownLogic, SIGNAL(showNotification(QString, NotificationType::Type)),
             notifier, SLOT(showNotification(QString, NotificationType::Type)));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic(this);
-    connect(eventHandler, SIGNAL(shortPowerKeyPressOccured()), lockScreenLogic, SLOT(shortPowerKeyPressOccured()));
+    lockScreenLogic = new LockScreenBusinessLogic(this);    
 
     /* Battery */
     batteryLogic = new BatteryBusinessLogic(systemUIGConf, this);

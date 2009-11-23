@@ -51,6 +51,7 @@ void RoamingContainer::setLayout()
     roamingLabel->setObjectName("networkLabel");
     roamingLayout->addItem(roamingLabel, 0, 0, 1, 1, Qt::AlignLeft);
     roamingLayout->addItem(roamingButton, 0, 1, 1, 1, Qt::AlignRight);
+    roamingLayout->setPreferredWidth(1);
 
     // roamingUpdatesLayout
     roamingUpdatesWidget = new QGraphicsWidget;
@@ -59,6 +60,7 @@ void RoamingContainer::setLayout()
     roamingUpdatesLabel->setObjectName("networkLabel");
     roamingUpdatesLayout->addItem(roamingUpdatesLabel, 0, 0, 1, 1, Qt::AlignLeft);
     roamingUpdatesLayout->addItem(roamingUpdatesButton, 0, 1, 1, 1, Qt::AlignRight);
+    roamingUpdatesLayout->setPreferredWidth(1);
 
     // mainLayout
     DuiLayout *mainLayout = new DuiLayout();

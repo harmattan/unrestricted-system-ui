@@ -1,6 +1,6 @@
 #ifndef DISPLAYBUSINESSLOGIC_H
 #define DISPLAYBUSINESSLOGIC_H
-#include "../tests/stubs/displaystatestub.h" //#include <qmsystem/qmdisplaystate.h>
+#include <qmsystem/qmdisplaystate.h>
 
 #include <QObject>
 

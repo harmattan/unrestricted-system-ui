@@ -25,7 +25,8 @@ HEADERS = batteryapplet.h \
     timecontainer.h \
     slidercontainer.h \
     dcpbattery.h \
-    batteryimage.h
+    batteryimage.h \
+    batterytranslation.h
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
@@ -46,4 +47,5 @@ message("CSS path will be: " $$css.path)
 INSTALLS += target \
     css \
     desktop
-OTHER_FILES += batteryapplet.css
+OTHER_FILES += batteryapplet.css \
+    battery.desktop

@@ -4,7 +4,7 @@
 
 namespace Maemo {
 
-#ifdef UTILISE_BATTERY_USER
+#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
 void QmBatteryUser::start()
 {
     emit changeLevel();
@@ -31,7 +31,7 @@ void QmBattery::initValues()
     state = QmBattery::StateNotCharging;
     type = QmBattery::Wall;
 
-#ifdef UTILISE_BATTERY_USER
+#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
     batteryUser = new QmBatteryUser();
     connect(batteryUser, SIGNAL(changeLevel()), this, SLOT(changeLevel()));
     batteryUser->start();
@@ -39,7 +39,7 @@ void QmBattery::initValues()
 
 }
 
-int QmBattery::remainingTime(QmBattery::RemainingTimeMode mode)
+int QmBattery::getRemainingIdleTime(QmBattery::RemainingTimeMode mode) const
 {
     if(mode == QmBattery::PowersaveMode)
         return energyLevel * 3 / 2;
@@ -47,7 +47,7 @@ int QmBattery::remainingTime(QmBattery::RemainingTimeMode mode)
         return energyLevel * 3;
 }
 
-int QmBattery::remainingTalkTime(QmBattery::RemainingTimeMode mode)
+int QmBattery::getRemainingTalkTime(QmBattery::RemainingTimeMode mode) const
 {
     if(mode == QmBattery::PowersaveMode)
         return energyLevel * 2 / 2;
@@ -77,7 +77,6 @@ QmBattery::Level QmBattery::getLevel()
 
 void QmBattery::changeLevel()
 {
-#ifndef UNIT_TEST
     if(levelIndex == 2) {
         levelIndexInc = -1;        
     }    
@@ -105,7 +104,6 @@ void QmBattery::changeLevel()
             break;
     }
     emit batteryEnergyLevelChanged(energyLevel);
-#endif
 }
 
 void QmBattery::setBatteryEnergyLevel(int level)

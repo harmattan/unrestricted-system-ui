@@ -8,7 +8,7 @@
 
 namespace Maemo {
 
-#ifdef UTILISE_BATTERY_USER
+#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
 class QmBatteryUser : public QObject
 {
     Q_OBJECT
@@ -47,6 +47,8 @@ public:
     /** The type of charger connected */
     enum ChargerType
     {        
+        Unknown = -1,        /**< Unknown charger */
+        None,                /**< No  charger connected */
         Wall,                /**< Wall charger  */
         USB_500mA,           /**< USB with 500mA output */
         USB_100mA            /**< USB with 100mA output */
@@ -96,18 +98,21 @@ public:
     int getBatteryEnergyLevel();
     void setBatteryEnergyLevel(int level);
 
-    /* Remaining battery time (idle), seconds
-     * @param mode The mode
-     * @return battery time in seconds, -1 if not available
-     */
-    int remainingTime(QmBattery::RemainingTimeMode mode);
+    /*
+    * Remaining battery time (idle), seconds, -1=not known
+    * @return battery time in seconds if its not charging
+    *         -1 , if its charging
+    */
+    int getRemainingIdleTime(RemainingTimeMode mode) const;
 
     /*
-     * Remaining battery time (talk time), seconds
-     * @param mode The mode
-     * @return battery time in seconds, -1 if not available
-     */
-    int remainingTalkTime(QmBattery::RemainingTimeMode mode);
+    * Remaining battery time (talk time), seconds, -1=not known
+    *  This will get changed after lower layer supports remaining talktime api
+    * @return battery time in seconds if its not charging
+    *         -1 , if its charging
+    */
+    int  getRemainingTalkTime(RemainingTimeMode mode) const;
+
 
 signals:
 
@@ -150,7 +155,7 @@ private: //attributes
     int levelIndexInc;
     QmBattery::State state;
     QmBattery::ChargerType type;
-#ifdef UTILISE_BATTERY_USER
+#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
     QmBatteryUser *batteryUser;
 #endif
 

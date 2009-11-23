@@ -26,8 +26,7 @@ SOURCES += main.cpp \
     pincodequerybusinesslogic.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \
-    lockscreenui.cpp \
-    eventhandler.cpp \
+    lockscreenui.cpp \    
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
     batterybusinesslogicadaptor.cpp \    
@@ -47,8 +46,7 @@ HEADERS += main.h \
     pincodequerybusinesslogic.h \
     sysuid.h \
     lockscreenbusinesslogic.h \
-    lockscreenui.h \
-    eventhandler.h \
+    lockscreenui.h \    
     shutdownui.h \
     shutdownbusinesslogic.h \
     batterybusinesslogicadaptor.h \    

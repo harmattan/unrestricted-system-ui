@@ -10,10 +10,10 @@
 #include "displaystatestub.h"
 #include "gconfstub.h"
 #else
-#include "../tests/stubs/ledstub.h" //#include <qmsystem/qmled.h>
-#include "../tests/stubs/batterystub.h" //#include <qmsystem/qmbattery.h>
-#include "../tests/stubs/devicemodestub.h" //#include <qmsystem/qmdevicemode.h>
-#include "../tests/stubs/displaystatestub.h" //#include <qmsystem/qmdisplaystate.h>
+#include <qmsystem/qmled.h>
+#include <qmsystem/qmbattery.h>
+#include <qmsystem/qmdevicemode.h>
+#include <qmsystem/qmdisplaystate.h>
 #include "systemuigconf.h"
 #endif
 
@@ -62,11 +62,6 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 public:
     BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent = 0);
-
-    // constructor for module tests
-    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QmBattery *battery,
-                         QmDeviceMode *deviceMode, QmLED *led, QObject* parent = 0);
-
     virtual ~BatteryBusinessLogic();
 
     void setPSMThreshold(const QString &threshold);
@@ -101,16 +96,15 @@ private: //attributes
     QStringList PSMThresholds;
 
 private: //methods
-    void init();
     void initSystemUIGConfKeys();
     void checkPSMThreshold();
-    int animationRate();    
+    int animationRate(Maemo::QmBattery::ChargerType type);
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);
     void batteryEnergyLevelChanged(int energyLevel);
     void batteryStatusChanged(Maemo::QmBattery::State state);
-    void batteryChargerEvent(Maemo::QmBattery::ChargerEvent event);
+    void batteryChargerEvent(Maemo::QmBattery::ChargerType type);
     void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);    
     void utiliseLED(bool activate, const QString &pattern);
 

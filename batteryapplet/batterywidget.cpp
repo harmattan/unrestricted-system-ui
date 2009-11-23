@@ -30,10 +30,6 @@ TODO list:
 3) Battery header not yet defined (logical name)
 
 */
-namespace {
-    const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
-    const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
-}
 
 BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
@@ -136,7 +132,7 @@ void BatteryWidget::PSMButtonReleased()
 
 void BatteryWidget::updatePSMButton(bool toggle)
 {
-    QString text = ( toggle ? PSMDeactivateText : PSMActivateText );
+    QString text = ( toggle ? DcpBattery::PSMDeactivateText : DcpBattery::PSMActivateText );
     PSMButton->setText(text);
     PSMButton->setEnabled(true);
 }

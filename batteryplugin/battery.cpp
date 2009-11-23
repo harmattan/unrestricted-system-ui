@@ -31,9 +31,7 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
 
     DuiTheme::loadCSS(cssDir + "batteryplugin.css");
 
-    // init widgets
-    DuiLabel *headerLabel = new DuiLabel(trid("qtn_ener_battery", "Battery"));
-    headerLabel->setObjectName("batteryHeaderLabel");
+    // init widgets    
     modeLabel = new DuiLabel();
     modeLabel->setObjectName("batteryModeLabel");
     timeLabel = new DuiLabel();
@@ -41,15 +39,23 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     batteryImage = new BatteryImage();
     batteryImage->setObjectName("batteryImage");
 
-    // insert widgets
-    DuiLayout *layout = new DuiLayout();
+    // Create a container for the battery
+    DuiContainer *container = new DuiContainer;
+    DuiWidget *widget = new DuiWidget;
+    DuiLayout *layout = new DuiLayout;
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
-    layoutPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 1);
-    layoutPolicy->addItemAtPosition(modeLabel, 0, 1, 1, 1);
-    layoutPolicy->addItemAtPosition(timeLabel, 1, 0, 1, 2);
-    layoutPolicy->addItemAtPosition(batteryImage, 2, 0, 1, 2);
-    DuiContainer *container = new DuiContainer();
-    container->centralWidget()->setLayout(layout);
+    layout->setLandscapePolicy(landscapePolicy);
+    layout->setPortraitPolicy(portraitPolicy);
+    widget->setLayout(layout);
+    container->setTitle(trid("qtn_ener_battery", "Battery"));
+    container->setCentralWidget(widget);
+    connect(container, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
+    mainLayout->addItem(container);
+
+    // insert widgets    
+    layoutPolicy->addItemAtPosition(modeLabel, 0, 0, 1, 1);
+    layoutPolicy->addItemAtPosition(timeLabel, 0, 1, 1, 2);
+    layoutPolicy->addItemAtPosition(batteryImage, 1, 0, 1, 2);            
 
     // get widget values
     dbusIf = new BatteryDBusInterface();

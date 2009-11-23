@@ -54,9 +54,9 @@ void BatteryImage::startCharging(int rate)
     if(timer == NULL) {
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateImage()));
-        timer->setInterval(rate);
-        timer->start();
     }
+    timer->setInterval(rate);
+    timer->start();
 }
 
 void BatteryImage::stopCharging()
