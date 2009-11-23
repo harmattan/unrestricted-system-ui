@@ -2,6 +2,7 @@
 #include "pincodequeryui.h"
 
 #include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiTextEdit>
 #include <DuiButton>
 #include <DuiLocale>
@@ -71,16 +72,19 @@ void Ut_PinCodeQueryBusinessLogic::cleanup()
 }
 
 DuiApplication *app;
+DuiApplicationWindow *win;
 void Ut_PinCodeQueryBusinessLogic::initTestCase()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_pincodequerybusinesslogic";
     app = new DuiApplication(argc, &app_name);
+    win = new DuiApplicationWindow();
     qRegisterMetaType<NotificationType::Type>("NotificationType::Type");
 }
 
 void Ut_PinCodeQueryBusinessLogic::cleanupTestCase()
 {
+    delete win;
     delete app;
 }
 
@@ -130,7 +134,8 @@ void Ut_PinCodeQueryBusinessLogic::doAndVerifyPinNok(QString code, QString error
     m_subject->uiPin->getCodeEntry()->setText(code);
     emitButtonReleased("enterButton");
 
-    QTest::qWait(wait);
+    // runtime for first and second signal
+    QTest::qWait(wait); QTest::qWait(wait);
     QCOMPARE(spy.count(), 1); // make sure the signal was emitted exactly one time
     QList<QVariant> arguments = spy.takeFirst(); // take the first signal
     qDebug() << Q_FUNC_INFO << errorText;
@@ -398,6 +403,9 @@ void Ut_PinCodeQueryBusinessLogic::testPinToPuk()
     m_simSec->pinAttempts = 3;
     emitButtonReleased("enterButton");
 
+    // runtime for first...
+    QTest::qWait(wait);
+    // ...and second signal
     QTest::qWait(wait);
     QCOMPARE(spy.count(), 1);
     QList<QVariant> arguments = spy.takeFirst();
@@ -409,6 +417,9 @@ void Ut_PinCodeQueryBusinessLogic::testPinToPuk()
     m_simSec->pinAttempts = 2;
     emitButtonReleased("enterButton");
 
+    // runtime for first...
+    QTest::qWait(wait);
+    // ...and second signal
     QTest::qWait(wait);
     QCOMPARE(spy.count(), 1);
     arguments = spy.takeFirst();
@@ -420,6 +431,9 @@ void Ut_PinCodeQueryBusinessLogic::testPinToPuk()
     m_simSec->pinAttempts = 1;
     emitButtonReleased("enterButton");
 
+    // runtime for first...
+    QTest::qWait(wait);
+    // ...and second signal
     QTest::qWait(wait);
     QCOMPARE(spy.count(), 1);
     arguments = spy.takeFirst();
@@ -453,7 +467,8 @@ void Ut_PinCodeQueryBusinessLogic::testPinToPuk()
         m_subject->uiPin->getCodeEntry()->setText(wrongPin);
         emitButtonReleased("enterButton");
 
-        QTest::qWait(wait);
+        // runtime for first and second signal
+        QTest::qWait(wait); QTest::qWait(wait);
         QCOMPARE(m_subject->uiPin->isVisible(), true);
         QCOMPARE(spy.count(), 1);
         arguments = spy.takeFirst();
