@@ -2,6 +2,8 @@
 
 #include <DuiLabel>
 #include <DuiSceneManager>
+#include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiLocale>
 
 #include <QDebug>
@@ -42,6 +44,6 @@ void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
 void ShutdownUI::alignText()
 {
     qDebug() << "ShutdownUI::alignText()";
-    QSize size = DuiSceneManager::instance()->visibleSceneSize();
+    QSize size = DuiApplication::activeApplicationWindow()->sceneManager()->visibleSceneSize();
     text->setGeometry(QRectF(0, 0, size.width(), size.height()));
 }

@@ -9,6 +9,8 @@
 #include <DuiLayout>
 #include <DuiGridLayoutPolicy>
 #include <DuiSceneManager>
+#include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiTheme>
 #include <QTime>
 
@@ -45,7 +47,8 @@ void LockScreenUI::createContent()
     DuiLayout* layout = new DuiLayout;
     DuiLayout* widgets = createWidgets();
 
-    QSize size = DuiSceneManager::instance()->visibleSceneSize(Dui::Landscape);
+    QSize size = DuiApplication::activeApplicationWindow()->
+            sceneManager()->visibleSceneSize(Dui::Landscape);
 
     DuiGridLayoutPolicy* l_policy = new DuiGridLayoutPolicy(layout);
     l_policy->setSpacing(10);
@@ -53,7 +56,8 @@ void LockScreenUI::createContent()
     l_policy->setColumnFixedWidth(0, size.width());
     l_policy->addItemAtPosition(widgets, 1, 0, Qt::AlignCenter);
 
-    size = DuiSceneManager::instance()->visibleSceneSize(Dui::Portrait);
+    size = DuiApplication::activeApplicationWindow()->
+           sceneManager()->visibleSceneSize(Dui::Portrait);
 
     DuiGridLayoutPolicy* p_policy = new DuiGridLayoutPolicy(layout);
     p_policy->setSpacing(10);

@@ -34,7 +34,6 @@ private slots:
     void profileSelected(int id);
     void sliderValueChanged(int index);
     void vibrationChanged(bool enabled);
-    void orientationChanged(const Dui::Orientation &);
 
 private: //methods
     DuiContainer* createContainer();

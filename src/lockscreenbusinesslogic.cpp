@@ -98,10 +98,10 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
 {
     qDebug() << Q_FUNC_INFO << toggle;
     if (toggle) {
-        DuiApplication::instance()->applicationWindow()->show();
+        DuiApplication::activeApplicationWindow()->show();
         lockUI->appear();
     } else {
-        DuiApplication::instance()->applicationWindow()->hide();
+        DuiApplication::activeApplicationWindow()->hide();
     }
 }
 

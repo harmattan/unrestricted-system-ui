@@ -24,10 +24,6 @@ ProfileWidget::ProfileWidget(QGraphicsWidget *parent)
 {    
     setReferer(DcpProfile::None);
     initWidget();
-
-    connect(DuiSceneManager::instance(),
-        SIGNAL(orientationChanged(const Dui::Orientation &)),
-        this, SLOT(orientationChanged(const Dui::Orientation &)));
 }
 
 ProfileWidget::~ProfileWidget()
@@ -163,11 +159,6 @@ void ProfileWidget::profileSelected(int id)
 {
     qDebug() << Q_FUNC_INFO << ":" << id;
     profileIf->setProfile(id);
-}
-
-void ProfileWidget::orientationChanged(const Dui::Orientation &orientation)
-{
-    qDebug() << Q_FUNC_INFO << "to" << orientation;
 }
 
 void ProfileWidget::setProfile(int profileId)

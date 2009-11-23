@@ -369,7 +369,7 @@ class UserInterface:
         def cb_launch(widget):
             obj = bus.get_object(bus_name_launch, PATH_launch)
             query = dbus.Interface(obj, if_name_launch)
-            print query.LaunchPinQuery('PIN')
+            print 'LaunchPinQuery returns:', query.LaunchPinQuery('PIN')
         launch.connect('clicked', cb_launch)
         frame.add(launch)
 

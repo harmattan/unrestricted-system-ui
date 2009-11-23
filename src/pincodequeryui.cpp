@@ -94,60 +94,56 @@ void PinCodeQueryUI::createContent()
     layout->getContentsMargins(&left,&top,&right,&bottom);
     qDebug() << Q_FUNC_INFO << "margins l:"<<left<<"r:"<<right<<"t:"<<top<<"b:"<<bottom;
 
-    QSize size = DuiSceneManager::instance()->visibleSceneSize();
-    qDebug() << Q_FUNC_INFO << "size w x h:"<<size.width()<<"x"<<size.height();
-    int longSide = size.width();
-    int shortSide = size.height();
-    if(longSide < shortSide)
-    {
-        int tmp = longSide;
-        longSide = shortSide;
-        shortSide = tmp;
-    }
-    qDebug() << Q_FUNC_INFO << "size l x s:"<<longSide<<"x"<<shortSide;
-    longSide -= left + right;
-    shortSide -= top + bottom;
-
-    int half = longSide/2;
-    int quarter = shortSide/4;
-    int eight = longSide/8;
-
-    int sixth = shortSide/6;
-    for(int i=0; i<6;++i) {
-        landscapePolicy->setRowFixedHeight(i, sixth);
-    }
-
-    for(int i=0; i<8; ++i) {
-        landscapePolicy->setColumnFixedWidth(i, eight);
-    }
-    for(int i=0; i<5; ++i) {
-        if(i == 3 ) {
-            portraitPolicy->setRowFixedHeight(i, half);
+    DuiApplicationWindow* win = DuiApplication::activeApplicationWindow();
+    if(win){
+        QSize size = win->sceneManager()->visibleSceneSize();
+        qDebug() << Q_FUNC_INFO << "size w x h:"<<size.width()<<"x"<<size.height();
+        int longSide = size.width();
+        int shortSide = size.height();
+        if(longSide < shortSide)
+        {
+            int tmp = longSide;
+            longSide = shortSide;
+            shortSide = tmp;
         }
-        else {
-            portraitPolicy->setRowFixedHeight(i, eight);
+        qDebug() << Q_FUNC_INFO << "size l x s:"<<longSide<<"x"<<shortSide;
+        longSide -= left + right;
+        shortSide -= top + bottom;
+
+        int half = longSide/2;
+        int quarter = shortSide/4;
+        int eight = longSide/8;
+
+        int sixth = shortSide/6;
+        for(int i=0; i<6;++i) {
+            landscapePolicy->setRowFixedHeight(i, sixth);
         }
+
+        for(int i=0; i<8; ++i) {
+            landscapePolicy->setColumnFixedWidth(i, eight);
+        }
+        for(int i=0; i<5; ++i) {
+            if(i == 3 ) {
+                portraitPolicy->setRowFixedHeight(i, half);
+            }
+            else {
+                portraitPolicy->setRowFixedHeight(i, eight);
+            }
+        }
+        for(int i=0; i<4;++i) {
+            portraitPolicy->setColumnFixedWidth(i, quarter);
+        }
+
+        // button layouts
+        int side = 36;
+        QSizeF minSize(landscapePolicy->columnMinimumWidth(0), side);
+        landscapePolicy->setRowAlignment(5, Qt::AlignBottom);
+        portraitPolicy->setRowAlignment(4, Qt::AlignBottom);
+
+        enterButton->setMinimumSize( minSize );
+        cancelButton->setMinimumSize( minSize );
     }
-    for(int i=0; i<4;++i) {
-        portraitPolicy->setColumnFixedWidth(i, quarter);
-    }
-    createWidgetLayouts(landscapePolicy, portraitPolicy);
     backspaceTimer = NULL;
-}
-
-void PinCodeQueryUI::createWidgetLayouts(DuiGridLayoutPolicy* lPolicy, DuiGridLayoutPolicy* pPolicy)
-{
-    int side = 36;
-
-    // enter button layout
-    QSizeF minSize(lPolicy->columnMinimumWidth(0), side);
-    QSizeF maxSize(DuiSceneManager::instance()->visibleSceneSize().width(), side);
-    qDebug() << Q_FUNC_INFO << "enter col width:" << minSize.width() << "-" << maxSize.width();
-    lPolicy->setRowAlignment(5, Qt::AlignBottom);
-    pPolicy->setRowAlignment(4, Qt::AlignBottom);
-
-    enterButton->setMinimumSize( minSize );
-    cancelButton->setMinimumSize( minSize );
 }
 
 DuiButton *PinCodeQueryUI::getEmergencyBtn()
@@ -276,11 +272,7 @@ void PinCodeQueryUI::removeText()
 
 void PinCodeQueryUI::hideWindow()
 {
-    DuiApplication *app = DuiApplication::instance();
-    DuiApplicationWindow *win = NULL;
-    if(app){
-        win = app->applicationWindow();
-    }
+    DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
     qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
     if(win && !win->isHidden()){
         win->hide();
@@ -288,11 +280,7 @@ void PinCodeQueryUI::hideWindow()
 }
 void PinCodeQueryUI::showWindow()
 {
-    DuiApplication *app = DuiApplication::instance();
-    DuiApplicationWindow *win = NULL;
-    if(app){
-        win = app->applicationWindow();
-    }
+    DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
     qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
     if(win && win->isHidden()){
         win->show();
@@ -300,11 +288,7 @@ void PinCodeQueryUI::showWindow()
 }
 void PinCodeQueryUI::setWindowOnTop(bool onTop)
 {
-    DuiApplication *app = DuiApplication::instance();
-    DuiApplicationWindow *win = NULL;
-    if(app){
-        win = app->applicationWindow();
-    }
+    DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
     if(!win){
         return;
     }
