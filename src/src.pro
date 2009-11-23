@@ -1,5 +1,4 @@
 include(duiconfig.pri)
-STUB_PREFIX = ../tests/stubs/
 TEMPLATE = app
 #DEFINES += UTILISE_BATTERY_USER
 TARGET = sysuid
@@ -32,11 +31,7 @@ SOURCES += main.cpp \
     batterybusinesslogicadaptor.cpp \    
     systemuigconf.cpp \    
     notifierdbusadaptor.cpp \
-    pincodequerydbusadaptor.cpp \
-    $$STUB_PREFIX/devicemodestub.cpp \
-    $$STUB_PREFIX/batterystub.cpp \
-    $$STUB_PREFIX/displaystatestub.cpp \
-    $$STUB_PREFIX/ledstub.cpp \
+    pincodequerydbusadaptor.cpp \    
     lockscreenbusinesslogicadaptor.cpp
 
 HEADERS += main.h \
@@ -53,11 +48,7 @@ HEADERS += main.h \
     systemuigconf.h \    
     notifierdbusadaptor.h \        
     pincodequerydbusadaptor.h \
-    notificationtype.h \
-    $$STUB_PREFIX/devicemodestub.h \
-    $$STUB_PREFIX/batterystub.h \
-    $$STUB_PREFIX/displaystatestub.h \    
-    $$STUB_PREFIX/ledstub.h \
+    notificationtype.h \    
     lockscreenbusinesslogicadaptor.h
 
 style_sheet.files += sysuid.css
