@@ -39,7 +39,7 @@ NotifTimer::~NotifTimer()
         killTimer(timerId);
 }
 
-void NotifTimer::timerEvent(QTimerEvent *e)
+void NotifTimer::timerEvent(QTimerEvent *)
 {
     // need to kill the timer _before_ we emit timeout() in case the
     // slot connected to timeout calls processEvents()
