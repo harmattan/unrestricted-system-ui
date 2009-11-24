@@ -24,7 +24,7 @@ namespace {
     QString HeaderEnterPinCode2Left = trid("qtn_cell_enter_pin_code_2", "Enter PIN code. 2 attempts remaining.");
     QString HeaderEnterPinCodeNew = trid("qtn_cell_enter_new_pin", "Enter new PIN code");
     QString HeaderEnterPinCodeReNew = trid("qtn_cell_reenter_new_pin", "Re-enter new PIN code");
-    QString HeaderEnterPukCode = trid("qtn_cell_enter_PUK_code", "Enter PUK code");
+    QString HeaderEnterPukCode = trid("qtn_cell_enter_puk_code", "Enter PUK code");
     QString HeaderEnterSimLockCode = trid("qtn_cell_enter_unlock_code", "Enter code for unlocking SIM card");
 
     /* At the moment this contains several error case that may pop up from SIM library.
