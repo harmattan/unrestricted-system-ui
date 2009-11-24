@@ -12,8 +12,9 @@
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiTheme>
-#include <QTime>
+#include <DuiLocale>
 
+#include <QTime>
 #include <QDateTime>
 
 LockScreenUI::LockScreenUI() :
@@ -48,7 +49,7 @@ void LockScreenUI::createContent()
     DuiLayout* widgets = createWidgets();
 
     QSize size = DuiApplication::activeApplicationWindow()->
-            sceneManager()->visibleSceneSize(Dui::Landscape);
+                 sceneManager()->visibleSceneSize(Dui::Landscape);
 
     DuiGridLayoutPolicy* l_policy = new DuiGridLayoutPolicy(layout);
     l_policy->setSpacing(10);
@@ -171,10 +172,12 @@ void LockScreenUI::timerEvent(QTimerEvent *event)
 
 void LockScreenUI::updateDateTime()
 {
-    QDateTime dt(QDateTime::currentDateTime());
-    // TODO: locale stuff
-    timeLabel->setText(dt.time().toString("!! hh:mm A"));
-    dateLabel->setText(dt.date().toString("!! dddd, d MMMM"));
+    DuiLocale locale;
+
+    QDateTime now(QDateTime::currentDateTime());
+
+    timeLabel->setText(locale.formatDateTime(now, DuiLocale::DateNone, DuiLocale::TimeShort));
+    dateLabel->setText(locale.formatDateTime(now, DuiLocale::DateFull, DuiLocale::TimeNone));
 }
 
 // Check dbus adaptor!
