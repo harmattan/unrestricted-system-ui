@@ -65,6 +65,7 @@ CallContainer::CallContainer(DuiWidget *parent) :
     pickerButton = new DuiButton();
 //    pickerButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     pickerButton->setObjectName("peoplePickerButton");
+    pickerButton->setIconID("icon-m-addressbook");
 
     QGraphicsGridLayout* fwdNumberLayout = new QGraphicsGridLayout();
     fwdNumberLayout->addItem(numberLabel, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
