@@ -288,6 +288,12 @@ void PinCodeQueryUI::showWindow()
 }
 void PinCodeQueryUI::setWindowOnTop(bool onTop)
 {
+#ifdef UNIT_TEST
+    // window cannot be on top at unit tests or it crashes:
+    // "The WM_COMMAND property of a window needs correct values for argv and this is not present."
+    onTop = false;
+#endif
+
     DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
     if(!win){
         return;
