@@ -4,14 +4,6 @@
 
 namespace Maemo {
 
-#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
-void QmBatteryUser::start()
-{
-    emit changeLevel();
-    QTimer::singleShot(5000, this, SLOT(start()));
-}
-#endif
-
 QmBattery::QmBattery(QObject *parent) :
         QObject(parent)
 {
@@ -30,13 +22,6 @@ void QmBattery::initValues()
     energyLevel = 100;
     state = QmBattery::StateNotCharging;
     type = QmBattery::Wall;
-
-#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
-    batteryUser = new QmBatteryUser();
-    connect(batteryUser, SIGNAL(changeLevel()), this, SLOT(changeLevel()));
-    batteryUser->start();
-#endif
-
 }
 
 int QmBattery::getRemainingIdleTime(QmBattery::RemainingTimeMode mode) const

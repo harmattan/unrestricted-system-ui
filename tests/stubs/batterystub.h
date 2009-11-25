@@ -8,22 +8,6 @@
 
 namespace Maemo {
 
-#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
-class QmBatteryUser : public QObject
-{
-    Q_OBJECT
-public:
-    QmBatteryUser() { ; }
-    virtual ~QmBatteryUser() { ; }
-
-public slots:
-    void start();
-
-signals:
-    void changeLevel();
-};
-#endif
-
 class QmBattery : public QObject
 {
     Q_OBJECT
@@ -155,9 +139,6 @@ private: //attributes
     int levelIndexInc;
     QmBattery::State state;
     QmBattery::ChargerType type;
-#if defined(UTILISE_BATTERY_USER) && !defined(UNIT_TEST)
-    QmBatteryUser *batteryUser;
-#endif
 
 };
 }

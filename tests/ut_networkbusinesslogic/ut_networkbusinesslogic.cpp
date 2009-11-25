@@ -15,7 +15,7 @@ namespace {
 
 void Ut_NetworkBusinessLogic::init()
 {
-    m_subject = new NetworkBusinessLogic(true);
+    m_subject = new NetworkBusinessLogic();
     m_subject->networkRegistration->init(m_subject->networkOperator);
 }
 
@@ -137,23 +137,6 @@ void Ut_NetworkBusinessLogic::testSelectOperator()
     for(int i=0; i<operatorNames.size(); ++i) {    
         m_subject->selectOperator(i);
         QVERIFY(m_subject->networkOperator->name() == operatorNames.at(i));
-    }
-}
-
-void Ut_NetworkBusinessLogic::testSignalStrengthIcon()
-{
-    QSignalSpy spy(m_subject, SIGNAL(signalStrengthIconChanged(QString)));    
-    int count;
-
-    for(int i=0; i<=100; ++i) {
-        m_subject->signalStrength->setBars(i);
-        count = (((i%20 == 1 && i > 20) || i == 0) ? 1 : 0); //0, 21, 41, 61, 81
-        QCOMPARE(spy.count(), count);
-        if(count == 1) {
-            QList<QVariant> arguments = spy.takeFirst();
-            QVERIFY(arguments.at(0).type() == QVariant::String);
-            QVERIFY(arguments.at(0).toString() == QString("icon-s-network-%1").arg(i<100 ? i/20*20 + 20 : 100));
-        }
     }
 }
 

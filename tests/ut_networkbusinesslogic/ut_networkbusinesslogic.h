@@ -18,8 +18,7 @@ private slots:
 
     void testNetworkIcon();
     void testQueryAvailableOperators();
-    void testSelectOperator();
-    void testSignalStrengthIcon();
+    void testSelectOperator();    
 
 private: //methods
     QStringList addOperators();
