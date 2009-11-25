@@ -19,8 +19,6 @@
 #include <NetworkOperator>
 #endif
 
-class NetworkDBusInterface;
-
 using namespace Cellular;
 
 class NetworkTechnology : public QObject

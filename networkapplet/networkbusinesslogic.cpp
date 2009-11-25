@@ -1,8 +1,8 @@
 #include "networkbusinesslogic.h"
-#include "networkdbusinterface.h"
 #include "networktranslation.h"
 
 #include <DuiLocale>
+#include <DuiNotification>
 #include <QDebug>
 
 
@@ -244,10 +244,8 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
     disconnect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
                this, SLOT(selectOperatorCompleted(bool, const QString &)));   
 
-    if(!success) {
-        NetworkDBusInterface networkIf;
-        networkIf.showNotification(DcpNetwork::NoAccessText);
-    }
+    if(!success)
+        DuiNotification("", "", DcpNetwork::NoAccessText);    
 }
 
 void NetworkBusinessLogic::toggleRoaming(bool toggle)

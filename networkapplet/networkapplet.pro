@@ -9,7 +9,6 @@ LIBS += -lduicontrolpanel \
     -lcellular-qt
 INCLUDEPATH += /usr/include/qt4/dui \
     /usr/include/duicontrolpanel
-QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
@@ -19,8 +18,7 @@ MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = networkapplet.h \
     networkwidget.h \
-    networkbrief.h \
-    networkdbusinterface.h \
+    networkbrief.h \    
     networktranslation.h \
     networkcontainer.h \
     networklist.h \
@@ -29,8 +27,7 @@ HEADERS = networkapplet.h \
     dcpnetwork.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
-    networkbrief.cpp \
-    networkdbusinterface.cpp \
+    networkbrief.cpp \    
     networkcontainer.cpp \
     networklist.cpp \
     roamingcontainer.cpp \
