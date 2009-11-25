@@ -162,7 +162,7 @@ void Ut_PinCodeQueryBusinessLogic::testStateChange()
     QCOMPARE(m_subject->previousSimState, (int)newState);
 }
 
-void Ut_PinCodeQueryBusinessLogic::testUiControls()
+void Ut_PinCodeQueryBusinessLogic::testUiControls_PIN()
 {
     // enable UI operations
     m_subject->initialized = true;
@@ -172,43 +172,88 @@ void Ut_PinCodeQueryBusinessLogic::testUiControls()
     QCOMPARE(m_subject->uiPin.isNull(), false);
     DuiButton *enter = m_subject->uiPin->getEnterBtn();
     DuiButton *cancel = m_subject->uiPin->getCancelBtn();
-
-    // test enter button enablity
-    QString pin("12");
-    m_subject->uiPin->getCodeEntry()->setText(pin);
     QCOMPARE(enter->isEnabled(), false);
     QCOMPARE(cancel->isEnabled(), true);
 
-    m_subject->uiPin->getCodeEntry()->setText(pin+pin);
+    // test enter button enablity
+    QString code("12");
+    m_subject->uiPin->getCodeEntry()->setText(code);
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
+
+    m_subject->uiPin->getCodeEntry()->setText(code+code);
+    QCOMPARE(enter->isEnabled(), true);
+    QCOMPARE(cancel->isEnabled(), true);
+}
+
+void Ut_PinCodeQueryBusinessLogic::testUiControls_PUK()
+{
+    // enable UI operations
+    m_subject->initialized = true;
+
+    doAndVerifyStateChange(SIM::PUKRequired);
+    QCOMPARE(m_subject->uiPin.isNull(), false);
+    DuiButton *enter = m_subject->uiPin->getEnterBtn();
+    DuiButton *cancel = m_subject->uiPin->getCancelBtn();
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
+
+    QString code("12");
+    m_subject->uiPin->getCodeEntry()->setText(code);
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
+
+    m_subject->uiPin->getCodeEntry()->setText(code+code);
     QCOMPARE(enter->isEnabled(), true);
     QCOMPARE(cancel->isEnabled(), true);
 
-    // clean UI
-    emitButtonReleased("cancelButton");
+    m_subject->uiPin->getCodeEntry()->setText(m_simSec->puk);
+    emitButtonReleased("enterButton");
 
+    QTest::qWait(wait);
+    doAndVerifyStateChange(SIM::Ok);
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), false);
+
+    m_subject->uiPin->getCodeEntry()->setText(code);
+    QCOMPARE(enter->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), false);
+
+    m_subject->uiPin->getCodeEntry()->setText(code+code);
+    QCOMPARE(enter->isEnabled(), true);
+    QCOMPARE(cancel->isEnabled(), false);
+}
+
+void Ut_PinCodeQueryBusinessLogic::testUiControls_ChangePIN()
+{
+    // enable UI operations
+    m_subject->initialized = true;
+
+    // test change PIN code
     doAndVerifyStateChange(SIM::Ok);
     m_subject->changePinCode();
 
     QCOMPARE(m_subject->uiPin.isNull(), false);
-    enter = m_subject->uiPin.data()->getEnterBtn();
-    cancel = m_subject->uiPin.data()->getCancelBtn();
+    DuiButton *enter = m_subject->uiPin.data()->getEnterBtn();
+    DuiButton *cancel = m_subject->uiPin.data()->getCancelBtn();
     QCOMPARE(enter->isEnabled(), false);
     QCOMPARE(cancel->isEnabled(), true);
 
+    QString code("12");
     m_subject->uiPin->getCodeEntry()->setText(m_simSec->pin);
     emitButtonReleased("enterButton");
 
     QTest::qWait(wait);
     QCOMPARE(enter->isEnabled(), false);
-    QCOMPARE(cancel->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
 
-    m_subject->uiPin->getCodeEntry()->setText(pin);
+    m_subject->uiPin->getCodeEntry()->setText(code);
     QCOMPARE(enter->isEnabled(), false);
-    QCOMPARE(cancel->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
 
-    m_subject->uiPin->getCodeEntry()->setText(pin+pin);
+    m_subject->uiPin->getCodeEntry()->setText(code+code);
     QCOMPARE(enter->isEnabled(), true);
-    QCOMPARE(cancel->isEnabled(), false);
+    QCOMPARE(cancel->isEnabled(), true);
 }
 
 void Ut_PinCodeQueryBusinessLogic::testFailedLaunchPinQuery()

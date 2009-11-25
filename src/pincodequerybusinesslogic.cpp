@@ -167,6 +167,7 @@ void PinCodeQueryBusinessLogic::closeUi()
     qDebug() << Q_FUNC_INFO << "uiPin->isVisible()" << (uiPin ? uiPin->isVisible() : (bool)0);
     if(uiPin)
     {
+        uiPin->getCancelBtn()->setEnabled(true);
         uiPin->getCodeEntry()->setText("");
         uiPin->disappearNow();
     }
@@ -264,6 +265,9 @@ void PinCodeQueryBusinessLogic::ui2PINFailed(int attemptsLeft)
 {
     qDebug() << Q_FUNC_INFO << attemptsLeft;
     switch(attemptsLeft){
+    case -1:
+        // nothing
+        break;
     case 2:
         emit showNotification(PINCodeIncorrect2AttemptsLeft, NotificationType::error);
         break;
@@ -284,10 +288,11 @@ void PinCodeQueryBusinessLogic::ui2PUKQuery()
 void PinCodeQueryBusinessLogic::ui2enterNewPin()
 {
     qDebug() << Q_FUNC_INFO;
+    bool enableCancel = (SubEnterOldPIN == subState);
     subState = SubEnterNewPIN;
-    createUi();
+    createUi(enableCancel);
     setUiHeader(HeaderEnterPinCodeNew);
-    uiPin->getCancelBtn()->setEnabled(false);
+    uiPin->getCancelBtn()->setEnabled(enableCancel);
 }
 
 void PinCodeQueryBusinessLogic::ui2disappear(bool operationOk)

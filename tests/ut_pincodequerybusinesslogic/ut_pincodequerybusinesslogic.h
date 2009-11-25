@@ -30,7 +30,9 @@ private slots:
     void testStateChange();
     void testFailedLaunchPinQuery();
     void testLaunchPinQuery();
-    void testUiControls();
+    void testUiControls_PIN();
+    void testUiControls_PUK();
+    void testUiControls_ChangePIN();
     void testEnablePinQuery();
     void testChangePinCode();
     void testPinToPuk();
