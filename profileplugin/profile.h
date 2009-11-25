@@ -21,6 +21,7 @@
 
 class DuiApplicationPage;
 class DuiButton;
+class DuiButtonGroup;
 class DuiStatusIndicatorMenuInterface;
 class ProfileDataInterface;
 
@@ -55,6 +56,7 @@ private:
     ProfileDataInterface* dataIf;
 
     QStringList profileNames;
+    DuiButtonGroup *buttonGroup;
 
 };
 

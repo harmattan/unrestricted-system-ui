@@ -80,12 +80,11 @@ void NetworkTechnology::updateTechnology()
     }
 }
 
-NetworkBusinessLogic::NetworkBusinessLogic(bool monitorSignalStrength, QObject* parent) :
+NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
         QObject(parent),        
         networkRegistration(NULL),
         radioAccess(NULL),
-        networkOperator(NULL),
-        signalStrength(NULL),
+        networkOperator(NULL),        
         technology(NULL)
 {
     qDebug() << Q_FUNC_INFO;
@@ -97,12 +96,6 @@ NetworkBusinessLogic::NetworkBusinessLogic(bool monitorSignalStrength, QObject* 
     // network operator
     networkOperator = new NetworkOperator();
     connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
-
-    // signal strength
-    if(monitorSignalStrength) {
-        signalStrength = new SignalStrength();
-        connect(signalStrength, SIGNAL(levelChanged(int, int)), this, SLOT(signalStrengthChanged(int)));
-    }
 
     // network technology
     technology = new NetworkTechnology(radioAccess);    
@@ -129,10 +122,7 @@ NetworkBusinessLogic::~NetworkBusinessLogic()
     delete networkOperator;
     networkOperator = NULL;
     delete technology;
-    technology = NULL;
-    if(signalStrength != NULL)
-        delete signalStrength;
-    signalStrength = NULL;
+    technology = NULL;    
 }
 
 bool NetworkBusinessLogic::networkEnabled()
@@ -370,34 +360,6 @@ QString NetworkBusinessLogic::mapTechnologyToIcon(NetworkTechnology::Technology 
             break;
     }
     return icon;   
-}
-
-QString NetworkBusinessLogic::signalStrengthIcon()
-{
-    qDebug() << Q_FUNC_INFO;    
-    return mapSignalStrengthToIcon(signalStrength->bars());
-}
-
-void NetworkBusinessLogic::signalStrengthChanged(int bars)
-{
-    qDebug() << Q_FUNC_INFO;
-    static QString prevSSIcon;
-    QString newSSIcon = mapSignalStrengthToIcon(bars);    
-    if(prevSSIcon != newSSIcon) {
-        emit signalStrengthIconChanged(newSSIcon);
-        prevSSIcon = newSSIcon;
-    }
-}
-
-QString NetworkBusinessLogic::mapSignalStrengthToIcon(int bars)
-{
-    qDebug() << Q_FUNC_INFO;
-    QString icon;
-    if(bars % 20 == 0 && bars > 0)
-        icon = QString("icon-s-network-%1").arg(bars);
-    else
-        icon = QString("icon-s-network-%1").arg(bars/20*20 + 20);
-    return icon;
 }
 
 bool NetworkBusinessLogic::manualSelectionRequired()

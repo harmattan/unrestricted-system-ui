@@ -1,6 +1,5 @@
 include(duiconfig.pri)
 TEMPLATE = app
-#DEFINES += UTILISE_BATTERY_USER
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \

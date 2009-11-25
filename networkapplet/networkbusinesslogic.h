@@ -12,13 +12,11 @@
 #include "radioaccessstub.h"
 #include "networkcellstub.h"
 #include "networkoperatorstub.h"
-#include "signalstrengthstub.h"
 #else
 #include <NetworkRegistration>
 #include <RadioAccess>
 #include <NetworkCell>
 #include <NetworkOperator>
-#include <SignalStrength>
 #endif
 
 class NetworkDBusInterface;
@@ -72,7 +70,7 @@ class NetworkBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    NetworkBusinessLogic(bool monitorSignalStrength = false, QObject* parent = 0);    
+    NetworkBusinessLogic(QObject* parent = 0);
     virtual ~NetworkBusinessLogic();
 
     bool networkEnabled();
@@ -87,8 +85,7 @@ public:
     void toggleRoaming(bool toggle);
     void toggleRoamingUpdates(bool toggle);
     bool manualSelectionRequired();
-    QString currentOperator();
-    QString signalStrengthIcon();    
+    QString currentOperator();    
 
 public slots:
     void toggleNetwork(bool toggle);
@@ -100,29 +97,24 @@ private slots:
     void availableOperatorsReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
     void selectOperatorCompleted(bool success, const QString &reason);
     void technologyChanged(NetworkTechnology::Technology technology);
-    void signalStrengthChanged(int bars);
 
 signals:
     void availableNetworkOperators(int, QStringList, bool);
     void networkIconChanged(QString);
-
     void networkSelectionValuesAvailable(int, int, QStringList);    
     void networkSelected(bool);
     void roamingUpdatesValueChanged(bool);    
-    void networkOperatorChanged(QString);
-    void signalStrengthIconChanged(QString);
+    void networkOperatorChanged(QString);    
     void showNotification(QString);
 
 private: //methods    
     void queryAvailableOperators();
-    QString mapTechnologyToIcon(NetworkTechnology::Technology technology);
-    QString mapSignalStrengthToIcon(int bars);
+    QString mapTechnologyToIcon(NetworkTechnology::Technology technology);    
 
 private: //attributes
     NetworkRegistration *networkRegistration;
     RadioAccess *radioAccess;
-    NetworkOperator *networkOperator;
-    SignalStrength *signalStrength;
+    NetworkOperator *networkOperator;    
     NetworkTechnology *technology;
     QHash<RadioAccess::Mode, QString> modes;
     QHash<NetworkRegistration::Mode, QString> selectionValues;

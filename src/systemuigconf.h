@@ -13,24 +13,15 @@ class SystemUIGConf : public QObject
 public:
 
     enum GConfKeyGroup {
-        Battery,
-        Display,
-        Network
+        Battery = 0,
+        Offline
     };
 
     enum GConfKey {        
-        BatteryPSMAutoKey,
+        BatteryPSMAutoKey = 0,
         BatteryPSMThresholdKey,
-        DisplayBrightnessMaxLevelKey,
-        DisplayBrightnessLevelStepKey,
-        DisplayBrightnessKey,
-        DisplayBlankTimeoutsKey,
-        DisplayBlankTimeoutKey,
-        DisplayDimTimeoutsKey,
-        DisplayDimTimeoutKey,
-        DisplayBlankInhibitKey,        
-        NetworkRoamingKey,
-        NetworkRoamingUpdatesKey        
+        OfflineModeKey,
+        OfflinePhoneNetworkOnKey
     };   
 
     SystemUIGConf(QObject* parent = 0);

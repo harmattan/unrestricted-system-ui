@@ -57,12 +57,12 @@ Network::Network(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     connect(logic, SIGNAL(networkOperatorChanged(QString)), operatorLabel, SLOT(setText(QString)));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateButtonImage(QString)));
     connect(toggleButton, SIGNAL(toggled(bool)), logic, SLOT(toggleNetwork(bool)));    
-    connect(logic, SIGNAL(signalStrengthIconChanged(QString)), signalStrengthImage, SLOT(setImage(QString)));
+    //connect(logic, SIGNAL(signalStrengthIconChanged(QString)), signalStrengthImage, SLOT(setImage(QString)));
 
     updateButton(logic->networkEnabled());
     updateButtonImage(logic->networkIcon());
     operatorLabel->setText(logic->currentOperator());
-    signalStrengthImage->setImage(logic->signalStrengthIcon());
+    signalStrengthImage->setImage("icon-s-network-60");
 
     // mainLayout    
     DuiLayout *mainLayout = new DuiLayout();

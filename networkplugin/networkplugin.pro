@@ -11,10 +11,10 @@ INCLUDEPATH += /usr/include/duistatusindicatormenu \
     ../networkapplet
 QT += dbus
 HEADERS = networkplugin.h \
-    network.h \
+    network.h \    
     ../networkapplet/networkbusinesslogic.h
 SOURCES = networkplugin.cpp \
-    network.cpp \
+    network.cpp \    
     ../networkapplet/networkbusinesslogic.cpp
 TARGET = $$qtLibraryTarget(connectivity)
 css.files = networkplugin.css

@@ -9,16 +9,8 @@ SystemUIGConf::SystemUIGConf(QObject* parent) :
     // init the gconf keys    
     duiGConfItems.insert(SystemUIGConf::BatteryPSMAutoKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));
     duiGConfItems.insert(SystemUIGConf::BatteryPSMThresholdKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBrightnessMaxLevelKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBrightnessMaxLevelKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBrightnessLevelStepKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBrightnessLevelStepKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBrightnessKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBrightnessKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBlankTimeoutsKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBlankTimeoutsKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBlankTimeoutKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBlankTimeoutKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayDimTimeoutsKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayDimTimeoutsKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayDimTimeoutKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayDimTimeoutKey)));
-    duiGConfItems.insert(SystemUIGConf::DisplayBlankInhibitKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::DisplayBlankInhibitKey)));    
-    duiGConfItems.insert(SystemUIGConf::NetworkRoamingKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingKey)));
-    duiGConfItems.insert(SystemUIGConf::NetworkRoamingUpdatesKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingUpdatesKey)));
+    duiGConfItems.insert(SystemUIGConf::OfflineModeKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::OfflineModeKey)));
+    duiGConfItems.insert(SystemUIGConf::OfflinePhoneNetworkOnKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::OfflinePhoneNetworkOnKey)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -68,12 +60,9 @@ QString SystemUIGConf::mapGConfKeyGroup(SystemUIGConf::GConfKeyGroup keyGroup)
         case SystemUIGConf::Battery:
             keyGroupStr = "/systemui/settings/battery";
             break;
-        case SystemUIGConf::Display:
-            keyGroupStr = "/system/osso/dsm/display";
-            break;
-        case SystemUIGConf::Network:
-            keyGroupStr = "/system/osso/connectivity/network_type/GPRS";
-            break;
+        case SystemUIGConf::Offline:
+            keyGroupStr = "/systemui/settings/offline";
+            break;        
         default:
             break;
     }
@@ -90,36 +79,12 @@ QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
         case SystemUIGConf::BatteryPSMThresholdKey:
             keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg("/batteryPSMThreshold");
             break;
-        case SystemUIGConf::DisplayBrightnessMaxLevelKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/max_display_brightness");
+        case SystemUIGConf::OfflineModeKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Offline)).arg("/offlineMode");
             break;
-        case SystemUIGConf::DisplayBrightnessLevelStepKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Display_brightness_level_step");
+        case SystemUIGConf::OfflinePhoneNetworkOnKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Offline)).arg("/offlinePhoneNetworkOn");
             break;
-        case SystemUIGConf::DisplayBrightnessKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Display_brightness");
-            break;
-        case SystemUIGConf::DisplayBlankTimeoutsKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Possible_display_blank_timeouts");
-            break;
-        case SystemUIGConf::DisplayBlankTimeoutKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Display_blank_timeout");
-            break;
-        case SystemUIGConf::DisplayDimTimeoutsKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Possible_display_dim_timeouts");
-            break;
-        case SystemUIGConf::DisplayDimTimeoutKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/Display_dim_timeout");
-            break;
-        case SystemUIGConf::DisplayBlankInhibitKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Display)).arg("/inhibit_blank_mode");
-            break;        
-        case SystemUIGConf::NetworkRoamingKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/gprs_roaming_disabled").arg("");
-            break;
-        case SystemUIGConf::NetworkRoamingUpdatesKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/????"); //TODO: find out the value
-            break;        
         default:
             break;
     }

@@ -1,0 +1,15 @@
+#connectivityLabel1 {
+	color: white;
+        font: "Nokia Sans" 18;
+}
+
+#connectivityLabel2 {
+        color: orange;
+        font: "Nokia Sans" 14;
+}
+
+#connectivityButton {
+        preferred-size: size(36, 36);
+        minimum-size: size(36, 36);
+        maximum-size: size(36, 36);
+}

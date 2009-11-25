@@ -13,14 +13,10 @@
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
-#include <DuiList>
-#include <DuiStylableWidget>
-#include <DuiWidgetController>
 #include <QDebug>
 
 /* TODO:
-   1) Show data counter dialog
-   2) Toggle button, what to do?
+   1) Show data counter dialog   
    3) Update the list so that the selected operator is indicated somehow
    4) Update the list so that when selection fails teh list is updated accordingly
 */

@@ -33,7 +33,8 @@
 Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
     DuiWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
-    dataIf(NULL)
+    dataIf(NULL),
+    buttonGroup(NULL)
 {    
     Q_UNUSED(statusIndicatorMenu);
     dataIf = new ProfileDataInterface();
@@ -57,7 +58,7 @@ Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     mainLayout->addItem(container);
 
     // Create a button group for the profiles
-    DuiButtonGroup *buttonGroup = new DuiButtonGroup(widget);
+    buttonGroup = new DuiButtonGroup(widget);
     buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
 
     // Find out the possible profiles
@@ -82,6 +83,8 @@ Profile::~Profile()
 {
     delete dataIf;
     dataIf = NULL;
+    delete buttonGroup;
+    buttonGroup = NULL;
 }
 
 void Profile::showProfileModificationPage()
