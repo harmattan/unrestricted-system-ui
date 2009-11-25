@@ -84,10 +84,11 @@ PATH = '/com/nokia/csd/sim'
 bus_name_emerg = dbus.service.BusName('com.nokia.csd.Call', bus)
 PATH_emerg = '/com/nokia/csd/call'
 
-# launch
-bus_name_launch = 'com.nokia.systemui.pin'
-PATH_launch = '/com/nokia/systemui/pin'
-if_name_launch = 'com.nokia.systemui.pin.PinCodeQuery'
+# pin query
+service_name_pin = 'com.nokia.systemui.pin'
+service_path_pin = '/com/nokia/systemui/pin'
+service_if_pin = 'com.nokia.systemui.pin.PinCodeQuery'
+
 
 TIMEOUT = 1000
 PIN = '4321'
@@ -367,11 +368,43 @@ class UserInterface:
 
         launch = gtk.Button('Launch query')
         def cb_launch(widget):
-            obj = bus.get_object(bus_name_launch, PATH_launch)
-            query = dbus.Interface(obj, if_name_launch)
+            obj = bus.get_object(service_name_pin, service_path_pin)
+            query = dbus.Interface(obj, service_if_pin)
             print 'LaunchPinQuery returns:', query.LaunchPinQuery('PIN')
         launch.connect('clicked', cb_launch)
         frame.add(launch)
+
+        change = gtk.Button('Change PIN')
+        def cb_change(widget):
+            obj = bus.get_object(service_name_pin, service_path_pin)
+            query = dbus.Interface(obj, service_if_pin)
+            print 'emit ChangePinCode:', query.ChangePinCode()
+        change.connect('clicked', cb_change)
+        frame.add(change)
+
+        enable = gtk.Button('Enable PIN query')
+        def cb_enable(widget):
+            obj = bus.get_object(service_name_pin, service_path_pin)
+            query = dbus.Interface(obj, service_if_pin)
+            print 'emit EnablePinQuery(true)', query.EnablePinQuery(True)
+        enable.connect('clicked', cb_enable)
+        frame.add(enable)
+
+        disable = gtk.Button('Disable PIN query')
+        def cb_disable(widget):
+            obj = bus.get_object(service_name_pin, service_path_pin)
+            query = dbus.Interface(obj, service_if_pin)
+            print 'emit EnablePinQuery(false)', query.EnablePinQuery(False)
+        disable.connect('clicked', cb_disable)
+        frame.add(disable)
+
+        queryState = gtk.Button('PIN query state')
+        def cb_queryState(widget):
+            obj = bus.get_object(service_name_pin, service_path_pin)
+            query = dbus.Interface(obj, service_if_pin)
+            print 'emit PinQueryState', query.PinQueryState('PIN')
+        queryState.connect('clicked', cb_queryState)
+        frame.add(queryState)
 
         verify = gtk.Button('Verify code required')
         def cb_verify_code_req(widget):
