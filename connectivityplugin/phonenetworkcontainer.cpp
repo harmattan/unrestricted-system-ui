@@ -16,6 +16,13 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
         radioAccess(NULL),
         networkTechnology(NULL)
 {
+    signalStrengthIcon = new NetworkSignalStrengthIcon();
+    networkOperator = new NetworkOperator();
+    radioAccess = new RadioAccess();
+    networkTechnology = new NetworkTechnology(radioAccess);
+    connect(networkTechnology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
+            this, SLOT(updateButtonIcon(NetworkTechnology::Technology)));
+
     toggleButton = new DuiButton();
     toggleButton->setCheckable(true);
     toggleButton->setChecked(/* TODO: check state from correct API */true);
@@ -25,14 +32,7 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
     operatorLabel = new DuiLabel();
     operatorLabel->setObjectName("connectivityLabel2");
     operatorLabel->setText(networkOperator->name());
-    connect(networkOperator, SIGNAL(nameChanged(QString)), operatorLabel, SLOT(setText(QString)));
-
-    signalStrengthIcon = new NetworkSignalStrengthIcon();
-    networkOperator = new NetworkOperator();
-    radioAccess = new RadioAccess();
-    networkTechnology = new NetworkTechnology(radioAccess);
-    connect(networkTechnology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
-            this, SLOT(updateButtonIcon(NetworkTechnology::Technology)));
+    connect(networkOperator, SIGNAL(nameChanged(QString)), operatorLabel, SLOT(setText(QString)));   
 
     updateButtonIcon(networkTechnology->currentTechnology());
 
