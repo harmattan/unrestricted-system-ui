@@ -29,6 +29,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
             this, SLOT(updateMissedEventAmounts(int, int, int, int)));
     dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
     */
+    shortPowerKeyPressOccured();
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()

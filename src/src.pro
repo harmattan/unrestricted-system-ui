@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     batterybusinesslogic.cpp \
     pincodequeryui.cpp \
     pincodequerybusinesslogic.cpp \
+    cellularui.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \    
@@ -38,6 +39,7 @@ HEADERS += main.h \
     batterybusinesslogic.h \
     pincodequeryui.h \
     pincodequerybusinesslogic.h \
+    cellularui.h \
     sysuid.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \    

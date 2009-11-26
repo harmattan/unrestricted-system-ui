@@ -14,6 +14,7 @@
 #include "notifier.h"
 #include "notificationtype.h"
 #include "shutdownbusinesslogic.h"
+#include "cellularui.h"
 
 namespace
 {
@@ -56,11 +57,18 @@ Sysuid::Sysuid() :
             notifier, SLOT(showNotification(QString, NotificationType::Type)));
 
     /* Lockscreen */
-    lockScreenLogic = new LockScreenBusinessLogic(this);    
+    lockScreenLogic = new LockScreenBusinessLogic(this);
 
     /* Battery */
     batteryLogic = new BatteryBusinessLogic(systemUIGConf, this);
     connect(batteryLogic, SIGNAL(showNotification(QString)), notifier, SLOT(showNotification(QString)));
+
+    /* Cellular UI */
+    cellUI = new CellularUI(this);
+    connect(cellUI, SIGNAL(showNotification(QString, NotificationType::Type)),
+            notifier, SLOT(showNotification(QString, NotificationType::Type)));
+    connect(cellUI, SIGNAL(showConfirmation(QString, QString)),
+            notifier, SLOT(showConfirmation(QString, QString)));
 
     // D-Bus registration and stuff.
     new BatteryBusinessLogicAdaptor(this, batteryLogic);

@@ -12,6 +12,7 @@ class ShutdownBusinessLogic;
 class EventHandler;
 class Notifier;
 class CallAndSimBusinessLogic;
+class CellularUI;
 
 class Sysuid : public QObject
 {
@@ -25,13 +26,14 @@ public:
     static QString dbusPath();
 
 private:
-    SystemUIGConf *systemUIGConf;
-    PinCodeQueryBusinessLogic *pinCodeQueryLogic;
-    BatteryBusinessLogic *batteryLogic;    
-    LockScreenBusinessLogic *lockScreenLogic;
-    ShutdownBusinessLogic *shutdownLogic;
-    EventHandler *eventHandler;
-    Notifier *notifier;   
+    SystemUIGConf* systemUIGConf;
+    PinCodeQueryBusinessLogic* pinCodeQueryLogic;
+    BatteryBusinessLogic* batteryLogic;
+    LockScreenBusinessLogic* lockScreenLogic;
+    ShutdownBusinessLogic* shutdownLogic;
+    CellularUI* cellUI;
+    EventHandler* eventHandler;
+    Notifier* notifier;
     static Sysuid* _sysuid;
 };
 
