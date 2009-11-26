@@ -11,20 +11,23 @@ CONFIG += plugin \
     cellular-qt
 INCLUDEPATH += /usr/include/duistatusindicatormenu \
     /usr/include/duicontrolpanel \
-    ../src
+    ../src \
+    ../networkapplet
 QT += dbus
 HEADERS = connectivityplugin.h \
     connectivity.h \
     phonenetworkcontainer.h \
     offlinecontainer.h \
     networksignalstrengthicon.h \
-    ../src/systemuigconf.h
+    ../src/systemuigconf.h \
+    ../networkapplet/networktechnology.h
 SOURCES = connectivityplugin.cpp \
     connectivity.cpp \
     phonenetworkcontainer.cpp \
     offlinecontainer.cpp \
     networksignalstrengthicon.cpp \
-    ../src/systemuigconf.cpp
+    ../src/systemuigconf.cpp \
+    ../networkapplet/networktechnology.cpp
 TARGET = $$qtLibraryTarget(connectivity)
 css.files = connectivity.css
 css.path += /usr/share/duistatusindicatormenu/themes/style/

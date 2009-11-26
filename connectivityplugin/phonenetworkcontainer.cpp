@@ -12,19 +12,29 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
         toggleButton(NULL),
         operatorLabel(NULL),
         signalStrengthIcon(NULL),
-        networkOperator(NULL)
+        networkOperator(NULL),
+        radioAccess(NULL),
+        networkTechnology(NULL)
 {
-    networkOperator = new NetworkOperator();
     toggleButton = new DuiButton();
     toggleButton->setCheckable(true);
     toggleButton->setChecked(/* TODO: check state from correct API */true);
     toggleButton->setObjectName("connectivityButton");
     connect(toggleButton, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));    
-    signalStrengthIcon = new NetworkSignalStrengthIcon();
+
     operatorLabel = new DuiLabel();
     operatorLabel->setObjectName("connectivityLabel2");
     operatorLabel->setText(networkOperator->name());
     connect(networkOperator, SIGNAL(nameChanged(QString)), operatorLabel, SLOT(setText(QString)));
+
+    signalStrengthIcon = new NetworkSignalStrengthIcon();
+    networkOperator = new NetworkOperator();
+    radioAccess = new RadioAccess();
+    networkTechnology = new NetworkTechnology(radioAccess);
+    connect(networkTechnology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
+            this, SLOT(updateButtonIcon(NetworkTechnology::Technology)));
+
+    updateButtonIcon(networkTechnology->currentTechnology());
 
     setLayout();
 }
@@ -33,6 +43,10 @@ PhoneNetworkContainer::~PhoneNetworkContainer()
 {
     delete networkOperator;
     networkOperator = NULL;
+    delete networkTechnology;
+    networkTechnology = NULL;
+    delete radioAccess;
+    radioAccess = NULL;
 }
 
 bool PhoneNetworkContainer::phoneNetworkOn()
@@ -43,6 +57,34 @@ bool PhoneNetworkContainer::phoneNetworkOn()
 void PhoneNetworkContainer::togglePhoneNetwork(bool toggle)
 { 
     toggleButton->setChecked(toggle);
+}
+
+void PhoneNetworkContainer::updateButtonIcon(NetworkTechnology::Technology technology)
+{
+    toggleButton->setIconID(mapTechnologyToIcon(technology));
+}
+
+QString PhoneNetworkContainer::mapTechnologyToIcon(NetworkTechnology::Technology technology)
+{    
+    QString icon;
+    switch(technology) {
+        case NetworkTechnology::TwoG:
+            icon = QString("icon-s-gsm");
+            break;
+        case NetworkTechnology::TwoPointFiveG:
+            icon = QString("icon-s-25g");
+            break;
+        case NetworkTechnology::ThreeG:
+            icon = QString("icon-s-3g");
+            break;
+        case NetworkTechnology::ThreePointFiveG:
+            icon = QString("icon-s-35g");
+            break;
+        default:
+            icon = QString("icon-s-network-0");
+            break;
+    }
+    return icon;
 }
 
 void PhoneNetworkContainer::setLayout()
