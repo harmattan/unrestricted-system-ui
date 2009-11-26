@@ -23,53 +23,42 @@ TestPage::~TestPage()
 }
 
 /* TestObj */
-TestObj::TestObj() : QObject(), time(0)
+TestObj::TestObj() : QObject(), time(2)
 {
-    timer = new QTimer(0);
-    connect(timer, SIGNAL(timeout()), this, SLOT(handlePage()));
     handlePage();
 }
 
 TestObj::~TestObj()
 {
     delete p;
-    if(timer != NULL)
-    {
-        timer->stop();
-        delete timer;
-        timer = NULL;
-    }
 }
 
 void TestObj::handlePage()
 {
     switch(time)
     {
-        case 0: // start timer for 5 sec and
-            qDebug() << Q_FUNC_INFO << "start timer," << time;
-            time = 5;
-            timer->start(time*1000);
-        case 2: // create page
-            if(p == NULL)
-            {
-                p = new TestPage();
-                p->appear();
-                qDebug() << Q_FUNC_INFO << "new & p->appear()," << time;
-            }
-            for (int i = 0; i < 300; ++i)
-            {
-                p->appear();
-            }
-            qDebug() << Q_FUNC_INFO << "p->appear() x 300" << time;
-        break;
-        case 5: // delete page and wait 2 sec
+        case 1: // delete page and wait 2 sec
             time = 2;
-            p->disappear();
-            qDebug() << Q_FUNC_INFO << "p->disappear()" << time;
-            delete p;
-            timer->start(time);
+            qDebug() << Q_FUNC_INFO << "to disappear:" << (QObject*)p;
+            if(p){
+                qDebug() << Q_FUNC_INFO << "to disappear:" << (QObject*)p << "--> t->disappearNow(), wait" << time;
+                p->disappearNow();
+            }
+            QTimer::singleShot(time*500, this, SLOT(handlePage()));
+        break;
+        case 2: // create page
+            time = 1;
+            QTimer::singleShot(time*500, this, SLOT(handlePage()));
+            qDebug() << Q_FUNC_INFO << "to appear:" << (QObject*)p;
+            if(!p){
+                p = new TestPage();
+                sleep(1);
+            }
+            qDebug() << Q_FUNC_INFO << "--> p->appearNow(DuiSceneWindow::DestroyWhenDone), wait" << time;
+            p->appearNow(DuiSceneWindow::DestroyWhenDone);
         break;
     }
+    qDebug() << Q_FUNC_INFO << "out" << (QObject*)p;
 }
 
 

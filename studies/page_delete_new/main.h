@@ -31,7 +31,6 @@ public slots:
 private:
     QPointer<TestPage> p;
     int time;
-    QTimer* timer;
 };
 
 #endif // MAIN_H
