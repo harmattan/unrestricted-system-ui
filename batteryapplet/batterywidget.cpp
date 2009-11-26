@@ -124,8 +124,7 @@ void BatteryWidget::initWidget()
 }
 
 void BatteryWidget::PSMButtonReleased()
-{
-    PSMButton->setEnabled(false);
+{    
     bool toggle = ( PSMButton->text() == DcpBattery::PSMActivateText ? true : false);
     batteryIf->setPSMValue(toggle);
 }
@@ -133,8 +132,7 @@ void BatteryWidget::PSMButtonReleased()
 void BatteryWidget::updatePSMButton(bool toggle)
 {
     QString text = ( toggle ? DcpBattery::PSMDeactivateText : DcpBattery::PSMActivateText );
-    PSMButton->setText(text);
-    PSMButton->setEnabled(true);
+    PSMButton->setText(text); 
 }
 
 void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)

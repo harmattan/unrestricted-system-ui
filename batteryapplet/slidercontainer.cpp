@@ -11,10 +11,12 @@
 
 SliderContainer::SliderContainer(DuiWidget *parent) :
         DuiContainer(parent),
-        PSMAutoButton(new DuiButton(this)),
-        PSMSlider(new DuiSlider(this, "continuous"))
+        PSMAutoButton(NULL),
+        PSMSlider(NULL)
 {
+    PSMAutoButton = new DuiButton();    
     connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
+    PSMSlider = new DuiSlider(this, "continuous");
     connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
     setLayout();
 }
@@ -31,9 +33,9 @@ void SliderContainer::setLayout()
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiGridLayoutPolicy(layout);
     layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::PSMAutoActivateText), 0, 0);
-    layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);
-    layoutPolicy->setRowMaximumHeight(1, 75);
-
+    layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);    
+    layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
+    layoutPolicy->setRowSpacing(0, 25);
     centralWidget()->setLayout(layout);
 }
 
@@ -60,11 +62,11 @@ void SliderContainer::sliderValueChanged(int value)
 void SliderContainer::toggleSliderExistence(bool toggle)
 {
     qDebug() << "SliderContainer::toggleSliderExistence(" << toggle << ")";
-    if(toggle) {
+    if(toggle) {        
         if(layoutPolicy->itemAt(1, 0) != PSMSlider)
             layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
     }
-    else {
+    else {        
         if(layoutPolicy->itemAt(1, 0) == PSMSlider)
             layoutPolicy->removeItem(PSMSlider);
     }
