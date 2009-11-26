@@ -7,6 +7,7 @@
 #include "standbytimecontainer.h"
 #include "slidercontainer.h"
 
+#include <QGraphicsLinearLayout>
 #include <QDebug>
 
 #include <DuiButton>
@@ -54,22 +55,21 @@ bool BatteryWidget::back()
 
 void BatteryWidget::initWidget()
 {       
-    qDebug() << "Test";
     // proxy for dbus interface on remote object
     batteryIf = new BatteryDBusInterface();
 
     // talkTimeContainer        
-    talkTimeContainer = new TalkTimeContainer(this);
+    talkTimeContainer = new TalkTimeContainer();
 
     // standByTimeContainer
-    standByTimeContainer = new StandByTimeContainer(this);
+    standByTimeContainer = new StandByTimeContainer();
 
     // PSMButton
-    PSMButton = new DuiButton(this);
+    PSMButton = new DuiButton();
     connect(PSMButton, SIGNAL(released()), this, SLOT(PSMButtonReleased()));
 
     // sliderContainer
-    sliderContainer = new SliderContainer(this);   
+    sliderContainer = new SliderContainer();
     connect(sliderContainer, SIGNAL(PSMAutoToggled(bool)), batteryIf, SLOT(setPSMAutoValue(bool)));
     connect(sliderContainer, SIGNAL(PSMThresholdValueChanged(QString)), batteryIf, SLOT(setPSMThresholdValue(QString)));
 
@@ -92,7 +92,7 @@ void BatteryWidget::initWidget()
     portraitLayoutPolicy->setSpacing(20);
     orientationLayout->setPortraitPolicy(portraitLayoutPolicy);
 
-    DuiContainer *mainContainer = new DuiContainer(this);
+    DuiContainer *mainContainer = new DuiContainer();
     mainContainer->centralWidget()->setLayout(orientationLayout);
 
     // connect the value receive signals
@@ -117,10 +117,11 @@ void BatteryWidget::initWidget()
     batteryIf->PSMThresholdValuesRequired();
 
     // mainLayout
-    DuiLayout *mainLayout = new DuiLayout(this);
-    DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    mainLayoutPolicy->addItem(mainContainer);
-    this->setLayout(mainLayout);
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addItem(mainContainer);
+    setLayout(mainLayout);
+
 }
 
 void BatteryWidget::PSMButtonReleased()

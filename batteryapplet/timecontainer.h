@@ -8,7 +8,7 @@ class DuiLabel;
 class TimeContainer : public DuiContainer
 {
 public:
-    TimeContainer(DuiWidget *parent);
+    TimeContainer(DuiWidget *parent=0);
     virtual ~TimeContainer();
 
     void updateTimeLabel(const QString &text);

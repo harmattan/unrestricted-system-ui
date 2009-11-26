@@ -16,7 +16,7 @@ SliderContainer::SliderContainer(DuiWidget *parent) :
 {
     PSMAutoButton = new DuiButton();    
     connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
-    PSMSlider = new DuiSlider(this, "continuous");
+    PSMSlider = new DuiSlider(0, "continuous");
     connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
     setLayout();
 }

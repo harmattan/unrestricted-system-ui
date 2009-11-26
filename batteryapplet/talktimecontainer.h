@@ -10,7 +10,7 @@ class TalkTimeContainer : public TimeContainer
 {
     Q_OBJECT
 public:
-    TalkTimeContainer(DuiWidget *parent);
+    TalkTimeContainer(DuiWidget *parent=0);
     virtual ~TalkTimeContainer();
 
     BatteryImage * batteryImage();

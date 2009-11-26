@@ -13,7 +13,7 @@ class SliderContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    SliderContainer(DuiWidget *parent);
+    SliderContainer(DuiWidget *parent=0);
     virtual ~SliderContainer();
 
 public slots:

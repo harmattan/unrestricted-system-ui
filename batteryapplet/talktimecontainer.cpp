@@ -30,7 +30,7 @@ void TalkTimeContainer::setLayout()
     DuiLayout *layout = new DuiLayout();
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);    
     layoutPolicy->addItemAtPosition(image, 0, 0, 2, 1, Qt::AlignLeft);
-    layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::TalkTimeText, this), 0, 1);
+    layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::TalkTimeText), 0, 1);
     timeLabel = new DuiLabel();
     layoutPolicy->addItemAtPosition(timeLabel, 1, 1);
     layoutPolicy->setColumnFixedWidth(0, 50);

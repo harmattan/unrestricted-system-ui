@@ -8,7 +8,7 @@ class DuiLabel;
 class StandByTimeContainer : public TimeContainer
 {
 public:
-    StandByTimeContainer(DuiWidget *parent);
+    StandByTimeContainer(DuiWidget *parent=0);
     virtual ~StandByTimeContainer();
 
 private: //methods
