@@ -8,6 +8,7 @@
 CellularUI::CellularUI(QObject* parent) :
         QObject(parent)
 {
+    // Note! This D-Bus interface is going to be replaced by some Qt bindings.
     gprs = new QDBusInterface("com.nokia.csd.GPRS",
                               "/com/nokia/csd/gprs",
                               "com.nokia.csd.GPRS",
