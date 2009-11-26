@@ -3,7 +3,8 @@ CONFIG += plugin \
     gui \
     dui \
     silent \
-    debug
+    debug \
+    qmsystem
 LIBS += -lduicontrolpanel
 INCLUDEPATH += /usr/include/qt4/dui \
     /usr/include/duicontrolpanel

@@ -2,7 +2,7 @@
 
 #include <DuiLabel>
 #include <DuiLayout>
-#include <DuiGridLayoutPolicy>
+#include <DuiLinearLayoutPolicy>
 #include <DuiSlider>
 
 #include <QDebug>
@@ -27,11 +27,10 @@ SliderContainer::~SliderContainer()
 void SliderContainer::setLayout()
 {    
     DuiLayout *layout = new DuiLayout();
-    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
-    layoutPolicy->addItemAtPosition(label, 0, 0);
-    layoutPolicy->addItemAtPosition(slider, 1, 0);
-    layoutPolicy->setRowMaximumHeight(1, 50);
-
+    DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    layoutPolicy->addItem(label, Qt::AlignLeft);
+    layoutPolicy->addItem(slider, Qt::AlignLeft);    
+    layoutPolicy->setItemSpacing(0, 25);
     centralWidget()->setLayout(layout);
 }
 
