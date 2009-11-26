@@ -9,10 +9,6 @@
 #include <QVariant>
 #include <QDebug>
 
-namespace {
-    const int NetworkTechnologyCheckInterval = 500;
-}
-
 void Ut_NetworkBusinessLogic::init()
 {
     m_subject = new NetworkBusinessLogic();
@@ -36,40 +32,6 @@ void Ut_NetworkBusinessLogic::initTestCase()
 void Ut_NetworkBusinessLogic::cleanupTestCase()
 {
     delete app;
-}
-
-void Ut_NetworkBusinessLogic::testNetworkIcon()
-{    
-    // Test 2G icon
-    m_subject->radioAccess->setTechnology(RadioAccess::GSM);
-    m_subject->technology->networkCell->setServices(NetworkCell::GPRSSupport);
-    QTest::qWait(NetworkTechnologyCheckInterval + 50);    
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-gsm"));
-
-    // Test 2.5G icon
-    m_subject->technology->networkCell->setServices(NetworkCell::EGPRSSupport);
-    QTest::qWait(NetworkTechnologyCheckInterval - 10);
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-gsm")); //test that the icon is not changed ...
-    QTest::qWait(10 + 50);
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-25g")); // until now
-
-    // Test 3G icon
-    m_subject->radioAccess->setTechnology(RadioAccess::UMTS);
-    QTest::qWait(NetworkTechnologyCheckInterval - 50);
-    m_subject->technology->networkCell->setServices(NetworkCell::GPRSSupport);  //restart the timer
-    QTest::qWait(NetworkTechnologyCheckInterval - 50);
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-25g")); //test that the icon is not changed ...
-    QTest::qWait(10 + 50);
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-3g")); // until now
-
-    // Test 3.5G icon
-    m_subject->technology->networkCell->setServices(NetworkCell::HSDPASupport);
-    QTest::qWait(NetworkTechnologyCheckInterval - 50);
-    m_subject->radioAccess->setState(RadioAccess::AllocatedHSDPA); //restart the timer
-    QTest::qWait(NetworkTechnologyCheckInterval - 50);    
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-3g")); //test that the icon is not changed ...
-    QTest::qWait(10 + 50);
-    QCOMPARE(m_subject->networkIcon(), QString("icon-s-35g")); // until now
 }
 
 void Ut_NetworkBusinessLogic::testQueryAvailableOperators()

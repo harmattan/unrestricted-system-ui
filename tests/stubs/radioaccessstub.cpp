@@ -6,8 +6,8 @@ namespace Cellular
 
 RadioAccess::RadioAccess(QObject *parent) :
         QObject(parent),
-        currentMode(RadioAccess::GSMMode),
-        currentTechnology(RadioAccess::GSM),
+        currentMode(RadioAccess::UMTSMode),
+        currentTechnology(RadioAccess::UMTS),
         flags(RadioAccess::Idle)
 {
 }

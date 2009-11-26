@@ -5,63 +5,19 @@
 #include <QStringList>
 #include <QHash>
 #include <QMultiMap>
-#include <QTimer>
 
 #ifdef UNIT_TEST
 #include "networkregistrationstub.h"
 #include "radioaccessstub.h"
-#include "networkcellstub.h"
 #include "networkoperatorstub.h"
 #else
 #include <NetworkRegistration>
 #include <RadioAccess>
-#include <NetworkCell>
 #include <NetworkOperator>
 #endif
+#include "networktechnology.h"
 
 using namespace Cellular;
-
-class NetworkTechnology : public QObject
-{
-    Q_OBJECT
-
-public:
-
-    enum Technology {
-        None = 0,
-        TwoG,
-        TwoPointFiveG,
-        ThreeG,
-        ThreePointFiveG
-    };
-
-    NetworkTechnology(RadioAccess *radioAccess, QObject *parent = 0);    
-    ~NetworkTechnology();
-
-    NetworkTechnology::Technology currentTechnology();
-
-private slots:    
-    void checkTechnology();
-
-signals:
-    void technologyChanged(NetworkTechnology::Technology technology);
-
-private: //methods
-    void init();
-    void updateTechnology();
-
-private: //attributes
-    RadioAccess *radioAccess;
-    NetworkCell *networkCell;
-    NetworkTechnology::Technology technology;
-    QTimer *timer;
-
-#ifdef UNIT_TEST
-   friend class Ut_NetworkBusinessLogic;
-#endif // UNIT_TEST
-
-};
-
 
 class NetworkBusinessLogic : public QObject
 {

@@ -16,7 +16,6 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testNetworkIcon();
     void testQueryAvailableOperators();
     void testSelectOperator();    
 

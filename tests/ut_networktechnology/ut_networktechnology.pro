@@ -3,23 +3,19 @@ STUB_PREFIX = ../stubs/
 INCLUDEPATH += $$SRC_PREFIX \
     $$STUB_PREFIX \
     /usr/include/cellular-qt
-QT += testlib 
+QT += testlib
 TEMPLATE = app
 DEFINES += UNIT_TEST
-TARGET = ut_networkbusinesslogic
+TARGET = ut_networktechnology
 target.path = /usr/lib/system-ui-tests
 CONFIG += dui \
     cellular-qt
-SOURCES += ut_networkbusinesslogic.cpp \
-    $$SRC_PREFIX/networkbusinesslogic.cpp \
+SOURCES += ut_networktechnology.cpp \
     $$SRC_PREFIX/networktechnology.cpp \
-    $$STUB_PREFIX/networkregistrationstub.cpp \
     $$STUB_PREFIX/radioaccessstub.cpp \    
-    $$STUB_PREFIX/networkoperatorstub.cpp
-HEADERS += ut_networkbusinesslogic.h \
-    $$SRC_PREFIX/networkbusinesslogic.h \
+    $$STUB_PREFIX/networkcellstub.cpp
+HEADERS += ut_networktechnology.h \
     $$SRC_PREFIX/networktechnology.h \
-    $$STUB_PREFIX/networkregistrationstub.h \
     $$STUB_PREFIX/radioaccessstub.h \    
-    $$STUB_PREFIX/networkoperatorstub.h
+    $$STUB_PREFIX/networkcellstub.h
 INSTALLS += target

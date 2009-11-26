@@ -18,20 +18,22 @@ MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = networkapplet.h \
     networkwidget.h \
-    networkbrief.h \    
+    networkbrief.h \
     networktranslation.h \
     networkcontainer.h \
     networklist.h \
     roamingcontainer.h \
     networkbusinesslogic.h \
-    dcpnetwork.h
+    dcpnetwork.h \
+    networktechnology.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
-    networkbrief.cpp \    
+    networkbrief.cpp \
     networkcontainer.cpp \
     networklist.cpp \
     roamingcontainer.cpp \
-    networkbusinesslogic.cpp
+    networkbusinesslogic.cpp \
+    networktechnology.cpp
 css.files = networkapplet.css
 DESTDIR = lib
 desktop.files += *.desktop
