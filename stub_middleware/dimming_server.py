@@ -53,6 +53,16 @@ DISPLAY_MODES = [
             ]
 global DISPLAY_MODE_IDX
 DISPLAY_MODE_IDX = 2
+#//LOCK (MCE)
+#define SYS_MCE_TKMODE_GET                "get_tklock_mode"
+#define SYS_MCE_DEVICELOCKMODE_GET        "get_devicelock_mode"
+
+#define SYS_MCE_TSKBMODE_REQ              "req_tklock_mode_change"
+
+#define SYS_MCE_DEVICELOCKMODE_SIG        "devicelock_mode_ind"
+#define SYS_MCE_TKMODE_SIG                "tklock_mode_ind"
+
+LOCK = 'unlocked'
 
 class ServerReq(dbus.service.Object):
     def __init__ (self, bus_name, path=PATH_REQ):
@@ -65,6 +75,16 @@ class ServerReq(dbus.service.Object):
         global DISPLAY_MODE_IDX
         self.on_getdisplaystatus(self.getdisplaystatus)
         return DISPLAY_MODES[DISPLAY_MODE_IDX]
+
+    @dbus.service.method('com.nokia.mce.request')
+    def get_tklock_mode(self):
+        return LOCK
+    @dbus.service.method('com.nokia.mce.request')
+    def req_tklock_mode_change(self, how):
+        if how == LOCK:
+            LOCK = 'locked'
+        else:
+            LOCK = 'unlocked'
 
 class ServerSig(dbus.service.Object):
     def __init__ (self, bus_name, path=PATH_SIG):
@@ -80,6 +100,12 @@ class ServerSig(dbus.service.Object):
                          signature='si')
     def sig_hardware_key_state_ind(self, str, integer):
         print 'signal emit: hw key ind', str, integer
+
+    @dbus.service.signal(dbus_interface='com.nokia.mce.signal',
+                         signature='s')
+    def tklock_mode_ind(self, state):
+        LOCK = state
+        print 'signal emit: touch screen lock mode:', state
 
 def set_text_color(widget, color):
     widget.modify_fg (gtk.STATE_NORMAL ,
@@ -114,7 +140,6 @@ class UserInterface:
         frame = tmp
         
 
-        liststore = gtk.ListStore(gobject.TYPE_STRING)
         mode = gtk.combo_box_new_text()
         g = None
         for m in DISPLAY_MODES:
@@ -128,6 +153,18 @@ class UserInterface:
                         global DISPLAY_MODE_IDX
                         DISPLAY_MODE_IDX = i
                         self.serverSig.display_status_ind(widget.get_label())
+            radio.connect('toggled', cb_display) 
+
+            frame.add(radio)
+
+        g = None
+        for m in 'locked unlocked'.split(' '):
+            radio = gtk.RadioButton(group=g,label=m)
+            if g == None:
+                g = radio
+            def cb_display(widget):
+                if not widget.get_active(): return
+                self.serverSig.tklock_mode_ind(widget.get_label())
             radio.connect('toggled', cb_display) 
 
             frame.add(radio)
