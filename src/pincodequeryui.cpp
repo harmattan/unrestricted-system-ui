@@ -20,11 +20,6 @@
 #include <QIntValidator>
 
 
-/*!
- * TODOs:
- * 1. Emergency call icon ID to be updated when provided by Vappu
- *
- */
 PinCodeQueryUI::PinCodeQueryUI()
 {
     qDebug() << Q_FUNC_INFO;
@@ -273,19 +268,21 @@ void PinCodeQueryUI::removeText()
 void PinCodeQueryUI::hideWindow()
 {
     DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
-    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
     if(win && !win->isHidden()){
         win->hide();
     }
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
 }
+
 void PinCodeQueryUI::showWindow()
 {
     DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
-    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
     if(win && win->isHidden()){
         win->show();
     }
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
 }
+
 void PinCodeQueryUI::setWindowOnTop(bool onTop)
 {
 #ifdef UNIT_TEST
@@ -328,18 +325,18 @@ void PinCodeQueryUI::appearNow(DuiSceneWindow::DeletionPolicy policy)
 
 void PinCodeQueryUI::disappear()
 {
-    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
     if(isVisible()){
         DuiApplicationPage::disappear();
     }
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
 }
 
 void PinCodeQueryUI::disappearNow()
 {
-    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
     if(isVisible()){
         DuiApplicationPage::disappearNow();
     }
+    qDebug() << Q_FUNC_INFO << "isVisible()" << isVisible();
 }
 
 // eof

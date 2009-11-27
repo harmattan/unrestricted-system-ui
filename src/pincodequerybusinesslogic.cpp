@@ -140,18 +140,16 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         connect(uiPinEmergency, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinEnter, SIGNAL(released()), this, SLOT(uiButtonReleased()));
         connect(uiPinCancel, SIGNAL(released()), this, SLOT(uiButtonReleased()));
+        connect(uiPin, SIGNAL(backButtonClicked()), this, SLOT(cancelQuery()));
 
         /* Unfortunately no effect with libdui-dev version 0.11.1-1+0rebuild1+0m6 */
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
-    } else {
-        uiPin->getEnterBtn()->setEnabled(false);
     }
+    uiPin->setBackButtonEnabled(enableBack);
 
     DuiApplicationPage::DisplayMode mod = 0;
     if(enableBack){
-        uiPin->setBackButtonEnabled(enableBack);
-        connect(uiPin, SIGNAL(backButtonClicked ()), this, SLOT(cancelQuery()));
-        mod = (DuiApplicationPage::EscapeButtonVisible);
+        mod = DuiApplicationPage::EscapeButtonVisible;
     }
     uiPin->setDisplayMode( mod );
     uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
@@ -213,13 +211,17 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
 
 //            bool res = connect(callUi->RequestCellularCall("+3580405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
             bool res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
-                    this, SLOT(emergencyCallDone(CallUi::PendingCallRequest *)));
+                    this, SLOT(callStarted(CallUi::PendingCallRequest *)));
             if(res){
                 /* TODO: commented out until fix for #129775 is available
                  * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
                  * at the moment same behaviour as with #129775*/
                 PinCodeQueryUI::hideWindow();
                 /**/
+                qDebug() << Q_FUNC_INFO << "page visible:" << uiPin->isVisible();
+
+                connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
+                    this, SLOT(callEnded(QString, int, int, QString)));
             }
         }
     }
@@ -228,14 +230,29 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     qDebug() << Q_FUNC_INFO << "out";
 }
 
-void PinCodeQueryBusinessLogic::emergencyCallDone(CallUi::PendingCallRequest *req)
+void PinCodeQueryBusinessLogic::callStarted(CallUi::PendingCallRequest *req)
 {
-   PinCodeQueryUI::showWindow();
     if(req){
-        qDebug() << Q_FUNC_INFO << "called" << req->callId() << "successed?" << req->isError() << ";" << req->errorName() << ":" << req->errorMessage();
+        qDebug() << Q_FUNC_INFO << "callId" << req->callId() << "isError:" << req->isError()
+                << ";" << req->errorName() << ":" << req->errorMessage();
+        if(req->callId().isEmpty() || req->isError()){
+            callDone(req->callId(), CallUi::Error, 0, req->errorMessage());
+        } else {
+            connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
+                this, SLOT(emergencyCallEnded(QString, int, int, QString)));
+        }
     } else {
-        qDebug() << Q_FUNC_INFO << "call failure?";
+        qDebug() << Q_FUNC_INFO << "call start failure?";
+        callDone(0, CallUi::Error, 0, QString());
     }
+}
+
+void PinCodeQueryBusinessLogic::callDone(QString uid, int reason, int duration, QString message)
+{
+   qDebug() << Q_FUNC_INFO << "uid" << uid << "reason" << reason
+                << "duration" << duration << ":" << message;
+   PinCodeQueryUI::showWindow();
+   uiPin->appear();
 }
 
 // =======================================

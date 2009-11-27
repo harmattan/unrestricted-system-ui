@@ -132,7 +132,8 @@ private slots:
     void simEnablePINQueryComplete(SIMError error);
     void simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
 
-    void emergencyCallDone(CallUi::PendingCallRequest *req);
+    void callStarted(CallUi::PendingCallRequest *req);
+    void callDone(QString uid, int reason, int duration, QString message);
 
 #ifdef UNIT_TEST
    friend class Ut_PinCodeQueryBusinessLogic;
