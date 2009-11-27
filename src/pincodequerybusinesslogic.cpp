@@ -152,8 +152,8 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         mod = DuiApplicationPage::EscapeButtonVisible;
     }
     uiPin->setDisplayMode( mod );
-    uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
     PinCodeQueryUI::showWindow();
+    uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
 }
 
 void PinCodeQueryBusinessLogic::closeUi()
@@ -209,7 +209,7 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
         if(callUi){
             qDebug() << Q_FUNC_INFO << "call";
 
-//            bool res = connect(callUi->RequestCellularCall("+3580405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
+//            bool res = connect(callUi->RequestCellularCall("+358405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
             bool res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
                     this, SLOT(callStarted(CallUi::PendingCallRequest *)));
             if(res){
