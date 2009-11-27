@@ -146,6 +146,7 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
     }
     uiPin->setBackButtonEnabled(enableBack);
+    uiPin->getEnterBtn()->setEnabled(false);
 
     DuiApplicationPage::DisplayMode mod = 0;
     if(enableBack){
@@ -369,6 +370,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
                 } else if (subState == SubEnterNewPIN) {
                     subState = SubReEnterNewPIN;
                     newPinCode = uiPin->getCodeEntry()->text();
+                    uiPin->getEnterBtn()->setEnabled(false);
                     setUiHeader(HeaderEnterPinCodeReNew);
                 } else if (subState == SubReEnterNewPIN) {
                     if (newPinCode == uiPin->getCodeEntry()->text()) {
