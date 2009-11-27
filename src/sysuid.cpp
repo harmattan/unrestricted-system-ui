@@ -67,8 +67,6 @@ Sysuid::Sysuid() :
     cellUI = new CellularUI(this);
     connect(cellUI, SIGNAL(showNotification(QString, NotificationType::Type)),
             notifier, SLOT(showNotification(QString, NotificationType::Type)));
-    connect(cellUI, SIGNAL(showConfirmation(QString, QString)),
-            notifier, SLOT(showConfirmation(QString, QString)));
 
     // D-Bus registration and stuff.
     new BatteryBusinessLogicAdaptor(this, batteryLogic);
