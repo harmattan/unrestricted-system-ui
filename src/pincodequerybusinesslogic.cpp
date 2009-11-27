@@ -213,15 +213,8 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
             bool res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
                     this, SLOT(callStarted(CallUi::PendingCallRequest *)));
             if(res){
-                /* TODO: commented out until fix for #129775 is available
-                 * Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
-                 * at the moment same behaviour as with #129775*/
+                // TODO: Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
                 PinCodeQueryUI::hideWindow();
-                /**/
-                qDebug() << Q_FUNC_INFO << "page visible:" << uiPin->isVisible();
-
-                connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
-                    this, SLOT(callEnded(QString, int, int, QString)));
             }
         }
     }
@@ -236,10 +229,11 @@ void PinCodeQueryBusinessLogic::callStarted(CallUi::PendingCallRequest *req)
         qDebug() << Q_FUNC_INFO << "callId" << req->callId() << "isError:" << req->isError()
                 << ";" << req->errorName() << ":" << req->errorMessage();
         if(req->callId().isEmpty() || req->isError()){
+            qDebug() << Q_FUNC_INFO << "failed: open ui";
             callDone(req->callId(), CallUi::Error, 0, req->errorMessage());
-        } else {
-            connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
-                this, SLOT(emergencyCallEnded(QString, int, int, QString)));
+        } else if (callUi) {
+          connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
+              this, SLOT(callDone(QString, int, int, QString)));
         }
     } else {
         qDebug() << Q_FUNC_INFO << "call start failure?";
@@ -249,10 +243,15 @@ void PinCodeQueryBusinessLogic::callStarted(CallUi::PendingCallRequest *req)
 
 void PinCodeQueryBusinessLogic::callDone(QString uid, int reason, int duration, QString message)
 {
-   qDebug() << Q_FUNC_INFO << "uid" << uid << "reason" << reason
+    qDebug() << Q_FUNC_INFO << "uid" << uid << "reason" << reason
                 << "duration" << duration << ":" << message;
-   PinCodeQueryUI::showWindow();
-   uiPin->appear();
+    PinCodeQueryUI::showWindow();
+    uiPin->appear();
+    // we don't want to have more end-signals
+    if(callUi){
+        disconnect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
+                this, SLOT(callDone(QString, int, int, QString)));
+    }
 }
 
 // =======================================
