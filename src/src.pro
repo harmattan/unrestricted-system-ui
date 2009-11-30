@@ -25,15 +25,15 @@ SOURCES += main.cpp \
     cellularui.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \
-    lockscreenui.cpp \    
+    lockscreenui.cpp \
     shutdownui.cpp \
     shutdownbusinesslogic.cpp \
-    batterybusinesslogicadaptor.cpp \    
-    systemuigconf.cpp \    
+    batterybusinesslogicadaptor.cpp \
+    systemuigconf.cpp \
     notifierdbusadaptor.cpp \
-    pincodequerydbusadaptor.cpp \    
-    lockscreenbusinesslogicadaptor.cpp
-
+    pincodequerydbusadaptor.cpp \
+    lockscreenbusinesslogicadaptor.cpp \
+    callhandler.cpp
 HEADERS += main.h \
     notifier.h \
     batterybusinesslogic.h \
@@ -42,16 +42,16 @@ HEADERS += main.h \
     cellularui.h \
     sysuid.h \
     lockscreenbusinesslogic.h \
-    lockscreenui.h \    
+    lockscreenui.h \
     shutdownui.h \
     shutdownbusinesslogic.h \
-    batterybusinesslogicadaptor.h \    
-    systemuigconf.h \    
-    notifierdbusadaptor.h \        
+    batterybusinesslogicadaptor.h \
+    systemuigconf.h \
+    notifierdbusadaptor.h \
     pincodequerydbusadaptor.h \
-    notificationtype.h \    
-    lockscreenbusinesslogicadaptor.h
-
+    notificationtype.h \
+    lockscreenbusinesslogicadaptor.h \
+    callhandler.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

@@ -12,12 +12,11 @@
     #include <SIM>
     #include <SIMLock>
 #endif
-#include <call-ui/CallUiServiceApi>
 
 class PinCodeQueryDBusAdaptor;
+class CallHandler;
 
 using namespace Cellular;
-using namespace CallUi;
 
 class PinCodeQueryBusinessLogic : public QObject
 {
@@ -87,7 +86,7 @@ private: // attributes
     SIMSecurity* simSec;
     SIMLock *simLock;
 
-    CallUiServiceApi *callUi;
+    CallHandler *callUi;
 
 private: // methods
     bool handleSIMError(SIMError error);
@@ -132,8 +131,8 @@ private slots:
     void simEnablePINQueryComplete(SIMError error);
     void simPinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error);
 
-    void callStarted(CallUi::PendingCallRequest *req);
-    void callDone(QString uid, int reason, int duration, QString message);
+    void callStarted();
+    void callDone();
 
 #ifdef UNIT_TEST
    friend class Ut_PinCodeQueryBusinessLogic;

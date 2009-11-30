@@ -1,4 +1,5 @@
 #include "pincodequerybusinesslogic.h"
+#include "callhandler.h"
 #ifndef UNIT_TEST
     #include "pincodequerydbusadaptor.h"
 #endif // UNIT_TEST
@@ -13,8 +14,6 @@
 #include <ssc-dbus-names.h>
 
 #include "sysuid.h"
-
-using namespace CallUi;
 
 /*! The pincode query business logic object is the glue object between
  * SIM and pincode query UI widgets. It knows something about both ends.
@@ -80,12 +79,7 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
 {
     qDebug() << Q_FUNC_INFO;
 
-    sim = new SIM(this);
     simSec = new SIMSecurity(this);
-    simLock = new SIMLock(this);
-
-    dbus = new PinCodeQueryDBusAdaptor(this);
-
     connect(simSec, SIGNAL(verifyPINComplete(bool, SIMError)),
             this, SLOT(simPINCodeVerified(bool, SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(verifyPUKComplete(bool, SIMError)),
@@ -102,14 +96,23 @@ PinCodeQueryBusinessLogic::PinCodeQueryBusinessLogic(QObject* parent) :
             this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
     connect(simSec, SIGNAL(disablePINQueryComplete(SIMError)),
             this, SLOT(simEnablePINQueryComplete(SIMError)), Qt::QueuedConnection);
+
+    simLock = new SIMLock(this);
     connect(simLock, SIGNAL(simLockUnlockComplete(SIMLockError)),
             this, SLOT(simLockUnlockCodeVerified(SIMLockError)));
 
+    sim = new SIM(this);
     // bootstrap the state machine
     connect(sim, SIGNAL(statusComplete(SIM::SIMStatus, SIMError)),
         this, SLOT(simStatusComplete(SIM::SIMStatus, SIMError)), Qt::QueuedConnection);
     connect(sim, SIGNAL(statusChanged(SIM::SIMStatus)),
         this, SLOT(simStatusChanged(SIM::SIMStatus)), Qt::QueuedConnection);
+
+    dbus = new PinCodeQueryDBusAdaptor(this);
+
+    callUi = new CallHandler(this);
+    connect(callUi, SIGNAL(callStarted()), this, SLOT(callStarted()));
+    connect(callUi, SIGNAL(callDone()), this, SLOT(callDone()));
 
     sim->status();
 }
@@ -203,56 +206,25 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     dlg->exec();
 
     if(dlg->clickedButton() == callButton){
-        // do call
-        if(!callUi){
-            callUi = new CallUiServiceApi(this);
-        }
-        if(callUi){
-            qDebug() << Q_FUNC_INFO << "call";
-
-//            bool res = connect(callUi->RequestCellularCall("+358405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
-            bool res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
-                    this, SLOT(callStarted(CallUi::PendingCallRequest *)));
-            if(res){
-                // TODO: Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
-                PinCodeQueryUI::hideWindow();
-            }
-        }
+        callUi->startCall();
     }
 
     dlg->deleteLater();
     qDebug() << Q_FUNC_INFO << "out";
 }
 
-void PinCodeQueryBusinessLogic::callStarted(CallUi::PendingCallRequest *req)
+void PinCodeQueryBusinessLogic::callStarted()
 {
-    if(req){
-        qDebug() << Q_FUNC_INFO << "callId" << req->callId() << "isError:" << req->isError()
-                << ";" << req->errorName() << ":" << req->errorMessage();
-        if(req->callId().isEmpty() || req->isError()){
-            qDebug() << Q_FUNC_INFO << "failed: open ui";
-            callDone(req->callId(), CallUi::Error, 0, req->errorMessage());
-        } else if (callUi) {
-          connect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
-              this, SLOT(callDone(QString, int, int, QString)));
-        }
-    } else {
-        qDebug() << Q_FUNC_INFO << "call start failure?";
-        callDone(0, CallUi::Error, 0, QString());
-    }
+    qDebug() << Q_FUNC_INFO;
+    // TODO: Possibly better solution is to un/set flag Qt::WindowStaysOnTopHint but
+    PinCodeQueryUI::hideWindow();
 }
 
-void PinCodeQueryBusinessLogic::callDone(QString uid, int reason, int duration, QString message)
+void PinCodeQueryBusinessLogic::callDone()
 {
-    qDebug() << Q_FUNC_INFO << "uid" << uid << "reason" << reason
-                << "duration" << duration << ":" << message;
+    qDebug() << Q_FUNC_INFO;
     PinCodeQueryUI::showWindow();
     uiPin->appear();
-    // we don't want to have more end-signals
-    if(callUi){
-        disconnect(callUi, SIGNAL(CallEnded(QString, int, int, QString)),
-                this, SLOT(callDone(QString, int, int, QString)));
-    }
 }
 
 // =======================================

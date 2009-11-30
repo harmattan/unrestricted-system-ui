@@ -15,9 +15,11 @@ CONFIG += dui
 SOURCES += ut_pincodequerybusinesslogic.cpp \
     $$SRC_PREFIX/pincodequerybusinesslogic.cpp \
     $$SRC_PREFIX/pincodequeryui.cpp \
+    $$SRC_PREFIX/callhandler.cpp \
     pinstubs.cpp
 HEADERS += ut_pincodequerybusinesslogic.h \
     $$SRC_PREFIX/pincodequerybusinesslogic.h \
     $$SRC_PREFIX/pincodequeryui.h \
+    $$SRC_PREFIX/callhandler.h \
     pinstubs.h
 INSTALLS += target
