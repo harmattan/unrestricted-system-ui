@@ -43,6 +43,8 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
     selectionValues.insert(NetworkRegistration::Manual, DcpNetwork::ManualText);
 
     tempNetworkToggle = true;
+    tempRoamingToggle = false;
+    tempRoamingUpdatesToggle = false;
 }
 
 NetworkBusinessLogic::~NetworkBusinessLogic()
