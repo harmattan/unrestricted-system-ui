@@ -57,7 +57,7 @@ Description: Profiles settings applet.
 
 Package: duistatusindicatormenu-profileplugin
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libduistatusindicatormenu
+Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu
 Description: Profile status indicator menu plugin.
 
 Package: duicontrolpanel-callandsimapplet

@@ -15,16 +15,21 @@ public:
     virtual QString valueText() const;
     virtual int widgetTypeID() const;
     virtual bool toggle() const;
+    virtual QString toggleIconId() const;        
 
 private slots:
     void updateOperatorLabel(const QString &text);
-    void updateToggle(bool toggle);
     void updateToggleIcon(const QString &icon);
+    virtual void setToggle (bool toggle);
+
+private:
+    void updateToggle(bool toggle);
 
 private:
     NetworkBusinessLogic *logic;
     QString networkText;
     bool networkToggle;
+    QString networkToggleIcon;
 
 };
 
