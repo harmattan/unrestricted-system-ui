@@ -3,16 +3,11 @@
 
 #include "dcpwidget.h" 
 
-class BatteryDBusInterface;
-class DuiLabel;
 class DuiButton;
-class DuiGridLayoutPolicy;
-class DuiImage;
-class DuiSlider;
-
-class TalkTimeContainer;
-class StandByTimeContainer;
+class BatteryDBusInterface;
 class SliderContainer;
+class StandByTimeContainer;
+class TalkTimeContainer;
 
 class BatteryWidget : public DcpWidget
 {

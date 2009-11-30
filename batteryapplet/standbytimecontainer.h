@@ -3,8 +3,6 @@
 
 #include "timecontainer.h"
 
-class DuiLabel;
-
 class StandByTimeContainer : public TimeContainer
 {
 public:

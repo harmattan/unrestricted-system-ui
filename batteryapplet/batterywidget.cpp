@@ -3,9 +3,9 @@
 #include "batterytranslation.h"
 #include "batterydbusinterface.h"
 #include "dcpbattery.h"
-#include "talktimecontainer.h"
-#include "standbytimecontainer.h"
 #include "slidercontainer.h"
+#include "standbytimecontainer.h"
+#include "talktimecontainer.h"
 
 #include <QGraphicsLinearLayout>
 #include <QDebug>
@@ -13,13 +13,8 @@
 #include <DuiButton>
 #include <DuiContainer>
 #include <DuiGridLayoutPolicy>
-#include <DuiImage>
-#include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
-#include <DuiSceneManager>
-#include <DuiSlider>
-#include <DuiStylableWidget>
 
 /*
 
@@ -27,8 +22,6 @@ TODO list:
 
 1) what is the correct interval for updating the battery image when charging? Is there a difference between
    USB and normal charging?
-2) The layout should be finalized
-3) Battery header not yet defined (logical name)
 
 */
 

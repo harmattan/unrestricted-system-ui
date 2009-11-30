@@ -5,7 +5,6 @@
 
 class DuiButton;
 class DuiGridLayoutPolicy;
-class DuiLabel;
 class DuiSlider;
 
 class SliderContainer : public DuiContainer

@@ -1,7 +1,6 @@
 #ifndef BATTERYIMAGE_H
 #define BATTERYIMAGE_H
 
-#include <QObject>
 #include <DuiImage>
 
 class QTimer;

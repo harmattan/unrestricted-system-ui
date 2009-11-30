@@ -4,7 +4,6 @@
 #include "timecontainer.h"
 
 class BatteryImage;
-class DuiLabel;
 
 class TalkTimeContainer : public TimeContainer
 {
