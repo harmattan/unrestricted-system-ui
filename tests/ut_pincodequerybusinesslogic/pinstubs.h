@@ -212,7 +212,7 @@ public:
     QString code;
 };
 
-} // namespace
+} // namespace Cellular
 
 //////////////////
 
@@ -241,5 +241,96 @@ public:
     bool queryDoneOk;
 };
 
+/*****************************************************************/
+/*    CallUi */
+/*****************************************************************/
+namespace CallUi
+{
+enum CallDirection {
+    Outgoing, //!< Outgoing call.
+    Incoming  //!< Incoming call.
+};
+
+enum EndReason {
+    UserEnded,   //!< The call was ended locally.
+    RemoteEnded, //!< The call was ended by the remote end.
+    Error,       //!< The call was ended bacause of an error.
+    Unknown      //!< The call was ended but we failed to collect the reason.
+};
+
+class PendingCallRequest : public QObject
+{
+    Q_OBJECT
+
+public: // API
+    PendingCallRequest(QObject *parent);
+    virtual ~PendingCallRequest();
+    inline QString callId() const {return m_callId;}
+    inline bool isFinished() const {return m_finished;}
+    inline bool isValid() const {return m_valid;}
+    inline bool isError() const {return m_error;}
+    inline QString errorName() const {return m_eName;}
+    inline QString errorMessage() const {return m_eMsg;}
+
+Q_SIGNALS:
+    void finished(CallUi::PendingCallRequest *request);
+
+public:
+    inline void emitFinished() {emit finished(this);}
+
+public:
+    QString m_callId;
+    bool m_finished;
+    bool m_valid;
+    bool m_error;
+    QString m_eName;
+    QString m_eMsg;
+};
+
+
+class CallUiServiceApi : public QObject
+{
+    Q_OBJECT
+
+public:
+    CallUiServiceApi(QObject *parent=NULL);
+    virtual ~CallUiServiceApi();
+
+public Q_SLOTS:
+    bool Call(const QString &accountPath, const QString &contactId) const;
+
+public Q_SLOTS:
+    CallUi::PendingCallRequest * RequestCall( const QString &accountPath,
+                                              const QString &contactId,
+                                              bool requestVideo=false );
+
+    CallUi::PendingCallRequest * RequestCellularCall(
+            const QString &phoneNumber );
+
+    CallUi::PendingCallRequest * RequestEmergencyCall();
+
+Q_SIGNALS:
+    void NewCall(QString uid, int direction, QString contactId) const;
+    void CallEnded(QString uid, int reason, int duration, QString message) const;
+
+public:
+    void emitNewCall(QString uid, int direction, QString contactId);
+    void emitCallEnded(QString uid, int reason, int duration, QString message);
+
+public:
+    PendingCallRequest *m_request;
+    QString m_uid;
+    int m_direction;
+    QString m_contactId;
+    int m_reason;
+    int m_duration;
+    QString m_msg;
+
+    // input
+    bool m_callStart;
+    QString m_number;
+};
+
+} // namespace CallUi
 
 #endif // PINSTUBS_H

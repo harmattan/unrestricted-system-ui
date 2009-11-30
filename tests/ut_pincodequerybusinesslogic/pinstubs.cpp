@@ -208,3 +208,74 @@ void PinCodeQueryDBusAdaptor::pinQueryDoneResponse(bool queryOk)
     this->queryDoneOk = queryOk;
 }
 
+/*------------ Call UI ---------*/
+
+using namespace CallUi;
+
+PendingCallRequest::PendingCallRequest(QObject *parent) :
+        QObject(parent),
+        m_callId(""),
+        m_finished(false),
+        m_valid(false),
+        m_error(true),
+        m_eName("error"),
+        m_eMsg("some error stuff")
+{
+}
+
+PendingCallRequest::~PendingCallRequest()
+{
+}
+
+CallUiServiceApi::CallUiServiceApi(QObject *parent) :
+        QObject(parent),
+        m_request(new CallUi::PendingCallRequest(parent)),
+        m_uid(""),
+        m_direction(CallUi::Outgoing),
+        m_contactId(""),
+        m_reason(CallUi::Unknown),
+        m_duration(0),
+        m_msg(),
+        m_callStart(false)
+{
+}
+
+CallUiServiceApi::~CallUiServiceApi()
+{
+}
+
+bool CallUiServiceApi::Call(const QString &accountPath, const QString &contactId) const
+{
+    qDebug() << Q_FUNC_INFO << accountPath << contactId;
+    return m_callStart;
+}
+
+CallUi::PendingCallRequest * CallUiServiceApi::RequestCall( const QString &accountPath,
+                                              const QString &contactId,
+                                              bool requestVideo )
+{
+    qDebug() << Q_FUNC_INFO << accountPath << contactId << requestVideo;
+    return m_request;
+}
+
+CallUi::PendingCallRequest * CallUiServiceApi::RequestCellularCall(
+            const QString &phoneNumber )
+{
+    qDebug() << Q_FUNC_INFO << phoneNumber;
+    return m_request;
+}
+
+CallUi::PendingCallRequest * CallUiServiceApi::RequestEmergencyCall()
+{
+    return m_request;
+}
+
+void CallUiServiceApi::emitNewCall(QString uid, int direction, QString contactId)
+{
+    emit NewCall(uid, direction, contactId);
+}
+
+void CallUiServiceApi::emitCallEnded(QString uid, int reason, int duration, QString message)
+{
+    emit CallEnded(uid, reason, duration, message);
+}

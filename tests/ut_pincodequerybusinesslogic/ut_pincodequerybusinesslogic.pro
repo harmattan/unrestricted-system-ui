@@ -6,7 +6,6 @@ INCLUDEPATH += $$SRC_PREFIX \
     /usr/lib/dbus-1.0/include
 QT += dbus \
     testlib
-LIBS += -lcallui0
 TEMPLATE = app
 DEFINES += UNIT_TEST
 TARGET = ut_pincodequerybusinesslogic
