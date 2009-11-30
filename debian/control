@@ -2,7 +2,7 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: Matti Katila <matti.katila@ixonos.com>
-Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev (>= 0.15.0-), libqmsystem-dev, ssc-daemon-dev, libalarm-dev, libhal-dev, libprofile-qt-dev
+Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev (>= 0.15.0-), libqmsystem-dev, ssc-daemon-dev, libalarm-dev, libhal-dev, libprofile-qt-dev, duistatusindicatormenu-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -30,20 +30,35 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
 Description: Battery settings applet.
 
+Package: duistatusindicatormenu-batteryplugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu
+Description: Battery status indicator menu plugin.
+
 Package: duicontrolpanel-displayapplet
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel
 Description: Display settings applet.
 
 Package: duicontrolpanel-networkapplet
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel
 Description: Cellular network settings applet.
+
+Package: duistatusindicatormenu-connectivityplugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu
+Description: Connectivity status indicator menu plugin.
 
 Package: duicontrolpanel-profileapplet
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
+Depends: ${shlibs:Depends}, ${misc:Depends}, libduicontrolpanel
 Description: Profiles settings applet.
+
+Package: duistatusindicatormenu-profileplugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libduistatusindicatormenu
+Description: Profile status indicator menu plugin.
 
 Package: duicontrolpanel-callandsimapplet
 Architecture: any
