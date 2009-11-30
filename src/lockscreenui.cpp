@@ -72,10 +72,6 @@ void LockScreenUI::createContent()
     centralWidget()->setLayout(layout);
 
     connect(slider, SIGNAL(unlocked()), this, SLOT(sliderUnlocked()));
-
-    QTime t(QTime::currentTime());
-    timerAdjusting = true;
-    timer.start((60 - t.second()) + 1000, this);
 }
 
 void LockScreenUI::sliderUnlocked()
@@ -158,18 +154,6 @@ DuiLayout* LockScreenUI::createWidgets()
     return layout;
 }
 
-void LockScreenUI::timerEvent(QTimerEvent *event)
-{
-    if (event->timerId() == timer.timerId()) {
-        if (timerAdjusting) {
-            timerAdjusting = false;
-            timer.start(60 * 1000, this);
-        }
-        updateDateTime();
-        update();
-    }
-}
-
 void LockScreenUI::updateDateTime()
 {
     DuiLocale locale;
@@ -178,6 +162,7 @@ void LockScreenUI::updateDateTime()
 
     timeLabel->setText(locale.formatDateTime(now, DuiLocale::DateNone, DuiLocale::TimeShort));
     dateLabel->setText(locale.formatDateTime(now, DuiLocale::DateFull, DuiLocale::TimeNone));
+    update();
 }
 
 // Check dbus adaptor!

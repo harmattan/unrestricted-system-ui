@@ -2,6 +2,7 @@
 #include <DuiApplication>
 #include <QDBusInterface>
 #include <QDebug>
+#include <QTime>
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
@@ -13,59 +14,58 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
 {
     qDebug() << Q_FUNC_INFO;
 
+    locks = new QmLocks(this);
     display = new QmDisplayState(this);
     lockUI = new LockScreenUI();
 
+    connect(locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)), 
+	    this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
 
-
-    /*
-    dbusIf = new QDBusInterface("org.maemo.dui.NotificationManager", "/systemui",
-                                "org.maemo.dui.NotificationManager.MissedEvents",
-                                QDBusConnection::sessionBus(), this);
-    connect(dbusIf, SIGNAL(missedEventAmountsChanged(int, int, int, int)),
-            this, SLOT(updateMissedEventAmounts(int, int, int, int)));
-    dbusIf->call(QDBus::NoBlock, QString("missedEventAmountsRequired"));
-    */
+    connect(&timer, SIGNAL(timeout()), lockUI, SLOT(updateDateTime()));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
-    //delete eventEater;
-    //eventEater = NULL;
     delete lockUI;
 }
 
 void LockScreenBusinessLogic::shortPowerKeyPressOccured()
 {
     qDebug() << Q_FUNC_INFO;
-    switch (display->get()) {
-    case Maemo::QmDisplayState::Off:
-        toggleScreenLockUI(true); //make sure the UI is on
-        toggleKeyPadLock(false);
-        display->set(Maemo::QmDisplayState::On);
-        break;
-    case Maemo::QmDisplayState::On:
-    case Maemo::QmDisplayState::Dimmed:
-        toggleKeyPadLock(true);
-        display->set(Maemo::QmDisplayState::Off);
+    /* THIS SHOULD BE DONE BY MCE OF SYSTEMSW
+    */
+}
+
+void LockScreenBusinessLogic::locksChanged(Maemo::QmLocks::Lock lock, Maemo::QmLocks::State state)
+{
+    if (lock == QmLocks::Device)
+        return;
+
+    knownLock = state;
+
+    if (knownLock == QmLocks::Locked) {
         toggleScreenLockUI(true);
-        break;
+        mayStartTimer();
+    } else {
+        toggleScreenLockUI(false);
+	stopTimer();
     }
 }
 
+
 void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
-    qDebug() << Q_FUNC_INFO << state;
+    knownDisplay = state;
+
     switch (state) {
     case Maemo::QmDisplayState::Off:
-        toggleKeyPadLock(true); //lock the keypad
-        toggleScreenLockUI(true); //show UI
+        stopTimer();
         break;
     case Maemo::QmDisplayState::On:
-        toggleKeyPadLock(false); //unlock the keypad
+        mayStartTimer();
         break;
     default:
         break;
@@ -76,7 +76,7 @@ void LockScreenBusinessLogic::unlockScreen()
 {
     qDebug() << Q_FUNC_INFO;
     toggleScreenLockUI(false); //turn off the UI
-    toggleKeyPadLock(false); //unlock the keypad
+    locks->setState(QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
 }
 
 void LockScreenBusinessLogic::updateMissedEventAmounts(int a, int b, int c, int d)
@@ -84,14 +84,6 @@ void LockScreenBusinessLogic::updateMissedEventAmounts(int a, int b, int c, int 
     qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts("
     << a << ", " << b << ", " << c << ", " << d << ")";
     lockUI->updateMissedEventAmounts(a, b, c, d);
-}
-
-void LockScreenBusinessLogic::toggleKeyPadLock(bool toggle)
-{
-    qDebug() << Q_FUNC_INFO << toggle;
-    QmLocks::State newState = (toggle ? QmLocks::Locked : QmLocks::Unlocked);
-    QmLocks touchPadLocker;
-    touchPadLocker.setState(QmLocks::TouchAndKeyboard, newState);
 }
 
 void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
@@ -105,4 +97,19 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
     }
 }
 
+void LockScreenBusinessLogic::mayStartTimer()
+{
+    if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off) {
+        // It's better to update the time straight away.
+        lockUI->updateDateTime();
 
+        QTime t(QTime::currentTime());
+	// TODO: some adjustments of time may be done
+        timer.start(1000);
+    }
+}
+
+void LockScreenBusinessLogic::stopTimer()
+{
+    timer.stop();
+}

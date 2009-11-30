@@ -30,7 +30,6 @@ public slots:
 
 private:
     DuiLayout* createWidgets();
-    void timerEvent(QTimerEvent *event);
 
 private:
     DuiLabel* timeLabel; // qtn_scrlock_current_time
@@ -47,9 +46,6 @@ private:
     DuiLabel* unreadChatMessagesLabel;
 
     UnlockSlider *slider;
-
-    QBasicTimer timer;
-    bool timerAdjusting;
 };
 
 #endif // LOCKSCREENUI_H

@@ -6,6 +6,7 @@
 //#include "eventeater.h"
 
 #include <QObject>
+#include <QTimer>
 
 class LockScreenUI;
 class QDBusInterface;
@@ -25,18 +26,29 @@ public slots:
 
 private slots:
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
     void unlockScreen();
+
+    // from dbus
     void updateMissedEventAmounts(int, int, int, int);
 
+signals:
+    void updateTime();
+
 private: //methods
-    void toggleKeyPadLock(bool toggle);
     void toggleScreenLockUI(bool toggle);
+    void mayStartTimer();
+    void stopTimer();
 
 private: //attributes
     QmDisplayState *display;
-    //EventEater *eventEater;
+    QmLocks *locks;
     LockScreenUI *lockUI;
-    QDBusInterface *dbusIf;
+
+    QTimer timer;
+
+    QmLocks::State knownLock;
+    QmDisplayState::DisplayState knownDisplay;
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H
