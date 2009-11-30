@@ -2,7 +2,11 @@
 #define CALLHANDLER_H
 
 #include <QObject>
-#include <call-ui/CallUiServiceApi>
+#ifdef UNIT_TEST
+    #include "../tests/ut_pincodequerybusinesslogic/pinstubs.h"
+#else
+    #include <call-ui/CallUiServiceApi>
+#endif
 
 using namespace CallUi;
 
