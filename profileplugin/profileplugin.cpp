@@ -15,11 +15,11 @@
  */
 
 #include "profileplugin.h"
-#include "profile.h"
+#include "profilewidget.h"
 
 Q_EXPORT_PLUGIN2(profile, ProfilePlugin);
 
 DuiWidget* ProfilePlugin::constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu)
 {
-    return new Profile(statusIndicatorMenu);
+    return new ProfileWidget(statusIndicatorMenu);
 }

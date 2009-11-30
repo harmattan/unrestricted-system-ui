@@ -1,21 +1,5 @@
-/*
- * profile.h
- *
- * This file is part of duistatusindicatormenu
- *
- * Copyright (C) 2009 Nokia Corporation. All rights reserved.
- *
- * This software, including documentation, is protected by copyright
- * controlled by Nokia Corporation. All rights are reserved.
- * Copying, including reproducing, storing, adapting or translating,
- * any or all of this material requires the prior written consent of
- * Nokia Corporation. This material also contains confidential
- * information which may not be disclosed to others without the prior
- * written consent of Nokia.
- */
-
-#ifndef PROFILE_H
-#define PROFILE_H
+#ifndef PROFILEWIDGET_H
+#define PROFILEWIDGET_H
 
 #include <DuiWidget>
 
@@ -29,13 +13,13 @@ class ProfileDataInterface;
  * The Profile widget makes it possible to select the currently
  * active profile.
  */
-class Profile : public DuiWidget
+class ProfileWidget : public DuiWidget
 {
     Q_OBJECT
 
 public:
-    Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
-    virtual ~Profile();
+    ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
+    virtual ~ProfileWidget();
 
 private slots:
     /*!
@@ -60,4 +44,4 @@ private:
 
 };
 
-#endif // PROFILE_H
+#endif // PROFILEWIDGET_H

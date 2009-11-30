@@ -11,10 +11,10 @@ INCLUDEPATH  += \
     /usr/include/duicontrolpanel
 HEADERS = profiledatainterface.h \
     profileplugin.h \
-    profile.h
+    profilewidget.h
 SOURCES = profiledatainterface.cpp \
     profileplugin.cpp \
-    profile.cpp
+    profilewidget.cpp
 TARGET        = $$qtLibraryTarget(profile)
 DESTDIR       = lib
 target.path += /usr/lib/duistatusindicatormenu/plugins/ 

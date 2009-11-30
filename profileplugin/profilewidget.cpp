@@ -14,7 +14,7 @@
  * written consent of Nokia.
  */
 
-#include "profile.h"
+#include "profilewidget.h"
 #include "profiledatainterface.h"
 
 #include <DuiButton>
@@ -30,7 +30,7 @@
 #include <QGraphicsLinearLayout>
 
 
-Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
+ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
     DuiWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
     dataIf(NULL),
@@ -79,7 +79,7 @@ Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     }
 }
 
-Profile::~Profile()
+ProfileWidget::~ProfileWidget()
 {
     delete dataIf;
     dataIf = NULL;
@@ -87,7 +87,7 @@ Profile::~Profile()
     buttonGroup = NULL;
 }
 
-void Profile::showProfileModificationPage()
+void ProfileWidget::showProfileModificationPage()
 {    
     // instantiate the interface
     DuiControlPanelIf cpIf;
