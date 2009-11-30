@@ -145,7 +145,6 @@ void ProfileButtons::setLayout()
 
     DuiStylableWidget *layoutWidget = new DuiStylableWidget();
     layoutWidget->setLayout(layout);
-//    layoutWidget->setObjectName("profileContainerLayout");
 
     setCentralWidget(layoutWidget);
 }

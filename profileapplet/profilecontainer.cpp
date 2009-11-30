@@ -22,7 +22,7 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
     level(-2),
     profileId(id)
 {
-    qDebug() << "ProfileContainer::ProfileContainer()" << title;
+    qDebug() << Q_FUNC_INFO << title;
 
     if(0 <= level) {
         slider = new DuiSlider(this, "continuous");
@@ -35,7 +35,6 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
 
     button = new DuiButton(DcpProfile::VibrationText, this);
     button->setCheckable(true);
-    //button->setMaximumHeight(36);
     setVibration(vibra);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
 
@@ -51,11 +50,9 @@ void ProfileContainer::setLayout()
     DuiLayout *layout = new DuiLayout();
 
     DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy(layout);
-    //landscapePolicy->setObjectName("profileContainerLayout.Landscape");
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
 
     DuiGridLayoutPolicy *portraitPolicy = new DuiGridLayoutPolicy(layout);
-    //portraitPolicy->setObjectName("profileContainerLayout.Portrait");
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
 
@@ -66,7 +63,7 @@ void ProfileContainer::setLayout()
     {
         img = new DuiImage("icon-m-volume", this);
         item = slider;
-        qDebug() << "slider height" << slider->size().height();
+        qDebug() << Q_FUNC_INFO << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
     }
     else
@@ -101,7 +98,7 @@ void ProfileContainer::setLayout()
 
 void ProfileContainer::setLevel(int value)
 {
-    qDebug() << "ProfileContainer::setLevel for " << title() << ":" << value << "(old:" << level << ")";
+    qDebug() << Q_FUNC_INFO << "for" << title() << ":" << value << "(old:" << level << ")";
     if(!slider || value == level)
         return;
 
@@ -109,14 +106,14 @@ void ProfileContainer::setLevel(int value)
     if(ProfileApplet::sliderMin < level && ProfileApplet::sliderMax >= level)
     {
         slider->setValue(level);
-        qDebug() << "ProfileContainer::setLevel done:" << slider->value();
+        qDebug() << Q_FUNC_INFO << "done:" << slider->value();
     }
-    qDebug() << "ProfileContainer::setLevel done:" << slider->value();
+    qDebug() << Q_FUNC_INFO << "done:" << slider->value();
 }
 
 void ProfileContainer::setVibration(bool enabled)
 {
-    qDebug() << "ProfileContainer::setVibration for " << title() << ":" << enabled;
+    qDebug() << Q_FUNC_INFO << "for " << title() << ":" << enabled;
     button->setChecked(enabled);
 }
 
