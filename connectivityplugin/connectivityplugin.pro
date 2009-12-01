@@ -29,10 +29,9 @@ SOURCES = connectivityplugin.cpp \
     ../src/systemuigconf.cpp \
     ../networkapplet/networktechnology.cpp
 TARGET = $$qtLibraryTarget(connectivity)
-css.files = connectivity.css
+css.files = connectivityplugin.css
 css.path += /usr/share/duistatusindicatormenu/themes/style/
 DESTDIR = lib
 target.path += /usr/lib/duistatusindicatormenu/plugins/
 INSTALLS += target \
     css
-OTHER_FILES += connectivity.css
