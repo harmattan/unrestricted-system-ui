@@ -32,6 +32,11 @@ private slots:
      */
     void buttonClicked(int index);
 
+    /*!
+     * \brief A slot for receiving information about profile changes
+     */
+    void changeProfile(const QString &profileName);
+
 private:
     //! Interface for controlling the status indicator menu
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu;

@@ -7,6 +7,8 @@ class Profile;
 
 class ProfileDataInterface : public QObject
 {
+    Q_OBJECT
+
 public:
     ProfileDataInterface();
     virtual ~ProfileDataInterface();
@@ -15,6 +17,9 @@ public:
     QString currentProfileName();    
     bool setProfile(const QString &profileName);
     QString profileName2Text(const QString &profileName);
+
+signals:
+    void currentProfileNameChanged(QString);
 
 private: //attributes
     Profile *profileAPI;    

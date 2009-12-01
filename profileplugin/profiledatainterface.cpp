@@ -8,7 +8,8 @@ ProfileDataInterface::ProfileDataInterface() :
         QObject(),
         profileAPI(NULL)
 {
-    profileAPI = new Profile(this);
+    profileAPI = new Profile(this);    
+    connect(profileAPI, SIGNAL(activeProfileChanged(QString)), this, SIGNAL(currentProfileNameChanged(QString)));
 }
 
 ProfileDataInterface::~ProfileDataInterface()

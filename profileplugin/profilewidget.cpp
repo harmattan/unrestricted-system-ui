@@ -38,6 +38,7 @@ ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMen
 {    
     Q_UNUSED(statusIndicatorMenu);
     dataIf = new ProfileDataInterface();
+    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), this, SLOT(changeProfile(QString)));
 
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
@@ -97,3 +98,15 @@ void ProfileWidget::showProfileModificationPage()
     cpIf.appletPage("Profile");
 }
 
+void ProfileWidget::changeProfile(const QString &profileName)
+{
+    QString text = dataIf->profileName2Text(profileName);
+    QList<DuiButton *> buttons = buttonGroup->buttons();
+    for(int i=0; i<buttons.size(); ++i) {
+        DuiButton *button = buttons.at(i);
+        if(button->text() == text) {
+            button->setChecked(true);
+            break;
+        }
+    }
+}
