@@ -9,7 +9,7 @@
 }
 
 #connectivityButton {
-        preferred-size: size(36, 36);
-        minimum-size: size(36, 36);
-        maximum-size: size(36, 36);
+        preferred-size: 36 36;
+        minimum-size: 36 36;
+        maximum-size: 36 36;
 }
