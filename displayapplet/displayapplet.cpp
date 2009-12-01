@@ -42,7 +42,7 @@ QString DisplayApplet::title() const
 QVector<DuiAction*> DisplayApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
-    DuiAction* helpAction = new DuiAction(DcpNetwork::HelpText, pageMain());
+    DuiAction* helpAction = new DuiAction(DcpDisplay::HelpText, pageMain());
     vector.append(helpAction);
     helpAction->setLocation(DuiAction::ApplicationMenu);
     return vector;
