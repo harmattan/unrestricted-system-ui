@@ -1,6 +1,7 @@
 MOC_DIR = .moc
 DUIGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
+QT += dbus
 LIBS += -lprofile-qt \
     -lduicontrolpanel
 TEMPLATE      = lib
