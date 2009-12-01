@@ -17,6 +17,8 @@
 #include <QGraphicsLinearLayout>
 #include <QDebug>
 
+const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
+
 Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
         DuiWidget(parent),
         dbusIf(NULL),
@@ -25,6 +27,8 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
         timeLabel(NULL),
         batteryImage(NULL)
 {
+    DuiTheme::loadCSS(cssDir + "batteryplugin.css");
+
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
     mainLayout->setContentsMargins(0, 0, 0, 0);

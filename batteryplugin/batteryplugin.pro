@@ -21,4 +21,7 @@ SOURCES = batteryplugin.cpp \
 TARGET = $$qtLibraryTarget(battery)
 DESTDIR = lib
 target.path += /usr/lib/duistatusindicatormenu/plugins
-INSTALLS += target 
+css.files = batteryplugin.css
+css.path += /usr/share/duistatusindicatormenu/themes/style/
+INSTALLS += target \
+    css
