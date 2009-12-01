@@ -6,15 +6,20 @@
 #include <DuiLocale>
 #include <DuiLinearLayoutPolicy>
 
+namespace {
+    const QString SwitchOfflineOn = trid("NOT_DEFINED", "Switch to Offline mode");
+    const QString SwitchOfflineOff = trid("NOT_DEFINED", "Exit Offline mode");
+}
+
 OfflineContainer::OfflineContainer(bool state, DuiWidget *parent) :
         DuiContainer(parent),
-        toggleButton(NULL)
+        offlineButton(NULL)
 {    
-    toggleButton = new DuiButton();
-    toggleButton->setCheckable(true);
-    toggleButton->setChecked(state);
-    toggleButton->setObjectName("connectivityButton");
-    connect(toggleButton, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));    
+    offlineButton = new DuiButton();
+    offlineButton->setObjectName("offlineButton");
+    offlineButton->setText(state ? SwitchOfflineOff : SwitchOfflineOn);
+
+    connect(offlineButton, SIGNAL(clicked()), this, SLOT(offlineButtonClicked()));
     setLayout();
 }
 
@@ -22,19 +27,27 @@ OfflineContainer::~OfflineContainer()
 {
 }    
 
+void OfflineContainer::offlineButtonClicked()
+{
+    QString text = offlineButton->text();
+    emit toggled(text == SwitchOfflineOn);
+    offlineButton->setText(text == SwitchOfflineOn ? SwitchOfflineOff : SwitchOfflineOn);
+}
+
 bool OfflineContainer::offlineMode()
 {
-    return toggleButton->isChecked();
+    return (offlineButton->text() == SwitchOfflineOff);
 }
 
 void OfflineContainer::setLayout()
 {
-    DuiLayout *layout = new DuiLayout();
+    DuiLayout *layout = new DuiLayout();    
     DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
-    DuiLabel *headerLabel = new DuiLabel(trid("qtn_offline_offline", "Offline mode"));
-    headerLabel->setObjectName("connectivityLabel1");
-    layoutPolicy->addItem(headerLabel, Qt::AlignLeft);
-    layoutPolicy->addItem(toggleButton, Qt::AlignRight);
+    layoutPolicy->addItem(offlineButton, Qt::AlignCenter);
+    layoutPolicy->insertStretch(1, 1);
+    layoutPolicy->insertStretch(0, 1);
+
+    //layoutPolicy->insertStretch(0, 1);
     centralWidget()->setLayout(layout);
 }
 

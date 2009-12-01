@@ -21,8 +21,7 @@ const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
 
 /*
     TODO:
-    1) Network API needed to toggle the phone network on/off
-    2) Localization for header of "Connectivity" needed
+    1) Network API needed to toggle the phone network on/off  
 */
 
 Connectivity::Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
@@ -53,9 +52,6 @@ Connectivity::Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     // dummy bluetooth container
     bluetoothContainer = createDummyContainer(trid("NOT DEFINED", "Bluetooth"));
 
-    // dummy presence container
-    DuiContainer *presenceContainer = createDummyContainer(trid("NOT DEFINED", "My presence"));
-
     // dummy location container
     DuiContainer *locationContainer = createDummyContainer(trid("NOT DEFINED", "Show location"));
      ///////////////////////// PLACE HOLDERS /////////////////////////
@@ -66,14 +62,13 @@ Connectivity::Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     DuiWidget *widget = new DuiWidget();
     DuiLayout *layout = new DuiLayout();    
     widget->setLayout(layout);
-    mainContainer->setTitle(trid("NOT DEFINED", "Connectivity"));
+    mainContainer->setTitle(trid("qtn_stat_menu_connectivity", "Connectivity"));
     mainContainer->setCentralWidget(widget);
 
     // insert widgets
     layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    layoutPolicy->addItem(offlineContainer, Qt::AlignLeft);
-    layoutPolicy->addItem(internetContainer, Qt::AlignLeft);
-    layoutPolicy->addItem(presenceContainer, Qt::AlignLeft);
+    layoutPolicy->addItem(offlineContainer, Qt::AlignLeft);    
+    layoutPolicy->addItem(internetContainer, Qt::AlignLeft);    
     layoutPolicy->addItem(locationContainer, Qt::AlignLeft);
     if(!offlineContainer->offlineMode())
         toggleContainersVisibility(true);

@@ -13,3 +13,9 @@
         minimum-size: 36 36;
         maximum-size: 36 36;
 }
+
+#offlineButton {
+        preferred-size: 200 36;
+        minimum-size: 400 50;
+        maximum-size: 400 50;
+}

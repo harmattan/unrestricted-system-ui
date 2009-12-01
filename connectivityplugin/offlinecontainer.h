@@ -19,11 +19,14 @@ public:
 signals:
     void toggled(bool);
 
+private slots:
+    void offlineButtonClicked();
+
 private:
     void setLayout();
 
 private:
-    DuiButton *toggleButton;
+    DuiButton *offlineButton;
 };
 
 #endif // OFFLINECONTAINER_H
