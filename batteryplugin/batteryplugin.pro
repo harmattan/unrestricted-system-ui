@@ -6,7 +6,8 @@ CONFIG += plugin \
     dui \
     duistatusindicatormenu
 INCLUDEPATH += /usr/include/duistatusindicatormenu \
-    ../batteryapplet
+    ../batteryapplet \
+    /usr/include/duicontrolpanel
 QT += dbus
 HEADERS = batteryplugin.h \
     battery.h \
