@@ -37,6 +37,9 @@ void LockScreenBusinessLogic::shortPowerKeyPressOccured()
     qDebug() << Q_FUNC_INFO;
     /* THIS SHOULD BE DONE BY MCE OF SYSTEMSW
     */
+    if (knownLock == QmLocks::Unlocked) {
+        locks->setState(QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    }
 }
 
 void LockScreenBusinessLogic::locksChanged(Maemo::QmLocks::Lock lock, Maemo::QmLocks::State state)
