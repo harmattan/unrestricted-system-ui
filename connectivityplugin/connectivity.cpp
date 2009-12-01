@@ -32,7 +32,7 @@ Connectivity::Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
         bluetoothContainer(NULL),
         layoutPolicy(NULL)
 {
-    DuiTheme::loadCSS(cssDir + "connectivity.css");
+    DuiTheme::loadCSS(cssDir + "connectivityplugin.css");
 
     // offline container
     SystemUIGConf systemUIGConf;
