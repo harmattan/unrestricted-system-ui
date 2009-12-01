@@ -1,5 +1,6 @@
 #include <QTimer>
 #include <DuiButton>
+#include <DuiHomeButtonPanel>
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <QDebug>
@@ -34,6 +35,8 @@ int main(int argc, char** argv)
 
     p.appear();
     w.show();
+
+    w.homeButtonPanel()->disappearNow();
 
     return app.exec();
 }
