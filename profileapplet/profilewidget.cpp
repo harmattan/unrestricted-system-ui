@@ -27,7 +27,7 @@ ProfileWidget::ProfileWidget(QGraphicsWidget *parent)
 }
 
 ProfileWidget::~ProfileWidget()
-{    
+{
 }
 
 void ProfileWidget::initWidget()
@@ -43,9 +43,7 @@ void ProfileWidget::initWidget()
     profileButtons = new ProfileButtons(this);
 
     // get init values
-    setProfile(profileIf->getCurrentProfile());
     initProfiles();
-
 }
 
 void ProfileWidget::initProfiles()
@@ -73,7 +71,7 @@ void ProfileWidget::initProfiles()
         map.insert(d.profileId, d.profileName);
     }
 
-    profileButtons->init(map);
+    profileButtons->init(map, profileIf->getCurrentProfile());
     connect(profileButtons, SIGNAL(profileSelected(int)), this, SLOT(profileSelected(int)));
 
     DuiContainer *contentContainer = createContainer();

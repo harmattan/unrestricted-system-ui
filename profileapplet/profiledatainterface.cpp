@@ -16,14 +16,13 @@ namespace ProfileId{
         beep,
         loud,
         none // none must be last to teel how many profiles there are available
-    };
+    };    
 }
 
 ProfileDataInterface::ProfileDataInterface()
 {
     api = new Profile(this);
-    // TODO: connects:
-    // what is the possibility the profiles can change without user action when UI is open?
+    connect(api, SIGNAL(activeProfileChanged(QString)), this, SLOT(currentProfileNameChanged(QString)));    
 }
 
 ProfileDataInterface::~ProfileDataInterface()
@@ -35,6 +34,11 @@ QString ProfileDataInterface::getCurrentProfileName()
     qDebug() << Q_FUNC_INFO;
     QString prof = api->activeProfile();
     return id2Name(prof);
+}
+
+void ProfileDataInterface::currentProfileNameChanged(const QString &prof)
+{
+    emit currentProfile(mapId(prof));
 }
 
 int ProfileDataInterface::getCurrentProfile()

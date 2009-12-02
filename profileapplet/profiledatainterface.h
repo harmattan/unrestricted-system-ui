@@ -35,6 +35,9 @@ public:
     void setVibration(int id, bool value);
     void setVolumeLevel(int id, int value);
 
+private slots:
+    void currentProfileNameChanged(const QString &prof);
+
 private:
     int checkSilent(int id, int level);
     static int mapId(QString id);

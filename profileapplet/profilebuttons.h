@@ -2,8 +2,8 @@
 #define PROFILEBUTTONS_H
 
 #include <DuiContainer>
-#include <QHash>
-class DuiButton;
+
+class DuiButtonGroup;
 
 class ProfileButtons : public DuiContainer
 {
@@ -13,12 +13,9 @@ public:
     ProfileButtons(DuiWidget *parent=0);
     virtual ~ProfileButtons();
 
-    void init(QMap<int, QString> data);
-    int selectedProfile();
+    void init(QMap<int, QString> data, int currentId);
     QString selectedProfileName();
 
-public slots:
-    // returns false if selection won't change
     bool selectProfile(int id);
 
 signals:
@@ -27,15 +24,13 @@ signals:
 private slots:
     void buttonToggled(bool checked);
 
-private:
-    void createProfileButtons();
-    void addButton(QString name, int id);
-    void setLayout();
-    void toggleSelected();
+private:    
+    void addButton(QString name, int id, bool checked);
+    void setLayout();    
 
-private:
-    int selected;
-    QHash<int, DuiButton*> buttons;
+private:   
+    DuiButtonGroup *buttons;    
+
 };
 
 #endif // PROFILEBUTTONS_H
