@@ -57,11 +57,11 @@ puts " step 3: start pin query again.."
 sleep 1
     system("dbus-send --system --print-reply --dest=com.nokia.systemui.pin /com/nokia/systemui/pin com.nokia.systemui.pin.PinCodeQuery.LaunchPinQuery string:'PIN'")
     # verify that Pin code query is visible
-    verify {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 8}
+    verify {@app.test_object_exists?( "Button", :text => "Enter" ) == 'true'}
   end
 
-  def test_2_enter_correct_code
-puts "testing Enter correct pin code case.."
+  def test_2_enter_short_and_long_code
+puts "testing Enter short and long code.."
     # enter 3 digits to pin code
 puts " step 1: enter 3 digits and verify that Enter is not enabled.."
 sleep 1
@@ -81,18 +81,23 @@ sleep 1
        verify {@app.DuiButton( :name => 'numpadButton1' ).tap}
     end
     # verify that the entered code is only 8 digits long
-    verify {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 8}
+    verify_equal(8) {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length}
 
-puts " step 3: erase entered digits by pressing Backspace 8 times and verify that code field is empty.."
+puts " step 3: erase entered digits by pressing Backspace and verify that code field is empty.."
 sleep 1
     # clear digits by hitting the backspace button until no more digits left
     while @app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length > 0
       verify {@app.DuiButton( :name => 'backspaceButton' ).tap}
     end
     # verify that the entered code is 0 digits long
-    verify {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 0}
+    verify_equal(0) {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length}
 
-puts " step 4: enter correct pin code, press enter and then verify that the Enter button is not visible anymore"
+  end
+
+
+  def test_3_enter_correct_code
+puts "testing Enter correct pin code case.."
+puts " step 1: enter correct pin code and verify that Enter is enabled"
 sleep 1
     # enter correct pin code
     verify {@app.DuiButton( :name => 'numpadButton4' ).tap}
@@ -100,10 +105,12 @@ sleep 1
     verify {@app.DuiButton( :name => 'numpadButton2' ).tap}
     verify {@app.DuiButton( :name => 'numpadButton1' ).tap}
     # verify that the entered code is 4 digits long
-    verify {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 4}
-    # verify that the enter button is not enabled when only 3 digits entered
+    verify_equal(4) {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length }
+    # verify that the enter button is enabled when 
     verify {@app.DuiButton( :name => 'enterButton' ).attribute("enabled") =='true' }
 
+puts " step 2: press enter and then verify that the Enter button doesn't exist anymore"
+sleep 1
     # press enter
     verify {@app.DuiButton( :name => 'enterButton' ).tap}
 

@@ -24,7 +24,10 @@ void sysuid_exit(int sig)
 
 int main(int argc, char** argv)
 {    
-    DuiApplication app(argc, argv);
+    char *argv_[] = { "sysuid", "-software" };
+    argc = 2;
+
+    DuiApplication app(argc, argv_);
     exitPtr = &app;
 
     DuiApplicationWindow win;
