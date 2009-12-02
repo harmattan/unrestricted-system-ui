@@ -5,7 +5,7 @@
 
 namespace DcpBattery {
     const QString AppletTitle = trid("qtn_ener_battery", "Battery");
-    const QString HelpText = trid("NOT_DEFINED", "Help");
+    const QString HelpText = trid("qtn_comm_help", "Help");
     const QString TalkTimeText = trid("qtn_ener_tt", "Estimated talk time:");    
     const QString StandByTimeText = trid("qtn_ener_st", "Estimated stand-by time:");
     const QString TimeValueText = trid("qtn_ener_remtime", "%a hours %b minutes");    
