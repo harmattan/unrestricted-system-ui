@@ -7,13 +7,15 @@ LIBS += -lprofile-qt \
 TEMPLATE      = lib
 CONFIG       += plugin gui dui duistatusindicatormenu
 INCLUDEPATH  += \
-    ../../src \
+    ../profileapplet \
     /usr/include/profile-qt \
     /usr/include/duicontrolpanel
-HEADERS = profiledatainterface.h \
+HEADERS = ../profileapplet/profiledatainterface.h \
+    ../profileapplet/profilebuttons.h \
     profileplugin.h \
     profilewidget.h
-SOURCES = profiledatainterface.cpp \
+SOURCES = ../profileapplet/profiledatainterface.cpp \
+    ../profileapplet/profilebuttons.cpp \
     profileplugin.cpp \
     profilewidget.cpp
 TARGET        = $$qtLibraryTarget(profile)

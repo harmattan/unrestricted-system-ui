@@ -4,10 +4,9 @@
 #include <DuiWidget>
 
 class DuiApplicationPage;
-class DuiButton;
-class DuiButtonGroup;
 class DuiStatusIndicatorMenuInterface;
 class ProfileDataInterface;
+class ProfileButtons;
 
 /*!
  * The Profile widget makes it possible to select the currently
@@ -38,14 +37,20 @@ private slots:
     void changeProfile(const QString &profileName);
 
 private:
+    /*!
+     * \brief A method for initializing the profile buttons container
+     */
+    void initProfileButtons();
+
+private:
     //! Interface for controlling the status indicator menu
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
 
     //! Profile data If to receive information about possible profiles
     ProfileDataInterface* dataIf;
 
-    QStringList profileNames;
-    DuiButtonGroup *buttonGroup;
+    //! Profile buttongroup container
+    ProfileButtons *profileButtons;
 
 };
 

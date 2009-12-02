@@ -16,6 +16,7 @@
 
 #include "profilewidget.h"
 #include "profiledatainterface.h"
+#include "profilebuttons.h"
 
 #include <DuiButton>
 #include <DuiButtonGroup>
@@ -34,79 +35,50 @@ ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMen
     DuiWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
     dataIf(NULL),
-    buttonGroup(NULL)
+    profileButtons(NULL)
 {    
     Q_UNUSED(statusIndicatorMenu);
-    dataIf = new ProfileDataInterface();
-    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), this, SLOT(changeProfile(QString)));
+    dataIf = new ProfileDataInterface();    
+    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), profileButtons, SLOT(selectProfile(int)));    
 
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     // Create a container for the profiles
-    DuiContainer *container = new DuiContainer;
-    DuiWidget *widget = new DuiWidget;
-    DuiLayout *layout = new DuiLayout;
-    DuiLinearLayoutPolicy *landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
-    DuiGridLayoutPolicy *portraitPolicy = new DuiGridLayoutPolicy(layout);
-    layout->setLandscapePolicy(landscapePolicy);
-    layout->setPortraitPolicy(portraitPolicy);
-    widget->setLayout(layout);
-    container->setTitle(trid("qtn_prof_profile", "Profile"));
-    container->setCentralWidget(widget);
-    connect(container, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
-    mainLayout->addItem(container);
+    initProfileButtons();
 
-    // Create a button group for the profiles
-    buttonGroup = new DuiButtonGroup(widget);
-    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(buttonClicked(int)));
+    mainLayout->addItem(profileButtons);
 
-    // Find out the possible profiles
-    QStringList profileNames = dataIf->profileNames();
-    QString activeName = dataIf->currentProfileName();
-
-    // Place the buttons in the button group and in the layout
-    DuiButton *button;
-    for(int i=0; i<profileNames.count(); ++i) {
-        button = new DuiButton(dataIf->profileName2Text(profileNames.at(i)));
-        button->setObjectName("profileButton");
-        button->setCheckable(true);
-        if(profileNames.at(i) == activeName)
-            button->setChecked(true);
-        landscapePolicy->addItem(button);
-        portraitPolicy->addItemAtPosition(button, i/2, i%2);
-        buttonGroup->addButton(button);        
-    }
 }
 
 ProfileWidget::~ProfileWidget()
 {
     delete dataIf;
-    dataIf = NULL;
-    delete buttonGroup;
-    buttonGroup = NULL;
+    dataIf = NULL;    
+}
+
+void ProfileWidget::initProfileButtons()
+{
+    profileButtons = new ProfileButtons();
+    profileButtons->setTitle(trid("qtn_prof_profile", "Profile"));
+    QMap<int, QString> map;
+    QList<ProfileDataInterface::ProfileData> l = dataIf->getProfilesData();
+    for(int i = 0; i < l.count(); ++i) {
+        ProfileDataInterface::ProfileData d = l.at(i);
+        map.insert(d.profileId, d.profileName);
+    }
+    profileButtons->init(map, dataIf->getCurrentProfile());
+    connect(profileButtons, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
+    connect(profileButtons, SIGNAL(profileSelected(int)), dataIf, SLOT(setProfile(int)));
 }
 
 void ProfileWidget::showProfileModificationPage()
-{    
+{
     // instantiate the interface
     DuiControlPanelIf cpIf;
     // check the interface is valid
     if (!cpIf.isValid())
         return;    
     cpIf.appletPage("Profile");
-}
-
-void ProfileWidget::changeProfile(const QString &profileName)
-{
-    QString text = dataIf->profileName2Text(profileName);
-    QList<DuiButton *> buttons = buttonGroup->buttons();
-    for(int i=0; i<buttons.size(); ++i) {
-        DuiButton *button = buttons.at(i);
-        if(button->text() == text) {
-            button->setChecked(true);
-            break;
-        }
-    }
 }
