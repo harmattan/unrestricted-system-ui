@@ -16,6 +16,7 @@ public:
     void init(QMap<int, QString> data, int currentId);
     QString selectedProfileName();
 
+public slots:
     bool selectProfile(int id);
 
 signals:

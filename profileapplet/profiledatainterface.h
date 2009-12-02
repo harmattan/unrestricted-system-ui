@@ -30,10 +30,12 @@ signals:
 public:
     QString getCurrentProfileName();
     int getCurrentProfile();
-    QList<ProfileData> getProfilesData();
-    void setProfile(int value);
+    QList<ProfileData> getProfilesData();    
     void setVibration(int id, bool value);
     void setVolumeLevel(int id, int value);
+
+public slots:
+    void setProfile(int value);
 
 private slots:
     void currentProfileNameChanged(const QString &prof);

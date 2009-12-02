@@ -56,7 +56,7 @@ void BatteryBusinessLogicAdaptor::batteryChargingState()
 
 QString BatteryBusinessLogicAdaptor::PSMThresholdValue()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue(" << batteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMThresholdKey).toString() << ")";
+    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue()";
     return batteryLogic->PSMThresholdValue();
 }
 
