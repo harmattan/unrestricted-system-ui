@@ -1,3 +1,9 @@
+system-ui (0.10.0-2) harmattan; urgency=low
+
+  * Sprint 10 main release
+
+ --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Wed, 02 Dec 2009 10:37:27 +0200
+
 system-ui (0.10.1~0) harmattan; urgency=low
 
   * Pre-release
