@@ -22,7 +22,6 @@ puts "Initialize once before all tests.."
 #
   end
 
-
   def setup 
     @app=@sut.run(:name => 'sysuid')
 puts "Setup before each test.."
@@ -46,14 +45,6 @@ puts "testing Launch pin query case.."
 puts " step 1: verify that pin query is visible.."
 sleep 1
     verify {@app.test_object_exists?( "Button", :text => "Enter" ) == 'true'}
-
-if @app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 3
- puts "Mitä hittoa.."
-end
-
-mikas= @app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length
-puts "Tähän pitäs tulla noin nolla..: '#mikas'"
-    verify {@app.DuiTextEdit( :name => 'codeEntry' ).attribute("text").length == 3}
 
     # press Cancel and verify that pin query is not visble anymore by verifying that the Enter button is not visible 
 puts " step 2: press cancel and verify that the Enter button is not visible anymore.."
