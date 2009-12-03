@@ -19,89 +19,108 @@ CallContainer::CallContainer(DuiWidget *parent) :
         callFwdButton(NULL),
         numberLabel(NULL),
         numberEdit(NULL),
-        pickerButton(NULL)
+        pickerButton(NULL),
+        fwdNumberWidget(NULL),
+        dummyWidget(NULL),
+        lp(NULL),
+        pp(NULL)
 {
     // layout & policies
-
     DuiLayout* layout = new DuiLayout();
-
-    DuiGridLayoutPolicy* lp = new DuiGridLayoutPolicy(layout);
+    lp = new DuiGridLayoutPolicy(layout);
     layout->setLandscapePolicy(lp); // ownership transferred
-
-    DuiGridLayoutPolicy* pp = new DuiGridLayoutPolicy(layout);
+    pp = new DuiGridLayoutPolicy(layout);
     layout->setPortraitPolicy(pp); // ownership transferred
 
-    // send caller id
-
+    // send caller id widget
     sendCallerIdComboBox = new DuiComboBox();
-//    sendCallerIdComboBox->setObjectName("sendCallerIdComboBox");
     sendCallerIdComboBox->addItem(DcpCallAndSim::LetNetworkChooseText);
     sendCallerIdComboBox->addItem(DcpCallAndSim::YesText);
     sendCallerIdComboBox->addItem(DcpCallAndSim::NoText);
     sendCallerIdComboBox->setIconVisible(false);
     sendCallerIdComboBox->setCurrentIndex(0);
-//    sendCallerIdComboBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    QGraphicsLinearLayout* sendCallerIdLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    // TODO: some const value here some day
-    sendCallerIdLayout->setContentsMargins(10, 10, 10, 10);
+    QGraphicsWidget *sendCallerIdWidget = new QGraphicsWidget;
+    sendCallerIdWidget->setPreferredWidth(1);
+    QGraphicsLinearLayout* sendCallerIdLayout = new QGraphicsLinearLayout(Qt::Vertical, sendCallerIdWidget);    
+    sendCallerIdLayout->setContentsMargins(0, 0, 0, 0);
     sendCallerIdLayout->addItem(createLabel(DcpCallAndSim::SendCallerIdText));
     sendCallerIdLayout->addItem(sendCallerIdComboBox);
 
-    // call waiting checkbox
+    // call waiting checkbox widget
+    QGraphicsWidget* callWaitingWidget = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
 
-    QGraphicsLinearLayout* callWaitingLayout = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
+    // call forwarding checkbox widget
+    QGraphicsWidget* callFwdWidget = createCheckBox(DcpCallAndSim::CallForwardingText, callFwdButton);
 
-    // call forwarding checkbox
-
-    QGraphicsLinearLayout* callFwdLayout = createCheckBox(DcpCallAndSim::CallForwardingText, callFwdButton);
-
-    // call forwarding number
-
+    // call forwarding number widget
     numberLabel = createLabel(DcpCallAndSim::ForwardToText);
-
     numberEdit = new DuiTextEdit();
-
     pickerButton = new DuiButton();
-//    pickerButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     pickerButton->setObjectName("peoplePickerButton");
     pickerButton->setIconID("icon-m-addressbook");
 
-    QGraphicsGridLayout* fwdNumberLayout = new QGraphicsGridLayout();
+    fwdNumberWidget = new QGraphicsWidget;
+    fwdNumberWidget->setPreferredWidth(1);    
+    QGraphicsGridLayout* fwdNumberLayout = new QGraphicsGridLayout(fwdNumberWidget);
+    fwdNumberLayout->setContentsMargins(0, 0, 0, 0);
     fwdNumberLayout->addItem(numberLabel, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     fwdNumberLayout->addItem(pickerButton, 0, 1, 2, 1, Qt::AlignCenter);
     fwdNumberLayout->addItem(numberEdit, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
-    // landscape policy
+    // dummy placeholder
+    dummyWidget = new QGraphicsWidget;
+    dummyWidget->setContentsMargins(0, 0, 0, 0);
+    dummyWidget->setPreferredWidth(1);
 
-    lp->setSpacing(5);
-    lp->setColumnMaximumWidth(0, 390);
-    lp->setColumnMaximumWidth(1, 390);
-    lp->addItemAtPosition(sendCallerIdLayout, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    lp->addItemAtPosition(callWaitingLayout, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
-    lp->addItemAtPosition(callFwdLayout, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    lp->addItemAtPosition(fwdNumberLayout, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    // landscape policy
+    lp->setSpacing(5);    
+    lp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    lp->addItemAtPosition(callWaitingWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    lp->addItemAtPosition(callFwdWidget, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    lp->addItemAtPosition(dummyWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     // portrait policy
-
-    pp->setSpacing(5);
-    pp->setColumnMaximumWidth(0, 470);
-    pp->addItemAtPosition(sendCallerIdLayout, 0, 0, Qt::AlignCenter);
-    pp->addItemAtPosition(callWaitingLayout, 1, 0, Qt::AlignCenter);
-    pp->addItemAtPosition(callFwdLayout, 2, 0, Qt::AlignCenter);
-    pp->addItemAtPosition(fwdNumberLayout, 3, 0, Qt::AlignCenter);
+    pp->setSpacing(5);    
+    pp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(callWaitingWidget, 1, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(callFwdWidget, 2, 0, Qt::AlignCenter);
+    pp->addItemAtPosition(dummyWidget, 3, 0, Qt::AlignCenter);
 
     // connect signals
-
     connect(sendCallerIdComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(sendCallerIdSelected(int)));
     connect(callWaitingButton, SIGNAL(toggled(bool)), this, SLOT(callWaitingToggled(bool)));
     connect(callFwdButton, SIGNAL(toggled(bool)), this, SLOT(callForwardingToggled(bool)));
     connect(numberEdit, SIGNAL(lostFocus(Qt::FocusReason)), this, SLOT(numberChanged()));
 
     // layout
-
     centralWidget()->setLayout(layout);
 }
+
+CallContainer::~CallContainer()
+{
+    //delete proxy widgets
+    delete dummyWidget;
+    dummyWidget = NULL;
+    delete fwdNumberWidget;
+    fwdNumberWidget = NULL;
+}
+
+void CallContainer::toggleFwdNumberWidget(bool toggle)
+{
+    if(toggle) {
+        lp->removeItem(dummyWidget);
+        lp->addItemAtPosition(fwdNumberWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        pp->removeItem(dummyWidget);
+        pp->addItemAtPosition(fwdNumberWidget, 3, 0, Qt::AlignCenter);
+    } else {        
+        lp->removeItem(fwdNumberWidget);
+        lp->addItemAtPosition(dummyWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        pp->removeItem(fwdNumberWidget);
+        pp->addItemAtPosition(dummyWidget, 3, 0, Qt::AlignCenter);
+    }
+}
+
 
 void CallContainer::setSendCallerId(int value)
 {
@@ -120,19 +139,17 @@ void CallContainer::setCallWaiting(bool enabled)
 }
 
 void CallContainer::setCallForwarding(bool enabled, QString number)
-{
+{    
     qDebug() << Q_FUNC_INFO << enabled << number;
 
     if (number.compare(numberEdit->text()) != 0) {
         numberEdit->setText(number);
     }
 
-    if (callFwdButton->isChecked() != enabled) {
+    if (callFwdButton->isChecked() != enabled) {        
         callFwdButton->setChecked(enabled);
     } else {
-        numberLabel->setVisible(enabled);
-        numberEdit->setVisible(enabled);
-        pickerButton->setVisible(enabled);
+        toggleFwdNumberWidget(enabled);
     }
 }
 
@@ -152,9 +169,7 @@ void CallContainer::requestFailed(DcpCallAndSim::Data data)
         callWaitingButton->blockSignals(false);
         break;
     case DcpCallAndSim::CallForwardingData:
-        numberLabel->setVisible(false);
-        numberEdit->setVisible(false);
-        pickerButton->setVisible(false);
+        toggleFwdNumberWidget(false);
 
         callFwdButton->blockSignals(true);
         callFwdButton->setChecked(false);
@@ -183,9 +198,7 @@ void CallContainer::callForwardingToggled(bool checked)
 {
     qDebug() << Q_FUNC_INFO << checked;
 
-    numberLabel->setVisible(checked);
-    numberEdit->setVisible(checked);
-    pickerButton->setVisible(checked);
+    toggleFwdNumberWidget(checked);
 
     emit callForwardingChanged(checked, numberEdit->text());
 }
@@ -207,7 +220,7 @@ DuiLabel* CallContainer::createLabel(const QString& text)
     return label;
 }
 
-QGraphicsLinearLayout* CallContainer::createCheckBox(const QString& text, DuiButton*& button)
+QGraphicsWidget* CallContainer::createCheckBox(const QString& text, DuiButton*& button)
 {
     button = new DuiButton();
     button->setObjectName("checkBoxButton");
@@ -215,12 +228,15 @@ QGraphicsLinearLayout* CallContainer::createCheckBox(const QString& text, DuiBut
 
     DuiLabel* label = createLabel(text);
 
-    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    widget->setPreferredWidth(1);    
+    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout(Qt::Horizontal, widget);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     layout->addItem(label);
     layout->setAlignment(label, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addItem(button);
-    layout->setAlignment(button, Qt::AlignRight | Qt::AlignVCenter);
+    layout->setAlignment(button, Qt::AlignRight | Qt::AlignVCenter);        
 
-    return layout;
+    return widget;
 }

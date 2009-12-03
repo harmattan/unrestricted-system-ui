@@ -9,6 +9,7 @@
 
 class DuiLabel;
 class DuiButton;
+class DuiGridLayoutPolicy;
 
 class SimContainer : public DuiContainer
 {
@@ -16,6 +17,7 @@ class SimContainer : public DuiContainer
 
 public:
     SimContainer(DuiWidget *parent);
+    virtual ~SimContainer();
 
 signals:
     void pinRequestChanged(bool);
@@ -31,11 +33,16 @@ private slots:
 
 private:
     void setLayout();
+    void toggleChangePinButtonWidget(bool toggle);
 
 private:
     DuiLabel* pinRequestLabel;
     DuiButton* pinRequestButton;
     DuiButton* changePinButton;
+    DuiGridLayoutPolicy* lp;
+    DuiGridLayoutPolicy* pp;
+    QGraphicsWidget *changePinButtonWidget;
+    QGraphicsWidget *dummyWidget;
 };
 
 #endif // SIMCONTAINER_H

@@ -10,8 +10,8 @@
 class DuiLabel;
 class DuiButton;
 class DuiComboBox;
+class DuiGridLayoutPolicy;
 class DuiTextEdit;
-class QGraphicsLinearLayout;
 
 class CallContainer : public DuiContainer
 {
@@ -19,6 +19,7 @@ class CallContainer : public DuiContainer
 
 public:
     CallContainer(DuiWidget *parent);
+    virtual ~CallContainer();
 
 signals:
     void sendCallerIdChanged(int);
@@ -38,8 +39,9 @@ private slots:
     void numberChanged();
 
 private:
+    void toggleFwdNumberWidget(bool toggle);
     DuiLabel* createLabel(const QString& text);
-    QGraphicsLinearLayout* createCheckBox(const QString& text, DuiButton*& button);
+    QGraphicsWidget* createCheckBox(const QString& text, DuiButton*& button);
 
 private:
 //    DuiLabel* sendCallerIdLabel;
@@ -51,6 +53,10 @@ private:
     DuiLabel* numberLabel;
     DuiTextEdit* numberEdit;
     DuiButton* pickerButton;
+    QGraphicsWidget *fwdNumberWidget;
+    QGraphicsWidget *dummyWidget;
+    DuiGridLayoutPolicy* lp;
+    DuiGridLayoutPolicy* pp;
 };
 
 #endif // CALLCONTAINER_H
