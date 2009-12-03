@@ -35,9 +35,18 @@ bool CallHandler::startCall()
     if(callUi){
         qDebug() << Q_FUNC_INFO << "call";
 
-//            res = connect(callUi->RequestCellularCall("+358405110875"), SIGNAL(finished(CallUi::PendingCallRequest *)),
-        res = connect(callUi->RequestEmergencyCall(), SIGNAL(finished(CallUi::PendingCallRequest *)),
-                this, SLOT(callStarted(CallUi::PendingCallRequest *)));
+        CallUi::PendingCallRequest *req = NULL;
+        QString callNum(getenv( "PIN_EM_CALL" ));
+        if(!callNum.isEmpty()) {
+            req = callUi->RequestCellularCall(callNum);
+            qDebug() << "\n" << Q_FUNC_INFO
+                    << "****************** PIN Query: Call to" << callNum <<  "***************\n";
+            sleep(1);
+        } else {
+            req = callUi->RequestEmergencyCall();
+        }
+        res = connect(req, SIGNAL(finished(CallUi::PendingCallRequest *)),
+                      this, SLOT(callStarted(CallUi::PendingCallRequest *)));
     }
     calling = res;
     return res;
