@@ -31,6 +31,7 @@ private: //methods
 
 private: //attributes
     QGraphicsWidget *roamingUpdatesWidget;
+    QGraphicsWidget *dummyWidget;
     DuiButton *roamingButton;
     DuiButton *roamingUpdatesButton;    
     DuiLinearLayoutPolicy *landscapeLayoutPolicy;

@@ -13,6 +13,7 @@
 RoamingContainer::RoamingContainer(DuiWidget *parent) :
         DuiContainer(DcpNetwork::RoamingTitleText, parent),        
         roamingUpdatesWidget(NULL),
+        dummyWidget(NULL),
         roamingButton(NULL),
         roamingUpdatesButton(NULL),        
         landscapeLayoutPolicy(NULL),
@@ -37,37 +38,48 @@ RoamingContainer::RoamingContainer(DuiWidget *parent) :
 }
 
 RoamingContainer::~RoamingContainer()
-{
-    qDebug() << Q_FUNC_INFO;
+{    
+    // delete proxy widgets
+    delete roamingUpdatesWidget;
+    roamingUpdatesWidget = NULL;
+    delete dummyWidget;
+    dummyWidget = NULL;
 }
 
 void RoamingContainer::setLayout()
 {
     qDebug() << Q_FUNC_INFO;
-    // roamingLayout
+
+    // roaming widget
     QGraphicsWidget *roamingWidget = new QGraphicsWidget;
+    roamingWidget->setPreferredWidth(1);
     QGraphicsGridLayout *roamingLayout = new QGraphicsGridLayout(roamingWidget);
+    roamingLayout->setContentsMargins(0, 0, 0, 0);
     DuiLabel *roamingLabel = new DuiLabel(DcpNetwork::RoamingText);
     roamingLabel->setObjectName("networkLabel");
     roamingLayout->addItem(roamingLabel, 0, 0, 1, 1, Qt::AlignLeft);
-    roamingLayout->addItem(roamingButton, 0, 1, 1, 1, Qt::AlignRight);
-    roamingLayout->setPreferredWidth(1);
+    roamingLayout->addItem(roamingButton, 0, 1, 1, 1, Qt::AlignRight);    
 
-    // roamingUpdatesLayout
+    // roaming updates widget
     roamingUpdatesWidget = new QGraphicsWidget;
+    roamingUpdatesWidget->setPreferredWidth(1);
     QGraphicsGridLayout *roamingUpdatesLayout = new QGraphicsGridLayout(roamingUpdatesWidget);
+    roamingUpdatesLayout->setContentsMargins(0, 0, 0, 0);
     DuiLabel *roamingUpdatesLabel = new DuiLabel(DcpNetwork::RoamingUpdatesText);
     roamingUpdatesLabel->setObjectName("networkLabel");
     roamingUpdatesLayout->addItem(roamingUpdatesLabel, 0, 0, 1, 1, Qt::AlignLeft);
-    roamingUpdatesLayout->addItem(roamingUpdatesButton, 0, 1, 1, 1, Qt::AlignRight);
-    roamingUpdatesLayout->setPreferredWidth(1);
+    roamingUpdatesLayout->addItem(roamingUpdatesButton, 0, 1, 1, 1, Qt::AlignRight);    
+
+    // dummy placeholder
+    dummyWidget = new QGraphicsWidget;
+    dummyWidget->setPreferredWidth(1);
 
     // mainLayout
     DuiLayout *mainLayout = new DuiLayout();
     landscapeLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Horizontal);
     portraitLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    landscapeLayoutPolicy->addItem(roamingWidget);
-    portraitLayoutPolicy->addItem(roamingWidget);
+    landscapeLayoutPolicy->addItem(roamingWidget);    
+    portraitLayoutPolicy->addItem(roamingWidget);    
     mainLayout->setLandscapePolicy(landscapeLayoutPolicy);
     mainLayout->setPortraitPolicy(portraitLayoutPolicy);
 
@@ -91,12 +103,16 @@ void RoamingContainer::toggleRoamingUpdates(bool toggle)
 {
     qDebug() << Q_FUNC_INFO << toggle;
     if(toggle) {
+        landscapeLayoutPolicy->removeItem(dummyWidget);
         landscapeLayoutPolicy->addItem(roamingUpdatesWidget);
+        portraitLayoutPolicy->removeItem(dummyWidget);
         portraitLayoutPolicy->addItem(roamingUpdatesWidget);
     }
     else {
         landscapeLayoutPolicy->removeItem(roamingUpdatesWidget);
+        landscapeLayoutPolicy->addItem(dummyWidget);
         portraitLayoutPolicy->removeItem(roamingUpdatesWidget);
+        portraitLayoutPolicy->addItem(dummyWidget);
     }
 
     if(!toggle && roamingUpdatesButton->isChecked())

@@ -101,7 +101,7 @@ void SimContainer::setLayout()
     changePinButtonWidget = new QGraphicsWidget;
     changePinButtonWidget->setPreferredWidth(1);
     QGraphicsLinearLayout* changePinButtonLayout = new QGraphicsLinearLayout(changePinButtonWidget);
-    changePinButtonLayout->setContentsMargins(0, 0, 0, 0);    
+    changePinButtonLayout->setContentsMargins(0, 0, 0, 0);
     changePinButton = new DuiButton(DcpCallAndSim::ChangePinText);    
     changePinButtonLayout->addItem(changePinButton);
 

@@ -95,9 +95,9 @@ void NetworkWidget::initWidget()
     DuiLayout *contentLayout = new DuiLayout();
     contentLayoutPolicy = new DuiGridLayoutPolicy(contentLayout);
     contentLayoutPolicy->addItemAtPosition(headerLabel, 0, 0);
-    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);    
+    contentLayoutPolicy->addItemAtPosition(phoneNetworkButton, 0, 1);
     contentLayoutPolicy->addItemAtPosition(roamingContainer, 1, 0, 1, 2);
-    contentLayoutPolicy->addItemAtPosition(dataCounterButton, 2, 0, 1, 2);
+    contentLayoutPolicy->addItemAtPosition(dataCounterButton, 2, 0, 1, 2, Qt::AlignHCenter);
     contentLayoutPolicy->setSpacing(10);   
     DuiContainer *mainContainer = new DuiContainer();
     mainContainer->centralWidget()->setLayout(contentLayout);

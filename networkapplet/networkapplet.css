@@ -11,23 +11,8 @@
 	maximum-size: 44% 60;
 }
 
-#networkLayoutWidget1 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 800 -1;
-	minimum-size: 800 50;
-	maximum-size: 800 -1;
-}
-#networkLayoutWidget2 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 44% 50;
-	minimum-size: 44% 50;
-	maximum-size: 44% 50;
-}
-
 #availableNetwork {
-	font: "Nokia Sans" 18;
+        font: "Nokia Sans" 14;
 }
 
 #availableNetwork:selected {
@@ -36,5 +21,5 @@
 }
 
 #networkLabel {
-    color: white;
+    color: white;    
 }
