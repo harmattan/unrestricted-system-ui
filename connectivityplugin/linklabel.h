@@ -23,7 +23,7 @@ private slots:
     bool event(QEvent *event);
 
 private:
-    void showNetworkModificationPage();
+    void showDuiControlPanelApplet();
 
 private:
     LinkLabel::Link link;

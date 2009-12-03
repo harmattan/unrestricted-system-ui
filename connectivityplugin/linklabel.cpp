@@ -17,11 +17,11 @@ bool LinkLabel::event(QEvent *event)
 {
     bool result = DuiLabel::event(event);
     if(event->type() == QEvent::GraphicsSceneMousePress)
-        showNetworkModificationPage();
+        showDuiControlPanelApplet();
     return result;
 }
 
-void LinkLabel::showNetworkModificationPage()
+void LinkLabel::showDuiControlPanelApplet()
 {
     // instantiate the interface
     DuiControlPanelIf cpIf;
