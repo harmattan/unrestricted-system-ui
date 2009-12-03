@@ -20,14 +20,16 @@ HEADERS = connectivityplugin.h \
     offlinecontainer.h \
     networksignalstrengthicon.h \
     ../src/systemuigconf.h \
-    ../networkapplet/networktechnology.h
+    ../networkapplet/networktechnology.h \
+    linklabel.h
 SOURCES = connectivityplugin.cpp \
     connectivity.cpp \
     phonenetworkcontainer.cpp \
     offlinecontainer.cpp \
     networksignalstrengthicon.cpp \
     ../src/systemuigconf.cpp \
-    ../networkapplet/networktechnology.cpp
+    ../networkapplet/networktechnology.cpp \
+    linklabel.cpp
 TARGET = $$qtLibraryTarget(connectivity)
 css.files = connectivityplugin.css
 css.path += /usr/share/duistatusindicatormenu/themes/style/

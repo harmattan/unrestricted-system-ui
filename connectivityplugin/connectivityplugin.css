@@ -1,9 +1,9 @@
-#connectivityLabel1 {
+#connectivityLinkLabel {
 	color: white;
         font: "Nokia Sans" 18;
 }
 
-#connectivityLabel2 {
+#connectivitySubLabel {
         color: orange;
         font: "Nokia Sans" 14;
 }

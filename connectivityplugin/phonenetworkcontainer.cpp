@@ -1,11 +1,13 @@
 #include "phonenetworkcontainer.h"
 #include "networksignalstrengthicon.h"
+#include "linklabel.h"
 
 #include <DuiButton>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLocale>
 #include <DuiGridLayoutPolicy>
+
 
 PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
         DuiContainer(parent),
@@ -30,7 +32,7 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
     connect(toggleButton, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));    
 
     operatorLabel = new DuiLabel();
-    operatorLabel->setObjectName("connectivityLabel2");
+    operatorLabel->setObjectName("connectivitySubLabel");
     operatorLabel->setText(networkOperator->name());
     connect(networkOperator, SIGNAL(nameChanged(QString)), operatorLabel, SLOT(setText(QString)));   
 
@@ -91,9 +93,8 @@ void PhoneNetworkContainer::setLayout()
 {
     DuiLayout *layout = new DuiLayout();
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
-    DuiLabel *headerLabel = new DuiLabel(trid("qtn_cell_phone_network", "Phone network"));
-    headerLabel->setObjectName("connectivityLabel1");
-    layoutPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 2);
+    LinkLabel *linkLabel = new LinkLabel(LinkLabel::Network, trid("qtn_cell_phone_network", "Phone network"));    
+    layoutPolicy->addItemAtPosition(linkLabel, 0, 0, 1, 2);
     layoutPolicy->addItemAtPosition(signalStrengthIcon, 1, 0, 1, 1);
     layoutPolicy->addItemAtPosition(operatorLabel, 1, 1, 1, 1);
     layoutPolicy->addItemAtPosition(toggleButton, 0, 2, 2, 1);

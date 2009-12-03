@@ -3,7 +3,6 @@
 #include "offlinecontainer.h"
 #include "systemuigconf.h"
 
-#include <DuiControlPanelIf>
 #include <DuiContainer>
 #include <DuiLabel>
 #include <DuiLayout>
@@ -40,9 +39,7 @@ Connectivity::Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     connect(offlineContainer, SIGNAL(toggled(bool)), this, SLOT(toggleOfflineMode(bool)));
 
     // network container
-    networkContainer = new PhoneNetworkContainer();
-    connect(networkContainer, SIGNAL(headerClicked()), this, SLOT(showNetworkModificationPage()));
-
+    networkContainer = new PhoneNetworkContainer();    
 
     ///////////////////////// PLACE HOLDERS /////////////////////////
     // dummy internet container
@@ -97,16 +94,6 @@ void Connectivity::toggleContainersVisibility(bool toggle)
     }
 }
 
-void Connectivity::showNetworkModificationPage()
-{
-    // instantiate the interface
-    DuiControlPanelIf cpIf;
-    // check the interface is valid
-    if (!cpIf.isValid())
-        return;
-    cpIf.appletPage("Network");
-}
-
 void Connectivity::toggleOfflineMode(bool toggle)
 {
     qDebug() << "Connectivity::toggleOfflineMode(" << toggle << ")";
@@ -147,10 +134,10 @@ DuiContainer* Connectivity::createDummyContainer(const QString &text)
     DuiContainer *container = new DuiContainer();
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     DuiLabel *headerLabel = new DuiLabel(text);
-    headerLabel->setObjectName("connectivityLabel1");
+    headerLabel->setObjectName("connectivityLinkLabel");
     layout->addItem(headerLabel);
     DuiLabel *label = new DuiLabel("Placeholder");
-    label->setObjectName("connectivityLabel2");
+    label->setObjectName("connectivitySubLabel");
     layout->addItem(label);
     container->centralWidget()->setLayout(layout);
     return container;

@@ -24,7 +24,7 @@ public:
     bool phoneNetworkOn();
     void togglePhoneNetwork(bool toggle);    
 
-signals:
+signals:    
     void toggled(bool);
 
 private slots:

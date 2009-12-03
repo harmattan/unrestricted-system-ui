@@ -17,8 +17,7 @@ public:
     Connectivity(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
     virtual ~Connectivity();
 
-private slots:
-    void showNetworkModificationPage();
+private slots:    
     void toggleOfflineMode(bool toggle);    
 
 private:
@@ -30,7 +29,7 @@ private:
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu
     PhoneNetworkContainer *networkContainer;
     OfflineContainer *offlineContainer;
-    DuiContainer *bluetoothContainer;
+    DuiContainer *bluetoothContainer;    
     DuiLinearLayoutPolicy *layoutPolicy;
 };
 
