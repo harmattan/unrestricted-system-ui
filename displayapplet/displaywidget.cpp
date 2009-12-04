@@ -11,6 +11,8 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
+#include <QGraphicsLinearLayout>
+
 /* TODO:
     1) Display header not yet defined (logical name)
 */
@@ -66,9 +68,8 @@ void DisplayWidget::initWidget()
     contentContainer->centralWidget()->setLayout(contentLayout);
 
     //mainLayout
-    DuiLayout *mainLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Horizontal);
-    mainLayoutPolicy->addItem(contentContainer);
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout();
+    mainLayout->addItem(contentContainer);
 
     // catch user actions
     connect(brightnessContainer, SIGNAL(sliderValueChanged(int)), logic, SLOT(setBrightnessValue(int)));
