@@ -4,19 +4,10 @@
 #include "dcpwidget.h" 
 
 class DuiButton;
-class DuiComboBox;
-class DuiContainer;
 class DuiGridLayoutPolicy;
-class DuiLabel;
-class DuiLayout;
-class DuiLinearLayoutPolicy;
-class DuiStylableWidget;
-class DuiWidgetController;
+class NetworkBusinessLogic;
 class NetworkContainer;
 class RoamingContainer;
-class NetworkBusinessLogic;
-
-#include <QDebug>
 
 class NetworkWidget : public DcpWidget
 {

@@ -59,7 +59,7 @@ void NetworkContainer::setLayout()
     // create the main layout
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    layoutPolicy->addItem(cbLayout, Qt::AlignLeft);
+    layoutPolicy->addItem(cbLayout, Qt::AlignLeft);   
 
     centralWidget()->setLayout(layout);
 }

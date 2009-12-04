@@ -5,6 +5,8 @@
 #include "roamingcontainer.h"
 #include "dcpnetwork.h"
 
+#include <QDebug>
+#include <QGraphicsLinearLayout>
 
 #include <DuiButton>
 #include <DuiContainer>
@@ -12,8 +14,6 @@
 #include <DuiGridLayoutPolicy>
 #include <DuiLabel>
 #include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <QDebug>
 
 /* TODO:
    1) Show data counter dialog   
@@ -124,10 +124,8 @@ void NetworkWidget::initWidget()
     connect(networkContainer, SIGNAL(availableOperatorSelected(int)), logic, SLOT(selectOperator(int)));
 
     // mainLayout
-    DuiLayout *mainLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    mainLayoutPolicy->addItem(mainContainer);
-
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout();
+    mainLayout->addItem(mainContainer);
     this->setLayout(mainLayout);
 }
 

@@ -1,10 +1,5 @@
 #include "networklist.h"
 
-#include <DuiLabel>
-#include <DuiList>
-#include <DuiWidgetFactory>
-#include <DuiWidgetListModel>
-#include <QGraphicsWidget>
 #include <QModelIndex>
 #include <QDebug>
 #include <QStringListModel>
