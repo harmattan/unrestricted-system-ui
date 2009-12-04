@@ -25,14 +25,18 @@ HEADERS = callandsimapplet.h \
     callandsimtranslation.h \
     callandsimbrief.h \
     callandsimdbusinterface.h \
-    callandsim.h
+    callandsim.h \
+    forwardingwidget.h \
+    forwardingcontainer.h
 SOURCES = callandsimapplet.cpp \
     callandsimwidget.cpp \
     callcontainer.cpp \
     simcontainer.cpp \
     callandsimbrief.cpp \
     callandsimdbusinterface.cpp \
-    callandsim.cpp
+    callandsim.cpp \
+    forwardingwidget.cpp \
+    forwardingcontainer.cpp
 css.files = callandsimapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

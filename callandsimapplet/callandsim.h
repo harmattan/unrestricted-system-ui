@@ -6,6 +6,7 @@
 #include <cellular-qt/CallForwarding>
 #include <cellular-qt/CallWaiting>
 #include <cellular-qt/SIM>
+//#include <cellular-qt/NetworkRegistration>
 
 #include <QObject>
 
@@ -47,12 +48,15 @@ private slots:
     void pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error = SIMErrorNone);
     void pinQueryEnabled(SIMSecurity::PINQuery queryState);
 
+    void networkStatusChanges(int status);
+
     void DBusMessagingFailure();
 
 private:
     CallForwarding* callForwarding;
     CallWaiting* callWaiting;
     SIMSecurity* simSecurity;
+    //NetworkRegistration *networkRegistration;
     QDBusInterface* dbusPinIf;
 };
 

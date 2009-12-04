@@ -7,15 +7,15 @@ CallAndSimDBusInterface::CallAndSimDBusInterface()
 {
     dbusIf = new QDBusInterface("com.nokia.systemui", "/",
                                 "com.nokia.systemui.callandsim",
-                                QDBusConnection::sessionBus());
+                                QDBusConnection::sessionBus(), this);
 
     connect(dbusIf, SIGNAL(callerIdSending(int)), this, SIGNAL(callerIdSending(int)));
 }
 
 CallAndSimDBusInterface::~CallAndSimDBusInterface()
 {
-    delete dbusIf;
-    dbusIf = NULL;
+//    delete dbusIf;
+//    dbusIf = NULL;
 }
 
 void CallAndSimDBusInterface::callerIdSendingRequired()

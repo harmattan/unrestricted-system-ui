@@ -24,22 +24,17 @@ public:
 signals:
     void sendCallerIdChanged(int);
     void callWaitingChanged(bool);
-    void callForwardingChanged(bool, const QString);
 
 public slots:
     void setSendCallerId(int value);
     void setCallWaiting(bool enabled);
-    void setCallForwarding(bool enabled, QString number);
     void requestFailed(DcpCallAndSim::Data data);
 
 private slots:
     void sendCallerIdSelected(int index);
     void callWaitingToggled(bool checked);
-    void callForwardingToggled(bool checked);
-    void numberChanged();
 
 private:
-    void toggleFwdNumberWidget(bool toggle);
     DuiLabel* createLabel(const QString& text);
     QGraphicsWidget* createCheckBox(const QString& text, DuiButton*& button);
 
@@ -48,13 +43,6 @@ private:
     DuiComboBox* sendCallerIdComboBox;
 //    DuiLabel* callWaitingLabel;
     DuiButton* callWaitingButton;
-//    DuiLabel* callForwardingLabel;
-    DuiButton* callFwdButton;
-    DuiLabel* numberLabel;
-    DuiTextEdit* numberEdit;
-    DuiButton* pickerButton;
-    QGraphicsWidget *fwdNumberWidget;
-    QGraphicsWidget *dummyWidget;
     DuiGridLayoutPolicy* lp;
     DuiGridLayoutPolicy* pp;
 };

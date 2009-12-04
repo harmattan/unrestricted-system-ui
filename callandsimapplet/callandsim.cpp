@@ -11,6 +11,7 @@ CallAndSim::CallAndSim(QObject* parent) :
     callForwarding = new CallForwarding(this);
     callWaiting = new CallWaiting(this);
     simSecurity = new SIMSecurity(this);
+//    networkRegistration = new NetworkRegistration(this);
 
     connect(callWaiting, SIGNAL(waitingActivateComplete(CallWaiting::WaitingError)),
             this, SLOT(waitingActivateComplete(CallWaiting::WaitingError)));
@@ -26,6 +27,8 @@ CallAndSim::CallAndSim(QObject* parent) :
     connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)),
             this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
 
+//    connect(networkRegistration, SIGNAL(statusChanged(int)), this, SLOT(networkStatusChanged(int)));
+
     // TODO: CallerId
 
     dbusPinIf = new QDBusInterface("com.nokia.systemui.pin",
@@ -33,10 +36,12 @@ CallAndSim::CallAndSim(QObject* parent) :
                                    "com.nokia.systemui.pin.PinCodeQuery",
                                    QDBusConnection::systemBus(),
                                    this);
-
-    connect(dbusPinIf, SIGNAL(PinQueryStateComplete(SIMSecurity::PINQuery)),
-            this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
-
+    /*
+        connect(dbusPinIf, SIGNAL(PinQueryStateCompleted(SIMSecurity::PINQuery)),
+                this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
+        connect(dbusPinIf, SIGNAL(PinQueryEnabled(SIMSecurity::PINQuery)),
+                this, SLOT(pinQueryStateComplete(SIMSecurity::PINQuery, SIMError)));
+    */
 }
 
 void CallAndSim::setCallerIdSending(int value)
@@ -73,7 +78,7 @@ void CallAndSim::setPinRequest(bool enabled)
 
     QList<QVariant> list;
     list << QVariant(enabled);
-    dbusPinIf->callWithCallback(QString("EnablePinQuery"), list, this, SLOT(pinQueryEnabled(SIMSecurity::PINQuery)), SLOT(DBusMessagingFailure()));
+    dbusPinIf->call(QString("EnablePinQuery"), QVariant(enabled));
 }
 
 void CallAndSim::changePinCode()
@@ -194,6 +199,11 @@ void CallAndSim::pinQueryEnabled(SIMSecurity::PINQuery queryState)
     } else {
         emit requestFailed(DcpCallAndSim::PinRequestData);
     }
+}
+
+void CallAndSim::networkStatusChanges(int status)
+{
+    // TODO
 }
 
 void CallAndSim::DBusMessagingFailure()

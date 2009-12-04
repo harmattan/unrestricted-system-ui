@@ -6,6 +6,7 @@
 
 class DuiAction;
 class CallAndSimWidget;
+class DuiInfoBanner;
 
 class CallAndSimApplet : public QObject, public DcpAppletIf
 {
@@ -20,8 +21,14 @@ public:
     virtual QVector<DuiAction*> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId);
 
+private slots:
+    void switchNetworkOn();
+
 private:
+    bool checkNetworkState();
+
     QPointer<CallAndSimWidget> main;
+    DuiInfoBanner* infoBanner;
 };
 
 #endif // CALLANDSIMAPPLET_H

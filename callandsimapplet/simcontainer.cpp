@@ -92,8 +92,8 @@ void SimContainer::setLayout()
 
     QGraphicsWidget *pinRequestWidget = new QGraphicsWidget;
     pinRequestWidget->setPreferredWidth(1);
-    QGraphicsLinearLayout* pinRequestLayout = new QGraphicsLinearLayout(Qt::Horizontal, pinRequestWidget);    
-    pinRequestLayout->setContentsMargins(0, 0, 0, 0);        
+    QGraphicsLinearLayout* pinRequestLayout = new QGraphicsLinearLayout(Qt::Horizontal, pinRequestWidget);
+    pinRequestLayout->setContentsMargins(0, 0, 0, 0);
     pinRequestLayout->addItem(pinRequestLabel);
     pinRequestLayout->addItem(pinRequestButton);
 
@@ -102,7 +102,7 @@ void SimContainer::setLayout()
     changePinButtonWidget->setPreferredWidth(1);
     QGraphicsLinearLayout* changePinButtonLayout = new QGraphicsLinearLayout(changePinButtonWidget);
     changePinButtonLayout->setContentsMargins(0, 0, 0, 0);
-    changePinButton = new DuiButton(DcpCallAndSim::ChangePinText);    
+    changePinButton = new DuiButton(DcpCallAndSim::ChangePinText);
     changePinButtonLayout->addItem(changePinButton);
 
     // dummy placeholder
@@ -110,12 +110,12 @@ void SimContainer::setLayout()
     dummyWidget->setPreferredWidth(1);
 
     // landscape policy
-    lp->setSpacing(5);    
+    lp->setSpacing(5);
     lp->addItemAtPosition(pinRequestWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
     lp->addItemAtPosition(dummyWidget, 0, 1, Qt::AlignCenter);
 
     // portrait policy
-    pp->setSpacing(5);    
+    pp->setSpacing(5);
     pp->addItemAtPosition(pinRequestWidget, 0, 0, Qt::AlignLeft);
     pp->addItemAtPosition(dummyWidget, 1, 0, Qt::AlignCenter);
 
@@ -129,7 +129,7 @@ void SimContainer::setLayout()
 
 void SimContainer::toggleChangePinButtonWidget(bool toggle)
 {
-    if(toggle) {
+    if (toggle) {
         lp->removeItem(dummyWidget);
         lp->addItemAtPosition(changePinButtonWidget, 0, 1, Qt::AlignCenter);
         pp->removeItem(dummyWidget);
