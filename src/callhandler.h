@@ -22,6 +22,7 @@ public:
     ~CallHandler();
 
     bool callOngoing();
+    static inline const char* envVar() { return "PIN_EM_CALL"; }
 
 signals:
     void callStarted();

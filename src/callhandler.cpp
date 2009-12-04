@@ -36,12 +36,9 @@ bool CallHandler::startCall()
         qDebug() << Q_FUNC_INFO << "call";
 
         CallUi::PendingCallRequest *req = NULL;
-        QString callNum(getenv( "PIN_EM_CALL" ));
+        QString callNum(getenv( envVar() ));
         if(!callNum.isEmpty()) {
             req = callUi->RequestCellularCall(callNum);
-            qDebug() << "\n" << Q_FUNC_INFO
-                    << "****************** PIN Query: Call to" << callNum <<  "***************\n";
-            sleep(1);
         } else {
             req = callUi->RequestEmergencyCall();
         }

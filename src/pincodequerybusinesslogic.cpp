@@ -203,6 +203,11 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
     DuiButton* callButton = dlg->addButton(QString(trid("qtn_cell_emergency_call_number", "Call")));
     dlg->addButton(DuiDialog::Cancel);
+
+    qDebug() << "\n" << Q_FUNC_INFO
+            << "****************** PIN Query: Call to var"
+            << CallHandler::envVar() << "value :"
+            << getenv( CallHandler::envVar() ) <<  "***************\n";
     dlg->exec();
 
     if(dlg->clickedButton() == callButton){
