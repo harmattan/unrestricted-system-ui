@@ -5,9 +5,9 @@
 
 class DuiButton;
 class BatteryDBusInterface;
+class BatteryImage;
 class SliderContainer;
-class StandByTimeContainer;
-class TalkTimeContainer;
+class TimeContainer;
 
 class BatteryWidget : public DcpWidget
 {
@@ -28,11 +28,12 @@ private slots:
     void remainingTimeValuesReceived(const QStringList &timeValues);
 
 private: //attributes
-    TalkTimeContainer *talkTimeContainer;
-    StandByTimeContainer *standByTimeContainer;
-    SliderContainer *sliderContainer;
     BatteryDBusInterface *batteryIf;
-    DuiButton *PSMButton;    
+    BatteryImage *batteryImage;
+    DuiButton *PSMButton;
+    SliderContainer *sliderContainer;
+    TimeContainer *standByTimeContainer;
+    TimeContainer *talkTimeContainer;    
 
 };
 #endif // BATTERYWIDGET_H

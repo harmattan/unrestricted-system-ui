@@ -32,7 +32,9 @@ void SliderContainer::setLayout()
 
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiGridLayoutPolicy(layout);
-    layoutPolicy->addItemAtPosition(new DuiLabel(DcpBattery::PSMAutoActivateText), 0, 0);
+    DuiLabel *textLabel = new DuiLabel(DcpBattery::PSMAutoActivateText);
+    textLabel->setObjectName("batteryLabel");
+    layoutPolicy->addItemAtPosition(textLabel, 0, 0);
     layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);    
     layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
     layoutPolicy->setRowSpacing(0, 25);

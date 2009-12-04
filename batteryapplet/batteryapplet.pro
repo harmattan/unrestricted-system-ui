@@ -19,9 +19,7 @@ HEADERS = batteryapplet.h \
     batterywidget.h \
     batterytranslation.h \
     batterybrief.h \
-    batterydbusinterface.h \
-    talktimecontainer.h \
-    standbytimecontainer.h \
+    batterydbusinterface.h \    
     timecontainer.h \
     slidercontainer.h \
     dcpbattery.h \
@@ -30,9 +28,7 @@ HEADERS = batteryapplet.h \
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
-    batterydbusinterface.cpp \
-    talktimecontainer.cpp \
-    standbytimecontainer.cpp \
+    batterydbusinterface.cpp \    
     timecontainer.cpp \
     slidercontainer.cpp \
     batteryimage.cpp

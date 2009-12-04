@@ -2,21 +2,25 @@
 #define TIMECONTAINER_H
 
 #include <DuiContainer>
-#include <DuiLabel>
+
+class DuiImage;
+class DuiLabel;
 
 class TimeContainer : public DuiContainer
 {
 public:
-    TimeContainer(DuiWidget *parent=0);
+    TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent=0);
     virtual ~TimeContainer();
 
     void updateTimeLabel(const QString &text);
 
-protected: //methods
-    virtual void setLayout() = 0;
+private:
+    void setLayout();
 
-protected: //attributes    
-    DuiLabel *timeLabel;    
+private:
+    DuiImage *image;
+    DuiLabel *textLabel;
+    DuiLabel *timeLabel;
 
 };
 

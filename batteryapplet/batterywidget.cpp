@@ -4,8 +4,7 @@
 #include "batterydbusinterface.h"
 #include "dcpbattery.h"
 #include "slidercontainer.h"
-#include "standbytimecontainer.h"
-#include "talktimecontainer.h"
+#include "timecontainer.h"
 
 #include <QGraphicsLinearLayout>
 #include <QDebug>
@@ -27,11 +26,12 @@ TODO list:
 
 BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
-        talkTimeContainer(NULL),
-        standByTimeContainer(NULL),
-        sliderContainer(NULL),
         batteryIf(NULL),
-        PSMButton(NULL)
+        batteryImage(NULL),
+        PSMButton(NULL),
+        sliderContainer(NULL),
+        standByTimeContainer(NULL),
+        talkTimeContainer(NULL)
 {
     setReferer(DcpBattery::None);
     initWidget();
@@ -51,11 +51,14 @@ void BatteryWidget::initWidget()
     // proxy for dbus interface on remote object
     batteryIf = new BatteryDBusInterface();
 
+    // battery image
+    batteryImage = new BatteryImage();
+
     // talkTimeContainer        
-    talkTimeContainer = new TalkTimeContainer();
+    talkTimeContainer = new TimeContainer(DcpBattery::TalkTimeText, batteryImage);
 
     // standByTimeContainer
-    standByTimeContainer = new StandByTimeContainer();
+    standByTimeContainer = new TimeContainer(DcpBattery::StandByTimeText, new DuiImage("qgn_ener_standby"));
 
     // PSMButton
     PSMButton = new DuiButton();
@@ -74,7 +77,7 @@ void BatteryWidget::initWidget()
     landscapeLayoutPolicy->addItemAtPosition(standByTimeContainer, 0, 1);
     landscapeLayoutPolicy->addItemAtPosition(PSMButton, 1, 0, 1, 2);
     landscapeLayoutPolicy->addItemAtPosition(sliderContainer, 2, 0, 1, 2);
-    landscapeLayoutPolicy->setSpacing(20);
+    landscapeLayoutPolicy->setSpacing(10);
     orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
 
     DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(orientationLayout, Qt::Vertical);
@@ -82,7 +85,7 @@ void BatteryWidget::initWidget()
     portraitLayoutPolicy->addItem(standByTimeContainer, Qt::AlignLeft);
     portraitLayoutPolicy->addItem(PSMButton, Qt::AlignCenter);
     portraitLayoutPolicy->addItem(sliderContainer, Qt::AlignLeft);
-    portraitLayoutPolicy->setSpacing(20);
+    portraitLayoutPolicy->setSpacing(10);
     orientationLayout->setPortraitPolicy(portraitLayoutPolicy);
 
     DuiContainer *mainContainer = new DuiContainer();
@@ -90,10 +93,10 @@ void BatteryWidget::initWidget()
 
     // connect the value receive signals
     connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));  
-    connect(batteryIf, SIGNAL(batteryCharging(int)), talkTimeContainer->batteryImage(), SLOT(startCharging(int)));
-    connect(batteryIf, SIGNAL(batteryNotCharging()), talkTimeContainer->batteryImage(), SLOT(stopCharging()));
+    connect(batteryIf, SIGNAL(batteryCharging(int)), batteryImage, SLOT(startCharging(int)));
+    connect(batteryIf, SIGNAL(batteryNotCharging()), batteryImage, SLOT(stopCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
-    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), talkTimeContainer->batteryImage(), SLOT(updateBatteryLevel(int)));
+    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), batteryImage, SLOT(updateBatteryLevel(int)));
     connect(batteryIf, SIGNAL(PSMValueReceived(bool)), this, SLOT(updatePSMButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
     connect(batteryIf, SIGNAL(PSMAutoDisabled()), sliderContainer, SLOT(PSMAutoDisabled()));

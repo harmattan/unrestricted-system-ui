@@ -1,12 +1,22 @@
 #include "timecontainer.h"
 #include "batterytranslation.h"
 
+#include <DuiGridLayoutPolicy>
+#include <DuiImage>
 #include <DuiLabel>
+#include <DuiLayout>
 
-TimeContainer::TimeContainer(DuiWidget *parent) :
-        DuiContainer(parent),        
+TimeContainer::TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent) :
+        DuiContainer(parent),
+        image(image),
+        textLabel(NULL),
         timeLabel(NULL)
 {    
+    timeLabel = new DuiLabel();
+    timeLabel->setObjectName("batteryTimeLabel");
+    textLabel = new DuiLabel(text);
+    textLabel->setObjectName("batteryLabel");
+    setLayout();
 }
 
 TimeContainer::~TimeContainer()
@@ -38,3 +48,15 @@ void TimeContainer::updateTimeLabel(const QString &value)
     timeLabel->setText(time);
 }
 
+void TimeContainer::setLayout()
+{
+    // set the layout
+    DuiLayout *layout = new DuiLayout();
+    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
+    centralWidget()->setLayout(layout);
+
+    // add the widgets
+    layoutPolicy->addItemAtPosition(image, 0, 0, 2, 1);
+    layoutPolicy->addItemAtPosition(textLabel, 0, 1, 1, 1);
+    layoutPolicy->addItemAtPosition(timeLabel, 1, 1, 1, 1);
+}

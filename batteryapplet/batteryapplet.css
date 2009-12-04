@@ -4,3 +4,12 @@
 	maximum-size: size(36, 36);
 }
 
+#batteryLabel {
+    color: white;
+    font: "Nokia Sans" 16;
+}
+
+#batteryTimeLabel {
+    color: orange;
+    font: "Nokia Sans" 16;
+}
