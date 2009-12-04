@@ -5,7 +5,7 @@
 #include "profilebuttons.h"
 
 #include <QDebug>
-#include <QTimer>
+#include <QGraphicsLinearLayout>
 
 #include <DuiButton>
 #include <DuiContainer>
@@ -13,10 +13,6 @@
 #include <DuiLayout>
 #include <DuiGridLayoutPolicy>
 #include <DuiLinearLayoutPolicy>
-#include <DuiSceneManager>
-#include <DuiSlider>
-#include <DuiStylableWidget>
-#include <DuiWidgetController>
 #include <QDebug>
 
 ProfileWidget::ProfileWidget(QGraphicsWidget *parent)
@@ -79,10 +75,8 @@ void ProfileWidget::initProfiles()
     /*
      * mainLayout
      */
-    DuiLayout *mainLayout = new DuiLayout(this);
-    DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    mainLayoutPolicy->addItem(contentContainer);
-
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout();
+    mainLayout->addItem(contentContainer);
     this->setLayout(mainLayout);
 }
 
@@ -121,11 +115,8 @@ DuiContainer* ProfileWidget::createContainer()
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
-    DuiStylableWidget *layoutWidget = new DuiStylableWidget();
-    layoutWidget->setLayout(layout);
-
-    DuiContainer *container = new DuiContainer(this);
-    container->setCentralWidget(layoutWidget);
+    DuiContainer *container = new DuiContainer();
+    container->centralWidget()->setLayout(layout);
 
     return container;
 }

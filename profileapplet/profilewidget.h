@@ -5,11 +5,7 @@
 #include "profilebuttons.h"
 #include "profiledatainterface.h"
 
-class DuiButton;
 class DuiContainer;
-class DuiGridLayoutPolicy;
-class DuiSlider;
-class DuiWidgetController;
 class ProfileContainer;
 
 class ProfileWidget : public DcpWidget

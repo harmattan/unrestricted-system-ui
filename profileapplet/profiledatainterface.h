@@ -42,9 +42,9 @@ private slots:
 
 private:
     int checkSilent(int id, int level);
-    static int mapId(QString id);
+    static int mapId(const QString &id);
     static QString mapId(int id);
-    static QString id2Name(QString id);
+    static QString id2Name(const QString &id);
 
 private:
     Profile* api;

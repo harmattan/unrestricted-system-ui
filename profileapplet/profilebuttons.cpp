@@ -7,7 +7,6 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 #include <DuiGridLayoutPolicy>
-#include <DuiStylableWidget>
 #include <QDebug>
 
 ProfileButtons::ProfileButtons(DuiWidget *parent) :
@@ -102,8 +101,6 @@ void ProfileButtons::setLayout()
     landscapePolicy->setSpacing(5);
     portraitPolicy->setSpacing(5);
 
-    DuiStylableWidget *layoutWidget = new DuiStylableWidget();
-    layoutWidget->setLayout(layout);
+    centralWidget()->setLayout(layout);
 
-    setCentralWidget(layoutWidget);
 }

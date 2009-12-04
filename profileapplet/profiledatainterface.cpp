@@ -107,7 +107,7 @@ int ProfileDataInterface::checkSilent(int id, int level)
     return level;
 }
 
-QString ProfileDataInterface::id2Name(QString id)
+QString ProfileDataInterface::id2Name(const QString &id)
 {
     QString localised = "";
     if(ProfileName::ringing == id){
@@ -122,7 +122,7 @@ QString ProfileDataInterface::id2Name(QString id)
     return localised;
 }
 
-int ProfileDataInterface::mapId(QString id)
+int ProfileDataInterface::mapId(const QString &id)
 {
     int intId = ProfileId::none;
     if(ProfileName::ringing == id){

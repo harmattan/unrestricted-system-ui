@@ -8,7 +8,6 @@
 #include <DuiLayout>
 #include <DuiImage>
 #include <DuiGridLayoutPolicy>
-#include <DuiStylableWidget>
 #include <QDebug>
 
 namespace ProfileApplet{
@@ -89,11 +88,8 @@ void ProfileContainer::setLayout()
     landscapePolicy->setSpacing(5);
     portraitPolicy->setSpacing(5);
 
-    DuiStylableWidget *layoutWidget = new DuiStylableWidget();
-    layoutWidget->setLayout(layout);
-    layoutWidget->setObjectName("profileContainerLayout");
+    centralWidget()->setLayout(layout);
 
-    setCentralWidget(layoutWidget);
 }
 
 void ProfileContainer::setLevel(int value)
