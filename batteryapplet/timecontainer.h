@@ -2,8 +2,7 @@
 #define TIMECONTAINER_H
 
 #include <DuiContainer>
-
-class DuiLabel;
+#include <DuiLabel>
 
 class TimeContainer : public DuiContainer
 {
