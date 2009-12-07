@@ -734,7 +734,8 @@ void PinCodeQueryBusinessLogic::startLaunch()
 void PinCodeQueryBusinessLogic::getCode(bool enableBack, QString header)
 {
     createUi(enableBack);
-    uiPin->getCodeEntry()->setValidator(new QIntValidator(0, 99999999, uiPin->getCodeEntry()));
+    QRegExp rx("\\d{0,8}", Qt::CaseInsensitive); // max 8 digits
+    uiPin->getCodeEntry()->setValidator(new QRegExpValidator(rx, uiPin->getCodeEntry()));
     setUiHeader(header);
 }
 
