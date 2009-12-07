@@ -205,8 +205,8 @@ void PinCodeQueryBusinessLogic::doEmergencyCall()
     dlg->addButton(DuiDialog::Cancel);
 
     qDebug() << "\n" << Q_FUNC_INFO
-            << "****************** PIN Query: Call to var"
-            << CallHandler::envVar() << "value :"
+            << "****************** PIN Query: About to call to ("
+            << CallHandler::envVar() << ") :"
             << getenv( CallHandler::envVar() ) <<  "***************\n";
     dlg->exec();
 
