@@ -27,7 +27,6 @@ PinCodeQueryUI::PinCodeQueryUI()
     setFullscreen(true);
     setDisplayMode(0);
     setBackButtonEnabled(false);
-    setTitle("PIN code query:");
     createContent();
 }
 
@@ -68,16 +67,16 @@ void PinCodeQueryUI::createContent()
     setColumnStretch().
     */
     // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
-    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 5);
-    landscapePolicy->addItemAtPosition(emergencyCallButton, 0, 6);
-    landscapePolicy->addItemAtPosition(entryTextEdit, 3, 0, 1, 3);
-    landscapePolicy->addItemAtPosition(backspaceButton, 3, 3);
-    landscapePolicy->addItemAtPosition(enterButton, 5, 0, 1, 2);
-    landscapePolicy->addItemAtPosition(cancelButton, 5, 2, 1, 2);
+    landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 7);
+    landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
+    landscapePolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
+    landscapePolicy->addItemAtPosition(backspaceButton, 2, 3);
+    landscapePolicy->addItemAtPosition(enterButton, 4, 0, 1, 2);
+    landscapePolicy->addItemAtPosition(cancelButton, 4, 2, 1, 2);
     landscapePolicy->addItemAtPosition(nums, 1, 4, 5, 7);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
-    portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 3);
+    portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
     portraitPolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     portraitPolicy->addItemAtPosition(backspaceButton, 2, 3);
     portraitPolicy->addItemAtPosition(nums, 3, 0, 1, 4);
@@ -109,9 +108,9 @@ void PinCodeQueryUI::createContent()
         int quarter = shortSide/4;
         int eight = longSide/8;
 
-        int sixth = shortSide/6;
-        for(int i=0; i<6;++i) {
-            landscapePolicy->setRowFixedHeight(i, sixth);
+        int fifth = shortSide/5;
+        for(int i=0; i<5;++i) {
+            landscapePolicy->setRowFixedHeight(i, fifth);
         }
 
         for(int i=0; i<8; ++i) {
@@ -165,7 +164,7 @@ void PinCodeQueryUI::setHeader(QString header)
 
 void PinCodeQueryUI::createWidgetItems()
 {    
-    emergencyCallButton = new DuiButton();
+    emergencyCallButton = new DuiButton(QString(trid("qtn_cell_emergency_call", "Emergency call")));
     emergencyCallButton->setObjectName("emergencyCallButton");
     emergencyCallButton->setIconID("icon-m-common-emergency-call");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
