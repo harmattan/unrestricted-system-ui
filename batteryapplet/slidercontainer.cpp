@@ -16,8 +16,7 @@ SliderContainer::SliderContainer(DuiWidget *parent) :
 {
     PSMAutoButton = new DuiButton();    
     connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
-    PSMSlider = new DuiSlider(0, "continuous");
-    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+    PSMSlider = new DuiSlider(0, "continuous");    
     setLayout();
 }
 
@@ -42,10 +41,11 @@ void SliderContainer::setLayout()
 }
 
 void SliderContainer::initSlider(const QStringList &values)
-{
-    sliderValues = QStringList(values);
+{    
+    sliderValues = QStringList(values);    
     PSMSlider->setRange(0,sliderValues.size()-1);
     PSMSlider->setOrientation(Qt::Horizontal);
+    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
 }
 
 void SliderContainer::updateSlider(const QString &value)
