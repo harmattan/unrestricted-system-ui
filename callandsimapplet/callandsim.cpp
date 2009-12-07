@@ -203,6 +203,7 @@ void CallAndSim::pinQueryEnabled(SIMSecurity::PINQuery queryState)
 
 void CallAndSim::networkStatusChanges(int status)
 {
+    (status);
     // TODO
 }
 

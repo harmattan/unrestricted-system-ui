@@ -5,6 +5,7 @@
 
 class CallContainer;
 class SimContainer;
+class ForwardingContainer;
 class CallAndSim;
 
 class CallAndSimWidget : public DcpWidget
@@ -17,6 +18,7 @@ public:
 private:
     CallContainer* callContainer;
     SimContainer* simContainer;
+    ForwardingContainer* forwardingContainer;
     CallAndSim* logic;
 };
 

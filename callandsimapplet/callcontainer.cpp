@@ -2,7 +2,7 @@
 #include "callandsimtranslation.h"
 
 #include <DuiLayout>
-#include <DuiGridLayoutPolicy>
+#include <DuiLinearLayoutPolicy>
 #include <DuiComboBox>
 #include <DuiLabel>
 #include <DuiTextEdit>
@@ -19,43 +19,47 @@ CallContainer::CallContainer(DuiWidget *parent) :
 {
     // layout & policies
     DuiLayout* layout = new DuiLayout();
-    lp = new DuiGridLayoutPolicy(layout);
+    lp = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
     layout->setLandscapePolicy(lp); // ownership transferred
-    pp = new DuiGridLayoutPolicy(layout);
+    pp = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     layout->setPortraitPolicy(pp); // ownership transferred
-    /*
-        // send caller id widget
-        sendCallerIdComboBox = new DuiComboBox();
-        sendCallerIdComboBox->addItem(DcpCallAndSim::LetNetworkChooseText);
-        sendCallerIdComboBox->addItem(DcpCallAndSim::YesText);
-        sendCallerIdComboBox->addItem(DcpCallAndSim::NoText);
-        sendCallerIdComboBox->setIconVisible(false);
-        sendCallerIdComboBox->setCurrentIndex(0);
 
-        QGraphicsWidget *sendCallerIdWidget = new QGraphicsWidget;
-        sendCallerIdWidget->setPreferredWidth(1);
-        QGraphicsLinearLayout* sendCallerIdLayout = new QGraphicsLinearLayout(Qt::Vertical, sendCallerIdWidget);
-        sendCallerIdLayout->setContentsMargins(0, 0, 0, 0);
-        sendCallerIdLayout->addItem(createLabel(DcpCallAndSim::SendCallerIdText));
-        sendCallerIdLayout->addItem(sendCallerIdComboBox);
+    // send caller id widget
+    sendCallerIdComboBox = new DuiComboBox();
+    sendCallerIdComboBox->addItem(DcpCallAndSim::LetNetworkChooseText);
+    sendCallerIdComboBox->addItem(DcpCallAndSim::YesText);
+    sendCallerIdComboBox->addItem(DcpCallAndSim::NoText);
+    sendCallerIdComboBox->setIconVisible(false);
+    sendCallerIdComboBox->setCurrentIndex(0);
 
-        // call waiting checkbox widget
-        QGraphicsWidget* callWaitingWidget = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
+    QGraphicsWidget *sendCallerIdWidget = new QGraphicsWidget;
+    sendCallerIdWidget->setPreferredWidth(1);
+    QGraphicsLinearLayout* sendCallerIdLayout = new QGraphicsLinearLayout(Qt::Vertical, sendCallerIdWidget);
+    sendCallerIdLayout->setContentsMargins(0, 0, 0, 0);
+    sendCallerIdLayout->addItem(createLabel(DcpCallAndSim::SendCallerIdText));
+    sendCallerIdLayout->addItem(sendCallerIdComboBox);
 
-       // landscape policy
-        lp->setSpacing(5);
-        lp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-        lp->addItemAtPosition(callWaitingWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    // call waiting checkbox widget
+    QGraphicsWidget* callWaitingWidget = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
 
-        // portrait policy
-        pp->setSpacing(5);
-        pp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignCenter);
-        pp->addItemAtPosition(callWaitingWidget, 1, 0, Qt::AlignCenter);
+   // landscape policy
+    lp->setSpacing(5);
+    lp->addItem(sendCallerIdWidget);
+    lp->addItem(callWaitingWidget);
+    //lp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    //lp->addItemAtPosition(callWaitingWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
-        // connect signals
-        connect(sendCallerIdComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(sendCallerIdSelected(int)));
-        connect(callWaitingButton, SIGNAL(toggled(bool)), this, SLOT(callWaitingToggled(bool)));
-    */
+    // portrait policy
+    pp->setSpacing(5);
+    pp->addItem(sendCallerIdWidget);
+    pp->addItem(callWaitingWidget);
+//    pp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignCenter);
+//    pp->addItemAtPosition(callWaitingWidget, 1, 0, Qt::AlignCenter);
+
+    // connect signals
+    connect(sendCallerIdComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(sendCallerIdSelected(int)));
+    connect(callWaitingButton, SIGNAL(toggled(bool)), this, SLOT(callWaitingToggled(bool)));
+
     // layout
     centralWidget()->setLayout(layout);
 }

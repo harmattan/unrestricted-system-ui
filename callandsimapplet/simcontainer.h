@@ -16,7 +16,7 @@ class SimContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    SimContainer(DuiWidget *parent);
+    SimContainer(DuiWidget* parent = 0);
     virtual ~SimContainer();
 
 signals:

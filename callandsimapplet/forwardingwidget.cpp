@@ -6,6 +6,7 @@
 #include <DuiButton>
 
 #include <QGraphicsLinearLayout>
+#include <QGraphicsGridLayout>
 #include <QDebug>
 
 ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFunction, QGraphicsItem* parent) :
@@ -45,6 +46,14 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
     numberButton = new DuiButton;
     numberButton->setObjectName("forwardingButton");
 
+    // layout for button
+
+    buttonWidget = new QGraphicsWidget;
+    buttonWidget->setPreferredWidth(1);
+    QGraphicsGridLayout* buttonLayout = new QGraphicsGridLayout(buttonWidget);
+    checkLayout->setContentsMargins(0, 0, 0, 0);
+    buttonLayout->addItem(numberButton, 0, 0, 1, 1, Qt::AlignCenter);
+
     // dummy placeholder for hiding the button
 
     dummyWidget = new QGraphicsWidget;
@@ -53,9 +62,6 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
 
     // policies
 
-    // adds dummyWidget to the policies so the button is hidden by default
-    setButtonVisible(checkButton->isChecked());
-
     lp->setSpacing(5);
     lp->addItemAtPosition(checkWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -63,6 +69,9 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
 
     pp->setSpacing(5);
     pp->addItemAtPosition(checkWidget, 0, 0, Qt::AlignCenter);
+
+    // adds dummyWidget to the policies so the button is hidden by default
+    setButtonVisible(checkButton->isChecked());
 
     // connect signals
 
@@ -86,15 +95,20 @@ void ForwardingWidget::setButtonVisible(bool visible)
     qDebug() << Q_FUNC_INFO << visible;
     if (visible) {
         lp->removeItem(dummyWidget);
-        lp->addItemAtPosition(numberButton, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        lp->addItemAtPosition(buttonWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
         pp->removeItem(dummyWidget);
-        pp->addItemAtPosition(numberButton, 1, 0, Qt::AlignCenter);
+        pp->addItemAtPosition(buttonWidget, 1, 0, Qt::AlignCenter);
     } else {
-        lp->removeItem(numberButton);
+        lp->removeItem(buttonWidget);
         lp->addItemAtPosition(dummyWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
-        pp->removeItem(numberButton);
+        pp->removeItem(buttonWidget);
         pp->addItemAtPosition(dummyWidget, 1, 0, Qt::AlignCenter);
     }
+}
+
+bool ForwardingWidget::isEnabled()
+{
+    return checkButton->isChecked();
 }
 
 void ForwardingWidget::checked(bool check)

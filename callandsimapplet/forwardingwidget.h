@@ -16,6 +16,7 @@ public:
     ~ForwardingWidget();
 
     void setButtonVisible(bool visible);
+    bool isEnabled();
 
 signals:
     void forwardingDisabled(QString interface);
@@ -27,8 +28,9 @@ private slots:
 private:
     QString dbusFunction;
     DuiButton* checkButton;
+    QGraphicsWidget* buttonWidget;
+    QGraphicsWidget* dummyWidget; // for hiding the number button
     DuiButton* numberButton;
-    QGraphicsWidget* dummyWidget; // helps to
     DuiGridLayoutPolicy* lp;
     DuiGridLayoutPolicy* pp;
 };

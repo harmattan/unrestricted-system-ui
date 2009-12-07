@@ -6,13 +6,15 @@
 #include <DuiContainer>
 
 class ForwardingWidget;
+class DuiLinearLayoutPolicy;
 
 class ForwardingContainer : public DuiContainer
 {
     Q_OBJECT
 
 public:
-    ForwardingContainer();
+    ForwardingContainer(DuiWidget* parent = 0);
+    ~ForwardingContainer();
     /*
     signals:
         void callForwardingChanged(bool, const QString);
@@ -27,11 +29,22 @@ public:
     private:
         void toggleFwdNumberWidget(bool toggle);
     */
+
+
+private:
+    void setWidgetVisibilities();
+    void switchWidget(QGraphicsWidget* show, QGraphicsWidget* hide);
+    QGraphicsWidget* newDummy();
+
 private:
     ForwardingWidget* fwdAll;
     ForwardingWidget* fwdBusy;
     ForwardingWidget* fwdNotAnswered;
     ForwardingWidget* fwdOutOfReach;
+    QGraphicsWidget* dummyBusy;
+    QGraphicsWidget* dummyNotAnswered;
+    QGraphicsWidget* dummyOutOfReach;
+    DuiLinearLayoutPolicy* lp;
 };
 
 #endif // FORWARDINGCONTAINER_H

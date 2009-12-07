@@ -50,13 +50,13 @@ void SimContainer::requestFailed(DcpCallAndSim::Data data)
     qDebug() << Q_FUNC_INFO << data;
 
     if (data == DcpCallAndSim::PinRequestData) {
-        pinRequestButton->blockSignals(true);
+/*        pinRequestButton->blockSignals(true);
         pinRequestButton->setChecked(false);
         pinRequestButton->blockSignals(false);
 
         changePinButton->blockSignals(true);
         toggleChangePinButtonWidget(false);
-        changePinButton->blockSignals(false);
+        changePinButton->blockSignals(false);*/
     }
 }
 
@@ -95,7 +95,9 @@ void SimContainer::setLayout()
     QGraphicsLinearLayout* pinRequestLayout = new QGraphicsLinearLayout(Qt::Horizontal, pinRequestWidget);
     pinRequestLayout->setContentsMargins(0, 0, 0, 0);
     pinRequestLayout->addItem(pinRequestLabel);
+    pinRequestLayout->setAlignment(pinRequestLabel, Qt::AlignLeft | Qt::AlignVCenter);
     pinRequestLayout->addItem(pinRequestButton);
+    pinRequestLayout->setAlignment(pinRequestButton, Qt::AlignRight | Qt::AlignVCenter);
 
     // change pin code button widget
     changePinButtonWidget = new QGraphicsWidget;

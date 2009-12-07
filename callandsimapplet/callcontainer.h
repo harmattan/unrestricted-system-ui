@@ -10,7 +10,7 @@
 class DuiLabel;
 class DuiButton;
 class DuiComboBox;
-class DuiGridLayoutPolicy;
+class DuiLinearLayoutPolicy;
 class DuiTextEdit;
 
 class CallContainer : public DuiContainer
@@ -18,7 +18,7 @@ class CallContainer : public DuiContainer
     Q_OBJECT
 
 public:
-    CallContainer(DuiWidget *parent);
+    CallContainer(DuiWidget* parent = 0);
     virtual ~CallContainer();
 
 signals:
@@ -43,8 +43,8 @@ private:
     DuiComboBox* sendCallerIdComboBox;
 //    DuiLabel* callWaitingLabel;
     DuiButton* callWaitingButton;
-    DuiGridLayoutPolicy* lp;
-    DuiGridLayoutPolicy* pp;
+    DuiLinearLayoutPolicy* lp;
+    DuiLinearLayoutPolicy* pp;
 };
 
 #endif // CALLCONTAINER_H

@@ -75,6 +75,7 @@ void CallAndSimApplet::switchNetworkOn()
 
 bool CallAndSimApplet::checkNetworkState()
 {
+    /*
     QScopedPointer<Cellular::NetworkRegistration> nr(new Cellular::NetworkRegistration);
     QString body;
     QString buttonText;
@@ -107,6 +108,6 @@ bool CallAndSimApplet::checkNetworkState()
 
         return false;
     }
-
+*/
     return true;
 }

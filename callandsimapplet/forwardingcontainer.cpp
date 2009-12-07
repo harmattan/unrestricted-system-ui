@@ -1,43 +1,84 @@
 #include "forwardingcontainer.h"
+#include "forwardingwidget.h"
 
 #include <DuiLayout>
+#include <DuiLinearLayoutPolicy>
+#include <DuiLocale>
 
-ForwardingContainer::ForwardingContainer()
+ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
+        DuiContainer(trid("qtn_cell_call_forwarding", "Call forwardign"), parent)
 {
-    /*
-    // layout & policies
-    DuiLayout* layout = new DuiLayout();
+    DuiLayout* layout = new DuiLayout;
     lp = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    layout->setLandscapePolicy(lp); // ownership transferred
-    //    pp = new DuiGridLayoutPolicy(layout);
-    //    layout->setPortraitPolicy(pp); // ownership transferred
-
-
-    // dummy placeholder
-    dummyWidget = new QGraphicsWidget;
-    dummyWidget->setContentsMargins(0, 0, 0, 0);
-    dummyWidget->setPreferredWidth(1);
-
-    //    lp->addItemAtPosition(callFwdWidget, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    //    lp->addItemAtPosition(dummyWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
-
-    //    pp->addItemAtPosition(callFwdWidget, 2, 0, Qt::AlignCenter);
-    //    pp->addItemAtPosition(dummyWidget, 3, 0, Qt::AlignCenter);
-
-    //    connect(callFwdButton, SIGNAL(toggled(bool)), this, SLOT(callForwardingToggled(bool)));
-    //    connect(numberEdit, SIGNAL(lostFocus(Qt::FocusReason)), this, SLOT(numberChanged()));
-    // landscape policy
     lp->setSpacing(5);
 
-    // portrait policy
-    //    pp->setSpacing(5);
+    fwdAll         = new ForwardingWidget(trid("qtn_cell_forw_unconditional", "All voice calls"),
+                                          QString("dbusfunc"));
+    fwdBusy        = new ForwardingWidget(trid("qtn_cell_forw_busy", "If busy"),
+                                          QString("dbusfunc"));
+    fwdNotAnswered = new ForwardingWidget(trid("qtn_cell_forw_no_reply", "If not answered"),
+                                          QString("dbusfunc"));
+    fwdOutOfReach  = new ForwardingWidget(trid("qtn_cell_forw_not_reachable", "If out of reach"),
+                                          QString("dbusfunc"));
+
+    // dummy widgets are used to hide others when unconditional forwarding is active
+    dummyBusy = newDummy();
+    dummyNotAnswered = newDummy();
+    dummyOutOfReach = newDummy();
+
+    lp->addItem(fwdAll);
+    setWidgetVisibilities();
 
     // connect signals
 
     // layout
     centralWidget()->setLayout(layout);
-    */
 }
+
+ForwardingContainer::~ForwardingContainer()
+{
+    if (lp->indexOf(dummyBusy) < 0) {
+        delete dummyBusy;
+        delete dummyNotAnswered;
+        delete dummyOutOfReach;
+    } else {
+        delete fwdBusy;
+        delete fwdNotAnswered;
+        delete fwdOutOfReach;
+    }
+}
+
+void ForwardingContainer::setWidgetVisibilities()
+{
+    if (fwdAll->isEnabled()) {
+        // if unconditional forwarding is enabled, hide other widgets
+        switchWidget(dummyBusy, fwdBusy);
+        switchWidget(dummyNotAnswered, fwdNotAnswered);
+        switchWidget(dummyOutOfReach, fwdOutOfReach);
+    } else {
+        switchWidget(fwdBusy, dummyBusy);
+        switchWidget(fwdNotAnswered, dummyNotAnswered);
+        switchWidget(fwdOutOfReach, dummyOutOfReach);
+    }
+}
+
+void ForwardingContainer::switchWidget(QGraphicsWidget* show, QGraphicsWidget* hide)
+{
+    lp->removeItem(hide);
+
+    if (lp->indexOf(show) < 0) {
+        lp->addItem(show);
+    }
+}
+
+QGraphicsWidget* ForwardingContainer::newDummy()
+{
+    QGraphicsWidget* dummy = new QGraphicsWidget;
+    dummy->setContentsMargins(0, 0, 0, 0);
+    dummy->setPreferredWidth(1);
+    return dummy;
+}
+
 /*
 ForwardingContainer::~ForwardingContainer()
 {

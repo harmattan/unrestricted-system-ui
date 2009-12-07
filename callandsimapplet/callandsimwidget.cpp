@@ -2,6 +2,7 @@
 #include "dcpcallandsim.h"
 #include "callcontainer.h"
 #include "simcontainer.h"
+#include "forwardingcontainer.h"
 #include "callandsimtranslation.h"
 #include "callandsim.h"
 
@@ -21,9 +22,9 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
 
     // create containers
 
-    simContainer = new SimContainer(this);
-    callContainer = new CallContainer(this);
-//    forwardingContainer = new ForwardingContainer(this);
+    simContainer = new SimContainer;
+    callContainer = new CallContainer;
+    forwardingContainer = new ForwardingContainer;
 
     // connect signals, containers -> logic
 
@@ -53,7 +54,7 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
     DuiLinearLayoutPolicy *mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
     mainLayoutPolicy->addItem(simContainer);
     mainLayoutPolicy->addItem(callContainer);
-//    mainLayoutPolicy->addItem(forwardingContainer);
+    mainLayoutPolicy->addItem(forwardingContainer);
     mainLayoutPolicy->setSpacing(10);
 
     this->setLayout(mainLayout);
