@@ -10,6 +10,7 @@
     1) What to do when toggling "Enable phone network"-feature?
     2) What to do when toggling "Enable roaming updates"-feature?
     3) When user tries to toggle phone network on and there is no SIM card inserted, a note should be displayed
+    4) Remove the temporary solution to get/set gconf values when toggling phone network and roaming/roaming updates
 
 */
 
@@ -18,9 +19,16 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
         networkRegistration(NULL),
         radioAccess(NULL),
         networkOperator(NULL),        
-        technology(NULL)
+        technology(NULL),
+        systemUIGConf(NULL) //temp
 {
     qDebug() << Q_FUNC_INFO;
+
+    //temp
+    systemUIGConf = new SystemUIGConf();
+    //temp
+    connect(systemUIGConf, SIGNAL(valueChanged(SystemUIGConf::GConfKey,QVariant)),
+            this, SLOT(tempSlot(SystemUIGConf::GConfKey,QVariant)));
 
     //network registration
     networkRegistration = new NetworkRegistration();
@@ -42,9 +50,18 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
     selectionValues.insert(NetworkRegistration::Automatic, DcpNetwork::AutomaticText);
     selectionValues.insert(NetworkRegistration::Manual, DcpNetwork::ManualText);
 
-    tempNetworkToggle = true;
-    tempRoamingToggle = false;
-    tempRoamingUpdatesToggle = false;
+}
+
+//temp
+void NetworkBusinessLogic::tempSlot(SystemUIGConf::GConfKey key, QVariant var)
+{    
+    if(key == SystemUIGConf::NetworkToggle) {        
+        emit networkStateChanged(var.toBool());
+    }
+    else if(key == SystemUIGConf::NetworkRoaming) {
+        if(var.toBool() == false)
+            systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdates, var);
+    }
 }
 
 NetworkBusinessLogic::~NetworkBusinessLogic()
@@ -57,28 +74,28 @@ NetworkBusinessLogic::~NetworkBusinessLogic()
     delete networkOperator;
     networkOperator = NULL;
     delete technology;
-    technology = NULL;    
+    technology = NULL;
+
+    delete systemUIGConf; //temp
+    systemUIGConf = NULL; //temp
 }
 
 bool NetworkBusinessLogic::networkEnabled()
 {
-    qDebug() << Q_FUNC_INFO;
-    //TODO: use API to get the value for real
-    return tempNetworkToggle;
+    //temp
+    return systemUIGConf->value(SystemUIGConf::NetworkToggle, QVariant(true)).toBool();
 }
 
 bool NetworkBusinessLogic::roamingEnabled()
 {
-    qDebug() << Q_FUNC_INFO;
-    return tempRoamingToggle;
-    //return systemUIGConf->value(SystemUIGConf::NetworkRoamingKey, QVariant(false)).toBool();
+    //temp
+    return systemUIGConf->value(SystemUIGConf::NetworkRoaming, QVariant(true)).toBool();
 }
 
 bool NetworkBusinessLogic::roamingUpdatesEnabled()
 {
-    qDebug() << Q_FUNC_INFO;
-    return tempRoamingUpdatesToggle;
-    //return systemUIGConf->value(SystemUIGConf::NetworkRoamingUpdatesKey, QVariant(false)).toBool();
+    //temp
+    return systemUIGConf->value(SystemUIGConf::NetworkRoamingUpdates, QVariant(false)).toBool();
 }
 
 QStringList NetworkBusinessLogic::networkModes()
@@ -127,15 +144,7 @@ QString NetworkBusinessLogic::defaultNetworkSelectionValue()
 void NetworkBusinessLogic::toggleNetwork(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
-    Q_UNUSED(toggle);
-    //TODO: use API to set the value for real
-    tempNetworkToggle = toggle;
-    if(!tempNetworkToggle)
-        emit networkIconChanged(QString("icon-s-network-0"));
-
-
-    //DcpNetwork::NoSIMText
-
+    systemUIGConf->setValue(SystemUIGConf::NetworkToggle, QVariant(toggle)); //temp
 }
 
 void NetworkBusinessLogic::setNetworkMode(const QString &value)
@@ -186,19 +195,13 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
 void NetworkBusinessLogic::toggleRoaming(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
-    //TODO: change the temp
-    tempRoamingToggle = toggle;
-    if(!toggle) {
-        tempRoamingUpdatesToggle = false;
-        emit roamingUpdatesValueChanged(false);        
-    }
+    systemUIGConf->setValue(SystemUIGConf::NetworkRoaming, QVariant(toggle)); //temp
 }
 
 void NetworkBusinessLogic::toggleRoamingUpdates(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
-    //TODO: change the temp
-    tempRoamingUpdatesToggle = toggle;
+    systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdates, QVariant(toggle)); //temp
 }
 
 void NetworkBusinessLogic::queryAvailableOperators()

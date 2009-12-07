@@ -19,11 +19,11 @@ public:
 
 private slots:
     void updateOperatorLabel(const QString &text);
-    void updateToggleIcon(const QString &icon);
-    virtual void setToggle (bool toggle);
-
-private:
+    void updateToggleIcon(const QString &icon);    
     void updateToggle(bool toggle);
+
+private slots:
+    virtual void setToggle (bool toggle);
 
 private:
     NetworkBusinessLogic *logic;

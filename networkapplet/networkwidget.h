@@ -25,9 +25,9 @@ private slots:
     void updateNetworkIcon(const QString &value);
     void toggleNetworkSettings(bool toggle);
     void dataCounterButtonPressed();
+    void togglePhoneNetworkButton(bool toggle);
 
-private: //methods
-    void initPhoneNetworkButton(bool toggle);
+private: //methods    
     void changeSelection();    
 
 private: //attributes

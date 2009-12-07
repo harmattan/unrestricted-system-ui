@@ -25,7 +25,8 @@ HEADERS = networkapplet.h \
     roamingcontainer.h \
     networkbusinesslogic.h \
     dcpnetwork.h \
-    networktechnology.h
+    networktechnology.h \
+    systemuigconf.h
 SOURCES = networkapplet.cpp \
     networkwidget.cpp \
     networkbrief.cpp \
@@ -33,7 +34,8 @@ SOURCES = networkapplet.cpp \
     networklist.cpp \
     roamingcontainer.cpp \
     networkbusinesslogic.cpp \
-    networktechnology.cpp
+    networktechnology.cpp \
+    systemuigconf.cpp
 css.files = networkapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

@@ -16,6 +16,7 @@
 #include <NetworkOperator>
 #endif
 #include "networktechnology.h"
+#include "systemuigconf.h" //temp
 
 using namespace Cellular;
 
@@ -27,9 +28,9 @@ public:
     NetworkBusinessLogic(QObject* parent = 0);
     virtual ~NetworkBusinessLogic();
 
-    bool networkEnabled();
-    bool roamingEnabled();
-    bool roamingUpdatesEnabled();
+    bool networkEnabled(); //temp
+    bool roamingEnabled(); //temp
+    bool roamingUpdatesEnabled(); //temp
     QStringList networkModes();
     QString selectedNetworkMode();
     QStringList networkSelectionValues();
@@ -52,6 +53,8 @@ private slots:
     void selectOperatorCompleted(bool success, const QString &reason);
     void technologyChanged(NetworkTechnology::Technology technology);
 
+    void tempSlot(SystemUIGConf::GConfKey,QVariant); //temp
+
 signals:
     void availableNetworkOperators(int, QStringList, bool);
     void networkIconChanged(QString);
@@ -60,6 +63,8 @@ signals:
     void roamingUpdatesValueChanged(bool);    
     void networkOperatorChanged(QString);    
     void showNotification(QString);
+
+    void networkStateChanged(bool); //temp
 
 private: //methods    
     void queryAvailableOperators();
@@ -74,9 +79,7 @@ private: //attributes
     QHash<NetworkRegistration::Mode, QString> selectionValues;
     QMultiMap<QString, QStringList> operators;    
 
-    bool tempNetworkToggle; //for temp usage
-    bool tempRoamingToggle; //for temp usage
-    bool tempRoamingUpdatesToggle; //for temp usage
+    SystemUIGConf *systemUIGConf; //temp
 
 #ifdef UNIT_TEST
    friend class Ut_NetworkBusinessLogic;

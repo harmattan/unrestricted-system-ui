@@ -107,13 +107,14 @@ void NetworkWidget::initWidget()
     networkContainer->initSelectionComboBox(logic->selectedNetworkSelectionValue(), logic->networkSelectionValues());
     roamingContainer->initRoamingButton(logic->roamingEnabled());
     roamingContainer->initRoamingUpdatesButton(logic->roamingUpdatesEnabled());
-    initPhoneNetworkButton(logic->networkEnabled());
+    togglePhoneNetworkButton(logic->networkEnabled());
     updateNetworkIcon(logic->networkIcon());
 
     // connect the value receive signals
     connect(logic, SIGNAL(availableNetworkOperators(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableOperators(int, QStringList, bool)));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateNetworkIcon(QString)));
     connect(logic, SIGNAL(roamingUpdatesValueChanged(bool)), roamingContainer, SLOT(toggleRoamingUpdates(bool)));
+    connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(togglePhoneNetworkButton(bool)));
 
     // catch user actions
     connect(phoneNetworkButton, SIGNAL(toggled(bool)), this, SLOT(toggleNetworkSettings(bool)));
@@ -129,7 +130,7 @@ void NetworkWidget::initWidget()
     this->setLayout(mainLayout);
 }
 
-void NetworkWidget::initPhoneNetworkButton(bool toggle)
+void NetworkWidget::togglePhoneNetworkButton(bool toggle)
 {    
     phoneNetworkButton->setChecked(toggle);
     toggleNetworkSettings(toggle);
