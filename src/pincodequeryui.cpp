@@ -59,7 +59,7 @@ void PinCodeQueryUI::createContent()
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
-    DuiLayout* nums = createNumpad();
+    QGraphicsWidget* nums = createNumpad();
 
     //attach widget items to landscape and portrait policies
     /*
@@ -195,10 +195,12 @@ void PinCodeQueryUI::createWidgetItems()
     headerLabel->setAlignment(Qt::AlignCenter);    
 }
 
-DuiLayout* PinCodeQueryUI::createNumpad()
+QGraphicsWidget* PinCodeQueryUI::createNumpad()
 {
-    //create numpadLayout and policy for that
-    DuiLayout *numpadLayout = new DuiLayout(this);
+    //create numpadWidget
+    QGraphicsWidget *numpadWidget = new QGraphicsWidget;
+    DuiLayout *numpadLayout = new DuiLayout(numpadWidget);
+    numpadLayout->setContentsMargins(0, 0, 0, 0);
     DuiGridLayoutPolicy *numpadLayoutPolicy = new DuiGridLayoutPolicy(numpadLayout);
 
     int values[] = {
@@ -221,7 +223,7 @@ DuiLayout* PinCodeQueryUI::createNumpad()
             numpadLayoutPolicy->addItemAtPosition(num, (i/3), i%3, 1, 1);
         }
     }
-    return numpadLayout;
+    return numpadWidget;
 }
 
 void PinCodeQueryUI::buttonReleased()

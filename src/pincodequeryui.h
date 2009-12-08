@@ -45,7 +45,7 @@ private slots:
 
 private: //methods
     void createWidgetItems();
-    DuiLayout* createNumpad();
+    QGraphicsWidget* createNumpad();
 
 private: //attributes
     DuiButton *emergencyCallButton;
