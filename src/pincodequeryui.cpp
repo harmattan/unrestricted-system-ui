@@ -1,4 +1,5 @@
 #include "pincodequeryui.h"
+#include "callhandler.h"
 
 #include <DuiWidget>
 #include <DuiApplication>
@@ -289,6 +290,7 @@ void PinCodeQueryUI::checkEntry()
         }
         emergencyCallButton->setVisible(true);
         entryTextEdit->setMaskedInput(false);
+        CallHandler::debugPrintCallNum(Q_FUNC_INFO);
     }
     else if(emergencyCallButton->isVisible()) {
         DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());

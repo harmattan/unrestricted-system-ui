@@ -2,6 +2,7 @@
 #include "callhandler.h"
 #ifndef UNIT_TEST
     #include "pincodequerydbusadaptor.h"
+    #include <EmergencyNumbers>
 #endif // UNIT_TEST
 #include <DuiLocale>
 #include <DuiButton>
@@ -12,7 +13,6 @@
 
 #include <QtDBus>
 #include <ssc-dbus-names.h>
-#include <EmergencyNumbers>
 
 #include "sysuid.h"
 
@@ -200,25 +200,7 @@ void PinCodeQueryBusinessLogic::setPinHeader(int attemptsLeft)
 
 void PinCodeQueryBusinessLogic::doEmergencyCall()
 {
-    qDebug() << Q_FUNC_INFO;
-
-    DuiDialog* dlg = new DuiDialog();
-    dlg->setTitle(QString(trid("qtn_cell_start_emergency_call", "Start emergency call?")));
-    DuiButton* callButton = dlg->addButton(QString(trid("qtn_cell_emergency_call_number", "Call")));
-    dlg->addButton(DuiDialog::Cancel);
-
-    qDebug() << "\n" << Q_FUNC_INFO
-            << "****************** PIN Query: About to call to ("
-            << CallHandler::envVar() << ") :"
-            << getenv( CallHandler::envVar() ) <<  "***************\n";
-    dlg->exec();
-
-    if(dlg->clickedButton() == callButton){
-        callUi->startCall();
-    }
-
-    dlg->deleteLater();
-    qDebug() << Q_FUNC_INFO << "out";
+    callUi->startCall();
 }
 
 void PinCodeQueryBusinessLogic::callStarted()
@@ -324,7 +306,7 @@ void PinCodeQueryBusinessLogic::uiButtonReleased()
 
     if(buttonName == QString("emergencyCallButton")) {
         doEmergencyCall();
-   }
+    }
     else if(buttonName == QString("enterButton")) {
         if(SubEnablePinQuery == subState){
             simSec->enablePINQuery(SIMSecurity::PIN, uiPin->getCodeEntry()->text());

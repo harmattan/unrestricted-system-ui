@@ -23,6 +23,7 @@ public:
 
     bool callOngoing();
     static inline const char* envVar() { return "PIN_EM_CALL"; }
+    static void debugPrintCallNum(const char *funcInfo);
 
 signals:
     void callStarted();
@@ -39,6 +40,10 @@ private:
     CallUiServiceApi *callUi;
     QString uid;
     bool calling;
+
+#ifdef UNIT_TEST
+   friend class Ut_PinCodeQueryBusinessLogic;
+#endif // UNIT_TEST
 };
 
 #endif // CALLHANDLER_H

@@ -22,6 +22,14 @@ bool CallHandler::callOngoing()
     return calling;
 }
 
+void CallHandler::debugPrintCallNum(const char *funcInfo)
+{
+    qDebug() << funcInfo
+            << "\n****************** PIN Query: Number to call to ("
+            << envVar() << ") :" << getenv( envVar() )
+            <<  "***************\n";
+}
+
 bool CallHandler::startCall()
 {
     qDebug() << Q_FUNC_INFO;
