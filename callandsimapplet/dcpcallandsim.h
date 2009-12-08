@@ -11,7 +11,6 @@ enum {
 enum Data {
     CallerIdSendingData = 0,
     CallWaitingData,
-    CallForwardingData,
     PinRequestData,
     AllData
 };

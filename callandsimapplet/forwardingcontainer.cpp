@@ -5,6 +5,11 @@
 #include <DuiLinearLayoutPolicy>
 #include <DuiLocale>
 
+#include <QDebug>
+
+// Delay before a call is forwarded
+const int FORWARDING_DELAY(20);
+
 ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
         DuiContainer(trid("qtn_cell_call_forwarding", "Call forwardign"), parent)
 {
@@ -12,24 +17,38 @@ ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
     lp = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     lp->setSpacing(5);
 
-    fwdAll         = new ForwardingWidget(trid("qtn_cell_forw_unconditional", "All voice calls"),
-                                          QString("dbusfunc"));
-    fwdBusy        = new ForwardingWidget(trid("qtn_cell_forw_busy", "If busy"),
-                                          QString("dbusfunc"));
-    fwdNotAnswered = new ForwardingWidget(trid("qtn_cell_forw_no_reply", "If not answered"),
-                                          QString("dbusfunc"));
-    fwdOutOfReach  = new ForwardingWidget(trid("qtn_cell_forw_not_reachable", "If out of reach"),
-                                          QString("dbusfunc"));
+    fwdAll          = new ForwardingWidget(trid("qtn_cell_forw_unconditional", "All voice calls"),
+                                           QString("dbusfunc"));
+    fwdBusy         = new ForwardingWidget(trid("qtn_cell_forw_busy", "If busy"),
+                                           QString("dbusfunc"));
+    fwdNoReply      = new ForwardingWidget(trid("qtn_cell_forw_no_reply", "If not answered"),
+                                           QString("dbusfunc"));
+    fwdNotReachable = new ForwardingWidget(trid("qtn_cell_forw_not_reachable", "If out of reach"),
+                                           QString("dbusfunc"));
 
     // dummy widgets are used to hide others when unconditional forwarding is active
-    dummyBusy = newDummy();
-    dummyNotAnswered = newDummy();
-    dummyOutOfReach = newDummy();
+    dummyBusy         = newDummy();
+    dummyNoReply      = newDummy();
+    dummyNotReachable = newDummy();
 
     lp->addItem(fwdAll);
-    setWidgetVisibilities();
+    // showCFWidgets adds the other widgets to layout
+    hideCFWidgets(fwdAll->isEnabled());
+
+    callForwarding = new CallForwarding(this);
+
+    connect(callForwarding, SIGNAL(divertCheckComplete(bool, QString, CallForwarding::DivertError)),
+            this, SLOT(divertCheckComplete(bool, QString, CallForwarding::DivertError)));
+    connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)),
+            this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
 
     // connect signals
+    connect(fwdAll, SIGNAL(enabled(bool)), this, SLOT(hideCFWidgets(bool)));
+
+    divertCheck(CallForwarding::NotReachable, true);
+    divertCheck(CallForwarding::NoReply, true);
+    divertCheck(CallForwarding::Busy, true);
+    divertCheck(CallForwarding::Unconditional);
 
     // layout
     centralWidget()->setLayout(layout);
@@ -37,34 +56,139 @@ ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
 
 ForwardingContainer::~ForwardingContainer()
 {
-    if (lp->indexOf(dummyBusy) < 0) {
-        delete dummyBusy;
-        delete dummyNotAnswered;
-        delete dummyOutOfReach;
+    // set showCFWidgets to false, removing dummy widgets from the layout
+    hideCFWidgets(false);
+    delete dummyBusy;
+    delete dummyNoReply;
+    delete dummyNotReachable;
+}
+
+void ForwardingContainer::hideCFWidgets(bool hide)
+{
+    if (hide) {
+        // replace widgets with invisible dummies
+        switchWidget(dummyBusy, fwdBusy);
+        switchWidget(dummyNoReply, fwdNoReply);
+        switchWidget(dummyNotReachable, fwdNotReachable);
     } else {
-        delete fwdBusy;
-        delete fwdNotAnswered;
-        delete fwdOutOfReach;
+        switchWidget(fwdBusy, dummyBusy);
+        switchWidget(fwdNoReply, dummyNoReply);
+        switchWidget(fwdNotReachable, dummyNotReachable);
     }
 }
 
-void ForwardingContainer::setWidgetVisibilities()
+/*void ForwardingContainer::divertActivateComplete(CallForwarding::DivertError error)
 {
-    if (fwdAll->isEnabled()) {
-        // if unconditional forwarding is enabled, hide other widgets
-        switchWidget(dummyBusy, fwdBusy);
-        switchWidget(dummyNotAnswered, fwdNotAnswered);
-        switchWidget(dummyOutOfReach, fwdOutOfReach);
-    } else {
-        switchWidget(fwdBusy, dummyBusy);
-        switchWidget(fwdNotAnswered, dummyNotAnswered);
-        switchWidget(fwdOutOfReach, dummyOutOfReach);
+    Q_UNUSED(error);
+    // not needed?
+}*/
+
+void ForwardingContainer::divertCancelComplete(CallForwarding::DivertError error)
+{
+    qDebug() << Q_FUNC_INFO;
+    FwdAction action = actionQueue.dequeue();
+
+    if (error != CallForwarding::NoError) {
+        // TODO: Error message
+        qDebug() << "error:" << error;
+    }
+
+    ForwardingWidget* widget = widgetForType(action.type);
+    if (widget != NULL) {
+        widget->update(false, "");
+    }
+
+    processQueue();
+}
+
+void ForwardingContainer::divertCheckComplete(bool active, QString number, CallForwarding::DivertError error)
+{
+    qDebug() << Q_FUNC_INFO;
+    FwdAction action = actionQueue.dequeue();
+
+    if (error != CallForwarding::NoError) {
+        // TODO: Error message
+        qDebug() << "error:" << error;
+    }
+
+    ForwardingWidget* widget = widgetForType(action.type);
+    if (widget != NULL) {
+        widget->update(active, number);
+    }
+
+    processQueue();
+}
+
+void ForwardingContainer::divertCheck(CallForwarding::DivertType type, bool queue)
+{
+    qDebug() << Q_FUNC_INFO << type << queue;
+    actionQueue.enqueue(FwdAction(type, FwdAction::Check));
+
+    if (!queue) {
+        processQueue();
+    }
+}
+
+void ForwardingContainer::divertCancel(CallForwarding::DivertType type, bool queue)
+{
+    qDebug() << Q_FUNC_INFO << type << queue;
+    actionQueue.enqueue(FwdAction(type, FwdAction::Cancel));
+
+    if (!queue) {
+        processQueue();
+    }
+}
+
+
+void ForwardingContainer::processQueue()
+{
+    qDebug() << Q_FUNC_INFO << "count:" << actionQueue.count();
+    if (actionQueue.isEmpty()) {
+        return;
+    }
+
+    FwdAction action = actionQueue.head();
+
+    switch (action.action) {
+    case FwdAction::Check:
+        qDebug() << "divertCheck" << action.type;
+        callForwarding->divertCheck(action.type);
+        break;
+    case FwdAction::Cancel:
+        qDebug() << "divertCancel" << action.type;
+        callForwarding->divertCancel(action.type);
+        break;
+    default:
+        actionQueue.dequeue();
+    }
+}
+
+ForwardingWidget* ForwardingContainer::widgetForType(CallForwarding::DivertType type)
+{
+    switch (type) {
+    case CallForwarding::Unconditional:
+        return fwdAll;
+        break;
+    case CallForwarding::Busy:
+        return fwdBusy;
+        break;
+    case CallForwarding::NoReply:
+        return fwdNoReply;
+        break;
+    case CallForwarding::NotReachable:
+        return fwdNotReachable;
+        break;
+    default:
+        return NULL;
     }
 }
 
 void ForwardingContainer::switchWidget(QGraphicsWidget* show, QGraphicsWidget* hide)
 {
-    lp->removeItem(hide);
+    qDebug() << Q_FUNC_INFO;
+    if (lp->indexOf(hide) >= 0) {
+        lp->removeItem(hide);
+    }
 
     if (lp->indexOf(show) < 0) {
         lp->addItem(show);
@@ -80,30 +204,6 @@ QGraphicsWidget* ForwardingContainer::newDummy()
 }
 
 /*
-ForwardingContainer::~ForwardingContainer()
-{
-    //delete proxy widgets
-    delete dummyWidget;
-    dummyWidget = NULL;
-    delete fwdNumberWidget;
-    fwdNumberWidget = NULL;
-}
-
-void CallContainer::toggleFwdNumberWidget(bool toggle)
-{
-    if(toggle) {
-        lp->removeItem(dummyWidget);
-        lp->addItemAtPosition(fwdNumberWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
-        pp->removeItem(dummyWidget);
-        pp->addItemAtPosition(fwdNumberWidget, 3, 0, Qt::AlignCenter);
-    } else {
-        lp->removeItem(fwdNumberWidget);
-        lp->addItemAtPosition(dummyWidget, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
-        pp->removeItem(fwdNumberWidget);
-        pp->addItemAtPosition(dummyWidget, 3, 0, Qt::AlignCenter);
-    }
-}
-
 void CallContainer::setCallForwarding(bool enabled, QString number)
 {
     qDebug() << Q_FUNC_INFO << enabled << number;

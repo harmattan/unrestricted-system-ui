@@ -1,9 +1,9 @@
 #include "forwardingwidget.h"
 
-//#include <DuiLayout>
 #include <DuiGridLayoutPolicy>
 #include <DuiLabel>
 #include <DuiButton>
+#include <DuiLocale>
 
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -45,6 +45,7 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
 
     numberButton = new DuiButton;
     numberButton->setObjectName("forwardingButton");
+    numberButton->setText(trid("qtn_cell_enter_select_number", "Enter or select number"));
 
     // layout for button
 
@@ -71,7 +72,7 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
     pp->addItemAtPosition(checkWidget, 0, 0, Qt::AlignCenter);
 
     // adds dummyWidget to the policies so the button is hidden by default
-    setButtonVisible(checkButton->isChecked());
+    showButton(checkButton->isChecked());
 
     // connect signals
 
@@ -83,17 +84,24 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
 
 ForwardingWidget::~ForwardingWidget()
 {
+    // delete the one that's not visible because it doesn't have parent
     if (checkButton->isChecked()) {
         delete dummyWidget;
     } else {
-        delete numberButton;
+        delete buttonWidget;
     }
 }
 
-void ForwardingWidget::setButtonVisible(bool visible)
+void ForwardingWidget::update(bool enabled, QString number)
 {
-    qDebug() << Q_FUNC_INFO << visible;
-    if (visible) {
+    showButton(enabled);
+    numberButton->setText( number.length() > 0 ? number : trid("qtn_cell_enter_select_number", "Enter or select number"));
+}
+
+void ForwardingWidget::showButton(bool show)
+{
+    qDebug() << Q_FUNC_INFO << show;
+    if (show) {
         lp->removeItem(dummyWidget);
         lp->addItemAtPosition(buttonWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
         pp->removeItem(dummyWidget);
@@ -114,9 +122,10 @@ bool ForwardingWidget::isEnabled()
 void ForwardingWidget::checked(bool check)
 {
     qDebug() << Q_FUNC_INFO;
-    setButtonVisible(check);
+    showButton(check);
 
     if (!check) {
         emit forwardingDisabled(dbusFunction);
     }
+    emit enabled(check);
 }

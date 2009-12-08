@@ -46,7 +46,7 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
 
     // get data
 
-    logic->requestData(DcpCallAndSim::AllData);
+//    logic->requestData(DcpCallAndSim::AllData);
 
     // main layout
 

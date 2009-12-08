@@ -2,13 +2,9 @@
 
 using namespace DcpCallAndSim;
 
-// Delay before a call is forwarded
-const int FORWARDING_DELAY(20);
-
 CallAndSim::CallAndSim(QObject* parent) :
         QObject(parent)
 {
-    callForwarding = new CallForwarding(this);
     callWaiting = new CallWaiting(this);
     simSecurity = new SIMSecurity(this);
 //    networkRegistration = new NetworkRegistration(this);
@@ -19,13 +15,6 @@ CallAndSim::CallAndSim(QObject* parent) :
             this, SLOT(waitingCheckComplete(bool, CallWaiting::WaitingError)));
     connect(callWaiting, SIGNAL(waitingCancelComplete(CallWaiting::WaitingError)),
             this, SLOT(waitingCancelComplete(CallWaiting::WaitingError)));
-
-    connect(callForwarding, SIGNAL(divertActivateComplete(CallForwarding::DivertError)),
-            this, SLOT(divertActivateComplete(CallForwarding::DivertError)));
-    connect(callForwarding, SIGNAL(divertCheckComplete(bool, QString, CallForwarding::DivertError)),
-            this, SLOT(divertCheckComplete(bool, QString, CallForwarding::DivertError)));
-    connect(callForwarding, SIGNAL(divertCancelComplete(CallForwarding::DivertError)),
-            this, SLOT(divertCancelComplete(CallForwarding::DivertError)));
 
 //    connect(networkRegistration, SIGNAL(statusChanged(int)), this, SLOT(networkStatusChanged(int)));
 
@@ -61,17 +50,6 @@ void CallAndSim::setCallWaiting(bool enabled)
     }
 }
 
-void CallAndSim::setCallForwarding(bool enabled, QString number)
-{
-    qDebug() << Q_FUNC_INFO << enabled << number;
-
-    if (enabled) {
-        callForwarding->divertActivate(CallForwarding::Unconditional, number, FORWARDING_DELAY);
-    } else {
-        callForwarding->divertCancel(CallForwarding::CancelAll);
-    }
-}
-
 void CallAndSim::setPinRequest(bool enabled)
 {
     qDebug() << Q_FUNC_INFO << enabled;
@@ -99,15 +77,11 @@ void CallAndSim::requestData(DcpCallAndSim::Data data)
     case CallWaitingData:
         callWaiting->waitingCheck();
         break;
-    case CallForwardingData:
-        callForwarding->divertCheck(CallForwarding::Unconditional);
-        break;
     case PinRequestData:
         dbusPinIf->call(QDBus::NoBlock, QString("PinQueryState"), QString("PIN"));
         break;
     case AllData:
         callWaiting->waitingCheck();
-        callForwarding->divertCheck(CallForwarding::Unconditional);
         dbusPinIf->call(QDBus::NoBlock, QString("PinQueryState"), QString("PIN"));
         // TODO: CallerId sending
         // TODO: Queuing needed also?
@@ -150,39 +124,6 @@ void CallAndSim::waitingCheckComplete(bool active, CallWaiting::WaitingError err
     emit callWaitingComplete(active);
 }
 
-void CallAndSim::divertActivateComplete(CallForwarding::DivertError error)
-{
-    qDebug() << Q_FUNC_INFO << error;
-
-    if (error != CallForwarding::NoError) {
-        // TODO: display error note
-        emit requestFailed(DcpCallAndSim::CallForwardingData);
-    }
-}
-
-void CallAndSim::divertCancelComplete(CallForwarding::DivertError error)
-{
-    qDebug() << Q_FUNC_INFO << error;
-
-    if (error != CallForwarding::NoError) {
-        // TODO: display error note
-        emit requestFailed(DcpCallAndSim::CallForwardingData);
-    }
-}
-
-void CallAndSim::divertCheckComplete(bool active, QString number, CallForwarding::DivertError error)
-{
-    qDebug() << Q_FUNC_INFO << active << number << error;
-
-    if (error != CallForwarding::NoError) {
-        // TODO: display error note
-        emit requestFailed(DcpCallAndSim::CallForwardingData);
-        return;
-    }
-
-    emit callForwardingComplete(active, number);
-}
-
 void CallAndSim::pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error)
 {
     qDebug() << Q_FUNC_INFO << state << error;
@@ -203,7 +144,7 @@ void CallAndSim::pinQueryEnabled(SIMSecurity::PINQuery queryState)
 
 void CallAndSim::networkStatusChanges(int status)
 {
-    (status);
+    Q_UNUSED(status);
     // TODO
 }
 
