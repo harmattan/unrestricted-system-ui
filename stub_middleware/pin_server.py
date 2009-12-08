@@ -121,6 +121,7 @@ class EmergencyServer(dbus.service.Object):
 
     @dbus.service.method('com.nokia.csd.Call')
     def GetEmergencyNumbers(self):
+        print 'em numbers'
         #self.on_getsimstatus(self.getsimstatus)
         return [ "112", "911" ]
 

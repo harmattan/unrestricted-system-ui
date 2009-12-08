@@ -12,6 +12,7 @@
 
 #include <QtDBus>
 #include <ssc-dbus-names.h>
+#include <EmergencyNumbers>
 
 #include "sysuid.h"
 
@@ -130,7 +131,9 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
 
     if(!uiPin)
     {
-        uiPin = new PinCodeQueryUI();
+        EmergencyNumbers emeNums;
+        uiPin = new PinCodeQueryUI(emeNums.numbers());
+
         uiPin->setPannableAreaInteractive(false);
         DuiButton *uiPinEmergency = uiPin->getEmergencyBtn();
         DuiButton *uiPinCancel = uiPin->getCancelBtn();

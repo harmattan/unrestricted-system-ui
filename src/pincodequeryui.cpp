@@ -20,7 +20,9 @@
 #include <QIntValidator>
 
 
-PinCodeQueryUI::PinCodeQueryUI()
+PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers) :
+        DuiApplicationPage(),
+        emergencyNumbers(emergencyNumbers)
 {
     qDebug() << Q_FUNC_INFO;
     setVisible(false);
@@ -66,9 +68,10 @@ void PinCodeQueryUI::createContent()
     factors to be the same yourself. You do this using setColumnMinimumWidth() and
     setColumnStretch().
     */
-    // addItemAtPosition (QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
+    // addItemAtPosition (QGraphicsLayoutItem *item,
+    //           int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment=0)
     landscapePolicy->addItemAtPosition(headerLabel, 0, 0, 1, 7);
-    landscapePolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
+    // emergencyCallButton's reserved slot: 1, 0, 1, 4;
     landscapePolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     landscapePolicy->addItemAtPosition(backspaceButton, 2, 3);
     landscapePolicy->addItemAtPosition(enterButton, 4, 0, 1, 2);
@@ -76,7 +79,7 @@ void PinCodeQueryUI::createContent()
     landscapePolicy->addItemAtPosition(nums, 1, 4, 5, 7);
 
     portraitPolicy->addItemAtPosition(headerLabel, 0, 0, 1, 4);
-    portraitPolicy->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
+    // emergencyCallButton's reserved slot: 1, 0, 1, 4;
     portraitPolicy->addItemAtPosition(entryTextEdit, 2, 0, 1, 3);
     portraitPolicy->addItemAtPosition(backspaceButton, 2, 3);
     portraitPolicy->addItemAtPosition(nums, 3, 0, 1, 4);
@@ -168,6 +171,7 @@ void PinCodeQueryUI::createWidgetItems()
     emergencyCallButton->setObjectName("emergencyCallButton");
     emergencyCallButton->setIconID("icon-m-common-emergency-call");
     connect(emergencyCallButton, SIGNAL(released()), this, SLOT(buttonReleased()));
+    emergencyCallButton->setVisible(false);
 
     entryTextEdit = new DuiTextEdit(DuiTextEditModel::SingleLine, "");
     entryTextEdit->setObjectName("codeEntry");
@@ -228,7 +232,8 @@ void PinCodeQueryUI::buttonReleased()
     if(button->objectName().left(button->objectName().length()-1) == "numpadButton") {
         entryTextEdit->insert(button->objectName().right(1));
         qDebug() << Q_FUNC_INFO << "text now: " << entryTextEdit->text();
-    }
+        checkEntry(); //Check the current entry
+   }
 
     //Check if the button was backspace
     else if(button->objectName() == QString("backspaceButton")) {
@@ -239,6 +244,7 @@ void PinCodeQueryUI::buttonReleased()
             backspaceTimer = NULL;
         }
         entryTextEdit->setText(entryTextEdit->text().left(entryTextEdit->text().length()-1));
+        checkEntry(); //Check the current entry
     }
 }
 
@@ -262,6 +268,37 @@ void PinCodeQueryUI::removeText()
         backspaceTimer = NULL;
     }
     entryTextEdit->setText("");
+}
+
+void PinCodeQueryUI::checkEntry()
+{
+    if(emergencyCallButton == NULL)
+        return;
+
+    QString pinCode = entryTextEdit->text();
+
+    //check if the entered opin code is an emergency call phone number
+    if( emergencyNumbers.contains(pinCode) ) {
+        DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());
+        QList<DuiAbstractLayoutPolicy *> list = layout->registeredPolicies();
+        int cnt = list.count();
+        for(int i = 0; i < cnt; ++i){
+           ((DuiGridLayoutPolicy*)list[i])->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
+        }
+        emergencyCallButton->setVisible(true);
+        entryTextEdit->setMaskedInput(false);
+    }
+    else if(emergencyCallButton->isVisible()) {
+        DuiLayout* layout = (DuiLayout*)(centralWidget()->layout());
+        QList<DuiAbstractLayoutPolicy *> list = layout->registeredPolicies();
+        int cnt = list.count();
+        for(int i = 0; i < cnt; ++i){
+           list[i]->removeItem(emergencyCallButton);
+        }
+        emergencyCallButton->setVisible(false);
+        entryTextEdit->setMaskedInput(true);
+    }
+    qDebug() << Q_FUNC_INFO << "emButton->isVisible()" << emergencyCallButton->isVisible();
 }
 
 void PinCodeQueryUI::hideWindow()

@@ -17,7 +17,7 @@ class  PinCodeQueryUI : public DuiApplicationPage
     Q_OBJECT
 
 public:
-    PinCodeQueryUI();
+    PinCodeQueryUI(QStringList emergencyNumbers);
     virtual ~ PinCodeQueryUI();
     virtual void createContent();
 
@@ -27,6 +27,7 @@ public:
     DuiTextEdit *getCodeEntry();
 
     void setHeader(QString);
+    void checkEntry();
     static void hideWindow();
     static void showWindow();
     static void setWindowOnTop(bool onTop = true);
@@ -54,6 +55,7 @@ private: //attributes
     DuiLabel *headerLabel;
     DuiTextEdit *entryTextEdit;
     QTimer *backspaceTimer;
+    QStringList emergencyNumbers;
 };
 
 #endif //  PINCODEQUERYUI_H
