@@ -9,6 +9,7 @@
 #define PINSTUBS_H
 
 #include <QObject>
+#include <QStringList>
 
 namespace Cellular {
 
@@ -210,6 +211,12 @@ public:
     SIMLockLevel level;
     SIMLockError error;
     QString code;
+};
+
+class EmergencyNumbers
+{
+public:
+    inline QStringList numbers(){QStringList l; l << QString("911") << QString("112"); return l;}
 };
 
 } // namespace Cellular
