@@ -40,6 +40,8 @@ PinCodeQueryUI::~PinCodeQueryUI()
     if(backspaceTimer != NULL) {
         //we stop timing the press event
         backspaceTimer->stop();
+        delete backspaceTimer;
+        backspaceTimer = NULL;
     }
 }
 
@@ -215,7 +217,7 @@ QGraphicsWidget* PinCodeQueryUI::createNumpad()
         QString str1 = QString("qtn_cell_dialer_").append(QString::number(values[i]));
         QString str2 = QString::number(values[i]);
         QString str3 = QString("numpadButton" + str2);
-        DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())), this);
+        DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())));
         num->setObjectName(str3);
         connect(num, SIGNAL(released()), this, SLOT(buttonReleased()));
         if(values[i] == 0) {
