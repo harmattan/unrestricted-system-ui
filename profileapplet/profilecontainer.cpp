@@ -24,7 +24,7 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
     qDebug() << Q_FUNC_INFO << title;
 
     if(0 <= level) {
-        slider = new DuiSlider(this, "continuous");
+        slider = new DuiSlider(0, "continuous");
         slider->setOrientation(Qt::Horizontal);
         slider->setRange(ProfileApplet::sliderMin, ProfileApplet::sliderMax);
         slider->setThumbLabelVisible(false);
@@ -32,7 +32,7 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
         connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
     }
 
-    button = new DuiButton(DcpProfile::VibrationText, this);
+    button = new DuiButton(DcpProfile::VibrationText);
     button->setCheckable(true);
     setVibration(vibra);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
@@ -60,15 +60,15 @@ void ProfileContainer::setLayout()
 
     if(slider)
     {
-        img = new DuiImage("icon-m-volume", this);
+        img = new DuiImage("icon-m-volume");
         item = slider;
         qDebug() << Q_FUNC_INFO << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
     }
     else
     {
-        img = new DuiImage("icon-m-volume-off", this);
-        item = new DuiLabel(DcpProfile::NoRingingText, this);
+        img = new DuiImage("icon-m-volume-off");
+        item = new DuiLabel(DcpProfile::NoRingingText);
     }
     img->setObjectName("speakerIcon");
 
