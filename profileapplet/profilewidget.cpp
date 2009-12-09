@@ -15,8 +15,10 @@
 #include <DuiLinearLayoutPolicy>
 #include <QDebug>
 
-ProfileWidget::ProfileWidget(QGraphicsWidget *parent)
-	    :DcpWidget(parent)
+ProfileWidget::ProfileWidget(QGraphicsWidget *parent) :
+        DcpWidget(parent),
+        profileButtons(NULL),
+        profileIf(NULL)
 {    
     setReferer(DcpProfile::None);
     initWidget();
@@ -24,6 +26,8 @@ ProfileWidget::ProfileWidget(QGraphicsWidget *parent)
 
 ProfileWidget::~ProfileWidget()
 {
+    delete profileIf;
+    profileIf = NULL;
 }
 
 void ProfileWidget::initWidget()
@@ -36,7 +40,7 @@ void ProfileWidget::initWidget()
     connect(profileIf, SIGNAL(volumeLevel(int, int)), this, SLOT(setVolume(int, int)));
     connect(profileIf, SIGNAL(vibrationValue(int, bool)), this, SLOT(setVibration(int, bool)));
 
-    profileButtons = new ProfileButtons(this);
+    profileButtons = new ProfileButtons();
 
     // get init values
     initProfiles();
@@ -58,8 +62,7 @@ void ProfileWidget::initProfiles()
                 d.profileId,
                 d.profileName,
                 d.volumeLevel,
-                d.vibrationEnabled,
-                this);
+                d.vibrationEnabled);
         connect(cont, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
         connect(cont, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
         containers.insert(d.profileId, cont);
@@ -84,8 +87,8 @@ DuiContainer* ProfileWidget::createContainer()
 {
     DuiLayout *layout = new DuiLayout();
 
-    DuiLabel* currentHeader = new DuiLabel(DcpProfile::CurrentText,this);
-    DuiLabel* settingsHeader = new DuiLabel(DcpProfile::SettingsHeaderText,this);
+    DuiLabel* currentHeader = new DuiLabel(DcpProfile::CurrentText);
+    DuiLabel* settingsHeader = new DuiLabel(DcpProfile::SettingsHeaderText);
 
     DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     portraitPolicy->addItem(currentHeader, Qt::AlignLeft);

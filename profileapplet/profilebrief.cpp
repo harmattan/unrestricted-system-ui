@@ -8,10 +8,8 @@ ProfileBrief::ProfileBrief()
 
 QString ProfileBrief::valueText() const
 {
-    ProfileDataInterface* profileIf = new ProfileDataInterface();
-    QString name = profileIf->getCurrentProfileName();
-    delete profileIf;
-    return name;
+    ProfileDataInterface profileIf;
+    return profileIf.getCurrentProfileName();
 }
 
 

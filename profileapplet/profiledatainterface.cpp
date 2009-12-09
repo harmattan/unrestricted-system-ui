@@ -21,12 +21,14 @@ namespace ProfileId{
 
 ProfileDataInterface::ProfileDataInterface()
 {
-    api = new Profile(this);
+    api = new Profile();
     connect(api, SIGNAL(activeProfileChanged(QString)), this, SLOT(currentProfileNameChanged(QString)));    
 }
 
 ProfileDataInterface::~ProfileDataInterface()
 {
+    delete api;
+    api = NULL;
 }
 
 QString ProfileDataInterface::getCurrentProfileName()

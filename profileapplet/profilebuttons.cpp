@@ -37,7 +37,7 @@ void ProfileButtons::init(QMap<int, QString> data, int currentId)
 
 void  ProfileButtons::addButton(QString name, int id, bool checked)
 {
-    DuiButton* button = new DuiButton(name, this);
+    DuiButton* button = new DuiButton(name);
     button->setCheckable(true);
     button->setChecked(checked);
     buttons->addButton(button, id);    

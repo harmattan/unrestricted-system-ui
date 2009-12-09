@@ -5,6 +5,7 @@
 #include <QObject>
 class ProfileWidget;
 class DuiAction;
+class ProfileBrief;
 
 class ProfileApplet : public QObject, public DcpAppletIf
 {

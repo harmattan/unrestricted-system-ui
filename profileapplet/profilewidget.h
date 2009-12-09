@@ -36,8 +36,8 @@ private: //methods
 
 private: //attributes
     ProfileButtons* profileButtons;
+    ProfileDataInterface *profileIf;
     QHash<int, ProfileContainer*> containers;
 
-    ProfileDataInterface *profileIf;
 };
 #endif // PROFILEWIDGET_H
