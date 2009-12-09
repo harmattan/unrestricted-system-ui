@@ -19,7 +19,6 @@ private:
     CallContainer* callContainer;
     SimContainer* simContainer;
     ForwardingContainer* forwardingContainer;
-    CallAndSim* logic;
 };
 
 #endif // CALLANDSIMWIDGET_H

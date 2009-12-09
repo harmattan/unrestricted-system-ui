@@ -14,39 +14,14 @@ CallAndSimWidget::CallAndSimWidget(QGraphicsWidget* parent) :
         callContainer(NULL),
         simContainer(NULL)
 {
+    qDebug() << Q_FUNC_INFO;
     setReferer(DcpCallAndSim::None);
-
-    // create logic
-
-    logic = new CallAndSim(this);
 
     // create containers
 
     simContainer = new SimContainer;
     callContainer = new CallContainer;
     forwardingContainer = new ForwardingContainer;
-
-    // connect signals, containers -> logic
-
-    connect(simContainer, SIGNAL(pinRequestChanged(bool)),               logic, SLOT(setPinRequest(bool)));
-    connect(simContainer, SIGNAL(pinChangeRequested()),                  logic, SLOT(changePinCode()));
-    connect(callContainer, SIGNAL(sendCallerIdChanged(int)),             logic, SLOT(setCallerIdSending(int)));
-    connect(callContainer, SIGNAL(callWaitingChanged(bool)),             logic, SLOT(setCallWaiting(bool)));
-//    connect(callContainer, SIGNAL(callForwardingChanged(bool, QString)), logic, SLOT(setCallForwarding(bool, QString)));
-
-    // connect signals, logic -> containers
-
-    connect(logic, SIGNAL(callerIdSendingComplete(int)),          callContainer, SLOT(setSendCallerId(int)));
-    connect(logic, SIGNAL(callWaitingComplete(bool)),             callContainer, SLOT(setCallWaiting(bool)));
-//    connect(logic, SIGNAL(callForwardingComplete(bool, QString)), callContainer, SLOT(setCallForwarding(bool, QString)));
-    connect(logic, SIGNAL(pinRequestComplete(bool)),              simContainer, SLOT(setPinRequest(bool)));
-
-    connect(logic, SIGNAL(requestFailed(DcpCallAndSim::Data)),    callContainer, SLOT(requestFailed(DcpCallAndSim::Data)));
-    connect(logic, SIGNAL(requestFailed(DcpCallAndSim::Data)),    simContainer, SLOT(requestFailed(DcpCallAndSim::Data)));
-
-    // get data
-
-//    logic->requestData(DcpCallAndSim::AllData);
 
     // main layout
 

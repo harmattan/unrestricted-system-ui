@@ -3,8 +3,6 @@
 
 #include "dcpcallandsim.h"
 
-
-#include <cellular-qt/CallWaiting>
 #include <cellular-qt/SIM>
 //#include <cellular-qt/NetworkRegistration>
 
@@ -23,21 +21,13 @@ public:
 
 signals:
     void callerIdSendingComplete(int);
-    void callWaitingComplete(bool);
     void pinRequestComplete(bool);
-    void requestFailed(DcpCallAndSim::Data data);
 
 public slots:
-    void setCallerIdSending(int value);
-    void setCallWaiting(bool enabled);
     void setPinRequest(bool enabled);
     void changePinCode();
-    void requestData(DcpCallAndSim::Data data);
 
 private slots:
-    void waitingActivateComplete(CallWaiting::WaitingError);
-    void waitingCancelComplete(CallWaiting::WaitingError);
-    void waitingCheckComplete(bool active, CallWaiting::WaitingError);
 
     void pinQueryStateComplete(SIMSecurity::PINQuery state, SIMError error = SIMErrorNone);
     void pinQueryEnabled(SIMSecurity::PINQuery queryState);
@@ -47,7 +37,6 @@ private slots:
     void DBusMessagingFailure();
 
 private:
-    CallWaiting* callWaiting;
     SIMSecurity* simSecurity;
     //NetworkRegistration *networkRegistration;
     QDBusInterface* dbusPinIf;

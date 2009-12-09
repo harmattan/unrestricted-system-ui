@@ -44,22 +44,22 @@ void SimContainer::setPinRequest(bool enabled)
         toggleChangePinButtonWidget(enabled);
     }
 }
-
+/*
 void SimContainer::requestFailed(DcpCallAndSim::Data data)
 {
     qDebug() << Q_FUNC_INFO << data;
 
     if (data == DcpCallAndSim::PinRequestData) {
-/*        pinRequestButton->blockSignals(true);
-        pinRequestButton->setChecked(false);
-        pinRequestButton->blockSignals(false);
+                pinRequestButton->blockSignals(true);
+                pinRequestButton->setChecked(false);
+                pinRequestButton->blockSignals(false);
 
-        changePinButton->blockSignals(true);
-        toggleChangePinButtonWidget(false);
-        changePinButton->blockSignals(false);*/
+                changePinButton->blockSignals(true);
+                toggleChangePinButtonWidget(false);
+                changePinButton->blockSignals(false);
     }
 }
-
+*/
 void SimContainer::buttonToggled(bool checked)
 {
     qDebug() << Q_FUNC_INFO << checked;

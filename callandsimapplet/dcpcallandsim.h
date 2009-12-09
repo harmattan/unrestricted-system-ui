@@ -7,13 +7,6 @@ enum {
     None = -1,
     Main = 0
 };
-
-enum Data {
-    CallerIdSendingData = 0,
-    CallWaitingData,
-    PinRequestData,
-    AllData
-};
 }
 
 #endif // DCPCALLANDSIM_H

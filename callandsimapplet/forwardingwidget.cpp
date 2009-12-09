@@ -9,9 +9,8 @@
 #include <QGraphicsGridLayout>
 #include <QDebug>
 
-ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFunction, QGraphicsItem* parent) :
-        QGraphicsWidget(parent),
-        dbusFunction(toggleFunction)
+ForwardingWidget::ForwardingWidget(const QString& label, QGraphicsItem* parent) :
+        QGraphicsWidget(parent)
 {
     qDebug() << Q_FUNC_INFO << label;
 
@@ -76,7 +75,7 @@ ForwardingWidget::ForwardingWidget(const QString& label, const QString& toggleFu
 
     // connect signals
 
-    connect(checkButton, SIGNAL(toggled(bool)), this, SLOT(checked(bool)));
+    connect(checkButton, SIGNAL(toggled(bool)), this, SLOT(toggled(bool)));
     connect(numberButton, SIGNAL(clicked()), this, SIGNAL(buttonClicked()));
 
     setLayout(layout);
@@ -94,13 +93,13 @@ ForwardingWidget::~ForwardingWidget()
 
 void ForwardingWidget::update(bool enabled, QString number)
 {
+    checkButton->setChecked(enabled);
     showButton(enabled);
-    numberButton->setText( number.length() > 0 ? number : trid("qtn_cell_enter_select_number", "Enter or select number"));
+    numberButton->setText(number.length() > 0 ? number : trid("qtn_cell_enter_select_number", "Enter or select number"));
 }
 
 void ForwardingWidget::showButton(bool show)
 {
-    qDebug() << Q_FUNC_INFO << show;
     if (show) {
         lp->removeItem(dummyWidget);
         lp->addItemAtPosition(buttonWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
@@ -119,13 +118,8 @@ bool ForwardingWidget::isEnabled()
     return checkButton->isChecked();
 }
 
-void ForwardingWidget::checked(bool check)
+void ForwardingWidget::toggled(bool checked)
 {
-    qDebug() << Q_FUNC_INFO;
-    showButton(check);
-
-    if (!check) {
-        emit forwardingDisabled(dbusFunction);
-    }
-    emit enabled(check);
+    showButton(checked);
+    emit enabled(checked);
 }

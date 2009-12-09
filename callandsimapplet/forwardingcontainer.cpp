@@ -3,36 +3,30 @@
 
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
+#include <DuiNotification>
 #include <DuiLocale>
 
 #include <QDebug>
-
-// Delay before a call is forwarded
-const int FORWARDING_DELAY(20);
 
 ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
         DuiContainer(trid("qtn_cell_call_forwarding", "Call forwardign"), parent)
 {
     DuiLayout* layout = new DuiLayout;
-    lp = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    lp->setSpacing(5);
+    policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setSpacing(5);
 
-    fwdAll          = new ForwardingWidget(trid("qtn_cell_forw_unconditional", "All voice calls"),
-                                           QString("dbusfunc"));
-    fwdBusy         = new ForwardingWidget(trid("qtn_cell_forw_busy", "If busy"),
-                                           QString("dbusfunc"));
-    fwdNoReply      = new ForwardingWidget(trid("qtn_cell_forw_no_reply", "If not answered"),
-                                           QString("dbusfunc"));
-    fwdNotReachable = new ForwardingWidget(trid("qtn_cell_forw_not_reachable", "If out of reach"),
-                                           QString("dbusfunc"));
+    fwdAll          = new ForwardingWidget(trid("qtn_cell_forw_unconditional", "All voice calls"));
+    fwdBusy         = new ForwardingWidget(trid("qtn_cell_forw_busy", "If busy"));
+    fwdNoReply      = new ForwardingWidget(trid("qtn_cell_forw_no_reply", "If not answered"));
+    fwdNotReachable = new ForwardingWidget(trid("qtn_cell_forw_not_reachable", "If out of reach"));
 
     // dummy widgets are used to hide others when unconditional forwarding is active
     dummyBusy         = newDummy();
     dummyNoReply      = newDummy();
     dummyNotReachable = newDummy();
 
-    lp->addItem(fwdAll);
-    // showCFWidgets adds the other widgets to layout
+    policy->addItem(fwdAll);
+    // hideCFWidgets adds the other widgets to layout
     hideCFWidgets(fwdAll->isEnabled());
 
     callForwarding = new CallForwarding(this);
@@ -45,6 +39,12 @@ ForwardingContainer::ForwardingContainer(DuiWidget* parent) :
     // connect signals
     connect(fwdAll, SIGNAL(enabled(bool)), this, SLOT(hideCFWidgets(bool)));
 
+    connect(fwdAll, SIGNAL(buttonClicked()), this, SLOT(selectNumberAll()));
+    connect(fwdBusy, SIGNAL(buttonClicked()), this, SLOT(selectNumberBusy()));
+    connect(fwdNoReply, SIGNAL(buttonClicked()), this, SLOT(selectNumberNoReply()));
+    connect(fwdNotReachable, SIGNAL(buttonClicked()), this, SLOT(selectNumberNotReachable()));
+
+    // query state of each divert
     divertCheck(CallForwarding::NotReachable, true);
     divertCheck(CallForwarding::NoReply, true);
     divertCheck(CallForwarding::Busy, true);
@@ -63,6 +63,41 @@ ForwardingContainer::~ForwardingContainer()
     delete dummyNotReachable;
 }
 
+void ForwardingContainer::selectNumberAll()
+{
+    DuiNotification notification("", "", "Number picker not implemented yet");
+}
+
+void ForwardingContainer::selectNumberBusy()
+{
+    DuiNotification notification("", "", "Number picker not implemented yet");
+}
+
+void ForwardingContainer::selectNumberNoReply()
+{
+    DuiNotification notification("", "", "Number picker not implemented yet");
+}
+
+void ForwardingContainer::selectNumberNotReachable()
+{
+    DuiNotification notification("", "", "Number picker not implemented yet");
+}
+
+// called when a divert has been set to update the UI
+void ForwardingContainer::divertSet(CallForwarding::DivertType type, bool active, QString number, CallForwarding::DivertError error)
+{
+    qDebug() << Q_FUNC_INFO << type << active << number << error;
+    ForwardingWidget* widget = widgetForType(type);
+    if (widget) {
+        if (error == CallForwarding::NoError) {
+            widget->update(active, number);
+        } else {
+            widget->update(false, "");
+        }
+    }
+}
+
+// hides/shows conditional forwarding widgets (used when unconditional forwarding is enabled)
 void ForwardingContainer::hideCFWidgets(bool hide)
 {
     if (hide) {
@@ -77,20 +112,15 @@ void ForwardingContainer::hideCFWidgets(bool hide)
     }
 }
 
-/*void ForwardingContainer::divertActivateComplete(CallForwarding::DivertError error)
-{
-    Q_UNUSED(error);
-    // not needed?
-}*/
-
+// called when divertCancel completes
 void ForwardingContainer::divertCancelComplete(CallForwarding::DivertError error)
 {
     qDebug() << Q_FUNC_INFO;
     FwdAction action = actionQueue.dequeue();
 
     if (error != CallForwarding::NoError) {
-        // TODO: Error message
         qDebug() << "error:" << error;
+        DuiNotification notification("", "", "divertCancel failed");
     }
 
     ForwardingWidget* widget = widgetForType(action.type);
@@ -101,14 +131,14 @@ void ForwardingContainer::divertCancelComplete(CallForwarding::DivertError error
     processQueue();
 }
 
+// called when divertCheck completes
 void ForwardingContainer::divertCheckComplete(bool active, QString number, CallForwarding::DivertError error)
 {
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << active << number << error;
     FwdAction action = actionQueue.dequeue();
 
     if (error != CallForwarding::NoError) {
-        // TODO: Error message
-        qDebug() << "error:" << error;
+        DuiNotification notification("", "", "divertCheck failed");
     }
 
     ForwardingWidget* widget = widgetForType(action.type);
@@ -119,6 +149,8 @@ void ForwardingContainer::divertCheckComplete(bool active, QString number, CallF
     processQueue();
 }
 
+// checks a divert state
+// if the queue parameter is set to true, leaves the request to the queue without processing it
 void ForwardingContainer::divertCheck(CallForwarding::DivertType type, bool queue)
 {
     qDebug() << Q_FUNC_INFO << type << queue;
@@ -129,6 +161,8 @@ void ForwardingContainer::divertCheck(CallForwarding::DivertType type, bool queu
     }
 }
 
+// cancels a divert
+// if the queue parameter is set to true, leaves the request to the queue without processing it
 void ForwardingContainer::divertCancel(CallForwarding::DivertType type, bool queue)
 {
     qDebug() << Q_FUNC_INFO << type << queue;
@@ -139,7 +173,8 @@ void ForwardingContainer::divertCancel(CallForwarding::DivertType type, bool que
     }
 }
 
-
+// starts processing the action queue, next items are processed as responses are received
+// prevents multiple calls to Cellular API
 void ForwardingContainer::processQueue()
 {
     qDebug() << Q_FUNC_INFO << "count:" << actionQueue.count();
@@ -163,6 +198,7 @@ void ForwardingContainer::processQueue()
     }
 }
 
+// returns ForwardingWidget pointer for wanted divert type
 ForwardingWidget* ForwardingContainer::widgetForType(CallForwarding::DivertType type)
 {
     switch (type) {
@@ -183,18 +219,19 @@ ForwardingWidget* ForwardingContainer::widgetForType(CallForwarding::DivertType 
     }
 }
 
+// replaces widget with another one in a layout
 void ForwardingContainer::switchWidget(QGraphicsWidget* show, QGraphicsWidget* hide)
 {
-    qDebug() << Q_FUNC_INFO;
-    if (lp->indexOf(hide) >= 0) {
-        lp->removeItem(hide);
+    if (policy->indexOf(hide) >= 0) {
+        policy->removeItem(hide);
     }
 
-    if (lp->indexOf(show) < 0) {
-        lp->addItem(show);
+    if (policy->indexOf(show) < 0) {
+        policy->addItem(show);
     }
 }
 
+// creates a new dummy widget for hiding others
 QGraphicsWidget* ForwardingContainer::newDummy()
 {
     QGraphicsWidget* dummy = new QGraphicsWidget;
@@ -202,55 +239,3 @@ QGraphicsWidget* ForwardingContainer::newDummy()
     dummy->setPreferredWidth(1);
     return dummy;
 }
-
-/*
-void CallContainer::setCallForwarding(bool enabled, QString number)
-{
-    qDebug() << Q_FUNC_INFO << enabled << number;
-
-    if (number.compare(numberEdit->text()) != 0) {
-        numberEdit->setText(number);
-    }
-
-    if (callFwdButton->isChecked() != enabled) {
-        callFwdButton->setChecked(enabled);
-    } else {
-        toggleFwdNumberWidget(enabled);
-    }
-}
-
-void CallContainer::requestFailed(DcpCallAndSim::Data data)
-{
-    qDebug() << Q_FUNC_INFO << data;
-
-    switch (data) {
-    case DcpCallAndSim::CallForwardingData:
-        toggleFwdNumberWidget(false);
-
-        callFwdButton->blockSignals(true);
-        callFwdButton->setChecked(false);
-        callFwdButton->blockSignals(false);
-        break;
-    default:
-        break;
-    }
-}
-
-void CallContainer::callForwardingToggled(bool checked)
-{
-    qDebug() << Q_FUNC_INFO << checked;
-
-    toggleFwdNumberWidget(checked);
-
-    emit callForwardingChanged(checked, numberEdit->text());
-}
-
-void CallContainer::numberChanged()
-{
-    QString number(numberEdit->text());
-
-    qDebug() << Q_FUNC_INFO << callFwdButton->isChecked() << number;
-
-    emit callForwardingChanged(callFwdButton->isChecked(), number);
-}
-*/

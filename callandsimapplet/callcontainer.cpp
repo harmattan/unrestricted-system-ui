@@ -7,6 +7,7 @@
 #include <DuiLabel>
 #include <DuiTextEdit>
 #include <DuiButton>
+#include <DuiNotification>
 
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -18,11 +19,11 @@ CallContainer::CallContainer(DuiWidget *parent) :
         pp(NULL)
 {
     // layout & policies
-    DuiLayout* layout = new DuiLayout();
+    DuiLayout* layout = new DuiLayout;
     lp = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
-    layout->setLandscapePolicy(lp); // ownership transferred
+    layout->setLandscapePolicy(lp);
     pp = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    layout->setPortraitPolicy(pp); // ownership transferred
+    layout->setPortraitPolicy(pp);
 
     // send caller id widget
     sendCallerIdComboBox = new DuiComboBox();
@@ -42,23 +43,30 @@ CallContainer::CallContainer(DuiWidget *parent) :
     // call waiting checkbox widget
     QGraphicsWidget* callWaitingWidget = createCheckBox(DcpCallAndSim::CallWaitingText, callWaitingButton);
 
-   // landscape policy
+    // landscape policy
     lp->setSpacing(5);
     lp->addItem(sendCallerIdWidget);
     lp->addItem(callWaitingWidget);
-    //lp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    //lp->addItemAtPosition(callWaitingWidget, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     // portrait policy
     pp->setSpacing(5);
     pp->addItem(sendCallerIdWidget);
     pp->addItem(callWaitingWidget);
-//    pp->addItemAtPosition(sendCallerIdWidget, 0, 0, Qt::AlignCenter);
-//    pp->addItemAtPosition(callWaitingWidget, 1, 0, Qt::AlignCenter);
 
     // connect signals
     connect(sendCallerIdComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(sendCallerIdSelected(int)));
     connect(callWaitingButton, SIGNAL(toggled(bool)), this, SLOT(callWaitingToggled(bool)));
+
+    callWaiting = new CallWaiting(this);
+
+    connect(callWaiting, SIGNAL(waitingActivateComplete(CallWaiting::WaitingError)),
+            this, SLOT(waitingActivateComplete(CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCheckComplete(bool, CallWaiting::WaitingError)),
+            this, SLOT(waitingCheckComplete(bool, CallWaiting::WaitingError)));
+    connect(callWaiting, SIGNAL(waitingCancelComplete(CallWaiting::WaitingError)),
+            this, SLOT(waitingCancelComplete(CallWaiting::WaitingError)));
+
+    callWaiting->waitingCheck();
 
     // layout
     centralWidget()->setLayout(layout);
@@ -67,7 +75,7 @@ CallContainer::CallContainer(DuiWidget *parent) :
 CallContainer::~CallContainer()
 {
 }
-
+/*
 void CallContainer::setSendCallerId(int value)
 {
     Q_ASSERT(value >= 0 && value < 3);
@@ -83,39 +91,54 @@ void CallContainer::setCallWaiting(bool enabled)
         callWaitingButton->setChecked(enabled);
     }
 }
+*/
 
-void CallContainer::requestFailed(DcpCallAndSim::Data data)
+void CallContainer::waitingActivateComplete(CallWaiting::WaitingError error)
 {
-    qDebug() << Q_FUNC_INFO << data;
+    qDebug() << Q_FUNC_INFO << error;
 
-    switch (data) {
-    case DcpCallAndSim::CallerIdSendingData:
-        sendCallerIdComboBox->blockSignals(true);
-        sendCallerIdComboBox->setCurrentIndex(0);
-        sendCallerIdComboBox->blockSignals(false);
-        break;
-    case DcpCallAndSim::CallWaitingData:
-        callWaitingButton->blockSignals(true);
-        callWaitingButton->setChecked(false);
-        callWaitingButton->blockSignals(false);
-        break;
-    default:
-        break;
+    if (error != CallWaiting::NoError) {
+        DuiNotification notification("", "", "waitingActivate failed");
     }
+}
+
+void CallContainer::waitingCancelComplete(CallWaiting::WaitingError error)
+{
+    qDebug() << Q_FUNC_INFO << error;
+
+    if (error != CallWaiting::NoError) {
+        DuiNotification notification("", "", "waitingCancel failed");
+    }
+
+    callWaitingButton->setChecked(false);
+}
+
+void CallContainer::waitingCheckComplete(bool active, CallWaiting::WaitingError error)
+{
+    qDebug() << Q_FUNC_INFO << active << error;
+
+    if (error != CallWaiting::NoError) {
+        DuiNotification notification("", "", "waitingCheck failed");
+    }
+
+    callWaitingButton->setChecked(active);
 }
 
 void CallContainer::sendCallerIdSelected(int index)
 {
     qDebug() << Q_FUNC_INFO << index;
-
-    emit sendCallerIdChanged(index);
 }
 
 void CallContainer::callWaitingToggled(bool checked)
 {
     qDebug() << Q_FUNC_INFO << checked;
 
-    emit callWaitingChanged(checked);
+    if (checked) {
+        callWaiting->waitingActivate();
+    }
+    else {
+        callWaiting->waitingCancel();
+    }
 }
 
 DuiLabel* CallContainer::createLabel(const QString& text)

@@ -3,6 +3,8 @@
 
 #include "dcpcallandsim.h"
 
+#include <cellular-qt/CallWaiting>
+
 #include <DuiContainer>
 
 #include <QString>
@@ -13,6 +15,8 @@ class DuiComboBox;
 class DuiLinearLayoutPolicy;
 class DuiTextEdit;
 
+using namespace Cellular;
+
 class CallContainer : public DuiContainer
 {
     Q_OBJECT
@@ -21,16 +25,15 @@ public:
     CallContainer(DuiWidget* parent = 0);
     virtual ~CallContainer();
 
-signals:
-    void sendCallerIdChanged(int);
-    void callWaitingChanged(bool);
-
 public slots:
-    void setSendCallerId(int value);
-    void setCallWaiting(bool enabled);
-    void requestFailed(DcpCallAndSim::Data data);
+//    void setCallerIdSending(int value);
+//    void setSendCallerId(int value);
 
 private slots:
+    void waitingActivateComplete(CallWaiting::WaitingError);
+    void waitingCancelComplete(CallWaiting::WaitingError);
+    void waitingCheckComplete(bool active, CallWaiting::WaitingError);
+
     void sendCallerIdSelected(int index);
     void callWaitingToggled(bool checked);
 
@@ -39,9 +42,9 @@ private:
     QGraphicsWidget* createCheckBox(const QString& text, DuiButton*& button);
 
 private:
-//    DuiLabel* sendCallerIdLabel;
+    CallWaiting* callWaiting;
+
     DuiComboBox* sendCallerIdComboBox;
-//    DuiLabel* callWaitingLabel;
     DuiButton* callWaitingButton;
     DuiLinearLayoutPolicy* lp;
     DuiLinearLayoutPolicy* pp;

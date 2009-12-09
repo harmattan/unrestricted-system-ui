@@ -108,6 +108,6 @@ bool CallAndSimApplet::checkNetworkState()
 
         return false;
     }
-*/
+    */
     return true;
 }

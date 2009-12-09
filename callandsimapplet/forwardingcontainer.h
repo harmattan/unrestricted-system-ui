@@ -41,11 +41,15 @@ public:
     ~ForwardingContainer();
 
 public slots:
+    void selectNumberAll();
+    void selectNumberBusy();
+    void selectNumberNoReply();
+    void selectNumberNotReachable();
+    void divertSet(CallForwarding::DivertType type, bool active, QString number, CallForwarding::DivertError error);
 
 private slots:
     void hideCFWidgets(bool show);
 
-//    void divertActivateComplete(CallForwarding::DivertError error);
     void divertCancelComplete(CallForwarding::DivertError error);
     void divertCheckComplete(bool active, QString number, CallForwarding::DivertError error);
 
@@ -68,7 +72,7 @@ private:
     QGraphicsWidget* dummyBusy;
     QGraphicsWidget* dummyNoReply;
     QGraphicsWidget* dummyNotReachable;
-    DuiLinearLayoutPolicy* lp;
+    DuiLinearLayoutPolicy* policy;
 };
 
 #endif // FORWARDINGCONTAINER_H
