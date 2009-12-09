@@ -15,7 +15,8 @@
 
 using namespace Cellular;
 
-#define SKIP  QSKIP ( "already tested", SkipSingle );
+// testing macro: skips selected tests when defined.
+#define SKIP /* QSKIP ( "already tested", SkipSingle ); */
 
 namespace {
     QString SIMCardNotInserted = trid("NOT DOCUMENTED YET" , "SIM card not inserted.");
