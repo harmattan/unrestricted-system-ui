@@ -213,17 +213,17 @@ QGraphicsWidget* PinCodeQueryUI::createNumpad()
         0
     };
 
-    for (unsigned int i=0; i<sizeof(values)/sizeof(values[0]); ++i) {	
-        QString str1 = QString("qtn_cell_dialer_").append(QString::number(values[i]));
-        QString str2 = QString::number(values[i]);
-        QString str3 = QString("numpadButton" + str2);
-        DuiButton *num = new DuiButton(QString(trid(str1.toLatin1(), str2.toLatin1())));
-        num->setObjectName(str3);
-        connect(num, SIGNAL(released()), this, SLOT(buttonReleased()));
+    for (unsigned int i=0; i<sizeof(values)/sizeof(values[0]); ++i) {
+        QString num = QString::number(values[i]);
+        QString qtn = QString("qtn_cell_dialer_").append(num);
+        QString name = QString("numpadButton").append(num);
+        DuiButton *btn = new DuiButton(QString(trid(qtn.toLatin1(), num.toLatin1())));
+        btn->setObjectName(name);
+        connect(btn, SIGNAL(released()), this, SLOT(buttonReleased()));
         if(values[i] == 0) {
-            numpadLayoutPolicy->addItemAtPosition(num, (i/3), 1, 1, 1);
+            numpadLayoutPolicy->addItemAtPosition(btn, (i/3), 1, 1, 1);
         } else {
-            numpadLayoutPolicy->addItemAtPosition(num, (i/3), i%3, 1, 1);
+            numpadLayoutPolicy->addItemAtPosition(btn, (i/3), i%3, 1, 1);
         }
     }
     return numpadWidget;
