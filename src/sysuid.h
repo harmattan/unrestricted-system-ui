@@ -9,7 +9,6 @@ class PinCodeQueryBusinessLogic;
 class BatteryBusinessLogic;
 class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
-class EventHandler;
 class Notifier;
 class CallAndSimBusinessLogic;
 class CellularUI;
@@ -31,8 +30,7 @@ private:
     BatteryBusinessLogic* batteryLogic;
     LockScreenBusinessLogic* lockScreenLogic;
     ShutdownBusinessLogic* shutdownLogic;
-    CellularUI* cellUI;
-    EventHandler* eventHandler;
+    CellularUI* cellUI;    
     Notifier* notifier;
     static Sysuid* _sysuid;
 };

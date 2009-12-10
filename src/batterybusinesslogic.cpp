@@ -128,7 +128,9 @@ BatteryBusinessLogic::~BatteryBusinessLogic()
     delete battery;
     battery = NULL;
     delete deviceMode;
-    deviceMode = NULL;    
+    deviceMode = NULL;
+    delete led;
+    led = NULL;
 }
 
 void BatteryBusinessLogic::initSystemUIGConfKeys()
