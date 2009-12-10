@@ -22,6 +22,8 @@ public:
     void setMnc(const QString &mnc);
     void setMcc(const QString &mcc);
 
+    bool isValid();
+
 signals:
     void nameChanged(const QString &name);
 

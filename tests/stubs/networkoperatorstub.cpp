@@ -42,4 +42,9 @@ void NetworkOperator::setMcc(const QString &mcc)
     currentMcc = mcc;
 }
 
+bool NetworkOperator::isValid()
+{
+    return true;
+}
+
 }
