@@ -3,6 +3,8 @@
 
 #include "dcpcallandsim.h"
 
+#include <cellular-qt/SIM>
+
 #include <DuiContainer>
 
 #include <QString>
@@ -10,6 +12,9 @@
 class DuiLabel;
 class DuiButton;
 class DuiGridLayoutPolicy;
+class QDBusInterface;
+
+using namespace Cellular;
 
 class SimContainer : public DuiContainer
 {
@@ -31,6 +36,8 @@ private slots:
     void buttonToggled(bool checked);
     void changePinClicked();
 
+    void pinQueryState(SIMSecurity::PINQuery state);
+
 private:
     void setLayout();
     void toggleChangePinButtonWidget(bool toggle);
@@ -43,6 +50,7 @@ private:
     DuiGridLayoutPolicy* pp;
     QGraphicsWidget *changePinButtonWidget;
     QGraphicsWidget *dummyWidget;
+    QDBusInterface* dbusPinIf;
 };
 
 #endif // SIMCONTAINER_H

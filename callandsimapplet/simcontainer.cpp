@@ -23,15 +23,25 @@ SimContainer::SimContainer(DuiWidget *parent) :
         dummyWidget(NULL)
 {
     setLayout();
+
+    dbusPinIf = new QDBusInterface("com.nokia.systemui.pin",
+                               "/com/nokia/systemui/pin",
+                               "com.nokia.systemui.pin.PinCodeQuery",
+                               QDBusConnection::systemBus(),
+                               this);
+
+    connect(dbusPinIf, SIGNAL(PinQueryStateCompleted(SIMSecurity::PINQuery)),
+            this, SLOT(pinQueryState(SIMSecurity::PINQuery)));
+    connect(dbusPinIf, SIGNAL(PinQueryEnabled(SIMSecurity::PINQuery)),
+            this, SLOT(pinQueryState(SIMSecurity::PINQuery)));
+
+    dbusPinIf->call(QString("PinQueryState"), QVariant(QString("PIN")));
 }
 
 SimContainer::~SimContainer()
 {
-    // delete proxy widgets
-    delete changePinButtonWidget;
-    changePinButtonWidget = NULL;
+    toggleChangePinButtonWidget(true);
     delete dummyWidget;
-    dummyWidget = NULL;
 }
 
 void SimContainer::setPinRequest(bool enabled)
@@ -44,33 +54,24 @@ void SimContainer::setPinRequest(bool enabled)
         toggleChangePinButtonWidget(enabled);
     }
 }
-/*
-void SimContainer::requestFailed(DcpCallAndSim::Data data)
-{
-    qDebug() << Q_FUNC_INFO << data;
 
-    if (data == DcpCallAndSim::PinRequestData) {
-                pinRequestButton->blockSignals(true);
-                pinRequestButton->setChecked(false);
-                pinRequestButton->blockSignals(false);
-
-                changePinButton->blockSignals(true);
-                toggleChangePinButtonWidget(false);
-                changePinButton->blockSignals(false);
-    }
-}
-*/
 void SimContainer::buttonToggled(bool checked)
 {
-    qDebug() << Q_FUNC_INFO << checked;
-
     toggleChangePinButtonWidget(checked);
-    emit pinRequestChanged(checked);
+    dbusPinIf->call(QString("EnablePinQuery"), QVariant(checked));
 }
 
 void SimContainer::changePinClicked()
 {
-    emit pinChangeRequested();
+    qDebug() << Q_FUNC_INFO;
+    dbusPinIf->call(QDBus::NoBlock, QString("ChangePinCode"));
+}
+
+void SimContainer::pinQueryState(SIMSecurity::PINQuery state)
+{
+    bool enabled = state == SIMSecurity::Enabled;
+    pinRequestButton->setChecked(enabled);
+    toggleChangePinButtonWidget(enabled);
 }
 
 void SimContainer::setLayout()
