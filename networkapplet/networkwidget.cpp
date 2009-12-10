@@ -44,7 +44,7 @@ NetworkWidget::~NetworkWidget()
 bool NetworkWidget::back()
 {
     //check that the user has selected a network before closing the window
-    if(logic->manualSelectionRequired() && !networkContainer->operatorSelected()) {
+    if(logic->manualSelectionRequired()) {
         qDebug() << "No selection made!\n\n\n";
         changeSelection();
         return false;
@@ -111,7 +111,8 @@ void NetworkWidget::initWidget()
     updateNetworkIcon(logic->networkIcon());
 
     // connect the value receive signals
-    connect(logic, SIGNAL(availableNetworkOperators(int, QStringList, bool)), networkContainer, SLOT(toggleAvailableOperators(int, QStringList, bool)));
+    connect(logic, SIGNAL(availableNetworkOperators(int, QStringList)), networkContainer, SLOT(showAvailableOperators(int, QStringList)));
+    connect(logic, SIGNAL(autoSelectNetworkOperator()), networkContainer, SLOT(hideAvailableOperators()));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateNetworkIcon(QString)));
     connect(logic, SIGNAL(roamingUpdatesValueChanged(bool)), roamingContainer, SLOT(toggleRoamingUpdates(bool)));
     connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(togglePhoneNetworkButton(bool)));

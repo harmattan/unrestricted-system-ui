@@ -15,10 +15,10 @@
 */
 
 NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
-        QObject(parent),        
+        QObject(parent),
         networkRegistration(NULL),
         radioAccess(NULL),
-        networkOperator(NULL),        
+        networkOperator(NULL),
         technology(NULL),
         systemUIGConf(NULL) //temp
 {
@@ -39,7 +39,7 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
     connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
 
     // network technology
-    technology = new NetworkTechnology(radioAccess);    
+    technology = new NetworkTechnology(radioAccess);
     connect(technology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
             this, SLOT(technologyChanged(NetworkTechnology::Technology)));
 
@@ -54,8 +54,8 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
 
 //temp
 void NetworkBusinessLogic::tempSlot(SystemUIGConf::GConfKey key, QVariant var)
-{    
-    if(key == SystemUIGConf::NetworkToggle) {        
+{
+    if(key == SystemUIGConf::NetworkToggle) {
         emit networkStateChanged(var.toBool());
     }
     else if(key == SystemUIGConf::NetworkRoaming) {
@@ -161,24 +161,24 @@ void NetworkBusinessLogic::setNetworkSelectionValue(const QString &value)
     else { //Automatic
         networkRegistration->selectOperator();
         this->operators.clear(); //remove old operators
-        emit availableNetworkOperators(-1, QStringList(), false);        
+        emit autoSelectNetworkOperator();
     }
 }
 
 void NetworkBusinessLogic::selectOperator(int index)
-{    
+{
 
-    qDebug() << Q_FUNC_INFO;    
-    QMapIterator<QString, QStringList> iter(operators);    
+    qDebug() << Q_FUNC_INFO;
+    QMapIterator<QString, QStringList> iter(operators);
     while (iter.hasNext()) {
-        iter.next();        
+        iter.next();
         if(--index < 0)
             break;
     }
 
     connect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
-        this, SLOT(selectOperatorCompleted(bool, const QString &)));    
-    networkRegistration->selectOperator(iter.value().at(0), iter.value().at(1));    
+        this, SLOT(selectOperatorCompleted(bool, const QString &)));
+    networkRegistration->selectOperator(iter.value().at(0), iter.value().at(1));
 }
 
 void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &reason)
@@ -186,10 +186,10 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
     qDebug() << Q_FUNC_INFO;
     Q_UNUSED(reason);
     disconnect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
-               this, SLOT(selectOperatorCompleted(bool, const QString &)));   
+               this, SLOT(selectOperatorCompleted(bool, const QString &)));
 
     if(!success)
-        DuiNotification("", "", DcpNetwork::NoAccessText);    
+        DuiNotification("", "", DcpNetwork::NoAccessText);
 }
 
 void NetworkBusinessLogic::toggleRoaming(bool toggle)
@@ -215,14 +215,14 @@ void NetworkBusinessLogic::queryAvailableOperators()
 void NetworkBusinessLogic::availableOperatorsReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
     qDebug() << Q_FUNC_INFO;
-    Q_UNUSED(reason);    
+    Q_UNUSED(reason);
     disconnect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
             this, SLOT(availableOperatorsReceived(bool, const QList<AvailableOperator*> &, const QString &)));
 
     if(!success || operators.size() == 0) {
-        emit availableNetworkOperators(-1, QStringList(), true);
+        emit availableNetworkOperators(-1, QStringList());
         return;
-    }    
+    }
 
     QString selectedOperatorMnc;
     QString selectedOperatorMcc;
@@ -243,17 +243,17 @@ void NetworkBusinessLogic::availableOperatorsReceived(bool success, const QList<
 
     if(selectedOperatorMnc.isEmpty()) // no selected operator
         operatorNames = this->operators.keys();
-    else {        
-        QMapIterator<QString, QStringList> iter(this->operators);        
+    else {
+        QMapIterator<QString, QStringList> iter(this->operators);
         while (iter.hasNext()) {
             iter.next();
             operatorNames << iter.key();
             if(iter.value().at(0) == selectedOperatorMnc && iter.value().at(1) == selectedOperatorMcc)
                 selectedOperatorIndex = operatorNames.size() - 1;
         }
-    }        
+    }
 
-    emit availableNetworkOperators(selectedOperatorIndex, operatorNames, true);
+    emit availableNetworkOperators(selectedOperatorIndex, operatorNames);
 }
 
 void NetworkBusinessLogic::technologyChanged(NetworkTechnology::Technology technology)
@@ -295,11 +295,16 @@ QString NetworkBusinessLogic::mapTechnologyToIcon(NetworkTechnology::Technology 
             icon = QString("icon-s-network-0");
             break;
     }
-    return icon;   
+    return icon;
 }
 
 bool NetworkBusinessLogic::manualSelectionRequired()
 {
     qDebug() << Q_FUNC_INFO;
-    return (networkRegistration->mode() == NetworkRegistration::Manual ? true : false);
+    if(networkRegistration->mode() == NetworkRegistration::Manual) {
+        if(!networkOperator->isValid())
+            return true;
+    }
+    return false;
+
 }

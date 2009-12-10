@@ -3,6 +3,7 @@
 
 #include <DuiContainer>
 
+class QGraphicsLinearLayout;
 class DuiComboBox;
 class DuiGridLayoutPolicy;
 class DuiLabel;
@@ -19,30 +20,31 @@ public:
 
     void initModeComboBox(const QString &value, const QStringList &values);
     void initSelectionComboBox(const QString &value, const QStringList &values);
-    void setDefaultSelection(const QString &value);
-    bool operatorSelected();
+    void setDefaultSelection(const QString &value);    
 
 public slots:        
-    void toggleAvailableOperators(int selected, const QStringList &operators, bool toggle);
+    void showAvailableOperators(int selected, const QStringList &operators);
+    void hideAvailableOperators();
 
 signals:
     void networkModeChanged(QString);
     void networkSelectionChanged(QString);
     void availableOperatorSelected(int);
 
-private: //methods
-    void setLayout();    
-    void toggleComboBoxSignalConnection(DuiComboBox *cb, bool toggle = true);
+private:    
+    void setLayout();
+    QGraphicsWidget* comboBoxWidget(DuiLabel *label, DuiComboBox *comboBox);
     void initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values);
+    void toggleOperatorWidget(bool toggle);
 
-private: //attributes
+private:
     DuiComboBox *modeComboBox;
-    DuiComboBox *selectionComboBox;
+    DuiComboBox *selComboBox;
+    DuiLinearLayoutPolicy *layoutPolicy;
+    NetworkList *networkList;
+    QGraphicsWidget *operatorWidget;    
     DuiLabel *infoLabel;
-    DuiLabel *modeLabel;
-    DuiLabel *selectionLabel;
-    DuiLinearLayoutPolicy *layoutPolicy;    
-    NetworkList *networkList;    
+    QGraphicsLinearLayout *mainLayout;
 
 };
 

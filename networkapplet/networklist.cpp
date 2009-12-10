@@ -9,8 +9,7 @@
 
 NetworkList::NetworkList(QGraphicsItem *parent) :
         DuiList(parent),        
-        listModel(NULL),        
-        selected(false)
+        listModel(NULL)
 {
     setObjectName("availableNetworksList");
     enableItemSelection(true);
@@ -22,29 +21,22 @@ NetworkList::~NetworkList()
 {
 }
 
-bool NetworkList::insertOperators(int selected, const QStringList &operators)
-{
-    if(operators.size() <= 0)
-        return false;
-
+void NetworkList::insertOperators(int selected, const QStringList &operators)
+{    
     listModel->setStringList(operators);
     this->setItemModel(listModel);
 
-    if(selected != -1) {
-        selectItem(listModel->index(selected));
-        this->selected = true;
-    }
+    if(selected != -1)
+        selectItem(listModel->index(selected));        
+}
 
-    return true;
+void NetworkList::removeOperators()
+{
+    listModel->setStringList(QStringList());
 }
 
 void NetworkList::availableOperatorClicked(const QModelIndex &index)
-{
-    selected = true;    
+{       
     emit availableOperatorSelected(index.row());
 }
 
-bool NetworkList::itemSelected()
-{
-    return selected;
-}

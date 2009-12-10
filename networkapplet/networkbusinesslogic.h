@@ -56,7 +56,8 @@ private slots:
     void tempSlot(SystemUIGConf::GConfKey,QVariant); //temp
 
 signals:
-    void availableNetworkOperators(int, QStringList, bool);
+    void availableNetworkOperators(int, QStringList);
+    void autoSelectNetworkOperator();
     void networkIconChanged(QString);
     void networkSelectionValuesAvailable(int, int, QStringList);    
     void networkSelected(bool);

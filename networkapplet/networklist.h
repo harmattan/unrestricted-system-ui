@@ -14,8 +14,8 @@ public:
     NetworkList(QGraphicsItem *parent = 0);
     virtual ~NetworkList();
 
-    bool insertOperators(int selected, const QStringList &operators);
-    bool itemSelected();
+    void insertOperators(int selected, const QStringList &operators);
+    void removeOperators();
 
 signals:
     void availableOperatorSelected(int);

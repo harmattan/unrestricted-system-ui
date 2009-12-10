@@ -8,26 +8,24 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
+#include <QGraphicsLinearLayout>
 #include <QDebug>
 
 NetworkContainer::NetworkContainer(DuiWidget *parent) :
         DuiContainer(DcpNetwork::NetworkTitleText, parent),
         modeComboBox(NULL),
-        selectionComboBox(NULL),
-        infoLabel(NULL),
-        modeLabel(NULL),
-        selectionLabel(NULL),        
-        networkList(NULL)
+        selComboBox(NULL),
+        networkList(NULL),
+        operatorWidget(NULL),
+        infoLabel(NULL)
 {    
     modeComboBox = new DuiComboBox();
-    selectionComboBox = new DuiComboBox();
-    modeLabel = new DuiLabel(DcpNetwork::NetworkModeText);
-    modeLabel->setObjectName("networkLabel");
-    selectionLabel = new DuiLabel(DcpNetwork::NetworkSelectionText);
-    selectionLabel->setObjectName("networkLabel");
-    toggleComboBoxSignalConnection(modeComboBox);
-    toggleComboBoxSignalConnection(selectionComboBox);
+    connect(modeComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
+    selComboBox = new DuiComboBox();
+    connect(selComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
+    networkList = new NetworkList();
+    connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));    
     setLayout();
 }
 
@@ -38,30 +36,59 @@ NetworkContainer::~NetworkContainer()
 }
 
 void NetworkContainer::setLayout()
-{
-    // create the layout for combo boxes
-    DuiLayout *cbLayout = new DuiLayout();
+{    
+    // create labels
+    DuiLabel *modeLabel = new DuiLabel(DcpNetwork::NetworkModeText);
+    modeLabel->setObjectName("networkLabel");
+    DuiLabel *selLabel = new DuiLabel(DcpNetwork::NetworkSelectionText);
+    selLabel->setObjectName("networkLabel");
+    infoLabel = new DuiLabel();
+    infoLabel->setObjectName("networkLabel");   
 
-    DuiGridLayoutPolicy *cbLandscapeLayoutPolicy = new DuiGridLayoutPolicy(cbLayout);
-    cbLandscapeLayoutPolicy->addItemAtPosition(modeLabel, 0, 0);
-    cbLandscapeLayoutPolicy->addItemAtPosition(selectionLabel, 0, 1);
-    cbLandscapeLayoutPolicy->addItemAtPosition(modeComboBox, 1, 0);
-    cbLandscapeLayoutPolicy->addItemAtPosition(selectionComboBox, 1, 1);
+    // create proxy widget for mode combo box
+    QGraphicsWidget *modeWidget = comboBoxWidget(modeLabel, modeComboBox);
+
+    // create proxy widget for selection combo box
+    QGraphicsWidget *selWidget = comboBoxWidget(selLabel, selComboBox);
+
+    // create the proxy widget for both combo boxes
+    QGraphicsWidget *cbWidget = new QGraphicsWidget;
+    DuiLayout *cbLayout = new DuiLayout(cbWidget);
+    cbLayout->setContentsMargins(0, 0, 0, 0);
+    DuiLinearLayoutPolicy *cbLandscapeLayoutPolicy = new DuiLinearLayoutPolicy(cbLayout, Qt::Horizontal);
     cbLayout->setLandscapePolicy(cbLandscapeLayoutPolicy);
-
     DuiLinearLayoutPolicy *cbPortraitLayoutPolicy = new DuiLinearLayoutPolicy(cbLayout, Qt::Vertical);
-    cbPortraitLayoutPolicy->addItem(modeLabel, Qt::AlignLeft);
-    cbPortraitLayoutPolicy->addItem(modeComboBox, Qt::AlignLeft);
-    cbPortraitLayoutPolicy->addItem(selectionLabel, Qt::AlignLeft);    
-    cbPortraitLayoutPolicy->addItem(selectionComboBox, Qt::AlignLeft);
     cbLayout->setPortraitPolicy(cbPortraitLayoutPolicy);
+
+    cbLandscapeLayoutPolicy->addItem(modeWidget, Qt::AlignLeft);
+    cbLandscapeLayoutPolicy->addItem(selWidget, Qt::AlignLeft);
+    cbPortraitLayoutPolicy->addItem(modeWidget, Qt::AlignLeft);
+    cbPortraitLayoutPolicy->addItem(selWidget, Qt::AlignLeft);
+
+    // create the proxy widget for operators
+    operatorWidget = new QGraphicsWidget;
+    QGraphicsLinearLayout *operatorLayout = new QGraphicsLinearLayout(Qt::Vertical, operatorWidget);
+    operatorLayout->setContentsMargins(0, 0, 0, 0);
+    operatorLayout->addItem(infoLabel);
+    operatorLayout->addItem(networkList);
 
     // create the main layout
     DuiLayout *layout = new DuiLayout();
     layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    layoutPolicy->addItem(cbLayout, Qt::AlignLeft);   
+    layoutPolicy->addItem(cbWidget, Qt::AlignLeft);
 
-    centralWidget()->setLayout(layout);
+    centralWidget()->setLayout(layout);    
+}
+
+QGraphicsWidget* NetworkContainer::comboBoxWidget(DuiLabel *label, DuiComboBox *comboBox)
+{
+    QGraphicsWidget *widget = new QGraphicsWidget;
+    widget->setPreferredWidth(1);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, widget);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addItem(label);
+    layout->addItem(comboBox);
+    return widget;
 }
 
 void NetworkContainer::initModeComboBox(const QString &value, const QStringList &values)
@@ -71,87 +98,54 @@ void NetworkContainer::initModeComboBox(const QString &value, const QStringList 
 
 void NetworkContainer::initSelectionComboBox(const QString &value, const QStringList &values)
 {    
-    initComboBox(selectionComboBox, value, values);
+    initComboBox(selComboBox, value, values);
 }
 
 void NetworkContainer::initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values)
 {
     cb->addItems(values);
     if(values.contains(value)) {
-        toggleComboBoxSignalConnection(cb, false);
+        cb->blockSignals(true);
         cb->setCurrentIndex(values.indexOf(value));
-        toggleComboBoxSignalConnection(cb);
+        cb->blockSignals(false);
     }
 }
 
-void NetworkContainer::toggleComboBoxSignalConnection(DuiComboBox *cb, bool toggle)
+void NetworkContainer::showAvailableOperators(int selected, const QStringList &operators)
+{    
+    if(operators.size() > 0) {        
+        networkList->insertOperators(selected, operators);
+        infoLabel->setText(DcpNetwork::AvailableNetworksText);
+    }
+    else {
+        networkList->removeOperators();
+        infoLabel->setText(DcpNetwork::NoAvailableNetworksText);
+    }
+    toggleOperatorWidget(true);
+}
+
+void NetworkContainer::hideAvailableOperators()
+{
+    networkList->removeOperators();    
+    toggleOperatorWidget(false);
+}
+
+void NetworkContainer::toggleOperatorWidget(bool toggle)
 {
     if(toggle) {
-        if(cb == modeComboBox)
-            connect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
-        else if(cb == selectionComboBox)
-            connect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
+        if(layoutPolicy->indexOf(operatorWidget) == -1)
+            layoutPolicy->addItem(operatorWidget, Qt::AlignLeft);
     }
-    else {
-        if(cb == modeComboBox)
-            disconnect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
-        else if(cb == selectionComboBox)
-            disconnect(cb, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
-    }
-}
-
-void NetworkContainer::toggleAvailableOperators(int selected, const QStringList &operators, bool toggle)
-{    
-    if(toggle) {
-        if(infoLabel == NULL) {
-            infoLabel = new DuiLabel();
-            infoLabel->setObjectName("networkLabel");
-        }
-        if(networkList == NULL) {
-            networkList = new NetworkList();
-            connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
-        }
-        if(networkList->insertOperators(selected, operators)) {
-            infoLabel->setText(DcpNetwork::AvailableNetworksText);
-            if(layoutPolicy->indexOf(infoLabel) == -1)
-                layoutPolicy->addItem(infoLabel, Qt::AlignLeft);
-            if(layoutPolicy->indexOf(networkList) == -1)
-                layoutPolicy->addItem(networkList, Qt::AlignLeft);
-        }
-        else {
-            infoLabel->setText(DcpNetwork::NoAvailableNetworksText);
-            if(layoutPolicy->indexOf(infoLabel) == -1)
-                layoutPolicy->addItem(infoLabel, Qt::AlignLeft);
-        }
-    }
-    else {
-        if(infoLabel != NULL) {
-            layoutPolicy->removeItem(infoLabel);
-            delete infoLabel;
-            infoLabel = NULL;
-        }
-        if(networkList != NULL) {
-            layoutPolicy->removeItem(networkList);
-            delete networkList;
-            networkList = NULL;
-        }        
-    }
+    else
+        layoutPolicy->removeItem(operatorWidget);
 }
 
 void NetworkContainer::setDefaultSelection(const QString &value)
 {
-    for(int i=0; i<selectionComboBox->count(); ++i) {
-        if(selectionComboBox->itemText(i) == value) {
-            selectionComboBox->setCurrentIndex(i);
+    for(int i=0; i<selComboBox->count(); ++i) {
+        if(selComboBox->itemText(i) == value) {
+            selComboBox->setCurrentIndex(i);
             break;
         }
     }
-}
-
-bool NetworkContainer::operatorSelected()
-{
-    if(networkList != NULL)
-        if(!networkList->itemSelected())
-            return false;
-    return true;
 }

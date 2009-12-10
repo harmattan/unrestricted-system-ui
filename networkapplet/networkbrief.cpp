@@ -6,24 +6,27 @@
 
 NetworkBrief::NetworkBrief() :
         DcpBrief(),
-        logic(NULL)
+        logic(NULL),
+        networkText(QString("")),
+        networkToggle(false),
+        networkToggleIcon(QString(""))
 {
-    logic = new NetworkBusinessLogic();
+
+    logic = new NetworkBusinessLogic();    
 
     connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(updateToggle(bool)));
-    connect(logic, SIGNAL(networkOperatorChanged(QString)), this, SLOT(updateOperatorLabel(QString)));    
+    connect(logic, SIGNAL(networkOperatorChanged(QString)), this, SLOT(updateOperatorLabel(QString)));
     connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateToggleIcon(QString)));
 
     updateToggle(logic->networkEnabled());
-    updateToggleIcon(logic->networkIcon());   
+    updateToggleIcon(logic->networkIcon());
     updateOperatorLabel(logic->currentOperator());
-
 }
 
 NetworkBrief::~NetworkBrief()
-{
+{   
     delete logic;
-    logic = NULL;
+    logic = NULL; 
 }
 
 QString NetworkBrief::valueText() const
@@ -43,8 +46,9 @@ QString NetworkBrief::toggleIconId() const
 
 int NetworkBrief::widgetTypeID() const
 {    
-    return DCPLABEL2BUTTON;
+    return DCPLABELBUTTON;
 }
+
 
 void NetworkBrief::updateOperatorLabel(const QString &text)
 {
@@ -68,3 +72,4 @@ void NetworkBrief::setToggle (bool toggle)
 {
     logic->toggleNetwork(toggle);
 }
+
