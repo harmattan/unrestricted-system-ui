@@ -35,6 +35,11 @@ void NetworkList::removeOperators()
     listModel->setStringList(QStringList());
 }
 
+void NetworkList::removeSelection()
+{
+    // TODO: remove selection
+}
+
 void NetworkList::availableOperatorClicked(const QModelIndex &index)
 {       
     emit availableOperatorSelected(index.row());

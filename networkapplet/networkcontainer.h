@@ -20,11 +20,12 @@ public:
 
     void initModeComboBox(const QString &value, const QStringList &values);
     void initSelectionComboBox(const QString &value, const QStringList &values);
-    void setDefaultSelection(const QString &value);    
+    void setDefaultSelection(const QString &value);
 
 public slots:        
     void showAvailableOperators(int selected, const QStringList &operators);
     void hideAvailableOperators();
+    void operatorSelectionFailed();
 
 signals:
     void networkModeChanged(QString);

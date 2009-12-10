@@ -16,6 +16,7 @@ public:
 
     void insertOperators(int selected, const QStringList &operators);
     void removeOperators();
+    void removeSelection();
 
 signals:
     void availableOperatorSelected(int);

@@ -64,6 +64,7 @@ signals:
     void roamingUpdatesValueChanged(bool);    
     void networkOperatorChanged(QString);    
     void showNotification(QString);
+    void operatorSelectionFailed();
 
     void networkStateChanged(bool); //temp
 

@@ -188,8 +188,10 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
     disconnect(networkRegistration, SIGNAL(selectionCompleted(bool, const QString &)),
                this, SLOT(selectOperatorCompleted(bool, const QString &)));
 
-    if(!success)
+    if(!success) {
         DuiNotification("", "", DcpNetwork::NoAccessText);
+        emit operatorSelectionFailed();
+    }
 }
 
 void NetworkBusinessLogic::toggleRoaming(bool toggle)

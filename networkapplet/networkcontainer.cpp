@@ -25,7 +25,7 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
     connect(selComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
     networkList = new NetworkList();
-    connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));    
+    connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
     setLayout();
 }
 
@@ -149,3 +149,9 @@ void NetworkContainer::setDefaultSelection(const QString &value)
         }
     }
 }
+
+void NetworkContainer::operatorSelectionFailed()
+{
+    networkList->removeSelection();
+}
+
