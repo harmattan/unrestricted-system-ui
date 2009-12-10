@@ -28,8 +28,8 @@ PinCodeQueryUI::PinCodeQueryUI(QStringList emergencyNumbers) :
     qDebug() << Q_FUNC_INFO;
     setVisible(false);
     setFullscreen(true);
-    setDisplayMode(0);
-    setBackButtonEnabled(false);
+    setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
     createContent();
 }
 

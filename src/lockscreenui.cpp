@@ -6,7 +6,6 @@
 #include <DuiLabel>
 #include <DuiImage>
 #include <DuiButton>
-#include <DuiHomeButtonPanel>
 #include <DuiLayout>
 #include <DuiGridLayoutPolicy>
 #include <DuiSceneManager>
@@ -36,7 +35,9 @@ LockScreenUI::LockScreenUI() :
     setPannableAreaInteractive(false);
 
     // let's hide home button
-    DuiApplication::activeApplicationWindow()->homeButtonPanel()->disappearNow();
+    setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
 }
 
 LockScreenUI::~LockScreenUI()

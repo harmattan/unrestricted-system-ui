@@ -151,14 +151,8 @@ void PinCodeQueryBusinessLogic::createUi(bool enableBack)
         /* Unfortunately no effect with libdui-dev version 0.11.1-1+0rebuild1+0m6 */
         qDebug() << Q_FUNC_INFO << "created:" << static_cast<QObject*> (uiPin);
     }
-    uiPin->setBackButtonEnabled(enableBack);
-    uiPin->getEnterBtn()->setEnabled(false);
-
-    DuiApplicationPage::DisplayMode mod = 0;
-    if(enableBack){
-        mod = DuiApplicationPage::EscapeButtonVisible;
-    }
-    uiPin->setDisplayMode( mod );
+    uiPin->setComponentsDisplayMode(DuiApplicationPage::EscapeButton,
+                (enableBack ? DuiApplicationPageModel::Hide : DuiApplicationPageModel::Hide) );
     PinCodeQueryUI::showWindow();
     uiPin->appearNow(/*DuiSceneWindow::DestroyWhenDone*/);
 }

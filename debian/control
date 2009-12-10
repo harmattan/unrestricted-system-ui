@@ -2,7 +2,7 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: Matti Katila <matti.katila@ixonos.com>
-Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev (>= 0.15.0-), libqmsystem-dev, ssc-daemon-dev, libalarm-dev, libhal-dev, libprofile-qt-dev(>= 0.10.0-2), duistatusindicatormenu-dev
+Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev, libcallui-dev, libdui-dev (>= 0.16), libqmsystem-dev, ssc-daemon-dev, libalarm-dev, libhal-dev, libprofile-qt-dev(>= 0.10.0-2), duistatusindicatormenu-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
