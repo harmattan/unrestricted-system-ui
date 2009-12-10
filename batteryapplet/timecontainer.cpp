@@ -16,6 +16,7 @@ TimeContainer::TimeContainer(const QString &text, DuiImage *image, DuiWidget *pa
     timeLabel->setObjectName("batteryTimeLabel");
     textLabel = new DuiLabel(text);
     textLabel->setObjectName("batteryLabel");
+    setHeaderVisible(false);
     setLayout();
 }
 

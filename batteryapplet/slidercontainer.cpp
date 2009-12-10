@@ -16,7 +16,8 @@ SliderContainer::SliderContainer(DuiWidget *parent) :
 {
     PSMAutoButton = new DuiButton();    
     connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
-    PSMSlider = new DuiSlider(0, "continuous");    
+    PSMSlider = new DuiSlider(0, "continuous");
+    setHeaderVisible(false);
     setLayout();
 }
 
@@ -34,8 +35,7 @@ void SliderContainer::setLayout()
     DuiLabel *textLabel = new DuiLabel(DcpBattery::PSMAutoActivateText);
     textLabel->setObjectName("batteryLabel");
     layoutPolicy->addItemAtPosition(textLabel, 0, 0);
-    layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);    
-    layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
+    layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);
     layoutPolicy->setRowSpacing(0, 25);
     centralWidget()->setLayout(layout);
 }
@@ -64,7 +64,7 @@ void SliderContainer::sliderValueChanged(int value)
 void SliderContainer::toggleSliderExistence(bool toggle)
 {
     qDebug() << "SliderContainer::toggleSliderExistence(" << toggle << ")";
-    if(toggle) {        
+    if(toggle) {
         if(layoutPolicy->itemAt(1, 0) != PSMSlider)
             layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
     }

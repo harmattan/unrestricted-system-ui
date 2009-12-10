@@ -89,6 +89,7 @@ void BatteryWidget::initWidget()
     orientationLayout->setPortraitPolicy(portraitLayoutPolicy);
 
     DuiContainer *mainContainer = new DuiContainer();
+    mainContainer->setHeaderVisible(false);
     mainContainer->centralWidget()->setLayout(orientationLayout);
 
     // connect the value receive signals

@@ -1,7 +1,7 @@
 #PSMAutoButton {
-	preferred-size: size(36, 36);
-	minimum-size: size(36, 36);
-	maximum-size: size(36, 36);
+        preferred-size: size(36, 36);
+        minimum-size: size(36, 36);
+        maximum-size: size(36, 36);
 }
 
 #batteryLabel {
