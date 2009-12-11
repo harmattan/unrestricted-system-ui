@@ -35,8 +35,8 @@ void Ut_NetworkBusinessLogic::cleanupTestCase()
 }
 
 void Ut_NetworkBusinessLogic::testQueryAvailableOperators()
-{
-    QSignalSpy spy(m_subject, SIGNAL(availableNetworkOperators(int,QStringList,bool)));
+{    
+    QSignalSpy spy(m_subject, SIGNAL(availableNetworkOperators(int,QStringList)));
     QStringList names = addOperators();
 
     m_subject->networkRegistration->setQuerySuccess(false); // make the query to fail
@@ -49,9 +49,7 @@ void Ut_NetworkBusinessLogic::testQueryAvailableOperators()
     QVERIFY(arguments.at(0).toInt() == -1);
     QVERIFY(arguments.at(1).type() == QVariant::StringList);
     QVERIFY(arguments.at(1).toStringList().size() == 0);
-    QVERIFY(arguments.at(2).type() == QVariant::Bool);
-    QVERIFY(arguments.at(2).toBool() == true);
-
+    
     m_subject->networkRegistration->setQuerySuccess(true); // make the query succeeds
     m_subject->queryAvailableOperators();
 
@@ -62,8 +60,6 @@ void Ut_NetworkBusinessLogic::testQueryAvailableOperators()
     QVERIFY(arguments.at(0).toInt() != -1);
     QVERIFY(arguments.at(1).type() == QVariant::StringList);
     QVERIFY(arguments.at(1).toStringList().size() > 0);
-    QVERIFY(arguments.at(2).type() == QVariant::Bool);
-    QVERIFY(arguments.at(2).toBool() == true);
 
     // test that the operator names are sorted
     operatorNames = arguments.at(1).toStringList();
