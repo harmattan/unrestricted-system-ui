@@ -30,7 +30,6 @@ signals:
 
 public slots:
     void setPinRequest(bool enabled);
-//    void requestFailed(DcpCallAndSim::Data data);
 
 private slots:
     void buttonToggled(bool checked);

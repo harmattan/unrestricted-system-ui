@@ -135,8 +135,7 @@ void CallContainer::callWaitingToggled(bool checked)
 
     if (checked) {
         callWaiting->waitingActivate();
-    }
-    else {
+    } else {
         callWaiting->waitingCancel();
     }
 }

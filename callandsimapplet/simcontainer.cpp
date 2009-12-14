@@ -25,10 +25,10 @@ SimContainer::SimContainer(DuiWidget *parent) :
     setLayout();
 
     dbusPinIf = new QDBusInterface("com.nokia.systemui.pin",
-                               "/com/nokia/systemui/pin",
-                               "com.nokia.systemui.pin.PinCodeQuery",
-                               QDBusConnection::systemBus(),
-                               this);
+                                   "/com/nokia/systemui/pin",
+                                   "com.nokia.systemui.pin.PinCodeQuery",
+                                   QDBusConnection::systemBus(),
+                                   this);
 
     connect(dbusPinIf, SIGNAL(PinQueryStateCompleted(SIMSecurity::PINQuery)),
             this, SLOT(pinQueryState(SIMSecurity::PINQuery)));
