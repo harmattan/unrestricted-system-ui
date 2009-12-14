@@ -27,11 +27,21 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic()
     }
 }
 
+void ShutdownBusinessLogic::showUI()
+{
+    ShutdownUI::showWindow();
+
+    if (!ui) {
+        ui = new ShutdownUI;
+    }
+    ui->appear();
+}
+
 void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication what)
 {
     switch (what) {
     case QmSystemState::Shutdown:
-        normalShutdown();
+        showUI();
         break;
     case QmSystemState::ThermalStateFatal:
         thermalShutdown();
@@ -47,18 +57,14 @@ void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication wh
     }
 }
 
-void ShutdownBusinessLogic::normalShutdown()
-{
-    if (!ui) {
-        ui = new ShutdownUI;
-    }
-    ui->appear();
-}
-
 void ShutdownBusinessLogic::thermalShutdown()
 {
     const QString msg = trid("qtn_shut_high_temp", "Temperature too high. Device shutting down.");
     emit showNotification(msg, NotificationType::warning);
+
+    /* TODO: do we need to call showUI here?
+    UI spec says: Ten seconds before the shutdown takes place, thermal shutdown notification is displayed accompanying ‘System alert’ sound.
+    */
 }
 
 void ShutdownBusinessLogic::batteryShutdown()

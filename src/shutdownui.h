@@ -14,6 +14,8 @@ public:
     virtual ~ShutdownUI();
     virtual void createContent();
 
+    static void showWindow();
+
 protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent* event);
     void alignText();

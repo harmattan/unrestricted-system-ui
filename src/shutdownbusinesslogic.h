@@ -17,6 +17,8 @@ public:
     ShutdownBusinessLogic(QObject* parent = 0);
     virtual ~ShutdownBusinessLogic();
 
+    void showUI();
+
 public slots:
     void systemStateChanged(Maemo::QmSystemState::StateIndication what);
 
@@ -24,7 +26,6 @@ signals:
     void showNotification(const QString& notifText, NotificationType::Type type);
 
 private:
-    void normalShutdown();
     void thermalShutdown();
     void batteryShutdown();
     void shutdownDeniedUSB();

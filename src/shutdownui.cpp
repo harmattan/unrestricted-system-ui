@@ -35,6 +35,15 @@ void ShutdownUI::createContent()
     alignText();
 }
 
+void ShutdownUI::showWindow()
+{
+    DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
+    if (win && win->isHidden()) {
+        win->show();
+    }
+    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
+}
+
 void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
 {
     qDebug() << "ShutdownUI::resizeEvent()";
