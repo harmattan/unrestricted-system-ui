@@ -46,9 +46,8 @@ QString NetworkBrief::toggleIconId() const
 
 int NetworkBrief::widgetTypeID() const
 {    
-    return DCPLABELBUTTON;
+    return DCPLABELBUTTON + 100;
 }
-
 
 void NetworkBrief::updateOperatorLabel(const QString &text)
 {
