@@ -64,6 +64,31 @@ DISPLAY_MODE_IDX = 2
 
 LOCK = 'unlocked'
 
+
+class ThermalSig(dbus.service.Object):
+    def __init__(self, bus_name=dbus.service.BusName('com.nokia.thermalmanager', bus), path="/com/nokia/thermalmanager"):
+        dbus.service.Object.__init__(self, bus_name, path)
+        
+    @dbus.service.signal(dbus_interface='com.nokia.thermalmanager',
+                         signature='s')
+    def thermal_state_change_ind(self, state): #state=='fatal'
+        print "thermal signal", state
+
+class DsmeSig(dbus.service.Object):
+    def __init__(self, bus_name=dbus.service.BusName('com.nokia.dsme', bus), path="/com/nokia/dsme/signal"):
+        dbus.service.Object.__init__(self, bus_name, path)
+        
+    @dbus.service.signal(dbus_interface='com.nokia.dsme.signal',
+                         signature='')
+    def shutdown_ind(self):
+        print 'shutdown'
+
+    @dbus.service.signal(dbus_interface='com.nokia.dsme.signal',
+                         signature='')
+    def battery_empty_ind(self):
+        print 'battery empty'
+
+
 class ServerReq(dbus.service.Object):
     def __init__ (self, bus_name, path=PATH_REQ):
         dbus.service.Object.__init__(self, bus_name, path)
@@ -187,6 +212,24 @@ class UserInterface:
         llong.connect('clicked', cb_power)
         frame.add(llong)
 
+        but = gtk.Button('Shutdown')
+        def cb(widget):
+            self.dsmeSig.shutdown_ind()
+        but.connect('clicked', cb)
+        frame.add(but)
+
+        but = gtk.Button('Battery empty shutdown')
+        def cb(widget):
+            self.dsmeSig.battery_empty_ind()
+        but.connect('clicked', cb)
+        frame.add(but)
+
+        but = gtk.Button('Thermal shutdown')
+        def cb(widget):
+            self.thermalSig.thermal_state_change_ind('fatal')
+        but.connect('clicked', cb)
+        frame.add(but)
+
         pwr = gtk.Button('Power btn')
         def cb_pressed(widget):
             self.serverSig.sig_hardware_key_state_ind('down', 0)
@@ -220,6 +263,8 @@ class UserInterface:
     def __init__(self):
         self.serverSig = ServerSig(bus_name)
         self.serverReq = ServerReq(bus_name)
+        self.dsmeSig = DsmeSig()
+        self.thermalSig = ThermalSig()
 
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete_event", self.delete_event)
