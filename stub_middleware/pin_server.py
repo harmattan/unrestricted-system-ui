@@ -369,9 +369,14 @@ class UserInterface:
 
         launch = gtk.Button('Launch query')
         def cb_launch(widget):
-            obj = bus.get_object(service_name_pin, service_path_pin)
-            query = dbus.Interface(obj, service_if_pin)
-            print 'LaunchPinQuery returns:', query.LaunchPinQuery('PIN')
+            import os
+            os.system('dbus-send --system --print-reply --dest='+
+                      service_name_pin+' '+
+                      service_path_pin+' '+
+                      service_name_pin+".LaunchPinQuery string:'PIN'")
+            #obj = bus.get_object(service_name_pin, service_path_pin)
+            #query = dbus.Interface(obj, service_if_pin)
+            #print 'LaunchPinQuery returns:', query.LaunchPinQuery('PIN')
         launch.connect('clicked', cb_launch)
         frame.add(launch)
 
