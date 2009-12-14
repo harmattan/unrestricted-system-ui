@@ -370,7 +370,7 @@ class UserInterface:
         launch = gtk.Button('Launch query')
         def cb_launch(widget):
             import os
-            os.system('dbus-send --system --print-reply --dest='+
+            os.popen2('dbus-send --system --print-reply --dest='+
                       service_name_pin+' '+
                       service_path_pin+' '+
                       service_name_pin+".LaunchPinQuery string:'PIN'")
