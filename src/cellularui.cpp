@@ -15,7 +15,7 @@ CellularUI::CellularUI(QObject* parent) :
                               QDBusConnection::systemBus(),
                               this);
 
-    connect(gprs, SIGNAL(Suspended(int, QString)), this, SLOT(gprsSuspended(int, QString)));
+//    connect(gprs, SIGNAL(Suspended(int, QString)), this, SLOT(gprsSuspended(int, QString)));
 }
 
 void CellularUI::gprsSuspended(int code, QString cause)

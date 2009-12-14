@@ -18,7 +18,7 @@ Q_SIGNALS:
     void showNotification(QString, NotificationType::Type type = NotificationType::info);
 
 private Q_SLOTS:
-    void gprsSuspended(int, QString);
+    void gprsSuspended(int code, QString cause);
 
 private:
     QDBusInterface* gprs;
