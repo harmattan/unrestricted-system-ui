@@ -31,7 +31,6 @@ LockScreenUI::LockScreenUI() :
 {
     qDebug() << Q_FUNC_INFO;
     setFullscreen(true);
-    setDisplayMode(0);
     setPannableAreaInteractive(false);
 
     // let's hide home button

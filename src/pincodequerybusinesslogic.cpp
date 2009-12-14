@@ -6,7 +6,6 @@
 #endif // UNIT_TEST
 #include <DuiLocale>
 #include <DuiButton>
-#include <DuiDialog>
 #include <DuiTextEdit>
 #include <DuiApplicationWindow>
 #include <QRegExpValidator>
