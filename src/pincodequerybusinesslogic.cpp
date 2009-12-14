@@ -296,7 +296,7 @@ void PinCodeQueryBusinessLogic::uiCodeChanged()
 void PinCodeQueryBusinessLogic::uiButtonReleased()
 {
     QString code = uiPin->getCodeEntry()->text();
-    const QString buttonName = this->sender()->objectName();
+    const QString buttonName = sender()->objectName();
 
     if(buttonName == QString("emergencyCallButton")) {
         doEmergencyCall();
@@ -370,6 +370,8 @@ void PinCodeQueryBusinessLogic::simStatusChanged(SIM::SIMStatus next)
             previousSimState = next;
             ui2disappear(true);
         }
+    } else {
+        stateOperationIdle(next);
     }
 
     previousSimState = next;
@@ -399,13 +401,25 @@ bool PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
             }
             ui2PUKQuery();
             break;
-        case (SIM::NoSIM):
-            // removed when hot swapping not supported.
-            // emit showNotification(trid("qtn_cell_sim_removed" , "SIM card removed. Cellular network is not available."));
-            closeUi = true;
-            break;
         case (SIM::SIMLockRejected):
             ui2SIMLocked();
+            break;
+        default:
+            stateOperationIdle(status);
+            closeUi = true;
+            break;
+    }
+    return closeUi;
+}
+
+void PinCodeQueryBusinessLogic::stateOperationIdle(int status)
+{
+    qDebug() << Q_FUNC_INFO << "(" << status << ")";
+    switch(status)
+    {
+        case (SIM::NoSIM):
+            // removed when hot swapping not supported.
+            // emit showNotification(trid("qtn_cell_sim_removed", "SIM card removed. Cellular network is not available."));
             break;
         case (SIM::Rejected):
             // notification??
@@ -413,11 +427,10 @@ bool PinCodeQueryBusinessLogic::stateOperation(int status, int relationState)
             emit showNotification(SIMCardRejected, NotificationType::error);
         case (SIM::UnknownStatus):
         case (SIM::NotReady):
+        case (SIM::Ok):
         default:
-            closeUi = true;
             break;
     }
-    return closeUi;
 }
 
 // called only in bootstrap

@@ -97,6 +97,7 @@ private: // methods
     void closeUi();
     void setUiHeader(QString headerText);
     bool stateOperation(int status, int relationState);
+    void stateOperationIdle(int status);
     void startLaunch();
     void getCode(bool enableBack, QString header);
     void setPinHeader(int attemptsLeft);
