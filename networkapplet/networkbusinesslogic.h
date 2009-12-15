@@ -10,6 +10,7 @@
 #include "networkregistrationstub.h"
 #include "radioaccessstub.h"
 #include "networkoperatorstub.h"
+#include "sscstub.h"
 #else
 #include <NetworkRegistration>
 #include <RadioAccess>
