@@ -719,6 +719,8 @@ void Ut_PinCodeQueryBusinessLogic::testTechnicalProblem()
 void Ut_PinCodeQueryBusinessLogic::testSIMLockRetry()
 {
     SKIP
+    QSKIP ( "Requires the workaround for NB#150416 rolled back: also emergency number is masked",
+            SkipSingle );
     m_simLock->error = SIMLockErrorNone;
     m_dbus->queryDoneOk = true;
 

@@ -291,7 +291,8 @@ void PinCodeQueryUI::checkEntry()
            ((DuiGridLayoutPolicy*)list[i])->addItemAtPosition(emergencyCallButton, 1, 0, 1, 4);
         }
         emergencyCallButton->setVisible(true);
-        entryTextEdit->setMaskedInput(false);
+        // Workaround for NB#150416: don't unmask text
+        //entryTextEdit->setMaskedInput(false);
         CallHandler::debugPrintCallNum(Q_FUNC_INFO);
     }
     else if(emergencyCallButton->isVisible()) {
@@ -302,7 +303,8 @@ void PinCodeQueryUI::checkEntry()
            list[i]->removeItem(emergencyCallButton);
         }
         emergencyCallButton->setVisible(false);
-        entryTextEdit->setMaskedInput(true);
+        // Workaround for NB#150416: don't unmask text
+        //entryTextEdit->setMaskedInput(true);
     }
     qDebug() << Q_FUNC_INFO << "emButton->isVisible()" << emergencyCallButton->isVisible();
 }
