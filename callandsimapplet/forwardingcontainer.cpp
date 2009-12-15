@@ -65,22 +65,22 @@ ForwardingContainer::~ForwardingContainer()
 
 void ForwardingContainer::selectNumberAll()
 {
-    DuiNotification notification("", "", "Number picker not implemented yet");
+//    DuiNotification notification("", "", "Number picker not implemented yet");
 }
 
 void ForwardingContainer::selectNumberBusy()
 {
-    DuiNotification notification("", "", "Number picker not implemented yet");
+//    DuiNotification notification("", "", "Number picker not implemented yet");
 }
 
 void ForwardingContainer::selectNumberNoReply()
 {
-    DuiNotification notification("", "", "Number picker not implemented yet");
+//    DuiNotification notification("", "", "Number picker not implemented yet");
 }
 
 void ForwardingContainer::selectNumberNotReachable()
 {
-    DuiNotification notification("", "", "Number picker not implemented yet");
+//    DuiNotification notification("", "", "Number picker not implemented yet");
 }
 
 // called when a divert has been set to update the UI
@@ -116,16 +116,21 @@ void ForwardingContainer::hideCFWidgets(bool hide)
 void ForwardingContainer::divertCancelComplete(CallForwarding::DivertError error)
 {
     qDebug() << Q_FUNC_INFO;
-    FwdAction action = actionQueue.dequeue();
 
     if (error != CallForwarding::NoError) {
         qDebug() << "error:" << error;
-        DuiNotification notification("", "", "divertCancel failed");
+//        DuiNotification notification("", "", "divertCancel failed");
     }
 
-    ForwardingWidget* widget = widgetForType(action.type);
-    if (widget != NULL) {
-        widget->update(false, "");
+    if (!actionQueue.isEmpty()) {
+        FwdAction action = actionQueue.dequeue();
+
+        ForwardingWidget* widget = widgetForType(action.type);
+        if (widget != NULL) {
+            widget->update(false, "");
+        }
+    } else {
+        qDebug() << "actionQueue empty!";
     }
 
     processQueue();
@@ -135,15 +140,20 @@ void ForwardingContainer::divertCancelComplete(CallForwarding::DivertError error
 void ForwardingContainer::divertCheckComplete(bool active, QString number, CallForwarding::DivertError error)
 {
     qDebug() << Q_FUNC_INFO << active << number << error;
-    FwdAction action = actionQueue.dequeue();
 
     if (error != CallForwarding::NoError) {
-        DuiNotification notification("", "", "divertCheck failed");
+//        DuiNotification notification("", "", "divertCheck failed");
     }
 
-    ForwardingWidget* widget = widgetForType(action.type);
-    if (widget != NULL) {
-        widget->update(active, number);
+    if (!actionQueue.isEmpty()) {
+        FwdAction action = actionQueue.dequeue();
+
+        ForwardingWidget* widget = widgetForType(action.type);
+        if (widget != NULL) {
+            widget->update(active, number);
+        }
+    } else {
+        qDebug() << "actionQueue empty!";
     }
 
     processQueue();

@@ -98,7 +98,7 @@ void CallContainer::waitingActivateComplete(CallWaiting::WaitingError error)
     qDebug() << Q_FUNC_INFO << error;
 
     if (error != CallWaiting::NoError) {
-        DuiNotification notification("", "", "waitingActivate failed");
+//        DuiNotification notification("", "", "waitingActivate failed");
     }
 }
 
@@ -107,7 +107,7 @@ void CallContainer::waitingCancelComplete(CallWaiting::WaitingError error)
     qDebug() << Q_FUNC_INFO << error;
 
     if (error != CallWaiting::NoError) {
-        DuiNotification notification("", "", "waitingCancel failed");
+//        DuiNotification notification("", "", "waitingCancel failed");
     }
 
     callWaitingButton->setChecked(false);
@@ -118,7 +118,7 @@ void CallContainer::waitingCheckComplete(bool active, CallWaiting::WaitingError 
     qDebug() << Q_FUNC_INFO << active << error;
 
     if (error != CallWaiting::NoError) {
-        DuiNotification notification("", "", "waitingCheck failed");
+//        DuiNotification notification("", "", "waitingCheck failed");
     }
 
     callWaitingButton->setChecked(active);

@@ -4,68 +4,9 @@
 	maximum-size: 36 36;
 }
 
-#peoplePickerButton {
-	preferred-size: 64 64;
-	minimum-size: 64 64;
-	maximum-size: 64 64;
-}
-
 #sendCallerIdComboBox {
 	preferred-size: size(40%, 50);
 	minimum-size: size(30%, 50);
 	maximum-size: size(50%, 400);
 }
-	
-<!--
-#dataCounterButton {
-	font: "Nokia Sans" 12;
-	preferred-size: 44% 60;
-	minimum-size: 44% 60;
-	maximum-size: 44% 60;
-}
 
-#networkLayoutWidget1 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 800 -1;
-	minimum-size: 800 50;
-	maximum-size: 800 -1;
-}
-#networkLayoutWidget2 {
-	background-opacity: 255;
-    	background-color: #141414;
-	preferred-size: 44% 50;
-	minimum-size: 44% 50;
-	maximum-size: 44% 50;
-}
-
-#availableNetwork {
-	font: "Nokia Sans" 18;
-}
-
-#availableNetwork:selected {
-	color: #141414;
-	font: "Nokia Sans" 6;
-}
-
-#availableNetworksList {
-	normal-background-image:;
-	
-	margin-left: 0;
-	margin-top: 0;
-	margin-right: 0;
-	margin-bottom: 0;
-
-	item-spacing: 0;
-			    
-	preferred-size: size(90%, 50);
-	minimum-size: size(90%, 50);
-	maximum-size: size(90%, 1000);
-
-	container-object-name: "wgListContainer";
-	group-header-object-name: "wgListGroupHeaders";	
-	item-object-name: "availableNetwork";
-}
-						    
-		
--->
