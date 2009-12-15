@@ -6,6 +6,34 @@
 namespace Cellular
 {
 
+class SSC: public QObject
+{
+    Q_OBJECT
+public:
+    //! Possible SSC errors
+    enum SSCError { NoError, /*!< Returned when no error happened and operation completed successfully */
+        BusCommunicationError, /*!< Returned when a D-Bus communication error with the SSC daemon occured */
+        Failed,
+        NotAvailable,
+        ServiceNeeded,
+        Internal,
+        NotReady,
+        MissingSim,
+        UnsupportedSim,
+        BlockedSim,
+        SimLocked,
+        MissingPin,
+        SystemNotReady,
+        Inactive,
+        SearchingNetwork,
+        NoCoverage,
+        SelectedNetNotAvailable,
+        Offline,
+        ShuttingDown,
+        PowerOff
+  };
+};
+
 class NetworkOperator : public QObject
 {
     Q_OBJECT
