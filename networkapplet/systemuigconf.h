@@ -18,8 +18,8 @@ public:
 
     enum GConfKey {        
         NetworkToggle = 0,
-        NetworkRoaming,
-        NetworkRoamingUpdates
+        NetworkRoamingState,
+        NetworkRoamingUpdatesState
     };   
 
     SystemUIGConf(QObject* parent = 0);

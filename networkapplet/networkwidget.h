@@ -1,13 +1,13 @@
 #ifndef NETWORKWIDGET_H
 #define NETWORKWIDGET_H
 
-#include "dcpwidget.h" 
+#include "dcpwidget.h"
+#include "roamingcontainer.h"
 
 class DuiButton;
 class DuiGridLayoutPolicy;
 class NetworkBusinessLogic;
 class NetworkContainer;
-class RoamingContainer;
 
 class NetworkWidget : public DcpWidget
 {
@@ -26,6 +26,8 @@ private slots:
     void toggleNetworkSettings(bool toggle);
     void dataCounterButtonPressed();
     void togglePhoneNetworkButton(bool toggle);
+    void roamingStateChanged(int state);
+    void roamingStateChanged(RoamingContainer::RoamingState state);
 
 private: //methods    
     void changeSelection();    

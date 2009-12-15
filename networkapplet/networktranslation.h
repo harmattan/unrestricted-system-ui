@@ -5,9 +5,10 @@
 
 namespace DcpNetwork {    
     const QString PhoneNetworkText = trid("qtn_cell_phone_network", "Phone network");
-    const QString RoamingTitleText = trid("qtn_cell_roaming", "Roaming");
-    const QString RoamingText = trid("qtn_cell_enable_roaming", "Enable roaming");
-    const QString RoamingUpdatesText = trid("qtn_cell_roaming_updates", "Enable automatic updates");
+    const QString RoamingTitleText = trid("qtn_cell_roaming", "Data roaming");
+    const QString RoamingAlwaysAskText = trid("qtn_cell_always_ask", "Always ask");
+    const QString RoamingAlwaysAllowText = trid("qtn_cell_always_allow", "Always allow");
+    const QString RoamingUpdatesText = trid("qtn_cell_roaming_updates", "Allow also automatic connection usage");
     const QString DataCounterText = trid("qtn_cell_data_counter", "Data counter");
     const QString NetworkTitleText = trid("qtn_cell_network", "Network");
     const QString NetworkModeText = trid("qtn_cell_network_mode", "Network mode");    

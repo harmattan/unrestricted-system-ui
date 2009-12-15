@@ -14,6 +14,7 @@
 #include <NetworkRegistration>
 #include <RadioAccess>
 #include <NetworkOperator>
+#include <SSC>
 #endif
 #include "networktechnology.h"
 #include "systemuigconf.h" //temp
@@ -29,16 +30,15 @@ public:
     virtual ~NetworkBusinessLogic();
 
     bool networkEnabled(); //temp
-    bool roamingEnabled(); //temp
-    bool roamingUpdatesEnabled(); //temp
+    int roamingState(); //temp
+    bool roamingUpdatesState(); //temp
     QStringList networkModes();
     QString selectedNetworkMode();
     QStringList networkSelectionValues();
     QString selectedNetworkSelectionValue();
     QString defaultNetworkSelectionValue();
     QString networkIcon();
-    void toggleRoaming(bool toggle);
-    void toggleRoamingUpdates(bool toggle);
+    void changeRoamingState(int state);    
     bool manualSelectionRequired();
     QString currentOperator();    
 
@@ -47,10 +47,12 @@ public slots:
     void setNetworkMode(const QString &value);
     void setNetworkSelectionValue(const QString &value);
     void selectOperator(int index);
+    void changeRoamingUpdatesState(bool state);
 
 private slots:
     void availableOperatorsReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
     void selectOperatorCompleted(bool success, const QString &reason);
+    void networkToggleCompleted(SSC::SSCError error);
     void technologyChanged(NetworkTechnology::Technology technology);
 
     void tempSlot(SystemUIGConf::GConfKey,QVariant); //temp
@@ -61,7 +63,8 @@ signals:
     void networkIconChanged(QString);
     void networkSelectionValuesAvailable(int, int, QStringList);    
     void networkSelected(bool);
-    void roamingUpdatesValueChanged(bool);    
+    void roamingStateChanged(int);
+    void roamingUpdatesStateChanged(bool);
     void networkOperatorChanged(QString);    
     void showNotification(QString);
     void operatorSelectionFailed();
@@ -75,7 +78,8 @@ private: //methods
 private: //attributes
     NetworkRegistration *networkRegistration;
     RadioAccess *radioAccess;
-    NetworkOperator *networkOperator;    
+    NetworkOperator *networkOperator;
+    SSC *ssc;
     NetworkTechnology *technology;
     QHash<RadioAccess::Mode, QString> modes;
     QHash<NetworkRegistration::Mode, QString> selectionValues;

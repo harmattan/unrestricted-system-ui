@@ -1,120 +1,150 @@
 #include "roamingcontainer.h"
 #include "networktranslation.h"
 
-#include <QGraphicsGridLayout>
 #include <QDebug>
 
 #include <DuiButton>
-#include <DuiGridLayoutPolicy>
+#include <DuiButtonGroup>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
-RoamingContainer::RoamingContainer(DuiWidget *parent) :
-        DuiContainer(DcpNetwork::RoamingTitleText, parent),        
-        roamingUpdatesWidget(NULL),
-        dummyWidget(NULL),
-        roamingButton(NULL),
-        roamingUpdatesButton(NULL),        
-        landscapeLayoutPolicy(NULL),
-        portraitLayoutPolicy(NULL)
+RoamingContainer::RoamingContainer(RoamingContainer::RoamingState state, bool roamingUpdatesState, DuiWidget *parent) :
+        DuiContainer(DcpNetwork::RoamingTitleText, parent)
 {
     qDebug() << Q_FUNC_INFO;
-    // roaming button
-    roamingButton = new DuiButton();
-    roamingButton->setCheckable(true);
-    roamingButton->setObjectName("basicNetworkButton");
-    connect(roamingButton, SIGNAL(toggled(bool)), this, SLOT(toggleRoamingUpdates(bool)));
-    connect(roamingButton, SIGNAL(toggled(bool)), this, SIGNAL(roamingToggled(bool)));
-
-    // roaming updates button
-    roamingUpdatesButton = new DuiButton();
-    roamingUpdatesButton->setCheckable(true);
-    roamingUpdatesButton->setObjectName("basicNetworkButton");
-    connect(roamingUpdatesButton, SIGNAL(toggled(bool)), this, SIGNAL(roamingUpdatesToggled(bool)));
 
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
-    setLayout();
+    setLayout(state, roamingUpdatesState);
 }
 
 RoamingContainer::~RoamingContainer()
-{    
-    // delete proxy widgets
-    delete roamingUpdatesWidget;
-    roamingUpdatesWidget = NULL;
-    delete dummyWidget;
-    dummyWidget = NULL;
-}
-
-void RoamingContainer::setLayout()
 {
     qDebug() << Q_FUNC_INFO;
 
-    // roaming widget
-    QGraphicsWidget *roamingWidget = new QGraphicsWidget;
-    roamingWidget->setPreferredWidth(1);
-    QGraphicsGridLayout *roamingLayout = new QGraphicsGridLayout(roamingWidget);
-    roamingLayout->setContentsMargins(0, 0, 0, 0);
-    DuiLabel *roamingLabel = new DuiLabel(DcpNetwork::RoamingText);
-    roamingLabel->setObjectName("networkLabel");
-    roamingLayout->addItem(roamingLabel, 0, 0, 1, 1, Qt::AlignLeft);
-    roamingLayout->addItem(roamingButton, 0, 1, 1, 1, Qt::AlignRight);    
+    lowerWidget->deleteLater();
+    lowerWidget = NULL;
+}
 
-    // roaming updates widget
-    roamingUpdatesWidget = new QGraphicsWidget;
-    roamingUpdatesWidget->setPreferredWidth(1);
-    QGraphicsGridLayout *roamingUpdatesLayout = new QGraphicsGridLayout(roamingUpdatesWidget);
-    roamingUpdatesLayout->setContentsMargins(0, 0, 0, 0);
-    DuiLabel *roamingUpdatesLabel = new DuiLabel(DcpNetwork::RoamingUpdatesText);
-    roamingUpdatesLabel->setObjectName("networkLabel");
-    roamingUpdatesLayout->addItem(roamingUpdatesLabel, 0, 0, 1, 1, Qt::AlignLeft);
-    roamingUpdatesLayout->addItem(roamingUpdatesButton, 0, 1, 1, 1, Qt::AlignRight);    
+void RoamingContainer::setLayout(RoamingContainer::RoamingState state, bool roamingUpdatesState)
+{
+    qDebug() << Q_FUNC_INFO;
 
-    // dummy placeholder
-    dummyWidget = new QGraphicsWidget;
-    dummyWidget->setPreferredWidth(1);
+    // create button group and buttons
+    buttons = new DuiButtonGroup();
+    connect(buttons, SIGNAL(buttonClicked(DuiButton*)), this, SLOT(buttonClicked(DuiButton*)));
+    alwaysAskButton = createButton(DcpNetwork::RoamingAlwaysAskText, QString("networkRoamingButton"),
+                                   state == RoamingContainer::AlwaysAsk);
+    alwaysAllowButton = createButton(DcpNetwork::RoamingAlwaysAllowText, QString("networkRoamingButton"),
+                                     state == RoamingContainer::AlwaysAllow);
+    buttons->addButton(alwaysAskButton);
+    buttons->addButton(alwaysAllowButton);
 
-    // mainLayout
+    // create label
+    DuiLabel *updatesLabel = new DuiLabel(DcpNetwork::RoamingUpdatesText);
+    updatesLabel->setObjectName("networkLabel");
+
+    // create toggle button
+    updatesToggleButton = createButton(QString(""), QString("networkToggleButton"),
+                                       (state == RoamingContainer::AlwaysAllow && roamingUpdatesState));
+    connect(updatesToggleButton, SIGNAL(toggled(bool)), this, SIGNAL(roamingUpdatesToggled(bool)));
+
+    // upper widget
+    QGraphicsWidget *upperWidget = new QGraphicsWidget;
+    DuiLayout *upperLayout = new DuiLayout(upperWidget);
+
+    DuiLinearLayoutPolicy *landscapeLayoutPolicy = new DuiLinearLayoutPolicy(upperLayout, Qt::Horizontal);
+    landscapeLayoutPolicy->addItem(alwaysAskButton, Qt::AlignLeft);
+    landscapeLayoutPolicy->addItem(alwaysAllowButton, Qt::AlignLeft);
+    upperLayout->setLandscapePolicy(landscapeLayoutPolicy);
+
+    DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(upperLayout, Qt::Vertical);
+    portraitLayoutPolicy->addItem(alwaysAskButton, Qt::AlignLeft);
+    portraitLayoutPolicy->addItem(alwaysAllowButton, Qt::AlignLeft);
+    upperLayout->setPortraitPolicy(portraitLayoutPolicy);
+
+    // lower widget
+    lowerWidget = new QGraphicsWidget;
+    DuiLayout *lowerLayout = new DuiLayout(lowerWidget);
+    DuiLinearLayoutPolicy *lowerLayoutPolicy = new DuiLinearLayoutPolicy(lowerLayout, Qt::Horizontal);
+    lowerLayoutPolicy->addItem(updatesLabel, Qt::AlignLeft);
+    lowerLayoutPolicy->addItem(updatesToggleButton, Qt::AlignRight);
+
+    // main layout
     DuiLayout *mainLayout = new DuiLayout();
-    landscapeLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Horizontal);
-    portraitLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
-    landscapeLayoutPolicy->addItem(roamingWidget);    
-    portraitLayoutPolicy->addItem(roamingWidget);    
-    mainLayout->setLandscapePolicy(landscapeLayoutPolicy);
-    mainLayout->setPortraitPolicy(portraitLayoutPolicy);
-
+    mainLayoutPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
+    mainLayoutPolicy->addItem(upperWidget, Qt::AlignLeft);
+    toggleLowerWidget(state == RoamingContainer::AlwaysAllow);
     centralWidget()->setLayout(mainLayout);
 }
 
-void RoamingContainer::initRoamingButton(bool toggle)
+DuiButton* RoamingContainer::createButton(const QString &text, const QString &name, bool checked)
 {
     qDebug() << Q_FUNC_INFO;
-    roamingButton->setChecked(toggle);
-    toggleRoamingUpdates(toggle);
+
+    DuiButton* button = new DuiButton(text);
+    button->setCheckable(true);
+    button->setChecked(checked);
+    button->setObjectName(name);
+    return button;
 }
 
-void RoamingContainer::initRoamingUpdatesButton(bool toggle)
+void RoamingContainer::buttonClicked(DuiButton *button)
 {
     qDebug() << Q_FUNC_INFO;
-    roamingUpdatesButton->setChecked(toggle);
+
+    if(button->text() == DcpNetwork::RoamingAlwaysAskText) {
+        toggleLowerWidget(false);
+    } else {
+        toggleLowerWidget(true);
+    }
+    emit roamingStateChanged(button->text() == DcpNetwork::RoamingAlwaysAskText ?
+                             RoamingContainer::AlwaysAsk : RoamingContainer::AlwaysAllow);
+}
+
+void RoamingContainer::toggleLowerWidget(bool toggle)
+{
+    qDebug() << Q_FUNC_INFO;
+
+    if(toggle) {
+        if(mainLayoutPolicy->indexOf(lowerWidget) == -1) {
+            mainLayoutPolicy->addItem(lowerWidget, Qt::AlignLeft);
+        }
+    } else {        
+        mainLayoutPolicy->removeItem(lowerWidget);
+        updatesToggleButton->setChecked(false);
+    }
+}
+
+void RoamingContainer::changeRoamingState(RoamingContainer::RoamingState state)
+{
+    qDebug() << Q_FUNC_INFO;
+
+    buttons->blockSignals(true);
+    switch(state) {
+        case RoamingContainer::AlwaysAsk:            
+            alwaysAskButton->setChecked(true);
+            toggleLowerWidget(false);            
+            break;
+        case RoamingContainer::AlwaysAllow:            
+            alwaysAllowButton->setChecked(true);
+            toggleLowerWidget(true);            
+            break;        
+        default:
+            break;
+    }
+    buttons->blockSignals(false);
 }
 
 void RoamingContainer::toggleRoamingUpdates(bool toggle)
-{
-    qDebug() << Q_FUNC_INFO << toggle;
+{        
     if(toggle) {
-        landscapeLayoutPolicy->removeItem(dummyWidget);
-        landscapeLayoutPolicy->addItem(roamingUpdatesWidget);
-        portraitLayoutPolicy->removeItem(dummyWidget);
-        portraitLayoutPolicy->addItem(roamingUpdatesWidget);
-    }
-    else {
-        landscapeLayoutPolicy->removeItem(roamingUpdatesWidget);
-        landscapeLayoutPolicy->addItem(dummyWidget);
-        portraitLayoutPolicy->removeItem(roamingUpdatesWidget);
-        portraitLayoutPolicy->addItem(dummyWidget);
+        buttons->blockSignals(true);
+        alwaysAllowButton->setChecked(true);
+        buttons->blockSignals(false);
     }
 
-    if(!toggle && roamingUpdatesButton->isChecked())
-        roamingUpdatesButton->toggle();
+    alwaysAllowButton->blockSignals(true);
+    updatesToggleButton->setChecked(toggle);
+    alwaysAllowButton->blockSignals(false);
 }

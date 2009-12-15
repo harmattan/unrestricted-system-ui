@@ -8,8 +8,8 @@ SystemUIGConf::SystemUIGConf(QObject* parent) :
 {
     // init the gconf keys    
     duiGConfItems.insert(SystemUIGConf::NetworkToggle, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkToggle)));
-    duiGConfItems.insert(SystemUIGConf::NetworkRoaming, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoaming)));
-    duiGConfItems.insert(SystemUIGConf::NetworkRoamingUpdates, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingUpdates)));
+    duiGConfItems.insert(SystemUIGConf::NetworkRoamingState, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingState)));
+    duiGConfItems.insert(SystemUIGConf::NetworkRoamingUpdatesState, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingUpdatesState)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -72,11 +72,11 @@ QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
         case SystemUIGConf::NetworkToggle:
             keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkToggle");
             break;
-        case SystemUIGConf::NetworkRoaming:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoaming");
+        case SystemUIGConf::NetworkRoamingState:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoamingState");
             break;
-        case SystemUIGConf::NetworkRoamingUpdates:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoamingUpdates");
+        case SystemUIGConf::NetworkRoamingUpdatesState:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoamingUpdatesState");
             break;
         default:
             break;

@@ -19,6 +19,7 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
         networkRegistration(NULL),
         radioAccess(NULL),
         networkOperator(NULL),
+        ssc(NULL),
         technology(NULL),
         systemUIGConf(NULL) //temp
 {
@@ -30,13 +31,17 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
     connect(systemUIGConf, SIGNAL(valueChanged(SystemUIGConf::GConfKey,QVariant)),
             this, SLOT(tempSlot(SystemUIGConf::GConfKey,QVariant)));
 
-    //network registration
+    // network registration
     networkRegistration = new NetworkRegistration();
     radioAccess = new RadioAccess();
 
     // network operator
     networkOperator = new NetworkOperator();
     connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
+
+    // state synchronization control
+    ssc = new SSC();
+    connect(ssc, SIGNAL(setRadioComplete(SSCError)), this, SLOT(networkToggleCompleted(SSCError)));
 
     // network technology
     technology = new NetworkTechnology(radioAccess);
@@ -58,9 +63,11 @@ void NetworkBusinessLogic::tempSlot(SystemUIGConf::GConfKey key, QVariant var)
     if(key == SystemUIGConf::NetworkToggle) {
         emit networkStateChanged(var.toBool());
     }
-    else if(key == SystemUIGConf::NetworkRoaming) {
-        if(var.toBool() == false)
-            systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdates, var);
+    else if(key == SystemUIGConf::NetworkRoamingState) {
+        emit roamingStateChanged(var.toInt());
+    }
+    else if(key == SystemUIGConf::NetworkRoamingUpdatesState) {
+        emit roamingUpdatesStateChanged(var.toBool());
     }
 }
 
@@ -86,16 +93,44 @@ bool NetworkBusinessLogic::networkEnabled()
     return systemUIGConf->value(SystemUIGConf::NetworkToggle, QVariant(true)).toBool();
 }
 
-bool NetworkBusinessLogic::roamingEnabled()
+void NetworkBusinessLogic::networkToggleCompleted(SSC::SSCError error)
 {
-    //temp
-    return systemUIGConf->value(SystemUIGConf::NetworkRoaming, QVariant(true)).toBool();
+    switch(error) {
+        case SSC::NoError:
+        case SSC::BusCommunicationError:
+        case SSC::Failed:
+        case SSC::NotAvailable:
+        case SSC::ServiceNeeded:
+        case SSC::Internal:
+        case SSC::NotReady:
+        case SSC::MissingSim:
+        case SSC::UnsupportedSim:
+        case SSC::BlockedSim:
+        case SSC::SimLocked:
+        case SSC::MissingPin:
+        case SSC::SystemNotReady:
+        case SSC::Inactive:
+        case SSC::SearchingNetwork:
+        case SSC::NoCoverage:
+        case SSC::SelectedNetNotAvailable:
+        case SSC::Offline:
+        case SSC::ShuttingDown:
+        case SSC::PowerOff:
+        default:
+            break;
+    }
 }
 
-bool NetworkBusinessLogic::roamingUpdatesEnabled()
+int NetworkBusinessLogic::roamingState()
 {
     //temp
-    return systemUIGConf->value(SystemUIGConf::NetworkRoamingUpdates, QVariant(false)).toBool();
+    return systemUIGConf->value(SystemUIGConf::NetworkRoamingState, QVariant(0)).toInt();
+}
+
+bool NetworkBusinessLogic::roamingUpdatesState()
+{
+    //temp
+    return systemUIGConf->value(SystemUIGConf::NetworkRoamingUpdatesState, QVariant(false)).toBool();
 }
 
 QStringList NetworkBusinessLogic::networkModes()
@@ -194,16 +229,16 @@ void NetworkBusinessLogic::selectOperatorCompleted(bool success, const QString &
     }
 }
 
-void NetworkBusinessLogic::toggleRoaming(bool toggle)
+void NetworkBusinessLogic::changeRoamingState(int state)
 {
     qDebug() << Q_FUNC_INFO;
-    systemUIGConf->setValue(SystemUIGConf::NetworkRoaming, QVariant(toggle)); //temp
+    systemUIGConf->setValue(SystemUIGConf::NetworkRoamingState, QVariant(state)); //temp
 }
 
-void NetworkBusinessLogic::toggleRoamingUpdates(bool toggle)
+void NetworkBusinessLogic::changeRoamingUpdatesState(bool state)
 {
     qDebug() << Q_FUNC_INFO;
-    systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdates, QVariant(toggle)); //temp
+    systemUIGConf->setValue(SystemUIGConf::NetworkRoamingUpdatesState, QVariant(state)); //temp
 }
 
 void NetworkBusinessLogic::queryAvailableOperators()

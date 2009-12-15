@@ -4,38 +4,46 @@
 #include <DuiContainer>
 
 class DuiButton;
-class DuiLabel;
-class DuiLayout;
+class DuiButtonGroup;
 class DuiLinearLayoutPolicy;
-
 
 class RoamingContainer : public DuiContainer
 {
     Q_OBJECT
 
 public:
-    RoamingContainer(DuiWidget *parent = 0);
-    virtual ~RoamingContainer();
-    void initRoamingButton(bool value);
-    void initRoamingUpdatesButton(bool value);
+    enum RoamingState {
+        AlwaysAsk = 0,
+        AlwaysAllow
+    };
 
-private slots:
+public:
+    RoamingContainer(RoamingContainer::RoamingState state, bool roamingUpdatesState, DuiWidget *parent = 0);
+    virtual ~RoamingContainer();
+    void changeRoamingState(RoamingContainer::RoamingState state);
+
+public slots:
     void toggleRoamingUpdates(bool toggle);
 
+private slots:
+    void buttonClicked(DuiButton *button);    
+
 signals:
-    void roamingToggled(bool);
+    void roamingStateChanged(RoamingContainer::RoamingState);
     void roamingUpdatesToggled(bool);
 
-private: //methods
-    void setLayout();    
+private:
+    void setLayout(RoamingContainer::RoamingState state, bool roamingUpdatesState);
+    DuiButton* createButton(const QString &text, const QString &name, bool checked);
+    void toggleLowerWidget(bool toggle);
 
-private: //attributes
-    QGraphicsWidget *roamingUpdatesWidget;
-    QGraphicsWidget *dummyWidget;
-    DuiButton *roamingButton;
-    DuiButton *roamingUpdatesButton;    
-    DuiLinearLayoutPolicy *landscapeLayoutPolicy;
-    DuiLinearLayoutPolicy *portraitLayoutPolicy;    
+private:
+    QGraphicsWidget *lowerWidget;
+    DuiButton *alwaysAskButton;
+    DuiButton *alwaysAllowButton;
+    DuiButton *updatesToggleButton;
+    DuiButtonGroup *buttons;
+    DuiLinearLayoutPolicy *mainLayoutPolicy;
 
 };
 
