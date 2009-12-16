@@ -5,10 +5,7 @@ UnlockSliderStyle {
     background-tile-image: UnlockSliderBG 0 0 0 0;
     icon-image: UnlockSliderTemp 0 0 0 0;
 
-    thickness: 49.0;
-/*    handle-size: 49 49;
-    background-tile-size: 49 49;
-    icon-size: 49 49;*/
+    thickness: 90.0;
     blink-time: 300;
     blink-count: 2;
 }
