@@ -116,6 +116,7 @@ void NetworkWidget::initWidget()
     connect(logic, SIGNAL(roamingUpdatesStateChanged(bool)), roamingContainer, SLOT(toggleRoamingUpdates(bool)));
     connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(togglePhoneNetworkButton(bool)));
     connect(logic, SIGNAL(operatorSelectionFailed()), networkContainer, SLOT(operatorSelectionFailed()));
+    connect(logic, SIGNAL(searchingOperators(bool)), networkContainer, SLOT(setProgressIndicatorVisible(bool)));
 
     // catch user actions
     connect(phoneNetworkButton, SIGNAL(toggled(bool)), this, SLOT(toggleNetworkSettings(bool)));

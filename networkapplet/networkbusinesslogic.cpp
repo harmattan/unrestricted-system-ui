@@ -247,11 +247,15 @@ void NetworkBusinessLogic::queryAvailableOperators()
     connect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
         this, SLOT(availableOperatorsReceived(bool, const QList<AvailableOperator*> &, const QString &)));
     networkRegistration->queryAvailableOperators();
+    emit searchingOperators(true);
 }
 
 void NetworkBusinessLogic::availableOperatorsReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason)
 {
     qDebug() << Q_FUNC_INFO;
+
+    emit searchingOperators(false);
+
     Q_UNUSED(reason);
     disconnect(networkRegistration, SIGNAL(availableOperators(bool, const QList<AvailableOperator*> &, const QString &)),
             this, SLOT(availableOperatorsReceived(bool, const QList<AvailableOperator*> &, const QString &)));

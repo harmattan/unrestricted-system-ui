@@ -69,6 +69,7 @@ signals:
     void networkOperatorChanged(QString);    
     void showNotification(QString);
     void operatorSelectionFailed();
+    void searchingOperators(bool);
 
     void networkStateChanged(bool); //temp
 
