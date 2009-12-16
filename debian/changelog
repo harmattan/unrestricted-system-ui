@@ -1,5 +1,21 @@
 system-ui (0.11.0-3) harmattan; urgency=low
 
+  * INC51 Demo release
+  * This release doesn't include call and sim settings because the problem at launching it was not solved to the release deadline.
+  * Unmasking the code in PIN query, when entering emergency key is disabled due DUI bug 150416
+  * Network settings has no toggle button in settings menu due DUI bug 150644
+
+  * Fixes: NB#149409 - Phone network cannot be switched ON and OFF from Status indicator menu
+  * Fixes: NB#149412 - SIM card rejected notification is not shown.
+  * Fixes: NB#143861 - Focus goes back to PIN query view when Call is selected for emergency call
+  * Fixes: NB#149492 - Phone network settings view cannot be opened from Status indicator menu
+  * Fixes: NB#147131 - duicontrolpanel crashes if Profile settings view is opened several times
+  * Fixes: NB#149225 - More than eight digits can be entered to pin code, when starting the code with
+
+ --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Wed, 16 Dec 2009 10:01:16 +0200
+
+system-ui (0.11.0-3) harmattan; urgency=low
+
   * Pre-release
 
  --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Thu, 10 Dec 2009 16:45:20 +0200
