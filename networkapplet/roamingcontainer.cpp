@@ -112,7 +112,8 @@ void RoamingContainer::toggleLowerWidget(bool toggle)
         }
     } else {        
         mainLayoutPolicy->removeItem(lowerWidget);
-        updatesToggleButton->setChecked(false);
+        if(updatesToggleButton->isChecked() == true)
+            updatesToggleButton->click();
     }
 }
 
@@ -120,7 +121,6 @@ void RoamingContainer::changeRoamingState(RoamingContainer::RoamingState state)
 {
     qDebug() << Q_FUNC_INFO;
 
-    buttons->blockSignals(true);
     switch(state) {
         case RoamingContainer::AlwaysAsk:            
             alwaysAskButton->setChecked(true);
@@ -133,18 +133,12 @@ void RoamingContainer::changeRoamingState(RoamingContainer::RoamingState state)
         default:
             break;
     }
-    buttons->blockSignals(false);
 }
 
 void RoamingContainer::toggleRoamingUpdates(bool toggle)
 {        
-    if(toggle) {
-        buttons->blockSignals(true);
-        alwaysAllowButton->setChecked(true);
-        buttons->blockSignals(false);
-    }
-
-    alwaysAllowButton->blockSignals(true);
+    if(toggle) {        
+        alwaysAllowButton->setChecked(true);        
+    }  
     updatesToggleButton->setChecked(toggle);
-    alwaysAllowButton->blockSignals(false);
 }
