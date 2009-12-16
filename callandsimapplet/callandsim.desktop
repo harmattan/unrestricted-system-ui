@@ -15,4 +15,5 @@ X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 Category= Device system
 Order=2
 WidgetType=DcpLabel2
+Text2= Not implemented
 
