@@ -1,8 +1,6 @@
 #ifndef UT_LOWBATTERYNOTIFIER_H
 #define UT_LOWBATTERYNOTIFIER_H
 
-#include "notifier.h"
-
 #include <QtTest/QtTest>
 #include <QObject>
 #include <QThread>

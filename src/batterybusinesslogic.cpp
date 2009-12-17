@@ -3,7 +3,7 @@
 #include <DuiLocale>
 #include <QTimer>
 #include <QTime>
-
+#include <DuiNotification>
 /* TODO List
 
    1) Create notification for RechargeBatteryText. Connect it to the signal from QmSystemState which inforsm the reason for shut down.
@@ -50,7 +50,7 @@ LowBatteryNotifier::~LowBatteryNotifier()
 void LowBatteryNotifier::showLowBatteryNotification()
 {    
     qDebug() << Q_FUNC_INFO;    
-    emit showNotification(LowBatteryText);
+    DuiNotification("", "", LowBatteryText);
     time.start(); //restart time
     switch(display->get()) {
         case Maemo::QmDisplayState::On:
@@ -191,7 +191,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             qDebug() << "Charging";
             emit batteryCharging(animationRate(battery->getChargerType()));
             utiliseLED(true, QString("PatternBatteryCharging"));            
-            emit showNotification(ChargingText);
+            DuiNotification("", "", ChargingText);
             if(lowBatteryNotifier != NULL) {                
                 delete lowBatteryNotifier;
                 lowBatteryNotifier = NULL;
@@ -206,7 +206,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
             qDebug() << "Charging not started";
             emit batteryNotCharging();
             utiliseLED(false, QString("PatternBatteryCharging"));
-            emit showNotification(ChargingNotStartedText);
+            DuiNotification("", "", ChargingNotStartedText);
             break;
         default:
             break;
@@ -219,7 +219,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
     qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
     switch(level) {
         case QmBattery::LevelFull:            
-            emit showNotification(ChargingCompleteText);
+            DuiNotification("", "", ChargingCompleteText);
             utiliseLED(true, QString("PatternBatteryFull"));
             break;
         case QmBattery::LevelLow:                           
@@ -249,7 +249,7 @@ void BatteryBusinessLogic::batteryChargerEvent(Maemo::QmBattery::ChargerType typ
     switch(type) {
         case QmBattery::None: // No  charger connected
             if(battery->getLevel() == QmBattery::LevelFull)
-                 emit showNotification(DisconnectChargerText); //show reminder
+                 DuiNotification("", "", DisconnectChargerText); //show reminder
             break;
         case QmBattery::Wall: // Wall charger
         case QmBattery::USB_500mA: // USB with 500mA output
@@ -265,11 +265,11 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
 {    
     qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if(PSMState == QmDeviceMode::PSMStateOff) {
-        emit showNotification(ExitPSMText);
+        DuiNotification("", "", ExitPSMText);
         emit PSMValueChanged(false);
     }
     else if(PSMState == QmDeviceMode::PSMStateOn) {
-        emit showNotification(EnterPSMText);
+        DuiNotification("", "", EnterPSMText);
         emit PSMValueChanged(true);
     }
     emit remainingTimeValuesChanged(remainingTimeValues());
