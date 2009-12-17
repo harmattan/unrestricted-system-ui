@@ -6,8 +6,7 @@
 SystemUIGConf::SystemUIGConf(QObject* parent) :
         QObject(parent)
 {
-    // init the gconf keys
-    duiGConfItems.insert(SystemUIGConf::NetworkToggle, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkToggle)));
+    // init the gconf keys    
     duiGConfItems.insert(SystemUIGConf::NetworkRoamingState, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingState)));
     duiGConfItems.insert(SystemUIGConf::NetworkRoamingUpdatesState, new DuiGConfItem(mapGConfKey(SystemUIGConf::NetworkRoamingUpdatesState)));
 
@@ -68,10 +67,7 @@ QString SystemUIGConf::mapGConfKeyGroup(SystemUIGConf::GConfKeyGroup keyGroup)
 QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
 {
     QString keyStr("%1%2");
-    switch (key) {
-    case SystemUIGConf::NetworkToggle:
-        keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkToggle");
-        break;
+    switch (key) {    
     case SystemUIGConf::NetworkRoamingState:
         keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Network)).arg("/networkRoamingState");
         break;

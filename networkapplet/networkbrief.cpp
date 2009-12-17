@@ -16,9 +16,9 @@ NetworkBrief::NetworkBrief() :
 
     connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(updateToggle(bool)));
     connect(logic, SIGNAL(networkOperatorChanged(QString)), this, SLOT(updateOperatorLabel(QString)));
-    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateToggleIcon(QString)));
+    connect(logic, SIGNAL(networkIconChanged(QString)), this, SLOT(updateToggleIcon(QString)));    
 
-    updateToggle(logic->networkEnabled());
+    updateToggle(logic->networkState());
     updateToggleIcon(logic->networkIcon());
     updateOperatorLabel(logic->currentOperator());
 }
@@ -67,6 +67,6 @@ void NetworkBrief::updateToggleIcon(const QString &icon)
 
 void NetworkBrief::setToggle(bool toggle)
 {
-    logic->toggleNetwork(toggle);
+    logic->toggleNetworkState(toggle);
 }
 

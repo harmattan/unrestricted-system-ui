@@ -16,12 +16,15 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
         signalStrengthIcon(NULL),
         networkOperator(NULL),
         radioAccess(NULL),
+        systemControl(NULL),
         networkTechnology(NULL)
 {
     signalStrengthIcon = new NetworkSignalStrengthIcon();
-    networkOperator = new NetworkOperator();
-    radioAccess = new RadioAccess();
-    networkTechnology = new NetworkTechnology(radioAccess);
+    networkOperator = new NetworkOperator(this);
+    radioAccess = new RadioAccess(this);
+    systemControl = new SystemControl(this);    
+    connect(systemControl, SIGNAL(powerChanged(bool)), toggleButton, SLOT(setChecked(bool)));
+    networkTechnology = new NetworkTechnology(radioAccess, this);
     connect(networkTechnology, SIGNAL(technologyChanged(NetworkTechnology::Technology)),
             this, SLOT(updateButtonIcon(NetworkTechnology::Technology)));
 
@@ -42,23 +45,17 @@ PhoneNetworkContainer::PhoneNetworkContainer(DuiWidget *parent) :
 }
 
 PhoneNetworkContainer::~PhoneNetworkContainer()
-{
-    delete networkOperator;
-    networkOperator = NULL;
-    delete networkTechnology;
-    networkTechnology = NULL;
-    delete radioAccess;
-    radioAccess = NULL;
+{    
 }
 
-bool PhoneNetworkContainer::phoneNetworkOn()
+bool PhoneNetworkContainer::phoneNetworkState()
 {
-    return toggleButton->isChecked();
+    return systemControl->power();
 }
 
-void PhoneNetworkContainer::togglePhoneNetwork(bool toggle)
-{ 
-    toggleButton->setChecked(toggle);
+void PhoneNetworkContainer::togglePhoneNetworkState(bool toggle)
+{
+    systemControl->setPower(toggle);    
 }
 
 void PhoneNetworkContainer::updateButtonIcon(NetworkTechnology::Technology technology)

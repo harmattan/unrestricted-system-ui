@@ -6,6 +6,7 @@
 #include <DuiContainer>
 #include <NetworkOperator>
 #include <RadioAccess>
+#include <SystemControl>
 
 class DuiButton;
 class DuiLabel;
@@ -21,8 +22,8 @@ public:
     PhoneNetworkContainer(DuiWidget *parent = 0);
     virtual ~PhoneNetworkContainer();
 
-    bool phoneNetworkOn();
-    void togglePhoneNetwork(bool toggle);    
+    bool phoneNetworkState();
+    void togglePhoneNetworkState(bool toggle);
 
 signals:    
     void toggled(bool);
@@ -40,6 +41,7 @@ private:
     NetworkSignalStrengthIcon *signalStrengthIcon;
     NetworkOperator *networkOperator;
     RadioAccess *radioAccess;
+    SystemControl *systemControl;
     NetworkTechnology *networkTechnology;
 
 };

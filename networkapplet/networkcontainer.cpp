@@ -24,13 +24,14 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
     selComboBox = new DuiComboBox();
     connect(selComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
-    networkList = new NetworkList(this);
+    networkList = new NetworkList();
     connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
     setLayout();
 }
 
 NetworkContainer::~NetworkContainer()
 {
+    toggleOperatorWidget(true); // just to make sure it will be deleted
 }
 
 void NetworkContainer::setLayout()
@@ -130,10 +131,13 @@ void NetworkContainer::hideAvailableOperators()
 void NetworkContainer::toggleOperatorWidget(bool toggle)
 {
     if (toggle) {
-        if (layoutPolicy->indexOf(operatorWidget) == -1)
+        if (layoutPolicy->indexOf(operatorWidget) == -1) {
             layoutPolicy->addItem(operatorWidget, Qt::AlignLeft);
-    } else
+        }
+    } else {
         layoutPolicy->removeItem(operatorWidget);
+    }
+
 }
 
 void NetworkContainer::setDefaultSelection(const QString &value)

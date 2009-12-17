@@ -21,7 +21,7 @@ public:
         BatteryPSMAutoKey = 0,
         BatteryPSMThresholdKey,
         OfflineModeKey,
-        OfflinePhoneNetworkOnKey
+        OfflinePhoneNetworkStateKey
     };   
 
     SystemUIGConf(QObject* parent = 0);

@@ -7,10 +7,11 @@
 
 /*
     TODO:
-    1) What to do when toggling "Enable phone network"-feature?
-    2) What to do when toggling "Enable roaming updates"-feature?
-    3) When user tries to toggle phone network on and there is no SIM card inserted, a note should be displayed
-    4) Remove the temporary solution to get/set gconf values when toggling phone network and roaming/roaming updates
+    1) When SystemControl provides the setPower success signals, connect to those and show the notifications
+    2) What to do when toggling Roaming toggles?
+    3) Remove the temporary solution to get/set gconf values when toggling phone network and roaming/roaming updates
+    4) Remove the NetworkTechnology when the corresponding functionality is in RadioAccess
+    5) Data counter
 
 */
 
@@ -19,7 +20,7 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
         networkRegistration(NULL),
         radioAccess(NULL),
         networkOperator(NULL),
-        ssc(NULL),
+        systemControl(NULL),
         technology(NULL),
         systemUIGConf(NULL) //temp
 {
@@ -39,11 +40,11 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
 
     // network operator
     networkOperator = new NetworkOperator(this);
-    connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));
+    connect(networkOperator, SIGNAL(nameChanged(QString)), this, SIGNAL(networkOperatorChanged(QString)));    
 
-    // state synchronization control
-    ssc = new SSC();
-    connect(ssc, SIGNAL(setRadioComplete(SSCError)), this, SLOT(networkToggleCompleted(SSCError)));
+    // system control
+    systemControl = new SystemControl(this);
+    connect(systemControl, SIGNAL(powerChanged(bool)), this, SIGNAL(networkStateChanged(bool)));
 
     // network technology
     technology = new NetworkTechnology(radioAccess, this);
@@ -62,9 +63,7 @@ NetworkBusinessLogic::NetworkBusinessLogic(QObject* parent) :
 //temp
 void NetworkBusinessLogic::tempSlot(SystemUIGConf::GConfKey key, QVariant var)
 {
-    if (key == SystemUIGConf::NetworkToggle) {
-        emit networkStateChanged(var.toBool());
-    } else if (key == SystemUIGConf::NetworkRoamingState) {
+    if (key == SystemUIGConf::NetworkRoamingState) {
         emit roamingStateChanged(var.toInt());
     } else if (key == SystemUIGConf::NetworkRoamingUpdatesState) {
         emit roamingUpdatesStateChanged(var.toBool());
@@ -75,48 +74,22 @@ NetworkBusinessLogic::~NetworkBusinessLogic()
 {
 }
 
-bool NetworkBusinessLogic::networkEnabled()
+bool NetworkBusinessLogic::networkState()
 {
-    //temp
-    return systemUIGConf->value(SystemUIGConf::NetworkToggle, QVariant(true)).toBool();
-}
-
-void NetworkBusinessLogic::networkToggleCompleted(SSC::SSCError error)
-{
-    switch (error) {
-    case SSC::NoError:
-    case SSC::BusCommunicationError:
-    case SSC::Failed:
-    case SSC::NotAvailable:
-    case SSC::ServiceNeeded:
-    case SSC::Internal:
-    case SSC::NotReady:
-    case SSC::MissingSim:
-    case SSC::UnsupportedSim:
-    case SSC::BlockedSim:
-    case SSC::SimLocked:
-    case SSC::MissingPin:
-    case SSC::SystemNotReady:
-    case SSC::Inactive:
-    case SSC::SearchingNetwork:
-    case SSC::NoCoverage:
-    case SSC::SelectedNetNotAvailable:
-    case SSC::Offline:
-    case SSC::ShuttingDown:
-    case SSC::PowerOff:
-    default:
-        break;
-    }
+    qDebug() << Q_FUNC_INFO;
+    return systemControl->power();    
 }
 
 int NetworkBusinessLogic::roamingState()
 {
+    qDebug() << Q_FUNC_INFO;
     //temp
     return systemUIGConf->value(SystemUIGConf::NetworkRoamingState, QVariant(0)).toInt();
 }
 
 bool NetworkBusinessLogic::roamingUpdatesState()
 {
+    qDebug() << Q_FUNC_INFO;
     //temp
     return systemUIGConf->value(SystemUIGConf::NetworkRoamingUpdatesState, QVariant(false)).toBool();
 }
@@ -164,10 +137,10 @@ QString NetworkBusinessLogic::defaultNetworkSelectionValue()
     return selectionValues.value(NetworkRegistration::Automatic);
 }
 
-void NetworkBusinessLogic::toggleNetwork(bool toggle)
+void NetworkBusinessLogic::toggleNetworkState(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
-    systemUIGConf->setValue(SystemUIGConf::NetworkToggle, QVariant(toggle)); //temp
+    systemControl->setPower(toggle);    
 }
 
 void NetworkBusinessLogic::setNetworkMode(const QString &value)

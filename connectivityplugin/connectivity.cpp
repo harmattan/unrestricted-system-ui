@@ -104,21 +104,21 @@ void Connectivity::toggleOfflineMode(bool toggle)
 
     if(toggle) {
         // store the current state of phone network to gconf
-        systemUIGConf.setValue(SystemUIGConf::OfflinePhoneNetworkOnKey, QVariant(networkContainer->phoneNetworkOn()));
+        systemUIGConf.setValue(SystemUIGConf::OfflinePhoneNetworkStateKey, QVariant(networkContainer->phoneNetworkState()));
 
         // turn off the phone network
-        networkContainer->togglePhoneNetwork(false);        
+        networkContainer->togglePhoneNetworkState(false);
 
         //show notification
         DuiNotification("", "", trid("qtn_offline_entering", "Closing all connections. Switching to offline mode."));       
     }
     else {
         // restore the previous state of phone network from gconf
-        bool networkWasOn = systemUIGConf.value(SystemUIGConf::OfflinePhoneNetworkOnKey, QVariant(false)).toBool();
+        bool networkWasOn = systemUIGConf.value(SystemUIGConf::OfflinePhoneNetworkStateKey, QVariant(false)).toBool();
 
         // turn on the phone network if needed
         if(networkWasOn)
-            networkContainer->togglePhoneNetwork(true);        
+            networkContainer->togglePhoneNetworkState(true);
 
         //show notification
         DuiNotification("", "", trid("qtn_offline_exiting", "Restoring all connections. Exiting offline mode."));                

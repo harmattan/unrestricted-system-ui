@@ -10,12 +10,12 @@
 #include "networkregistrationstub.h"
 #include "radioaccessstub.h"
 #include "networkoperatorstub.h"
-#include "sscstub.h"
+#include "systemcontrolstub.h"
 #else
 #include <NetworkRegistration>
 #include <RadioAccess>
 #include <NetworkOperator>
-#include <SSC>
+#include <SystemControl>
 #endif
 #include "networktechnology.h"
 #include "systemuigconf.h" //temp
@@ -30,7 +30,7 @@ public:
     NetworkBusinessLogic(QObject* parent = 0);
     virtual ~NetworkBusinessLogic();
 
-    bool networkEnabled(); //temp
+    bool networkState();
     int roamingState(); //temp
     bool roamingUpdatesState(); //temp
     QStringList networkModes();
@@ -44,7 +44,7 @@ public:
     QString currentOperator();
 
 public slots:
-    void toggleNetwork(bool toggle);
+    void toggleNetworkState(bool toggle);
     void setNetworkMode(const QString &value);
     void setNetworkSelectionValue(const QString &value);
     void selectOperator(int index);
@@ -52,8 +52,7 @@ public slots:
 
 private slots:
     void availableOperatorsReceived(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
-    void selectOperatorCompleted(bool success, const QString &reason);
-    void networkToggleCompleted(SSC::SSCError error);
+    void selectOperatorCompleted(bool success, const QString &reason);    
     void technologyChanged(NetworkTechnology::Technology technology);
 
     void tempSlot(SystemUIGConf::GConfKey, QVariant); //temp
@@ -70,8 +69,7 @@ signals:
     void showNotification(QString);
     void operatorSelectionFailed();
     void searchingOperators(bool);
-
-    void networkStateChanged(bool); //temp
+    void networkStateChanged(bool);
 
 private: //methods
     void queryAvailableOperators();
@@ -81,7 +79,7 @@ private: //attributes
     NetworkRegistration *networkRegistration;
     RadioAccess *radioAccess;
     NetworkOperator *networkOperator;
-    SSC *ssc;
+    SystemControl *systemControl;
     NetworkTechnology *technology;
     QHash<RadioAccess::Mode, QString> modes;
     QHash<NetworkRegistration::Mode, QString> selectionValues;

@@ -16,9 +16,8 @@ public:
         Network = 0
     };
 
-    enum GConfKey {
-        NetworkToggle = 0,
-        NetworkRoamingState,
+    enum GConfKey {        
+        NetworkRoamingState = 0,
         NetworkRoamingUpdatesState
     };
 

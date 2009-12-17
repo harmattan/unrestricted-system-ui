@@ -10,7 +10,7 @@ SystemUIGConf::SystemUIGConf(QObject* parent) :
     duiGConfItems.insert(SystemUIGConf::BatteryPSMAutoKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));
     duiGConfItems.insert(SystemUIGConf::BatteryPSMThresholdKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
     duiGConfItems.insert(SystemUIGConf::OfflineModeKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::OfflineModeKey)));
-    duiGConfItems.insert(SystemUIGConf::OfflinePhoneNetworkOnKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::OfflinePhoneNetworkOnKey)));
+    duiGConfItems.insert(SystemUIGConf::OfflinePhoneNetworkStateKey, new DuiGConfItem(mapGConfKey(SystemUIGConf::OfflinePhoneNetworkStateKey)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -82,8 +82,8 @@ QString SystemUIGConf::mapGConfKey(SystemUIGConf::GConfKey key)
         case SystemUIGConf::OfflineModeKey:
             keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Offline)).arg("/offlineMode");
             break;
-        case SystemUIGConf::OfflinePhoneNetworkOnKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Offline)).arg("/offlinePhoneNetworkOn");
+        case SystemUIGConf::OfflinePhoneNetworkStateKey:
+            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Offline)).arg("/offlinePhoneNetworkState");
             break;
         default:
             break;

@@ -36,6 +36,7 @@ NetworkWidget::NetworkWidget(QGraphicsWidget *parent) :
 
 NetworkWidget::~NetworkWidget()
 {
+    toggleNetworkSettings(true); // just to make sure it will be deleted
 }
 
 bool NetworkWidget::back()
@@ -101,7 +102,7 @@ void NetworkWidget::initWidget()
     // set values
     networkContainer->initModeComboBox(logic->selectedNetworkMode(), logic->networkModes());
     networkContainer->initSelectionComboBox(logic->selectedNetworkSelectionValue(), logic->networkSelectionValues());
-    togglePhoneNetworkButton(logic->networkEnabled());
+    togglePhoneNetworkButton(logic->networkState());
     updateNetworkIcon(logic->networkIcon());
 
     // connect the value receive signals
@@ -140,11 +141,13 @@ void NetworkWidget::toggleNetworkSettings(bool toggle)
 {
     qDebug() << "NetworkWidget::toggleNetworkSettings(" << toggle << ")";
 
-    if (toggle)
-        contentLayoutPolicy->addItemAtPosition(networkContainer, 3, 0, 1, 2);
-    else
+    if (toggle) {
+        if (contentLayoutPolicy->itemAt(3, 0) != networkContainer) {
+            contentLayoutPolicy->addItemAtPosition(networkContainer, 3, 0, 1, 2);
+        }
+    } else {
         contentLayoutPolicy->removeItem(networkContainer);
-
+    }
 }
 
 void NetworkWidget::updateNetworkIcon(const QString &value)
