@@ -49,7 +49,7 @@ private: //attributes
     QTimer *timer;
 
 #ifdef UNIT_TEST
-   friend class Ut_NetworkTechnology;
+    friend class Ut_NetworkTechnology;
 #endif // UNIT_TEST
 
 };

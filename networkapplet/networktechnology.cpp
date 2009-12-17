@@ -10,7 +10,7 @@ NetworkTechnology::NetworkTechnology(RadioAccess *radioAccess, QObject *parent) 
         timer(NULL)
 {
     qDebug() << Q_FUNC_INFO;
-    networkCell = new NetworkCell();
+    networkCell = new NetworkCell(this);
     /* Technology changes depend to the RadioAccess's techonology and NetworkCell's services.
        The state changes of both of those have to be taken into account before we indicate any
        changes to end-user. There will be 500 ms interval which makes it possible that both the
@@ -26,9 +26,6 @@ NetworkTechnology::NetworkTechnology(RadioAccess *radioAccess, QObject *parent) 
 
 NetworkTechnology::~NetworkTechnology()
 {
-    qDebug() << Q_FUNC_INFO;
-    delete networkCell;
-    networkCell = NULL;
 }
 
 void NetworkTechnology::checkTechnology()
@@ -37,7 +34,7 @@ void NetworkTechnology::checkTechnology()
     timer->stop();
     NetworkTechnology::Technology previousTechnology = currentTechnology();
     updateTechnology();
-    if(previousTechnology != currentTechnology())
+    if (previousTechnology != currentTechnology())
         emit technologyChanged(technology);
 }
 
@@ -51,18 +48,18 @@ void NetworkTechnology::updateTechnology()
 {
     qDebug() << Q_FUNC_INFO << " " << radioAccess->technology() << " " << networkCell->services();
     technology = NetworkTechnology::None;
-    switch(radioAccess->technology()) {
-        case RadioAccess::GSM:
-            technology = NetworkTechnology::TwoG;
-            if(networkCell->services() == NetworkCell::EGPRSSupport)
-                technology = NetworkTechnology::TwoPointFiveG;
-            break;
-        case RadioAccess::UMTS:
-            technology = NetworkTechnology::ThreeG;
-            if(networkCell->services() == NetworkCell::HSDPASupport && radioAccess->state() == RadioAccess::AllocatedHSDPA)
-                technology = NetworkTechnology::ThreePointFiveG;
-            break;
-        default:
-            break;
+    switch (radioAccess->technology()) {
+    case RadioAccess::GSM:
+        technology = NetworkTechnology::TwoG;
+        if (networkCell->services() == NetworkCell::EGPRSSupport)
+            technology = NetworkTechnology::TwoPointFiveG;
+        break;
+    case RadioAccess::UMTS:
+        technology = NetworkTechnology::ThreeG;
+        if (networkCell->services() == NetworkCell::HSDPASupport && radioAccess->state() == RadioAccess::AllocatedHSDPA)
+            technology = NetworkTechnology::ThreePointFiveG;
+        break;
+    default:
+        break;
     }
 }

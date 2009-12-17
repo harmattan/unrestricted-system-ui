@@ -18,32 +18,30 @@ NetworkContainer::NetworkContainer(DuiWidget *parent) :
         networkList(NULL),
         operatorWidget(NULL),
         infoLabel(NULL)
-{    
+{
     modeComboBox = new DuiComboBox();
     connect(modeComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkModeChanged(QString)));
     selComboBox = new DuiComboBox();
     connect(selComboBox, SIGNAL(currentIndexChanged(QString)), this, SIGNAL(networkSelectionChanged(QString)));
     connect(this, SIGNAL(headerClicked()), this, SLOT(toggleExpand()));
-    networkList = new NetworkList();
+    networkList = new NetworkList(this);
     connect(networkList, SIGNAL(availableOperatorSelected(int)), this, SIGNAL(availableOperatorSelected(int)));
     setLayout();
 }
 
 NetworkContainer::~NetworkContainer()
 {
-    delete networkList;
-    networkList = NULL;
 }
 
 void NetworkContainer::setLayout()
-{    
+{
     // create labels
     DuiLabel *modeLabel = new DuiLabel(DcpNetwork::NetworkModeText);
     modeLabel->setObjectName("networkLabel");
     DuiLabel *selLabel = new DuiLabel(DcpNetwork::NetworkSelectionText);
     selLabel->setObjectName("networkLabel");
     infoLabel = new DuiLabel();
-    infoLabel->setObjectName("networkLabel");   
+    infoLabel->setObjectName("networkLabel");
 
     // create proxy widget for mode combo box
     QGraphicsWidget *modeWidget = comboBoxWidget(modeLabel, modeComboBox);
@@ -77,7 +75,7 @@ void NetworkContainer::setLayout()
     layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     layoutPolicy->addItem(cbWidget, Qt::AlignLeft);
 
-    centralWidget()->setLayout(layout);    
+    centralWidget()->setLayout(layout);
 }
 
 QGraphicsWidget* NetworkContainer::comboBoxWidget(DuiLabel *label, DuiComboBox *comboBox)
@@ -92,19 +90,19 @@ QGraphicsWidget* NetworkContainer::comboBoxWidget(DuiLabel *label, DuiComboBox *
 }
 
 void NetworkContainer::initModeComboBox(const QString &value, const QStringList &values)
-{    
+{
     initComboBox(modeComboBox, value, values);
-}    
+}
 
 void NetworkContainer::initSelectionComboBox(const QString &value, const QStringList &values)
-{    
+{
     initComboBox(selComboBox, value, values);
 }
 
 void NetworkContainer::initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values)
 {
     cb->addItems(values);
-    if(values.contains(value)) {
+    if (values.contains(value)) {
         cb->blockSignals(true);
         cb->setCurrentIndex(values.indexOf(value));
         cb->blockSignals(false);
@@ -112,12 +110,11 @@ void NetworkContainer::initComboBox(DuiComboBox *cb, const QString &value, const
 }
 
 void NetworkContainer::showAvailableOperators(int selected, const QStringList &operators)
-{    
-    if(operators.size() > 0) {        
+{
+    if (operators.size() > 0) {
         networkList->insertOperators(selected, operators);
         infoLabel->setText(DcpNetwork::AvailableNetworksText);
-    }
-    else {
+    } else {
         networkList->removeOperators();
         infoLabel->setText(DcpNetwork::NoAvailableNetworksText);
     }
@@ -126,24 +123,23 @@ void NetworkContainer::showAvailableOperators(int selected, const QStringList &o
 
 void NetworkContainer::hideAvailableOperators()
 {
-    networkList->removeOperators();    
+    networkList->removeOperators();
     toggleOperatorWidget(false);
 }
 
 void NetworkContainer::toggleOperatorWidget(bool toggle)
 {
-    if(toggle) {
-        if(layoutPolicy->indexOf(operatorWidget) == -1)
+    if (toggle) {
+        if (layoutPolicy->indexOf(operatorWidget) == -1)
             layoutPolicy->addItem(operatorWidget, Qt::AlignLeft);
-    }
-    else
+    } else
         layoutPolicy->removeItem(operatorWidget);
 }
 
 void NetworkContainer::setDefaultSelection(const QString &value)
 {
-    for(int i=0; i<selComboBox->count(); ++i) {
-        if(selComboBox->itemText(i) == value) {
+    for (int i = 0; i < selComboBox->count(); ++i) {
+        if (selComboBox->itemText(i) == value) {
             selComboBox->setCurrentIndex(i);
             break;
         }

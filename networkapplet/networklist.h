@@ -24,8 +24,8 @@ signals:
 private slots:
     void availableOperatorClicked(const QModelIndex &index);
 
-private:    
-    QStringListModel* listModel;    
+private:
+    QStringListModel* listModel;
     bool selected;
 };
 

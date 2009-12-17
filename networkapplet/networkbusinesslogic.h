@@ -39,9 +39,9 @@ public:
     QString selectedNetworkSelectionValue();
     QString defaultNetworkSelectionValue();
     QString networkIcon();
-    void changeRoamingState(int state);    
+    void changeRoamingState(int state);
     bool manualSelectionRequired();
-    QString currentOperator();    
+    QString currentOperator();
 
 public slots:
     void toggleNetwork(bool toggle);
@@ -56,26 +56,26 @@ private slots:
     void networkToggleCompleted(SSC::SSCError error);
     void technologyChanged(NetworkTechnology::Technology technology);
 
-    void tempSlot(SystemUIGConf::GConfKey,QVariant); //temp
+    void tempSlot(SystemUIGConf::GConfKey, QVariant); //temp
 
 signals:
     void availableNetworkOperators(int, QStringList);
     void autoSelectNetworkOperator();
     void networkIconChanged(QString);
-    void networkSelectionValuesAvailable(int, int, QStringList);    
+    void networkSelectionValuesAvailable(int, int, QStringList);
     void networkSelected(bool);
     void roamingStateChanged(int);
     void roamingUpdatesStateChanged(bool);
-    void networkOperatorChanged(QString);    
+    void networkOperatorChanged(QString);
     void showNotification(QString);
     void operatorSelectionFailed();
     void searchingOperators(bool);
 
     void networkStateChanged(bool); //temp
 
-private: //methods    
+private: //methods
     void queryAvailableOperators();
-    QString mapTechnologyToIcon(NetworkTechnology::Technology technology);    
+    QString mapTechnologyToIcon(NetworkTechnology::Technology technology);
 
 private: //attributes
     NetworkRegistration *networkRegistration;
@@ -85,12 +85,12 @@ private: //attributes
     NetworkTechnology *technology;
     QHash<RadioAccess::Mode, QString> modes;
     QHash<NetworkRegistration::Mode, QString> selectionValues;
-    QMultiMap<QString, QStringList> operators;    
+    QMultiMap<QString, QStringList> operators;
 
     SystemUIGConf *systemUIGConf; //temp
 
 #ifdef UNIT_TEST
-   friend class Ut_NetworkBusinessLogic;
+    friend class Ut_NetworkBusinessLogic;
 #endif // UNIT_TEST
 
 };

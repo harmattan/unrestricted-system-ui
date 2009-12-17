@@ -8,12 +8,12 @@
 // Class list cannot inherit DuiList because the signals are not inherited along
 
 NetworkList::NetworkList(QGraphicsItem *parent) :
-        DuiList(parent),        
+        DuiList(parent),
         listModel(NULL)
 {
     setObjectName("availableNetworksList");
     enableItemSelection(true);
-    listModel = new QStringListModel;    
+    listModel = new QStringListModel;
     connect(this, SIGNAL(itemClicked(const QModelIndex &)), this, SLOT(availableOperatorClicked(const QModelIndex &)));
 }
 
@@ -22,12 +22,12 @@ NetworkList::~NetworkList()
 }
 
 void NetworkList::insertOperators(int selected, const QStringList &operators)
-{    
+{
     listModel->setStringList(operators);
     this->setItemModel(listModel);
 
-    if(selected != -1)
-        selectItem(listModel->index(selected));        
+    if (selected != -1)
+        selectItem(listModel->index(selected));
 }
 
 void NetworkList::removeOperators()
@@ -41,7 +41,7 @@ void NetworkList::removeSelection()
 }
 
 void NetworkList::availableOperatorClicked(const QModelIndex &index)
-{       
+{
     emit availableOperatorSelected(index.row());
 }
 

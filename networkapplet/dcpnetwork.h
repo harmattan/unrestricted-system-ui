@@ -2,10 +2,9 @@
 #define DCPNETWORK_H
 namespace DcpNetwork
 {
-    enum
-    {
-	None = -1,
-        Main = 0
-    };
+enum {
+    None = -1,
+    Main = 0
+};
 }
 #endif // DCPNETWORK_H

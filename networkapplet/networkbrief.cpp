@@ -12,7 +12,7 @@ NetworkBrief::NetworkBrief() :
         networkToggleIcon(QString(""))
 {
 
-    logic = new NetworkBusinessLogic();    
+    logic = new NetworkBusinessLogic(this);
 
     connect(logic, SIGNAL(networkStateChanged(bool)), this, SLOT(updateToggle(bool)));
     connect(logic, SIGNAL(networkOperatorChanged(QString)), this, SLOT(updateOperatorLabel(QString)));
@@ -24,9 +24,7 @@ NetworkBrief::NetworkBrief() :
 }
 
 NetworkBrief::~NetworkBrief()
-{   
-    delete logic;
-    logic = NULL; 
+{
 }
 
 QString NetworkBrief::valueText() const
@@ -45,7 +43,7 @@ QString NetworkBrief::toggleIconId() const
 }
 
 int NetworkBrief::widgetTypeID() const
-{    
+{
     return DCPLABELBUTTON + 100;
 }
 
@@ -56,18 +54,18 @@ void NetworkBrief::updateOperatorLabel(const QString &text)
 }
 
 void NetworkBrief::updateToggle(bool toggle)
-{    
+{
     networkToggle = toggle;
     emit valuesChanged();
 }
 
 void NetworkBrief::updateToggleIcon(const QString &icon)
 {
-    networkToggleIcon = icon;    
+    networkToggleIcon = icon;
     emit valuesChanged();
 }
 
-void NetworkBrief::setToggle (bool toggle)
+void NetworkBrief::setToggle(bool toggle)
 {
     logic->toggleNetwork(toggle);
 }

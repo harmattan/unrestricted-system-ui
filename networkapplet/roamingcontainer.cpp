@@ -21,9 +21,7 @@ RoamingContainer::RoamingContainer(RoamingContainer::RoamingState state, bool ro
 RoamingContainer::~RoamingContainer()
 {
     qDebug() << Q_FUNC_INFO;
-
-    lowerWidget->deleteLater();
-    lowerWidget = NULL;
+    toggleLowerWidget(true); // just to make sure it will be deleted
 }
 
 void RoamingContainer::setLayout(RoamingContainer::RoamingState state, bool roamingUpdatesState)
@@ -93,7 +91,7 @@ void RoamingContainer::buttonClicked(DuiButton *button)
 {
     qDebug() << Q_FUNC_INFO;
 
-    if(button->text() == DcpNetwork::RoamingAlwaysAskText) {
+    if (button->text() == DcpNetwork::RoamingAlwaysAskText) {
         toggleLowerWidget(false);
     } else {
         toggleLowerWidget(true);
@@ -106,13 +104,13 @@ void RoamingContainer::toggleLowerWidget(bool toggle)
 {
     qDebug() << Q_FUNC_INFO;
 
-    if(toggle) {
-        if(mainLayoutPolicy->indexOf(lowerWidget) == -1) {
+    if (toggle) {
+        if (mainLayoutPolicy->indexOf(lowerWidget) == -1) {
             mainLayoutPolicy->addItem(lowerWidget, Qt::AlignLeft);
         }
-    } else {        
+    } else {
         mainLayoutPolicy->removeItem(lowerWidget);
-        if(updatesToggleButton->isChecked() == true)
+        if (updatesToggleButton->isChecked() == true)
             updatesToggleButton->click();
     }
 }
@@ -121,24 +119,24 @@ void RoamingContainer::changeRoamingState(RoamingContainer::RoamingState state)
 {
     qDebug() << Q_FUNC_INFO;
 
-    switch(state) {
-        case RoamingContainer::AlwaysAsk:            
-            alwaysAskButton->setChecked(true);
-            toggleLowerWidget(false);            
-            break;
-        case RoamingContainer::AlwaysAllow:            
-            alwaysAllowButton->setChecked(true);
-            toggleLowerWidget(true);            
-            break;        
-        default:
-            break;
+    switch (state) {
+    case RoamingContainer::AlwaysAsk:
+        alwaysAskButton->setChecked(true);
+        toggleLowerWidget(false);
+        break;
+    case RoamingContainer::AlwaysAllow:
+        alwaysAllowButton->setChecked(true);
+        toggleLowerWidget(true);
+        break;
+    default:
+        break;
     }
 }
 
 void RoamingContainer::toggleRoamingUpdates(bool toggle)
-{        
-    if(toggle) {        
-        alwaysAllowButton->setChecked(true);        
-    }  
+{
+    if (toggle) {
+        alwaysAllowButton->setChecked(true);
+    }
     updatesToggleButton->setChecked(toggle);
 }

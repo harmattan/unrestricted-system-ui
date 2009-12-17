@@ -11,8 +11,8 @@ class NetworkContainer;
 
 class NetworkWidget : public DcpWidget
 {
-    Q_OBJECT    
-		
+    Q_OBJECT
+
 public:
     NetworkWidget(QGraphicsWidget *parent = 0);
     virtual ~NetworkWidget();
@@ -29,17 +29,17 @@ private slots:
     void roamingStateChanged(int state);
     void roamingStateChanged(RoamingContainer::RoamingState state);
 
-private: //methods    
-    void changeSelection();    
+private: //methods
+    void changeSelection();
 
 private: //attributes
     NetworkBusinessLogic *logic;
-    DuiButton *phoneNetworkButton;    
-    DuiButton *dataCounterButton;    
-    DuiGridLayoutPolicy *contentLayoutPolicy;    
+    DuiButton *phoneNetworkButton;
+    DuiButton *dataCounterButton;
+    DuiGridLayoutPolicy *contentLayoutPolicy;
     bool networkSelected;
     NetworkContainer *networkContainer;
-    RoamingContainer *roamingContainer;    
+    RoamingContainer *roamingContainer;
 
 };
 #endif // NETWORKWIDGET_H

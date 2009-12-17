@@ -17,21 +17,21 @@ Q_EXPORT_PLUGIN2(networkapplet, NetworkApplet)
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
 void NetworkApplet::init()
-{    
+{
     DuiTheme::loadCSS(cssDir + "networkapplet.css");
 };
 
 DcpWidget* NetworkApplet::constructWidget(int widgetId)
-{ 
+{
     Q_UNUSED(widgetId);
     return pageMain();
 }
 
 DcpWidget* NetworkApplet::pageMain()
-{    
-     if(main == NULL)
+{
+    if (main == NULL)
         main = new NetworkWidget();
-    return main;    
+    return main;
 }
 
 QString NetworkApplet::title() const

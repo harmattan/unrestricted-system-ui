@@ -22,7 +22,7 @@ public:
     void initSelectionComboBox(const QString &value, const QStringList &values);
     void setDefaultSelection(const QString &value);
 
-public slots:        
+public slots:
     void showAvailableOperators(int selected, const QStringList &operators);
     void hideAvailableOperators();
     void operatorSelectionFailed();
@@ -32,7 +32,7 @@ signals:
     void networkSelectionChanged(QString);
     void availableOperatorSelected(int);
 
-private:    
+private:
     void setLayout();
     QGraphicsWidget* comboBoxWidget(DuiLabel *label, DuiComboBox *comboBox);
     void initComboBox(DuiComboBox *cb, const QString &value, const QStringList &values);
@@ -43,7 +43,7 @@ private:
     DuiComboBox *selComboBox;
     DuiLinearLayoutPolicy *layoutPolicy;
     NetworkList *networkList;
-    QGraphicsWidget *operatorWidget;    
+    QGraphicsWidget *operatorWidget;
     DuiLabel *infoLabel;
     QGraphicsLinearLayout *mainLayout;
 

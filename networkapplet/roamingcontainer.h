@@ -26,7 +26,7 @@ public slots:
     void toggleRoamingUpdates(bool toggle);
 
 private slots:
-    void buttonClicked(DuiButton *button);    
+    void buttonClicked(DuiButton *button);
 
 signals:
     void roamingStateChanged(RoamingContainer::RoamingState);
