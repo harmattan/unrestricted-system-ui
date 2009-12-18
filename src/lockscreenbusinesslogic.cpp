@@ -18,8 +18,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     display = new QmDisplayState(this);
     lockUI = new LockScreenUI();
 
-    connect(locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)), 
-	    this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    connect(locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
+            this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     connect(lockUI, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
@@ -54,7 +54,7 @@ void LockScreenBusinessLogic::locksChanged(Maemo::QmLocks::Lock lock, Maemo::QmL
         mayStartTimer();
     } else {
         toggleScreenLockUI(false);
-	stopTimer();
+        stopTimer();
     }
 }
 
@@ -107,7 +107,7 @@ void LockScreenBusinessLogic::mayStartTimer()
         lockUI->updateDateTime();
 
         QTime t(QTime::currentTime());
-	// TODO: some adjustments of time may be done
+        // TODO: some adjustments of time may be done
         timer.start(1000);
     }
 }

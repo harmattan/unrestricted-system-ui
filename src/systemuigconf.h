@@ -13,23 +13,20 @@ class SystemUIGConf : public QObject
 public:
 
     enum GConfKeyGroup {
-        Battery = 0,
-        Offline
+        Battery = 0
     };
 
-    enum GConfKey {        
+    enum GConfKey {
         BatteryPSMAutoKey = 0,
-        BatteryPSMThresholdKey,
-        OfflineModeKey,
-        OfflinePhoneNetworkStateKey
-    };   
+        BatteryPSMThresholdKey
+    };
 
     SystemUIGConf(QObject* parent = 0);
     virtual ~SystemUIGConf();
 
     void setValue(SystemUIGConf::GConfKey key, QVariant value);
     QVariant value(SystemUIGConf::GConfKey, QVariant def = NULL);
-    int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);    
+    int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);
 
 signals:
     void valueChanged(SystemUIGConf::GConfKey key, QVariant value);

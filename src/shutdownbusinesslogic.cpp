@@ -3,6 +3,7 @@
 
 #include <qmsystem/qmsystemstate.h>
 
+#include <DuiNotification>
 #include <DuiLocale>
 
 #include <QDebug>
@@ -59,8 +60,7 @@ void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication wh
 
 void ShutdownBusinessLogic::thermalShutdown()
 {
-    const QString msg = trid("qtn_shut_high_temp", "Temperature too high. Device shutting down.");
-    emit showNotification(msg, NotificationType::warning);
+    DuiNotification("", "", trid("qtn_shut_high_temp", "Temperature too high. Device shutting down."));
 
     /* TODO: do we need to call showUI here?
     UI spec says: Ten seconds before the shutdown takes place, thermal shutdown notification is displayed accompanying ‘System alert’ sound.
@@ -69,12 +69,10 @@ void ShutdownBusinessLogic::thermalShutdown()
 
 void ShutdownBusinessLogic::batteryShutdown()
 {
-    const QString msg = trid("qtn_shut_batt_empty", "Battery empty. Device shutting down.");
-    emit showNotification(msg, NotificationType::warning);
+    DuiNotification("", "", trid("qtn_shut_batt_empty", "Battery empty. Device shutting down."));
 }
 
 void ShutdownBusinessLogic::shutdownDeniedUSB()
 {
-    const QString msg = trid("qtn_shut_unplug_usb", "USB cable plugged in. Unplug the USB cable to shutdown.");
-    emit showNotification(msg, NotificationType::warning);
+    DuiNotification("", "", trid("qtn_shut_unplug_usb", "USB cable plugged in. Unplug the USB cable to shutdown."));
 }

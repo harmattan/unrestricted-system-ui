@@ -1,7 +1,6 @@
 #include <QDebug>
 
 #include "sysuid.h"
-#include "main.h"
 
 #include <QTimer>
 #include <QDebug>
@@ -23,16 +22,13 @@ void sysuid_exit(int sig)
 
 
 int main(int argc, char** argv)
-{    
-    char *argv_[] = { "sysuid", "-software" };
-    argc = 2;
-
-    DuiApplication app(argc, argv_);
+{
+    DuiApplication app(argc, argv);
     exitPtr = &app;
 
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
-        flags |= Qt::FramelessWindowHint;// | Qt::WindowStaysOnTopHint;
+    flags |= Qt::FramelessWindowHint;
     win.setWindowOpacity(0);
     win.setWindowFlags(flags);
 
@@ -44,7 +40,7 @@ int main(int argc, char** argv)
     Sysuid daemon;
 
     int ret = app.exec();
-    //qDebug() << "Bye!";
+
     return ret;
 }
 

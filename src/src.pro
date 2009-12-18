@@ -1,4 +1,3 @@
-include(duiconfig.pri)
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
@@ -7,8 +6,7 @@ CONFIG += dui \
     qmsystem
 QT += dbus
 LIBS += -lX11 \
-    -lcallui0 \
-    -lhal
+    -lcallui0
 INCLUDEPATH += /usr/include/alarmd \
     /usr/include/dbus-1.0 \
     /usr/lib/dbus-1.0/include
@@ -18,11 +16,7 @@ contains(cov, true) {
     QMAKE_LFLAGS += --coverage
 }
 SOURCES += main.cpp \
-    notifier.cpp \
     batterybusinesslogic.cpp \
-    pincodequeryui.cpp \
-    pincodequerybusinesslogic.cpp \
-    cellularui.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \
     lockscreenui.cpp \
@@ -30,16 +24,8 @@ SOURCES += main.cpp \
     shutdownbusinesslogic.cpp \
     batterybusinesslogicadaptor.cpp \
     systemuigconf.cpp \
-    notifierdbusadaptor.cpp \
-    pincodequerydbusadaptor.cpp \
-    lockscreenbusinesslogicadaptor.cpp \
-    callhandler.cpp
-HEADERS += main.h \
-    notifier.h \
-    batterybusinesslogic.h \
-    pincodequeryui.h \
-    pincodequerybusinesslogic.h \
-    cellularui.h \
+    lockscreenbusinesslogicadaptor.cpp
+HEADERS += batterybusinesslogic.h \
     sysuid.h \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
@@ -47,11 +33,7 @@ HEADERS += main.h \
     shutdownbusinesslogic.h \
     batterybusinesslogicadaptor.h \
     systemuigconf.h \
-    notifierdbusadaptor.h \
-    pincodequerydbusadaptor.h \
-    notificationtype.h \
-    lockscreenbusinesslogicadaptor.h \
-    callhandler.h
+    lockscreenbusinesslogicadaptor.h
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../data/*.svg

@@ -1,8 +1,6 @@
 #ifndef SHUTDOWNBUSINESSLOGIC_H
 #define SHUTDOWNBUSINESSLOGIC_H
 
-#include "notifier.h"
-
 #include <qmsystem/qmsystemstate.h>
 
 #include <QObject>
@@ -21,9 +19,6 @@ public:
 
 public slots:
     void systemStateChanged(Maemo::QmSystemState::StateIndication what);
-
-signals:
-    void showNotification(const QString& notifText, NotificationType::Type type);
 
 private:
     void thermalShutdown();

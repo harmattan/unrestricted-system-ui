@@ -5,13 +5,9 @@
 #include <QPointer>
 
 class SystemUIGConf;
-class PinCodeQueryBusinessLogic;
 class BatteryBusinessLogic;
 class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
-class Notifier;
-class CallAndSimBusinessLogic;
-class CellularUI;
 
 class Sysuid : public QObject
 {
@@ -26,12 +22,9 @@ public:
 
 private:
     SystemUIGConf* systemUIGConf;
-    PinCodeQueryBusinessLogic* pinCodeQueryLogic;
     BatteryBusinessLogic* batteryLogic;
     LockScreenBusinessLogic* lockScreenLogic;
     ShutdownBusinessLogic* shutdownLogic;
-    CellularUI* cellUI;    
-    Notifier* notifier;
     static Sysuid* _sysuid;
 };
 

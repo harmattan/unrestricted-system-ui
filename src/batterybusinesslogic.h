@@ -31,7 +31,7 @@ class LowBatteryNotifier : public QObject
 
 public:
     LowBatteryNotifier(QObject* parent = 0);
-    virtual ~LowBatteryNotifier();   
+    virtual ~LowBatteryNotifier();
 
 public slots:
     void showLowBatteryNotification();
@@ -43,7 +43,7 @@ signals:
     void showNotification(QString);
 
 private:
-    QmDisplayState *display;    
+    QmDisplayState *display;
     QTimer *timer;
     QTime time;
     bool sleep;
@@ -51,7 +51,7 @@ private:
     int inactiveInterval;
 
 #ifdef UNIT_TEST
-   friend class Ut_LowBatteryNotifier;
+    friend class Ut_LowBatteryNotifier;
 #endif // UNIT_TEST
 
 
@@ -85,10 +85,10 @@ signals:
     void showNotification(QString);
 
 public slots:
-    void initBattery();    
+    void initBattery();
 
 private: //attributes
-    SystemUIGConf *systemUIGConf;    
+    SystemUIGConf *systemUIGConf;
     QmBattery *battery;
     QmDeviceMode *deviceMode;
     QmLED *led;
@@ -105,11 +105,11 @@ private slots:
     void batteryEnergyLevelChanged(int energyLevel);
     void batteryStatusChanged(Maemo::QmBattery::State state);
     void batteryChargerEvent(Maemo::QmBattery::ChargerType type);
-    void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);    
+    void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);
     void utiliseLED(bool activate, const QString &pattern);
 
 #ifdef UNIT_TEST
-   friend class Ut_BatteryBusinessLogic;
+    friend class Ut_BatteryBusinessLogic;
 #endif // UNIT_TEST
 
 };
