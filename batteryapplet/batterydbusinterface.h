@@ -17,7 +17,7 @@ public:
     void PSMValueRequired();
     void PSMAutoValueRequired();
     void batteryChargingStateRequired();
-    void PSMThresholdValuesRequired();        
+    void PSMThresholdValuesRequired();
     void setPSMValue(bool toggle);
 
 public slots:
@@ -27,14 +27,14 @@ public slots:
     void setPSMAutoValue(bool toggle);
     void setPSMThresholdValue(const QString &value);
 
-public slots:    
+public slots:
     void DBusMessagingFailure();
     void valueSet();
     void querySent();
 
 signals:
     void batteryCharging(int);
-    void batteryNotCharging();    
+    void batteryNotCharging();
     void PSMValueReceived(bool);
     void PSMAutoValueReceived(bool);
     void PSMAutoDisabled();

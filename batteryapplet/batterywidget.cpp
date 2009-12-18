@@ -38,7 +38,7 @@ BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
 }
 
 BatteryWidget::~BatteryWidget()
-{    
+{
 }
 
 bool BatteryWidget::back()
@@ -47,14 +47,14 @@ bool BatteryWidget::back()
 }
 
 void BatteryWidget::initWidget()
-{       
+{
     // proxy for dbus interface on remote object
     batteryIf = new BatteryDBusInterface();
 
     // battery image
     batteryImage = new BatteryImage();
 
-    // talkTimeContainer        
+    // talkTimeContainer
     talkTimeContainer = new TimeContainer(DcpBattery::TalkTimeText, batteryImage);
 
     // standByTimeContainer
@@ -93,7 +93,7 @@ void BatteryWidget::initWidget()
     mainContainer->centralWidget()->setLayout(orientationLayout);
 
     // connect the value receive signals
-    connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));  
+    connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));
     connect(batteryIf, SIGNAL(batteryCharging(int)), batteryImage, SLOT(startCharging(int)));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryImage, SLOT(stopCharging()));
     connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
@@ -122,20 +122,20 @@ void BatteryWidget::initWidget()
 }
 
 void BatteryWidget::PSMButtonReleased()
-{    
-    bool toggle = ( PSMButton->text() == DcpBattery::PSMActivateText ? true : false);
+{
+    bool toggle = (PSMButton->text() == DcpBattery::PSMActivateText ? true : false);
     batteryIf->setPSMValue(toggle);
 }
 
 void BatteryWidget::updatePSMButton(bool toggle)
 {
-    QString text = ( toggle ? DcpBattery::PSMDeactivateText : DcpBattery::PSMActivateText );
-    PSMButton->setText(text); 
+    QString text = (toggle ? DcpBattery::PSMDeactivateText : DcpBattery::PSMActivateText);
+    PSMButton->setText(text);
 }
 
 void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
 {
-    qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";    
+    qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";
     talkTimeContainer->updateTimeLabel(timeValues.at(0));
-    standByTimeContainer->updateTimeLabel(timeValues.at(1));   
+    standByTimeContainer->updateTimeLabel(timeValues.at(1));
 }

@@ -9,7 +9,7 @@ class DuiLabel;
 class TimeContainer : public DuiContainer
 {
 public:
-    TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent=0);
+    TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent = 0);
     virtual ~TimeContainer();
 
     void updateTimeLabel(const QString &text);

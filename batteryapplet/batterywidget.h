@@ -1,7 +1,7 @@
 #ifndef BATTERYWIDGET_H
 #define BATTERYWIDGET_H
 
-#include "dcpwidget.h" 
+#include "dcpwidget.h"
 
 class DuiButton;
 class BatteryDBusInterface;
@@ -12,7 +12,7 @@ class TimeContainer;
 class BatteryWidget : public DcpWidget
 {
     Q_OBJECT
-		
+
 public:
     BatteryWidget(QGraphicsWidget *parent = 0);
     virtual ~BatteryWidget();
@@ -33,7 +33,7 @@ private: //attributes
     DuiButton *PSMButton;
     SliderContainer *sliderContainer;
     TimeContainer *standByTimeContainer;
-    TimeContainer *talkTimeContainer;    
+    TimeContainer *talkTimeContainer;
 
 };
 #endif // BATTERYWIDGET_H

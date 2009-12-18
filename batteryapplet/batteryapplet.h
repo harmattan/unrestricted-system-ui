@@ -18,7 +18,7 @@ public:
     virtual DcpWidget* pageMain();
     virtual QString title() const;
     virtual QVector<DuiAction *> viewMenuItems();
-    virtual DcpBrief* constructBrief(int partId = 0);    
+    virtual DcpBrief* constructBrief(int partId = 0);
 
 private:
     QPointer<BatteryWidget> main;

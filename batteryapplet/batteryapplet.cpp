@@ -17,19 +17,19 @@ Q_EXPORT_PLUGIN2(batteryapplet, BatteryApplet)
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
 void BatteryApplet::init()
-{   
-    DuiTheme::loadCSS(cssDir + "batteryapplet.css");    
+{
+    DuiTheme::loadCSS(cssDir + "batteryapplet.css");
 }
 
 DcpWidget* BatteryApplet::constructWidget(int widgetId)
 {
     Q_UNUSED(widgetId);
-    return pageMain();    
+    return pageMain();
 }
 
 DcpWidget* BatteryApplet::pageMain()
 {
-    if(main == NULL)
+    if (main == NULL)
         main = new BatteryWidget();
     return main;
 }

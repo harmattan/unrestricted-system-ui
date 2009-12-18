@@ -45,7 +45,7 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     DuiContainer *container = new DuiContainer;
     DuiWidget *widget = new DuiWidget;
     DuiLayout *layout = new DuiLayout;
-    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);    
+    DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
     widget->setLayout(layout);
     container->setTitle(trid("qtn_ener_battery", "Battery"));
     container->setCentralWidget(widget);
@@ -73,22 +73,22 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
 }
 
 Battery::~Battery()
-{    
+{
     delete dbusIf;
-    dbusIf = NULL;    
+    dbusIf = NULL;
 }
 
 void Battery::updateModeLabel(bool toggle)
-{   
-    modeLabel->setText((toggle ? trid("qtn_ener_psmode", "Power save mode") : trid("qtn_ener_normal", "Normal mode")));    
+{
+    modeLabel->setText((toggle ? trid("qtn_ener_psmode", "Power save mode") : trid("qtn_ener_normal", "Normal mode")));
 }
 
 void Battery::updateTimeLabel(const QStringList &times)
-{ 
-    if(times.size() != 2)
+{
+    if (times.size() != 2)
         return;
 
-    if(times.at(1).toInt() == 0) // a text, not minute value
+    if (times.at(1).toInt() == 0) // a text, not minute value
         timeLabel->setText(times.at(1));
     else
         timeLabel->setText(timeValue(times.at(1).toInt()));
@@ -101,12 +101,12 @@ QString Battery::timeValue(int minutes)
     const QString hoursPrefix = (TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
     QString time;
 
-    if(minutes < 60)
+    if (minutes < 60)
         time = QString("%1%2").arg(minutes).arg(minutesPrefix);
     else {
-        QVariant minsVar = minutes%60;
+        QVariant minsVar = minutes % 60;
         minsVar = (minsVar.toInt() == 0) ? "00" : minsVar;
-        time = QString("%1:%2%3").arg(minutes/60).arg(minsVar.toString()).arg(hoursPrefix);
+        time = QString("%1:%2%3").arg(minutes / 60).arg(minsVar.toString()).arg(hoursPrefix);
     }
     return time;
 }
@@ -117,6 +117,6 @@ void Battery::showBatteryModificationPage()
     DuiControlPanelIf cpIf;
     // check the interface is valid
     if (!cpIf.isValid())
-        return;   
+        return;
     cpIf.appletPage("Battery");
 }

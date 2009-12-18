@@ -25,7 +25,7 @@ private: //attributes
     QTimer *timer;
     int batteryLevel;
     QStringList batteryImages;
-    QStringList batteryChargingImages;    
+    QStringList batteryChargingImages;
 };
 
 #endif // BATTERYIMAGE_H
