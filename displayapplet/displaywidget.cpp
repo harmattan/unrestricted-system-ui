@@ -23,26 +23,26 @@ DisplayWidget::DisplayWidget(QGraphicsWidget *parent) :
         logic(NULL),
         brightnessContainer(NULL),
         screenLightsContainer(NULL)
-{    
+{
     setReferer(DcpDisplay::None);
     initWidget();
 }
 
 DisplayWidget::~DisplayWidget()
-{    
+{
 }
 
 void DisplayWidget::initWidget()
 {
-    logic = new DisplayBusinessLogic();    
+    logic = new DisplayBusinessLogic();
 
     // blankInhibitContainer
-    blankInhibitButton = new DuiButton();    
+    blankInhibitButton = new DuiButton();
     blankInhibitButton->setCheckable(true);
     blankInhibitButton->setChecked(logic->blankInhibitValue());
     blankInhibitButton->setObjectName("blankInhibitButton");
     DuiLayout *blankInhibitLayout = new DuiLayout();
-    DuiLinearLayoutPolicy *blankInhibitLayoutPolicy = new DuiLinearLayoutPolicy(blankInhibitLayout, Qt::Horizontal);    
+    DuiLinearLayoutPolicy *blankInhibitLayoutPolicy = new DuiLinearLayoutPolicy(blankInhibitLayout, Qt::Horizontal);
     DuiLabel *blankiInhibitLabel = new DuiLabel(DcpDisplay::BlankInhibitText);
     blankiInhibitLabel->setObjectName("displayLabel");
     blankInhibitLayoutPolicy->addItem(blankiInhibitLabel, Qt::AlignLeft);
@@ -76,7 +76,7 @@ void DisplayWidget::initWidget()
     connect(screenLightsContainer, SIGNAL(sliderValueChanged(int)), logic, SLOT(setScreenLightsValue(int)));
     connect(blankInhibitButton, SIGNAL(toggled(bool)), logic, SLOT(setBlankInhibitValue(bool)));
 
-    this->setLayout(mainLayout);    
+    this->setLayout(mainLayout);
 
 }
 

@@ -16,17 +16,17 @@ public:
 
     void initSlider(const QList<int> &values, int index);
 
-private slots:    
+private slots:
     void valueChanged(int index);
 
 private:
     void updateSlider(int value);
 
-signals:    
+signals:
     void sliderValueChanged(int);
 
 private: //methods
-    void setLayout();   
+    void setLayout();
 
 private: //attributes
     DuiLabel *label;

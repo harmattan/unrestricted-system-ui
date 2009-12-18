@@ -17,7 +17,7 @@ Q_EXPORT_PLUGIN2(displayapplet, DisplayApplet)
 const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
 
 void DisplayApplet::init()
-{    
+{
     DuiTheme::loadCSS(cssDir + "displayapplet.css");
 }
 
@@ -29,7 +29,7 @@ DcpWidget* DisplayApplet::constructWidget(int widgetId)
 
 DcpWidget* DisplayApplet::pageMain()
 {
-     if(main == NULL)
+    if (main == NULL)
         main = new DisplayWidget();
     return main;
 }

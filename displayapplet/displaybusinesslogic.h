@@ -17,8 +17,8 @@ public:
     QList<int> brightnessValues();
     int selectedBrightnessValue();
     QList<int> screenLightsValues();
-    int selectedScreenLightsValue();        
-    bool blankInhibitValue();    
+    int selectedScreenLightsValue();
+    bool blankInhibitValue();
 
 public slots:
     void setBrightnessValue(int value);
@@ -27,7 +27,7 @@ public slots:
     void toggleDisplay(bool toggle);
 
 private: //attributes
-    QmDisplayState *display;    
+    QmDisplayState *display;
 
 };
 

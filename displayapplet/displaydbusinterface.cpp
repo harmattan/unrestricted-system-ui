@@ -4,9 +4,9 @@
 
 DisplayDBusInterface::DisplayDBusInterface()
 {
-    dbusIf = new QDBusInterface("com.nokia.systemui", "/", 
-				"com.nokia.systemui.display", 
-				QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("com.nokia.systemui", "/",
+                                "com.nokia.systemui.display",
+                                QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(brightnessValuesReceived(int, QStringList)), this, SIGNAL(brightnessValuesReceived(int, QStringList)));
     connect(dbusIf, SIGNAL(screenLightsValuesReceived(int, QStringList)), this, SIGNAL(screenLightsValuesReceived(int, QStringList)));
 }
@@ -20,7 +20,7 @@ DisplayDBusInterface::~DisplayDBusInterface()
 void DisplayDBusInterface::brightnessValuesRequired()
 {
     qDebug() << "DisplayDBusInterface::brightnessValuesRequired()";
-    QList<QVariant> list;    
+    QList<QVariant> list;
     dbusIf->callWithCallback(QString("brightnessValues"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 

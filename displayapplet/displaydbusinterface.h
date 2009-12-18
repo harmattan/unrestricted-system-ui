@@ -14,8 +14,8 @@ public:
     DisplayDBusInterface();
     virtual ~DisplayDBusInterface();
 
-    void brightnessValuesRequired();    
-    void screenLightsValuesRequired();    
+    void brightnessValuesRequired();
+    void screenLightsValuesRequired();
     void blankInhibitValueRequired();
 
 public slots:
@@ -25,7 +25,7 @@ public slots:
 
 private slots:
     void valueSet();
-    void DBusMessagingFailure();    
+    void DBusMessagingFailure();
 
 signals:
     void brightnessValuesReceived(int, QStringList);

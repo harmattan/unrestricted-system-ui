@@ -1,7 +1,7 @@
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
 
-#include "dcpwidget.h" 
+#include "dcpwidget.h"
 
 class DuiButton;
 class DisplayBusinessLogic;
@@ -10,7 +10,7 @@ class SliderContainer;
 class DisplayWidget : public DcpWidget
 {
     Q_OBJECT
-		
+
 public:
     DisplayWidget(QGraphicsWidget *parent = 0);
     virtual ~DisplayWidget();
@@ -18,11 +18,11 @@ public:
 protected:
     void initWidget();
 
-private slots:    
+private slots:
     void initBlankInhibitButton(bool toggle);
 
 private: //attributes
-    DuiButton *blankInhibitButton;    
+    DuiButton *blankInhibitButton;
     DisplayBusinessLogic *logic;
     SliderContainer *brightnessContainer;
     SliderContainer *screenLightsContainer;
