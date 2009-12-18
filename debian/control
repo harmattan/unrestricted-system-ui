@@ -11,7 +11,6 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
-  - pin/puk query, sim notifications
   - battery notifications
   - screenlock
   - shutdown dialog
@@ -40,16 +39,6 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel
 Description: Display settings applet.
 
-Package: duicontrolpanel-networkapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel
-Description: Cellular network settings applet.
-
-Package: duistatusindicatormenu-connectivityplugin
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu
-Description: Connectivity status indicator menu plugin.
-
 Package: duicontrolpanel-profileapplet
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libduicontrolpanel
@@ -60,8 +49,4 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu
 Description: Profile status indicator menu plugin.
 
-Package: duicontrolpanel-callandsimapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel
-Description: Call & SIM card settings applet.
 
