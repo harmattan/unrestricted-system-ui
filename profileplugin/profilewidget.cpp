@@ -32,14 +32,14 @@
 
 
 ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
-    DuiWidget(parent),
-    statusIndicatorMenu(statusIndicatorMenu),
-    dataIf(NULL),
-    profileButtons(NULL)
-{    
+        DuiWidget(parent),
+        statusIndicatorMenu(statusIndicatorMenu),
+        dataIf(NULL),
+        profileButtons(NULL)
+{
     Q_UNUSED(statusIndicatorMenu);
-    dataIf = new ProfileDataInterface();    
-    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), profileButtons, SLOT(selectProfile(int)));    
+    dataIf = new ProfileDataInterface();
+    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), profileButtons, SLOT(selectProfile(int)));
 
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
@@ -55,7 +55,7 @@ ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMen
 ProfileWidget::~ProfileWidget()
 {
     delete dataIf;
-    dataIf = NULL;    
+    dataIf = NULL;
 }
 
 void ProfileWidget::initProfileButtons()
@@ -64,7 +64,7 @@ void ProfileWidget::initProfileButtons()
     profileButtons->setTitle(trid("qtn_prof_profile", "Profile"));
     QMap<int, QString> map;
     QList<ProfileDataInterface::ProfileData> l = dataIf->getProfilesData();
-    for(int i = 0; i < l.count(); ++i) {
+    for (int i = 0; i < l.count(); ++i) {
         ProfileDataInterface::ProfileData d = l.at(i);
         map.insert(d.profileId, d.profileName);
     }
@@ -79,6 +79,6 @@ void ProfileWidget::showProfileModificationPage()
     DuiControlPanelIf cpIf;
     // check the interface is valid
     if (!cpIf.isValid())
-        return;    
+        return;
     cpIf.appletPage("Profile");
 }

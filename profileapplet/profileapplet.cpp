@@ -31,7 +31,7 @@ DcpWidget* ProfileApplet::constructWidget(int widgetId)
 DcpWidget* ProfileApplet::pageMain()
 {
     qDebug() << Q_FUNC_INFO << (QObject*)main;
-    if(main == NULL)
+    if (main == NULL)
         main = new ProfileWidget();
     return main;
 }

@@ -8,21 +8,22 @@
 
 using namespace ProfileName;
 
-namespace ProfileId{
-    // must be identical with enum defined in ../profileapplet/profilebuttons.h
-    enum ProfileId {
-        ringing = 0,
-        silent,
-        beep,
-        loud,
-        none // none must be last to teel how many profiles there are available
-    };    
+namespace ProfileId
+{
+// must be identical with enum defined in ../profileapplet/profilebuttons.h
+enum ProfileId {
+    ringing = 0,
+    silent,
+    beep,
+    loud,
+    none // none must be last to teel how many profiles there are available
+};
 }
 
 ProfileDataInterface::ProfileDataInterface()
 {
     api = new Profile();
-    connect(api, SIGNAL(activeProfileChanged(QString)), this, SLOT(currentProfileNameChanged(QString)));    
+    connect(api, SIGNAL(activeProfileChanged(QString)), this, SLOT(currentProfileNameChanged(QString)));
 }
 
 ProfileDataInterface::~ProfileDataInterface()
@@ -59,8 +60,7 @@ QList<ProfileDataInterface::ProfileData> ProfileDataInterface::getProfilesData()
     QStringList ids = api->profileNames();
 
     // send...
-    for(int i = 0; i < ids.count(); ++i)
-    {
+    for (int i = 0; i < ids.count(); ++i) {
         ProfileDataInterface::ProfileData d;
         //get name...
         QString id = ids.at(i);
@@ -78,7 +78,7 @@ void ProfileDataInterface::setProfile(int value)
 {
     qDebug() << Q_FUNC_INFO << "(" << value << ")";
     bool success = api->setActiveProfile(mapId(value));
-    if(!success){
+    if (!success) {
         // TODO: what??
     }
 }
@@ -87,7 +87,7 @@ void ProfileDataInterface::setVibration(int id, bool value)
 {
     qDebug() << Q_FUNC_INFO << "(" << id << "," << value <<  ")";
     bool success = api->setVibration(mapId(id), value);
-    if(!success){
+    if (!success) {
         // TODO: what??
     }
 }
@@ -96,14 +96,14 @@ void ProfileDataInterface::setVolumeLevel(int id, int value)
 {
     qDebug() << Q_FUNC_INFO << "(" << id << "," << value <<  ")";
     bool success = api->setVolumeLevel(mapId(id), value);
-    if(!success){
+    if (!success) {
         // TODO: what??
     }
 }
 
 int ProfileDataInterface::checkSilent(int id, int level)
 {
-    if(id == ProfileId::silent){
+    if (id == ProfileId::silent) {
         level = -1;
     }
     return level;
@@ -112,13 +112,13 @@ int ProfileDataInterface::checkSilent(int id, int level)
 QString ProfileDataInterface::id2Name(const QString &id)
 {
     QString localised = "";
-    if(ProfileName::ringing == id){
+    if (ProfileName::ringing == id) {
         localised = DcpProfile::RingingText;
-    }else if(ProfileName::silent == id){
+    } else if (ProfileName::silent == id) {
         localised = DcpProfile::SilentText;
-    }else if(ProfileName::beep == id){
+    } else if (ProfileName::beep == id) {
         localised = DcpProfile::BeepText;
-    }else if(ProfileName::loud == id){
+    } else if (ProfileName::loud == id) {
         localised = DcpProfile::LoudText;
     }
     return localised;
@@ -127,13 +127,13 @@ QString ProfileDataInterface::id2Name(const QString &id)
 int ProfileDataInterface::mapId(const QString &id)
 {
     int intId = ProfileId::none;
-    if(ProfileName::ringing == id){
+    if (ProfileName::ringing == id) {
         intId = ProfileId::ringing;
-    }else if(ProfileName::silent == id){
+    } else if (ProfileName::silent == id) {
         intId = ProfileId::silent;
-    }else if(ProfileName::beep == id){
+    } else if (ProfileName::beep == id) {
         intId = ProfileId::beep;
-    }else if(ProfileName::loud == id){
+    } else if (ProfileName::loud == id) {
         intId = ProfileId::loud;
     }
     return intId;
@@ -142,19 +142,19 @@ int ProfileDataInterface::mapId(const QString &id)
 QString ProfileDataInterface::mapId(int id)
 {
     QString stringId = "";
-    switch(id){
-        case ProfileId::ringing:
-            stringId = ProfileName::ringing;
-            break;
-        case ProfileId::silent:
-            stringId = ProfileName::silent;
-            break;
-        case ProfileId::beep:
-            stringId = ProfileName::beep;
-            break;
-        case ProfileId::loud:
-            stringId = ProfileName::loud;
-            break;
+    switch (id) {
+    case ProfileId::ringing:
+        stringId = ProfileName::ringing;
+        break;
+    case ProfileId::silent:
+        stringId = ProfileName::silent;
+        break;
+    case ProfileId::beep:
+        stringId = ProfileName::beep;
+        break;
+    case ProfileId::loud:
+        stringId = ProfileName::loud;
+        break;
     }
     return stringId;
 }

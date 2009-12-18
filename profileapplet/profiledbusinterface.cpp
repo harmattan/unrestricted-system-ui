@@ -4,9 +4,9 @@
 
 ProfileDBusInterface::ProfileDBusInterface()
 {
-    dbusIf = new QDBusInterface("com.nokia.systemui", "/", 
-				"com.nokia.systemui.profile", 
-				QDBusConnection::sessionBus());
+    dbusIf = new QDBusInterface("com.nokia.systemui", "/",
+                                "com.nokia.systemui.profile",
+                                QDBusConnection::sessionBus());
     connect(dbusIf, SIGNAL(currentProfile(int)), this, SIGNAL(currentProfile(int)));
     connect(dbusIf, SIGNAL(volumeLevel(int, int)), this, SIGNAL(volumeLevel(int, int)));
     connect(dbusIf, SIGNAL(vibrationValue(int, bool)), this, SIGNAL(vibrationValue(int, bool)));
@@ -24,13 +24,11 @@ QString ProfileDBusInterface::getCurrentProfileName()
     QString name = "";
     QDBusMessage reply = dbusIf->call(QString("getCurrentProfileName"));
 
-    if(reply.type() == QDBusMessage::ErrorMessage) {
+    if (reply.type() == QDBusMessage::ErrorMessage) {
         qDebug() << Q_FUNC_INFO << "error reply:" << reply.errorName();
-    }
-    else if(reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() > 0) {
+    } else if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() > 0) {
         name = reply.arguments().at(0).toString();
-    }
-    else {
+    } else {
         qDebug() << Q_FUNC_INFO << "reply type:" << reply.type();
     }
     qDebug() << Q_FUNC_INFO << ":" << name;
@@ -40,7 +38,7 @@ QString ProfileDBusInterface::getCurrentProfileName()
 void ProfileDBusInterface::currentProfileRequired()
 {
     qDebug() << "ProfileDBusInterface::currentProfileRequired()";
-    QList<QVariant> list;    
+    QList<QVariant> list;
     dbusIf->callWithCallback(QString("getCurrentProfile"), list, this, SLOT(querySent()), SLOT(DBusMessagingFailure()));
 }
 

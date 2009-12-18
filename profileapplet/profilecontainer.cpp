@@ -10,20 +10,21 @@
 #include <DuiGridLayoutPolicy>
 #include <QDebug>
 
-namespace ProfileApplet{
-    const int sliderMin = 0;
-    const int sliderMax = 100;
+namespace ProfileApplet
+{
+const int sliderMin = 0;
+const int sliderMax = 100;
 }
 
 ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool vibra, DuiWidget *parent) :
-    DuiContainer(title, parent),
-    slider(NULL),
-    level(-2),
-    profileId(id)
+        DuiContainer(title, parent),
+        slider(NULL),
+        level(-2),
+        profileId(id)
 {
     qDebug() << Q_FUNC_INFO << title;
 
-    if(0 <= level) {
+    if (0 <= level) {
         slider = new DuiSlider(0, "continuous");
         slider->setOrientation(Qt::Horizontal);
         slider->setRange(ProfileApplet::sliderMin, ProfileApplet::sliderMax);
@@ -58,15 +59,12 @@ void ProfileContainer::setLayout()
     DuiImage* img = NULL;
     QGraphicsLayoutItem* item = NULL;
 
-    if(slider)
-    {
+    if (slider) {
         img = new DuiImage("icon-m-volume");
         item = slider;
         qDebug() << Q_FUNC_INFO << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
-    }
-    else
-    {
+    } else {
         img = new DuiImage("icon-m-volume-off");
         item = new DuiLabel(DcpProfile::NoRingingText);
     }
@@ -95,12 +93,11 @@ void ProfileContainer::setLayout()
 void ProfileContainer::setLevel(int value)
 {
     qDebug() << Q_FUNC_INFO << "for" << title() << ":" << value << "(old:" << level << ")";
-    if(!slider || value == level)
+    if (!slider || value == level)
         return;
 
     level = value;
-    if(ProfileApplet::sliderMin < level && ProfileApplet::sliderMax >= level)
-    {
+    if (ProfileApplet::sliderMin < level && ProfileApplet::sliderMax >= level) {
         slider->setValue(level);
         qDebug() << Q_FUNC_INFO << "done:" << slider->value();
     }

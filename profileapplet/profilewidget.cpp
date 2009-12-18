@@ -19,7 +19,7 @@ ProfileWidget::ProfileWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
         profileButtons(NULL),
         profileIf(NULL)
-{    
+{
     setReferer(DcpProfile::None);
     initWidget();
 }
@@ -55,14 +55,13 @@ void ProfileWidget::initProfiles()
     qDebug() << Q_FUNC_INFO << "received count:" << l.count();
 
     // create profile containers
-    for(int i = 0; i < l.count(); ++i)
-    {
+    for (int i = 0; i < l.count(); ++i) {
         ProfileDataInterface::ProfileData d = l.at(i);
         ProfileContainer* cont = new ProfileContainer(
-                d.profileId,
-                d.profileName,
-                d.volumeLevel,
-                d.vibrationEnabled);
+            d.profileId,
+            d.profileName,
+            d.volumeLevel,
+            d.vibrationEnabled);
         connect(cont, SIGNAL(sliderValueChanged(int)), this, SLOT(sliderValueChanged(int)));
         connect(cont, SIGNAL(vibrationChanged(bool)), this, SLOT(vibrationChanged(bool)));
         containers.insert(d.profileId, cont);
@@ -102,16 +101,15 @@ DuiContainer* ProfileWidget::createContainer()
 
     int row = 3;
     int col = 0;
-    for(int i = 0; i < containers.count(); ++i)
-    {
+    for (int i = 0; i < containers.count(); ++i) {
         qDebug() << Q_FUNC_INFO << "row:" << row << "col:" << col;
         ProfileContainer* cont = containers.value(i);
         portraitPolicy->addItem(cont);
         landscapePolicy->addItemAtPosition(cont, row, col);
         ++col;
-        if(1 < col){
+        if (1 < col) {
             ++row;
-            col=0;
+            col = 0;
         }
     }
 
@@ -125,7 +123,7 @@ DuiContainer* ProfileWidget::createContainer()
 }
 
 void ProfileWidget::sliderValueChanged(int index)
-{      
+{
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
     qDebug() << Q_FUNC_INFO << "for" << profile->title() << ":" << index;
     profileIf->setVolumeLevel(profile->id(), index);
@@ -141,7 +139,7 @@ void ProfileWidget::vibrationChanged(bool enabled)
 
 QString ProfileWidget::currentProfile()
 {
-    if(profileButtons) {
+    if (profileButtons) {
         return profileButtons->selectedProfileName();
     }
     return "";
@@ -163,7 +161,7 @@ void ProfileWidget::setVolume(int profileId, int level)
 {
     qDebug() << Q_FUNC_INFO << "for profile" << profileId << ":" << level;
     ProfileContainer *cont = containers.value(profileId);
-    if (cont){
+    if (cont) {
         cont->setLevel(level);
     }
 }
@@ -172,7 +170,7 @@ void ProfileWidget::setVibration(int profileId, bool enabled)
 {
     qDebug() << Q_FUNC_INFO << "for profile" << profileId << ":" << enabled;
     ProfileContainer *cont = containers.value(profileId);
-    if (cont){
+    if (cont) {
         cont->setVibration(enabled);
     }
 }

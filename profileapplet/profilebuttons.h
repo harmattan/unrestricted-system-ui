@@ -10,7 +10,7 @@ class ProfileButtons : public DuiContainer
     Q_OBJECT
 
 public:
-    ProfileButtons(DuiWidget *parent=0);
+    ProfileButtons(DuiWidget *parent = 0);
     virtual ~ProfileButtons();
 
     void init(QMap<int, QString> data, int currentId);
@@ -25,12 +25,12 @@ signals:
 private slots:
     void buttonToggled(bool checked);
 
-private:    
+private:
     void addButton(QString name, int id, bool checked);
-    void setLayout();    
+    void setLayout();
 
-private:   
-    DuiButtonGroup *buttons;    
+private:
+    DuiButtonGroup *buttons;
 
 };
 

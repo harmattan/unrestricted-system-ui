@@ -10,8 +10,7 @@ class ProfileDataInterface : public QObject
 
 public:
 
-    struct ProfileData
-    {
+    struct ProfileData {
         int profileId;
         QString profileName;
         int volumeLevel;
@@ -30,7 +29,7 @@ signals:
 public:
     QString getCurrentProfileName();
     int getCurrentProfile();
-    QList<ProfileData> getProfilesData();    
+    QList<ProfileData> getProfilesData();
     void setVibration(int id, bool value);
     void setVolumeLevel(int id, int value);
 

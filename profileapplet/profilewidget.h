@@ -1,7 +1,7 @@
 #ifndef PROFILEWIDGET_H
 #define PROFILEWIDGET_H
 
-#include "dcpwidget.h" 
+#include "dcpwidget.h"
 #include "profilebuttons.h"
 #include "profiledatainterface.h"
 
@@ -11,7 +11,7 @@ class ProfileContainer;
 class ProfileWidget : public DcpWidget
 {
     Q_OBJECT
-		
+
 public:
     ProfileWidget(QGraphicsWidget *parent = 0);
     virtual ~ProfileWidget();
