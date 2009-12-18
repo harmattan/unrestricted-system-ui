@@ -6,7 +6,8 @@
 
 // STUB CLASS
 
-namespace Maemo {
+namespace Maemo
+{
 
 class QmBattery : public QObject
 {
@@ -14,23 +15,20 @@ class QmBattery : public QObject
 public:
 
     /** Battery charge level states */
-    enum Level
-    {
+    enum Level {
         LevelFull = 0,       /**< Battery full */
         LevelLow,            /**< Battery low */
         LevelCritical        /**< Battery level critically low */
     };
 
     /** The mode in which the remaining time is to be calculated */
-    enum RemainingTimeMode
-    {
+    enum RemainingTimeMode {
         NormalMode,       /**< In normal mode */
         PowersaveMode     /**< In powersave mode */
     };
 
     /** The type of charger connected */
-    enum ChargerType
-    {        
+    enum ChargerType {
         Unknown = -1,        /**< Unknown charger */
         None,                /**< No  charger connected */
         Wall,                /**< Wall charger  */
@@ -39,18 +37,16 @@ public:
     };
 
     /** Battery charging states */
-    enum State
-    {
+    enum State {
         StateCharging = 0,    /**< Charging */
         StateNotCharging,     /**< Not charging */
         StateChargingFailed
     };
 
     /** Charging events */
-    enum ChargerEvent
-    {
+    enum ChargerEvent {
         ChargerConnected,    /**< Charger connected */
-        ChargerDisconnected, /**< Charger disconnected */        
+        ChargerDisconnected, /**< Charger disconnected */
     };
 
     QmBattery(QObject *parent = 0);
@@ -60,7 +56,7 @@ public:
     * Current battery charge level
     * @return  QmBattery::Level whether battery is low/full/critical
     */
-    QmBattery::Level getLevel();    
+    QmBattery::Level getLevel();
 
     /*
     * Current battery state

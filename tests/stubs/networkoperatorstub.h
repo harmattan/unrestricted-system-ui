@@ -11,7 +11,7 @@ class NetworkOperator : public QObject
     Q_OBJECT
 
 public:
-    NetworkOperator(QObject *parent=0);
+    NetworkOperator(QObject *parent = 0);
     ~NetworkOperator();
 
     QString name() const;

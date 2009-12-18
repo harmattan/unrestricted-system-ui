@@ -25,21 +25,5 @@
             <file>/tmp/ut_lowbatterynotifier.txt</file>
          </get>
     </set>
-    <set name="networkbusinesslogic" description="middleware tests">
-      <case name="ut_networkbusinesslogic" type="Functional" description="Test the NetworkBusinessLogic" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_networkbusinesslogic</step>
-      </case>
-          <get>
-            <file>/tmp/ut_networkbusinesslogic.txt</file>
-         </get>
-    </set>
-    <set name="pincodequerybusinesslogic" description="middleware tests">
-      <case name="ut_pincodequerybusinesslogic" type="Functional" description="Test the PinCodeQueryBusinessLogic" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_pincodequerybusinesslogic</step>
-      </case>
-          <get>
-            <file>/tmp/ut_pincodequerybusinesslogic.txt</file>
-         </get>
-    </set>
   </suite>
 </testdefinition>

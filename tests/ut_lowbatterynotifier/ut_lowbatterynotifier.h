@@ -13,8 +13,10 @@ class LowBatteryHelper : public QObject
     Q_OBJECT
 
 public:
-    LowBatteryHelper() : QObject() { ;}
-    void start();    
+    LowBatteryHelper() : QObject() {
+        ;
+    }
+    void start();
     QList<int> notificationTimes();
 
 public slots:

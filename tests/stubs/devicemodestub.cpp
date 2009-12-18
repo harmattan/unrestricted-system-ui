@@ -2,7 +2,8 @@
 
 #include <QDebug>
 
-namespace Maemo {
+namespace Maemo
+{
 
 QmDeviceMode::QmDeviceMode(QObject *parent) :
         QObject(parent),

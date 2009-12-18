@@ -5,7 +5,7 @@ namespace Cellular
 
 NetworkOperator::NetworkOperator(QObject *parent) :
         QObject(parent)
-{    
+{
 }
 
 NetworkOperator::~NetworkOperator()

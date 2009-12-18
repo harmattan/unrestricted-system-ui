@@ -11,7 +11,7 @@ class SystemControl : public QObject
     Q_OBJECT
 
 public:
-    SystemControl(QObject *parent=0);
+    SystemControl(QObject *parent = 0);
     ~SystemControl();
 
     bool power() const;

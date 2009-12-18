@@ -12,18 +12,17 @@ class AvailableOperator : public QObject
 {
 public:
 
-    enum Availability
-    {
+    enum Availability {
         UnknownAvailability = -1, //!< Availability unknown
         Available, //!< Operator is available
         Current, //!< Operator is the current registered operator
         NotAvailable //!< Operator is not available
     };
 
-    AvailableOperator(const QString &mnc, const QString &mcc, const QString &name, AvailableOperator::Availability availability, QObject *parent=0);
+    AvailableOperator(const QString &mnc, const QString &mcc, const QString &name, AvailableOperator::Availability availability, QObject *parent = 0);
     ~AvailableOperator();
 
-     //! Set operator MNC
+    //! Set operator MNC
     void setMnc(const QString &mnc);
     //! Set operator MCC
     void setMcc(const QString &mcc);
@@ -32,14 +31,14 @@ public:
     //! Set operator availability
     void setAvailability(AvailableOperator::Availability availability);
 
-     //! Get operator MNC
+    //! Get operator MNC
     QString mnc() const;
     //! Get operator MCC
     QString mcc() const;
     //! Get operator name
     QString name() const;
     //! Get operator availability
-    AvailableOperator::Availability availability() const;    
+    AvailableOperator::Availability availability() const;
 
 private:
     QString currentMnc;
@@ -54,11 +53,10 @@ class NetworkRegistration : public QObject
     Q_OBJECT
 
 public:
-    NetworkRegistration(QObject *parent=0);
+    NetworkRegistration(QObject *parent = 0);
     ~NetworkRegistration();
 
-    enum Mode
-    {
+    enum Mode {
         UnknownMode = -1, //!< Network access mode is unknown
         Manual, //!< Manual network access selection
         Automatic //!< Automatic network access selection
@@ -70,7 +68,7 @@ public:
     void selectOperator();
     //! Select an operator based on MNC/MCC code
     void selectOperator(const QString &mnc, const QString &mcc);
-     //! Query for available networks
+    //! Query for available networks
     void queryAvailableOperators();
 
     // for unit test usage
@@ -79,7 +77,7 @@ public:
     void init(NetworkOperator *networkOperator);
 
 signals:
-     //! Access selection mode changed
+    //! Access selection mode changed
     void modeChanged(int mode);
     //! Asynchronous response to available network scan
     void availableOperators(bool success, const QList<AvailableOperator*> &operators, const QString &reason);
@@ -89,7 +87,7 @@ signals:
 private:
     bool success;
     NetworkOperator *networkOperator;
-    QList<AvailableOperator*> operators;    
+    QList<AvailableOperator*> operators;
 
 };
 }

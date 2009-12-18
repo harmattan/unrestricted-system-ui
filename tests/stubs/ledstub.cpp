@@ -1,7 +1,8 @@
 #include "ledstub.h"
 #include <QDebug>
 
-namespace Maemo {
+namespace Maemo
+{
 
 QmLED::QmLED(QObject *parent) : QObject(parent)
 {

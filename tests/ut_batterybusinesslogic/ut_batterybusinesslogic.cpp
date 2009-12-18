@@ -6,14 +6,15 @@
 
 #include <QVariant>
 
-namespace {
-    const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
-    const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
+namespace
+{
+const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
+const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
 }
 
 void Ut_BatteryBusinessLogic::init()
-{    
-    systemUIGConf = new SystemUIGConf();    
+{
+    systemUIGConf = new SystemUIGConf();
     m_subject = new BatteryBusinessLogic(systemUIGConf);
 }
 
@@ -39,7 +40,7 @@ void Ut_BatteryBusinessLogic::cleanupTestCase()
 }
 
 void Ut_BatteryBusinessLogic::testSetPSMThreshold()
-{       
+{
     // set the battery level to 15%
     m_subject->battery->setBatteryEnergyLevel(15);
 
@@ -79,7 +80,7 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
 }
 
 void Ut_BatteryBusinessLogic::testTogglePSM()
-{    
+{
     QSignalSpy spy(m_subject, SIGNAL(PSMAutoDisabled()));
 
     // set the PSM auto on
@@ -93,7 +94,7 @@ void Ut_BatteryBusinessLogic::testTogglePSM()
 
     // check that the PSM auto turn off signal is emitted
     QCOMPARE(spy.count(), 1);
-    spy.takeFirst();    
+    spy.takeFirst();
 
     // set the PSM auto on
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
@@ -105,11 +106,11 @@ void Ut_BatteryBusinessLogic::testTogglePSM()
     QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
 
     // check that the PSM auto turn off signal is emitted
-    QCOMPARE(spy.count(), 1);    
+    QCOMPARE(spy.count(), 1);
 }
 
 void Ut_BatteryBusinessLogic::testTogglePSMAuto()
-{    
+{
     // set the PSM auto on
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
 

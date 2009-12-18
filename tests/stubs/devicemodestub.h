@@ -5,7 +5,8 @@
 
 // STUB CLASS
 
-namespace Maemo {
+namespace Maemo
+{
 
 class QmDeviceMode : public QObject
 {
@@ -13,8 +14,7 @@ class QmDeviceMode : public QObject
 public:
 
     /** Possible power save modes for the device. */
-    enum PSMState
-    {
+    enum PSMState {
         PSMError = -1,    /**< Power save mode could not be figured out. */
         PSMStateOff = 0,  /**< Power save mode is off */
         PSMStateOn        /**< Power save mode is on */

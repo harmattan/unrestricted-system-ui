@@ -2,7 +2,8 @@
 #include <QTimer>
 #include <QDebug>
 
-namespace Maemo {
+namespace Maemo
+{
 
 QmBattery::QmBattery(QObject *parent) :
         QObject(parent)
@@ -26,7 +27,7 @@ void QmBattery::initValues()
 
 int QmBattery::getRemainingIdleTime(QmBattery::RemainingTimeMode mode) const
 {
-    if(mode == QmBattery::PowersaveMode)
+    if (mode == QmBattery::PowersaveMode)
         return energyLevel * 3 / 2;
     else
         return energyLevel * 3;
@@ -34,7 +35,7 @@ int QmBattery::getRemainingIdleTime(QmBattery::RemainingTimeMode mode) const
 
 int QmBattery::getRemainingTalkTime(QmBattery::RemainingTimeMode mode) const
 {
-    if(mode == QmBattery::PowersaveMode)
+    if (mode == QmBattery::PowersaveMode)
         return energyLevel * 2 / 2;
     else
         return energyLevel * 2;
@@ -62,31 +63,30 @@ QmBattery::Level QmBattery::getLevel()
 
 void QmBattery::changeLevel()
 {
-    if(levelIndex == 2) {
-        levelIndexInc = -1;        
-    }    
-    else if(levelIndex == 0) {
-        levelIndexInc = 1;        
+    if (levelIndex == 2) {
+        levelIndexInc = -1;
+    } else if (levelIndex == 0) {
+        levelIndexInc = 1;
     }
 
     levelIndex += levelIndexInc;
 
     emit batteryLevelChanged(levels.at(levelIndex));
 
-    switch(levelIndex) {
-        case 0:
-            energyLevel = 90;
-            state = QmBattery::StateNotCharging;
-            emit batteryStatusChanged(QmBattery::StateNotCharging);
-            break;
-        case 1:
-            energyLevel = 15;            
-            break;
-        default: //2
-            energyLevel = 5;
-            state = QmBattery::StateCharging;
-            emit batteryStatusChanged(QmBattery::StateCharging);
-            break;
+    switch (levelIndex) {
+    case 0:
+        energyLevel = 90;
+        state = QmBattery::StateNotCharging;
+        emit batteryStatusChanged(QmBattery::StateNotCharging);
+        break;
+    case 1:
+        energyLevel = 15;
+        break;
+    default: //2
+        energyLevel = 5;
+        state = QmBattery::StateCharging;
+        emit batteryStatusChanged(QmBattery::StateCharging);
+        break;
     }
     emit batteryEnergyLevelChanged(energyLevel);
 }

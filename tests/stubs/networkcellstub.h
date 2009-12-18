@@ -11,11 +11,10 @@ class NetworkCell : public QObject
     Q_OBJECT
 
 public:
-    NetworkCell(QObject *parent=0);
+    NetworkCell(QObject *parent = 0);
     ~NetworkCell();
 
-    enum Service
-    {
+    enum Service {
         CSService = 1,         //!< Current cell supports CS services
         GPRSService = 1 << 1,  //!< Current cell supports GPRS services
         GPRSSupport = 1 << 2,  //!< Current cell supports GPRS

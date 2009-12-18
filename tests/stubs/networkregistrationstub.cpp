@@ -63,7 +63,7 @@ AvailableOperator::Availability AvailableOperator::availability() const
 }
 
 NetworkRegistration::NetworkRegistration(QObject *parent) :
-        QObject(parent),        
+        QObject(parent),
         success(true),
         networkOperator(NULL)
 {
@@ -71,7 +71,7 @@ NetworkRegistration::NetworkRegistration(QObject *parent) :
 
 NetworkRegistration::~NetworkRegistration()
 {
-    for(int i=0; i<operators.size(); ++i) {
+    for (int i = 0; i < operators.size(); ++i) {
         AvailableOperator *oper = operators.at(i);
         delete oper;
         oper = NULL;
@@ -90,23 +90,22 @@ NetworkRegistration::Mode NetworkRegistration::mode() const
 
 void NetworkRegistration::selectOperator()
 {
-    currentMode = NetworkRegistration::Automatic;    
+    currentMode = NetworkRegistration::Automatic;
     emit selectionCompleted(true, QString(""));
 }
 
 void NetworkRegistration::selectOperator(const QString &mnc, const QString &mcc)
 {
     currentMode = NetworkRegistration::Manual;
-    for(int i=0; i<operators.size(); ++i) {        
-        if(operators.at(i)->mnc() == mnc && operators.at(i)->mcc() == mcc) {
+    for (int i = 0; i < operators.size(); ++i) {
+        if (operators.at(i)->mnc() == mnc && operators.at(i)->mcc() == mcc) {
             operators.at(i)->setAvailability(AvailableOperator::Current);
-            if(networkOperator != NULL) {
+            if (networkOperator != NULL) {
                 networkOperator->setName(operators.at(i)->name());
                 networkOperator->setMnc(operators.at(i)->mnc());
                 networkOperator->setMcc(operators.at(i)->mcc());
             }
-        }
-        else
+        } else
             operators.at(i)->setAvailability(AvailableOperator::Available);
     }
 
@@ -114,8 +113,8 @@ void NetworkRegistration::selectOperator(const QString &mnc, const QString &mcc)
 }
 
 void NetworkRegistration::queryAvailableOperators()
-{    
-    if(success)
+{
+    if (success)
         emit availableOperators(true, operators, QString(""));
     else
         emit availableOperators(false, operators, QString("empty"));

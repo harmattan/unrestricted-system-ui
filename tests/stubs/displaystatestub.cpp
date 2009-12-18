@@ -1,6 +1,7 @@
 #include "displaystatestub.h"
 
-namespace Maemo {
+namespace Maemo
+{
 
 QmDisplayState::QmDisplayState(QObject *parent) :
         QObject(parent),
@@ -9,7 +10,7 @@ QmDisplayState::QmDisplayState(QObject *parent) :
         blankTimeout(35),
         dimTimeout(30),
         blankingWhenCharging(true)
-{    
+{
 }
 
 QmDisplayState::~QmDisplayState()

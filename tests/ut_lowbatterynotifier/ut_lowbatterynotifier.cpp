@@ -8,15 +8,16 @@
 #include <QTime>
 #include <QThread>
 
-namespace {
-    const int Act = 1000;
-    const int Inact = 2000;
+namespace
+{
+const int Act = 1000;
+const int Inact = 2000;
 }
 
 void LowBatteryHelper::start()
 {
     times.clear();
-    time.start();   
+    time.start();
 }
 
 QList<int> LowBatteryHelper::notificationTimes()
@@ -30,7 +31,7 @@ void LowBatteryHelper::notificationShown()
 }
 
 void Ut_LowBatteryNotifier::init()
-{            
+{
     m_subject = new LowBatteryNotifier();
     m_helper = new LowBatteryHelper();
     connect(m_subject, SIGNAL(showNotification(QString)), m_helper, SLOT(notificationShown()));
@@ -43,7 +44,7 @@ void Ut_LowBatteryNotifier::cleanup()
     delete m_subject;
     m_subject = NULL;
     delete m_helper;
-    m_helper = NULL;    
+    m_helper = NULL;
 }
 
 DuiApplication *app;
@@ -60,7 +61,7 @@ void Ut_LowBatteryNotifier::cleanupTestCase()
 }
 
 void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
-{               
+{
     /*
         1) Display is on
         2) Waiting [2 * Active timeout + 50]
@@ -74,13 +75,12 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
     QTest::qWait(Act * 2 + 50);
 
     QCOMPARE(m_helper->notificationTimes().count(), 3);
-    for(int i=0; i<m_helper->notificationTimes().count(); ++i) {        
+    for (int i = 0; i < m_helper->notificationTimes().count(); ++i) {
         qDebug() << "times(" << i << "): " << m_helper->notificationTimes().at(i);
-        if(i>0) {
+        if (i > 0) {
             QVERIFY(m_helper->notificationTimes().at(i) <= Act + 100);
             QVERIFY(m_helper->notificationTimes().at(i) >= Act);
-        }
-        else {
+        } else {
             QVERIFY(m_helper->notificationTimes().at(i) <= 100);
             QVERIFY(m_helper->notificationTimes().at(i) >= 0);
         }
@@ -106,13 +106,13 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
     m_subject->display->set(Maemo::QmDisplayState::On);
     m_helper->start();
     m_subject->showLowBatteryNotification();
-    QTest::qWait(Act/2);
+    QTest::qWait(Act / 2);
     m_subject->display->set(Maemo::QmDisplayState::Dimmed);
     m_subject->display->set(Maemo::QmDisplayState::On);
-    QTest::qWait(Act/4);
+    QTest::qWait(Act / 4);
     m_subject->display->set(Maemo::QmDisplayState::Dimmed);
     m_subject->display->set(Maemo::QmDisplayState::Off);
-    QTest::qWait(Act/2);
+    QTest::qWait(Act / 2);
     m_subject->display->set(Maemo::QmDisplayState::On);
 
     QCOMPARE(m_helper->notificationTimes().count(), 2);
@@ -120,8 +120,8 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
     QVERIFY(m_helper->notificationTimes().at(0) <= 100);
     QVERIFY(m_helper->notificationTimes().at(0) >= 0);
     qDebug() << "times(" << 1 << "): " << m_helper->notificationTimes().at(1);
-    QVERIFY(m_helper->notificationTimes().at(1) <= Act/2 + Act/2 + Act/4 + 100);
-    QVERIFY(m_helper->notificationTimes().at(1) >= Act/2 + Act/2 + Act/4);
+    QVERIFY(m_helper->notificationTimes().at(1) <= Act / 2 + Act / 2 + Act / 4 + 100);
+    QVERIFY(m_helper->notificationTimes().at(1) >= Act / 2 + Act / 2 + Act / 4);
 
 }
 
@@ -141,20 +141,19 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse()
     m_subject->display->set(Maemo::QmDisplayState::Off);
     m_helper->start();
     m_subject->showLowBatteryNotification();
-    QTest::qWait(Inact + Act/2);
+    QTest::qWait(Inact + Act / 2);
     m_subject->display->set(Maemo::QmDisplayState::On);
     m_subject->display->set(Maemo::QmDisplayState::Dimmed);
     m_subject->display->set(Maemo::QmDisplayState::Off);
-    QTest::qWait(Inact - Act/2 + 50);
+    QTest::qWait(Inact - Act / 2 + 50);
 
     QCOMPARE(m_helper->notificationTimes().count(), 3);
-    for(int i=0; i<m_helper->notificationTimes().count(); ++i) {
+    for (int i = 0; i < m_helper->notificationTimes().count(); ++i) {
         qDebug() << "times(" << i << "): " << m_helper->notificationTimes().at(i);
-        if(i>0) {
+        if (i > 0) {
             QVERIFY(m_helper->notificationTimes().at(i) <= Inact + 100);
             QVERIFY(m_helper->notificationTimes().at(i) >= Inact);
-        }
-        else {
+        } else {
             QVERIFY(m_helper->notificationTimes().at(i) <= 100);
             QVERIFY(m_helper->notificationTimes().at(i) >= 0);
         }

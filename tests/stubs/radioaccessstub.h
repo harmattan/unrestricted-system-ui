@@ -11,26 +11,23 @@ class RadioAccess : public QObject
     Q_OBJECT
 
 public:
-    RadioAccess(QObject *parent=0);
+    RadioAccess(QObject *parent = 0);
     ~RadioAccess();
 
-    enum Mode
-    {
+    enum Mode {
         UnknownMode = -1, //!< Radio access selection mode unknown
         DualMode, //!< Dual mode access selection in use
         GSMMode, //!< GSM only access selection mode in use
         UMTSMode //!< UMTS only access selection mode in use
     };
 
-    enum Technology
-    {
+    enum Technology {
         UnknownTechnology = -1, //!< Current access technology is unknown
         GSM, //!< Using GSM
         UMTS //!< Using UMTS
     };
 
-    enum State
-    {
+    enum State {
         Idle, //!< Radio access is idle
         AllocatedHSDPA, //!< High speed downlink allocated
         AllocatedHSUPA //!< High speed uplink allocated

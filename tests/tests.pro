@@ -2,10 +2,7 @@ TEMPLATE = subdirs
 SUBDIRS = \
     ut_unlockslider \
     ut_batterybusinesslogic \
-    ut_lowbatterynotifier \
-    ut_networkbusinesslogic \
-    ut_networktechnology \
-    ut_pincodequerybusinesslogic \
+    ut_lowbatterynotifier
 
 QMAKE_STRIP = echo
 #include(shell.pri)

@@ -45,7 +45,7 @@ void Ut_UnlockSlider::testPosition()
 {
     m_subject->setMagnetic(false);
     QVERIFY(m_subject->isMagnetic() == false);
-    for (qreal i=0.0f; i<1.0f; i+=0.1f) {
+    for (qreal i = 0.0f; i < 1.0f; i += 0.1f) {
         m_subject->setPosition(i);
         QVERIFY(m_subject->position() == i);
     }

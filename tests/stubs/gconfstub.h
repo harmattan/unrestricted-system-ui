@@ -7,7 +7,7 @@
 class SystemUIGConf : public QObject
 {
 public:
-     enum GConfKeyGroup {
+    enum GConfKeyGroup {
         Battery,
         Display,
         Network

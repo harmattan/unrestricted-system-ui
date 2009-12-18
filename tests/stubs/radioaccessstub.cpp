@@ -22,7 +22,7 @@ RadioAccess::Mode RadioAccess::mode() const
 }
 
 RadioAccess::Technology RadioAccess::technology() const
-{    
+{
     return currentTechnology;
 }
 
@@ -34,7 +34,7 @@ RadioAccess::Flags RadioAccess::state() const
 void RadioAccess::setMode(RadioAccess::Mode mode)
 {
     currentMode = mode;
-    emit modeChanged((int)mode);   
+    emit modeChanged((int)mode);
 }
 
 void RadioAccess::setTechnology(RadioAccess::Technology technology)

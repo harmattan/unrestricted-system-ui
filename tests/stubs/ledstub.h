@@ -3,7 +3,8 @@
 
 #include <QObject>
 
-namespace Maemo {
+namespace Maemo
+{
 /**
  * @brief Provides information and actions on device LED.
  */

@@ -22,8 +22,8 @@ void SystemUIGConf::setValue(SystemUIGConf::GConfKey key, QVariant value)
 
 QVariant SystemUIGConf::value(SystemUIGConf::GConfKey key, QVariant def)
 {
-    if(GConfValues.contains(key))
+    if (GConfValues.contains(key))
         return GConfValues.value(key);
     else
-        return def;   
+        return def;
 }

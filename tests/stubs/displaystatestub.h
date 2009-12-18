@@ -5,7 +5,8 @@
 
 // STUB CLASS
 
-namespace Maemo {
+namespace Maemo
+{
 
 class QmDisplayState : public QObject
 {
@@ -13,8 +14,7 @@ class QmDisplayState : public QObject
 
 public:
     /** Possible states for device display. */
-    enum DisplayState
-    {
+    enum DisplayState {
         Off = -1,   /**< Display is off */
         Dimmed = 0, /**< Display is dimmed */
         On = 1      /**< Display is on */

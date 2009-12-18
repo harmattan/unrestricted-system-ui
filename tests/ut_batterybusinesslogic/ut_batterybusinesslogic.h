@@ -21,11 +21,11 @@ private slots:
     void cleanupTestCase();
 
     void testSetPSMThreshold();
-    void testTogglePSM();    
+    void testTogglePSM();
     void testTogglePSMAuto();
 
 private:
-    SystemUIGConf *systemUIGConf;    
+    SystemUIGConf *systemUIGConf;
     BatteryBusinessLogic* m_subject;
 };
 
