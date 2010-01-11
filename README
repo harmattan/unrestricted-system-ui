@@ -28,5 +28,8 @@ Release
 -------
 
  dpkg-buildpackage -rfakeroot
-
+ # for svn: (old)
  svn copy https://projects.maemo.org/svn/har-systemui/cellular-ui/trunk https://projects.maemo.org/svn/har-systemui/cellular-ui/tags/system-ui-0.6.0-1 -m "try release"
+ # for git: <in master branch>
+ git tag system-ui-VERSION
+ git push --tags origin master

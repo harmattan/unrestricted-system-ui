@@ -6,4 +6,4 @@
 TEMPLATE = subdirs
 SUBDIRS = src batteryapplet batteryplugin displayapplet profileapplet profileplugin tests
 
-QMAKE_CLEAN += configure-stamp build-stamp \
+QMAKE_CLEAN += configure-stamp build-stamp
