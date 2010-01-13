@@ -1,11 +1,12 @@
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
 
-#include "dcpwidget.h"
+#include <dcpwidget.h>
 
 class DuiButton;
+class DuiSlider;
+class DuiContainer;
 class DisplayBusinessLogic;
-class SliderContainer;
 
 class DisplayWidget : public DcpWidget
 {
@@ -19,12 +20,19 @@ protected:
     void initWidget();
 
 private slots:
-    void initBlankInhibitButton(bool toggle);
+    void modify_brightness_handle (int newValue);
+    void modify_screenlight_handle (int newValue);
 
-private: //attributes
-    DuiButton *blankInhibitButton;
-    DisplayBusinessLogic *logic;
-    SliderContainer *brightnessContainer;
-    SliderContainer *screenLightsContainer;
+private:
+    DisplayBusinessLogic   *m_logic;
+    QList<int>              m_brightness_vals;
+    QList<int>              m_screenlight_vals;
+    DuiSlider              *m_brightnessSlider;
+    DuiSlider              *m_screenlightSlider;
+    DuiContainer           *m_brightnessContainer;
+    DuiContainer           *m_screenlightContainer;
+
 };
+
 #endif // DISPLAYWIDGET_H
+

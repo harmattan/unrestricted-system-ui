@@ -1,9 +1,11 @@
 #ifndef DISPLAYAPPLET_H
 #define DISPLAYAPPLET_H
 
-#include "dcpappletif.h"
+#include <DcpAppletIf>
+#include <DcpWidget>
+#include <DcpBrief>
 #include <QObject>
-class DcpWidget;
+
 class DuiAction;
 class DisplayWidget;
 

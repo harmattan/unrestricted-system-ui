@@ -1,8 +1,11 @@
 system-ui (0.11.0-5~unreleased) harmattan; urgency=low
 
-  * FILLME
+  * Fixes: NB#151330 - Containers are too large in Display settings view and
+    slider values cannot be shown
+  * Its related to previous one, but lets the reporter to decide it:
+    NB#151327 - Dragging of the Display view work very poorly
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 12 Jan 2010 09:20:01 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 13 Jan 2010 16:51:24 +0100
 
 system-ui (0.11.0-4) harmattan; urgency=low
 

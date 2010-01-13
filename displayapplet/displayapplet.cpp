@@ -7,6 +7,7 @@
 #include "dcpwidget.h"
 
 #include <QtGui>
+#include <QtPlugin>
 #include <QDebug>
 
 #include <DuiTheme>

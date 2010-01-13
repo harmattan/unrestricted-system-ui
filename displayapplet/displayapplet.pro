@@ -20,13 +20,12 @@ HEADERS = displayapplet.h \
     displaywidget.h \
     displaybrief.h \
     displaytranslation.h \
-    displaybusinesslogic.h \
-    slidercontainer.h
+    displaybusinesslogic.h
 SOURCES = displayapplet.cpp \
     displaywidget.cpp \
     displaybrief.cpp \
-    displaybusinesslogic.cpp \
-    slidercontainer.cpp
+    displaybusinesslogic.cpp
+
 css.files = displayapplet.css
 DESTDIR = lib
 desktop.files += *.desktop
