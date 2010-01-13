@@ -1,8 +1,9 @@
 #ifndef BATTERYAPPLET_H
 #define BATTERYAPPLET_H
 
-#include "dcpappletif.h"
+#include <DcpAppletIf>
 #include <QObject>
+
 class DcpWidget;
 class DuiAction;
 class BatteryWidget;

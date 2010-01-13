@@ -15,7 +15,8 @@ SliderContainer::SliderContainer(DuiWidget *parent) :
         PSMSlider(NULL)
 {
     PSMAutoButton = new DuiButton();
-    connect(PSMAutoButton, SIGNAL(toggled(bool)), this, SLOT(PSMAutoButtonToggled(bool)));
+    connect (PSMAutoButton, SIGNAL (toggled (bool)),
+             this, SLOT (PSMAutoButtonToggled (bool)));
     PSMSlider = new DuiSlider(0, "continuous");
     setHeaderVisible(false);
     setLayout();
@@ -42,17 +43,20 @@ void SliderContainer::setLayout()
 
 void SliderContainer::initSlider(const QStringList &values)
 {
-    sliderValues = QStringList(values);
-    PSMSlider->setRange(0, sliderValues.size() - 1);
-    PSMSlider->setOrientation(Qt::Horizontal);
-    connect(PSMSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderValueChanged(int)));
+    sliderValues = QStringList (values);
+    PSMSlider->setRange (0, sliderValues.size() - 1);
+    PSMSlider->setOrientation (Qt::Horizontal);
+    PSMSlider->setHandleLabelVisible (true);
+    connect (PSMSlider, SIGNAL (valueChanged (int)),
+             this, SLOT (sliderValueChanged (int)));
 }
 
 void SliderContainer::updateSlider(const QString &value)
 {
     qDebug() << "SliderContainer::updateSlider(" << value << ")";
-    PSMSlider->setValue(sliderValues.indexOf(value)); //in case this is the first call, we need to set the value
-    PSMSlider->setThumbLabel(QString("%1%").arg(value));
+    PSMSlider->setValue(sliderValues.indexOf(value));
+    //^ in case this is the first call, we need to set the value
+    PSMSlider->setHandleLabel (QString ("%1%").arg (value));
 }
 
 void SliderContainer::sliderValueChanged(int value)
@@ -92,3 +96,4 @@ void SliderContainer::PSMAutoButtonToggled(bool toggle)
     toggleSliderExistence(toggle);
     emit PSMAutoToggled(toggle);
 }
+

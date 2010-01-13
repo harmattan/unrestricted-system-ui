@@ -4,7 +4,8 @@
 #include "batterybrief.h"
 
 #include "dcpbattery.h"
-#include "dcpwidget.h"
+
+#include <dcpwidget.h>
 
 #include <QtGui>
 #include <QDebug>
@@ -53,3 +54,4 @@ DcpBrief* BatteryApplet::constructBrief(int partId)
     Q_UNUSED(partId);
     return new BatteryBrief();
 }
+
