@@ -1,6 +1,5 @@
 #include "batteryapplet.h"
 #include "batterywidget.h"
-#include "batterytranslation.h"
 #include "batterybrief.h"
 
 #include "dcpbattery.h"
@@ -37,13 +36,15 @@ DcpWidget* BatteryApplet::pageMain()
 
 QString BatteryApplet::title() const
 {
-    return DcpBattery::AppletTitle;
+    //% "Battery"
+    return qtTrId ("qtn_ener_battery");
 }
 
 QVector<DuiAction*> BatteryApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
-    DuiAction* helpAction = new DuiAction(DcpBattery::HelpText, pageMain());
+    //% "Help"
+    DuiAction* helpAction = new DuiAction(qtTrId ("qtn_comm_help"), pageMain());
     vector.append(helpAction);
     helpAction->setLocation(DuiAction::ApplicationMenu);
     return vector;

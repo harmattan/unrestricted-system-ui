@@ -17,14 +17,13 @@ MOC_DIR = .moc
 OBJECTS_DIR = .objects
 HEADERS = batteryapplet.h \
     batterywidget.h \
-    batterytranslation.h \
     batterybrief.h \
     batterydbusinterface.h \    
     timecontainer.h \
     slidercontainer.h \
     dcpbattery.h \
-    batteryimage.h \
-    batterytranslation.h
+    batteryimage.h
+
 SOURCES = batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
@@ -32,6 +31,7 @@ SOURCES = batteryapplet.cpp \
     timecontainer.cpp \
     slidercontainer.cpp \
     batteryimage.cpp
+
 css.files = batteryapplet.css
 DESTDIR = lib
 desktop.files += *.desktop

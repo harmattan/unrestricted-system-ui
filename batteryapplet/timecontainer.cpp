@@ -1,5 +1,4 @@
 #include "timecontainer.h"
-#include "batterytranslation.h"
 
 #include <DuiGridLayoutPolicy>
 #include <DuiImage>
@@ -24,8 +23,16 @@ TimeContainer::~TimeContainer()
 {
 }
 
-void TimeContainer::updateTimeLabel(const QString &value)
+void TimeContainer::setText (const QString &text)
 {
+    textLabel->setText (text);
+}
+
+void TimeContainer::updateTimeLabel (const QString &value)
+{
+    //% "%a hours %b minutes"
+    const QString TimeValueText = qtTrId ("qtn_ener_remtime");
+
     if (timeLabel == NULL)
         return;
 
@@ -35,8 +42,11 @@ void TimeContainer::updateTimeLabel(const QString &value)
     }
     int minutes = value.toInt();
 
-    const QString minutesPrefix = DcpBattery::TimeValueText.section("%b", 1, 1).trimmed();
-    const QString hoursPrefix = (DcpBattery::TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
+    const QString minutesPrefix =
+        TimeValueText.section("%b", 1, 1).trimmed();
+    const QString hoursPrefix =
+        (TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
+
     QString time;
 
     if (minutes < 60)
@@ -61,3 +71,4 @@ void TimeContainer::setLayout()
     layoutPolicy->addItemAtPosition(textLabel, 0, 1, 1, 1);
     layoutPolicy->addItemAtPosition(timeLabel, 1, 1, 1, 1);
 }
+

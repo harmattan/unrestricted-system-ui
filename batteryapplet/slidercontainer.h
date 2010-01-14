@@ -4,16 +4,18 @@
 #include <DuiContainer>
 
 class DuiButton;
-class DuiGridLayoutPolicy;
+class DuiLabel;
 class DuiSlider;
+class DuiLinearLayoutPolicy; 
 
 class SliderContainer : public DuiContainer
 {
     Q_OBJECT
 
 public:
-    SliderContainer(DuiWidget *parent = 0);
-    virtual ~SliderContainer();
+    SliderContainer (DuiWidget *parent = 0);
+    virtual ~SliderContainer ();
+    void retranslate ();
 
 public slots:
     void initSlider(const QStringList &values);
@@ -29,15 +31,15 @@ signals:
     void PSMAutoToggled(bool);
     void PSMThresholdValueChanged(QString);
 
-private: //methods
-    void setLayout();
-    void toggleSliderExistence(bool toggle);
+private:
+    DuiButton               *PSMAutoButton;
+    DuiSlider               *PSMSlider;
+    DuiLabel                *textLabel;
+    QStringList              sliderValues;
+    DuiLinearLayoutPolicy   *layout_policy;
 
-private: //attributes
-    DuiButton *PSMAutoButton;
-    DuiSlider *PSMSlider;
-    DuiGridLayoutPolicy *layoutPolicy;
-    QStringList sliderValues;
+    void    setLayout();
+    void    toggleSliderExistence (bool toggle);
 
 };
 

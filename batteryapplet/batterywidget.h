@@ -27,13 +27,16 @@ private slots:
     void updatePSMButton(bool toggle);
     void remainingTimeValuesReceived(const QStringList &timeValues);
 
-private: //attributes
-    BatteryDBusInterface *batteryIf;
-    BatteryImage *batteryImage;
-    DuiButton *PSMButton;
-    SliderContainer *sliderContainer;
-    TimeContainer *standByTimeContainer;
-    TimeContainer *talkTimeContainer;
+private:
+    BatteryDBusInterface    *batteryIf;
+    BatteryImage            *batteryImage;
+    DuiButton               *PSMButton;
+    bool                     PSMButtonToggle;
+    SliderContainer         *sliderContainer;
+    TimeContainer           *standByTimeContainer;
+    TimeContainer           *talkTimeContainer;
+
+    void    retranslateUi ();
 
 };
 #endif // BATTERYWIDGET_H

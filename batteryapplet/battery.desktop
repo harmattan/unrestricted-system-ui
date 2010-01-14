@@ -3,8 +3,8 @@ Type=DUIApplet
 Name=Battery
 Icon=
 Exec=
-X-logical-id=qtn_NOT_DEFINED
-X-translation-catalog=duisettings
+X-logical-id=qtn_ener_battery
+X-translation-catalog=duicontrolpanel-systemui
 
 [DUI]
 X-DUIApplet-Applet=libbatteryapplet.so

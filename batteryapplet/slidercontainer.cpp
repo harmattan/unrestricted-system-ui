@@ -1,8 +1,7 @@
 #include "slidercontainer.h"
-#include "batterytranslation.h"
 
 #include <DuiButton>
-#include <DuiGridLayoutPolicy>
+#include <DuiLinearLayoutPolicy>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiSlider>
@@ -10,35 +9,53 @@
 #include <QDebug>
 
 SliderContainer::SliderContainer(DuiWidget *parent) :
-        DuiContainer(parent),
-        PSMAutoButton(NULL),
-        PSMSlider(NULL)
+        DuiContainer (parent),
+        PSMAutoButton (NULL),
+        PSMSlider (NULL)
 {
-    PSMAutoButton = new DuiButton();
-    connect (PSMAutoButton, SIGNAL (toggled (bool)),
-             this, SLOT (PSMAutoButtonToggled (bool)));
-    PSMSlider = new DuiSlider(0, "continuous");
-    setHeaderVisible(false);
-    setLayout();
+    PSMSlider = new DuiSlider;
+    setHeaderVisible (false);
+    setLayout ();
 }
 
 SliderContainer::~SliderContainer()
 {
 }
 
+void
+SliderContainer::retranslate ()
+{
+    //% "Auto activate power save"
+    textLabel->setText (qtTrId ("qtn_ener_autops"));
+}
+
 void SliderContainer::setLayout()
 {
+    DuiLayout *layout = new DuiLayout (this);
+    layout_policy =
+        new DuiLinearLayoutPolicy (layout, Qt::Vertical);
+
+    DuiLayout *hlayout = new DuiLayout;
+    DuiLinearLayoutPolicy *hpolicy =
+        new DuiLinearLayoutPolicy (hlayout, Qt::Horizontal);
+
+    // battery label
+    textLabel = new DuiLabel;
+    textLabel->setObjectName("batteryLabel");
+    retranslate ();
+
+    hpolicy->addItem (textLabel, Qt::AlignLeft);
+
+    // PSMAutoButton
+    PSMAutoButton = new DuiButton ();
+    connect (PSMAutoButton, SIGNAL (toggled (bool)),
+             this, SLOT (PSMAutoButtonToggled (bool)));
     PSMAutoButton->setCheckable(true);
     PSMAutoButton->setObjectName("PSMAutoButton");
 
-    DuiLayout *layout = new DuiLayout();
-    layoutPolicy = new DuiGridLayoutPolicy(layout);
-    DuiLabel *textLabel = new DuiLabel(DcpBattery::PSMAutoActivateText);
-    textLabel->setObjectName("batteryLabel");
-    layoutPolicy->addItemAtPosition(textLabel, 0, 0);
-    layoutPolicy->addItemAtPosition(PSMAutoButton, 0, 1);
-    layoutPolicy->setRowSpacing(0, 25);
-    centralWidget()->setLayout(layout);
+    hpolicy->addItem (PSMAutoButton, Qt::AlignRight);
+
+    layout_policy->addItem (hlayout);
 }
 
 void SliderContainer::initSlider(const QStringList &values)
@@ -54,7 +71,7 @@ void SliderContainer::initSlider(const QStringList &values)
 void SliderContainer::updateSlider(const QString &value)
 {
     qDebug() << "SliderContainer::updateSlider(" << value << ")";
-    PSMSlider->setValue(sliderValues.indexOf(value));
+    PSMSlider->setValue (sliderValues.indexOf(value));
     //^ in case this is the first call, we need to set the value
     PSMSlider->setHandleLabel (QString ("%1%").arg (value));
 }
@@ -67,20 +84,19 @@ void SliderContainer::sliderValueChanged(int value)
 
 void SliderContainer::toggleSliderExistence(bool toggle)
 {
-    qDebug() << "SliderContainer::toggleSliderExistence(" << toggle << ")";
     if (toggle) {
-        if (layoutPolicy->itemAt(1, 0) != PSMSlider)
-            layoutPolicy->addItemAtPosition(PSMSlider, 1, 0, 1, 2);
+        if (layout_policy->size() < 2)
+            layout_policy->addItem (PSMSlider);
     } else {
-        if (layoutPolicy->itemAt(1, 0) == PSMSlider)
-            layoutPolicy->removeItem(PSMSlider);
+        if (layout_policy->size() > 1)
+            layout_policy->removeItem (PSMSlider);
     }
 }
 
 void SliderContainer::initPSMAutoButton(bool toggle)
 {
-    PSMAutoButton->setChecked(toggle);
-    toggleSliderExistence(toggle);
+    PSMAutoButton->setChecked (toggle);
+    toggleSliderExistence (toggle);
 }
 
 void SliderContainer::PSMAutoDisabled()
@@ -93,7 +109,7 @@ void SliderContainer::PSMAutoDisabled()
 void SliderContainer::PSMAutoButtonToggled(bool toggle)
 {
     qDebug() << "SliderContainer::PSMAutoButtonToggled(" << toggle << ")";
-    toggleSliderExistence(toggle);
+    toggleSliderExistence (toggle);
     emit PSMAutoToggled(toggle);
 }
 

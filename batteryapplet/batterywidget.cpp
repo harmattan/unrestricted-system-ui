@@ -1,6 +1,5 @@
 #include "batterywidget.h"
 #include "batteryimage.h"
-#include "batterytranslation.h"
 #include "batterydbusinterface.h"
 #include "dcpbattery.h"
 #include "slidercontainer.h"
@@ -55,10 +54,14 @@ void BatteryWidget::initWidget()
     batteryImage = new BatteryImage();
 
     // talkTimeContainer
-    talkTimeContainer = new TimeContainer(DcpBattery::TalkTimeText, batteryImage);
+    //% "Estimated talk time:"
+    talkTimeContainer = new TimeContainer(qtTrId ("qtn_ener_tt"),
+                                          batteryImage);
 
     // standByTimeContainer
-    standByTimeContainer = new TimeContainer(DcpBattery::StandByTimeText, new DuiImage("qgn_ener_standby"));
+    //% "Estimated stand-by time:"
+    standByTimeContainer = new TimeContainer(qtTrId ("qtn_ener_st"),
+                                             new DuiImage("qgn_ener_standby"));
 
     // PSMButton
     PSMButton = new DuiButton();
@@ -66,8 +69,10 @@ void BatteryWidget::initWidget()
 
     // sliderContainer
     sliderContainer = new SliderContainer();
-    connect(sliderContainer, SIGNAL(PSMAutoToggled(bool)), batteryIf, SLOT(setPSMAutoValue(bool)));
-    connect(sliderContainer, SIGNAL(PSMThresholdValueChanged(QString)), batteryIf, SLOT(setPSMThresholdValue(QString)));
+    connect (sliderContainer, SIGNAL(PSMAutoToggled(bool)),
+             batteryIf, SLOT(setPSMAutoValue(bool)));
+    connect (sliderContainer, SIGNAL(PSMThresholdValueChanged(QString)),
+             batteryIf, SLOT(setPSMThresholdValue(QString)));
 
     // mainContainer
     DuiLayout *orientationLayout = new DuiLayout();
@@ -93,17 +98,28 @@ void BatteryWidget::initWidget()
     mainContainer->centralWidget()->setLayout(orientationLayout);
 
     // connect the value receive signals
-    connect(batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)), this, SLOT(remainingTimeValuesReceived(QStringList)));
-    connect(batteryIf, SIGNAL(batteryCharging(int)), batteryImage, SLOT(startCharging(int)));
-    connect(batteryIf, SIGNAL(batteryNotCharging()), batteryImage, SLOT(stopCharging()));
-    connect(batteryIf, SIGNAL(batteryNotCharging()), batteryIf, SLOT(batteryBarValueRequired()));
-    connect(batteryIf, SIGNAL(batteryBarValueReceived(int)), batteryImage, SLOT(updateBatteryLevel(int)));
-    connect(batteryIf, SIGNAL(PSMValueReceived(bool)), this, SLOT(updatePSMButton(bool)));
-    connect(batteryIf, SIGNAL(PSMAutoValueReceived(bool)), sliderContainer, SLOT(initPSMAutoButton(bool)));
-    connect(batteryIf, SIGNAL(PSMAutoDisabled()), sliderContainer, SLOT(PSMAutoDisabled()));
-    connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), sliderContainer, SLOT(initSlider(QStringList)));
-    connect(batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)), batteryIf, SLOT(PSMThresholdValueRequired()));
-    connect(batteryIf, SIGNAL(PSMThresholdValueReceived(QString)), sliderContainer, SLOT(updateSlider(QString)));
+    connect (batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)),
+             this, SLOT(remainingTimeValuesReceived(QStringList)));
+    connect (batteryIf, SIGNAL(batteryCharging(int)),
+             batteryImage, SLOT(startCharging(int)));
+    connect (batteryIf, SIGNAL(batteryNotCharging()),
+             batteryImage, SLOT(stopCharging()));
+    connect (batteryIf, SIGNAL(batteryNotCharging()),
+             batteryIf, SLOT(batteryBarValueRequired()));
+    connect (batteryIf, SIGNAL(batteryBarValueReceived(int)),
+             batteryImage, SLOT(updateBatteryLevel(int)));
+    connect (batteryIf, SIGNAL(PSMValueReceived(bool)),
+             this, SLOT(updatePSMButton(bool)));
+    connect (batteryIf, SIGNAL(PSMAutoValueReceived(bool)),
+             sliderContainer, SLOT(initPSMAutoButton(bool)));
+    connect (batteryIf, SIGNAL(PSMAutoDisabled()),
+             sliderContainer, SLOT(PSMAutoDisabled()));
+    connect (batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)),
+             sliderContainer, SLOT(initSlider(QStringList)));
+    connect (batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)),
+             batteryIf, SLOT(PSMThresholdValueRequired()));
+    connect (batteryIf, SIGNAL(PSMThresholdValueReceived(QString)),
+             sliderContainer, SLOT(updateSlider(QString)));
 
     // send value requests over dbus
     batteryIf->remainingTimeValuesRequired();
@@ -123,14 +139,20 @@ void BatteryWidget::initWidget()
 
 void BatteryWidget::PSMButtonReleased()
 {
-    bool toggle = (PSMButton->text() == DcpBattery::PSMActivateText ? true : false);
-    batteryIf->setPSMValue(toggle);
+    batteryIf->setPSMValue (PSMButtonToggle);
 }
 
 void BatteryWidget::updatePSMButton(bool toggle)
 {
-    QString text = (toggle ? DcpBattery::PSMDeactivateText : DcpBattery::PSMActivateText);
-    PSMButton->setText(text);
+    PSMButtonToggle = toggle;
+
+    if (toggle) {
+        //% "Deactivate power save now"
+        PSMButton->setText (qtTrId ("qtn_ener_dps"));
+    } else {
+        //% "Activate power save now"
+        PSMButton->setText (qtTrId ("qtn_ener_aps"));
+    }
 }
 
 void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
@@ -138,4 +160,20 @@ void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
     qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";
     talkTimeContainer->updateTimeLabel(timeValues.at(0));
     standByTimeContainer->updateTimeLabel(timeValues.at(1));
+}
+
+void BatteryWidget::retranslateUi ()
+{
+    // This call will reload the translated text on PSButton
+    updatePSMButton (PSMButtonToggle);
+
+    // This call will retranslate the label (infoText)
+    sliderContainer->retranslate ();
+
+    talkTimeContainer->setText(qtTrId ("qtn_ener_tt"));
+    standByTimeContainer->setText (qtTrId ("qtn_ener_st"));
+
+    // This call will reload timelabels on timercontainers
+    batteryIf->remainingTimeValuesRequired();
+
 }
