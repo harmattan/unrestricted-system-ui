@@ -73,7 +73,9 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
+	# install the translation source file to doc.
+	install -m 644 -D -p $(CURDIR)/translations/duicontrolpanel-systemui.ts \
+		$(CURDIR)/debian/tmp/usr/share/doc/systemui-l10n-engineering-english/duicontrolpanel-systemui.ts
 
 # Build architecture-dependent files here.
 binary-arch: build install

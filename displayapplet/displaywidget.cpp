@@ -1,5 +1,4 @@
 #include "displaywidget.h"
-#include "displaytranslation.h"
 #include "displaybusinesslogic.h"
 #include "dcpdisplay.h"
 
@@ -69,7 +68,8 @@ void DisplayWidget::initWidget()
              this, SLOT (modify_brightness_handle (int)));
 
     m_brightnessContainer = new DuiContainer;
-    m_brightnessContainer->setTitle (DcpDisplay::BrightnessText);
+    //% "Brightness: %1%"
+    m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
     m_brightnessContainer->centralWidget ()->setLayout (brightnessLayout);
 
     modify_brightness_handle (m_logic->selectedBrightnessValue ());
@@ -106,7 +106,8 @@ void DisplayWidget::initWidget()
              this, SLOT (modify_screenlight_handle (int)));
 
     m_screenlightContainer = new DuiContainer;
-    m_screenlightContainer->setTitle (DcpDisplay::ScreenLightsText);
+    //% "Screen lights off after: %1 sec" 
+    m_screenlightContainer->setTitle (qtTrId ("qtn_disp_screenoff"));
     m_screenlightContainer->centralWidget ()->setLayout (screenlightLayout);
 
     modify_screenlight_handle (m_logic->selectedScreenLightsValue ());
@@ -126,10 +127,11 @@ void DisplayWidget::initWidget()
     DuiLinearLayoutPolicy *blankInhibitLayoutPolicy =
         new DuiLinearLayoutPolicy (blankInhibitLayout, Qt::Horizontal);
 
-    DuiLabel *blankInhibitLabel = new DuiLabel (DcpDisplay::BlankInhibitText);
-//    blankInhibitLabel->setObjectName ("displayLabel");
+    //% "Keep screen lights on during the charging"
+    m_blankinhibitLabel = new DuiLabel (qtTrId ("qtn_disp_screenon"));
+//  m_blankinhibitLabel->setObjectName ("displayLabel");
 //    XXX: ^ this should be black
-    blankInhibitLayoutPolicy->addItem (blankInhibitLabel, Qt::AlignLeft);
+    blankInhibitLayoutPolicy->addItem (m_blankinhibitLabel, Qt::AlignLeft);
     blankInhibitLayoutPolicy->addItem (blankInhibitButton, Qt::AlignRight);
 
     DuiContainer *blankInhibitContainer = new DuiContainer;
@@ -140,14 +142,15 @@ void DisplayWidget::initWidget()
              m_logic, SLOT (setBlankInhibitValue (bool)));
 
     // policy->addItem(blankInhibitContainer, Qt::AlignLeft);
-    // This inhibit button better in screenlights container:
+    // This inhibit button looks better in screenlights container:
     screenlightLayoutPolicy->addItem (blankInhibitContainer, Qt::AlignLeft);
 
     // Note-label
-    DuiLabel *noteLabel = new DuiLabel (DcpDisplay::NoteText);
-//    noteLabel->setObjectName("displayLabel");
+    //% "Note! In the power save mode, screen light settings are affected."
+    m_noteLabel = new DuiLabel (qtTrId ("qtn_disp_note"));
+//  m_noteLabel->setObjectName("displayLabel");
 //    XXX: ^ this should be black
-    policy->addItem (noteLabel, Qt::AlignLeft);
+    policy->addItem (m_noteLabel, Qt::AlignLeft);
 }
 
 void
@@ -158,7 +161,7 @@ DisplayWidget::modify_brightness_handle (int newValue)
 
 #ifdef VALUE_IN_HEADER
     m_brightnessContainer->setTitle
-        (QString ("Brightness: %1%").arg (value));
+        (qtTrId ("qtn_disp_bright").arg (value));
 #else
     m_brightnessSlider->setHandleLabel (QString::number (value) + "%");
 #endif
@@ -169,13 +172,22 @@ DisplayWidget::modify_screenlight_handle (int newValue)
 {
     int value = m_screenlight_vals.at(newValue);
 
-    // Todo localize this with qtTrId
 #ifdef VALUE_IN_HEADER
     m_screenlightContainer->setTitle
-        (QString ("Screen lights off after: %1 sec").arg (value));
+        (qtTrId ("qtn_disp_screenoff").arg (value));
 #else
     m_screenlightSlider->setHandleLabel (
         QString::number (m_screenlight_vals.at(newValue)) + " sec");
 #endif
+}
+
+void
+DisplayWidget::retranslateUi ()
+{
+    modify_brightness_handle (m_brightnessSlider->value ());
+    modify_screenlight_handle (m_screenlightSlider->value ());
+
+    m_noteLabel->setText (qtTrId ("qtn_disp_note"));
+    m_blankinhibitLabel->setText (qtTrId ("qtn_disp_screenon"));
 }
 

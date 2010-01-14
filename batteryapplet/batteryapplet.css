@@ -1,16 +1,20 @@
+/*
+
 #PSMAutoButton {
         preferred-size: 36, 36;
         minimum-size: 36, 36;
         maximum-size: 36, 36;
 }
 
+*/
+
 #batteryLabel {
 /*    color: white;  <- its invisible <dkedves> */
     color: black;
-    font: "Nokia Sans" 16;
+/*    font: "Nokia Sans" 16; */
 }
 
 #batteryTimeLabel {
     color: orange;
-    font: "Nokia Sans" 16;
+/*    font: "Nokia Sans" 16; */
 }

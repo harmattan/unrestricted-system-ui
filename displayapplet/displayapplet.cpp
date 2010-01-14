@@ -1,10 +1,9 @@
 #include "displayapplet.h"
 #include "displaywidget.h"
-#include "displaytranslation.h"
 #include "displaybrief.h"
 
 #include "dcpdisplay.h"
-#include "dcpwidget.h"
+#include <dcpwidget.h>
 
 #include <QtGui>
 #include <QtPlugin>
@@ -37,13 +36,15 @@ DcpWidget* DisplayApplet::pageMain()
 
 QString DisplayApplet::title() const
 {
-    return DcpDisplay::AppletTitle;
+    //% "Display"
+    return qtTrId ("qtn_dcp_display_title");
 }
 
 QVector<DuiAction*> DisplayApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
-    DuiAction* helpAction = new DuiAction(DcpDisplay::HelpText, pageMain());
+    //% "Help"
+    DuiAction* helpAction = new DuiAction(qtTrId ("qtn_comm_help"), pageMain());
     vector.append(helpAction);
     helpAction->setLocation(DuiAction::ApplicationMenu);
     return vector;

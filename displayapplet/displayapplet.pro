@@ -16,11 +16,12 @@ contains(cov, true) {
 }
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
+
 HEADERS = displayapplet.h \
     displaywidget.h \
     displaybrief.h \
-    displaytranslation.h \
     displaybusinesslogic.h
+
 SOURCES = displayapplet.cpp \
     displaywidget.cpp \
     displaybrief.cpp \
