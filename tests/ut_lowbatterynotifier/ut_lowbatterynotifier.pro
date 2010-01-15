@@ -1,4 +1,4 @@
-SRC_PREFIX = ../../src/
+SRC_PREFIX = ../../components/sysuid
 STUB_PREFIX = ../stubs/
 INCLUDEPATH += $$SRC_PREFIX \
     $$STUB_PREFIX

@@ -29,8 +29,10 @@ const char *LowBatteryText = QT_TRID_NOOP ("qtn_ener_lowbatt");
 const char *EnterPSMText = QT_TRID_NOOP ("qtn_ener_ent_psnote");
 //% "Exiting power save mode"
 const char *ExitPSMText = QT_TRID_NOOP ("qtn_ener_exit_psnote");
+/* TODO: ^^
 //% "Recharge battery"
 const char *RechargeBatteryText = QT_TRID_NOOP ("qtn_ener_rebatt");
+ */
 const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
 const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
 const int   ChargingAnimationRateUSB = 800; // 800 ms

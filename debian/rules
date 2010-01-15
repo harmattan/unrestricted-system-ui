@@ -59,6 +59,7 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	make  $(PARALLEL_MAKEFLAGS) clean || true
+	-@make distclean
 
 	dh_clean 
 
