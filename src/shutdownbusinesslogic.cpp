@@ -60,7 +60,8 @@ void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication wh
 
 void ShutdownBusinessLogic::thermalShutdown()
 {
-    DuiNotification("", "", trid("qtn_shut_high_temp", "Temperature too high. Device shutting down."));
+    //% "Temperature too high. Device shutting down."
+    DuiNotification("", "", qtTrId ("qtn_shut_high_temp"));
 
     /* TODO: do we need to call showUI here?
     UI spec says: Ten seconds before the shutdown takes place, thermal shutdown notification is displayed accompanying ‘System alert’ sound.
@@ -69,10 +70,12 @@ void ShutdownBusinessLogic::thermalShutdown()
 
 void ShutdownBusinessLogic::batteryShutdown()
 {
-    DuiNotification("", "", trid("qtn_shut_batt_empty", "Battery empty. Device shutting down."));
+    //% "Battery empty. Device shutting down."
+    DuiNotification("", "", qtTrId ("qtn_shut_batt_empty"));
 }
 
 void ShutdownBusinessLogic::shutdownDeniedUSB()
 {
-    DuiNotification("", "", trid("qtn_shut_unplug_usb", "USB cable plugged in. Unplug the USB cable to shutdown."));
+    //% "USB cable plugged in. Unplug the USB cable to shutdown."
+    DuiNotification("", "", qtTrId ("qtn_shut_unplug_usb"));
 }

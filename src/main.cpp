@@ -1,5 +1,3 @@
-#include <QDebug>
-
 #include "sysuid.h"
 
 #include <QTimer>
@@ -8,38 +6,50 @@
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 
+#include <QObject>
+#include <QDebug>
+
 #include "signal.h"
 
 static DuiApplication *exitPtr;
-void sysuid_exit(int sig)
+
+void sysuid_exit (int sig)
 {
-    Q_UNUSED(sig);
+    Q_UNUSED (sig);
     if (exitPtr) {
-        exitPtr->quit();
+        exitPtr->quit ();
         exitPtr = NULL;
     }
 }
 
-
-int main(int argc, char** argv)
+int main (int argc, char** argv)
 {
-    DuiApplication app(argc, argv);
+    DuiApplication app (argc, argv);
     exitPtr = &app;
 
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
-    win.setWindowOpacity(0);
-    win.setWindowFlags(flags);
+    win.setWindowOpacity (0);
+    win.setWindowFlags (flags);
 
+    qDebug () << "Starting system-ui";
     // qDebug and qWarning are filttered off.
-    qInstallMsgHandler(0);
+    qInstallMsgHandler (0);
 
-    signal(SIGINT, sysuid_exit);
+    qDebug () << "Starting system-ui 2";
+
+    signal (SIGINT, sysuid_exit);
 
     Sysuid daemon;
 
-    int ret = app.exec();
+    qDebug () << "- System-UI daemon initialized";
+
+    // re-install the translations on locale settings changed signal
+    QObject::connect (&app, SIGNAL (localeSettingsChanged ()),
+                      &daemon, SLOT (retranslate ()));
+
+    int ret = app.exec ();
 
     return ret;
 }
