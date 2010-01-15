@@ -54,7 +54,7 @@ ProfileWidget::initWidget ()
     profileButtons = new ProfileButtons();
 
     // get init values
-    initProfiles();
+    initProfiles ();
 }
 
 void 
@@ -92,7 +92,7 @@ ProfileWidget::initProfiles ()
      * mainLayout
      */
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout();
-    mainLayout->addItem(contentContainer);
+    mainLayout->addItem (contentContainer);
     this->setLayout (mainLayout);
 }
 
@@ -106,15 +106,16 @@ ProfileWidget::createContainer ()
     //% "Profile Settings"
     DuiLabel* settingsHeader = new DuiLabel (qtTrId ("qtn_prof_settings"));
 
-    DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->addItem(currentHeader, Qt::AlignLeft);
-    portraitPolicy->addItem(profileButtons, Qt::AlignCenter);
-    portraitPolicy->addItem(settingsHeader, Qt::AlignLeft);
+    DuiLinearLayoutPolicy *portraitPolicy = 
+        new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    portraitPolicy->addItem (currentHeader, Qt::AlignLeft);
+    portraitPolicy->addItem (profileButtons, Qt::AlignCenter);
+    portraitPolicy->addItem (settingsHeader, Qt::AlignLeft);
 
-    DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy(layout);
-    landscapePolicy->addItemAtPosition(currentHeader, 0, 0, 1, 2);
-    landscapePolicy->addItemAtPosition(profileButtons, 1, 0, 1, 2, Qt::AlignCenter);
-    landscapePolicy->addItemAtPosition(settingsHeader, 2, 0, 1, 2);
+    DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy (layout);
+    landscapePolicy->addItemAtPosition (currentHeader, 0, 0, 1, 2);
+    landscapePolicy->addItemAtPosition (profileButtons, 1, 0, 1, 2, Qt::AlignCenter);
+    landscapePolicy->addItemAtPosition (settingsHeader, 2, 0, 1, 2);
 
     int row = 3;
     int col = 0;
@@ -130,20 +131,22 @@ ProfileWidget::createContainer ()
         }
     }
 
-    layout->setLandscapePolicy(landscapePolicy); // ownership transferred
-    layout->setPortraitPolicy(portraitPolicy); // ownership transferred
+    layout->setLandscapePolicy (landscapePolicy); // ownership transferred
+    layout->setPortraitPolicy (portraitPolicy); // ownership transferred
 
-    DuiContainer *container = new DuiContainer();
-    container->centralWidget()->setLayout(layout);
+    DuiContainer *container = new DuiContainer ();
+    container->centralWidget()->setLayout (layout);
 
     return container;
 }
 
 void 
-ProfileWidget::sliderValueChanged (int index)
+ProfileWidget::sliderValueChanged (
+        int index)
 {
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
     qDebug() << Q_FUNC_INFO << "for" << profile->title() << ":" << index;
+
     profileIf->setVolumeLevel(profile->id(), index);
 }
 
@@ -155,15 +158,21 @@ ProfileWidget::vibrationChanged (
     // press at this point
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
     qDebug() << Q_FUNC_INFO << "for" << profile->title() << ":" << enabled;
+
     profileIf->setVibration (profile->id(), enabled);
 }
 
 QString 
 ProfileWidget::currentProfile ()
 {
+    /*
+     * FIXME: So it is the current profile or the string that the UI thinks is
+     * the current profile.
+     */
     if (profileButtons) {
         return profileButtons->selectedProfileName ();
     }
+
     return "";
 }
 
@@ -172,6 +181,7 @@ ProfileWidget::profileSelected (
         int id)
 {
     qDebug() << Q_FUNC_INFO << ":" << id;
+
     profileIf->setProfile (id);
 }
 
@@ -180,7 +190,8 @@ ProfileWidget::setProfile (
         int profileId)
 {
     qDebug() << Q_FUNC_INFO << ":" << profileId;
-    profileButtons->selectProfile(profileId);
+
+    profileButtons->selectProfile (profileId);
 }
 
 void 
@@ -189,7 +200,8 @@ ProfileWidget::setVolume (
         int level)
 {
     qDebug() << Q_FUNC_INFO << "for profile" << profileId << ":" << level;
-    ProfileContainer *cont = containers.value(profileId);
+
+    ProfileContainer *cont = containers.value (profileId);
     if (cont) {
         cont->setLevel(level);
     }
@@ -201,9 +213,10 @@ ProfileWidget::setVibration (
         bool enabled)
 {
     qDebug() << Q_FUNC_INFO << "for profile" << profileId << ":" << enabled;
+
     ProfileContainer *cont = containers.value(profileId);
     if (cont) {
-        cont->setVibration(enabled);
+        cont->setVibration (enabled);
     }
 }
 
