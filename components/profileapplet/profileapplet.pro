@@ -17,14 +17,18 @@ contains(cov, true) {
 }
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
-HEADERS = profileapplet.h \
+HEADERS = \
+    ../debug.h \
+    profileapplet.h \
     profilewidget.h \
     profilebrief.h \
     profiletranslation.h \
     profilecontainer.h \
     profilebuttons.h \
     profiledatainterface.h
-SOURCES = profileapplet.cpp \
+SOURCES = \
+    ../debug.cpp \
+    profileapplet.cpp \
     profilewidget.cpp \
     profilebrief.cpp \
     profilecontainer.cpp \
