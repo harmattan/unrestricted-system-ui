@@ -1,3 +1,6 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
+
 #include "profiledatainterface.h"
 #include "profiletranslation.h"
 
@@ -5,6 +8,9 @@
 #include <QDebug>
 #include <QStringList>
 #include <QList>
+
+#define DEBUG
+#include "../debug.h"
 
 using namespace ProfileName;
 
@@ -20,10 +26,14 @@ enum ProfileId {
 };
 }
 
-ProfileDataInterface::ProfileDataInterface()
+ProfileDataInterface::ProfileDataInterface ()
 {
-    api = new Profile();
-    connect(api, SIGNAL(activeProfileChanged(QString)), this, SLOT(currentProfileNameChanged(QString)));
+    api = new Profile ();
+
+    SYS_DEBUG ("*** active profile = '%s'", 
+            SYS_STR (api->activeProfile()));
+    connect (api, SIGNAL(activeProfileChanged(QString)), 
+            this, SLOT(currentProfileNameChanged(QString)));
 }
 
 ProfileDataInterface::~ProfileDataInterface()
@@ -51,13 +61,14 @@ int ProfileDataInterface::getCurrentProfile()
     return mapId(prof);
 }
 
-QList<ProfileDataInterface::ProfileData> ProfileDataInterface::getProfilesData()
+QList<ProfileDataInterface::ProfileData> 
+ProfileDataInterface::getProfilesData ()
 {
     qDebug() << Q_FUNC_INFO;
     QList<ProfileData> data;
 
     // send profile <name, is> map
-    QStringList ids = api->profileNames();
+    QStringList ids = api->profileNames ();
 
     // send...
     for (int i = 0; i < ids.count(); ++i) {
