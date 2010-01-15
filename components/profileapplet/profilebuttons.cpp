@@ -1,5 +1,4 @@
 #include "profilebuttons.h"
-#include "profiletranslation.h"
 
 #include <QHash>
 #include <DuiButton>

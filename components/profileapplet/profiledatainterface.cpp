@@ -1,5 +1,4 @@
 #include "profiledatainterface.h"
-#include "profiletranslation.h"
 
 #include <Profile>
 #include <QDebug>
@@ -113,13 +112,17 @@ QString ProfileDataInterface::id2Name(const QString &id)
 {
     QString localised = "";
     if (ProfileName::ringing == id) {
-        localised = DcpProfile::RingingText;
+        //% "Ringing"
+        localised = qtTrId ("qtn_prof_ringing");
     } else if (ProfileName::silent == id) {
-        localised = DcpProfile::SilentText;
+        //% "Silent"
+        localised = qtTrId ("qtn_prof_silent");
     } else if (ProfileName::beep == id) {
-        localised = DcpProfile::BeepText;
+        //% "Beep"
+        localised = qtTrId ("qtn_prof_beep");
     } else if (ProfileName::loud == id) {
-        localised = DcpProfile::LoudText;
+        //% "Loud"
+        localised = qtTrId ("qtn_prof_loud");
     }
     return localised;
 }

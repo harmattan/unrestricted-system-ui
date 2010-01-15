@@ -1,8 +1,9 @@
 [Desktop Entry]
 Type=DUIApplet
 Name=Profile
-X-logical-id=qtn_sett_main_profile
-X-translation-catalog=duisettings
+X-logical-id=qtn_prof_profile
+# ?? qtn_sett_main_profile
+X-translation-catalog=duicontrolpanel-systemui
 Icon=
 Exec=
 

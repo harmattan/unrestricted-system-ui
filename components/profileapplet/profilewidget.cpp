@@ -1,5 +1,4 @@
 #include "profilewidget.h"
-#include "profiletranslation.h"
 #include "profilecontainer.h"
 #include "dcpprofile.h"
 #include "profilebuttons.h"
@@ -86,8 +85,10 @@ DuiContainer* ProfileWidget::createContainer()
 {
     DuiLayout *layout = new DuiLayout();
 
-    DuiLabel* currentHeader = new DuiLabel(DcpProfile::CurrentText);
-    DuiLabel* settingsHeader = new DuiLabel(DcpProfile::SettingsHeaderText);
+    //% "Current profile"
+    DuiLabel* currentHeader = new DuiLabel (qtTrId ("qtn_prof_currprof"));
+    //% "Profile Settings"
+    DuiLabel* settingsHeader = new DuiLabel (qtTrId ("qtn_prof_settings"));
 
     DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     portraitPolicy->addItem(currentHeader, Qt::AlignLeft);
