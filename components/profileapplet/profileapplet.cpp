@@ -1,5 +1,4 @@
 #include "profileapplet.h"
-#include "profiletranslation.h"
 #include "profilewidget.h"
 #include "profilebrief.h"
 
@@ -38,13 +37,15 @@ DcpWidget* ProfileApplet::pageMain()
 
 QString ProfileApplet::title() const
 {
-    return DcpProfile::AppletTitle;
+    //% "Profiles"
+    return qtTrId ("qtn_prof_profile");
 }
 
 QVector<DuiAction*> ProfileApplet::viewMenuItems()
 {
     QVector<DuiAction*> vector;
-    DuiAction* helpAction = new DuiAction(DcpProfile::MenuHelpText, pageMain());
+    //% "Help"
+    DuiAction* helpAction = new DuiAction (qtTrId ("qtn_comm_help"), pageMain ());
     vector.append(helpAction);
     helpAction->setLocation(DuiAction::ApplicationMenu);
     return vector;

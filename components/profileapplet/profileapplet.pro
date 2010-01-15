@@ -20,7 +20,6 @@ OBJECTS_DIR = .objects
 HEADERS = profileapplet.h \
     profilewidget.h \
     profilebrief.h \
-    profiletranslation.h \
     profilecontainer.h \
     profilebuttons.h \
     profiledatainterface.h

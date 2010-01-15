@@ -3,12 +3,7 @@
 # ####################################################################
 
 TEMPLATE = subdirs
-SUBDIRS = src \
-          batteryapplet \
-          batteryplugin \ 
-          displayapplet \
-          profileapplet \
-          profileplugin \
+SUBDIRS = components \
           tests \
           translations
 

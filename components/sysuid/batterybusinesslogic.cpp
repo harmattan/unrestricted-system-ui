@@ -15,18 +15,28 @@
 
 namespace
 {
-const QString ChargingText = trid("qtn_ener_char", "Charging");
-const QString ChargingNotStartedText = trid("qtn_ener_repcharger", "Charging not started. Replace charger.");
-const QString ChargingCompleteText = trid("qtn_ener_charcomp", "Charging complete");
-const QString DisconnectChargerText = trid("qtn_ener_remcha", "Disconnect charger from power supply to save energy");
-const QString LowBatteryText = trid("qtn_ener_lowbatt", "Low battery");
-const QString EnterPSMText = trid("qtn_ener_ent_psnote", "Entering power save mode");
-const QString ExitPSMText = trid("qtn_ener_exit_psnote", "Exiting power save mode");
-const QString RechargeBatteryText = trid("qtn_ener_rebatt", "Recharge battery");
-const int LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
-const int LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
-const int ChargingAnimationRateUSB = 800; // 800 ms
-const int ChargingAnimationRateWall = 400; // 400 ms
+//% "Charging"
+const char *ChargingText = QT_TRID_NOOP ("qtn_ener_char");
+//% "Charging not started. Replace charger."
+const char *ChargingNotStartedText = QT_TRID_NOOP ("qtn_ener_repcharger");
+//% "Charging complete"
+const char *ChargingCompleteText = QT_TRID_NOOP ("qtn_ener_charcomp");
+//% "Disconnect charger from power supply to save energy"
+const char *DisconnectChargerText = QT_TRID_NOOP ("qtn_ener_remcha");
+//% "Low battery"
+const char *LowBatteryText = QT_TRID_NOOP ("qtn_ener_lowbatt");
+//% "Entering power save mode"
+const char *EnterPSMText = QT_TRID_NOOP ("qtn_ener_ent_psnote");
+//% "Exiting power save mode"
+const char *ExitPSMText = QT_TRID_NOOP ("qtn_ener_exit_psnote");
+/* TODO: ^^
+//% "Recharge battery"
+const char *RechargeBatteryText = QT_TRID_NOOP ("qtn_ener_rebatt");
+ */
+const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
+const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
+const int   ChargingAnimationRateUSB = 800; // 800 ms
+const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
 LowBatteryNotifier::LowBatteryNotifier(QObject* parent) :
@@ -51,7 +61,7 @@ LowBatteryNotifier::~LowBatteryNotifier()
 void LowBatteryNotifier::showLowBatteryNotification()
 {
     qDebug() << Q_FUNC_INFO;
-    DuiNotification("", "", LowBatteryText);
+    DuiNotification("", "", qtTrId (LowBatteryText));
     time.start(); //restart time
     switch (display->get()) {
     case Maemo::QmDisplayState::On:
@@ -192,7 +202,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
         qDebug() << "Charging";
         emit batteryCharging(animationRate(battery->getChargerType()));
         utiliseLED(true, QString("PatternBatteryCharging"));
-        DuiNotification("", "", ChargingText);
+        DuiNotification("", "", qtTrId (ChargingText));
         if (lowBatteryNotifier != NULL) {
             delete lowBatteryNotifier;
             lowBatteryNotifier = NULL;
@@ -207,7 +217,7 @@ void BatteryBusinessLogic::batteryStatusChanged(Maemo::QmBattery::State state)
         qDebug() << "Charging not started";
         emit batteryNotCharging();
         utiliseLED(false, QString("PatternBatteryCharging"));
-        DuiNotification("", "", ChargingNotStartedText);
+        DuiNotification("", "", qtTrId (ChargingNotStartedText));
         break;
     default:
         break;
@@ -220,7 +230,7 @@ void BatteryBusinessLogic::batteryLevelChanged(Maemo::QmBattery::Level level)
     qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
     switch (level) {
     case QmBattery::LevelFull:
-        DuiNotification("", "", ChargingCompleteText);
+        DuiNotification("", "", qtTrId (ChargingCompleteText));
         utiliseLED(true, QString("PatternBatteryFull"));
         break;
     case QmBattery::LevelLow:
@@ -250,7 +260,7 @@ void BatteryBusinessLogic::batteryChargerEvent(Maemo::QmBattery::ChargerType typ
     switch (type) {
     case QmBattery::None: // No  charger connected
         if (battery->getLevel() == QmBattery::LevelFull)
-            DuiNotification("", "", DisconnectChargerText); //show reminder
+            DuiNotification("", "", qtTrId (DisconnectChargerText)); //show reminder
         break;
     case QmBattery::Wall: // Wall charger
     case QmBattery::USB_500mA: // USB with 500mA output
@@ -266,10 +276,10 @@ void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState P
 {
     qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << PSMState << ")";
     if (PSMState == QmDeviceMode::PSMStateOff) {
-        DuiNotification("", "", ExitPSMText);
+        DuiNotification("", "", qtTrId (ExitPSMText));
         emit PSMValueChanged(false);
     } else if (PSMState == QmDeviceMode::PSMStateOn) {
-        DuiNotification("", "", EnterPSMText);
+        DuiNotification("", "", qtTrId (EnterPSMText));
         emit PSMValueChanged(true);
     }
     emit remainingTimeValuesChanged(remainingTimeValues());
@@ -329,7 +339,7 @@ QStringList BatteryBusinessLogic::remainingTimeValues()
 
     QStringList values;
     if (battery->getState() == QmBattery::StateCharging)
-        values << ChargingText << ChargingText;
+        values << qtTrId (ChargingText) << qtTrId (ChargingText);
     else {
         Maemo::QmDeviceMode::PSMState state = deviceMode->getPSMState();
         Maemo::QmBattery::RemainingTimeMode mode;

@@ -29,7 +29,8 @@ void ShutdownUI::createContent()
 
     DuiWidget* panel = centralWidget();
 
-    text = new DuiLabel(trid("qtn_shut_down", "Shutting down, good bye!"), panel);
+    //% "Shutting down, good bye!"
+    text = new DuiLabel (qtTrId ("qtn_shut_down"), panel);
     text->setAlignment(Qt::AlignCenter);
 
     alignText();

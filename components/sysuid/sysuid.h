@@ -20,6 +20,9 @@ public:
     static QString dbusService();
     static QString dbusPath();
 
+public slots:
+    void retranslate ();
+
 private:
     SystemUIGConf* systemUIGConf;
     BatteryBusinessLogic* batteryLogic;

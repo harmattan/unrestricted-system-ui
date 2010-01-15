@@ -61,7 +61,8 @@ ProfileWidget::~ProfileWidget()
 void ProfileWidget::initProfileButtons()
 {
     profileButtons = new ProfileButtons();
-    profileButtons->setTitle(trid("qtn_prof_profile", "Profile"));
+    //% "Profiles"
+    profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
     QMap<int, QString> map;
     QList<ProfileDataInterface::ProfileData> l = dataIf->getProfilesData();
     for (int i = 0; i < l.count(); ++i) {

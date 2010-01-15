@@ -2,7 +2,7 @@
 #define LOCKSCREENBUSINESSLOGIC_H
 
 #include <qmsystem/qmlocks.h>
-#include "../tests/stubs/displaystatestub.h" //#include "qmsystem/qmdisplaystate.h"
+#include <qmsystem/qmdisplaystate.h>
 //#include "eventeater.h"
 
 #include <QObject>
