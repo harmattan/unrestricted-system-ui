@@ -2,7 +2,6 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include "profilewidget.h"
-#include "profiletranslation.h"
 #include "profilecontainer.h"
 #include "dcpprofile.h"
 #include "profilebuttons.h"
@@ -102,8 +101,10 @@ ProfileWidget::createContainer ()
 {
     DuiLayout *layout = new DuiLayout();
 
-    DuiLabel* currentHeader = new DuiLabel(DcpProfile::CurrentText);
-    DuiLabel* settingsHeader = new DuiLabel(DcpProfile::SettingsHeaderText);
+    //% "Current profile"
+    DuiLabel* currentHeader = new DuiLabel (qtTrId ("qtn_prof_currprof"));
+    //% "Profile Settings"
+    DuiLabel* settingsHeader = new DuiLabel (qtTrId ("qtn_prof_settings"));
 
     DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     portraitPolicy->addItem(currentHeader, Qt::AlignLeft);

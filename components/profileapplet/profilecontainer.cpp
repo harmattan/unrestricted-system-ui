@@ -1,6 +1,5 @@
 #include "profilecontainer.h"
 #include "profilebuttons.h"
-#include "profiletranslation.h"
 
 #include <DuiButton>
 #include <DuiSlider>
@@ -33,7 +32,8 @@ ProfileContainer::ProfileContainer(int id, const QString &title, int level, bool
         connect(slider, SIGNAL(valueChanged(int)), this, SIGNAL(sliderValueChanged(int)));
     }
 
-    button = new DuiButton(DcpProfile::VibrationText);
+    //% "Vibration"
+    button = new DuiButton (qtTrId ("qtn_prof_vibration"));
     button->setCheckable(true);
     setVibration(vibra);
     connect(button, SIGNAL(toggled(bool)), this, SIGNAL(vibrationChanged(bool)));
@@ -66,7 +66,8 @@ void ProfileContainer::setLayout()
         slider->setMaximumHeight(32);
     } else {
         img = new DuiImage("icon-m-volume-off");
-        item = new DuiLabel(DcpProfile::NoRingingText);
+        //% "No ringing"
+        item = new DuiLabel (qtTrId ("qtn_prof_noringing"));
     }
     img->setObjectName("speakerIcon");
 

@@ -17,6 +17,10 @@
 #include <QGraphicsLinearLayout>
 #include <QDebug>
 
+// TODO: load the translation file somewhere...
+//       i don't have any information how is statusindicatormenu
+//       on-the fly localisation change ongoing ... :-S <dkedves>
+
 const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
 
 Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
@@ -47,7 +51,8 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     DuiLayout *layout = new DuiLayout;
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
     widget->setLayout(layout);
-    container->setTitle(trid("qtn_ener_battery", "Battery"));
+    //% "Battery"
+    container->setTitle(qtTrId ("qtn_ener_battery"));
     container->setCentralWidget(widget);
     connect(container, SIGNAL(headerClicked()), this, SLOT(showBatteryModificationPage()));
     mainLayout->addItem(container);
@@ -80,7 +85,12 @@ Battery::~Battery()
 
 void Battery::updateModeLabel(bool toggle)
 {
-    modeLabel->setText((toggle ? trid("qtn_ener_psmode", "Power save mode") : trid("qtn_ener_normal", "Normal mode")));
+    modeLabel->setText ((toggle ?
+                         //% "Power save mode"
+                         qtTrId ("qtn_ener_psmode") :
+                         //% "Normal mode"
+                         qtTrId ("qtn_ener_normal"))
+                       );
 }
 
 void Battery::updateTimeLabel(const QStringList &times)
@@ -96,7 +106,8 @@ void Battery::updateTimeLabel(const QStringList &times)
 
 QString Battery::timeValue(int minutes)
 {
-    const QString TimeValueText = trid("qtn_ener_remtime", "%a hours %b minutes");
+    //% "%a hours %b minutes"
+    const QString TimeValueText = qtTrId ("qtn_ener_remtime");
     const QString minutesPrefix = TimeValueText.section("%b", 1, 1).trimmed();
     const QString hoursPrefix = (TimeValueText.section("%b", 0, 0)).section("%a", 1, 1).trimmed();
     QString time;

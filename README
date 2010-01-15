@@ -1,35 +1,21 @@
-
-Cellurar User Interface
+System User Interface
 =======================
-
-authors:
+(old) authors:
    Ossi Jormakka
    Matti Katila
    Carita Kautto
    Miikka Kulmala
    Jan Lapinkataja
    Telle-Tiia Pitkanen
-
-
-PIN and PUK code query
-----------------------
-
-A view that allows user to type PIN and/or PUK code.
-
-
-
-SIM card notifications
-----------------------
-
-A notification of SIM card insert.
-
+current authors (/maintainers):
+   Laszlo Pere
+   David Kedves
 
 Release
 -------
 
- dpkg-buildpackage -rfakeroot
- # for svn: (old)
- svn copy https://projects.maemo.org/svn/har-systemui/cellular-ui/trunk https://projects.maemo.org/svn/har-systemui/cellular-ui/tags/system-ui-0.6.0-1 -m "try release"
- # for git: <in master branch>
+ sb2 -e dpkg-buildpackage -rfakeroot -b
+ # <in master branch>
  git tag system-ui-VERSION
  git push --tags origin master
+

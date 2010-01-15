@@ -22,7 +22,6 @@ HEADERS = \
     profileapplet.h \
     profilewidget.h \
     profilebrief.h \
-    profiletranslation.h \
     profilecontainer.h \
     profilebuttons.h \
     profiledatainterface.h
