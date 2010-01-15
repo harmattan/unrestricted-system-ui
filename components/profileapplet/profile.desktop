@@ -13,7 +13,7 @@ X-DUIApplet-ImageLandscape=Widget_landscape_NOT_DEFINED.png
 X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 
 [DCP]
-Category= Sound
+Category= qtn_sett_main_look
 Order=2
 WidgetType= DcpLabel2
 Text2= Not found
