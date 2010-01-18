@@ -27,6 +27,12 @@ XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
 
+Package: duicontrolpanel-usbapplet
+Section: misc
+Architecture: any
+Depends:  duicontrolpanel, libduicontrolpanel, systemui-l10n-engineering-english
+Description: USB applet for the control panel application
+
 Package: duicontrolpanel-batteryapplet
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel, systemui-l10n-engineering-english
