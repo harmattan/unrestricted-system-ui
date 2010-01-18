@@ -12,10 +12,12 @@ INCLUDEPATH  += ../profileapplet \
 
 HEADERS = ../profileapplet/profiledatainterface.h \
           ../profileapplet/profilebuttons.h \
+	  ../debug.h \
           profileplugin.h \
           profilewidget.h
 SOURCES = ../profileapplet/profiledatainterface.cpp \
           ../profileapplet/profilebuttons.cpp \
+	  ../debug.cpp \
           profileplugin.cpp \
           profilewidget.cpp
 
