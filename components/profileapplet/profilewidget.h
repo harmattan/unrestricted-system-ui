@@ -38,8 +38,8 @@ private:
     DuiContainer* createContainer();
 
 private:
-    ProfileButtons        *profileButtons;
-    ProfileDataInterface  *profileIf;
-    QHash<int, ProfileContainer*> containers;
+    ProfileButtons                  *m_ProfileButtons;
+    ProfileDataInterface            *m_ProfileIf;
+    QHash<int, ProfileContainer*>    m_Containers;
 };
 #endif

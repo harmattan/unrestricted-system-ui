@@ -11,6 +11,8 @@
 #define DEBUG
 #include "../debug.h"
 
+//#define USE_TEST_DATA
+
 using namespace ProfileName;
 
 namespace ProfileId
@@ -35,29 +37,43 @@ ProfileDataInterface::ProfileDataInterface ()
             this, SLOT(currentProfileNameChanged(QString)));
 }
 
-ProfileDataInterface::~ProfileDataInterface()
+ProfileDataInterface::~ProfileDataInterface ()
 {
     delete api;
     api = NULL;
 }
 
-QString ProfileDataInterface::getCurrentProfileName()
+
+QString 
+ProfileDataInterface::getCurrentProfileName ()
 {
     qDebug() << Q_FUNC_INFO;
     QString prof = api->activeProfile();
-    return id2Name(prof);
+
+    #ifdef USE_TEST_DATA
+    return "Ringing";
+    #endif
+
+    return id2Name (prof);
 }
 
-void ProfileDataInterface::currentProfileNameChanged(const QString &prof)
+void 
+ProfileDataInterface::currentProfileNameChanged (
+        const QString &prof)
 {
     emit currentProfile(mapId(prof));
 }
 
-int ProfileDataInterface::getCurrentProfile()
+int 
+ProfileDataInterface::getCurrentProfile ()
 {
     qDebug() << Q_FUNC_INFO;
+
     QString prof = api->activeProfile();
-    return mapId(prof);
+    #ifdef USE_TEST_DATA
+    return ProfileId::ringing;
+    #endif
+    return mapId (prof);
 }
 
 QList<ProfileDataInterface::ProfileData> 
@@ -74,52 +90,114 @@ ProfileDataInterface::getProfilesData ()
         ProfileDataInterface::ProfileData d;
         //get name...
         QString id = ids.at(i);
-        d.profileId = mapId(id);
-        d.profileName = id2Name(id);
-        d.volumeLevel = checkSilent(d.profileId, api->volumeLevel(id));
-        d.vibrationEnabled = api->isVibrationEnabled(id);
+        d.profileId = mapId (id);
+        d.profileName = id2Name (id);
+        d.volumeLevel = checkSilent (d.profileId, api->volumeLevel(id));
+        d.vibrationEnabled = api->isVibrationEnabled (id);
         data.append(d);
     }
     qDebug() << Q_FUNC_INFO << "data.count():" << data.count();
+
+    #ifdef USE_TEST_DATA
+    SYS_WARNING ("Adding test data.");
+    {
+        ProfileDataInterface::ProfileData d;
+        //get name...
+        QString id ("ringing");
+        d.profileId = ProfileId::ringing;
+        d.profileName = "Ringing";
+        d.volumeLevel = 10;
+        d.vibrationEnabled = false;
+        data.append (d);
+    } {
+        ProfileDataInterface::ProfileData d;
+        //get name...
+        QString id ("silent");
+        d.profileId = ProfileId::silent;
+        d.profileName = "Silent";
+        d.volumeLevel = 0;
+        d.vibrationEnabled = true;
+        data.append (d);
+    } {
+        ProfileDataInterface::ProfileData d;
+        //get name...
+        QString id ("beep");
+        d.profileId = ProfileId::beep;
+        d.profileName = "Beep";
+        d.volumeLevel = 10;
+        d.vibrationEnabled = false;
+        data.append (d);
+    } {
+        ProfileDataInterface::ProfileData d;
+        //get name...
+        QString id ("loud");
+        d.profileId = ProfileId::loud;
+        d.profileName = "Loud";
+        d.volumeLevel = 100;
+        d.vibrationEnabled = false;
+        data.append (d);
+    }
+    #endif
+
     return data;
 }
 
-void ProfileDataInterface::setProfile(int value)
+void 
+ProfileDataInterface::setProfile (
+        int value)
 {
     qDebug() << Q_FUNC_INFO << "(" << value << ")";
-    bool success = api->setActiveProfile(mapId(value));
+
+    bool success = api->setActiveProfile (mapId(value));
     if (!success) {
+        SYS_WARNING ("Failed setting profile.");
         // TODO: what??
     }
 }
 
-void ProfileDataInterface::setVibration(int id, bool value)
+void 
+ProfileDataInterface::setVibration (
+        int    id, 
+        bool   value)
 {
     qDebug() << Q_FUNC_INFO << "(" << id << "," << value <<  ")";
+
     bool success = api->setVibration(mapId(id), value);
     if (!success) {
+        SYS_WARNING ("Failed setting the vibration.");
         // TODO: what??
     }
 }
 
-void ProfileDataInterface::setVolumeLevel(int id, int value)
+void 
+ProfileDataInterface::setVolumeLevel (
+        int   id, 
+        int   value)
 {
     qDebug() << Q_FUNC_INFO << "(" << id << "," << value <<  ")";
+
     bool success = api->setVolumeLevel(mapId(id), value);
     if (!success) {
+        SYS_WARNING ("Failed setting volume level");
         // TODO: what??
     }
 }
 
-int ProfileDataInterface::checkSilent(int id, int level)
+int 
+ProfileDataInterface::checkSilent (
+        int   id, 
+        int   level)
 {
     if (id == ProfileId::silent) {
         level = -1;
     }
+
     return level;
 }
 
-QString ProfileDataInterface::id2Name(const QString &id)
+QString 
+ProfileDataInterface::id2Name (
+        const QString &id)
 {
     QString localised = "";
     if (ProfileName::ringing == id) {
@@ -135,12 +213,17 @@ QString ProfileDataInterface::id2Name(const QString &id)
         //% "Loud"
         localised = qtTrId ("qtn_prof_loud");
     }
+
+    SYS_DEBUG ("returning '%s'", SYS_STR (localised));
     return localised;
 }
 
-int ProfileDataInterface::mapId(const QString &id)
+int 
+ProfileDataInterface::mapId (
+        const QString &id)
 {
     int intId = ProfileId::none;
+
     if (ProfileName::ringing == id) {
         intId = ProfileId::ringing;
     } else if (ProfileName::silent == id) {
@@ -153,23 +236,27 @@ int ProfileDataInterface::mapId(const QString &id)
     return intId;
 }
 
-QString ProfileDataInterface::mapId(int id)
+QString 
+ProfileDataInterface::mapId (
+        int id)
 {
     QString stringId = "";
+
     switch (id) {
-    case ProfileId::ringing:
-        stringId = ProfileName::ringing;
-        break;
-    case ProfileId::silent:
-        stringId = ProfileName::silent;
-        break;
-    case ProfileId::beep:
-        stringId = ProfileName::beep;
-        break;
-    case ProfileId::loud:
-        stringId = ProfileName::loud;
-        break;
+        case ProfileId::ringing:
+            stringId = ProfileName::ringing;
+            break;
+        case ProfileId::silent:
+            stringId = ProfileName::silent;
+            break;
+        case ProfileId::beep:
+            stringId = ProfileName::beep;
+            break;
+        case ProfileId::loud:
+            stringId = ProfileName::loud;
+            break;
     }
+
     return stringId;
 }
 

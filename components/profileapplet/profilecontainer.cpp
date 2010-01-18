@@ -1,3 +1,6 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
+
 #include "profilecontainer.h"
 #include "profilebuttons.h"
 
@@ -60,7 +63,7 @@ void ProfileContainer::setLayout()
     QGraphicsLayoutItem* item = NULL;
 
     if (slider) {
-        img = new DuiImage("icon-m-volume");
+        img = new DuiImage ("icon-m-volume");
         item = slider;
         qDebug() << Q_FUNC_INFO << "slider height" << slider->size().height();
         slider->setMaximumHeight(32);
@@ -111,7 +114,8 @@ void ProfileContainer::setVibration(bool enabled)
     button->setChecked(enabled);
 }
 
-int ProfileContainer::id()
+int 
+ProfileContainer::id ()
 {
     return profileId;
 }
