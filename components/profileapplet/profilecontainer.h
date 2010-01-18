@@ -8,31 +8,45 @@
 
 class DuiButton;
 class DuiSlider;
+class DuiImage;
 
+/*!
+ * A widget that shows and controls the basic properties of a profile: the mute
+ * state, the volume level and the vibration on/off property.
+ */
 class ProfileContainer: public DuiContainer
 {
     Q_OBJECT
 
 public:
-    ProfileContainer(int id, const QString &title, int level, bool vibra, DuiWidget *parent = 0);
-    virtual ~ProfileContainer();
+    ProfileContainer(
+            int            id, 
+            const QString &title, 
+            int            level, 
+            bool           vibra, 
+            DuiWidget     *parent = 0);
+    virtual ~ProfileContainer ();
 
-    void setLevel(int value);
-    void setVibration(bool enabled);
-    int id();
+    void setLevel (int value);
+    void setVibration (bool enabled);
+    int id ();
 
 signals:
-    void sliderValueChanged(int newValue);
-    void vibrationChanged(bool enabled);
+    void sliderValueChanged (int newValue);
+    void vibrationChanged (bool enabled);
 
+private slots:
+    void slotSliderValueChanged (int newValue); 
+    
 private:
     void setLayout();
 
 private:
-    DuiSlider* slider;
-    DuiButton* button;
-    int level;
-    const int profileId;
+    DuiSlider   *m_Slider;
+    DuiButton   *m_Button;
+    DuiImage    *m_Img;
+    int          m_Level;
+    const int    m_ProfileId;
 };
 
 #endif // PROFILECONTAINER_H

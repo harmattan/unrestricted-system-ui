@@ -12,10 +12,10 @@ class ProfileButtons : public DuiContainer
     Q_OBJECT
 
 public:
-    ProfileButtons(DuiWidget *parent = 0);
+    ProfileButtons (DuiWidget *parent = 0);
     virtual ~ProfileButtons();
 
-    void init(QMap<int, QString> data, int currentId);
+    void init (QMap<int, QString> data, int currentId);
     QString selectedProfileName();
 
 public slots:
@@ -32,7 +32,7 @@ private:
     void setLayout();
 
 private:
-    DuiButtonGroup *buttons;
+    DuiButtonGroup *m_Buttons;
 
 };
 

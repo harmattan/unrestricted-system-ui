@@ -10,96 +10,134 @@
 #include <DuiGridLayoutPolicy>
 #include <QDebug>
 
-ProfileButtons::ProfileButtons(DuiWidget *parent) :
-        DuiContainer(parent),
-        buttons(NULL)
+#define DEBUG
+#include "../debug.h"
+
+static const int nButtonColumns = 2;
+
+ProfileButtons::ProfileButtons (
+        DuiWidget *parent) :
+    DuiContainer (parent),
+    m_Buttons (0)
 {
 }
 
 ProfileButtons::~ProfileButtons()
 {
-    delete buttons;
-    buttons = NULL;
+    delete m_Buttons;
+    m_Buttons = NULL;
 }
 
-void ProfileButtons::init(QMap<int, QString> data, int currentId)
+
+void 
+ProfileButtons::init (
+        QMap<int, QString> data, 
+        int currentId)
 {
-    buttons = new DuiButtonGroup();
-    connect(buttons, SIGNAL(buttonClicked(int)), this, SIGNAL(profileSelected(int)));
+    m_Buttons = new DuiButtonGroup();
+    connect (m_Buttons, SIGNAL(buttonClicked(int)), 
+            this, SIGNAL(profileSelected(int)));
+
     QList<int> ids = data.keys();
     for (int i = 0; i < data.count(); ++i) {
         int id = ids.at(i);
-        addButton(data.value(id), id, (currentId == id));
+        addButton (data.value(id), id, (currentId == id));
         qDebug() << Q_FUNC_INFO << id << "," << data.value(id);
     }
     setLayout();
 }
 
-void  ProfileButtons::addButton(QString name, int id, bool checked)
+void
+ProfileButtons::addButton (
+        QString   name, 
+        int       id, 
+        bool      checked)
 {
-    DuiButton* button = new DuiButton(name);
-    button->setCheckable(true);
-    button->setChecked(checked);
-    buttons->addButton(button, id);
+    DuiButton *button = new DuiButton (name);
+    button->setCheckable (true);
+    button->setChecked (checked);
+    m_Buttons->addButton (button, id);
 }
 
-bool ProfileButtons::selectProfile(int id)
+/*!
+ * \returns true if the button for the profile has been found.
+ */
+bool 
+ProfileButtons::selectProfile (
+        int id)
 {
+    bool retval = false;
+
     qDebug() << Q_FUNC_INFO << id;
-    if (buttons == NULL)
-        return false;
 
-    QList<DuiButton*> buttonList = buttons->buttons();
+    if (m_Buttons == NULL)
+        return retval;
+
+    QList<DuiButton*> buttonList = m_Buttons->buttons();
     for (int i = 0; i < buttonList.size(); ++i) {
-        DuiButton *button = buttonList.at(i);
-        if (id == buttons->id(button))
-            button->setChecked(true);
-        else
-            button->setChecked(false);
+        DuiButton *button = buttonList.at (i);
+        bool       checked;
+        
+        checked = id == m_Buttons->id (button);
+        button->setChecked (checked);
+        if (checked)
+            retval = true;
     }
-    return true;
+
+    return retval;
 }
 
-QString ProfileButtons::selectedProfileName()
+/*!
+ * \returns The translated UI string from the checked button or an empty string
+ *   if there is no selected button.
+ */
+QString 
+ProfileButtons::selectedProfileName ()
 {
-    if (buttons == NULL)
-        return QString("");
+    if (m_Buttons == NULL)
+        return QString ("");
 
-    DuiButton* button = buttons->checkedButton();
+    DuiButton *button = m_Buttons->checkedButton();
     if (button)
         return button->text();
+
     return QString("");
 }
 
-void ProfileButtons::setLayout()
+/*!
+ * Creates the layout for the profile buttons. Takes the profile selection
+ * buttons from m_Buttons and sets a portrait and a landscape layout for them.
+ */
+void 
+ProfileButtons::setLayout ()
 {
-    DuiLayout *layout = new DuiLayout();
+    DuiLayout              *layout;
+    DuiLinearLayoutPolicy  *landscapePolicy;
+    DuiGridLayoutPolicy    *portraitPolicy;
+    QList<DuiButton*>       buttonList = m_Buttons->buttons();
+    int                     col = 0;
+    int                     row = 0;
 
-    DuiLinearLayoutPolicy *landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+    layout = new DuiLayout();
+
+    landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
     layout->setLandscapePolicy(landscapePolicy); // ownership transferred
 
-    DuiGridLayoutPolicy *portraitPolicy = new DuiGridLayoutPolicy(layout);
+    portraitPolicy = new DuiGridLayoutPolicy(layout);
     layout->setPortraitPolicy(portraitPolicy); // ownership transferred
 
-    // set objects
-    int col = 0;
-    int row = 0;
-    QList<DuiButton*> buttonList = buttons->buttons();
+    // Storing the buttons in the layout. 
     for (int i = 0; i < buttonList.size(); ++i) {
-        qDebug() << Q_FUNC_INFO << "row:" << row << "col:" << col;
-        DuiButton* button = buttonList.at(i);
-        landscapePolicy->addItem(button);
-        portraitPolicy->addItemAtPosition(button, row, col);
+        SYS_DEBUG ("Adding button at %d, %d", col, row);
+        landscapePolicy->addItem (buttonList[i]);
+        portraitPolicy->addItemAtPosition (buttonList[i], row, col);
+
         ++col;
-        if (1 < col) {
+        if (col >= nButtonColumns) {
             ++row;
             col = 0;
         }
     }
 
-    landscapePolicy->setSpacing(5);
-    portraitPolicy->setSpacing(5);
-
-    centralWidget()->setLayout(layout);
-
+    centralWidget()->setLayout (layout);
 }
