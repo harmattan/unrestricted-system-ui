@@ -1,0 +1,28 @@
+@import "../../../themes/base/dui/libdui/style/fonts.css";
+@import "../../../themes/base/dui/libdui/style/sizes.css";
+@import "../../../themes/base/dui/libdui/style/colors.css";
+@import "../../../themes/base/dui/libdui/style/margins.css";
+
+#ExampleTitle {
+        font: $FONT_LARGE;
+}
+
+#DateExampleLabel {
+        font: $FONT_SMALL;
+        color: #777777;
+}
+
+#TimeExampleLabel {
+        font: $FONT_SMALL;
+        color: #777777;
+}
+
+#NumberExampleLabel {
+        font: $FONT_SMALL;
+        color: #777777;
+}
+
+#CurrencyExampleLabel {
+        font: $FONT_SMALL;
+        color: #777777;
+}

@@ -28,7 +28,8 @@ class ProfilePlugin : public QObject, public DuiStatusIndicatorMenuPluginInterfa
 
 public:
     // Methods derived from DuiStatusIndicatorMenuPlugin
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
+    virtual DuiWidget *constructWidget (
+        DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
 };
 
 #endif // PROFILEPLUGIN_H
