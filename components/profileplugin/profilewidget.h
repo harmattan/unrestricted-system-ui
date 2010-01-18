@@ -17,41 +17,43 @@ class ProfileWidget : public DuiWidget
     Q_OBJECT
 
 public:
-    ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
-    virtual ~ProfileWidget();
+    ProfileWidget (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
+                   QGraphicsItem *parent = NULL);
+    virtual ~ProfileWidget ();
 
 private slots:
     /*!
      * \brief A slot for showing the profile duicontrolpanel plugin
      */
-    void showProfileModificationPage();
+    void showProfileModificationPage ();
 
     /*!
      * \brief A slot for receiving information about profile button clicks.
      */
-    void buttonClicked(int index);
+    void buttonClicked (int index);
 
     /*!
      * \brief A slot for receiving information about profile changes
      */
-    void changeProfile(const QString &profileName);
+    void changeProfile (const QString &profileName);
 
 private:
     /*!
      * \brief A method for initializing the profile buttons container
      */
-    void initProfileButtons();
+    void initProfileButtons ();
 
 private:
     //! Interface for controlling the status indicator menu
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
 
     //! Profile data If to receive information about possible profiles
-    ProfileDataInterface* dataIf;
+    ProfileDataInterface            *dataIf;
 
     //! Profile buttongroup container
-    ProfileButtons *profileButtons;
+    ProfileButtons                  *profileButtons;
 
 };
 
 #endif // PROFILEWIDGET_H
+

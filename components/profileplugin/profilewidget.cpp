@@ -31,55 +31,68 @@
 #include <QGraphicsLinearLayout>
 
 
-ProfileWidget::ProfileWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
-        DuiWidget(parent),
-        statusIndicatorMenu(statusIndicatorMenu),
-        dataIf(NULL),
-        profileButtons(NULL)
+ProfileWidget::ProfileWidget (
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
+    QGraphicsItem *parent) :
+        DuiWidget (parent),
+        statusIndicatorMenu (statusIndicatorMenu),
+        dataIf (NULL),
+        profileButtons (NULL)
 {
-    Q_UNUSED(statusIndicatorMenu);
-    dataIf = new ProfileDataInterface();
-    connect(dataIf, SIGNAL(currentProfileNameChanged(QString)), profileButtons, SLOT(selectProfile(int)));
+    Q_UNUSED (statusIndicatorMenu);
+    dataIf = new ProfileDataInterface;
 
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    setLayout(mainLayout);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    connect (dataIf, SIGNAL (currentProfileNameChanged (QString)),
+             profileButtons, SLOT (selectProfile (int)));
+
+    QGraphicsLinearLayout *mainLayout =
+        new QGraphicsLinearLayout (Qt::Vertical);
+
+    setLayout (mainLayout);
+    mainLayout->setContentsMargins (0, 0, 0, 0);
 
     // Create a container for the profiles
-    initProfileButtons();
+    initProfileButtons ();
 
-    mainLayout->addItem(profileButtons);
+    mainLayout->addItem (profileButtons);
 
 }
 
-ProfileWidget::~ProfileWidget()
+ProfileWidget::~ProfileWidget ()
 {
     delete dataIf;
     dataIf = NULL;
 }
 
-void ProfileWidget::initProfileButtons()
+void
+ProfileWidget::initProfileButtons ()
 {
-    profileButtons = new ProfileButtons();
+    profileButtons = new ProfileButtons ();
     //% "Profiles"
     profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
     QMap<int, QString> map;
-    QList<ProfileDataInterface::ProfileData> l = dataIf->getProfilesData();
-    for (int i = 0; i < l.count(); ++i) {
-        ProfileDataInterface::ProfileData d = l.at(i);
-        map.insert(d.profileId, d.profileName);
+    QList<ProfileDataInterface::ProfileData> l = dataIf->getProfilesData ();
+
+    for (int i = 0; i < l.count (); ++i) {
+        ProfileDataInterface::ProfileData d = l.at (i);
+        map.insert (d.profileId, d.profileName);
     }
-    profileButtons->init(map, dataIf->getCurrentProfile());
-    connect(profileButtons, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
-    connect(profileButtons, SIGNAL(profileSelected(int)), dataIf, SLOT(setProfile(int)));
+    profileButtons->init (map, dataIf->getCurrentProfile ());
+
+    connect (profileButtons, SIGNAL (headerClicked ()),
+             this, SLOT (showProfileModificationPage ()));
+    connect (profileButtons, SIGNAL (profileSelected (int)),
+             dataIf, SLOT (setProfile (int)));
 }
 
-void ProfileWidget::showProfileModificationPage()
+void
+ProfileWidget::showProfileModificationPage ()
 {
     // instantiate the interface
     DuiControlPanelIf cpIf;
     // check the interface is valid
-    if (!cpIf.isValid())
+    if (!cpIf.isValid ())
         return;
-    cpIf.appletPage("Profile");
+    cpIf.appletPage ("Profile");
 }
+
