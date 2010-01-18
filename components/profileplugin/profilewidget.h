@@ -20,6 +20,10 @@ public:
     ProfileWidget (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
                    QGraphicsItem *parent = NULL);
     virtual ~ProfileWidget ();
+    /*!
+     * \brief A method for retranslating the UI
+     */
+    void retranslateUi ();
 
 private slots:
     /*!
@@ -36,16 +40,16 @@ private slots:
      * \brief A slot for receiving information about profile changes
      */
     void changeProfile (const QString &profileName);
+    /*!
+     * \brief A slot for reloading the translations on locale-change
+     */
+    void loadTranslation ();
 
 private:
     /*!
      * \brief A method for initializing the profile buttons container
      */
     void initProfileButtons ();
-    /*!
-     * \brief A method for reloading the translations on locale-change
-     */
-    void retranslateUi ();
 
 private:
     //! Interface for controlling the status indicator menu

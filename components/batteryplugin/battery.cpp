@@ -2,6 +2,10 @@
 #include "batterydbusinterface.h"
 #include "batteryimage.h"
 
+#define DEBUG
+#include "../debug.h"
+
+#include <DuiApplication>
 #include <DuiApplicationIfProxy>
 #include <DuiContainer>
 #include <DuiControlPanelIf>
@@ -28,13 +32,20 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
         modeLabel (NULL),
         timeLabel (NULL),
         batteryImage (NULL),
-        container (NULL)
+        container (NULL),
+        initialized (false)
 {
+    DuiApplication  *App = DuiApplication::instance ();
+
     DuiTheme::loadCSS (cssDir + "batteryplugin.css");
 
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout (Qt::Vertical);
     setLayout (mainLayout);
     mainLayout->setContentsMargins (0, 0, 0, 0);
+
+    connect (App, SIGNAL (localeSettingsChanged ()),
+             this, SLOT (loadTranslation ()));
+    loadTranslation ();
 
     // init widgets
     modeLabel = new DuiLabel;
@@ -62,6 +73,12 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     layoutPolicy->addItemAtPosition (timeLabel, 0, 1, 1, 2);
     layoutPolicy->addItemAtPosition (batteryImage, 1, 0, 1, 2);
 
+#ifdef DEBUG
+    // set some default values (for testing...)
+    updateModeLabel (false);
+    batteryImage->startCharging (50);
+#endif
+
     // get widget values
     dbusIf = new BatteryDBusInterface;
     connect (dbusIf, SIGNAL (PSMValueReceived (bool)),
@@ -80,6 +97,7 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     dbusIf->batteryBarValueRequired ();
     dbusIf->batteryChargingStateRequired ();
 
+    initialized = true;
 }
 
 Battery::~Battery()
@@ -145,11 +163,26 @@ Battery::showBatteryModificationPage ()
 }
 
 void
-Battery::retranslateUi ()
+Battery::loadTranslation ()
 {
+    SYS_DEBUG ("start");
+
     DuiLocale   locale;
 
+    locale.installTrCatalog (SYSTEMUI_TRANSLATION ".qm");
     locale.installTrCatalog (SYSTEMUI_TRANSLATION);
+    DuiLocale::setDefault (locale);
+
+    SYS_DEBUG ("end");
+}
+
+void
+Battery::retranslateUi ()
+{
+    if (initialized == false)
+        return;
+
+    SYS_DEBUG ("");
 
     // This call will reload modeLabel and timeLabel
     // contents with the actual translations:

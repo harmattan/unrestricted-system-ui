@@ -17,15 +17,16 @@ public:
     Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
              QGraphicsItem *parent = NULL);
     virtual ~Battery ();
+    void retranslateUi ();
 
 private slots:
     void updateModeLabel (bool toggle);
     void updateTimeLabel (const QStringList &times);
     void showBatteryModificationPage ();
+    void loadTranslation ();
 
 private: //methods
     QString timeValue (int minutes);
-    void retranslateUi ();
 
 private: //attributes
     BatteryDBusInterface            *dbusIf;
@@ -35,6 +36,7 @@ private: //attributes
     DuiLabel                        *timeLabel;
     BatteryImage                    *batteryImage;
     DuiContainer                    *container;
+    bool                             initialized;
 
 };
 

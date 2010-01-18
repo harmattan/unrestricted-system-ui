@@ -18,8 +18,13 @@
 #include "profiledatainterface.h"
 #include "profilebuttons.h"
 
+#define DEBUG
+#include "../debug.h"
+
+#include <QDebug>
 #include <DuiButton>
 #include <DuiButtonGroup>
+#include <DuiApplication>
 #include <DuiContainer>
 #include <DuiControlPanelIf>
 #include <DuiGridLayoutPolicy>
@@ -37,11 +42,13 @@ ProfileWidget::ProfileWidget (
     QGraphicsItem *parent) :
         DuiWidget (parent),
         statusIndicatorMenu (statusIndicatorMenu),
-        dataIf (NULL),
-        profileButtons (NULL)
+        dataIf (0),
+        profileButtons (0)
 {
-    Q_UNUSED (statusIndicatorMenu);
-    dataIf = new ProfileDataInterface;
+    DuiApplication  *App = DuiApplication::instance ();
+
+    Q_UNUSED(statusIndicatorMenu);
+    dataIf = new ProfileDataInterface ();
 
     connect (dataIf, SIGNAL (currentProfileNameChanged (QString)),
              profileButtons, SLOT (selectProfile (int)));
@@ -52,11 +59,14 @@ ProfileWidget::ProfileWidget (
     setLayout (mainLayout);
     mainLayout->setContentsMargins (0, 0, 0, 0);
 
+    connect (App, SIGNAL (localeSettingsChanged ()),
+             this, SLOT (loadTranslation ()));
+    loadTranslation ();
+
     // Create a container for the profiles
     initProfileButtons ();
 
     mainLayout->addItem (profileButtons);
-
 }
 
 ProfileWidget::~ProfileWidget ()
@@ -68,6 +78,8 @@ ProfileWidget::~ProfileWidget ()
 void
 ProfileWidget::initProfileButtons ()
 {
+    SYS_DEBUG ("start");
+
     profileButtons = new ProfileButtons ();
     //% "Profiles"
     profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
@@ -84,6 +96,8 @@ ProfileWidget::initProfileButtons ()
              this, SLOT (showProfileModificationPage ()));
     connect (profileButtons, SIGNAL (profileSelected (int)),
              dataIf, SLOT (setProfile (int)));
+
+    SYS_DEBUG ("end");
 }
 
 void
@@ -98,11 +112,26 @@ ProfileWidget::showProfileModificationPage ()
 }
 
 void
-ProfileWidget::retranslateUi ()
+ProfileWidget::loadTranslation ()
 {
+    SYS_DEBUG ("START");
+
     DuiLocale   locale;
 
+    locale.installTrCatalog (SYSTEMUI_TRANSLATION ".qm");
     locale.installTrCatalog (SYSTEMUI_TRANSLATION);
+    DuiLocale::setDefault (locale);
+
+    SYS_DEBUG ("END");
+}
+
+void
+ProfileWidget::retranslateUi ()
+{
+    if (profileButtons == 0)
+        return;
+
+    SYS_DEBUG ("");
 
     profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
 }
