@@ -7,11 +7,12 @@
 class BatteryPlugin : public QObject, public DuiStatusIndicatorMenuPluginInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES (DuiStatusIndicatorMenuPluginInterface)
 
 public:
     // Methods derived from DuiStatusIndicatorMenuPlugin
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
+    virtual DuiWidget *constructWidget (
+        DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
 };
 
 #endif // BATTERYPLUGIN_H
