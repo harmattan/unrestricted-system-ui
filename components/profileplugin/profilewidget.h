@@ -42,6 +42,10 @@ private:
      * \brief A method for initializing the profile buttons container
      */
     void initProfileButtons ();
+    /*!
+     * \brief A method for reloading the translations on locale-change
+     */
+    void retranslateUi ();
 
 private:
     //! Interface for controlling the status indicator menu

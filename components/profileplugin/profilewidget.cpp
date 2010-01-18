@@ -30,6 +30,7 @@
 
 #include <QGraphicsLinearLayout>
 
+#define SYSTEMUI_TRANSLATION "duicontrolpanel-systemui"
 
 ProfileWidget::ProfileWidget (
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
@@ -94,5 +95,15 @@ ProfileWidget::showProfileModificationPage ()
     if (!cpIf.isValid ())
         return;
     cpIf.appletPage ("Profile");
+}
+
+void
+ProfileWidget::retranslateUi ()
+{
+    DuiLocale   locale;
+
+    locale.installTrCatalog (SYSTEMUI_TRANSLATION);
+
+    profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
 }
 
