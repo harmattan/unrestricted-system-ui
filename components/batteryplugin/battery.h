@@ -4,6 +4,7 @@
 #include <DuiWidget>
 
 class DuiLabel;
+class DuiContainer;
 class DuiStatusIndicatorMenuInterface;
 class BatteryDBusInterface;
 class BatteryImage;
@@ -13,23 +14,28 @@ class Battery : public DuiWidget
     Q_OBJECT
 
 public:
-    Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
-    virtual ~Battery();
+    Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
+             QGraphicsItem *parent = NULL);
+    virtual ~Battery ();
 
 private slots:
-    void updateModeLabel(bool toggle);
-    void updateTimeLabel(const QStringList &times);
-    void showBatteryModificationPage();
+    void updateModeLabel (bool toggle);
+    void updateTimeLabel (const QStringList &times);
+    void showBatteryModificationPage ();
 
 private: //methods
-    QString timeValue(int minutes);
+    QString timeValue (int minutes);
+    void retranslateUi ();
 
 private: //attributes
-    BatteryDBusInterface *dbusIf;
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu; //! Interface for controlling the status indicator menu
-    DuiLabel *modeLabel;
-    DuiLabel *timeLabel;
-    BatteryImage *batteryImage;
+    BatteryDBusInterface            *dbusIf;
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
+    //^^ ! Interface for controlling the status indicator menu
+    DuiLabel                        *modeLabel;
+    DuiLabel                        *timeLabel;
+    BatteryImage                    *batteryImage;
+    DuiContainer                    *container;
+
 };
 
 #endif // BATTERY_H

@@ -17,19 +17,19 @@
 #include <QGraphicsLinearLayout>
 #include <QDebug>
 
-// TODO: load the translation file somewhere...
-//       i don't have any information how is statusindicatormenu
-//       on-the fly localisation change ongoing ... :-S <dkedves>
+#define SYSTEMUI_TRANSLATION "duicontrolpanel-systemui"
 
 const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
 
-Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
-        DuiWidget(parent),
-        dbusIf(NULL),
-        statusIndicatorMenu(statusIndicatorMenu),
-        modeLabel(NULL),
-        timeLabel(NULL),
-        batteryImage(NULL)
+Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
+                 QGraphicsItem *parent) :
+        DuiWidget (parent),
+        dbusIf (NULL),
+        statusIndicatorMenu (statusIndicatorMenu),
+        modeLabel (NULL),
+        timeLabel (NULL),
+        batteryImage (NULL),
+        container (NULL)
 {
     DuiTheme::loadCSS(cssDir + "batteryplugin.css");
 
@@ -46,7 +46,7 @@ Battery::Battery(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     batteryImage->setObjectName("batteryImage");
 
     // Create a container for the battery
-    DuiContainer *container = new DuiContainer;
+    container = new DuiContainer;
     DuiWidget *widget = new DuiWidget;
     DuiLayout *layout = new DuiLayout;
     DuiGridLayoutPolicy *layoutPolicy = new DuiGridLayoutPolicy(layout);
@@ -131,3 +131,18 @@ void Battery::showBatteryModificationPage()
         return;
     cpIf.appletPage("Battery");
 }
+
+void Battery::retranslateUi ()
+{
+    DuiLocale   locale;
+
+    locale.installTrCatalog (SYSTEMUI_TRANSLATION);
+
+    // This call will reload modeLabel and timeLabel
+    // contents with the actual translations:
+    dbusIf->PSMValueRequired();
+    dbusIf->remainingTimeValuesRequired();
+
+    container->setTitle(qtTrId ("qtn_ener_battery"));
+}
+
