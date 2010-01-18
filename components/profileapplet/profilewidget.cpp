@@ -147,7 +147,7 @@ ProfileWidget::sliderValueChanged (
     ProfileContainer* profile = static_cast<ProfileContainer*>(this->sender());
     qDebug() << Q_FUNC_INFO << "for" << profile->title() << ":" << index;
 
-    m_ProfileIf->setVolumeLevel(profile->id(), index);
+    m_ProfileIf->setVolumeLevel (profile->id(), index);
 }
 
 void 
