@@ -24,7 +24,7 @@
 class ProfilePlugin : public QObject, public DuiStatusIndicatorMenuPluginInterface
 {
     Q_OBJECT
-    Q_INTERFACES (DuiStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
 
 public:
     // Methods derived from DuiStatusIndicatorMenuPlugin
