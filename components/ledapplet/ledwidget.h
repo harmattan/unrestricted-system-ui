@@ -4,8 +4,21 @@
 #define LEDWIDGET_H
 
 #include "dcpwidget.h"
+
+class DuiButton;
+
 class LedWidget : public DcpWidget
 {
     Q_OBJECT
+
+public:
+    LedWidget (QGraphicsWidget *parent = 0);
+
+protected:
+    void initWidget (void);
+
+private:
+    DuiButton   *m_IlluminationButton;
+    DuiButton   *m_EventsButton;
 };
 #endif
