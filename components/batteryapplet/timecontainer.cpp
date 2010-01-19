@@ -1,11 +1,11 @@
 #include "timecontainer.h"
 
 #include <DuiGridLayoutPolicy>
-#include <DuiImage>
+#include <DuiImageWidget>
 #include <DuiLabel>
 #include <DuiLayout>
 
-TimeContainer::TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent) :
+TimeContainer::TimeContainer(const QString &text, DuiImageWidget *image, DuiWidget *parent) :
         DuiContainer(parent),
         image(image),
         textLabel(NULL),
@@ -67,8 +67,8 @@ void TimeContainer::setLayout()
     centralWidget()->setLayout(layout);
 
     // add the widgets
-    layoutPolicy->addItemAtPosition(image, 0, 0, 2, 1);
-    layoutPolicy->addItemAtPosition(textLabel, 0, 1, 1, 1);
-    layoutPolicy->addItemAtPosition(timeLabel, 1, 1, 1, 1);
+    layoutPolicy->addItem(image, 0, 0, 2, 1);
+    layoutPolicy->addItem(textLabel, 0, 1, 1, 1);
+    layoutPolicy->addItem(timeLabel, 1, 1, 1, 1);
 }
 

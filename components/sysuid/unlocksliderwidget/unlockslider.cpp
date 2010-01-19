@@ -4,7 +4,7 @@
 #include "unlocksliderview.h"
 
 UnlockSlider::UnlockSlider(QGraphicsItem *parent) :
-        DuiWidgetController(parent, new UnlockSliderModel)
+        DuiWidgetController(new UnlockSliderModel(), parent)
 {
     this->setView(view = new UnlockSliderView(this));
 }
@@ -80,9 +80,9 @@ void UnlockSlider::blink()
     model()->setBlinking(true);
 }
 
-void UnlockSlider::modelModified(const QList<const char*>& modifications)
+void UnlockSlider::updateData(const QList<const char*>& modifications)
 {
-    DuiWidgetController::modelModified(modifications);
+    DuiWidgetController::updateData(modifications);
 
     const char* member;
     foreach(member, modifications) {

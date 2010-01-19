@@ -47,7 +47,7 @@ LedApplet::viewMenuItems ()
     //% "Help"
     DuiAction* helpAction = new DuiAction (qtTrId ("qtn_comm_help"), pageMain ());
     vector.append(helpAction);
-    helpAction->setLocation(DuiAction::ApplicationMenu);
+    helpAction->setLocation(DuiAction::ApplicationMenuLocation);
 #endif
     return vector;
 }

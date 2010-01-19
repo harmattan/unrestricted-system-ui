@@ -4,7 +4,7 @@
 #include <QDebug>
 
 BatteryImage::BatteryImage(QGraphicsItem *parent) :
-        DuiImage(parent),
+        DuiImageWidget(parent),
         timer(NULL),
         batteryLevel(0)
 {

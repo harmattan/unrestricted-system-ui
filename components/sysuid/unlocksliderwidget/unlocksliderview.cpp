@@ -40,9 +40,9 @@ void UnlockSliderView::resizeEvent(QGraphicsSceneResizeEvent* event)
     update();
 }
 
-void UnlockSliderView::modelModified(const QList<const char*>& modifications)
+void UnlockSliderView::updateData(const QList<const char*>& modifications)
 {
-    DuiWidgetView::modelModified(modifications);
+    DuiWidgetView::updateData(modifications);
 
     const char* member;
     foreach(member, modifications) {
@@ -70,16 +70,16 @@ void UnlockSliderView::modelModified(const QList<const char*>& modifications)
     update();
 }
 
-void UnlockSliderView::modelChanged()
+void UnlockSliderView::setupModel()
 {
-    DuiWidgetView::modelChanged();
+    DuiWidgetView::setupModel();
 
     recalcRects();
 }
 
-void UnlockSliderView::styleChanged()
+void UnlockSliderView::applyStyle()
 {
-    DuiWidgetView::styleChanged();
+    DuiWidgetView::applyStyle();
 
     recalcRects();
 }
@@ -228,7 +228,7 @@ void UnlockSliderView::setHandleModelPos(const QPointF& center)
 
     // Prevent possible(?) division by zero
     if (max - min != 0) {
-        // Scale c to 0..1 range and set the value to model which causes modelModified to be called
+        // Scale c to 0..1 range and set the value to model which causes updateData to be called
         qreal pos = (clamp(c, min, max) - min) / (max - min);
         if (qApp->isRightToLeft()) {
             pos = 1.0f - pos;

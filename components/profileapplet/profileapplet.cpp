@@ -49,7 +49,7 @@ QVector<DuiAction*> ProfileApplet::viewMenuItems()
     //% "Help"
     DuiAction* helpAction = new DuiAction (qtTrId ("qtn_comm_help"), pageMain ());
     vector.append(helpAction);
-    helpAction->setLocation(DuiAction::ApplicationMenu);
+    helpAction->setLocation(DuiAction::ApplicationMenuLocation);
     return vector;
 }
 

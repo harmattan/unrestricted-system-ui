@@ -6,7 +6,7 @@
 #include <DuiContainer>
 #include <DuiControlPanelIf>
 #include <DuiGridLayoutPolicy>
-#include <DuiImage>
+#include <DuiImageWidget>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLocale>
@@ -58,9 +58,9 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     mainLayout->addItem (container);
 
     // insert widgets
-    layoutPolicy->addItemAtPosition (modeLabel, 0, 0, 1, 1);
-    layoutPolicy->addItemAtPosition (timeLabel, 0, 1, 1, 2);
-    layoutPolicy->addItemAtPosition (batteryImage, 1, 0, 1, 2);
+    layoutPolicy->addItem(modeLabel, 0, 0, 1, 1);
+    layoutPolicy->addItem(timeLabel, 0, 1, 1, 2);
+    layoutPolicy->addItem(batteryImage, 1, 0, 1, 2);
 
     // get widget values
     dbusIf = new BatteryDBusInterface;

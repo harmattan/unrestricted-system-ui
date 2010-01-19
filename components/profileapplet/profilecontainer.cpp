@@ -8,7 +8,7 @@
 #include <DuiSlider>
 #include <DuiLabel>
 #include <DuiLayout>
-#include <DuiImage>
+#include <DuiImageWidget>
 #include <DuiGridLayoutPolicy>
 #include <QDebug>
 
@@ -92,10 +92,10 @@ ProfileContainer::setLayout ()
      * FIXME: Ok, but what happens when we change the 'mute' state?
      */
     if (m_Slider) {
-        m_Img = new DuiImage ("icon-m-volume");
+        m_Img = new DuiImageWidget ("icon-m-volume");
         item = m_Slider;
     } else {
-        m_Img = new DuiImage ("icon-m-volume-off");
+        m_Img = new DuiImageWidget ("icon-m-volume-off");
         //% "No ringing"
         item = new DuiLabel (qtTrId ("qtn_prof_noringing"));
     }
@@ -104,12 +104,12 @@ ProfileContainer::setLayout ()
     /*
      * Adding the widgets to the proper places.
      */
-    landscapePolicy->addItemAtPosition (m_Img, 0, 0);
-    portraitPolicy->addItemAtPosition (m_Img, 0, 0);
-    landscapePolicy->addItemAtPosition (item, 0, 1);
-    portraitPolicy->addItemAtPosition (item, 0, 1);
-    landscapePolicy->addItemAtPosition (m_Button, 1, 0, 1, 2);
-    portraitPolicy->addItemAtPosition (m_Button, 1, 0, 1, 2);
+    landscapePolicy->addItem(m_Img, 0, 0);
+    portraitPolicy->addItem(m_Img, 0, 0);
+    landscapePolicy->addItem(item, 0, 1);
+    portraitPolicy->addItem(item, 0, 1);
+    landscapePolicy->addItem(m_Button, 1, 0, 1, 2);
+    portraitPolicy->addItem(m_Button, 1, 0, 1, 2);
     
     centralWidget()->setLayout(layout);
 }

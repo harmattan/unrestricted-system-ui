@@ -6,12 +6,6 @@
 
 #include <QVariant>
 
-namespace
-{
-const QString PSMActivateText = trid("qtn_ener_aps", "Activate power save now");
-const QString PSMDeactivateText = trid("qtn_ener_dps", "Deactivate power save now");
-}
-
 void Ut_BatteryBusinessLogic::init()
 {
     systemUIGConf = new SystemUIGConf();

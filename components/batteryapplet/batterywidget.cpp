@@ -61,7 +61,7 @@ void BatteryWidget::initWidget()
     // standByTimeContainer
     //% "Estimated stand-by time:"
     standByTimeContainer = new TimeContainer(qtTrId ("qtn_ener_st"),
-                                             new DuiImage("qgn_ener_standby"));
+                                             new DuiImageWidget("qgn_ener_standby"));
 
     // PSMButton
     PSMButton = new DuiButton();
@@ -78,10 +78,10 @@ void BatteryWidget::initWidget()
     DuiLayout *orientationLayout = new DuiLayout();
 
     DuiGridLayoutPolicy *landscapeLayoutPolicy = new DuiGridLayoutPolicy(orientationLayout);
-    landscapeLayoutPolicy->addItemAtPosition(talkTimeContainer, 0, 0);
-    landscapeLayoutPolicy->addItemAtPosition(standByTimeContainer, 0, 1);
-    landscapeLayoutPolicy->addItemAtPosition(PSMButton, 1, 0, 1, 2);
-    landscapeLayoutPolicy->addItemAtPosition(sliderContainer, 2, 0, 1, 2);
+    landscapeLayoutPolicy->addItem(talkTimeContainer, 0, 0);
+    landscapeLayoutPolicy->addItem(standByTimeContainer, 0, 1);
+    landscapeLayoutPolicy->addItem(PSMButton, 1, 0, 1, 2);
+    landscapeLayoutPolicy->addItem(sliderContainer, 2, 0, 1, 2);
     landscapeLayoutPolicy->setSpacing(10);
     orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
 
