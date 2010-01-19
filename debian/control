@@ -63,3 +63,7 @@ Section: devel
 Architecture: all
 Description: Engineering English translations for system-ui packages.
 
+Package: duicontrolpanel-ledapplet
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel, systemui-l10n-engineering-english
+Description: LED settings applet.
