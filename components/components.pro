@@ -4,6 +4,7 @@ SUBDIRS = sysuid \
           batteryplugin \ 
           displayapplet \
           profileapplet \
+	  ledapplet     \
           profileplugin \
           usbapplet
 
