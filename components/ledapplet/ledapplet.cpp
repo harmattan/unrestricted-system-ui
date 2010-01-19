@@ -26,7 +26,9 @@ DcpWidget *
 LedApplet::constructWidget (
         int widgetId)
 {
-    Q_UNUSED(widgetId);
+    Q_UNUSED (widgetId);
+
+    SYS_DEBUG ("Contructing LedWidget");
     return new LedWidget ();
 }
 
