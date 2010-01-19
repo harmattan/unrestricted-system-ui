@@ -36,8 +36,8 @@ private: //attributes
     DuiLabel                        *timeLabel;
     BatteryImage                    *batteryImage;
     DuiContainer                    *container;
-    bool                             initialized;
-
+    bool                             PSMode;
+    QStringList                     *last_values;
 };
 
 #endif // BATTERY_H

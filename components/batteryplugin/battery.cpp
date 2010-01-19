@@ -2,7 +2,7 @@
 #include "batterydbusinterface.h"
 #include "batteryimage.h"
 
-#define DEBUG
+#undef DEBUG
 #include "../debug.h"
 
 #include <DuiApplication>
@@ -25,7 +25,7 @@
 const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
 
 Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
-                 QGraphicsItem *parent) :
+                  QGraphicsItem *parent) :
         DuiWidget (parent),
         dbusIf (NULL),
         statusIndicatorMenu (statusIndicatorMenu),
@@ -33,7 +33,8 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
         timeLabel (NULL),
         batteryImage (NULL),
         container (NULL),
-        initialized (false)
+        PSMode (false),
+        last_values (0)
 {
     DuiApplication  *App = DuiApplication::instance ();
 
@@ -96,8 +97,6 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     dbusIf->remainingTimeValuesRequired ();
     dbusIf->batteryBarValueRequired ();
     dbusIf->batteryChargingStateRequired ();
-
-    initialized = true;
 }
 
 Battery::~Battery()
@@ -109,6 +108,8 @@ Battery::~Battery()
 void
 Battery::updateModeLabel (bool toggle)
 {
+    PSMode = toggle;
+
     modeLabel->setText ((toggle ?
                          //% "Power save mode"
                          qtTrId ("qtn_ener_psmode") :
@@ -120,6 +121,10 @@ Battery::updateModeLabel (bool toggle)
 void
 Battery::updateTimeLabel (const QStringList &times)
 {
+    if (last_values != 0)
+        delete last_values;
+    last_values = new QStringList (times);
+
     if (times.size () != 2)
         return;
 
@@ -165,29 +170,23 @@ Battery::showBatteryModificationPage ()
 void
 Battery::loadTranslation ()
 {
-    SYS_DEBUG ("start");
+    SYS_DEBUG ("");
 
     DuiLocale   locale;
 
     locale.installTrCatalog (SYSTEMUI_TRANSLATION ".qm");
     locale.installTrCatalog (SYSTEMUI_TRANSLATION);
     DuiLocale::setDefault (locale);
-
-    SYS_DEBUG ("end");
 }
 
 void
 Battery::retranslateUi ()
 {
-    if (initialized == false)
-        return;
-
     SYS_DEBUG ("");
 
-    // This call will reload modeLabel and timeLabel
-    // contents with the actual translations:
-    dbusIf->PSMValueRequired ();
-    dbusIf->remainingTimeValuesRequired ();
+    updateModeLabel (PSMode);
+    if (last_values != 0)
+        updateTimeLabel (*last_values);
 
     container->setTitle (qtTrId ("qtn_ener_battery"));
 }

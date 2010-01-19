@@ -18,7 +18,7 @@
 #include "profiledatainterface.h"
 #include "profilebuttons.h"
 
-#define DEBUG
+#undef DEBUG
 #include "../debug.h"
 
 #include <QDebug>
@@ -78,8 +78,6 @@ ProfileWidget::~ProfileWidget ()
 void
 ProfileWidget::initProfileButtons ()
 {
-    SYS_DEBUG ("start");
-
     profileButtons = new ProfileButtons ();
     //% "Profiles"
     profileButtons->setTitle (qtTrId ("qtn_prof_profile"));
@@ -96,8 +94,6 @@ ProfileWidget::initProfileButtons ()
              this, SLOT (showProfileModificationPage ()));
     connect (profileButtons, SIGNAL (profileSelected (int)),
              dataIf, SLOT (setProfile (int)));
-
-    SYS_DEBUG ("end");
 }
 
 void
@@ -114,15 +110,13 @@ ProfileWidget::showProfileModificationPage ()
 void
 ProfileWidget::loadTranslation ()
 {
-    SYS_DEBUG ("START");
+    SYS_DEBUG ("");
 
     DuiLocale   locale;
 
     locale.installTrCatalog (SYSTEMUI_TRANSLATION ".qm");
     locale.installTrCatalog (SYSTEMUI_TRANSLATION);
     DuiLocale::setDefault (locale);
-
-    SYS_DEBUG ("END");
 }
 
 void
