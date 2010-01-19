@@ -10,16 +10,17 @@ INCLUDEPATH  += ../profileapplet \
                 /usr/include/profile-qt \
                 /usr/include/duicontrolpanel
 
-HEADERS = ../profileapplet/profiledatainterface.h \
+HEADERS = profileplugin.h \
+          profilewidget.h \
+          ../profileapplet/profiledatainterface.h \
           ../profileapplet/profilebuttons.h \
-	  ../debug.h \
-          profileplugin.h \
-          profilewidget.h
-SOURCES = ../profileapplet/profiledatainterface.cpp \
+          ../debug.h
+          
+SOURCES = profileplugin.cpp \
+          profilewidget.cpp \
+          ../profileapplet/profiledatainterface.cpp \
           ../profileapplet/profilebuttons.cpp \
-	  ../debug.cpp \
-          profileplugin.cpp \
-          profilewidget.cpp
+          ../debug.cpp
 
 TARGET        = $$qtLibraryTarget(profile)
 DESTDIR       = lib

@@ -2,6 +2,10 @@
 #include "batterydbusinterface.h"
 #include "batteryimage.h"
 
+#undef DEBUG
+#include "../debug.h"
+
+#include <DuiApplication>
 #include <DuiApplicationIfProxy>
 #include <DuiContainer>
 #include <DuiControlPanelIf>
@@ -21,20 +25,28 @@
 const QString cssDir = "/usr/share/duistatusindicatormenu/themes/style/";
 
 Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
-                 QGraphicsItem *parent) :
+                  QGraphicsItem *parent) :
         DuiWidget (parent),
         dbusIf (NULL),
         statusIndicatorMenu (statusIndicatorMenu),
         modeLabel (NULL),
         timeLabel (NULL),
         batteryImage (NULL),
-        container (NULL)
+        container (NULL),
+        PSMode (false),
+        last_values (0)
 {
+    DuiApplication  *App = DuiApplication::instance ();
+
     DuiTheme::loadCSS (cssDir + "batteryplugin.css");
 
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout (Qt::Vertical);
     setLayout (mainLayout);
     mainLayout->setContentsMargins (0, 0, 0, 0);
+
+    connect (App, SIGNAL (localeSettingsChanged ()),
+             this, SLOT (loadTranslation ()));
+    loadTranslation ();
 
     // init widgets
     modeLabel = new DuiLabel;
@@ -62,6 +74,12 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     layoutPolicy->addItem(timeLabel, 0, 1, 1, 2);
     layoutPolicy->addItem(batteryImage, 1, 0, 1, 2);
 
+#ifdef DEBUG
+    // set some default values (for testing...)
+    updateModeLabel (false);
+    batteryImage->startCharging (50);
+#endif
+
     // get widget values
     dbusIf = new BatteryDBusInterface;
     connect (dbusIf, SIGNAL (PSMValueReceived (bool)),
@@ -79,7 +97,6 @@ Battery::Battery (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     dbusIf->remainingTimeValuesRequired ();
     dbusIf->batteryBarValueRequired ();
     dbusIf->batteryChargingStateRequired ();
-
 }
 
 Battery::~Battery()
@@ -91,6 +108,8 @@ Battery::~Battery()
 void
 Battery::updateModeLabel (bool toggle)
 {
+    PSMode = toggle;
+
     modeLabel->setText ((toggle ?
                          //% "Power save mode"
                          qtTrId ("qtn_ener_psmode") :
@@ -102,6 +121,10 @@ Battery::updateModeLabel (bool toggle)
 void
 Battery::updateTimeLabel (const QStringList &times)
 {
+    if (last_values != 0)
+        delete last_values;
+    last_values = new QStringList (times);
+
     if (times.size () != 2)
         return;
 
@@ -145,16 +168,25 @@ Battery::showBatteryModificationPage ()
 }
 
 void
-Battery::retranslateUi ()
+Battery::loadTranslation ()
 {
+    SYS_DEBUG ("");
+
     DuiLocale   locale;
 
+    locale.installTrCatalog (SYSTEMUI_TRANSLATION ".qm");
     locale.installTrCatalog (SYSTEMUI_TRANSLATION);
+    DuiLocale::setDefault (locale);
+}
 
-    // This call will reload modeLabel and timeLabel
-    // contents with the actual translations:
-    dbusIf->PSMValueRequired ();
-    dbusIf->remainingTimeValuesRequired ();
+void
+Battery::retranslateUi ()
+{
+    SYS_DEBUG ("");
+
+    updateModeLabel (PSMode);
+    if (last_values != 0)
+        updateTimeLabel (*last_values);
 
     container->setTitle (qtTrId ("qtn_ener_battery"));
 }

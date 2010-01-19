@@ -1,5 +1,2 @@
 profileapplet:
     Implement retranslateUi()
-profileplugin,batteryplugin:
-    Implement retranslateUi ()
-    (seems statusindicatormenu doesn't have any support for applet translations-catalog reload on localeChange :-S)
