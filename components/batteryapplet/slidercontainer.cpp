@@ -18,6 +18,7 @@ SliderContainer::SliderContainer(DuiWidget *parent) :
     setLayout ();
 }
 
+
 void
 SliderContainer::retranslate ()
 {
