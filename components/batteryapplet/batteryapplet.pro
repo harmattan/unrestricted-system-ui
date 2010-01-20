@@ -3,10 +3,9 @@ CONFIG += plugin \
     gui \
     dui \
     silent \
-    debug
-LIBS += -lduicontrolpanel
-INCLUDEPATH += /usr/include/qt4/dui \
-    /usr/include/duicontrolpanel
+    debug \
+    duicontrolpanel
+
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
