@@ -15,7 +15,7 @@
 
 Q_EXPORT_PLUGIN2(profileapplet, ProfileApplet)
 
-const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
+const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
 
 
 void ProfileApplet::init()
