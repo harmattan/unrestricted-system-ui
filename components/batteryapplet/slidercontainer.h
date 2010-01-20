@@ -14,6 +14,7 @@ class SliderContainer : public DuiContainer
 
 public:
     SliderContainer (DuiWidget *parent = 0);
+    //virtual ~SliderContainer ();
     void retranslate ();
 
 public slots:
