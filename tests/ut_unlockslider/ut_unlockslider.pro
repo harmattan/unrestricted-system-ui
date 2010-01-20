@@ -4,7 +4,7 @@ QT += testlib
 TEMPLATE = app
 TARGET = ut_unlockslider
 target.path = /usr/lib/system-ui-tests
-CONFIG += dui
+CONFIG += dui silent
 
 SOURCES += ut_unlockslider.cpp \
     $$SLIDER_PREFIX/unlockslidermodel.cpp \
