@@ -5,7 +5,7 @@ QT += dbus
 LIBS += -lprofile-qt \
         -lduicontrolpanel
 TEMPLATE      = lib
-CONFIG       += plugin gui dui duistatusindicatormenu
+CONFIG       += plugin gui dui duistatusindicatormenu silent
 INCLUDEPATH  += ../profileapplet \
                 /usr/include/profile-qt \
                 /usr/include/duicontrolpanel
