@@ -1,4 +1,4 @@
 usr/lib/duicontrolpanel/applets/libusbapplet.so
 usr/lib/duicontrolpanel/usbapplet.desktop
-usr/share/duicontrolpanel/themes/style/usbapplet.css
+usr/share/themes/base/dui/duicontrolpanel/style/usbapplet.css
 

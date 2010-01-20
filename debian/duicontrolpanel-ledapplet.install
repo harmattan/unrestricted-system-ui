@@ -1,3 +1,3 @@
 usr/lib/duicontrolpanel/ledapplet.desktop
-usr/share/duicontrolpanel/themes/style/ledapplet.css
+usr/share/themes/base/dui/duicontrolpanel/style/ledapplet.css
 usr/lib/duicontrolpanel/applets/libledapplet.so
