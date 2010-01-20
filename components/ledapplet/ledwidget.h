@@ -17,6 +17,10 @@ public:
 protected:
     void initWidget (void);
 
+protected slots:
+    void illuminationToggled (bool newState);
+    void eventsToggled       (bool newState);
+
 private:
     DuiButton   *m_IlluminationButton;
     DuiButton   *m_EventsButton;

@@ -5,6 +5,7 @@
 #include <DuiLabel>
 #include <DuiButton>
 #include <DuiLinearLayoutPolicy>
+#include <DuiGridLayoutPolicy>
 
 #include "ledwidget.h"
 
@@ -26,25 +27,57 @@ void
 LedWidget::initWidget ()
 {
     DuiLayout               *mainLayout;
-    DuiLinearLayoutPolicy   *landscapePolicy, *portraitPolicy;
+    DuiGridLayoutPolicy     *landscapePolicy;
+    DuiLinearLayoutPolicy   *portraitPolicy;
+    DuiLabel                *label1, *label2;
 
     SYS_DEBUG ("");
 
     mainLayout = new DuiLayout (this);
-    landscapePolicy = new DuiLinearLayoutPolicy (mainLayout, Qt::Horizontal);
+    landscapePolicy = new DuiGridLayoutPolicy (mainLayout);
     portraitPolicy  = new DuiLinearLayoutPolicy (mainLayout, Qt::Vertical);
     mainLayout->setLandscapePolicy (landscapePolicy);
     mainLayout->setPortraitPolicy (portraitPolicy);
 
+    label1 = new DuiLabel ("Illumination light");
+
     m_IlluminationButton = new DuiButton ();
-    m_IlluminationButton->setCheckable(true);
+    m_IlluminationButton->setCheckable (true);
+
+    label2 = new DuiLabel ("Incoming events");
 
     m_EventsButton = new DuiButton ();
-    m_EventsButton->setCheckable(true);
+    m_EventsButton->setCheckable (true);
 
-    landscapePolicy->addItem (m_IlluminationButton, Qt::AlignRight);
+    /*
+     * Well, no UI spec yet, so I'm not sure this is what we want...
+     */
+    portraitPolicy->addItem (label1, Qt::AlignLeft);
     portraitPolicy->addItem (m_IlluminationButton, Qt::AlignRight);
-    
-    landscapePolicy->addItem (m_EventsButton, Qt::AlignRight);
+    portraitPolicy->addItem (label2, Qt::AlignLeft);
     portraitPolicy->addItem (m_EventsButton, Qt::AlignRight);
+   
+    landscapePolicy->addItemAtPosition (label1, 0, 0);
+    landscapePolicy->addItemAtPosition (m_IlluminationButton, 0, 1);
+    landscapePolicy->addItemAtPosition (label2, 1, 0);
+    landscapePolicy->addItemAtPosition (m_EventsButton, 1, 1);
+
+    connect (m_IlluminationButton, SIGNAL (toggled(bool)),
+            this, SLOT (illuminationToggled(bool)));
+    connect (m_EventsButton, SIGNAL (toggled(bool)),
+            this, SLOT (eventsToggled(bool)));
+}
+
+void 
+LedWidget::illuminationToggled (
+        bool newState)
+{
+    SYS_DEBUG ("*** state = %s", newState ? "true" : "false");
+}
+
+void 
+LedWidget::eventsToggled (
+        bool newState)
+{
+    SYS_DEBUG ("*** state = %s", newState ? "true" : "false");
 }
