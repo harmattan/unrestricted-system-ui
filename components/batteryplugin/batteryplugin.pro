@@ -5,7 +5,8 @@ LIBS += -lduicontrolpanel
 CONFIG += plugin \
           gui \
           dui \
-          duistatusindicatormenu
+          duistatusindicatormenu \
+          silent
 
 QT += dbus
 INCLUDEPATH += ../batteryapplet \
