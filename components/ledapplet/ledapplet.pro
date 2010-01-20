@@ -1,9 +1,12 @@
 TEMPLATE = lib
-CONFIG += plugin \
-    gui \
-    dui \
-    silent \
+CONFIG +=            \
+    silent           \
+    qmsystem         \
+    plugin           \
+    gui              \
+    dui              \
     debug
+    
 
 LIBS += -lduicontrolpanel 
 
@@ -25,11 +28,11 @@ HEADERS =            \
     ledwidget.h      \
     ledbrief.h 
 
-SOURCES =           \
-    ../debug.cpp    \
-    ledapplet.cpp   \
-    ledwidget.cpp   \
-    ledbrief.cpp    \
+SOURCES =            \
+    ../debug.cpp     \
+    ledapplet.cpp    \
+    ledwidget.cpp    \
+    ledbrief.cpp     \
 
 css.files = ledapplet.css
 DESTDIR = lib

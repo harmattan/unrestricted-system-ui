@@ -6,11 +6,14 @@
 #include <DuiButton>
 #include <DuiLinearLayoutPolicy>
 #include <DuiGridLayoutPolicy>
+#include <qmled.h>
 
 #include "ledwidget.h"
 
 #define DEBUG
 #include "../debug.h"
+
+using namespace Maemo;
 
 LedWidget::LedWidget (
         QGraphicsWidget *parent):
@@ -79,5 +82,11 @@ void
 LedWidget::eventsToggled (
         bool newState)
 {
+    QmLED  qmApi;
+
     SYS_DEBUG ("*** state = %s", newState ? "true" : "false");
+    if (newState)
+        qmApi.enable ();
+    else
+        qmApi.disable ();
 }
