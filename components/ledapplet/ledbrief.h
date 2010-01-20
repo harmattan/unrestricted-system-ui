@@ -8,6 +8,11 @@
 class LedBrief: public DcpBrief
 {
     Q_OBJECT
+
+public:
+    virtual int widgetTypeID () const;
+    virtual bool toggle () const;
+    virtual void setToggle (bool toggle);
 };
 
 #endif
