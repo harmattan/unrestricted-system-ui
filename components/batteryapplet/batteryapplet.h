@@ -14,15 +14,18 @@ class BatteryApplet : public QObject, public DcpAppletIf
     Q_INTERFACES(DcpAppletIf)
 
 public:
+    BatteryApplet ();
+    ~BatteryApplet ();
+    
     virtual void init();
-    virtual DcpWidget* constructWidget(int widgetId);
-    virtual DcpWidget* pageMain();
+    virtual DcpWidget *constructWidget(int widgetId);
+    virtual DcpWidget *pageMain();
     virtual QString title() const;
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId = 0);
 
 private:
-    QPointer<BatteryWidget> main;
+    BatteryWidget  *m_MainWidget;
 
 };
 #endif // BATTERYAPPLET_H

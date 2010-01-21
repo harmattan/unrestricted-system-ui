@@ -71,8 +71,8 @@ ProfileContainer::ProfileContainer (
 
 ProfileContainer::~ProfileContainer()
 {
+    SYS_DEBUG ("");
 }
-
 
 void 
 ProfileContainer::setLayout ()

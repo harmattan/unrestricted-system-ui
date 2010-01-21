@@ -25,7 +25,7 @@ public:
             int            level, 
             bool           vibra, 
             DuiWidget     *parent = 0);
-    virtual ~ProfileContainer ();
+    ~ProfileContainer ();
 
     void setLevel (int value);
     void setVibration (bool enabled);

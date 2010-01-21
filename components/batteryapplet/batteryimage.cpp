@@ -8,15 +8,29 @@ BatteryImage::BatteryImage(QGraphicsItem *parent) :
         timer(NULL),
         batteryLevel(0)
 {
-    batteryImages << QString("icon-m-battery-verylow") << QString("icon-m-battery-low") << QString("icon-m-battery-13")
-    << QString("icon-m-battery-25") << QString("icon-m-battery-38") << QString("icon-m-battery-50")
-    << QString("icon-m-battery-62") << QString("icon-m-battery-75") << QString("icon-m-battery-88")
-    << QString("icon-m-battery-100");
+    batteryImages << 
+	    QString ("icon-m-battery-verylow") << 
+	    QString ("icon-m-battery-low") << 
+	    QString ("icon-m-battery-13") << 
+	    QString ("icon-m-battery-25") << 
+	    QString ("icon-m-battery-38") << 
+	    QString ("icon-m-battery-50") << 
+	    QString ("icon-m-battery-62") << 
+	    QString ("icon-m-battery-75") << 
+	    QString ("icon-m-battery-88") << 
+	    QString ("icon-m-battery-100");
 
-    batteryChargingImages << QString("") << QString("") << QString("icon-s-battery-13")
-    << QString("icon-s-battery-25") << QString("icon-s-battery-38") << QString("icon-s-battery-50")
-    << QString("icon-s-battery-62") << QString("icon-s-battery-75") << QString("icon-s-battery-88")
-    << QString("icon-s-battery-100");
+    batteryChargingImages << 
+	    QString("") << 
+	    QString("") << 
+	    QString("icon-s-battery-13") << 
+	    QString("icon-s-battery-25") << 
+	    QString("icon-s-battery-38") << 
+	    QString("icon-s-battery-50") << 
+	    QString("icon-s-battery-62") << 
+	    QString("icon-s-battery-75") << 
+	    QString("icon-s-battery-88") << 
+	    QString("icon-s-battery-100");
 }
 
 BatteryImage::~BatteryImage()

@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "slidercontainer.h"
 
 #include <DuiButton>
@@ -8,27 +10,39 @@
 
 #include <QDebug>
 
-SliderContainer::SliderContainer(DuiWidget *parent) :
+#define DEBUG 
+#include "../debug.h"
+
+SliderContainer::SliderContainer (DuiWidget *parent) :
         DuiContainer (parent),
         PSMAutoButton (NULL),
-        PSMSlider (NULL)
+        PSMSlider (new DuiSlider)
 {
-    PSMSlider = new DuiSlider;
+    SYS_DEBUG ("");
+
+    //PSMSlider = new DuiSlider;
     setHeaderVisible (false);
     setLayout ();
+}
+
+SliderContainer::~SliderContainer ()
+{
+    SYS_DEBUG ("Destroying %p", this);
 }
 
 
 void
 SliderContainer::retranslate ()
 {
+    SYS_DEBUG ("");
     //% "Auto activate power save"
     textLabel->setText (qtTrId ("qtn_ener_autops"));
 }
 
 void SliderContainer::setLayout()
 {
-    DuiLayout *layout = new DuiLayout (this);
+    SYS_DEBUG ("");
+    DuiLayout *layout = new DuiLayout ();
     layout_policy =
         new DuiLinearLayoutPolicy (layout, Qt::Vertical);
 
@@ -53,10 +67,15 @@ void SliderContainer::setLayout()
     hpolicy->addItem (PSMAutoButton, Qt::AlignRight);
 
     layout_policy->addItem (hlayout);
+
+    centralWidget()->setLayout (layout);
 }
 
-void SliderContainer::initSlider(const QStringList &values)
+void 
+SliderContainer::initSlider (
+        const QStringList &values)
 {
+    SYS_DEBUG ("");
     sliderValues = QStringList (values);
     PSMSlider->setRange (0, sliderValues.size() - 1);
     PSMSlider->setOrientation (Qt::Horizontal);
@@ -75,12 +94,14 @@ void SliderContainer::updateSlider(const QString &value)
 
 void SliderContainer::sliderValueChanged(int value)
 {
+    SYS_DEBUG ("");
     updateSlider(sliderValues.at(value));
     emit PSMThresholdValueChanged(sliderValues.at(value));
 }
 
 void SliderContainer::toggleSliderExistence(bool toggle)
 {
+    SYS_DEBUG ("");
     if (toggle) {
         if (layout_policy->count() < 2)
             layout_policy->addItem (PSMSlider);
@@ -98,6 +119,7 @@ void SliderContainer::initPSMAutoButton(bool toggle)
 
 void SliderContainer::PSMAutoDisabled()
 {
+    SYS_DEBUG ("");
     PSMAutoButton->blockSignals(true);
     initPSMAutoButton(false);
     PSMAutoButton->blockSignals(false);
@@ -105,6 +127,7 @@ void SliderContainer::PSMAutoDisabled()
 
 void SliderContainer::PSMAutoButtonToggled(bool toggle)
 {
+    SYS_DEBUG ("");
     qDebug() << "SliderContainer::PSMAutoButtonToggled(" << toggle << ")";
     toggleSliderExistence (toggle);
     emit PSMAutoToggled(toggle);

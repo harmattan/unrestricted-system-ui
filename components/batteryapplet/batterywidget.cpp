@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "batterywidget.h"
 #include "batteryimage.h"
 #include "batterydbusinterface.h"
@@ -14,30 +16,37 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
+
+#define DEBUG 
+#include "../debug.h"
 /*
-
 TODO list:
-
 1) what is the correct interval for updating the battery image when charging? Is there a difference between
    USB and normal charging?
 
 */
 
-BatteryWidget::BatteryWidget(QGraphicsWidget *parent) :
-        DcpWidget(parent),
-        batteryIf(NULL),
-        batteryImage(NULL),
-        PSMButton(NULL),
-        sliderContainer(NULL),
-        standByTimeContainer(NULL),
-        talkTimeContainer(NULL)
+BatteryWidget::BatteryWidget (QGraphicsWidget *parent) :
+        DcpWidget (parent),
+        batteryIf (NULL),
+        batteryImage (NULL),
+        PSMButton (NULL),
+        sliderContainer (NULL),
+        standByTimeContainer (NULL),
+        talkTimeContainer (NULL)
 {
-    setReferer(DcpBattery::None);
+    SYS_DEBUG ("Starting in %p", this);
+    //setReferer(DcpBattery::None);
     initWidget();
 }
 
-BatteryWidget::~BatteryWidget()
+BatteryWidget::~BatteryWidget ()
 {
+    SYS_DEBUG ("Destroying %p", this);
+    if (batteryIf) {
+        delete batteryIf;
+        batteryIf = NULL;
+    }
 }
 
 bool BatteryWidget::back()
@@ -47,28 +56,31 @@ bool BatteryWidget::back()
 
 void BatteryWidget::initWidget()
 {
+    SYS_DEBUG ("Start");
     // proxy for dbus interface on remote object
     batteryIf = new BatteryDBusInterface();
 
     // battery image
-    batteryImage = new BatteryImage();
+    batteryImage = new BatteryImage ();
 
     // talkTimeContainer
     //% "Estimated talk time:"
-    talkTimeContainer = new TimeContainer(qtTrId ("qtn_ener_tt"),
-                                          batteryImage);
+    talkTimeContainer = new TimeContainer (
+            qtTrId ("qtn_ener_tt"), batteryImage);
 
     // standByTimeContainer
     //% "Estimated stand-by time:"
-    standByTimeContainer = new TimeContainer(qtTrId ("qtn_ener_st"),
-                                             new DuiImageWidget("qgn_ener_standby"));
+    standByTimeContainer = new TimeContainer(
+            qtTrId ("qtn_ener_st"), new DuiImageWidget("qgn_ener_standby"));
 
     // PSMButton
     PSMButton = new DuiButton();
-    connect(PSMButton, SIGNAL(released()), this, SLOT(PSMButtonReleased()));
+    connect (PSMButton, SIGNAL(released()), 
+            this, SLOT(PSMButtonReleased()));
 
     // sliderContainer
     sliderContainer = new SliderContainer();
+
     connect (sliderContainer, SIGNAL(PSMAutoToggled(bool)),
              batteryIf, SLOT(setPSMAutoValue(bool)));
     connect (sliderContainer, SIGNAL(PSMThresholdValueChanged(QString)),
@@ -82,14 +94,14 @@ void BatteryWidget::initWidget()
     landscapeLayoutPolicy->addItem(standByTimeContainer, 0, 1);
     landscapeLayoutPolicy->addItem(PSMButton, 1, 0, 1, 2);
     landscapeLayoutPolicy->addItem(sliderContainer, 2, 0, 1, 2);
-    landscapeLayoutPolicy->setSpacing(10);
+    landscapeLayoutPolicy->setSpacing (10);
     orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
 
     DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(orientationLayout, Qt::Vertical);
     portraitLayoutPolicy->addItem(talkTimeContainer, Qt::AlignLeft);
     portraitLayoutPolicy->addItem(standByTimeContainer, Qt::AlignLeft);
     portraitLayoutPolicy->addItem(PSMButton, Qt::AlignCenter);
-    portraitLayoutPolicy->addItem(sliderContainer, Qt::AlignLeft);
+    portraitLayoutPolicy->addItem (sliderContainer, Qt::AlignLeft);
     portraitLayoutPolicy->setSpacing(10);
     orientationLayout->setPortraitPolicy(portraitLayoutPolicy);
 
@@ -133,8 +145,9 @@ void BatteryWidget::initWidget()
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addItem(mainContainer);
-    setLayout(mainLayout);
+    this->setLayout(mainLayout);
 
+    SYS_DEBUG ("End");
 }
 
 void BatteryWidget::PSMButtonReleased()
@@ -142,7 +155,9 @@ void BatteryWidget::PSMButtonReleased()
     batteryIf->setPSMValue (PSMButtonToggle);
 }
 
-void BatteryWidget::updatePSMButton(bool toggle)
+void 
+BatteryWidget::updatePSMButton(
+        bool toggle)
 {
     PSMButtonToggle = toggle;
 
@@ -162,7 +177,8 @@ void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
     standByTimeContainer->updateTimeLabel(timeValues.at(1));
 }
 
-void BatteryWidget::retranslateUi ()
+void 
+BatteryWidget::retranslateUi ()
 {
     // This call will reload the translated text on PSButton
     updatePSMButton (PSMButtonToggle);
@@ -175,5 +191,4 @@ void BatteryWidget::retranslateUi ()
 
     // This call will reload timelabels on timercontainers
     batteryIf->remainingTimeValuesRequired();
-
 }

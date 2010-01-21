@@ -57,25 +57,21 @@ void DisplayWidget::initWidget()
     m_brightnessSlider->setRange (0, m_brightness_vals.size () - 1);
     m_brightnessSlider->setValue (m_logic->selectedBrightnessValue ());
 
+// FIXME: now its casues crash on the device :-S <dkedves>
+#if 0
     m_brightnessSlider->setMinLabelVisible (true);
     m_brightnessSlider->setMaxLabelVisible (true);
     m_brightnessSlider->setMinLabelIconID ("icon-l-brightness-min");
     m_brightnessSlider->setMaxLabelIconID ("icon-l-brightness-max");
+#endif
 
     connect (m_brightnessSlider, SIGNAL (valueChanged (int)),
              m_logic, SLOT (setBrightnessValue (int)));
-    connect (m_brightnessSlider, SIGNAL (valueChanged (int)),
-             this, SLOT (modify_brightness_handle (int)));
 
     m_brightnessContainer = new DuiContainer;
-    //% "Brightness: %1%"
+    //% "Brightness:"
     m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
     m_brightnessContainer->centralWidget ()->setLayout (brightnessLayout);
-
-    modify_brightness_handle (m_logic->selectedBrightnessValue ());
-#ifndef VALUE_IN_HEADER
-    m_brightnessSlider->setHandleLabelVisible (true);
-#endif
 
     policy->addItem (m_brightnessContainer);
 
@@ -154,20 +150,6 @@ void DisplayWidget::initWidget()
 }
 
 void
-DisplayWidget::modify_brightness_handle (int newValue)
-{
-    // FIXME: val * 20 % is okey?
-    int value = m_brightness_vals.at(newValue) * 20;
-
-#ifdef VALUE_IN_HEADER
-    m_brightnessContainer->setTitle
-        (qtTrId ("qtn_disp_bright").arg (value));
-#else
-    m_brightnessSlider->setHandleLabel (QString::number (value) + "%");
-#endif
-}
-
-void
 DisplayWidget::modify_screenlight_handle (int newValue)
 {
     int value = m_screenlight_vals.at(newValue);
@@ -184,9 +166,9 @@ DisplayWidget::modify_screenlight_handle (int newValue)
 void
 DisplayWidget::retranslateUi ()
 {
-    modify_brightness_handle (m_brightnessSlider->value ());
     modify_screenlight_handle (m_screenlightSlider->value ());
 
+    m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
     m_noteLabel->setText (qtTrId ("qtn_disp_note"));
     m_blankinhibitLabel->setText (qtTrId ("qtn_disp_screenon"));
 }

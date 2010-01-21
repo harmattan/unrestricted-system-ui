@@ -14,16 +14,20 @@ contains(cov, true) {
 }
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
-HEADERS = batteryapplet.h \
-    batterywidget.h \
-    batterybrief.h \
+HEADERS =                  \
+    ../debug.h             \
+    batteryapplet.h        \
+    batterywidget.h        \
+    batterybrief.h         \
     batterydbusinterface.h \    
-    timecontainer.h \
-    slidercontainer.h \
-    dcpbattery.h \
+    timecontainer.h        \
+    slidercontainer.h      \
+    dcpbattery.h           \
     batteryimage.h
 
-SOURCES = batteryapplet.cpp \
+SOURCES =                  \
+    ../debug.cpp           \
+    batteryapplet.cpp \
     batterywidget.cpp \
     batterybrief.cpp \
     batterydbusinterface.cpp \    
