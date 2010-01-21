@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #include <DuiLabel>
-#include <DuiImage>
+#include <DuiImageWidget>
 #include <DuiButton>
 #include <DuiLayout>
 #include <DuiGridLayoutPolicy>
@@ -30,7 +30,6 @@ LockScreenUI::LockScreenUI() :
         unreadChatMessagesLabel(NULL)
 {
     qDebug() << Q_FUNC_INFO;
-    setFullscreen(true);
     setPannableAreaInteractive(false);
 
     // let's hide home button
@@ -59,7 +58,7 @@ void LockScreenUI::createContent()
     l_policy->setSpacing(10);
     l_policy->setRowFixedHeight(1, size.height());
     l_policy->setColumnFixedWidth(0, size.width());
-    l_policy->addItemAtPosition(widgets, 1, 0, Qt::AlignCenter);
+    l_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
 
     size = DuiApplication::activeApplicationWindow()->
            sceneManager()->visibleSceneSize(Dui::Portrait);
@@ -68,7 +67,7 @@ void LockScreenUI::createContent()
     p_policy->setSpacing(10);
     p_policy->setRowFixedHeight(1, size.height());
     p_policy->setColumnFixedWidth(0, size.width());
-    p_policy->addItemAtPosition(widgets, 1, 0, Qt::AlignCenter);
+    p_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
 
     layout->setLandscapePolicy(l_policy);
     layout->setPortraitPolicy(p_policy);
@@ -121,13 +120,13 @@ DuiLayout* LockScreenUI::createWidgets()
     spacerl->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
-    unreadEmailsImage = new DuiImage("icon-m-notification-email");
+    unreadEmailsImage = new DuiImageWidget("icon-m-notification-email");
     //unreadEmailsImage->setImage(QImage("/usr/share/sysuid/themes/svg/emails-missed.svg"));
-    unreadMessagesImage = new DuiImage("icon-m-notification-sms");
+    unreadMessagesImage = new DuiImageWidget("icon-m-notification-sms");
     //unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
-    missedCallsImage = new DuiImage("icon-m-notification-call");
+    missedCallsImage = new DuiImageWidget("icon-m-notification-call");
     //missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
-    unreadChatMessagesImage = new DuiImage("icon-m-notification-im");
+    unreadChatMessagesImage = new DuiImageWidget("icon-m-notification-im");
     //unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
 
     // TODO: some suitable layout could be added to image and then the label to that layout
@@ -143,17 +142,17 @@ DuiLayout* LockScreenUI::createWidgets()
     QGraphicsWidget* spacerb = new QGraphicsWidget;
     spacerb->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    policy->addItemAtPosition(spacert,                 0, 0, 1, 6);
-    policy->addItemAtPosition(timeLabel,               1, 0, 1, 6);
-    policy->addItemAtPosition(dateLabel,               2, 0, 1, 6);
-    policy->addItemAtPosition(slider,                  3, 0, 1, 6);
-    policy->addItemAtPosition(spacerl,                 4, 0);
-    policy->addItemAtPosition(unreadEmailsImage,       4, 1);
-    policy->addItemAtPosition(unreadMessagesImage,     4, 2);
-    policy->addItemAtPosition(missedCallsImage,        4, 3);
-    policy->addItemAtPosition(unreadChatMessagesImage, 4, 4);
-    policy->addItemAtPosition(spacerr,                 4, 5);
-    policy->addItemAtPosition(spacerb,                 5, 0, 1, 6);
+    policy->addItem(spacert,                 0, 0, 1, 6);
+    policy->addItem(timeLabel,               1, 0, 1, 6);
+    policy->addItem(dateLabel,               2, 0, 1, 6);
+    policy->addItem(slider,                  3, 0, 1, 6);
+    policy->addItem(spacerl,                 4, 0);
+    policy->addItem(unreadEmailsImage,       4, 1);
+    policy->addItem(unreadMessagesImage,     4, 2);
+    policy->addItem(missedCallsImage,        4, 3);
+    policy->addItem(unreadChatMessagesImage, 4, 4);
+    policy->addItem(spacerr,                 4, 5);
+    policy->addItem(spacerb,                 5, 0, 1, 6);
 
     return layout;
 }

@@ -130,7 +130,7 @@ ProfileButtons::setLayout ()
     for (int i = 0; i < buttonList.size(); ++i) {
         SYS_DEBUG ("Adding button at %d, %d", col, row);
         landscapePolicy->addItem (buttonList[i]);
-        portraitPolicy->addItemAtPosition (buttonList[i], row, col);
+        portraitPolicy->addItem(buttonList[i], row, col);
 
         ++col;
         if (col >= nButtonColumns) {

@@ -1,11 +1,11 @@
 #ifndef BATTERYIMAGE_H
 #define BATTERYIMAGE_H
 
-#include <DuiImage>
+#include <DuiImageWidget>
 
 class QTimer;
 
-class BatteryImage : public DuiImage
+class BatteryImage : public DuiImageWidget
 {
     Q_OBJECT
 

@@ -113,9 +113,9 @@ ProfileWidget::createContainer ()
     portraitPolicy->addItem (settingsHeader, Qt::AlignLeft);
 
     DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy (layout);
-    landscapePolicy->addItemAtPosition (currentHeader, 0, 0, 1, 2);
-    landscapePolicy->addItemAtPosition (m_ProfileButtons, 1, 0, 1, 2, Qt::AlignCenter);
-    landscapePolicy->addItemAtPosition (settingsHeader, 2, 0, 1, 2);
+    landscapePolicy->addItem(currentHeader, 0, 0, 1, 2);
+    landscapePolicy->addItem(m_ProfileButtons, 1, 0, 1, 2, Qt::AlignCenter);
+    landscapePolicy->addItem(settingsHeader, 2, 0, 1, 2);
 
     int row = 3;
     int col = 0;
@@ -123,7 +123,7 @@ ProfileWidget::createContainer ()
         qDebug() << Q_FUNC_INFO << "row:" << row << "col:" << col;
         ProfileContainer* cont = m_Containers.value(i);
         portraitPolicy->addItem(cont);
-        landscapePolicy->addItemAtPosition (cont, row, col);
+        landscapePolicy->addItem(cont, row, col);
         ++col;
         if (1 < col) {
             ++row;

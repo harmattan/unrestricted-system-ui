@@ -14,7 +14,7 @@
 
 Q_EXPORT_PLUGIN2(ledapplet, LedApplet)
 
-const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
+const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
 
 void 
 LedApplet::init ()
@@ -47,7 +47,7 @@ LedApplet::viewMenuItems ()
     //% "Help"
     DuiAction* helpAction = new DuiAction (qtTrId ("qtn_comm_help"), pageMain ());
     vector.append(helpAction);
-    helpAction->setLocation(DuiAction::ApplicationMenu);
+    helpAction->setLocation(DuiAction::ApplicationMenuLocation);
 #endif
     return vector;
 }

@@ -102,10 +102,10 @@ void SliderContainer::toggleSliderExistence(bool toggle)
 {
     SYS_DEBUG ("");
     if (toggle) {
-        if (layout_policy->size() < 2)
+        if (layout_policy->count() < 2)
             layout_policy->addItem (PSMSlider);
     } else {
-        if (layout_policy->size() > 1)
+        if (layout_policy->count() > 1)
             layout_policy->removeItem (PSMSlider);
     }
 }

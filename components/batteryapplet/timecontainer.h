@@ -3,13 +3,14 @@
 
 #include <DuiContainer>
 
-class DuiImage;
+class DuiImageWidget;
 class DuiLabel;
 
 class TimeContainer : public DuiContainer
 {
 public:
-    TimeContainer(const QString &text, DuiImage *image, DuiWidget *parent = 0);
+    TimeContainer(const QString &text, DuiImageWidget *image,
+                  DuiWidget *parent = 0);
     //virtual ~TimeContainer();
 
     void updateTimeLabel (const QString &text);
@@ -19,7 +20,7 @@ private:
     void setLayout();
 
 private:
-    DuiImage *image;
+    DuiImageWidget *image;
     DuiLabel *textLabel;
     DuiLabel *timeLabel;
 

@@ -13,7 +13,7 @@
 
 Q_EXPORT_PLUGIN2(usbapplet, UsbApplet)
 
-const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
+const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
 
 void 
 UsbApplet::init (void)

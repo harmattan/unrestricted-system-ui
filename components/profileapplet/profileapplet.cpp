@@ -15,7 +15,7 @@
 
 Q_EXPORT_PLUGIN2(profileapplet, ProfileApplet)
 
-const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
+const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
 
 
 void ProfileApplet::init()
@@ -49,7 +49,7 @@ QVector<DuiAction*> ProfileApplet::viewMenuItems()
     //% "Help"
     DuiAction* helpAction = new DuiAction (qtTrId ("qtn_comm_help"), pageMain ());
     vector.append(helpAction);
-    helpAction->setLocation(DuiAction::ApplicationMenu);
+    helpAction->setLocation(DuiAction::ApplicationMenuLocation);
     return vector;
 }
 

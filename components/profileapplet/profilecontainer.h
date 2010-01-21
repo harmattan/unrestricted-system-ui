@@ -8,7 +8,7 @@
 
 class DuiButton;
 class DuiSlider;
-class DuiImage;
+class DuiImageWidget;
 
 /*!
  * A widget that shows and controls the basic properties of a profile: the mute
@@ -44,7 +44,7 @@ private:
 private:
     DuiSlider   *m_Slider;
     DuiButton   *m_Button;
-    DuiImage    *m_Img;
+    DuiImageWidget    *m_Img;
     int          m_Level;
     const int    m_ProfileId;
 };

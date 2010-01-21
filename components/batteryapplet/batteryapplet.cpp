@@ -18,7 +18,7 @@
 
 Q_EXPORT_PLUGIN2(batteryapplet, BatteryApplet)
 
-const QString cssDir = "/usr/share/duicontrolpanel/themes/style/";
+const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
 
 BatteryApplet::BatteryApplet ():
 	m_MainWidget (0)
@@ -65,7 +65,7 @@ QVector<DuiAction*> BatteryApplet::viewMenuItems()
     //% "Help"
     DuiAction* helpAction = new DuiAction(qtTrId ("qtn_comm_help"), pageMain());
     vector.append(helpAction);
-    helpAction->setLocation(DuiAction::ApplicationMenu);
+    helpAction->setLocation(DuiAction::ApplicationMenuLocation);
     return vector;
 }
 

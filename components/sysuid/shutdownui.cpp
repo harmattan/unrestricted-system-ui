@@ -11,7 +11,6 @@
 ShutdownUI::ShutdownUI() :
         text(0)
 {
-    setFullscreen(true);
     setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Hide);
     setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
     setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);

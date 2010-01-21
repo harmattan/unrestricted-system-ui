@@ -5,7 +5,7 @@
 #include <QBasicTimer>
 
 class DuiLabel;
-class DuiImage;
+class DuiImageWidget;
 class DuiButton;
 class DuiLayout;
 class UnlockSlider;
@@ -35,10 +35,10 @@ private:
     DuiLabel* timeLabel; // qtn_scrlock_current_time
     DuiLabel* dateLabel; // qtn_scrlock_current_daydate
 
-    DuiImage* unreadEmailsImage;
-    DuiImage* unreadMessagesImage;
-    DuiImage* missedCallsImage;
-    DuiImage* unreadChatMessagesImage;
+    DuiImageWidget* unreadEmailsImage;
+    DuiImageWidget* unreadMessagesImage;
+    DuiImageWidget* missedCallsImage;
+    DuiImageWidget* unreadChatMessagesImage;
 
     DuiLabel* unreadEmailsLabel;
     DuiLabel* unreadMessagesLabel;

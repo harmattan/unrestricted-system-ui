@@ -60,10 +60,10 @@ LedWidget::initWidget ()
     portraitPolicy->addItem (label2, Qt::AlignLeft);
     portraitPolicy->addItem (m_EventsButton, Qt::AlignRight);
    
-    landscapePolicy->addItemAtPosition (label1, 0, 0);
-    landscapePolicy->addItemAtPosition (m_IlluminationButton, 0, 1);
-    landscapePolicy->addItemAtPosition (label2, 1, 0);
-    landscapePolicy->addItemAtPosition (m_EventsButton, 1, 1);
+    landscapePolicy->addItem(label1, 0, 0);
+    landscapePolicy->addItem(m_IlluminationButton, 0, 1);
+    landscapePolicy->addItem(label2, 1, 0);
+    landscapePolicy->addItem(m_EventsButton, 1, 1);
 
     connect (m_IlluminationButton, SIGNAL (toggled(bool)),
             this, SLOT (illuminationToggled(bool)));

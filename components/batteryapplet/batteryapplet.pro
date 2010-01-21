@@ -3,10 +3,9 @@ CONFIG += plugin \
     gui \
     dui \
     silent \
-    debug
-LIBS += -lduicontrolpanel
-INCLUDEPATH += /usr/include/qt4/dui \
-    /usr/include/duicontrolpanel
+    debug \
+    duicontrolpanel
+
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
@@ -41,7 +40,7 @@ DESTDIR = lib
 desktop.files += *.desktop
 desktop.path = $$(DEBIAN_DESTDIR)/usr/lib/duicontrolpanel
 target.path += $$(DEBIAN_DESTDIR)$$[QT_INSTALL_LIBS]/duicontrolpanel/applets
-css.path += $$(DEBIAN_DESTDIR)/usr/share/duicontrolpanel/themes/style
+css.path += $$(DEBIAN_DESTDIR)/usr/share/themes/base/dui/duicontrolpanel/style
 message("The plugin will be installed to: " $$target.path)
 message("CSS path will be: " $$css.path)
 INSTALLS += target \
@@ -49,3 +48,4 @@ INSTALLS += target \
     desktop
 OTHER_FILES += batteryapplet.css \
     battery.desktop
+

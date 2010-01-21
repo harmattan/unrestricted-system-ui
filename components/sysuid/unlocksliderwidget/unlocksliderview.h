@@ -22,10 +22,10 @@ public:
     void releaseHandle();
 
 protected:
-    virtual void modelModified(const QList<const char*>& modifications);
-    virtual void modelChanged();
+    virtual void updateData(const QList<const char*>& modifications);
+    virtual void setupModel();
 
-    virtual void styleChanged();
+    virtual void applyStyle();
 
     virtual void drawBackground(QPainter* painter, const QStyleOptionGraphicsItem* option) const;
     virtual void drawContents(QPainter* painter, const QStyleOptionGraphicsItem* option) const;

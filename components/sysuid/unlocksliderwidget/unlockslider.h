@@ -92,7 +92,7 @@ public Q_SLOTS:
 
 protected slots:
     //! \reimp
-    virtual void modelModified(const QList<const char*>& modifications);
+    virtual void updateData(const QList<const char*>& modifications);
     //! \reimp_end
 
 };
