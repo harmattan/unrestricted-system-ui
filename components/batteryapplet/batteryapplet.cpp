@@ -35,21 +35,21 @@ void BatteryApplet::init()
     DuiTheme::loadCSS(cssDir + "batteryapplet.css");
 }
 
-DcpWidget* BatteryApplet::constructWidget(int widgetId)
+DcpWidget *
+BatteryApplet::constructWidget (
+		int widgetId)
 {
-    Q_UNUSED(widgetId);
+    Q_UNUSED (widgetId);
     return pageMain();
 }
 
 DcpWidget* 
-BatteryApplet::pageMain()
+BatteryApplet::pageMain ()
 {
     SYS_DEBUG ("Starting on %p", this);
     if (m_MainWidget == NULL)
         m_MainWidget = new BatteryWidget();
 
-    SYS_DEBUG ("----------------Wow!");
-    SYS_DEBUG ("Returning %p", m_MainWidget);
     return m_MainWidget;
 }
 

@@ -1,7 +1,13 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "batterydbusinterface.h"
 #include <QtDBus>
+#include <QDBusError>
 #include <QDebug>
 #include <QVariant>
+
+#define DEBUG
+#include "../debug.h"
 
 BatteryDBusInterface::BatteryDBusInterface ()
 {
@@ -35,7 +41,7 @@ BatteryDBusInterface::PSMValueRequired ()
     qDebug () << "BatteryDBusInterface::PSMValueRequired()";
     dbusIf->callWithCallback (QString ("PSMValue"), QList<QVariant> (), this,
                               SIGNAL (PSMValueReceived (bool)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void
@@ -44,7 +50,7 @@ BatteryDBusInterface::PSMAutoValueRequired ()
     qDebug () << "BatteryDBusInterface::PSMAutoValueRequired()";
     dbusIf->callWithCallback (QString ("PSMAutoValue"), QList<QVariant> (), this,
                               SIGNAL (PSMAutoValueReceived (bool)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void
@@ -61,7 +67,7 @@ BatteryDBusInterface::PSMThresholdValuesRequired ()
     dbusIf->callWithCallback (QString ("PSMThresholdValues"),
                               QList<QVariant> (), this,
                               SIGNAL (PSMThresholdValuesReceived (QStringList)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void BatteryDBusInterface::PSMThresholdValueRequired()
@@ -70,7 +76,7 @@ void BatteryDBusInterface::PSMThresholdValueRequired()
     dbusIf->callWithCallback (QString ("PSMThresholdValue"),
                               QList<QVariant> (), this,
                               SIGNAL (PSMThresholdValueReceived (QString)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void
@@ -80,7 +86,7 @@ BatteryDBusInterface::remainingTimeValuesRequired ()
     dbusIf->callWithCallback (QString ("remainingTimeValues"),
                               QList<QVariant> (), this,
                               SIGNAL (remainingTimeValuesReceived (QStringList)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void
@@ -89,7 +95,7 @@ BatteryDBusInterface::batteryBarValueRequired ()
     qDebug () << "BatteryDBusInterface::batteryBarValueRequired()";
     dbusIf->callWithCallback (QString ("batteryBarValue"), QList<QVariant> (),
                               this, SIGNAL (batteryBarValueReceived (int)),
-                              SLOT (DBusMessagingFailure ()));
+                              SLOT (DBusMessagingFailure (QDBusError)));
 }
 
 void
@@ -120,8 +126,14 @@ BatteryDBusInterface::querySent()
 }
 
 void
-BatteryDBusInterface::DBusMessagingFailure ()
+BatteryDBusInterface::DBusMessagingFailure (
+		QDBusError error)
 {
-    qWarning () << "BatteryDBusInterface::DBusMessagingFailure()";
+    SYS_WARNING ("%s: %s", SYS_STR (error.name()), SYS_STR (error.message()));
+    qWarning () << 
+	    "BatteryDBusInterface::DBusMessagingFailure()" <<
+	    error.name() <<
+	    ": " <<
+	    error.message();
 }
 

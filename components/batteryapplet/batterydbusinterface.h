@@ -5,6 +5,7 @@
 #include <QStringList>
 
 class QDBusInterface;
+#include <QDBusError>
 
 class BatteryDBusInterface : public QObject
 {
@@ -28,7 +29,7 @@ public slots:
     void setPSMThresholdValue (const QString &value);
 
 public slots:
-    void DBusMessagingFailure ();
+    void DBusMessagingFailure (QDBusError error);
     void valueSet ();
     void querySent ();
 

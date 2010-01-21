@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#define DEBUG 
+//#define DEBUG 
 #include "../debug.h"
 
 SliderContainer::SliderContainer (DuiWidget *parent) :
@@ -20,7 +20,6 @@ SliderContainer::SliderContainer (DuiWidget *parent) :
 {
     SYS_DEBUG ("");
 
-    //PSMSlider = new DuiSlider;
     setHeaderVisible (false);
     setLayout ();
 }
