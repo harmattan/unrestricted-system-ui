@@ -19,9 +19,11 @@ TimeContainer::TimeContainer(const QString &text, DuiImage *image, DuiWidget *pa
     setLayout();
 }
 
+#if 0
 TimeContainer::~TimeContainer()
 {
 }
+#endif
 
 void TimeContainer::setText (const QString &text)
 {
