@@ -21,7 +21,6 @@ protected:
     void initWidget();
 
 private slots:
-    void modify_brightness_handle (int newValue);
     void modify_screenlight_handle (int newValue);
 
 private:
