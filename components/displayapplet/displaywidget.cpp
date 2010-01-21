@@ -57,10 +57,13 @@ void DisplayWidget::initWidget()
     m_brightnessSlider->setRange (0, m_brightness_vals.size () - 1);
     m_brightnessSlider->setValue (m_logic->selectedBrightnessValue ());
 
+// FIXME: now its casues crash on the device :-S <dkedves>
+#if 0
     m_brightnessSlider->setMinLabelVisible (true);
     m_brightnessSlider->setMaxLabelVisible (true);
     m_brightnessSlider->setMinLabelIconID ("icon-l-brightness-min");
     m_brightnessSlider->setMaxLabelIconID ("icon-l-brightness-max");
+#endif
 
     connect (m_brightnessSlider, SIGNAL (valueChanged (int)),
              m_logic, SLOT (setBrightnessValue (int)));

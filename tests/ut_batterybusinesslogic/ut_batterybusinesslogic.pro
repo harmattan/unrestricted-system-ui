@@ -7,7 +7,7 @@ TEMPLATE = app
 DEFINES += UNIT_TEST
 TARGET = ut_batterybusinesslogic
 target.path = /usr/lib/system-ui-tests
-CONFIG += dui
+CONFIG += dui silent
 SOURCES += ut_batterybusinesslogic.cpp \
     $$SRC_PREFIX/batterybusinesslogic.cpp \    
     $$STUB_PREFIX/devicemodestub.cpp \

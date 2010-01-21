@@ -10,7 +10,8 @@ TARGET = ut_lowbatterynotifier
 target.path = /usr/lib/system-ui-tests
 CONFIG += dui \
     cellular-qt \
-    qmsystem
+    qmsystem \
+    silent
 contains(cov, true) {
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
