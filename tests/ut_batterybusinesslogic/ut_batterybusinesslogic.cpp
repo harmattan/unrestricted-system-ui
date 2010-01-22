@@ -36,7 +36,7 @@ void Ut_BatteryBusinessLogic::cleanupTestCase()
 void Ut_BatteryBusinessLogic::testSetPSMThreshold()
 {
     // set the battery level to 15%
-    m_subject->battery->setBatteryEnergyLevel(15);
+    m_subject->m_Battery->setBatteryEnergyLevel(15);
 
     // set the threshold level to 10%
     const QString test = "10";
@@ -46,7 +46,7 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     QCOMPARE(m_subject->PSMThresholdValue(), test);
 
     // set the PSM state to Off (just to make sure)
-    m_subject->deviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOff);
+    m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOff);
 
     // set the PSM auto on
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
@@ -59,7 +59,7 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     QCOMPARE(m_subject->PSMThresholdValue(), test2);
 
     // check that the PSM is toggled on
-    QCOMPARE(m_subject->deviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
+    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
 
     // set the threshold level to 5%
     const QString test3 = "5";
@@ -69,7 +69,7 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     QCOMPARE(m_subject->PSMThresholdValue(), test3);
 
     // check that the PSM is toggled off
-    QCOMPARE(m_subject->deviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
+    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
 
 }
 
@@ -109,7 +109,7 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
 
     // set the PSM on
-    m_subject->deviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOn);
+    m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOn);
 
     // toggle the PSM auto off
     m_subject->togglePSMAuto(false);
@@ -118,10 +118,10 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
 
     // check that the PSM is toggled off
-    QCOMPARE(m_subject->deviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
+    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
 
     // set the battery level to 5%
-    m_subject->battery->setBatteryEnergyLevel(5);
+    m_subject->m_Battery->setBatteryEnergyLevel(5);
 
     // set the threshold level to 10%
     systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant("10"));
@@ -130,7 +130,7 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     m_subject->togglePSMAuto(true);
 
     // check that the PSM is toggled on
-    QCOMPARE(m_subject->deviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
+    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
 
 }
 

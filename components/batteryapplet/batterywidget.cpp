@@ -150,17 +150,25 @@ void BatteryWidget::initWidget()
     SYS_DEBUG ("End");
 }
 
-void BatteryWidget::PSMButtonReleased()
+/*!
+ * This function is called when the user clicked on the 'power save mode' button
+ * that activates and disactivates the power saving mode. The function will call
+ * the battery interface, but the UI will be changed only when the sysuid
+ * reports the change.
+ */
+void 
+BatteryWidget::PSMButtonReleased ()
 {
-    batteryIf->setPSMValue (PSMButtonToggle);
+    batteryIf->setPSMValue (!PSMButtonToggle);
 }
 
 void 
-BatteryWidget::updatePSMButton(
+BatteryWidget::updatePSMButton (
         bool toggle)
 {
     PSMButtonToggle = toggle;
 
+    SYS_DEBUG ("PSMButtonToggle now is %s", PSMButtonToggle ? "on" : "off");
     if (toggle) {
         //% "Deactivate power save now"
         PSMButton->setText (qtTrId ("qtn_ener_dps"));

@@ -73,4 +73,5 @@ namespace SysDebug
 };
 
 #define SYS_STR(qstring) qstring.toLatin1().constData()
+#define SYS_BOOL(boolean) (boolean ? "true" : "false")
 #endif

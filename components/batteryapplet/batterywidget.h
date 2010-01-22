@@ -33,6 +33,7 @@ private:
     BatteryDBusInterface    *batteryIf;
     BatteryImage            *batteryImage;
     DuiButton               *PSMButton;
+    // true means 
     bool                     PSMButtonToggle;
     SliderContainer         *sliderContainer;
     TimeContainer           *standByTimeContainer;

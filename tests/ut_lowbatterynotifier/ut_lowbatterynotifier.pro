@@ -18,13 +18,17 @@ contains(cov, true) {
     QMAKE_LFLAGS += --coverage
 }
 
-SOURCES += ut_lowbatterynotifier.cpp \
+SOURCES += \
+    ut_lowbatterynotifier.cpp \
+    $$SRC_PREFIX/../debug.cpp \
     $$SRC_PREFIX/batterybusinesslogic.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \
     $$STUB_PREFIX/batterystub.cpp \
     $$STUB_PREFIX/gconfstub.cpp
 
-HEADERS += ut_lowbatterynotifier.h \
+HEADERS += \
+    ut_lowbatterynotifier.h \
+    $$SRC_PREFIX/../debug.h \
     $$SRC_PREFIX/batterybusinesslogic.h \
     $$STUB_PREFIX/displaystatestub.h \
     $$STUB_PREFIX/batterystub.h \

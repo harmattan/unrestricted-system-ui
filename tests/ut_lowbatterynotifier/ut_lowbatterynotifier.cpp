@@ -35,8 +35,8 @@ void Ut_LowBatteryNotifier::init()
     m_subject = new LowBatteryNotifier();
     m_helper = new LowBatteryHelper();
     connect(m_subject, SIGNAL(showNotification(QString)), m_helper, SLOT(notificationShown()));
-    m_subject->activeInterval = Act;
-    m_subject->inactiveInterval = Inact;
+    m_subject->m_ActiveInterval = Act;
+    m_subject->m_InactiveInterval = Inact;
 }
 
 void Ut_LowBatteryNotifier::cleanup()
@@ -69,7 +69,7 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
             - First was sent right away
             - Second and third were sent at [Active timeout (+0,1 secs)]
     */
-    m_subject->display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set(Maemo::QmDisplayState::On);
     m_helper->start();
     m_subject->showLowBatteryNotification();
     QTest::qWait(Act * 2 + 50);
@@ -103,17 +103,17 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
             - First was sent right away
             - Second was sent at [Active timeout * 1.25 (+0,1 secs)]
     */
-    m_subject->display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set(Maemo::QmDisplayState::On);
     m_helper->start();
     m_subject->showLowBatteryNotification();
     QTest::qWait(Act / 2);
-    m_subject->display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set(Maemo::QmDisplayState::On);
     QTest::qWait(Act / 4);
-    m_subject->display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->display->set(Maemo::QmDisplayState::Off);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
     QTest::qWait(Act / 2);
-    m_subject->display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set(Maemo::QmDisplayState::On);
 
     QCOMPARE(m_helper->notificationTimes().count(), 2);
     qDebug() << "times(" << 0 << "): " << m_helper->notificationTimes().at(0);
@@ -138,13 +138,13 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse()
             - First was sent right away
             - Second and third were sent at [Inactive timeout]
     */
-    m_subject->display->set(Maemo::QmDisplayState::Off);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
     m_helper->start();
     m_subject->showLowBatteryNotification();
     QTest::qWait(Inact + Act / 2);
-    m_subject->display->set(Maemo::QmDisplayState::On);
-    m_subject->display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->display->set(Maemo::QmDisplayState::Off);
+    m_subject->m_Display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
     QTest::qWait(Inact - Act / 2 + 50);
 
     QCOMPARE(m_helper->notificationTimes().count(), 3);

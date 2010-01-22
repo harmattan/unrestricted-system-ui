@@ -17,7 +17,22 @@ contains(cov, true) {
     QMAKE_CXXFLAGS += --coverage
     QMAKE_LFLAGS += --coverage
 }
-SOURCES += main.cpp \
+
+HEADERS += \
+    ../debug.h \
+    batterybusinesslogic.h \
+    sysuid.h \
+    lockscreenbusinesslogic.h \
+    lockscreenui.h \
+    shutdownui.h \
+    shutdownbusinesslogic.h \
+    batterybusinesslogicadaptor.h \
+    systemuigconf.h \
+    lockscreenbusinesslogicadaptor.h
+
+SOURCES +=  \
+    ../debug.cpp \
+    main.cpp \
     batterybusinesslogic.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \
@@ -27,15 +42,7 @@ SOURCES += main.cpp \
     batterybusinesslogicadaptor.cpp \
     systemuigconf.cpp \
     lockscreenbusinesslogicadaptor.cpp
-HEADERS += batterybusinesslogic.h \
-    sysuid.h \
-    lockscreenbusinesslogic.h \
-    lockscreenui.h \
-    shutdownui.h \
-    shutdownbusinesslogic.h \
-    batterybusinesslogicadaptor.h \
-    systemuigconf.h \
-    lockscreenbusinesslogicadaptor.h
+
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
     ../../data/*.svg

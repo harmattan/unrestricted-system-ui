@@ -30,8 +30,8 @@ class LowBatteryNotifier : public QObject
     Q_OBJECT
 
 public:
-    LowBatteryNotifier(QObject* parent = 0);
-    virtual ~LowBatteryNotifier();
+    LowBatteryNotifier (QObject* parent = 0);
+    virtual ~LowBatteryNotifier ();
 
 public slots:
     void showLowBatteryNotification();
@@ -43,16 +43,16 @@ signals:
     void showNotification(QString);
 
 private:
-    QmDisplayState *display;
-    QTimer *timer;
-    QTime time;
-    bool sleep;
-    int activeInterval;
-    int inactiveInterval;
+    QmDisplayState  *m_Display;
+    QTimer          *m_Timer;
+    QTime            m_Time;
+    bool             m_Sleep;
+    int              m_ActiveInterval;
+    int              m_InactiveInterval;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;
-#endif // UNIT_TEST
+#endif
 
 
 };
@@ -79,7 +79,7 @@ signals:
     void batteryCharging(int);
     void batteryNotCharging();
     void batteryBarValueChanged(int);
-    void PSMValueChanged(bool);
+    void PSMValueChanged (bool);
     void PSMAutoDisabled();
     void remainingTimeValuesChanged(QStringList);
     void showNotification(QString);
@@ -87,18 +87,19 @@ signals:
 public slots:
     void initBattery();
 
-private: //attributes
-    SystemUIGConf *systemUIGConf;
-    QmBattery *battery;
-    QmDeviceMode *deviceMode;
-    QmLED *led;
-    LowBatteryNotifier *lowBatteryNotifier;
-    QStringList PSMThresholds;
+private:
+    SystemUIGConf      *m_SystemUIGConf;
+    QmBattery          *m_Battery;
+    QmDeviceMode       *m_DeviceMode;
+    QmLED              *m_Led;
+    LowBatteryNotifier *m_LowBatteryNotifier;
+    QStringList         m_PSMThresholds;
 
 private: //methods
-    void initSystemUIGConfKeys();
-    void checkPSMThreshold();
-    int animationRate(Maemo::QmBattery::ChargerType type);
+    void setPSMState (bool on);
+    void initSystemUIGConfKeys ();
+    void checkPSMThreshold ();
+    int animationRate (Maemo::QmBattery::ChargerType type);
 
 private slots:
     void batteryLevelChanged(Maemo::QmBattery::Level level);
@@ -110,10 +111,10 @@ private slots:
 
 #ifdef UNIT_TEST
     friend class Ut_BatteryBusinessLogic;
-#endif // UNIT_TEST
+#endif
 
 };
 
 
-#endif // BATTERYBUSINESSLOGIC_H
+#endif
 

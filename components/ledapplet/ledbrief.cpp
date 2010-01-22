@@ -27,6 +27,7 @@ void
 LedBrief::setToggle (
         bool toggle)
 {
+    Q_UNUSED (toggle);
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 }
 
