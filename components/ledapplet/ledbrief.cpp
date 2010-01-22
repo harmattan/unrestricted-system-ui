@@ -4,7 +4,7 @@
 #include "ledbrief.h"
 #include "dcpwidgettypes.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 int 

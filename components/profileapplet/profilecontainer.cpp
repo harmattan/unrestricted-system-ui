@@ -12,7 +12,7 @@
 #include <DuiGridLayoutPolicy>
 #include <QDebug>
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 namespace ProfileApplet
@@ -135,24 +135,22 @@ ProfileContainer::setLevel (
 
 /*!
  * This slot is called when the volume slider value has been changed. The slot
- * can be changed to modify the icon that shows if the volume is muted. 
+ * is used to modify the icon that shows if the volume is muted. 
  */
 void
 ProfileContainer::slotSliderValueChanged (
         int newValue)
 {
-    SYS_DEBUG ("*** newValue = %d", newValue);
-    SYS_DEBUG ("*** m_Level  = %d", m_Level);
     if (!m_Img)
         return;
 
     if (newValue == 0 && m_Level != 0) {
-        SYS_DEBUG ("setIconID (icon-m-volume-off)");
         m_Img->setImage ("icon-m-volume-off");
     } else if (newValue != 0 && m_Level == 0) {
-        SYS_DEBUG ("setIconID (icon-m-volume)");
         m_Img->setImage ("icon-m-volume");
     }
+
+    m_Level = newValue;
 }
 
 /*!
