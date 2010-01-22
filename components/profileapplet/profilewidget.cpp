@@ -26,8 +26,7 @@ ProfileWidget::ProfileWidget(QGraphicsWidget *parent) :
     m_ProfileIf (0)
 {
     SYS_DEBUG ("");
-    setReferer(DcpProfile::None);
-    initWidget();
+    initWidget ();
 }
 
 ProfileWidget::~ProfileWidget ()
@@ -51,7 +50,7 @@ ProfileWidget::initWidget ()
     connect (m_ProfileIf, SIGNAL(vibrationValue(int, bool)), 
             this, SLOT(setVibration(int, bool)));
 
-    m_ProfileButtons = new ProfileButtons();
+    m_ProfileButtons = new ProfileButtons ();
 
     // get init values
     initProfiles ();

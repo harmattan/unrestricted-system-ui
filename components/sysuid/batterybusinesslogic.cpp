@@ -6,7 +6,8 @@
 #include <DuiNotification>
 /* TODO List
 
-   1) Create notification for RechargeBatteryText. Connect it to the signal from QmSystemState which inforsm the reason for shut down.
+   1) Create notification for RechargeBatteryText. Connect it to the signal 
+      from QmSystemState which inforsm the reason for shut down.
    2) What are correct animation rates when charging with USB / Wall?
    3) If USB 100 mA is used, do we show animation at all? In Fremantle not.
    4) Connect sounds with notifications
@@ -112,8 +113,17 @@ BatteryBusinessLogic::BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject
     led = new QmLED();
 
     /* init the PSM thresholds */
-    PSMThresholds << QString("5") << QString("10") << QString("15") << QString("25") << QString("35")
-    << QString("50") << QString("60") << QString("75") << QString("85") << QString("100");
+    PSMThresholds << 
+	    QString("5") << 
+	    QString("10") << 
+	    QString("15") << 
+	    QString("25") << 
+	    QString("35") << 
+	    QString("50") << 
+	    QString("60") << 
+	    QString("75") << 
+	    QString("85") << 
+	    QString("100");
 
     /* check if gconfvalues need to initialized */
     initSystemUIGConfKeys();

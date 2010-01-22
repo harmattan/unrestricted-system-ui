@@ -24,8 +24,6 @@ ProfileButtons::ProfileButtons (
 
 ProfileButtons::~ProfileButtons()
 {
-    delete m_Buttons;
-    m_Buttons = NULL;
 }
 
 
