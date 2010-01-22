@@ -5,27 +5,27 @@
 #include <DuiLabel>
 #include <DuiLayout>
 
-TimeContainer::TimeContainer(const QString &text, DuiImageWidget *image, DuiWidget *parent) :
-        DuiContainer(parent),
+TimeContainer::TimeContainer(
+		const QString  &text, 
+		DuiImageWidget *image, 
+		DuiWidget      *parent) :
+	DuiContainer(parent),
         image(image),
         textLabel(NULL),
         timeLabel(NULL)
 {
-    timeLabel = new DuiLabel();
-    timeLabel->setObjectName("batteryTimeLabel");
-    textLabel = new DuiLabel(text);
-    textLabel->setObjectName("batteryLabel");
-    setHeaderVisible(false);
-    setLayout();
+    timeLabel = new DuiLabel ("N/A");
+    timeLabel->setObjectName ("batteryTimeLabel");
+    textLabel = new DuiLabel (text);
+    textLabel->setObjectName ("batteryLabel");
+    setHeaderVisible (false);
+    setLayout ();
 }
 
-#if 0
-TimeContainer::~TimeContainer()
-{
-}
-#endif
 
-void TimeContainer::setText (const QString &text)
+void 
+TimeContainer::setText (
+		const QString &text)
 {
     textLabel->setText (text);
 }

@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "batteryimage.h"
 
 #include <QTimer>
@@ -8,6 +10,12 @@ BatteryImage::BatteryImage(QGraphicsItem *parent) :
         timer(NULL),
         batteryLevel(0)
 {
+    /*
+     * We have to show something even if we get no signals from DBus. FIXME:
+     * maybe this is not the right image, but it is the only one works now.
+     */
+    setImage ("icon-m-battery");
+
     batteryImages << 
 	    QString ("icon-m-battery-verylow") << 
 	    QString ("icon-m-battery-low") << 
@@ -39,14 +47,17 @@ BatteryImage::~BatteryImage()
     timer = NULL;
 }
 
-void BatteryImage::updateBatteryLevel(int level)
+void 
+BatteryImage::updateBatteryLevel(int level)
 {
     batteryLevel = level;
     if (timer == NULL)
-        updateImage(false);
+        updateImage (false);
 }
 
-void BatteryImage::updateImage(bool charging)
+void 
+BatteryImage::updateImage (
+		bool charging)
 {
     static int chargingImageIndex = batteryLevel;
     if (charging) {
@@ -61,7 +72,9 @@ void BatteryImage::updateImage(bool charging)
     }
 }
 
-void BatteryImage::startCharging(int rate)
+void
+BatteryImage::startCharging (
+		int rate)
 {
     if (rate < 0) //USB 100mA
         return;
@@ -70,11 +83,13 @@ void BatteryImage::startCharging(int rate)
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateImage()));
     }
+
     timer->setInterval(rate);
     timer->start();
 }
 
-void BatteryImage::stopCharging()
+void
+BatteryImage::stopCharging()
 {
     if (timer != NULL) {
         timer->stop();

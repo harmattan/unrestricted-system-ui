@@ -36,7 +36,12 @@ BatteryWidget::BatteryWidget (QGraphicsWidget *parent) :
         talkTimeContainer (NULL)
 {
     SYS_DEBUG ("Starting in %p", this);
-    //setReferer(DcpBattery::None);
+    /*
+     * One can assume, that when the applet is started the power save mode is
+     * not active. This way we show a value that makes sense even if the DBus
+     * interface to the sysuid is not usable.
+     */
+    PSMButtonToggle = false;
     initWidget();
 }
 
@@ -70,7 +75,7 @@ void BatteryWidget::initWidget()
 
     // standByTimeContainer
     //% "Estimated stand-by time:"
-    standByTimeContainer = new TimeContainer(
+    standByTimeContainer = new TimeContainer (
             qtTrId ("qtn_ener_st"), new DuiImageWidget("qgn_ener_standby"));
 
     // PSMButton

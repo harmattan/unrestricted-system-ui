@@ -7,6 +7,11 @@
 class QDBusInterface;
 #include <QDBusError>
 
+/*!
+ * Implements a DBus connection to the battery & power save mode API implemented
+ * in the sysuid daemon. The other side of the DBus API is implemented in 
+ * components/sysuid/batterybusinesslogicadaptor.cpp.
+ */
 class BatteryDBusInterface : public QObject
 {
     Q_OBJECT

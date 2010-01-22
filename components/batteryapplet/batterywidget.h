@@ -33,7 +33,7 @@ private:
     BatteryDBusInterface    *batteryIf;
     BatteryImage            *batteryImage;
     DuiButton               *PSMButton;
-    // true means 
+    // true means we are believed to be in power save mode
     bool                     PSMButtonToggle;
     SliderContainer         *sliderContainer;
     TimeContainer           *standByTimeContainer;

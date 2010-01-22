@@ -528,6 +528,9 @@ BatteryBusinessLogic::animationRate (
     return rate;
 }
 
+/*!
+ * \param on true for entering PSM mode, false to leave it
+ */
 void
 BatteryBusinessLogic::setPSMState (
         bool     on)

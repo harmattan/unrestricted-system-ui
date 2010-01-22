@@ -8,7 +8,9 @@
 #define DEBUG
 #include "../debug.h"
 
-BatteryBrief::BatteryBrief ()
+BatteryBrief::BatteryBrief () :
+    m_Charging (false),
+    m_NotCharging (false)
 {
     SYS_DEBUG ("");
     
@@ -36,7 +38,7 @@ BatteryBrief::valueText() const
     else if (m_NotCharging)
         return "Not charging";
 
-    return "Not implemented";
+    return "N/A";
 }
 
 

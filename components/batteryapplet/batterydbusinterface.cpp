@@ -106,10 +106,17 @@ BatteryDBusInterface::setPSMThresholdValue (const QString &value)
 }
 
 void
-BatteryDBusInterface::setPSMValue (bool toggle)
+BatteryDBusInterface::setPSMValue (
+        bool toggle)
 {
     qDebug () << "BatteryDBusInterface::setPSMValue(" << toggle << ")";
     dbusIf->call (QDBus::NoBlock, QString ("setPSMValue"), toggle);
+
+    QDBusError error = dbusIf->lastError();
+    if (error.isValid()) {
+        SYS_WARNING ("%s: %s", SYS_STR (error.name()), 
+                SYS_STR (error.message()));
+    }
 }
 
 void
