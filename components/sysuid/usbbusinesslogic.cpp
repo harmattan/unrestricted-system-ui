@@ -1,9 +1,18 @@
 #include "usbbusinesslogic.h"
-#include <QDBusConnection>
-#include <QString>
 
-#define USB_CABLE_UDI \
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingReply>
+#include <QDBusPendingCallWatcher>
+
+#include <QString>
+#include <QDebug>
+
+#define DEFAULT_USB_CABLE_UDI \
     "/org/freedesktop/Hal/devices/usb_device_1d6b_2_musb_hdrc"
+// ^ It is from RX-51, TODO: check the harmattan one, maybe differs
 
 UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     QObject (parent),
@@ -11,24 +20,28 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     hal (0)
 {
     setting = new DuiGConfItem (USB_GCONF_KEY);
-    hal = new QDBusInterface ("org.freedesktop.Hal",
-                              USB_CABLE_UDI,
-                              "org.freedesktop.Hal.Device",
-                              QDBusConnection::systemBus (),
-                              this);
-/*                              
-    hal->connection ().connect ("org.freedesktop.Hal",
-                                USB_CABLE_UDI,
-                                "org.freedesktop.Hal.Device",
-                                "PropertyModified",
-                                this
-                                SIGNAL (propertyModified (int, const QList<ChangeDescription> &)));
- */
+
+    QDBusInterface HalManager ("org.freedesktop.Hal",
+                               "/org/freedesktop/Hal/Manager",
+                               "org.freedesktop.Hal.Manager",
+                               QDBusConnection::systemBus (),
+                               this);
+
+    // Do the usb-cable-button UDI finding async:
+    QDBusPendingCall async =
+        HalManager.asyncCall ("FindDeviceStringMatch",
+                              QVariant ("button.type"),
+                              QVariant ("usb.cable"));
+
+    QDBusPendingCallWatcher *watcher =
+        new QDBusPendingCallWatcher (async, this);
+
+    QObject::connect (watcher, SIGNAL (finished (QDBusPendingCallWatcher *)),
+                      this, SLOT (query_finished (QDBusPendingCallWatcher *)));
 }
 
 UsbBusinessLogic::~UsbBusinessLogic ()
 {
-    // TODO: drop hal connections
 }
 
 // This function will not set the gconf-key value,
@@ -91,5 +104,78 @@ UsbBusinessLogic::getCableType ()
     }
 
     return CABLE_NONE;
+}
+
+void
+UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
+{
+    // Init UDI with the default one (as a fallback value...)
+    QString udi (DEFAULT_USB_CABLE_UDI);
+
+    QDBusPendingReply<QStringList> reply = *call;
+    if (reply.isError ())
+    {
+        qWarning () << "Determining usb-cable-udi failed, using the default one:\n"
+                    << DEFAULT_USB_CABLE_UDI;
+    }
+    else
+    {
+        QStringList list = reply.value ();
+        foreach (QString str, list)
+        {
+            // TODO: test on the device, maybe the list has multiple entries
+            qDebug () << "Found UDI: " << str;
+            udi = str;
+            // XXX: <- remove the comment  break;
+        }
+    }
+
+    // Set up the connection with the found device (or with the default one)
+    init_device (udi);
+}
+
+void
+UsbBusinessLogic::init_device (QString &udi)
+{
+    hal = new QDBusInterface ("org.freedesktop.Hal",
+                              udi,
+                              "org.freedesktop.Hal.Device",
+                              QDBusConnection::systemBus (),
+                              this);
+
+    hal->connection ().connect (
+        "org.freedesktop.Hal", udi, "org.freedesktop.Hal.Device",
+        "PropertyModified", // <- SLOT
+        this, SLOT (usb_prop_changed (const QDBusMessage &)));
+}
+
+void
+UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
+{
+    enum UsbCableType   current = getCableType ();
+
+    Q_UNUSED(msg)
+
+    // INFO: i can show usb-cable-(dis)connected info msg...
+    emit (UsbCableEvent (current));
+
+    if (current != CABLE_PERIPHERAL)
+        return; // no-op
+
+    // Get the Usb applet setting for GConf...
+    usb_modes mode = getMode ();
+
+    if (mode == USB_AUTO)
+    { 
+        // Cable just plugged in, and the current mode is auto,
+        // lets show the mode-selection dialog:
+        emit PopUpDialog ();
+    }
+    else
+    {
+        // Switch the device to the selected mode,
+        // (without questions :-P)
+        setMode (mode);
+    }
 }
 
