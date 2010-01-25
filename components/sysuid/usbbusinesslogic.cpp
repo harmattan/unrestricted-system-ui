@@ -9,7 +9,7 @@
 
 #include <QString>
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "../debug.h"
 
@@ -128,7 +128,7 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
         if (list.isEmpty () == false)
         { // The first UDI seems okey :-)
             udi = list.first ();
-            SYS_DEBUG ("UsbCable: found UDI: %s", str.constData ().toLatin1 ());
+            SYS_DEBUG ("UsbCable: found UDI: %s", udi.constData ()->toLatin1 ());
         }
         else
             SYS_WARNING ("Determining usb-cable-udi failed, "
@@ -160,6 +160,22 @@ UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
     UsbCableType current = getCableType ();
 
     Q_UNUSED(msg)
+
+#ifdef DEBUG
+    switch (current)
+    {
+        case CABLE_PERIPHERAL:
+            SYS_DEBUG ("%s: peripheral-mode", __func__);
+            break;
+        case CABLE_HOST:
+            SYS_DEBUG ("%s: host-mode", __func__);
+            break;
+        case CABLE_NONE:
+        default:
+            SYS_DEBUG ("%s: idle", __func__);
+            break;
+    }
+#endif
 
     // INFO: i can show usb-cable-(dis)connected info msg...
     emit (UsbCableEvent (current));
