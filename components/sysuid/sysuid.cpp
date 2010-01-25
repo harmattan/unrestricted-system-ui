@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -14,6 +16,9 @@
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 
+#define DEBUG
+#include "../debug.h"
+
 #define TRANSLATION_CATALOG "duicontrolpanel-systemui"
 
 namespace
@@ -23,13 +28,13 @@ const QString styleDir = themeDir + "style/";
 const QString svgDir = themeDir + "svg/";
 }
 
-Sysuid* Sysuid::_sysuid = NULL;
+Sysuid* Sysuid::m_Sysuid = NULL;
 
 Sysuid::Sysuid () : QObject ()
 {
     qDebug () << "starting sysuidaemon";
 
-    _sysuid = this;
+    m_Sysuid = this;
 
     DuiTheme::addPixmapDirectory (svgDir); // or ..(themeDir, true); ?
     DuiTheme::loadCSS (styleDir + "sysuid.css");
@@ -38,15 +43,14 @@ Sysuid::Sysuid () : QObject ()
     // Load translation of System-UI
     retranslate ();
 
-    systemUIGConf   = new SystemUIGConf (this);
-    shutdownLogic   = new ShutdownBusinessLogic (this);
-    lockScreenLogic = new LockScreenBusinessLogic (this);
-    batteryLogic    = new BatteryBusinessLogic (systemUIGConf, this);
+    m_SystemUIGConf   = new SystemUIGConf (this);
+    m_ShutdownLogic   = new ShutdownBusinessLogic (this);
+    m_LockScreenLogic = new LockScreenBusinessLogic (this);
+    m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
 
     // D-Bus registration and stuff
-
-    new BatteryBusinessLogicAdaptor (this, batteryLogic);
-    new LockScreenBusinessLogicAdaptor (this, lockScreenLogic);
+    new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
+    new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus ();
     if (!bus.registerService (dbusService ())) {
@@ -61,12 +65,12 @@ Sysuid::Sysuid () : QObject ()
 
 Sysuid::~Sysuid ()
 {
-    _sysuid = NULL;
+    m_Sysuid = NULL;
 }
 
 Sysuid* Sysuid::sysuid ()
 {
-    return _sysuid;
+    return m_Sysuid;
 }
 
 QString Sysuid::dbusService ()

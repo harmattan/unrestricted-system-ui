@@ -4,8 +4,6 @@
 #include "batterybusinesslogicadaptor.h"
 #include "batterybusinesslogic.h"
 
-//#include <QDebug>
-
 #define DEBUG
 #include "../debug.h"
 
@@ -29,10 +27,6 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor (
             this, SIGNAL(remainingTimeValuesChanged(QStringList)));
 }
 
-BatteryBusinessLogicAdaptor::~BatteryBusinessLogicAdaptor()
-{
-}
-
 
 void 
 BatteryBusinessLogicAdaptor::setPSMValue (
@@ -46,7 +40,10 @@ void
 BatteryBusinessLogicAdaptor::setPSMAutoValue (
         bool toggle)
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::setPSMAutoValue(" << toggle << ")";
+    qDebug() << 
+        "BatteryBusinessLogicAdaptor::setPSMAutoValue(" << 
+        toggle << 
+        ")";
     m_BatteryLogic->togglePSMAuto(toggle);
 }
 
@@ -54,7 +51,10 @@ void
 BatteryBusinessLogicAdaptor::setPSMThresholdValue (
         const QString &value)
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::setPSMThresholdValue(" << value << ")";
+    qDebug() << 
+        "BatteryBusinessLogicAdaptor::setPSMThresholdValue(" << 
+        value << 
+        ")";
     m_BatteryLogic->setPSMThreshold(value);
 }
 
@@ -69,7 +69,8 @@ bool
 BatteryBusinessLogicAdaptor::PSMAutoValue ()
 {
     qDebug() << "BatteryBusinessLogicAdaptor::PSMDisabled()";
-    return m_BatteryLogic->GConfItemValue(SystemUIGConf::BatteryPSMAutoKey).toBool();
+    return m_BatteryLogic->GConfItemValue (
+            SystemUIGConf::BatteryPSMAutoKey).toBool();
 }
 
 void 

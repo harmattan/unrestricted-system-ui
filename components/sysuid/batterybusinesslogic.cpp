@@ -50,8 +50,8 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
  * Methods for the LowBatteryNotifier class.
  */
 LowBatteryNotifier::LowBatteryNotifier (
-        QObject* parent) :
-        QObject(parent),
+        QObject *parent) :
+        QObject (parent),
         m_Display (new QmDisplayState()),
         m_Timer (new QTimer(this))
 {
@@ -60,7 +60,7 @@ LowBatteryNotifier::LowBatteryNotifier (
     m_Sleep = m_Display->get() == Maemo::QmDisplayState::Off;
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
-    m_Time.start();
+    m_Time.start ();
     connect(m_Display, 
             SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, 
@@ -73,6 +73,7 @@ LowBatteryNotifier::LowBatteryNotifier (
 LowBatteryNotifier::~LowBatteryNotifier()
 {
 }
+
 
 void 
 LowBatteryNotifier::showLowBatteryNotification()
@@ -150,15 +151,15 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     initSystemUIGConfKeys ();
 
     /* connect to QmSystem signals */
-    connect(m_Battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
+    connect (m_Battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
             this, SLOT(batteryLevelChanged(Maemo::QmBattery::Level)));
-    connect(m_Battery, SIGNAL(batteryStatusChanged(Maemo::QmBattery::State)),
+    connect (m_Battery, SIGNAL(batteryStatusChanged(Maemo::QmBattery::State)),
             this, SLOT(batteryStatusChanged(Maemo::QmBattery::State)));
-    connect(m_Battery, SIGNAL(batteryEnergyLevelChanged(int)),
+    connect (m_Battery, SIGNAL(batteryEnergyLevelChanged(int)),
             this, SLOT(batteryEnergyLevelChanged(int)));
-    connect(m_Battery, SIGNAL(chargerEvent(Maemo::QmBattery::ChargerType)),
+    connect (m_Battery, SIGNAL(chargerEvent(Maemo::QmBattery::ChargerType)),
             this, SLOT(batteryChargerEvent(Maemo::QmBattery::ChargerType)));
-    connect(m_DeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
+    connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
             this, SLOT(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)));
 
     initBattery();

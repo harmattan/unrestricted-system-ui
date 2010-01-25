@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "shutdownbusinesslogic.h"
 #include "shutdownui.h"
 
@@ -6,76 +8,103 @@
 #include <DuiNotification>
 #include <DuiLocale>
 
-#include <QDebug>
+//#include <QDebug>
+
+#define DEBUG
+#include "../debug.h"
 
 using namespace Maemo;
 
-ShutdownBusinessLogic::ShutdownBusinessLogic(QObject* parent) :
-        QObject(parent),
-        ui(NULL),
-        state(NULL)
+ShutdownBusinessLogic::ShutdownBusinessLogic (
+        QObject *parent) :
+    QObject (parent),
+    m_Ui (NULL),
+    m_State (new QmSystemState (this))
 {
-    state = new QmSystemState(this);
-    connect(state, SIGNAL(systemStateChanged(Maemo::QmSystemState::StateIndication)),
-            this, SLOT(systemStateChanged(Maemo::QmSystemState::StateIndication)));
+    connect (
+        m_State, 
+        SIGNAL(systemStateChanged (Maemo::QmSystemState::StateIndication)),
+        this, 
+        SLOT(systemStateChanged (Maemo::QmSystemState::StateIndication)));
 }
 
-ShutdownBusinessLogic::~ShutdownBusinessLogic()
+ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
-    if (ui) {
-        ui->deleteLater();
-        ui = NULL;
+    if (m_Ui) {
+        m_Ui->deleteLater();
+        m_Ui = NULL;
     }
 }
 
-void ShutdownBusinessLogic::showUI()
+
+void 
+ShutdownBusinessLogic::showUI ()
 {
     ShutdownUI::showWindow();
 
-    if (!ui) {
-        ui = new ShutdownUI;
+    if (!m_Ui) {
+        m_Ui = new ShutdownUI;
     }
-    ui->appear();
+    m_Ui->appear();
 }
 
-void ShutdownBusinessLogic::systemStateChanged(QmSystemState::StateIndication what)
+/*!
+ * This function is called when the QmSystem reports a state change.
+ */
+void 
+ShutdownBusinessLogic::systemStateChanged (
+        QmSystemState::StateIndication what)
 {
     switch (what) {
-    case QmSystemState::Shutdown:
-        showUI();
-        break;
-    case QmSystemState::ThermalStateFatal:
-        thermalShutdown();
-        break;
-    case QmSystemState::ShutdownDeniedUSB:
-        shutdownDeniedUSB();
-        break;
-    case QmSystemState::BatteryStateEmpty:
-        batteryShutdown();
-        break;
-    default:
-        break;
+        case QmSystemState::Shutdown:
+            SYS_DEBUG ("QmSystemState::Shutdown");
+            showUI ();
+            break;
+
+        case QmSystemState::ThermalStateFatal:
+            SYS_DEBUG ("QmSystemState::ThermalStateFatal");
+            thermalShutdown ();
+            break;
+            
+        case QmSystemState::ShutdownDeniedUSB:
+            SYS_DEBUG ("QmSystemState::ShutdownDeniedUSB");
+            shutdownDeniedUSB ();
+            break;
+
+        case QmSystemState::BatteryStateEmpty:
+            SYS_DEBUG ("QmSystemState::BatteryStateEmpty");
+            batteryShutdown ();
+            break;
+
+        default:
+            SYS_WARNING ("Unknown state");
+            break;
     }
 }
 
-void ShutdownBusinessLogic::thermalShutdown()
+void 
+ShutdownBusinessLogic::thermalShutdown ()
 {
     //% "Temperature too high. Device shutting down."
     DuiNotification("", "", qtTrId ("qtn_shut_high_temp"));
 
     /* TODO: do we need to call showUI here?
-    UI spec says: Ten seconds before the shutdown takes place, thermal shutdown notification is displayed accompanying ‘System alert’ sound.
-    */
+     * UI spec says: Ten seconds before the shutdown takes place, thermal 
+     * shutdown notification is displayed accompanying ‘System alert’ sound.
+     */
 }
 
-void ShutdownBusinessLogic::batteryShutdown()
+void
+ShutdownBusinessLogic::batteryShutdown ()
 {
     //% "Battery empty. Device shutting down."
     DuiNotification("", "", qtTrId ("qtn_shut_batt_empty"));
 }
 
-void ShutdownBusinessLogic::shutdownDeniedUSB()
+void 
+ShutdownBusinessLogic::shutdownDeniedUSB ()
 {
     //% "USB cable plugged in. Unplug the USB cable to shutdown."
     DuiNotification("", "", qtTrId ("qtn_shut_unplug_usb"));
 }
+

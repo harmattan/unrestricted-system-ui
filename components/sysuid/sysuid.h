@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef SYSUID_H
 #define SYSUID_H
 
@@ -24,11 +26,11 @@ public slots:
     void retranslate ();
 
 private:
-    SystemUIGConf* systemUIGConf;
-    BatteryBusinessLogic* batteryLogic;
-    LockScreenBusinessLogic* lockScreenLogic;
-    ShutdownBusinessLogic* shutdownLogic;
-    static Sysuid* _sysuid;
+    SystemUIGConf           *m_SystemUIGConf;
+    BatteryBusinessLogic    *m_BatteryLogic;
+    LockScreenBusinessLogic *m_LockScreenLogic;
+    ShutdownBusinessLogic   *m_ShutdownLogic;
+    static Sysuid           *m_Sysuid;
 };
 
 #endif // SYSUID_H
