@@ -33,7 +33,8 @@ HEADERS += \
     systemuigconf.h \
     lockscreenbusinesslogicadaptor.h \
     ../usbapplet/usbmodes.h \
-    usbbusinesslogic.h
+    usbbusinesslogic.h \
+    usbui.h
 
 SOURCES +=  \
     ../debug.cpp \
@@ -48,7 +49,8 @@ SOURCES +=  \
     systemuigconf.cpp \
     lockscreenbusinesslogicadaptor.cpp \
     ../usbapplet/usbmodes.cpp \
-    usbbusinesslogic.cpp
+    usbbusinesslogic.cpp \
+    usbui.cpp
 
 style_sheet.files += sysuid.css
 style_svg.files += *.svg \
