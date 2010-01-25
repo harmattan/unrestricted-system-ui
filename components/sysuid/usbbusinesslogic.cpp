@@ -124,13 +124,15 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
     else
     {
         QStringList list = reply.value ();
-        foreach (QString str, list)
-        {
-            // TODO: test on the device, maybe the list has multiple entries
-            SYS_DEBUG ("Found UDI: %s", str.constData ().toLatin1 ());;
-            udi = str;
-            // XXX: <- remove the comment  break;
+
+        if (list.isEmpty () == false)
+        { // The first UDI seems okey :-)
+            udi = list.first ();
+            SYS_DEBUG ("UsbCable: found UDI: %s", str.constData ().toLatin1 ());
         }
+        else
+            SYS_WARNING ("Determining usb-cable-udi failed, "
+                         "using the default one:" DEFAULT_USB_CABLE_UDI);
     }
 
     // Set up the connection with the found device (or with the default one)
