@@ -6,31 +6,38 @@
 #include <DuiLocale>
 #include <QTimer>
 
+#undef DEBUG
+#define WARNING
+#include "../debug.h"
+
 UsbUi::UsbUi (QObject *parent) : QObject (parent)
 {
+    SYS_DEBUG ("UsbUi init");
+
     logic = new UsbBusinessLogic (this);
 
     QObject::connect (logic, SIGNAL (PopUpDialog ()),
                       this, SLOT (ShowDialog ()));
 
-    QObject::connect (logic, SIGNAL (UsbCableEvent (enum UsbCableType)),
-                      this, SLOT (UsbEvent (enum UsbCableType)));
+    QObject::connect (logic, SIGNAL (UsbCableEvent (UsbCableType)),
+                      this, SLOT (UsbEvent (UsbCableType)));
 }
 
 UsbUi::~UsbUi ()
 {
-    // TODO
 }
 
 // Showing the mode selection dialog
 void
 UsbUi::ShowDialog ()
 {
+    // TODO
+    SYS_WARNING ("Not implemented: Show USB mode selection dialog");
 }
 
 // Showing notification on connection/disconnection
 void
-UsbUi::UsbEvent (enum UsbCableType cable)
+UsbUi::UsbEvent (UsbCableType cable)
 {
     // TODO: add some nice icons to info-banners
     DuiInfoBanner   *infoBanner = 0;

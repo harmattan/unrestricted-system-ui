@@ -1,20 +1,20 @@
 #ifndef USBBUSINESSLOGIC_H
 #define USBBUSINESSLOGIC_H
 
-#include "../usbapplet/usbmodes.h"
 #include <QObject>
 #include <QString>
 #include <DuiGConfItem>
+#include <QDBusPendingCallWatcher>
+#include <QDBusInterface>
+#include <QDBusMessage>
 
-class QDBusPendingCallWatcher;
-class QDBusInterface;
-class QDBusMessage;
+#include "../usbapplet/usbmodes.h"
 
-enum UsbCableType {
+typedef enum {
     CABLE_PERIPHERAL = 1,
     CABLE_HOST,
     CABLE_NONE
-};
+} UsbCableType;
 
 class UsbBusinessLogic : public QObject
 {
@@ -24,12 +24,12 @@ class UsbBusinessLogic : public QObject
         UsbBusinessLogic (QObject *parent = 0);
         ~UsbBusinessLogic ();
 
-        void setMode (enum usb_modes new_mode);
-        enum UsbCableType getCableType ();
-        enum usb_modes getMode ();
+        void setMode (usb_modes new_mode);
+        UsbCableType getCableType ();
+        usb_modes getMode ();
 
     signals:
-        void UsbCableEvent (enum UsbCableType cable);
+        void UsbCableEvent (UsbCableType cable);
         void PopUpDialog ();
 
     private slots:
@@ -37,10 +37,11 @@ class UsbBusinessLogic : public QObject
         void query_finished (QDBusPendingCallWatcher *call);
 
     private:
+        void init_device (QString &udi);
+
         DuiGConfItem    *setting; 
         QDBusInterface  *hal;
 
-        void init_device (QString &udi);
 };
 
 #endif

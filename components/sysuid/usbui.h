@@ -6,14 +6,15 @@
 
 class UsbUi : public QObject
 {
+    Q_OBJECT
 
     public:
         UsbUi (QObject *parent = 0);
         ~UsbUi ();
 
-    private slots:
+    public slots:
         void ShowDialog ();
-        void UsbEvent (enum UsbCableType cable);
+        void UsbEvent (UsbCableType cable);
 
     private:
         UsbBusinessLogic    *logic;

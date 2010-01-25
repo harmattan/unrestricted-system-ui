@@ -8,7 +8,10 @@
 #include <QDBusPendingCallWatcher>
 
 #include <QString>
-#include <QDebug>
+
+#undef DEBUG
+#define WARNING
+#include "../debug.h"
 
 #define DEFAULT_USB_CABLE_UDI \
     "/org/freedesktop/Hal/devices/usb_device_1d6b_2_musb_hdrc"
@@ -84,7 +87,7 @@ UsbBusinessLogic::getMode ()
     return current_mode;
 }
 
-enum UsbCableType
+UsbCableType
 UsbBusinessLogic::getCableType ()
 {
     QDBusMessage reply = hal->call("GetProperty", "usb_device.mode");
@@ -115,8 +118,8 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
     QDBusPendingReply<QStringList> reply = *call;
     if (reply.isError ())
     {
-        qWarning () << "Determining usb-cable-udi failed, using the default one:\n"
-                    << DEFAULT_USB_CABLE_UDI;
+        SYS_WARNING ("Determining usb-cable-udi failed, "
+                     "using the default one:" DEFAULT_USB_CABLE_UDI);
     }
     else
     {
@@ -124,7 +127,7 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
         foreach (QString str, list)
         {
             // TODO: test on the device, maybe the list has multiple entries
-            qDebug () << "Found UDI: " << str;
+            SYS_DEBUG ("Found UDI: %s", str.constData ().toLatin1 ());;
             udi = str;
             // XXX: <- remove the comment  break;
         }
@@ -152,7 +155,7 @@ UsbBusinessLogic::init_device (QString &udi)
 void
 UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
 {
-    enum UsbCableType   current = getCableType ();
+    UsbCableType current = getCableType ();
 
     Q_UNUSED(msg)
 
