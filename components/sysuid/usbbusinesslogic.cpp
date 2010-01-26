@@ -15,7 +15,6 @@
 
 #define DEFAULT_USB_CABLE_UDI \
     "/org/freedesktop/Hal/devices/usb_device_1d6b_2_musb_hdrc"
-// ^ It is from RX-51, TODO: check the harmattan one, maybe differs
 
 UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     QObject (parent),
@@ -128,7 +127,7 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
         if (list.isEmpty () == false)
         { // The first UDI seems okey :-)
             udi = list.first ();
-            SYS_DEBUG ("UsbCable: found UDI: %s", udi.constData ()->toLatin1 ());
+            SYS_DEBUG ("found UDI: %s", udi.toLatin1 ().constData ());
         }
         else
             SYS_WARNING ("Determining usb-cable-udi failed, "

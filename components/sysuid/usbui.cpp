@@ -49,7 +49,8 @@ UsbUi::UsbEvent (UsbCableType cable)
         //% "Usb-cable disconnected"
         infoBanner->setBodyText (qtTrId ("qtn_usb_disconnected"));
         infoBanner->appear (DuiSceneWindow::DestroyWhenDone);
-        QTimer::singleShot (3000, infoBanner, SLOT (dissappear ()));
+        infoBanner->setActive (true);
+        QTimer::singleShot (3000, infoBanner, SLOT (disappear ()));
 
         return;
     }
@@ -87,6 +88,7 @@ UsbUi::UsbEvent (UsbCableType cable)
     infoBanner->setBodyText (
         qtTrId ("qtn_usb_connected_mode").arg (*mode_text));
     infoBanner->appear (DuiSceneWindow::DestroyWhenDone);
-    QTimer::singleShot (3000, infoBanner, SLOT (dissappear ()));
+    infoBanner->setActive (true);
+    QTimer::singleShot (3000, infoBanner, SLOT (disappear ()));
 }
 
