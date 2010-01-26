@@ -2,7 +2,7 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
-Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev,
+Build-Depends: debhelper (>= 5), libduicontrolpanel-dev,
                libdui-dev (>= 0.18), libqmsystem-dev, libalarm-dev,
                libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev
 Standards-Version: 3.7.3
