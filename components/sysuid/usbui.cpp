@@ -1,12 +1,12 @@
 #include "usbui.h"
 #include "usbbusinesslogic.h"
 
-#include <DuiInfoBanner>
+#include <DuiNotification>
 #include <DuiSceneWindow>
 #include <DuiLocale>
 #include <QTimer>
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "../debug.h"
 
@@ -14,12 +14,12 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent)
 {
     SYS_DEBUG ("UsbUi init");
 
-    logic = new UsbBusinessLogic (this);
+    m_logic = new UsbBusinessLogic (this);
 
-    QObject::connect (logic, SIGNAL (PopUpDialog ()),
+    QObject::connect (m_logic, SIGNAL (PopUpDialog ()),
                       this, SLOT (ShowDialog ()));
 
-    QObject::connect (logic, SIGNAL (UsbCableEvent (UsbCableType)),
+    QObject::connect (m_logic, SIGNAL (UsbCableEvent (UsbCableType)),
                       this, SLOT (UsbEvent (UsbCableType)));
 }
 
@@ -39,18 +39,21 @@ UsbUi::ShowDialog ()
 void
 UsbUi::UsbEvent (UsbCableType cable)
 {
-    // TODO: add some nice icons to info-banners
-    DuiInfoBanner   *infoBanner = 0;
+    SYS_DEBUG ("");
+
+    // remove previous one
+    if (m_notification)
+    {
+        m_notification->remove ();
+        delete m_notification;
+        m_notification = 0;
+    }
+    // TODO: add some nice icons to the notificitations
 
     if (cable == CABLE_NONE)
     {
-        infoBanner = new DuiInfoBanner (DuiInfoBanner::Information);
-
         //% "Usb-cable disconnected"
-        infoBanner->setBodyText (qtTrId ("qtn_usb_disconnected"));
-        infoBanner->appear (DuiSceneWindow::DestroyWhenDone);
-        infoBanner->setActive (true);
-        QTimer::singleShot (3000, infoBanner, SLOT (disappear ()));
+        m_notification = new DuiNotification ("", "", qtTrId ("qtn_usb_disconnected"));
 
         return;
     }
@@ -60,7 +63,7 @@ UsbUi::UsbEvent (UsbCableType cable)
         return;
     }
 
-    usb_modes   config    = logic->getMode ();
+    usb_modes   config    = m_logic->getMode ();
     QString    *mode_text = 0;
 
     switch (config)
@@ -83,12 +86,8 @@ UsbUi::UsbEvent (UsbCableType cable)
             return;
     } 
 
-    infoBanner = new DuiInfoBanner (DuiInfoBanner::Information);
     //% "<b>Usb connected<br />Selected mode: <i>%1</i>"
-    infoBanner->setBodyText (
-        qtTrId ("qtn_usb_connected_mode").arg (*mode_text));
-    infoBanner->appear (DuiSceneWindow::DestroyWhenDone);
-    infoBanner->setActive (true);
-    QTimer::singleShot (3000, infoBanner, SLOT (disappear ()));
+    m_notification =
+        new DuiNotification ("", "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
 }
 

@@ -127,7 +127,7 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
         if (list.isEmpty () == false)
         { // The first UDI seems okey :-)
             udi = list.first ();
-            SYS_DEBUG ("found UDI: %s", udi.toLatin1 ().constData ());
+            SYS_DEBUG ("found UDI: %s", SYS_STR (udi));
         }
         else
             SYS_WARNING ("Determining usb-cable-udi failed, "

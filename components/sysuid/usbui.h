@@ -4,6 +4,8 @@
 #include <QObject>
 #include "usbbusinesslogic.h"
 
+class DuiNotification;
+
 class UsbUi : public QObject
 {
     Q_OBJECT
@@ -17,7 +19,8 @@ class UsbUi : public QObject
         void UsbEvent (UsbCableType cable);
 
     private:
-        UsbBusinessLogic    *logic;
+        UsbBusinessLogic    *m_logic;
+        DuiNotification     *m_notification;
 };
 
 #endif
