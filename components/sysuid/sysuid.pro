@@ -2,14 +2,10 @@ TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
-          cellular-qt \
           qmsystem \
           silent
 
 QT += dbus
-
-LIBS += -lX11 \
-        -lcallui0
 
 INCLUDEPATH += /usr/include/alarmd \
                /usr/include/dbus-1.0 \

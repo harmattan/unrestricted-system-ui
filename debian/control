@@ -3,9 +3,8 @@ Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev,
-               libcallui-dev, libdui-dev (>= 0.18), libqmsystem-dev,
-               ssc-daemon-dev, libalarm-dev, libprofile-qt-dev (>= 0.13),
-               duistatusindicatormenu-dev
+               libdui-dev (>= 0.18), libqmsystem-dev, libalarm-dev,
+               libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
