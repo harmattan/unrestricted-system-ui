@@ -13,7 +13,7 @@
 class LockScreenBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    #if 0
+    #if 1
     // This is what used in MCE.
     Q_CLASSINFO("D-Bus Interface", "com.nokia.system_ui.request")
     #else

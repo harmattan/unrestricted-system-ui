@@ -17,10 +17,11 @@ contains(cov, true) {
     QMAKE_LFLAGS += --coverage
 }
 
-HEADERS += \
-    ../debug.h \
+HEADERS +=                 \
+    ../debug.h             \
+    sysuidrequest.h        \
     batterybusinesslogic.h \
-    sysuid.h \
+    sysuid.h               \
     lockscreenbusinesslogic.h \
     lockscreenui.h \
     shutdownui.h \
@@ -35,6 +36,7 @@ HEADERS += \
 SOURCES +=  \
     ../debug.cpp \
     main.cpp \
+    sysuidrequest.cpp \
     batterybusinesslogic.cpp \
     sysuid.cpp \
     lockscreenbusinesslogic.cpp \

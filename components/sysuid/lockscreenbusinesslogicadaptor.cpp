@@ -91,7 +91,8 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
     }
 
-    return (int) TkLockReplyOk;
+    //return (int) TkLockReplyOk;
+    return 100;
 }
 
 #if 0

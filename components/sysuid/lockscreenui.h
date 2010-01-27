@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef LOCKSCREENUI_H
 #define LOCKSCREENUI_H
 
@@ -17,33 +19,37 @@ class LockScreenUI : public DuiApplicationPage
 public:
     LockScreenUI();
     virtual ~LockScreenUI();
-    virtual void createContent();
 
-    void updateMissedEventAmounts(int a, int b, int c, int d);
+    virtual void createContent ();
+    void updateMissedEventAmounts (
+            int emails, 
+            int messages, 
+            int calls, 
+            int im);
 
 signals:
-    void unlocked();
+    void unlocked ();
 
 public slots:
-    void sliderUnlocked();
-    void updateDateTime();
+    void sliderUnlocked ();
+    void updateDateTime ();
 
 private:
-    DuiLayout* createWidgets();
+    DuiLayout* createWidgets ();
 
 private:
-    DuiLabel* timeLabel; // qtn_scrlock_current_time
-    DuiLabel* dateLabel; // qtn_scrlock_current_daydate
+    DuiLabel *timeLabel; // qtn_scrlock_current_time
+    DuiLabel *dateLabel; // qtn_scrlock_current_daydate
 
-    DuiImageWidget* unreadEmailsImage;
-    DuiImageWidget* unreadMessagesImage;
-    DuiImageWidget* missedCallsImage;
-    DuiImageWidget* unreadChatMessagesImage;
+    DuiImageWidget *unreadEmailsImage;
+    DuiImageWidget *unreadMessagesImage;
+    DuiImageWidget *missedCallsImage;
+    DuiImageWidget *unreadChatMessagesImage;
 
-    DuiLabel* unreadEmailsLabel;
-    DuiLabel* unreadMessagesLabel;
-    DuiLabel* missedCallsLabel;
-    DuiLabel* unreadChatMessagesLabel;
+    DuiLabel *unreadEmailsLabel;
+    DuiLabel *unreadMessagesLabel;
+    DuiLabel *missedCallsLabel;
+    DuiLabel *unreadChatMessagesLabel;
 
     UnlockSlider *slider;
 };

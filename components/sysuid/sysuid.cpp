@@ -10,6 +10,7 @@
 
 #include "usbui.h"
 #include "sysuid.h"
+#include "sysuidrequest.h"
 #include "systemuigconf.h"
 #include "batterybusinesslogic.h"
 #include "batterybusinesslogicadaptor.h"
@@ -46,13 +47,13 @@ Sysuid::Sysuid () : QObject ()
 
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
-    m_LockScreenLogic = new LockScreenBusinessLogic (this);
+    //m_LockScreenLogic = new LockScreenBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
-    new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
+    //new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 
 #if 0
     // This is what used in MCE.
@@ -69,6 +70,8 @@ Sysuid::Sysuid () : QObject ()
         qCritical () << Q_FUNC_INFO << "failed to register dbus object";
         abort();
     }
+
+    new SysUidRequest;
 }
 
 Sysuid::~Sysuid ()

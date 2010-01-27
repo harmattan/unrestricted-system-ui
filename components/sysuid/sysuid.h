@@ -9,7 +9,7 @@
 class UsbUi;
 class SystemUIGConf;
 class BatteryBusinessLogic;
-class LockScreenBusinessLogic;
+//class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
 
 class Sysuid : public QObject
@@ -29,7 +29,7 @@ public slots:
 private:
     SystemUIGConf           *m_SystemUIGConf;
     BatteryBusinessLogic    *m_BatteryLogic;
-    LockScreenBusinessLogic *m_LockScreenLogic;
+    //LockScreenBusinessLogic *m_LockScreenLogic;
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
