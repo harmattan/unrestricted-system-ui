@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QPointer>
 
+class UsbUi;
 class SystemUIGConf;
 class BatteryBusinessLogic;
 class LockScreenBusinessLogic;
@@ -30,6 +31,7 @@ private:
     BatteryBusinessLogic    *m_BatteryLogic;
     LockScreenBusinessLogic *m_LockScreenLogic;
     ShutdownBusinessLogic   *m_ShutdownLogic;
+    UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
 };
 

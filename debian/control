@@ -2,22 +2,21 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
-Build-Depends: debhelper (>= 5), libcellular-qt-dev, libduicontrolpanel-dev,
-               libcallui-dev, libdui-dev (>= 0.16), libqmsystem-dev,
-               ssc-daemon-dev, libalarm-dev, libhal-dev,
-               libprofile-qt-dev (>= 0.10.0-2), duistatusindicatormenu-dev,
-               libqmsystem-dev
+Build-Depends: debhelper (>= 5), libduicontrolpanel-dev,
+               libdui-dev (>= 0.18), libqmsystem-dev, libalarm-dev,
+               libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
 Replaces: cellular-ui
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english
+Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, hal
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - battery notifications
   - screenlock
   - shutdown dialog
+  - usb mode selection dialog
 
 Package: system-ui-tests
 Section: tests

@@ -7,7 +7,9 @@
 #include <DuiApplicationWindow>
 
 #include <QObject>
-#include <QDebug>
+
+#define DEBUG
+#include "../debug.h"
 
 #include "signal.h"
 
@@ -27,23 +29,24 @@ int main (int argc, char** argv)
     DuiApplication app (argc, argv);
     exitPtr = &app;
 
+    SYS_DEBUG ("- System-UI start");
+
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     win.setWindowOpacity (0);
     win.setWindowFlags (flags);
 
-    qDebug () << "Starting system-ui";
-    // qDebug and qWarning are filttered off.
+    // qDebug and qWarning shows nothing without this:
+    // FIXME: Use SYS_DEBUG, SYS_WARNING instead of q...
+    //        and then remove this call
     qInstallMsgHandler (0);
-
-    qDebug () << "Starting system-ui 2";
 
     signal (SIGINT, sysuid_exit);
 
     Sysuid daemon;
 
-    qDebug () << "- System-UI daemon initialized";
+    SYS_DEBUG ("- System-UI daemon initialized");
 
     // re-install the translations on locale settings changed signal
     QObject::connect (&app, SIGNAL (localeSettingsChanged ()),

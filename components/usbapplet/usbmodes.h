@@ -3,12 +3,12 @@
 
 #define USB_GCONF_KEY   "/Dui/System/UsbMode"
 
-enum usb_modes {
+typedef enum {
     USB_OVI_SUITE = 0,
     USB_MASS_STORAGE,
     USB_NOOP,
     USB_AUTO
-};
+} usb_modes;
 
 extern const char * usb_modes_str[];
 

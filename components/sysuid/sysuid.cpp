@@ -8,6 +8,7 @@
 #include <QDBusConnection>
 #include <QDebug>
 
+#include "usbui.h"
 #include "sysuid.h"
 #include "systemuigconf.h"
 #include "batterybusinesslogic.h"
@@ -47,6 +48,7 @@ Sysuid::Sysuid () : QObject ()
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_LockScreenLogic = new LockScreenBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
+    m_UsbUi           = new UsbUi (this);
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);

@@ -1,17 +1,20 @@
 SRC_PREFIX = ../../components/sysuid
 STUB_PREFIX = ../stubs/
 INCLUDEPATH += $$SRC_PREFIX \
-    $$STUB_PREFIX
+               $$STUB_PREFIX
+
 QT += testlib \
-    dbus
+      dbus
+
 TEMPLATE = app
 DEFINES += UNIT_TEST
 TARGET = ut_lowbatterynotifier
 target.path = /usr/lib/system-ui-tests
+
 CONFIG += dui \
-    cellular-qt \
-    qmsystem \
-    silent
+          qmsystem \
+          silent
+
 contains(cov, true) {
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
