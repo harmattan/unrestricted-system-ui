@@ -91,18 +91,14 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
     }
 
-    //return (int) TkLockReplyOk;
-    return 100;
+    return (int) TkLockReplyOk;
 }
 
-#if 0
 /*
- * This is somehow not working. 
+ * This is not working. 
  */
-int
+void
 LockScreenBusinessLogicAdaptor::tklock_close ()
 {
     SYS_DEBUG ("");
-    return (int) TkLockReplyOk;
 }
-#endif

@@ -8,7 +8,9 @@ class QString;
 class LockScreenBusinessLogic;
 
 /*!
- * This class creates a connection 
+ * This class creates a connection between the system bus and the methods
+ * implemented in the LockScreenBusinessLogicAdaptor where the methods
+ * implemented for the MCE handling the locking of the touch screen.
  */
 class SysUidRequest : public QObject
 {

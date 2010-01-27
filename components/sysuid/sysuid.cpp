@@ -55,13 +55,7 @@ Sysuid::Sysuid () : QObject ()
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
     //new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 
-#if 0
-    // This is what used in MCE.
-    QDBusConnection bus = QDBusConnection::systemBus ();
-#else
-    // This is what others want.
     QDBusConnection bus = QDBusConnection::sessionBus ();
-#endif
     if (!bus.registerService (dbusService ())) {
         qCritical () << Q_FUNC_INFO << "failed to register dbus service";
         abort();
@@ -86,24 +80,12 @@ Sysuid* Sysuid::sysuid ()
 
 QString Sysuid::dbusService ()
 {
-#if 0
-    // This is what used in MCE.
-    return QString ("com.nokia.system_ui");
-#else
-    // This is what others want.
     return QString ("com.nokia.systemui");
-#endif
 }
 
 QString Sysuid::dbusPath ()
 {
-#if 0
-    // This is what used in MCE.
-    return QString ("/com/nokia/system_ui/request");
-#else
-    // This is what others want.
     return QString ("/");
-#endif
 }
 
 void Sysuid::retranslate ()

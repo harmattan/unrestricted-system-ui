@@ -59,12 +59,10 @@ public slots:
             bool       b1,
             bool       b2);
 
-    #if 0
     /*
-     * This is somehow not working. 
+     * This is not working. 
      */
-    int tklock_close ();
-    #endif
+    void tklock_close ();
 
 signals:
     void delegateSetMissedEvents (int, int, int, int);
