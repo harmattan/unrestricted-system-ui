@@ -69,6 +69,12 @@ private slots:
 
 signals:
     void delegateSetMissedEvents (int, int, int, int);
+
+private:
+    QString  m_MCECallbackService;
+    QString  m_MCECallbackPath;
+    QString  m_MCECallbackInterface;
+    QString  m_MCECallbackMethod;
 };
 
 #endif 

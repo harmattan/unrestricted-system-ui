@@ -41,29 +41,34 @@ LockScreenBusinessLogicAdaptor::SetMissedEvents (
 
 int 
 LockScreenBusinessLogicAdaptor::tklock_open (
-        const QString  &a,
-        const QString  &b,
-        const QString  &c,
-        const QString  &d,
+        const QString  &service,
+        const QString  &path,
+        const QString  &interface,
+        const QString  &method,
         uint            mode,
         bool            silent,
         bool            flicker)
 {
     SYS_DEBUG (
-"\n*** a         = '%s'"
-"\n*** b         = '%s'"
-"\n*** c         = '%s'"
-"\n*** d         = '%s'"
+"\n*** service   = '%s'"
+"\n*** path      = '%s'"
+"\n*** interface = '%s'"
+"\n*** method    = '%s'"
 "\n*** u         = %u"
 "\n*** silent    = %s"
 "\n*** flicker   = %s",
-            SYS_STR (a),
-            SYS_STR (b),
-            SYS_STR (c),
-            SYS_STR (d),
+            SYS_STR (service),
+            SYS_STR (path),
+            SYS_STR (interface),
+            SYS_STR (method),
             mode,
             silent ? "true" : "false",
             flicker ? "true" : "false");
+
+    m_MCECallbackService = service;
+    m_MCECallbackPath = path;
+    m_MCECallbackInterface = interface;
+    m_MCECallbackMethod = method;
 
     switch (mode) {
         case TkLockModeNone:
@@ -99,7 +104,11 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 }
 
 /*
- * This is not working. 
+ * Here the MCE reports back that the lock screen should be closed. We actually
+ * closed it already, so we do nothing, but we need this method otherwise MCE
+ * will lock the screen again.
+ *
+ * FIXME: Maybe we should hide the screen locker here? 
  */
 int
 LockScreenBusinessLogicAdaptor::tklock_close (
@@ -113,17 +122,18 @@ LockScreenBusinessLogicAdaptor::tklock_close (
 void 
 LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
-    SYS_DEBUG ("");
-#if 1
     QDBusInterface *dbusIf;
+    SYS_DEBUG ("");
+
     dbusIf = new QDBusInterface (
-            "com.nokia.mce", 
-            "/com/nokia/mce/request",
-            "com.nokia.mce.request",
+            m_MCECallbackService, //"com.nokia.mce", 
+            m_MCECallbackPath, //"/com/nokia/mce/request",
+            m_MCECallbackInterface, //"com.nokia.mce.request",
             QDBusConnection::systemBus ());
 
-    static int n = 1;
-    SYS_DEBUG ("tklock_callback (%d)", n);
-    dbusIf->call (QDBus::NoBlock, QString ("tklock_callback"), n);
-#endif
+    dbusIf->call (QDBus::NoBlock, 
+            m_MCECallbackMethod, //QString ("tklock_callback"), 
+            (int) TkLockReplyOk);
+
+    delete dbusIf;
 }
