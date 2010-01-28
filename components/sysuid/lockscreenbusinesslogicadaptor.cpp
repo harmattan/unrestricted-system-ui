@@ -4,7 +4,7 @@
 #include "QDBusInterface"
 #include "lockscreenbusinesslogicadaptor.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (

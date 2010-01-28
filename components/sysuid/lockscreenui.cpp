@@ -149,10 +149,10 @@ LockScreenUI::createWidgets ()
 
     // TODO: some suitable layout could be added to image and then the label to that layout
 
-    unreadEmailsLabel = new DuiLabel("0", unreadEmailsImage);
-    unreadMessagesLabel = new DuiLabel("2", unreadMessagesImage);
-    missedCallsLabel = new DuiLabel("1", missedCallsImage);
-    unreadChatMessagesLabel = new DuiLabel("3", unreadChatMessagesImage);
+    unreadEmailsLabel   = new DuiLabel ("0", unreadEmailsImage);
+    unreadMessagesLabel = new DuiLabel ("0", unreadMessagesImage);
+    missedCallsLabel    = new DuiLabel ("0", missedCallsImage);
+    unreadChatMessagesLabel = new DuiLabel ("0", unreadChatMessagesImage);
 
     QGraphicsWidget* spacerr = new QGraphicsWidget;
     spacerr->setSizePolicy(
