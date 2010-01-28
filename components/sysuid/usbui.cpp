@@ -4,6 +4,7 @@
 #include <DuiNotification>
 #include <DuiSceneWindow>
 #include <DuiButton>
+#include <DuiLabel>
 #include <DuiDialog>
 #include <DuiLocale>
 #include <QTimer>
@@ -19,11 +20,12 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
 {
     m_logic = new UsbBusinessLogic (this);
 
-    QObject::connect (m_logic, SIGNAL (PopUpDialog ()),
-                      this, SLOT (ShowDialog ()));
-
     QObject::connect (m_logic, SIGNAL (UsbCableEvent (UsbCableType)),
                       this, SLOT (UsbEvent (UsbCableType)));
+
+    // It is for UsbBusinessLogicAdaptor:
+    QObject::connect (m_logic, SIGNAL (ShowDialog ()),
+                      this, SLOT (ShowDialog ()));
 }
 
 UsbUi::~UsbUi ()
@@ -42,6 +44,7 @@ UsbUi::~UsbUi ()
 void
 UsbUi::ShowDialog ()
 {
+    SYS_DEBUG ("");
     DuiButtonModel  *button;
 
     if (m_dialog)
@@ -57,10 +60,16 @@ UsbUi::ShowDialog ()
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
     m_dialog->setWindowModal (true);
 
+    //% "Select USB mode:"
+    DuiLabel (qtTrId ("qtn_usb_select_usb_mode"),
+              m_dialog->centralWidget ()).setAlignment (Qt::AlignCenter);
+
+    //% "Ovi Suite"
     button = m_dialog->addButton (qtTrId ("qtn_usb_ovi_suite"));
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (OviSuiteSelected ()));
 
+    //% "Mass Storage"
     button = m_dialog->addButton (qtTrId ("qtn_usb_mass_storage"));
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
@@ -121,6 +130,10 @@ UsbUi::UsbEvent (UsbCableType cable)
     usb_modes   config    = m_logic->getModeSetting ();
     QString    *mode_text = 0;
 
+    // Activate the desired usb mode
+    if (config != USB_AUTO)
+        m_logic->setMode (config);
+
     switch (config)
     {
         case USB_OVI_SUITE:
@@ -135,9 +148,8 @@ UsbUi::UsbEvent (UsbCableType cable)
             //% "Do nothing"
             mode_text = new QString (qtTrId ("qtn_usb_do_nothing"));
             break;
-        default:
-            // no-op, on setting USB_NOOP
-            // and on USB_AUTO (a ShowDialog signal will come)
+        case USB_AUTO:
+            ShowDialog ();
             return;
     } 
 
@@ -152,3 +164,4 @@ UsbUi::getLogic ()
 {
     return m_logic;
 }
+

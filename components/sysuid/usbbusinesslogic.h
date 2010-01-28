@@ -30,11 +30,11 @@ class UsbBusinessLogic : public QObject
         bool isActive ();
 
         void emitUsbCableEvent (UsbCableType cable);
-        void emitPopUpDialog ();
+        void emitShowDialog ();
 
     signals:
         void UsbCableEvent (UsbCableType cable);
-        void PopUpDialog ();
+        void ShowDialog ();
         void Active (bool active);
 
     private slots:

@@ -57,12 +57,14 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
     switch (new_mode)
     {
         case USB_OVI_SUITE:  
+            SYS_DEBUG ("not-implemented: Ovi Suite mode");
             // TODO: ask ke-recv to switch device to
             //       pc-suite mode
             m_active = true;
             emit Active (true);
             break;
         case USB_MASS_STORAGE:
+            SYS_DEBUG ("not-implemented: Mass Storage mode");
             // TODO: ask ke-recv to switch device to
             //       usb-mass-storage mode
             m_active = true;
@@ -70,6 +72,8 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
             break;
         case USB_NOOP:
         default:
+            SYS_DEBUG ("doing nothing");
+            m_active = false;
             /* Do nothing, ie. Charging only ... */
             break;
     }
@@ -191,22 +195,6 @@ UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
         emit Active (false);
         return;
     }
-
-    // Get the Usb applet setting from GConf...
-    usb_modes mode = getModeSetting ();
-
-    if (mode == USB_AUTO)
-    { 
-        // Cable just plugged in, and the current mode is auto,
-        // lets show the mode-selection dialog:
-        emit PopUpDialog ();
-    }
-    else
-    {
-        // Switch the device to the selected mode,
-        // (without questions :-P)
-        setMode (mode);
-    }
 }
 
 // Returns whether the device has an active usb connection
@@ -218,14 +206,15 @@ UsbBusinessLogic::isActive ()
 }
 
 void
-UsbBusinessLogic::emitPopUpDialog ()
+UsbBusinessLogic::emitUsbCableEvent (UsbCableType cable)
 {
-    emit PopUpDialog ();
+    emit UsbCableEvent (cable);
 }
 
 void
-UsbBusinessLogic::emitUsbCableEvent (UsbCableType cable)
+UsbBusinessLogic::emitShowDialog ()
 {
-    emit (UsbCableEvent (cable));
+    emit ShowDialog ();
 }
+
 

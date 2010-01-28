@@ -11,8 +11,6 @@ class UsbBusinessLogicAdaptor : public QDBusAbstractAdaptor
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.usb")
 
-    friend class UsbBusinessLogic;
-
 public:
     UsbBusinessLogicAdaptor (
             QObject             *parent,

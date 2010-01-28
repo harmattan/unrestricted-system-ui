@@ -1,6 +1,6 @@
 #include "usbbusinesslogicadaptor.h"
 
-#define DEBUG
+#define WARNING
 #include "../debug.h"
 
 UsbBusinessLogicAdaptor::UsbBusinessLogicAdaptor (
@@ -30,7 +30,7 @@ UsbBusinessLogicAdaptor::ShowModeSelectionDialog ()
     {
         SYS_WARNING (" called when usb peripheral cable isn't connected!");
     }
-    m_usb->emitPopUpDialog ();      /* SIGNAL */
+    m_usb->emitShowDialog (); 
 }
 
 // This function just proxy-ing the query
