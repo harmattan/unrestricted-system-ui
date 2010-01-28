@@ -47,13 +47,11 @@ Sysuid::Sysuid () : QObject ()
 
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
-    //m_LockScreenLogic = new LockScreenBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
-    //new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus ();
     if (!bus.registerService (dbusService ())) {
@@ -65,6 +63,10 @@ Sysuid::Sysuid () : QObject ()
         abort();
     }
 
+    /*
+     * The screen locking is implemented in this separate class, because it is
+     * bound to the system bus (MCE wants to contact us on the system bus).
+     */
     new SysUidRequest;
 }
 
