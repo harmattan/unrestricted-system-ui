@@ -47,8 +47,10 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 
     locks->setDeviceAutolockTime (30);
 #endif
+    SYS_DEBUG ("################################################");
     SYS_DEBUG ("*** locks->getDeviceAutolockTime () = %dsec", 
             locks->getDeviceAutolockTime ());
+    SYS_DEBUG ("################################################");
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()

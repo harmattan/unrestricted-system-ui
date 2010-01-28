@@ -1,6 +1,11 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "displaybusinesslogic.h"
 
 #include <QDebug>
+
+//#define DEBUG
+#include "../debug.h"
 
 /*
     TODO:
@@ -24,10 +29,15 @@ DisplayBusinessLogic::~DisplayBusinessLogic()
     display = NULL;
 }
 
-void DisplayBusinessLogic::toggleDisplay(bool toggle)
+void
+DisplayBusinessLogic::toggleDisplay (
+        bool toggle)
 {
-    QmDisplayState::DisplayState state = (toggle ? QmDisplayState::On : QmDisplayState::Off);
-    display->set(state);
+    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+    QmDisplayState::DisplayState state = 
+        (toggle ? QmDisplayState::On : QmDisplayState::Off);
+
+    display->set (state);
 }
 
 QList<int> DisplayBusinessLogic::brightnessValues()
@@ -43,7 +53,8 @@ QList<int> DisplayBusinessLogic::brightnessValues()
     return values;
 }
 
-int DisplayBusinessLogic::selectedBrightnessValue()
+int
+DisplayBusinessLogic::selectedBrightnessValue ()
 {
     QList<int> values = brightnessValues();
     int index = values.indexOf(display->getDisplayBrightnessValue());
@@ -61,7 +72,8 @@ QList<int> DisplayBusinessLogic::screenLightsValues()
     return values;
 }
 
-int DisplayBusinessLogic::selectedScreenLightsValue()
+int 
+DisplayBusinessLogic::selectedScreenLightsValue ()
 {
     QList<int> values = screenLightsValues();
     int index = values.indexOf(display->getDisplayDimTimeout());
@@ -69,26 +81,75 @@ int DisplayBusinessLogic::selectedScreenLightsValue()
         index = values.size() / 2;
         setScreenLightsValue(values.at(index));
     }
+
     return index;
 }
 
-bool DisplayBusinessLogic::blankInhibitValue()
+bool 
+DisplayBusinessLogic::blankInhibitValue ()
 {
     return display->getBlankingWhenCharging();
 }
 
-void DisplayBusinessLogic::setBrightnessValue(int value)
+void 
+DisplayBusinessLogic::setBrightnessValue (
+        int value)
 {
+    SYS_DEBUG ("*** value = %d", value);
     display->setDisplayBrightnessValue(value);
 }
 
-void DisplayBusinessLogic::setScreenLightsValue(int value)
+void 
+DisplayBusinessLogic::setScreenLightsValue (
+		int value)
 {
-    display->setDisplayDimTimeout(value);
-    display->setDisplayBlankTimeout(value + TIMEGAP);
+    int seconds;
+
+    SYS_DEBUG ("*** value = %d", value);
+
+    /*
+     * We got the serial number, not the value.
+     */
+    switch (value) {
+        case 0:
+            seconds = 10;
+            break;
+
+        case 1:
+            seconds = 30;
+            break;
+
+        case 2:
+            seconds = 60;
+            break;
+
+        case 3:
+            seconds = 120;
+            break;
+
+        case 4:
+            seconds = 300;
+            break;
+
+        default:
+            SYS_WARNING ("Unknown value, using 300");
+            seconds = 300;
+    }
+
+    SYS_DEBUG ("*** seconds = %d", seconds);
+
+    display->setDisplayDimTimeout (seconds);
+    display->setDisplayBlankTimeout (value + TIMEGAP);
 }
 
-void DisplayBusinessLogic::setBlankInhibitValue(bool value)
+void 
+DisplayBusinessLogic::setBlankInhibitValue (
+        bool value)
 {
+    /*
+     * Actually the UI string is a negative 'keep the lights on'.
+     */
+    value = !value;
+    SYS_DEBUG ("*** blanking when charging = %s", value ? "true" : "false");
     display->setBlankingWhenCharging(value);
 }
