@@ -18,7 +18,7 @@
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 #define TRANSLATION_CATALOG "duicontrolpanel-systemui"

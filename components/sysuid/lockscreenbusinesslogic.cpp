@@ -9,7 +9,7 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
@@ -35,22 +35,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 
     connect (&timer, SIGNAL(timeout()), 
             lockUI, SLOT(updateDateTime()));
-
-#if 0
-    /*
-     * It seems that the screen is locked after a very short period of time no
-     * matter what I do.
-     */
-    SYS_DEBUG ("##############################################");
-    SYS_DEBUG ("*** locks->getDeviceAutolockTime () = %dsec", 
-            locks->getDeviceAutolockTime ());
-
-    locks->setDeviceAutolockTime (30);
-#endif
-    SYS_DEBUG ("################################################");
-    SYS_DEBUG ("*** locks->getDeviceAutolockTime () = %dsec", 
-            locks->getDeviceAutolockTime ());
-    SYS_DEBUG ("################################################");
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()

@@ -88,7 +88,10 @@ DisplayBusinessLogic::selectedScreenLightsValue ()
 bool 
 DisplayBusinessLogic::blankInhibitValue ()
 {
-    return display->getBlankingWhenCharging();
+    /*
+     * Actually the UI string is a negative.
+     */
+    return !display->getBlankingWhenCharging();
 }
 
 void 
