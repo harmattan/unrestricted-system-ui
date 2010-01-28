@@ -15,14 +15,11 @@
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
     QObject (parent), 
-    display (NULL),
-    lockUI (NULL)
+    display ( new QmDisplayState(this)),
+    locks (new QmLocks(this)),
+    lockUI (new LockScreenUI)
 {
     SYS_DEBUG ("");
-
-    locks = new QmLocks(this);
-    display = new QmDisplayState(this);
-    lockUI = new LockScreenUI();
 
     connect(locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
             this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
@@ -56,11 +53,11 @@ LockScreenBusinessLogic::locksChanged (
     if (knownLock == QmLocks::Locked) {
         SYS_DEBUG ("locked");
         toggleScreenLockUI (true);
-        mayStartTimer();
+        mayStartTimer ();
     } else {
         SYS_DEBUG ("not locked");
         toggleScreenLockUI (false);
-        stopTimer();
+        stopTimer ();
     }
 }
 
@@ -83,6 +80,9 @@ LockScreenBusinessLogic::displayStateChanged (
             break;
 
         default:
+            /*
+             * Might be a dimmed state.
+             */
             break;
     }
 }
@@ -90,23 +90,12 @@ LockScreenBusinessLogic::displayStateChanged (
 /*!
  * This function is called when the lock slider is moved by the user so the
  * screen should be unlocked.
- * FIXME: The locks->setState() function can not be used to unlock the screen
- * (found this in the documentation of the QmLocks::setState()).
  */
 void 
 LockScreenBusinessLogic::unlockScreen ()
 {
     SYS_DEBUG ("");
     toggleScreenLockUI (false); //turn off the UI
-#if 0
-    bool retval;
-    retval = locks->setState (QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
-    if (!retval) {
-        SYS_WARNING ("Unlock has been failed.");
-    } else {
-        SYS_DEBUG ("The screen was unlocked.");
-    }
-#endif
 }
 
 void 
@@ -126,7 +115,7 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
-    SYS_DEBUG ("");
+    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
         DuiApplication::activeApplicationWindow()->show();
