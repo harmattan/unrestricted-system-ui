@@ -21,9 +21,6 @@ public:
     LockScreenBusinessLogic(QObject* parent = 0);
     virtual ~LockScreenBusinessLogic();
 
-public slots:
-    void shortPowerKeyPressOccured();
-
 private slots:
     void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
     void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
@@ -33,7 +30,8 @@ private slots:
     void updateMissedEventAmounts(int, int, int, int);
 
 signals:
-    void updateTime();
+    void updateTime ();
+    void unlockConfirmed ();
 
 private: //methods
     void toggleScreenLockUI(bool toggle);

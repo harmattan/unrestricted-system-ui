@@ -6,7 +6,7 @@
 
 class QString;
 class LockScreenBusinessLogic;
-
+class EventHandler;
 /*!
  * This class creates a connection between the system bus and the methods
  * implemented in the LockScreenBusinessLogicAdaptor where the methods

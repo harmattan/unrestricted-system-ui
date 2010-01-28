@@ -62,7 +62,10 @@ public slots:
     /*
      * This is not working. 
      */
-    void tklock_close ();
+    int tklock_close (bool b);
+
+private slots:
+    void unlockConfirmed ();
 
 signals:
     void delegateSetMissedEvents (int, int, int, int);

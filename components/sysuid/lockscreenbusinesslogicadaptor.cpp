@@ -1,18 +1,22 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
+#include "QDBusInterface"
 #include "lockscreenbusinesslogicadaptor.h"
 
 #define DEBUG
 #include "../debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
-    QObject *obj, 
-    LockScreenBusinessLogic *logic) :
-    QDBusAbstractAdaptor(obj)
+        QObject                 *obj, 
+        LockScreenBusinessLogic *logic) :
+    QDBusAbstractAdaptor (obj)
 {
     connect (this, SIGNAL(delegateSetMissedEvents(int, int, int, int)),
             logic, SLOT(updateMissedEventAmounts(int, int, int, int)));
+
+    connect (logic, SIGNAL(unlockConfirmed()),
+            this, SLOT(unlockConfirmed ()));
 }
 
 
@@ -97,8 +101,29 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 /*
  * This is not working. 
  */
-void
-LockScreenBusinessLogicAdaptor::tklock_close ()
+int
+LockScreenBusinessLogicAdaptor::tklock_close (
+        bool   b)
+{
+    SYS_DEBUG ("*** b = %s", b ? "true" : "false");
+
+    return (int) TkLockReplyOk;
+}
+
+void 
+LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
     SYS_DEBUG ("");
+#if 1
+    QDBusInterface *dbusIf;
+    dbusIf = new QDBusInterface (
+            "com.nokia.mce", 
+            "/com/nokia/mce/request",
+            "com.nokia.mce.request",
+            QDBusConnection::systemBus ());
+
+    static int n = 1;
+    SYS_DEBUG ("tklock_callback (%d)", n);
+    dbusIf->call (QDBus::NoBlock, QString ("tklock_callback"), n);
+#endif
 }

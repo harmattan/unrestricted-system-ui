@@ -30,6 +30,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     connect (lockUI, SIGNAL(unlocked()), 
             this, SLOT(unlockScreen()));
+    connect (lockUI, SIGNAL(unlocked()), 
+            this, SIGNAL(unlockConfirmed()));
 
     connect (&timer, SIGNAL(timeout()), 
             lockUI, SLOT(updateDateTime()));
@@ -44,9 +46,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
             locks->getDeviceAutolockTime ());
 
     locks->setDeviceAutolockTime (30);
+#endif
     SYS_DEBUG ("*** locks->getDeviceAutolockTime () = %dsec", 
             locks->getDeviceAutolockTime ());
-#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -54,18 +56,6 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
     delete lockUI;
 }
 
-void 
-LockScreenBusinessLogic::shortPowerKeyPressOccured ()
-{
-    SYS_DEBUG ("");
-    /* THIS SHOULD BE DONE BY MCE OF SYSTEMSW
-    */
-#if 0
-    if (knownLock == QmLocks::Unlocked) {
-        locks->setState (QmLocks::TouchAndKeyboard, QmLocks::Locked);
-    }
-#endif
-}
 
 void 
 LockScreenBusinessLogic::locksChanged (
@@ -111,12 +101,26 @@ LockScreenBusinessLogic::displayStateChanged (
     }
 }
 
+/*!
+ * This function is called when the lock slider is moved by the user so the
+ * screen should be unlocked.
+ * FIXME: The locks->setState() function can not be used to unlock the screen
+ * (found this in the documentation of the QmLocks::setState()).
+ */
 void 
 LockScreenBusinessLogic::unlockScreen ()
 {
-    qDebug() << Q_FUNC_INFO;
+    SYS_DEBUG ("");
     toggleScreenLockUI (false); //turn off the UI
-    locks->setState (QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+#if 0
+    bool retval;
+    retval = locks->setState (QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+    if (!retval) {
+        SYS_WARNING ("Unlock has been failed.");
+    } else {
+        SYS_DEBUG ("The screen was unlocked.");
+    }
+#endif
 }
 
 void 
