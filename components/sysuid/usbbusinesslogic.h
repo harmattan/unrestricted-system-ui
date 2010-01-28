@@ -26,11 +26,16 @@ class UsbBusinessLogic : public QObject
 
         void setMode (usb_modes new_mode);
         UsbCableType getCableType ();
-        usb_modes getMode ();
+        usb_modes getModeSetting ();
+        bool isActive ();
+
+        void emitUsbCableEvent (UsbCableType cable);
+        void emitPopUpDialog ();
 
     signals:
         void UsbCableEvent (UsbCableType cable);
         void PopUpDialog ();
+        void Active (bool active);
 
     private slots:
         void usb_prop_changed (const QDBusMessage &msg);
@@ -39,8 +44,9 @@ class UsbBusinessLogic : public QObject
     private:
         void init_device (QString &udi);
 
-        DuiGConfItem    *setting; 
-        QDBusInterface  *hal;
+        DuiGConfItem    *m_setting; 
+        QDBusInterface  *m_hal;
+        bool             m_active;
 
 };
 

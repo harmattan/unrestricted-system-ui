@@ -4,6 +4,7 @@
 #include <QObject>
 #include "usbbusinesslogic.h"
 
+class DuiDialog;
 class DuiNotification;
 
 class UsbUi : public QObject
@@ -13,14 +14,18 @@ class UsbUi : public QObject
     public:
         UsbUi (QObject *parent = 0);
         ~UsbUi ();
+        UsbBusinessLogic * getLogic ();
 
-    public slots:
+    private slots:
         void ShowDialog ();
         void UsbEvent (UsbCableType cable);
+        void OviSuiteSelected ();
+        void MassStorageSelected ();
 
     private:
         UsbBusinessLogic    *m_logic;
         DuiNotification     *m_notification;
+        DuiDialog           *m_dialog;
 };
 
 #endif

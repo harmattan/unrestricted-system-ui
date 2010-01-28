@@ -31,6 +31,7 @@ HEADERS +=                 \
     lockscreenbusinesslogicadaptor.h \
     ../usbapplet/usbmodes.h \
     usbbusinesslogic.h \
+    usbbusinesslogicadaptor.h \
     usbui.h
 
 SOURCES +=  \
@@ -48,6 +49,7 @@ SOURCES +=  \
     lockscreenbusinesslogicadaptor.cpp \
     ../usbapplet/usbmodes.cpp \
     usbbusinesslogic.cpp \
+    usbbusinesslogicadaptor.cpp \
     usbui.cpp
 
 style_sheet.files += sysuid.css

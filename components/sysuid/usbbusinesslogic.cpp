@@ -18,10 +18,11 @@
 
 UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     QObject (parent),
-    setting (0),
-    hal (0)
+    m_setting (0),
+    m_hal (0),
+    m_active (false)
 {
-    setting = new DuiGConfItem (USB_GCONF_KEY);
+    m_setting = new DuiGConfItem (USB_GCONF_KEY);
 
     QDBusInterface HalManager ("org.freedesktop.Hal",
                                "/org/freedesktop/Hal/Manager",
@@ -58,10 +59,14 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
         case USB_OVI_SUITE:  
             // TODO: ask ke-recv to switch device to
             //       pc-suite mode
+            m_active = true;
+            emit Active (true);
             break;
         case USB_MASS_STORAGE:
             // TODO: ask ke-recv to switch device to
             //       usb-mass-storage mode
+            m_active = true;
+            emit Active (true);
             break;
         case USB_NOOP:
         default:
@@ -71,9 +76,9 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
 }
 
 usb_modes
-UsbBusinessLogic::getMode ()
+UsbBusinessLogic::getModeSetting ()
 {
-    QString   val = setting->value ().toString (); 
+    QString   val = m_setting->value ().toString (); 
     usb_modes current_mode = USB_AUTO;
 
     for (int i = 0; i <= USB_AUTO; i++)
@@ -89,7 +94,7 @@ UsbBusinessLogic::getMode ()
 UsbCableType
 UsbBusinessLogic::getCableType ()
 {
-    QDBusMessage reply = hal->call("GetProperty", "usb_device.mode");
+    QDBusMessage reply = m_hal->call("GetProperty", "usb_device.mode");
 
     if (reply.type() != QDBusMessage::ReplyMessage)
     {
@@ -141,13 +146,14 @@ UsbBusinessLogic::query_finished (QDBusPendingCallWatcher *call)
 void
 UsbBusinessLogic::init_device (QString &udi)
 {
-    hal = new QDBusInterface ("org.freedesktop.Hal",
-                              udi,
-                              "org.freedesktop.Hal.Device",
-                              QDBusConnection::systemBus (),
-                              this);
+    m_hal = new QDBusInterface (
+                "org.freedesktop.Hal",
+                udi,
+                "org.freedesktop.Hal.Device",
+                QDBusConnection::systemBus (),
+                this);
 
-    hal->connection ().connect (
+    m_hal->connection ().connect (
         "org.freedesktop.Hal", udi, "org.freedesktop.Hal.Device",
         "PropertyModified", // <- SLOT
         this, SLOT (usb_prop_changed (const QDBusMessage &)));
@@ -180,10 +186,14 @@ UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
     emit (UsbCableEvent (current));
 
     if (current != CABLE_PERIPHERAL)
-        return; // no-op
+    { // peripheral cable disconnected
+        m_active = false;
+        emit Active (false);
+        return;
+    }
 
-    // Get the Usb applet setting for GConf...
-    usb_modes mode = getMode ();
+    // Get the Usb applet setting from GConf...
+    usb_modes mode = getModeSetting ();
 
     if (mode == USB_AUTO)
     { 
@@ -197,5 +207,25 @@ UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
         // (without questions :-P)
         setMode (mode);
     }
+}
+
+// Returns whether the device has an active usb connection
+// (aka Ovi Suite or Mass Storage mode...)
+bool
+UsbBusinessLogic::isActive ()
+{
+    return m_active;
+}
+
+void
+UsbBusinessLogic::emitPopUpDialog ()
+{
+    emit PopUpDialog ();
+}
+
+void
+UsbBusinessLogic::emitUsbCableEvent (UsbCableType cable)
+{
+    emit (UsbCableEvent (cable));
 }
 

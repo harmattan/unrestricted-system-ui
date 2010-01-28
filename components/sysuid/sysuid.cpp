@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "usbui.h"
+#include "usbbusinesslogicadaptor.h"
 #include "sysuid.h"
 #include "sysuidrequest.h"
 #include "systemuigconf.h"
@@ -54,6 +55,7 @@ Sysuid::Sysuid () : QObject ()
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
     //new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
+    new UsbBusinessLogicAdaptor (this, m_UsbUi->getLogic ());
 
     QDBusConnection bus = QDBusConnection::sessionBus ();
     if (!bus.registerService (dbusService ())) {
