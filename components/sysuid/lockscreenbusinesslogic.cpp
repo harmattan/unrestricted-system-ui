@@ -9,7 +9,7 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-//#define DEBUG
+#define DEBUG
 #include "../debug.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
@@ -32,6 +32,14 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 
     connect (&timer, SIGNAL(timeout()), 
             lockUI, SLOT(updateDateTime()));
+
+    /*
+     * Just to be sure: maybe the screen is already locked when this daemon
+     * started...
+     */
+    locksChanged (
+            QmLocks::TouchAndKeyboard,
+            locks->getState (QmLocks::TouchAndKeyboard));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -42,7 +50,7 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 
 void 
 LockScreenBusinessLogic::locksChanged (
-        Maemo::QmLocks::Lock lock, 
+        Maemo::QmLocks::Lock  lock, 
         Maemo::QmLocks::State state)
 {
     if (lock == QmLocks::Device)
@@ -51,11 +59,11 @@ LockScreenBusinessLogic::locksChanged (
     knownLock = state;
 
     if (knownLock == QmLocks::Locked) {
-        SYS_DEBUG ("locked");
+        SYS_DEBUG ("Locked");
         toggleScreenLockUI (true);
         mayStartTimer ();
     } else {
-        SYS_DEBUG ("not locked");
+        SYS_DEBUG ("Unlocked");
         toggleScreenLockUI (false);
         stopTimer ();
     }

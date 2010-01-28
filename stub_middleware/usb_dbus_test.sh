@@ -5,7 +5,7 @@
 # you should run this in runtime (maemo-sdk enter runtime)
 
 source /tmp/session_bus_address.${USER}
-sysuid &
+sysuid -software &
 
 SYSUIDPID=$!
 sleep 3; # wait for sysuid startup

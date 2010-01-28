@@ -4,7 +4,7 @@
 #include "QDBusInterface"
 #include "lockscreenbusinesslogicadaptor.h"
 
-//#define DEBUG
+#define DEBUG
 #include "../debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
@@ -49,6 +49,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         bool            silent,
         bool            flicker)
 {
+#if 0
     SYS_DEBUG (
 "\n*** service   = '%s'"
 "\n*** path      = '%s'"
@@ -64,7 +65,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             mode,
             silent ? "true" : "false",
             flicker ? "true" : "false");
-
+#endif
     m_MCECallbackService = service;
     m_MCECallbackPath = path;
     m_MCECallbackInterface = interface;
@@ -72,31 +73,31 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
     switch (mode) {
         case TkLockModeNone:
-            SYS_DEBUG ("*** TkLockModeNone");
+            SYS_DEBUG ("### TkLockModeNone");
             break;
         
         case TkLockModeEnable:
-            SYS_DEBUG ("*** TkLockModeEnable");
+            SYS_DEBUG ("### TkLockModeEnable");
             break;
 
         case TkLockModeHelp:
-            SYS_DEBUG ("*** TkLockModeHelp");
+            SYS_DEBUG ("### TkLockModeHelp");
             break;
 
         case TkLockModeSelect:
-            SYS_DEBUG ("*** TkLockModeSelect");
+            SYS_DEBUG ("### TkLockModeSelect");
             break;
 
         case TkLockModeOneInput:
-            SYS_DEBUG ("*** TkLockModeOneInput");
+            SYS_DEBUG ("### TkLockModeOneInput");
             break;
 
         case TkLockEnableVisual:
-            SYS_DEBUG ("*** TkLockEnableVisual");
+            SYS_DEBUG ("### TkLockEnableVisual");
             break;
 
         default:
-            SYS_WARNING ("*** Unknown mode");
+            SYS_WARNING ("### Unknown mode");
             break;
     }
 

@@ -4,7 +4,6 @@
 #include <DuiNotification>
 #include <DuiSceneWindow>
 #include <DuiButton>
-#include <DuiLabel>
 #include <DuiDialog>
 #include <DuiLocale>
 #include <QTimer>
@@ -59,10 +58,6 @@ UsbUi::ShowDialog ()
     //% "Usb connected"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
     m_dialog->setWindowModal (true);
-
-    //% "Select USB mode:"
-    DuiLabel (qtTrId ("qtn_usb_select_usb_mode"),
-              m_dialog->centralWidget ()).setAlignment (Qt::AlignCenter);
 
     //% "Ovi Suite"
     button = m_dialog->addButton (qtTrId ("qtn_usb_ovi_suite"));
