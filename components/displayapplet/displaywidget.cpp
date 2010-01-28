@@ -97,7 +97,7 @@ void DisplayWidget::initWidget()
 #endif
 
     connect (m_screenlightSlider, SIGNAL (valueChanged (int)),
-             m_logic, SLOT (setScreenLightsValue (int)));
+             m_logic, SLOT (setScreenLightTimeouts (int)));
     connect (m_screenlightSlider, SIGNAL (valueChanged (int)),
              this, SLOT (modify_screenlight_handle (int)));
 

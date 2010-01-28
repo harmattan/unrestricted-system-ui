@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-//#define DEBUG
+#define DEBUG
 #include "../debug.h"
 
 /*
@@ -17,9 +17,10 @@ using namespace Maemo;
 
 static int TIMEGAP = 5; // time gap between blanking and dimming
 
-DisplayBusinessLogic::DisplayBusinessLogic(QObject* parent) :
-        QObject(parent),
-        display(new QmDisplayState())
+DisplayBusinessLogic::DisplayBusinessLogic (
+        QObject* parent) :
+    QObject (parent),
+    display (new QmDisplayState())
 {
 }
 
@@ -40,7 +41,8 @@ DisplayBusinessLogic::toggleDisplay (
     display->set (state);
 }
 
-QList<int> DisplayBusinessLogic::brightnessValues()
+QList<int> 
+DisplayBusinessLogic::brightnessValues ()
 {
     QList<int> values;
 
@@ -65,7 +67,7 @@ DisplayBusinessLogic::selectedBrightnessValue ()
     return index;
 }
 
-QList<int> DisplayBusinessLogic::screenLightsValues()
+QList<int> DisplayBusinessLogic::screenLightsValues ()
 {
     QList<int> values;
     values << 10 << 30 << 60 << 120 << 300;
@@ -79,7 +81,7 @@ DisplayBusinessLogic::selectedScreenLightsValue ()
     int index = values.indexOf(display->getDisplayDimTimeout());
     if (index < 0) {
         index = values.size() / 2;
-        setScreenLightsValue(values.at(index));
+        setScreenLightTimeouts (values.at(index));
     }
 
     return index;
@@ -102,47 +104,30 @@ DisplayBusinessLogic::setBrightnessValue (
     display->setDisplayBrightnessValue(value);
 }
 
+/*!
+ * This function will take an index of the 'screen lights off' list that stores
+ * the screen dim delay values and sets the dim timeout and the blank timeout
+ * accordingly.
+ */
 void 
-DisplayBusinessLogic::setScreenLightsValue (
-		int value)
+DisplayBusinessLogic::setScreenLightTimeouts (
+		int     index)
 {
-    int seconds;
-
-    SYS_DEBUG ("*** value = %d", value);
-
     /*
-     * We got the serial number, not the value.
+     * We got the index, not the value.
      */
-    switch (value) {
-        case 0:
-            seconds = 10;
-            break;
-
-        case 1:
-            seconds = 30;
-            break;
-
-        case 2:
-            seconds = 60;
-            break;
-
-        case 3:
-            seconds = 120;
-            break;
-
-        case 4:
-            seconds = 300;
-            break;
-
-        default:
-            SYS_WARNING ("Unknown value, using 300");
-            seconds = 300;
-    }
-
+    QList <int> values = screenLightsValues ();
+    int seconds = values[index];;
+    
+    SYS_DEBUG ("*** index   = %d", index);
     SYS_DEBUG ("*** seconds = %d", seconds);
 
     display->setDisplayDimTimeout (seconds);
-    display->setDisplayBlankTimeout (value + TIMEGAP);
+    /*
+     * Originally it was seconds + TIMEGAP here, but as I see the blank timeout
+     * is relative to the dim timeout value.
+     */
+    display->setDisplayBlankTimeout (TIMEGAP);
 }
 
 void 

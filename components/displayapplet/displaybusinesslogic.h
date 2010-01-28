@@ -22,7 +22,7 @@ public:
 
 public slots:
     void setBrightnessValue(int value);
-    void setScreenLightsValue(int value);
+    void setScreenLightTimeouts (int index);
     void setBlankInhibitValue(bool value);
     void toggleDisplay(bool toggle);
 
