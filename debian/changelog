@@ -1,6 +1,14 @@
 system-ui (0.11.0-6~unreleased) harmattan; urgency=low
 
-  * FILLME
+  * Fixes: NB#141171 - Nothing happens if short power key is pressed again 
+           when touchscreen lock view is displayed. 
+  * Fixes: NB#148945 - QmLocks does not emit locked signal when lockscreen
+           expects.
+  * Fixes: NB#151854 - A call to QmLocks::setState() with 
+           QmLocks::TouchAndKeyboard as the first argument return true, but no
+           stateChanged signal is emitted.
+  * Fixes: NB#150092 - Touchscreen not locked.
+  * Fixes: NB#151278 -  Display is not dimmed according to the Time set.
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 22 Jan 2010 12:40:49 +0100
 
