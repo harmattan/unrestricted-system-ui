@@ -16,6 +16,11 @@ public:
     LedDBusInterface ();
     ~LedDBusInterface ();
 
+    void ledStateRequired ();
+    void setLedState (bool state);
+signals:
+    void ledStateReceived (bool state);
+
 public slots:
     void DBusMessagingFailure (QDBusError error);
 

@@ -71,5 +71,5 @@ LedApplet::constructBrief (
         int partId)
 {
     Q_UNUSED (partId);
-    return new LedBrief();
+    return new LedBrief (m_LedDBusInterface);
 }

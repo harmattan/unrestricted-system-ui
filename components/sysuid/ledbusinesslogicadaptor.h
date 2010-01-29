@@ -27,7 +27,12 @@ public slots:
     bool LedsEnabled ();
     bool IlluminationLedEnabled ();
     bool EventsLedEnabled ();
-    
+
+signals: 
+    void ledsStateChanged (bool);
+    void illuminationLedStateChanged (bool);
+    void eventsLedStateChanged (bool);
+
 public:
     LedBusinessLogic   *m_LedLogic;
 };

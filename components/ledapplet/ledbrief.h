@@ -5,14 +5,26 @@
 
 #include "dcpbrief.h"
 
+class LedDBusInterface;
+
 class LedBrief: public DcpBrief
 {
     Q_OBJECT
 
 public:
+    LedBrief (LedDBusInterface *dbusIf);
+
+public slots:
+    void ledStateReceived (bool brief);
+
+public:
     virtual int widgetTypeID () const;
     virtual bool toggle () const;
     virtual void setToggle (bool toggle);
+
+private:
+    LedDBusInterface *m_LedDBusIf;
+    bool              m_LedState;
 };
 
 #endif

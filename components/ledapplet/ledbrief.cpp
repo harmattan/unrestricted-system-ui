@@ -3,9 +3,23 @@
 
 #include "ledbrief.h"
 #include "dcpwidgettypes.h"
+#include "leddbusinterface.h"
 
-//#define DEBUG
+#define DEBUG
 #include "../debug.h"
+
+LedBrief::LedBrief (
+        LedDBusInterface *dbusIf) :
+    m_LedDBusIf (dbusIf),
+    m_LedState (false)
+{
+    Q_ASSERT (dbusIf);
+
+    connect (dbusIf, SIGNAL(ledStateReceived(bool)),
+            this, SLOT (ledStateReceived(bool)));
+
+    dbusIf->ledStateRequired ();
+}
 
 int 
 LedBrief::widgetTypeID () const
@@ -16,18 +30,27 @@ LedBrief::widgetTypeID () const
 bool
 LedBrief::toggle () const
 {
-    SYS_DEBUG ("returning false");
-    /*
-     * Not implemented.
-     */
-    return false;
+    return m_LedState;
 }
 
 void
 LedBrief::setToggle (
         bool toggle)
 {
-    Q_UNUSED (toggle);
+    if (toggle == m_LedState)
+        return;
+
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 }
 
+void
+LedBrief::ledStateReceived (
+        bool state)
+{
+    if (m_LedState == state)
+        return;
+
+    SYS_DEBUG ("state = %s", state ? "on" : "off");
+    m_LedState = state;
+    emit valuesChanged ();
+}

@@ -15,6 +15,9 @@ LedDBusInterface::LedDBusInterface ()
     m_DbusIf = new QDBusInterface (
             "com.nokia.systemui", "/", "com.nokia.systemui.leds",
             QDBusConnection::sessionBus ());
+
+    connect (m_DbusIf, SIGNAL (ledsStateChanged(bool)),
+            this, SIGNAL (ledStateReceived(bool)));
 }
 
 LedDBusInterface::~LedDBusInterface ()
@@ -30,5 +33,28 @@ LedDBusInterface::DBusMessagingFailure (
 		QDBusError error)
 {
     SYS_WARNING ("%s: %s", SYS_STR (error.name()), SYS_STR (error.message()));
+}
+
+void
+LedDBusInterface::ledStateRequired ()
+{
+    SYS_DEBUG ("");
+
+    m_DbusIf->callWithCallback (
+            QString ("LedsEnabled"), QList<QVariant> (),
+            this,
+            SIGNAL (ledStateReceived (bool)),
+            SLOT (DBusMessagingFailure (QDBusError)));
+}
+
+void
+LedDBusInterface::setLedState (
+        bool    state)
+{
+    SYS_DEBUG ("*** state = %s", state ? "on" : "off");
+    m_DbusIf->call (
+            QDBus::NoBlock,
+            QString ("setLedsEnabled"),
+            state);
 }
 
