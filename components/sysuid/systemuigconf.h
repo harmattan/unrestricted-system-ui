@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef SYSTEMUIGCONF_H
 #define SYSTEMUIGCONF_H
 
@@ -7,6 +9,11 @@
 
 class DuiGConfItem;
 
+/*!
+ * Implements a permanent storage for the settings handled by the sysuid daemon.
+ * The configuration items are identified by numerical IDs and stored with the
+ * help of the GConf library.
+ */
 class SystemUIGConf : public QObject
 {
     Q_OBJECT
@@ -44,4 +51,4 @@ private: //attributes
 };
 
 
-#endif // SYSTEMGCONF_H
+#endif

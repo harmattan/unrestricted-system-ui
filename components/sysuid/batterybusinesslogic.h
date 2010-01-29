@@ -57,9 +57,13 @@ private:
 
 };
 
+/*!
+ * Implements the configuration and state for the battery, the power save mode.
+ */
 class BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
+
 public:
     BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent = 0);
     virtual ~BatteryBusinessLogic();
