@@ -15,3 +15,4 @@ LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
     SYS_DEBUG ("");
 }
 
+
