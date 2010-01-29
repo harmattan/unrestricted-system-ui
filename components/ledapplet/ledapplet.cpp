@@ -8,6 +8,7 @@
 #include "ledbrief.h"
 #include "ledapplet.h"
 #include "ledwidget.h"
+#include "leddbusinterface.h"
 
 #define DEBUG
 #include "../debug.h"
@@ -15,6 +16,19 @@
 Q_EXPORT_PLUGIN2(ledapplet, LedApplet)
 
 const QString cssDir = "/usr/share/themes/base/dui/duicontrolpanel/style/";
+
+
+LedApplet::LedApplet ()
+{
+   m_LedDBusInterface = new  LedDBusInterface ();
+}
+
+LedApplet::~LedApplet () 
+{
+    delete m_LedDBusInterface;
+    m_LedDBusInterface = 0;
+}
+
 
 void 
 LedApplet::init ()

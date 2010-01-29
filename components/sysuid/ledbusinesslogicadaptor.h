@@ -13,13 +13,21 @@ class LedBusinessLogic;
 class LedBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.led")
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.leds")
 
 public:
     LedBusinessLogicAdaptor (
             QObject          *parent, 
             LedBusinessLogic *ledLogic);
 
+public slots:
+    Q_NOREPLY void setLedsEnabled (bool enabled);
+    Q_NOREPLY void setIlluminationLedEnabled (bool enabled);
+    Q_NOREPLY void setEventsLedEnabled (bool enabled);
+    bool LedsEnabled ();
+    bool IlluminationLedEnabled ();
+    bool EventsLedEnabled ();
+    
 public:
     LedBusinessLogic   *m_LedLogic;
 };

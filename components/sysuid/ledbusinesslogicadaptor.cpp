@@ -15,4 +15,45 @@ LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
     SYS_DEBUG ("");
 }
 
+void
+LedBusinessLogicAdaptor::setLedsEnabled (
+        bool         enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+}
+
+void
+LedBusinessLogicAdaptor::setIlluminationLedEnabled (
+        bool         enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+}
+
+void
+LedBusinessLogicAdaptor::setEventsLedEnabled (
+        bool         enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+}
+
+bool
+LedBusinessLogicAdaptor::LedsEnabled ()
+{
+    SYS_DEBUG ("");
+    return true;
+}
+
+bool
+LedBusinessLogicAdaptor::IlluminationLedEnabled ()
+{
+    SYS_DEBUG ("");
+    return true;
+}
+
+bool
+LedBusinessLogicAdaptor::EventsLedEnabled ()
+{
+    SYS_DEBUG ("");
+    return true;
+}
 

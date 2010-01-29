@@ -4,7 +4,10 @@
 #define LEDAPPLET_H
 
 #include "dcpappletif.h"
+
 #include <QObject>
+
+class LedDBusInterface;
 
 class LedApplet : public QObject, public DcpAppletIf
 {
@@ -12,12 +15,17 @@ class LedApplet : public QObject, public DcpAppletIf
     Q_INTERFACES (DcpAppletIf)
 
 public:
+    LedApplet ();
+    ~LedApplet ();
+    
     virtual void init();
     virtual DcpWidget* constructWidget(int widgetId);
     virtual QString title() const;
     virtual QVector<DuiAction *> viewMenuItems();
     virtual DcpBrief* constructBrief(int partId);
 
+private:
+    LedDBusInterface   *m_LedDBusInterface;
 };
 
 #endif

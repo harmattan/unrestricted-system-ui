@@ -1,17 +1,16 @@
 TEMPLATE = lib
-CONFIG +=            \
-    silent           \
-    qmsystem         \
-    plugin           \
-    gui              \
-    dui              \
-    debug
-    
+CONFIG += plugin \
+    gui \
+    dui \
+    silent \
+    debug \
+    duicontrolpanel
 
 LIBS += -lduicontrolpanel 
 
 INCLUDEPATH += /usr/include/qt4/dui \
     /usr/include/duicontrolpanel 
+
 
 QT += dbus
 contains(cov, true) { 
@@ -22,17 +21,19 @@ contains(cov, true) {
 MOC_DIR = .moc
 OBJECTS_DIR = .objects
 
-HEADERS =            \
-    ../debug.h       \
-    ledapplet.h      \
-    ledwidget.h      \
+HEADERS =                \
+    ../debug.h           \
+    leddbusinterface.h   \
+    ledapplet.h          \
+    ledwidget.h          \
     ledbrief.h 
 
-SOURCES =            \
-    ../debug.cpp     \
-    ledapplet.cpp    \
-    ledwidget.cpp    \
-    ledbrief.cpp     \
+SOURCES =                \
+    ../debug.cpp         \
+    leddbusinterface.cpp \
+    ledapplet.cpp        \
+    ledwidget.cpp        \
+    ledbrief.cpp
 
 css.files = ledapplet.css
 DESTDIR = lib
@@ -45,3 +46,7 @@ message("CSS path will be: " $$css.path)
 INSTALLS += target \
     css \
     desktop
+    
+OTHER_FILES += ledapplet.css \
+    ledapplet.desktop
+

@@ -6,6 +6,12 @@ CONFIG += plugin \
     debug \
     duicontrolpanel
 
+LIBS += -lduicontrolpanel 
+
+INCLUDEPATH += /usr/include/qt4/dui \
+    /usr/include/duicontrolpanel 
+
+
 QT += dbus
 contains(cov, true) { 
     message("Coverage options enabled")
