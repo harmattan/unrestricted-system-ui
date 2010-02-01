@@ -7,15 +7,11 @@
 #include <DuiLinearLayoutPolicy>
 #include <DuiGridLayoutPolicy>
 
-//#include <qmled.h>
-
 #include "ledwidget.h"
 #include "leddbusinterface.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
-
-//using namespace Maemo;
 
 LedWidget::LedWidget (
         LedDBusInterface  *dbusIf,
@@ -97,15 +93,6 @@ LedWidget::eventsToggled (
         bool newState)
 {
     m_LedDBusInterface->setEventsLedState (newState);
-#if 0
-    QmLED  qmApi;
-
-    SYS_DEBUG ("*** state = %s", newState ? "true" : "false");
-    if (newState)
-        qmApi.enable ();
-    else
-        qmApi.disable ();
-#endif
 }
 
 void

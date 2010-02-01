@@ -5,7 +5,7 @@
 #include "dcpwidgettypes.h"
 #include "leddbusinterface.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LedBrief::LedBrief (

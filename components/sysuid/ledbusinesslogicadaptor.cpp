@@ -4,7 +4,7 @@
 #include "ledbusinesslogicadaptor.h"
 #include "ledbusinesslogic.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
@@ -14,6 +14,13 @@ LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
     m_LedLogic (ledLogic)
 {
     SYS_DEBUG ("");
+
+    connect (ledLogic, SIGNAL(ledsStateChanged(bool)),
+            this, SIGNAL(ledsStateChanged (bool)));
+    connect (ledLogic, SIGNAL(illuminationLedStateChanged(bool)),
+            this, SIGNAL(illuminationLedStateChanged(bool)));
+    connect (ledLogic, SIGNAL(eventsLedStateChanged(bool)),
+            this, SIGNAL(eventsLedStateChanged(bool)));
 }
 
 void

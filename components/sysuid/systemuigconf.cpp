@@ -5,7 +5,7 @@
 #include <DuiGConfItem>
 #include <QDebug>
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 SystemUIGConf::SystemUIGConf (

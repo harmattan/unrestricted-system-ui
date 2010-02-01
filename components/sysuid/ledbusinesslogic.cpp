@@ -3,7 +3,7 @@
 
 #include "ledbusinesslogic.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LedBusinessLogic::LedBusinessLogic (
@@ -14,12 +14,21 @@ LedBusinessLogic::LedBusinessLogic (
     m_Led (new QmLED)
 {
     SYS_DEBUG ("");
+    connect (
+     m_SystemUIGConf, SIGNAL (valueChanged(SystemUIGConf::GConfKey, QVariant)),
+     this, SLOT (gconfValueChanged (SystemUIGConf::GConfKey, QVariant)));
 }
 
 LedBusinessLogic::~LedBusinessLogic ()
 {
     delete m_Led;
     m_Led = 0;
+
+    /*
+     * This is the class that stores the led states in the GConf database, so
+     * here we read the configuration and set the hardware.
+     */
+    ensureLedStates ();
 }
 
 bool
@@ -34,9 +43,7 @@ LedBusinessLogic::setLedsEnabled (
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
     m_SystemUIGConf->setValue (SystemUIGConf::LedAllEnabled, enabled);
-    /*
-     * FIXME: Not implemented yet.
-     */
+    ensureLedStates ();
 }
 
 bool
@@ -52,9 +59,7 @@ LedBusinessLogic::setIlluminationLedEnabled (
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
     m_SystemUIGConf->setValue (SystemUIGConf::LedIlluminationEnabled, enabled);
-    /*
-     * FIXME: Not implemented yet.
-     */
+    ensureLedStates ();
 }
 
 bool
@@ -69,7 +74,49 @@ LedBusinessLogic::setEventsLedEnabled (
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
     m_SystemUIGConf->setValue (SystemUIGConf::LedEventsEnabled, enabled);
-    /*
-     * FIXME: Not implemented yet.
-     */
+    ensureLedStates ();
 }
+
+void 
+LedBusinessLogic::ensureLedStates ()
+{
+    bool allLedEnabled;
+    bool eventsLedEnabled;
+    bool illuminationLedEnabled;
+    
+    allLedEnabled = m_SystemUIGConf->value (
+            SystemUIGConf::LedAllEnabled).toBool();
+    illuminationLedEnabled = m_SystemUIGConf->value (
+            SystemUIGConf::LedIlluminationEnabled).toBool();
+    eventsLedEnabled = m_SystemUIGConf->value (
+            SystemUIGConf::LedEventsEnabled).toBool();
+
+    if (allLedEnabled && eventsLedEnabled)
+        m_Led->enable ();
+    else 
+        m_Led->disable ();
+
+    SYS_WARNING ("Don't know how to turn the illumination led %s",
+        allLedEnabled && illuminationLedEnabled ? "on" : "off");
+}
+
+void 
+LedBusinessLogic::gconfValueChanged (
+        SystemUIGConf::GConfKey key, 
+        QVariant                value)
+{
+    switch (key) {
+        case SystemUIGConf::LedAllEnabled:
+            emit ledsStateChanged(value.toBool());
+            break;
+        
+        case SystemUIGConf::LedIlluminationEnabled:
+            emit illuminationLedStateChanged(value.toBool());
+            break;
+
+        case SystemUIGConf::LedEventsEnabled:
+            emit eventsLedStateChanged(value.toBool());
+            break;
+    }
+}
+

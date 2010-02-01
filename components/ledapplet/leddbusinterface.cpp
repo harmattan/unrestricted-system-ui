@@ -6,7 +6,7 @@
 #include <QDBusError>
 #include <QVariant>
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 LedDBusInterface::LedDBusInterface ()

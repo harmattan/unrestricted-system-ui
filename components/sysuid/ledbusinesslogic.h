@@ -27,7 +27,17 @@ public:
     bool eventsLedEnabled ();
     void setEventsLedEnabled (bool enabled);
 
+signals: 
+    void ledsStateChanged(bool enabled);
+    void illuminationLedStateChanged(bool enabled);
+    void eventsLedStateChanged(bool enabled);
+
+
+private slots:
+    void gconfValueChanged (SystemUIGConf::GConfKey key, QVariant value);
+
 private:
+    void ensureLedStates ();
     SystemUIGConf      *m_SystemUIGConf;
     QmLED              *m_Led;
 };
