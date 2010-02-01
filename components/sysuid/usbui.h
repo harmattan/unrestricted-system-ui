@@ -18,7 +18,7 @@ class UsbUi : public QObject
 
     private slots:
         void ShowDialog ();
-        void UsbEvent (UsbCableType cable);
+        void UsbEvent (bool Connected);
         void OviSuiteSelected ();
         void MassStorageSelected ();
 

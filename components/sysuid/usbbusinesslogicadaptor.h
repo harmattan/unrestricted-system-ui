@@ -20,14 +20,17 @@ signals:
     // Its emitted when some USB mode activated/deactivated
     // (Ovi Suite mode, Mass Storage mode)
     // This can be used eg. for the status-area usb icon
-    void UsbModeChanged (bool active);
+    void Active (bool active);
+    void Connected (bool connected);
 
 public slots:
     // Its for testing: 
     Q_NOREPLY void testUsbConnection (bool connected);
     // Its for eg.: statusindicator menu plugin:
     Q_NOREPLY void ShowModeSelectionDialog ();
-    bool UsbMode (); 
+
+    bool isActive (); 
+    bool isConnected ();
 
 private:
     UsbBusinessLogic   *m_usb;

@@ -21,8 +21,8 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
 {
     m_logic = new UsbBusinessLogic (this);
 
-    QObject::connect (m_logic, SIGNAL (UsbCableEvent (UsbCableType)),
-                      this, SLOT (UsbEvent (UsbCableType)));
+    QObject::connect (m_logic, SIGNAL (Connected (bool)),
+                      this, SLOT (UsbEvent (bool)));
 
     // It is for UsbBusinessLogicAdaptor:
     QObject::connect (m_logic, SIGNAL (ShowDialog ()),
@@ -81,7 +81,7 @@ UsbUi::ShowDialog ()
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
-    hbox = new DuiWidget (m_dialog);
+    hbox = new DuiWidget;
     hbox->setLayout (layout);
 
     m_dialog->setCentralWidget (hbox);
@@ -112,7 +112,7 @@ UsbUi::MassStorageSelected ()
 
 // Showing notification on connection/disconnection
 void
-UsbUi::UsbEvent (UsbCableType cable)
+UsbUi::UsbEvent (bool connected)
 {
     SYS_DEBUG ("");
 
@@ -124,7 +124,7 @@ UsbUi::UsbEvent (UsbCableType cable)
         m_notification = 0;
     }
 
-    if (cable == CABLE_NONE)
+    if (connected == false)
     {
         //% "Usb disconnected"
         m_notification = new DuiNotification ("",
@@ -136,11 +136,6 @@ UsbUi::UsbEvent (UsbCableType cable)
         if (m_dialog)
             m_dialog->disappear ();
 
-        return;
-    }
-    else if (cable == CABLE_HOST)
-    {
-        // Not implemented ...
         return;
     }
 
