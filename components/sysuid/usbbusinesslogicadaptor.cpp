@@ -10,35 +10,44 @@ UsbBusinessLogicAdaptor::UsbBusinessLogicAdaptor (
     m_usb (usb)
 {
     QObject::connect (m_usb, SIGNAL (Active (bool)),
-                      this, SIGNAL (UsbModeChanged (bool)));
+                      this, SIGNAL (Active (bool)));
+    QObject::connect (m_usb, SIGNAL (Connected (bool)),
+                      this, SIGNAL (Connected (bool)));
 }
 
 void
 UsbBusinessLogicAdaptor::testUsbConnection (
     bool connected)
 {
-    if (connected)
-        m_usb->emitUsbCableEvent (CABLE_PERIPHERAL);
-    else
-        m_usb->emitUsbCableEvent (CABLE_NONE);
+    m_usb->emitConnected (connected);
+    // And of course, UsbBusinessLogic should emit itself connected signal:
+    emit Connected (connected);
 }
 
 void
 UsbBusinessLogicAdaptor::ShowModeSelectionDialog ()
 {
-    if (m_usb->getCableType () != CABLE_PERIPHERAL)
+    if (m_usb->isConnected () == false)
     {
         SYS_WARNING (" called when usb peripheral cable isn't connected!");
     }
     m_usb->emitShowDialog (); 
 }
 
-// This function just proxy-ing the query
+// This function just proxying the query
 // to the businesslogic isActive method
 bool
-UsbBusinessLogicAdaptor::UsbMode ()
+UsbBusinessLogicAdaptor::isActive ()
 {
     return m_usb->isActive ();
+}
+
+// This function just proxying the query
+// to the businesslogic isConnected method
+bool
+UsbBusinessLogicAdaptor::isConnected ()
+{
+    return m_usb->isConnected ();
 }
 
 

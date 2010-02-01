@@ -10,12 +10,6 @@
 
 #include "../usbapplet/usbmodes.h"
 
-typedef enum {
-    CABLE_PERIPHERAL = 1,
-    CABLE_HOST,
-    CABLE_NONE
-} UsbCableType;
-
 class UsbBusinessLogic : public QObject
 {
     Q_OBJECT
@@ -25,17 +19,18 @@ class UsbBusinessLogic : public QObject
         ~UsbBusinessLogic ();
 
         void setMode (usb_modes new_mode);
-        UsbCableType getCableType ();
         usb_modes getModeSetting ();
         bool isActive ();
+        bool isConnected ();
 
-        void emitUsbCableEvent (UsbCableType cable);
         void emitShowDialog ();
+        // Its for testing:
+        void emitConnected (bool connected);
 
     signals:
-        void UsbCableEvent (UsbCableType cable);
         void ShowDialog ();
         void Active (bool active);
+        void Connected (bool connected);
 
     private slots:
         void usb_prop_changed (const QDBusMessage &msg);
@@ -43,10 +38,12 @@ class UsbBusinessLogic : public QObject
 
     private:
         void init_device (QString &udi);
+        int  getCableType ();
 
         DuiGConfItem    *m_setting; 
         QDBusInterface  *m_hal;
         bool             m_active;
+        bool             m_connected;
 
 };
 

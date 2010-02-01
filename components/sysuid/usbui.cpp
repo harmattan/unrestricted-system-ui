@@ -1,6 +1,8 @@
 #include "usbui.h"
 #include "usbbusinesslogic.h"
 
+#include <QGraphicsLinearLayout>
+#include <DuiWidget>
 #include <DuiNotification>
 #include <DuiSceneWindow>
 #include <DuiButton>
@@ -19,8 +21,8 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
 {
     m_logic = new UsbBusinessLogic (this);
 
-    QObject::connect (m_logic, SIGNAL (UsbCableEvent (UsbCableType)),
-                      this, SLOT (UsbEvent (UsbCableType)));
+    QObject::connect (m_logic, SIGNAL (Connected (bool)),
+                      this, SLOT (UsbEvent (bool)));
 
     // It is for UsbBusinessLogicAdaptor:
     QObject::connect (m_logic, SIGNAL (ShowDialog ()),
@@ -39,12 +41,12 @@ UsbUi::~UsbUi ()
 
 // Showing the mode selection dialog
 // (when mode is usb-auto / "ask on connection")
-// TODO: test this, how does it looks?
 void
 UsbUi::ShowDialog ()
 {
     SYS_DEBUG ("");
-    DuiButtonModel  *button;
+    DuiButton  *button;
+    DuiWidget  *hbox;
 
     if (m_dialog)
     {
@@ -59,16 +61,32 @@ UsbUi::ShowDialog ()
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
     m_dialog->setWindowModal (true);
 
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+
     //% "Ovi Suite"
-    button = m_dialog->addButton (qtTrId ("qtn_usb_ovi_suite"));
+    button = new DuiButton (qtTrId ("qtn_usb_ovi_suite"), m_dialog);
+
+    layout->addItem (button);
+    layout->setStretchFactor (button, 1);
+
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (OviSuiteSelected ()));
 
     //% "Mass Storage"
-    button = m_dialog->addButton (qtTrId ("qtn_usb_mass_storage"));
+    button = new DuiButton (qtTrId ("qtn_usb_mass_storage"), m_dialog);
+
+    layout->addItem (button);
+    layout->setStretchFactor (button, 1);
+
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
+    hbox = new DuiWidget;
+    hbox->setLayout (layout);
+
+    m_dialog->setCentralWidget (hbox);
+
+    m_dialog->setButtonBoxVisible (false);
     m_dialog->appear ();
 }
 
@@ -76,8 +94,9 @@ void
 UsbUi::OviSuiteSelected ()
 {
     SYS_DEBUG ("");
+
     m_logic->setMode (USB_OVI_SUITE);
-    // XXX: do we need this?
+
     m_dialog->disappear ();
 }
 
@@ -85,14 +104,15 @@ void
 UsbUi::MassStorageSelected ()
 {
     SYS_DEBUG ("");
+
     m_logic->setMode (USB_MASS_STORAGE);
-    // XXX: do we need this?
+
     m_dialog->disappear ();
 }
 
 // Showing notification on connection/disconnection
 void
-UsbUi::UsbEvent (UsbCableType cable)
+UsbUi::UsbEvent (bool connected)
 {
     SYS_DEBUG ("");
 
@@ -103,22 +123,19 @@ UsbUi::UsbEvent (UsbCableType cable)
         delete m_notification;
         m_notification = 0;
     }
-    // FIXME: add some nice icons to the notificitations
 
-    if (cable == CABLE_NONE)
+    if (connected == false)
     {
-        //% "Usb-cable disconnected"
-        m_notification = new DuiNotification ("", "", qtTrId ("qtn_usb_disconnected"));
+        //% "Usb disconnected"
+        m_notification = new DuiNotification ("",
+                                              "",
+                                              qtTrId ("qtn_usb_disconnected"),
+                                              "icon-m-usb");
 
         // Hide the mode-selection dialog
         if (m_dialog)
             m_dialog->disappear ();
 
-        return;
-    }
-    else if (cable == CABLE_HOST)
-    {
-        // Not implemented ...
         return;
     }
 
@@ -150,7 +167,10 @@ UsbUi::UsbEvent (UsbCableType cable)
 
     //% "<b>Usb connected</b><br />Selected mode: <b>%1</b>"
     m_notification =
-        new DuiNotification ("", "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
+        new DuiNotification ("",
+                             "",
+                             qtTrId ("qtn_usb_connected_%1").arg (*mode_text),
+                             "icon-m-usb");
 }
 
 // for dbus adaptor

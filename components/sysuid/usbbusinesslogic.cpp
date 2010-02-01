@@ -16,11 +16,18 @@
 #define DEFAULT_USB_CABLE_UDI \
     "/org/freedesktop/Hal/devices/usb_device_1d6b_2_musb_hdrc"
 
+enum UsbCableType {
+    CABLE_PERIPHERAL = 1,
+    CABLE_HOST,
+    CABLE_NONE
+};
+
 UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     QObject (parent),
     m_setting (0),
     m_hal (0),
-    m_active (false)
+    m_active (false),
+    m_connected (false)
 {
     m_setting = new DuiGConfItem (USB_GCONF_KEY);
 
@@ -95,7 +102,7 @@ UsbBusinessLogic::getModeSetting ()
     return current_mode;
 }
 
-UsbCableType
+int
 UsbBusinessLogic::getCableType ()
 {
     QDBusMessage reply = m_hal->call("GetProperty", "usb_device.mode");
@@ -161,12 +168,18 @@ UsbBusinessLogic::init_device (QString &udi)
         "org.freedesktop.Hal", udi, "org.freedesktop.Hal.Device",
         "PropertyModified", // <- SLOT
         this, SLOT (usb_prop_changed (const QDBusMessage &)));
+
+    if (getCableType () == CABLE_PERIPHERAL)
+    {
+        m_connected = true;
+        emit Connected (m_connected);
+    }
 }
 
 void
 UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
 {
-    UsbCableType current = getCableType ();
+    int current = getCableType ();
 
     Q_UNUSED(msg)
 
@@ -186,15 +199,20 @@ UsbBusinessLogic::usb_prop_changed (const QDBusMessage &msg)
     }
 #endif
 
-    // INFO: i can show usb-cable-(dis)connected info msg...
-    emit (UsbCableEvent (current));
-
     if (current != CABLE_PERIPHERAL)
     { // peripheral cable disconnected
-        m_active = false;
-        emit Active (false);
-        return;
+        if (m_active == true)
+        {
+            m_active = false;
+            emit Active (false);
+        }
+        
+        m_connected = false;
     }
+    else
+        m_connected = true;
+
+    emit Connected (m_connected);
 }
 
 // Returns whether the device has an active usb connection
@@ -205,10 +223,17 @@ UsbBusinessLogic::isActive ()
     return m_active;
 }
 
-void
-UsbBusinessLogic::emitUsbCableEvent (UsbCableType cable)
+// Returns true when a peripheral usb cable connected to the device
+bool
+UsbBusinessLogic::isConnected ()
 {
-    emit UsbCableEvent (cable);
+    return m_connected;
+}
+
+void
+UsbBusinessLogic::emitConnected (bool connected)
+{
+    emit Connected (connected);
 }
 
 void
