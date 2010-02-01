@@ -22,4 +22,21 @@ LedBusinessLogic::~LedBusinessLogic ()
     m_Led = 0;
 }
 
+bool
+LedBusinessLogic::ledsEnabled ()
+{
+    return m_SystemUIGConf->value (SystemUIGConf::LedAllEnabled).toBool();
+}
+
+void
+LedBusinessLogic::setLedsEnabled (
+        bool enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_SystemUIGConf->setValue (SystemUIGConf::LedAllEnabled, enabled);
+    /*
+     * FIXME: Not implemented yet.
+     */
+
+}
 

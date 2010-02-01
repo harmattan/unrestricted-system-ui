@@ -19,6 +19,10 @@ SystemUIGConf::SystemUIGConf (
     duiGConfItems.insert (SystemUIGConf::BatteryPSMThresholdKey, 
             new DuiGConfItem (
                 mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
+    
+    duiGConfItems.insert (SystemUIGConf::LedAllEnabled, 
+            new DuiGConfItem (
+                mapGConfKey(SystemUIGConf::LedAllEnabled)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -97,6 +101,10 @@ SystemUIGConf::mapGConfKeyGroup (
             keyGroupStr = "/systemui/settings/battery";
             break;
 
+        case SystemUIGConf::Led:
+            keyGroupStr = "/systemui/settings/leds";
+            break;
+
         default:
             break;
     }
@@ -111,21 +119,29 @@ QString
 SystemUIGConf::mapGConfKey (
         SystemUIGConf::GConfKey key)
 {
-    QString keyStr("%1%2");
+    QString keyStr;
 
     switch (key) {
         case SystemUIGConf::BatteryPSMAutoKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg(
-                    "/batteryPSMAuto");
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Battery) +
+                    "/batteryPSMAuto";
             break;
+
         case SystemUIGConf::BatteryPSMThresholdKey:
-            keyStr = keyStr.arg(mapGConfKeyGroup(SystemUIGConf::Battery)).arg(
-                    "/batteryPSMThreshold");
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Battery) +
+                    "/batteryPSMThreshold";
             break;
+
+        case SystemUIGConf::LedAllEnabled:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/allLedsEnabled";
+            break;
+
         default:
             break;
     }
 
+    SYS_DEBUG ("Returning '%s'", SYS_STR(keyStr));
     return keyStr;
 }
 

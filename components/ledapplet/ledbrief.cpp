@@ -41,6 +41,7 @@ LedBrief::setToggle (
         return;
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+    m_LedDBusIf->setLedState (toggle);
 }
 
 void

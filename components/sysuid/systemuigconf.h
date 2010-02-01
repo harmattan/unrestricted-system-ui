@@ -20,12 +20,14 @@ class SystemUIGConf : public QObject
 public:
 
     enum GConfKeyGroup {
-        Battery = 0
+        Battery = 0,
+        Led
     };
 
     enum GConfKey {
-        BatteryPSMAutoKey = 0,
-        BatteryPSMThresholdKey
+        BatteryPSMAutoKey       = 0,
+        BatteryPSMThresholdKey,
+        LedAllEnabled,
     };
 
     SystemUIGConf(QObject* parent = 0);

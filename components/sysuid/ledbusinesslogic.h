@@ -18,6 +18,9 @@ public:
     LedBusinessLogic (SystemUIGConf *systemUIGConf, QObject *parent = 0);
     ~LedBusinessLogic ();
 
+    bool ledsEnabled ();
+    void setLedsEnabled (bool enabled);
+    
 private:
     SystemUIGConf      *m_SystemUIGConf;
     QmLED              *m_Led;

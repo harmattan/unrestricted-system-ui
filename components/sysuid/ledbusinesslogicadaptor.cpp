@@ -2,6 +2,7 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include "ledbusinesslogicadaptor.h"
+#include "ledbusinesslogic.h"
 
 #define DEBUG
 #include "../debug.h"
@@ -20,6 +21,7 @@ LedBusinessLogicAdaptor::setLedsEnabled (
         bool         enabled)
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_LedLogic->setLedsEnabled (enabled);
 }
 
 void
@@ -40,7 +42,7 @@ bool
 LedBusinessLogicAdaptor::LedsEnabled ()
 {
     SYS_DEBUG ("");
-    return true;
+    return m_LedLogic->ledsEnabled ();
 }
 
 bool
