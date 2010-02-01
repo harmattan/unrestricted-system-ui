@@ -6,9 +6,11 @@
 #include <DuiButton>
 #include <DuiLinearLayoutPolicy>
 #include <DuiGridLayoutPolicy>
+
 //#include <qmled.h>
 
 #include "ledwidget.h"
+#include "leddbusinterface.h"
 
 #define DEBUG
 #include "../debug.h"
@@ -16,11 +18,22 @@
 //using namespace Maemo;
 
 LedWidget::LedWidget (
-        QGraphicsWidget *parent):
-    DcpWidget (parent)
+        LedDBusInterface  *dbusIf,
+        QGraphicsWidget   *parent):
+    DcpWidget (parent),
+    m_LedDBusInterface (dbusIf)
 {
     SYS_DEBUG ("");
     initWidget ();
+
+    connect (m_LedDBusInterface, SIGNAL(illuminationLedStateReceived(bool)),
+            this, SLOT(illuminationLedStateReceived(bool)));
+    
+    connect (m_LedDBusInterface, SIGNAL(eventsLedStateReceived(bool)),
+            this, SLOT(eventsLedStateReceived(bool)));
+
+    m_LedDBusInterface->illuminationLedStateRequired ();
+    m_LedDBusInterface->eventsLedStateRequired ();
 }
 
 /*!
@@ -76,12 +89,14 @@ LedWidget::illuminationToggled (
         bool newState)
 {
     SYS_DEBUG ("*** state = %s", newState ? "true" : "false");
+    m_LedDBusInterface->setIlluminationLedState (newState);
 }
 
 void 
 LedWidget::eventsToggled (
         bool newState)
 {
+    m_LedDBusInterface->setEventsLedState (newState);
 #if 0
     QmLED  qmApi;
 
@@ -92,3 +107,20 @@ LedWidget::eventsToggled (
         qmApi.disable ();
 #endif
 }
+
+void
+LedWidget::illuminationLedStateReceived (
+        bool enabled)
+{
+    SYS_DEBUG ("enabled = %s", enabled ? "yes" : "no");
+    m_IlluminationButton->setChecked (enabled);
+}
+
+void 
+LedWidget::eventsLedStateReceived (
+        bool enabled)
+{
+    SYS_DEBUG ("enabled = %s", enabled ? "yes" : "no");
+    m_EventsButton->setChecked (enabled);
+}
+

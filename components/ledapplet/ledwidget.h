@@ -6,13 +6,14 @@
 #include "dcpwidget.h"
 
 class DuiButton;
+class LedDBusInterface;
 
 class LedWidget : public DcpWidget
 {
     Q_OBJECT
 
 public:
-    LedWidget (QGraphicsWidget *parent = 0);
+    LedWidget (LedDBusInterface *dbusIf, QGraphicsWidget *parent = 0);
 
 protected:
     void initWidget (void);
@@ -21,8 +22,12 @@ protected slots:
     void illuminationToggled (bool newState);
     void eventsToggled       (bool newState);
 
+    void illuminationLedStateReceived (bool enabled);
+    void eventsLedStateReceived (bool enabled);
+
 private:
-    DuiButton   *m_IlluminationButton;
-    DuiButton   *m_EventsButton;
+    LedDBusInterface   *m_LedDBusInterface;
+    DuiButton          *m_IlluminationButton;
+    DuiButton          *m_EventsButton;
 };
 #endif

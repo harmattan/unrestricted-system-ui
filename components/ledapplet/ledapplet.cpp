@@ -43,7 +43,7 @@ LedApplet::constructWidget (
     Q_UNUSED (widgetId);
 
     SYS_DEBUG ("Contructing LedWidget");
-    return new LedWidget ();
+    return new LedWidget (m_LedDBusInterface);
 }
 
 QString

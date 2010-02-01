@@ -23,6 +23,14 @@ SystemUIGConf::SystemUIGConf (
     duiGConfItems.insert (SystemUIGConf::LedAllEnabled, 
             new DuiGConfItem (
                 mapGConfKey(SystemUIGConf::LedAllEnabled)));
+    
+    duiGConfItems.insert (SystemUIGConf::LedEventsEnabled, 
+            new DuiGConfItem (
+                mapGConfKey(SystemUIGConf::LedEventsEnabled)));
+    
+    duiGConfItems.insert (SystemUIGConf::LedIlluminationEnabled, 
+            new DuiGConfItem (
+                mapGConfKey(SystemUIGConf::LedIlluminationEnabled)));
 
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -135,6 +143,16 @@ SystemUIGConf::mapGConfKey (
         case SystemUIGConf::LedAllEnabled:
             keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
                     "/allLedsEnabled";
+            break;
+        
+        case SystemUIGConf::LedEventsEnabled:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/eventsLedEnabled";
+            break;
+        
+        case SystemUIGConf::LedIlluminationEnabled:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/illuminationLedEnabled";
             break;
 
         default:

@@ -49,12 +49,57 @@ LedDBusInterface::ledStateRequired ()
 
 void
 LedDBusInterface::setLedState (
-        bool    state)
+        bool    enabled)
 {
-    SYS_DEBUG ("*** state = %s", state ? "on" : "off");
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
     m_DbusIf->call (
             QDBus::NoBlock,
             QString ("setLedsEnabled"),
-            state);
+            enabled);
 }
 
+void
+LedDBusInterface::illuminationLedStateRequired ()
+{
+    SYS_DEBUG ("");
+
+    m_DbusIf->callWithCallback (
+            QString ("IlluminationLedEnabled"), QList<QVariant> (),
+            this,
+            SIGNAL (illuminationLedStateReceived (bool)),
+            SLOT (DBusMessagingFailure (QDBusError)));
+}
+
+void
+LedDBusInterface::setIlluminationLedState (
+        bool    enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_DbusIf->call (
+            QDBus::NoBlock,
+            QString ("setIlluminationLedEnabled"),
+            enabled);
+}
+
+void
+LedDBusInterface::eventsLedStateRequired ()
+{
+    SYS_DEBUG ("");
+
+    m_DbusIf->callWithCallback (
+            QString ("EventsLedEnabled"), QList<QVariant> (),
+            this,
+            SIGNAL (eventsLedStateReceived (bool)),
+            SLOT (DBusMessagingFailure (QDBusError)));
+}
+
+void
+LedDBusInterface::setEventsLedState (
+        bool    enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_DbusIf->call (
+            QDBus::NoBlock,
+            QString ("setEventsLedEnabled"),
+            enabled);
+}

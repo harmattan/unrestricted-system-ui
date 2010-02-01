@@ -37,6 +37,39 @@ LedBusinessLogic::setLedsEnabled (
     /*
      * FIXME: Not implemented yet.
      */
-
 }
 
+bool
+LedBusinessLogic::illuminationLedEnabled ()
+{
+    return m_SystemUIGConf->value (
+            SystemUIGConf::LedIlluminationEnabled).toBool();
+}
+
+void
+LedBusinessLogic::setIlluminationLedEnabled (
+        bool enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_SystemUIGConf->setValue (SystemUIGConf::LedIlluminationEnabled, enabled);
+    /*
+     * FIXME: Not implemented yet.
+     */
+}
+
+bool
+LedBusinessLogic::eventsLedEnabled ()
+{
+    return m_SystemUIGConf->value (SystemUIGConf::LedEventsEnabled).toBool();
+}
+
+void
+LedBusinessLogic::setEventsLedEnabled (
+        bool enabled)
+{
+    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_SystemUIGConf->setValue (SystemUIGConf::LedEventsEnabled, enabled);
+    /*
+     * FIXME: Not implemented yet.
+     */
+}

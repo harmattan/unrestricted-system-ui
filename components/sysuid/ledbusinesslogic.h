@@ -21,6 +21,12 @@ public:
     bool ledsEnabled ();
     void setLedsEnabled (bool enabled);
     
+    bool illuminationLedEnabled ();
+    void setIlluminationLedEnabled (bool enabled);
+    
+    bool eventsLedEnabled ();
+    void setEventsLedEnabled (bool enabled);
+
 private:
     SystemUIGConf      *m_SystemUIGConf;
     QmLED              *m_Led;

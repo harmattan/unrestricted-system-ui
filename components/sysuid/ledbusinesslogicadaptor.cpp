@@ -29,6 +29,7 @@ LedBusinessLogicAdaptor::setIlluminationLedEnabled (
         bool         enabled)
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_LedLogic->setIlluminationLedEnabled (enabled);
 }
 
 void
@@ -36,6 +37,7 @@ LedBusinessLogicAdaptor::setEventsLedEnabled (
         bool         enabled)
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    m_LedLogic->setEventsLedEnabled (enabled);
 }
 
 bool
@@ -49,13 +51,13 @@ bool
 LedBusinessLogicAdaptor::IlluminationLedEnabled ()
 {
     SYS_DEBUG ("");
-    return true;
+    return m_LedLogic->illuminationLedEnabled ();
 }
 
 bool
 LedBusinessLogicAdaptor::EventsLedEnabled ()
 {
     SYS_DEBUG ("");
-    return true;
+    return m_LedLogic->eventsLedEnabled ();
 }
 
