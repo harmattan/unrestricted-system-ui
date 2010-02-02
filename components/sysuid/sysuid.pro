@@ -65,8 +65,17 @@ style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
 style_images.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/images
 
+# TODO: remove these when ke-recv going to be integrated:
+usb_scripts.files += pcsuite-enable.sh
+usb_scripts.path = $$(DEBIAN_DESTDIR)/usr/bin
+
+usb_sudoers.files += usb.sudoers
+usb_sudoers.path = $$(DEBIAN_DESTDIR)/etc/sudoers.d
+
 INSTALLS += target \
             style_sheet \
             style_svg \
-            style_images
+            style_images \
+            usb_scripts \
+            usb_sudoers
 

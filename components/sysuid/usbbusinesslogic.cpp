@@ -1,5 +1,6 @@
 #include "usbbusinesslogic.h"
 
+#include <QProcess>
 #include <QDBusMessage>
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -60,13 +61,20 @@ UsbBusinessLogic::~UsbBusinessLogic ()
 void
 UsbBusinessLogic::setMode (usb_modes new_mode)
 {
+    QProcess    process;
+
     // FIXME: ke-recv needed to do these things ...
     switch (new_mode)
     {
         case USB_OVI_SUITE:  
-            SYS_DEBUG ("not-implemented: Ovi Suite mode");
-            // TODO: ask ke-recv to switch device to
+#ifdef __ARMEL__
+            SYS_DEBUG ("Workarund for Ovi Suite mode: /usr/bin/pcsuite-enable.sh");
+            // FIXME: ask ke-recv to switch device to
             //       pc-suite mode
+            process.start ("/usr/bin/sudo /usr/bin/pcsuite-enable.sh");
+#else
+            SYS_DEBUG ("Ovi Suite mode activated (no-op in i386 target)");
+#endif
             m_active = true;
             emit Active (true);
             break;
