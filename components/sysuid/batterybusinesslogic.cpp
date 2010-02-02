@@ -307,9 +307,7 @@ void
 BatteryBusinessLogic::batteryEnergyLevelChanged (
         int percentage)
 {
-    qDebug() << 
-        "BatteryBusinessLogic::batteryEnergyLevelChanged(" << 
-        percentage << ")";
+    SYS_DEBUG ("*** percentage = %d", percentage);
 
     emit batteryBarValueChanged (batteryBarValue(percentage));
     emit remainingTimeValuesChanged (remainingTimeValues());
@@ -432,14 +430,15 @@ BatteryBusinessLogic::remainingTimeValues ()
         Maemo::QmDeviceMode::PSMState state = m_DeviceMode->getPSMState();
         Maemo::QmBattery::RemainingTimeMode mode;
         switch (state) {
-        case Maemo::QmDeviceMode::PSMStateOn:
-            mode = Maemo::QmBattery::PowersaveMode;
-            break;
-        case Maemo::QmDeviceMode::PSMStateOff:
-            mode = Maemo::QmBattery::NormalMode;
-            break;
-        default:
-            return QStringList() << "N/A" << "N/A";
+            case Maemo::QmDeviceMode::PSMStateOn:
+                mode = Maemo::QmBattery::PowersaveMode;
+                break;
+            case Maemo::QmDeviceMode::PSMStateOff:
+            default:
+                mode = Maemo::QmBattery::NormalMode;
+                break;
+                // This was the default...
+                //return QStringList() << "N/A" << "N/A";
         }
         values << QString("%1").arg(m_Battery->getRemainingTalkTime(mode) / 60)
             << QString("%1").arg(m_Battery->getRemainingIdleTime(mode) / 60);
