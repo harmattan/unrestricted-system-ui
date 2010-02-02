@@ -95,6 +95,11 @@ ProfileWidget::initProfiles ()
     this->setLayout (mainLayout);
 }
 
+/*!
+ * FIXME: The UI spec has been changed, the portrait and the landscape policy is
+ * the same. The code is not changed yet, I'm afraid the UI spec might be
+ * changed back...
+ */
 DuiContainer * 
 ProfileWidget::createContainer ()
 {
@@ -130,8 +135,9 @@ ProfileWidget::createContainer ()
         }
     }
 
-    layout->setLandscapePolicy (landscapePolicy); // ownership transferred
-    layout->setPortraitPolicy (portraitPolicy); // ownership transferred
+    //layout->setLandscapePolicy (landscapePolicy);
+    //layout->setPortraitPolicy (portraitPolicy);
+    layout->setPolicy (portraitPolicy);
 
     DuiContainer *container = new DuiContainer ();
     container->centralWidget()->setLayout (layout);

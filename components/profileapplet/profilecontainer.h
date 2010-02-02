@@ -6,6 +6,7 @@
 
 #include <DuiContainer>
 
+class DuiLabel;
 class DuiButton;
 class DuiSlider;
 class DuiImageWidget;
@@ -37,16 +38,19 @@ signals:
 
 private slots:
     void slotSliderValueChanged (int newValue); 
+    void slotVibrationSwitchToggled (bool toggle);
     
 private:
     void setLayout();
 
 private:
-    DuiSlider   *m_Slider;
-    DuiButton   *m_Button;
+    DuiSlider         *m_Slider;
+    DuiButton         *m_VibrationSwitch;
+    DuiLabel          *m_VibrationLabel;
+    DuiLabel          *m_OnOffLabel;
     DuiImageWidget    *m_Img;
-    int          m_Level;
-    const int    m_ProfileId;
+    int                m_Level;
+    const int          m_ProfileId;
 };
 
-#endif // PROFILECONTAINER_H
+#endif

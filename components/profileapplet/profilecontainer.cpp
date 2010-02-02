@@ -4,15 +4,18 @@
 #include "profilecontainer.h"
 #include "profilebuttons.h"
 
+#include <QGraphicsLinearLayout>
 #include <DuiButton>
 #include <DuiSlider>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiImageWidget>
 #include <DuiGridLayoutPolicy>
+#include <DuiLinearLayoutPolicy>
+#include <DuiSeparator>
 #include <QDebug>
 
-//#define DEBUG
+#define DEBUG
 #include "../debug.h"
 
 namespace ProfileApplet
@@ -33,7 +36,7 @@ ProfileContainer::ProfileContainer (
     m_Level (-2),
     m_ProfileId (id)
 {
-    qDebug() << Q_FUNC_INFO << title;
+    SYS_DEBUG ("Creating container for %s", SYS_STR(title)); 
 
     if (0 <= level) {
         /*
@@ -60,11 +63,18 @@ ProfileContainer::ProfileContainer (
     }
 
     //% "Vibration"
-    m_Button = new DuiButton (qtTrId ("qtn_prof_vibration"));
-    m_Button->setCheckable (true);
+    m_VibrationLabel = new DuiLabel (qtTrId ("qtn_prof_vibration"));
+
+    m_OnOffLabel = new DuiLabel ();
+
+    m_VibrationSwitch = new DuiButton;
+    m_VibrationSwitch->setCheckable (true);
+    m_VibrationSwitch->setViewType (DuiButton::switchType);
+
+
     setVibration (vibra);
-    connect (m_Button, SIGNAL(toggled(bool)), 
-            this, SIGNAL(vibrationChanged(bool)));
+    connect (m_VibrationSwitch, SIGNAL(toggled(bool)), 
+            this, SLOT(slotVibrationSwitchToggled(bool)));
 
     setLayout ();
 }
@@ -77,17 +87,23 @@ ProfileContainer::~ProfileContainer()
 void 
 ProfileContainer::setLayout ()
 {
-    DuiLayout *layout = new DuiLayout();
+    QGraphicsLayoutItem   *item;
+    QGraphicsLinearLayout *hbox, *hbox1, *vbox;
+    DuiLayout             *layout = new DuiLayout();
+    DuiSeparator          *vSep, *hSep;
+    DuiLinearLayoutPolicy *landscapePolicy, *portraitPolicy;
+    
+    SYS_DEBUG ("");
 
-    DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy(layout);
-    layout->setLandscapePolicy(landscapePolicy); // ownership transferred
-
-    DuiGridLayoutPolicy *portraitPolicy = new DuiGridLayoutPolicy(layout);
-    layout->setPortraitPolicy(portraitPolicy); // ownership transferred
-
-
-    QGraphicsLayoutItem* item = NULL;
-
+    landscapePolicy = new DuiLinearLayoutPolicy (layout, Qt::Horizontal);
+    portraitPolicy  = new DuiLinearLayoutPolicy (layout, Qt::Vertical);
+    #if 0
+    layout->setLandscapePolicy (portraitPolicy);
+    layout->setPortraitPolicy (landscapePolicy);
+    #else
+    layout->setLandscapePolicy (landscapePolicy);
+    layout->setPortraitPolicy (portraitPolicy);
+    #endif
     /*
      * FIXME: Ok, but what happens when we change the 'mute' state?
      */
@@ -101,15 +117,36 @@ ProfileContainer::setLayout ()
     }
     m_Img->setObjectName ("speakerIcon");
 
+    vSep = new DuiSeparator (this, Qt::Vertical);
+    hSep = new DuiSeparator (this, Qt::Horizontal);
+
+    vbox = new QGraphicsLinearLayout (Qt::Vertical);
+    vbox->setSpacing (0.0);
+    vbox->addItem (m_VibrationLabel);
+    vbox->addItem (m_OnOffLabel);
+
+    hbox = new QGraphicsLinearLayout (Qt::Horizontal);
+    hbox->addItem (vbox);
+    hbox->addItem (m_VibrationSwitch);
+    hbox->setAlignment (vbox, Qt::AlignCenter);
+    hbox->setAlignment (m_VibrationSwitch, Qt::AlignCenter);
+
+    hbox1 = new QGraphicsLinearLayout (Qt::Horizontal);
+    hbox1->addItem (m_Img);
+    hbox1->addItem (item);
+    hbox1->setAlignment (m_Img, Qt::AlignCenter);
+    hbox1->setAlignment (item, Qt::AlignCenter);
+
     /*
      * Adding the widgets to the proper places.
      */
-    landscapePolicy->addItem(m_Img, 0, 0);
-    portraitPolicy->addItem(m_Img, 0, 0);
-    landscapePolicy->addItem(item, 0, 1);
-    portraitPolicy->addItem(item, 0, 1);
-    landscapePolicy->addItem(m_Button, 1, 0, 1, 2);
-    portraitPolicy->addItem(m_Button, 1, 0, 1, 2);
+    landscapePolicy->addItem (hbox1);
+    landscapePolicy->addItem (vSep);
+    landscapePolicy->addItem (hbox);
+    
+    portraitPolicy->addItem (hbox1);
+    portraitPolicy->addItem (hSep);
+    portraitPolicy->addItem (hbox);
     
     centralWidget()->setLayout(layout);
 }
@@ -132,6 +169,26 @@ ProfileContainer::setLevel (
     }
     qDebug() << Q_FUNC_INFO << "done:" << m_Slider->value();
 }
+
+/*!
+ * This slot is called when the user toggled the vibration switch. The function
+ * will update the UI (on/off label) and send a signal.
+ */
+void
+ProfileContainer::slotVibrationSwitchToggled (
+        bool toggle)
+{
+    QString text = toggle ? 
+        //% "On"
+        qtTrId ("qtn_comm_on") :
+        //% "Off"
+        qtTrId ("qtn_comm_off");
+
+    m_OnOffLabel->setText (text);
+
+    emit vibrationChanged (toggle);
+}
+
 
 /*!
  * This slot is called when the volume slider value has been changed. The slot
@@ -162,7 +219,16 @@ ProfileContainer::setVibration (
         bool enabled)
 {
     qDebug() << Q_FUNC_INFO << "for " << title() << ":" << enabled;
-    m_Button->setChecked (enabled);
+    m_VibrationSwitch->setChecked (enabled);
+    
+    QString text = enabled ? 
+        //% "On"
+        qtTrId ("qtn_comm_on") : 
+        //% "Off"
+        qtTrId ("qtn_comm_off");
+        
+    SYS_DEBUG ("Setting on/off label to '%s'", SYS_STR(text));
+    m_OnOffLabel->setText (text);
 }
 
 int 
