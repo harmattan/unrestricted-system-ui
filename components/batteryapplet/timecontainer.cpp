@@ -52,11 +52,11 @@ void TimeContainer::updateTimeLabel (const QString &value)
     QString time;
 
     if (minutes < 60)
-        time = QString("%1%2").arg(minutes).arg(minutesPrefix);
+        time = QString("%1 %2").arg(minutes).arg(minutesPrefix);
     else {
         QVariant minsVar = minutes % 60;
         minsVar = (minsVar.toInt() == 0) ? "00" : minsVar;
-        time = QString("%1:%2%3").arg(minutes / 60).arg(minsVar.toString()).arg(hoursPrefix);
+        time = QString("%1:%2 %3").arg(minutes / 60).arg(minsVar.toString()).arg(hoursPrefix);
     }
     timeLabel->setText(time);
 }
