@@ -54,19 +54,21 @@ LedWidget::initWidget ()
     label1 = new DuiLabel ("Illumination light");
 
     m_IlluminationButton = new DuiButton ();
+    m_IlluminationButton->setViewType (DuiButton::switchType);
     m_IlluminationButton->setCheckable (true);
 
     label2 = new DuiLabel ("Incoming events");
 
     m_EventsButton = new DuiButton ();
+    m_EventsButton->setViewType (DuiButton::switchType);
     m_EventsButton->setCheckable (true);
 
     /*
      * Well, no UI spec yet, so I'm not sure this is what we want...
      */
-    portraitPolicy->addItem (label1, Qt::AlignLeft);
+    portraitPolicy->addItem (label1, Qt::AlignLeft | Qt::AlignVCenter);
     portraitPolicy->addItem (m_IlluminationButton, Qt::AlignRight);
-    portraitPolicy->addItem (label2, Qt::AlignLeft);
+    portraitPolicy->addItem (label2, Qt::AlignLeft | Qt::AlignVCenter);
     portraitPolicy->addItem (m_EventsButton, Qt::AlignRight);
    
     landscapePolicy->addItem(label1, 0, 0);
