@@ -100,7 +100,10 @@ UsbUi::OviSuiteSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_OVI_SUITE);
+
     m_dialog->disappear ();
+
+    show_notification (USB_OVI_SUITE);
 }
 
 void
@@ -109,6 +112,9 @@ UsbUi::MassStorageSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_MASS_STORAGE);
+
+    show_notification (USB_MASS_STORAGE);
+
     m_dialog->disappear ();
 }
 
@@ -118,16 +124,16 @@ UsbUi::UsbEvent (bool connected)
 {
     SYS_DEBUG ("");
 
-    // remove previous one
-    if (m_notification)
-    {
-        m_notification->remove ();
-        delete m_notification;
-        m_notification = 0;
-    }
-
     if (connected == false)
     {
+        // remove previous one
+        if (m_notification)
+        {
+            m_notification->remove ();
+            delete m_notification;
+            m_notification = 0;
+        }
+
         //% "Usb disconnected"
         m_notification = new DuiNotification ("",
                                               "",
@@ -142,13 +148,35 @@ UsbUi::UsbEvent (bool connected)
     }
 
     usb_modes   config    = m_logic->getModeSetting ();
-    QString    *mode_text = 0;
-
     // Activate the desired usb mode
     if (config != USB_AUTO)
+    {
         m_logic->setMode (config);
+        // TODO: result checking?
+    }
+    else // Or show the mode-selection dialog
+    {
+        ShowDialog ();
+        return;
+    }
 
-    switch (config)
+    show_notification ((int) config);
+}
+
+// for dbus adaptor
+UsbBusinessLogic *
+UsbUi::getLogic ()
+{
+    return m_logic;
+}
+
+// id should be an usb_modes enum value
+void
+UsbUi::show_notification (int id)
+{
+    QString *mode_text;
+
+    switch (id)
     {
         case USB_OVI_SUITE:
             //% "Ovi Suite"
@@ -163,9 +191,19 @@ UsbUi::UsbEvent (bool connected)
             mode_text = new QString (qtTrId ("qtn_usb_do_nothing"));
             break;
         case USB_AUTO:
-            ShowDialog ();
+        default:
+            // no notification should be shown...
             return;
+            break;
     } 
+
+    // remove previous one
+    if (m_notification)
+    {
+        m_notification->remove ();
+        delete m_notification;
+        m_notification = 0;
+    }
 
     //% "<b>Usb connected</b><br />Selected mode: <b>%1</b>"
     m_notification =
@@ -173,12 +211,5 @@ UsbUi::UsbEvent (bool connected)
                              "",
                              qtTrId ("qtn_usb_connected_%1").arg (*mode_text),
                              "icon-m-usb");
-}
-
-// for dbus adaptor
-UsbBusinessLogic *
-UsbUi::getLogic ()
-{
-    return m_logic;
 }
 

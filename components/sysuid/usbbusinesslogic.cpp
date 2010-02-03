@@ -32,6 +32,8 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
 {
     m_setting = new DuiGConfItem (USB_GCONF_KEY, this);
 
+    m_process = new QProcess (this);
+
     QDBusInterface HalManager ("org.freedesktop.Hal",
                                "/org/freedesktop/Hal/Manager",
                                "org.freedesktop.Hal.Manager",
@@ -53,6 +55,11 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
 
 UsbBusinessLogic::~UsbBusinessLogic ()
 {
+    delete m_setting;
+    m_setting = 0;
+
+    delete m_process;
+    m_process = 0;
 }
 
 // This function will not set the gconf-key value,
@@ -61,17 +68,15 @@ UsbBusinessLogic::~UsbBusinessLogic ()
 void
 UsbBusinessLogic::setMode (usb_modes new_mode)
 {
-    QProcess    process;
-
     // FIXME: ke-recv needed to do these things ...
     switch (new_mode)
     {
         case USB_OVI_SUITE:  
 #ifdef __ARMEL__
-            SYS_DEBUG ("Workarund for Ovi Suite mode: /usr/bin/pcsuite-enable.sh");
+            SYS_DEBUG ("Running: /usr/bin/pcsuite-enable.sh");
             // FIXME: ask ke-recv to switch device to
             //       pc-suite mode
-            process.start ("/usr/bin/sudo /usr/bin/pcsuite-enable.sh");
+            m_process->start ("/usr/bin/sudo /usr/bin/pcsuite-enable.sh");
 #else
             SYS_DEBUG ("Ovi Suite mode activated (no-op in i386 target)");
 #endif

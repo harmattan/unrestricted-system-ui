@@ -8,6 +8,8 @@
 #include <QDBusInterface>
 #include <QDBusMessage>
 
+class QProcess;
+
 #include "../usbapplet/usbmodes.h"
 
 class UsbBusinessLogic : public QObject
@@ -44,6 +46,7 @@ class UsbBusinessLogic : public QObject
         QDBusInterface  *m_hal;
         bool             m_active;
         bool             m_connected;
+        QProcess        *m_process;
 
 };
 
