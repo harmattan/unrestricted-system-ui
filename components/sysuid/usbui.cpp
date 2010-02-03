@@ -10,8 +10,7 @@
 #include <DuiLocale>
 #include <QTimer>
 
-#define DEBUG
-#define WARNING
+#undef DEBUG
 #include "../debug.h"
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
