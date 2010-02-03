@@ -32,7 +32,7 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
 {
     m_setting = new DuiGConfItem (USB_GCONF_KEY, this);
 
-    m_process = new QProcess (this);
+    m_process = new QProcess;
 
     QDBusInterface HalManager ("org.freedesktop.Hal",
                                "/org/freedesktop/Hal/Manager",

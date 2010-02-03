@@ -10,7 +10,8 @@
 #include <DuiLocale>
 #include <QTimer>
 
-#undef DEBUG
+#define DEBUG
+#define WARNING
 #include "../debug.h"
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
@@ -112,9 +113,9 @@ UsbUi::MassStorageSelected ()
 
     m_logic->setMode (USB_MASS_STORAGE);
 
-    show_notification (USB_MASS_STORAGE);
-
     m_dialog->disappear ();
+
+    show_notification (USB_MASS_STORAGE);
 }
 
 // Showing notification on connection/disconnection
