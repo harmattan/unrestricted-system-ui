@@ -14,21 +14,22 @@ LedBusinessLogic::LedBusinessLogic (
     m_Led (new QmLED)
 {
     SYS_DEBUG ("");
+
     connect (
      m_SystemUIGConf, SIGNAL (valueChanged(SystemUIGConf::GConfKey, QVariant)),
      this, SLOT (gconfValueChanged (SystemUIGConf::GConfKey, QVariant)));
-}
-
-LedBusinessLogic::~LedBusinessLogic ()
-{
-    delete m_Led;
-    m_Led = 0;
 
     /*
      * This is the class that stores the led states in the GConf database, so
      * here we read the configuration and set the hardware.
      */
     ensureLedStates ();
+}
+
+LedBusinessLogic::~LedBusinessLogic ()
+{
+    delete m_Led;
+    m_Led = 0;
 }
 
 bool
@@ -83,7 +84,7 @@ LedBusinessLogic::ensureLedStates ()
     bool allLedEnabled;
     bool eventsLedEnabled;
     bool illuminationLedEnabled;
-    
+
     allLedEnabled = m_SystemUIGConf->value (
             SystemUIGConf::LedAllEnabled).toBool();
     illuminationLedEnabled = m_SystemUIGConf->value (

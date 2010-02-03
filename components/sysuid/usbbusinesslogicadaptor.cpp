@@ -50,4 +50,3 @@ UsbBusinessLogicAdaptor::isConnected ()
     return m_usb->isConnected ();
 }
 
-

@@ -29,14 +29,14 @@ public:
         BatteryPSMThresholdKey,
         LedAllEnabled,
         LedEventsEnabled,
-        LedIlluminationEnabled,
+        LedIlluminationEnabled
     };
 
     SystemUIGConf(QObject* parent = 0);
     virtual ~SystemUIGConf();
 
     void setValue(SystemUIGConf::GConfKey key, QVariant value);
-    QVariant value(SystemUIGConf::GConfKey, QVariant def = NULL);
+    QVariant value(SystemUIGConf::GConfKey, QVariant def = QVariant());
     int keyCount(SystemUIGConf::GConfKeyGroup keyGroup);
 
 signals:

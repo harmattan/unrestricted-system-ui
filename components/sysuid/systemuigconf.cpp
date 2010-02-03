@@ -78,10 +78,7 @@ SystemUIGConf::value (
         SystemUIGConf::GConfKey key, 
         QVariant                def)
 {
-    if (def.isNull())
-        return duiGConfItems.value(key)->value ();
-    else
-        return duiGConfItems.value(key)->value (def);
+    return duiGConfItems.value(key)->value (def);
 }
 
 /*!

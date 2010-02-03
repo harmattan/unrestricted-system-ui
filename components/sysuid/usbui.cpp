@@ -2,7 +2,7 @@
 #include "usbbusinesslogic.h"
 
 #include <QGraphicsLinearLayout>
-#include <DuiWidget>
+#include <DuiContainer>
 #include <DuiNotification>
 #include <DuiSceneWindow>
 #include <DuiButton>
@@ -45,12 +45,12 @@ void
 UsbUi::ShowDialog ()
 {
     SYS_DEBUG ("");
-    DuiButton  *button;
-    DuiWidget  *hbox;
+    DuiButton     *button;
+    DuiContainer  *hbox;
 
     if (m_dialog)
     {
-        m_dialog->appear ();
+        m_dialog->appear (DuiSceneWindow::KeepWhenDone);
         m_dialog->setFocus ();
         return;
     }
@@ -64,7 +64,7 @@ UsbUi::ShowDialog ()
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
 
     //% "Ovi Suite"
-    button = new DuiButton (qtTrId ("qtn_usb_ovi_suite"), m_dialog);
+    button = new DuiButton (qtTrId ("qtn_usb_ovi_suite"));
 
     layout->addItem (button);
     layout->setStretchFactor (button, 1);
@@ -73,7 +73,7 @@ UsbUi::ShowDialog ()
                       this, SLOT (OviSuiteSelected ()));
 
     //% "Mass Storage"
-    button = new DuiButton (qtTrId ("qtn_usb_mass_storage"), m_dialog);
+    button = new DuiButton (qtTrId ("qtn_usb_mass_storage"));
 
     layout->addItem (button);
     layout->setStretchFactor (button, 1);
@@ -81,13 +81,14 @@ UsbUi::ShowDialog ()
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
-    hbox = new DuiWidget;
+    hbox = new DuiContainer;
+    hbox->setHeaderVisible (false);
     hbox->setLayout (layout);
 
     m_dialog->setCentralWidget (hbox);
 
     m_dialog->setButtonBoxVisible (false);
-    m_dialog->appear ();
+    m_dialog->appear (DuiSceneWindow::KeepWhenDone);
 }
 
 void
@@ -96,7 +97,6 @@ UsbUi::OviSuiteSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_OVI_SUITE);
-
     m_dialog->disappear ();
 }
 
@@ -106,7 +106,6 @@ UsbUi::MassStorageSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_MASS_STORAGE);
-
     m_dialog->disappear ();
 }
 

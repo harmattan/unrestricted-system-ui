@@ -34,7 +34,8 @@ int main (int argc, char** argv)
     DuiApplicationWindow win;
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
-    win.setWindowOpacity (0);
+    flags |= Qt::CustomizeWindowHint;
+    win.setWindowOpacity (0.0);
     win.setWindowFlags (flags);
 
     // qDebug and qWarning shows nothing without this:

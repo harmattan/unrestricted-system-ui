@@ -30,7 +30,7 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     m_active (false),
     m_connected (false)
 {
-    m_setting = new DuiGConfItem (USB_GCONF_KEY);
+    m_setting = new DuiGConfItem (USB_GCONF_KEY, this);
 
     QDBusInterface HalManager ("org.freedesktop.Hal",
                                "/org/freedesktop/Hal/Manager",
@@ -97,8 +97,12 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
 usb_modes
 UsbBusinessLogic::getModeSetting ()
 {
-    QString   val = m_setting->value ().toString (); 
     usb_modes current_mode = USB_AUTO;
+
+    if (m_setting->value ().type() == QVariant::Invalid)
+        return current_mode;
+
+    QString   val = m_setting->value ().toString (); 
 
     for (int i = 0; i <= USB_AUTO; i++)
         if (val == usb_modes_str[i])
@@ -180,7 +184,7 @@ UsbBusinessLogic::init_device (QString &udi)
     if (getCableType () == CABLE_PERIPHERAL)
     {
         m_connected = true;
-        emit Connected (m_connected);
+//        emit Connected (m_connected);
     }
 }
 
@@ -249,5 +253,4 @@ UsbBusinessLogic::emitShowDialog ()
 {
     emit ShowDialog ();
 }
-
 
