@@ -1,4 +1,4 @@
-system-ui (0.11.0-6~unreleased) harmattan; urgency=low
+system-ui (0.11.0-6) harmattan; urgency=low
 
   * Fixes: NB#141171 - Nothing happens if short power key is pressed again 
            when touchscreen lock view is displayed. 
@@ -13,7 +13,7 @@ system-ui (0.11.0-6~unreleased) harmattan; urgency=low
            Status indicator menu
   * Fixes: NB#141264 - Obexd is not opening connection properly
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 22 Jan 2010 12:40:49 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 03 Feb 2010 11:39:11 +0100
 
 system-ui (0.11.0-5) harmattan; urgency=low
 
