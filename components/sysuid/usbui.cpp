@@ -60,6 +60,8 @@ UsbUi::ShowDialog ()
     //% "Usb connected"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
     m_dialog->setWindowModal (true);
+    m_dialog->setCloseButtonVisible (false);
+    //FIXME: seems dialog should hide itself from task-selector too ^^^
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
 
@@ -89,6 +91,7 @@ UsbUi::ShowDialog ()
 
     m_dialog->setButtonBoxVisible (false);
     m_dialog->appear (DuiSceneWindow::KeepWhenDone);
+    m_dialog->setFocus ();
 }
 
 void
