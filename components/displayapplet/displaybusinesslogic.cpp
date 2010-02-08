@@ -81,7 +81,7 @@ DisplayBusinessLogic::selectedScreenLightsValue ()
     int index = values.indexOf(display->getDisplayDimTimeout());
     if (index < 0) {
         index = values.size() / 2;
-        setScreenLightTimeouts (values.at(index));
+        setScreenLightTimeouts (index);
     }
 
     return index;
@@ -116,8 +116,8 @@ DisplayBusinessLogic::setScreenLightTimeouts (
     /*
      * We got the index, not the value.
      */
-    QList <int> values = screenLightsValues ();
-    int seconds = values[index];;
+    QList<int> values = screenLightsValues ();
+    int seconds = values[index];
     
     SYS_DEBUG ("*** index   = %d", index);
     SYS_DEBUG ("*** seconds = %d", seconds);
