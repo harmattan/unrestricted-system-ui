@@ -22,6 +22,7 @@ protected:
 
 private slots:
     void modify_screenlight_handle (int newValue);
+    void update_onoff_label (bool value);
 
 private:
     DisplayBusinessLogic   *m_logic;
@@ -36,8 +37,8 @@ private:
     DuiContainer           *m_screenlightContainer;
     DuiLabel               *m_blankinhibitLabel;
     DuiLabel               *m_noteLabel;
+    DuiLabel               *m_OnOffLabel;
     // TODO: infonote, blankinhibitlabel for retranslateui
-
 };
 
 #endif // DISPLAYWIDGET_H

@@ -116,37 +116,48 @@ void DisplayWidget::initWidget()
     // Blank inhibit
     DuiButton *blankInhibitButton = new DuiButton;
     blankInhibitButton->setCheckable (true);
-    blankInhibitButton->setChecked (m_logic->blankInhibitValue());
-    blankInhibitButton->setObjectName ("blankInhibitButton");
+    blankInhibitButton->setViewType (DuiButton::switchType);
 
     DuiLayout *blankInhibitLayout = new DuiLayout;
     DuiLinearLayoutPolicy *blankInhibitLayoutPolicy =
         new DuiLinearLayoutPolicy (blankInhibitLayout, Qt::Horizontal);
 
-    //% "Keep screen lights on during the charging"
-    m_blankinhibitLabel = new DuiLabel (qtTrId ("qtn_disp_screenon"));
-//  m_blankinhibitLabel->setObjectName ("displayLabel");
-//    XXX: ^ this should be black
-    blankInhibitLayoutPolicy->addItem (m_blankinhibitLabel, Qt::AlignLeft);
-    blankInhibitLayoutPolicy->addItem (blankInhibitButton, Qt::AlignRight);
+    m_OnOffLabel = new DuiLabel;
+
+    blankInhibitLayoutPolicy->addItem (m_OnOffLabel, Qt::AlignLeft);
+    blankInhibitLayoutPolicy->addItem (blankInhibitButton,
+                                       Qt::AlignRight | Qt::AlignVCenter);
 
     DuiContainer *blankInhibitContainer = new DuiContainer;
-    blankInhibitContainer->setHeaderVisible (false);
+    //% "Keep screen lights on during the charging"
+    blankInhibitContainer->setTitle (qtTrId ("qtn_disp_screenon"));
     blankInhibitContainer->centralWidget ()->setLayout (blankInhibitLayout);
 
     connect (blankInhibitButton, SIGNAL (toggled (bool)),
              m_logic, SLOT (setBlankInhibitValue (bool)));
+    connect (blankInhibitButton, SIGNAL (toggled (bool)),
+             this, SLOT (update_onoff_label (bool)));
 
-    // policy->addItem(blankInhibitContainer, Qt::AlignLeft);
-    // This inhibit button looks better in screenlights container:
-    screenlightLayoutPolicy->addItem (blankInhibitContainer, Qt::AlignLeft);
+    blankInhibitButton->setChecked (m_logic->blankInhibitValue());
+
+    policy->addItem(blankInhibitContainer, Qt::AlignLeft);
 
     // Note-label
-    //% "Note! In the power save mode, screen light settings are affected."
-    m_noteLabel = new DuiLabel (qtTrId ("qtn_disp_note"));
-//  m_noteLabel->setObjectName("displayLabel");
-//    XXX: ^ this should be black
-    policy->addItem (m_noteLabel, Qt::AlignLeft);
+    // % "Note! In the power save mode, screen light settings are affected."
+    //m_noteLabel = new DuiLabel (qtTrId ("qtn_disp_note"));
+    //policy->addItem (m_noteLabel, Qt::AlignLeft);
+}
+
+void
+DisplayWidget::update_onoff_label (bool value)
+{
+    QString text = value ?
+        //% "On"
+        qtTrId ("qtn_comm_on") :
+        //% "Off"
+        qtTrId ("qtn_comm_off");
+
+    m_OnOffLabel->setText (text);
 }
 
 void

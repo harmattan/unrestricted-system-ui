@@ -141,3 +141,4 @@ DisplayBusinessLogic::setBlankInhibitValue (
     SYS_DEBUG ("*** blanking when charging = %s", value ? "true" : "false");
     display->setBlankingWhenCharging(value);
 }
+
