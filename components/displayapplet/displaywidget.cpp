@@ -11,12 +11,6 @@
 #include <DuiSlider>
 #include <DuiLinearLayoutPolicy>
 
-#define VALUE_IN_HEADER
-
-/* TODO:
-    1) Display header not yet defined (logical name)
-*/
-
 DisplayWidget::DisplayWidget(QGraphicsWidget *parent) :
         DcpWidget(parent),
         m_logic(NULL)
@@ -69,7 +63,7 @@ void DisplayWidget::initWidget()
              m_logic, SLOT (setBrightnessValue (int)));
 
     m_brightnessContainer = new DuiContainer;
-    //% "Brightness:"
+    //% "Brightness"
     m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
     m_brightnessContainer->centralWidget ()->setLayout (brightnessLayout);
 
@@ -102,14 +96,12 @@ void DisplayWidget::initWidget()
              this, SLOT (modify_screenlight_handle (int)));
 
     m_screenlightContainer = new DuiContainer;
-    //% "Screen lights off after: %1 sec" 
+    //% "Backlight time-out" 
     m_screenlightContainer->setTitle (qtTrId ("qtn_disp_screenoff"));
     m_screenlightContainer->centralWidget ()->setLayout (screenlightLayout);
 
     modify_screenlight_handle (m_logic->selectedScreenLightsValue ());
-#ifndef VALUE_IN_HEADER
     m_screenlightSlider->setHandleLabelVisible (true);
-#endif
 
     policy->addItem (m_screenlightContainer);
 
@@ -129,7 +121,7 @@ void DisplayWidget::initWidget()
                                        Qt::AlignRight | Qt::AlignVCenter);
 
     DuiContainer *blankInhibitContainer = new DuiContainer;
-    //% "Keep screen lights on during the charging"
+    //% "Display stays lit when charging"
     blankInhibitContainer->setTitle (qtTrId ("qtn_disp_screenon"));
     blankInhibitContainer->centralWidget ()->setLayout (blankInhibitLayout);
 
@@ -141,11 +133,6 @@ void DisplayWidget::initWidget()
     blankInhibitButton->setChecked (m_logic->blankInhibitValue());
 
     policy->addItem(blankInhibitContainer, Qt::AlignLeft);
-
-    // Note-label
-    // % "Note! In the power save mode, screen light settings are affected."
-    //m_noteLabel = new DuiLabel (qtTrId ("qtn_disp_note"));
-    //policy->addItem (m_noteLabel, Qt::AlignLeft);
 }
 
 void
@@ -163,15 +150,17 @@ DisplayWidget::update_onoff_label (bool value)
 void
 DisplayWidget::modify_screenlight_handle (int newValue)
 {
-    int value = m_screenlight_vals.at(newValue);
+    int value = m_screenlight_vals.at (newValue);
+    QString str = (value < 60) ?
+                  //% "%1 seconds"
+                  qtTrId ("qtn_comm_time_second") :
+                  //% "%1 minutes"
+                  qtTrId ("qtn_comm_time_minute");
 
-#ifdef VALUE_IN_HEADER
-    m_screenlightContainer->setTitle
-        (qtTrId ("qtn_disp_screenoff").arg (value));
-#else
-    m_screenlightSlider->setHandleLabel (
-        QString::number (m_screenlight_vals.at(newValue)) + " sec");
-#endif
+    if (value >= 60)
+        value /= 60;
+
+    m_screenlightSlider->setHandleLabel (str.arg (value));
 }
 
 void
