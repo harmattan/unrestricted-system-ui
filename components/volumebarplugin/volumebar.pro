@@ -20,7 +20,7 @@ SOURCES = volumebarplugin.cpp \
           volumebar.cpp \
           ../debug.cpp
 
-TARGET = $$qtLibraryTarget(volumebar)
+TARGET = $$qtLibraryTarget(volume)
 DESTDIR = lib
 target.path += /usr/lib/duistatusindicatormenu/plugins
 
