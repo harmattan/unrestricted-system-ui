@@ -16,6 +16,9 @@ public:
                QGraphicsItem *parent = NULL);
     virtual ~VolumeBar ();
 
+private slots:
+    void volumeChanged (int val);
+
 private:
     DuiSlider   *m_bar;
 
