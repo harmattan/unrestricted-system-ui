@@ -51,7 +51,6 @@ VolumeBar::VolumeBar (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     DuiLabel *label = new DuiLabel (qtTrId ("qtn_volume"));
 
     m_bar = new DuiSlider;
-    m_bar->setMinLabelIconID ("icon-m-volume");
     m_bar->setMinLabelVisible (true);
     m_bar->setRange (0, 100);
 
@@ -63,10 +62,17 @@ VolumeBar::VolumeBar (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
     connect (m_bar, SIGNAL (valueChanged (int)),
              this, SLOT (volumeChanged (int)));
 
-    double test;
-    test = m_logic->getVolume ();
-    SYS_DEBUG ("Volume value : %2.4f", test);
-    // TODO: use the volume value / set the slider value
+    int current_volume;
+
+    current_volume = (int) (100.0 * m_logic->getVolume ());
+
+    if (current_volume > 0)
+        m_bar->setMinLabelIconID ("icon-m-volume");
+    else
+        m_bar->setMinLabelIconID ("icon-m-volume-off");
+
+    m_bar->setValue (current_volume);
+
 }
 
 VolumeBar::~VolumeBar ()
@@ -82,7 +88,8 @@ VolumeBar::volumeChanged (int val)
         m_bar->setMinLabelIconID ("icon-m-volume");
     else
         m_bar->setMinLabelIconID ("icon-m-volume-off");
-    // TODO: Set the volume-value
+
+    m_logic->setVolume ((double) val / 100.0);
 }
 
 

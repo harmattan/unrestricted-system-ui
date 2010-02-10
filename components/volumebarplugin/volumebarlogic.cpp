@@ -10,6 +10,8 @@
 #include "../debug.h"
 
 // This code based on maemo-statusmenu-volume code.
+// TODO: FIXME: i need more information how this
+//              should be done properly...
 
 struct _NsvVolume {
     pa_threaded_mainloop    *mainloop;
