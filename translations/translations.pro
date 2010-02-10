@@ -7,7 +7,8 @@ SOURCEDIR = $$PWD/../components/sysuid \
             $$PWD/../components/batteryplugin \
             $$PWD/../components/profileapplet \
             $$PWD/../components/profileplugin \
-            $$PWD/../components/usbapplet
+            $$PWD/../components/usbapplet \
+            $$PWD/../components/volumebarplugin
 TRANSLATIONDIR = $$PWD
 TRANSLATION_INSTALLDIR = /usr/share/l10n/dui
 include(translations.pri)

@@ -43,6 +43,11 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english
 Description: Battery status indicator menu plugin.
 
+Package: duistatusindicatormenu-volumeplugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english
+Description: Volume status indicator plugin
+
 Package: duicontrolpanel-displayapplet
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel, systemui-l10n-engineering-english

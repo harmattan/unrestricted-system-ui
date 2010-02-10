@@ -6,5 +6,6 @@ SUBDIRS = sysuid        \
           profileapplet \
           ledapplet     \
           profileplugin \
-          usbapplet
+          usbapplet     \
+          volumebarplugin
 
