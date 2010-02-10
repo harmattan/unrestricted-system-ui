@@ -2,6 +2,7 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include <QDBusConnection>
+#include <QDBusError>
 
 #include "sysuidrequest.h"
 #include "lockscreenbusinesslogic.h"
@@ -19,15 +20,37 @@ SysUidRequest::SysUidRequest ()
     
     if (!bus.registerService (dbusService ())) {
         SYS_WARNING ("failed to register dbus service");
-        abort();
+        dbusError (bus);
     }
 
     if (!bus.registerObject (dbusPath (), this)) {
         SYS_WARNING ("failed to register dbus object");
-        abort();
+        dbusError (bus);
     }
 }
 
+/*!
+ * An error printing method. It is implemented so we know what external cause is
+ * aborted the sysuid.
+ */
+void 
+SysUidRequest::dbusError (
+        QDBusConnection &connection, 
+        bool abortProgram)
+{
+    QDBusError error = connection.lastError ();
+    
+    if (error.isValid()) {
+        SYS_WARNING ("DBus error: %s", SYS_STR(error.message()));
+        qCritical() << "DBus error: " << SYS_STR(error.message());
+    } else {
+        SYS_WARNING ("Unknown DBus error");
+        qCritical() << "Unknown DBus error";
+    }
+
+    if (abortProgram)
+        abort();
+}
 
 QString 
 SysUidRequest::dbusService ()
