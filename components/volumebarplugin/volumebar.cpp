@@ -22,12 +22,15 @@
 VolumeBar::VolumeBar (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
                       QGraphicsItem *parent) :
         DuiWidget (parent),
-        m_bar (NULL)
+        m_bar (0),
+        m_logic (0)
 {
     Q_UNUSED(statusIndicatorMenu)
 
 // Comment out when its needed (and .css to debian/*volume*.install file)
 //    DuiTheme::loadCSS (cssDir + "volumebarplugin.css");
+
+    m_logic = new VolumeBarLogic;
 
     QGraphicsLinearLayout *mainLayout =
         new QGraphicsLinearLayout (Qt::Vertical);
@@ -59,11 +62,17 @@ VolumeBar::VolumeBar (DuiStatusIndicatorMenuInterface &statusIndicatorMenu,
 
     connect (m_bar, SIGNAL (valueChanged (int)),
              this, SLOT (volumeChanged (int)));
+
+    double test;
+    test = m_logic->getVolume ();
+    SYS_DEBUG ("Volume value : %2.4f", test);
+    // TODO: use the volume value / set the slider value
 }
 
 VolumeBar::~VolumeBar ()
 {
     //Free the resources here
+    delete m_logic;
 }
 
 void
@@ -73,7 +82,7 @@ VolumeBar::volumeChanged (int val)
         m_bar->setMinLabelIconID ("icon-m-volume");
     else
         m_bar->setMinLabelIconID ("icon-m-volume-off");
-
+    // TODO: Set the volume-value
 }
 
 
