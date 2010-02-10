@@ -8,7 +8,7 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 
-#define DEBUG
+//#define DEBUG
 #include "../debug.h"
 
 SysUidRequest::SysUidRequest ()
@@ -16,8 +16,14 @@ SysUidRequest::SysUidRequest ()
     m_LockScreenLogic = new LockScreenBusinessLogic (this);
     new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 
+    /*
+     * Registering on the system bus, because MCE needs us to provide interface
+     * on the system bus, not the session bus. This is not going to work under 
+     * the scratchbox if the libosso-dbus-conf package is not installed.
+     */
     QDBusConnection bus = QDBusConnection::systemBus ();
-    
+   
+    SYS_DEBUG ("Registering service/object on system bus.");
     if (!bus.registerService (dbusService ())) {
         SYS_WARNING ("failed to register dbus service");
         dbusError (bus);
