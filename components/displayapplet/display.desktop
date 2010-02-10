@@ -14,5 +14,5 @@ X-DUIApplet-ImagePortrait=Widget_portrait_NOT_DEFINED.png
 [DCP]
 Category= Look & Feel
 Order=1
-WidgetType= DcpLabel2
+WidgetType=DcpLabel2
 
