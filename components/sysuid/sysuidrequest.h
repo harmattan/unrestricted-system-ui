@@ -4,9 +4,11 @@
 #define SYSUIDREQUEST_H
 #include <QObject>
 
-class QString;
+//class QString;
 class LockScreenBusinessLogic;
-class EventHandler;
+//class EventHandler;
+class QDBusConnection;
+
 /*!
  * This class creates a connection between the system bus and the methods
  * implemented in the LockScreenBusinessLogicAdaptor where the methods
@@ -22,6 +24,7 @@ public:
 private:
     QString dbusService ();
     QString dbusPath ();
+    void dbusError (QDBusConnection &connection, bool abortProgram = true);
 
     LockScreenBusinessLogic *m_LockScreenLogic;
 };

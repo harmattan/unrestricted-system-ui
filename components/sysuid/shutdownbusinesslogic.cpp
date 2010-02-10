@@ -15,6 +15,10 @@
 
 using namespace Maemo;
 
+#ifdef TEST_SHUTDOWN_LOGIC
+#  include <QTimer>
+#endif
+
 ShutdownBusinessLogic::ShutdownBusinessLogic (
         QObject *parent) :
     QObject (parent),
@@ -26,6 +30,11 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (
         SIGNAL(systemStateChanged (Maemo::QmSystemState::StateIndication)),
         this, 
         SLOT(systemStateChanged (Maemo::QmSystemState::StateIndication)));
+
+    #ifdef TEST_SHUTDOWN_LOGIC
+    SYS_DEBUG ("Register test timeout.");
+    QTimer::singleShot (5000, this, SLOT(testTimeoutSlot()));
+    #endif
 }
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
@@ -85,6 +94,7 @@ ShutdownBusinessLogic::systemStateChanged (
 void 
 ShutdownBusinessLogic::thermalShutdown ()
 {
+    SYS_DEBUG ("");
     //% "Temperature too high. Device shutting down."
     DuiNotification("", "", qtTrId ("qtn_shut_high_temp"));
 
@@ -108,3 +118,11 @@ ShutdownBusinessLogic::shutdownDeniedUSB ()
     DuiNotification("", "", qtTrId ("qtn_shut_unplug_usb"));
 }
 
+#ifdef TEST_SHUTDOWN_LOGIC
+void 
+ShutdownBusinessLogic::testTimeoutSlot ()
+{
+    SYS_DEBUG ("");
+    systemStateChanged (QmSystemState::ShutdownDeniedUSB);
+}
+#endif
