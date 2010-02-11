@@ -4,7 +4,8 @@ Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), libduicontrolpanel-dev,
                libdui-dev (>= 0.18), libqmsystem-dev, libalarm-dev,
-               libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev
+               libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev,
+               libpulse-dev (>= 0.9.15)
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -22,7 +23,7 @@ Package: system-ui-tests
 Section: tests
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends},testrunner, ci-testing
+Depends: ${shlibs:Depends}, testrunner, ci-testing
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
@@ -45,7 +46,7 @@ Description: Battery status indicator menu plugin.
 
 Package: duistatusindicatormenu-volumeplugin
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english
+Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english, libpulse0
 Description: Volume status indicator plugin
 
 Package: duicontrolpanel-displayapplet

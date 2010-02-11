@@ -1,8 +1,15 @@
-system-ui (0.12.0-2~unreleased) harmattan; urgency=low
+system-ui (0.12.1-2~unreleased) harmattan; urgency=low
 
-  * FILLME
+  * FILLME 
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 03 Feb 2010 13:03:21 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 11 Feb 2010 13:04:58 +0100
+
+system-ui (0.12.1-1) harmattan; urgency=low
+
+  * A crash fix in DisplayApplet
+  * New package: duistatusindicatormenu-volumeplugin
+
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 11 Feb 2010 13:03:43 +0100
 
 system-ui (0.12.0-1) harmattan; urgency=low
 
