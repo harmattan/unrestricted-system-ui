@@ -1,9 +1,13 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef DISPLAYDBUSINTERFACE_H
 #define DISPLAYDBUSINTERFACE_H
 
 #include <QObject>
 #include <QStringList>
+#include <QDBusError>
 
+#if 0
 class QDBusInterface;
 
 class DisplayDBusInterface : public QObject
@@ -25,7 +29,7 @@ public slots:
 
 private slots:
     void valueSet();
-    void DBusMessagingFailure();
+    void DBusMessagingFailure (QDBusError error);
 
 signals:
     void brightnessValuesReceived(int, QStringList);
@@ -36,5 +40,5 @@ private:
     QDBusInterface *dbusIf;
 
 };
-
+#endif
 #endif // DISPLAYDBUSINTERFACE_H

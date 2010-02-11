@@ -59,11 +59,13 @@ int
 DisplayBusinessLogic::selectedBrightnessValue ()
 {
     QList<int> values = brightnessValues();
+
     int index = values.indexOf(display->getDisplayBrightnessValue());
     if (index < 0) {
         index = values.size() / 2;
-        setBrightnessValue(values.at(index));
+        setBrightnessValue (values.at(index));
     }
+
     return index;
 }
 
