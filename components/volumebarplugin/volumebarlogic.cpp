@@ -6,7 +6,8 @@
 
 #define qstring2char(p) p->toLatin1().constData()
 
-#define DEBUG
+#undef DEBUG
+#define WARNING
 #include "../debug.h"
 
 // This code based on maemo-statusmenu-volume code.
@@ -37,6 +38,8 @@ VolumeBarLogic::VolumeBarLogic () :
     m_initialized = false;
     m_priv = new NsvVolume;
 
+    m_priv->default_sink = 0;
+
     m_priv->mainloop = pa_threaded_mainloop_new ();
 
     if (! m_priv->mainloop)
@@ -65,6 +68,12 @@ VolumeBarLogic::VolumeBarLogic () :
         return;
     }
 
+    if (pa_context_connect (m_priv->context, 0, (pa_context_flags_t) 0, 0) < 0)
+    {
+        SYS_WARNING ("Failed to connect Pulseaudio: %s",
+                     pa_strerror (pa_context_errno (m_priv->context)));
+    }
+
     pa_context_set_state_callback (m_priv->context, context_state_cb, (void *) m_priv);
 
     /* Wait for the context to be ready */
@@ -85,6 +94,7 @@ VolumeBarLogic::VolumeBarLogic () :
 
         if (state == PA_CONTEXT_READY)
         {
+            SYS_DEBUG ("initialized successfully");
             m_initialized = true;
             break;
         }
@@ -149,6 +159,8 @@ context_state_cb (pa_context *c, void *userdata)
 void
 VolumeBarLogic::get_default_sink_name ()
 {
+    SYS_DEBUG ("");
+
     pa_operation *o = 0;
 
     pa_threaded_mainloop_lock (m_priv->mainloop);
@@ -176,6 +188,7 @@ server_info_cb (
     void                 *userdata)
 {
     NsvVolume   *m_priv = (NsvVolume *) userdata;
+    SYS_DEBUG ("%s", i->default_sink_name);
 
     if (m_priv->default_sink)
         delete m_priv->default_sink;
@@ -210,7 +223,7 @@ sink_info_cb (
 void
 VolumeBarLogic::setVolume (double v)
 {
-    SYS_DEBUG ("");
+    SYS_DEBUG ("%2.2f", v);
 
     if (m_initialized == false)
         return;
@@ -241,8 +254,6 @@ VolumeBarLogic::setVolume (double v)
 double
 VolumeBarLogic::getVolume ()
 {
-    SYS_DEBUG ("");
-
     if (m_initialized == false)
         return 0.0;
 
@@ -265,6 +276,8 @@ VolumeBarLogic::getVolume ()
                      pa_strerror (pa_context_errno (m_priv->context)));
 
     pa_threaded_mainloop_unlock (m_priv->mainloop);
+
+    SYS_DEBUG ("%2.2f", (double) m_priv->volume / PA_VOLUME_NORM);
 
     return (double) m_priv->volume / PA_VOLUME_NORM;
 }
