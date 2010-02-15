@@ -38,6 +38,7 @@ private:
     DuiSlider               *PSMSlider;
     DuiLabel                *textLabel;
     QStringList              sliderValues;
+    int                      sliderValue;
     DuiLinearLayoutPolicy   *layout_policy;
 
     void    setLayout();

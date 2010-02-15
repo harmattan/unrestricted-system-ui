@@ -14,7 +14,8 @@
 SliderContainer::SliderContainer (DuiWidget *parent) :
         DuiContainer (parent),
         PSMAutoButton (NULL),
-        PSMSlider (new DuiSlider)
+        PSMSlider (0),
+        sliderValue (-1)
 {
     SYS_DEBUG ("");
 
@@ -76,9 +77,17 @@ SliderContainer::initSlider (
 {
     SYS_DEBUG ("");
     sliderValues = QStringList (values);
+
+    if (PSMSlider == 0)
+        return;
+
     PSMSlider->setRange (0, sliderValues.size () - 1);
     PSMSlider->setOrientation (Qt::Horizontal);
     PSMSlider->setHandleLabelVisible (true);
+
+    if (sliderValue > 0)
+        sliderValueChanged (sliderValue);
+
     connect (PSMSlider, SIGNAL (valueChanged (int)),
              this, SLOT (sliderValueChanged (int)));
 }
@@ -95,7 +104,9 @@ void SliderContainer::updateSlider (const QString &value)
 void SliderContainer::sliderValueChanged (int value)
 {
     SYS_DEBUG ("");
-    updateSlider(sliderValues.at (value));
+
+    sliderValue = value;
+    updateSlider (sliderValues.at (value));
     emit PSMThresholdValueChanged (sliderValues.at (value));
 }
 
@@ -103,14 +114,19 @@ void SliderContainer::toggleSliderExistence (bool toggle)
 {
     SYS_DEBUG ("");
     if (toggle) {
-        if (layout_policy->count () < 2)
+        if ((layout_policy->count () < 2) && (PSMSlider == 0))
         {
+            PSMSlider = new DuiSlider;
+            initSlider (sliderValues);
             layout_policy->addItem (PSMSlider);
-            PSMSlider->setVisible (true);
         }
     } else {
-        if (layout_policy->count () > 1)
+        if ((PSMSlider) && (layout_policy->count () > 1))
+        {
             layout_policy->removeItem (PSMSlider);
+            delete PSMSlider;
+            PSMSlider = 0;
+        }
     }
 }
 
