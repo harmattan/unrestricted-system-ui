@@ -8,7 +8,6 @@
 #include "timecontainer.h"
 
 #include <QGraphicsLinearLayout>
-#include <QDebug>
 
 #include <DuiButton>
 #include <DuiContainer>
@@ -16,9 +15,9 @@
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
 
-
 #define DEBUG 
 #include "../debug.h"
+
 /*
 TODO list:
 1) what is the correct interval for updating the battery image when charging? Is there a difference between
@@ -54,19 +53,19 @@ BatteryWidget::~BatteryWidget ()
     }
 }
 
-bool BatteryWidget::back()
+bool BatteryWidget::back ()
 {
     return true; // back is handled by main window by default
 }
 
-void BatteryWidget::initWidget()
+void BatteryWidget::initWidget ()
 {
     SYS_DEBUG ("Start");
     // proxy for dbus interface on remote object
-    batteryIf = new BatteryDBusInterface();
+    batteryIf = new BatteryDBusInterface;
 
     // battery image
-    batteryImage = new BatteryImage ();
+    batteryImage = new BatteryImage;
 
     // talkTimeContainer
     //% "Estimated talk time:"
@@ -76,82 +75,85 @@ void BatteryWidget::initWidget()
     // standByTimeContainer
     //% "Estimated stand-by time:"
     standByTimeContainer = new TimeContainer (
-            qtTrId ("qtn_ener_st"), new DuiImageWidget ());
+            qtTrId ("qtn_ener_st"), new DuiImageWidget);
                                   //"qgn_ener_standby" ^
 
     // PSMButton
-    PSMButton = new DuiButton();
-    connect (PSMButton, SIGNAL(released()), 
-            this, SLOT(PSMButtonReleased()));
+    PSMButton = new DuiButton ;
+    connect (PSMButton, SIGNAL (released ()), 
+             this, SLOT (PSMButtonReleased ()));
 
     // sliderContainer
-    sliderContainer = new SliderContainer();
+    sliderContainer = new SliderContainer;
 
-    connect (sliderContainer, SIGNAL(PSMAutoToggled(bool)),
-             batteryIf, SLOT(setPSMAutoValue(bool)));
-    connect (sliderContainer, SIGNAL(PSMThresholdValueChanged(QString)),
-             batteryIf, SLOT(setPSMThresholdValue(QString)));
+    connect (sliderContainer, SIGNAL (PSMAutoToggled (bool)),
+             batteryIf, SLOT (setPSMAutoValue (bool)));
+    connect (sliderContainer, SIGNAL (PSMThresholdValueChanged (QString)),
+             batteryIf, SLOT (setPSMThresholdValue (QString)));
 
     // mainContainer
-    DuiLayout *orientationLayout = new DuiLayout();
+    DuiLayout *orientationLayout = new DuiLayout;
 
-    DuiGridLayoutPolicy *landscapeLayoutPolicy = new DuiGridLayoutPolicy(orientationLayout);
-    landscapeLayoutPolicy->addItem(talkTimeContainer, 0, 0);
-    landscapeLayoutPolicy->addItem(standByTimeContainer, 0, 1);
-    landscapeLayoutPolicy->addItem(PSMButton, 1, 0, 1, 2);
-    landscapeLayoutPolicy->addItem(sliderContainer, 2, 0, 1, 2);
+    DuiGridLayoutPolicy *landscapeLayoutPolicy =
+        new DuiGridLayoutPolicy (orientationLayout);
+    landscapeLayoutPolicy->addItem (talkTimeContainer, 0, 0);
+    landscapeLayoutPolicy->addItem (standByTimeContainer, 0, 1);
+    landscapeLayoutPolicy->addItem (PSMButton, 1, 0, 1, 2);
+    landscapeLayoutPolicy->addItem (sliderContainer, 2, 0, 1, 2);
     landscapeLayoutPolicy->setSpacing (10);
-    orientationLayout->setLandscapePolicy(landscapeLayoutPolicy);
+    orientationLayout->setLandscapePolicy (landscapeLayoutPolicy);
 
-    DuiLinearLayoutPolicy *portraitLayoutPolicy = new DuiLinearLayoutPolicy(orientationLayout, Qt::Vertical);
-    portraitLayoutPolicy->addItem(talkTimeContainer, Qt::AlignLeft);
-    portraitLayoutPolicy->addItem(standByTimeContainer, Qt::AlignLeft);
-    portraitLayoutPolicy->addItem(PSMButton, Qt::AlignCenter);
+    DuiLinearLayoutPolicy *portraitLayoutPolicy =
+        new DuiLinearLayoutPolicy (orientationLayout, Qt::Vertical);
+    portraitLayoutPolicy->addItem (talkTimeContainer, Qt::AlignLeft);
+    portraitLayoutPolicy->addItem (standByTimeContainer, Qt::AlignLeft);
+    portraitLayoutPolicy->addItem (PSMButton, Qt::AlignCenter);
     portraitLayoutPolicy->addItem (sliderContainer, Qt::AlignLeft);
-    portraitLayoutPolicy->setSpacing(10);
-    orientationLayout->setPortraitPolicy(portraitLayoutPolicy);
+    portraitLayoutPolicy->setSpacing (10);
+    orientationLayout->setPortraitPolicy (portraitLayoutPolicy);
 
-    DuiContainer *mainContainer = new DuiContainer();
-    mainContainer->setHeaderVisible(false);
-    mainContainer->centralWidget()->setLayout(orientationLayout);
+    DuiContainer *mainContainer = new DuiContainer;
+    mainContainer->setHeaderVisible (false);
+    mainContainer->centralWidget ()->setLayout (orientationLayout);
 
     // connect the value receive signals
-    connect (batteryIf, SIGNAL(remainingTimeValuesReceived(QStringList)),
-             this, SLOT(remainingTimeValuesReceived(QStringList)));
-    connect (batteryIf, SIGNAL(batteryCharging(int)),
-             batteryImage, SLOT(startCharging(int)));
-    connect (batteryIf, SIGNAL(batteryNotCharging()),
-             batteryImage, SLOT(stopCharging()));
-    connect (batteryIf, SIGNAL(batteryNotCharging()),
-             batteryIf, SLOT(batteryBarValueRequired()));
-    connect (batteryIf, SIGNAL(batteryBarValueReceived(int)),
-             batteryImage, SLOT(updateBatteryLevel(int)));
-    connect (batteryIf, SIGNAL(PSMValueReceived(bool)),
-             this, SLOT(updatePSMButton(bool)));
-    connect (batteryIf, SIGNAL(PSMAutoValueReceived(bool)),
-             sliderContainer, SLOT(initPSMAutoButton(bool)));
-    connect (batteryIf, SIGNAL(PSMAutoDisabled()),
-             sliderContainer, SLOT(PSMAutoDisabled()));
-    connect (batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)),
-             sliderContainer, SLOT(initSlider(QStringList)));
-    connect (batteryIf, SIGNAL(PSMThresholdValuesReceived(QStringList)),
-             batteryIf, SLOT(PSMThresholdValueRequired()));
-    connect (batteryIf, SIGNAL(PSMThresholdValueReceived(QString)),
-             sliderContainer, SLOT(updateSlider(QString)));
+    connect (batteryIf, SIGNAL (remainingTimeValuesReceived (QStringList)),
+             this, SLOT (remainingTimeValuesReceived (QStringList)));
+    connect (batteryIf, SIGNAL (batteryCharging (int)),
+             batteryImage, SLOT (startCharging (int)));
+    connect (batteryIf, SIGNAL (batteryNotCharging ()),
+             batteryImage, SLOT (stopCharging ()));
+    connect (batteryIf, SIGNAL (batteryNotCharging ()),
+             batteryIf, SLOT (batteryBarValueRequired ()));
+    connect (batteryIf, SIGNAL (batteryBarValueReceived (int)),
+             batteryImage, SLOT (updateBatteryLevel (int)));
+    connect (batteryIf, SIGNAL (PSMValueReceived (bool)),
+             this, SLOT (updatePSMButton (bool)));
+    connect (batteryIf, SIGNAL (PSMAutoValueReceived (bool)),
+             sliderContainer, SLOT (initPSMAutoButton (bool)));
+    connect (batteryIf, SIGNAL (PSMAutoDisabled ()),
+             sliderContainer, SLOT (PSMAutoDisabled ()));
+    connect (batteryIf, SIGNAL (PSMThresholdValuesReceived (QStringList)),
+             sliderContainer, SLOT (initSlider (QStringList)));
+    connect (batteryIf, SIGNAL (PSMThresholdValuesReceived (QStringList)),
+             batteryIf, SLOT (PSMThresholdValueRequired ()));
+    connect (batteryIf, SIGNAL (PSMThresholdValueReceived (QString)),
+             sliderContainer, SLOT (updateSlider (QString)));
 
     // send value requests over dbus
-    batteryIf->remainingTimeValuesRequired();
-    batteryIf->batteryBarValueRequired();
-    batteryIf->batteryChargingStateRequired();
-    batteryIf->PSMValueRequired();
-    batteryIf->PSMAutoValueRequired();
-    batteryIf->PSMThresholdValuesRequired();
+    batteryIf->remainingTimeValuesRequired ();
+    batteryIf->batteryBarValueRequired ();
+    batteryIf->batteryChargingStateRequired ();
+    batteryIf->PSMValueRequired ();
+    batteryIf->PSMAutoValueRequired ();
+    batteryIf->PSMThresholdValuesRequired ();
 
     // mainLayout
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->addItem(mainContainer);
-    this->setLayout(mainLayout);
+    QGraphicsLinearLayout *mainLayout =
+        new QGraphicsLinearLayout (Qt::Vertical);
+    mainLayout->setContentsMargins (0, 0, 0, 0);
+    mainLayout->addItem (mainContainer);
+    this->setLayout (mainLayout);
 
     SYS_DEBUG ("End");
 }
@@ -186,9 +188,12 @@ BatteryWidget::updatePSMButton (
 
 void BatteryWidget::remainingTimeValuesReceived(const QStringList &timeValues)
 {
-    qDebug() << "BatteryWidget::remainingTimeValuesReceived(" << timeValues.at(0) << ", " << timeValues.at(1) << ")";
-    talkTimeContainer->updateTimeLabel(timeValues.at(0));
-    standByTimeContainer->updateTimeLabel(timeValues.at(1));
+    SYS_DEBUG ("timevalues = %s, %s",
+               SYS_STR (timeValues.at (0)),
+               SYS_STR (timeValues.at (1)));
+
+    talkTimeContainer->updateTimeLabel (timeValues.at (0));
+    standByTimeContainer->updateTimeLabel (timeValues.at (1));
 }
 
 void 
@@ -204,5 +209,6 @@ BatteryWidget::retranslateUi ()
     standByTimeContainer->setText (qtTrId ("qtn_ener_st"));
 
     // This call will reload timelabels on timercontainers
-    batteryIf->remainingTimeValuesRequired();
+    batteryIf->remainingTimeValuesRequired ();
 }
+
