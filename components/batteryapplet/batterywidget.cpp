@@ -76,7 +76,8 @@ void BatteryWidget::initWidget()
     // standByTimeContainer
     //% "Estimated stand-by time:"
     standByTimeContainer = new TimeContainer (
-            qtTrId ("qtn_ener_st"), new DuiImageWidget("qgn_ener_standby"));
+            qtTrId ("qtn_ener_st"), new DuiImageWidget ());
+                                  //"qgn_ener_standby" ^
 
     // PSMButton
     PSMButton = new DuiButton();

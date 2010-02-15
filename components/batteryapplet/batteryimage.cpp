@@ -3,17 +3,20 @@
 #include "batteryimage.h"
 
 #include <QTimer>
-#include <QDebug>
 
-BatteryImage::BatteryImage(QGraphicsItem *parent) :
-        DuiImageWidget(parent),
-        timer(NULL),
-        batteryLevel(0)
+#define DEBUG
+#include "../debug.h"
+
+BatteryImage::BatteryImage (QGraphicsItem *parent) :
+        DuiImageWidget (parent),
+        timer (NULL),
+        batteryLevel (0)
 {
     /*
      * We have to show something even if we get no signals from DBus. FIXME:
      * maybe this is not the right image, but it is the only one works now.
      */
+#if 0
     setImage ("icon-m-battery");
 
     batteryImages << 
@@ -29,27 +32,43 @@ BatteryImage::BatteryImage(QGraphicsItem *parent) :
 	    QString ("icon-m-battery-100");
 
     batteryChargingImages << 
-	    QString("") << 
-	    QString("") << 
-	    QString("icon-s-battery-13") << 
-	    QString("icon-s-battery-25") << 
-	    QString("icon-s-battery-38") << 
-	    QString("icon-s-battery-50") << 
-	    QString("icon-s-battery-62") << 
-	    QString("icon-s-battery-75") << 
-	    QString("icon-s-battery-88") << 
-	    QString("icon-s-battery-100");
+	    QString ("") << 
+	    QString ("") << 
+	    QString ("icon-s-battery-13") << 
+	    QString ("icon-s-battery-25") << 
+	    QString ("icon-s-battery-38") << 
+	    QString ("icon-s-battery-50") << 
+	    QString ("icon-s-battery-62") << 
+	    QString ("icon-s-battery-75") << 
+	    QString ("icon-s-battery-88") << 
+	    QString ("icon-s-battery-100");
+#else
+    // Seems themes still not contains the proper images ^
+    setImage ("icon-s-battery-60");
+
+    batteryImages <<
+        QString ("icon-s-battery-0") <<
+        QString ("icon-s-battery-20") <<
+        QString ("icon-s-battery-40") <<
+        QString ("icon-s-battery-60") <<
+        QString ("icon-s-battery-80") <<
+        QString ("icon-s-battery-100");
+
+    batteryChargingImages = batteryImages;
+#endif
 }
 
-BatteryImage::~BatteryImage()
+BatteryImage::~BatteryImage ()
 {
     delete timer;
     timer = NULL;
 }
 
 void 
-BatteryImage::updateBatteryLevel(int level)
+BatteryImage::updateBatteryLevel (int level)
 {
+    SYS_DEBUG ("level = %d", level);
+
     batteryLevel = level;
     if (timer == NULL)
         updateImage (false);
@@ -59,17 +78,37 @@ void
 BatteryImage::updateImage (
 		bool charging)
 {
+#if 0
     static int chargingImageIndex = batteryLevel;
     if (charging) {
-        if (chargingImageIndex >= batteryChargingImages.size())
+        if (chargingImageIndex >= batteryChargingImages.size ())
             chargingImageIndex = (batteryLevel > 1 ? batteryLevel : 2);
-        qDebug() << "Charging index: " << chargingImageIndex;
-        setImage(batteryChargingImages.at(chargingImageIndex++));
+        SYS_DEBUG ("Charging index: %d", chargingImageIndex);
+        setImage (batteryChargingImages.at (chargingImageIndex++));
     } else {
-        qDebug() << "Normal index: " << batteryLevel;
-        setImage(batteryImages.at(batteryLevel));
+        SYS_DEBUG ("Normal index: %d", batteryLevel);
+        setImage (batteryImages.at (batteryLevel));
         chargingImageIndex = batteryLevel;
     }
+#else
+    SYS_DEBUG ("charging = %s", charging ? "true" : "false");
+
+    static int imageIndex = batteryLevel;
+
+    if (charging)
+    {
+        imageIndex++;
+    }
+    else
+    {
+        imageIndex = batteryLevel;
+    }
+
+    if (batteryImages.size () <= imageIndex)
+       imageIndex = 0;
+
+    setImage (batteryImages.at (imageIndex)); 
+#endif
 }
 
 void
@@ -80,20 +119,22 @@ BatteryImage::startCharging (
         return;
 
     if (timer == NULL) {
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateImage()));
+        timer = new QTimer (this);
+        connect (timer, SIGNAL (timeout ()),
+                 this, SLOT (updateImage ()));
     }
 
-    timer->setInterval(rate);
-    timer->start();
+    timer->setInterval (rate);
+    timer->start ();
 }
 
 void
-BatteryImage::stopCharging()
+BatteryImage::stopCharging ()
 {
     if (timer != NULL) {
-        timer->stop();
+        timer->stop ();
         delete timer;
         timer = NULL;
     }
 }
+

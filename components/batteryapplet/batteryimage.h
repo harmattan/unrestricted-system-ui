@@ -12,22 +12,22 @@ class BatteryImage : public DuiImageWidget
     Q_OBJECT
 
 public:
-    BatteryImage(QGraphicsItem *parent = 0);
-    virtual ~BatteryImage();
+    BatteryImage (QGraphicsItem *parent = 0);
+    ~BatteryImage ();
 
 public slots:
-    void updateBatteryLevel(int level);
-    void startCharging(int rate);
-    void stopCharging();
+    void updateBatteryLevel (int level);
+    void startCharging (int rate);
+    void stopCharging ();
 
 private slots:
-    void updateImage(bool charging = true);
+    void updateImage (bool charging = true);
 
 private: //attributes
-    QTimer *timer;
-    int batteryLevel;
-    QStringList batteryImages;
-    QStringList batteryChargingImages;
+    QTimer      *timer;
+    int          batteryLevel;
+    QStringList  batteryImages;
+    QStringList  batteryChargingImages;
 };
 
 #endif // BATTERYIMAGE_H
