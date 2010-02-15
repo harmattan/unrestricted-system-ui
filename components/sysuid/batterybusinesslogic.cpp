@@ -7,10 +7,12 @@
 #include <QTime>
 #include <DuiNotification>
 
+
 /*
- * Needed to add some delay otherwise the QmSystem seems to return wrong value.
+ * Needed to add some delay otherwise the QmSystem seems to return wrong value. 
+ * But then it stopped to work with the next image...
  */
-#define DELAY_FOR_INITIALIZATION 20
+#define DELAY_FOR_INITIALIZATION 0
 
 #define DEBUG
 #include "../debug.h"
@@ -169,7 +171,14 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
             this, SLOT(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)));
 
+    #if DELAY_FOR_INITIALIZATION
+    /*
+     * See the documentation of DELAY_FOR_INITIALIZATION for further details.
+     */
     QTimer::singleShot (DELAY_FOR_INITIALIZATION, this, SLOT(initBattery()));
+    #else
+    initBattery ();
+    #endif
 }
 
 
