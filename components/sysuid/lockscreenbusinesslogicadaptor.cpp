@@ -49,7 +49,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         bool            silent,
         bool            flicker)
 {
-#if 0
+#if 1
     SYS_DEBUG (
 "\n*** service   = '%s'"
 "\n*** path      = '%s'"
