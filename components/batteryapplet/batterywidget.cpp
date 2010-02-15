@@ -100,8 +100,8 @@ void BatteryWidget::initWidget ()
     landscapeLayoutPolicy->addItem (standByTimeContainer, 0, 1);
     landscapeLayoutPolicy->setColumnStretchFactor (0, 2);
     landscapeLayoutPolicy->setColumnStretchFactor (1, 2);
-    landscapeLayoutPolicy->addItem (PSMButton, 1, 0, 1, 2);
-    landscapeLayoutPolicy->addItem (sliderContainer, 2, 0, 1, 2);
+    landscapeLayoutPolicy->addItem (sliderContainer, 1, 0, 1, 2);
+    landscapeLayoutPolicy->addItem (PSMButton, 2, 0, 1, 2);
     landscapeLayoutPolicy->setSpacing (10);
     orientationLayout->setLandscapePolicy (landscapeLayoutPolicy);
 
@@ -111,8 +111,8 @@ void BatteryWidget::initWidget ()
     portraitLayoutPolicy->addItem (standByTimeContainer, Qt::AlignLeft);
     portraitLayoutPolicy->setStretchFactor (talkTimeContainer, 2);
     portraitLayoutPolicy->setStretchFactor (standByTimeContainer, 2);
-    portraitLayoutPolicy->addItem (PSMButton, Qt::AlignCenter);
     portraitLayoutPolicy->addItem (sliderContainer, Qt::AlignLeft);
+    portraitLayoutPolicy->addItem (PSMButton, Qt::AlignCenter);
     portraitLayoutPolicy->setSpacing (10);
     orientationLayout->setPortraitPolicy (portraitLayoutPolicy);
 
