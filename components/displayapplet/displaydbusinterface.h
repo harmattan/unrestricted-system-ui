@@ -8,6 +8,10 @@
 #include <QDBusError>
 
 #if 0
+/*
+ * Removed the class because was not used at all. The file itself will be
+ * removed soon if noone touches the file.
+ */
 class QDBusInterface;
 
 class DisplayDBusInterface : public QObject

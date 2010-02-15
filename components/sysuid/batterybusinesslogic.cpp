@@ -7,6 +7,11 @@
 #include <QTime>
 #include <DuiNotification>
 
+/*
+ * Needed to add some delay otherwise the QmSystem seems to return wrong value.
+ */
+#define DELAY_FOR_INITIALIZATION 20
+
 #define DEBUG
 #include "../debug.h"
 
@@ -55,7 +60,7 @@ LowBatteryNotifier::LowBatteryNotifier (
         m_Display (new QmDisplayState()),
         m_Timer (new QTimer(this))
 {
-    qDebug() << Q_FUNC_INFO;
+    SYS_DEBUG ("----------------------------------------------");
 
     m_Sleep = m_Display->get() == Maemo::QmDisplayState::Off;
     m_ActiveInterval = LowBatteryActiveInterval;
@@ -78,7 +83,8 @@ LowBatteryNotifier::~LowBatteryNotifier()
 void 
 LowBatteryNotifier::showLowBatteryNotification()
 {
-    qDebug() << Q_FUNC_INFO;
+    SYS_DEBUG ("");
+
     DuiNotification("", "", qtTrId (LowBatteryText));
     m_Time.start(); //restart time
 
@@ -99,7 +105,8 @@ void
 LowBatteryNotifier::displayStateChanged (
         Maemo::QmDisplayState::DisplayState state)
 {
-    qDebug() << Q_FUNC_INFO;
+    SYS_DEBUG ("");
+
     switch (state) {
     case Maemo::QmDisplayState::On:
         if (!m_Sleep)
@@ -162,7 +169,7 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
             this, SLOT(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)));
 
-    initBattery();
+    QTimer::singleShot (DELAY_FOR_INITIALIZATION, this, SLOT(initBattery()));
 }
 
 
@@ -200,6 +207,7 @@ BatteryBusinessLogic::initSystemUIGConfKeys ()
 void
 BatteryBusinessLogic::initBattery ()
 {
+    SYS_DEBUG ("");
     //init the charging status
     batteryStatusChanged (m_Battery->getState());
 
@@ -243,35 +251,37 @@ void
 BatteryBusinessLogic::batteryStatusChanged (
         Maemo::QmBattery::State state)
 {
-    //qDebug() << "BatteryBusinessLogic::batteryStatusChanged(" << state << ")";
+    SYS_DEBUG ("");
+
     switch (state) {
-    case QmBattery::StateCharging:
-        qDebug() << "Charging";
-        emit batteryCharging(animationRate (m_Battery->getChargerType()));
-        utiliseLED (true, QString("PatternBatteryCharging"));
-        DuiNotification ("", "", qtTrId (ChargingText));
-        if (m_LowBatteryNotifier != NULL) {
-            delete m_LowBatteryNotifier;
-            m_LowBatteryNotifier = NULL;
-        }
-        break;
+        case QmBattery::StateCharging:
+            SYS_DEBUG ("Charging");
+            emit batteryCharging (animationRate (m_Battery->getChargerType()));
+            utiliseLED (true, QString("PatternBatteryCharging"));
+            DuiNotification ("", "", qtTrId (ChargingText));
+            if (m_LowBatteryNotifier != NULL) {
+                delete m_LowBatteryNotifier;
+                m_LowBatteryNotifier = NULL;
+            }
+            break;
 
-    case QmBattery::StateNotCharging:
-        qDebug() << "Not charging";
-        emit batteryNotCharging ();
-        utiliseLED (false, QString("PatternBatteryCharging"));
-        break;
+        case QmBattery::StateNotCharging:
+            SYS_DEBUG ("Not charging");
+            emit batteryNotCharging ();
+            utiliseLED (false, QString("PatternBatteryCharging"));
+            break;
 
-    case QmBattery::StateChargingFailed:
-        qDebug() << "Charging not started";
-        emit batteryNotCharging ();
-        utiliseLED (false, QString("PatternBatteryCharging"));
-        DuiNotification ("", "", qtTrId (ChargingNotStartedText));
-        break;
+        case QmBattery::StateChargingFailed:
+            SYS_DEBUG ("Charging not started");
+            emit batteryNotCharging ();
+            utiliseLED (false, QString("PatternBatteryCharging"));
+            DuiNotification ("", "", qtTrId (ChargingNotStartedText));
+            break;
 
-    default:
-        break;
+        default:
+            SYS_WARNING ("Unhandled state: %d", state);
     }
+
     emit remainingTimeValuesChanged (remainingTimeValues());
 }
 
@@ -279,7 +289,7 @@ void
 BatteryBusinessLogic::batteryLevelChanged (
         Maemo::QmBattery::Level level)
 {
-    qDebug() << "BatteryBusinessLogic::batteryLevelChanged(" << level << ")";
+    SYS_DEBUG ("");
 
     switch (level) {
     case QmBattery::LevelFull:
@@ -318,6 +328,8 @@ void
 BatteryBusinessLogic::batteryChargerEvent (
         Maemo::QmBattery::ChargerType type)
 {
+    SYS_DEBUG ("");
+
     switch (type) {
     case QmBattery::None: // No  charger connected
         if (m_Battery->getLevel() == QmBattery::LevelFull)
@@ -421,7 +433,7 @@ BatteryBusinessLogic::togglePSMAuto (
 QStringList 
 BatteryBusinessLogic::remainingTimeValues ()
 {
-    qDebug() << "BatteryBusinessLogic::remainingTimeValues()";
+    SYS_DEBUG ("");
 
     QStringList values;
     if (m_Battery->getState() == QmBattery::StateCharging)
@@ -496,6 +508,7 @@ BatteryBusinessLogic::PSMThresholdValue()
 void 
 BatteryBusinessLogic::batteryStatus ()
 {
+    SYS_DEBUG ("");
     switch (m_Battery->getState()) {
         case QmBattery::StateCharging:
             emit batteryCharging (animationRate(m_Battery->getChargerType()));
@@ -515,6 +528,7 @@ BatteryBusinessLogic::animationRate (
         Maemo::QmBattery::ChargerType type)
 {
     int rate = -1;
+    SYS_DEBUG ("");
     switch (type) {
     case QmBattery::USB_500mA:
         rate = ChargingAnimationRateUSB;
