@@ -8,8 +8,6 @@
 #include <DuiLayout>
 #include <DuiSlider>
 
-#include <QDebug>
-
 //#define DEBUG 
 #include "../debug.h"
 
@@ -41,7 +39,8 @@ SliderContainer::retranslate ()
 void SliderContainer::setLayout()
 {
     SYS_DEBUG ("");
-    DuiLayout *layout = new DuiLayout ();
+
+    DuiLayout *layout = new DuiLayout;
     layout_policy =
         new DuiLinearLayoutPolicy (layout, Qt::Vertical);
 
@@ -51,23 +50,24 @@ void SliderContainer::setLayout()
 
     // battery label
     textLabel = new DuiLabel;
-    textLabel->setObjectName("batteryLabel");
+    textLabel->setObjectName ("batteryLabel");
     retranslate ();
 
     hpolicy->addItem (textLabel, Qt::AlignLeft);
 
     // PSMAutoButton
-    PSMAutoButton = new DuiButton ();
+    PSMAutoButton = new DuiButton;
     connect (PSMAutoButton, SIGNAL (toggled (bool)),
              this, SLOT (PSMAutoButtonToggled (bool)));
-    PSMAutoButton->setCheckable(true);
-    PSMAutoButton->setObjectName("PSMAutoButton");
+    PSMAutoButton->setCheckable (true);
+    PSMAutoButton->setViewType (DuiButton::switchType);
+    // PSMAutoButton->setObjectName ("PSMAutoButton");
 
     hpolicy->addItem (PSMAutoButton, Qt::AlignRight);
 
     layout_policy->addItem (hlayout);
 
-    centralWidget()->setLayout (layout);
+    centralWidget ()->setLayout (layout);
 }
 
 void 
@@ -76,59 +76,63 @@ SliderContainer::initSlider (
 {
     SYS_DEBUG ("");
     sliderValues = QStringList (values);
-    PSMSlider->setRange (0, sliderValues.size() - 1);
+    PSMSlider->setRange (0, sliderValues.size () - 1);
     PSMSlider->setOrientation (Qt::Horizontal);
     PSMSlider->setHandleLabelVisible (true);
     connect (PSMSlider, SIGNAL (valueChanged (int)),
              this, SLOT (sliderValueChanged (int)));
 }
 
-void SliderContainer::updateSlider(const QString &value)
+void SliderContainer::updateSlider (const QString &value)
 {
-    qDebug() << "SliderContainer::updateSlider(" << value << ")";
-    PSMSlider->setValue (sliderValues.indexOf(value));
+    SYS_DEBUG ("value = %s", SYS_STR (value));
+
+    PSMSlider->setValue (sliderValues.indexOf (value));
     //^ in case this is the first call, we need to set the value
     PSMSlider->setHandleLabel (QString ("%1%").arg (value));
 }
 
-void SliderContainer::sliderValueChanged(int value)
+void SliderContainer::sliderValueChanged (int value)
 {
     SYS_DEBUG ("");
-    updateSlider(sliderValues.at(value));
-    emit PSMThresholdValueChanged(sliderValues.at(value));
+    updateSlider(sliderValues.at (value));
+    emit PSMThresholdValueChanged (sliderValues.at (value));
 }
 
-void SliderContainer::toggleSliderExistence(bool toggle)
+void SliderContainer::toggleSliderExistence (bool toggle)
 {
     SYS_DEBUG ("");
     if (toggle) {
-        if (layout_policy->count() < 2)
+        if (layout_policy->count () < 2)
+        {
             layout_policy->addItem (PSMSlider);
+            PSMSlider->setVisible (true);
+        }
     } else {
-        if (layout_policy->count() > 1)
+        if (layout_policy->count () > 1)
             layout_policy->removeItem (PSMSlider);
     }
 }
 
-void SliderContainer::initPSMAutoButton(bool toggle)
+void SliderContainer::initPSMAutoButton (bool toggle)
 {
     PSMAutoButton->setChecked (toggle);
     toggleSliderExistence (toggle);
 }
 
-void SliderContainer::PSMAutoDisabled()
+void SliderContainer::PSMAutoDisabled ()
 {
     SYS_DEBUG ("");
-    PSMAutoButton->blockSignals(true);
-    initPSMAutoButton(false);
-    PSMAutoButton->blockSignals(false);
+    PSMAutoButton->blockSignals (true);
+    initPSMAutoButton (false);
+    PSMAutoButton->blockSignals (false);
 }
 
-void SliderContainer::PSMAutoButtonToggled(bool toggle)
+void SliderContainer::PSMAutoButtonToggled (bool toggle)
 {
-    SYS_DEBUG ("");
-    qDebug() << "SliderContainer::PSMAutoButtonToggled(" << toggle << ")";
+    SYS_DEBUG ("toggle = %s", SYS_BOOL (toggle));
+
     toggleSliderExistence (toggle);
-    emit PSMAutoToggled(toggle);
+    emit PSMAutoToggled (toggle);
 }
 
