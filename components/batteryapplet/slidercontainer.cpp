@@ -8,7 +8,7 @@
 #include <DuiLayout>
 #include <DuiSlider>
 
-//#define DEBUG 
+#undef DEBUG 
 #include "../debug.h"
 
 SliderContainer::SliderContainer (DuiWidget *parent) :
@@ -96,7 +96,15 @@ void SliderContainer::updateSlider (const QString &value)
 {
     SYS_DEBUG ("value = %s", SYS_STR (value));
 
-    PSMSlider->setValue (sliderValues.indexOf (value));
+    // Store the actual value for later
+    // (eg for the case when slider isn't ready yet...)
+    sliderValue = sliderValues.indexOf (value);
+
+    // Slider not yet created:
+    if (PSMSlider == 0)
+        return;
+
+    PSMSlider->setValue (sliderValue);
     //^ in case this is the first call, we need to set the value
     PSMSlider->setHandleLabel (QString ("%1%").arg (value));
 }
