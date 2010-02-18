@@ -15,7 +15,7 @@ Release
 -------
 
  sb2 -e dpkg-buildpackage -rfakeroot -b
- # <in master branch>
+ # Do these in master branch:
  git tag system-ui-VERSION
  git push --tags origin master
 
