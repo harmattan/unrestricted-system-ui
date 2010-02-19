@@ -171,7 +171,6 @@ DisplayWidget::retranslateUi ()
     modify_screenlight_handle (m_screenlightSlider->value ());
 
     m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
-    m_noteLabel->setText (qtTrId ("qtn_disp_note"));
     m_blankinhibitLabel->setText (qtTrId ("qtn_disp_screenon"));
 }
 
