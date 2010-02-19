@@ -122,10 +122,10 @@ void DisplayWidget::initWidget()
     blankInhibitLayoutPolicy->addItem (blankInhibitButton,
                                        Qt::AlignRight | Qt::AlignVCenter);
 
-    DuiContainer *blankInhibitContainer = new DuiContainer;
+    m_blankInhibitContainer = new DuiContainer;
     //% "Display stays lit when charging"
-    blankInhibitContainer->setTitle (qtTrId ("qtn_disp_screenon"));
-    blankInhibitContainer->centralWidget ()->setLayout (blankInhibitLayout);
+    m_blankInhibitContainer->setTitle (qtTrId ("qtn_disp_screenon"));
+    m_blankInhibitContainer->centralWidget ()->setLayout (blankInhibitLayout);
 
     connect (blankInhibitButton, SIGNAL (toggled (bool)),
              m_logic, SLOT (setBlankInhibitValue (bool)));
@@ -134,7 +134,7 @@ void DisplayWidget::initWidget()
 
     blankInhibitButton->setChecked (m_logic->blankInhibitValue());
 
-    policy->addItem(blankInhibitContainer, Qt::AlignLeft);
+    policy->addItem(m_blankInhibitContainer, Qt::AlignLeft);
 }
 
 void
@@ -171,6 +171,6 @@ DisplayWidget::retranslateUi ()
     modify_screenlight_handle (m_screenlightSlider->value ());
 
     m_brightnessContainer->setTitle (qtTrId ("qtn_disp_bright"));
-    m_blankinhibitLabel->setText (qtTrId ("qtn_disp_screenon"));
+    m_blankInhibitContainer->setTitle (qtTrId ("qtn_disp_screenon"));
 }
 

@@ -37,7 +37,7 @@ private:
 
     DuiContainer           *m_brightnessContainer;
     DuiContainer           *m_screenlightContainer;
-    DuiLabel               *m_blankinhibitLabel;
+    DuiContainer           *m_blankInhibitContainer;
     DuiLabel               *m_OnOffLabel;
 };
 
