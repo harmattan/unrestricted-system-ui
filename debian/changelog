@@ -1,8 +1,13 @@
-system-ui (0.12.1-2~unreleased) harmattan; urgency=low
+system-ui (0.12.1-2) harmattan; urgency=low
 
-  * FILLME 
+  * Fixes some crashes:
+    - Battery applet
+    - Display applet
+  * Install VolumePlugin properly
+  * TouchScreen/Shutdown UI seems works properly on latest image (with this
+    pkg)
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 11 Feb 2010 13:04:58 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 19 Feb 2010 13:42:06 +0100
 
 system-ui (0.12.1-1) harmattan; urgency=low
 
