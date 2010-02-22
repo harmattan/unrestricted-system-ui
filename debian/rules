@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 # Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+# export DH_VERBOSE=1
 
 DEBDIR = ..
 CFLAGS = -Wall -Werror -g
@@ -40,7 +40,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
-	qmake $(QMAKE_OPTIONS)
+	@qmake $(QMAKE_OPTIONS)
 
 	touch configure-stamp
 
@@ -74,8 +74,8 @@ install: build
 # Build architecture-independent files here.
 binary-indep: build install
 	# install the translation source file to doc.
-	install -m 644 -D -p $(CURDIR)/translations/duicontrolpanel-systemui.ts \
-		$(CURDIR)/debian/tmp/usr/share/doc/systemui-l10n-engineering-english/duicontrolpanel-systemui.ts
+	install -m 644 -D -p $(CURDIR)/translations/systemui.ts \
+		$(CURDIR)/debian/tmp/usr/share/doc/systemui-l10n-engineering-english/systemui.ts
 
 # Build architecture-dependent files here.
 binary-arch: build install
@@ -111,3 +111,4 @@ binary-arch: build install
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
+

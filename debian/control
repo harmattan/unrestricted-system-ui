@@ -2,10 +2,8 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
-Build-Depends: debhelper (>= 5), libduicontrolpanel-dev,
-               libdui-dev (>= 0.18), libqmsystem-dev, libalarm-dev,
-               libprofile-qt-dev (>= 0.13), duistatusindicatormenu-dev,
-               libpulse-dev (>= 0.9.15)
+Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18), libqmsystem-dev,
+               libalarm-dev, libprofile-qt-dev (>= 0.13)
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -28,48 +26,3 @@ XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
 
-Package: duicontrolpanel-usbapplet
-Section: misc
-Architecture: any
-Depends:  duicontrolpanel, libduicontrolpanel, systemui-l10n-engineering-english
-Description: USB applet for the control panel application
-
-Package: duicontrolpanel-batteryapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, system-ui, libduicontrolpanel, systemui-l10n-engineering-english
-Description: Battery settings applet.
-
-Package: duistatusindicatormenu-batteryplugin
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english
-Description: Battery status indicator menu plugin.
-
-Package: duistatusindicatormenu-volumeplugin
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english, libpulse0
-Description: Volume status indicator plugin
-
-Package: duicontrolpanel-displayapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel, systemui-l10n-engineering-english
-Description: Display settings applet.
-
-Package: duicontrolpanel-profileapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel, systemui-l10n-engineering-english
-Description: Profiles settings applet.
-
-Package: duistatusindicatormenu-profileplugin
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duistatusindicatormenu, systemui-l10n-engineering-english
-Description: Profile status indicator menu plugin.
-
-Package: systemui-l10n-engineering-english
-Section: devel
-Architecture: all
-Description: Engineering English translations for system-ui packages.
-
-Package: duicontrolpanel-ledapplet
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, duicontrolpanel, systemui-l10n-engineering-english
-Description: LED settings applet.
