@@ -9,7 +9,8 @@ Standards-Version: 3.7.3
 Package: system-ui
 Replaces: cellular-ui
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, hal, sudo
+Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
+         hal, sudo, libosso-dbus-conf [i386]
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - battery notifications

@@ -28,7 +28,7 @@
 #define WARNING
 #include "debug.h"
 
-#define TRANSLATION_CATALOG "duicontrolpanel-systemui"
+#define TRANSLATION_CATALOG "systemui"
 
 namespace
 {

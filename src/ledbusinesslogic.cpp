@@ -118,6 +118,8 @@ LedBusinessLogic::gconfValueChanged (
         case SystemUIGConf::LedEventsEnabled:
             emit eventsLedStateChanged(value.toBool());
             break;
+        default:
+            break;
     }
 }
 

@@ -49,6 +49,9 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         bool            silent,
         bool            flicker)
 {
+    Q_UNUSED(flicker);
+    Q_UNUSED(silent);
+
 #if 1
     SYS_DEBUG (
 "\n*** service   = '%s'"
@@ -115,6 +118,7 @@ int
 LockScreenBusinessLogicAdaptor::tklock_close (
         bool   b)
 {
+    Q_UNUSED(b);
     SYS_DEBUG ("*** b = %s", b ? "true" : "false");
 
     return (int) TkLockReplyOk;
