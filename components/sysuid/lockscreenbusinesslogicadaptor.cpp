@@ -138,3 +138,4 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 
     delete dbusIf;
 }
+

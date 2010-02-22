@@ -10,7 +10,6 @@ class UsbUi;
 class SystemUIGConf;
 class BatteryBusinessLogic;
 class LedBusinessLogic;
-//class LockScreenBusinessLogic;
 class ShutdownBusinessLogic;
 
 class Sysuid : public QObject
@@ -18,11 +17,12 @@ class Sysuid : public QObject
     Q_OBJECT
 
 public:
-    Sysuid();
-    virtual ~Sysuid();
-    static Sysuid* sysuid();
-    static QString dbusService();
-    static QString dbusPath();
+    Sysuid ();
+    virtual ~Sysuid ();
+    static Sysuid* sysuid ();
+    static QString dbusService ();
+    static QString dbusPath ();
+    bool running_in_actdead_mode ();
 
 public slots:
     void retranslate ();

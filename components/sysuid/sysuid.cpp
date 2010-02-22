@@ -1,5 +1,8 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
+
+#include "unistd.h"
+
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -22,6 +25,7 @@
 #include "shutdownbusinesslogic.h"
 
 //#define DEBUG
+#define WARNING
 #include "../debug.h"
 
 #define TRANSLATION_CATALOG "duicontrolpanel-systemui"
@@ -37,7 +41,7 @@ Sysuid* Sysuid::m_Sysuid = NULL;
 
 Sysuid::Sysuid () : QObject ()
 {
-    qDebug () << "starting sysuidaemon";
+    SYS_DEBUG ("Starting sysuidaemon");
 
     m_Sysuid = this;
 
@@ -47,6 +51,9 @@ Sysuid::Sysuid () : QObject ()
 
     // Load translation of System-UI
     retranslate ();
+
+    SYS_WARNING ("running in active-dead mode : %s",
+                 SYS_BOOL (running_in_actdead_mode ()));
 
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
@@ -103,7 +110,7 @@ void Sysuid::retranslate ()
     // Create a new duilocale instance with current language
     DuiLocale        locale (lang);
 
-    qDebug () << Q_FUNC_INFO << "with lang" << lang;
+    SYS_DEBUG (" lang = %s", SYS_STR (lang));
 
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
@@ -111,5 +118,13 @@ void Sysuid::retranslate ()
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     DuiLocale::setDefault (locale);
+}
+
+bool
+Sysuid::running_in_actdead_mode ()
+{
+    // Seems this is the only way to check whether
+    // are we running in active-dead mode:
+    return access ("/tmp/ACT_DEAD", F_OK) == 0;
 }
 

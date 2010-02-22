@@ -1,7 +1,5 @@
 #include "sysuid.h"
 
-#include <QTimer>
-#include <QDebug>
 #include <DuiSceneManager>
 #include <DuiApplication>
 #include <DuiApplicationWindow>
@@ -39,11 +37,6 @@ int main (int argc, char** argv)
     flags |= Qt::CustomizeWindowHint;
     win.setWindowOpacity (0.0);
     win.setWindowFlags (flags);
-
-    // qDebug and qWarning shows nothing without this:
-    // FIXME: Use SYS_DEBUG, SYS_WARNING instead of q...
-    //        and then remove this call
-    qInstallMsgHandler (0);
 
     signal (SIGINT, sysuid_exit);
 

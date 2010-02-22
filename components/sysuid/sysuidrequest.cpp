@@ -69,3 +69,4 @@ SysUidRequest::dbusPath ()
 {
     return QString ("/com/nokia/system_ui/request");
 }
+
