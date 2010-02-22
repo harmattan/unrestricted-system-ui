@@ -7,58 +7,53 @@ CONFIG += dui \
 
 QT += dbus
 
-INCLUDEPATH += /usr/include/alarmd \
-               /usr/include/dbus-1.0 \
-               /usr/lib/dbus-1.0/include
-
 contains(cov, true) { 
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
     QMAKE_LFLAGS += --coverage
 }
 
-HEADERS +=                 \
-    ../debug.h             \
-    sysuidrequest.h        \
-    batterybusinesslogic.h \
-    ledbusinesslogic.h     \
-    sysuid.h               \
-    lockscreenbusinesslogic.h \
-    lockscreenui.h \
-    shutdownui.h                     \
-    shutdownbusinesslogic.h          \
-    batterybusinesslogicadaptor.h    \
-    ledbusinesslogicadaptor.h        \
-    systemuigconf.h \
-    lockscreenbusinesslogicadaptor.h \
-    ../usbapplet/usbmodes.h \
-    usbbusinesslogic.h \
-    usbbusinesslogicadaptor.h \
+HEADERS +=                              \
+    debug.h                             \
+    sysuidrequest.h                     \
+    batterybusinesslogic.h              \
+    ledbusinesslogic.h                  \
+    sysuid.h                            \
+    lockscreenbusinesslogic.h           \
+    lockscreenui.h                      \
+    shutdownui.h                        \
+    shutdownbusinesslogic.h             \
+    batterybusinesslogicadaptor.h       \
+    ledbusinesslogicadaptor.h           \
+    systemuigconf.h                     \
+    lockscreenbusinesslogicadaptor.h    \
+    usbmodes.h                          \
+    usbbusinesslogic.h                  \
+    usbbusinesslogicadaptor.h           \
     usbui.h
 
-SOURCES +=  \
-    ../debug.cpp \
-    main.cpp \
-    sysuidrequest.cpp \
-    batterybusinesslogic.cpp    \
-    ledbusinesslogic.cpp        \
-    sysuid.cpp \
-    lockscreenbusinesslogic.cpp \
-    lockscreenui.cpp \
-    shutdownui.cpp \
-    shutdownbusinesslogic.cpp \
-    batterybusinesslogicadaptor.cpp \
-    ledbusinesslogicadaptor.cpp     \
-    systemuigconf.cpp \
-    lockscreenbusinesslogicadaptor.cpp \
-    ../usbapplet/usbmodes.cpp \
-    usbbusinesslogic.cpp \
-    usbbusinesslogicadaptor.cpp \
+SOURCES +=                              \
+    debug.cpp                           \
+    main.cpp                            \
+    sysuidrequest.cpp                   \
+    batterybusinesslogic.cpp            \
+    ledbusinesslogic.cpp                \
+    sysuid.cpp                          \
+    lockscreenbusinesslogic.cpp         \
+    lockscreenui.cpp                    \
+    shutdownui.cpp                      \
+    shutdownbusinesslogic.cpp           \
+    batterybusinesslogicadaptor.cpp     \
+    ledbusinesslogicadaptor.cpp         \
+    systemuigconf.cpp                   \
+    lockscreenbusinesslogicadaptor.cpp  \
+    usbmodes.cpp                        \
+    usbbusinesslogic.cpp                \
+    usbbusinesslogicadaptor.cpp         \
     usbui.cpp
 
 style_sheet.files += sysuid.css
-style_svg.files += *.svg \
-                   ../../data/*.svg
+style_svg.files += ../data/*.svg
 
 include(unlocksliderwidget/unlocksliderwidget.pri)
 style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style

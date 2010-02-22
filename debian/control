@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18),
-               libqmsystem-dev, libalarm-dev
+               libqmsystem-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
