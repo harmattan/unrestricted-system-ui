@@ -1,9 +1,5 @@
-# ####################################################################
-# System-UI main projectfile
-# ####################################################################
-
 TEMPLATE = subdirs
-SUBDIRS = components \
+SUBDIRS = src \
           tests \
           translations
 
