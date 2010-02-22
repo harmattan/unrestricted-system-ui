@@ -1,7 +1,7 @@
-SRC_PREFIX = ../../components/sysuid
-STUB_PREFIX = ../stubs/
+SRC_PREFIX = ../../src
+STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
-    $$STUB_PREFIX
+               $$STUB_PREFIX
 QT += testlib
 TEMPLATE = app
 DEFINES += UNIT_TEST
@@ -11,7 +11,7 @@ CONFIG += dui silent
 
 HEADERS += \
     ut_batterybusinesslogic.h \
-    $$SRC_PREFIX/../debug.h \
+    $$SRC_PREFIX/debug.h \
     $$SRC_PREFIX/batterybusinesslogic.h \    
     $$STUB_PREFIX/devicemodestub.h \
     $$STUB_PREFIX/displaystatestub.h \
@@ -21,7 +21,7 @@ HEADERS += \
 
 SOURCES += \
     ut_batterybusinesslogic.cpp \
-    $$SRC_PREFIX/../debug.cpp \
+    $$SRC_PREFIX/debug.cpp \
     $$SRC_PREFIX/batterybusinesslogic.cpp \    
     $$STUB_PREFIX/devicemodestub.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \

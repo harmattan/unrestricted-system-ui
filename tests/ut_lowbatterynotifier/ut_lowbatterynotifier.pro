@@ -1,5 +1,5 @@
-SRC_PREFIX = ../../components/sysuid
-STUB_PREFIX = ../stubs/
+SRC_PREFIX = ../../src
+STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 
@@ -23,7 +23,7 @@ contains(cov, true) {
 
 SOURCES += \
     ut_lowbatterynotifier.cpp \
-    $$SRC_PREFIX/../debug.cpp \
+    $$SRC_PREFIX/debug.cpp \
     $$SRC_PREFIX/batterybusinesslogic.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \
     $$STUB_PREFIX/batterystub.cpp \
@@ -31,7 +31,7 @@ SOURCES += \
 
 HEADERS += \
     ut_lowbatterynotifier.h \
-    $$SRC_PREFIX/../debug.h \
+    $$SRC_PREFIX/debug.h \
     $$SRC_PREFIX/batterybusinesslogic.h \
     $$STUB_PREFIX/displaystatestub.h \
     $$STUB_PREFIX/batterystub.h \
@@ -45,3 +45,4 @@ contains(cov, true) {
 
 
 INSTALLS += target
+

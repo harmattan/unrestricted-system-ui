@@ -8,10 +8,8 @@
 #include <DuiNotification>
 #include <DuiLocale>
 
-//#include <QDebug>
-
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 using namespace Maemo;
 

@@ -14,8 +14,8 @@
  */
 #define DELAY_FOR_INITIALIZATION 0
 
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 /* TODO List
 

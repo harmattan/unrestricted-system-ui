@@ -12,7 +12,7 @@
 
 #define DEBUG
 #define WARNING
-#include "../debug.h"
+#include "debug.h"
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic (0),

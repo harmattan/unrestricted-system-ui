@@ -6,8 +6,8 @@
 
 #include <QObject>
 
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 #include "signal.h"
 

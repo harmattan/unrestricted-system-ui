@@ -10,9 +10,9 @@
 
 #include <QString>
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
-#include "../debug.h"
+#include "debug.h"
 
 #define DEFAULT_USB_CABLE_UDI \
     "/org/freedesktop/Hal/devices/usb_device_1d6b_2_musb_hdrc"

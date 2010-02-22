@@ -10,7 +10,7 @@
 
 class QProcess;
 
-#include "../usbapplet/usbmodes.h"
+#include "usbmodes.h"
 
 class UsbBusinessLogic : public QObject
 {

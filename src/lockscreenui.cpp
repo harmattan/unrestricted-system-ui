@@ -20,7 +20,7 @@
 #include <QDateTime>
 
 #define DEBUG
-#include "../debug.h"
+#include "debug.h"
 
 LockScreenUI::LockScreenUI () :
         timeLabel (NULL),

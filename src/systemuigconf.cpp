@@ -5,8 +5,8 @@
 #include <DuiGConfItem>
 #include <QDebug>
 
-//#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 SystemUIGConf::SystemUIGConf (
 		QObject* parent) :

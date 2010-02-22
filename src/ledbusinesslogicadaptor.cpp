@@ -4,8 +4,8 @@
 #include "ledbusinesslogicadaptor.h"
 #include "ledbusinesslogic.h"
 
-//#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
             QObject          *parent, 

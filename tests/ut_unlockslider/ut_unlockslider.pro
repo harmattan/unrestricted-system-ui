@@ -1,4 +1,4 @@
-SLIDER_PREFIX = ../../components/sysuid/unlocksliderwidget
+SLIDER_PREFIX = ../../src/unlocksliderwidget
 INCLUDEPATH += $$SLIDER_PREFIX
 QT += testlib
 TEMPLATE = app

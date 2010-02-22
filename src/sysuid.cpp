@@ -26,7 +26,7 @@
 
 //#define DEBUG
 #define WARNING
-#include "../debug.h"
+#include "debug.h"
 
 #define TRANSLATION_CATALOG "duicontrolpanel-systemui"
 

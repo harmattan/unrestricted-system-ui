@@ -4,8 +4,8 @@
 #include "batterybusinesslogicadaptor.h"
 #include "batterybusinesslogic.h"
 
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor (
 		QObject              *obj, 

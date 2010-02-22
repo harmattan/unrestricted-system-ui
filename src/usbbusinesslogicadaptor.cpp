@@ -1,7 +1,7 @@
 #include "usbbusinesslogicadaptor.h"
 
 #define WARNING
-#include "../debug.h"
+#include "debug.h"
 
 UsbBusinessLogicAdaptor::UsbBusinessLogicAdaptor (
     QObject             *parent,

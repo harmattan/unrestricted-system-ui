@@ -9,8 +9,8 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :

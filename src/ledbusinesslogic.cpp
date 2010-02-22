@@ -4,7 +4,7 @@
 #include "ledbusinesslogic.h"
 
 //#define DEBUG
-#include "../debug.h"
+#include "debug.h"
 
 LedBusinessLogic::LedBusinessLogic (
         SystemUIGConf *systemUIGConf, 

@@ -4,8 +4,8 @@
 #include "QDBusInterface"
 #include "lockscreenbusinesslogicadaptor.h"
 
-#define DEBUG
-#include "../debug.h"
+#undef DEBUG
+#include "debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
         QObject                 *obj, 
