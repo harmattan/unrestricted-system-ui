@@ -18,6 +18,12 @@ Description: Various system user interfaces.
   - shutdown dialog
   - usb mode selection dialog
 
+Package: system-ui-dbg
+Section: devel
+Architecture: any
+Depends: system-ui (= ${binary:Version})
+Description: System UI - debug symbols
+
 Package: system-ui-tests
 Section: tests
 Priority: optional
