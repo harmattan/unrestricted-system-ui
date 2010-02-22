@@ -19,3 +19,8 @@ Release
  git tag system-ui-VERSION
  git push --tags origin master
 
+Applets
+-------
+Applets moved to:
+    git@dvcs.projects.maemo.org:af/systemui-applets
+

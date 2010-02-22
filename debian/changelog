@@ -1,8 +1,8 @@
 system-ui (0.12.1-3~unreleased) harmattan; urgency=low
 
-  * FILLME
+  * Split sysuid from applets
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 19 Feb 2010 13:48:42 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 22 Feb 2010 16:40:44 +0100
 
 system-ui (0.12.1-2) harmattan; urgency=low
 

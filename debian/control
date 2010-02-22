@@ -2,8 +2,8 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
-Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18), libqmsystem-dev,
-               libalarm-dev, libprofile-qt-dev (>= 0.13)
+Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18),
+               libqmsystem-dev, libalarm-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -25,4 +25,9 @@ Depends: ${shlibs:Depends}, testrunner, ci-testing
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
+
+Package: systemui-l10n-engineering-english
+Section: devel
+Architecture: all
+Description: Engineering English translations for system-ui daemon.
 
