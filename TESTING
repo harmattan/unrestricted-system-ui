@@ -1,0 +1,12 @@
+Testing:
+
+sb2 -Re apt-get install system-ui-tests
+or
+sb2 -Re system-ui-tests*.deb
+
+--
+
+maemo-sdk start gui
+maemo-sdk enter runtime
+
+testrunner.py -f /usr/share/system-ui-tests/tests.xml -o system-ui-tests-results.xml
