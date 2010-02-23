@@ -88,6 +88,8 @@ LowBatteryNotifier::showLowBatteryNotification()
     SYS_DEBUG ("");
 
     DuiNotification("", "", qtTrId (LowBatteryText));
+    // Needed by ut_lowbatterynotification
+    emit showNotification (qtTrId (LowBatteryText));
     m_Time.start(); //restart time
 
     switch (m_Display->get()) {
