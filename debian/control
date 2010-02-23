@@ -20,6 +20,7 @@ Description: Various system user interfaces.
 
 Package: system-ui-dbg
 Section: devel
+Priority: extra
 Architecture: any
 Depends: system-ui (= ${binary:Version})
 Description: System UI - debug symbols
