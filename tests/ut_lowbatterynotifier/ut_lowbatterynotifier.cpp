@@ -14,32 +14,33 @@ const int Act = 1000;
 const int Inact = 2000;
 }
 
-void LowBatteryHelper::start()
+void LowBatteryHelper::start ()
 {
-    times.clear();
-    time.start();
+    times.clear ();
+    time.start ();
 }
 
-QList<int> LowBatteryHelper::notificationTimes()
+QList<int> LowBatteryHelper::notificationTimes ()
 {
     return times;
 }
 
-void LowBatteryHelper::notificationShown()
+void LowBatteryHelper::notificationShown ()
 {
-    times << time.restart();
+    times << time.restart ();
 }
 
-void Ut_LowBatteryNotifier::init()
+void Ut_LowBatteryNotifier::init ()
 {
-    m_subject = new LowBatteryNotifier();
-    m_helper = new LowBatteryHelper();
-    connect(m_subject, SIGNAL(showNotification(QString)), m_helper, SLOT(notificationShown()));
+    m_subject = new LowBatteryNotifier ();
+    m_helper = new LowBatteryHelper ();
+    connect (m_subject, SIGNAL (showNotification (QString)),
+             m_helper, SLOT (notificationShown ()));
     m_subject->m_ActiveInterval = Act;
     m_subject->m_InactiveInterval = Inact;
 }
 
-void Ut_LowBatteryNotifier::cleanup()
+void Ut_LowBatteryNotifier::cleanup ()
 {
     delete m_subject;
     m_subject = NULL;
@@ -48,19 +49,19 @@ void Ut_LowBatteryNotifier::cleanup()
 }
 
 DuiApplication *app;
-void Ut_LowBatteryNotifier::initTestCase()
+void Ut_LowBatteryNotifier::initTestCase ()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_lowbatterynotifier";
     app = new DuiApplication(argc, &app_name);
 }
 
-void Ut_LowBatteryNotifier::cleanupTestCase()
+void Ut_LowBatteryNotifier::cleanupTestCase ()
 {
     delete app;
 }
 
-void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
+void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
 {
     /*
         1) Display is on
@@ -69,25 +70,29 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse()
             - First was sent right away
             - Second and third were sent at [Active timeout (+0,1 secs)]
     */
-    m_subject->m_Display->set(Maemo::QmDisplayState::On);
-    m_helper->start();
-    m_subject->showLowBatteryNotification();
-    QTest::qWait(Act * 2 + 50);
+    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    m_helper->start ();
+    m_subject->showLowBatteryNotification ();
+    QTest::qWait (Act * 2 + 50);
 
-    QCOMPARE(m_helper->notificationTimes().count(), 3);
-    for (int i = 0; i < m_helper->notificationTimes().count(); ++i) {
-        qDebug() << "times(" << i << "): " << m_helper->notificationTimes().at(i);
-        if (i > 0) {
-            QVERIFY(m_helper->notificationTimes().at(i) <= Act + 100);
-            QVERIFY(m_helper->notificationTimes().at(i) >= Act);
-        } else {
-            QVERIFY(m_helper->notificationTimes().at(i) <= 100);
-            QVERIFY(m_helper->notificationTimes().at(i) >= 0);
+    QCOMPARE(m_helper->notificationTimes ().count (), 3);
+    for (int i = 0; i < m_helper->notificationTimes ().count (); ++i)
+    {
+        qDebug () << "times(" << i << "): " << m_helper->notificationTimes ().at (i);
+        if (i > 0)
+        {
+            QVERIFY(m_helper->notificationTimes ().at (i) <= Act + 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) >= Act);
+        }
+        else
+        {
+            QVERIFY(m_helper->notificationTimes ().at (i) <= 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) >= 0);
         }
     }
 }
 
-void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
+void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
 {
     /*
         1) Display is on
@@ -103,29 +108,29 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse()
             - First was sent right away
             - Second was sent at [Active timeout * 1.25 (+0,1 secs)]
     */
-    m_subject->m_Display->set(Maemo::QmDisplayState::On);
-    m_helper->start();
-    m_subject->showLowBatteryNotification();
-    QTest::qWait(Act / 2);
-    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set(Maemo::QmDisplayState::On);
-    QTest::qWait(Act / 4);
-    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
-    QTest::qWait(Act / 2);
-    m_subject->m_Display->set(Maemo::QmDisplayState::On);
+    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    m_helper->start ();
+    m_subject->showLowBatteryNotification ();
+    QTest::qWait (Act / 2);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    QTest::qWait (Act / 4);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    QTest::qWait (Act / 2);
+    m_subject->m_Display->set (Maemo::QmDisplayState::On);
 
-    QCOMPARE(m_helper->notificationTimes().count(), 2);
-    qDebug() << "times(" << 0 << "): " << m_helper->notificationTimes().at(0);
-    QVERIFY(m_helper->notificationTimes().at(0) <= 100);
-    QVERIFY(m_helper->notificationTimes().at(0) >= 0);
-    qDebug() << "times(" << 1 << "): " << m_helper->notificationTimes().at(1);
-    QVERIFY(m_helper->notificationTimes().at(1) <= Act / 2 + Act / 2 + Act / 4 + 100);
-    QVERIFY(m_helper->notificationTimes().at(1) >= Act / 2 + Act / 2 + Act / 4);
+    QCOMPARE(m_helper->notificationTimes ().count (), 2);
+    qDebug() << "times(" << 0 << "): " << m_helper->notificationTimes ().at (0);
+    QVERIFY(m_helper->notificationTimes ().at (0) <= 100);
+    QVERIFY(m_helper->notificationTimes ().at (0) >= 0);
+    qDebug() << "times(" << 1 << "): " << m_helper->notificationTimes ().at (1);
+    QVERIFY(m_helper->notificationTimes ().at (1) <= Act / 2 + Act / 2 + Act / 4 + 100);
+    QVERIFY(m_helper->notificationTimes ().at (1) >= Act / 2 + Act / 2 + Act / 4);
 
 }
 
-void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse()
+void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
 {
     /*
         1) Display is off
@@ -138,24 +143,24 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse()
             - First was sent right away
             - Second and third were sent at [Inactive timeout]
     */
-    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
-    m_helper->start();
-    m_subject->showLowBatteryNotification();
-    QTest::qWait(Inact + Act / 2);
-    m_subject->m_Display->set(Maemo::QmDisplayState::On);
-    m_subject->m_Display->set(Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set(Maemo::QmDisplayState::Off);
-    QTest::qWait(Inact - Act / 2 + 50);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    m_helper->start ();
+    m_subject->showLowBatteryNotification ();
+    QTest::qWait (Inact + Act / 2);
+    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
+    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    QTest::qWait (Inact - Act / 2 + 50);
 
-    QCOMPARE(m_helper->notificationTimes().count(), 3);
-    for (int i = 0; i < m_helper->notificationTimes().count(); ++i) {
-        qDebug() << "times(" << i << "): " << m_helper->notificationTimes().at(i);
+    QCOMPARE(m_helper->notificationTimes ().count (), 3);
+    for (int i = 0; i < m_helper->notificationTimes ().count (); ++i) {
+        qDebug() << "times(" << i << "): " << m_helper->notificationTimes ().at (i);
         if (i > 0) {
-            QVERIFY(m_helper->notificationTimes().at(i) <= Inact + 100);
-            QVERIFY(m_helper->notificationTimes().at(i) >= Inact);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= Inact + 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) >= Inact);
         } else {
-            QVERIFY(m_helper->notificationTimes().at(i) <= 100);
-            QVERIFY(m_helper->notificationTimes().at(i) >= 0);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) >= 0);
         }
     }
 }
