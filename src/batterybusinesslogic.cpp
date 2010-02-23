@@ -7,7 +7,6 @@
 #include <QTime>
 #include <DuiNotification>
 
-
 /*
  * Needed to add some delay otherwise the QmSystem seems to return wrong value. 
  * But then it stopped to work with the next image...
@@ -52,6 +51,14 @@ const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
 const int   ChargingAnimationRateUSB = 800; // 800 ms
 const int   ChargingAnimationRateWall = 400; // 400 ms
 }
+
+#if 0
+#define NOTIFICATION(str) \
+        if (m_notification != 0) \
+        { \
+        }
+#endif
+
 
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.

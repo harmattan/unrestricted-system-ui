@@ -2,7 +2,7 @@ Testing:
 
 sb2 -Re apt-get install system-ui-tests
 or
-sb2 -Re system-ui-tests*.deb
+sb2 -Re dpkg -i system-ui-tests*.deb
 
 --
 
