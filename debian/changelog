@@ -1,9 +1,10 @@
-system-ui (0.12.1-3~unreleased) harmattan; urgency=low
+system-ui (0.12.1-3) harmattan; urgency=low
 
   * Split sysuid from applets
   * Add dbg package creation
+  * Re-Tag
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 22 Feb 2010 17:27:56 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 23 Feb 2010 09:19:16 +0100
 
 system-ui (0.12.1-2) harmattan; urgency=low
 
