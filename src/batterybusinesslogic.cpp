@@ -52,13 +52,15 @@ const int   ChargingAnimationRateUSB = 800; // 800 ms
 const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#if 0
-#define NOTIFICATION(str) \
+// This macro will hide the previous notification
+#define NOTIFICATION(duinotification) \
         if (m_notification != 0) \
         { \
-        }
-#endif
-
+            m_notification->remove (); \
+            delete m_notification; \
+            m_notification = 0; \
+        } \
+        m_notification = (duinotification);
 
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.
@@ -67,7 +69,8 @@ LowBatteryNotifier::LowBatteryNotifier (
         QObject *parent) :
         QObject (parent),
         m_Display (new QmDisplayState()),
-        m_Timer (new QTimer(this))
+        m_Timer (new QTimer(this)),
+        m_notification (0)
 {
     SYS_DEBUG ("----------------------------------------------");
 
@@ -94,7 +97,7 @@ LowBatteryNotifier::showLowBatteryNotification()
 {
     SYS_DEBUG ("");
 
-    DuiNotification("", "", qtTrId (LowBatteryText));
+    NOTIFICATION(new DuiNotification ("", "", qtTrId (LowBatteryText)));
     // Needed by ut_lowbatterynotification
     emit showNotification (qtTrId (LowBatteryText));
     m_Time.start(); //restart time
@@ -150,7 +153,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_Battery (new QmBattery),
     m_DeviceMode (new QmDeviceMode),
     m_Led (new QmLED),
-    m_LowBatteryNotifier (NULL)
+    m_LowBatteryNotifier (NULL),
+    m_notification (0)
 {
     /* init the PSM thresholds */
     m_PSMThresholds << 
@@ -276,7 +280,7 @@ BatteryBusinessLogic::batteryStatusChanged (
             SYS_DEBUG ("Charging");
             emit batteryCharging (animationRate (m_Battery->getChargerType()));
             utiliseLED (true, QString("PatternBatteryCharging"));
-            DuiNotification ("", "", qtTrId (ChargingText));
+            NOTIFICATION(new DuiNotification ("", "", qtTrId (ChargingText)));
             if (m_LowBatteryNotifier != NULL) {
                 delete m_LowBatteryNotifier;
                 m_LowBatteryNotifier = NULL;
@@ -293,7 +297,8 @@ BatteryBusinessLogic::batteryStatusChanged (
             SYS_DEBUG ("Charging not started");
             emit batteryNotCharging ();
             utiliseLED (false, QString("PatternBatteryCharging"));
-            DuiNotification ("", "", qtTrId (ChargingNotStartedText));
+            NOTIFICATION(new DuiNotification ("", "",
+                             qtTrId (ChargingNotStartedText)));
             break;
 
         default:
@@ -311,7 +316,8 @@ BatteryBusinessLogic::batteryLevelChanged (
 
     switch (level) {
     case QmBattery::LevelFull:
-        DuiNotification("", "", qtTrId (ChargingCompleteText));
+        NOTIFICATION(new DuiNotification("", "",
+                         qtTrId (ChargingCompleteText)));
         utiliseLED(true, QString("PatternBatteryFull"));
         break;
 
@@ -351,7 +357,8 @@ BatteryBusinessLogic::batteryChargerEvent (
     switch (type) {
     case QmBattery::None: // No  charger connected
         if (m_Battery->getLevel() == QmBattery::LevelFull)
-            DuiNotification("", "", qtTrId (DisconnectChargerText)); //show reminder
+            NOTIFICATION(new DuiNotification("", "",
+                             qtTrId (DisconnectChargerText))); //show reminder
         break;
 
     case QmBattery::Wall: // Wall charger
@@ -373,11 +380,11 @@ BatteryBusinessLogic::devicePSMStateChanged (
         PSMState << ")";
 
     if (PSMState == QmDeviceMode::PSMStateOff) {
-        DuiNotification("", "", qtTrId (ExitPSMText));
+        NOTIFICATION(new DuiNotification("", "", qtTrId (ExitPSMText)));
         SYS_DEBUG ("Emitting DBus signal on PSM off");
         emit PSMValueChanged (false);
     } else if (PSMState == QmDeviceMode::PSMStateOn) {
-        DuiNotification("", "", qtTrId (EnterPSMText));
+        NOTIFICATION(new DuiNotification("", "", qtTrId (EnterPSMText)));
         SYS_DEBUG ("Emitting DBus signal on PSM on");
         emit PSMValueChanged (true);
     }
