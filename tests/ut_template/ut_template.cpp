@@ -34,7 +34,7 @@ Ut_Template::testCase1 ()
     // XXX: Implement here a test case
     const QString test = "10";
 
-    QCOMPARE(test, "10");
+    QCOMPARE(test, QString ("10"));
 
     QVERIFY(1 == 1);
 }
