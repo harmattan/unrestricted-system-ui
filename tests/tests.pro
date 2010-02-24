@@ -1,8 +1,11 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    ut_unlockslider \
-    ut_batterybusinesslogic \
-    ut_lowbatterynotifier
+    ut_template
+
+# These tests needs X server:
+#    ut_unlockslider \
+#    ut_batterybusinesslogic \
+#    ut_lowbatterynotifier
 
 QMAKE_STRIP = echo
 #include(shell.pri)
