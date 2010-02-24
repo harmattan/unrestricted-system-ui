@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <testdefinition version="0.1">
   <suite name="system-ui-tests"> 
-    <set name="template" description "Dummy test">
+    <set name="template" description="Dummy test">
         <case name="template" description="Dummy test (a template for unit test)">
             <step expected_result="0">/usr/lib/system-ui-tests/ut_template</step>
         </case>
+<!-- I can't see whats the point for the following lines:
         <get>
-            <file>ut_template.txt</file>
+            <file>/tmp/ut_template.txt</file>
         </get>
     </set>
+-->
 <!--
+     TESTS which needs X, but seems its unavailable... :-S
     <set name="unlockslider" description="API tests">
       <case name="ut_unlockslider" type="Functional" description="Test the unlock slider API" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
