@@ -5,6 +5,9 @@
 
 #include "actdeadbusinesslogic.h"
 class DuiApplicationPage;
+class DuiImageWidget;
+class DuiLabel;
+class QTimer;
 
 class ActDeadUI : public QObject
 {
@@ -16,7 +19,8 @@ class ActDeadUI : public QObject
     
     public slots:
         void chargingComplete ();
-        void batteryEvent (QmBattery::State);
+        void powersave (bool active);
+        void animate ();
 
     private:
         void showCharging ();
@@ -26,6 +30,10 @@ class ActDeadUI : public QObject
     private:
         DuiApplicationPage      *m_window;
         ActDeadBusinessLogic    *m_logic;
+        DuiImageWidget          *m_anim;
+        QStringList             *m_anim_imgs;
+        QTimer                  *m_timer;
+        DuiLabel                *m_status;
 };
 
 #endif

@@ -15,7 +15,6 @@ class ActDeadBusinessLogic : public QObject
 
     public:
         ActDeadBusinessLogic (QObject *parent = 0);
-        ~ActDeadBusinessLogic ();
         QmBattery::State getBatteryState ();
         QmBattery::Level getBatteryLevel ();
         void turnOnDisplay ();
@@ -23,10 +22,12 @@ class ActDeadBusinessLogic : public QObject
     signals:
         void ChargingComplete ();
         void BatteryEvent (QmBattery::State state);
+        void PowerSave (bool active);
 
     private slots:
         void levelChange (QmBattery::Level level);
         void stateChange (QmBattery::State state);
+        void displayChange (QmDisplayState::DisplayState state);
 
     private:
         QmBattery           *m_battery;

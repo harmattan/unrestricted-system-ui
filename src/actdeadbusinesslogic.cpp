@@ -21,6 +21,10 @@ ActDeadBusinessLogic::ActDeadBusinessLogic (QObject *parent) :
     m_level = m_battery->getLevel ();
     m_display = new QmDisplayState (this);
 
+    connect (m_display,
+             SIGNAL (displayStateChanged (QmDisplayState::DisplayState)),
+             this,
+             SLOT (displayChange (QmDisplayState::DisplayState)));
     connect (m_battery, SIGNAL (batteryLevelChanged (QmBattery::Level)),
              this, SLOT (levelChange (QmBattery::Level)));
     connect (m_battery, SIGNAL (batteryStatusChanged (QmBattery::State)),
@@ -36,14 +40,6 @@ ActDeadBusinessLogic::ActDeadBusinessLogic (QObject *parent) :
     // Dim the display (maybe the charging
     // animation and the window isn't ready)
     m_display->set (QmDisplayState::Dimmed);
-}
-
-ActDeadBusinessLogic::~ActDeadBusinessLogic ()
-{
-    delete m_battery;
-    m_battery = 0;
-    delete m_display;
-    m_display = 0;
 }
 
 QmBattery::State
@@ -114,5 +110,19 @@ ActDeadBusinessLogic::turnOnDisplay ()
     m_display->set (QmDisplayState::On);
     // Pause blanking for a while...
     m_display->setBlankingPause ();
+}
+
+void
+ActDeadBusinessLogic::displayChange (QmDisplayState::DisplayState state)
+{
+    bool active = true;
+
+    if (state == QmDisplayState::Off)
+        active = false;
+
+    // Emit powersave signal, in this way
+    // UI can stop the animation untill screen
+    // is turned off...
+    emit PowerSave (active);
 }
 
