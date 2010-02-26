@@ -30,9 +30,7 @@ HEADERS +=                              \
     usbmodes.h                          \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
-    usbui.h                             \
-    actdeadbusinesslogic.h              \
-    actdeadui.h
+    usbui.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -52,9 +50,7 @@ SOURCES +=                              \
     usbmodes.cpp                        \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
-    usbui.cpp                           \
-    actdeadbusinesslogic.cpp            \
-    actdeadui.cpp
+    usbui.cpp
 
 style_sheet.files += sysuid.css
 style_svg.files += ../data/*.svg
@@ -64,7 +60,7 @@ style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
 style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
 style_images.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/images
 
-# TODO: remove these when ke-recv-ng or what going to be integrated...
+# TODO: remove these when ke-recv going to be integrated:
 usb_scripts.files += pcsuite-enable.sh
 usb_scripts.path = $$(DEBIAN_DESTDIR)/usr/bin
 

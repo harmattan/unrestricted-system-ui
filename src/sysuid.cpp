@@ -23,7 +23,6 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
-#include "actdeadui.h"
 
 //#define DEBUG
 #define WARNING
@@ -40,12 +39,7 @@ const QString svgDir = themeDir + "svg/";
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid () : QObject (),
-    m_SystemUIGConf (0),
-    m_BatteryLogic (0),
-    m_LedLogic (0),
-    m_ShutdownLogic (0),
-    m_UsbUi (0)
+Sysuid::Sysuid () : QObject ()
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
@@ -58,44 +52,35 @@ Sysuid::Sysuid () : QObject (),
     // Load translation of System-UI
     retranslate ();
 
-    if (! running_in_actdead_mode ())
-    {
-        m_SystemUIGConf   = new SystemUIGConf (this);
-        m_ShutdownLogic   = new ShutdownBusinessLogic (this);
-        m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
-        m_LedLogic        = new LedBusinessLogic (m_SystemUIGConf, this);
-        m_UsbUi           = new UsbUi (this);
+    SYS_WARNING ("running in active-dead mode : %s",
+                 SYS_BOOL (running_in_actdead_mode ()));
 
-        // D-Bus registration and stuff
-        new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
-        new LedBusinessLogicAdaptor (this, m_LedLogic);
-        new UsbBusinessLogicAdaptor (this, m_UsbUi->getLogic ());
+    m_SystemUIGConf   = new SystemUIGConf (this);
+    m_ShutdownLogic   = new ShutdownBusinessLogic (this);
+    m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
+    m_LedLogic        = new LedBusinessLogic (m_SystemUIGConf, this);
+    m_UsbUi           = new UsbUi (this);
 
-        // FIXME: XXX: Do we need this also in act-dead mode?
-        QDBusConnection bus = QDBusConnection::sessionBus ();
-        if (!bus.registerService (dbusService ())) {
-            qCritical () << Q_FUNC_INFO << "failed to register dbus service";
-            abort();
-        }
-        if (!bus.registerObject (dbusPath (), sysuid ())) {
-            qCritical () << Q_FUNC_INFO << "failed to register dbus object";
-            abort();
-        }
+    // D-Bus registration and stuff
+    new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
+    new LedBusinessLogicAdaptor (this, m_LedLogic);
+    new UsbBusinessLogicAdaptor (this, m_UsbUi->getLogic ());
 
-        /*
-         * The screen locking is implemented in this separate class, because it is
-         * bound to the system bus (MCE wants to contact us on the system bus).
-         */
-        new SysUidRequest;
+    QDBusConnection bus = QDBusConnection::sessionBus ();
+    if (!bus.registerService (dbusService ())) {
+        qCritical () << Q_FUNC_INFO << "failed to register dbus service";
+        abort();
     }
-    else
-    {
-        // Active-dead mode:
-        // Only instantiate Active-dead ui
-        SYS_WARNING ("Active dead mode");
-
-        new ActDeadUI (this);
+    if (!bus.registerObject (dbusPath (), sysuid ())) {
+        qCritical () << Q_FUNC_INFO << "failed to register dbus object";
+        abort();
     }
+
+    /*
+     * The screen locking is implemented in this separate class, because it is
+     * bound to the system bus (MCE wants to contact us on the system bus).
+     */
+    new SysUidRequest;
 }
 
 Sysuid::~Sysuid ()
