@@ -53,9 +53,6 @@ ActDeadUI::ActDeadUI (QObject *parent) :
     // TODO: Check whether the charging really happening...
     // if (logic->getBatteryState () == QMBattery::StateCharging)
     showCharging ();
-//    showNotCharging ();
-//    chargingComplete ();
-
 }
 
 ActDeadUI::~ActDeadUI ()
@@ -79,7 +76,7 @@ ActDeadUI::createContents ()
 
     QGraphicsLinearLayout *widgets = new QGraphicsLinearLayout;
 
-    widgets->addStretch (2);
+    widgets->addStretch (4);
 
     m_anim = new DuiImageWidget;
     m_anim->setMaximumSize (64, 64);
@@ -88,14 +85,11 @@ ActDeadUI::createContents ()
 
     //% "Charging"
     m_status = new DuiLabel (qtTrId ("qtn_ener_char"));
-    m_status->setAlignment (Qt::AlignCenter);
-    m_status->setWordWrap (false);
-//    m_status->setSizePolicy (QSizePolicy::MinimumExpanding,
-//                             QSizePolicy::MinimumExpanding);
+    m_status->setAlignment (Qt::AlignLeft | Qt::AlignVCenter);
     m_status->setObjectName ("actdeadLabel");
     widgets->addItem (m_status);
 
-    widgets->addStretch (2);
+    widgets->addStretch (4);
 
     QSize size = DuiApplication::activeApplicationWindow ()->
                  sceneManager ()->visibleSceneSize (Dui::Landscape);
@@ -137,15 +131,13 @@ ActDeadUI::chargingComplete ()
 {
     SYS_DEBUG ("");
 
-    m_anim->setVisible (true);
+    m_anim->setVisible (false);
     // Stopping animation
     if (m_timer)
     {
         delete m_timer;
         m_timer = 0;
     }
-    m_anim->setImage (m_anim_imgs->at (m_anim_imgs->count () - 1),
-                      QSize (64, 64));
 
     //% "Charging complete"
     m_status->setText (qtTrId ("qtn_ener_charcomp") +
@@ -168,7 +160,6 @@ ActDeadUI::showCharging ()
                  this, SLOT (animate ()));
     }
     m_timer->start (ANIM_TIMEOUT);
-    m_anim->setVisible (true);
 
     //% "Charging"
     m_status->setText (qtTrId ("qtn_ener_char"));
@@ -182,7 +173,6 @@ ActDeadUI::showNotCharging ()
 {
     SYS_DEBUG ("");
 
-    m_anim->setVisible (false);
     // Stopping animation
     if (m_timer)
     {
