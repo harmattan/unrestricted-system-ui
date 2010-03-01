@@ -1,4 +1,4 @@
-Source: systemui
+Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
