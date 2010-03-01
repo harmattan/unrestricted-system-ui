@@ -1,3 +1,9 @@
+system-ui (0.12.1-5~unreleased) harmattan; urgency=low
+
+  * FILLME 
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 01 Mar 2010 14:50:45 +0100
+
 system-ui (0.12.1-4) harmattan; urgency=low
 
   * Fixes: NB#152690 - No UI indications when connected / disconnected 
