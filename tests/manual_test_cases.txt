@@ -14,7 +14,7 @@ Touch-screen lock UI
   Prerequisite:
     - Open DuiControlPanel
     - Open Display applet
-    - Set some value for time-out
+    - Set some value for blacklight time-out
       (when charger or usb cable connected turn off the "Display stays 
        lit when charging" option)
     - (optional: close DuiControlpanel)
@@ -30,6 +30,7 @@ Touch-screen lock UI
     - Touch-screen unlock UI should be appear
 
   1) Wait for some time (~5sec): screen should be locked (+off) again.
+  or
   2) Try to unlock the screen: screen should be unlocked
                           (and screen-lights restored)
 
@@ -60,3 +61,4 @@ CASE 4:
   (Battery full notification)
   
   TODO: Need to be checked whether can be tested without battery
+
