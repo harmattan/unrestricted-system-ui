@@ -1,7 +1,7 @@
 #include "sysuid.h"
 
-#include <DuiSceneManager>
 #include <DuiApplication>
+#include <DuiSceneManager>
 #include <DuiApplicationWindow>
 
 #include <QObject>
