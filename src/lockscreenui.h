@@ -51,6 +51,11 @@ private:
     DuiLabel *missedCallsLabel;
     DuiLabel *unreadChatMessagesLabel;
 
+    int m_emails;
+    int m_messages;
+    int m_calls;
+    int m_im;
+
     UnlockSlider *slider;
 };
 
