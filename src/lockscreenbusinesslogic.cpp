@@ -9,7 +9,7 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
@@ -39,6 +39,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
      * FIXME: getState() segfaults under scratchbox. 
      */
 #ifndef __i386__
+    displayStateChanged (display->get ());
+
     locksChanged (
             QmLocks::TouchAndKeyboard,
             locks->getState (QmLocks::TouchAndKeyboard));
@@ -87,10 +89,18 @@ LockScreenBusinessLogic::displayStateChanged (
 
         case Maemo::QmDisplayState::On:
             SYS_DEBUG ("Screen on");
+            // Only appear lockUI when display isn't off,
+            // because it can trigger SGX hardware recovery errors
+            if (knownLock == QmLocks::Locked)
+            {
+                lockUI->appear();
+                lockUI->setActive(true);
+            }
             mayStartTimer ();
             break;
 
         default:
+            SYS_DEBUG ("Dimmed");
             /*
              * Might be a dimmed state.
              */
@@ -130,7 +140,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
     if (toggle) {
         DuiApplication::activeApplicationWindow()->show();
-        lockUI->appear();
     } else {
         DuiApplication::activeApplicationWindow()->hide();
     }
@@ -141,6 +150,7 @@ LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("");
     if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off) {
+        SYS_DEBUG ("Locked & Not off");
         // It's better to update the time straight away.
         lockUI->updateDateTime();
 
