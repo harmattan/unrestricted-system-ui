@@ -93,8 +93,9 @@ LockScreenBusinessLogic::displayStateChanged (
             // because it can trigger SGX hardware recovery errors
             if (knownLock == QmLocks::Locked)
             {
-                lockUI->appear();
-                lockUI->setActive(true);
+                SYS_DEBUG ("Show the lock UI");
+                lockUI->appearNow ();
+                lockUI->setActive (true);
             }
             mayStartTimer ();
             break;
@@ -139,9 +140,9 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        DuiApplication::activeApplicationWindow()->show();
+        DuiApplication::activeApplicationWindow ()->show ();
     } else {
-        DuiApplication::activeApplicationWindow()->hide();
+        DuiApplication::activeApplicationWindow ()->hide ();
     }
 }
 
