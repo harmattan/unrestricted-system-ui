@@ -1,15 +1,11 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    ut_template
-
-# These tests needs X server:
-#    ut_unlockslider \
-#    ut_batterybusinesslogic \
-#    ut_lowbatterynotifier
+    ut_template \
+    ut_unlockslider \
+    ut_batterybusinesslogic \
+    ut_lowbatterynotifier
 
 QMAKE_STRIP = echo
-#include(shell.pri)
-#include(runtests.pri)
 
 QMAKE_CLEAN += **/*.log.xml ./coverage.log.xml
 
