@@ -149,6 +149,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         DuiApplication::activeApplicationWindow ()->show ();
         hidefromTaskBar ();
     } else {
+        DuiApplication::activeApplicationWindow ()->lower ();
         DuiApplication::activeApplicationWindow ()->hide ();
     }
 }
@@ -158,7 +159,6 @@ LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("");
     if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off) {
-        SYS_DEBUG ("Locked & Not off");
         // It's better to update the time straight away.
         lockUI->updateDateTime();
 
