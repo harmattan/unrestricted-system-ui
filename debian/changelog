@@ -1,3 +1,9 @@
+system-ui (0.12.1-6) harmattan; urgency=low
+
+  * Re-tag, with disabled tklock
+
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 04 Mar 2010 16:21:33 +0100
+
 system-ui (0.12.1-5) harmattan; urgency=low
 
   * Fixes: NB#159266 - Device goes into Sleep after launching a 
