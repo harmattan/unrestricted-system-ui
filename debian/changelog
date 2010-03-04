@@ -1,9 +1,9 @@
-system-ui (0.12.1-5~unreleased) harmattan; urgency=low
+system-ui (0.12.1-5) harmattan; urgency=low
 
   * Fixes: NB#159266 - Device goes into Sleep after launching a 
                        application from Launcher.
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 04 Mar 2010 13:42:15 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 04 Mar 2010 13:58:40 +0100
 
 system-ui (0.12.1-4) harmattan; urgency=low
 
