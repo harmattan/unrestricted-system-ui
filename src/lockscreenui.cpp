@@ -23,16 +23,20 @@
 #include "debug.h"
 
 LockScreenUI::LockScreenUI () :
-        timeLabel (NULL),
-        dateLabel (NULL),
-        unreadEmailsImage (NULL),
-        unreadMessagesImage (NULL),
-        missedCallsImage (NULL),
-        unreadChatMessagesImage (NULL),
-        unreadEmailsLabel (NULL),
-        unreadMessagesLabel (NULL),
-        missedCallsLabel (NULL),
-        unreadChatMessagesLabel (NULL)
+        timeLabel (0),
+        dateLabel (0),
+        unreadEmailsImage (0),
+        unreadMessagesImage (0),
+        missedCallsImage (0),
+        unreadChatMessagesImage (0),
+        unreadEmailsLabel (0),
+        unreadMessagesLabel (0),
+        missedCallsLabel (0),
+        unreadChatMessagesLabel (0),
+        m_emails (0),
+        m_messages (0),
+        m_calls (0),
+        m_im (0)
 {
     SYS_DEBUG ("");
     setPannableAreaInteractive(false);
@@ -121,7 +125,7 @@ LockScreenUI::createWidgets ()
 
     updateDateTime();
     /*
-     * DuiSlider* slider = new DuiSlider(NULL, "dot");
+     * DuiSlider* slider = new DuiSlider(0, "dot");
      * slider->setOrientation(Qt::Horizontal);
      */
     slider = new UnlockSlider;
@@ -149,10 +153,14 @@ LockScreenUI::createWidgets ()
 
     // TODO: some suitable layout could be added to image and then the label to that layout
 
-    unreadEmailsLabel   = new DuiLabel ("0", unreadEmailsImage);
-    unreadMessagesLabel = new DuiLabel ("0", unreadMessagesImage);
-    missedCallsLabel    = new DuiLabel ("0", missedCallsImage);
-    unreadChatMessagesLabel = new DuiLabel ("0", unreadChatMessagesImage);
+    unreadEmailsLabel   = new DuiLabel (QString("%1").arg(m_emails),
+                                        unreadEmailsImage);
+    unreadMessagesLabel = new DuiLabel (QString("%1").arg(m_messages),
+                                        unreadMessagesImage);
+    missedCallsLabel    = new DuiLabel (QString("%1").arg(m_calls),
+                                        missedCallsImage);
+    unreadChatMessagesLabel = new DuiLabel (QString("%1").arg(m_im),
+                                            unreadChatMessagesImage);
 
     QGraphicsWidget* spacerr = new QGraphicsWidget;
     spacerr->setSizePolicy(
@@ -180,6 +188,9 @@ LockScreenUI::createWidgets ()
 void 
 LockScreenUI::updateDateTime ()
 {
+    if (isContentCreated () == false)
+        return;
+
     DuiLocale locale;
 
     QDateTime now (QDateTime::currentDateTime());
@@ -209,8 +220,17 @@ LockScreenUI::updateMissedEventAmounts (
 "\n*** im        = %d",
     emails, messages, calls, im);
 
-    missedCallsLabel->setText(QString("%1").arg(calls));
-    unreadMessagesLabel->setText(QString("%1").arg(messages));
-    unreadEmailsLabel->setText(QString("%1").arg(emails));
-    unreadChatMessagesLabel->setText(QString("%1").arg(im));
+    m_emails = emails;
+    m_messages = messages;
+    m_calls = calls;
+    m_im = im;
+
+    if (isContentCreated ())
+    {
+        missedCallsLabel->setText(QString("%1").arg(calls));
+        unreadMessagesLabel->setText(QString("%1").arg(messages));
+        unreadEmailsLabel->setText(QString("%1").arg(emails));
+        unreadChatMessagesLabel->setText(QString("%1").arg(im));
+    }
 }
+

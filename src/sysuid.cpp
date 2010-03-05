@@ -80,7 +80,8 @@ Sysuid::Sysuid () : QObject ()
      * The screen locking is implemented in this separate class, because it is
      * bound to the system bus (MCE wants to contact us on the system bus).
      */
-    new SysUidRequest;
+//   <dkedves> disabled for a while: see NB#159266      
+//    new SysUidRequest;
 }
 
 Sysuid::~Sysuid ()

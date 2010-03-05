@@ -1,8 +1,29 @@
-system-ui (0.12.1-4~unreleased) harmattan; urgency=low
+system-ui (0.12.1-7~unreleased) harmattan; urgency=low
 
-  * FILLME 
+  * FILLME
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 23 Feb 2010 09:23:26 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 05 Mar 2010 10:23:39 +0100
+
+system-ui (0.12.1-6) harmattan; urgency=low
+
+  * Re-tag, with disabled tklock
+
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 04 Mar 2010 16:21:33 +0100
+
+system-ui (0.12.1-5) harmattan; urgency=low
+
+  * Fixes: NB#159266 - Device goes into Sleep after launching a 
+                       application from Launcher.
+
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 04 Mar 2010 13:58:40 +0100
+
+system-ui (0.12.1-4) harmattan; urgency=low
+
+  * Fixes: NB#152690 - No UI indications when connected / disconnected 
+                       the dedicated / USB charging 
+  * Fixes: NB#156758 -  Battery applet always shows "Charging..."
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 26 Feb 2010 12:58:26 +0100
 
 system-ui (0.12.1-3) harmattan; urgency=low
 
@@ -55,7 +76,7 @@ system-ui (0.11.0-6) harmattan; urgency=low
   * Fixes: NB#151278 - Display is not dimmed according to the Time set.
   * Fixes: NB#151460 - Battery stand-by time available cannot be shown in 
            Status indicator menu
-  * Fixes: NB#141264 - Obexd is not opening connection properly
+  * Workaround for NB#141264 - Obexd is not opening connection properly
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 03 Feb 2010 11:39:11 +0100
 

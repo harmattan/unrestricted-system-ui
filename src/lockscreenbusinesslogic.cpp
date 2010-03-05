@@ -9,6 +9,11 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
+#include <X11/Xlib.h>
+// TODO: this include can be removed when duicompositor
+// sets the _NET_WM_STATE attribute according to the message.
+#include <X11/Xatom.h>
+
 #undef DEBUG
 #include "debug.h"
 
@@ -39,6 +44,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
      * FIXME: getState() segfaults under scratchbox. 
      */
 #ifndef __i386__
+    displayStateChanged (display->get ());
+
     locksChanged (
             QmLocks::TouchAndKeyboard,
             locks->getState (QmLocks::TouchAndKeyboard));
@@ -87,10 +94,20 @@ LockScreenBusinessLogic::displayStateChanged (
 
         case Maemo::QmDisplayState::On:
             SYS_DEBUG ("Screen on");
+            // Only appear lockUI when display isn't off,
+            // because it can trigger SGX hardware recovery errors
+            if (knownLock == QmLocks::Locked)
+            {
+                SYS_DEBUG ("Show the lock UI");
+                lockUI->setOpacity (1.0);
+                lockUI->appearNow ();
+                lockUI->setActive (true);
+            }
             mayStartTimer ();
             break;
 
         default:
+            SYS_DEBUG ("Dimmed");
             /*
              * Might be a dimmed state.
              */
@@ -129,10 +146,11 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        DuiApplication::activeApplicationWindow()->show();
-        lockUI->appear();
+        DuiApplication::activeApplicationWindow ()->show ();
+        hidefromTaskBar ();
     } else {
-        DuiApplication::activeApplicationWindow()->hide();
+        DuiApplication::activeApplicationWindow ()->lower ();
+        DuiApplication::activeApplicationWindow ()->hide ();
     }
 }
 
@@ -154,5 +172,50 @@ void
 LockScreenBusinessLogic::stopTimer ()
 {
     timer.stop();
+}
+
+void
+LockScreenBusinessLogic::hidefromTaskBar ()
+{
+    SYS_DEBUG ("");
+    XEvent e;
+    e.xclient.type = ClientMessage;
+    Display *display = QX11Info::display ();
+    Atom netWmStateAtom = XInternAtom (display,
+                                       "_NET_WM_STATE",
+                                       False);
+    Atom skipTaskbarAtom = XInternAtom (QX11Info::display (),
+                                        "_NET_WM_STATE_SKIP_TASKBAR",
+                                       False);
+
+    e.xclient.message_type = netWmStateAtom;
+    e.xclient.display = display;
+    e.xclient.window = DuiApplication::activeApplicationWindow ()->internalWinId();
+    e.xclient.format = 32;
+    e.xclient.data.l[0] = 1;
+    e.xclient.data.l[1] = skipTaskbarAtom; 
+    e.xclient.data.l[2] = 0;
+    e.xclient.data.l[3] = 0;
+    e.xclient.data.l[4] = 0;
+    XSendEvent (display,
+                RootWindow (display, DuiApplication::activeApplicationWindow ()->x11Info ().screen ()),
+                FALSE,
+                (SubstructureNotifyMask | SubstructureRedirectMask),
+                &e);
+
+    // TODO: setting this property by hand can be removed when duicompositor
+    // sets the _NET_WM_STATE attribute according to the message.
+    QVector<Atom> atoms;
+    atoms.append(skipTaskbarAtom);
+    XChangeProperty (QX11Info::display (),
+                     DuiApplication::activeApplicationWindow ()->internalWinId(),
+                     netWmStateAtom,
+                     XA_ATOM,
+                     32,
+                     PropModeReplace,
+                     (unsigned char *) atoms.data (),
+                     atoms.count ());
+
+    XFlush (display);
 }
 

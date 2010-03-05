@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <testdefinition version="0.1">
   <suite name="system-ui-tests"> 
+    <set name="template" description="Dummy test">
+        <case name="template" description="Dummy test (a template for unit test)">
+            <step expected_result="0">/usr/lib/system-ui-tests/ut_template</step>
+        </case>
+    </set>
     <set name="unlockslider" description="API tests">
       <case name="ut_unlockslider" type="Functional" description="Test the unlock slider API" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
       </case>
-          <get>
-            <file>/tmp/ut_unlockslider.txt</file>
-         </get>
     </set>
     <set name="batterybusinesslogic" description="middleware tests">
       <case name="ut_batterybusinesslogic" type="Functional" description="Test the BatteryBusinessLogic" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_batterybusinesslogic</step>
       </case>
-          <get>
-            <file>/tmp/ut_batterybusinesslogic.txt</file>
-         </get>
     </set>
     <set name="lowbatterynotifier" description="middleware tests">
       <case name="ut_lowbatterynotifier" type="Functional" description="Test the LowBatteryNotifier" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lowbatterynotifier</step>
       </case>
-          <get>
-            <file>/tmp/ut_lowbatterynotifier.txt</file>
-         </get>
     </set>
   </suite>
 </testdefinition>

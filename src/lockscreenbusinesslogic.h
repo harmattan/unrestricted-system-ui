@@ -37,6 +37,7 @@ private: //methods
     void toggleScreenLockUI(bool toggle);
     void mayStartTimer();
     void stopTimer();
+    void hidefromTaskBar();
 
 private: //attributes
     QmDisplayState *display;

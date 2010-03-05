@@ -26,7 +26,7 @@ Depends: system-ui (= ${binary:Version})
 Description: System UI - debug symbols
 
 Package: system-ui-tests
-Section: tests
+Section: devel
 Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, testrunner, ci-testing
