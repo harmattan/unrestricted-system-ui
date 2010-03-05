@@ -99,6 +99,8 @@ LowBatteryNotifier::showLowBatteryNotification()
 
     NOTIFICATION(new DuiNotification ("", "", qtTrId (LowBatteryText)));
     // Needed by ut_lowbatterynotification
+    qDebug () << "emitting showNotification ()";
+
     emit showNotification (qtTrId (LowBatteryText));
     m_Time.start(); //restart time
 
