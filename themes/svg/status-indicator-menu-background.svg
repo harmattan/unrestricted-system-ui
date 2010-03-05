@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="status-indicator-menu-background-layer"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16.001px"
+	 viewBox="0 0 16 16.001" style="enable-background:new 0 0 16 16.001;" xml:space="preserve">
+<g id="status-indicator-menu-background">
+	<g>
+		<rect y="0.001" style="opacity:0.93;fill:#010101;enable-background:new    ;" width="16" height="16"/>
+	</g>
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-389.5005" y1="696.2539" x2="-389.5005" y2="694.4336" gradientTransform="matrix(-1 5.076770e-06 -5.728453e-06 8.7902 -381.496 -6104.2207)">
+		<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+		<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0.93"/>
+	</linearGradient>
+	<rect style="opacity:0.1;fill:url(#SVGID_1_);enable-background:new    ;" width="16" height="16"/>
+</g>
+</svg>

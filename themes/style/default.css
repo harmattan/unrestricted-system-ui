@@ -1,0 +1,30 @@
+@const FONT_XLARGE:  "Nokia Sans" 3.11mm; /* 32px */
+@const FONT_LARGE:   "Nokia Sans" 2.72mm; /* 28px */
+@const FONT_DEFAULT: "Nokia Sans" 2.34mm; /* 24px */
+@const FONT_SMALL:   "Nokia Sans" 1.95mm; /* 20px */
+@const FONT_XSMALL:  "Nokia Sans" 1.56mm; /* 16px */
+@const COLOR_ACTIVE_FOREGROUND: #ffffff; /* activated item title */
+@const COLOR_ACTIVE_BACKGROUND: #CCFF33; /* activated item background */
+
+DuiApplicationPageStyle#StatusIndicatorMenuPage {
+    background-image: status-indicator-menu-background;
+}
+
+DuiButtonStyle#StatusIndicatorMenuSettingsButton {
+    font: $FONT_DEFAULT;
+    preferred-size: 432 86;
+    minimum-size: 432 86;
+    maximum-size: 432 86;
+    margin-top: 6;
+    margin-bottom: 6;
+}
+
+#lockscreenTimeLabel {
+    color: #00DD00;
+    font: "Nokia Sans Wide" 52;
+}
+
+#lockscreenDateLabel {
+    color: #EEEEEE;
+    font: "Nokia Sans Wide" 24;
+}

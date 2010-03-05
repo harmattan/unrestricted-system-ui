@@ -1,0 +1,62 @@
+/*
+ * profile.h
+ *
+ * This file is part of system ui
+ *
+ * Copyright (C) 2009 Nokia Corporation. All rights reserved.
+ *
+ * This software, including documentation, is protected by copyright
+ * controlled by Nokia Corporation. All rights are reserved.
+ * Copying, including reproducing, storing, adapting or translating,
+ * any or all of this material requires the prior written consent of
+ * Nokia Corporation. This material also contains confidential
+ * information which may not be disclosed to others without the prior
+ * written consent of Nokia.
+ */
+
+#ifndef PROFILE_H
+#define PROFILE_H
+
+#include <DuiWidget>
+
+class DuiStatusIndicatorMenuInterface;
+class DuiApplicationPage;
+class DuiButton;
+
+/*!
+ * The Profile widget makes it possible to select the currently
+ * active profile.
+ */
+class Profile : public DuiWidget
+{
+    Q_OBJECT
+
+public:
+    Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
+    virtual ~Profile();
+
+private slots:
+    /*!
+     * \brief A slot for showing the profile modification page.
+     */
+    void showProfileModificationPage();
+
+    /*!
+     * \brief A slot for receiving information about button clicks.
+     */
+    void buttonClicked();
+
+    /*!
+     * \brief A slot for receiving information about button clicks.
+     */
+    void buttonClicked(DuiButton *button);
+
+private:
+    //! Interface for controlling the status indicator menu
+    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
+
+    //! Application page for the profile modification
+    DuiApplicationPage *profileModificationPage;
+};
+
+#endif // PROFILE_H

@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    ut_template
+    ut_template \
+    ut_pluginlist
 
 # These tests needs X server:
 #    ut_unlockslider \

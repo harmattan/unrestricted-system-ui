@@ -8,7 +8,3 @@ HEADERS += unlocksliderwidget/unlockslider.h \
     unlocksliderwidget/unlocksliderview.h
 MODEL_HEADERS += unlocksliderwidget/unlockslidermodel.h
 STYLE_HEADERS += unlocksliderwidget/unlocksliderstyle.h
-
-style_sheet.files += unlocksliderwidget/unlocksliderstyle.css
-style_svg.files += unlocksliderwidget/*.svg
-
