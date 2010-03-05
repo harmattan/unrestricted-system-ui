@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "ut_lowbatterynotifier.h"
 #include "batterybusinesslogic.h"
 #include "displaystatestub.h"
@@ -13,8 +15,12 @@
 
 namespace
 {
-const int Act = 1000;
-const int Inact = 2000;
+    const int Act = 1000;
+    const int Inact = 2000;
+    // Acceptable delay in milliseconds. I have seen as much as 363 milliseconds
+    // delay in the CITA server, so we have to fine tune the original 100
+    // milliseconds tolerance here.
+    const int aDelay = 500;
 }
 
 void LowBatteryHelper::start ()
@@ -90,17 +96,17 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
     for (int i = 0; i < m_helper->notificationTimes ().count (); ++i)
     {
         qDebug () << 
-		__func__ <<
-		"times(" << i << "): " <<
-		m_helper->notificationTimes ().at (i);
+		    __func__ <<
+    		"Notification " << i << " shown after " <<
+		m_helper->notificationTimes ().at (i) << "uSec";
         if (i > 0)
         {
-            //QVERIFY(m_helper->notificationTimes ().at (i) <= Act + 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= Act + aDelay);
             QVERIFY(m_helper->notificationTimes ().at (i) >= Act);
         }
         else
         {
-            //QVERIFY(m_helper->notificationTimes ().at (i) <= 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= aDelay);
             QVERIFY(m_helper->notificationTimes ().at (i) >= 0);
         }
     }
@@ -137,16 +143,19 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
     QCOMPARE(m_helper->notificationTimes ().count (), 2);
     qDebug() << 
 	    __func__ <<
-	    "times(" << 0 << "): " << m_helper->notificationTimes ().at (0);
+	    "Notification 0 shown after " << 
+        m_helper->notificationTimes ().at (0) << "uSec";
     
-    //QVERIFY(m_helper->notificationTimes ().at (0) <= 100);
+    QVERIFY(m_helper->notificationTimes ().at (0) <= aDelay);
     QVERIFY(m_helper->notificationTimes ().at (0) >= 0);
     
     qDebug() << 
 	    __func__ <<
-	    "times(" << 1 << "): " << m_helper->notificationTimes ().at (1);
+	    "Notification 1 shown after " << 
+        m_helper->notificationTimes ().at (1) << "uSec";
 
-    //QVERIFY(m_helper->notificationTimes ().at (1) <= Act / 2 + Act / 2 + Act / 4 + 100);
+    QVERIFY(m_helper->notificationTimes ().at (1) <= 
+             Act / 2 + Act / 2 + Act / 4 + aDelay);
     QVERIFY(m_helper->notificationTimes ().at (1) >= Act / 2 + Act / 2 + Act / 4);
 
 }
@@ -176,16 +185,15 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
     QCOMPARE(m_helper->notificationTimes ().count (), 3);
     for (int i = 0; i < m_helper->notificationTimes ().count (); ++i) {
         qDebug() << 
-		__func__ <<
-		"times(" << i << "): " << 
-		m_helper->notificationTimes ().at (i);
+		    __func__ <<
+    		"Notification " << i << " shown after " << 
+	    	m_helper->notificationTimes ().at (i) << "uSec";
 
         if (i > 0) {
-	    // This failed, have no idea why, but we need to integrate!
-            //QVERIFY(m_helper->notificationTimes ().at (i) <= Inact + 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= Inact + aDelay);
             QVERIFY(m_helper->notificationTimes ().at (i) >= Inact);
         } else {
-            //QVERIFY(m_helper->notificationTimes ().at (i) <= 100);
+            QVERIFY(m_helper->notificationTimes ().at (i) <= aDelay);
             QVERIFY(m_helper->notificationTimes ().at (i) >= 0);
         }
     }
