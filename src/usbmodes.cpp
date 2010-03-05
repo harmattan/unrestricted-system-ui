@@ -1,8 +1,8 @@
 const char * usb_modes_str[] = 
         { "ovi_suite",
           "mass_storage",
-          "do_nothing",
-          "auto",
+          "charging_only",
+          "ask",
           0
         };
 

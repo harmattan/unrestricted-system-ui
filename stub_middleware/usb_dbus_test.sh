@@ -1,10 +1,9 @@
 #!/bin/sh
 # David Kedves <dkedves@blumsoft.eu>
 # Copyright 2010 Nokia
-# This script just for testing the sysuid UsbUi in sbox2,
-# you should run this in runtime (maemo-sdk enter runtime)
+# This script just for testing the sysuid UsbUi inside scratchbox 1
 
-source /tmp/session_bus_address.${USER}
+source /tmp/session_bus_address.user
 sysuid -software &
 
 SYSUIDPID=$!
@@ -32,7 +31,7 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 sleep 3;
 
 echo "Usb connect with do nothing setting"
-gconftool-2 -t string -s /Dui/System/UsbMode do_nothing
+gconftool-2 -t string -s /Dui/System/UsbMode charging_only
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 3;
@@ -41,7 +40,7 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 sleep 3;
 
 echo Usb connect with "Ask on connection" setting
-gconftool-2 -t string -s /Dui/System/UsbMode auto
+gconftool-2 -t string -s /Dui/System/UsbMode ask
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 15;
