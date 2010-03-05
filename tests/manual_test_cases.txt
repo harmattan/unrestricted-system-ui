@@ -7,6 +7,14 @@ CASE 1:
     - Shutdown UI (with text "Good bye!") should be appear,
       and device should power off
 
+CASE 2:
+  (Thermal shutdown)
+   TODO: Need to find a way how is possible to trigger this situation...
+
+CASE 3:
+  (Battery critical low)
+  See Battery UI case 4.
+
 Touch-screen lock UI
 ------------------------
   (Basic locking/unlocking test...)
