@@ -9,7 +9,9 @@ CASE 1:
 
 CASE 2:
   (Thermal shutdown)
-   TODO: Need to find a way how is possible to trigger this situation...
+
+  On the device: apt-get install tbench dsm-tests
+                 tbench -t 41052
 
 CASE 3:
   (Battery critical low)
@@ -63,7 +65,8 @@ CASE 2:
 CASE 3:
   (Critical-low battery notification & forced shutdown)
 
-  TODO: Check whether this can be checked without battery
+  On the device: apt-get install tbench dsm-tests
+                 tbench -t 41900
 
 CASE 4:
   (Battery full notification)
