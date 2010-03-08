@@ -21,6 +21,8 @@ Touch-screen lock UI
 ------------------------
   (Basic locking/unlocking test...)
 
+  [XXX: Currently disabled due to libdui bug https://projects.maemo.org/bugzilla/show_bug.cgi?id=159342 ]
+
   Prerequisite:
     - Open DuiControlPanel
     - Open Display applet
