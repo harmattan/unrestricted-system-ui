@@ -7,7 +7,7 @@ CONFIG += dui \
 
 QT += dbus
 
-contains(cov, true) { 
+contains(cov, true) {
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
     QMAKE_LFLAGS += --coverage
@@ -54,6 +54,7 @@ SOURCES +=                              \
 
 include(unlocksliderwidget/unlocksliderwidget.pri)
 include(statusindicatormenu/statusindicatormenu.pri)
+include(statusarea/statusarea.pri)
 
 # TODO: remove these when ke-recv going to be integrated:
 usb_scripts.files += pcsuite-enable.sh

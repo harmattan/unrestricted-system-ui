@@ -23,6 +23,7 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
+#include "statusareawindow.h"
 
 //#define DEBUG
 #define WARNING
@@ -76,6 +77,10 @@ Sysuid::Sysuid () : QObject ()
         abort();
     }
 
+    // Show status area window when sysui daemon starts
+    m_StatusAreaWindow = new StatusAreaWindow;
+    m_StatusAreaWindow->show();
+
     /*
      * The screen locking is implemented in this separate class, because it is
      * bound to the system bus (MCE wants to contact us on the system bus).
@@ -86,6 +91,7 @@ Sysuid::Sysuid () : QObject ()
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
+    delete m_StatusAreaWindow;
 }
 
 Sysuid* Sysuid::sysuid ()

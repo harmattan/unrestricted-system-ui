@@ -1,9 +1,9 @@
 TEMPLATE = subdirs
 SUBDIRS = src \
-          tests \
           translations \
           themes \
-          demos
+          demos \
+          tests
 
 QMAKE_CLEAN += configure-stamp build-stamp
 

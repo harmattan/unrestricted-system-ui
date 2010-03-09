@@ -1,7 +1,12 @@
 TEMPLATE = subdirs
 SUBDIRS = \
     ut_template \
-    ut_pluginlist
+    ut_pluginlist \
+    ut_clock \
+    ut_clockview \
+    ut_notifier \
+    ut_statusarea \
+    ut_statusareaview
 
 # These tests needs X server:
 #    ut_unlockslider \

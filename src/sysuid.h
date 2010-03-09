@@ -11,6 +11,7 @@ class SystemUIGConf;
 class BatteryBusinessLogic;
 class LedBusinessLogic;
 class ShutdownBusinessLogic;
+class StatusAreaWindow;
 
 class Sysuid : public QObject
 {
@@ -34,6 +35,7 @@ private:
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
+    StatusAreaWindow *m_StatusAreaWindow;
 };
 
 #endif // SYSUID_H
