@@ -16,32 +16,25 @@
 ** of this file.
 **
 ****************************************************************************/
+#ifndef TESTCONTEXTITEM
+#define TESTCONTEXTITEM
 
-#ifndef UT_CLOCK_H
-#define UT_CLOCK_H
+#include "applicationcontext.h"
+#include <QVariant>
 
-#include <QtTest/QtTest>
-#include <QObject>
-
-class Clock;
-
-class Ut_Clock : public QObject
+class TestContextItem : public ContextItem
 {
     Q_OBJECT
 
 public:
-    static QList<int> timerIds;
+    TestContextItem();
+    virtual ~TestContextItem();
+    void setValue(const QVariant &val);
 
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-    void testModelUpdates();
+    virtual QVariant value() const;
 
 private:
-    Clock *m_subject;
+    QVariant value_;
 };
 
 #endif

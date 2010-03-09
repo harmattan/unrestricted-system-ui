@@ -22,6 +22,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusareaview.h \
     $$SRCDIR/statusarea/statusarea.h \
     $$SRCDIR/statusarea/notifier.h \
-    $$SRCDIR/statusarea/clock.h
+    $$SRCDIR/statusarea/clock.h \
+    $$SRCDIR/statusarea/statusindicator.h
 
 include(../common_bot.pri)

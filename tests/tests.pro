@@ -6,7 +6,10 @@ SUBDIRS = \
     ut_clockview \
     ut_notifier \
     ut_statusarea \
-    ut_statusareaview
+    ut_statusareaview \
+    ut_statusindicator \
+    ut_statusindicatorimageview \
+    ut_statusindicatorlabelview
 
 # These tests needs X server:
 #    ut_unlockslider \

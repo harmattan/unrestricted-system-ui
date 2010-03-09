@@ -19,19 +19,24 @@
 
 #include "statusareaview.h"
 #include "statusarea.h"
+#include "statusindicator.h"
 #include "notifier.h"
 #include "clock.h"
 #include "contextframeworkcontext.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
 #include <DuiSceneWindow>
-#include <DuiPannableViewport>
 #include <DuiSceneManager>
 #include <DuiViewCreator>
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
     DuiWidgetView(controller),
     controller(controller),
+    alarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
+    batteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
+    phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
+    internetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
+    bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     notifier(new Notifier())
 {
     // Layout for clock and search button
@@ -46,9 +51,16 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     clockAlarmLayout->setContentsMargins(0, 0, 0, 0);
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopLeftCorner, clockAlarmLayout, Qt::TopLeftCorner);
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopRightCorner, clockAlarmLayout, Qt::TopRightCorner);
+    clockAlarmLayout->addCornerAnchors(alarmIndicator, Qt::TopRightCorner, clock, Qt::TopRightCorner);
     DuiWidget *clockAlarmWidget = new DuiWidget;
     clockAlarmWidget->setLayout(clockAlarmLayout);
     layout->addItem(clockAlarmWidget);
+
+    // Put the rest of the indicators to the layout
+    layout->addItem(batteryIndicator);
+    layout->addItem(phoneSignalStrengthIndicator);
+    layout->addItem(internetConnectionIndicator);
+    layout->addItem(bluetoothIndicator);
 
     // Create the notifier
     notifier->setObjectName("Notifier");
@@ -56,7 +68,9 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
 
     // Stretch
     layout->addStretch();
+
 }
+
 
 StatusAreaView::~StatusAreaView()
 {

@@ -17,31 +17,54 @@
 **
 ****************************************************************************/
 
-#ifndef UT_CLOCK_H
-#define UT_CLOCK_H
+#ifndef UT_STATUSINDICATORLABELVIEW_H
+#define UT_STATUSINDICATORLABELVIEW_H
 
 #include <QtTest/QtTest>
 #include <QObject>
 
-class Clock;
+#include "statusindicatorlabelview.h"
 
-class Ut_Clock : public QObject
+class DuiApplication;
+
+class TestStatusIndicatorLabelView : public StatusIndicatorLabelView
+{
+    Q_OBJECT
+    DUI_VIEW(StatusIndicatorModel, StatusIndicatorLabelStyle)
+
+public:
+    TestStatusIndicatorLabelView(StatusIndicator *controller);
+
+    StatusIndicatorModel *getModel();
+
+};
+
+
+class Ut_StatusIndicatorLabelView : public QObject
 {
     Q_OBJECT
 
-public:
-    static QList<int> timerIds;
-
 private slots:
+    // Called before the first testfunction is executed
     void initTestCase();
+    // Called after the last testfunction was executed
     void cleanupTestCase();
+    // Called before each testfunction is executed
     void init();
+    // Called after every testfunction
     void cleanup();
 
-    void testModelUpdates();
+    // Test cases
+    void testLabelChanged();
+    void testModelChanged();
 
 private:
-    Clock *m_subject;
+    // DuiApplication
+    DuiApplication *app;
+    // A controller for the test subject
+    StatusIndicator *controller;
+    // The object being tested
+    TestStatusIndicatorLabelView *m_subject;
 };
 
 #endif

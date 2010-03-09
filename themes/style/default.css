@@ -99,3 +99,75 @@ DuiLabelStyle#ClockLabel {
     padding-top: 0;
     padding-bottom: 0;
 }
+
+StatusIndicatorImageStyle {
+    margin-top: 4;
+    margin-bottom: 0;
+    /* The number of milliseconds in which the images in imageList are animated */
+    animation-duration: 3000;
+}
+
+StatusIndicatorLabelStyle {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+DuiLabelStyle#StatusIndicatorLabel {
+    font: $FONT_SMALL;
+    color: #FFFFFF;
+}
+
+StatusIndicatorImageStyle#PhoneNetworkSignalStrengthStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-network0 icon-s-status-network1 icon-s-status-network2 icon-s-status-network3 icon-s-status-network4 icon-s-status-network5";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
+StatusIndicatorImageStyle#BatteryStatusIndicatorLevel {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    preferred-size: 29 18;
+    minimum-size: 29 18;
+    maximum-size: 29 18;
+}
+
+StatusIndicatorImageStyle#BatteryStatusIndicatorCharging {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    preferred-size: 29 18;
+    minimum-size: 29 18;
+    maximum-size: 29 18;
+}
+
+StatusIndicatorImageStyle#ClockAlarmStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-alarm icon-s-status-alarm";
+    preferred-size: 10 11;
+    minimum-size: 10 11;
+    maximum-size: 10 11;
+    margin-top: 0;
+}
+
+StatusIndicatorImageStyle#BluetoothStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth icon-s-status-bluetooth-active";
+    preferred-size: 10 18;
+    minimum-size: 10 18;
+    maximum-size: 10 18;
+}
+
+StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-wlan";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}

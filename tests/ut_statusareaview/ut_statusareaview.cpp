@@ -22,6 +22,13 @@
 #include "clock_stub.h"
 #include "notifier_stub.h"
 #include "contextframeworkcontext_stub.h"
+#include "clockalarmstatusindicator_stub.h"
+#include "batterystatusindicator_stub.h"
+#include "phonenetworksignalstrengthstatusindicator_stub.h"
+#include "internetconnectionstatusindicator_stub.h"
+#include "bluetoothstatusindicator_stub.h"
+#include "statusindicator_stub.h"
+#include "phonenetworkstatusindicator_stub.h"
 #include <DuiSceneWindow>
 #include <QGraphicsLayout>
 

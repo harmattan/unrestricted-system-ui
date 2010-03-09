@@ -29,7 +29,7 @@
 
 class Notifier;
 class StatusArea;
-class DuiPannableViewport;
+class StatusIndicator;
 class DuiSceneWindow;
 
 /*!
@@ -60,11 +60,26 @@ private:
     //! The controller instance
     StatusArea *controller;
 
-    //! Notifier
-    Notifier *notifier;
+    //! Alarm indicator
+    StatusIndicator *alarmIndicator;
+
+    //! Battery indicator
+    StatusIndicator *batteryIndicator;
+
+    //! Phone signal strength indicator
+    StatusIndicator *phoneSignalStrengthIndicator;
+
+    //! Internet connection indicator
+    StatusIndicator *internetConnectionIndicator;
+
+    //! Bluetooth indicator
+    StatusIndicator *bluetoothIndicator;
 
     //! Placeholder for the launcher button
     DuiButton *launcherButtonPlaceholder;
+
+    //! Notifier
+    Notifier *notifier;
 };
 
 #endif // STATUSAREAVIEW_H

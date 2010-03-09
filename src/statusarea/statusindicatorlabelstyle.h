@@ -17,31 +17,21 @@
 **
 ****************************************************************************/
 
-#ifndef UT_CLOCK_H
-#define UT_CLOCK_H
 
-#include <QtTest/QtTest>
-#include <QObject>
+#ifndef STATUSINDICATORLABELSTYLE_H_
+#define STATUSINDICATORLABELSTYLE_H_
 
-class Clock;
+#include <DuiWidgetStyle>
 
-class Ut_Clock : public QObject
+class StatusIndicatorLabelStyle : public DuiWidgetStyle
 {
     Q_OBJECT
-
-public:
-    static QList<int> timerIds;
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-    void testModelUpdates();
-
-private:
-    Clock *m_subject;
+    DUI_STYLE(StatusIndicatorLabelStyle)
 };
 
-#endif
+class StatusIndicatorLabelStyleContainer : public DuiWidgetStyleContainer
+{
+    DUI_STYLE_CONTAINER(StatusIndicatorLabelStyle)
+};
+
+#endif /* STATUSINDICATORLABELSTYLE_H_ */

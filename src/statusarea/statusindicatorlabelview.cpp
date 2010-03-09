@@ -17,56 +17,41 @@
 **
 ****************************************************************************/
 
-#include "clockview.h"
-#include "clock.h"
-
-#include <QTime>
+#include "statusindicatorlabelview.h"
+#include "statusindicator.h"
 #include <QGraphicsLinearLayout>
-#include <DuiViewCreator>
+#include <DuiTheme>
 #include <DuiLabel>
+#include <DuiViewCreator>
 
-ClockView::ClockView(Clock *controller) : DuiWidgetView(controller)
+StatusIndicatorLabelView::StatusIndicatorLabelView(StatusIndicator *controller) :
+    DuiWidgetView(controller),
+    controller(controller)
 {
-    QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
-    l->setContentsMargins(0, 0, 0, 0);
-    controller->setLayout(l);
-
-    label = new DuiLabel(NULL);
-    label->setObjectName("ClockLabel");
-    l->addItem(label);
+    label = new DuiLabel(controller);
+    label->setObjectName("StatusIndicatorLabel");
 }
 
-void ClockView::styleUpdated()
+StatusIndicatorLabelView::~StatusIndicatorLabelView()
 {
-    updateLabel();
 }
 
-void ClockView::setupModel()
+void StatusIndicatorLabelView::setupModel()
 {
     DuiWidgetView::setupModel();
-    updateLabel();
+
+    label->setText(model()->value().toString());
 }
 
-void ClockView::updateData(const QList<const char *>& modifications)
+void StatusIndicatorLabelView::updateData(const QList<const char *>& modifications)
 {
     DuiWidgetView::updateData(modifications);
+
     const char *member;
     foreach(member, modifications) {
-        if (member == ClockModel::Time) {
-            updateLabel();
+        if (member == StatusIndicatorModel::Value) {
+            label->setText(model()->value().toString());
         }
     }
 }
-
-void ClockView::updateLabel()
-{
-    QString text = model()->time().toString(style()->timeFormat());
-
-    if (text != previousLabel) {
-        // Only update the label if the text has changed
-        label->setText(text);
-        previousLabel = text;
-    }
-}
-
-DUI_REGISTER_VIEW_NEW(ClockView, Clock)
+DUI_REGISTER_VIEW_NEW(StatusIndicatorLabelView, StatusIndicator)

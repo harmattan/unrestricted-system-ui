@@ -17,31 +17,27 @@
 **
 ****************************************************************************/
 
-#ifndef UT_CLOCK_H
-#define UT_CLOCK_H
 
-#include <QtTest/QtTest>
-#include <QObject>
+#ifndef STATUSINDICATORIMAGESTYLE_H_
+#define STATUSINDICATORIMAGESTYLE_H_
 
-class Clock;
+#include <DuiWidgetStyle>
 
-class Ut_Clock : public QObject
+class StatusIndicatorImageStyle : public DuiWidgetStyle
 {
     Q_OBJECT
+    DUI_STYLE(StatusIndicatorImageStyle)
 
-public:
-    static QList<int> timerIds;
+    //! The list of IDs of the images to be shown in the status indicator separated by spaces
+    DUI_STYLE_ATTRIBUTE(QString, imageList, ImageList)
 
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-    void testModelUpdates();
-
-private:
-    Clock *m_subject;
+    //! The number of milliseconds in which the images in imageList are animated
+    DUI_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
 };
 
-#endif
+class StatusIndicatorImageStyleContainer : public DuiWidgetStyleContainer
+{
+    DUI_STYLE_CONTAINER(StatusIndicatorImageStyle)
+};
+
+#endif /* STATUSINDICATORIMAGESTYLE_H_ */
