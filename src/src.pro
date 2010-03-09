@@ -43,7 +43,7 @@ HEADERS +=                              \
     usbui.h \
     x11wrapper.h \
     contextframeworkcontext.h \
-    applicationcontext.h
+    applicationcontext.h \
 
 SOURCES +=                              \
     debug.cpp                           \

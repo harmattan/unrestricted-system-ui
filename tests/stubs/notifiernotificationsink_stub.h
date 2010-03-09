@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #ifndef NOTIFIERNOTIFICATIONSINK_STUB
 #define NOTIFIERNOTIFICATIONSINK_STUB
 

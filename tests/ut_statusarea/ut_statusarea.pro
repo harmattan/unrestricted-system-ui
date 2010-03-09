@@ -4,6 +4,8 @@ INCLUDEPATH += $$SRCDIR/statusarea  $$SRCDIR/statusindicatormenu $$SRCDIR/notifi
 
 INCLUDEPATH += /usr/include/contextsubscriber
 
+INCLUDEPATH += /usr/include/contextsubscriber
+
 STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
 MODEL_HEADERS += \
     $$SRCDIR/statusarea/statusareamodel.h
@@ -29,6 +31,7 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/contextframeworkcontext.h \
+    contextproperty.h
 
 # service classes
 HEADERS += \

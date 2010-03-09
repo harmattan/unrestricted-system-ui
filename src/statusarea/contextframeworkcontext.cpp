@@ -5,7 +5,7 @@
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
 ** This file is part of systemui.
-**
+*
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
 **
@@ -16,33 +16,22 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_STATUSAREAVIEW_H
-#define UT_STATUSAREAVIEW_H
 
-#include <QtTest/QtTest>
-#include <QObject>
+#include "contextframeworkcontext.h"
+#include <QVariant>
 
-class StatusAreaView;
-class StatusArea;
-class DuiButton;
-
-class Ut_StatusAreaView : public QObject
+ContextFrameworkItem::ContextFrameworkItem(const QString &key)
+    : property(key)
 {
-    Q_OBJECT
+    connect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
+}
 
-public:
-    static int windowExecutionCount;
-    static int windowRejectionCount;
+QVariant ContextFrameworkItem::value() const
+{
+    return property.value();
+}
 
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-private:
-    StatusAreaView *m_subject;
-    StatusArea *statusArea;
-};
-
-#endif
+ContextItem *ContextFrameworkContext::createContextItem(const QString &key)
+{
+    return new ContextFrameworkItem(key);
+}

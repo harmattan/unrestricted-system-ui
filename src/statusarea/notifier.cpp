@@ -45,6 +45,7 @@ Notifier::~Notifier()
 
 void Notifier::notificationCountChanged(uint count)
 {
+    printf("notificationCountChanged() and count is %d\n",count);
     if (count > 0) {
         setText(QString().sprintf("%u", count));
         show();
