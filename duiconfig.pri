@@ -1,3 +1,5 @@
+# Load more defines from the dui_defines...
+load(dui_defines)
 # Directories
 unix {
     DUISTATUSINDICATORMENU_PREFIX = /usr

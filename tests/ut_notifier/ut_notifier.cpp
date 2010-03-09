@@ -20,6 +20,9 @@
 #include <DuiApplication>
 #include "ut_notifier.h"
 #include "notifier.h"
+#include "notificationsink_stub.h"
+#include "notifiernotificationsink_stub.h"
+#include "sysuid_stub.h"
 
 void Ut_Notifier::initTestCase()
 {

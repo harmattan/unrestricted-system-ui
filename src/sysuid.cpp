@@ -24,6 +24,9 @@
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 #include "statusareawindow.h"
+#include "notificationmanager.h"
+#include "duicompositornotificationsink.h"
+#include "duifeedbacknotificationsink.h"
 
 //#define DEBUG
 #define WARNING
@@ -62,6 +65,10 @@ Sysuid::Sysuid () : QObject ()
     m_LedLogic        = new LedBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
 
+    notificationManager_ = new NotificationManager(3000);
+    compositorNotificationSink_ = new DuiCompositorNotificationSink;
+    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;
+
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
     new LedBusinessLogicAdaptor (this, m_LedLogic);
@@ -81,11 +88,21 @@ Sysuid::Sysuid () : QObject ()
     m_StatusAreaWindow = new StatusAreaWindow;
     m_StatusAreaWindow->show();
 
-    /*
-     * The screen locking is implemented in this separate class, because it is
-     * bound to the system bus (MCE wants to contact us on the system bus).
-     */
-    new SysUidRequest;
+//    /*
+//     * The screen locking is implemented in this separate class, because it is
+//     * bound to the system bus (MCE wants to contact us on the system bus).
+//     */
+//    new SysUidRequest;
+
+    // Connect the notification signals for the compositor notification sink
+    connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), compositorNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), compositorNotificationSink_, SLOT(removeNotification(uint)));
+    connect(compositorNotificationSink_, SIGNAL(notificationRemovalRequested(uint)), notificationManager_, SLOT(removeNotification(uint)));
+
+    // Connect the notification signals for the feedback notification sink
+    connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
+
 }
 
 Sysuid::~Sysuid ()
@@ -132,5 +149,25 @@ Sysuid::running_in_actdead_mode ()
     // Seems this is the only way to check whether
     // are we running in active-dead mode:
     return access ("/tmp/ACT_DEAD", F_OK) == 0;
+}
+
+NotificationManager &Sysuid::notificationManager()
+{
+    return *notificationManager_;
+}
+
+DuiCompositorNotificationSink& Sysuid::compositorNotificationSink()
+{
+    return *compositorNotificationSink_;
+}
+
+Dui::Orientation Sysuid::orientation() const
+{
+    return m_StatusAreaWindow->orientation();
+}
+
+Dui::OrientationAngle Sysuid::orientationAngle() const
+{
+    return m_StatusAreaWindow->orientationAngle();
 }
 

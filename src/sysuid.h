@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include "duinamespace.h"
 
 class UsbUi;
 class SystemUIGConf;
@@ -12,6 +13,9 @@ class BatteryBusinessLogic;
 class LedBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaWindow;
+class NotificationManager;
+class DuiCompositorNotificationSink;
+class DuiFeedbackNotificationSink;
 
 class Sysuid : public QObject
 {
@@ -25,6 +29,30 @@ public:
     static QString dbusPath ();
     bool running_in_actdead_mode ();
 
+    /*!
+     * Returns a reference to the notification manager.
+     *
+     * \return a reference to the notification manager
+     */
+    NotificationManager &notificationManager();
+
+    /*!
+     * Returns a reference to the compositor notification sink.
+     *
+     * \return a reference to the compositor notification sink
+     */
+    DuiCompositorNotificationSink& compositorNotificationSink();
+
+    /*!
+     * Returns the current orientation of the status area window's scene.
+     */
+    virtual Dui::Orientation orientation() const;
+
+    /*!
+     * Returns the current orientation angle of the status area window's scene.
+     */
+    virtual Dui::OrientationAngle orientationAngle() const;
+
 public slots:
     void retranslate ();
 
@@ -36,6 +64,15 @@ private:
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
     StatusAreaWindow *m_StatusAreaWindow;
+
+    //! Notification manager
+    NotificationManager *notificationManager_;
+
+    //! Compositor notification sink for visualizing the notification outside home
+    DuiCompositorNotificationSink *compositorNotificationSink_;
+
+    //! Feedback notification sink for presenting the notification as a feedback
+    DuiFeedbackNotificationSink *feedbackNotificationSink_;
 };
 
 #endif // SYSUID_H

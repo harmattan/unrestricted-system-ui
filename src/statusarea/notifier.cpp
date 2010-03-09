@@ -17,25 +17,21 @@
 **
 ****************************************************************************/
 #include "notifier.h"
+#include "notifiernotificationsink.h"
+#include "sysuid.h"
+#include "duicompositornotificationsink.h"
 
-Notifier::Notifier(DuiWidget *parent) : DuiLabel(parent)
-// notifierSink(new NotifierNotificationSink)
+Notifier::Notifier(DuiWidget *parent) : DuiLabel(parent),
+ notifierSink(new NotifierNotificationSink)
 {
- // TODO: uncomment these and modify when notification stuff is moved to sysuid
-/*
-// Connect the notification signals
-HomeApplication *application = dynamic_cast<HomeApplication *>(qApp);
-if (application != NULL) {
-    NotificationManager *notificationManager = &application->notificationManager();
+    NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
 
     // Connect notification signals
-    connect(&application->homeNotificationSink(), SIGNAL(transferNotification(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
+    connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierSink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notifierSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notifierSink, SLOT(removeGroup(uint)));
-}
-
-    connect(notifierSink, SIGNAL(notificationCountChanged(uint)), this, SLOT(notificationCountChanged(uint))); */
+    connect(notifierSink, SIGNAL(notificationCountChanged(uint)), this, SLOT(notificationCountChanged(uint)));
 
     // Set the text of the label in centrally aligned mode
     setAlignment(Qt::AlignCenter);

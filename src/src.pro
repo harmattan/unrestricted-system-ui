@@ -3,9 +3,13 @@ TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
           qmsystem \
-          silent
+          silent \
+          link_pkgconfig
 
 QT += dbus
+
+SYSTEMUI_SOURCE_DIR = .
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 contains(cov, true) {
     message("Coverage options enabled")
@@ -30,7 +34,10 @@ HEADERS +=                              \
     usbmodes.h                          \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
-    usbui.h
+    usbui.h \
+    x11wrapper.h \
+    contextframeworkcontext.h \
+    applicationcontext.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -50,11 +57,19 @@ SOURCES +=                              \
     usbmodes.cpp                        \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
-    usbui.cpp
+    usbui.cpp \
+    x11wrapper.cpp \
+    contextframeworkcontext.cpp
 
 include(unlocksliderwidget/unlocksliderwidget.pri)
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
+include(notifications/notifications.pri)
+
+PKGCONFIG += contextsubscriber-1.0 \
+                          xcomposite \
+                          maemosec
+
 
 # TODO: remove these when ke-recv going to be integrated:
 usb_scripts.files += pcsuite-enable.sh

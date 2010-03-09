@@ -1,6 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_statusareaview
 INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu
+INCLUDEPATH += /usr/include/contextsubscriber
 
 STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
 MODEL_HEADERS += $$SRCDIR/statusarea/statusareamodel.h

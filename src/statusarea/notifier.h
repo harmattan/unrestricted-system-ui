@@ -22,6 +22,8 @@
 
 #include <DuiLabel>
 
+class NotifierNotificationSink ;
+
 /*!
  * The Notifier is a widget that displays the number of
  * notifications that have not been dismissed (if any).
@@ -50,6 +52,10 @@ private slots:
      * \param count the number of notifications
      */
     void notificationCountChanged(uint count);
+
+private:
+    //! The notification sink for the notifier
+    NotifierNotificationSink *notifierSink;
 };
 
 #endif /* NOTIFIER_H_ */

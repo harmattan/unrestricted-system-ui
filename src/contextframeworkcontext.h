@@ -21,7 +21,7 @@
 #define CONTEXTFRAMEWORKCONTEXT_H
 
 #include "applicationcontext.h"
-#include "contextsubscriber/contextproperty.h"
+#include <contextproperty.h>
 
 /*!
  * Concrete ApplicationContext that creates ContextFrameworkItems from the
