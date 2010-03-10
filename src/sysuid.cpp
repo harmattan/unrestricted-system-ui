@@ -80,7 +80,7 @@ Sysuid::Sysuid () : QObject ()
      * The screen locking is implemented in this separate class, because it is
      * bound to the system bus (MCE wants to contact us on the system bus).
      */
-    new SysUidRequest;
+//    new SysUidRequest;
 }
 
 Sysuid::~Sysuid ()
@@ -103,8 +103,23 @@ QString Sysuid::dbusPath ()
     return QString ("/");
 }
 
+/*!
+ * Please note that in the libdui 0.19.4 manipulating theh DuiLocale in this
+ * function might cause an endless recursion. I added a protection for brake the
+ * recursion.
+ *
+ * FIXME: Once DuiLocale is working as it should be this function could be
+ * eliminated.
+ */
 void Sysuid::retranslate ()
 {
+    static bool      running = false;
+
+    SYS_DEBUG ("*** running = %s", running ? "true" : "false");
+    if (running)
+        return;
+    running = true;
+
     DuiGConfItem     languageItem ("/Dui/i18n/Language");
     QString          lang = languageItem.value ().toString ();
     // Create a new duilocale instance with current language
@@ -118,6 +133,8 @@ void Sysuid::retranslate ()
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     DuiLocale::setDefault (locale);
+
+    running = false;
 }
 
 bool
