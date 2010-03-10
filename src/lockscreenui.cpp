@@ -133,17 +133,13 @@ LockScreenUI::createWidgets ()
                                          QSizePolicy::Minimum));
 
     // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
-    unreadEmailsImage = new DuiImageWidget("icon-s-email");
-    // "icon-m-notification-email"
+    unreadEmailsImage = new DuiImageWidget ("icon-m-notification-email");
     //unreadEmailsImage->setImage(QImage("/usr/share/sysuid/themes/svg/emails-missed.svg"));
-    unreadMessagesImage = new DuiImageWidget("icon-s-sms");
-    // "icon-m-notification-sms"
+    unreadMessagesImage = new DuiImageWidget ("icon-m-notification-sms");
     //unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
-    missedCallsImage = new DuiImageWidget("icon-s-status-call-missed");
-    // "icon-m-notification-call"
+    missedCallsImage = new DuiImageWidget ("icon-m-notification-call");
     //missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
-    unreadChatMessagesImage = new DuiImageWidget("icon-s-messaging");
-    // "icon-m-notification-im"
+    unreadChatMessagesImage = new DuiImageWidget ("icon-m-notification-im");
     //unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
 
     // TODO: some suitable layout could be added to image and then the label to that layout
