@@ -1,6 +1,8 @@
 system-ui (0.12.1-7~unreleased) harmattan; urgency=low
 
-  * FILLME
+  [Laszlo Pere]
+  * Fixes: NB#159959 - after left-to-right <-> right-to-left change the test
+    application can't be started again with duitestrunner
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 05 Mar 2010 10:23:39 +0100
 
