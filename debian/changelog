@@ -2,8 +2,9 @@ system-ui (0.12.1-8~unreleased) unstable; urgency=low
 
   * Fixes: NB#160317 - "Low battery" warning is always showed when
                        device is power on
+  * Re-enable touch screen locking
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 11 Mar 2010 13:34:31 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 13:58:40 +0100
 
 system-ui (0.12.1-7) harmattan; urgency=low
 
