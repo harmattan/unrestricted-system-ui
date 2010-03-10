@@ -1,3 +1,9 @@
+system-ui (0.12.1-8~unreleased) harmattan; urgency=low
+
+  * Re-enable touch screen locking
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 10 Mar 2010 12:45:41 +0100
+
 system-ui (0.12.1-7) harmattan; urgency=low
 
   [David Kedves]
