@@ -22,7 +22,6 @@ public:
     static Sysuid* sysuid ();
     static QString dbusService ();
     static QString dbusPath ();
-    bool running_in_actdead_mode ();
 
 public slots:
     void retranslate ();

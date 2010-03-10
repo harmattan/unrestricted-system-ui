@@ -1,8 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
-#include "unistd.h"
-
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -51,9 +49,6 @@ Sysuid::Sysuid () : QObject ()
 
     // Load translation of System-UI
     retranslate ();
-
-    SYS_WARNING ("running in active-dead mode : %s",
-                 SYS_BOOL (running_in_actdead_mode ()));
 
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
@@ -135,13 +130,5 @@ void Sysuid::retranslate ()
     DuiLocale::setDefault (locale);
 
     running = false;
-}
-
-bool
-Sysuid::running_in_actdead_mode ()
-{
-    // Seems this is the only way to check whether
-    // are we running in active-dead mode:
-    return access ("/tmp/ACT_DEAD", F_OK) == 0;
 }
 
