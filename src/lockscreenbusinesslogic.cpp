@@ -133,10 +133,9 @@ LockScreenBusinessLogic::updateMissedEventAmounts (
         int c, 
         int d)
 {
-    SYS_DEBUG ("");
-    qDebug() << "LockScreenBusinessLogic::updateMissedEventAmounts("
-    << a << ", " << b << ", " << c << ", " << d << ")";
-    lockUI->updateMissedEventAmounts(a, b, c, d);
+    SYS_DEBUG ("%d, %d, %d, %d", a, b, c ,d);
+
+    lockUI->updateMissedEventAmounts (a, b, c, d);
 }
 
 void 
@@ -147,9 +146,9 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
     if (toggle) {
         DuiApplication::activeApplicationWindow ()->show ();
-        hidefromTaskBar ();
+        DuiApplication::activeApplicationWindow ()->raise ();
     } else {
-        DuiApplication::activeApplicationWindow ()->lower ();
+        hidefromTaskBar ();
         DuiApplication::activeApplicationWindow ()->hide ();
     }
 }

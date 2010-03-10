@@ -39,18 +39,11 @@ LockScreenUI::LockScreenUI () :
         m_im (0)
 {
     SYS_DEBUG ("");
-    setPannableAreaInteractive(false);
+    setPannableAreaInteractive (false);
 
     // let's hide home button
-    setComponentsDisplayMode (
-            DuiApplicationPage::EscapeButton, 
-            DuiApplicationPageModel::Hide);
-    setComponentsDisplayMode (
-            DuiApplicationPage::NavigationBar, 
-            DuiApplicationPageModel::Hide);
-    setComponentsDisplayMode (
-            DuiApplicationPage::HomeButton, 
-            DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode (DuiApplicationPage::AllComponents,
+                              DuiApplicationPageModel::Hide);
 }
 
 LockScreenUI::~LockScreenUI ()
@@ -124,14 +117,11 @@ LockScreenUI::createWidgets ()
     dateLabel->setAlignment (Qt::AlignCenter);
 
     updateDateTime();
-    /*
-     * DuiSlider* slider = new DuiSlider(0, "dot");
-     * slider->setOrientation(Qt::Horizontal);
-     */
+
     slider = new UnlockSlider;
-    slider->setSizePolicy(
-            QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-    slider->setVisible(true);
+    slider->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
+                                        QSizePolicy::Expanding));
+    slider->setVisible (true);
 
     slider->setObjectName ("unlockslider");
     slider->setMinimumWidth (450);
@@ -139,12 +129,14 @@ LockScreenUI::createWidgets ()
     slider->setMaximumHeight (80);
 
     QGraphicsWidget* spacerl = new QGraphicsWidget;
-    spacerl->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
+    spacerl->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
+                                         QSizePolicy::Minimum));
 
     // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
     unreadEmailsImage = new DuiImageWidget("icon-m-notification-email");
     //unreadEmailsImage->setImage(QImage("/usr/share/sysuid/themes/svg/emails-missed.svg"));
-    unreadMessagesImage = new DuiImageWidget("icon-m-notification-sms");
+    unreadMessagesImage = new DuiImageWidget("icon-m-content-sms");
+    // "icon-m-notification-sms"
     //unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
     missedCallsImage = new DuiImageWidget("icon-m-notification-call");
     //missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
