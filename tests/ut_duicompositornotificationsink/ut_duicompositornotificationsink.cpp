@@ -33,6 +33,9 @@
 #include "notificationmanager_stub.h"
 #include <QSettings>
 #include "sysuid_stub.h"
+#include "notificationmanager.h"
+#include "eventtypestore.h"
+#include <QSettings>
 
 #define NUMBER_OF_WINDOWS 2
 
@@ -40,7 +43,6 @@ static QSettings *settings;
 
 maemosec::storage::~storage()
 {
-
 }
 
 // Mock notification manager (used by DuiCompositorNotificationSink)
