@@ -23,6 +23,8 @@
 #include "statusareamodel.h"
 
 #include <DuiButton>
+#include <QSharedPointer>
+class StatusIndicatorMenuWindow;
 
 /*!
  * Status area is the top part on the home screen. It contains the clock,
@@ -41,6 +43,11 @@ public:
      */
     StatusArea(DuiWidget *parent = NULL);
 
+    /*!
+     * \brief Destructor
+     */
+    virtual ~StatusArea();
+
     //! \reimp
     bool sceneEvent(QEvent *event);
     //! \reimp_end
@@ -50,11 +57,18 @@ private:
     static const QString STATUS_INDICATOR_MENU_SERVICE_NAME;
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;
+    //! Status indicator menu
+    QSharedPointer<StatusIndicatorMenuWindow> statusIndicatorMenuWindow;
 
     /*!
      * Shows the status indicator menu when the user swipes the status area
      */
     void showStatusIndicatorMenu();
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusArea;
+#endif
+
 };
 
 #endif // STATUSAREA_H

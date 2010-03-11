@@ -14,7 +14,7 @@
 
 #include "pluginlist.h"
 #include <DuiButton>
-#include <DuiStatusIndicatorMenuPluginInterface>
+#include "duistatusindicatormenuplugininterface.h"
 #include <DuiWindow>
 #include <DuiApplicationPage>
 #include <QPluginLoader>
@@ -94,7 +94,7 @@ void PluginList::showStatusIndicatorMenu()
 void PluginList::hideStatusIndicatorMenu()
 {
     if (applicationWindow != NULL) {
-        applicationWindow->showMinimized();
+        applicationWindow->lower();
     }
 }
 

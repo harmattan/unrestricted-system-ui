@@ -20,13 +20,19 @@
 #include "statusarea.h"
 #include <DuiApplicationIfProxy>
 #include <QGraphicsSceneMouseEvent>
+#include "statusindicatormenuwindow.h"
 
 const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.duistatusindicatormenu";
 // To prevent swipe inside the status bar. Must end swiping atlease some distance away from status bar
 const int SWIPE_THRESHOLD = 30;
 
 StatusArea::StatusArea(DuiWidget *parent) :
-    DuiWidgetController(parent)
+    DuiWidgetController(parent),
+    statusIndicatorMenuWindow(new StatusIndicatorMenuWindow)
+{
+}
+
+StatusArea::~StatusArea()
 {
 }
 
@@ -65,10 +71,12 @@ bool StatusArea::sceneEvent(QEvent *event)
 
 void StatusArea::showStatusIndicatorMenu()
 {
-    DuiApplicationIfProxy duiApplicationIfProxy(STATUS_INDICATOR_MENU_SERVICE_NAME, this);
-    if (duiApplicationIfProxy.connection().isConnected()) {
-        duiApplicationIfProxy.launch();
-    } else {
-        qWarning() << "Could not launch" << STATUS_INDICATOR_MENU_SERVICE_NAME << "- DBus not connected?";
+    // If status indicator window is not visible, then show it
+    if (!statusIndicatorMenuWindow->isVisible()) {
+        statusIndicatorMenuWindow->show();
+    }
+    // Otherwise, raise it
+    else {
+        statusIndicatorMenuWindow->raise();
     }
 }

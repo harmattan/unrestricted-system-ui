@@ -31,12 +31,6 @@ QDBusPendingReply<> DuiApplicationIfProxy::launch()
     return QDBusPendingReply<>();
 }
 
-// DuiApplicationWindow stubs (used by PluginList)
-void QWidget::showMinimized()
-{
-    Ut_PluginList::applicationWindowMinimized = true;
-}
-
 // DuiApplicationPage stubs (used by PluginList)
 void DuiApplicationPage::appear(enum DeletionPolicy)
 {
@@ -79,7 +73,6 @@ void Ut_PluginList::cleanupTestCase()
 void Ut_PluginList::init()
 {
     duiApplicationIfProxyLaunchCalled = false;
-    applicationWindowMinimized = false;
     applicationPageShown = false;
     loadedPlugins.clear();
     pluginList = new PluginList(applicationWindow, applicationPage);
@@ -121,7 +114,7 @@ void Ut_PluginList::testHideStatusIndicatorMenu()
 {
     pluginList->hideStatusIndicatorMenu();
 
-    QVERIFY(applicationWindowMinimized);
+    QVERIFY(!applicationWindow->isVisible());
 }
 
 void Ut_PluginList::testSettingsButtonClicked()

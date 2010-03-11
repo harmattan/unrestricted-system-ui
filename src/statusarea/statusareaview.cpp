@@ -37,7 +37,7 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     internetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
-    notifier(new Notifier())
+    notifier(new Notifier(controller))
 {
     // Layout for clock and search button
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);

@@ -31,7 +31,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     setSceneRect(QRectF(QPointF(), visibleSceneSize(Dui::Landscape)));
     centerOn(sceneRect().center());
     sceneManager =
-	QSharedPointer<DuiSceneManager>(new DuiSceneManager(scene.data()));
+    QSharedPointer<DuiSceneManager>(new DuiSceneManager(scene.data()));
 
     // Create an application page for the plugin list
     applicationPage->setObjectName("StatusIndicatorMenuPage");
@@ -40,12 +40,12 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Show);
     applicationPage->setCentralWidget(new PluginList(this,
-						     applicationPage.data()));
+                             applicationPage.data()));
     sceneManager->showWindowNow(applicationPage.data());
 
     // Create an escape button
     escapeButtonPanel->connect(escapeButtonPanel.data(),
-			       SIGNAL(buttonClicked()), this, SLOT(lower()));
+                   SIGNAL(buttonClicked()), this, SLOT(lower()));
     sceneManager->showWindowNow(escapeButtonPanel.data());
 
     // Set the X window properties so that the window does not appear in the task bar

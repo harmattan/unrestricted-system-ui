@@ -1,3 +1,4 @@
+
 /***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -19,18 +20,8 @@
 #include "ut_statusarea.h"
 #include "statusarea.h"
 #include "contextframeworkcontext.h"
-#include <DuiApplication>
-#include <DuiApplicationIfProxy>
 #include <QGraphicsSceneMouseEvent>
-
-// DuiApplicationIfProxy stubs (used by StatusArea)
-QDBusPendingReply<> DuiApplicationIfProxy::launch()
-{
-    Ut_StatusArea::duiApplicationIfProxyLaunchCalled = true;
-
-    return QDBusPendingReply<>();
-}
-
+#include "statusindicatormenuwindow.h"
 // ContextFrameworkContext stubs (used by StatusArea)
 QVariant ContextFrameworkItem::value() const
 {
@@ -55,11 +46,8 @@ QPointF QGraphicsSceneMouseEvent::pos() const
         return QPointF();
 }
 
-bool Ut_StatusArea::duiApplicationIfProxyLaunchCalled;
-
 void Ut_StatusArea::init()
 {
-    duiApplicationIfProxyLaunchCalled = false;
     statusArea = new StatusArea();
 }
 
@@ -81,7 +69,6 @@ void Ut_StatusArea::cleanupTestCase()
 
 void Ut_StatusArea::testWhenSwipeStatusAreaStatusIndicatorMenuAppears()
 {
-
     QGraphicsSceneMouseEvent mouseDownEvent(QEvent::GraphicsSceneMousePress);
     mouseDown = true;
     statusArea->sceneEvent(&mouseDownEvent);
@@ -91,13 +78,11 @@ void Ut_StatusArea::testWhenSwipeStatusAreaStatusIndicatorMenuAppears()
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-
-    QVERIFY(duiApplicationIfProxyLaunchCalled);
+    QVERIFY(statusArea->statusIndicatorMenuWindow->isVisible());
 }
 
 void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear()
 {
-
     QGraphicsSceneMouseEvent mouseDownEvent(QEvent::GraphicsSceneMousePress);
     mouseDown = true;
     statusArea->sceneEvent(&mouseDownEvent);
@@ -107,8 +92,7 @@ void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppe
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-
-    QVERIFY(!duiApplicationIfProxyLaunchCalled);
+    QVERIFY(!statusArea->statusIndicatorMenuWindow->isVisible());
 }
 
-QTEST_APPLESS_MAIN(Ut_StatusArea)
+QTEST_MAIN(Ut_StatusArea)

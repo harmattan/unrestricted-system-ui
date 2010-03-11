@@ -16,13 +16,12 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "notifier.h"
 
 Notifier::Notifier(DuiWidget *parent) : DuiLabel(parent)
 // notifierSink(new NotifierNotificationSink)
 {
-// TODO: uncomment these and modify when notification stuff is moved to sysuid
+ // TODO: uncomment these and modify when notification stuff is moved to sysuid
 /*
 // Connect the notification signals
 HomeApplication *application = dynamic_cast<HomeApplication *>(qApp);
@@ -36,7 +35,10 @@ if (application != NULL) {
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notifierSink, SLOT(removeGroup(uint)));
 }
 
-connect(notifierSink, SIGNAL(notificationCountChanged(uint)), this, SLOT(notificationCountChanged(uint))); */
+    connect(notifierSink, SIGNAL(notificationCountChanged(uint)), this, SLOT(notificationCountChanged(uint))); */
+
+    // Set the text of the label in centrally aligned mode
+    setAlignment(Qt::AlignCenter);
     hide();
 }
 
