@@ -33,6 +33,9 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     sceneManager =
     QSharedPointer<DuiSceneManager>(new DuiSceneManager(scene.data()));
 
+    // Manage orientation change
+    connect(this, SIGNAL(orientationAngleChanged(Dui::OrientationAngle)), this, SLOT(setOrientationAngle(Dui::OrientationAngle)));
+
     // Create an application page for the plugin list
     applicationPage->setObjectName("StatusIndicatorMenuPage");
     applicationPage->setTitle("Status Indicator Menu");
