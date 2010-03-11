@@ -318,9 +318,12 @@ BatteryBusinessLogic::batteryLevelChanged (
 
     switch (level) {
     case QmBattery::LevelFull:
-        NOTIFICATION(new DuiNotification("", "",
+        if (m_Battery->getState() != QmBattery::StateCharging)
+        {
+            NOTIFICATION(new DuiNotification("", "",
                          qtTrId (ChargingCompleteText)));
-        utiliseLED(true, QString("PatternBatteryFull"));
+            utiliseLED(true, QString("PatternBatteryFull"));
+        }
         break;
 
     case QmBattery::LevelLow:
