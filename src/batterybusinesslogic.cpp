@@ -318,7 +318,7 @@ BatteryBusinessLogic::batteryLevelChanged (
 
     switch (level) {
     case QmBattery::LevelFull:
-        if (m_Battery->getState() != QmBattery::StateCharging)
+        if (m_Battery->getState() == QmBattery::StateCharging)
         {
             NOTIFICATION(new DuiNotification("", "",
                          qtTrId (ChargingCompleteText)));
