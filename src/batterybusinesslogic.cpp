@@ -7,6 +7,8 @@
 #include <QTime>
 #include <DuiNotification>
 
+using namespace Maemo;
+
 /*
  * Needed to add some delay otherwise the QmSystem seems to return wrong value. 
  * But then it stopped to work with the next image...
@@ -74,14 +76,14 @@ LowBatteryNotifier::LowBatteryNotifier (
 {
     SYS_DEBUG ("----------------------------------------------");
 
-    m_Sleep = m_Display->get() == Maemo::QmDisplayState::Off;
+    m_Sleep = m_Display->get() == QmDisplayState::Off;
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
     connect(m_Display, 
-            SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
+            SIGNAL(displayStateChanged(QmDisplayState::DisplayState)),
             this, 
-            SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
+            SLOT(displayStateChanged(QmDisplayState::DisplayState)));
 
     connect (m_Timer, SIGNAL(timeout()), 
             this, SLOT(showLowBatteryNotification()));
@@ -105,12 +107,12 @@ LowBatteryNotifier::showLowBatteryNotification()
     m_Time.start(); //restart time
 
     switch (m_Display->get()) {
-        case Maemo::QmDisplayState::On:
-        case Maemo::QmDisplayState::Dimmed:
+        case QmDisplayState::On:
+        case QmDisplayState::Dimmed:
             m_Sleep = false;
             m_Timer->start (m_ActiveInterval);
             break;
-        case Maemo::QmDisplayState::Off:
+        case QmDisplayState::Off:
             m_Sleep = true;
             m_Timer->start (m_InactiveInterval);
             break;
@@ -119,12 +121,12 @@ LowBatteryNotifier::showLowBatteryNotification()
 
 void 
 LowBatteryNotifier::displayStateChanged (
-        Maemo::QmDisplayState::DisplayState state)
+        QmDisplayState::DisplayState state)
 {
     SYS_DEBUG ("");
 
     switch (state) {
-    case Maemo::QmDisplayState::On:
+    case QmDisplayState::On:
         if (!m_Sleep)
             break;
         if (m_Time.elapsed() < m_ActiveInterval)
@@ -134,10 +136,10 @@ LowBatteryNotifier::displayStateChanged (
         m_Sleep = false;
         break;
 
-    case Maemo::QmDisplayState::Dimmed:
+    case QmDisplayState::Dimmed:
         m_Sleep = false;
         break;
-    case Maemo::QmDisplayState::Off:
+    case QmDisplayState::Off:
         m_Timer->setInterval (m_InactiveInterval - m_Time.elapsed());
         m_Sleep = true;
         break;
@@ -175,16 +177,16 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     initSystemUIGConfKeys ();
 
     /* connect to QmSystem signals */
-    connect (m_Battery, SIGNAL(batteryLevelChanged(Maemo::QmBattery::Level)),
-            this, SLOT(batteryLevelChanged(Maemo::QmBattery::Level)));
-    connect (m_Battery, SIGNAL(batteryStatusChanged(Maemo::QmBattery::State)),
-            this, SLOT(batteryStatusChanged(Maemo::QmBattery::State)));
+    connect (m_Battery, SIGNAL(batteryLevelChanged(QmBattery::Level)),
+            this, SLOT(batteryLevelChanged(QmBattery::Level)));
+    connect (m_Battery, SIGNAL(batteryStatusChanged(QmBattery::State)),
+            this, SLOT(batteryStatusChanged(QmBattery::State)));
     connect (m_Battery, SIGNAL(batteryEnergyLevelChanged(int)),
             this, SLOT(batteryEnergyLevelChanged(int)));
-    connect (m_Battery, SIGNAL(chargerEvent(Maemo::QmBattery::ChargerType)),
-            this, SLOT(batteryChargerEvent(Maemo::QmBattery::ChargerType)));
-    connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
-            this, SLOT(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)));
+    connect (m_Battery, SIGNAL(chargerEvent(QmBattery::ChargerType)),
+            this, SLOT(batteryChargerEvent(QmBattery::ChargerType)));
+    connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(QmDeviceMode::PSMState)),
+            this, SLOT(devicePSMStateChanged(QmDeviceMode::PSMState)));
 
     #if DELAY_FOR_INITIALIZATION
     /*
@@ -273,7 +275,7 @@ BatteryBusinessLogic::batteryBarValue (
 
 void 
 BatteryBusinessLogic::batteryStatusChanged (
-        Maemo::QmBattery::State state)
+        QmBattery::State state)
 {
     SYS_DEBUG ("");
 
@@ -312,7 +314,7 @@ BatteryBusinessLogic::batteryStatusChanged (
 
 void 
 BatteryBusinessLogic::batteryLevelChanged (
-        Maemo::QmBattery::Level level)
+        QmBattery::Level level)
 {
     SYS_DEBUG ("");
 
@@ -360,7 +362,7 @@ BatteryBusinessLogic::batteryEnergyLevelChanged (
 
 void 
 BatteryBusinessLogic::batteryChargerEvent (
-        Maemo::QmBattery::ChargerType type)
+        QmBattery::ChargerType type)
 {
     SYS_DEBUG ("");
 
@@ -377,14 +379,14 @@ BatteryBusinessLogic::batteryChargerEvent (
         emit batteryCharging(animationRate(type));
         break;
 
-    default: //Maemo::QmBattery::Unknown
+    default: //QmBattery::Unknown
         break;
     }
 }
 
 void 
 BatteryBusinessLogic::devicePSMStateChanged (
-        Maemo::QmDeviceMode::PSMState PSMState)
+        QmDeviceMode::PSMState PSMState)
 {
     qDebug() << "BatteryBusinessLogic::devicePSMStateChanged(" << 
         PSMState << ")";
@@ -474,15 +476,15 @@ BatteryBusinessLogic::remainingTimeValues ()
     if (m_Battery->getState() == QmBattery::StateCharging)
         values << qtTrId (ChargingText) << qtTrId (ChargingText);
     else {
-        Maemo::QmDeviceMode::PSMState state = m_DeviceMode->getPSMState();
-        Maemo::QmBattery::RemainingTimeMode mode;
+        QmDeviceMode::PSMState state = m_DeviceMode->getPSMState();
+        QmBattery::RemainingTimeMode mode;
         switch (state) {
-            case Maemo::QmDeviceMode::PSMStateOn:
-                mode = Maemo::QmBattery::PowersaveMode;
+            case QmDeviceMode::PSMStateOn:
+                mode = QmBattery::PowersaveMode;
                 break;
-            case Maemo::QmDeviceMode::PSMStateOff:
+            case QmDeviceMode::PSMStateOff:
             default:
-                mode = Maemo::QmBattery::NormalMode;
+                mode = QmBattery::NormalMode;
                 break;
                 // This was the default...
                 //return QStringList() << "N/A" << "N/A";
@@ -560,7 +562,7 @@ BatteryBusinessLogic::batteryStatus ()
 
 int
 BatteryBusinessLogic::animationRate (
-        Maemo::QmBattery::ChargerType type)
+        QmBattery::ChargerType type)
 {
     int rate = -1;
     SYS_DEBUG ("");
