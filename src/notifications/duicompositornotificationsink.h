@@ -30,7 +30,7 @@ class DuiInfoBanner;
 
 /*!
  * DuiCompositorNotificationSink implements the NotificationSink interface for
- * displaying notifications on top of other applications than duihome.
+ * displaying notifications on top of other applications.
  *
  * Notification is displayed for a certain time after which it is hidden.
  */
@@ -77,13 +77,6 @@ private slots:
 
 private:
     /*!
-     * Checks whether the desktop window is on top.
-     *
-     * \return true if the desktop window is the topmost window, false otherwise
-     */
-    bool isDesktopWindowOnTop();
-
-    /*!
      * Updates an existing info banner with the given notification parameters.
      *
      * \param notification the notification to be updated
@@ -126,11 +119,6 @@ private:
 
     //! A mapping between notification IDs and private notification information classes
     QHash<uint, DuiCompositorNotificationSinkNotification *> idToNotification;
-
-    // X11 Atoms for different window types
-    Atom windowTypeAtom;
-    Atom windowTypeDesktopAtom;
-    Atom clientListStackingAtom;
 
     //! Whether the orientation change signal has been connected
     bool orientationChangeSignalConnected;

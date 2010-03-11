@@ -103,7 +103,7 @@ Sysuid::Sysuid () : QObject ()
     // Connect the notification signals for the feedback notification sink
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
-
+    connect(m_StatusAreaWindow, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
     // Restore persistent notifications after all the signal connections are made to the notification sinks
     notificationManager_->restorePersistentData();
 }

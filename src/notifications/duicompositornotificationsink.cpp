@@ -19,7 +19,6 @@
 
 #include <QGraphicsScene>
 #include <QTimer>
-#include <QX11Info>
 #include <DuiInfoBanner>
 #include <DuiWindow>
 #include <DuiScene>
@@ -28,17 +27,11 @@
 #include "notificationmanager.h"
 #include "duicompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
-#include "x11wrapper.h"
 #include "sysuid.h"
 
 DuiCompositorNotificationSink::DuiCompositorNotificationSink() :
     orientationChangeSignalConnected(false)
 {
-    // Get X11 Atoms for different window types
-    Display *dpy = QX11Info::display();
-    windowTypeAtom = X11Wrapper::XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
-    windowTypeDesktopAtom = X11Wrapper::XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
-    clientListStackingAtom = X11Wrapper::XInternAtom(dpy, "_NET_CLIENT_LIST_STACKING", False);
 }
 
 DuiCompositorNotificationSink::~DuiCompositorNotificationSink()
@@ -62,8 +55,7 @@ void DuiCompositorNotificationSink::addNotification(const Notification &notifica
     if (idToNotification.contains(notification.notificationId())) {
         // The notification already exists so update it
         updateNotification(notification);
-    } else if (!isDesktopWindowOnTop()) {
-        // If the desktop window is not on top show an info banner
+    } else {
         // Create a new toplevel window for the info banner
         QGraphicsScene *scene = new QGraphicsScene;
         QGraphicsView *view = new QGraphicsView(scene);
@@ -165,48 +157,6 @@ DuiCompositorNotificationSink::DuiCompositorNotificationSinkNotification::DuiCom
 
 DuiCompositorNotificationSink::DuiCompositorNotificationSinkNotification::~DuiCompositorNotificationSinkNotification()
 {
-}
-
-bool DuiCompositorNotificationSink::isDesktopWindowOnTop()
-{
-    bool desktopOnTop = false;
-
-    // Get a list of all windows in their stacking order
-    Display *dpy = QX11Info::display();
-    Atom actualType;
-    int actualFormat;
-    unsigned long numWindowItems, bytesLeft;
-    unsigned char *windowData = NULL;
-    int result = X11Wrapper::XGetWindowProperty(dpy, DefaultRootWindow(dpy), clientListStackingAtom, 0, 0x7fffffff, False, XA_WINDOW,
-                 &actualType, &actualFormat, &numWindowItems, &bytesLeft, &windowData);
-
-    if (result == Success && windowData != None && numWindowItems > 0) {
-        Window *wins = (Window *)windowData;
-        unsigned char *typeData = NULL;
-        unsigned long numTypeItems;
-
-        // Get the window type
-        result = X11Wrapper::XGetWindowProperty(dpy, wins[numWindowItems - 1], windowTypeAtom, 0L, 16L, False, XA_ATOM,
-                                                &actualType, &actualFormat, &numTypeItems, &bytesLeft, &typeData);
-
-        if (result == Success) {
-            Atom *type = (Atom *)typeData;
-
-            // Check if the types list includes desktop
-            for (unsigned int n = 0; n < numTypeItems; n++) {
-                if (type[n] == windowTypeDesktopAtom) {
-                    desktopOnTop = true;
-                    break;
-                }
-            }
-
-            X11Wrapper::XFree(typeData);
-        }
-
-        X11Wrapper::XFree(wins);
-    }
-
-    return desktopOnTop;
 }
 
 void DuiCompositorNotificationSink::rotateInfoBanners(const Dui::Orientation &orientation)

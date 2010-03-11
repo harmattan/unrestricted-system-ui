@@ -10,6 +10,17 @@ SUBDIRS = \
     ut_statusindicatorimageview \
     ut_statusindicatorlabelview \
     ut_notificationarea
+    ut_notification \
+    ut_notificationgroup \
+    ut_notificationmanager \
+    ut_notificationparameter \
+    ut_notificationparameters \
+    ut_notifiernotificationsink \
+    ut_dbusinterfacenotificationsource \
+    ut_duicompositornotificationsink \
+    ut_duifeedbacknotificationsink \
+    ut_eventtypestore \
+    ut_widgetnotificationsink \
 
 # These tests needs X server:
 #    ut_unlockslider \

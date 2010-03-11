@@ -53,6 +53,12 @@ public:
      */
     virtual Dui::OrientationAngle orientationAngle() const;
 
+signals:
+    /*!
+      * Inform about orientation changes
+      */
+    void orientationChangeFinished(const Dui::Orientation &);
+
 public slots:
     void retranslate ();
 
