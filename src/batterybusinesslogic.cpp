@@ -327,11 +327,16 @@ BatteryBusinessLogic::batteryLevelChanged (
         break;
 
     case QmBattery::LevelLow:
-        if (m_Battery->getState() != QmBattery::StateCharging) {
-            if (m_LowBatteryNotifier == NULL) {
-                m_LowBatteryNotifier = new LowBatteryNotifier();
-                connect(m_LowBatteryNotifier, SIGNAL(showNotification(QString)), 
-                        this, SIGNAL(showNotification(QString)));
+        // Seems LevelLow coming on start, i just checked the QmSystem
+        // sources, if the value is not full or critically low the result
+        // is LevelLow :-S (Why there is no LevelNormal?) <dkedves>
+        if ((m_Battery->getState() != QmBattery::StateCharging) &&
+            (m_Battery->getBatteryEnergyLevel () <= 10))
+        {
+          if (m_LowBatteryNotifier == NULL) {
+              m_LowBatteryNotifier = new LowBatteryNotifier();
+              connect(m_LowBatteryNotifier, SIGNAL(showNotification(QString)), 
+                      this, SIGNAL(showNotification(QString)));
             }
             m_LowBatteryNotifier->showLowBatteryNotification();
         }
@@ -589,3 +594,4 @@ BatteryBusinessLogic::setPSMState (
         }
     }
 }
+
