@@ -27,6 +27,8 @@ int main (int argc, char** argv)
     DuiApplication app (argc, argv);
     exitPtr = &app;
 
+    qInstallMsgHandler (0);
+
     app.setQuitOnLastWindowClosed (false);
 
     SYS_DEBUG ("- System-UI start");

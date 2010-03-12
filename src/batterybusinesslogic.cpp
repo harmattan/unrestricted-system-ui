@@ -15,7 +15,7 @@ using namespace Maemo;
  */
 #define DELAY_FOR_INITIALIZATION 0
 
-//#define DEBUG
+#define DEBUG
 #include "debug.h"
 
 /* TODO List
@@ -160,6 +160,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_LowBatteryNotifier (NULL),
     m_notification (0)
 {
+    SYS_DEBUG ("");
+
     /* init the PSM thresholds */
     m_PSMThresholds << 
 	    QString("5") << 
@@ -177,16 +179,26 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     initSystemUIGConfKeys ();
 
     /* connect to QmSystem signals */
-    connect (m_Battery, SIGNAL(batteryLevelChanged(QmBattery::Level)),
-            this, SLOT(batteryLevelChanged(QmBattery::Level)));
-    connect (m_Battery, SIGNAL(batteryStatusChanged(QmBattery::State)),
-            this, SLOT(batteryStatusChanged(QmBattery::State)));
-    connect (m_Battery, SIGNAL(batteryEnergyLevelChanged(int)),
-            this, SLOT(batteryEnergyLevelChanged(int)));
-    connect (m_Battery, SIGNAL(chargerEvent(QmBattery::ChargerType)),
-            this, SLOT(batteryChargerEvent(QmBattery::ChargerType)));
-    connect (m_DeviceMode, SIGNAL(devicePSMStateChanged(QmDeviceMode::PSMState)),
-            this, SLOT(devicePSMStateChanged(QmDeviceMode::PSMState)));
+    connect (m_Battery,
+             SIGNAL (batteryLevelChanged (Maemo::QmBattery::Level)),
+             this,
+             SLOT (batteryLevelChanged (Maemo::QmBattery::Level)));
+    connect (m_Battery,
+             SIGNAL (batteryStatusChanged (Maemo::QmBattery::State)),
+             this,
+             SLOT (batteryStatusChanged (Maemo::QmBattery::State)));
+    connect (m_Battery,
+             SIGNAL (batteryEnergyLevelChanged(int)),
+             this,
+             SLOT(batteryEnergyLevelChanged(int)));
+    connect (m_Battery,
+             SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
+             this,
+             SLOT (batteryChargerEvent (Maemo::QmBattery::ChargerType)));
+    connect (m_DeviceMode,
+             SIGNAL (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)),
+             this,
+             SLOT (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)));
 
     #if DELAY_FOR_INITIALIZATION
     /*
