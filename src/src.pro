@@ -1,3 +1,7 @@
+MOC_DIR = .moc
+DUIGEN_OUTDIR = .gen
+OBJECTS_DIR = .obj
+
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
