@@ -47,10 +47,15 @@ private slots:
     void testAddNotification();
     // Test removing a notification
     void testRemoveNotification();
+    // Test when a notification is added, then latest comes first.
+    void testAddNotificationLatestComesFirst();
+    // Test when a notification is updated then that banner comes first
+    void testUpdatedNotificationComesFirst();
 
 signals:
     void addNotification(DuiInfoBanner &notification);
     void removeNotification(DuiInfoBanner &notification);
+    void notificationUpdated(DuiInfoBanner &notification);
 
 public:
     static QGraphicsLayoutItem *addedItem;

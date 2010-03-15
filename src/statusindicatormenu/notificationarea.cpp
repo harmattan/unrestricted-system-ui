@@ -38,6 +38,7 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     connect(notificationAreaSink, SIGNAL(removeNotification(DuiInfoBanner &)), this, SLOT(removeNotification(DuiInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
+    connect(notificationAreaSink, SIGNAL(notificationUpdated(DuiInfoBanner &)), this, SLOT(moveNotificationToTop(DuiInfoBanner &)));
 }
 
 NotificationArea::~NotificationArea()
@@ -45,12 +46,21 @@ NotificationArea::~NotificationArea()
     delete notificationAreaSink;
 }
 
+void NotificationArea::moveNotificationToTop(DuiInfoBanner &notification)
+{
+    QList<DuiInfoBanner *> banners(model()->banners());
+    if(banners.count() != 0) {
+        banners.move(banners.indexOf(&notification), 0);
+        model()->setBanners(banners);
+    }
+}
+
 void NotificationArea::addNotification(DuiInfoBanner &notification)
 {
     // Put the notification into the model of the notification area
     notification.setParentItem(this);
     QList<DuiInfoBanner *> banners(model()->banners());
-    banners.append(&notification);
+    banners.push_front(&notification);
     model()->setBanners(banners);
 
     emit notificationCountChanged(model()->banners().count());

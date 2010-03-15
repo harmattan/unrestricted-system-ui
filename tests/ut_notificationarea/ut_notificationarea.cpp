@@ -51,6 +51,7 @@ void Ut_NotificationArea::init()
 
     connect(this, SIGNAL(addNotification(DuiInfoBanner &)), m_subject, SLOT(addNotification(DuiInfoBanner &)));
     connect(this, SIGNAL(removeNotification(DuiInfoBanner &)), m_subject, SLOT(removeNotification(DuiInfoBanner &)));
+    connect(this, SIGNAL(notificationUpdated(DuiInfoBanner &)), m_subject, SLOT(moveNotificationToTop(DuiInfoBanner &)));
 }
 
 void Ut_NotificationArea::cleanup()
@@ -78,6 +79,29 @@ void Ut_NotificationArea::testRemoveNotification()
     QVERIFY(! m_subject->model()->banners().contains(&notification));
     QCOMPARE(notificationCountSpy.count(), 1);
     QCOMPARE(notificationCountSpy.takeAt(0).at(0).toInt(), 0);
+}
+
+void Ut_NotificationArea::testAddNotificationLatestComesFirst()
+{
+    DuiInfoBanner notification1(DuiInfoBanner::Information);
+    emit addNotification(notification1);
+    DuiInfoBanner notification2(DuiInfoBanner::Information);
+    emit addNotification(notification2);
+    QCOMPARE(m_subject->model()->banners().at(0), &notification2);
+    QCOMPARE(m_subject->model()->banners().at(1), &notification1);
+}
+
+void Ut_NotificationArea::testUpdatedNotificationComesFirst()
+{
+    // Add three notifications
+    DuiInfoBanner notification1(DuiInfoBanner::Information);
+    emit addNotification(notification1);
+    DuiInfoBanner notification2(DuiInfoBanner::Information);
+    emit addNotification(notification2);
+    DuiInfoBanner notification3(DuiInfoBanner::Information);
+    emit addNotification(notification3);
+    emit notificationUpdated(notification2);
+    QCOMPARE(m_subject->model()->banners().at(0), &notification2);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationArea)

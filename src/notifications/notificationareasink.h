@@ -75,6 +75,13 @@ signals:
      */
     void bannerClicked();
 
+    /*!
+     * Signal to let the notification area know that a notification was updated, so make it the top
+     *
+     * \param notification the DuiInfoBanner to be made top in notification area
+     */
+    void notificationUpdated(DuiInfoBanner &notification);
+
 private:
     //! Sets up the info banner can connects its signals
     void setupInfoBanner(DuiInfoBanner *infoBanner);

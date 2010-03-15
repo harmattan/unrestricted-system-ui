@@ -59,6 +59,14 @@ private slots:
     void addNotification(DuiInfoBanner &notification);
 
     /*!
+     * Moves the banner to top. Called when relayouting is asked by notification area sink
+     * when a notification/group is updated.
+     *
+     * \param notification the DuiInfoBanner to be made top
+     */
+    void moveNotificationToTop(DuiInfoBanner &notification);
+
+    /*!
      * Removes a notification from the notification area.
      *
      * \param notification the DuiInfoBanner to be removed

@@ -29,6 +29,7 @@ public:
     virtual void notificationAreaConstructor(NotificationArea *notificationArea, DuiWidget *parent);
     virtual void notificationAreaDestructor();
     virtual void addNotification(DuiInfoBanner &notification);
+    virtual void moveNotificationToTop(DuiInfoBanner &notification);
     virtual void removeNotification(DuiInfoBanner &notification);
 };
 
@@ -50,6 +51,13 @@ void NotificationAreaStub::addNotification(DuiInfoBanner &notification)
     QList<ParameterBase *> params;
     params.append(new Parameter<DuiInfoBanner &>(notification));
     stubMethodEntered("addNotification", params);
+}
+
+void NotificationAreaStub::moveNotificationToTop(DuiInfoBanner &notification)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiInfoBanner &>(notification));
+    stubMethodEntered("makeNotificationTop",params);
 }
 
 void NotificationAreaStub::removeNotification(DuiInfoBanner &notification)
@@ -75,6 +83,11 @@ NotificationArea::~NotificationArea()
 void NotificationArea::addNotification(DuiInfoBanner &notification)
 {
     gNotificationAreaStub->addNotification(notification);
+}
+
+void NotificationArea::moveNotificationToTop(DuiInfoBanner &notification)
+{
+    gNotificationAreaStub->makeNotificationTop(notification);
 }
 
 void NotificationArea::removeNotification(DuiInfoBanner &notification)

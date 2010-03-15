@@ -9,7 +9,8 @@ SUBDIRS = \
     ut_statusareaview \
     ut_statusindicator \
     ut_statusindicatorimageview \
-    ut_statusindicatorlabelview
+    ut_statusindicatorlabelview \
+    ut_notificationarea
 
 # These tests needs X server:
 #    ut_unlockslider \

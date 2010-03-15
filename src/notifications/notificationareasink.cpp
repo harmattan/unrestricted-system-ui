@@ -58,7 +58,7 @@ DuiInfoBanner *NotificationAreaSink::updateNotification(DuiInfoBanner *infoBanne
 
     // Update the info banner's actions
     updateActions(infoBanner, parameters);
-
+    emit notificationUpdated(*infoBanner);
     return infoBanner;
 }
 
