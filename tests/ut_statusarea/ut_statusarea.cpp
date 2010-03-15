@@ -22,11 +22,35 @@
 #include "contextframeworkcontext.h"
 #include <QGraphicsSceneMouseEvent>
 #include "statusindicatormenuwindow.h"
+#include "notificationarea_stub.h"
+#include <DuiApplication>
+#include <DuiApplicationPage>
+#include <DuiScene>
+#include <DuiSceneManager>
+#include <DuiEscapeButtonPanel>
+#include "statusindicatormenuwindow_stub.h"
+
+
+DuiWindow::DuiWindow(QWidget *parent)
+    : QGraphicsView(parent),
+      d_ptr(0)
+{
+}
+
+QPair<void*, bool> gSetVisible(0, false);
+void QWidget::setVisible(bool visible)
+{
+    gSetVisible.first = this;
+    gSetVisible.second = visible;
+}
+
+
 // ContextFrameworkContext stubs (used by StatusArea)
 QVariant ContextFrameworkItem::value() const
 {
     return QVariant();
 }
+
 
 const QPointF mouseDownPos = QPointF(12.24, 20.20); // Arbitary point
 const QPointF mouseMovePos = QPointF(15.20, 51.10); // Point with y greater than mouseDownPos + SWIPE_THRESHOLD
@@ -49,6 +73,8 @@ QPointF QGraphicsSceneMouseEvent::pos() const
 void Ut_StatusArea::init()
 {
     statusArea = new StatusArea();
+    gSetVisible.first = 0;
+    gSetVisible.second = false;
 }
 
 void Ut_StatusArea::cleanup()
@@ -61,11 +87,16 @@ void Ut_StatusArea::cleanup()
 
 void Ut_StatusArea::initTestCase()
 {
+    int argc = 1;
+    char *app_name = (char *)"./ut_statusarea";
+    app = new DuiApplication(argc, &app_name);
 }
 
 void Ut_StatusArea::cleanupTestCase()
 {
+    delete app;
 }
+
 
 void Ut_StatusArea::testWhenSwipeStatusAreaStatusIndicatorMenuAppears()
 {
@@ -78,7 +109,8 @@ void Ut_StatusArea::testWhenSwipeStatusAreaStatusIndicatorMenuAppears()
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-    QVERIFY(statusArea->statusIndicatorMenuWindow->isVisible());
+    QVERIFY(gSetVisible.first == statusArea->statusIndicatorMenuWindow &&
+            gSetVisible.second);
 }
 
 void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear()
@@ -92,7 +124,7 @@ void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppe
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-    QVERIFY(!statusArea->statusIndicatorMenuWindow->isVisible());
+    QVERIFY(gSetVisible.first != statusArea->statusIndicatorMenuWindow);
 }
 
-QTEST_MAIN(Ut_StatusArea)
+QTEST_APPLESS_MAIN(Ut_StatusArea)

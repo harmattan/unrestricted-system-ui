@@ -87,7 +87,7 @@ void NotificationArea::addNotification(DuiInfoBanner &notification)
 
 void NotificationArea::moveNotificationToTop(DuiInfoBanner &notification)
 {
-    gNotificationAreaStub->makeNotificationTop(notification);
+    gNotificationAreaStub->moveNotificationToTop(notification);
 }
 
 void NotificationArea::removeNotification(DuiInfoBanner &notification)

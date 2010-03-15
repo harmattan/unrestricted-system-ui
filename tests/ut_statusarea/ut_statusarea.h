@@ -26,6 +26,7 @@
 #include "statusareastyle.h"
 
 class StatusArea;
+class DuiApplication;
 
 class Ut_StatusArea : public QObject
 {
@@ -36,6 +37,7 @@ public:
 
 private:
     StatusArea *statusArea;
+    DuiApplication *app;
 
 private slots:
     // Executed once before every test case

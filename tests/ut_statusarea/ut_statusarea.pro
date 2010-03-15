@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_statusarea
-INCLUDEPATH += $$SRCDIR/statusarea  $$SRCDIR/statusindicatormenu
+INCLUDEPATH += $$SRCDIR/statusarea  $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
 
 INCLUDEPATH += /usr/include/contextsubscriber
 
@@ -13,7 +13,11 @@ SOURCES += \
     ut_statusarea.cpp \
     $$SRCDIR/statusarea/statusarea.cpp \
     $$SRCDIR/statusindicatormenu/pluginlist.cpp \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
+#    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
+
+# service classes
+SOURCES += \
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit classes
 HEADERS += \
@@ -25,5 +29,9 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/contextframeworkcontext.h \
+
+# service classes
+HEADERS += \
+    $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)
