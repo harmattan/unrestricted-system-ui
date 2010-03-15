@@ -29,6 +29,7 @@
 #include "bluetoothstatusindicator_stub.h"
 #include "statusindicator_stub.h"
 #include "phonenetworkstatusindicator_stub.h"
+#include "notificationarea_stub.h"
 #include <DuiSceneWindow>
 #include <QGraphicsLayout>
 

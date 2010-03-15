@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_statusareaview
-INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu
+INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
 INCLUDEPATH += /usr/include/contextsubscriber
 
 STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
@@ -29,5 +29,9 @@ HEADERS += \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h
+
+# service classes
+HEADERS += \
+    $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)
