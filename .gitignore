@@ -12,3 +12,6 @@
 *.gcno
 *.gcda
 *.pro.user
+lib
+*.qm
+*.ts
