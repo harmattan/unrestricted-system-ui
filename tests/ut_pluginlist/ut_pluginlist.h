@@ -63,6 +63,8 @@ private slots:
     void testHideStatusIndicatorMenu();
     // Test clicking the settings button
     void testSettingsButtonClicked();
+    // Test that the notification area shows/hides based on available notifications
+    void testNotificationAreaVisibility();
 
 signals:
     void settingsButtonClicked();

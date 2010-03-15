@@ -21,6 +21,7 @@
 class DuiWindow;
 class DuiApplicationPage;
 class QGraphicsLinearLayout;
+class NotificationArea;
 
 /*!
  * The plugin list displays a list of plugins instantiated from shared
@@ -55,6 +56,12 @@ private slots:
      */
     void settingsButtonClicked();
 
+    /*!
+     * \brief Sets the visibility of the notification area based on the notification count
+     * \param notificationCount the number of notifications visible
+     */
+    void setNotificationCount(int notificationCount);
+
 private:
     /*!
      * Adds a plugin to the list.
@@ -76,6 +83,9 @@ private:
 
     //! The application page to show if the plugin returns from a subpage
     DuiApplicationPage *applicationPage;
+
+    //! The notification area widget
+    NotificationArea *notificationArea;
 
     //! The name of the control panel service
     const static QString CONTROL_PANEL_SERVICE_NAME;

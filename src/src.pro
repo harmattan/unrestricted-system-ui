@@ -1,3 +1,5 @@
+include(../duiconfig.pri)
+
 MOC_DIR = .moc
 DUIGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj

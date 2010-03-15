@@ -1,7 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_pluginlist
 
-INCLUDEPATH += $$SRCDIR/statusindicatormenu
+INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
 
 # unit test and unit
 SOURCES += \
@@ -13,8 +13,13 @@ HEADERS += \
     ut_pluginlist.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
 
+
+# service classes
+SOURCES += \
+    $$STUBSDIR/stubbase.cpp
+
 # service classes
 HEADERS += \
-
+    $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)

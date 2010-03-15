@@ -20,6 +20,7 @@
 #include <QPluginLoader>
 #include <QGraphicsLinearLayout>
 #include <DuiApplicationIfProxy>
+#include "notificationarea.h"
 
 const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
@@ -32,6 +33,11 @@ PluginList::PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applica
     // Create a widget for laying out the widgets
     mainLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(mainLayout);
+
+    // Create the notification area
+    notificationArea = new NotificationArea(this);
+    notificationArea->setVisible(false);
+    connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
 
     // Load the plugins
     addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
@@ -49,6 +55,22 @@ PluginList::PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applica
 
 PluginList::~PluginList()
 {
+    delete notificationArea;
+}
+
+void PluginList::setNotificationCount(int notificationCount)
+{
+    if(notificationCount > 0) {
+        if(!notificationArea->isVisible()) {
+            notificationArea->setVisible(true);
+            mainLayout->insertItem(0, notificationArea);
+        }
+    } else {
+        if(notificationArea->isVisible()) {
+            notificationArea->setVisible(false);
+            mainLayout->removeItem(notificationArea);
+        }
+    }
 }
 
 void PluginList::addPlugin(const QString &path)

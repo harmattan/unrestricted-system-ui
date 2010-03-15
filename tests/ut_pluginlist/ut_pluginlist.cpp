@@ -1,7 +1,7 @@
 /*
  * ut_pluginlist.cpp
  *
- * This file is part of duistatusindocatormenu
+ * This file is part of system ui
  *
  * Copyright (C) 2009 Nokia Corporation. All rights reserved.
  *
@@ -22,6 +22,7 @@
 #include <DuiApplicationIfProxy>
 #include "ut_pluginlist.h"
 #include "pluginlist.h"
+#include "notificationarea_stub.h"
 
 // DuiApplicationIfProxy stubs (used by StatusArea)
 QDBusPendingReply<> DuiApplicationIfProxy::launch()
@@ -122,6 +123,20 @@ void Ut_PluginList::testSettingsButtonClicked()
     emit settingsButtonClicked();
 
     QVERIFY(duiApplicationIfProxyLaunchCalled);
+}
+
+void Ut_PluginList::testNotificationAreaVisibility()
+{
+    NotificationArea *notificationArea =
+            gNotificationAreaStub->stubLastCallTo("notificationAreaConstructor").parameter<NotificationArea*>(0);
+
+    QVERIFY(!notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 1));
+    QVERIFY(notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 10));
+    QVERIFY(notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 0));
+    QVERIFY(!notificationArea->isVisible());
 }
 
 QTEST_APPLESS_MAIN(Ut_PluginList)

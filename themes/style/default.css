@@ -19,6 +19,22 @@ DuiButtonStyle#StatusIndicatorMenuSettingsButton {
     margin-bottom: 6;
 }
 
+NotificationAreaStyle {
+    minimum-size: 100% 80;
+    margin-left:   0;
+    margin-top:    0;
+    margin-right:  0;
+    margin-bottom: 0;
+}
+                
+DuiSceneWindowAnimatorStyle:event_notification {
+    transition-in-type: "move.right";
+    transition-out-type: "move.to";
+    transition-out-destination: 0 78;
+    transition-out-fade: false;
+}
+
+
 #lockscreenTimeLabel {
     color: #00DD00;
     font: "Nokia Sans Wide" 52;
@@ -167,3 +183,4 @@ StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
     minimum-size: 24 18;
     maximum-size: 24 18;
 }
+
