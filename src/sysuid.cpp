@@ -67,7 +67,7 @@ Sysuid::Sysuid () : QObject ()
 
     notificationManager_ = new NotificationManager(3000);
     compositorNotificationSink_ = new DuiCompositorNotificationSink;
-    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;
+    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;    
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
@@ -98,11 +98,14 @@ Sysuid::Sysuid () : QObject ()
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), compositorNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), compositorNotificationSink_, SLOT(removeNotification(uint)));
     connect(compositorNotificationSink_, SIGNAL(notificationRemovalRequested(uint)), notificationManager_, SLOT(removeNotification(uint)));
+    connect(notificationManager_, SIGNAL(notificationRestored(const Notification &)), compositorNotificationSink_, SIGNAL(notificationAdded(Notification)));
 
     // Connect the notification signals for the feedback notification sink
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
 
+    // Restore persistent notifications after all the signal connections are made to the notification sinks
+    notificationManager_->restorePersistentData();
 }
 
 Sysuid::~Sysuid ()

@@ -20,6 +20,7 @@
 #include "sysuid.h"
 #include "notificationarea.h"
 #include "notificationareasink.h"
+#include "duicompositornotificationsink.h"
 #include <DuiInfoBanner>
 #include <QTimer>
 
@@ -30,7 +31,7 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     // Connect notification signals
     NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
 
-    connect(notificationManager, SIGNAL(notificationUpdated(Notification)), notificationAreaSink, SLOT(addNotification(const Notification &)));
+    connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
