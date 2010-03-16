@@ -23,7 +23,6 @@ HEADERS += statusarea/statusarea.h \
     statusarea/clockstyle.h \
     statusarea/clockmodel.h \
     statusarea/notifier.h \
-    statusarea/applicationcontext.h \
     statusarea/statusindicatormodel.h \
     statusarea/statusindicatorlabelview.h \
     statusarea/statusindicatorlabelstyle.h \

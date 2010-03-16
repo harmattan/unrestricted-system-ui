@@ -20,7 +20,7 @@ SOURCES +=  \
 # unit test and unit classes
 HEADERS += ut_statusindicator.h \
     $$SRCDIR/statusarea/statusindicator.h \
-    $$SRCDIR/statusarea/applicationcontext.h  \
+    $$SRCDIR/applicationcontext.h  \
     $$SRCDIR/statusarea/statusindicatorimagestyle.h \
     $$SRCDIR/statusarea/statusindicatorlabelstyle.h \
     $$SRCDIR/statusarea/statusindicatormodel.h \
