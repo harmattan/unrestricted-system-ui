@@ -9,7 +9,6 @@ class StatusIndicatorMenuWindowStub : public StubBase
 public:
     virtual void StatusIndicatorMenuWindowConstructor();
     virtual void StatusIndicatorMenuWindowDestructor();
-    virtual void setOrientationAngle(Dui::OrientationAngle angle);
     virtual void excludeFromTaskBar();
     virtual void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two);
 };
@@ -22,13 +21,6 @@ void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor()
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowDestructor()
 {
     stubMethodEntered("StatusIndicatorMenuWindowDestructor");
-}
-
-void StatusIndicatorMenuWindowStub::setOrientationAngle(Dui::OrientationAngle angle)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<Dui::OrientationAngle >(angle));
-    stubMethodEntered("setOrientationAngle", params);
 }
 
 void StatusIndicatorMenuWindowStub::excludeFromTaskBar()
@@ -53,7 +45,6 @@ StatusIndicatorMenuWindowStub *gStatusIndicatorMenuWindowStub = &gDefaultStatusI
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     DuiWindow(parent),
-    scene(0),
     applicationPage(0),
     escapeButtonPanel(0)
 {
@@ -63,11 +54,6 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
     gStatusIndicatorMenuWindowStub->StatusIndicatorMenuWindowDestructor();
-}
-
-void StatusIndicatorMenuWindow::setOrientationAngle(Dui::OrientationAngle angle)
-{
-    gStatusIndicatorMenuWindowStub->setOrientationAngle(angle);
 }
 
 void StatusIndicatorMenuWindow::excludeFromTaskBar()

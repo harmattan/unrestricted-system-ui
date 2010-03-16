@@ -12,30 +12,18 @@
  * written consent of Nokia.
  */
 
-#include <DuiApplication>
 #include <DuiApplicationPage>
-#include <DuiScene>
 #include <DuiSceneManager>
 #include <DuiEscapeButtonPanel>
+#include <QX11Info>
 #include "pluginlist.h"
 #include "statusindicatormenuwindow.h"
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     DuiWindow(parent),
-    scene(new DuiScene),
     applicationPage(new DuiApplicationPage),
     escapeButtonPanel(new DuiEscapeButtonPanel)
 {
-    // Take the scene into use and create a scene manager for it. Must be done in this order.
-    setScene(scene.data());
-    setSceneRect(QRectF(QPointF(), visibleSceneSize(Dui::Landscape)));
-    centerOn(sceneRect().center());
-    sceneManager =
-    QSharedPointer<DuiSceneManager>(new DuiSceneManager(scene.data()));
-
-    // Manage orientation change
-    connect(this, SIGNAL(orientationAngleChanged(Dui::OrientationAngle)), this, SLOT(setOrientationAngle(Dui::OrientationAngle)));
-
     // Create an application page for the plugin list
     applicationPage->setObjectName("StatusIndicatorMenuPage");
     applicationPage->setTitle("Status Indicator Menu");
@@ -44,12 +32,12 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Show);
     applicationPage->setCentralWidget(new PluginList(this,
                              applicationPage.data()));
-    sceneManager->showWindowNow(applicationPage.data());
+    sceneManager()->showWindowNow(applicationPage.data());
 
     // Create an escape button
     escapeButtonPanel->connect(escapeButtonPanel.data(),
                    SIGNAL(buttonClicked()), this, SLOT(lower()));
-    sceneManager->showWindowNow(escapeButtonPanel.data());
+    sceneManager()->showWindowNow(escapeButtonPanel.data());
 
     // Set the X window properties so that the window does not appear in the task bar
     excludeFromTaskBar();
@@ -57,12 +45,6 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
-}
-
-void StatusIndicatorMenuWindow::setOrientationAngle(Dui::OrientationAngle angle)
-{
-    sceneManager->setOrientationAngle(angle);
-    DuiWindow::setOrientationAngle(angle);
 }
 
 void StatusIndicatorMenuWindow::excludeFromTaskBar()

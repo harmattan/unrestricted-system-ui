@@ -16,7 +16,6 @@
 #define STATUSINDICATORMENUWINDOW_H
 
 #include <DuiWindow>
-#include <QSharedPointer>
 #include <X11/Xlib.h>
 
 // TODO: this include can be removed when duicompositor
@@ -24,8 +23,6 @@
 #include <X11/Xatom.h>
 
 
-class DuiScene;
-class DuiSceneManager;
 class DuiApplicationPage;
 class DuiEscapeButtonPanel;
 
@@ -51,11 +48,6 @@ public:
      */
     ~StatusIndicatorMenuWindow();
 
-public slots:
-    //! \reimp
-    virtual void setOrientationAngle(Dui::OrientationAngle angle);
-    //! \reimp_end
-
 private:
     /*!
      * Sets the X window properties for the window so that the window is not
@@ -72,12 +64,6 @@ private:
      * \param two the second Atom to put in the value
      */
     static void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0);
-
-    //! A scene for this window
-    QSharedPointer<DuiScene> scene;
-
-    //! A scene manager for the scene
-    QSharedPointer<DuiSceneManager> sceneManager;
 
     //! The main application page
     QSharedPointer<DuiApplicationPage> applicationPage;
