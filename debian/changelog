@@ -1,16 +1,11 @@
-system-ui (0.12.2-2~unrelease) harmattan; urgency=low
+system-ui (0.12.2-2) harmattan; urgency=low
 
-  * Prepare to next version
-
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:01:04 +0100
-
-system-ui (0.12.2-1) unstable; urgency=low
-
+  * Fixes: NB#159421 - Touch screen lock not working....
   * Fixes: NB#160317 - "Low battery" warning is always showed when
                        device is power on
   * Re-enable touch screen locking
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:00:12 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:08:10 +0100
 
 system-ui (0.12.1-7) harmattan; urgency=low
 
