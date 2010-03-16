@@ -10,7 +10,6 @@ public:
     virtual void StatusIndicatorMenuWindowConstructor();
     virtual void StatusIndicatorMenuWindowDestructor();
     virtual void excludeFromTaskBar();
-    virtual void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two);
 };
 
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor()
@@ -26,16 +25,6 @@ void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowDestructor()
 void StatusIndicatorMenuWindowStub::excludeFromTaskBar()
 {
     stubMethodEntered("excludeFromTaskBar");
-}
-
-void StatusIndicatorMenuWindowStub::changeNetWmState(const QWidget* w, bool set, Atom one, Atom two)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<const QWidget*>(w));
-    params.append(new Parameter<bool>(set));
-    params.append(new Parameter<Atom>(one));
-    params.append(new Parameter<Atom>(two));
-    stubMethodEntered("changeNetWmState", params);
 }
 
 
@@ -61,9 +50,5 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     gStatusIndicatorMenuWindowStub->excludeFromTaskBar();
 }
 
-void StatusIndicatorMenuWindow::changeNetWmState(const QWidget* w, bool set, Atom one, Atom two)
-{
-    gStatusIndicatorMenuWindowStub->changeNetWmState(w, set, one, two);
-}
 
 #endif
