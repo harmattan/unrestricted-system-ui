@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    ut_template \
     ut_unlockslider \
     ut_batterybusinesslogic \
     ut_lowbatterynotifier
