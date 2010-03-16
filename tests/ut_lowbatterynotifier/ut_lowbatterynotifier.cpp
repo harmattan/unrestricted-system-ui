@@ -164,8 +164,7 @@ Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
         " (should be between " << lower << " and " << higher << ")";
 
     QVERIFY(m_helper->notificationTimes ().at (1) <= higher);
-    // This again fails, I just don't know why!
-    //QVERIFY(m_helper->notificationTimes ().at (1) >= lower);
+    QVERIFY(m_helper->notificationTimes ().at (1) >= lower);
 }
 
 void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
