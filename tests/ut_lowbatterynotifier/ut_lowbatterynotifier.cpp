@@ -138,7 +138,6 @@ void Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
     m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
     m_subject->m_Display->set (Maemo::QmDisplayState::Off);
     QTest::qWait (Act / 2);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
     m_subject->m_Display->set (Maemo::QmDisplayState::On);
 
     QCOMPARE(m_helper->notificationTimes ().count (), 2);

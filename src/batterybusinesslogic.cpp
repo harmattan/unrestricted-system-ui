@@ -81,9 +81,9 @@ LowBatteryNotifier::LowBatteryNotifier (
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
     connect(m_Display, 
-            SIGNAL(displayStateChanged(QmDisplayState::DisplayState)),
+            SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, 
-            SLOT(displayStateChanged(QmDisplayState::DisplayState)));
+            SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
 
     connect (m_Timer, SIGNAL(timeout()), 
             this, SLOT(showLowBatteryNotification()));
@@ -121,7 +121,7 @@ LowBatteryNotifier::showLowBatteryNotification()
 
 void 
 LowBatteryNotifier::displayStateChanged (
-        QmDisplayState::DisplayState state)
+        Maemo::QmDisplayState::DisplayState state)
 {
     SYS_DEBUG ("");
 
@@ -374,7 +374,7 @@ BatteryBusinessLogic::batteryEnergyLevelChanged (
 
 void 
 BatteryBusinessLogic::batteryChargerEvent (
-        QmBattery::ChargerType type)
+        Maemo::QmBattery::ChargerType type)
 {
     SYS_DEBUG ("");
 
