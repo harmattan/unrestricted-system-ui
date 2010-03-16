@@ -43,12 +43,6 @@ public:
         StateChargingFailed
     };
 
-    /** Charging events */
-    enum ChargerEvent {
-        ChargerConnected,    /**< Charger connected */
-        ChargerDisconnected, /**< Charger disconnected */
-    };
-
     QmBattery(QObject *parent = 0);
     virtual ~QmBattery();
 
@@ -107,7 +101,7 @@ signals:
     * Sent when a charger event has occurred.
     * @param event Charger event.
     */
-    void chargerEvent(Maemo::QmBattery::ChargerEvent event);
+    void chargerEvent(Maemo::QmBattery::ChargerType type);
 
     /**
      * Sent when the number of bars indicating battery charge changes
