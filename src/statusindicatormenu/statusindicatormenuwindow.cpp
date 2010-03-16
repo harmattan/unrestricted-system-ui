@@ -19,6 +19,41 @@
 #include "pluginlist.h"
 #include "statusindicatormenuwindow.h"
 
+#include <X11/Xlib.h>
+
+// TODO: this include can be removed when duicompositor
+// sets the _NET_WM_STATE attribute according to the message.
+#include <X11/Xatom.h>
+
+
+/*!
+ * Changes the _NET_WM_STATE property of a widget's window.
+ *
+ * \param w the widget whose window's property to change
+ * \param set \c true if the first data value will be 1, \c false if it will be 0
+ * \param one the first Atom to put in the value
+ * \param two the second Atom to put in the value
+ */
+void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0)
+{
+    XEvent e;
+    e.xclient.type = ClientMessage;
+    Display *display = QX11Info::display();
+    Atom netWmStateAtom = XInternAtom(display, "_NET_WM_STATE", FALSE);
+    e.xclient.message_type = netWmStateAtom;
+    e.xclient.display = display;
+    e.xclient.window = w->internalWinId();
+    e.xclient.format = 32;
+    e.xclient.data.l[0] = set ? 1 : 0;
+    e.xclient.data.l[1] = one;
+    e.xclient.data.l[2] = two;
+    e.xclient.data.l[3] = 0;
+    e.xclient.data.l[4] = 0;
+    XSendEvent(display, RootWindow(display, w->x11Info().screen()), FALSE, (SubstructureNotifyMask | SubstructureRedirectMask), &e);
+    XSync(display, FALSE);
+}
+
+
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     DuiWindow(parent),
     applicationPage(new DuiApplicationPage),
@@ -59,23 +94,4 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     QVector<Atom> atoms;
     atoms.append(skipTaskbarAtom);
     XChangeProperty(QX11Info::display(), internalWinId(), netWmStateAtom, XA_ATOM, 32, PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
-}
-
-void StatusIndicatorMenuWindow::changeNetWmState(const QWidget* w, bool set, Atom one, Atom two)
-{
-    XEvent e;
-    e.xclient.type = ClientMessage;
-    Display *display = QX11Info::display();
-    Atom netWmStateAtom = XInternAtom(display, "_NET_WM_STATE", FALSE);
-    e.xclient.message_type = netWmStateAtom;
-    e.xclient.display = display;
-    e.xclient.window = w->internalWinId();
-    e.xclient.format = 32;
-    e.xclient.data.l[0] = set ? 1 : 0;
-    e.xclient.data.l[1] = one;
-    e.xclient.data.l[2] = two;
-    e.xclient.data.l[3] = 0;
-    e.xclient.data.l[4] = 0;
-    XSendEvent(display, RootWindow(display, w->x11Info().screen()), FALSE, (SubstructureNotifyMask | SubstructureRedirectMask), &e);
-    XSync(display, FALSE);
 }

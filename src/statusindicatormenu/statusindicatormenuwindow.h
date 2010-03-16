@@ -16,12 +16,6 @@
 #define STATUSINDICATORMENUWINDOW_H
 
 #include <DuiWindow>
-#include <X11/Xlib.h>
-
-// TODO: this include can be removed when duicompositor
-// sets the _NET_WM_STATE attribute according to the message.
-#include <X11/Xatom.h>
-
 
 class DuiApplicationPage;
 class DuiEscapeButtonPanel;
@@ -54,16 +48,6 @@ private:
      * included in the task bar.
      */
     void excludeFromTaskBar();
-
-    /*!
-     * Changes the _NET_WM_STATE property of a widget's window.
-     *
-     * \param w the widget whose window's property to change
-     * \param set \c true if the first data value will be 1, \c false if it will be 0
-     * \param one the first Atom to put in the value
-     * \param two the second Atom to put in the value
-     */
-    static void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0);
 
     //! The main application page
     QSharedPointer<DuiApplicationPage> applicationPage;
