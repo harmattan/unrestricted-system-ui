@@ -1,3 +1,9 @@
+system-ui (0.12.2-2~unrelease) harmattan; urgency=low
+
+  * Prepare to next version
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:01:04 +0100
+
 system-ui (0.12.2-1) unstable; urgency=low
 
   * Fixes: NB#160317 - "Low battery" warning is always showed when
