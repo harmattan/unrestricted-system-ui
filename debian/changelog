@@ -1,3 +1,9 @@
+system-ui (0.12.2-3~unreleased) harmattan; urgency=low
+
+  * Prepare
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:08:46 +0100
+
 system-ui (0.12.2-2) harmattan; urgency=low
 
   * Fixes: NB#159421 - Touch screen lock not working....
