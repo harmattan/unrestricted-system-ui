@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    ut_template \
     ut_pluginlist \
     ut_clock \
     ut_clockview \
@@ -18,8 +17,14 @@ SUBDIRS = \
 #    ut_lowbatterynotifier
 
 QMAKE_STRIP = echo
-#include(shell.pri)
-#include(runtests.pri)
+
+check.target = check
+check.CONFIG = recursive
+QMAKE_EXTRA_TARGETS += check
+
+check-xml.target = check-xml
+check-xml.CONFIG = recursive
+QMAKE_EXTRA_TARGETS += check-xml
 
 QMAKE_CLEAN += **/*.log.xml ./coverage.log.xml
 
