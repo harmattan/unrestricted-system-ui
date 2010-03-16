@@ -15,7 +15,7 @@ using namespace Maemo;
  */
 #define DELAY_FOR_INITIALIZATION 0
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 /* TODO List
