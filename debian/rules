@@ -71,6 +71,11 @@ install: build
 	# Add here commands to install the package into debian/tmp
 	INSTALL_ROOT=$(CURDIR)/debian/tmp make  $(PARALLEL_MAKEFLAGS) install
 
+	# duistatusindicatormenu-doc package
+	make  $(PARALLEL_MAKEFLAGS) doc
+	mkdir -p ${CURDIR}/debian/tmp/usr/share/doc/system-ui/html
+	cp -r doc/html/*  ${CURDIR}/debian/tmp/usr/share/doc/system-ui/html/
+
 # Build architecture-independent files here.
 binary-indep: build install
 	# install the translation source file to doc.
