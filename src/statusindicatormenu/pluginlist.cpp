@@ -116,7 +116,7 @@ void PluginList::showStatusIndicatorMenu()
 void PluginList::hideStatusIndicatorMenu()
 {
     if (applicationWindow != NULL) {
-        applicationWindow->lower();
+        applicationWindow->hide();
     }
 }
 

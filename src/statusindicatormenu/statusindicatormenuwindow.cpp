@@ -71,7 +71,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
     // Create an escape button
     escapeButtonPanel->connect(escapeButtonPanel.data(),
-                   SIGNAL(buttonClicked()), this, SLOT(lower()));
+                   SIGNAL(buttonClicked()), this, SLOT(hide()));
     sceneManager()->showWindowNow(escapeButtonPanel.data());
 
     // Set the X window properties so that the window does not appear in the task bar
