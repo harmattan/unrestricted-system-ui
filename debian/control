@@ -38,6 +38,7 @@ XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
 
 Package: system-ui-dev
+Provides: duistatusindicatormenu-dev
 Conflicts: duistatusindicatormenu-dev
 Replaces: duistatusindicatormenu-dev
 Architecture: any
