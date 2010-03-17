@@ -31,7 +31,7 @@ using namespace Maemo;
 namespace
 {
 //% "Charging"
-const char *ChargingText = QT_TRID_NOOP ("qtn_ener_char");
+const char *ChargingText = QT_TRID_NOOP ("qtn_ener_charging");
 //% "Charging not started. Replace charger."
 const char *ChargingNotStartedText = QT_TRID_NOOP ("qtn_ener_repcharger");
 //% "Charging complete"
