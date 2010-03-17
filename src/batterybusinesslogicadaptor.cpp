@@ -25,6 +25,8 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor (
             this, SIGNAL(PSMAutoDisabled()));
     connect (m_BatteryLogic, SIGNAL(remainingTimeValuesChanged(QStringList)), 
             this, SIGNAL(remainingTimeValuesChanged(QStringList)));
+    connect (m_BatteryLogic, SIGNAL (batteryFullyCharged ()),
+             this, SIGNAL (batteryFull ()));
 }
 
 

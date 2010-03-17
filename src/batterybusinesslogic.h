@@ -84,13 +84,14 @@ public:
     QString PSMThresholdValue();
 
 signals:
-    void batteryCharging(int);
-    void batteryNotCharging();
-    void batteryBarValueChanged(int);
+    void batteryCharging (int);
+    void batteryNotCharging ();
+    void batteryBarValueChanged (int);
     void PSMValueChanged (bool);
-    void PSMAutoDisabled();
-    void remainingTimeValuesChanged(QStringList);
-    void showNotification(QString);
+    void PSMAutoDisabled ();
+    void remainingTimeValuesChanged (QStringList);
+    void showNotification (QString);
+    void batteryFullyCharged ();
 
 public slots:
     void initBattery();

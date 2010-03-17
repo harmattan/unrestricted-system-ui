@@ -343,6 +343,7 @@ BatteryBusinessLogic::batteryLevelChanged (
             NOTIFICATION(new DuiNotification("", "",
                          qtTrId (ChargingCompleteText)));
             utiliseLED(true, QString("PatternBatteryFull"));
+            emit batteryFullyCharged ();
         }
         break;
 

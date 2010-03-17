@@ -27,6 +27,7 @@ signals:
     void batteryCharging (int);
     void batteryNotCharging ();
     void batteryBarValueChanged (int);
+    void batteryFull ();
     /*!
      * Power save mode turned on/off.
      */
