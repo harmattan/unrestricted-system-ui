@@ -1,13 +1,14 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include <DuiApplicationWindow>
-#include <DuiApplication>
+#include <DuiSceneManager>
 #include <QDBusInterface>
 #include <QDebug>
 #include <QTime>
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
+#include "sysuid.h"
 
 #undef DEBUG
 #include "debug.h"
@@ -129,10 +130,10 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        DuiApplication::activeApplicationWindow()->show();
-        lockUI->appear();
+        Sysuid::sysuid()->applicationWindow().show();
+        Sysuid::sysuid()->applicationWindow().sceneManager()->showWindow(lockUI);
     } else {
-        DuiApplication::activeApplicationWindow()->hide();
+        Sysuid::sysuid()->applicationWindow().hide();
     }
 }
 

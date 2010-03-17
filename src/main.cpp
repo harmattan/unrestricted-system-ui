@@ -2,7 +2,6 @@
 
 #include <DuiSceneManager>
 #include <DuiApplication>
-#include <DuiApplicationWindow>
 
 #include <QObject>
 
@@ -30,13 +29,6 @@ int main (int argc, char** argv)
     app.setQuitOnLastWindowClosed (false);
 
     SYS_DEBUG ("- System-UI start");
-
-    DuiApplicationWindow win;
-    Qt::WindowFlags flags = 0;
-    flags |= Qt::FramelessWindowHint;
-    flags |= Qt::CustomizeWindowHint;
-    win.setWindowOpacity (0.0);
-    win.setWindowFlags (flags);
 
     signal (SIGINT, sysuid_exit);
 

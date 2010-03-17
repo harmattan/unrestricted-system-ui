@@ -3,6 +3,7 @@
 
 #include "unistd.h"
 
+#include <DuiApplicationWindow>
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -43,7 +44,8 @@ const QString svgDir = themeDir + "svg/";
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid () : QObject ()
+Sysuid::Sysuid () : QObject (),
+        applicationWindow_(new DuiApplicationWindow)
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
@@ -59,6 +61,8 @@ Sysuid::Sysuid () : QObject ()
     SYS_WARNING ("running in active-dead mode : %s",
                  SYS_BOOL (running_in_actdead_mode ()));
 
+    applicationWindow_->setWindowOpacity(0.0);
+    applicationWindow_->setWindowFlags(Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
@@ -85,8 +89,8 @@ Sysuid::Sysuid () : QObject ()
     }
 
     // Show status area window when sysui daemon starts
-    m_StatusAreaWindow = new StatusAreaWindow;
-    m_StatusAreaWindow->show();
+    statusAreaWindow_ = new StatusAreaWindow;
+    statusAreaWindow_->show();
 
 //    /*
 //     * The screen locking is implemented in this separate class, because it is
@@ -103,7 +107,7 @@ Sysuid::Sysuid () : QObject ()
     // Connect the notification signals for the feedback notification sink
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
-    connect(m_StatusAreaWindow, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
+    connect(statusAreaWindow_, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
     // Restore persistent notifications after all the signal connections are made to the notification sinks
     notificationManager_->restorePersistentData();
 }
@@ -111,7 +115,8 @@ Sysuid::Sysuid () : QObject ()
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
-    delete m_StatusAreaWindow;
+    delete statusAreaWindow_;
+    delete applicationWindow_;
 }
 
 Sysuid* Sysuid::sysuid ()
@@ -166,11 +171,15 @@ DuiCompositorNotificationSink& Sysuid::compositorNotificationSink()
 
 Dui::Orientation Sysuid::orientation() const
 {
-    return m_StatusAreaWindow->orientation();
+    return statusAreaWindow_->orientation();
 }
 
 Dui::OrientationAngle Sysuid::orientationAngle() const
 {
-    return m_StatusAreaWindow->orientationAngle();
+    return statusAreaWindow_->orientationAngle();
 }
 
+DuiApplicationWindow &Sysuid::applicationWindow()
+{
+    return *applicationWindow_;
+}

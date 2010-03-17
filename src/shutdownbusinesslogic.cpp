@@ -2,9 +2,12 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "shutdownbusinesslogic.h"
 #include "shutdownui.h"
+#include "sysuid.h"
 
 #include <qmsystem/qmsystemstate.h>
 
+#include <DuiApplicationWindow>
+#include <DuiSceneManager>
 #include <DuiNotification>
 #include <DuiLocale>
 
@@ -52,7 +55,9 @@ ShutdownBusinessLogic::showUI ()
     if (!m_Ui) {
         m_Ui = new ShutdownUI;
     }
-    m_Ui->appear();
+
+    // Make sure the shutdown UI is shown in the application window by registering it explicitly to the application window scene manager
+    Sysuid::sysuid()->applicationWindow().sceneManager()->showWindow(m_Ui);
 }
 
 /*!

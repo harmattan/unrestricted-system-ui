@@ -16,6 +16,7 @@ class StatusAreaWindow;
 class NotificationManager;
 class DuiCompositorNotificationSink;
 class DuiFeedbackNotificationSink;
+class DuiApplicationWindow;
 
 class Sysuid : public QObject
 {
@@ -53,6 +54,13 @@ public:
      */
     virtual Dui::OrientationAngle orientationAngle() const;
 
+    /*!
+     * Returns a reference to the application window.
+     *
+     * \return a reference to the application window
+     */
+    DuiApplicationWindow &applicationWindow();
+
 signals:
     /*!
       * Inform about orientation changes
@@ -69,7 +77,12 @@ private:
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
-    StatusAreaWindow *m_StatusAreaWindow;
+
+    //! Status area window
+    StatusAreaWindow *statusAreaWindow_;
+
+    //! Application window
+    DuiApplicationWindow *applicationWindow_;
 
     //! Notification manager
     NotificationManager *notificationManager_;

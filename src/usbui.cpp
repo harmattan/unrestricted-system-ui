@@ -88,8 +88,9 @@ UsbUi::ShowDialog ()
     hbox->setLayout (layout);
 
     m_dialog->setCentralWidget (hbox);
-
     m_dialog->setButtonBoxVisible (false);
+
+    // Modal dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
     m_dialog->appear (DuiSceneWindow::KeepWhenDone);
     m_dialog->setFocus ();
 }
