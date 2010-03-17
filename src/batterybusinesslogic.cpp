@@ -260,6 +260,12 @@ BatteryBusinessLogic::batteryBarValue (
     if (percentage == -1)
         percentage = m_Battery->getBatteryEnergyLevel();
 
+    SYS_DEBUG ("percentage = %d", percentage);
+
+    // in case of overflow (eg. in sbox)
+    if (percentage > 100)
+        percentage = 10;
+
     int index = 0;
     if (percentage >= 88)
         index = m_PSMThresholds.indexOf("100");
