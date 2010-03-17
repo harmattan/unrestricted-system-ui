@@ -3,7 +3,7 @@ TARGET = ut_notificationmanager
 INCLUDEPATH += $$SRCDIR/notifications
 INCLUDEPATH += /usr/include/contextsubscriber
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
-LIBS += -L../../lib -lduihome
+LIBS += -L../../lib
 # unit test and unit classes
 SOURCES += \
     ut_notificationmanager.cpp \
