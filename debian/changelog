@@ -1,8 +1,9 @@
-system-ui (0.12.2-4~unreleased) harmattan; urgency=low
+system-ui (0.13.0-1~unreleased) unstable; urgency=low
 
-  * PREPARE 
+  * New version [UNRELEASED]
+  * Implemented: SWP#DUI-1944 Notification plugin in Status Indicator Menu
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 18 Mar 2010 09:36:19 +0100
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 18 Mar 2010 16:19:39 +0200
 
 system-ui (0.12.2-3) harmattan; urgency=low
 

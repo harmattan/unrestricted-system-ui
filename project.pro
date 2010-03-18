@@ -1,6 +1,10 @@
 TEMPLATE = subdirs
 SUBDIRS = src \
-          tests \
-          translations
+          translations \
+          themes \
+          demos \
+          tests
 
 QMAKE_CLEAN += configure-stamp build-stamp
+
+include(doc/doc.pri)

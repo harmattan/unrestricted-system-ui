@@ -1,13 +1,14 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include <DuiApplicationWindow>
-#include <DuiApplication>
+#include <DuiSceneManager>
 #include <QDBusInterface>
 #include <QDebug>
 #include <QTime>
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
+#include "sysuid.h"
 
 #include <X11/Xlib.h>
 // TODO: this include can be removed when duicompositor
@@ -100,7 +101,7 @@ LockScreenBusinessLogic::displayStateChanged (
             {
                 SYS_DEBUG ("Show the lock UI");
                 lockUI->setOpacity (1.0);
-                lockUI->appearNow ();
+                Sysuid::sysuid()->applicationWindow().sceneManager()->showWindowNow(lockUI);
                 lockUI->setActive (true);
             }
             else
@@ -156,11 +157,11 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        DuiApplication::activeApplicationWindow ()->show ();
-        DuiApplication::activeApplicationWindow ()->raise ();
+        Sysuid::sysuid()->applicationWindow().show();
+        Sysuid::sysuid()->applicationWindow().raise();
     } else {
         hidefromTaskBar ();
-        DuiApplication::activeApplicationWindow ()->hide ();
+        Sysuid::sysuid()->applicationWindow().hide();
     }
 }
 

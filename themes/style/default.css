@@ -1,0 +1,186 @@
+@const FONT_XLARGE:  "Nokia Sans" 3.11mm; /* 32px */
+@const FONT_LARGE:   "Nokia Sans" 2.72mm; /* 28px */
+@const FONT_DEFAULT: "Nokia Sans" 2.34mm; /* 24px */
+@const FONT_SMALL:   "Nokia Sans" 1.95mm; /* 20px */
+@const FONT_XSMALL:  "Nokia Sans" 1.56mm; /* 16px */
+@const COLOR_ACTIVE_FOREGROUND: #ffffff; /* activated item title */
+@const COLOR_ACTIVE_BACKGROUND: #CCFF33; /* activated item background */
+
+DuiApplicationPageStyle#StatusIndicatorMenuPage {
+    background-image: status-indicator-menu-background;
+}
+
+DuiButtonStyle#StatusIndicatorMenuSettingsButton {
+    font: $FONT_DEFAULT;
+    preferred-size: 432 86;
+    minimum-size: 432 86;
+    maximum-size: 432 86;
+    margin-top: 6;
+    margin-bottom: 6;
+}
+
+NotificationAreaStyle {
+    minimum-size: 100% 80;
+    margin-left:   0;
+    margin-top:    0;
+    margin-right:  0;
+    margin-bottom: 0;
+}
+                
+DuiSceneWindowAnimatorStyle:event_notification {
+    transition-in-type: "move.right";
+    transition-out-type: "move.to";
+    transition-out-destination: 0 78;
+    transition-out-fade: false;
+}
+
+
+#lockscreenTimeLabel {
+    color: #00DD00;
+    font: "Nokia Sans Wide" 52;
+}
+
+#lockscreenDateLabel {
+    color: #EEEEEE;
+    font: "Nokia Sans Wide" 24;
+}
+
+
+StatusAreaStyle {
+    background-image:;
+    background-color: #000000;
+    minimum-size: 100% 28;
+    preferred-size: 100% 28;
+    maximum-size: 100% 28;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+StatusAreaStyle:pressed {
+    background-image: button-status-area-pressed 0 0 0 0;
+    background-color: $COLOR_ACTIVE_BACKGROUND;
+    background-opacity: 1.0;
+    text-color: $COLOR_ACTIVE_FOREGROUND;
+}
+
+StatusAreaStyle:selected {
+    background-image: button-status-area-pressed;
+    background-color: $COLOR_ACTIVE_BACKGROUND;
+    background-opacity: 1.0;
+    text-color: $COLOR_ACTIVE_FOREGROUND;
+}
+
+
+DuiLabelStyle#Notifier {
+    background-image: icon-s-status-notifier 9 9 9 9;
+    font: $FONT_XSMALL;
+    color: #FFFFFF;
+    preferred-size: 36 18;
+    minimum-size: 36 18;
+    maximum-size: 36 18;
+}
+
+ClockStyle {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    time-format: "HH:mm";
+    preferred-size: 84 28;
+    minimum-size: 84 28;
+    maximum-size: 84 28;
+}
+DuiLabelStyle#ClockLabel {
+    font: $FONT_SMALL;
+    color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 1.6mm;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+StatusIndicatorImageStyle {
+    margin-top: 4;
+    margin-bottom: 0;
+    /* The number of milliseconds in which the images in imageList are animated */
+    animation-duration: 3000;
+}
+
+StatusIndicatorLabelStyle {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+DuiLabelStyle#StatusIndicatorLabel {
+    font: $FONT_SMALL;
+    color: #FFFFFF;
+}
+
+StatusIndicatorImageStyle#PhoneNetworkSignalStrengthStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-network0 icon-s-status-network1 icon-s-status-network2 icon-s-status-network3 icon-s-status-network4 icon-s-status-network5";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
+StatusIndicatorImageStyle#BatteryStatusIndicatorLevel {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    preferred-size: 29 18;
+    minimum-size: 29 18;
+    maximum-size: 29 18;
+}
+
+StatusIndicatorImageStyle#BatteryStatusIndicatorCharging {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    preferred-size: 29 18;
+    minimum-size: 29 18;
+    maximum-size: 29 18;
+}
+
+StatusIndicatorImageStyle#ClockAlarmStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-alarm icon-s-status-alarm";
+    preferred-size: 10 11;
+    minimum-size: 10 11;
+    maximum-size: 10 11;
+    margin-top: 0;
+}
+
+StatusIndicatorImageStyle#BluetoothStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth icon-s-status-bluetooth-active";
+    preferred-size: 10 18;
+    minimum-size: 10 18;
+    maximum-size: 10 18;
+}
+
+StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-wlan";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
+

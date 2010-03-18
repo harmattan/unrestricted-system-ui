@@ -7,6 +7,9 @@ Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18),
 Standards-Version: 3.7.3
 
 Package: system-ui
+Provides: duistatusindicatormenu
+Conflicts: duistatusindicatormenu
+Replaces: duistatusindicatormenu
 Replaces: cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
@@ -33,6 +36,23 @@ Depends: ${shlibs:Depends}, testrunner, ci-testing
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
+
+Package: system-ui-dev
+Provides: duistatusindicatormenu-dev
+Conflicts: duistatusindicatormenu-dev
+Replaces: duistatusindicatormenu-dev
+Architecture: any
+Section: devel
+Depends: system-ui (= ${binary:Version})
+Description: System UI dev package
+ System UI development package
+
+Package: system-ui-doc
+Conflicts: duistatusindicatormenu-doc
+Replaces: duistatusindicatormenu-doc
+Section: doc
+Architecture: all
+Description: Documentation for System UI
 
 Package: systemui-l10n-engineering-english
 Section: devel

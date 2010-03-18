@@ -1,8 +1,8 @@
 #include "shutdownui.h"
+#include "sysuid.h"
 
 #include <DuiLabel>
 #include <DuiSceneManager>
-#include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiLocale>
 
@@ -37,11 +37,11 @@ void ShutdownUI::createContent()
 
 void ShutdownUI::showWindow()
 {
-    DuiApplicationWindow *win = DuiApplication::activeApplicationWindow();
-    if (win && win->isHidden()) {
-        win->show();
+    DuiApplicationWindow &win = Sysuid::sysuid()->applicationWindow();
+    if (win.isHidden()) {
+        win.show();
     }
-    qDebug() << Q_FUNC_INFO << "win->isHidden()" << (win ? win->isHidden() : true);
+    qDebug() << Q_FUNC_INFO << "win.isHidden()" << win.isHidden();
 }
 
 void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
@@ -55,6 +55,6 @@ void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
 void ShutdownUI::alignText()
 {
     qDebug() << "ShutdownUI::alignText()";
-    QSize size = DuiApplication::activeApplicationWindow()->sceneManager()->visibleSceneSize();
+    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize();
     text->setGeometry(QRectF(0, 0, size.width(), size.height()));
 }
