@@ -1,13 +1,10 @@
+include(../common_top.pri)
+TARGET = ut_batterybusinesslogic
+
 SRC_PREFIX = ../../src
 STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
-QT += testlib
-TEMPLATE = app
-DEFINES += UNIT_TEST
-TARGET = ut_batterybusinesslogic
-target.path = /usr/lib/system-ui-tests
-CONFIG += dui silent 
 
 HEADERS += \
     ut_batterybusinesslogic.h \
@@ -29,4 +26,4 @@ SOURCES += \
     $$STUB_PREFIX/ledstub.cpp \
     $$STUB_PREFIX/gconfstub.cpp
 
-INSTALLS += target
+include(../common_bot.pri)

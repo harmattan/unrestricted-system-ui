@@ -1,35 +1,30 @@
-SLIDER_PREFIX = ../../src/unlocksliderwidget
-UNLOCK_PREFIX = ../../src
-
-INCLUDEPATH += $$SLIDER_PREFIX 
-INCLUDEPATH += $$UNLOCK_PREFIX
-INCLUDEPATH += ../stubs
-
-QT += testlib
-TEMPLATE = app
+include(../common_top.pri)
 TARGET = ut_lockscreenui
-target.path = /usr/lib/system-ui-tests
 
-CONFIG += \
-    dui \
-    silent
+SRC_PREFIX = ../../src
+STUB_PREFIX = ../stubs
+SLIDER_PREFIX = ../../src/unlocksliderwidget
+INCLUDEPATH += $$SRC_PREFIX \
+               $$STUB_PREFIX \
+               $$SLIDER_PREFIX 
 
 SOURCES += ut_lockscreenui.cpp \
     $$SLIDER_PREFIX/unlockslidermodel.cpp \
     $$SLIDER_PREFIX/unlocksliderview.cpp \
     $$SLIDER_PREFIX/unlockslider.cpp \
-    $$UNLOCK_PREFIX/lockscreenui.cpp  \
-    ../stubs/stubbase.cpp
+    $$SRC_PREFIX/lockscreenui.cpp  \
+    $$STUB_PREFIX/stubbase.cpp
 
 HEADERS += ut_lockscreenui.h \
     $$SLIDER_PREFIX/unlockslidermodel.h \
     $$SLIDER_PREFIX/unlocksliderview.h \
     $$SLIDER_PREFIX/unlocksliderstyle.h \
     $$SLIDER_PREFIX/unlockslider.h \
-    $$UNLOCK_PREFIX/lockscreenui.h \
-    $$UNLOCK_PREFIX/sysuid.h 
+    $$SRC_PREFIX/lockscreenui.h \
+    $$SRC_PREFIX/sysuid.h 
 
 MODEL_HEADERS += $$SLIDER_PREFIX/unlockslidermodel.h
 STYLE_HEADERS += $$SLIDER_PREFIX/unlocksliderstyle.h
 
-INSTALLS += target
+include(../common_bot.pri)
+

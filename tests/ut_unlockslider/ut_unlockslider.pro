@@ -1,10 +1,8 @@
+include(../common_top.pri)
+TARGET = ut_unlockslider
+
 SLIDER_PREFIX = ../../src/unlocksliderwidget
 INCLUDEPATH += $$SLIDER_PREFIX
-QT += testlib
-TEMPLATE = app
-TARGET = ut_unlockslider
-target.path = /usr/lib/system-ui-tests
-CONFIG += dui silent
 
 SOURCES += ut_unlockslider.cpp \
     $$SLIDER_PREFIX/unlockslidermodel.cpp \
@@ -20,4 +18,4 @@ HEADERS += ut_unlockslider.h \
 MODEL_HEADERS += $$SLIDER_PREFIX/unlockslidermodel.h
 STYLE_HEADERS += $$SLIDER_PREFIX/unlocksliderstyle.h
 
-INSTALLS += target
+include(../common_bot.pri)

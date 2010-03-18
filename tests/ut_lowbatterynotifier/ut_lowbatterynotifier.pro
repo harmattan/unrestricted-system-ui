@@ -1,25 +1,12 @@
+include(../common_top.pri)
+TARGET = ut_lowbatterynotifier
+
 SRC_PREFIX = ../../src
 STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 
-QT += testlib \
-      dbus
-
-TEMPLATE = app
-DEFINES += UNIT_TEST
-TARGET = ut_lowbatterynotifier
-target.path = /usr/lib/system-ui-tests
-
-CONFIG += dui \
-          qmsystem \
-          silent
-
-contains(cov, true) {
-    message("Coverage options enabled")
-    QMAKE_CXXFLAGS += --coverage
-    QMAKE_LFLAGS += --coverage
-}
+CONFIG += qmsystem
 
 SOURCES += \
     ut_lowbatterynotifier.cpp \
@@ -37,12 +24,4 @@ HEADERS += \
     $$STUB_PREFIX/batterystub.h \
     $$STUB_PREFIX/gconfstub.h
 
-contains(cov, true) {
-    message("Coverage options enabled")
-    QMAKE_CXXFLAGS += --coverage
-    QMAKE_LFLAGS += --coverage
-}
-
-
-INSTALLS += target
-
+include(../common_bot.pri)
