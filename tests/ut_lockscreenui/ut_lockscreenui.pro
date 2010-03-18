@@ -3,7 +3,7 @@ UNLOCK_PREFIX = ../../src
 
 INCLUDEPATH += $$SLIDER_PREFIX 
 INCLUDEPATH += $$UNLOCK_PREFIX
-INCLUDEPATH += ./stubs
+INCLUDEPATH += ../stubs
 
 QT += testlib
 TEMPLATE = app
