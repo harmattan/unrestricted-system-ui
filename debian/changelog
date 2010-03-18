@@ -1,8 +1,9 @@
-system-ui (0.12.2-3~unreleased) harmattan; urgency=low
+system-ui (0.12.2-3) harmattan; urgency=low
 
-  * Prepare
+  * Fixes for tklock ui and event-eater
+  * Fixes in BatteryBusinessLogic
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 16 Mar 2010 14:08:46 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 18 Mar 2010 09:35:41 +0100
 
 system-ui (0.12.2-2) harmattan; urgency=low
 
