@@ -104,6 +104,10 @@ private slots:
     void testPersistentNotificationStorage();
     // Test that the persistent notifications are restored from the persistent storage
     void testPersistentNotificationRestoration();
+    // Test the removal of notifications based on event type
+    void testRemovingNotificationsWithEventType();
+    // Test the removal of groups based on event type
+    void testRemovingGroupsWithEventType();
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H

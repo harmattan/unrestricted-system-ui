@@ -34,6 +34,7 @@ HEADERS += \
     $$SRCDIR/notifications/notification.h \
     $$SRCDIR/notifications/notificationgroup.h \
     $$SRCDIR/notifications/notificationmanager.h \
+    $$SRCDIR/notifications/eventtypestore.h \
     $$SRCDIR/sysuid.h
 
 include(../common_bot.pri)

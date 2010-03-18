@@ -88,6 +88,10 @@ const QSettings *EventTypeStore::settingsForEventType(QString const &eventType) 
     return settings;
 }
 
+void EventTypeStore::updateEventTypeFileList(const QString &)
+{
+}
+
 maemosec::storage::~storage()
 {
 }

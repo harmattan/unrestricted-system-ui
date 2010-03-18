@@ -26,6 +26,11 @@ QMap<QString, QMap<QString, QString> > eventTypeSettingsMap;
 //Size of the event configuration file
 uint eventTypeFileSize;
 
+// QFileSystemWatcher stubs
+void QFileSystemWatcher::addPath(const QString &)
+{
+}
+
 // QFileInfo stubs
 bool QFileInfo::exists() const
 {
@@ -35,6 +40,17 @@ bool QFileInfo::exists() const
 qint64 QFileInfo::size() const
 {
     return eventTypeFileSize;
+}
+
+// QDir stubs
+bool QDir::exists() const
+{
+    return true;
+}
+
+QStringList QDir::entryList(const QStringList &, Filters, SortFlags) const
+{
+    return eventTypeFilesList;
 }
 
 // Stubs of QSettings methods
@@ -92,10 +108,10 @@ void Ut_EventTypeStore::testEventTypeSettingsValues()
     eventTypeSettingsMap.insert("chatEventType", chatSettingsMap);
 
     // Create a store that can hold up to 2 event types in memory at the same time
-    m_subject = new EventTypeStore("/foo/bar", 2);
+    m_subject = new EventTypeStore("/eventtypepath", 2);
 
     // Verify settings object is null for invalid key
-    QVERIFY(m_subject->settingsForEventType("foo") == NULL);
+    QVERIFY(m_subject->settingsForEventType("idontexist") == NULL);
 
     // Verify that settings object for each event type contains the provided keys/values
     QVERIFY(m_subject->settingsForEventType("smsEventType") != NULL);
@@ -135,9 +151,37 @@ void Ut_EventTypeStore::testEventTypeStoreMaxFileSizeHandling()
     bigEventTypeSettingsMap.insert("feedbackId", "sound-file");
     eventTypeSettingsMap.insert("bigEventType", bigEventTypeSettingsMap);
 
-    m_subject = new EventTypeStore("/foo/bar", 2);
+    m_subject = new EventTypeStore("/eventtypepath", 2);
     // Verify that settings object is NULL
     QVERIFY(m_subject->settingsForEventType("bigEventType") == NULL);
+}
+
+void Ut_EventTypeStore::testEventTypeUninstalling()
+{
+    // Create existing event type file
+    eventTypeFilesList.append("smsEventType.conf");
+
+    m_subject = new EventTypeStore("/eventtypepath");
+    QSignalSpy uninstallSpy(m_subject, SIGNAL(eventTypeUninstalled(QString)));
+    connect(this, SIGNAL(directoryChanged(QString)), m_subject, SLOT(updateEventTypeFileList(QString)));
+
+    // Add new event type file
+    eventTypeFilesList.append("chatEventType.conf");
+    emit directoryChanged("/eventtypepath");
+    QCOMPARE(uninstallSpy.count(), 0);
+    QVERIFY(m_subject->settingsForEventType("chatEventType") != NULL);
+
+    // Remove the added event type file
+    eventTypeFilesList.removeOne("chatEventType.conf");
+    emit directoryChanged("/eventtypepath");
+    QCOMPARE(uninstallSpy.count(), 1);
+    QVERIFY(m_subject->settingsForEventType("chatEventType") == NULL);
+
+    // Remove the existing event type file
+    eventTypeFilesList.removeOne("smsEventType.conf");
+    emit directoryChanged("/eventtypepath");
+    QCOMPARE(uninstallSpy.count(), 2);
+    QVERIFY(m_subject->settingsForEventType("smsEventType") == NULL);
 }
 
 QTEST_APPLESS_MAIN(Ut_EventTypeStore)

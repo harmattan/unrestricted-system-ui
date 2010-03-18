@@ -22,10 +22,11 @@
 
 #include <QString>
 #include <QMap>
+#include <QSet>
+#include <QSettings>
 #include <QSharedPointer>
 #include <QStringList>
-
-class QSettings;
+#include <QFileSystemWatcher>
 
 
 /*!
@@ -38,8 +39,10 @@ class QSettings;
  * package.
  *
  */
-class EventTypeStore
+class EventTypeStore : public QObject
 {
+    Q_OBJECT
+
 public:
     /*!
      * Creates a notification event types store to store the notifications event
@@ -56,6 +59,20 @@ public:
       * \param eventType The event type whose QSettings object is desired.
       */
     const QSettings *settingsForEventType(const QString &eventType) const;
+
+private slots:
+    /*!
+     * Updates the list of available event type files
+     * \param path the path to check for the event type files
+     */
+    void updateEventTypeFileList(const QString &path);
+
+signals:
+    /*!
+     * A signal sent whenever an event type has been uninstalled
+     * \param eventType the event type that was removed
+     */
+    void eventTypeUninstalled(const QString &eventType);
 
 private:
     //! The file extension for the event configuration files
@@ -78,6 +95,12 @@ private:
 
     //! Load the data into our internal map
     void loadSettings(const QString &eventType);
+
+    //! File system watcher to notice changes in installed event types
+    QFileSystemWatcher eventTypePathWatcher;
+
+    //! List of available event type files
+    QSet<QString> eventTypeFiles;
 };
 
 #endif /* EVENTTYPESTORE_H_ */

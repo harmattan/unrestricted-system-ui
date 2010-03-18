@@ -20,8 +20,8 @@
 #include "notificationmanager.h"
 #include "notification.h"
 #include "dbusinterfacenotificationsource.h"
-//#include "systemnotificationsource.h"
 #include "contextframeworkcontext.h"
+#include "genericnotificationparameterfactory.h"
 #include <QDBusConnection>
 #include <QDir>
 #include <duifiledatastore.h>
@@ -196,8 +196,27 @@ void NotificationManager::initializeEventTypeStore()
         return;
     }
     notificationEventTypeStore = QSharedPointer<EventTypeStore> (new EventTypeStore(NOTIFICATIONS_EVENT_TYPES, MAX_EVENT_TYPE_CONF_FILES));
+
+    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeUninstalled(QString)),
+            this, SLOT(removeNotificationsAndGroupsWithEventType(QString)));
 }
 
+void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType)
+{
+    foreach(const Notification &notification, notifications) {
+        if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
+           toString() == eventType) {
+            removeNotification(notification.notificationId());
+        }
+    }
+
+    foreach(const NotificationGroup &group, groups) {
+        if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
+           toString() == eventType) {
+            removeGroup(0, group.groupId());
+        }
+    }
+}
 
 uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, bool persistent, NotificationType type)
 {

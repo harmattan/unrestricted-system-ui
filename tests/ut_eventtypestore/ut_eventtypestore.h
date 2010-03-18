@@ -35,9 +35,13 @@ private slots:
 
     void testEventTypeSettingsValues();
     void testEventTypeStoreMaxFileSizeHandling();
+    void testEventTypeUninstalling();
 
 private:
     EventTypeStore *m_subject;
+
+signals:
+    void directoryChanged(const QString &path);
 };
 
 #endif

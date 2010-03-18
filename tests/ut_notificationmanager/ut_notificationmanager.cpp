@@ -1031,4 +1031,41 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     gTestingPersistent = false;
 }
 
+void Ut_NotificationManager::testRemovingNotificationsWithEventType()
+{
+    QSignalSpy notificationRemovedSpy(manager, SIGNAL(notificationRemoved(uint)));
+
+    // add a notification without event type
+    manager->addNotification(0);
+
+    // add a notification with sms event type
+    NotificationParameters parameters0;
+    parameters0.add("eventType", "sms");
+    uint id0 = manager->addNotification(0, parameters0);
+
+    // remove notifications with sms eventtype
+    manager->removeNotificationsAndGroupsWithEventType("sms");
+    QCOMPARE(notificationRemovedSpy.count(), 1);
+    QCOMPARE(notificationRemovedSpy.takeFirst()[0].toUInt(), id0);
+}
+
+void Ut_NotificationManager::testRemovingGroupsWithEventType()
+{
+    QSignalSpy groupRemovedSpy(manager, SIGNAL(groupRemoved(uint)));
+
+    // add a group without event type
+    manager->addGroup(0);
+
+    // add a group with sms event type
+    NotificationParameters parameters0;
+    parameters0.add("eventType", "sms");
+    uint id1 = manager->addGroup(0, parameters0);
+
+    // remove groups with sms eventtype
+    manager->removeNotificationsAndGroupsWithEventType("sms");
+    QCOMPARE(groupRemovedSpy.count(), 1);
+    QCOMPARE(groupRemovedSpy.takeFirst()[0].toUInt(), id1);
+}
+
+
 QTEST_MAIN(Ut_NotificationManager)

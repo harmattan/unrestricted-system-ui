@@ -113,6 +113,12 @@ public slots:
      */
     const EventTypeStore &eventTypeStore() const;
 
+    /*!
+     * Removes all notifications and groups with the specified event type
+     * \param eventType the event type of the notifications and groups to remove
+     */
+    void removeNotificationsAndGroupsWithEventType(const QString &eventType);
+
 signals:
     /*!
      * A signal for notifying that the contents of a notification

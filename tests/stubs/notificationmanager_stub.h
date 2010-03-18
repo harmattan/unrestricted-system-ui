@@ -58,6 +58,7 @@ public:
     virtual bool ensurePersistentDataPath();
     virtual void saveStateData();
     virtual void savePersistentNotifications();
+    virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
 };
 
 // 2. IMPLEMENT STUB
@@ -266,7 +267,12 @@ void NotificationManagerStub::savePersistentNotifications()
     stubMethodEntered("savePersistentNotifications");
 }
 
-
+void NotificationManagerStub::removeNotificationsAndGroupsWithEventType(const QString &eventType)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QString>(eventType));
+    stubMethodEntered("removeNotificationsAndGroupsWithEventType", params);
+}
 
 // 3. CREATE A STUB INSTANCE
 NotificationManagerStub gDefaultNotificationManagerStub;
@@ -394,5 +400,9 @@ void NotificationManager::savePersistentNotifications()
     gNotificationManagerStub->savePersistentNotifications();
 }
 
+void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType)
+{
+    gNotificationManagerStub->removeNotificationsAndGroupsWithEventType(eventType);
+}
 
 #endif

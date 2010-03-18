@@ -18,8 +18,8 @@
 ****************************************************************************/
 
 #include "eventtypestore.h"
-#include <QSettings>
 #include <QFileInfo>
+#include <QDir>
 
 const QString EventTypeStore::FILE_EXTENSION = ".conf";
 const uint EventTypeStore::FILE_MAX_SIZE = 32768;
@@ -30,6 +30,31 @@ EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEven
 {
     if (!this->eventTypesPath.endsWith('/')) {
         this->eventTypesPath.append('/');
+    }
+
+    // Watch for changes in event type files
+    eventTypePathWatcher.addPath(this->eventTypesPath);
+    connect(&eventTypePathWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(updateEventTypeFileList(QString)));
+    updateEventTypeFileList(this->eventTypesPath);
+}
+
+void EventTypeStore::updateEventTypeFileList(const QString &path)
+{
+    QDir eventTypesDir(path);
+
+    if(eventTypesDir.exists()) {
+        QStringList filter("*" + FILE_EXTENSION);
+
+        QSet<QString> files = eventTypesDir.entryList(filter, QDir::Files).toSet();
+        QSet<QString> removedFiles = eventTypeFiles - files;
+
+        foreach(const QString &removedEventType, removedFiles) {
+            QString eventType = QFileInfo(removedEventType).baseName();
+            eventTypesMap.remove(eventType);
+            emit eventTypeUninstalled(eventType);
+        }
+
+        eventTypeFiles = files;
     }
 }
 
