@@ -16,7 +16,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-private:
+    void testLockScreenUI ();
 };
 
 #endif

@@ -3,9 +3,10 @@
 
 #include "ut_lockscreenui.h"
 
-//#include "lockscreenui.h"
+#include "lockscreenui.h"
 
 #include <DuiApplication>
+#include <DuiApplicationWindow>
 #include <DuiTheme>
 
 void Ut_LockScreenUI::init()
@@ -22,12 +23,37 @@ void Ut_LockScreenUI::initTestCase()
     int argc = 1;
     char* app_name = (char*) "./Ut_LockScreenUI";
     app = new DuiApplication(argc, &app_name);
+
+    DuiApplicationWindow *win = new DuiApplicationWindow;
+    Qt::WindowFlags flags = 0;
+    flags |= Qt::FramelessWindowHint;
+    flags |= Qt::CustomizeWindowHint;
+    flags |= Qt::WindowStaysOnTopHint;
+    win->setWindowOpacity (0.0);
+    win->setWindowFlags (flags);
 }
 
-void Ut_LockScreenUI::cleanupTestCase()
+void 
+Ut_LockScreenUI::cleanupTestCase()
 {
     delete app;
 }
 
+void
+Ut_LockScreenUI::testLockScreenUI ()
+{
+    LockScreenUI *lockScreenUI;
+
+    lockScreenUI = new LockScreenUI;
+
+    DuiApplication::activeApplicationWindow ()->show ();
+    DuiApplication::activeApplicationWindow ()->raise ();
+
+    lockScreenUI->setOpacity (1.0);
+    lockScreenUI->appearNow ();
+    lockScreenUI->setActive (true);
+ 
+    QTest::qWait (5000);
+}
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)

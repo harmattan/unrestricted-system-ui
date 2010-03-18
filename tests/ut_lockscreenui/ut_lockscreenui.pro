@@ -1,7 +1,9 @@
 SLIDER_PREFIX = ../../src/unlocksliderwidget
 UNLOCK_PREFIX = ../../src
 
-INCLUDEPATH += $$SLIDER_PREFIX
+INCLUDEPATH += $$SLIDER_PREFIX 
+INCLUDEPATH += $$UNLOCK_PREFIX
+
 QT += testlib
 TEMPLATE = app
 TARGET = ut_lockscreenui
