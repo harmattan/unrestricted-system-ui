@@ -11,7 +11,7 @@ class BatteryBusinessLogic;
 /*!
  * Implements the DBus API interface for the battery charging status, the power
  * save mode system and the remaining use time system so that the applications
- * can get the information and change the settings through the DBus system.
+ * can get the information and change the settings through DBus.
  */
 class BatteryBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {

@@ -4,6 +4,8 @@
  * The first part of the header can be loaded and loaded again, so we can turn
  * on and off the debug facility for each source file.
  */
+#undef DEBUG
+
 
 /*
  * If the debug facility is enabled we also enable all the warning messages.
@@ -72,6 +74,9 @@ namespace SysDebug
         ...);
 };
 
-#define SYS_STR(qstring) qstring.toLatin1().constData()
-#define SYS_BOOL(boolean) (boolean ? "true" : "false")
+#define SYS_STR(qstring) ("\033[1m" + qstring + "\033[0;39m").toLatin1().constData()
+#define SYS_BOOL(boolean) (boolean ? \
+        "\033[1mtrue\033[0;39m" : \
+        "\033[1mfalse\033[0;39m")
+
 #endif

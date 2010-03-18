@@ -4,7 +4,7 @@
 #include "batterybusinesslogicadaptor.h"
 #include "batterybusinesslogic.h"
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor (
@@ -34,7 +34,7 @@ void
 BatteryBusinessLogicAdaptor::setPSMValue (
         bool toggle)
 {
-    SYS_DEBUG ("*** toggle = %s", toggle ? "yes" : "no");
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
     m_BatteryLogic->togglePSM (toggle);
 }
 
@@ -42,10 +42,7 @@ void
 BatteryBusinessLogicAdaptor::setPSMAutoValue (
         bool toggle)
 {
-    qDebug() << 
-        "BatteryBusinessLogicAdaptor::setPSMAutoValue(" << 
-        toggle << 
-        ")";
+    SYS_DEBUG ("");
     m_BatteryLogic->togglePSMAuto(toggle);
 }
 
@@ -53,59 +50,58 @@ void
 BatteryBusinessLogicAdaptor::setPSMThresholdValue (
         const QString &value)
 {
-    qDebug() << 
-        "BatteryBusinessLogicAdaptor::setPSMThresholdValue(" << 
-        value << 
-        ")";
+    SYS_DEBUG ("");
     m_BatteryLogic->setPSMThreshold(value);
 }
 
 bool
 BatteryBusinessLogicAdaptor::PSMValue ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMValue()";
+    SYS_DEBUG ("Returning %s", SYS_BOOL(m_BatteryLogic->PSMValue()));
     return m_BatteryLogic->PSMValue();
 }
 
 bool 
 BatteryBusinessLogicAdaptor::PSMAutoValue ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMDisabled()";
-    return m_BatteryLogic->GConfItemValue (
+    bool retval = m_BatteryLogic->GConfItemValue (
             SystemUIGConf::BatteryPSMAutoKey).toBool();
+
+    SYS_DEBUG ("Returning %s", SYS_BOOL(retval));
+    return retval;
 }
 
 void 
 BatteryBusinessLogicAdaptor::batteryChargingState ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::batteryChargingState()";
+    SYS_DEBUG ("");
     m_BatteryLogic->batteryStatus();
 }
 
 QString 
 BatteryBusinessLogicAdaptor::PSMThresholdValue ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValue()";
+    SYS_DEBUG ("Returning %s", SYS_STR(m_BatteryLogic->PSMThresholdValue()));
     return m_BatteryLogic->PSMThresholdValue();
 }
 
 int 
 BatteryBusinessLogicAdaptor::batteryBarValue ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::batteryBarValue()";
+    SYS_DEBUG ("Returning %d", m_BatteryLogic->batteryBarValue());
     return m_BatteryLogic->batteryBarValue();
 }
 
 QStringList 
 BatteryBusinessLogicAdaptor::PSMThresholdValues ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::PSMThresholdValues()";
+    SYS_DEBUG ("");
     return m_BatteryLogic->PSMThresholdValues();
 }
 
 QStringList 
 BatteryBusinessLogicAdaptor::remainingTimeValues ()
 {
-    qDebug() << "BatteryBusinessLogicAdaptor::remainingTimeValues()";
+    SYS_DEBUG ("");
     return m_BatteryLogic->remainingTimeValues();
 }
