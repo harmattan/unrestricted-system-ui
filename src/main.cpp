@@ -37,6 +37,7 @@ int main (int argc, char** argv)
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
+    flags |= Qt::WindowStaysOnTopHint;
     win.setWindowOpacity (0.0);
     win.setWindowFlags (flags);
 

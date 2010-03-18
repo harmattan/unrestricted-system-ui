@@ -103,14 +103,25 @@ LockScreenBusinessLogic::displayStateChanged (
                 lockUI->appearNow ();
                 lockUI->setActive (true);
             }
+            else
+            {
+                // Hide the event eater if screen isn't locked
+                if (DuiApplication::activeApplicationWindow ()->isVisible ())
+                    DuiApplication::activeApplicationWindow ()->hide ();
+            }
             mayStartTimer ();
             break;
 
         default:
             SYS_DEBUG ("Dimmed");
-            /*
-             * Might be a dimmed state.
-             */
+
+            // Create lockUI content on first dimming...
+            if (! lockUI->isContentCreated ())
+                lockUI->createContent ();
+
+            // Show the event-eater window...
+            DuiApplication::activeApplicationWindow ()->show ();
+            DuiApplication::activeApplicationWindow ()->raise ();
             break;
     }
 }
