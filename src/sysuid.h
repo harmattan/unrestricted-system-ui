@@ -5,12 +5,18 @@
 
 #include <QObject>
 #include <QPointer>
+#include "duinamespace.h"
 
 class UsbUi;
 class SystemUIGConf;
 class BatteryBusinessLogic;
 class LedBusinessLogic;
 class ShutdownBusinessLogic;
+class StatusAreaWindow;
+class NotificationManager;
+class DuiCompositorNotificationSink;
+class DuiFeedbackNotificationSink;
+class DuiApplicationWindow;
 
 class Sysuid : public QObject
 {
@@ -23,6 +29,43 @@ public:
     static QString dbusService ();
     static QString dbusPath ();
 
+    /*!
+     * Returns a reference to the notification manager.
+     *
+     * \return a reference to the notification manager
+     */
+    NotificationManager &notificationManager();
+
+    /*!
+     * Returns a reference to the compositor notification sink.
+     *
+     * \return a reference to the compositor notification sink
+     */
+    DuiCompositorNotificationSink& compositorNotificationSink();
+
+    /*!
+     * Returns the current orientation of the status area window's scene.
+     */
+    virtual Dui::Orientation orientation() const;
+
+    /*!
+     * Returns the current orientation angle of the status area window's scene.
+     */
+    virtual Dui::OrientationAngle orientationAngle() const;
+
+    /*!
+     * Returns a reference to the application window.
+     *
+     * \return a reference to the application window
+     */
+    DuiApplicationWindow &applicationWindow();
+
+signals:
+    /*!
+      * Inform about orientation changes
+      */
+    void orientationChangeFinished(const Dui::Orientation &);
+
 public slots:
     void retranslate ();
 
@@ -33,6 +76,21 @@ private:
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
+
+    //! Status area window
+    StatusAreaWindow *statusAreaWindow_;
+
+    //! Application window
+    DuiApplicationWindow *applicationWindow_;
+
+    //! Notification manager
+    NotificationManager *notificationManager_;
+
+    //! Compositor notification sink for visualizing the notification outside home
+    DuiCompositorNotificationSink *compositorNotificationSink_;
+
+    //! Feedback notification sink for presenting the notification as a feedback
+    DuiFeedbackNotificationSink *feedbackNotificationSink_;
 };
 
 #endif // SYSUID_H

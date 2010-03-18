@@ -1,6 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
+#include <DuiApplicationWindow>
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -21,6 +22,10 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
+#include "statusareawindow.h"
+#include "notificationmanager.h"
+#include "duicompositornotificationsink.h"
+#include "duifeedbacknotificationsink.h"
 
 //#define DEBUG
 #define WARNING
@@ -37,7 +42,8 @@ const QString svgDir = themeDir + "svg/";
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid () : QObject ()
+Sysuid::Sysuid () : QObject (),
+        applicationWindow_(new DuiApplicationWindow)
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
@@ -50,11 +56,17 @@ Sysuid::Sysuid () : QObject ()
     // Load translation of System-UI
     retranslate ();
 
+    applicationWindow_->setWindowOpacity(0.0);
+    applicationWindow_->setWindowFlags(Qt::FramelessWindowHint | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
     m_LedLogic        = new LedBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
+
+    notificationManager_ = new NotificationManager(3000);
+    compositorNotificationSink_ = new DuiCompositorNotificationSink;
+    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;    
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
@@ -71,16 +83,35 @@ Sysuid::Sysuid () : QObject ()
         abort();
     }
 
-    /*
-     * The screen locking is implemented in this separate class, because it is
-     * bound to the system bus (MCE wants to contact us on the system bus).
-     */
-    new SysUidRequest;
+    // Show status area window when sysui daemon starts
+    statusAreaWindow_ = new StatusAreaWindow;
+    statusAreaWindow_->show();
+
+//    /*
+//     * The screen locking is implemented in this separate class, because it is
+//     * bound to the system bus (MCE wants to contact us on the system bus).
+//     */
+//    new SysUidRequest;
+
+    // Connect the notification signals for the compositor notification sink
+    connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), compositorNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), compositorNotificationSink_, SLOT(removeNotification(uint)));
+    connect(compositorNotificationSink_, SIGNAL(notificationRemovalRequested(uint)), notificationManager_, SLOT(removeNotification(uint)));
+    connect(notificationManager_, SIGNAL(notificationRestored(const Notification &)), compositorNotificationSink_, SIGNAL(notificationAdded(Notification)));
+
+    // Connect the notification signals for the feedback notification sink
+    connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
+    connect(statusAreaWindow_, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
+    // Restore persistent notifications after all the signal connections are made to the notification sinks
+    notificationManager_->restorePersistentData();
 }
 
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
+    delete statusAreaWindow_;
+    delete applicationWindow_;
 }
 
 Sysuid* Sysuid::sysuid ()
@@ -132,3 +163,27 @@ void Sysuid::retranslate ()
     running = false;
 }
 
+NotificationManager &Sysuid::notificationManager()
+{
+    return *notificationManager_;
+}
+
+DuiCompositorNotificationSink& Sysuid::compositorNotificationSink()
+{
+    return *compositorNotificationSink_;
+}
+
+Dui::Orientation Sysuid::orientation() const
+{
+    return statusAreaWindow_->orientation();
+}
+
+Dui::OrientationAngle Sysuid::orientationAngle() const
+{
+    return statusAreaWindow_->orientationAngle();
+}
+
+DuiApplicationWindow &Sysuid::applicationWindow()
+{
+    return *applicationWindow_;
+}

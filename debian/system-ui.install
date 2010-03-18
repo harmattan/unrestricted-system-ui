@@ -1,6 +1,8 @@
 usr/bin/sysuid
 usr/bin/pcsuite-enable.sh
-usr/share/sysuid/themes/svg/*.svg
-usr/share/sysuid/themes/style/*.css
+usr/share/themes/base/dui/sysuid/*.conf
+usr/share/themes/base/dui/sysuid/style/*.css
+usr/share/themes/base/dui/sysuid/svg/*.svg
+usr/share/dui/notifications/eventtypes/*.conf
 etc/sudoers.d/usb.sudoers
 

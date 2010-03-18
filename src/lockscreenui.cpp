@@ -2,6 +2,7 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "lockscreenui.h"
 #include "unlocksliderwidget/unlockslider.h"
+#include "sysuid.h"
 
 #include <QDebug>
 
@@ -11,7 +12,6 @@
 #include <DuiLayout>
 #include <DuiGridLayoutPolicy>
 #include <DuiSceneManager>
-#include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiTheme>
 #include <DuiLocale>
@@ -65,8 +65,7 @@ LockScreenUI::createContent ()
     DuiLayout* layout = new DuiLayout;
     DuiLayout* widgets = createWidgets();
 
-    QSize size = DuiApplication::activeApplicationWindow()->
-                 sceneManager()->visibleSceneSize(Dui::Landscape);
+    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(Dui::Landscape);
 
     DuiGridLayoutPolicy* l_policy = new DuiGridLayoutPolicy(layout);
     l_policy->setSpacing(10);
@@ -74,8 +73,7 @@ LockScreenUI::createContent ()
     l_policy->setColumnFixedWidth(0, size.width());
     l_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
 
-    size = DuiApplication::activeApplicationWindow()->
-           sceneManager()->visibleSceneSize(Dui::Portrait);
+    size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(Dui::Portrait);
 
     DuiGridLayoutPolicy* p_policy = new DuiGridLayoutPolicy(layout);
     p_policy->setSpacing(10);

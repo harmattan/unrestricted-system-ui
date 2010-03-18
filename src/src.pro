@@ -1,13 +1,23 @@
+include(../duiconfig.pri)
+
+MOC_DIR = .moc
+DUIGEN_OUTDIR = .gen
+OBJECTS_DIR = .obj
+
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += dui \
           qmsystem \
-          silent
+          silent \
+          link_pkgconfig
 
 QT += dbus
 
-contains(cov, true) { 
+SYSTEMUI_SOURCE_DIR = .
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
+
+contains(cov, true) {
     message("Coverage options enabled")
     QMAKE_CXXFLAGS += --coverage
     QMAKE_LFLAGS += --coverage
@@ -30,7 +40,10 @@ HEADERS +=                              \
     usbmodes.h                          \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
-    usbui.h
+    usbui.h \
+    x11wrapper.h \
+    contextframeworkcontext.h \
+    applicationcontext.h \
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -50,15 +63,19 @@ SOURCES +=                              \
     usbmodes.cpp                        \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
-    usbui.cpp
-
-style_sheet.files += sysuid.css
-style_svg.files += ../data/*.svg
+    usbui.cpp \
+    x11wrapper.cpp \
+    contextframeworkcontext.cpp
 
 include(unlocksliderwidget/unlocksliderwidget.pri)
-style_sheet.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/style
-style_svg.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/svg
-style_images.path = $$(DEBIAN_DESTDIR)/usr/share/sysuid/themes/images
+include(statusindicatormenu/statusindicatormenu.pri)
+include(statusarea/statusarea.pri)
+include(notifications/notifications.pri)
+
+PKGCONFIG += contextsubscriber-1.0 \
+                          xcomposite \
+                          maemosec
+
 
 # TODO: remove these when ke-recv going to be integrated:
 usb_scripts.files += pcsuite-enable.sh
@@ -68,9 +85,6 @@ usb_sudoers.files += usb.sudoers
 usb_sudoers.path = $$(DEBIAN_DESTDIR)/etc/sudoers.d
 
 INSTALLS += target \
-            style_sheet \
-            style_svg \
-            style_images \
             usb_scripts \
             usb_sudoers
 
