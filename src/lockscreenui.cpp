@@ -19,6 +19,9 @@
 #include <QTime>
 #include <QDateTime>
 
+#include "duiwidgetcreator.h"
+DUI_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
+
 #define DEBUG
 #include "debug.h"
 
