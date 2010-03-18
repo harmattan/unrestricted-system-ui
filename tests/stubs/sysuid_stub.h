@@ -21,7 +21,7 @@
 
 #include "sysuid.h"
 #include <stubbase.h>
-
+#include <DuiApplicationWindow>
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
@@ -32,22 +32,12 @@ class SysuidStub : public StubBase {
   virtual Sysuid * sysuid();
   virtual QString dbusService();
   virtual QString dbusPath();
-  virtual bool running_in_actdead_mode();
   virtual NotificationManager & notificationManager();
   virtual DuiCompositorNotificationSink & compositorNotificationSink();
   virtual Dui::Orientation orientation() const;
   virtual Dui::OrientationAngle orientationAngle() const;
+  virtual DuiApplicationWindow &applicationWindow();
   virtual void retranslate();
-   SystemUIGConf *m_SystemUIGConf ;
-   BatteryBusinessLogic *m_BatteryLogic ;
-   LedBusinessLogic *m_LedLogic ;
-   ShutdownBusinessLogic *m_ShutdownLogic ;
-   UsbUi *m_UsbUi ;
-   Sysuid *m_Sysuid ;
-   StatusAreaWindow *m_StatusAreaWindow ;
-   NotificationManager *notificationManager_ ;
-   DuiCompositorNotificationSink *compositorNotificationSink_ ;
-   DuiFeedbackNotificationSink *feedbackNotificationSink_ ;
 }; 
 
 // 2. IMPLEMENT STUB
@@ -72,11 +62,6 @@ QString SysuidStub::dbusPath() {
   return stubReturnValue<QString>("dbusPath");
 }
 
-bool SysuidStub::running_in_actdead_mode() {
-  stubMethodEntered("running_in_actdead_mode");
-  return stubReturnValue<bool>("running_in_actdead_mode");
-}
-
 NotificationManager & SysuidStub::notificationManager() {
   stubMethodEntered("notificationManager");
   return stubReturnValue<NotificationManager &>("notificationManager");
@@ -95,6 +80,12 @@ Dui::Orientation SysuidStub::orientation() const {
 Dui::OrientationAngle SysuidStub::orientationAngle() const {
   stubMethodEntered("orientationAngle");
   return stubReturnValue<Dui::OrientationAngle>("orientationAngle");
+}
+
+DuiApplicationWindow &SysuidStub::applicationWindow() {
+  static DuiApplicationWindow window;
+  stubMethodEntered("applicationWindow");
+  return window;
 }
 
 void SysuidStub::retranslate() {
@@ -129,10 +120,6 @@ QString Sysuid::dbusPath() {
   return gSysuidStub->dbusPath();
 }
 
-bool Sysuid::running_in_actdead_mode() {
-  return gSysuidStub->running_in_actdead_mode();
-}
-
 NotificationManager & Sysuid::notificationManager() {
   return gSysuidStub->notificationManager();
 }
@@ -147,6 +134,10 @@ Dui::Orientation Sysuid::orientation() const {
 
 Dui::OrientationAngle Sysuid::orientationAngle() const {
   return gSysuidStub->orientationAngle();
+}
+
+DuiApplicationWindow &Sysuid::applicationWindow() {
+  return gSysuidStub->applicationWindow();
 }
 
 void Sysuid::retranslate() {

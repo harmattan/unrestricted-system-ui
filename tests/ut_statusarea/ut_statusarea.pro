@@ -1,10 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_statusarea
-INCLUDEPATH += $$SRCDIR/statusarea  $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
-
-INCLUDEPATH += /usr/include/contextsubscriber
-
-INCLUDEPATH += /usr/include/contextsubscriber
+INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
+PKGCONFIG += contextsubscriber-1.0
 
 STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
 MODEL_HEADERS += \

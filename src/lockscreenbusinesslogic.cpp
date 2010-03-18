@@ -5,6 +5,7 @@
 #include <QDBusInterface>
 #include <QDebug>
 #include <QTime>
+#include <QX11Info>
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
@@ -107,8 +108,8 @@ LockScreenBusinessLogic::displayStateChanged (
             else
             {
                 // Hide the event eater if screen isn't locked
-                if (DuiApplication::activeApplicationWindow ()->isVisible ())
-                    DuiApplication::activeApplicationWindow ()->hide ();
+                if (Sysuid::sysuid()->applicationWindow().isVisible ())
+                    Sysuid::sysuid()->applicationWindow().hide ();
             }
             mayStartTimer ();
             break;
@@ -121,8 +122,8 @@ LockScreenBusinessLogic::displayStateChanged (
                 lockUI->createContent ();
 
             // Show the event-eater window...
-            DuiApplication::activeApplicationWindow ()->show ();
-            DuiApplication::activeApplicationWindow ()->raise ();
+            Sysuid::sysuid()->applicationWindow().show ();
+            Sysuid::sysuid()->applicationWindow().raise ();
             break;
     }
 }
@@ -201,7 +202,7 @@ LockScreenBusinessLogic::hidefromTaskBar ()
 
     e.xclient.message_type = netWmStateAtom;
     e.xclient.display = display;
-    e.xclient.window = DuiApplication::activeApplicationWindow ()->internalWinId();
+    e.xclient.window = Sysuid::sysuid()->applicationWindow().internalWinId();
     e.xclient.format = 32;
     e.xclient.data.l[0] = 1;
     e.xclient.data.l[1] = skipTaskbarAtom; 
@@ -209,7 +210,7 @@ LockScreenBusinessLogic::hidefromTaskBar ()
     e.xclient.data.l[3] = 0;
     e.xclient.data.l[4] = 0;
     XSendEvent (display,
-                RootWindow (display, DuiApplication::activeApplicationWindow ()->x11Info ().screen ()),
+                RootWindow (display, Sysuid::sysuid()->applicationWindow().x11Info ().screen ()),
                 FALSE,
                 (SubstructureNotifyMask | SubstructureRedirectMask),
                 &e);
@@ -219,7 +220,7 @@ LockScreenBusinessLogic::hidefromTaskBar ()
     QVector<Atom> atoms;
     atoms.append(skipTaskbarAtom);
     XChangeProperty (QX11Info::display (),
-                     DuiApplication::activeApplicationWindow ()->internalWinId(),
+                     Sysuid::sysuid()->applicationWindow().internalWinId(),
                      netWmStateAtom,
                      XA_ATOM,
                      32,

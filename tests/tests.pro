@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS = $$system(ls -1d ut_*/ ft_*/)
+SUBDIRS = $$system(ls -1d ut_* ft_*)
 
 QMAKE_STRIP = echo
 
