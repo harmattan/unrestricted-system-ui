@@ -1,8 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS = \
-    ut_unlockslider \
-    ut_batterybusinesslogic \
-    ut_lowbatterynotifier
+SUBDIRS = $$system(ls -1d ut_*/ ft_*/)
 
 QMAKE_STRIP = echo
 
