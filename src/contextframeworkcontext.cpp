@@ -1,11 +1,11 @@
-/***************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
 ** This file is part of systemui.
-*
+**
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
 **
