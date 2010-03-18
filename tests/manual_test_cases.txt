@@ -21,8 +21,6 @@ Touch-screen lock UI
 ------------------------
   (Basic locking/unlocking test...)
 
-  [XXX: Currently disabled due to libdui bug https://projects.maemo.org/bugzilla/show_bug.cgi?id=159342 ]
-
   Prerequisite:
     - Open DuiControlPanel
     - Open Display applet
@@ -61,8 +59,6 @@ CASE 2:
   (Low battery notification)
 
   TODO: Need to be determined how to test properly
-  (XXX: i observed on my proto (on JIG)
-        "Low battery notification" automatically appears...)
 
 CASE 3:
   (Critical-low battery notification & forced shutdown)
