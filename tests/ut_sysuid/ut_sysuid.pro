@@ -1,14 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_sysuid
 INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea
-
 INCLUDEPATH += /usr/include/contextsubscriber
-
-INCLUDEPATH += /usr/include/contextsubscriber
-
-#STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
-#MODEL_HEADERS += \
-#    $$SRCDIR/statusarea/statusareamodel.h
 
 # unit test and unit classes
 SOURCES += \
@@ -26,9 +19,6 @@ SOURCES += \
     $$SRCDIR/systemuigconf.cpp \
     $$SRCDIR/sysuid.cpp \
     ut_sysuid.cpp \
-#    $$SRCDIR/statusarea/statusarea.cpp \
-#    $$SRCDIR/statusindicatormenu/pluginlist.cpp \
-#    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
 
 # service classes
 SOURCES += \
@@ -65,11 +55,6 @@ HEADERS += \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/statusarea/statusareawindow.h \
     $$SRCDIR/applicationcontext.h \
-#    $$SRCDIR/statusarea/statusareastyle.h \
-#    $$SRCDIR/statusarea/statusareamodel.h \
-#    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
-#    $$SRCDIR/statusindicatormenu/pluginlist.h \
-#    contextproperty.h
 
 # service classes
 HEADERS += \
