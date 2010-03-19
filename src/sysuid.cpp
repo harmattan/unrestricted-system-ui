@@ -45,7 +45,7 @@
 #include "duicompositornotificationsink.h"
 #include "duifeedbacknotificationsink.h"
 
-//#define DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -53,7 +53,7 @@
 
 namespace
 {
-const QString themeDir = "/usr/share/sysuid/themes/";
+const QString themeDir = "/usr/share/themes/base/dui/sysuid/";
 const QString styleDir = themeDir + "style/";
 const QString svgDir = themeDir + "svg/";
 }
