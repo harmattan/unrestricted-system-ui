@@ -38,6 +38,7 @@ class SysuidStub : public StubBase {
   virtual Dui::OrientationAngle orientationAngle() const;
   virtual DuiApplicationWindow &applicationWindow();
   virtual void retranslate();
+  virtual void applyUseMode();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -92,6 +93,9 @@ void SysuidStub::retranslate() {
   stubMethodEntered("retranslate");
 }
 
+void SysuidStub::applyUseMode() {
+    stubMethodEntered("applyUseMode");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -144,5 +148,8 @@ void Sysuid::retranslate() {
   gSysuidStub->retranslate();
 }
 
+void Sysuid::applyUseMode() {
+  gSysuidStub->applyUseMode();
+}
 
 #endif

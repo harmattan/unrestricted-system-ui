@@ -44,6 +44,7 @@
 #include "notificationmanager.h"
 #include "duicompositornotificationsink.h"
 #include "duifeedbacknotificationsink.h"
+#include "contextframeworkcontext.h"
 
 #define DEBUG
 #define WARNING
@@ -84,7 +85,7 @@ Sysuid::Sysuid () : QObject (),
 
     notificationManager_ = new NotificationManager(3000);
     compositorNotificationSink_ = new DuiCompositorNotificationSink;
-    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;    
+    feedbackNotificationSink_ = new DuiFeedbackNotificationSink;
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
@@ -115,6 +116,13 @@ Sysuid::Sysuid () : QObject (),
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), feedbackNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), feedbackNotificationSink_, SLOT(removeNotification(uint)));
     connect(statusAreaWindow_, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
+
+    // Subscribe to a context property for getting information about the video recording status
+    ContextFrameworkContext context;
+    useMode = QSharedPointer<ContextItem>(context.createContextItem("Use.Mode"));
+    connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
+    applyUseMode();
+
     // Restore persistent notifications after all the signal connections are made to the notification sinks
     notificationManager_->restorePersistentData();
 
@@ -204,4 +212,12 @@ Dui::OrientationAngle Sysuid::orientationAngle() const
 DuiApplicationWindow &Sysuid::applicationWindow()
 {
     return *applicationWindow_;
+}
+
+void Sysuid::applyUseMode()
+{
+    bool videoRecording = useMode->value().toString() == "recording";
+
+    compositorNotificationSink_->setApplicationEventsEnabled(!videoRecording);
+    feedbackNotificationSink_->setApplicationEventsEnabled(!videoRecording);
 }

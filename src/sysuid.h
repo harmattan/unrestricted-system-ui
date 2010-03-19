@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QPointer>
 #include "duinamespace.h"
+#include <QSharedPointer>
+#include "applicationcontext.h"
 
 class UsbUi;
 class SystemUIGConf;
@@ -87,6 +89,12 @@ signals:
 public slots:
     void retranslate ();
 
+private slots:
+    /*!
+     * Enables or disables various sinks according to current use mode
+     */
+    void applyUseMode();
+
 private:
     SystemUIGConf           *m_SystemUIGConf;
     BatteryBusinessLogic    *m_BatteryLogic;
@@ -109,6 +117,9 @@ private:
 
     //! Feedback notification sink for presenting the notification as a feedback
     DuiFeedbackNotificationSink *feedbackNotificationSink_;
+
+    //! Context item for getting information about video recording status
+    QSharedPointer<ContextItem> useMode;
 };
 
 #endif // SYSUID_H
