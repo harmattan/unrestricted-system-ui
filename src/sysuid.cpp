@@ -105,12 +105,6 @@ Sysuid::Sysuid () : QObject (),
     statusAreaWindow_ = new StatusAreaWindow;
     statusAreaWindow_->show();
 
-//    /*
-//     * The screen locking is implemented in this separate class, because it is
-//     * bound to the system bus (MCE wants to contact us on the system bus).
-//     */
-//    new SysUidRequest;
-
     // Connect the notification signals for the compositor notification sink
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), compositorNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), compositorNotificationSink_, SLOT(removeNotification(uint)));
@@ -123,6 +117,12 @@ Sysuid::Sysuid () : QObject (),
     connect(statusAreaWindow_, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
     // Restore persistent notifications after all the signal connections are made to the notification sinks
     notificationManager_->restorePersistentData();
+
+    /*
+     * The screen locking is implemented in this separate class, because it is
+     * bound to the system bus (MCE wants to contact us on the system bus).
+     */
+    new SysUidRequest;
 }
 
 Sysuid::~Sysuid ()
