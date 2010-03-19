@@ -65,8 +65,7 @@ public:
 
     //! \reimp
     virtual void showStatusIndicatorMenu();
-    virtual void hideStatusIndicatorMenu();
-    //! \reimp_end
+   //! \reimp_end
 
 private slots:
     /*!
@@ -79,6 +78,12 @@ private slots:
      * \param notificationCount the number of notifications visible
      */
     void setNotificationCount(int notificationCount);
+
+public slots:
+    /*!
+     * \brief Slot for hiding thestatus indicator menu.
+     */
+    virtual void hideStatusIndicatorMenu();
 
 private:
     /*!

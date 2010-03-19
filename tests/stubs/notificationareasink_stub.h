@@ -52,11 +52,11 @@ public:
     virtual void removeGroup(uint groupId);
     virtual void addNotification(const Notification &notification);
     virtual void removeNotification(uint notificationId);
-    virtual void notificationClicked();
     virtual void addNotification(DuiInfoBanner &notification);
     virtual void removeNotification(DuiInfoBanner &notification);
     virtual void setupInfoBanner(DuiInfoBanner *infoBanner);
     virtual DuiInfoBanner *updateNotification(DuiInfoBanner *dn, const NotificationParameters &parameters);
+    virtual void removeGroupBanner(uint groupId);
 };
 
 // 2. IMPLEMENT STUB
@@ -97,11 +97,6 @@ void NotificationAreaSinkStub::removeNotification(uint notificationId)
     stubMethodEntered("removeNotification", params);
 }
 
-void NotificationAreaSinkStub::notificationClicked()
-{
-    stubMethodEntered("notificationClicked");
-}
-
 void NotificationAreaSinkStub::addNotification(DuiInfoBanner &notification)
 {
     QList<ParameterBase *> params;
@@ -132,6 +127,12 @@ DuiInfoBanner *NotificationAreaSinkStub::updateNotification(DuiInfoBanner *dn, c
     return stubReturnValue<DuiInfoBanner *>("updateNotification");
 }
 
+void NotificationAreaSinkStub::removeGroupBanner(uint groupId)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<uint >(groupId));
+    stubMethodEntered("removeGroup", params);
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -170,11 +171,6 @@ void NotificationAreaSink::removeNotification(uint notificationId)
     gNotificationAreaSinkStub->removeNotification(notificationId);
 }
 
-void NotificationAreaSink::notificationClicked()
-{
-    gNotificationAreaSinkStub->notificationClicked();
-}
-
 void NotificationAreaSink::setupInfoBanner(DuiInfoBanner *infoBanner)
 {
     gNotificationAreaSinkStub->setupInfoBanner(infoBanner);
@@ -185,5 +181,9 @@ DuiInfoBanner *NotificationAreaSink::updateNotification(DuiInfoBanner *dn, const
     return gNotificationAreaSinkStub->updateNotification(dn, parameters);
 }
 
+void NotificationAreaSink::removeGroupBanner(uint groupId)
+{
+    return gNotificationAreaSinkStub->removeGroupBanner(groupId);
+}
 
 #endif

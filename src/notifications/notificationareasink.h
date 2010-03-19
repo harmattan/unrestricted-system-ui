@@ -50,11 +50,6 @@ private slots:
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
 
-    /*!
-     * A slot for catching notification clicks
-     */
-    void notificationClicked();
-
 signals:
     /*!
      * Adds a notification to a notification area.
@@ -71,12 +66,12 @@ signals:
     void removeNotification(DuiInfoBanner &notification);
 
     /*!
-     * Signal to notification area that notification was clicked .
+     * Signal that notification was clicked .
      */
     void bannerClicked();
 
     /*!
-     * Signal to let the notification area know that a notification was updated, so make it the top
+     * Signal notification was updated
      *
      * \param notification the DuiInfoBanner to be made top in notification area
      */
@@ -93,6 +88,28 @@ private:
 
     //! A mapping between group IDs and DuiInfoBanner widgets
     QHash<uint, DuiInfoBanner *> groupIdToDuiInfoBanner;
+
+    //! A mapping between group and count of notifications belonging to this group
+    QHash<uint, uint> notificationCountOfGroup;
+
+    //! A mapping between notification id and group id. Many to one relationship may exist here.
+    QHash<uint, uint> notificationIdToGroupId;
+
+    //! Removes the banner for this group id but does not remove the group
+    void removeGroupBanner(uint groupId);
+
+    //! Increases notification count for the group to which this notification belongs by 1
+    void increaseNotificationCountOfGroup(const Notification &notification);
+    //! Recreates the banner for group which was clicked and hence lost the banner
+    void reviveGroupBanner(const Notification &notification);
+    //! Adds a notifications to a group specified by the notification's group id
+    void addNotificationToGroup(const Notification &notification);
+    //! Adds a notification which has no group id or 0 group id
+    void addStandAloneNotification(const Notification &notification);
+    //! Deletes the group from the hash and clears all notifications ids held
+    void deleteGroupFromNotificationCountOfGroup(const uint groupId);
+    //! Decreases notification count for the group
+    uint decreaseNotificationCountOfGroup(uint groupId);
 };
 
 #endif /* NOTIFICATIONAREASINK_H_ */

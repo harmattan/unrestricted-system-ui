@@ -75,7 +75,7 @@ void NotificationAreaStub::moveNotificationToTop(DuiInfoBanner &notification)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<DuiInfoBanner &>(notification));
-    stubMethodEntered("makeNotificationTop",params);
+    stubMethodEntered("moveNotificationToTop",params);
 }
 
 void NotificationAreaStub::removeNotification(DuiInfoBanner &notification)

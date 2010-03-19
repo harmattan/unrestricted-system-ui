@@ -28,7 +28,6 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/contextframeworkcontext.h \
-    contextproperty.h
 
 # service classes
 HEADERS += \

@@ -56,6 +56,7 @@ PluginList::PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applica
     notificationArea = new NotificationArea(this);
     notificationArea->setVisible(false);
     connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
+    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
     // Load the plugins
     addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");

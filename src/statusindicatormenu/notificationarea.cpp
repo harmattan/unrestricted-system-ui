@@ -58,6 +58,7 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
     connect(notificationAreaSink, SIGNAL(notificationUpdated(DuiInfoBanner &)), this, SLOT(moveNotificationToTop(DuiInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
 }
 
 NotificationArea::~NotificationArea()
