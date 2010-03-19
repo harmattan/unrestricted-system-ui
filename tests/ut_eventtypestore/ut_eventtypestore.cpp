@@ -163,7 +163,7 @@ void Ut_EventTypeStore::testEventTypeUninstalling()
 
     m_subject = new EventTypeStore("/eventtypepath");
     QSignalSpy uninstallSpy(m_subject, SIGNAL(eventTypeUninstalled(QString)));
-    connect(this, SIGNAL(directoryChanged(QString)), m_subject, SLOT(updateEventTypeFileList(QString)));
+    connect(this, SIGNAL(directoryChanged(QString)), m_subject, SLOT(updateEventTypeFileList()));
 
     // Add new event type file
     eventTypeFilesList.append("chatEventType.conf");

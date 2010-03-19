@@ -10,6 +10,11 @@ comma :=,
 empty :=
 space := $(empty) $(empty)
 
+# When doing official releases, set TESTABILITY to off. Defaults to on now
+# because integration cannot pass DEB_BUILD_OPTIONS.
+ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
+   QMAKE_OPTIONS += TESTABILITY=on
+endif
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
