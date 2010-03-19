@@ -31,7 +31,7 @@ public:
     virtual void EventTypeStoreConstructor(const QString &eventTypesPath, uint maxStoredEventTypes);
     virtual const QSettings *settingsForEventType(const QString &eventType) const;
     virtual void loadSettings(const QString &eventType);
-    virtual void updateEventTypeFileList(const QString &path);
+    virtual void updateEventTypeFileList();
 };
 
 // 2. IMPLEMENT STUB
@@ -56,11 +56,9 @@ void EventTypeStoreStub::loadSettings(const QString &eventType)
     stubMethodEntered("loadSettings", params);
 }
 
-void EventTypeStoreStub::updateEventTypeFileList(const QString &path)
+void EventTypeStoreStub::updateEventTypeFileList()
 {
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QString>(path));
-    stubMethodEntered("updateEventTypeFileList", params);
+    stubMethodEntered("updateEventTypeFileList");
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -84,9 +82,9 @@ void EventTypeStore::loadSettings(const QString &eventType)
     gEventTypeStoreStub->loadSettings(eventType);
 }
 
-void EventTypeStore::updateEventTypeFileList(const QString &path)
+void EventTypeStore::updateEventTypeFileList()
 {
-    gEventTypeStoreStub->updateEventTypeFileList(path);
+    gEventTypeStoreStub->updateEventTypeFileList();
 } 
 
 #endif

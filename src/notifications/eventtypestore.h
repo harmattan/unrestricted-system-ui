@@ -63,9 +63,8 @@ public:
 private slots:
     /*!
      * Updates the list of available event type files
-     * \param path the path to check for the event type files
      */
-    void updateEventTypeFileList(const QString &path);
+    void updateEventTypeFileList();
 
 signals:
     /*!
