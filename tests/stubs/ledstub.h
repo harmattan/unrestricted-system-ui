@@ -50,6 +50,18 @@ public:
      */
     bool deactivate(const QString &pattern);
 
+    /**
+     * Enable device LED.
+     * @return True on success, false otherwise.
+     */
+    bool enable(void);
+
+    /**
+     * Disable device LED.
+     * @return True on success, false otherwise.
+     */
+    bool disable(void);
+
 };
 
 } //namespace Maemo

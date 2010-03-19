@@ -22,6 +22,10 @@
 #include <QObject>
 #include <QList>
 
+#if defined(X_H) && defined(None)
+#error "You have (maybe implicidly) included <X11/X.h> before batterystub.h, it defined 'None'. That breaks batterystub.h. Please move batterystub.h higher up the include list!"
+#endif
+
 // STUB CLASS
 
 namespace Maemo

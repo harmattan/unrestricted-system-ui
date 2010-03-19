@@ -42,4 +42,14 @@ bool QmLED::deactivate(const QString &pattern)
     return false;
 }
 
+bool QmLED::enable()
+{
+    return true;
+}
+
+bool QmLED::disable()
+{
+    return false;
+}
+
 }

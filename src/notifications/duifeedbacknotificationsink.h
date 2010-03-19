@@ -28,6 +28,7 @@
  */
 class DuiFeedbackNotificationSink : public NotificationSink
 {
+    Q_OBJECT
 public:
     /*!
      * Constructs a new DuiFeedbackNotificationSink.
