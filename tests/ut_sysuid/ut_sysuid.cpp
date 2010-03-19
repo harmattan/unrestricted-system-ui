@@ -30,6 +30,7 @@
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "statusareawindow_stub.h"
+#include "unlockslider_stub.h"
 
 maemosec::storage::~storage()
 {
