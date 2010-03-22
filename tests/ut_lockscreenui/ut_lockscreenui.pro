@@ -9,6 +9,7 @@ INCLUDEPATH += $$SRC_PREFIX \
                $$SLIDER_PREFIX 
 
 SOURCES += ut_lockscreenui.cpp \
+    $$SRC_PREFIX/debug.cpp \
     $$SLIDER_PREFIX/unlockslidermodel.cpp \
     $$SLIDER_PREFIX/unlocksliderview.cpp \
     $$SLIDER_PREFIX/unlockslider.cpp \
@@ -16,6 +17,7 @@ SOURCES += ut_lockscreenui.cpp \
     $$STUB_PREFIX/stubbase.cpp
 
 HEADERS += ut_lockscreenui.h \
+    $$SRC_PREFIX/debug.h \
     $$SLIDER_PREFIX/unlockslidermodel.h \
     $$SLIDER_PREFIX/unlocksliderview.h \
     $$SLIDER_PREFIX/unlocksliderstyle.h \

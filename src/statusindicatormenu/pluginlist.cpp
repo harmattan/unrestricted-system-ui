@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -29,7 +31,6 @@
  * information which may not be disclosed to others without the prior
  * written consent of Nokia.
  */
-
 #include "pluginlist.h"
 #include <DuiButton>
 #include "duistatusindicatormenuplugininterface.h"
@@ -92,9 +93,26 @@ void PluginList::setNotificationCount(int notificationCount)
     }
 }
 
-void PluginList::addPlugin(const QString &path)
+/*!
+ * This function will actually load a plugin.
+ */
+void 
+PluginList::addPlugin(
+        const QString &path)
 {
+    bool success;
     QPluginLoader loader(path);
+    
+    /*
+     * We have to resolve all the symbols early, so we will not abort when there
+     * are unresolved symbols in the library. It is really important!
+     */
+    loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+    success = loader.load();
+    if (!success) {
+        qDebug() << "Error loading plugin: " << loader.errorString();
+    }
+
     QObject* object = loader.instance();
 
     DuiStatusIndicatorMenuPluginInterface* plugin = qobject_cast<DuiStatusIndicatorMenuPluginInterface*>(object);
