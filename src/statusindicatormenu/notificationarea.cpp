@@ -49,7 +49,6 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     // Connect notification signals
     NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
 
-    connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
@@ -58,7 +57,7 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     connect(notificationAreaSink, SIGNAL(removeNotification(DuiInfoBanner &)), this, SLOT(removeNotification(DuiInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
-    connect(notificationAreaSink, SIGNAL(notificationUpdated(DuiInfoBanner &)), this, SLOT(moveNotificationToTop(DuiInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(DuiInfoBanner &)), this, SLOT(moveNotificationToTop(DuiInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
 }
 

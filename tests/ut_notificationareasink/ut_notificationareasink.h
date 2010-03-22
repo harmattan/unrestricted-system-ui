@@ -79,7 +79,7 @@ private slots:
     // Test that when no notifications left in the group, group banner is removed
     void testRemovingNotificationsWhenNoNotificationLeftGroupBannerIsRemoved();
     // Test when a new notification is added to the group then area is relayout
-    void testAddNotificationToGroupRelayoutsNotificationArea()    ;
+    void testAddNewNotificationToGroupUpdatesNotificationArea()    ;
 
 signals:
     void addGroup(uint groupId, const NotificationParameters &parameters);

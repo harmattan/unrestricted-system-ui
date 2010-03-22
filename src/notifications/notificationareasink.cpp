@@ -127,11 +127,13 @@ void NotificationAreaSink::increaseNotificationCountOfGroup(const Notification &
     notificationIdToGroupId.insert(notification.notificationId(), notification.groupId());
 }
 
-void NotificationAreaSink::reviveGroupBanner(const Notification &notification)
+DuiInfoBanner* NotificationAreaSink::reviveGroupBanner(const Notification &notification)
 {
     DuiInfoBanner *infoBanner = createInfoBanner(DuiInfoBanner::Event, notification.groupId(), notification.parameters());
     setupInfoBanner(infoBanner);
+    infoBanner->setParentItem(NULL);
     groupIdToDuiInfoBanner.insert(notification.groupId(), infoBanner);
+    return infoBanner;
 }
 
 void NotificationAreaSink::addNotificationToGroup(const Notification &notification)
@@ -144,14 +146,14 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
 
         if(infoBanner == NULL) {
             // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Revive the banner.
-            reviveGroupBanner(notification);
+            infoBanner = reviveGroupBanner(notification);
         }
 
         if(infoBanner != NULL && infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group
             emit addNotification(*infoBanner);
         } else {
-            emit notificationUpdated(*infoBanner);
+            emit notificationAddedToGroup(*infoBanner);
         }
     }
 }

@@ -307,9 +307,9 @@ void Ut_NotificationAreaSink::testAddNotificationToGroup()
     QCOMPARE(notifications.count(), 1);
 }
 
-void Ut_NotificationAreaSink::testAddNotificationToGroupRelayoutsNotificationArea()
+void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationArea()
 {
-    QSignalSpy updateSpy(sink, SIGNAL(notificationUpdated(DuiInfoBanner &)));
+    QSignalSpy updateSpy(sink, SIGNAL(notificationAddedToGroup(DuiInfoBanner &)));
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");

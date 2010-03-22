@@ -71,11 +71,11 @@ signals:
     void bannerClicked();
 
     /*!
-     * Signal notification was updated
+     * Signal notification was added to a group
      *
-     * \param notification that has been updated
+     * \param banner The group banner to which a notification has been added
      */
-    void notificationUpdated(DuiInfoBanner &notification);
+    void notificationAddedToGroup(DuiInfoBanner &banner);
 
 private:
     //! Sets up the info banner can connects its signals
@@ -101,7 +101,7 @@ private:
     //! Increases notification count for the group to which this notification belongs by 1
     void increaseNotificationCountOfGroup(const Notification &notification);
     //! Recreates the banner for group which was clicked and hence lost the banner
-    void reviveGroupBanner(const Notification &notification);
+    DuiInfoBanner* reviveGroupBanner(const Notification &notification);
     //! Adds a notifications to a group specified by the notification's group id
     void addNotificationToGroup(const Notification &notification);
     //! Adds a notification which has no group id or 0 group id
