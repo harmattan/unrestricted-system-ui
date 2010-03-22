@@ -62,6 +62,12 @@ private slots:
      */
     void rotate(const Dui::Orientation &orientation);
 
+signals:
+    /*!
+     * Signal that status indicator menu is visible
+     */
+    void statusIndicatorMenuVisibilityChanged(bool visible);
+
 private:
     //! Scene for this window
     QGraphicsScene *scene;

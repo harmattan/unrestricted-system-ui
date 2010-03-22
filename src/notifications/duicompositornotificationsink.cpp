@@ -30,7 +30,8 @@
 #include "sysuid.h"
 
 DuiCompositorNotificationSink::DuiCompositorNotificationSink() :
-    orientationChangeSignalConnected(false)
+    orientationChangeSignalConnected(false),
+    sinkDisabled(false)
 {
 }
 
@@ -45,7 +46,10 @@ DuiCompositorNotificationSink::~DuiCompositorNotificationSink()
 void DuiCompositorNotificationSink::addNotification(const Notification &notification)
 {
     if (!canAddNotification(notification)) return;
-
+    if(sinkDisabled) {
+        emit notificationAdded(notification);
+        return;
+    }
     if (!orientationChangeSignalConnected) {
         // Get informed about orientation changes
         connect(Sysuid::sysuid(), SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SLOT(rotateInfoBanners(const Dui::Orientation &)));
@@ -188,4 +192,9 @@ void DuiCompositorNotificationSink::setViewSizeAndRotation(QGraphicsView &view, 
     } else {
         view.setFixedSize(infoBanner.preferredSize().height(), infoBanner.preferredSize().width());
     }
+}
+
+void DuiCompositorNotificationSink::setDisabled(bool disabled)
+{
+    sinkDisabled = disabled;
 }

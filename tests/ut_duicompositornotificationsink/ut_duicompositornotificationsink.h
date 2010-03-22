@@ -81,6 +81,7 @@ private:
 
 signals:
     void orientationChangeFinished(const Dui::Orientation &orientation);
+    void statusIndictorMenuVisibilityChanged(bool);
 
 private slots:
     // Executed once before every test case
@@ -104,6 +105,8 @@ private slots:
     void testOrientationChanged();
     // Test that notifications are NOT added while recording
     void testNotificationWhileApplicationEventsDisabled();
+    // Test when sink is set to disabled, no notifications are generated
+    void testWhenSinkDisableTrueNoBannerCreated();
 };
 
 #endif // UT_DUICOMPOSITORNOTIFICATIONSINK_H

@@ -25,6 +25,7 @@
 #include <DuiButton>
 #include <QSharedPointer>
 class StatusIndicatorMenuWindow;
+class StatusAreaWindow;
 
 /*!
  * Status area is the top part on the home screen. It contains the clock,
@@ -41,7 +42,7 @@ public:
      *
      * \param parent the parent widget of the status area
      */
-    StatusArea(DuiWidget *parent = NULL);
+    StatusArea(DuiWidget *parent = NULL, StatusAreaWindow *statusAreaWindow = NULL);
 
     /*!
      * \brief Destructor

@@ -474,4 +474,18 @@ void Ut_DuiCompositorNotificationSink::testNotificationWhileApplicationEventsDis
     QCOMPARE(notifications.count(), 1);
 }
 
+void Ut_DuiCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
+{
+    connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
+    emit statusIndictorMenuVisibilityChanged(true);
+    // Create notification
+    TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters);
+    // Check that notification banner was not created when status indicator menu is visible
+    QCOMPARE(notifications.count(), 0);
+    emit statusIndictorMenuVisibilityChanged(false);
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(notifications.count(), 1);
+}
+
 QTEST_APPLESS_MAIN(Ut_DuiCompositorNotificationSink)

@@ -83,8 +83,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
     applicationPage->setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Show);
-    applicationPage->setCentralWidget(new PluginList(this,
-                             applicationPage.data()));
+    applicationPage->setCentralWidget(new PluginList(this, applicationPage.data()));
     sceneManager()->showWindowNow(applicationPage.data());
 
     // Create an escape button
@@ -94,6 +93,18 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
     // Set the X window properties so that the window does not appear in the task bar
     excludeFromTaskBar();
+    connect(this, SIGNAL(enteredDisplay()), this, SLOT(displayActive()));
+    connect(this, SIGNAL(exitedDisplay()), this, SLOT(displayInActive()));
+}
+
+void StatusIndicatorMenuWindow::displayActive()
+{
+    emit visibilityChanged(true);
+}
+
+void StatusIndicatorMenuWindow::displayInActive()
+{
+    emit visibilityChanged(false);
 }
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()

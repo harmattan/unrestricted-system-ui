@@ -105,7 +105,7 @@ Sysuid::Sysuid () : QObject (),
     // Show status area window when sysui daemon starts
     statusAreaWindow_ = new StatusAreaWindow;
     statusAreaWindow_->show();
-
+    connect(statusAreaWindow_, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), compositorNotificationSink_, SLOT(setDisabled(bool)));
     // Connect the notification signals for the compositor notification sink
     connect(notificationManager_, SIGNAL(notificationUpdated(const Notification &)), compositorNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), compositorNotificationSink_, SLOT(removeNotification(uint)));

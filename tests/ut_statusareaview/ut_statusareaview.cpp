@@ -32,6 +32,7 @@
 #include "notificationarea_stub.h"
 #include <DuiSceneWindow>
 #include <QGraphicsLayout>
+#include <DuiWidget>
 
 int Ut_StatusAreaView::windowExecutionCount;
 int Ut_StatusAreaView::windowRejectionCount;

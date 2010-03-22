@@ -60,6 +60,19 @@ public:
      */
     ~StatusIndicatorMenuWindow();
 
+signals:
+    /*!
+     * Signal the current visility status of window
+     * \param visible true when window is top and false when window is obscured
+     */
+    void visibilityChanged(bool visible);
+
+private slots:
+    //! Slot when window becomes top window
+    void displayActive();
+    //! Slot when window is no longer top window
+    void displayInActive();
+
 private:
     /*!
      * Sets the X window properties for the window so that the window is not

@@ -28,6 +28,8 @@ public:
     virtual void StatusIndicatorMenuWindowConstructor();
     virtual void StatusIndicatorMenuWindowDestructor();
     virtual void excludeFromTaskBar();
+    virtual void displayActive();
+    virtual void displayInActive();
 };
 
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor()
@@ -45,6 +47,15 @@ void StatusIndicatorMenuWindowStub::excludeFromTaskBar()
     stubMethodEntered("excludeFromTaskBar");
 }
 
+void StatusIndicatorMenuWindowStub::displayActive()
+{
+    stubMethodEntered("displayActive");
+}
+
+void StatusIndicatorMenuWindowStub::displayInActive()
+{
+    stubMethodEntered("displayInActive");
+}
 
 StatusIndicatorMenuWindowStub gDefaultStatusIndicatorMenuWindowStub;
 StatusIndicatorMenuWindowStub *gStatusIndicatorMenuWindowStub = &gDefaultStatusIndicatorMenuWindowStub;
@@ -68,5 +79,14 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     gStatusIndicatorMenuWindowStub->excludeFromTaskBar();
 }
 
+void StatusIndicatorMenuWindow::displayActive()
+{
+    gStatusIndicatorMenuWindowStub->displayActive();
+}
+
+void StatusIndicatorMenuWindow::displayInActive()
+{
+    gStatusIndicatorMenuWindowStub->displayInActive();
+}
 
 #endif

@@ -75,6 +75,12 @@ private slots:
      */
     void timeout();
 
+    /*!
+     * A slot for disabling sink(No notifications generated, they are just transfered)
+     * \param bool disabled true for suppressing notification banner from sink. false if sink should generate notification banners
+     */
+    void setDisabled(bool disabled);
+
 private:
     /*!
      * Updates an existing info banner with the given notification parameters.
@@ -122,6 +128,9 @@ private:
 
     //! Whether the orientation change signal has been connected
     bool orientationChangeSignalConnected;
+
+    //! Whether the sink is currently showing notifications or just transferring them
+    bool sinkDisabled;
 };
 
 #endif /* DUICOMPOSITORNOTIFICATIONSINK_H_ */

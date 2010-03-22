@@ -26,7 +26,7 @@
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     DuiWindow(parent),
     scene(new QGraphicsScene),
-    statusArea_(new StatusArea)
+    statusArea_(new StatusArea(NULL,this))
 {
     // Set the window type to _NET_WM_WINDOW_TYPE_DOCK
     setAttribute(Qt::WA_X11NetWmWindowTypeDock);

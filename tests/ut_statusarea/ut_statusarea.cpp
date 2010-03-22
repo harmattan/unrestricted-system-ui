@@ -28,6 +28,7 @@
 #include <DuiSceneManager>
 #include <DuiEscapeButtonPanel>
 #include "statusindicatormenuwindow_stub.h"
+#include <DuiWidget>
 
 
 DuiWindow::DuiWindow(QWidget *parent)

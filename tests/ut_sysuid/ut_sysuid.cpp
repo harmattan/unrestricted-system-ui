@@ -98,6 +98,9 @@ void DuiCompositorNotificationSink::rotateInfoBanners(const Dui::Orientation &)
 {
 }
 
+void DuiCompositorNotificationSink::setDisabled(bool)
+{
+}
 // DuiFeedbackNotificationSink stubs (used by Sysuid)
 DuiFeedbackNotificationSink *duiFeedbackNotificationSink = 0;
 DuiFeedbackNotificationSink::DuiFeedbackNotificationSink()
