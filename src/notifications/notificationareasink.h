@@ -73,7 +73,7 @@ signals:
     /*!
      * Signal notification was updated
      *
-     * \param notification the DuiInfoBanner to be made top in notification area
+     * \param notification that has been updated
      */
     void notificationUpdated(DuiInfoBanner &notification);
 

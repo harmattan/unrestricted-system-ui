@@ -58,7 +58,6 @@ DuiInfoBanner *NotificationAreaSink::updateNotification(DuiInfoBanner *infoBanne
 
     // Update the info banner's actions
     updateActions(infoBanner, parameters);
-    emit notificationUpdated(*infoBanner);
     return infoBanner;
 }
 
@@ -151,6 +150,8 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
         if(infoBanner != NULL && infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group
             emit addNotification(*infoBanner);
+        } else {
+            emit notificationUpdated(*infoBanner);
         }
     }
 }
@@ -163,10 +164,9 @@ void NotificationAreaSink::addStandAloneNotification(const Notification &notific
         // If the notification is already in the map, only update it
         updateNotification(infoBanner, notification.parameters());
     } else {
-        DuiInfoBanner *infoBanner = createInfoBanner(notification);
+        infoBanner = createInfoBanner(notification);
         setupInfoBanner(infoBanner);
         notificationIdToDuiInfoBanner.insert(notification.notificationId(), infoBanner);
-
         // Add to the notification area
         emit addNotification(*infoBanner);
     }
