@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), libdui-dev (>= 0.18),
                libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev,
-               libxcomposite-dev
+               libxcomposite-dev, libxext-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
