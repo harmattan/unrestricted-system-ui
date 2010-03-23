@@ -3,8 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libdui-dev (>= 0.18),
-               libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev,
-               libxcomposite-dev, libxext-dev
+               libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -14,7 +13,7 @@ Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
          hal [armel], sudo, libosso-dbus-conf [i386], duicompositor (>= 0.3.4~1) [armel],
-         libmaemosec0, libcontextsubscriber0, libxcomposite1
+         libmaemosec0, libcontextsubscriber0
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - battery notifications

@@ -27,7 +27,6 @@
 #include <DuiSceneManager>
 #include "duicompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
-#include "x11wrapper.h"
 #include "testnotificationparameters.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"

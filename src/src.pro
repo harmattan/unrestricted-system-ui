@@ -45,7 +45,6 @@ HEADERS +=                              \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
     usbui.h \
-    x11wrapper.h \
     contextframeworkcontext.h \
     applicationcontext.h \
 
@@ -68,7 +67,6 @@ SOURCES +=                              \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
     usbui.cpp \
-    x11wrapper.cpp \
     contextframeworkcontext.cpp
 
 include(unlocksliderwidget/unlocksliderwidget.pri)
@@ -77,7 +75,6 @@ include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 
 PKGCONFIG += contextsubscriber-1.0 \
-                          xcomposite \
                           maemosec
 
 
