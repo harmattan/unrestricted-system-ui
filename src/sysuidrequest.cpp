@@ -44,12 +44,12 @@ SysUidRequest::SysUidRequest ()
     SYS_DEBUG ("Registering service/object on system bus.");
     if (!bus.registerService (dbusService ())) {
         SYS_WARNING ("failed to register dbus service");
-        dbusError (bus);
+        dbusError (bus, false);
     }
 
     if (!bus.registerObject (dbusPath (), this)) {
         SYS_WARNING ("failed to register dbus object");
-        dbusError (bus);
+        dbusError (bus, false);
     }
 }
 
