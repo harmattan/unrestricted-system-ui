@@ -61,14 +61,16 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     /*
      * Just to be sure: maybe the screen is already locked when this daemon
      * started...
-     * FIXME: getState() segfaults under scratchbox. 
      */
 #ifndef __i386__
     displayStateChanged (display->get ());
 
+    // TODO/FIXME: getState() segfaults both in scratchbox and on the device.
+    /*
     locksChanged (
             QmLocks::TouchAndKeyboard,
             locks->getState (QmLocks::TouchAndKeyboard));
+            */
 #endif
 }
 
