@@ -37,14 +37,6 @@ DuiWindow::DuiWindow(QWidget *parent)
 {
 }
 
-QPair<void*, bool> gSetVisible(0, false);
-void QWidget::setVisible(bool visible)
-{
-    gSetVisible.first = this;
-    gSetVisible.second = visible;
-}
-
-
 // ContextFrameworkContext stubs (used by StatusArea)
 QVariant ContextFrameworkItem::value() const
 {
@@ -73,8 +65,7 @@ QPointF QGraphicsSceneMouseEvent::pos() const
 void Ut_StatusArea::init()
 {
     statusArea = new StatusArea();
-    gSetVisible.first = 0;
-    gSetVisible.second = false;
+    gStatusIndicatorMenuWindowStub->stubReset();
 }
 
 void Ut_StatusArea::cleanup()
@@ -109,8 +100,7 @@ void Ut_StatusArea::testWhenSwipeStatusAreaStatusIndicatorMenuAppears()
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-    QVERIFY(gSetVisible.first == statusArea->statusIndicatorMenuWindow &&
-            gSetVisible.second);
+    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 1);
 }
 
 void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear()
@@ -124,7 +114,7 @@ void Ut_StatusArea::testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppe
     statusArea->sceneEvent(&mouseMoveEvent);
     QGraphicsSceneMouseEvent mouseReleaseEvent(QEvent::GraphicsSceneMouseRelease);
     statusArea->sceneEvent(&mouseReleaseEvent);
-    QVERIFY(gSetVisible.first != statusArea->statusIndicatorMenuWindow);
+    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusArea)

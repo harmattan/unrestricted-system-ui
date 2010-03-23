@@ -111,6 +111,20 @@ StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
 }
 
+void StatusIndicatorMenuWindow::makeVisible()
+{
+    if (!isVisible()) {
+        // If status indicator window is not visible, then show it
+        show();
+    } else {
+        // Otherwise, raise it
+        raise();
+    }
+
+    // Make sure the application page is centered on display
+    centerOn(applicationPage.data());
+}
+
 void StatusIndicatorMenuWindow::excludeFromTaskBar()
 {
     // Tell the window to not to be shown in the switcher

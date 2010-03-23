@@ -60,6 +60,11 @@ public:
      */
     ~StatusIndicatorMenuWindow();
 
+    /*!
+     * Makes the window visible by showing or raising it.
+     */
+    void makeVisible();
+
 signals:
     /*!
      * Signal the current visility status of window

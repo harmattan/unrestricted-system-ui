@@ -27,6 +27,7 @@ class StatusIndicatorMenuWindowStub : public StubBase
 public:
     virtual void StatusIndicatorMenuWindowConstructor();
     virtual void StatusIndicatorMenuWindowDestructor();
+    virtual void makeVisible();
     virtual void excludeFromTaskBar();
     virtual void displayActive();
     virtual void displayInActive();
@@ -40,6 +41,11 @@ void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor()
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowDestructor()
 {
     stubMethodEntered("StatusIndicatorMenuWindowDestructor");
+}
+
+void StatusIndicatorMenuWindowStub::makeVisible()
+{
+    stubMethodEntered("makeVisible");
 }
 
 void StatusIndicatorMenuWindowStub::excludeFromTaskBar()
@@ -72,6 +78,11 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
     gStatusIndicatorMenuWindowStub->StatusIndicatorMenuWindowDestructor();
+}
+
+void StatusIndicatorMenuWindow::makeVisible()
+{
+    gStatusIndicatorMenuWindowStub->makeVisible();
 }
 
 void StatusIndicatorMenuWindow::excludeFromTaskBar()

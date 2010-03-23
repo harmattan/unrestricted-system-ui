@@ -31,7 +31,9 @@ StatusArea::StatusArea(DuiWidget *parent, StatusAreaWindow *statusAreaWindow) :
     DuiWidgetController(parent),
     statusIndicatorMenuWindow(new StatusIndicatorMenuWindow)
 {
-    connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
+    if (statusAreaWindow != NULL) {
+        connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
+    }
 }
 
 StatusArea::~StatusArea()
@@ -73,12 +75,5 @@ bool StatusArea::sceneEvent(QEvent *event)
 
 void StatusArea::showStatusIndicatorMenu()
 {
-    // If status indicator window is not visible, then show it
-    if (!statusIndicatorMenuWindow->isVisible()) {
-        statusIndicatorMenuWindow->show();
-    }
-    // Otherwise, raise it
-    else {
-        statusIndicatorMenuWindow->raise();
-    }
+    statusIndicatorMenuWindow->makeVisible();
 }

@@ -17,3 +17,12 @@ lib
 *.ts
 core
 doc/html
+debian/system-ui
+debian/system-ui-dbg*
+debian/system-ui-dev*
+debian/system-ui-doc*
+debian/system-ui-tests*
+debian/systemui-l10n-engineering-english*
+debian/files
+debian/tmp
+debian/system-ui.substvars
