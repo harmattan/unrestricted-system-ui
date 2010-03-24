@@ -1,3 +1,9 @@
+system-ui (0.13.3-1~unreleased) harmattan; urgency=low
+
+  * New version
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 24 Mar 2010 14:08:58 +0100
+
 system-ui (0.13.2-1) unstable; urgency=low
 
   * Fixes rotation of the status area window
