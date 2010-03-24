@@ -1,6 +1,8 @@
-system-ui (0.13.3-1~unreleased) harmattan; urgency=low
+system-ui (0.13.3-1) harmattan; urgency=low
 
   * New version
+  * Made touch-screen-locking working again
+    -> adds/installs some D-Bus policy
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 24 Mar 2010 14:08:58 +0100
 
