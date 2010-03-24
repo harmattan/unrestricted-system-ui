@@ -31,6 +31,7 @@
 #include "notificationmanager_stub.h"
 #include "statusareawindow_stub.h"
 #include "unlockslider_stub.h"
+#include "sysuidrequest_stub.h"
 
 maemosec::storage::~storage()
 {

@@ -20,7 +20,6 @@ SOURCES += \
     $$SRCDIR/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreenbusinesslogicadaptor.cpp \
     $$SRCDIR/systemuigconf.cpp \
-    $$SRCDIR/sysuidrequest.cpp \
     $$SRCDIR/sysuid.cpp \
     ut_sysuid.cpp \
 
