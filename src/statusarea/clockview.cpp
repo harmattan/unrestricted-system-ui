@@ -44,7 +44,10 @@ void ClockView::styleUpdated()
 void ClockView::setupModel()
 {
     DuiWidgetView::setupModel();
-    updateLabel();
+    QList<const char *> modifications;
+    modifications << ClockModel::Time;
+    modifications << ClockModel::TimeFormat24h;
+    updateData(modifications);
 }
 
 void ClockView::updateData(const QList<const char *>& modifications)
@@ -53,6 +56,13 @@ void ClockView::updateData(const QList<const char *>& modifications)
     const char *member;
     foreach(member, modifications) {
         if (member == ClockModel::Time) {
+            updateLabel();
+        } else if (member == ClockModel::TimeFormat24h) {
+            if (model()->timeFormat24h()) {
+                style().setModeDefault();
+            } else {
+                style().setModeTwelveHour();
+            }
             updateLabel();
         }
     }

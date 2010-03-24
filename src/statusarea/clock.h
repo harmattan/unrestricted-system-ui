@@ -20,10 +20,12 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-class QTimer;
-
 #include <DuiWidgetController>
+#include <QTimer>
+#include <qmtime.h>
 #include "clockmodel.h"
+
+typedef Maemo::QmTimeWhatChanged QmTimeWhatChanged;
 
 /*!
  * A widget for showing the current time.
@@ -39,25 +41,28 @@ public:
      */
     explicit Clock(QGraphicsItem *parent = NULL);
 
+private slots:
+    /*!
+     * \brief Updates the current time to the model and configures the timer for the next update.
+     */
+    void updateModelAndSetupTimer();
+
+    /*!
+     * \brief Updates the 24 hour mode if the settings have changed
+     */
+    void updateSettings(QmTimeWhatChanged whatChanged);
+
 private:
     //! \reimp
     virtual void enterDisplayEvent();
     virtual void exitDisplayEvent();
     //! \reimp_end
 
-    /*!
-     * \brief Enables or disables model updates.
-     *
-     * \param enabled \c true if the model updates should be enabled, \c false otherwise
-     */
-    void setModelUpdatesEnabled(bool enabled);
+    //! Update timer
+    QTimer timer;
 
-    //! \reimp
-    void timerEvent(QTimerEvent *event);
-    //! \reimp_end
-
-    //! ID for the update timer
-    int updateTimerId;
+    //! QmTime object to get the time format is
+    Maemo::QmTime qmTime;
 };
 
 #endif

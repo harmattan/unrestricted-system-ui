@@ -37,6 +37,9 @@ class ClockStyle : public DuiWidgetStyle
 class ClockStyleContainer : public DuiWidgetStyleContainer
 {
     DUI_STYLE_CONTAINER(ClockStyle)
+
+    //! \brief Style mode for 12 hour mode.
+    DUI_STYLE_MODE(TwelveHour)
 };
 
 #endif /* CLOCKSTYLE_H_ */

@@ -33,6 +33,8 @@ class ClockModel : public DuiWidgetModel
 
     //! The current time
     DUI_MODEL_PROPERTY(QDateTime, time, Time, true, QDateTime::currentDateTime())
+    //! Whether 24 hour clock mode is used
+    DUI_MODEL_PROPERTY(bool, timeFormat24h, TimeFormat24h, true, true)
 };
 
 #endif /* CLOCKMODEL_H_ */

@@ -1,6 +1,7 @@
 system-ui (0.13.4-1~unreleased) harmattan; urgency=low
 
   * New version [not released / tagged]
+  * Implemented: SWP#DUI-2404 Support for 12-hour and 24-hour clock on status bar
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 24 Mar 2010 14:19:14 +0100
 

@@ -20,17 +20,22 @@
 #ifndef UT_CLOCK_H
 #define UT_CLOCK_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-
-class Clock;
+#include <QDateTime>
+#include <qmtime.h>
+#include "clock.h"
 
 class Ut_Clock : public QObject
 {
     Q_OBJECT
 
 public:
-    static QList<int> timerIds;
+    static int timerTimeout;
+    static QDateTime expectedDateTime;
+    static Maemo::QmTime::TimeFormat expectedTimeFormat;
+
+signals:
+    void timeOrSettingsChanged(QmTimeWhatChanged);
 
 private slots:
     void initTestCase();
@@ -38,6 +43,9 @@ private slots:
     void init();
     void cleanup();
 
+    void test24HourModeDuringCreation();
+    void test24HourModeToggling();
+    void test24HourModeNotToggledWhenSettingsAreNotChanged();
     void testModelUpdates();
 
 private:

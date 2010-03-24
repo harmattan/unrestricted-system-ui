@@ -24,7 +24,6 @@
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 
-
 // DuiWidgetController stubs
 ClockModel clockModel;
 DuiWidgetModel *DuiWidgetController::model()
@@ -41,38 +40,13 @@ void QGraphicsLinearLayout::insertItem(int , QGraphicsLayoutItem *)
 {
 }
 
-// DuiStyleContainer stubs
-ClockStyleContainer clockStyleContainer;
-ClockStyle *clockStyle = 0;
-const DuiStyle *DuiStyleContainer::currentStyle() const
-{
-    return clockStyle;
-}
-
-// DuiWidgetStyleContainer stubs (prevents crashing)
-void DuiWidgetStyleContainer::reloadStyles()
-{
-}
-
-// DuiWidgetView stubs
-DuiWidgetStyleContainer &DuiWidgetView::style()
-{
-    return clockStyleContainer;
-}
-
-const DuiWidgetStyleContainer &DuiWidgetView::style() const
-{
-    return clockStyleContainer;
-}
-
-// DuiFeedback stubs (prevents crashing)
-DuiFeedback::DuiFeedback(QObject *) : d_ptr(0)
-{
-}
-
 void DuiLabel::setText(const QString &text)
 {
     Ut_ClockView::timeAsString = text;
+}
+
+TestClockView::TestClockView(Clock *controller) : ClockView(controller)
+{
 }
 
 QString Ut_ClockView::timeAsString;
@@ -80,19 +54,22 @@ QString Ut_ClockView::timeAsString;
 // Called before the first testfunction is executed
 void Ut_ClockView::initTestCase()
 {
-    clockStyle = new ClockStyle();
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_clockview";
+    app = new DuiApplication(argc, &app_name);
 }
 
 // Called after the last testfunction was executed
 void Ut_ClockView::cleanupTestCase()
 {
+    delete app;
 }
 
 // Called before each testfunction is executed
 void Ut_ClockView::init()
 {
     testClock = new Clock();
-    m_subject = new ClockView(testClock);
+    m_subject = new TestClockView(testClock);
 }
 
 // Called after every testfunction
@@ -103,12 +80,21 @@ void Ut_ClockView::cleanup()
     m_subject = NULL;
 }
 
-void Ut_ClockView::testUpdate()
+void Ut_ClockView::testUpdateTime()
 {
     m_subject->setModel(&clockModel);
-    clockStyle->setTimeFormat(QString("HH:mmA"));
+    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
     clockModel.setTime(QDateTime(QDate(1, 1, 1), QTime(1, 1)));
-    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01AM"));
+    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
 }
 
-QTEST_MAIN(Ut_ClockView)
+void Ut_ClockView::testUpdateTimeFormat()
+{
+    m_subject->setModel(&clockModel);
+    clockModel.setTimeFormat24h(false);
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelvehour"));
+    clockModel.setTimeFormat24h(true);
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString());
+}
+
+QTEST_APPLESS_MAIN(Ut_ClockView)

@@ -25,78 +25,64 @@
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class ClockStub : public StubBase
-{
-public:
-    virtual void ClockConstructor(QGraphicsItem *parent);
-    virtual void enterDisplayEvent();
-    virtual void exitDisplayEvent();
-    virtual void setModelUpdatesEnabled(bool enabled);
-    virtual void timerEvent(QTimerEvent *event);
-};
+class ClockStub : public StubBase {
+  public:
+  virtual void ClockConstructor(QGraphicsItem *parent);
+  virtual void updateModelAndSetupTimer();
+  virtual void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+  virtual void enterDisplayEvent();
+  virtual void exitDisplayEvent();
+}; 
 
 // 2. IMPLEMENT STUB
-void ClockStub::ClockConstructor(QGraphicsItem *parent)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsItem *>(parent));
-    stubMethodEntered("ClockConstructor", params);
+void ClockStub::ClockConstructor(QGraphicsItem *parent) {
+  Q_UNUSED(parent);
+
 }
-void ClockStub::enterDisplayEvent()
-{
-    stubMethodEntered("enterDisplayEvent");
+void ClockStub::updateModelAndSetupTimer() {
+  stubMethodEntered("updateModelAndSetupTimer");
 }
 
-void ClockStub::exitDisplayEvent()
-{
-    stubMethodEntered("exitDisplayEvent");
+void ClockStub::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<Maemo::QmTimeWhatChanged >(whatChanged));
+  stubMethodEntered("updateSettings",params);
 }
 
-void ClockStub::setModelUpdatesEnabled(bool enabled)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<bool >(enabled));
-    stubMethodEntered("setModelUpdatesEnabled", params);
+void ClockStub::enterDisplayEvent() {
+  stubMethodEntered("enterDisplayEvent");
 }
 
-void ClockStub::timerEvent(QTimerEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QTimerEvent * >(event));
-    stubMethodEntered("timerEvent", params);
+void ClockStub::exitDisplayEvent() {
+  stubMethodEntered("exitDisplayEvent");
 }
 
 
 
 // 3. CREATE A STUB INSTANCE
 ClockStub gDefaultClockStub;
-ClockStub *gClockStub = &gDefaultClockStub;
+ClockStub* gClockStub = &gDefaultClockStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-Clock::Clock(QGraphicsItem *parent)
-{
-    gClockStub->ClockConstructor(parent);
+Clock::Clock(QGraphicsItem *parent) {
+  gClockStub->ClockConstructor(parent);
 }
 
-void Clock::enterDisplayEvent()
-{
-    gClockStub->enterDisplayEvent();
+void Clock::updateModelAndSetupTimer() {
+  gClockStub->updateModelAndSetupTimer();
 }
 
-void Clock::exitDisplayEvent()
-{
-    gClockStub->exitDisplayEvent();
+void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
+  gClockStub->updateSettings(whatChanged);
 }
 
-void Clock::setModelUpdatesEnabled(bool enabled)
-{
-    gClockStub->setModelUpdatesEnabled(enabled);
+void Clock::enterDisplayEvent() {
+  gClockStub->enterDisplayEvent();
 }
 
-void Clock::timerEvent(QTimerEvent *event)
-{
-    gClockStub->timerEvent(event);
+void Clock::exitDisplayEvent() {
+  gClockStub->exitDisplayEvent();
 }
 
 

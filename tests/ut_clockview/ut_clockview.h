@@ -21,10 +21,42 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include "clockstyle.h"
+#include "clockview.h"
 
-class ClockView;
 class Clock;
 class DuiApplication;
+
+class TestClockStyle : public ClockStyle
+{
+};
+
+class TestClockStyleContainer : public ClockStyleContainer
+{
+public:
+    QString currentMode()
+    {
+        return ClockStyleContainer::currentMode();
+    }
+};
+
+class TestClockView : public ClockView
+{
+    DUI_VIEW(ClockModel, TestClockStyle)
+
+public:
+    TestClockView(Clock *controller);
+
+    ClockStyle *modifiableStyle() {
+        ClockStyleContainer &sc = style();
+        const ClockStyle *const_s = sc.operator ->();
+        ClockStyle *s = const_cast<ClockStyle *>(const_s);
+        return s;
+    }
+    TestClockStyleContainer& styleContainer() {
+        return style();
+    }
+};
 
 class Ut_ClockView : public QObject
 {
@@ -36,14 +68,15 @@ private slots:
     void init();
     void cleanup();
 
-    void testUpdate();
+    void testUpdateTime();
+    void testUpdateTimeFormat();
 
 public:
     static QString timeAsString;
 
 private:
     DuiApplication *app;
-    ClockView *m_subject;
+    TestClockView *m_subject;
     Clock *testClock;
 };
 

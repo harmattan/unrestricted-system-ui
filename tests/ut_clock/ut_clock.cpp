@@ -17,30 +17,39 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <DuiOnDisplayChangeEvent>
 #include "ut_clock.h"
 #include "clock.h"
 
-int QObject::startTimer(int)
+Maemo::QmTime::TimeFormat Maemo::QmTime::getTimeFormat()
 {
-    int id = 1;
-    if (!Ut_Clock::timerIds.isEmpty()) {
-        id = Ut_Clock::timerIds.last() + 1;
-    }
-    Ut_Clock::timerIds.append(id);
-    return id;
+    return Ut_Clock::expectedTimeFormat;
 }
 
-void QObject::killTimer(int id)
+QDateTime QDateTime::currentDateTime()
 {
-    Ut_Clock::timerIds.removeAll(id);
+    return Ut_Clock::expectedDateTime;
 }
 
-QList<int> Ut_Clock::timerIds;
+void QTimer::start(int msec)
+{
+    Ut_Clock::timerTimeout = msec;
+}
+
+void QTimer::stop()
+{
+    Ut_Clock::timerTimeout = -1;
+}
+
+int Ut_Clock::timerTimeout;
+QDateTime Ut_Clock::expectedDateTime;
+Maemo::QmTime::TimeFormat Ut_Clock::expectedTimeFormat;
 
 // Called before the first testfunction is executed
 void Ut_Clock::initTestCase()
 {
+    expectedDateTime = QDateTime(QDate(2000, 1, 1));
 }
 
 // Called after the last testfunction was executed
@@ -51,7 +60,9 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
-    m_subject = new Clock();
+    expectedTimeFormat = Maemo::QmTime::format12h;
+    m_subject = new Clock;
+    connect(this, SIGNAL(timeOrSettingsChanged(QmTimeWhatChanged)), m_subject, SLOT(updateSettings(QmTimeWhatChanged)));
 }
 
 // Called after every testfunction
@@ -60,27 +71,51 @@ void Ut_Clock::cleanup()
     delete m_subject;
 }
 
+void Ut_Clock::test24HourModeDuringCreation()
+{
+    // In init() qmsystem is set up to return 12 hour mode so the clock should be in 12 hour mode
+    QCOMPARE(m_subject->model()->timeFormat24h(), false);
+}
+
+void Ut_Clock::test24HourModeToggling()
+{
+    // Check that if qmsystem returns 24 hour mode the clock is in 24 hour mode
+    expectedTimeFormat = Maemo::QmTime::format24h;
+    emit timeOrSettingsChanged(Maemo::QmTimeOnlySettingsChanged);
+    QCOMPARE(m_subject->model()->timeFormat24h(), true);
+
+    // Check that if qmsystem returns 12 hour mode the clock is in 12 hour mode
+    expectedTimeFormat = Maemo::QmTime::format12h;
+    emit timeOrSettingsChanged(Maemo::QmTimeOnlySettingsChanged);
+    QCOMPARE(m_subject->model()->timeFormat24h(), false);
+}
+
+void Ut_Clock::test24HourModeNotToggledWhenSettingsAreNotChanged()
+{
+    // If something else than settings changes we should not care
+    expectedTimeFormat = Maemo::QmTime::format24h;
+    emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
+    QCOMPARE(m_subject->model()->timeFormat24h(), false);
+}
+
 void Ut_Clock::testModelUpdates()
 {
     DuiOnDisplayChangeEvent exitDisplayEvent(DuiOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     DuiOnDisplayChangeEvent enterDisplayEvent(DuiOnDisplayChangeEvent::FullyOnDisplay, QRectF());
 
-    QCOMPARE(timerIds.count(), 1);
-    QCOMPARE(timerIds.at(0), 1);
+    // The timer should be running by default and the model should contain the current time
+    QVERIFY(timerTimeout >= 0);
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
 
     // When the application becomes invisible the timer should stop
     qApp->sendEvent(m_subject, &exitDisplayEvent);
-    QCOMPARE(timerIds.count(), 0);
+    QCOMPARE(timerTimeout, -1);
 
-    // When the application becomes visible the timer should start
+    // When the application becomes visible the timer should start and the model should be updated to contain the current time
+    expectedDateTime = QDateTime(QDate(2001, 1, 1));
     qApp->sendEvent(m_subject, &enterDisplayEvent);
-    QCOMPARE(timerIds.count(), 1);
-    QCOMPARE(timerIds.at(0), 1);
-
-    // Only one timer should be running
-    qApp->sendEvent(m_subject, &enterDisplayEvent);
-    QCOMPARE(timerIds.count(), 1);
-    QCOMPARE(timerIds.at(0), 1);
+    QVERIFY(timerTimeout >= 0);
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
 
 QTEST_MAIN(Ut_Clock)

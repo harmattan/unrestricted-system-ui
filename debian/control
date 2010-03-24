@@ -13,7 +13,7 @@ Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
          hal [armel], sudo, duicompositor (>= 0.3.4~1) [armel],
-         libmaemosec0, libcontextsubscriber0, libdui0 (>= 0.19.11)
+         libmaemosec0, libcontextsubscriber0, libqmsystem0, libdui0 (>= 0.19.11)
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - status area
