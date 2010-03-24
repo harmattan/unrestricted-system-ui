@@ -24,7 +24,7 @@
 #include "statusarea.h"
 
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
-    DuiWindow(parent),
+    DuiWindow(NULL, parent),
     scene(new QGraphicsScene),
     statusArea_(new StatusArea(NULL,this))
 {
@@ -36,8 +36,8 @@ StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     scene->addItem(statusArea_);
 
     // Rotate to current orientation
-    rotate(this->orientation());
-    connect(this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SLOT(rotate(const Dui::Orientation &)));
+    rotate(this->orientationAngle());
+    connect(this, SIGNAL(orientationAngleChanged(const Dui::OrientationAngle &)), this, SLOT(rotate(const Dui::OrientationAngle &)));
 }
 
 StatusAreaWindow::~StatusAreaWindow()
@@ -52,29 +52,26 @@ StatusArea *StatusAreaWindow::statusArea() const
     return statusArea_;
 }
 
-void StatusAreaWindow::rotate(const Dui::Orientation &orientation)
+void StatusAreaWindow::rotate(const Dui::OrientationAngle &angle)
 {
-    // Notify each item on the notification view's scene about the new orientation
-    DuiOrientationChangeEvent event(orientation);
-    Q_FOREACH(QGraphicsItem * item, scene->items()) {
-        scene->sendEvent(item, &event);
+    // Set the size of the window
+    if (angle == Dui::Angle90 || angle == Dui::Angle270) {
+        setFixedSize(28, DuiDeviceProfile::instance()->resolution().height());
+    } else {
+        setFixedSize(DuiDeviceProfile::instance()->resolution().width(), 28);
     }
 
-    QTransform transform;
-    transform.rotate(this->orientationAngle());
-    setTransform(transform);
-    QSizeF size = statusArea_->preferredSize();
-    if (orientation == Dui::Portrait) {
-        size.transpose();
-    }
-    setFixedSize(size.toSize());
-    if (this->orientationAngle() == Dui::Angle0 ||
-            this->orientationAngle() == Dui::Angle270) {
+    // Move the window to the correct position
+    if (angle == Dui::Angle0 || angle == Dui::Angle270) {
         move(0, 0);
-    } else if (this->orientationAngle() == Dui::Angle90) {
+    } else if (angle == Dui::Angle90) {
         move(DuiDeviceProfile::instance()->resolution().width() - width(), 0);
     } else {
         move(0, DuiDeviceProfile::instance()->resolution().height() - height());
     }
-    centerOn(statusArea_);
+
+    // Rotate the view
+    QTransform transform;
+    transform.rotate(angle);
+    setTransform(transform);
 }

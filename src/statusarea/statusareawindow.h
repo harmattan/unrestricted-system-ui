@@ -58,9 +58,9 @@ private slots:
     /*!
      * \brief Rotates the status area to a new orientation
      *
-     * \param orientation the new orientation
+     * \param angle the new angle
      */
-    void rotate(const Dui::Orientation &orientation);
+    void rotate(const Dui::OrientationAngle &angle);
 
 signals:
     /*!

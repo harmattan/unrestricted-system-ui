@@ -61,19 +61,6 @@ StatusAreaStyle {
     padding-top: 0;
     padding-bottom: 0;
 }
-StatusAreaStyle:pressed {
-    background-image: button-status-area-pressed 0 0 0 0;
-    background-color: $COLOR_ACTIVE_BACKGROUND;
-    background-opacity: 1.0;
-    text-color: $COLOR_ACTIVE_FOREGROUND;
-}
-
-StatusAreaStyle:selected {
-    background-image: button-status-area-pressed;
-    background-color: $COLOR_ACTIVE_BACKGROUND;
-    background-opacity: 1.0;
-    text-color: $COLOR_ACTIVE_FOREGROUND;
-}
 
 
 DuiLabelStyle#Notifier {
