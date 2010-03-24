@@ -1,5 +1,7 @@
 # Load more defines from the dui_defines...
 load(dui_defines)
+# Silence the compiler
+CONFIG += silent
 # Directories
 unix {
     DUISTATUSINDICATORMENU_PREFIX = /usr

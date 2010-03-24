@@ -6,7 +6,7 @@ STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 
-CONFIG += qmsystem
+CONFIG += qmsystem silent
 
 SOURCES += \
     ut_lowbatterynotifier.cpp \

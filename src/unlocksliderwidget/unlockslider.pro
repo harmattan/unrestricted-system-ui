@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = unlockslidertest
-CONFIG += dui
+CONFIG += dui silent
 
 SOURCES += main.cpp \
     unlockslider.cpp \

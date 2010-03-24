@@ -5,7 +5,7 @@ OBJECTS_DIR = .obj
 include(../../../duiconfig.pri)
 
 TEMPLATE      = lib
-CONFIG       += plugin gui dui duistatusindicatormenu
+CONFIG       += plugin gui dui duistatusindicatormenu silent
 INCLUDEPATH  += \
     ../../../src/statusindicatormenu
 
