@@ -26,7 +26,8 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 
-#undef DEBUG
+#define DEBUG
+#define WARNING
 #include "debug.h"
 
 SysUidRequest::SysUidRequest ()
@@ -66,10 +67,8 @@ SysUidRequest::dbusError (
     
     if (error.isValid()) {
         SYS_WARNING ("DBus error: %s", SYS_STR(error.message()));
-        qCritical() << "DBus error: " << SYS_STR(error.message());
     } else {
         SYS_WARNING ("Unknown DBus error");
-        qCritical() << "Unknown DBus error";
     }
 
     if (abortProgram)

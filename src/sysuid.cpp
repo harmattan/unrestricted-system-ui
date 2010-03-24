@@ -23,7 +23,6 @@
 #include <DuiLocale>
 #include <DuiTheme>
 #include <DuiLocale>
-#include <DuiGConfItem>
 
 #include <QDBusConnection>
 #include <QDebug>
@@ -172,12 +171,9 @@ void Sysuid::retranslate ()
         return;
     running = true;
 
-    DuiGConfItem     languageItem ("/Dui/i18n/Language");
-    QString          lang = languageItem.value ().toString ();
-    // Create a new duilocale instance with current language
-    DuiLocale        locale (lang);
+    DuiLocale        locale;
 
-    SYS_DEBUG (" lang = %s", SYS_STR (lang));
+    SYS_DEBUG (" lang = %s", SYS_STR (locale.language ()));
 
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
