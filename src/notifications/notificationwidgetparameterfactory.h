@@ -59,6 +59,13 @@ public:
     }
 
     /*!
+     * Returns the keyname of the removable parameter
+     */
+    static QString removableKey() {
+        return QString("removable");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given icon ID.
      *
      * \param iconId the icon ID for the notification
@@ -96,6 +103,16 @@ public:
      */
     static NotificationParameter createActionParameter(const QString &action) {
         return NotificationParameter(actionKey(), QVariant(action));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given removability value.
+     *
+     * \param removable whether the notification is removable
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createRemovableParameter(bool removable) {
+        return NotificationParameter(removableKey(), QVariant(removable));
     }
 };
 

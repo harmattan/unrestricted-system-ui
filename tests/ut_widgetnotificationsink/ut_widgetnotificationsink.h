@@ -28,6 +28,7 @@ class DuiApplication;
 class TestWidgetNotificationSink;
 class QGraphicsWidget;
 class QAction;
+class TestNotificationParameters;
 
 class Ut_WidgetNotificationSink : public QObject
 {
@@ -59,6 +60,8 @@ private slots:
     void testWithoutEventTypeWithIconId();
     void testUpdateActions();
     void testInfoBannerClicking();
+    void testInfoBannerClickingWhenUnremovableInParameters();
+    void testInfoBannerClickingWhenUnremovableByEventType();
     void testInfoBannerCreationWithRemoteAction();
     void testInfoBannerCreationWithoutRemoteAction();
     void testInfoBannerCreationWithNotificationParameters();
@@ -75,6 +78,9 @@ private slots:
     void testLoadIconCannotReadImage();
 
 private:
+    // Helper for the "test clicking when unremovable" cases
+    void testInfoBannerClickingWhenUnremovable(TestNotificationParameters &parameters);
+
     // HomeApplication
     DuiApplication *app;
     // The object being tested

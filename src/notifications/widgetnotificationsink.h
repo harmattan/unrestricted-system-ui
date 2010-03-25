@@ -55,7 +55,14 @@ protected:
      * \param parameters Notification parameters to determine the icon id from.
      * \return Logical icon id as a string
      */
-    QString determineIconId(const NotificationParameters &parameters);
+    static QString determineIconId(const NotificationParameters &parameters);
+
+    /*!
+     * Determines removability of a notification based on the given notification parameters.
+     * \param parameters Notification parameters to determine removability from.
+     * \return \c true if the notification should be removable, \c false otherwise
+     */
+    static bool determineRemovability(const NotificationParameters &parameters);
 
     /*!
      * Creates a DuiInfoBanner widget to represent a notification object.
@@ -90,12 +97,21 @@ private:
      * \return Logical icon id as a string or an empty string if icon has not been defined for the
      *         given event type.
      */
-    QString determineIconIdFromEventType(const QString &eventType);
+    static QString determineIconIdFromEventType(const QString &eventType);
+
+    /*!
+     * Determines removability of a notification based on the given event type.
+     * \param eventType Notification event type.
+     * \return \c true if the notification should be removable, \c false otherwise
+     */
+    static bool determineRemovabilityFromEventType(const QString &eventType);
 
     //! DuiInfoBanner property to store the notification ID into
     static const char *NOTIFICATION_ID_PROPERTY;
     //! DuiInfoBanner property to store the group ID into
     static const char *GROUP_ID_PROPERTY;
+    //! DuiInfoBanner property to store the removability into
+    static const char *REMOVABLE_PROPERTY;
 
 private slots:
     /*!

@@ -30,6 +30,7 @@
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
+const char *WidgetNotificationSink::REMOVABLE_PROPERTY = "removable";
 static const int PIXMAP_WIDTH_MAX = 100;
 static const int PIXMAP_HEIGHT_MAX = 100;
 static const int IMAGE_DEFAULT_SIZE = 64;
@@ -89,6 +90,33 @@ QString WidgetNotificationSink::determineIconId(const NotificationParameters &pa
     return iconId;
 }
 
+bool WidgetNotificationSink::determineRemovabilityFromEventType(const QString &eventType)
+{
+    // Banners are removable by default
+    bool removable = true;
+    if (!eventType.isEmpty()) {
+        NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
+        const EventTypeStore &store = notificationManager.eventTypeStore();
+        const QSettings *settings = store.settingsForEventType(eventType);
+        if (settings != NULL) {
+            if (settings->contains(NotificationWidgetParameterFactory::removableKey())) {
+                removable = settings->value(NotificationWidgetParameterFactory::removableKey()).toBool();
+            }
+        }
+    }
+    return removable;
+}
+
+bool WidgetNotificationSink::determineRemovability(const NotificationParameters &parameters)
+{
+    QVariant value = parameters.value(NotificationWidgetParameterFactory::removableKey());
+    if (value.isValid() && value.canConvert<bool>()) {
+        return value.toBool();
+    } else {
+        return determineRemovabilityFromEventType(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString());
+    }
+}
+
 DuiInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
     DuiInfoBanner *infoBanner = createInfoBanner(notification.type() == NotificationManagerInterface::ApplicationEvent ? DuiInfoBanner::Event : DuiInfoBanner::Information,
@@ -114,6 +142,7 @@ DuiInfoBanner *WidgetNotificationSink::createInfoBanner(DuiInfoBanner::BannerTyp
     infoBanner->setBodyText(body);
     infoBanner->setIconID(iconId);
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
+    infoBanner->setProperty(REMOVABLE_PROPERTY, determineRemovability(parameters));
 
     updateActions(infoBanner, parameters);
 
@@ -153,17 +182,20 @@ void WidgetNotificationSink::infoBannerClicked()
             }
         }
 
-        // Get the notification ID from the info banner
-        bool ok = false;
-        uint notificationId = infoBanner->property(NOTIFICATION_ID_PROPERTY).toUInt(&ok);
-        if (ok) {
-            // Request notification removal
-            emit notificationRemovalRequested(notificationId);
-        } else {
-            uint groupId = infoBanner->property(GROUP_ID_PROPERTY).toUInt(&ok);
+        // Only remove the banner if it is removable
+        if (infoBanner->property(REMOVABLE_PROPERTY).toBool()) {
+            // Get the notification ID from the info banner
+            bool ok = false;
+            uint notificationId = infoBanner->property(NOTIFICATION_ID_PROPERTY).toUInt(&ok);
             if (ok) {
-                // Request notification group clearing
-                emit notificationGroupClearingRequested(groupId);
+                // Request notification removal
+                emit notificationRemovalRequested(notificationId);
+            } else {
+                uint groupId = infoBanner->property(GROUP_ID_PROPERTY).toUInt(&ok);
+                if (ok) {
+                    // Request notification group clearing
+                    emit notificationGroupClearingRequested(groupId);
+                }
             }
         }
     }

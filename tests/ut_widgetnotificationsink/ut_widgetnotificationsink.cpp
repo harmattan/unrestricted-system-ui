@@ -22,6 +22,7 @@
 #include "widgetnotificationsink.h"
 #include "../stubs/testnotificationparameters.h"
 #include "eventtypestore.h"
+#include "genericnotificationparameterfactory.h"
 #include "notificationmanager_stub.h"
 #include <QImageReader>
 #include <DuiApplication>
@@ -83,7 +84,9 @@ const QSettings *EventTypeStore::settingsForEventType(QString const &eventType) 
 {
     QSettings *settings = new QSettings;
     if (eventType == "message-received") {
-        settings->setValue("iconId", "Icon-messages");
+        settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
+    } else if (eventType == "voicemail") {
+        settings->setValue(NotificationWidgetParameterFactory::removableKey(), false);
     }
     return settings;
 }
@@ -217,6 +220,7 @@ void Ut_WidgetNotificationSink::cleanupTestCase()
 void Ut_WidgetNotificationSink::init()
 {
     eventTypeFilesList.append("message-received.conf");
+    eventTypeFilesList.append("voicemail.conf");
     m_subject = new TestWidgetNotificationSink();
     contents.clear();
     actions.clear();
@@ -234,7 +238,7 @@ void Ut_WidgetNotificationSink::cleanup()
 void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
 {
     TestNotificationParameters parameters;
-    parameters.add("eventType", "message-received");
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter("icon0"));
     QCOMPARE(m_subject->determineIconId(parameters), QString("icon0"));
 }
@@ -242,7 +246,7 @@ void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
 void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
 {
     TestNotificationParameters parameters;
-    parameters.add("eventType", "message-received");
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter(""));
     QCOMPARE(m_subject->determineIconId(parameters), QString("Icon-messages"));
 }
@@ -250,7 +254,7 @@ void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
 void Ut_WidgetNotificationSink::testWithoutEventTypeOrIconId()
 {
     TestNotificationParameters parameters;
-    parameters.add("eventType", "");
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter(""));
     QCOMPARE(m_subject->determineIconId(parameters), QString("default"));
 }
@@ -258,7 +262,7 @@ void Ut_WidgetNotificationSink::testWithoutEventTypeOrIconId()
 void Ut_WidgetNotificationSink::testWithoutEventTypeWithIconId()
 {
     TestNotificationParameters parameters;
-    parameters.add("eventType", "");
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter("icon0"));
     QCOMPARE(m_subject->determineIconId(parameters), QString("icon0"));
 }
@@ -352,6 +356,52 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QCOMPARE(notificationGroupClearingRequested.count(), 1);
     QCOMPARE(notificationGroupClearingRequested.first().at(0).toUInt(), groupID);
 }
+
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovable(TestNotificationParameters &parameters)
+{
+    // Create info banner from the parameters by first adding an action into the parameters
+    QApplication::processEvents();
+    uint notificationID = 0;
+    parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
+    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+
+    // Listen to triggered signals of info banner action
+    QCOMPARE(actions.count(), 1);
+    DuiRemoteAction *action = dynamic_cast<DuiRemoteAction *>(actions[infoBanner].at(0));
+    QVERIFY(action != NULL);
+
+    // Listen to notification removal requests of WidgetNotificationSink
+    QSignalSpy notificationRemovalRequested(m_subject, SIGNAL(notificationRemovalRequested(uint)));
+
+    // Click the infoBanner
+    connect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    emit click();
+    disconnect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    QApplication::processEvents();
+
+    // Verify that action was triggered even though the info banner is not removable
+    QCOMPARE(actionTriggeredCount, 1);
+
+    // Verify that request for notification removal was not emitted since the info banner is not removable
+    QCOMPARE(notificationRemovalRequested.count(), 0);
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovableInParameters()
+{
+    TestNotificationParameters parameters;
+    parameters.add(NotificationWidgetParameterFactory::createRemovableParameter(false));
+
+    testInfoBannerClickingWhenUnremovable(parameters);
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovableByEventType()
+{
+    TestNotificationParameters parameters;
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "voicemail");
+
+    testInfoBannerClickingWhenUnremovable(parameters);
+}
+
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
