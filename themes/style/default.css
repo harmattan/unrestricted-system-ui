@@ -87,10 +87,7 @@ ClockStyle {
     maximum-size: 84 28;
 }
 ClockStyle:twelvehour {
-    time-format: "hh:mmap";
-    preferred-size: 92 28;
-    minimum-size: 92 28;
-    maximum-size: 92 28;
+    time-format: "hh:mm'<font size=0.8>'AP'</font>'";
 }
 DuiLabelStyle#ClockLabel {
     font: $FONT_SMALL;
