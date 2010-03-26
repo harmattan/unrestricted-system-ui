@@ -1,10 +1,10 @@
 /*! \page notifications Notifications System Implementation
 
-The notifications system is implemented by the homescreen. This page describes the architecture and internals of the notification system itself and is meant for those developing the notification system. Convenience classes for application developers willing to use the notification system are provided in libdui. <strong>If you're an application developer willing to use notifications, refer to the libdui documentation for more information. There's a separate page for notifications that contains all the necessary information. However, if you want to define new notification event types for your application or you need to write system notification plugins, read on.</strong>
+The notifications system is implemented by the system UI daemon. This page describes the architecture and internals of the notification system itself and is meant for those developing the notification system. Convenience classes for application developers willing to use the notification system are provided in libdui. <strong>If you're an application developer willing to use notifications, refer to the libdui documentation for more information. There's a separate page for notifications that contains all the necessary information. However, if you want to define new notification event types for your application or you need to write system notification plugins, read on.</strong>
 
 \section components Components
 
-Homescreen notifications system is divided into three entities:
+The notification system is divided into three entities:
 
 - \b %Notification \b sources - %Notification sources observe events like signals in D-Bus system bus and changed values in context framework. System notifications are spawned by a special source which loads a fixed set of plugins.They can also expose APIs to allow other applications to trigger notifications.
 - \b %Notification \b manager - Manages the triggered notifications.
@@ -24,15 +24,13 @@ Homescreen notifications system is divided into three entities:
 
 %Notification manager queues notifications so that only one notification is triggered at a time. Notifications that are submitted when a notification is in process are appended to a queue which is then processed in first-in-first-out manner. %Notification manager defines maximum size for the queue. If queue size is exceeded all incoming notifications are silently dropped. This is to avoid malicious software from flooding the notifications system and creating a denial-of-service scenario.
 
-The \c NotificationManagerInterface also supports a concept of notification groups. A notification sender can create notification groups and subsequentially add notifications to the groups it has created. Notifications belonging to a group can be handled differently by some notification sinks. For example the \c HomeNotificationSink visualizes groupped notifications as a single element. The notification groups have group specific data which can be updated using the \c NotificationManagerInterface::updateGroup() method.
+The \c NotificationManagerInterface also supports a concept of notification groups. A notification sender can create notification groups and subsequentially add notifications to the groups it has created. Notifications belonging to a group can be handled differently by some notification sinks. For example the \c NotificationAreaSink visualizes groupped notifications as a single element. The notification groups have group specific data which can be updated using the \c NotificationManagerInterface::updateGroup() method.
 
 \section sinks Notification sinks
 
 %Notification sinks (\c NotificationSink) get notified by notification manager when a notification they should act upon is triggered. %Notification sinks can create various feedback when a notification is triggered. For instance a \c NotificationSink can create and show a notification widget, play a sound or launch haptic feedback upon a notification.
 
-\c HomeNotificationSink creates and shows a \c DuiInfoBanner widget on the homescreen, animates a transition of the \c DuiInfoBanner widget to the homescreen notification area and places the \c DuiInfoBanner widget onto the \c NotificationArea.
-
-\c DuiCompositorNotificationSink communicates to DuiCompositor when a notification is triggered. This sink will create a special notification window and a \c DuiInfoBanner widget. A \b xxx window hint is set to the created window. DuiCompositor will identify the notification window by the set window hint. \c DuiCompositorNotificationSink will handle the interaction affecting the notification widget. \c DuiCompositorNotificationSink will also destroy the notification widget and close the notification window when required. %Notification widget can be either cancelled or it can timeout. \c DuiCompositorNotificationSink will communicate the cause that closed the notification window to the DuiCompositor using custom X Atom. DuiCompositor is responsible for showing the notification window on top of any application as well as the transition animation of the notification window. DuiCompositor will investigate the top level window before showing the notification window. If the top level window is the homescreen the DuiCompositor will not do anything (since \c HomeNotificationSink will display the \c DuiInfoBanner widget in this case). If the top level window is something else, the DuiCompositor will composite the notification window on top of the open application.
+\c DuiCompositorNotificationSink communicates to DuiCompositor when a notification is triggered. This sink will create a special notification window and a \c DuiInfoBanner widget. A \b _NET_WM_TYPE_NOTIFICATION window hint is set to the created window. DuiCompositor will identify the notification window by the set window hint. \c DuiCompositorNotificationSink will handle the interaction affecting the notification widget. \c DuiCompositorNotificationSink will also destroy the notification widget and close the notification window when required. %Notification widget can be either cancelled or it can timeout. \c DuiCompositorNotificationSink will communicate the cause that closed the notification window to the DuiCompositor using custom X Atom. DuiCompositor is responsible for showing the notification window on top of any application as well as the transition animation of the notification window. After displaying the info banner the sink places the \c DuiInfoBanner widget onto the \c NotificationArea.
 
 \section event_types Event types
 
@@ -41,40 +39,10 @@ The event type parameter of a notification is used to describe the overall prope
 \verbatim
 iconId=Icon-close
 feedbackId=press
+removable=false
 \endverbatim
 
-\section System notification plugin writers guide
-
-System notifications cannot be sent over the DBus for security reasons as system notifications are privileged in the sense they show even when running full screen applications. For spawning system notifications, a plugin has to be loaded by the home process. Path to this plugin is hardcoded in source code so that only a fixed set of plugins are loaded. To create a system notification plugin follow the steps outlined below
-
-Derive a class from DuiHomeSystemNotificationPluginBase
-Include QtPlugin in your source code with #include <QtPlugin> at the start of your .cpp file
-Add macro Q_EXPORT_PLUGIN2 (<your target name>, <your class name>); at the end of your .cpp file
-Implement how the plugin interacts with the application from which a notification originates
-When ready to post a notification, call addNotification method provided by DuiHomeSystemNotificationPluginInterface with releavant paramters for the notification.
-In the .pro file for the plugin project, add the following
-
-TEMPLATE = lib
-CONFIG += dll plugin console
-TARGET = <your plugin name goes here>
-INCLUDEPATH += /usr/include/duihome
-LIBS += -L/usr/lib -lduihome
-HEADERS += <your header file>
-SOURCES += <your source file>
-target.path = /usr/lib/dui/notifications/systemnotificationplugins/
-INSTALLS += target
-
-As an example, a fake plugin is implemented under testsuites/fakesystemnotificationplugin in duihome source tree and is included in duifw-home-tests package.
-
-\section future_development Future development
-
-Notifications System may be extracted from DuiHome to a separate %Notification Manager or %Notification Daemon binary later after the design has evolved further.
-
-Architecture of the %Notification Manager should be open so that %Notification sources and sinks would be pluggable components. This would allow external parties to develop sources to trigger notifications as well as sinks to trigger a distinct feedback when a notification occurs.
-
-Execution model of %Notification Manager and sources and sinks is yet to be decided. If sources and sinks are ran in the same process with the %Notification Manager then %Notification Manager would be vulnerable to code written in plugged-in sources and sinks. This would mean that we would need to trust the code in plugged-in sources and sinks not to introduce stability or security issues. This would most likely restrict the writing of source and sink plugins within Nokia only. Performance of this execution model would be higher than in the execution model described below. This might be required for a time-critical component such as %Notification Manager.
-
-Another execution model would be to run the sources and/or sinks in isolated processes or threads. Running the sinks and sources in separate process would prevent 3rd party sinks and sources to access %Notification Manager process context and would thus be more secure. Running the sinks and sources in a separate thread would allow %Notification Manager to react to malfunctioning plug-ins. This execution model would have less security and stability issues than the previous execution model. However, the performance would be lower which could be unacceptable on such a time-critical functionality.
+The \c removable key can be used to define whether a notification of given type is removable when the user taps on the notification banner. If removable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If removable equals true the notification is removed when it is tapped. Notifications are removable by default.
 
 \section links Links
 
@@ -85,7 +53,6 @@ Another execution model would be to run the sources and/or sinks in isolated pro
 - NotificationSource
 - NotificationManagerInterface
 - NotificationSink
-- HomeNotificationSink
 - DuiCompositorNotificationSink
 */
 
