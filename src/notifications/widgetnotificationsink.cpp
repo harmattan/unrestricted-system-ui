@@ -30,7 +30,7 @@
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
-const char *WidgetNotificationSink::REMOVABLE_PROPERTY = "removable";
+const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
 static const int PIXMAP_WIDTH_MAX = 100;
 static const int PIXMAP_HEIGHT_MAX = 100;
 static const int IMAGE_DEFAULT_SIZE = 64;
@@ -90,30 +90,30 @@ QString WidgetNotificationSink::determineIconId(const NotificationParameters &pa
     return iconId;
 }
 
-bool WidgetNotificationSink::determineRemovabilityFromEventType(const QString &eventType)
+bool WidgetNotificationSink::determineUserRemovabilityFromEventType(const QString &eventType)
 {
-    // Banners are removable by default
-    bool removable = true;
+    // Banners are user removable by default
+    bool userRemovable = true;
     if (!eventType.isEmpty()) {
         NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
         const EventTypeStore &store = notificationManager.eventTypeStore();
         const QSettings *settings = store.settingsForEventType(eventType);
         if (settings != NULL) {
-            if (settings->contains(NotificationWidgetParameterFactory::removableKey())) {
-                removable = settings->value(NotificationWidgetParameterFactory::removableKey()).toBool();
+            if (settings->contains(NotificationWidgetParameterFactory::userRemovableKey())) {
+                userRemovable = settings->value(NotificationWidgetParameterFactory::userRemovableKey()).toBool();
             }
         }
     }
-    return removable;
+    return userRemovable;
 }
 
-bool WidgetNotificationSink::determineRemovability(const NotificationParameters &parameters)
+bool WidgetNotificationSink::determineUserRemovability(const NotificationParameters &parameters)
 {
-    QVariant value = parameters.value(NotificationWidgetParameterFactory::removableKey());
+    QVariant value = parameters.value(NotificationWidgetParameterFactory::userRemovableKey());
     if (value.isValid() && value.canConvert<bool>()) {
         return value.toBool();
     } else {
-        return determineRemovabilityFromEventType(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString());
+        return determineUserRemovabilityFromEventType(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString());
     }
 }
 
@@ -142,7 +142,7 @@ DuiInfoBanner *WidgetNotificationSink::createInfoBanner(DuiInfoBanner::BannerTyp
     infoBanner->setBodyText(body);
     infoBanner->setIconID(iconId);
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
-    infoBanner->setProperty(REMOVABLE_PROPERTY, determineRemovability(parameters));
+    infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
 
     updateActions(infoBanner, parameters);
 
@@ -182,8 +182,8 @@ void WidgetNotificationSink::infoBannerClicked()
             }
         }
 
-        // Only remove the banner if it is removable
-        if (infoBanner->property(REMOVABLE_PROPERTY).toBool()) {
+        // Only remove the banner if it is user removable
+        if (infoBanner->property(USER_REMOVABLE_PROPERTY).toBool()) {
             // Get the notification ID from the info banner
             bool ok = false;
             uint notificationId = infoBanner->property(NOTIFICATION_ID_PROPERTY).toUInt(&ok);

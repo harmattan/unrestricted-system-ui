@@ -59,10 +59,10 @@ public:
     }
 
     /*!
-     * Returns the keyname of the removable parameter
+     * Returns the keyname of the user removable parameter
      */
-    static QString removableKey() {
-        return QString("removable");
+    static QString userRemovableKey() {
+        return QString("userRemovable");
     }
 
     /*!
@@ -106,13 +106,13 @@ public:
     }
 
     /*!
-     * Creates a NotificationParameter with the given removability value.
+     * Creates a NotificationParameter with the given user removability value.
      *
-     * \param removable whether the notification is removable
+     * \param removable whether the notification is user removable
      * \return the related NotificationParameter
      */
-    static NotificationParameter createRemovableParameter(bool removable) {
-        return NotificationParameter(removableKey(), QVariant(removable));
+    static NotificationParameter createUserRemovableParameter(bool userRemovable) {
+        return NotificationParameter(userRemovableKey(), QVariant(userRemovable));
     }
 };
 

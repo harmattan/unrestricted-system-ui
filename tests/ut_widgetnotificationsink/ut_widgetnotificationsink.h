@@ -60,8 +60,8 @@ private slots:
     void testWithoutEventTypeWithIconId();
     void testUpdateActions();
     void testInfoBannerClicking();
-    void testInfoBannerClickingWhenUnremovableInParameters();
-    void testInfoBannerClickingWhenUnremovableByEventType();
+    void testInfoBannerClickingWhenNotUserRemovableInParameters();
+    void testInfoBannerClickingWhenNotUserRemovableByEventType();
     void testInfoBannerCreationWithRemoteAction();
     void testInfoBannerCreationWithoutRemoteAction();
     void testInfoBannerCreationWithNotificationParameters();
@@ -78,8 +78,8 @@ private slots:
     void testLoadIconCannotReadImage();
 
 private:
-    // Helper for the "test clicking when unremovable" cases
-    void testInfoBannerClickingWhenUnremovable(TestNotificationParameters &parameters);
+    // Helper for the "test clicking when not user removable" cases
+    void testInfoBannerClickingWhenNotUserRemovable(TestNotificationParameters &parameters);
 
     // HomeApplication
     DuiApplication *app;

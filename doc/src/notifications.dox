@@ -39,10 +39,10 @@ The event type parameter of a notification is used to describe the overall prope
 \verbatim
 iconId=Icon-close
 feedbackId=press
-removable=false
+userRemovable=false
 \endverbatim
 
-The \c removable key can be used to define whether a notification of given type is removable when the user taps on the notification banner. If removable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If removable equals true the notification is removed when it is tapped. Notifications are removable by default.
+The \c userRemovable key can be used to define whether a notification of given type is user removable when the user taps on the notification banner. If userRemovable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If userRemovable equals true the notification is removed when it is tapped. Notifications are user removable by default.
 
 \section links Links
 

@@ -86,7 +86,7 @@ const QSettings *EventTypeStore::settingsForEventType(QString const &eventType) 
     if (eventType == "message-received") {
         settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
     } else if (eventType == "voicemail") {
-        settings->setValue(NotificationWidgetParameterFactory::removableKey(), false);
+        settings->setValue(NotificationWidgetParameterFactory::userRemovableKey(), false);
     }
     return settings;
 }
@@ -357,7 +357,7 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QCOMPARE(notificationGroupClearingRequested.first().at(0).toUInt(), groupID);
 }
 
-void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovable(TestNotificationParameters &parameters)
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovable(TestNotificationParameters &parameters)
 {
     // Create info banner from the parameters by first adding an action into the parameters
     QApplication::processEvents();
@@ -379,27 +379,27 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovable(TestNotifi
     disconnect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
     QApplication::processEvents();
 
-    // Verify that action was triggered even though the info banner is not removable
+    // Verify that action was triggered even though the info banner is not user removable
     QCOMPARE(actionTriggeredCount, 1);
 
-    // Verify that request for notification removal was not emitted since the info banner is not removable
+    // Verify that request for notification removal was not emitted since the info banner is not user removable
     QCOMPARE(notificationRemovalRequested.count(), 0);
 }
 
-void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovableInParameters()
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableInParameters()
 {
     TestNotificationParameters parameters;
-    parameters.add(NotificationWidgetParameterFactory::createRemovableParameter(false));
+    parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(false));
 
-    testInfoBannerClickingWhenUnremovable(parameters);
+    testInfoBannerClickingWhenNotUserRemovable(parameters);
 }
 
-void Ut_WidgetNotificationSink::testInfoBannerClickingWhenUnremovableByEventType()
+void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableByEventType()
 {
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "voicemail");
 
-    testInfoBannerClickingWhenUnremovable(parameters);
+    testInfoBannerClickingWhenNotUserRemovable(parameters);
 }
 
 
