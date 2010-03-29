@@ -1,9 +1,18 @@
 system-ui (0.13.5-1~unreleased) harmattan; urgency=low
 
+  [ Vesa Halttunen ]
   * New version [not released / tagged]
   * Implemented: SWP#DUI-2411 Possibility for application to lock notifications
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 25 Mar 2010 15:52:22 +0200
+  [ David Kedves ]
+  * Fixes: NB#155615 - exit/enterDisplayEvent is not called when display
+                       is dimmed/undimmed
+  * Fixes: NB#161307 - "switched off" option is not displayed after pressing
+                       power key.
+  * Fixes: NB#161518 - Single tap on screen , screen displays ON at same
+                       time the item in the tapped location is getting selected
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 29 Mar 2010 15:48:21 +0200
 
 system-ui (0.13.4-1) harmattan; urgency=low
 
