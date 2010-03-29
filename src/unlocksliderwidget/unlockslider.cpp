@@ -22,7 +22,8 @@
 #include "unlocksliderview.h"
 
 UnlockSlider::UnlockSlider(QGraphicsItem *parent) :
-        DuiWidgetController(new UnlockSliderModel(), parent)
+        DuiWidgetController(new UnlockSliderModel(), parent),
+        is_unlocked (false)
 {
     this->setView(view = new UnlockSliderView(this));
 }
@@ -106,13 +107,20 @@ void UnlockSlider::updateData(const QList<const char*>& modifications)
     foreach(member, modifications) {
         if (member == UnlockSliderModel::Position) {
             if (model()->position() > 0.99f) {
-                emit unlocked();
+                is_unlocked = true;
             }
         }
         if (member == UnlockSliderModel::HandlePressed) {
             qDebug() << "released " << model()->handlePressed();
             if (!model()->handlePressed())
+            {
+                if (is_unlocked == true)
+                {
+                    is_unlocked = false;
+                    emit unlocked ();
+                }
                 emit released();
+            }
         }
     }
 }

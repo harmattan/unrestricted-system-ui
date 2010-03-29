@@ -36,6 +36,7 @@ class UnlockSlider : public DuiWidgetController
 
 private:
     UnlockSliderView *view;
+    bool              is_unlocked;
 
 public:
     UnlockSlider(QGraphicsItem *parent = 0);
