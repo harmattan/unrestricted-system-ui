@@ -83,7 +83,7 @@ void DuiInfoBanner::setIconID(const QString &iconId)
 // DuiSceneWindow stubs (used by NotificationAreaSink)
 void DuiSceneWindow::disappear()
 {
-    emit windowHidden();
+    emit disappeared();
 }
 
 // QFileInfo stubs

@@ -60,7 +60,8 @@ LockScreenUI::LockScreenUI () :
         m_im (0)
 {
     SYS_DEBUG ("");
-    setPannableAreaInteractive (false);
+
+    setProperty ("pannable", QVariant (false));
 
     // let's hide home button
     setComponentsDisplayMode (DuiApplicationPage::AllComponents,

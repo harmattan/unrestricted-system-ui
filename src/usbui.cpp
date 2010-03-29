@@ -51,7 +51,7 @@ UsbUi::~UsbUi ()
 {
     if (m_dialog)
     {
-        m_dialog->disappearNow ();
+        m_dialog->disappear ();
         delete m_dialog;
         m_dialog = 0;
     }
@@ -77,7 +77,7 @@ UsbUi::ShowDialog ()
 
     //% "Usb connected"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
-    m_dialog->setWindowModal (true);
+    m_dialog->setProperty ("systemModal", QVariant (true));
     m_dialog->setCloseButtonVisible (false);
     //FIXME: seems dialog should hide itself from task-selector too ^^^
 
@@ -108,7 +108,8 @@ UsbUi::ShowDialog ()
     m_dialog->setCentralWidget (hbox);
     m_dialog->setButtonBoxVisible (false);
 
-    // Modal dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
+    // Modal dialogs always create a new top level window and a scene manager
+    // so no need to worry about registering to a specific scene manager here
     m_dialog->appear (DuiSceneWindow::KeepWhenDone);
     m_dialog->setFocus ();
 }

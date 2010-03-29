@@ -29,10 +29,11 @@
 ShutdownUI::ShutdownUI() :
         text(0)
 {
-    setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Hide);
-    setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
-    setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
-    setPannableAreaInteractive(false);
+    setProperty ("pannable", QVariant (false));
+
+    // let's hide home button
+    setComponentsDisplayMode (DuiApplicationPage::AllComponents,
+                              DuiApplicationPageModel::Hide);
 }
 
 ShutdownUI::~ShutdownUI()
@@ -44,7 +45,7 @@ void ShutdownUI::createContent()
     qDebug() << "ShutdownUI::createContent()";
     DuiApplicationPage::createContent();
 
-    DuiWidget* panel = centralWidget();
+    QGraphicsWidget* panel = centralWidget();
 
     //% "Shutting down, good bye!"
     text = new DuiLabel (qtTrId ("qtn_shut_down"), panel);
