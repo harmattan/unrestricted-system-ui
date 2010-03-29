@@ -2,7 +2,7 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
-Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libdui-dev (>= 0.19),
+Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libdui-dev (>= 0.20.0),
                libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev
 Standards-Version: 3.7.3
 
@@ -13,7 +13,7 @@ Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
          hal [armel], sudo, duicompositor (>= 0.3.4~1) [armel],
-         libmaemosec0, libcontextsubscriber0, libqmsystem0, libdui0 (>= 0.19.11)
+         libmaemosec0, libcontextsubscriber0, libqmsystem0, libdui0 (>= 0.20.0)
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - status area
