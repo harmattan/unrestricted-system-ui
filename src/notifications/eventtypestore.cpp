@@ -34,9 +34,6 @@ EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEven
 
     // Watch for changes in event type files
     eventTypePathWatcher.addPath(this->eventTypesPath);
-#ifdef TESTABILITY_ON
-    eventTypePathWatcher.addPath(QDir::tempPath() + "/testeventtypes");
-#endif
     connect(&eventTypePathWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(updateEventTypeFileList()));
     updateEventTypeFileList();
 }
@@ -49,9 +46,6 @@ void EventTypeStore::updateEventTypeFileList()
         QStringList filter("*" + FILE_EXTENSION);
 
         QSet<QString> files = eventTypesDir.entryList(filter, QDir::Files).toSet();
-#ifdef TESTABILITY_ON
-        files += QDir(QDir::tempPath() + "/testeventtypes").entryList(filter, QDir::Files).toSet();
-#endif
         QSet<QString> removedFiles = eventTypeFiles - files;
 
         foreach(const QString &removedEventType, removedFiles) {
@@ -90,9 +84,6 @@ const QSettings *EventTypeStore::settingsForEventType(const QString &eventType) 
 void EventTypeStore::loadSettings(const QString &eventType)
 {
     QFileInfo file(QString(eventTypesPath).append(eventType).append(FILE_EXTENSION));
-#ifdef TESTABILITY_ON
-    if(!file.exists()) file = QFileInfo(QDir::tempPath() + "/testeventtypes/" + eventType + FILE_EXTENSION);
-#endif
     if (file.exists() && file.size() != 0 && file.size() <= FILE_MAX_SIZE) {
         QSharedPointer<QSettings> eventTypeSettings(new QSettings(file.filePath(), QSettings::IniFormat));
         if (eventTypeSettings->status() == QSettings::NoError) {

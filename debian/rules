@@ -36,12 +36,6 @@ endif
 
 QMAKE_OPTIONS = COV_OPTION=off
 
-# When doing official releases, set TESTABILITY to off. Defaults to on now
-# because integration cannot pass DEB_BUILD_OPTIONS.
-ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
-   QMAKE_OPTIONS += TESTABILITY=on
-endif
-
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
