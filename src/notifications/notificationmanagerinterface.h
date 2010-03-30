@@ -53,12 +53,11 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \param parameters Parameters for the notification
      * \param groupId A notification group where this notification is added.
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \param type the type of the notification. \see NotificationType.
      * \return a notification ID.
      * \see addGroup
      */
-    virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, bool persistent = false, NotificationType type = ApplicationEvent) = 0;
+    virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, NotificationType type = ApplicationEvent) = 0;
 
     /*!
      * Updates a notification.
@@ -77,11 +76,10 @@ public:
      *
      * \param notificationUserId the ID of the user of notifications
      * \param parameters Parameters for the notification group
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      *
      * \return the new group id.
      */
-    virtual uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), bool persistent = false) = 0;
+    virtual uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters()) = 0;
 
     /*!
      * Updates the contents of a notification group.

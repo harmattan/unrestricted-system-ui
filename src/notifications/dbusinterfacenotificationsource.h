@@ -33,7 +33,7 @@
  *
  * The new API can be tested using the following command:
  *
- * dbus-send --print-reply --dest=org.maemo.dui.NotificationManager / org.maemo.dui.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello DUI' string:'link' string:'Icon-close'
+ * dbus-send --print-reply --dest=com.nokia.dui.NotificationManager / com.nokia.dui.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello DUI' string:'link' string:'Icon-close'
  */
 class DBusInterfaceNotificationSource : public QObject, public NotificationSource
 {
@@ -46,120 +46,6 @@ public:
      * \param interface the NotificationManagerInterface to post the notifications to
      */
     DBusInterfaceNotificationSource(NotificationManagerInterface &interface);
-
-    /*!
-     * Adds a new notification.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param groupId the ID of the notification group to put the notification in
-     * \param eventType the event type of the notification
-     * \param type the type of the notification
-     * \return the ID of the new notification
-     */
-    uint addNotification(uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
-
-    /*!
-     * Adds a new notification.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param groupId the ID of the notification group to put the notification in
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \param type the type of the notification
-     * \return the ID of the new notification
-     */
-    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
-
-    /*!
-     * Updates an existing notification.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param notificationId the ID of the notification to be updated
-     * \param eventType the event type of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateNotification(uint notificationId, const QString &eventType);
-
-    /*!
-     * Updates an existing notification.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param notificationId the ID of the notification to be updated
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI);
-
-    /*!
-     * Removes a notification.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param notificationId the ID of the notification to be removed
-     * \return true if the removal succeeded, false otherwise
-     */
-    bool removeNotification(uint notificationId);
-
-    /*!
-     * Adds a new notification group.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param eventType the event type of the notification
-     * \return the ID of the new notification group
-     */
-    uint addGroup(const QString &eventType);
-
-    /*!
-     * Adds a new notification group.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \return the ID of the new notification group
-     */
-    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI);
-
-    /*!
-     * Updates an existing notification group.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param groupId the ID of the notification group to be updated
-     * \param eventType the event type of the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateGroup(uint groupId, const QString &eventType);
-
-    /*!
-     * Updates an existing notification group.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param groupId the ID of the notification group to be updated
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification
-     * \param body the body text to be used in the notification
-     * \param action the ID of the content to be used in the notification
-     * \param imageURI the ID of the icon to be used in the notification
-     * \return true if the update succeeded, false otherwise
-     */
-    bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI);
-
-    /*!
-     * Removes a notification group and all notifications in the group.
-     *
-     * \deprecated since 0.16, use the version with notificationUserId instead
-     * \param groupId the ID of the notification group to be removed
-     * \return true if the removal succeeded, false otherwise
-     */
-    bool removeGroup(uint groupId);
 
     /*!
      * Returns a user ID for the notification system. The user ID has to
@@ -175,11 +61,10 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \param groupId the ID of the notification group to put the notification in
      * \param eventType the event type of the notification
-     * \param persistent \c true if the notification should be persistent, \c false otherwise
      * \param type the type of the notification
      * \return the ID of the new notification
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, bool persistent = false, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
+    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
 
     /*!
      * Adds a new notification.
@@ -192,11 +77,10 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
-     * \param persistent \c true if the notification should be persistent, \c false otherwise
      * \param type the type of the notification
      * \return the ID of the new notification
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent = false, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
+    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
 
     /*!
      * Updates an existing notification.
@@ -237,10 +121,9 @@ public:
      *
      * \param notificationUserId the ID of the user of notifications
      * \param eventType the event type of the notification
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification group
      */
-    uint addGroup(uint notificationUserId, const QString &eventType, bool persistent = false);
+    uint addGroup(uint notificationUserId, const QString &eventType);
 
     /*!
      * Adds a new notification group.
@@ -252,10 +135,9 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification group
      */
-    uint addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent);
+    uint addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Updates an existing notification group.

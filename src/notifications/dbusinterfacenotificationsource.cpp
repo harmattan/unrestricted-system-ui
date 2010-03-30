@@ -26,69 +26,19 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
     new DBusInterfaceNotificationSourceAdaptor(this);
 }
 
-uint DBusInterfaceNotificationSource::addNotification(uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type)
-{
-    return manager.addNotification(0, notificationParameters(eventType), groupId, type);
-}
-
-uint DBusInterfaceNotificationSource::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, NotificationManagerInterface::NotificationType type)
-{
-    return manager.addNotification(0, notificationParameters(eventType, summary, body, action, imageURI), groupId, type);
-}
-
-bool DBusInterfaceNotificationSource::updateNotification(uint notificationId, const QString &eventType)
-{
-    return manager.updateNotification(0, notificationId, notificationParameters(eventType));
-}
-
-bool DBusInterfaceNotificationSource::updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI)
-{
-    return manager.updateNotification(0, notificationId, notificationParameters(eventType, summary, body, action, imageURI));
-}
-
-bool DBusInterfaceNotificationSource::removeNotification(uint notificationId)
-{
-    return manager.removeNotification(0, notificationId);
-}
-
-uint DBusInterfaceNotificationSource::addGroup(const QString &eventType)
-{
-    return manager.addGroup(0, notificationParameters(eventType));
-}
-
-uint DBusInterfaceNotificationSource::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI)
-{
-    return manager.addGroup(0, notificationParameters(eventType, summary, body, action, imageURI));
-}
-
-bool DBusInterfaceNotificationSource::updateGroup(uint groupId, const QString &eventType)
-{
-    return manager.updateGroup(0, groupId, notificationParameters(eventType));
-}
-
-bool DBusInterfaceNotificationSource::updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI)
-{
-    return manager.updateGroup(0, groupId, notificationParameters(eventType, summary, body, action, imageURI));
-}
-
-bool DBusInterfaceNotificationSource::removeGroup(uint groupId)
-{
-    return manager.removeGroup(0, groupId);
-}
-
 uint DBusInterfaceNotificationSource::notificationUserId()
 {
     return manager.notificationUserId();
 }
 
-uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, bool persistent, NotificationManagerInterface::NotificationType type)
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type)
 {
-    return manager.addNotification(notificationUserId, notificationParameters(eventType), groupId, persistent, type);
+    return manager.addNotification(notificationUserId, notificationParameters(eventType), groupId, type);
 }
 
-uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent, NotificationManagerInterface::NotificationType type)
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, NotificationManagerInterface::NotificationType type)
 {
-    return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), groupId, persistent, type);
+    return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), groupId, type);
 }
 
 bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType)
@@ -106,14 +56,14 @@ bool DBusInterfaceNotificationSource::removeNotification(uint notificationUserId
     return manager.removeNotification(notificationUserId, notificationId);
 }
 
-uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QString &eventType, bool persistent)
+uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QString &eventType)
 {
-    return manager.addGroup(notificationUserId, notificationParameters(eventType), persistent);
+    return manager.addGroup(notificationUserId, notificationParameters(eventType));
 }
 
-uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return manager.addGroup(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), persistent);
+    return manager.addGroup(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count));
 }
 
 bool DBusInterfaceNotificationSource::updateGroup(uint notificationUserId, uint groupId, const QString &eventType)

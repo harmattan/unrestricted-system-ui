@@ -27,7 +27,6 @@ MockNotificationManager::MockNotificationManager() :
     addNotificationNotificationUserId(12345),
     addNotificationGroupId(12345),
     addNotificationParameters(),
-    addNotificationPersistent(false),
     addNotificationType(NotificationManagerInterface::ApplicationEvent),
     updateNotificationNotificationUserId(12345),
     updateNotificationId(12345),
@@ -36,7 +35,6 @@ MockNotificationManager::MockNotificationManager() :
     removeNotificationId(12345),
     addGroupNotificationUserId(12345),
     addGroupParameters(),
-    addGroupPersistent(false),
     updateGroupNotificationUserId(12345),
     updateGroupId(12345),
     updateGroupParameters(),
@@ -47,12 +45,11 @@ MockNotificationManager::MockNotificationManager() :
 {
 }
 
-uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, bool persistent, NotificationType type)
+uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
 {
     addNotificationNotificationUserId = notificationUserId;
     addNotificationGroupId = groupId;
     addNotificationParameters = parameters;
-    addNotificationPersistent = persistent;
     addNotificationType = type;
     return 0;
 }
@@ -72,11 +69,10 @@ bool MockNotificationManager::removeNotification(uint notificationUserId, uint i
     return true;
 }
 
-uint MockNotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters, bool persistent)
+uint MockNotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters)
 {
     addGroupNotificationUserId = notificationUserId;
     addGroupParameters = parameters;
-    addGroupPersistent = persistent;
     return 0;
 }
 
@@ -118,67 +114,17 @@ DBusInterfaceNotificationSourceAdaptor::~DBusInterfaceNotificationSourceAdaptor(
 {
 }
 
-bool DBusInterfaceNotificationSourceAdaptor::removeNotification(uint)
-{
-    return true;
-}
-
-uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, const QString &)
-{
-    return 0;
-}
-
-uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, const QString &, const QString &, const QString &, const QString &, const QString &)
-{
-    return 0;
-}
-
-bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint, const QString &)
-{
-    return true;
-}
-
-bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint, const QString &, const QString &, const QString &, const QString &, const QString &)
-{
-    return true;
-}
-
-uint DBusInterfaceNotificationSourceAdaptor::addGroup(const QString &)
-{
-    return 0;
-}
-
-uint DBusInterfaceNotificationSourceAdaptor::addGroup(const QString &, const QString &, const QString &, const QString &, const QString &)
-{
-    return 0;
-}
-
-bool DBusInterfaceNotificationSourceAdaptor::removeGroup(uint)
-{
-    return true;
-}
-
-bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint, const QString &)
-{
-    return true;
-}
-
-bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint, const QString &, const QString &, const QString &, const QString &, const QString &)
-{
-    return true;
-}
-
 bool DBusInterfaceNotificationSourceAdaptor::removeNotification(uint, uint)
 {
     return true;
 }
 
-uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const QString &, bool)
+uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const QString &)
 {
     return 0;
 }
 
-uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint, bool)
+uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint)
 {
     return 0;
 }
@@ -193,12 +139,12 @@ bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint, uint, cons
     return true;
 }
 
-uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &, bool)
+uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &)
 {
     return 0;
 }
 
-uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint, bool)
+uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint)
 {
     return 0;
 }
@@ -252,14 +198,13 @@ void Ut_DBusInterfaceNotificationSource::cleanup()
 
 void Ut_DBusInterfaceNotificationSource::testAddNotification()
 {
-    source->addNotification(1, 2, "event", true, NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(1, 2, "event", NotificationManagerInterface::ApplicationEvent);
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)1);
     QCOMPARE(manager->addNotificationGroupId, (uint)2);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
-    QVERIFY(manager->addNotificationPersistent);
     QCOMPARE(manager->addNotificationType, NotificationManagerInterface::ApplicationEvent);
 
-    source->addNotification(3, 4, "event", "summary", "body", "action", "imageURI", 1, true, NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(3, 4, "event", "summary", "body", "action", "imageURI", 1, NotificationManagerInterface::ApplicationEvent);
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)3);
     QCOMPARE(manager->addNotificationGroupId, (uint)4);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
@@ -267,11 +212,9 @@ void Ut_DBusInterfaceNotificationSource::testAddNotification()
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
-
-    QVERIFY(manager->addNotificationPersistent);
     QCOMPARE(manager->addNotificationType, NotificationManagerInterface::ApplicationEvent);
 
-    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42, true, NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42, NotificationManagerInterface::ApplicationEvent);
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)5);
     QCOMPARE(manager->addNotificationGroupId, (uint)6);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
@@ -304,18 +247,16 @@ void Ut_DBusInterfaceNotificationSource::testRemoveNotification()
 
 void Ut_DBusInterfaceNotificationSource::testAddGroup()
 {
-    source->addGroup(1, "event", true);
+    source->addGroup(1, "event");
     QCOMPARE(manager->addGroupNotificationUserId, (uint)1);
     QCOMPARE(manager->addGroupParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
-    QVERIFY(manager->addGroupPersistent);
-    source->addGroup(2, "event", "summary", "body", "action", "imageURI", 1, true);
+    source->addGroup(2, "event", "summary", "body", "action", "imageURI", 1);
     QCOMPARE(manager->addGroupNotificationUserId, (uint)2);
     QCOMPARE(manager->addGroupParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(manager->addGroupParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("1"));
     QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
     QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
-    QVERIFY(manager->addGroupPersistent);
 }
 
 void Ut_DBusInterfaceNotificationSource::testUpdateGroup()

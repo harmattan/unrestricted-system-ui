@@ -82,10 +82,10 @@ public:
 
 public slots:
     //! \reimp
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, bool persistent = false, NotificationType type = ApplicationEvent);
+    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, NotificationType type = ApplicationEvent);
     bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters = NotificationParameters());
     bool removeNotification(uint notificationUserId, uint notificationId);
-    uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), bool persistent = false);
+    uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters());
     bool updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters = NotificationParameters());
     bool removeGroup(uint notificationUserId, uint groupId);
     uint notificationUserId();
@@ -170,6 +170,13 @@ protected slots:
     void relayNextNotification();
 
 private:
+    /*!
+     * Determines persistence of a notification from the notification parameters.
+     *
+     * \return \c true if the notification is persistent, \c false otherwise.
+     */
+    bool determinePersistence(const NotificationParameters &parameters);
+
     /*!
      * Handles the notification which either signals addNotification() immediatelly
      * or adds the notification into the notification wait queue to be processed later.

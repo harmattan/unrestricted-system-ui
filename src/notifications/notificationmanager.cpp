@@ -28,7 +28,7 @@
 #include <eventtypestore.h>
 
 //! Directory in which the persistent data files are located
-static const QString PERSISTENT_DATA_PATH = QDir::homePath() + QString("/.config/systemui/notificationmanager/");
+static const QString PERSISTENT_DATA_PATH = QDir::homePath() + QString("/.config/sysuid/notificationmanager/");
 
 //! The number configuration files to load into the event type store.
 static const uint MAX_EVENT_TYPE_CONF_FILES = 100;
@@ -49,7 +49,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
     persistentDataRestored(false),
-    persistentStorage(new maemosec::storage("org.maemo.dui.NotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
+    persistentStorage(new maemosec::storage("com.nokia.dui.NotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
 
@@ -65,7 +65,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     initializeEventTypeStore();
 
     // Connect to D-Bus and register the DBus source as an object
-    QDBusConnection::sessionBus().registerService("org.maemo.dui.NotificationManager");
+    QDBusConnection::sessionBus().registerService("com.nokia.dui.NotificationManager");
     QDBusConnection::sessionBus().registerObject("/notificationmanager", dBusSource);
 }
 
@@ -218,8 +218,9 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
     }
 }
 
-uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, bool persistent, NotificationType type)
+uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
 {
+    bool persistent = determinePersistence(parameters);
     restorePersistentData();
 
     if (groupId == 0 || groups.contains(groupId)) {
@@ -324,8 +325,9 @@ bool NotificationManager::removeNotificationsInGroup(uint groupId)
     return result;
 }
 
-uint NotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters, bool persistent)
+uint NotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters)
 {
+    bool persistent = determinePersistence(parameters);
     restorePersistentData();
 
     uint groupID = nextAvailableGroupID();
@@ -421,6 +423,25 @@ void NotificationManager::relayNextNotification()
     if (!waitQueue.isEmpty()) {
         submitNotification(waitQueue.takeFirst());
     }
+}
+
+bool NotificationManager::determinePersistence(const NotificationParameters &parameters)
+{
+    bool persistent = false;
+    QVariant persistentVariant = parameters.value(GenericNotificationParameterFactory::persistentKey());
+    if (persistentVariant.isValid()) {
+        persistent = persistentVariant.toBool();
+    } else {
+        QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
+        if (eventTypeVariant.isValid()) {
+            const QSettings *settings = notificationEventTypeStore->settingsForEventType(eventTypeVariant.toString());
+            if (settings != NULL) {
+                persistent = settings->value(GenericNotificationParameterFactory::persistentKey()).toBool();
+            }
+        }
+    }
+
+    return persistent;
 }
 
 void NotificationManager::submitNotification(const Notification &notification)

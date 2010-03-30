@@ -44,6 +44,13 @@ public:
     }
 
     /*!
+     * Returns the keyname of the persistent parameter
+     */
+    static QString persistentKey() {
+        return QString("persistent");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given event type.
      *
      * \param eventType the event type of the notification
@@ -61,6 +68,16 @@ public:
      */
     static NotificationParameter createCountParameter(uint count) {
         return NotificationParameter(countKey(), QVariant(count));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given persistence.
+     *
+     * \param persistent \c true if the notification is persistent, \c false otherwise
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createPersistentParameter(bool persistent) {
+        return NotificationParameter(persistentKey(), QVariant(persistent));
     }
 };
 

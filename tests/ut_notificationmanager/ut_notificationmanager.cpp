@@ -27,6 +27,8 @@
 #include "notification.h"
 #include "notificationgroup.h"
 #include "dbusinterfacenotificationsource.h"
+#include "eventtypestore.h"
+#include "genericnotificationparameterfactory.h"
 
 Q_DECLARE_METATYPE(Notification)
 Q_DECLARE_METATYPE(NotificationGroup)
@@ -123,6 +125,30 @@ maemosec::storage::storage(const char *name, maemosec::storage::visibility_t vis
 }
 
 maemosec::storage::~storage()
+{
+}
+
+QSettings emptySettings;
+QSettings persistentSettings;
+
+// EventTypeStore stubs
+EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEventTypes) :
+    eventTypesPath(eventTypesPath),
+    maxStoredEventTypes(maxStoredEventTypes)
+{
+    persistentSettings.setValue(GenericNotificationParameterFactory::persistentKey(), true);
+}
+
+void EventTypeStore::updateEventTypeFileList()
+{
+}
+
+const QSettings *EventTypeStore::settingsForEventType(const QString &eventType) const
+{
+    return eventType == "persistent" ? &persistentSettings : &emptySettings;
+}
+
+void EventTypeStore::loadSettings(const QString &)
 {
 }
 
@@ -260,7 +286,7 @@ void Ut_NotificationManager::testAddNotification()
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
-    uint id1 = manager->addNotification(0, parameters1, 0, true, NotificationManager::SystemEvent);
+    uint id1 = manager->addNotification(0, parameters1, 0, NotificationManager::SystemEvent);
     NotificationParameters parameters2;
     parameters2.add("iconId", "buttonicon2");
     uint id2 = manager->addNotification(0, parameters2);
@@ -876,7 +902,8 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     uint id0 = manager->addGroup(0, parameters0);
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
-    uint id1 = manager->addGroup(0, parameters1, true);
+    parameters1.add("eventType", "persistent");
+    uint id1 = manager->addGroup(0, parameters1);
 
     loadStateData();
 
@@ -926,7 +953,8 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
     uint gid0 = manager->addGroup(0, gparameters0);
     NotificationParameters gparameters1;
     gparameters1.add("body", "body1");
-    uint gid1 = manager->addGroup(0, gparameters1, true);
+    gparameters1.add("eventType", "persistent");
+    uint gid1 = manager->addGroup(0, gparameters1);
 
     // Create three notifications - two persistent and one non-persistent
     NotificationParameters parameters0;
@@ -935,12 +963,13 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
     manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
+    parameters1.add("eventType", "persistent");
     // Persistent in a non-persistent group
-    uint id1 = manager->addNotification(0, parameters1, gid0, true);
+    uint id1 = manager->addNotification(0, parameters1, gid0);
     NotificationParameters parameters2;
     parameters2.add("iconId", "buttonicon2");
     // Non-persistent in a persistent group
-    uint id2 = manager->addNotification(0, parameters2, gid1, false);
+    uint id2 = manager->addNotification(0, parameters2, gid1);
 
     loadNotifications();
 

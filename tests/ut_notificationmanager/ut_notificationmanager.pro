@@ -13,8 +13,7 @@ SOURCES += \
     $$SRCDIR/notifications/notification.cpp \
     $$SRCDIR/notifications/notificationgroup.cpp \
     $$SRCDIR/notifications/notificationparameter.cpp \
-    $$SRCDIR/notifications/notificationparameters.cpp \
-    $$SRCDIR/notifications/eventtypestore.cpp 
+    $$SRCDIR/notifications/notificationparameters.cpp
 
 # unit test and unit classes
 HEADERS += \

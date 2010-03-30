@@ -50,7 +50,7 @@ MockNotificationManager::MockNotificationManager() :
 {
 }
 
-uint MockNotificationManager::addNotification(uint, const NotificationParameters &parameters, uint groupId, bool, NotificationType type, int timeout)
+uint MockNotificationManager::addNotification(uint, const NotificationParameters &parameters, uint groupId, NotificationType type, int timeout)
 {
     uint notificationId = nextAvailableNotificationID++;
     Notification notification = Notification(notificationId, groupId, 0, parameters, type, timeout);
@@ -59,9 +59,9 @@ uint MockNotificationManager::addNotification(uint, const NotificationParameters
     return notificationId;
 }
 
-uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, bool persistent, NotificationType type)
+uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
 {
-    return addNotification(notificationUserId, parameters, groupId, persistent, type, 1000);
+    return addNotification(notificationUserId, parameters, groupId, type, 1000);
 }
 
 bool MockNotificationManager::updateNotification(uint, uint notificationId, const NotificationParameters &parameters)
@@ -96,7 +96,7 @@ bool MockNotificationManager::removeNotification(uint, uint notificationId)
     return removed;
 }
 
-uint MockNotificationManager::addGroup(uint, const NotificationParameters &, bool)
+uint MockNotificationManager::addGroup(uint, const NotificationParameters &)
 {
     return 0;
 }
@@ -413,7 +413,7 @@ void Ut_DuiCompositorNotificationSink::testTimeout()
 
     // Create a notification with a timeout of 0 milliseconds
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    notificationManager->addNotification(0, parameters1, 0, false, NotificationManagerInterface::ApplicationEvent, 0);
+    notificationManager->addNotification(0, parameters1, 0, NotificationManagerInterface::ApplicationEvent, 0);
 
     // Check that the timeout was set
     QCOMPARE(lastTimeout, 0);
