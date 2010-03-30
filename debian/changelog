@@ -1,4 +1,4 @@
-system-ui (0.13.5-1~unreleased) harmattan; urgency=low
+system-ui (0.13.5-1) harmattan; urgency=low
 
   [ Vesa Halttunen ]
   * New version [not released / tagged]
@@ -12,7 +12,7 @@ system-ui (0.13.5-1~unreleased) harmattan; urgency=low
   * Fixes: NB#161518 - Single tap on screen , screen displays ON at same
                        time the item in the tapped location is getting selected
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 29 Mar 2010 15:48:21 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 30 Mar 2010 11:01:27 +0200
 
 system-ui (0.13.4-1) harmattan; urgency=low
 
