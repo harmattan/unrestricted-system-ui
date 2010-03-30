@@ -68,16 +68,14 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 void 
 ShutdownBusinessLogic::showUI ()
 {
-    ShutdownUI::showWindow ();
+    ShutdownUI::showWindow();
 
     if (!m_Ui) {
         m_Ui = new ShutdownUI;
     }
 
-    // Make sure the shutdown UI is shown in the application window by 
-    // registering it explicitly to the application window scene manager
-    Sysuid::sysuid ()->applicationWindow ()
-        .sceneManager ()->appearSceneWindowNow (m_Ui);
+    // Make sure the shutdown UI is shown in the application window by registering it explicitly to the application window scene manager
+    Sysuid::sysuid()->applicationWindow().sceneManager()->showWindow(m_Ui);
 }
 
 /*!

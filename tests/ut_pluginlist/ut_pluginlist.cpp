@@ -33,7 +33,6 @@
  */
 
 #include <DuiApplication>
-#include <DuiSceneWindow>
 #include <DuiApplicationWindow>
 #include <DuiApplicationPage>
 #include <DuiButton>
@@ -52,7 +51,7 @@ QDBusPendingReply<> DuiApplicationIfProxy::launch()
 }
 
 // DuiApplicationPage stubs (used by PluginList)
-void DuiSceneWindow::appear(enum DeletionPolicy)
+void DuiApplicationPage::appear(enum DeletionPolicy)
 {
     Ut_PluginList::applicationPageShown = true;
 }

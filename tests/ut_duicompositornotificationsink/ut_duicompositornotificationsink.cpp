@@ -207,7 +207,7 @@ void QGraphicsView::setTransform(const QTransform &matrix, bool)
 // DuiSceneWindow stubs (used by DuiCompositorNotificationSink)
 void DuiSceneWindow::disappear()
 {
-    emit disappeared();
+    emit windowHidden();
 }
 
 // DuiInfoBanner stubs (used by DuiCompositorNotificationSink)

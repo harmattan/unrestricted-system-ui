@@ -122,8 +122,7 @@ LockScreenBusinessLogic::displayStateChanged (
             {
                 SYS_DEBUG ("Show the lock UI");
                 lockUI->setOpacity (1.0);
-                Sysuid::sysuid ()->applicationWindow ()
-                    .sceneManager ()->appearSceneWindowNow (lockUI);
+                Sysuid::sysuid()->applicationWindow().sceneManager()->showWindowNow(lockUI);
                 lockUI->setActive (true);
             }
             else

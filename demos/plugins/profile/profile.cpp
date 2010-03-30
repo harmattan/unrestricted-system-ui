@@ -86,7 +86,7 @@ Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
 
     // Set up the profile modification page
     profileModificationPage->setTitle("Profile");
-    setProperty ("escapeMode", QVariant (DuiEscapeButtonPanelModel::BackMode));
+    profileModificationPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
     connect(profileModificationPage, SIGNAL(backButtonClicked()), this, SLOT(buttonClicked()));
 }
 
