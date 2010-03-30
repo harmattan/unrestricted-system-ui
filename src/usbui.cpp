@@ -154,10 +154,8 @@ UsbUi::UsbEvent (bool connected)
         }
 
         //% "Usb disconnected"
-        m_notification = new DuiNotification ("",
-                                              "",
-                                              qtTrId ("qtn_usb_disconnected"),
-                                              "icon-m-usb");
+        m_notification = new DuiNotification (DuiNotification::DeviceRemovedEvent, "", qtTrId ("qtn_usb_disconnected"));
+        m_notification->publish();
 
         // Hide the mode-selection dialog
         if (m_dialog)
@@ -225,10 +223,6 @@ UsbUi::show_notification (int id)
     }
 
     //% "<b>Usb connected</b><br />Selected mode: <b>%1</b>"
-    m_notification =
-        new DuiNotification ("",
-                             "",
-                             qtTrId ("qtn_usb_connected_%1").arg (*mode_text),
-                             "icon-m-usb");
+    m_notification = new DuiNotification (DuiNotification::DeviceAddedEvent, "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
+    m_notification->publish();
 }
-
