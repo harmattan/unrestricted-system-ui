@@ -218,7 +218,7 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
     }
 }
 
-uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
+uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId)
 {
     bool persistent = determinePersistence(parameters);
     restorePersistentData();
@@ -227,7 +227,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         uint notificationId = nextAvailableNotificationID();
 
         // Mark the notification used
-        Notification notification(notificationId, groupId, notificationUserId, parameters, type, relayInterval);
+        Notification notification(notificationId, groupId, notificationUserId, parameters, determineType(parameters), relayInterval);
         notifications.insert(notificationId, notification);
         submitNotification(notification);
 
@@ -427,21 +427,35 @@ void NotificationManager::relayNextNotification()
 
 bool NotificationManager::determinePersistence(const NotificationParameters &parameters)
 {
-    bool persistent = false;
     QVariant persistentVariant = parameters.value(GenericNotificationParameterFactory::persistentKey());
-    if (persistentVariant.isValid()) {
-        persistent = persistentVariant.toBool();
-    } else {
+    if (!persistentVariant.isValid()) {
         QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
         if (eventTypeVariant.isValid()) {
             const QSettings *settings = notificationEventTypeStore->settingsForEventType(eventTypeVariant.toString());
             if (settings != NULL) {
-                persistent = settings->value(GenericNotificationParameterFactory::persistentKey()).toBool();
+                persistentVariant = settings->value(GenericNotificationParameterFactory::persistentKey());
             }
         }
     }
 
-    return persistent;
+    return persistentVariant.toBool();
+}
+
+
+Notification::NotificationType NotificationManager::determineType(const NotificationParameters &parameters)
+{
+    QVariant classVariant = parameters.value(GenericNotificationParameterFactory::classKey());
+    if (!classVariant.isValid()) {
+        QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
+        if (eventTypeVariant.isValid()) {
+            const QSettings *settings = notificationEventTypeStore->settingsForEventType(eventTypeVariant.toString());
+            if (settings != NULL) {
+                classVariant = settings->value(GenericNotificationParameterFactory::classKey());
+            }
+        }
+    }
+
+    return classVariant.toString() == "system" ? Notification::SystemEvent : Notification::ApplicationEvent;
 }
 
 void NotificationManager::submitNotification(const Notification &notification)

@@ -61,10 +61,9 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \param groupId the ID of the notification group to put the notification in
      * \param eventType the event type of the notification
-     * \param type the type of the notification
      * \return the ID of the new notification
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
+    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType);
 
     /*!
      * Adds a new notification.
@@ -77,10 +76,9 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
-     * \param type the type of the notification
      * \return the ID of the new notification
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, NotificationManagerInterface::NotificationType type = NotificationManagerInterface::ApplicationEvent);
+    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Updates an existing notification.

@@ -31,14 +31,14 @@ uint DBusInterfaceNotificationSource::notificationUserId()
     return manager.notificationUserId();
 }
 
-uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, NotificationManagerInterface::NotificationType type)
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType)
 {
-    return manager.addNotification(notificationUserId, notificationParameters(eventType), groupId, type);
+    return manager.addNotification(notificationUserId, notificationParameters(eventType), groupId);
 }
 
-uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, NotificationManagerInterface::NotificationType type)
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), groupId, type);
+    return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), groupId);
 }
 
 bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType)

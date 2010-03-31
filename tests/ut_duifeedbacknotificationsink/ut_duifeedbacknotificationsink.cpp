@@ -131,7 +131,7 @@ void Ut_DuiFeedbackNotificationSink::testAddNotification()
     // Create a notification
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
@@ -144,12 +144,12 @@ void Ut_DuiFeedbackNotificationSink::testNotificationWhileApplicationEventsDisab
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     sink->setApplicationEventsEnabled(true);
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
     // Check that DuiFeedbackPlayer::play() was called for the feedback when application events enabled
     QCOMPARE(played.count(), 1);
 
     sink->setApplicationEventsEnabled(false);
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
     // Check that DuiFeedbackPlayer::play() was NOT called for the feedback when application events are NOT enabled
     QCOMPARE(played.count(), 1);
 }
@@ -164,7 +164,7 @@ void Ut_DuiFeedbackNotificationSink::testWithEventTypeAndFeedbackId()
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
@@ -178,7 +178,7 @@ void Ut_DuiFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
@@ -190,7 +190,7 @@ void Ut_DuiFeedbackNotificationSink::testWithoutEventTypeOrFeedbackId()
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was not called for the feedback
     QCOMPARE(played.count(), 0);
@@ -201,7 +201,7 @@ void Ut_DuiFeedbackNotificationSink::testWithoutEventTypeWithFeedbackId()
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
-    emit addNotification(Notification(0, 0, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
@@ -214,7 +214,7 @@ void Ut_DuiFeedbackNotificationSink::testDetermineFeedBackId()
 
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
-    emit addNotification(Notification(0, 0, 0,  parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 0,  parameters, Notification::ApplicationEvent, 1000));
 
     // Check that DuiFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);

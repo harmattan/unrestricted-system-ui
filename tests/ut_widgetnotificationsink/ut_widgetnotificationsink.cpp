@@ -304,7 +304,7 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QApplication::processEvents();
     TestNotificationParameters parameters;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
@@ -363,7 +363,7 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovable(TestN
     QApplication::processEvents();
     uint notificationID = 0;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, NotificationManagerInterface::ApplicationEvent, 1000));
+    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
@@ -407,7 +407,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
 
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, NotificationManagerInterface::ApplicationEvent, 1020));
+    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
     QCOMPARE(infoBanner->bannerType(), DuiInfoBanner::Event);
     QCOMPARE(infoBanner->imageID(), QString("icon0"));
     QCOMPARE(infoBanner->bodyText(), QString("body0"));
@@ -422,7 +422,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 {
     TestNotificationParameters parameters("icon1", "body1", "buttonicon1", "");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, NotificationManagerInterface::SystemEvent, 1020));
+    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020));
     QCOMPARE(infoBanner->bannerType(), DuiInfoBanner::Information);
     QCOMPARE(infoBanner->imageID(), QString("icon1"));
     QCOMPARE(infoBanner->bodyText(), QString("body1"));

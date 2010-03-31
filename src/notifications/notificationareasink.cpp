@@ -177,7 +177,7 @@ void NotificationAreaSink::addStandAloneNotification(const Notification &notific
 void NotificationAreaSink::addNotification(const Notification &notification)
 {
     // Only application events are shown in the notification area
-    if (notification.type() == NotificationManagerInterface::ApplicationEvent) {
+    if (notification.type() == Notification::ApplicationEvent) {
         if (notification.groupId() > 0) {
             addNotificationToGroup(notification);
         } else {

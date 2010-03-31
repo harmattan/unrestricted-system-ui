@@ -286,7 +286,8 @@ void Ut_NotificationManager::testAddNotification()
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
-    uint id1 = manager->addNotification(0, parameters1, 0, NotificationManager::SystemEvent);
+    parameters1.add(GenericNotificationParameterFactory::classKey(), "system");
+    uint id1 = manager->addNotification(0, parameters1, 0);
     NotificationParameters parameters2;
     parameters2.add("iconId", "buttonicon2");
     uint id2 = manager->addNotification(0, parameters2);
@@ -307,7 +308,7 @@ void Ut_NotificationManager::testAddNotification()
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
-    QCOMPARE(n.type(), NotificationManager::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
     arguments = spy.takeFirst();
@@ -315,7 +316,7 @@ void Ut_NotificationManager::testAddNotification()
     QCOMPARE(n.notificationId(), id1);
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
-    QCOMPARE(n.type(), NotificationManager::SystemEvent);
+    QCOMPARE(n.type(), Notification::SystemEvent);
     QCOMPARE(n.timeout(), 0);
 
     arguments = spy.takeFirst();
@@ -323,7 +324,7 @@ void Ut_NotificationManager::testAddNotification()
     QCOMPARE(n.notificationId(), id2);
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value("iconId").toString(), QString("buttonicon2"));
-    QCOMPARE(n.type(), NotificationManager::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
     // Verify that the IDs are unique
@@ -353,7 +354,7 @@ void Ut_NotificationManager::testUpdateNotification()
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.parameters().value("imageId").isNull(), true);
     QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
-    QCOMPARE(n.type(), NotificationManagerInterface::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
     // TODO this cannot be fully tested until DuiInfoBanner supports updates
@@ -366,7 +367,8 @@ void Ut_NotificationManager::testRemoveNotification()
     // Create three notifications
     NotificationParameters parameters0;
     parameters0.add("imageId", "icon0");
-    manager->addNotification(0, parameters0, 0, NotificationManager::SystemEvent);
+    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
+    manager->addNotification(0, parameters0, 0);
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
     uint id1 = manager->addNotification(0, parameters1);
@@ -583,7 +585,7 @@ void Ut_NotificationManager::testSecondSimultaneousNotificationIsLeftInQueue()
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
-    QCOMPARE(n.type(), NotificationManagerInterface::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), -1);
 
     // Relay next notification
@@ -595,7 +597,7 @@ void Ut_NotificationManager::testSecondSimultaneousNotificationIsLeftInQueue()
     QCOMPARE(n.notificationId(), id1);
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
-    QCOMPARE(n.type(), NotificationManagerInterface::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), -1);
 
     // Create third notification. This should be left in the queue since the second notification is being shown.
@@ -691,7 +693,7 @@ void Ut_NotificationManager::testUpdatingNotificationInQueue()
     QCOMPARE(n.parameters().value("body").isNull(), true);
     QCOMPARE(n.parameters().value("iconId").toString(), QString("newicon"));
     QCOMPARE(n.parameters().value("contentId").isNull(), true);
-    QCOMPARE(n.type(), NotificationManagerInterface::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
 }
 
 // Test that nothing happens if wait queue is empty and relay notification is called
@@ -1011,15 +1013,15 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     // Create three notifications
     NotificationParameters parameters0;
     parameters0.add("imageId", "icon0");
-    stream << Notification(0, 3, 0, parameters0, NotificationManagerInterface::ApplicationEvent, 0);
+    stream << Notification(0, 3, 0, parameters0, Notification::ApplicationEvent, 0);
 
     NotificationParameters parameters1;
     parameters1.add("body", "body1");
-    stream << Notification(1, 4, 0, parameters1, NotificationManagerInterface::SystemEvent, 1000);
+    stream << Notification(1, 4, 0, parameters1, Notification::SystemEvent, 1000);
 
     NotificationParameters parameters2;
     parameters2.add("iconId", "buttonicon2");
-    stream << Notification(2, 5, 0, parameters2, NotificationManagerInterface::ApplicationEvent, 2000);
+    stream << Notification(2, 5, 0, parameters2, Notification::ApplicationEvent, 2000);
 
     gNotificationBuffer.close();
 
@@ -1038,7 +1040,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     QCOMPARE(n.notificationId(), (uint)0);
     QCOMPARE(n.groupId(), (uint)3);
     QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
-    QCOMPARE(n.type(), NotificationManager::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
     arguments = spy.takeFirst();
@@ -1046,7 +1048,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     QCOMPARE(n.notificationId(), (uint)1);
     QCOMPARE(n.groupId(), (uint)4);
     QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
-    QCOMPARE(n.type(), NotificationManager::SystemEvent);
+    QCOMPARE(n.type(), Notification::SystemEvent);
     QCOMPARE(n.timeout(), 1000);
 
     arguments = spy.takeFirst();
@@ -1054,7 +1056,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     QCOMPARE(n.notificationId(), (uint)2);
     QCOMPARE(n.groupId(), (uint)5);
     QCOMPARE(n.parameters().value("iconId").toString(), QString("buttonicon2"));
-    QCOMPARE(n.type(), NotificationManager::ApplicationEvent);
+    QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 2000);
 
     gTestingPersistent = false;

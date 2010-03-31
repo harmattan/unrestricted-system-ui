@@ -44,7 +44,7 @@ void Ut_Notification::testSerializationAndDeserialization()
     NotificationParameters parameters0;
     parameters0.add("imageId", "icon0");
 
-    Notification n1(1234, 20, 678, parameters0, NotificationManagerInterface::ApplicationEvent, 2345);
+    Notification n1(1234, 20, 678, parameters0, Notification::ApplicationEvent, 2345);
     Notification n2;
 
     // Transfer the state of notification n1 to n2
@@ -58,7 +58,7 @@ void Ut_Notification::testSerializationAndDeserialization()
     QCOMPARE(n2.notificationId(), uint(1234));
     QCOMPARE(n2.groupId(), uint(20));
     QCOMPARE(n2.userId(), uint(678));
-    QCOMPARE(n2.type(), NotificationManagerInterface::ApplicationEvent);
+    QCOMPARE(n2.type(), Notification::ApplicationEvent);
     QCOMPARE(n2.timeout(), int(2345));
     QCOMPARE(n2.parameters().value("imageId").toString(), QString("icon0"));
 }

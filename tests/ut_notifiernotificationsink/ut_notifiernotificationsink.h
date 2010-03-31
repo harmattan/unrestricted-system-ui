@@ -43,6 +43,7 @@ private slots:
 
     // Test cases
     void testAddNotification();
+    void testAddSystemNotification();
     void testRemoveNotification();
     void testNotificationsInGroups();
 

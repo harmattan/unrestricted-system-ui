@@ -1,6 +1,7 @@
 system-ui (0.14.0~2) harmattan; urgency=low
 
   * Compatibility with libdui 0.20
+  * Implemented: SWP#DUI-1883 Possibility to spawn a system notification
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 06 Apr 2010 14:37:13 +0200
 

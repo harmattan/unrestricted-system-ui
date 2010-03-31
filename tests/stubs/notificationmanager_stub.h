@@ -31,7 +31,7 @@ class NotificationManagerStub : public StubBase {
   virtual void NotificationManagerDestructor();
   virtual void restorePersistentData();
   virtual void loadSystemNotificationSource();
-  virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationManagerInterface::NotificationType type);
+  virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId);
   virtual bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
   virtual bool removeNotification(uint notificationUserId, uint notificationId);
   virtual uint addGroup(uint notificationUserId, const NotificationParameters &parameters);
@@ -73,12 +73,11 @@ void NotificationManagerStub::loadSystemNotificationSource() {
   stubMethodEntered("loadSystemNotificationSource");
 }
 
-uint NotificationManagerStub::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationManagerInterface::NotificationType type) {
+uint NotificationManagerStub::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
   QList<ParameterBase*> params;
   params.append( new Parameter<uint >(notificationUserId));
   params.append( new Parameter<const NotificationParameters & >(parameters));
   params.append( new Parameter<uint >(groupId));
-  params.append( new Parameter<NotificationManagerInterface::NotificationType >(type));
   stubMethodEntered("addNotification",params);
   return stubReturnValue<uint>("addNotification");
 }
@@ -241,8 +240,8 @@ void NotificationManager::loadSystemNotificationSource() {
   gNotificationManagerStub->loadSystemNotificationSource();
 }
 
-uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationManagerInterface::NotificationType type) {
-  return gNotificationManagerStub->addNotification(notificationUserId, parameters, groupId, type);
+uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
+  return gNotificationManagerStub->addNotification(notificationUserId, parameters, groupId);
 }
 
 bool NotificationManager::updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters) {

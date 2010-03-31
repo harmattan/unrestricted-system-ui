@@ -35,8 +35,8 @@ class MockNotificationManager : public QObject, public NotificationManagerInterf
     Q_OBJECT
 public:
     MockNotificationManager();
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type, int timeout);
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, NotificationType type = ApplicationEvent);
+    uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, int timeout);
+    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0);
     bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters = NotificationParameters());
     uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters());
     bool updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters = NotificationParameters());

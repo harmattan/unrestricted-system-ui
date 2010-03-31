@@ -60,6 +60,11 @@ void NotifierNotificationSink::removeGroup(uint groupId)
 
 void NotifierNotificationSink::addNotification(const Notification &notification)
 {
+    if (notification.type() == Notification::SystemEvent) {
+        // System notifications are not shown by the notifier sink
+        return;
+    }
+
     // Remove any previous notification with the same ID (so that updates work properly)
     removeNotification(notification.notificationId());
 

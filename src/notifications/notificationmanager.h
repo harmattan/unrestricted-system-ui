@@ -82,7 +82,7 @@ public:
 
 public slots:
     //! \reimp
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, NotificationType type = ApplicationEvent);
+    uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0);
     bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters = NotificationParameters());
     bool removeNotification(uint notificationUserId, uint notificationId);
     uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters());
@@ -173,9 +173,18 @@ private:
     /*!
      * Determines persistence of a notification from the notification parameters.
      *
+     * \param parameters NotificationParameters to determine the persistence from
      * \return \c true if the notification is persistent, \c false otherwise.
      */
     bool determinePersistence(const NotificationParameters &parameters);
+
+    /*!
+     * Determines the type of a notification from the notification parameters.
+     *
+     * \param parameters NotificationParameters to determine the type from
+     * \return the type of the notification
+     */
+    Notification::NotificationType determineType(const NotificationParameters &parameters);
 
     /*!
      * Handles the notification which either signals addNotification() immediatelly

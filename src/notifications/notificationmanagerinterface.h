@@ -32,16 +32,6 @@ class NotificationManagerInterface
 {
 public:
     /*!
-     * Notification types. Applications can only send ApplicationEvent
-     * notifications since the D-Bus API does not allow the application
-     * to set the type.
-     */
-    enum NotificationType {
-        ApplicationEvent,
-        SystemEvent
-    };
-
-    /*!
      * Adds a notification. Optionally adds the notification to a
      * notification group. The default group number 0 means that the
      * notification is not added to any group. You can create groups
@@ -53,11 +43,11 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \param parameters Parameters for the notification
      * \param groupId A notification group where this notification is added.
-     * \param type the type of the notification. \see NotificationType.
+     * \param type the type of the notification.
      * \return a notification ID.
      * \see addGroup
      */
-    virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0, NotificationType type = ApplicationEvent) = 0;
+    virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0) = 0;
 
     /*!
      * Updates a notification.
@@ -68,7 +58,6 @@ public:
      * \return true if the update succeeded, false otherwise
      */
     virtual bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters = NotificationParameters()) = 0;
-
 
     /*!
      * Adds a new notification group. Later on notifications can be added to

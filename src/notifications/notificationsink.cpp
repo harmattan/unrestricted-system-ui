@@ -46,5 +46,5 @@ void NotificationSink::setApplicationEventsEnabled(bool enabled)
 
 bool NotificationSink::canAddNotification(const Notification &notification)
 {
-    return appEventsEnabled || notification.type() == NotificationManagerInterface::SystemEvent;
+    return appEventsEnabled || notification.type() == Notification::SystemEvent;
 }

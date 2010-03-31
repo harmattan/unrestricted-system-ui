@@ -50,7 +50,7 @@ void Ut_NotifierNotificationSink::testAddNotification()
     // Adding a notification should cause a notification count change
     NotificationParameters notification1Parameters;
     notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, NotificationManagerInterface::ApplicationEvent, 0);
+    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toInt(), 5);
@@ -58,7 +58,7 @@ void Ut_NotifierNotificationSink::testAddNotification()
     // Adding a new notification should cause a notification count change
     NotificationParameters notification2Parameters;
     notification2Parameters.add("count", QVariant((uint)8));
-    Notification notification2(2, 0, 2, notification2Parameters, NotificationManagerInterface::ApplicationEvent, 0);
+    Notification notification2(2, 0, 2, notification2Parameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification2);
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.at(1).at(0).toInt(), 13);
@@ -69,6 +69,18 @@ void Ut_NotifierNotificationSink::testAddNotification()
     emit addNotification(notification2);
     QCOMPARE(spy.count(), 4);
     QCOMPARE(spy.at(3).at(0).toInt(), 11);
+}
+
+void Ut_NotifierNotificationSink::testAddSystemNotification()
+{
+    QSignalSpy spy(m_subject, SIGNAL(notificationCountChanged(uint)));
+
+    // Adding a system notification should cause no notification count change
+    NotificationParameters notification1Parameters;
+    notification1Parameters.add("count", QVariant((uint)5));
+    Notification notification1(1, 0, 2, notification1Parameters, Notification::SystemEvent, 0);
+    emit addNotification(notification1);
+    QCOMPARE(spy.count(), 0);
 }
 
 void Ut_NotifierNotificationSink::testRemoveNotification()
@@ -82,7 +94,7 @@ void Ut_NotifierNotificationSink::testRemoveNotification()
     // Removing an existing notification should inform about the change in notification count
     NotificationParameters notification1Parameters;
     notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, NotificationManagerInterface::ApplicationEvent, 0);
+    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
     emit removeNotification(1);
     QCOMPARE(spy.count(), 2);
@@ -106,7 +118,7 @@ void Ut_NotifierNotificationSink::testNotificationsInGroups()
     // Adding a notification into the group should cause a notification count change so that the group's count is used
     NotificationParameters notification1Parameters;
     notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 1, 2, notification1Parameters, NotificationManagerInterface::ApplicationEvent, 0);
+    Notification notification1(1, 1, 2, notification1Parameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toInt(), 8);
@@ -114,7 +126,7 @@ void Ut_NotifierNotificationSink::testNotificationsInGroups()
     // Adding a new notification into the same group should not cause a notification count change
     NotificationParameters notification2Parameters;
     notification2Parameters.add("count", QVariant((uint)8));
-    Notification notification2(2, 1, 2, notification2Parameters, NotificationManagerInterface::ApplicationEvent, 0);
+    Notification notification2(2, 1, 2, notification2Parameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification2);
     QCOMPARE(spy.count(), 1);
 

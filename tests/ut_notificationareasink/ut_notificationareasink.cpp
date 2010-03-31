@@ -180,11 +180,11 @@ void Ut_NotificationAreaSink::testAddNotification()
 
     // Create three notifications - two with a content link and one without
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
-    emit addNotification(Notification(0, 0, 2, parameters0, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1");
-    emit addNotification(Notification(1, 0, 2, parameters1, NotificationManagerInterface::SystemEvent, 1000));
+    emit addNotification(Notification(1, 0, 2, parameters1, Notification::SystemEvent, 1000));
     TestNotificationParameters parameters2("icon2", "body2", "buttonicon2", "");
-    emit addNotification(Notification(2, 0, 2, parameters2, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(2, 0, 2, parameters2, Notification::ApplicationEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink two times
     QCOMPARE(addSpy.count(), 2);
@@ -197,10 +197,10 @@ void Ut_NotificationAreaSink::testUpdateNotification()
 
     // Add two notifications with the same id; the second should update the existing one.
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
-    emit addNotification(Notification(0, 0, 2, parameters0, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1");
-    emit addNotification(Notification(0, 0, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
 
@@ -218,11 +218,11 @@ void Ut_NotificationAreaSink::testRemoveNotification()
 
     // Create three notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
-    emit addNotification(Notification(0, 0, 2, parameters0, NotificationManagerInterface::SystemEvent, 1000));
+    emit addNotification(Notification(0, 0, 2, parameters0, Notification::SystemEvent, 1000));
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1");
-    emit addNotification(Notification(1, 0, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(1, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
     TestNotificationParameters parameters2("icon2", "body2", "buttonicon2", "");
-    emit addNotification(Notification(2, 0, 2, parameters2, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(2, 0, 2, parameters2, Notification::ApplicationEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink two times
     QCOMPARE(addSpy.count(), 2);
@@ -237,9 +237,9 @@ void Ut_NotificationAreaSink::testRemoveNotification()
     QCOMPARE(destroyedNotifications.count(), 1);
 
     // Recreate the second notification and create an additional one
-    emit addNotification(Notification(1, 0, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(1, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
     TestNotificationParameters parameters3("icon3", "body3", "buttonicon3", "");
-    emit addNotification(Notification(3, 0, 2, parameters3, NotificationManagerInterface::SystemEvent, 1000));
+    emit addNotification(Notification(3, 0, 2, parameters3, Notification::SystemEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink three times in total
     QCOMPARE(addSpy.count(), 3);
@@ -271,7 +271,7 @@ void Ut_NotificationAreaSink::testRemoveGroup()
 
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1");
-    emit addNotification(Notification(0, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     emit removeGroup(1);
     QCOMPARE(remSpy.count(), 1);
 }
@@ -284,8 +284,8 @@ void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGro
     emit addGroup(1, parameters0);
     // Add two notifications to this group
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");
-    emit addNotification(Notification(0, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
-    emit addNotification(Notification(1, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
+    emit addNotification(Notification(1, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     // Remove first notification
     emit(removeNotification(0));
     // There is still one notification in the group so banner is not removed.
@@ -301,7 +301,7 @@ void Ut_NotificationAreaSink::testAddNotificationToGroup()
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");
-    emit addNotification(Notification(0, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
@@ -313,9 +313,9 @@ void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationAr
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");
-    emit addNotification(Notification(0, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(updateSpy.count(), 0);
-    emit addNotification(Notification(1, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(1, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(updateSpy.count(), 1);
 }
 
@@ -324,7 +324,7 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1");
-    emit addNotification(Notification(0, 1, 2, parameters1, NotificationManagerInterface::ApplicationEvent, 1000));
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
     QCOMPARE(icons.length(), 1);
     QCOMPARE(icons[0], QString("icon0"));

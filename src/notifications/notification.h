@@ -37,6 +37,14 @@ class Notification
 {
 public:
     /*!
+     * Notification types.
+     */
+    enum NotificationType {
+        ApplicationEvent,
+        SystemEvent
+    };
+
+    /*!
      * Empty constructor. Initializes the values to defaults.
      */
     Notification();
@@ -48,10 +56,10 @@ public:
      * \param groupId the group ID of this notification
      * \param userId the user ID associated to this notification
      * \param parameters parameters for the notification to be presented
-     * \param type the type of the notification to be presented
+     * \param type the type of the notification to be presented. \see NotificationType.
      * \param timeout The number of milliseconds to present the notification for
      */
-    Notification(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationManagerInterface::NotificationType type, int timeout);
+    Notification(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationType type, int timeout);
 
     /*!
      * Destructor.
@@ -98,7 +106,7 @@ public:
      *
      * \return type of this notification
      */
-    NotificationManagerInterface::NotificationType type() const;
+    NotificationType type() const;
 
     /*!
      * Returns the timeout of this notification.
@@ -121,7 +129,7 @@ private:
     //! The parameters for the notification to be presented
     NotificationParameters parameters_;
     //! The type of the notification to be presented
-    NotificationManagerInterface::NotificationType type_;
+    NotificationType type_;
     //! The number of milliseconds to present the notification for
     int timeout_;
 };

@@ -34,6 +34,7 @@
 #include "sysuid_stub.h"
 #include "notificationmanager.h"
 #include "eventtypestore.h"
+#include "genericnotificationparameterfactory.h"
 #include <QSettings>
 
 #define NUMBER_OF_WINDOWS 2
@@ -50,18 +51,18 @@ MockNotificationManager::MockNotificationManager() :
 {
 }
 
-uint MockNotificationManager::addNotification(uint, const NotificationParameters &parameters, uint groupId, NotificationType type, int timeout)
+uint MockNotificationManager::addNotification(uint, const NotificationParameters &parameters, uint groupId, int timeout)
 {
     uint notificationId = nextAvailableNotificationID++;
-    Notification notification = Notification(notificationId, groupId, 0, parameters, type, timeout);
+    Notification notification = Notification(notificationId, groupId, 0, parameters, Notification::ApplicationEvent, timeout);
     notifications.append(notification);
     emit notificationUpdated(notification);
     return notificationId;
 }
 
-uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
+uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId)
 {
-    return addNotification(notificationUserId, parameters, groupId, type, 1000);
+    return addNotification(notificationUserId, parameters, groupId, 1000);
 }
 
 bool MockNotificationManager::updateNotification(uint, uint notificationId, const NotificationParameters &parameters)
@@ -301,7 +302,8 @@ void Ut_DuiCompositorNotificationSink::testAddNotification()
     // Create three notifications - two with a content link and one without
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    notificationManager->addNotification(0, parameters0, 0, NotificationManagerInterface::SystemEvent);
+    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters0, 0);
     notificationManager->addNotification(0, parameters1);
 
     // Check that two DuiInfoBanners were created
@@ -377,7 +379,8 @@ void Ut_DuiCompositorNotificationSink::testRemoveNotification()
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
     TestNotificationParameters parameters2("icon2", "body2", "buttonicon2", "");
-    notificationManager->addNotification(0, parameters0, 0, NotificationManagerInterface::SystemEvent);
+    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters0, 0);
     uint id = notificationManager->addNotification(0, parameters1);
     notificationManager->addNotification(0, parameters2);
 
@@ -392,7 +395,8 @@ void Ut_DuiCompositorNotificationSink::testRemoveNotification()
     // Recreate the second notification and create an additional one
     notificationManager->addNotification(0, parameters1);
     TestNotificationParameters parameters4("icon3", "body3", "buttonicon3", "");
-    notificationManager->addNotification(0, parameters4, 0, NotificationManagerInterface::SystemEvent);
+    parameters4.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters4, 0);
     QCOMPARE(icons.length(), 4);
     QCOMPARE(icons[0], QString("icon0"));
     QCOMPARE(icons[1], QString("icon2"));
@@ -414,7 +418,7 @@ void Ut_DuiCompositorNotificationSink::testTimeout()
 
     // Create a notification with a timeout of 0 milliseconds
     TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    notificationManager->addNotification(0, parameters1, 0, NotificationManagerInterface::ApplicationEvent, 0);
+    notificationManager->addNotification(0, parameters1, 0, 0);
 
     // Check that the timeout was set
     QCOMPARE(lastTimeout, 0);

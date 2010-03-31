@@ -24,12 +24,12 @@ Notification::Notification() :
     groupId_(0),
     userId_(0),
     parameters_(),
-    type_(NotificationManagerInterface::ApplicationEvent),
+    type_(ApplicationEvent),
     timeout_(0)
 {
 }
 
-Notification::Notification(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationManagerInterface::NotificationType type, int timeout) :
+Notification::Notification(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationType type, int timeout) :
     notificationId_(notificationId),
     groupId_(groupId),
     userId_(userId),
@@ -68,7 +68,7 @@ void Notification::setParameters(const NotificationParameters &parameters)
     parameters_ = parameters;
 }
 
-NotificationManagerInterface::NotificationType Notification::type() const
+Notification::NotificationType Notification::type() const
 {
     return type_;
 }
@@ -96,7 +96,7 @@ QDataStream &operator>>(QDataStream &datastream, Notification &notification)
 
     qint32 s;
     datastream >> s;
-    notification.type_ = static_cast<NotificationManagerInterface::NotificationType>(s);
+    notification.type_ = static_cast<Notification::NotificationType>(s);
 
     datastream >> notification.groupId_;
     datastream >> notification.userId_;

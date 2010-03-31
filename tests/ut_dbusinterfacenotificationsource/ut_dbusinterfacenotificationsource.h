@@ -32,7 +32,7 @@ class MockNotificationManager : public NotificationManagerInterface
 {
 public:
     MockNotificationManager();
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId = 0, NotificationType type = ApplicationEvent);
+    uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId = 0);
     bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
     bool removeNotification(uint notificationUserId, uint notificationId);
     uint addGroup(uint notificationUserId, const NotificationParameters &parameters);
@@ -44,7 +44,6 @@ public:
     uint addNotificationNotificationUserId;
     uint addNotificationGroupId;
     NotificationParameters addNotificationParameters;
-    NotificationManagerInterface::NotificationType addNotificationType;
     uint updateNotificationNotificationUserId;
     uint updateNotificationId;
     NotificationParameters updateNotificationParameters;

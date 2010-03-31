@@ -27,7 +27,6 @@ MockNotificationManager::MockNotificationManager() :
     addNotificationNotificationUserId(12345),
     addNotificationGroupId(12345),
     addNotificationParameters(),
-    addNotificationType(NotificationManagerInterface::ApplicationEvent),
     updateNotificationNotificationUserId(12345),
     updateNotificationId(12345),
     updateNotificationParameters(),
@@ -45,12 +44,11 @@ MockNotificationManager::MockNotificationManager() :
 {
 }
 
-uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId, NotificationType type)
+uint MockNotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId)
 {
     addNotificationNotificationUserId = notificationUserId;
     addNotificationGroupId = groupId;
     addNotificationParameters = parameters;
-    addNotificationType = type;
     return 0;
 }
 
@@ -198,13 +196,12 @@ void Ut_DBusInterfaceNotificationSource::cleanup()
 
 void Ut_DBusInterfaceNotificationSource::testAddNotification()
 {
-    source->addNotification(1, 2, "event", NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(1, 2, "event");
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)1);
     QCOMPARE(manager->addNotificationGroupId, (uint)2);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
-    QCOMPARE(manager->addNotificationType, NotificationManagerInterface::ApplicationEvent);
 
-    source->addNotification(3, 4, "event", "summary", "body", "action", "imageURI", 1, NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(3, 4, "event", "summary", "body", "action", "imageURI", 1);
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)3);
     QCOMPARE(manager->addNotificationGroupId, (uint)4);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
@@ -212,9 +209,8 @@ void Ut_DBusInterfaceNotificationSource::testAddNotification()
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
-    QCOMPARE(manager->addNotificationType, NotificationManagerInterface::ApplicationEvent);
 
-    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42, NotificationManagerInterface::ApplicationEvent);
+    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42);
     QCOMPARE(manager->addNotificationNotificationUserId, (uint)5);
     QCOMPARE(manager->addNotificationGroupId, (uint)6);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));

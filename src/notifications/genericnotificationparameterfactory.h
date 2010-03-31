@@ -51,6 +51,13 @@ public:
     }
 
     /*!
+     * Returns the keyname of the class parameter
+     */
+    static QString classKey() {
+        return QString("class");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given event type.
      *
      * \param eventType the event type of the notification
@@ -79,7 +86,16 @@ public:
     static NotificationParameter createPersistentParameter(bool persistent) {
         return NotificationParameter(persistentKey(), QVariant(persistent));
     }
-};
 
+    /*!
+     * Creates a NotificationParameter with the given class.
+     *
+     * \param notificationClass the class of the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createClassParameter(const QString &notificationClass) {
+        return NotificationParameter(classKey(), QVariant(notificationClass));
+    }
+};
 
 #endif // GENERICNOTIFICATIONPARAMETERFACTORY_H

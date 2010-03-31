@@ -119,7 +119,7 @@ bool WidgetNotificationSink::determineUserRemovability(const NotificationParamet
 
 DuiInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
-    DuiInfoBanner *infoBanner = createInfoBanner(notification.type() == NotificationManagerInterface::ApplicationEvent ? DuiInfoBanner::Event : DuiInfoBanner::Information,
+    DuiInfoBanner *infoBanner = createInfoBanner(notification.type() == Notification::ApplicationEvent ? DuiInfoBanner::Event : DuiInfoBanner::Information,
                                 notification.groupId(), notification.parameters());
     infoBanner->setProperty(NOTIFICATION_ID_PROPERTY, notification.notificationId());
 
