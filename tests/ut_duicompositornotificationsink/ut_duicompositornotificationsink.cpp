@@ -155,7 +155,6 @@ void QWidget::setVisible(bool)
 
 void QWidget::setFixedSize(int w, int h)
 {
-    qDebug() << "SETFIXEDSIZE" << w << h;
     Ut_DuiCompositorNotificationSink::lastFixedWidth = w;
     Ut_DuiCompositorNotificationSink::lastFixedHeight = h;
 }
