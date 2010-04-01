@@ -1,10 +1,12 @@
+system-ui (0.14.0~1) harmattan; urgency=low
+
+  * Compatibility with libdui 0.20
+
+ -- Vesa Halttunen <vhalttun@4fil49414>  Thu, 01 Apr 2010 11:56:23 +0300
+
 system-ui (0.13.5-1) harmattan; urgency=low
 
-  [ Vesa Halttunen ]
-  * New version [not released / tagged]
   * Implemented: SWP#DUI-2411 Possibility for application to lock notifications
-
-  [ David Kedves ]
   * Fixes: NB#155615 - exit/enterDisplayEvent is not called when display
                        is dimmed/undimmed
   * Fixes: NB#161307 - "switched off" option is not displayed after pressing
