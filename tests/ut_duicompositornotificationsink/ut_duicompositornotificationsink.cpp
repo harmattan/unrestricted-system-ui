@@ -155,6 +155,7 @@ void QWidget::setVisible(bool)
 
 void QWidget::setFixedSize(int w, int h)
 {
+    qDebug() << "SETFIXEDSIZE" << w << h;
     Ut_DuiCompositorNotificationSink::lastFixedWidth = w;
     Ut_DuiCompositorNotificationSink::lastFixedHeight = h;
 }
@@ -259,7 +260,6 @@ void Ut_DuiCompositorNotificationSink::initTestCase()
     sysuid = new Sysuid();
     settings = new QSettings();
     gSysuidStub->stubSetReturnValue("sysuid",sysuid);
-    gSysuidStub->stubSetReturnValue("orientationAngle", Dui::Angle0);
 }
 
 void Ut_DuiCompositorNotificationSink::cleanupTestCase()
@@ -275,7 +275,6 @@ void Ut_DuiCompositorNotificationSink::init()
     sink = new DuiCompositorNotificationSink();
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), sink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationUpdated(Notification)), sink, SLOT(addNotification(Notification)));
-    connect(sink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(orientationChangeFinished(Dui::Orientation)), sink, SLOT(rotateInfoBanners(Dui::Orientation)));
     lastTimeout = -1;
     types.clear();
@@ -288,6 +287,8 @@ void Ut_DuiCompositorNotificationSink::init()
     lastFixedWidth = -1;
     lastFixedHeight = -1;
     lastTransform = QTransform();
+    gSysuidStub->stubSetReturnValue("orientation", Dui::Landscape);
+    gSysuidStub->stubSetReturnValue("orientationAngle", Dui::Angle0);
 }
 
 void Ut_DuiCompositorNotificationSink::cleanup()
@@ -315,6 +316,7 @@ void Ut_DuiCompositorNotificationSink::testAddNotification()
     QCOMPARE(lastFixedHeight, (int)infoBanner1.preferredHeight());
     QCOMPARE(lastTransform, transform1);
 
+    gSysuidStub->stubSetReturnValue("orientation", Dui::Portrait);
     gSysuidStub->stubSetReturnValue("orientationAgle", Dui::Angle90);
     // Create a notification without a content link
     TestNotificationParameters parameters3("icon3", "body3", "buttonicon3", "");
@@ -446,6 +448,7 @@ void Ut_DuiCompositorNotificationSink::testOrientationChanged()
     QCOMPARE(lastTransform, transform);
 
     // Rotate the screen
+    gSysuidStub->stubSetReturnValue("orientation", Dui::Portrait);
     gSysuidStub->stubSetReturnValue("orientationAngle", Dui::Angle90);
     emit orientationChangeFinished(Dui::Portrait);
 
