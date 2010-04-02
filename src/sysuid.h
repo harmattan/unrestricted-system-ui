@@ -104,19 +104,19 @@ private:
     static Sysuid           *m_Sysuid;
 
     //! Status area window
-    StatusAreaWindow *statusAreaWindow_;
+    StatusAreaWindow        *m_statusAreaWindow;
 
     //! Application window
-    DuiApplicationWindow *applicationWindow_;
+    DuiApplicationWindow    *m_applicationWindow;
 
     //! Notification manager
-    NotificationManager *notificationManager_;
+    NotificationManager     *m_notificationManager;
 
     //! Compositor notification sink for visualizing the notification outside home
-    DuiCompositorNotificationSink *compositorNotificationSink_;
+    DuiCompositorNotificationSink *m_compositorNotificationSink;
 
     //! Feedback notification sink for presenting the notification as a feedback
-    DuiFeedbackNotificationSink *feedbackNotificationSink_;
+    DuiFeedbackNotificationSink   *m_feedbackNotificationSink;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;
