@@ -74,8 +74,10 @@ Sysuid::Sysuid () : QObject (),
     // Load translation of System-UI
     retranslate ();
 
-    m_applicationWindow->setWindowOpacity(0.0);
-    m_applicationWindow->setWindowFlags(Qt::FramelessWindowHint | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
+    m_applicationWindow->setWindowOpacity (0.0);
+    m_applicationWindow->setWindowFlags (Qt::FramelessWindowHint |
+                                         Qt::CustomizeWindowHint |
+                                         Qt::WindowStaysOnTopHint);
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
@@ -103,27 +105,37 @@ Sysuid::Sysuid () : QObject (),
 
     // Show status area window when sysui daemon starts
     m_statusAreaWindow = new StatusAreaWindow;
-    m_statusAreaWindow->show();
-    connect(m_statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), m_compositorNotificationSink, SLOT(setDisabled(bool)));
+    m_statusAreaWindow->show ();
+
+    connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
+             m_compositorNotificationSink, SLOT (setDisabled (bool)));
     // Connect the notification signals for the compositor notification sink
-    connect(m_notificationManager, SIGNAL(notificationUpdated(const Notification &)), m_compositorNotificationSink, SLOT(addNotification(const Notification &)));
-    connect(m_notificationManager, SIGNAL(notificationRemoved(uint)), m_compositorNotificationSink, SLOT(removeNotification(uint)));
-    connect(m_compositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), m_notificationManager, SLOT(removeNotification(uint)));
-    connect(m_notificationManager, SIGNAL(notificationRestored(const Notification &)), m_compositorNotificationSink, SIGNAL(notificationAdded(Notification)));
+    connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
+             m_compositorNotificationSink, SLOT (addNotification (const Notification &)));
+    connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
+             m_compositorNotificationSink, SLOT (removeNotification (uint)));
+    connect (m_compositorNotificationSink, SIGNAL (notificationRemovalRequested (uint)),
+             m_notificationManager, SLOT (removeNotification (uint)));
+    connect (m_notificationManager, SIGNAL (notificationRestored (const Notification &)),
+             m_compositorNotificationSink, SIGNAL (notificationAdded (Notification)));
 
     // Connect the notification signals for the feedback notification sink
-    connect(m_notificationManager, SIGNAL(notificationUpdated(const Notification &)), m_feedbackNotificationSink, SLOT(addNotification(const Notification &)));
-    connect(m_notificationManager, SIGNAL(notificationRemoved(uint)), m_feedbackNotificationSink, SLOT(removeNotification(uint)));
-    connect(m_statusAreaWindow, SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SIGNAL(orientationChangeFinished(const Dui::Orientation &)));
+    connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
+             m_feedbackNotificationSink, SLOT (addNotification (const Notification &)));
+    connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
+              m_feedbackNotificationSink, SLOT (removeNotification (uint)));
+    connect (m_statusAreaWindow, SIGNAL (orientationChangeFinished (const Dui::Orientation &)),
+             this, SIGNAL (orientationChangeFinished (const Dui::Orientation &)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
-    useMode = QSharedPointer<ContextItem>(context.createContextItem("Use.Mode"));
-    connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
-    applyUseMode();
+    useMode = QSharedPointer<ContextItem> (context.createContextItem ("Use.Mode"));
+    connect (useMode.data (), SIGNAL (contentsChanged ()),
+             this, SLOT (applyUseMode ()));
+    applyUseMode ();
 
     // Restore persistent notifications after all the signal connections are made to the notification sinks
-    m_notificationManager->restorePersistentData();
+    m_notificationManager->restorePersistentData ();
 
     /*
      * The screen locking is implemented in this separate class, because it is
@@ -185,35 +197,37 @@ void Sysuid::retranslate ()
     running = false;
 }
 
-NotificationManager &Sysuid::notificationManager()
+NotificationManager &Sysuid::notificationManager ()
 {
     return *m_notificationManager;
 }
 
-DuiCompositorNotificationSink& Sysuid::compositorNotificationSink()
+DuiCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 {
     return *m_compositorNotificationSink;
 }
 
-Dui::Orientation Sysuid::orientation() const
+Dui::Orientation Sysuid::orientation () const
 {
-    return m_statusAreaWindow->orientation();
+    return m_statusAreaWindow->orientation ();
 }
 
-Dui::OrientationAngle Sysuid::orientationAngle() const
+Dui::OrientationAngle Sysuid::orientationAngle () const
 {
-    return m_statusAreaWindow->orientationAngle();
+    return m_statusAreaWindow->orientationAngle ();
 }
 
-DuiApplicationWindow &Sysuid::applicationWindow()
+DuiApplicationWindow &Sysuid::applicationWindow ()
 {
     return *m_applicationWindow;
 }
 
-void Sysuid::applyUseMode()
+void Sysuid::applyUseMode ()
 {
-    bool videoRecording = useMode->value().toString() == "recording";
+    bool videoRecording =
+        useMode->value ().toString () == "recording";
 
-    m_compositorNotificationSink->setApplicationEventsEnabled(!videoRecording);
-    m_feedbackNotificationSink->setApplicationEventsEnabled(!videoRecording);
+    m_compositorNotificationSink->setApplicationEventsEnabled (!videoRecording);
+    m_feedbackNotificationSink->setApplicationEventsEnabled (!videoRecording);
 }
+

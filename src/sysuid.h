@@ -54,37 +54,37 @@ public:
      *
      * \return a reference to the notification manager
      */
-    NotificationManager &notificationManager();
+    NotificationManager &notificationManager ();
 
     /*!
      * Returns a reference to the compositor notification sink.
      *
      * \return a reference to the compositor notification sink
      */
-    DuiCompositorNotificationSink& compositorNotificationSink();
+    DuiCompositorNotificationSink& compositorNotificationSink ();
 
     /*!
      * Returns the current orientation of the status area window's scene.
      */
-    virtual Dui::Orientation orientation() const;
+    virtual Dui::Orientation orientation () const;
 
     /*!
      * Returns the current orientation angle of the status area window's scene.
      */
-    virtual Dui::OrientationAngle orientationAngle() const;
+    virtual Dui::OrientationAngle orientationAngle () const;
 
     /*!
      * Returns a reference to the application window.
      *
      * \return a reference to the application window
      */
-    DuiApplicationWindow &applicationWindow();
+    DuiApplicationWindow &applicationWindow ();
 
 signals:
     /*!
       * Inform about orientation changes
       */
-    void orientationChangeFinished(const Dui::Orientation &);
+    void orientationChangeFinished (const Dui::Orientation &);
 
 public slots:
     void retranslate ();
@@ -93,7 +93,7 @@ private slots:
     /*!
      * Enables or disables various sinks according to current use mode
      */
-    void applyUseMode();
+    void applyUseMode ();
 
 private:
     SystemUIGConf           *m_SystemUIGConf;
