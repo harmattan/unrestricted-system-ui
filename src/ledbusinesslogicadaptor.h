@@ -40,15 +40,12 @@ public:
 
 public slots:
     Q_NOREPLY void setLedsEnabled (bool enabled);
-    Q_NOREPLY void setIlluminationLedEnabled (bool enabled);
     Q_NOREPLY void setEventsLedEnabled (bool enabled);
     bool LedsEnabled ();
-    bool IlluminationLedEnabled ();
     bool EventsLedEnabled ();
 
 signals: 
     void ledsStateChanged (bool);
-    void illuminationLedStateChanged (bool);
     void eventsLedStateChanged (bool);
 
 public:

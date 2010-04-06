@@ -46,10 +46,6 @@ SystemUIGConf::SystemUIGConf (
             new DuiGConfItem (
                 mapGConfKey(SystemUIGConf::LedEventsEnabled)));
     
-    duiGConfItems.insert (SystemUIGConf::LedIlluminationEnabled, 
-            new DuiGConfItem (
-                mapGConfKey(SystemUIGConf::LedIlluminationEnabled)));
-
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
         connect (i.value (), SIGNAL (valueChanged()), 
@@ -165,11 +161,6 @@ SystemUIGConf::mapGConfKey (
                     "/eventsLedEnabled";
             break;
         
-        case SystemUIGConf::LedIlluminationEnabled:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/illuminationLedEnabled";
-            break;
-
         default:
             break;
     }

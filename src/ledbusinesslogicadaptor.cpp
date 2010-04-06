@@ -35,8 +35,6 @@ LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
 
     connect (ledLogic, SIGNAL(ledsStateChanged(bool)),
             this, SIGNAL(ledsStateChanged (bool)));
-    connect (ledLogic, SIGNAL(illuminationLedStateChanged(bool)),
-            this, SIGNAL(illuminationLedStateChanged(bool)));
     connect (ledLogic, SIGNAL(eventsLedStateChanged(bool)),
             this, SIGNAL(eventsLedStateChanged(bool)));
 }
@@ -47,14 +45,6 @@ LedBusinessLogicAdaptor::setLedsEnabled (
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
     m_LedLogic->setLedsEnabled (enabled);
-}
-
-void
-LedBusinessLogicAdaptor::setIlluminationLedEnabled (
-        bool         enabled)
-{
-    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
-    m_LedLogic->setIlluminationLedEnabled (enabled);
 }
 
 void
@@ -70,13 +60,6 @@ LedBusinessLogicAdaptor::LedsEnabled ()
 {
     SYS_DEBUG ("");
     return m_LedLogic->ledsEnabled ();
-}
-
-bool
-LedBusinessLogicAdaptor::IlluminationLedEnabled ()
-{
-    SYS_DEBUG ("");
-    return m_LedLogic->illuminationLedEnabled ();
 }
 
 bool

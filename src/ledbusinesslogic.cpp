@@ -65,21 +65,6 @@ LedBusinessLogic::setLedsEnabled (
     ensureLedStates ();
 }
 
-bool
-LedBusinessLogic::illuminationLedEnabled ()
-{
-    return m_SystemUIGConf->value (
-            SystemUIGConf::LedIlluminationEnabled).toBool();
-}
-
-void
-LedBusinessLogic::setIlluminationLedEnabled (
-        bool enabled)
-{
-    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
-    m_SystemUIGConf->setValue (SystemUIGConf::LedIlluminationEnabled, enabled);
-    ensureLedStates ();
-}
 
 bool
 LedBusinessLogic::eventsLedEnabled ()
@@ -101,12 +86,9 @@ LedBusinessLogic::ensureLedStates ()
 {
     bool allLedEnabled;
     bool eventsLedEnabled;
-    bool illuminationLedEnabled;
 
     allLedEnabled = m_SystemUIGConf->value (
             SystemUIGConf::LedAllEnabled).toBool();
-    illuminationLedEnabled = m_SystemUIGConf->value (
-            SystemUIGConf::LedIlluminationEnabled).toBool();
     eventsLedEnabled = m_SystemUIGConf->value (
             SystemUIGConf::LedEventsEnabled).toBool();
 
@@ -114,9 +96,6 @@ LedBusinessLogic::ensureLedStates ()
         m_Led->enable ();
     else 
         m_Led->disable ();
-
-    SYS_WARNING ("Don't know how to turn the illumination led %s",
-        allLedEnabled && illuminationLedEnabled ? "on" : "off");
 }
 
 void 
@@ -129,13 +108,10 @@ LedBusinessLogic::gconfValueChanged (
             emit ledsStateChanged(value.toBool());
             break;
         
-        case SystemUIGConf::LedIlluminationEnabled:
-            emit illuminationLedStateChanged(value.toBool());
-            break;
-
         case SystemUIGConf::LedEventsEnabled:
             emit eventsLedStateChanged(value.toBool());
             break;
+
         default:
             break;
     }

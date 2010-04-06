@@ -39,15 +39,11 @@ public:
     bool ledsEnabled ();
     void setLedsEnabled (bool enabled);
     
-    bool illuminationLedEnabled ();
-    void setIlluminationLedEnabled (bool enabled);
-    
     bool eventsLedEnabled ();
     void setEventsLedEnabled (bool enabled);
 
 signals: 
     void ledsStateChanged(bool enabled);
-    void illuminationLedStateChanged(bool enabled);
     void eventsLedStateChanged(bool enabled);
 
 

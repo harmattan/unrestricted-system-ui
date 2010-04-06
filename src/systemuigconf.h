@@ -47,7 +47,6 @@ public:
         BatteryPSMThresholdKey,
         LedAllEnabled,
         LedEventsEnabled,
-        LedIlluminationEnabled
     };
 
     SystemUIGConf(QObject* parent = 0);
