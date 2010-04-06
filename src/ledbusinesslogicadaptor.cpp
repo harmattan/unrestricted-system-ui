@@ -39,6 +39,10 @@ LedBusinessLogicAdaptor::LedBusinessLogicAdaptor (
             this, SIGNAL(eventsLedStateChanged(bool)));
 }
 
+/*!
+ * Set if all led patterns are disabled. The ledapplet has a master switch in
+ * the brief, it uses this method to turn the led on/off.
+ */
 void
 LedBusinessLogicAdaptor::setLedsEnabled (
         bool         enabled)
@@ -47,6 +51,11 @@ LedBusinessLogicAdaptor::setLedsEnabled (
     m_LedLogic->setLedsEnabled (enabled);
 }
 
+/*!
+ * This method is used to set one or more specific led pattern on and off. The
+ * mask specifies which led pattern(s) to toggle, the second parameter
+ * determines if the pattern(s) should be enabled or disabled.
+ */
 void
 LedBusinessLogicAdaptor::setEventsLedEnabled (
 	int          mask,
@@ -56,6 +65,9 @@ LedBusinessLogicAdaptor::setEventsLedEnabled (
     m_LedLogic->setEventsLedEnabled (mask, enabled);
 }
 
+/*!
+ * This method will return if the master switch is turned on or off.
+ */
 bool
 LedBusinessLogicAdaptor::LedsEnabled ()
 {
@@ -63,6 +75,10 @@ LedBusinessLogicAdaptor::LedsEnabled ()
     return m_LedLogic->ledsEnabled ();
 }
 
+/*!
+ * Returns which led patterns are enabled. Every pattern is represented by a bit
+ * that is 1 if the pattern is enabled and 0 if disabled.
+ */
 int
 LedBusinessLogicAdaptor::EventsLedEnabled ()
 {

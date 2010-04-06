@@ -51,12 +51,18 @@ LedBusinessLogic::~LedBusinessLogic ()
     m_Led = 0;
 }
 
+/*!
+ * Returns true if the led master switch is turned on.
+ */
 bool
 LedBusinessLogic::ledsEnabled ()
 {
     return m_SystemUIGConf->value (SystemUIGConf::LedAllEnabled).toBool();
 }
 
+/*
+ * Sets the state of the master switch.
+ */
 void
 LedBusinessLogic::setLedsEnabled (
         bool enabled)
@@ -66,7 +72,10 @@ LedBusinessLogic::setLedsEnabled (
     ensureLedStates ();
 }
 
-
+/*!
+ * Returns information about the enabled led patterns. Every pattern is
+ * represented by a bit in the returned integer.
+ */
 int
 LedBusinessLogic::eventsLedEnabled ()
 {
@@ -89,6 +98,11 @@ LedBusinessLogic::eventsLedEnabled ()
     return retval;
 }
 
+/*!
+ * This method is used to set one or more specific led pattern on and off. The
+ * mask specifies which led pattern(s) to toggle, the second parameter
+ * determines if the pattern(s) should be enabled or disabled.
+ */
 void
 LedBusinessLogic::setEventsLedEnabled (
         int  mask,
@@ -112,13 +126,14 @@ LedBusinessLogic::setEventsLedEnabled (
     if (mask & 32)
         m_SystemUIGConf->setValue (SystemUIGConf::OtherNotificationsLed, enabled);
 
-    //SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
-    //m_SystemUIGConf->setValue (SystemUIGConf::LedEventsEnabled, enabled);
     ensureLedStates ();
 }
 
+/*!
+ * This method is called whenever the led state has been changed. 
+ */
 void 
-LedBusinessLogic::ensureLedStates ()
+LedBusinessLogic::ensureensureLedStatesLedStates ()
 {
     bool allLedEnabled;
 
@@ -134,6 +149,10 @@ LedBusinessLogic::ensureLedStates ()
         m_Led->disable ();
 }
 
+/*!
+ * This slot is called when the GConf database has been modified. A signal will
+ * be sent about the change.
+ */
 void 
 LedBusinessLogic::gconfValueChanged (
         SystemUIGConf::GConfKey key, 
@@ -157,7 +176,14 @@ LedBusinessLogic::gconfValueChanged (
             break;
 
         default:
+            /*
+             * This change is not about the event led.
+             */
             break;
     }
+
+    /* 
+     * FIXME: Should not we call the ensureLedStates() method?
+     */
 }
 
