@@ -73,18 +73,19 @@ LedBusinessLogic::eventsLedEnabled ()
     int retval = 0;
 
     if (m_SystemUIGConf->value (SystemUIGConf::MissedCallLed).toBool())
-        retval &= 1;
+        retval |= 1;
     if (m_SystemUIGConf->value (SystemUIGConf::SMSReceivedLed).toBool())
-        retval &= 2;
+        retval |= 2;
     if (m_SystemUIGConf->value (SystemUIGConf::EmailReceivedLed).toBool())
-        retval &= 4;
+        retval |= 4;
     if (m_SystemUIGConf->value (SystemUIGConf::InstantMessageReceivedLed).toBool())
-        retval &= 8;
+        retval |= 8;
     if (m_SystemUIGConf->value (SystemUIGConf::ChargingLed).toBool())
-        retval &= 16;
+        retval |= 16;
     if (m_SystemUIGConf->value (SystemUIGConf::OtherNotificationsLed).toBool())
-        retval &= 32;
+        retval |= 32;
 
+    SYS_DEBUG ("Returning %d", retval);
     return retval;
 }
 
