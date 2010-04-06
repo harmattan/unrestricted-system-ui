@@ -23,7 +23,7 @@
 #include <DuiGConfItem>
 #include <QDebug>
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 SystemUIGConf::SystemUIGConf (
@@ -42,9 +42,18 @@ SystemUIGConf::SystemUIGConf (
             new DuiGConfItem (
                 mapGConfKey(SystemUIGConf::LedAllEnabled)));
     
-    duiGConfItems.insert (SystemUIGConf::LedEventsEnabled, 
-            new DuiGConfItem (
-                mapGConfKey(SystemUIGConf::LedEventsEnabled)));
+    duiGConfItems.insert (SystemUIGConf::MissedCallLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::MissedCallLed)));
+    duiGConfItems.insert (SystemUIGConf::SMSReceivedLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::SMSReceivedLed)));
+    duiGConfItems.insert (SystemUIGConf::EmailReceivedLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::EmailReceivedLed)));
+    duiGConfItems.insert (SystemUIGConf::InstantMessageReceivedLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::InstantMessageReceivedLed)));
+    duiGConfItems.insert (SystemUIGConf::ChargingLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::ChargingLed)));
+    duiGConfItems.insert (SystemUIGConf::OtherNotificationsLed, 
+            new DuiGConfItem (mapGConfKey(SystemUIGConf::OtherNotificationsLed)));
     
     QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
     for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
@@ -81,6 +90,9 @@ SystemUIGConf::setValue (
         SystemUIGConf::GConfKey key, 
         QVariant                value)
 {
+    SYS_DEBUG ("*** key      = %d", (int) key);
+    SYS_DEBUG ("*** value    = %s", SYS_BOOL(value.toBool()));
+
     duiGConfItems.value(key)->set (value);
 }
 
@@ -156,11 +168,36 @@ SystemUIGConf::mapGConfKey (
                     "/allLedsEnabled";
             break;
         
-        case SystemUIGConf::LedEventsEnabled:
+        case SystemUIGConf::MissedCallLed:
             keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/eventsLedEnabled";
+                    "/MissedCallLedEnabled";
             break;
         
+	case SystemUIGConf::SMSReceivedLed:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/SMSReceivedLedEnabled";
+            break;
+        
+	case SystemUIGConf::EmailReceivedLed:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/EmailReceivedLedEnabled";
+            break;
+        
+	case SystemUIGConf::InstantMessageReceivedLed:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/InstantMessageReceivedLedEnabled";
+            break;
+        
+	case SystemUIGConf::ChargingLed:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/ChargingLedEnabled";
+            break;
+	
+	case SystemUIGConf::OtherNotificationsLed:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
+                    "/OtherNotificationsLed";
+            break;
+
         default:
             break;
     }

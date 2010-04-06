@@ -39,8 +39,8 @@ public:
     bool ledsEnabled ();
     void setLedsEnabled (bool enabled);
     
-    bool eventsLedEnabled ();
-    void setEventsLedEnabled (bool enabled);
+    int eventsLedEnabled ();
+    void setEventsLedEnabled (int mask, bool enabled);
 
 signals: 
     void ledsStateChanged(bool enabled);

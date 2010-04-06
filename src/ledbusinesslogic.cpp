@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,12 +18,10 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include "ledbusinesslogic.h"
 
-//#define DEBUG
+#define DEBUG
 #include "debug.h"
 
 LedBusinessLogic::LedBusinessLogic (
@@ -32,7 +32,8 @@ LedBusinessLogic::LedBusinessLogic (
     m_Led (new QmLED)
 {
     SYS_DEBUG ("");
-
+    SYS_DEBUG ("*** int  eventsLedEnabled()");
+    SYS_DEBUG ("*** bool ledsEnabled()");
     connect (
      m_SystemUIGConf, SIGNAL (valueChanged(SystemUIGConf::GConfKey, QVariant)),
      this, SLOT (gconfValueChanged (SystemUIGConf::GConfKey, QVariant)));
@@ -66,18 +67,52 @@ LedBusinessLogic::setLedsEnabled (
 }
 
 
-bool
+int
 LedBusinessLogic::eventsLedEnabled ()
 {
-    return m_SystemUIGConf->value (SystemUIGConf::LedEventsEnabled).toBool();
+    int retval = 0;
+
+    if (m_SystemUIGConf->value (SystemUIGConf::MissedCallLed).toBool())
+        retval &= 1;
+    if (m_SystemUIGConf->value (SystemUIGConf::SMSReceivedLed).toBool())
+        retval &= 2;
+    if (m_SystemUIGConf->value (SystemUIGConf::EmailReceivedLed).toBool())
+        retval &= 4;
+    if (m_SystemUIGConf->value (SystemUIGConf::InstantMessageReceivedLed).toBool())
+        retval &= 8;
+    if (m_SystemUIGConf->value (SystemUIGConf::ChargingLed).toBool())
+        retval &= 16;
+    if (m_SystemUIGConf->value (SystemUIGConf::OtherNotificationsLed).toBool())
+        retval &= 32;
+
+    return retval;
 }
 
 void
 LedBusinessLogic::setEventsLedEnabled (
+        int  mask,
         bool enabled)
 {
-    SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
-    m_SystemUIGConf->setValue (SystemUIGConf::LedEventsEnabled, enabled);
+    Q_UNUSED (enabled);
+    Q_UNUSED (mask);
+
+    SYS_DEBUG ("*** mask    = %d", mask);
+    SYS_DEBUG ("*** enabled = %s", SYS_BOOL(enabled));
+    if (mask & 1)
+        m_SystemUIGConf->setValue (SystemUIGConf::MissedCallLed, enabled);
+    if (mask & 2)
+        m_SystemUIGConf->setValue (SystemUIGConf::SMSReceivedLed, enabled);
+    if (mask & 4)
+        m_SystemUIGConf->setValue (SystemUIGConf::EmailReceivedLed, enabled);
+    if (mask & 8)
+        m_SystemUIGConf->setValue (SystemUIGConf::InstantMessageReceivedLed, enabled);
+    if (mask & 16)
+        m_SystemUIGConf->setValue (SystemUIGConf::ChargingLed, enabled);
+    if (mask & 32)
+        m_SystemUIGConf->setValue (SystemUIGConf::OtherNotificationsLed, enabled);
+
+    //SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
+    //m_SystemUIGConf->setValue (SystemUIGConf::LedEventsEnabled, enabled);
     ensureLedStates ();
 }
 
@@ -85,14 +120,14 @@ void
 LedBusinessLogic::ensureLedStates ()
 {
     bool allLedEnabled;
-    bool eventsLedEnabled;
 
     allLedEnabled = m_SystemUIGConf->value (
             SystemUIGConf::LedAllEnabled).toBool();
-    eventsLedEnabled = m_SystemUIGConf->value (
-            SystemUIGConf::LedEventsEnabled).toBool();
 
-    if (allLedEnabled && eventsLedEnabled)
+    /*
+     * Here we try to do some actual hw interaction, this is all we have.
+     */
+    if (allLedEnabled)
         m_Led->enable ();
     else 
         m_Led->disable ();
@@ -107,8 +142,16 @@ LedBusinessLogic::gconfValueChanged (
         case SystemUIGConf::LedAllEnabled:
             emit ledsStateChanged(value.toBool());
             break;
-        
-        case SystemUIGConf::LedEventsEnabled:
+
+        case SystemUIGConf::MissedCallLed:
+        case SystemUIGConf::SMSReceivedLed:
+        case SystemUIGConf::EmailReceivedLed:
+        case SystemUIGConf::InstantMessageReceivedLed:
+        case SystemUIGConf::ChargingLed:
+        case SystemUIGConf::OtherNotificationsLed:
+            /*
+             * No matter which event led has been changed, we emit this signal.
+             */
             emit eventsLedStateChanged(value.toBool());
             break;
 

@@ -46,7 +46,12 @@ public:
         BatteryPSMAutoKey       = 0,
         BatteryPSMThresholdKey,
         LedAllEnabled,
-        LedEventsEnabled,
+	MissedCallLed,
+        SMSReceivedLed,
+        EmailReceivedLed,
+        InstantMessageReceivedLed,
+        ChargingLed,
+        OtherNotificationsLed,
     };
 
     SystemUIGConf(QObject* parent = 0);

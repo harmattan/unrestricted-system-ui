@@ -49,10 +49,11 @@ LedBusinessLogicAdaptor::setLedsEnabled (
 
 void
 LedBusinessLogicAdaptor::setEventsLedEnabled (
+	int          mask,
         bool         enabled)
 {
     SYS_DEBUG ("*** enabled = %s", enabled ? "yes" : "no");
-    m_LedLogic->setEventsLedEnabled (enabled);
+    m_LedLogic->setEventsLedEnabled (mask, enabled);
 }
 
 bool
@@ -62,7 +63,7 @@ LedBusinessLogicAdaptor::LedsEnabled ()
     return m_LedLogic->ledsEnabled ();
 }
 
-bool
+int
 LedBusinessLogicAdaptor::EventsLedEnabled ()
 {
     SYS_DEBUG ("");
