@@ -1,8 +1,8 @@
-system-ui (0.14.0~1) harmattan; urgency=low
+system-ui (0.14.0~2) harmattan; urgency=low
 
   * Compatibility with libdui 0.20
 
- -- Vesa Halttunen <vhalttun@4fil49414>  Thu, 01 Apr 2010 11:56:23 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 06 Apr 2010 14:37:13 +0200
 
 system-ui (0.13.5-1) harmattan; urgency=low
 
