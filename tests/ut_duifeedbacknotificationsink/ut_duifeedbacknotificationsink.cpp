@@ -22,11 +22,14 @@
 #include <DuiApplication>
 #include <DuiFeedbackPlayer>
 #include "duifeedbacknotificationsink.h"
-#include "duifeedbackplayer_p.h"
 #include "feedbackparameterfactory.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "sysuid_stub.h"
+
+#if 0
+#include "duifeedbackplayer_p.h"
+#endif
 
 // xlib.h defines Status, undef it so we can use QSettings::Status
 #ifdef Status
@@ -41,10 +44,15 @@ void DuiFeedbackPlayer::play(const QString &feedbackName)
     Ut_DuiFeedbackNotificationSink::played.append(feedbackName);
 }
 
+#if 0
+// XXX: FIXME
+// Seems the libdui returns true like here, but that
+// is also initalizing a connection to duifeedbackd
 bool DuiFeedbackPlayerPrivate::init(const QString &)
 {
     return true;
 }
+#endif
 
 // maemosec stubs
 int maemosec::storage::get_file(const char *pathname, unsigned char **to_buf, ssize_t *bytes)
