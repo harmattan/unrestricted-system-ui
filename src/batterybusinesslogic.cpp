@@ -131,9 +131,15 @@ LowBatteryNotifier::showLowBatteryNotification()
             m_Sleep = false;
             m_Timer->start (m_ActiveInterval);
             break;
+
         case QmDisplayState::Off:
             m_Sleep = true;
             m_Timer->start (m_InactiveInterval);
+            break;
+
+        default:
+            // FIXME: what about the other states [Unknown]?
+            break;
     }
 }
 
@@ -161,6 +167,10 @@ LowBatteryNotifier::displayStateChanged (
         case QmDisplayState::Off:
             m_Timer->setInterval (m_InactiveInterval - m_Time.elapsed());
             m_Sleep = true;
+            break;
+
+        default:
+            // FIXME: what about the other states [Unknown]?
             break;
     }
 }
