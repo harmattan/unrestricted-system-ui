@@ -133,7 +133,7 @@ LedBusinessLogic::setEventsLedEnabled (
  * This method is called whenever the led state has been changed. 
  */
 void 
-LedBusinessLogic::ensureensureLedStatesLedStates ()
+LedBusinessLogic::ensureLedStates ()
 {
     bool allLedEnabled;
 
