@@ -35,16 +35,43 @@ void Ut_LockScreenUI::cleanup()
 {
 }
 
+DuiApplication *app;
 void Ut_LockScreenUI::initTestCase()
 {
-    static int argc = 1;
-    static char *app_name = (char *)"./ut_lockscreenui";
+    int argc = 1;
+    char* app_name = (char*) "./Ut_LockScreenUI";
     app = new DuiApplication(argc, &app_name);
+
+    DuiApplicationWindow *win = new DuiApplicationWindow;
+    Qt::WindowFlags flags = 0;
+    flags |= Qt::FramelessWindowHint;
+    flags |= Qt::CustomizeWindowHint;
+    flags |= Qt::WindowStaysOnTopHint;
+    win->setWindowOpacity (0.0);
+    win->setWindowFlags (flags);
 }
 
-void Ut_LockScreenUI::cleanupTestCase()
+void 
+Ut_LockScreenUI::cleanupTestCase()
 {
     delete app;
+}
+
+void
+Ut_LockScreenUI::testLockScreenUI ()
+{
+    LockScreenUI *lockScreenUI;
+
+    lockScreenUI = new LockScreenUI;
+
+    DuiApplication::activeApplicationWindow ()->show ();
+    DuiApplication::activeApplicationWindow ()->raise ();
+
+    lockScreenUI->setOpacity (1.0);
+    lockScreenUI->appearNow ();
+    lockScreenUI->setActive (true);
+ 
+    QTest::qWait (5000);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)

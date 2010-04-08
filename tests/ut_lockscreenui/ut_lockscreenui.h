@@ -24,20 +24,17 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-class DuiApplication;
-
 class Ut_LockScreenUI : public QObject
 {
     Q_OBJECT
-
-private:
-    DuiApplication *app;
 
 private slots:
     void init();
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
+
+    void testLockScreenUI ();
 };
 
 #endif
