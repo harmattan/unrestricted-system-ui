@@ -25,6 +25,7 @@
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaWindow_Scene_Render_Called = false;
+QRectF rectReceived(0,0,0,0);
 
 const QPixmap *DuiTheme::pixmap(const QString &id, const QSize &size)
 {
@@ -39,7 +40,7 @@ void QGraphicsScene::render(QPainter *painter,
 {
     Ut_StatusAreaWindow_Scene_Render_Called = true;
     Q_UNUSED(painter);
-    Q_UNUSED(target);
+    rectReceived= target;
     Q_UNUSED(source);
     Q_UNUSED(aspectRatioMode);
 }
@@ -53,6 +54,11 @@ void Ut_StatusAreaWindow::init()
 
 void Ut_StatusAreaWindow::cleanup()
 {
+<<<<<<< HEAD:tests/ut_statusareawindow/ut_statusareawindow.cpp
+=======
+    Ut_StatusAreaWindow_Scene_Render_Called = false;
+    rectReceived.setRect(0,0,0,0);
+>>>>>>> New : Rendering of statusarea window to a pixmap:tests/ut_statusareawindow/ut_statusareawindow.cpp
     delete statusAreaWindow;
 }
 
@@ -65,18 +71,42 @@ void Ut_StatusAreaWindow::initTestCase()
 
 void Ut_StatusAreaWindow::cleanupTestCase()
 {
+<<<<<<< HEAD:tests/ut_statusareawindow/ut_statusareawindow.cpp
     Ut_StatusAreaWindow_Scene_Render_Called = false;
+=======
+>>>>>>> New : Rendering of statusarea window to a pixmap:tests/ut_statusareawindow/ut_statusareawindow.cpp
     delete app;
 }
 
 void Ut_StatusAreaWindow::testSceneChanged()
 {
+    // Test an intersected rect
     QList<QRectF> rectList;
-    QRectF rect(0,0,30,80);
-    rectList.append(rect);
+    QRectF rect1(0,0,30,80);
+    rectList.append(rect1);
     connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
     emit changed(rectList);
     QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+
+    // Test when rect has no intersection with pixmap
+    Ut_StatusAreaWindow_Scene_Render_Called = false;
+    rectList.pop_front();
+    QRectF rect2(40,50,30,80);
+    rectList.append(rect2);
+    emit changed(rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+
+    // Test when two rects called then scene render called with complete intersection rect( final rect should be Rect1 U Rect2 Intersectin sharedPixmapRect)
+    rectList.pop_front();
+    QRectF rect3(0,0,10,20);
+    QRectF rect4(10,20,10,20);
+    rectList.append(rect3);
+    rectList.append(rect4);
+    emit changed(rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+    QRectF unitedRect = rect3.united(rect4) ;
+    QRectF expectedRect = unitedRect.intersected(QRectF(0,0,30,80)); // 0,0,30,80 come from the size of the pixmap
+    QCOMPARE(rectReceived,expectedRect);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaWindow)

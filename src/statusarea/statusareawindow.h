@@ -88,8 +88,8 @@ private:
     //! Shared Pixmap between libdui and systemui for the status area.
     QPixmap* statusAreaPixmap;
 
-    //! Initializes the shared pixmap for use
-    inline bool initializePixmap();
+    //! Initializes the scene for use
+    void initializeScene();
 
     //! Logical ID of shared pixmap which is used for rendering the status area
     static QString STATUS_AREA_PIXMAP_LOGICAL_ID;
