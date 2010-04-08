@@ -20,11 +20,12 @@
 #ifndef STATUSAREA_H
 #define STATUSAREA_H
 
+#include "statusindicatormenuwindow.h"
 #include "statusareamodel.h"
 
 #include <DuiButton>
 #include <QSharedPointer>
-class StatusIndicatorMenuWindow;
+
 class StatusAreaWindow;
 
 /*!

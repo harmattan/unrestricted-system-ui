@@ -17,9 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiApplicationPage>
 #include <DuiSceneManager>
-#include <DuiEscapeButtonPanel>
 #include <QX11Info>
 #include "pluginlist.h"
 #include "statusindicatormenuwindow.h"

@@ -20,24 +20,67 @@
 #include <DuiOrientationChangeEvent>
 #include <DuiOnDisplayChangeEvent>
 #include <DuiDeviceProfile>
+#include <DuiTheme>
 #include "statusareawindow.h"
 #include "statusarea.h"
 
+QString StatusAreaWindow::STATUS_AREA_PIXMAP_LOGICAL_ID = "duinavigationbar-statusarea-background";
+
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     DuiWindow(NULL, parent),
-    scene(new QGraphicsScene),
-    statusArea_(new StatusArea(NULL,this))
+    statusArea_(new StatusArea(NULL,this)),
+    statusAreaPixmap(NULL)
 {
     // Set the window type to _NET_WM_WINDOW_TYPE_DOCK
     setAttribute(Qt::WA_X11NetWmWindowTypeDock);
 
-    // Set the scene and add the status area to the scene
-    setScene(scene);
-    scene->addItem(statusArea_);
-
     // Rotate to current orientation
     rotate(this->orientationAngle());
     connect(this, SIGNAL(orientationAngleChanged(const Dui::OrientationAngle &)), this, SLOT(rotate(const Dui::OrientationAngle &)));
+}
+
+bool StatusAreaWindow::init()
+{
+    scene = new QGraphicsScene();
+    // Set the scene and add the status area to the scene
+    setScene(scene);
+    scene->addItem(statusArea_);
+    // Get signaled when the scene changes
+    connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+    return initializePixmap();
+}
+
+bool StatusAreaWindow::initializePixmap()
+{
+    statusAreaPixmap = const_cast<QPixmap*>(DuiTheme::pixmap(STATUS_AREA_PIXMAP_LOGICAL_ID));
+    QSize size = statusAreaPixmap->size();
+    if(size == QSize(50,50)) {
+        return false;
+    }
+    return true;
+}
+
+void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
+{
+    if (!region.empty() && !statusAreaPixmap->isNull()) {
+        QPainter painter(statusAreaPixmap);
+
+        foreach(const QRectF & r, region) {
+            // Don't draw areas that are outside the pixmap
+            QRectF drawRect = r.intersected(statusAreaPixmap->rect());
+
+            if (painter.isActive()) {
+                // Clear region with full transparency
+                painter.save();
+                painter.setCompositionMode(QPainter::CompositionMode_Clear);
+                painter.fillRect(drawRect, QBrush(QColor(0, 0, 0, 0)));
+                painter.restore();
+
+                // Render the changes to the scene
+                scene->render(&painter, drawRect, drawRect);
+            }
+        }
+    }
 }
 
 StatusAreaWindow::~StatusAreaWindow()

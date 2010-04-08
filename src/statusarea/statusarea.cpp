@@ -21,7 +21,6 @@
 #include "statusareawindow.h"
 #include <DuiApplicationIfProxy>
 #include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenuwindow.h"
 
 const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.duistatusindicatormenu";
 // To prevent swipe inside the status bar. Must end swiping atlease some distance away from status bar
