@@ -1,12 +1,12 @@
 /*! \page notifications Notifications System Implementation
 
-The notifications system is implemented by the system UI daemon. This page describes the architecture and internals of the notification system itself and is meant for those developing the notification system. Convenience classes for application developers willing to use the notification system are provided in libdui. <strong>If you're an application developer willing to use notifications, refer to the libdui documentation for more information. There's a separate page for notifications that contains all the necessary information. However, if you want to define new notification event types for your application or you need to write system notification plugins, read on.</strong>
+The notifications system is implemented by the system UI daemon. This page describes the architecture and internals of the notification system itself and is meant for those developing the notification system. Convenience classes for application developers willing to use the notification system are provided in libdui. <strong>If you're an application developer willing to use notifications, refer to the libdui documentation for more information. There's a separate page for notifications that contains all the necessary information. However, if you want to define new notification event types for your application, read on.</strong>
 
 \section components Components
 
 The notification system is divided into three entities:
 
-- \b %Notification \b sources - %Notification sources observe events like signals in D-Bus system bus and changed values in context framework. System notifications are spawned by a special source which loads a fixed set of plugins.They can also expose APIs to allow other applications to trigger notifications.
+- \b %Notification \b sources - %Notification sources observe events like D-Bus calls.
 - \b %Notification \b manager - Manages the triggered notifications.
 - \b %Notification \b sinks - Sinks act based on a notification. Sinks can for instance display a notification widget, play a sound or trigger tactile feedback.
 
@@ -16,7 +16,7 @@ The notification system is divided into three entities:
 
 %Notification sources are responsible for triggering notifications based on events and their internal logic. %Notification sources are given a notification manager interface instance that they should use to trigger notifications. %Notification sources inherit the \c NotificationSource interface.
 
-%Notification sources can use various means to decide whether notifications should be triggered. %Notification sources can connect to backends like context framework or D-Bus. System notifications have a special notification source which loads trusted plugins as system notifications cannot be sent over the DBus.A plugin just needs to call addNotification method of the notification manager interface when it is ready to send a notification. How a plugin interacts with the application originating a notification is left to a plugin.%Notification sources can also publish D-Bus interfaces to allow external parties to launch notifications. The <a href="http://www.galago-project.org/specs/notification/">Galago Desktop Notification Specification</a> can for instance be supported by a separate notification source in the system.
+%Notification sources can use various means to decide whether notifications should be triggered. %Notification sources can connect to backends like D-Bus. %Notification sources can also publish D-Bus interfaces to allow external parties to launch notifications. The <a href="http://www.galago-project.org/specs/notification/">Galago Desktop Notification Specification</a> can for instance be supported by a separate notification source in the system.
 
 \section manager Notification manager
 
@@ -40,9 +40,12 @@ The event type parameter of a notification is used to describe the overall prope
 iconId=Icon-close
 feedbackId=press
 userRemovable=false
+class=system
 \endverbatim
 
-The \c userRemovable key can be used to define whether a notification of given type is user removable when the user taps on the notification banner. If userRemovable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If userRemovable equals true the notification is removed when it is tapped. Notifications are user removable by default.
+The \c userRemovable key can be used to define whether a notification of given type is user removable when the user taps on the notification banner. If userRemovable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If userRemovable equals true or the key is missing the notification is removed when it is tapped.
+
+The \c class key can be used to define whether a notification of given type is a system notification or an application notification. If class equals system the notification is a system notification. It class equals application or the key is missing the notification is an application notification. System notifications may be treated differently by the notification sinks. For instance, system notifications are not displayed by the \c NotificationAreaSink. They may also have a higher priority than the application notifications.
 
 \section links Links
 
@@ -55,4 +58,3 @@ The \c userRemovable key can be used to define whether a notification of given t
 - NotificationSink
 - DuiCompositorNotificationSink
 */
-
