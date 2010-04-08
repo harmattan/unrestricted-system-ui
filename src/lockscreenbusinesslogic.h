@@ -44,9 +44,6 @@ private slots:
     void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
     void unlockScreen();
 
-    // from dbus
-    void updateMissedEventAmounts(int, int, int, int);
-
 signals:
     void updateTime ();
     void unlockConfirmed ();

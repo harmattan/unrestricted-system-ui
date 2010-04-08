@@ -45,19 +45,7 @@ DUI_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
 LockScreenUI::LockScreenUI () :
         timeLabel (0),
-        dateLabel (0),
-        unreadEmailsImage (0),
-        unreadMessagesImage (0),
-        missedCallsImage (0),
-        unreadChatMessagesImage (0),
-        unreadEmailsLabel (0),
-        unreadMessagesLabel (0),
-        missedCallsLabel (0),
-        unreadChatMessagesLabel (0),
-        m_emails (0),
-        m_messages (0),
-        m_calls (0),
-        m_im (0)
+        dateLabel (0)
 {
     SYS_DEBUG ("");
 
@@ -148,50 +136,10 @@ LockScreenUI::createWidgets ()
     slider->setMaximumWidth (450);
     slider->setMaximumHeight (80);
 
-    QGraphicsWidget* spacerl = new QGraphicsWidget;
-    spacerl->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
-                                         QSizePolicy::Minimum));
-
-    // TODO: if icon id used we have a problem with sizing. that's why use directly svg icons.
-    unreadEmailsImage = new DuiImageWidget ("icon-m-notification-email");
-    //unreadEmailsImage->setImage(QImage("/usr/share/sysuid/themes/svg/emails-missed.svg"));
-    unreadMessagesImage = new DuiImageWidget ("icon-m-notification-sms");
-    //unreadMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/messages-missed.svg"));
-    missedCallsImage = new DuiImageWidget ("icon-m-notification-call");
-    //missedCallsImage->setImage(QImage("/usr/share/sysuid/themes/svg/call-missed.svg"));
-    unreadChatMessagesImage = new DuiImageWidget ("icon-m-notification-im");
-    //unreadChatMessagesImage->setImage(QImage("/usr/share/sysuid/themes/svg/chat-missed.svg"));
-
-    // TODO: some suitable layout could be added to image and then the label to that layout
-
-    unreadEmailsLabel   = new DuiLabel (QString("%1").arg(m_emails),
-                                        unreadEmailsImage);
-    unreadMessagesLabel = new DuiLabel (QString("%1").arg(m_messages),
-                                        unreadMessagesImage);
-    missedCallsLabel    = new DuiLabel (QString("%1").arg(m_calls),
-                                        missedCallsImage);
-    unreadChatMessagesLabel = new DuiLabel (QString("%1").arg(m_im),
-                                            unreadChatMessagesImage);
-
-    QGraphicsWidget* spacerr = new QGraphicsWidget;
-    spacerr->setSizePolicy(
-            QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
-
-    QGraphicsWidget* spacerb = new QGraphicsWidget;
-    spacerb->setSizePolicy (
-            QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
-
     policy->addItem (spacert,                 0, 0, 1, 6);
     policy->addItem (timeLabel,               1, 0, 1, 6);
     policy->addItem (dateLabel,               2, 0, 1, 6);
     policy->addItem (slider,                  3, 0, 1, 6);
-    policy->addItem (spacerl,                 4, 0);
-    policy->addItem (unreadEmailsImage,       4, 1);
-    policy->addItem (unreadMessagesImage,     4, 2);
-    policy->addItem (missedCallsImage,        4, 3);
-    policy->addItem (unreadChatMessagesImage, 4, 4);
-    policy->addItem (spacerr,                 4, 5);
-    policy->addItem (spacerb,                 5, 0, 1, 6);
 
     return layout;
 }
@@ -213,35 +161,4 @@ LockScreenUI::updateDateTime ()
     update();
 }
 
-/*!
- * Check dbus adaptor!
- * Q_NOREPLY void SetMissedEvents(int emails, int messages, int calls, int im);
- */
-void
-LockScreenUI::updateMissedEventAmounts (
-        int emails, 
-        int messages, 
-        int calls, 
-        int im)
-{
-    SYS_DEBUG (
-"\n*** emails    = %d"
-"\n*** messages  = %d"
-"\n*** calls     = %d"
-"\n*** im        = %d",
-    emails, messages, calls, im);
-
-    m_emails = emails;
-    m_messages = messages;
-    m_calls = calls;
-    m_im = im;
-
-    if (isContentCreated ())
-    {
-        missedCallsLabel->setText(QString("%1").arg(calls));
-        unreadMessagesLabel->setText(QString("%1").arg(messages));
-        unreadEmailsLabel->setText(QString("%1").arg(emails));
-        unreadChatMessagesLabel->setText(QString("%1").arg(im));
-    }
-}
 

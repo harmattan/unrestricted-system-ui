@@ -39,11 +39,6 @@ public:
     virtual ~LockScreenUI();
 
     virtual void createContent ();
-    void updateMissedEventAmounts (
-            int emails, 
-            int messages, 
-            int calls, 
-            int im);
 
 signals:
     void unlocked ();
@@ -58,21 +53,6 @@ private:
 private:
     DuiLabel *timeLabel; // qtn_scrlock_current_time
     DuiLabel *dateLabel; // qtn_scrlock_current_daydate
-
-    DuiImageWidget *unreadEmailsImage;
-    DuiImageWidget *unreadMessagesImage;
-    DuiImageWidget *missedCallsImage;
-    DuiImageWidget *unreadChatMessagesImage;
-
-    DuiLabel *unreadEmailsLabel;
-    DuiLabel *unreadMessagesLabel;
-    DuiLabel *missedCallsLabel;
-    DuiLabel *unreadChatMessagesLabel;
-
-    int m_emails;
-    int m_messages;
-    int m_calls;
-    int m_im;
 
     UnlockSlider *slider;
 };
