@@ -73,11 +73,9 @@
       <case name="ut_unlockslider" type="Functional" description="Test the unlock slider API" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
       </case>
-<!--
       <case name="ut_lockscreenui" type="Functional" description="Test the unlock slider API" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lockscreenui</step>
       </case>
--->
     </set>
     <set name="batterybusinesslogic" description="middleware tests">
       <case name="ut_batterybusinesslogic" type="Functional" description="Test the BatteryBusinessLogic" level="Component">

@@ -25,6 +25,7 @@
 
 #include <DuiApplication>
 #include <DuiApplicationWindow>
+#include <DuiSceneManager>
 #include <DuiTheme>
 
 void Ut_LockScreenUI::init()
@@ -35,42 +36,72 @@ void Ut_LockScreenUI::cleanup()
 {
 }
 
-DuiApplication *app;
+
+int   argc = 1;
+char *argv[] = {
+    "./ut_lockscreenui", 
+    NULL };
+
+const QString themeDir = "/usr/share/themes/base/dui/sysuid/";
+const QString styleDir = themeDir + "style/";
+const QString svgDir = themeDir + "svg/";
+
 void Ut_LockScreenUI::initTestCase()
 {
-    int argc = 1;
-    char* app_name = (char*) "./Ut_LockScreenUI";
-    app = new DuiApplication(argc, &app_name);
+    qDebug() << "Creating application.";
+    app = new DuiApplication(argc, argv);
 
-    DuiApplicationWindow *win = new DuiApplicationWindow;
+    qDebug() << "Initializing our own themes.";
+    DuiTheme::addPixmapDirectory (svgDir);
+    DuiTheme::loadCSS (styleDir + "sysuid.css");
+    DuiTheme::loadCSS (styleDir + "unlocksliderstyle.css");
+
+    qDebug() << "Creating main window.";
+    m_MainWindow = new DuiApplicationWindow;
+
+#if 0
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
     flags |= Qt::WindowStaysOnTopHint;
-    win->setWindowOpacity (0.0);
-    win->setWindowFlags (flags);
+    m_MainWindow->setWindowOpacity (0.0);
+    m_MainWindow->setWindowFlags (flags);
+#endif
 }
 
 void 
 Ut_LockScreenUI::cleanupTestCase()
 {
+    //delete m_LockScreenUI;
+    delete m_MainWindow; 
     delete app;
 }
 
 void
+Ut_LockScreenUI::testLockScreenBusinessLogic ()
+{
+}
+
+/*!
+ * This function will do the basic testing of the lockscreenui. It seems, that
+ * we are not checking anything, but actually it is important to see if the test
+ * program crashes or not. So consider this a 'compiled' and 'not crashed' test
+ * case.
+ */
+void
 Ut_LockScreenUI::testLockScreenUI ()
 {
-    LockScreenUI *lockScreenUI;
-
-    lockScreenUI = new LockScreenUI;
+    m_LockScreenUI = new LockScreenUI ();
 
     DuiApplication::activeApplicationWindow ()->show ();
-    DuiApplication::activeApplicationWindow ()->raise ();
+    //DuiApplication::activeApplicationWindow ()->raise ();
 
-    lockScreenUI->setOpacity (1.0);
-    lockScreenUI->appearNow ();
-    lockScreenUI->setActive (true);
- 
+    //m_LockScreenUI->createContent ();
+    //m_LockScreenUI->setOpacity (1.0);
+    //m_LockScreenUI->show();
+    //m_LockScreenUI->setActive (true);
+    DuiApplication::activeApplicationWindow()->sceneManager()->showWindowNow(
+    		    m_LockScreenUI);
     QTest::qWait (5000);
 }
 
