@@ -34,7 +34,7 @@ Package: system-ui-tests
 Section: devel
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, testrunner, ci-testing
+Depends: ${shlibs:Depends}, duitestrunner
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui
