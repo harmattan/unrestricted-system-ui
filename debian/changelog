@@ -1,9 +1,10 @@
-system-ui (0.14.0~2) harmattan; urgency=low
+system-ui (0.14.0-1) harmattan; urgency=low
 
   * Compatibility with libdui 0.20
   * Implemented: SWP#DUI-1883 Possibility to spawn a system notification
+  * Dropped missed events from touch-screen-lock ui / logic
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 06 Apr 2010 14:37:13 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 09 Apr 2010 11:33:43 +0200
 
 system-ui (0.13.5-1) harmattan; urgency=low
 
