@@ -92,7 +92,7 @@ void Ut_ClockView::testUpdateTimeFormat()
 {
     m_subject->setModel(&clockModel);
     clockModel.setTimeFormat24h(false);
-    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelvehour"));
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelve-hour"));
     clockModel.setTimeFormat24h(true);
     QCOMPARE(m_subject->styleContainer().currentMode(), QString());
 }
