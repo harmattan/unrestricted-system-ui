@@ -39,7 +39,7 @@ void Ut_LockScreenUI::cleanup()
 
 int   argc = 1;
 char *argv[] = {
-    "./ut_lockscreenui", 
+    (char *) "./ut_lockscreenui",
     NULL };
 
 const QString themeDir = "/usr/share/themes/base/dui/sysuid/";
@@ -94,6 +94,14 @@ Ut_LockScreenUI::testLockScreenUI ()
     QTest::qWait (2000);
     hideLockScreenUI ();
     QTest::qWait (2000);
+
+    /*
+     * We should be able to hide/show the tklock ui multiple times
+     * [ -> so it shouldn't be destroyed meantime... ]
+     * ^ so if calling show/hide multiple times is not crashing
+     *   this test is passed.
+     */
+    QVERIFY (true);
 }
 
 void
@@ -103,13 +111,15 @@ Ut_LockScreenUI::showLockScreenUI ()
     if (!m_LockScreenUI)
         m_LockScreenUI = new LockScreenUI ();
 
+    QVERIFY (m_LockScreenUI != 0);
+
     m_MainWindow->show ();
     m_MainWindow->raise ();
 
     m_LockScreenUI->setOpacity (1.0);
     m_LockScreenUI->setActive (true);
 
-    m_MainWindow->sceneManager()->showWindowNow (m_LockScreenUI);
+    m_MainWindow->sceneManager()->appearSceneWindowNow (m_LockScreenUI);
 }
 
 void
@@ -118,7 +128,7 @@ Ut_LockScreenUI::hideLockScreenUI ()
     QVERIFY (m_LockScreenUI != 0);
 
     qDebug() << "Hiding LockScreenUI";
-    m_LockScreenUI->hide();
+    m_LockScreenUI->hide ();
     m_MainWindow->hide ();
 }
 
