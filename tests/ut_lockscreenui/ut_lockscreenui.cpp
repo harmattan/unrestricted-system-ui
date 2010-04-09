@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,8 +18,6 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include "ut_lockscreenui.h"
 #include "lockscreenui.h"
@@ -48,8 +48,10 @@ const QString svgDir = themeDir + "svg/";
 
 void Ut_LockScreenUI::initTestCase()
 {
+    m_LockScreenUI = 0;
+
     qDebug() << "Creating application.";
-    app = new DuiApplication(argc, argv);
+    m_App = new DuiApplication(argc, argv);
 
     qDebug() << "Initializing our own themes.";
     DuiTheme::addPixmapDirectory (svgDir);
@@ -59,7 +61,7 @@ void Ut_LockScreenUI::initTestCase()
     qDebug() << "Creating main window.";
     m_MainWindow = new DuiApplicationWindow;
 
-#if 0
+#if 1
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
@@ -74,12 +76,7 @@ Ut_LockScreenUI::cleanupTestCase()
 {
     //delete m_LockScreenUI;
     delete m_MainWindow; 
-    delete app;
-}
-
-void
-Ut_LockScreenUI::testLockScreenBusinessLogic ()
-{
+    delete m_App;
 }
 
 /*!
@@ -91,18 +88,41 @@ Ut_LockScreenUI::testLockScreenBusinessLogic ()
 void
 Ut_LockScreenUI::testLockScreenUI ()
 {
-    m_LockScreenUI = new LockScreenUI ();
+    showLockScreenUI ();
+    QTest::qWait (2000);
+    hideLockScreenUI ();
+    QTest::qWait (2000);
+    
+    showLockScreenUI ();
+    QTest::qWait (2000);
+    hideLockScreenUI ();
+    QTest::qWait (2000);
+}
 
-    DuiApplication::activeApplicationWindow ()->show ();
-    //DuiApplication::activeApplicationWindow ()->raise ();
+void
+Ut_LockScreenUI::showLockScreenUI ()
+{
+    qDebug() << "Showing LockScreenUI";
+    if (!m_LockScreenUI)
+        m_LockScreenUI = new LockScreenUI ();
 
-    //m_LockScreenUI->createContent ();
-    //m_LockScreenUI->setOpacity (1.0);
-    //m_LockScreenUI->show();
-    //m_LockScreenUI->setActive (true);
-    DuiApplication::activeApplicationWindow()->sceneManager()->showWindowNow(
-    		    m_LockScreenUI);
-    QTest::qWait (5000);
+    m_MainWindow->show ();
+    m_MainWindow->raise ();
+
+    m_LockScreenUI->setOpacity (1.0);
+    m_LockScreenUI->setActive (true);
+
+    m_MainWindow->sceneManager()->showWindowNow (m_LockScreenUI);
+}
+
+void
+Ut_LockScreenUI::hideLockScreenUI ()
+{
+    QVERIFY (m_LockScreenUI != 0);
+
+    qDebug() << "Hiding LockScreenUI";
+    m_LockScreenUI->hide();
+    m_MainWindow->hide ();
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)
