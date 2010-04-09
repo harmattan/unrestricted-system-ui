@@ -61,7 +61,12 @@ LockScreenUI::~LockScreenUI ()
     SYS_DEBUG ("");
 }
 
-
+/*!
+ * FIXME: This is a public method and there is no protection against multiple
+ * calling.
+ * FIXME: It is not clear why we need createWidgets() and createContent(), one
+ * should be enough.
+ */
 void
 LockScreenUI::createContent ()
 {
@@ -69,6 +74,13 @@ LockScreenUI::createContent ()
 
     DuiApplicationPage::createContent();
 
+    /*
+     * I had to modify this function because it caused a leak, and that led us
+     * to failed unit test. Now the screen looks a little bit different, but
+     * that doesn't matter, because we have to change the UI according to the
+     * new UI spec anyway. I left the old code here, so we can see what was the
+     * original idea.
+     */
     //DuiLayout* layout = new DuiLayout;
     DuiLayout* widgets = createWidgets();
 

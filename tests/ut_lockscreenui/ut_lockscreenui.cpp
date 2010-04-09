@@ -61,20 +61,17 @@ void Ut_LockScreenUI::initTestCase()
     qDebug() << "Creating main window.";
     m_MainWindow = new DuiApplicationWindow;
 
-#if 1
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
     flags |= Qt::WindowStaysOnTopHint;
     m_MainWindow->setWindowOpacity (0.0);
     m_MainWindow->setWindowFlags (flags);
-#endif
 }
 
 void 
 Ut_LockScreenUI::cleanupTestCase()
 {
-    //delete m_LockScreenUI;
     delete m_MainWindow; 
     delete m_App;
 }
