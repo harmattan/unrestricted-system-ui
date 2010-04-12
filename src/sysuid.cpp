@@ -105,9 +105,7 @@ Sysuid::Sysuid () : QObject (),
 
     // Show status area window when sysui daemon starts
     m_statusAreaWindow = new StatusAreaWindow;
-    if(!m_statusAreaWindow->init()) {
-        SYS_DEBUG ("Status bar pixmap was not obtained. Status bar rendering would not happen")
-    }
+    m_statusAreaWindow->init();
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));
