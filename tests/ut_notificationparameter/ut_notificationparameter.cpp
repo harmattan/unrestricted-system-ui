@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
+#include <MApplication>
 #include "ut_notificationparameter.h"
 #include "notificationparameter.h"
 

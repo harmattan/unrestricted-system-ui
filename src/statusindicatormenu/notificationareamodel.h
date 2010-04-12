@@ -20,18 +20,18 @@
 #ifndef NOTIFICATIONAREAMODEL_H_
 #define NOTIFICATIONAREAMODEL_H_
 
-#include <DuiWidgetModel>
+#include <MWidgetModel>
 
-class DuiInfoBanner;
+class MInfoBanner;
 
-typedef QList<DuiInfoBanner *> BannerList;
+typedef QList<MInfoBanner *> BannerList;
 
-class NotificationAreaModel : public DuiWidgetModel
+class NotificationAreaModel : public MWidgetModel
 {
     Q_OBJECT
-    DUI_MODEL(NotificationAreaModel)
-    //! Notification DuiInfoBanner's in statusarea
-    DUI_MODEL_PROPERTY(BannerList, banners, Banners, true, QList<DuiInfoBanner *>())
+    M_MODEL(NotificationAreaModel)
+    //! Notification MInfoBanner's in statusarea
+    M_MODEL_PROPERTY(BannerList, banners, Banners, true, QList<MInfoBanner *>())
 };
 
 #endif /* NOTIFICATIONAREAMODEL_H_ */

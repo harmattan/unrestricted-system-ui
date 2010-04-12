@@ -21,17 +21,17 @@
 #ifndef STATUSINDICATORLABELSTYLE_H_
 #define STATUSINDICATORLABELSTYLE_H_
 
-#include <DuiWidgetStyle>
+#include <MWidgetStyle>
 
-class StatusIndicatorLabelStyle : public DuiWidgetStyle
+class StatusIndicatorLabelStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(StatusIndicatorLabelStyle)
+    M_STYLE(StatusIndicatorLabelStyle)
 };
 
-class StatusIndicatorLabelStyleContainer : public DuiWidgetStyleContainer
+class StatusIndicatorLabelStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(StatusIndicatorLabelStyle)
+    M_STYLE_CONTAINER(StatusIndicatorLabelStyle)
 };
 
 #endif /* STATUSINDICATORLABELSTYLE_H_ */

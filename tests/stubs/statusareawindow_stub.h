@@ -29,7 +29,7 @@ public:
     virtual void StatusAreaWindowConstructor();
     virtual void StatusAreaWindowDestructor();
     virtual StatusArea *statusArea() const;
-    virtual void rotate(const Dui::OrientationAngle& angle);
+    virtual void rotate(const M::OrientationAngle& angle);
 };
 
 void StatusAreaWindowStub::StatusAreaWindowConstructor()
@@ -48,10 +48,10 @@ StatusArea * StatusAreaWindowStub::statusArea() const
     return stubReturnValue<StatusArea *>("statusArea");
 }
 
-void StatusAreaWindowStub::rotate(const Dui::OrientationAngle& angle)
+void StatusAreaWindowStub::rotate(const M::OrientationAngle& angle)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<Dui::OrientationAngle>(angle));
+    params.append(new Parameter<M::OrientationAngle>(angle));
     stubMethodEntered("rotate", params);
 }
 
@@ -59,7 +59,7 @@ StatusAreaWindowStub gDefaultStatusAreaWindowStub;
 StatusAreaWindowStub *gStatusAreaWindowStub = &gDefaultStatusAreaWindowStub;
 
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
-    DuiWindow(parent),
+    MWindow(parent),
     scene(0),
     statusArea_(0)
 {
@@ -76,7 +76,7 @@ StatusArea *StatusAreaWindow::statusArea() const
     return gStatusAreaWindowStub->statusArea();
 }
 
-void StatusAreaWindow::rotate(const Dui::OrientationAngle &angle)
+void StatusAreaWindow::rotate(const M::OrientationAngle &angle)
 {
     gStatusAreaWindowStub->rotate(angle);
 }

@@ -24,7 +24,7 @@
 
 class StatusAreaView;
 class StatusArea;
-class DuiButton;
+class MButton;
 
 class Ut_StatusAreaView : public QObject
 {

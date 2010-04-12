@@ -1,4 +1,4 @@
-include(../../duiconfig.pri)
+include(../../mconfig.pri)
 
 TEMPLATE = subdirs
 

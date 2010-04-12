@@ -22,8 +22,8 @@
 #include <QObject>
 #include "usbbusinesslogic.h"
 
-class DuiDialog;
-class DuiNotification;
+class MDialog;
+class MNotification;
 
 class UsbUi : public QObject
 {
@@ -42,8 +42,8 @@ class UsbUi : public QObject
 
     private:
         UsbBusinessLogic    *m_logic;
-        DuiNotification     *m_notification;
-        DuiDialog           *m_dialog;
+        MNotification     *m_notification;
+        MDialog           *m_dialog;
 
         void show_notification (int id);
 };

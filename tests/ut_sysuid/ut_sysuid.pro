@@ -58,8 +58,8 @@ HEADERS += \
     $$SRCDIR/notifications/eventtypestore.h \
     $$SRCDIR/notifications/notificationsink.h \
     $$SRCDIR/notifications/widgetnotificationsink.h \
-    $$SRCDIR/notifications/duicompositornotificationsink.h \
-    $$SRCDIR/notifications/duifeedbacknotificationsink.h \
+    $$SRCDIR/notifications/mcompositornotificationsink.h \
+    $$SRCDIR/notifications/mfeedbacknotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/unlocksliderwidget/unlockslider.h \
     $$SRCDIR/statusarea/statusareawindow.h \

@@ -17,16 +17,16 @@
 **
 ****************************************************************************/
 
-#include <DuiApplicationPage>
-#include <DuiSceneManager>
-#include <DuiEscapeButtonPanel>
+#include <MApplicationPage>
+#include <MSceneManager>
+#include <MEscapeButtonPanel>
 #include <QX11Info>
 #include "pluginlist.h"
 #include "statusindicatormenuwindow.h"
 
 #include <X11/Xlib.h>
 
-// TODO: this include can be removed when duicompositor
+// TODO: this include can be removed when mcompositor
 // sets the _NET_WM_STATE attribute according to the message.
 #include <X11/Xatom.h>
 
@@ -60,16 +60,16 @@ void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0)
 
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
-    DuiWindow(parent),
-    applicationPage(new DuiApplicationPage),
-    escapeButtonPanel(new DuiEscapeButtonPanel)
+    MWindow(parent),
+    applicationPage(new MApplicationPage),
+    escapeButtonPanel(new MEscapeButtonPanel)
 {
     // Create an application page for the plugin list
     applicationPage->setObjectName("StatusIndicatorMenuPage");
     applicationPage->setTitle("Status Indicator Menu");
-    applicationPage->setComponentsDisplayMode(DuiApplicationPage::NavigationBar, DuiApplicationPageModel::Hide);
-    applicationPage->setComponentsDisplayMode(DuiApplicationPage::HomeButton, DuiApplicationPageModel::Hide);
-    applicationPage->setComponentsDisplayMode(DuiApplicationPage::EscapeButton, DuiApplicationPageModel::Show);
+    applicationPage->setComponentsDisplayMode(MApplicationPage::NavigationBar, MApplicationPageModel::Hide);
+    applicationPage->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::Hide);
+    applicationPage->setComponentsDisplayMode(MApplicationPage::EscapeButton, MApplicationPageModel::Show);
     applicationPage->setCentralWidget(new PluginList(this, applicationPage.data()));
     sceneManager()->appearSceneWindowNow(applicationPage.data());
 
@@ -118,7 +118,7 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
     changeNetWmState(this, true, skipTaskbarAtom);
 
-    // TODO: setting this property by hand can be removed when duicompositor
+    // TODO: setting this property by hand can be removed when mcompositor
     // sets the _NET_WM_STATE attribute according to the message.
     Atom netWmStateAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE", False);
     QVector<Atom> atoms;

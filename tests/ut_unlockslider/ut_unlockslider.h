@@ -24,7 +24,7 @@
 
 #include "unlockslider.h"
 
-//Q_DECLARE_METATYPE(DuiButton*);
+//Q_DECLARE_METATYPE(MButton*);
 
 class Ut_UnlockSlider : public QObject
 {

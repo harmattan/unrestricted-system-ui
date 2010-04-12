@@ -25,15 +25,16 @@
 class StatusAreaStub : public StubBase
 {
 public:
-    virtual void statusAreaConstructor(DuiWidget *parent = NULL);
+    virtual void statusAreaConstructor(MWidget *parent = NULL, StatusAreaWindow *statusAreaWindow = NULL);
     virtual void showStatusIndicatorMenu();
     virtual bool sceneEvent(QEvent *event);
 };
 
-void StatusAreaStub::statusAreaConstructor(DuiWidget *parent)
+void StatusAreaStub::statusAreaConstructor(MWidget *parent, StatusAreaWindow *statusAreaWindow)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiWidget *>(parent));
+    params.append(new Parameter<MWidget *>(parent));
+    params.append(new Parameter<StatusAreaWindow *>(statusAreaWindow));
     stubMethodEntered("statusAreaConstructor", params);
 }
 
@@ -53,9 +54,9 @@ bool StatusAreaStub::sceneEvent(QEvent *event)
 StatusAreaStub gDefaultStatusAreaStub;
 StatusAreaStub *gStatusAreaStub = &gDefaultStatusAreaStub;
 
-StatusArea::StatusArea(DuiWidget *parent)
+StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow)
 {
-    gStatusAreaStub->statusAreaConstructor(parent);
+    gStatusAreaStub->statusAreaConstructor(parent, statusAreaWindow);
 }
 
 void StatusArea::showStatusIndicatorMenu()

@@ -28,13 +28,13 @@
 class NotifierStub : public StubBase
 {
 public:
-    virtual void NotifierConstructor(DuiWidget *parent);
+    virtual void NotifierConstructor(MWidget *parent);
     virtual void NotifierDestructor();
     virtual void notificationCountChanged(uint count);
 };
 
 // 2. IMPLEMENT STUB
-void NotifierStub::NotifierConstructor(DuiWidget *parent)
+void NotifierStub::NotifierConstructor(MWidget *parent)
 {
     Q_UNUSED(parent);
 
@@ -58,7 +58,7 @@ NotifierStub *gNotifierStub = &gDefaultNotifierStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-Notifier::Notifier(DuiWidget *parent)
+Notifier::Notifier(MWidget *parent)
 {
     gNotifierStub->NotifierConstructor(parent);
 }

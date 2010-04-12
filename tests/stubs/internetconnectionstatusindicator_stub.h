@@ -28,7 +28,7 @@
 class InternetConnectionStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void InternetConnectionStatusIndicatorDestructor();
     virtual void wifiSignalStrengthChanged();
     virtual void internetConnectionChanged();
@@ -37,7 +37,7 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void InternetConnectionStatusIndicatorStub::InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void InternetConnectionStatusIndicatorStub::InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -65,7 +65,7 @@ InternetConnectionStatusIndicatorStub *gInternetConnectionStatusIndicatorStub = 
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gInternetConnectionStatusIndicatorStub->InternetConnectionStatusIndicatorConstructor(context, parent);
 }

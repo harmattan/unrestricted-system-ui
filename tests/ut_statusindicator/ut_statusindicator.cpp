@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiOnDisplayChangeEvent>
+#include <MOnDisplayChangeEvent>
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
 #include "statusindicatorimageview.h"
@@ -50,7 +50,7 @@ TestStatusIndicatorImageView::TestStatusIndicatorImageView(StatusIndicator *cont
 
 void TestStatusIndicatorImageView::updateData(const QList<const char *>& modifications)
 {
-    DuiWidgetView::updateData(modifications);
+    MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
@@ -80,22 +80,22 @@ void Ut_StatusIndicator::cleanup()
 
 void Ut_StatusIndicator::initTestCase()
 {
-    // DuiApplications must be created manually these days due to theme system changes
+    // MApplications must be created manually these days due to theme system changes
     static int argc = 1;
     static char *app_name = (char *)"./ut_statusindicator";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusIndicator::cleanupTestCase()
 {
-    // Destroy the DuiApplication
+    // Destroy the MApplication
     delete app;
 }
 
 void Ut_StatusIndicator::testModelUpdates()
 {
-    DuiOnDisplayChangeEvent exitDisplayEvent(DuiOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    DuiOnDisplayChangeEvent enterDisplayEvent(DuiOnDisplayChangeEvent::FullyOnDisplay, QRectF());
+    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
+    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
     statusIndicator = new ClockAlarmStatusIndicator(*testContext);
 
     // When the application is visible the model should be updated
@@ -184,8 +184,8 @@ void Ut_StatusIndicator::testInternetConnection()
 
 void Ut_StatusIndicator::testAnimation()
 {
-    DuiOnDisplayChangeEvent exitDisplayEvent(DuiOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    DuiOnDisplayChangeEvent enterDisplayEvent(DuiOnDisplayChangeEvent::FullyOnDisplay, QRectF());
+    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
+    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
     statusIndicator = new BatteryStatusIndicator(*testContext);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));

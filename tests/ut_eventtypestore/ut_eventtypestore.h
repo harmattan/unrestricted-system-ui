@@ -16,8 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_DUIEVENTTYPESTORE_H
-#define UT_DUIEVENTTYPESTORE_H
+#ifndef UT_MEVENTTYPESTORE_H
+#define UT_MEVENTTYPESTORE_H
 
 #include <QtTest/QtTest>
 #include <QObject>

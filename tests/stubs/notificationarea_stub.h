@@ -21,23 +21,23 @@
 
 #include <stubbase.h>
 #include <notificationarea.h>
-#include <DuiInfoBanner>
+#include <MInfoBanner>
 
 class NotificationAreaStub : public StubBase
 {
 public:
-    virtual void notificationAreaConstructor(NotificationArea *notificationArea, DuiWidget *parent);
+    virtual void notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent);
     virtual void notificationAreaDestructor();
-    virtual void addNotification(DuiInfoBanner &notification);
-    virtual void moveNotificationToTop(DuiInfoBanner &notification);
-    virtual void removeNotification(DuiInfoBanner &notification);
+    virtual void addNotification(MInfoBanner &notification);
+    virtual void moveNotificationToTop(MInfoBanner &notification);
+    virtual void removeNotification(MInfoBanner &notification);
 };
 
-void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, DuiWidget *parent)
+void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<NotificationArea *>(notificationArea));
-    params.append(new Parameter<DuiWidget *>(parent));
+    params.append(new Parameter<MWidget *>(parent));
     stubMethodEntered("notificationAreaConstructor", params);
 }
 
@@ -46,31 +46,31 @@ void NotificationAreaStub::notificationAreaDestructor()
     stubMethodEntered("notificationAreaDestructor");
 }
 
-void NotificationAreaStub::addNotification(DuiInfoBanner &notification)
+void NotificationAreaStub::addNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("addNotification", params);
 }
 
-void NotificationAreaStub::moveNotificationToTop(DuiInfoBanner &notification)
+void NotificationAreaStub::moveNotificationToTop(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("moveNotificationToTop",params);
 }
 
-void NotificationAreaStub::removeNotification(DuiInfoBanner &notification)
+void NotificationAreaStub::removeNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("removeNotification", params);
 }
 
 NotificationAreaStub gDefaultNotificationAreaStub;
 NotificationAreaStub *gNotificationAreaStub = &gDefaultNotificationAreaStub;
 
-NotificationArea::NotificationArea(DuiWidget *parent)
+NotificationArea::NotificationArea(MWidget *parent)
 {
     gNotificationAreaStub->notificationAreaConstructor(this, parent);
 }
@@ -80,17 +80,17 @@ NotificationArea::~NotificationArea()
     gNotificationAreaStub->notificationAreaDestructor();
 }
 
-void NotificationArea::addNotification(DuiInfoBanner &notification)
+void NotificationArea::addNotification(MInfoBanner &notification)
 {
     gNotificationAreaStub->addNotification(notification);
 }
 
-void NotificationArea::moveNotificationToTop(DuiInfoBanner &notification)
+void NotificationArea::moveNotificationToTop(MInfoBanner &notification)
 {
     gNotificationAreaStub->moveNotificationToTop(notification);
 }
 
-void NotificationArea::removeNotification(DuiInfoBanner &notification)
+void NotificationArea::removeNotification(MInfoBanner &notification)
 {
     gNotificationAreaStub->removeNotification(notification);
 }

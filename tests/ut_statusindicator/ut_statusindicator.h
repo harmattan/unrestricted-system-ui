@@ -22,8 +22,8 @@
 #include <QtGui>
 #include <QtTest/QtTest>
 #include <QObject>
-#include <duiapplication.h>
-#include <duiwidget.h>
+#include <mapplication.h>
+#include <mwidget.h>
 #include "statusindicator.h"
 #include "statusindicatorimageview.h"
 #include "applicationcontext.h"
@@ -31,7 +31,7 @@
 class TestStatusIndicatorImageView : public StatusIndicatorImageView
 {
     Q_OBJECT
-    DUI_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
 
 public:
     TestStatusIndicatorImageView(StatusIndicator *controller);
@@ -54,7 +54,7 @@ class Ut_StatusIndicator : public QObject
     Q_OBJECT
 
 private:
-    DuiApplication  *app;
+    MApplication  *app;
     StatusIndicator *statusIndicator;
     TestContext     *testContext;
 

@@ -20,12 +20,12 @@
 #include "usbbusinesslogic.h"
 
 #include <QGraphicsLinearLayout>
-#include <DuiContainer>
-#include <DuiNotification>
-#include <DuiSceneWindow>
-#include <DuiButton>
-#include <DuiDialog>
-#include <DuiLocale>
+#include <MContainer>
+#include <MNotification>
+#include <MSceneWindow>
+#include <MButton>
+#include <MDialog>
+#include <MLocale>
 #include <QTimer>
 
 #define DEBUG
@@ -62,17 +62,17 @@ void
 UsbUi::ShowDialog ()
 {
     SYS_DEBUG ("");
-    DuiButton     *button;
-    DuiContainer  *hbox;
+    MButton     *button;
+    MContainer  *hbox;
 
     if (m_dialog)
     {
-        m_dialog->appear (DuiSceneWindow::KeepWhenDone);
+        m_dialog->appear (MSceneWindow::KeepWhenDone);
         m_dialog->setFocus ();
         return;
     }
 
-    m_dialog = new DuiDialog;
+    m_dialog = new MDialog;
 
     //% "Usb connected"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
@@ -83,7 +83,7 @@ UsbUi::ShowDialog ()
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
 
     //% "Ovi Suite"
-    button = new DuiButton (qtTrId ("qtn_usb_ovi_suite"));
+    button = new MButton (qtTrId ("qtn_usb_ovi_suite"));
 
     layout->addItem (button);
     layout->setStretchFactor (button, 1);
@@ -92,7 +92,7 @@ UsbUi::ShowDialog ()
                       this, SLOT (OviSuiteSelected ()));
 
     //% "Mass Storage"
-    button = new DuiButton (qtTrId ("qtn_usb_mass_storage"));
+    button = new MButton (qtTrId ("qtn_usb_mass_storage"));
 
     layout->addItem (button);
     layout->setStretchFactor (button, 1);
@@ -100,7 +100,7 @@ UsbUi::ShowDialog ()
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
-    hbox = new DuiContainer;
+    hbox = new MContainer;
     hbox->setHeaderVisible (false);
     hbox->setLayout (layout);
 
@@ -109,7 +109,7 @@ UsbUi::ShowDialog ()
 
     // Modal dialogs always create a new top level window and a scene manager
     // so no need to worry about registering to a specific scene manager here
-    m_dialog->appear (DuiSceneWindow::KeepWhenDone);
+    m_dialog->appear (MSceneWindow::KeepWhenDone);
     m_dialog->setFocus ();
 }
 
@@ -154,7 +154,7 @@ UsbUi::UsbEvent (bool connected)
         }
 
         //% "Usb disconnected"
-        m_notification = new DuiNotification (DuiNotification::DeviceRemovedEvent, "", qtTrId ("qtn_usb_disconnected"));
+        m_notification = new MNotification (MNotification::DeviceRemovedEvent, "", qtTrId ("qtn_usb_disconnected"));
         m_notification->publish();
 
         // Hide the mode-selection dialog
@@ -223,6 +223,6 @@ UsbUi::show_notification (int id)
     }
 
     //% "<b>Usb connected</b><br />Selected mode: <b>%1</b>"
-    m_notification = new DuiNotification (DuiNotification::DeviceAddedEvent, "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
+    m_notification = new MNotification (MNotification::DeviceAddedEvent, "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
     m_notification->publish();
 }

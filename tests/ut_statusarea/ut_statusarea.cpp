@@ -22,16 +22,16 @@
 #include <QGraphicsSceneMouseEvent>
 #include "statusindicatormenuwindow.h"
 #include "notificationarea_stub.h"
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiScene>
-#include <DuiSceneManager>
-#include <DuiEscapeButtonPanel>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MScene>
+#include <MSceneManager>
+#include <MEscapeButtonPanel>
 #include "statusindicatormenuwindow_stub.h"
-#include <DuiWidget>
+#include <MWidget>
 
 
-DuiWindow::DuiWindow(QWidget *parent)
+MWindow::MWindow(QWidget *parent)
     : QGraphicsView(parent),
       d_ptr(0)
 {
@@ -80,7 +80,7 @@ void Ut_StatusArea::initTestCase()
 {
     int argc = 1;
     char *app_name = (char *)"./ut_statusarea";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusArea::cleanupTestCase()

@@ -1,12 +1,12 @@
 include(../common_top.pri)
-TARGET = ut_duifeedbacknotificationsink
+TARGET = ut_mfeedbacknotificationsink
 INCLUDEPATH += $$SRCDIR/notifications
-DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 # unit test and unit
 SOURCES += \
-    ut_duifeedbacknotificationsink.cpp \
-    $$SRCDIR/notifications/duifeedbacknotificationsink.cpp \
+    ut_mfeedbacknotificationsink.cpp \
+    $$SRCDIR/notifications/mfeedbacknotificationsink.cpp \
     $$SRCDIR/notifications/notification.cpp \
     $$SRCDIR/notifications/notificationgroup.cpp \
     $$SRCDIR/notifications/notificationparameters.cpp \
@@ -19,8 +19,8 @@ SOURCES += \
 
 # unit test and unit
 HEADERS += \
-    ut_duifeedbacknotificationsink.h \
-    $$SRCDIR/notifications/duifeedbacknotificationsink.h \
+    ut_mfeedbacknotificationsink.h \
+    $$SRCDIR/notifications/mfeedbacknotificationsink.h \
 
 # base classes
 HEADERS += \

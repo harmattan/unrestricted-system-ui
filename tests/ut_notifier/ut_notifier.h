@@ -23,7 +23,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-class DuiApplication;
+class MApplication;
 class Notifier;
 
 class Ut_Notifier : public QObject
@@ -47,8 +47,8 @@ signals:
     void notificationCountChanged(uint count);
 
 private:
-    // DuiApplication
-    DuiApplication *app;
+    // MApplication
+    MApplication *app;
     // The object being tested
     Notifier *m_subject;
 };

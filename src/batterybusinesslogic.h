@@ -42,7 +42,7 @@
 #include <QTime>
 
 class QTimer;
-class DuiNotification;
+class MNotification;
 
 using namespace Maemo;
 
@@ -70,7 +70,7 @@ private:
     bool             m_Sleep;
     int              m_ActiveInterval;
     int              m_InactiveInterval;
-    DuiNotification *m_notification;
+    MNotification *m_notification;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;
@@ -121,7 +121,7 @@ private:
     QmLED              *m_Led;
     LowBatteryNotifier *m_LowBatteryNotifier;
     QStringList         m_PSMThresholds;
-    DuiNotification    *m_notification;
+    MNotification    *m_notification;
 
     void setPSMState (bool on);
     void initSystemUIGConfKeys ();

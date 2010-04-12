@@ -23,7 +23,7 @@
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
 #include "statusindicatorimagestyle.h"
-#include <DuiWidgetView>
+#include <MWidgetView>
 
 class StatusIndicator;
 class QPainter;
@@ -33,10 +33,10 @@ class QTimeLine;
  * \class StatusIndicatorImageView
  * \brief a view class for the status indicator widgets.
 */
-class StatusIndicatorImageView : public DuiWidgetView
+class StatusIndicatorImageView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
 
 public:
     /*!

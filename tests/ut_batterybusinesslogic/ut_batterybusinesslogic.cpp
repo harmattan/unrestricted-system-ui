@@ -18,9 +18,9 @@
 ****************************************************************************/
 #include "ut_batterybusinesslogic.h"
 
-#include <DuiApplication>
-#include <DuiTheme>
-#include <DuiLocale>
+#include <MApplication>
+#include <MTheme>
+#include <MLocale>
 
 #include <QVariant>
 
@@ -38,12 +38,12 @@ void Ut_BatteryBusinessLogic::cleanup()
     systemUIGConf = NULL;
 }
 
-DuiApplication *app;
+MApplication *app;
 void Ut_BatteryBusinessLogic::initTestCase()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_batterybusinesslogic";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_BatteryBusinessLogic::cleanupTestCase()

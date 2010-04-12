@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <QString>
-#include <DuiGConfItem>
+#include <MGConfItem>
 #include <QDBusPendingCallWatcher>
 #include <QDBusInterface>
 #include <QDBusMessage>
@@ -60,7 +60,7 @@ class UsbBusinessLogic : public QObject
         void init_device (QString &udi);
         int  getCableType ();
 
-        DuiGConfItem    *m_setting; 
+        MGConfItem    *m_setting; 
         QDBusInterface  *m_hal;
         bool             m_active;
         bool             m_connected;

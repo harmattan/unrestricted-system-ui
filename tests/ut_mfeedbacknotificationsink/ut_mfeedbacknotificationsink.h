@@ -17,19 +17,19 @@
 **
 ****************************************************************************/
 
-#ifndef UT_DUIFEEDBACKNOTIFICATIONSINK_H
-#define UT_DUIFEEDBACKNOTIFICATIONSINK_H
+#ifndef UT_MFEEDBACKNOTIFICATIONSINK_H
+#define UT_MFEEDBACKNOTIFICATIONSINK_H
 
 #include <QtTest/QtTest>
 #include <QObject>
 #include <QList>
 #include "notification.h"
 
-class DuiApplication;
-class DuiFeedbackNotificationSink;
+class MApplication;
+class MFeedbackNotificationSink;
 class QSettings;
 
-class Ut_DuiFeedbackNotificationSink : public QObject
+class Ut_MFeedbackNotificationSink : public QObject
 {
     Q_OBJECT
 
@@ -59,10 +59,10 @@ private slots:
     void testDetermineFeedBackId();
 
 private:
-    // DuiApplication
-    DuiApplication *app;
+    // MApplication
+    MApplication *app;
     // The object being tested
-    DuiFeedbackNotificationSink *sink;
+    MFeedbackNotificationSink *sink;
     // QSettings for the event type store
     QSettings *eventTypeSettings;
 

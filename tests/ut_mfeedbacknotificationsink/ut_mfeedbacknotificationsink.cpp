@@ -18,17 +18,17 @@
 ****************************************************************************/
 
 
-#include "ut_duifeedbacknotificationsink.h"
-#include <DuiApplication>
-#include <DuiFeedbackPlayer>
-#include "duifeedbacknotificationsink.h"
+#include "ut_mfeedbacknotificationsink.h"
+#include <MApplication>
+#include <MFeedbackPlayer>
+#include "mfeedbacknotificationsink.h"
 #include "feedbackparameterfactory.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "sysuid_stub.h"
 
 #if 0
-#include "duifeedbackplayer_p.h"
+#include "mfeedbackplayer_p.h"
 #endif
 
 // xlib.h defines Status, undef it so we can use QSettings::Status
@@ -38,17 +38,17 @@
 
 static NotificationManager *manager;
 
-// DuiFeedbackPlayer stubs (used by DuiApplication)
-void DuiFeedbackPlayer::play(const QString &feedbackName)
+// MFeedbackPlayer stubs (used by MApplication)
+void MFeedbackPlayer::play(const QString &feedbackName)
 {
-    Ut_DuiFeedbackNotificationSink::played.append(feedbackName);
+    Ut_MFeedbackNotificationSink::played.append(feedbackName);
 }
 
 #if 0
 // XXX: FIXME
 // Seems the libdui returns true like here, but that
-// is also initalizing a connection to duifeedbackd
-bool DuiFeedbackPlayerPrivate::init(const QString &)
+// is also initalizing a connection to mfeedbackd
+bool MFeedbackPlayerPrivate::init(const QString &)
 {
     return true;
 }
@@ -102,84 +102,84 @@ maemosec::storage::~storage()
 {
 }
 
-QList<QString> Ut_DuiFeedbackNotificationSink::played;
+QList<QString> Ut_MFeedbackNotificationSink::played;
 
-void Ut_DuiFeedbackNotificationSink::initTestCase()
+void Ut_MFeedbackNotificationSink::initTestCase()
 {
     static int argc = 1;
-    static char *app_name = (char *)"./ut_duifeedbacknotificationsink";
-    app = new DuiApplication(argc, &app_name);
+    static char *app_name = (char *)"./ut_mfeedbacknotificationsink";
+    app = new MApplication(argc, &app_name);
     eventTypeSettings = new QSettings;
     gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", const_cast<const QSettings *>(eventTypeSettings));
 }
 
-void Ut_DuiFeedbackNotificationSink::cleanupTestCase()
+void Ut_MFeedbackNotificationSink::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_DuiFeedbackNotificationSink::init()
+void Ut_MFeedbackNotificationSink::init()
 {
     played.clear();
-    sink = new DuiFeedbackNotificationSink();
+    sink = new MFeedbackNotificationSink();
     manager = new NotificationManager();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     eventTypeSettings->clear();
 }
 
-void Ut_DuiFeedbackNotificationSink::cleanup()
+void Ut_MFeedbackNotificationSink::cleanup()
 {
     delete sink;
     delete manager;
 }
 
-void Ut_DuiFeedbackNotificationSink::testAddNotification()
+void Ut_MFeedbackNotificationSink::testAddNotification()
 {
     // Create a notification
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was called for the feedback
+    // Check that MFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_DuiFeedbackNotificationSink::testNotificationWhileApplicationEventsDisabled()
+void Ut_MFeedbackNotificationSink::testNotificationWhileApplicationEventsDisabled()
 {
     // Create a notification
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     sink->setApplicationEventsEnabled(true);
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that DuiFeedbackPlayer::play() was called for the feedback when application events enabled
+    // Check that MFeedbackPlayer::play() was called for the feedback when application events enabled
     QCOMPARE(played.count(), 1);
 
     sink->setApplicationEventsEnabled(false);
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that DuiFeedbackPlayer::play() was NOT called for the feedback when application events are NOT enabled
+    // Check that MFeedbackPlayer::play() was NOT called for the feedback when application events are NOT enabled
     QCOMPARE(played.count(), 1);
 }
 
-void Ut_DuiFeedbackNotificationSink::testRemoveNotification()
+void Ut_MFeedbackNotificationSink::testRemoveNotification()
 {
     emit removeNotification(1);
 }
 
-void Ut_DuiFeedbackNotificationSink::testWithEventTypeAndFeedbackId()
+void Ut_MFeedbackNotificationSink::testWithEventTypeAndFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was called for the feedback
+    // Check that MFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_DuiFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
+void Ut_MFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
 {
     eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
 
@@ -188,35 +188,35 @@ void Ut_DuiFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was called for the feedback
+    // Check that MFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }
 
-void Ut_DuiFeedbackNotificationSink::testWithoutEventTypeOrFeedbackId()
+void Ut_MFeedbackNotificationSink::testWithoutEventTypeOrFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was not called for the feedback
+    // Check that MFeedbackPlayer::play() was not called for the feedback
     QCOMPARE(played.count(), 0);
 }
 
-void Ut_DuiFeedbackNotificationSink::testWithoutEventTypeWithFeedbackId()
+void Ut_MFeedbackNotificationSink::testWithoutEventTypeWithFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was called for the feedback
+    // Check that MFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_DuiFeedbackNotificationSink::testDetermineFeedBackId()
+void Ut_MFeedbackNotificationSink::testDetermineFeedBackId()
 {
     eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
 
@@ -224,9 +224,9 @@ void Ut_DuiFeedbackNotificationSink::testDetermineFeedBackId()
     parameters.add("eventType", "message-received");
     emit addNotification(Notification(0, 0, 0,  parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that DuiFeedbackPlayer::play() was called for the feedback
+    // Check that MFeedbackPlayer::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }
 
-QTEST_APPLESS_MAIN(Ut_DuiFeedbackNotificationSink)
+QTEST_APPLESS_MAIN(Ut_MFeedbackNotificationSink)

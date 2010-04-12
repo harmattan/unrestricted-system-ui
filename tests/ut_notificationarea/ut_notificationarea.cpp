@@ -35,8 +35,8 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
-#include <DuiInfoBanner>
+#include <MApplication>
+#include <MInfoBanner>
 #include "ut_notificationarea.h"
 #include "notificationarea.h"
 #include "notificationareaview.h"
@@ -50,15 +50,15 @@
 // Tests
 void Ut_NotificationArea::initTestCase()
 {
-    // Create a DuiAapplication
+    // Create a MAapplication
     static int argc = 1;
     static char *app_name = (char *)"./ut_notificationarea";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_NotificationArea::cleanupTestCase()
 {
-    // Destroy DuiApplication
+    // Destroy MApplication
     delete app;
 }
 
@@ -67,9 +67,9 @@ void Ut_NotificationArea::init()
     m_subject = new NotificationArea();
     m_subject->setView(new NotificationAreaView(m_subject));
 
-    connect(this, SIGNAL(addNotification(DuiInfoBanner &)), m_subject, SLOT(addNotification(DuiInfoBanner &)));
-    connect(this, SIGNAL(removeNotification(DuiInfoBanner &)), m_subject, SLOT(removeNotification(DuiInfoBanner &)));
-    connect(this, SIGNAL(notificationUpdated(DuiInfoBanner &)), m_subject, SLOT(moveNotificationToTop(DuiInfoBanner &)));
+    connect(this, SIGNAL(addNotification(MInfoBanner &)), m_subject, SLOT(addNotification(MInfoBanner &)));
+    connect(this, SIGNAL(removeNotification(MInfoBanner &)), m_subject, SLOT(removeNotification(MInfoBanner &)));
+    connect(this, SIGNAL(notificationUpdated(MInfoBanner &)), m_subject, SLOT(moveNotificationToTop(MInfoBanner &)));
 }
 
 void Ut_NotificationArea::cleanup()
@@ -80,7 +80,7 @@ void Ut_NotificationArea::cleanup()
 void Ut_NotificationArea::testAddNotification()
 {
     QSignalSpy notificationCountSpy(m_subject, SIGNAL(notificationCountChanged(int)));
-    DuiInfoBanner notification(DuiInfoBanner::Information);
+    MInfoBanner notification(MInfoBanner::Information);
     emit addNotification(notification);
     QVERIFY(notification.parentItem() != NULL);
     QVERIFY(m_subject->model()->banners().contains(&notification));
@@ -91,7 +91,7 @@ void Ut_NotificationArea::testAddNotification()
 void Ut_NotificationArea::testRemoveNotification()
 {
     QSignalSpy notificationCountSpy(m_subject, SIGNAL(notificationCountChanged(int)));
-    DuiInfoBanner notification(DuiInfoBanner::Information);
+    MInfoBanner notification(MInfoBanner::Information);
     emit removeNotification(notification);
     QVERIFY(notification.parentItem() == NULL);
     QVERIFY(! m_subject->model()->banners().contains(&notification));
@@ -101,9 +101,9 @@ void Ut_NotificationArea::testRemoveNotification()
 
 void Ut_NotificationArea::testAddNotificationLatestComesFirst()
 {
-    DuiInfoBanner notification1(DuiInfoBanner::Information);
+    MInfoBanner notification1(MInfoBanner::Information);
     emit addNotification(notification1);
-    DuiInfoBanner notification2(DuiInfoBanner::Information);
+    MInfoBanner notification2(MInfoBanner::Information);
     emit addNotification(notification2);
     QCOMPARE(m_subject->model()->banners().at(0), &notification2);
     QCOMPARE(m_subject->model()->banners().at(1), &notification1);
@@ -112,11 +112,11 @@ void Ut_NotificationArea::testAddNotificationLatestComesFirst()
 void Ut_NotificationArea::testUpdatedNotificationComesFirst()
 {
     // Add three notifications
-    DuiInfoBanner notification1(DuiInfoBanner::Information);
+    MInfoBanner notification1(MInfoBanner::Information);
     emit addNotification(notification1);
-    DuiInfoBanner notification2(DuiInfoBanner::Information);
+    MInfoBanner notification2(MInfoBanner::Information);
     emit addNotification(notification2);
-    DuiInfoBanner notification3(DuiInfoBanner::Information);
+    MInfoBanner notification3(MInfoBanner::Information);
     emit addNotification(notification3);
     emit notificationUpdated(notification2);
     QCOMPARE(m_subject->model()->banners().at(0), &notification2);

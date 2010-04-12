@@ -21,17 +21,17 @@
 
 #include <QTimer>
 
-#include <DuiWidgetView>
+#include <MWidgetView>
 
 #include "unlockslidermodel.h"
 #include "unlocksliderstyle.h"
 
 class UnlockSlider;
 
-class UnlockSliderView : public DuiWidgetView
+class UnlockSliderView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(UnlockSliderModel, UnlockSliderStyle)
+    M_VIEW(UnlockSliderModel, UnlockSliderStyle)
 
 public:
     UnlockSliderView(UnlockSlider* controller);
@@ -62,7 +62,7 @@ private:
     bool grabHandle(const QPointF& pos);
     void moveHandle(const QPointF& pos);
 
-    void drawImage(const DuiScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle = 0.0f) const;
+    void drawImage(const MScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle = 0.0f) const;
     QRectF handleRect() const;
     void recalcRects();
 

@@ -30,20 +30,20 @@
 #include "statusindicator_stub.h"
 #include "phonenetworkstatusindicator_stub.h"
 #include "notificationarea_stub.h"
-#include <DuiSceneWindow>
+#include <MSceneWindow>
 #include <QGraphicsLayout>
-#include <DuiWidget>
+#include <MWidget>
 
 int Ut_StatusAreaView::windowExecutionCount;
 int Ut_StatusAreaView::windowRejectionCount;
 
 // SceneWindow stubs
-void DuiSceneWindow::appear(DuiSceneWindow::DeletionPolicy)
+void MSceneWindow::appear(MSceneWindow::DeletionPolicy)
 {
     Ut_StatusAreaView::windowExecutionCount++;
 }
 
-void DuiSceneWindow::disappear()
+void MSceneWindow::disappear()
 {
     Ut_StatusAreaView::windowRejectionCount++;
 }

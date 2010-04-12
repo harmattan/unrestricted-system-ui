@@ -20,22 +20,22 @@
 #ifndef NOTIFICATIONAREA_H_
 #define NOTIFICATIONAREA_H_
 
-#include <DuiWidgetController>
+#include <MWidgetController>
 #include "notificationsink.h"
 #include "notificationareamodel.h"
 
 class NotificationManager;
 class NotificationAreaSink;
-class DuiInfoBanner;
-class DuiFlowLayoutPolicy;
+class MInfoBanner;
+class MFlowLayoutPolicy;
 
 /*!
  * The NotificationArea is a widget that shows notifications.
  */
-class NotificationArea : public DuiWidgetController
+class NotificationArea : public MWidgetController
 {
     Q_OBJECT
-    DUI_CONTROLLER(NotificationArea)
+    M_CONTROLLER(NotificationArea)
 
 public:
     /*!
@@ -43,7 +43,7 @@ public:
      *
      * \param parent the parent widget of the NotificationArea, defaults to NULL
      */
-    NotificationArea(DuiWidget *parent = NULL);
+    NotificationArea(MWidget *parent = NULL);
 
     /*!
      * Destroys the NotificationArea.
@@ -54,24 +54,24 @@ private slots:
     /*!
      * Adds a notification to the notification area.
      *
-     * \param notification the DuiInfoBanner to be added
+     * \param notification the MInfoBanner to be added
      */
-    void addNotification(DuiInfoBanner &notification);
+    void addNotification(MInfoBanner &notification);
 
     /*!
      * Moves the banner to top. Called when relayouting is asked by notification area sink
      * when a notification/group is updated.
      *
-     * \param notification the DuiInfoBanner to be made top
+     * \param notification the MInfoBanner to be made top
      */
-    void moveNotificationToTop(DuiInfoBanner &notification);
+    void moveNotificationToTop(MInfoBanner &notification);
 
     /*!
      * Removes a notification from the notification area.
      *
-     * \param notification the DuiInfoBanner to be removed
+     * \param notification the MInfoBanner to be removed
      */
-    void removeNotification(DuiInfoBanner &notification);
+    void removeNotification(MInfoBanner &notification);
 
 signals:
     /*!

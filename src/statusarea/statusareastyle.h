@@ -20,17 +20,17 @@
 #ifndef STATUSAREASTYLE_H
 #define STATUSAREASTYLE_H
 
-#include <duiwidgetstyle.h>
+#include <mwidgetstyle.h>
 
-class StatusAreaStyle : public DuiWidgetStyle
+class StatusAreaStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(StatusAreaStyle)
+    M_STYLE(StatusAreaStyle)
 };
 
-class StatusAreaStyleContainer : public DuiWidgetStyleContainer
+class StatusAreaStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(StatusAreaStyle)
+    M_STYLE_CONTAINER(StatusAreaStyle)
 };
 
 #endif

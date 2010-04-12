@@ -20,21 +20,21 @@
 #ifndef CLOCKMODEL_H_
 #define CLOCKMODEL_H_
 
-#include <DuiWidgetModel>
+#include <MWidgetModel>
 #include <QTime>
 
 /*!
  * A model for the Clock widget.
  */
-class ClockModel : public DuiWidgetModel
+class ClockModel : public MWidgetModel
 {
     Q_OBJECT
-    DUI_MODEL(ClockModel)
+    M_MODEL(ClockModel)
 
     //! The current time
-    DUI_MODEL_PROPERTY(QDateTime, time, Time, true, QDateTime::currentDateTime())
+    M_MODEL_PROPERTY(QDateTime, time, Time, true, QDateTime::currentDateTime())
     //! Whether 24 hour clock mode is used
-    DUI_MODEL_PROPERTY(bool, timeFormat24h, TimeFormat24h, true, true)
+    M_MODEL_PROPERTY(bool, timeFormat24h, TimeFormat24h, true, true)
 };
 
 #endif /* CLOCKMODEL_H_ */

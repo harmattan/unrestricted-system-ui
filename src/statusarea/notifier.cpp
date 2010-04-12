@@ -19,9 +19,9 @@
 #include "notifier.h"
 #include "notifiernotificationsink.h"
 #include "sysuid.h"
-#include "duicompositornotificationsink.h"
+#include "mcompositornotificationsink.h"
 
-Notifier::Notifier(DuiWidget *parent) : DuiLabel(parent),
+Notifier::Notifier(MWidget *parent) : MLabel(parent),
  notifierSink(new NotifierNotificationSink)
 {
     NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();

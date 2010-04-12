@@ -20,8 +20,8 @@
 #include "ut_statusindicatorimageview.h"
 #include "statusindicatorimageview.h"
 
-#include <DuiApplication>
-#include <DuiTheme>
+#include <MApplication>
+#include <MTheme>
 #include <QPainter>
 
 TestStatusIndicatorImageView::TestStatusIndicatorImageView(StatusIndicator *controller) :
@@ -52,12 +52,12 @@ StatusIndicatorImageStyle *TestStatusIndicatorImageView::modifiableStyle()
     return s;
 }
 
-// DuiTheme stubs
-QHash<QPixmap *, QString> gDuiThemePixmapPixmaps;
-QPixmap *DuiTheme::pixmapCopy(const QString &id, const QSize &)
+// MTheme stubs
+QHash<QPixmap *, QString> gMThemePixmapPixmaps;
+QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &)
 {
     QPixmap *p = new QPixmap;
-    gDuiThemePixmapPixmaps[p] = id;
+    gMThemePixmapPixmaps[p] = id;
 
     return p;
 }
@@ -110,7 +110,7 @@ void Ut_StatusIndicatorImageView::initTestCase()
 {
     static int argc = 1;
     static char *app_name = (char *)"./ut_statusindicatorimageview";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusIndicatorImageView::cleanupTestCase()
@@ -120,7 +120,7 @@ void Ut_StatusIndicatorImageView::cleanupTestCase()
 
 void Ut_StatusIndicatorImageView::init()
 {
-    gDuiThemePixmapPixmaps.clear();
+    gMThemePixmapPixmaps.clear();
 
     gQPainterPixmaps.clear();
 
@@ -148,7 +148,7 @@ void Ut_StatusIndicatorImageView::testImageListInitialized()
     m_subject->modifiableStyle()->setImageList("1 2");
     m_subject->executeStyleChanged();
     // Check that images are not loaded until they are used
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 0);
+    QCOMPARE(gMThemePixmapPixmaps.size(), 0);
 }
 
 void Ut_StatusIndicatorImageView::testSetAnimationFrame()
@@ -163,26 +163,26 @@ void Ut_StatusIndicatorImageView::testSetAnimationFrame()
     // Check that correct images get loaded from the theme and drawn
     m_subject->setAnimationFrame(0);
     m_subject->callableDrawContents(&painter, NULL);
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 1);
-    QVERIFY(gDuiThemePixmapPixmaps.key("1") != NULL);
+    QCOMPARE(gMThemePixmapPixmaps.size(), 1);
+    QVERIFY(gMThemePixmapPixmaps.key("1") != NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("1"));
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("1"));
 
     gQPainterPixmaps.clear();
     m_subject->setAnimationFrame(1);
     m_subject->callableDrawContents(&painter, NULL);
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 2);
-    QVERIFY(gDuiThemePixmapPixmaps.key("2") != NULL);
+    QCOMPARE(gMThemePixmapPixmaps.size(), 2);
+    QVERIFY(gMThemePixmapPixmaps.key("2") != NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("2"));
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("2"));
 
     // Check that images are not loaded again if they are already loaded
-    gDuiThemePixmapPixmaps.clear();
+    gMThemePixmapPixmaps.clear();
     m_subject->setAnimationFrame(0);
     m_subject->callableDrawContents(&painter, NULL);
     m_subject->setAnimationFrame(1);
     m_subject->callableDrawContents(&painter, NULL);
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 0);
+    QCOMPARE(gMThemePixmapPixmaps.size(), 0);
 }
 
 void Ut_StatusIndicatorImageView::testSetAnimationFrameToInvalid()
@@ -195,22 +195,22 @@ void Ut_StatusIndicatorImageView::testSetAnimationFrameToInvalid()
     m_subject->setAnimationFrame(-2);
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key(""));
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 1);
-    QVERIFY(gDuiThemePixmapPixmaps.key("") != NULL);
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key(""));
+    QCOMPARE(gMThemePixmapPixmaps.size(), 1);
+    QVERIFY(gMThemePixmapPixmaps.key("") != NULL);
 
     // Set animation frame to larger than allowed
     gQPainterPixmaps.clear();
     m_subject->setAnimationFrame(3);
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key(""));
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 1);
-    QVERIFY(gDuiThemePixmapPixmaps.key("") != NULL);
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key(""));
+    QCOMPARE(gMThemePixmapPixmaps.size(), 1);
+    QVERIFY(gMThemePixmapPixmaps.key("") != NULL);
 
     // Test the same with a longer image list
     gQPainterPixmaps.clear();
-    gDuiThemePixmapPixmaps.clear();
+    gMThemePixmapPixmaps.clear();
     m_subject->modifiableStyle()->setImageList("1 2");
     m_subject->executeStyleChanged();
 
@@ -218,18 +218,18 @@ void Ut_StatusIndicatorImageView::testSetAnimationFrameToInvalid()
     m_subject->setAnimationFrame(-2);
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("1"));
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 1);
-    QVERIFY(gDuiThemePixmapPixmaps.key("1") != NULL);
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("1"));
+    QCOMPARE(gMThemePixmapPixmaps.size(), 1);
+    QVERIFY(gMThemePixmapPixmaps.key("1") != NULL);
 
     // Set animation frame to larger than allowed
     gQPainterPixmaps.clear();
     m_subject->setAnimationFrame(3);
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("2"));
-    QCOMPARE(gDuiThemePixmapPixmaps.size(), 2);
-    QVERIFY(gDuiThemePixmapPixmaps.key("2") != NULL);
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("2"));
+    QCOMPARE(gMThemePixmapPixmaps.size(), 2);
+    QVERIFY(gMThemePixmapPixmaps.key("2") != NULL);
 }
 
 void Ut_StatusIndicatorImageView::testSetAnimationDuration()
@@ -254,7 +254,7 @@ void Ut_StatusIndicatorImageView::testValueChanged()
     QPainter painter;
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("2"));
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("2"));
 }
 
 void Ut_StatusIndicatorImageView::testValueChangedToInvalid()
@@ -269,7 +269,7 @@ void Ut_StatusIndicatorImageView::testValueChangedToInvalid()
     // The first image should be painted
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("1"));
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("1"));
 
     gQPainterPixmaps.clear();
 
@@ -278,7 +278,7 @@ void Ut_StatusIndicatorImageView::testValueChangedToInvalid()
     // The last image should be painted
     m_subject->callableDrawContents(&painter, NULL);
     QCOMPARE(gQPainterPixmaps.size(), 1);
-    QCOMPARE(gQPainterPixmaps.at(0), gDuiThemePixmapPixmaps.key("3"));
+    QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("3"));
 }
 
 void Ut_StatusIndicatorImageView::testChangingAnimate()

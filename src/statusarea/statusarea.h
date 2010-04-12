@@ -22,7 +22,7 @@
 
 #include "statusareamodel.h"
 
-#include <DuiButton>
+#include <MButton>
 #include <QSharedPointer>
 class StatusIndicatorMenuWindow;
 class StatusAreaWindow;
@@ -31,10 +31,10 @@ class StatusAreaWindow;
  * Status area is the top part on the home screen. It contains the clock,
  * indicator area and a search button.
  */
-class StatusArea : public DuiWidgetController
+class StatusArea : public MWidgetController
 {
     Q_OBJECT
-    DUI_CONTROLLER(StatusArea)
+    M_CONTROLLER(StatusArea)
 
 public:
     /*!
@@ -42,7 +42,7 @@ public:
      *
      * \param parent the parent widget of the status area
      */
-    StatusArea(DuiWidget *parent = NULL, StatusAreaWindow *statusAreaWindow = NULL);
+    StatusArea(MWidget *parent = NULL, StatusAreaWindow *statusAreaWindow = NULL);
 
     /*!
      * \brief Destructor

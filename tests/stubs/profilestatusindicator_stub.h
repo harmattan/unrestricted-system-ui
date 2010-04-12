@@ -28,14 +28,14 @@
 class ProfileStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void ProfileStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void ProfileStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void ProfileStatusIndicatorDestructor();
     virtual void profileChanged();
     ContextItem *profileStatus ;
 };
 
 // 2. IMPLEMENT STUB
-void ProfileStatusIndicatorStub::ProfileStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void ProfileStatusIndicatorStub::ProfileStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -58,7 +58,7 @@ ProfileStatusIndicatorStub *gProfileStatusIndicatorStub = &gDefaultProfileStatus
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gProfileStatusIndicatorStub->ProfileStatusIndicatorConstructor(context, parent);
 }

@@ -24,8 +24,8 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-class DuiApplication;
-class DuiApplicationWindow;
+class MApplication;
+class MApplicationWindow;
 class LockScreenUI;
 
 class Ut_LockScreenUI : public QObject
@@ -44,9 +44,9 @@ private:
     void showLockScreenUI ();
     void hideLockScreenUI ();
     
-    DuiApplicationWindow  *m_MainWindow;
+    MApplicationWindow  *m_MainWindow;
     LockScreenUI          *m_LockScreenUI;
-    DuiApplication        *m_App;
+    MApplication        *m_App;
 };
 
 #endif

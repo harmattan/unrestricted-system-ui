@@ -19,7 +19,7 @@
 #include "ut_statusindicatormenuwindow.h"
 #include "statusindicatormenuwindow.h"
 #include "pluginlist_stub.h"
-#include <DuiApplication>
+#include <MApplication>
 #include <QtTest/QtTest>
 #include <X11/Xutil.h>
 
@@ -51,7 +51,7 @@ void Ut_StatusIndicatorMenuWindow::initTestCase()
 {
     int argc = 1;
     char *app_name = (char *)"./ut_statusarea";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusIndicatorMenuWindow::cleanupTestCase()

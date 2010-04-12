@@ -18,7 +18,7 @@
 ****************************************************************************/
 #include "sysuid.h"
 
-#include <DuiApplication>
+#include <MApplication>
 
 #include <QObject>
 
@@ -27,7 +27,7 @@
 
 #include "signal.h"
 
-static DuiApplication *exitPtr;
+static MApplication *exitPtr;
 
 void sysuid_exit (int sig)
 {
@@ -40,7 +40,7 @@ void sysuid_exit (int sig)
 
 int main (int argc, char** argv)
 {
-    DuiApplication app (argc, argv);
+    MApplication app (argc, argv);
     exitPtr = &app;
 
     qInstallMsgHandler (0);

@@ -1,7 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_widgetnotificationsink
 INCLUDEPATH += $$SRCDIR/notifications
-DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 # unit test and unit
 SOURCES += \

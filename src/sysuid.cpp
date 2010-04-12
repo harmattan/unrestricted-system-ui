@@ -19,10 +19,10 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
-#include <DuiApplicationWindow>
-#include <DuiLocale>
-#include <DuiTheme>
-#include <DuiLocale>
+#include <MApplicationWindow>
+#include <MLocale>
+#include <MTheme>
+#include <MLocale>
 
 #include <QDBusConnection>
 #include <QDebug>
@@ -41,8 +41,8 @@
 #include "shutdownbusinesslogic.h"
 #include "statusareawindow.h"
 #include "notificationmanager.h"
-#include "duicompositornotificationsink.h"
-#include "duifeedbacknotificationsink.h"
+#include "mcompositornotificationsink.h"
+#include "mfeedbacknotificationsink.h"
 #include "contextframeworkcontext.h"
 
 #define DEBUG
@@ -53,7 +53,7 @@
 
 namespace
 {
-const QString themeDir = "/usr/share/themes/base/dui/sysuid/";
+const QString themeDir = "/usr/share/themes/base/m/sysuid/";
 const QString styleDir = themeDir + "style/";
 const QString svgDir = themeDir + "svg/";
 }
@@ -61,15 +61,15 @@ const QString svgDir = themeDir + "svg/";
 Sysuid* Sysuid::m_Sysuid = NULL;
 
 Sysuid::Sysuid () : QObject (),
-        m_applicationWindow(new DuiApplicationWindow)
+        m_applicationWindow(new MApplicationWindow)
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
     m_Sysuid = this;
 
-    DuiTheme::addPixmapDirectory (svgDir); // or ..(themeDir, true); ?
-    DuiTheme::loadCSS (styleDir + "sysuid.css");
-    DuiTheme::loadCSS (styleDir + "unlocksliderstyle.css");
+    MTheme::addPixmapDirectory (svgDir); // or ..(themeDir, true); ?
+    MTheme::loadCSS (styleDir + "sysuid.css");
+    MTheme::loadCSS (styleDir + "unlocksliderstyle.css");
 
     // Load translation of System-UI
     retranslate ();
@@ -85,8 +85,8 @@ Sysuid::Sysuid () : QObject (),
     m_UsbUi           = new UsbUi (this);
 
     m_notificationManager = new NotificationManager(3000);
-    m_compositorNotificationSink = new DuiCompositorNotificationSink;
-    m_feedbackNotificationSink = new DuiFeedbackNotificationSink;
+    m_compositorNotificationSink = new MCompositorNotificationSink;
+    m_feedbackNotificationSink = new MFeedbackNotificationSink;
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
@@ -124,8 +124,8 @@ Sysuid::Sysuid () : QObject (),
              m_feedbackNotificationSink, SLOT (addNotification (const Notification &)));
     connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
               m_feedbackNotificationSink, SLOT (removeNotification (uint)));
-    connect (m_statusAreaWindow, SIGNAL (orientationChangeFinished (const Dui::Orientation &)),
-             this, SIGNAL (orientationChangeFinished (const Dui::Orientation &)));
+    connect (m_statusAreaWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
+             this, SIGNAL (orientationChangeFinished (const M::Orientation &)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
@@ -167,11 +167,11 @@ QString Sysuid::dbusPath ()
 }
 
 /*!
- * Please note that in the libdui 0.19.4 manipulating theh DuiLocale in this
+ * Please note that in the libdui 0.19.4 manipulating theh MLocale in this
  * function might cause an endless recursion. I added a protection for brake the
  * recursion.
  *
- * FIXME: Once DuiLocale is working as it should be this function could be
+ * FIXME: Once MLocale is working as it should be this function could be
  * eliminated.
  */
 void Sysuid::retranslate ()
@@ -183,7 +183,7 @@ void Sysuid::retranslate ()
         return;
     running = true;
 
-    DuiLocale        locale;
+    MLocale        locale;
 
     SYS_DEBUG (" lang = %s", SYS_STR (locale.language ()));
 
@@ -192,7 +192,7 @@ void Sysuid::retranslate ()
     // Install real translation
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
-    DuiLocale::setDefault (locale);
+    MLocale::setDefault (locale);
 
     running = false;
 }
@@ -202,22 +202,22 @@ NotificationManager &Sysuid::notificationManager ()
     return *m_notificationManager;
 }
 
-DuiCompositorNotificationSink& Sysuid::compositorNotificationSink ()
+MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 {
     return *m_compositorNotificationSink;
 }
 
-Dui::Orientation Sysuid::orientation () const
+M::Orientation Sysuid::orientation () const
 {
     return m_statusAreaWindow->orientation ();
 }
 
-Dui::OrientationAngle Sysuid::orientationAngle () const
+M::OrientationAngle Sysuid::orientationAngle () const
 {
     return m_statusAreaWindow->orientationAngle ();
 }
 
-DuiApplicationWindow &Sysuid::applicationWindow ()
+MApplicationWindow &Sysuid::applicationWindow ()
 {
     return *m_applicationWindow;
 }

@@ -19,23 +19,23 @@
 
 #include <QGraphicsScene>
 #include <QTimer>
-#include <DuiInfoBanner>
-#include <DuiWindow>
-#include <DuiScene>
-#include <DuiSceneManager>
-#include <DuiOrientationChangeEvent>
+#include <MInfoBanner>
+#include <MWindow>
+#include <MScene>
+#include <MSceneManager>
+#include <MOrientationChangeEvent>
 #include "notificationmanager.h"
-#include "duicompositornotificationsink.h"
+#include "mcompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "sysuid.h"
 
-DuiCompositorNotificationSink::DuiCompositorNotificationSink() :
+MCompositorNotificationSink::MCompositorNotificationSink() :
     orientationChangeSignalConnected(false),
     sinkDisabled(false)
 {
 }
 
-DuiCompositorNotificationSink::~DuiCompositorNotificationSink()
+MCompositorNotificationSink::~MCompositorNotificationSink()
 {
     // Destroy the remaining notifications
     foreach(uint id, idToNotification.keys()) {
@@ -43,7 +43,7 @@ DuiCompositorNotificationSink::~DuiCompositorNotificationSink()
     }
 }
 
-void DuiCompositorNotificationSink::addNotification(const Notification &notification)
+void MCompositorNotificationSink::addNotification(const Notification &notification)
 {
     if (!canAddNotification(notification)) return;
     if(sinkDisabled) {
@@ -52,7 +52,7 @@ void DuiCompositorNotificationSink::addNotification(const Notification &notifica
     }
     if (!orientationChangeSignalConnected) {
         // Get informed about orientation changes
-        connect(Sysuid::sysuid(), SIGNAL(orientationChangeFinished(const Dui::Orientation &)), this, SLOT(rotateInfoBanners(const Dui::Orientation &)));
+        connect(Sysuid::sysuid(), SIGNAL(orientationChangeFinished(const M::Orientation &)), this, SLOT(rotateInfoBanners(const M::Orientation &)));
         orientationChangeSignalConnected = true;
     }
 
@@ -75,7 +75,7 @@ void DuiCompositorNotificationSink::addNotification(const Notification &notifica
         timer->setProperty("notificationId", notification.notificationId());
 
         // Create info banner widget
-        DuiInfoBanner *infoBanner = createInfoBanner(notification);
+        MInfoBanner *infoBanner = createInfoBanner(notification);
         infoBanner->setManagedManually(true);
 
         // Rotate the view to the current orientation and make the view as big as the info banner and
@@ -86,7 +86,7 @@ void DuiCompositorNotificationSink::addNotification(const Notification &notifica
         scene->addItem(infoBanner);
 
         // Keep track of the mapping between IDs and private notification information classes
-        idToNotification.insert(notification.notificationId(), new DuiCompositorNotificationSinkNotification(view, timer, infoBanner));
+        idToNotification.insert(notification.notificationId(), new MCompositorNotificationSinkNotification(view, timer, infoBanner));
 
         // Make the info banner disappear after the timeout
         timer->start(notification.timeout());
@@ -94,9 +94,9 @@ void DuiCompositorNotificationSink::addNotification(const Notification &notifica
     }
 }
 
-void DuiCompositorNotificationSink::updateNotification(const Notification &notification)
+void MCompositorNotificationSink::updateNotification(const Notification &notification)
 {
-    DuiCompositorNotificationSinkNotification *sinkNotification = idToNotification.value(notification.notificationId());
+    MCompositorNotificationSinkNotification *sinkNotification = idToNotification.value(notification.notificationId());
 
     if (sinkNotification != NULL && sinkNotification->infoBanner != NULL) {
         // Update the info banner widget
@@ -109,14 +109,14 @@ void DuiCompositorNotificationSink::updateNotification(const Notification &notif
     }
 }
 
-void DuiCompositorNotificationSink::removeNotification(uint notificationId)
+void MCompositorNotificationSink::removeNotification(uint notificationId)
 {
     notificationDone(notificationId, false);
 }
 
-void DuiCompositorNotificationSink::notificationDone(uint notificationId, bool notificationIdInUse)
+void MCompositorNotificationSink::notificationDone(uint notificationId, bool notificationIdInUse)
 {
-    DuiCompositorNotificationSinkNotification *sinkNotification = idToNotification.take(notificationId);
+    MCompositorNotificationSinkNotification *sinkNotification = idToNotification.take(notificationId);
     if (sinkNotification != NULL) {
         // Destroy the notification window immediately; this also destroys the timer
         QGraphicsScene *scene = sinkNotification->view->scene();
@@ -136,7 +136,7 @@ void DuiCompositorNotificationSink::notificationDone(uint notificationId, bool n
     }
 }
 
-void DuiCompositorNotificationSink::timeout()
+void MCompositorNotificationSink::timeout()
 {
     QTimer *timer = qobject_cast<QTimer *>(sender());
 
@@ -152,26 +152,26 @@ void DuiCompositorNotificationSink::timeout()
     }
 }
 
-DuiCompositorNotificationSink::DuiCompositorNotificationSinkNotification::DuiCompositorNotificationSinkNotification(QGraphicsView *view, QTimer *timer, DuiInfoBanner *infoBanner) :
+MCompositorNotificationSink::MCompositorNotificationSinkNotification::MCompositorNotificationSinkNotification(QGraphicsView *view, QTimer *timer, MInfoBanner *infoBanner) :
     view(view),
     timer(timer),
     infoBanner(infoBanner)
 {
 }
 
-DuiCompositorNotificationSink::DuiCompositorNotificationSinkNotification::~DuiCompositorNotificationSinkNotification()
+MCompositorNotificationSink::MCompositorNotificationSinkNotification::~MCompositorNotificationSinkNotification()
 {
 }
 
-void DuiCompositorNotificationSink::rotateInfoBanners(const Dui::Orientation &orientation)
+void MCompositorNotificationSink::rotateInfoBanners(const M::Orientation &orientation)
 {
-    foreach(DuiCompositorNotificationSinkNotification * notification, idToNotification.values()) {
+    foreach(MCompositorNotificationSinkNotification * notification, idToNotification.values()) {
         // Rotate the views of all existing notifications to the current orientation and resize their sizes accordingly
         if (notification != NULL && notification->view != NULL && notification->infoBanner != NULL) {
             QGraphicsScene *scene = notification->view->scene();
             if (scene != NULL) {
                 // Notify each item on the notification view's scene about the new orientation
-                DuiOrientationChangeEvent event(orientation);
+                MOrientationChangeEvent event(orientation);
                 Q_FOREACH(QGraphicsItem * item, scene->items()) {
                     scene->sendEvent(item, &event);
                 }
@@ -182,19 +182,19 @@ void DuiCompositorNotificationSink::rotateInfoBanners(const Dui::Orientation &or
     }
 }
 
-void DuiCompositorNotificationSink::setViewSizeAndRotation(QGraphicsView &view, const DuiInfoBanner &infoBanner)
+void MCompositorNotificationSink::setViewSizeAndRotation(QGraphicsView &view, const MInfoBanner &infoBanner)
 {
     QTransform transform;
     transform.rotate(Sysuid::sysuid()->orientationAngle());
     view.setTransform(transform);
-    if (Sysuid::sysuid()->orientation() == Dui::Landscape) {
+    if (Sysuid::sysuid()->orientation() == M::Landscape) {
         view.setFixedSize(infoBanner.preferredSize().width(), infoBanner.preferredSize().height());
     } else {
         view.setFixedSize(infoBanner.preferredSize().height(), infoBanner.preferredSize().width());
     }
 }
 
-void DuiCompositorNotificationSink::setDisabled(bool disabled)
+void MCompositorNotificationSink::setDisabled(bool disabled)
 {
     sinkDisabled = disabled;
 }

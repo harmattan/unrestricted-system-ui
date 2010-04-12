@@ -17,28 +17,28 @@
 **
 ****************************************************************************/
 
-#ifndef DUIFEEDBACKNOTIFICATIONSINK_H_
-#define DUIFEEDBACKNOTIFICATIONSINK_H_
+#ifndef MFEEDBACKNOTIFICATIONSINK_H_
+#define MFEEDBACKNOTIFICATIONSINK_H_
 
 #include "notificationsink.h"
 
 /*!
- * DuiFeedbackNotificationSink implements the NotificationSink interface for
+ * MFeedbackNotificationSink implements the NotificationSink interface for
  * presenting notifications as feedbacks.
  */
-class DuiFeedbackNotificationSink : public NotificationSink
+class MFeedbackNotificationSink : public NotificationSink
 {
     Q_OBJECT
 public:
     /*!
-     * Constructs a new DuiFeedbackNotificationSink.
+     * Constructs a new MFeedbackNotificationSink.
      */
-    DuiFeedbackNotificationSink();
+    MFeedbackNotificationSink();
 
     /*!
-     * Destroys the DuiFeedbackNotificationSink.
+     * Destroys the MFeedbackNotificationSink.
      */
-    virtual ~DuiFeedbackNotificationSink();
+    virtual ~MFeedbackNotificationSink();
 
 private:
     /*!
@@ -60,4 +60,4 @@ private slots:
     //! \reimp_end
 };
 
-#endif /* DUIFEEDBACKNOTIFICATIONSINK_H_ */
+#endif /* MFEEDBACKNOTIFICATIONSINK_H_ */

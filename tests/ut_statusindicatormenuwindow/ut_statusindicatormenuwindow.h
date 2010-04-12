@@ -22,7 +22,7 @@
 #include <QObject>
 
 class StatusIndicatorMenuWindow;
-class DuiApplication;
+class MApplication;
 
 class Ut_StatusIndicatorMenuWindow : public QObject
 {
@@ -30,7 +30,7 @@ class Ut_StatusIndicatorMenuWindow : public QObject
 
 private:
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
-    DuiApplication *app;
+    MApplication *app;
 
 private slots:
     // Executed once before every test case

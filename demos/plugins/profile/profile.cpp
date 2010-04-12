@@ -34,24 +34,24 @@
 
 #include "profile.h"
 #include <DuiStatusIndicatorMenuPluginInterface>
-#include <DuiButton>
-#include <DuiButtonGroup>
-#include <DuiContainer>
-#include <DuiApplicationPage>
+#include <MButton>
+#include <MButtonGroup>
+#include <MContainer>
+#include <MApplicationPage>
 #include <QGraphicsLinearLayout>
 
 Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
-    DuiWidget(parent),
+    MWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
-    profileModificationPage(new DuiApplicationPage)
+    profileModificationPage(new MApplicationPage)
 {
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     // Create a container for the profiles
-    DuiContainer *container = new DuiContainer;
-    DuiWidget *widget = new DuiWidget;
+    MContainer *container = new MContainer;
+    MWidget *widget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
     widget->setLayout(layout);
@@ -61,32 +61,32 @@ Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphics
     mainLayout->addItem(container);
 
     // Create a button group for the profiles
-    DuiButtonGroup *buttonGroup = new DuiButtonGroup(widget);
-    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(DuiButton *)), this, SLOT(buttonClicked(DuiButton *)));
+    MButtonGroup *buttonGroup = new MButtonGroup(widget);
+    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(MButton *)), this, SLOT(buttonClicked(MButton *)));
 
     // Place the buttons in the button group and in the layout
-    DuiButton *button;
-    button = new DuiButton("Ringing");
+    MButton *button;
+    button = new MButton("Ringing");
     button->setCheckable(true);
     button->setChecked(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Silent");
+    button = new MButton("Silent");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Beep");
+    button = new MButton("Beep");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Loud");
+    button = new MButton("Loud");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
 
     // Set up the profile modification page
     profileModificationPage->setTitle("Profile");
-    profileModificationPage->setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
+    profileModificationPage->setEscapeMode(MApplicationPageModel::EscapeManualBack);
     connect(profileModificationPage, SIGNAL(backButtonClicked()), this, SLOT(buttonClicked()));
 }
 
@@ -105,7 +105,7 @@ void Profile::buttonClicked()
     statusIndicatorMenu.showStatusIndicatorMenu();
 }
 
-void Profile::buttonClicked(DuiButton *)
+void Profile::buttonClicked(MButton *)
 {
     statusIndicatorMenu.hideStatusIndicatorMenu();
 }

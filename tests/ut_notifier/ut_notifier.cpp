@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
+#include <MApplication>
 #include "ut_notifier.h"
 #include "notifier.h"
 #include "notificationsink_stub.h"
@@ -28,7 +28,7 @@ void Ut_Notifier::initTestCase()
 {
     static int argc = 1;
     static char *app_name = (char *)"./ut_notifier";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_Notifier::cleanupTestCase()

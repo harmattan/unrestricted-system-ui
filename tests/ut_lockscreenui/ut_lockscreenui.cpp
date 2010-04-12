@@ -23,10 +23,10 @@
 #include "lockscreenui.h"
 #include "sysuid_stub.h"
 
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiSceneManager>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MSceneManager>
+#include <MTheme>
 
 void Ut_LockScreenUI::init()
 {
@@ -42,7 +42,7 @@ char *argv[] = {
     (char *) "./ut_lockscreenui",
     NULL };
 
-const QString themeDir = "/usr/share/themes/base/dui/sysuid/";
+const QString themeDir = "/usr/share/themes/base/m/sysuid/";
 const QString styleDir = themeDir + "style/";
 const QString svgDir = themeDir + "svg/";
 
@@ -51,15 +51,15 @@ void Ut_LockScreenUI::initTestCase()
     m_LockScreenUI = 0;
 
     qDebug() << "Creating application.";
-    m_App = new DuiApplication(argc, argv);
+    m_App = new MApplication(argc, argv);
 
     qDebug() << "Initializing our own themes.";
-    DuiTheme::addPixmapDirectory (svgDir);
-    DuiTheme::loadCSS (styleDir + "sysuid.css");
-    DuiTheme::loadCSS (styleDir + "unlocksliderstyle.css");
+    MTheme::addPixmapDirectory (svgDir);
+    MTheme::loadCSS (styleDir + "sysuid.css");
+    MTheme::loadCSS (styleDir + "unlocksliderstyle.css");
 
     qDebug() << "Creating main window.";
-    m_MainWindow = new DuiApplicationWindow;
+    m_MainWindow = new MApplicationWindow;
 
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;

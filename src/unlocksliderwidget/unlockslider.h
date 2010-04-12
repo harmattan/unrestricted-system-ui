@@ -19,14 +19,14 @@
 #ifndef UNLOCKSLIDER_H
 #define UNLOCKSLIDER_H
 
-#include <DuiWidgetController>
+#include <MWidgetController>
 #include "unlockslidermodel.h"
 #include "unlocksliderview.h"
 
-class UnlockSlider : public DuiWidgetController
+class UnlockSlider : public MWidgetController
 {
     Q_OBJECT
-    DUI_CONTROLLER(UnlockSlider)
+    M_CONTROLLER(UnlockSlider)
 
     Q_PROPERTY(bool handlePressed READ isHandlePressed)
     Q_PROPERTY(qreal position READ position WRITE setPosition)

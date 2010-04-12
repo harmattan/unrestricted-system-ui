@@ -24,7 +24,7 @@
 #include <QObject>
 #include "notification.h"
 
-class DuiApplication;
+class MApplication;
 class TestWidgetNotificationSink;
 class QGraphicsWidget;
 class QAction;
@@ -82,7 +82,7 @@ private:
     void testInfoBannerClickingWhenNotUserRemovable(TestNotificationParameters &parameters);
 
     // HomeApplication
-    DuiApplication *app;
+    MApplication *app;
     // The object being tested
     TestWidgetNotificationSink *m_subject;
 };

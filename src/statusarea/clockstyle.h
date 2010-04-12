@@ -20,26 +20,26 @@
 #ifndef CLOCKSTYLE_H_
 #define CLOCKSTYLE_H_
 
-#include <DuiWidgetStyle>
+#include <MWidgetStyle>
 
 /*!
  * A style class for the Clock widget.
  */
-class ClockStyle : public DuiWidgetStyle
+class ClockStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(ClockStyle)
+    M_STYLE(ClockStyle)
 
     //! Formatting string for the time
-    DUI_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
+    M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
 };
 
-class ClockStyleContainer : public DuiWidgetStyleContainer
+class ClockStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(ClockStyle)
+    M_STYLE_CONTAINER(ClockStyle)
 
     //! \brief Style mode for 12 hour mode.
-    DUI_STYLE_MODE(TwelveHour)
+    M_STYLE_MODE(TwelveHour)
 };
 
 #endif /* CLOCKSTYLE_H_ */

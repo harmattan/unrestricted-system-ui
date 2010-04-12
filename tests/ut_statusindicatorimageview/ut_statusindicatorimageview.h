@@ -25,12 +25,12 @@
 
 #include "statusindicatorimageview.h"
 
-class DuiApplication;
+class MApplication;
 
 class TestStatusIndicatorImageView : public StatusIndicatorImageView
 {
     Q_OBJECT
-    DUI_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
 
 public:
     TestStatusIndicatorImageView(StatusIndicator *controller);
@@ -70,8 +70,8 @@ private slots:
     void testChangingAnimate();
 
 private:
-    // DuiApplication
-    DuiApplication *app;
+    // MApplication
+    MApplication *app;
     // A controller for the test subject
     StatusIndicator *controller;
     // The object being tested

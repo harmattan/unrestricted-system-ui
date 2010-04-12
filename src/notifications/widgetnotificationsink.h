@@ -21,13 +21,13 @@
 #define WIDGETNOTIFICATIONSINK_H
 
 #include "notificationsink.h"
-#include <DuiInfoBanner>
+#include <MInfoBanner>
 
 /*!
  * WidgetNotificationSink is a common base class for all notification sinks that trigger
  * visual feedback using a graphics widget.
  *
- * WidgetNotificationSink creates DuiInfoBanner widgets for notifications. When DuiInfoBanner
+ * WidgetNotificationSink creates MInfoBanner widgets for notifications. When MInfoBanner
  * is clicked the action bound to the notification is triggered and notification is removed
  * from the notification system signalling notificationRemovalRequested().
  */
@@ -65,30 +65,30 @@ protected:
     static bool determineUserRemovability(const NotificationParameters &parameters);
 
     /*!
-     * Creates a DuiInfoBanner widget to represent a notification object.
+     * Creates a MInfoBanner widget to represent a notification object.
      * Ownership of the constructed object is passed to the caller.
-     * \param notification The notification object to represent with the DuiInfoBanner.
-     * \return Constructed DuiInfoBanner that represents the notification.
+     * \param notification The notification object to represent with the MInfoBanner.
+     * \return Constructed MInfoBanner that represents the notification.
      */
-    DuiInfoBanner *createInfoBanner(const Notification &notification);
+    MInfoBanner *createInfoBanner(const Notification &notification);
 
     /*!
-     * Creates a DuiInfoBanner widget from the given notification parameters.
+     * Creates a MInfoBanner widget from the given notification parameters.
      * Ownership of the constructed object is passed to the caller.
      * \param type Type of the info banner to be constructed.
      * \param groupId The group ID to be associated with the info banner.
-     * \param params NotificationParameters according to which configure the DuiInfoBanner.
+     * \param params NotificationParameters according to which configure the MInfoBanner.
      */
-    DuiInfoBanner *createInfoBanner(DuiInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters);
+    MInfoBanner *createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters);
 
     /*!
      * Removes old actions from the given info banner and adds the action
      * specified in the notification (if any)
      *
-     * \param infoBanner the DuiInfoBanner to update
+     * \param infoBanner the MInfoBanner to update
      * \param parameters the NotificationParameters to get the action from
      */
-    void updateActions(DuiInfoBanner *infoBanner, const NotificationParameters &parameters);
+    void updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters);
 
 private:
     /*!
@@ -106,11 +106,11 @@ private:
      */
     static bool determineUserRemovabilityFromEventType(const QString &eventType);
 
-    //! DuiInfoBanner property to store the notification ID into
+    //! MInfoBanner property to store the notification ID into
     static const char *NOTIFICATION_ID_PROPERTY;
-    //! DuiInfoBanner property to store the group ID into
+    //! MInfoBanner property to store the group ID into
     static const char *GROUP_ID_PROPERTY;
-    //! DuiInfoBanner property to store the user removability into
+    //! MInfoBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 
 private slots:

@@ -17,14 +17,14 @@
 **
 ****************************************************************************/
 
-#include <DuiOrientationChangeEvent>
-#include <DuiOnDisplayChangeEvent>
-#include <DuiDeviceProfile>
+#include <MOrientationChangeEvent>
+#include <MOnDisplayChangeEvent>
+#include <MDeviceProfile>
 #include "statusareawindow.h"
 #include "statusarea.h"
 
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
-    DuiWindow(NULL, parent),
+    MWindow(NULL, parent),
     scene(new QGraphicsScene),
     statusArea_(new StatusArea(NULL,this))
 {
@@ -37,7 +37,7 @@ StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
 
     // Rotate to current orientation
     rotate(this->orientationAngle());
-    connect(this, SIGNAL(orientationAngleChanged(const Dui::OrientationAngle &)), this, SLOT(rotate(const Dui::OrientationAngle &)));
+    connect(this, SIGNAL(orientationAngleChanged(const M::OrientationAngle &)), this, SLOT(rotate(const M::OrientationAngle &)));
 }
 
 StatusAreaWindow::~StatusAreaWindow()
@@ -52,22 +52,22 @@ StatusArea *StatusAreaWindow::statusArea() const
     return statusArea_;
 }
 
-void StatusAreaWindow::rotate(const Dui::OrientationAngle &angle)
+void StatusAreaWindow::rotate(const M::OrientationAngle &angle)
 {
     // Set the size of the window
-    if (angle == Dui::Angle90 || angle == Dui::Angle270) {
-        setFixedSize(28, DuiDeviceProfile::instance()->resolution().height());
+    if (angle == M::Angle90 || angle == M::Angle270) {
+        setFixedSize(28, MDeviceProfile::instance()->resolution().height());
     } else {
-        setFixedSize(DuiDeviceProfile::instance()->resolution().width(), 28);
+        setFixedSize(MDeviceProfile::instance()->resolution().width(), 28);
     }
 
     // Move the window to the correct position
-    if (angle == Dui::Angle0 || angle == Dui::Angle270) {
+    if (angle == M::Angle0 || angle == M::Angle270) {
         move(0, 0);
-    } else if (angle == Dui::Angle90) {
-        move(DuiDeviceProfile::instance()->resolution().width() - width(), 0);
+    } else if (angle == M::Angle90) {
+        move(MDeviceProfile::instance()->resolution().width() - width(), 0);
     } else {
-        move(0, DuiDeviceProfile::instance()->resolution().height() - height());
+        move(0, MDeviceProfile::instance()->resolution().height() - height());
     }
 
     // Rotate the view

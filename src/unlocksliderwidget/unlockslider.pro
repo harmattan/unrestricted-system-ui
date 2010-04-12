@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = unlockslidertest
-CONFIG += dui silent
+CONFIG += meegotouch silent
 
 SOURCES += main.cpp \
     unlockslider.cpp \

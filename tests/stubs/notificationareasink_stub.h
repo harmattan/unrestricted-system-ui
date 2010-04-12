@@ -34,10 +34,10 @@ public:
     virtual void removeGroup(uint groupId);
     virtual void addNotification(const Notification &notification);
     virtual void removeNotification(uint notificationId);
-    virtual void addNotification(DuiInfoBanner &notification);
-    virtual void removeNotification(DuiInfoBanner &notification);
-    virtual void setupInfoBanner(DuiInfoBanner *infoBanner);
-    virtual DuiInfoBanner *updateNotification(DuiInfoBanner *dn, const NotificationParameters &parameters);
+    virtual void addNotification(MInfoBanner &notification);
+    virtual void removeNotification(MInfoBanner &notification);
+    virtual void setupInfoBanner(MInfoBanner *infoBanner);
+    virtual MInfoBanner *updateNotification(MInfoBanner *dn, const NotificationParameters &parameters);
     virtual void removeGroupBanner(uint groupId);
 };
 
@@ -79,34 +79,34 @@ void NotificationAreaSinkStub::removeNotification(uint notificationId)
     stubMethodEntered("removeNotification", params);
 }
 
-void NotificationAreaSinkStub::addNotification(DuiInfoBanner &notification)
+void NotificationAreaSinkStub::addNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner & >(notification));
+    params.append(new Parameter<MInfoBanner & >(notification));
     stubMethodEntered("addNotification", params);
 }
 
-void NotificationAreaSinkStub::removeNotification(DuiInfoBanner &notification)
+void NotificationAreaSinkStub::removeNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner & >(notification));
+    params.append(new Parameter<MInfoBanner & >(notification));
     stubMethodEntered("removeNotification", params);
 }
 
-void NotificationAreaSinkStub::setupInfoBanner(DuiInfoBanner *infoBanner)
+void NotificationAreaSinkStub::setupInfoBanner(MInfoBanner *infoBanner)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner * >(infoBanner));
+    params.append(new Parameter<MInfoBanner * >(infoBanner));
     stubMethodEntered("setupInfoBanner", params);
 }
 
-DuiInfoBanner *NotificationAreaSinkStub::updateNotification(DuiInfoBanner *dn, const NotificationParameters &parameters)
+MInfoBanner *NotificationAreaSinkStub::updateNotification(MInfoBanner *dn, const NotificationParameters &parameters)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiInfoBanner * >(dn));
+    params.append(new Parameter<MInfoBanner * >(dn));
     params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("updateNotification", params);
-    return stubReturnValue<DuiInfoBanner *>("updateNotification");
+    return stubReturnValue<MInfoBanner *>("updateNotification");
 }
 
 void NotificationAreaSinkStub::removeGroupBanner(uint groupId)
@@ -153,12 +153,12 @@ void NotificationAreaSink::removeNotification(uint notificationId)
     gNotificationAreaSinkStub->removeNotification(notificationId);
 }
 
-void NotificationAreaSink::setupInfoBanner(DuiInfoBanner *infoBanner)
+void NotificationAreaSink::setupInfoBanner(MInfoBanner *infoBanner)
 {
     gNotificationAreaSinkStub->setupInfoBanner(infoBanner);
 }
 
-DuiInfoBanner *NotificationAreaSink::updateNotification(DuiInfoBanner *dn, const NotificationParameters &parameters)
+MInfoBanner *NotificationAreaSink::updateNotification(MInfoBanner *dn, const NotificationParameters &parameters)
 {
     return gNotificationAreaSinkStub->updateNotification(dn, parameters);
 }

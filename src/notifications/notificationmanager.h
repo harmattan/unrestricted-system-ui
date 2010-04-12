@@ -35,7 +35,7 @@
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
 class SystemNotificationSource;
-class DuiFileDataStore;
+class MFileDataStore;
 class EventTypeStore;
 
 /*!

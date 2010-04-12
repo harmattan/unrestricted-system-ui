@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <DuiOnDisplayChangeEvent>
+#include <MOnDisplayChangeEvent>
 #include "ut_clock.h"
 #include "clock.h"
 
@@ -100,8 +100,8 @@ void Ut_Clock::test24HourModeNotToggledWhenSettingsAreNotChanged()
 
 void Ut_Clock::testModelUpdates()
 {
-    DuiOnDisplayChangeEvent exitDisplayEvent(DuiOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    DuiOnDisplayChangeEvent enterDisplayEvent(DuiOnDisplayChangeEvent::FullyOnDisplay, QRectF());
+    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
+    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
 
     // The timer should be running by default and the model should contain the current time
     QVERIFY(timerTimeout >= 0);

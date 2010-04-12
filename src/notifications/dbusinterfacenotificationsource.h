@@ -33,7 +33,7 @@
  *
  * The new API can be tested using the following command:
  *
- * dbus-send --print-reply --dest=com.nokia.dui.NotificationManager / com.nokia.dui.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello DUI' string:'link' string:'Icon-close'
+ * dbus-send --print-reply --dest=com.nokia.m.NotificationManager / com.nokia.m.NotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello M' string:'link' string:'Icon-close'
  */
 class DBusInterfaceNotificationSource : public QObject, public NotificationSource
 {

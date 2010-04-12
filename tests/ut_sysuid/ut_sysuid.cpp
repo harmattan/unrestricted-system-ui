@@ -20,9 +20,9 @@
 #include "ut_sysuid.h"
 
 #include <QDBusConnection>
-#include <DuiApplication>
-#include "duicompositornotificationsink.h"
-#include "duifeedbacknotificationsink.h"
+#include <MApplication>
+#include "mcompositornotificationsink.h"
+#include "mfeedbacknotificationsink.h"
 #include "testcontextitem.h"
 #include "contextframeworkcontext.h"
 #include "sysuid.h"
@@ -53,7 +53,7 @@ NotificationParameters::~NotificationParameters()
 {
 }
 
-// NotificationSink stubs (used by DuiCompositorNotificationSink)
+// NotificationSink stubs (used by MCompositorNotificationSink)
 NotificationSink::NotificationSink()
 {
 }
@@ -72,52 +72,52 @@ void NotificationSink::setApplicationEventsEnabled(bool enabled)
     sinkSetEnabled[this] = enabled;
 }
 
-// DuiCompositorNotificationSink stubs (used by Sysuid)
-DuiCompositorNotificationSink *duiCompositorNotificationSink = 0;
-DuiCompositorNotificationSink::DuiCompositorNotificationSink()
+// MCompositorNotificationSink stubs (used by Sysuid)
+MCompositorNotificationSink *mCompositorNotificationSink = 0;
+MCompositorNotificationSink::MCompositorNotificationSink()
 {
-    duiCompositorNotificationSink = this;
+    mCompositorNotificationSink = this;
 }
 
-DuiCompositorNotificationSink::~DuiCompositorNotificationSink()
-{
-}
-
-void DuiCompositorNotificationSink::addNotification(const Notification &)
+MCompositorNotificationSink::~MCompositorNotificationSink()
 {
 }
 
-void DuiCompositorNotificationSink::removeNotification(uint)
+void MCompositorNotificationSink::addNotification(const Notification &)
 {
 }
 
-void DuiCompositorNotificationSink::timeout()
+void MCompositorNotificationSink::removeNotification(uint)
 {
 }
 
-void DuiCompositorNotificationSink::rotateInfoBanners(const Dui::Orientation &)
+void MCompositorNotificationSink::timeout()
 {
 }
 
-void DuiCompositorNotificationSink::setDisabled(bool)
-{
-}
-// DuiFeedbackNotificationSink stubs (used by Sysuid)
-DuiFeedbackNotificationSink *duiFeedbackNotificationSink = 0;
-DuiFeedbackNotificationSink::DuiFeedbackNotificationSink()
-{
-    duiFeedbackNotificationSink = this;
-}
-
-DuiFeedbackNotificationSink::~DuiFeedbackNotificationSink()
+void MCompositorNotificationSink::rotateInfoBanners(const M::Orientation &)
 {
 }
 
-void DuiFeedbackNotificationSink::addNotification(const Notification &)
+void MCompositorNotificationSink::setDisabled(bool)
+{
+}
+// MFeedbackNotificationSink stubs (used by Sysuid)
+MFeedbackNotificationSink *mFeedbackNotificationSink = 0;
+MFeedbackNotificationSink::MFeedbackNotificationSink()
+{
+    mFeedbackNotificationSink = this;
+}
+
+MFeedbackNotificationSink::~MFeedbackNotificationSink()
 {
 }
 
-void DuiFeedbackNotificationSink::removeNotification(uint)
+void MFeedbackNotificationSink::addNotification(const Notification &)
+{
+}
+
+void MFeedbackNotificationSink::removeNotification(uint)
 {
 }
 
@@ -164,7 +164,7 @@ void Ut_Sysuid::init()
     static char *args[] = {(char *) "./ut_sysuid"};
     static int argc = sizeof(args) / sizeof(char *);
 
-    app = new DuiApplication(argc, args);
+    app = new MApplication(argc, args);
     sysuid = new Sysuid();
 }
 
@@ -177,11 +177,11 @@ void Ut_Sysuid::cleanup()
 void Ut_Sysuid::testUseMode()
 {
     testContextItem->setValue("");
-    QVERIFY(sinkSetEnabled[duiCompositorNotificationSink]);
-    QVERIFY(sinkSetEnabled[duiFeedbackNotificationSink]);
+    QVERIFY(sinkSetEnabled[mCompositorNotificationSink]);
+    QVERIFY(sinkSetEnabled[mFeedbackNotificationSink]);
     testContextItem->setValue("recording");
-    QVERIFY(!sinkSetEnabled[duiCompositorNotificationSink]);
-    QVERIFY(!sinkSetEnabled[duiFeedbackNotificationSink]);
+    QVERIFY(!sinkSetEnabled[mCompositorNotificationSink]);
+    QVERIFY(!sinkSetEnabled[mFeedbackNotificationSink]);
 }
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

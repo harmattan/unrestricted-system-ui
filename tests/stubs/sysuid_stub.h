@@ -21,7 +21,7 @@
 
 #include "sysuid.h"
 #include <stubbase.h>
-#include <DuiApplicationWindow>
+#include <MApplicationWindow>
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
@@ -33,10 +33,10 @@ class SysuidStub : public StubBase {
   virtual QString dbusService();
   virtual QString dbusPath();
   virtual NotificationManager & notificationManager();
-  virtual DuiCompositorNotificationSink & compositorNotificationSink();
-  virtual Dui::Orientation orientation() const;
-  virtual Dui::OrientationAngle orientationAngle() const;
-  virtual DuiApplicationWindow &applicationWindow();
+  virtual MCompositorNotificationSink & compositorNotificationSink();
+  virtual M::Orientation orientation() const;
+  virtual M::OrientationAngle orientationAngle() const;
+  virtual MApplicationWindow &applicationWindow();
   virtual void retranslate();
   virtual void applyUseMode();
 }; 
@@ -68,23 +68,23 @@ NotificationManager & SysuidStub::notificationManager() {
   return stubReturnValue<NotificationManager &>("notificationManager");
 }
 
-DuiCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
+MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
   stubMethodEntered("compositorNotificationSink");
-  return stubReturnValue<DuiCompositorNotificationSink &>("compositorNotificationSink");
+  return stubReturnValue<MCompositorNotificationSink &>("compositorNotificationSink");
 }
 
-Dui::Orientation SysuidStub::orientation() const {
+M::Orientation SysuidStub::orientation() const {
   stubMethodEntered("orientation");
-  return stubReturnValue<Dui::Orientation>("orientation");
+  return stubReturnValue<M::Orientation>("orientation");
 }
 
-Dui::OrientationAngle SysuidStub::orientationAngle() const {
+M::OrientationAngle SysuidStub::orientationAngle() const {
   stubMethodEntered("orientationAngle");
-  return stubReturnValue<Dui::OrientationAngle>("orientationAngle");
+  return stubReturnValue<M::OrientationAngle>("orientationAngle");
 }
 
-DuiApplicationWindow &SysuidStub::applicationWindow() {
-  static DuiApplicationWindow window;
+MApplicationWindow &SysuidStub::applicationWindow() {
+  static MApplicationWindow window;
   stubMethodEntered("applicationWindow");
   return window;
 }
@@ -128,19 +128,19 @@ NotificationManager & Sysuid::notificationManager() {
   return gSysuidStub->notificationManager();
 }
 
-DuiCompositorNotificationSink & Sysuid::compositorNotificationSink() {
+MCompositorNotificationSink & Sysuid::compositorNotificationSink() {
   return gSysuidStub->compositorNotificationSink();
 }
 
-Dui::Orientation Sysuid::orientation() const {
+M::Orientation Sysuid::orientation() const {
   return gSysuidStub->orientation();
 }
 
-Dui::OrientationAngle Sysuid::orientationAngle() const {
+M::OrientationAngle Sysuid::orientationAngle() const {
   return gSysuidStub->orientationAngle();
 }
 
-DuiApplicationWindow &Sysuid::applicationWindow() {
+MApplicationWindow &Sysuid::applicationWindow() {
   return gSysuidStub->applicationWindow();
 }
 

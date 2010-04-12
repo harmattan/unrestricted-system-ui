@@ -20,7 +20,7 @@
 #ifndef STATUSINDICATOR_H
 #define STATUSINDICATOR_H
 
-#include <DuiWidgetController>
+#include <MWidgetController>
 #include <QSharedPointer>
 #include "statusindicatormodel.h"
 
@@ -31,10 +31,10 @@ class ContextItem;
  * StatusIndicator is a widget for displaying either image or text based status
  * indicators in the status indicator area of the home screen.
  */
-class StatusIndicator : public DuiWidgetController
+class StatusIndicator : public MWidgetController
 {
     Q_OBJECT
-    DUI_CONTROLLER(StatusIndicator)
+    M_CONTROLLER(StatusIndicator)
 
     Q_PROPERTY(QVariant value READ value WRITE setValue)
 
@@ -42,9 +42,9 @@ public:
     /*!
      * Constructs a StatusIndicator.
      *
-     * \param parent parent DuiWidget
+     * \param parent parent MWidget
      */
-    explicit StatusIndicator(DuiWidget *parent = NULL);
+    explicit StatusIndicator(MWidget *parent = NULL);
 
     /*!
      * \brief Destructor
@@ -99,16 +99,16 @@ private:
 class PhoneNetworkSignalStrengthStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(PhoneNetworkSignalStrengthStatusIndicator)
+    M_CONTROLLER(PhoneNetworkSignalStrengthStatusIndicator)
 
 public:
     /*!
      * Constructs a PhoneNetworkSignalStrengthStatusIndicator.
      *
      * \param context the application context to get status information from
-     * \param parent parent DuiWidget
+     * \param parent parent MWidget
      */
-    explicit PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, DuiWidget *parent = NULL);
+    explicit PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
     virtual ~PhoneNetworkSignalStrengthStatusIndicator();
 
@@ -126,16 +126,16 @@ private:
 class BatteryStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(BatteryStatusIndicator)
+    M_CONTROLLER(BatteryStatusIndicator)
 
 public:
     /*!
      * Constructs a BatteryStatusIndicator.
      *
      * \param context the application context to get status information from
-     * \param parent parent DuiWidget
+     * \param parent parent MWidget
      */
-    explicit BatteryStatusIndicator(ApplicationContext &context, DuiWidget *parent = NULL);
+    explicit BatteryStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
     virtual ~BatteryStatusIndicator();
 
@@ -154,16 +154,16 @@ private:
 class ClockAlarmStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(ClockAlarmStatusIndicator)
+    M_CONTROLLER(ClockAlarmStatusIndicator)
 
 public:
     /*!
      * Constructs a ClockAlarmStatusIndicator.
      *
      * \param context the application context to get status information from
-     * \param parent parent DuiWidget
+     * \param parent parent MWidget
      */
-    explicit ClockAlarmStatusIndicator(ApplicationContext &context, DuiWidget *parent = NULL);
+    explicit ClockAlarmStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
     virtual ~ClockAlarmStatusIndicator();
 
@@ -181,17 +181,17 @@ private:
 class BluetoothStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(BluetoothStatusIndicator)
+    M_CONTROLLER(BluetoothStatusIndicator)
 
 public:
     /*!
      * Constructs a BluetoothStatusIndicator.
      *
      * \param context the application context to get status information from
-     * \param parent parent DuiWidget
+     * \param parent parent MWidget
      */
     explicit BluetoothStatusIndicator(ApplicationContext &context,
-                                      DuiWidget *parent = NULL);
+                                      MWidget *parent = NULL);
 
     virtual ~BluetoothStatusIndicator();
 
@@ -210,10 +210,10 @@ private:
 class InternetConnectionStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(InternetConnectionStatusIndicator)
+    M_CONTROLLER(InternetConnectionStatusIndicator)
 
 public:
-    explicit InternetConnectionStatusIndicator(ApplicationContext &context, DuiWidget *parent = NULL);
+    explicit InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
     virtual ~InternetConnectionStatusIndicator();
 
@@ -233,16 +233,16 @@ private:
 class PhoneNetworkStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    DUI_CONTROLLER(PhoneNetworkStatusIndicator)
+    M_CONTROLLER(PhoneNetworkStatusIndicator)
 
 public:
     /*!
      * Constructs a PhoneNetworkStatusIndicator.
      *
      * \param context the application context to get status information from
-     * \param parent parent DuiWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
+     * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
      */
-    explicit PhoneNetworkStatusIndicator(ApplicationContext &context, DuiWidget *parent = NULL);
+    explicit PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
     virtual ~PhoneNetworkStatusIndicator();
 

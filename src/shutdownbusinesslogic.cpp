@@ -24,10 +24,10 @@
 
 #include <qmsystem/qmsystemstate.h>
 
-#include <DuiApplicationWindow>
-#include <DuiSceneManager>
-#include <DuiNotification>
-#include <DuiLocale>
+#include <MApplicationWindow>
+#include <MSceneManager>
+#include <MNotification>
+#include <MLocale>
 
 #undef DEBUG
 #include "debug.h"
@@ -119,7 +119,7 @@ ShutdownBusinessLogic::thermalShutdown ()
 {
     SYS_DEBUG ("");
     //% "Temperature too high. Device shutting down."
-    DuiNotification(DuiNotification::DeviceEvent, "", qtTrId ("qtn_shut_high_temp")).publish();
+    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_high_temp")).publish();
 
     /* TODO: do we need to call showUI here?
      * UI spec says: Ten seconds before the shutdown takes place, thermal 
@@ -131,14 +131,14 @@ void
 ShutdownBusinessLogic::batteryShutdown ()
 {
     //% "Battery empty. Device shutting down."
-    DuiNotification(DuiNotification::DeviceEvent, "", qtTrId ("qtn_shut_batt_empty")).publish();
+    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_batt_empty")).publish();
 }
 
 void 
 ShutdownBusinessLogic::shutdownDeniedUSB ()
 {
     //% "USB cable plugged in. Unplug the USB cable to shutdown."
-    DuiNotification(DuiNotification::DeviceEvent, "", qtTrId ("qtn_shut_unplug_usb")).publish();
+    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_unplug_usb")).publish();
 }
 
 #ifdef TEST_SHUTDOWN_LOGIC

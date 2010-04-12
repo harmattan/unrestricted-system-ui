@@ -23,10 +23,10 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <DuiInfoBanner>
+#include <MInfoBanner>
 #include "notificationareasink.h"
 
-class DuiApplication;
+class MApplication;
 class NotificationParameters;
 
 class Ut_NotificationAreaSink : public QObject
@@ -34,23 +34,23 @@ class Ut_NotificationAreaSink : public QObject
     Q_OBJECT
 
 public:
-    static QList<DuiInfoBanner::BannerType> types;
+    static QList<MInfoBanner::BannerType> types;
     static QList<QString> icons;
     static QList<QString> bodies;
     static QList<QString> buttonIcons;
     static QList<QString> contents;
-    static QList<DuiInfoBanner *> notifications;
-    static QList<DuiInfoBanner *> destroyedNotifications;
+    static QList<MInfoBanner *> notifications;
+    static QList<MInfoBanner *> destroyedNotifications;
 
 private:
-    DuiApplication *app;
+    MApplication *app;
     NotificationAreaSink *sink;
 
 public slots:
     // For faking the addition of a notification to a layout
-    void addNotification(DuiInfoBanner &notification);
+    void addNotification(MInfoBanner &notification);
     // For faking the removal of a notification from a layout
-    void removeNotification(DuiInfoBanner &notification);
+    void removeNotification(MInfoBanner &notification);
 
 private slots:
     // Executed once before every test case

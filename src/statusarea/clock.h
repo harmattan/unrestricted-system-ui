@@ -20,7 +20,7 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#include <DuiWidgetController>
+#include <MWidgetController>
 #include <QTimer>
 #include <qmtime.h>
 #include "clockmodel.h"
@@ -30,10 +30,10 @@ typedef Maemo::QmTimeWhatChanged QmTimeWhatChanged;
 /*!
  * A widget for showing the current time.
  */
-class Clock : public DuiWidgetController
+class Clock : public MWidgetController
 {
     Q_OBJECT
-    DUI_CONTROLLER(Clock)
+    M_CONTROLLER(Clock)
 
 public:
     /*!

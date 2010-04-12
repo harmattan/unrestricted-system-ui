@@ -20,23 +20,23 @@
 #ifndef STATUSINDICATORMENUWINDOW_H
 #define STATUSINDICATORMENUWINDOW_H
 
-#include <DuiWindow>
+#include <MWindow>
 
-class DuiApplicationPage;
-class DuiEscapeButtonPanel;
+class MApplicationPage;
+class MEscapeButtonPanel;
 
 /*!
- * Main window for the DUI Status Indicator Menu.
+ * Main window for the M Status Indicator Menu.
  * The window contains an application page which is populated
  * with a list of plugins.
  */
-class StatusIndicatorMenuWindow : public DuiWindow
+class StatusIndicatorMenuWindow : public MWindow
 {
     Q_OBJECT
 
 public:
     /*!
-     * Constructs a main window for the DUI Status Indicator Menu.
+     * Constructs a main window for the M Status Indicator Menu.
      *
      * \param parent Parent for the widget, defaults to NULL
      */
@@ -73,10 +73,10 @@ private:
     void excludeFromTaskBar();
 
     //! The main application page
-    QSharedPointer<DuiApplicationPage> applicationPage;
+    QSharedPointer<MApplicationPage> applicationPage;
 
     //! The escape button
-    QSharedPointer<DuiEscapeButtonPanel> escapeButtonPanel;
+    QSharedPointer<MEscapeButtonPanel> escapeButtonPanel;
 };
 
 #endif // STATUSINDICATORMENUWINDOW_H

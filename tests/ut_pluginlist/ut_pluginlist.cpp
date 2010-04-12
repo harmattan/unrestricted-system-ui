@@ -32,27 +32,27 @@
  * written consent of Nokia.
  */
 
-#include <DuiApplication>
-#include <DuiSceneWindow>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-#include <DuiButton>
+#include <MApplication>
+#include <MSceneWindow>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MButton>
 #include <QGraphicsLinearLayout>
-#include <DuiApplicationIfProxy>
+#include <MApplicationIfProxy>
 #include "ut_pluginlist.h"
 #include "pluginlist.h"
 #include "notificationarea_stub.h"
 
-// DuiApplicationIfProxy stubs (used by StatusArea)
-QDBusPendingReply<> DuiApplicationIfProxy::launch()
+// MApplicationIfProxy stubs (used by StatusArea)
+QDBusPendingReply<> MApplicationIfProxy::launch()
 {
-    Ut_PluginList::duiApplicationIfProxyLaunchCalled = true;
+    Ut_PluginList::mApplicationIfProxyLaunchCalled = true;
 
     return QDBusPendingReply<>();
 }
 
-// DuiApplicationPage stubs (used by PluginList)
-void DuiSceneWindow::appear(enum DeletionPolicy)
+// MApplicationPage stubs (used by PluginList)
+void MSceneWindow::appear(enum DeletionPolicy)
 {
     Ut_PluginList::applicationPageShown = true;
 }
@@ -64,12 +64,12 @@ QObject *QPluginLoader::instance()
     return new TestPlugin;
 }
 
-DuiWidget *TestPlugin::constructWidget(DuiStatusIndicatorMenuInterface &)
+MWidget *TestPlugin::constructWidget(DuiStatusIndicatorMenuInterface &)
 {
-    return new DuiWidget;
+    return new MWidget;
 }
 
-bool Ut_PluginList::duiApplicationIfProxyLaunchCalled;
+bool Ut_PluginList::mApplicationIfProxyLaunchCalled;
 bool Ut_PluginList::applicationWindowMinimized;
 bool Ut_PluginList::applicationPageShown;
 QStringList Ut_PluginList::loadedPlugins;
@@ -78,9 +78,9 @@ void Ut_PluginList::initTestCase()
 {
     int argc = 1;
     char *app_name = (char *)"./ut_pluginlist";
-    app = new DuiApplication(argc, &app_name);
-    applicationWindow = new DuiApplicationWindow;
-    applicationPage = new DuiApplicationPage;
+    app = new MApplication(argc, &app_name);
+    applicationWindow = new MApplicationWindow;
+    applicationPage = new MApplicationPage;
 }
 
 void Ut_PluginList::cleanupTestCase()
@@ -92,7 +92,7 @@ void Ut_PluginList::cleanupTestCase()
 
 void Ut_PluginList::init()
 {
-    duiApplicationIfProxyLaunchCalled = false;
+    mApplicationIfProxyLaunchCalled = false;
     applicationPageShown = false;
     loadedPlugins.clear();
     pluginList = new PluginList(applicationWindow, applicationPage);
@@ -141,7 +141,7 @@ void Ut_PluginList::testSettingsButtonClicked()
 {
     emit settingsButtonClicked();
 
-    QVERIFY(duiApplicationIfProxyLaunchCalled);
+    QVERIFY(mApplicationIfProxyLaunchCalled);
 }
 
 void Ut_PluginList::testNotificationAreaVisibility()

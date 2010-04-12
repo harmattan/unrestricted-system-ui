@@ -24,7 +24,7 @@
 #include "genericnotificationparameterfactory.h"
 #include <QDBusConnection>
 #include <QDir>
-#include <duifiledatastore.h>
+#include <mfiledatastore.h>
 #include <eventtypestore.h>
 
 //! Directory in which the persistent data files are located
@@ -49,7 +49,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
     persistentDataRestored(false),
-    persistentStorage(new maemosec::storage("com.nokia.dui.NotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
+    persistentStorage(new maemosec::storage("com.nokia.m.NotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
 
@@ -65,7 +65,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     initializeEventTypeStore();
 
     // Connect to D-Bus and register the DBus source as an object
-    QDBusConnection::sessionBus().registerService("com.nokia.dui.NotificationManager");
+    QDBusConnection::sessionBus().registerService("com.nokia.m.NotificationManager");
     QDBusConnection::sessionBus().registerObject("/notificationmanager", dBusSource);
 }
 

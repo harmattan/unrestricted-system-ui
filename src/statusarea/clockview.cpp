@@ -22,16 +22,16 @@
 
 #include <QTime>
 #include <QGraphicsLinearLayout>
-#include <DuiViewCreator>
-#include <DuiLabel>
+#include <MViewCreator>
+#include <MLabel>
 
-ClockView::ClockView(Clock *controller) : DuiWidgetView(controller)
+ClockView::ClockView(Clock *controller) : MWidgetView(controller)
 {
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(l);
 
-    label = new DuiLabel(NULL);
+    label = new MLabel(NULL);
     label->setObjectName("ClockLabel");
     l->addItem(label);
 }
@@ -43,7 +43,7 @@ void ClockView::styleUpdated()
 
 void ClockView::setupModel()
 {
-    DuiWidgetView::setupModel();
+    MWidgetView::setupModel();
     QList<const char *> modifications;
     modifications << ClockModel::Time;
     modifications << ClockModel::TimeFormat24h;
@@ -52,7 +52,7 @@ void ClockView::setupModel()
 
 void ClockView::updateData(const QList<const char *>& modifications)
 {
-    DuiWidgetView::updateData(modifications);
+    MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
         if (member == ClockModel::Time) {
@@ -79,4 +79,4 @@ void ClockView::updateLabel()
     }
 }
 
-DUI_REGISTER_VIEW_NEW(ClockView, Clock)
+M_REGISTER_VIEW_NEW(ClockView, Clock)

@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiRemoteAction>
+#include <MRemoteAction>
 #include "ut_widgetnotificationsink.h"
 #include "widgetnotificationsink.h"
 #include "../stubs/testnotificationparameters.h"
@@ -25,7 +25,7 @@
 #include "genericnotificationparameterfactory.h"
 #include "notificationmanager_stub.h"
 #include <QImageReader>
-#include <DuiApplication>
+#include <MApplication>
 #include "sysuid_stub.h"
 
 // xlib.h defines Status, undef it so we can use QSettings::Status
@@ -39,20 +39,20 @@ QStringList eventTypeFilesList;
 class TestWidgetNotificationSink : public WidgetNotificationSink
 {
 public:
-    DuiInfoBanner *createInfoBanner(const Notification &);
-    DuiInfoBanner *createInfoBanner(DuiInfoBanner::BannerType, uint groupId, const NotificationParameters &);
+    MInfoBanner *createInfoBanner(const Notification &);
+    MInfoBanner *createInfoBanner(MInfoBanner::BannerType, uint groupId, const NotificationParameters &);
     void addNotification(const Notification &);
     void removeNotification(uint);
     QString determineIconId(const NotificationParameters &);
-    void updateActions(DuiInfoBanner *infoBanner, const Notification &notification);
+    void updateActions(MInfoBanner *infoBanner, const Notification &notification);
 };
 
-DuiInfoBanner *TestWidgetNotificationSink::createInfoBanner(const Notification &n)
+MInfoBanner *TestWidgetNotificationSink::createInfoBanner(const Notification &n)
 {
     return WidgetNotificationSink::createInfoBanner(n);
 }
 
-DuiInfoBanner *TestWidgetNotificationSink::createInfoBanner(DuiInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
+MInfoBanner *TestWidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
 {
     return WidgetNotificationSink::createInfoBanner(type, groupId, parameters);
 }
@@ -70,7 +70,7 @@ QString TestWidgetNotificationSink::determineIconId(const NotificationParameters
     return WidgetNotificationSink::determineIconId(params);
 }
 
-void TestWidgetNotificationSink::updateActions(DuiInfoBanner *infoBanner, const Notification &notification)
+void TestWidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const Notification &notification)
 {
     WidgetNotificationSink::updateActions(infoBanner, notification.parameters());
 }
@@ -116,12 +116,12 @@ QStringList QDir::entryList(const QStringList &, Filters, SortFlags) const
     return eventTypeFilesList;
 }
 
-// QGraphicsWidget stubs (used by DuiCompositorNotificationSink)
+// QGraphicsWidget stubs (used by MCompositorNotificationSink)
 void QGraphicsWidget::addAction(QAction *action)
 {
     Ut_WidgetNotificationSink::actions[this].append(action);
 
-    DuiRemoteAction *dra = dynamic_cast<DuiRemoteAction *>(action);
+    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
     if (dra != NULL) {
         Ut_WidgetNotificationSink::contents.append(dra->toString());
     }
@@ -131,7 +131,7 @@ void QGraphicsWidget::removeAction(QAction *action)
 {
     Ut_WidgetNotificationSink::actions[this].removeAll(action);
 
-    DuiRemoteAction *dra = dynamic_cast<DuiRemoteAction *>(action);
+    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
     if (dra != NULL) {
         Ut_WidgetNotificationSink::contents.removeAll(dra->toString());
     }
@@ -203,17 +203,17 @@ QImage *Ut_WidgetNotificationSink::testImage = NULL;
 
 void Ut_WidgetNotificationSink::initTestCase()
 {
-    // Create a DuiAapplication
+    // Create a MAapplication
     static int argc = 1;
     static char *app_name = (char *)"./ut_widgetnotificationsink";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
     testImage = new QImage();
 }
 
 void Ut_WidgetNotificationSink::cleanupTestCase()
 {
     delete testImage;
-    // Destroy DuiApplication
+    // Destroy MApplication
     delete app;
 }
 
@@ -276,11 +276,11 @@ void Ut_WidgetNotificationSink::testUpdateActions()
     notification.setParameters(parameters);
 
     // Create an info banner with one action
-    DuiInfoBanner infoBanner(DuiInfoBanner::Event);
+    MInfoBanner infoBanner(MInfoBanner::Event);
     QAction *action = new QAction(&infoBanner);
     infoBanner.addAction(action);
 
-    // There shouldn't be any DuiRemoteActions at this point but the action should be added
+    // There shouldn't be any MRemoteActions at this point but the action should be added
     QCOMPARE(contents.count(), 0);
     QCOMPARE(actions.count(), 1);
     QCOMPARE(actions[&infoBanner].at(0), action);
@@ -288,12 +288,12 @@ void Ut_WidgetNotificationSink::testUpdateActions()
     // Update the actions
     m_subject->updateActions(&infoBanner, notification);
 
-    // There should be a DuiRemoteAction at this point
+    // There should be a MRemoteAction at this point
     QCOMPARE(contents.count(), 1);
     QCOMPARE(contents[0], QString("content0 0 0 0"));
     QCOMPARE(actions.count(), 1);
-    QVERIFY(dynamic_cast<DuiRemoteAction *>(actions[&infoBanner].at(0)) != NULL);
-    QCOMPARE(dynamic_cast<DuiRemoteAction *>(actions[&infoBanner].at(0))->toString(), QString("content0 0 0 0"));
+    QVERIFY(dynamic_cast<MRemoteAction *>(actions[&infoBanner].at(0)) != NULL);
+    QCOMPARE(dynamic_cast<MRemoteAction *>(actions[&infoBanner].at(0))->toString(), QString("content0 0 0 0"));
 }
 
 void Ut_WidgetNotificationSink::testInfoBannerClicking()
@@ -304,11 +304,11 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QApplication::processEvents();
     TestNotificationParameters parameters;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
-    DuiRemoteAction *action = dynamic_cast<DuiRemoteAction *>(actions[infoBanner].at(0));
+    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
@@ -333,11 +333,11 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     uint groupID = 1;
     TestNotificationParameters groupParameters;
     groupParameters.add(NotificationWidgetParameterFactory::createActionParameter("content1 1 1 1"));
-    infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Information, groupID, groupParameters);
+    infoBanner = m_subject->createInfoBanner(MInfoBanner::Information, groupID, groupParameters);
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 2);
-    action = dynamic_cast<DuiRemoteAction *>(actions[infoBanner].at(0));
+    action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
@@ -363,11 +363,11 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovable(TestN
     QApplication::processEvents();
     uint notificationID = 0;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
-    DuiRemoteAction *action = dynamic_cast<DuiRemoteAction *>(actions[infoBanner].at(0));
+    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
@@ -407,13 +407,13 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
 
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
-    QCOMPARE(infoBanner->bannerType(), DuiInfoBanner::Event);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
+    QCOMPARE(infoBanner->bannerType(), MInfoBanner::Event);
     QCOMPARE(infoBanner->imageID(), QString("icon0"));
     QCOMPARE(infoBanner->bodyText(), QString("body0"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon0"));
     QCOMPARE(infoBanner->actions().count(), 1);
-    DuiRemoteAction *remoteAction = dynamic_cast<DuiRemoteAction *>(infoBanner->actions().at(0));
+    MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content0 0 0 0"));
     delete infoBanner;
@@ -422,8 +422,8 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 {
     TestNotificationParameters parameters("icon1", "body1", "buttonicon1", "");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020));
-    QCOMPARE(infoBanner->bannerType(), DuiInfoBanner::Information);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020));
+    QCOMPARE(infoBanner->bannerType(), MInfoBanner::Information);
     QCOMPARE(infoBanner->imageID(), QString("icon1"));
     QCOMPARE(infoBanner->bodyText(), QString("body1"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
@@ -434,13 +434,13 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters()
 {
     TestNotificationParameters parameters("icon3", "body3", "buttonicon3", "content1 2 3 4");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
-    QCOMPARE(infoBanner->bannerType(), DuiInfoBanner::Event);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
+    QCOMPARE(infoBanner->bannerType(), MInfoBanner::Event);
     QCOMPARE(infoBanner->imageID(), QString("icon3"));
     QCOMPARE(infoBanner->bodyText(), QString("body3"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon3"));
     QCOMPARE(infoBanner->actions().count(), 1);
-    DuiRemoteAction *remoteAction = dynamic_cast<DuiRemoteAction *>(infoBanner->actions().at(0));
+    MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content1 2 3 4"));
     delete infoBanner;
@@ -452,7 +452,7 @@ void Ut_WidgetNotificationSink::testLoadIconDefaultSize()
     initImage(imageStrBase64, ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().size(), QSize(ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE));
     delete infoBanner;
 }
@@ -463,7 +463,7 @@ void Ut_WidgetNotificationSink::testLoadIconSmallerThanDefault()
     initImage(imageStrBase64, ICON_SMALL_SIZE, ICON_SMALL_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().size(), QSize(ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE));
     delete infoBanner;
 }
@@ -474,7 +474,7 @@ void Ut_WidgetNotificationSink::testLoadIconScaleDownToFit()
     initImage(imageStrBase64, ICON_BIG_SIZE, ICON_BIG_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().size(), QSize(ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE));
     delete infoBanner;
 }
@@ -488,7 +488,7 @@ void Ut_WidgetNotificationSink::testLoadIconScaleToFitBigHeight()
     testSize.scale(ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE, Qt::KeepAspectRatio);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().size(), testSize);
     delete infoBanner;
 }
@@ -502,7 +502,7 @@ void Ut_WidgetNotificationSink::testLoadIconScaleToFitBigWidth()
     testSize.scale(ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE, Qt::KeepAspectRatio);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().size(), testSize);
     delete infoBanner;
 }
@@ -513,7 +513,7 @@ void Ut_WidgetNotificationSink::testLoadIconTooBig()
     initImage(imageStrBase64, ICON_TOO_BIG_SIZE, ICON_TOO_BIG_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().isNull(), true);
     delete infoBanner;
 }
@@ -524,7 +524,7 @@ void Ut_WidgetNotificationSink::testLoadIconHeightTooBig()
     initImage(imageStrBase64, ICON_DEFAULT_SIZE, ICON_TOO_BIG_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().isNull(), true);
     delete infoBanner;
 }
@@ -535,7 +535,7 @@ void Ut_WidgetNotificationSink::testLoadIconWidthTooBig()
     initImage(imageStrBase64, ICON_TOO_BIG_SIZE, ICON_DEFAULT_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().isNull(), true);
     delete infoBanner;
 }
@@ -546,7 +546,7 @@ void Ut_WidgetNotificationSink::testLoadIconBrokenImage()
     initImage(badImageStrBase64, ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().isNull(), true);
     delete infoBanner;
 }
@@ -557,7 +557,7 @@ void Ut_WidgetNotificationSink::testLoadIconCannotReadImage()
     initImage(imageStrBase64, ICON_DEFAULT_SIZE, ICON_DEFAULT_SIZE);
 
     TestNotificationParameters parameters("/path/image.png");
-    DuiInfoBanner *infoBanner = m_subject->createInfoBanner(DuiInfoBanner::Event, 1, parameters);
+    MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->pixmap().isNull(), true);
     delete infoBanner;
 }

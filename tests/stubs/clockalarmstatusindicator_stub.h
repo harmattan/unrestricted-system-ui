@@ -28,14 +28,14 @@
 class ClockAlarmStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void ClockAlarmStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void ClockAlarmStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void ClockAlarmStatusIndicatorDestructor();
     virtual void clockAlarmChanged();
     ContextItem *clockAlarm ;
 };
 
 // 2. IMPLEMENT STUB
-void ClockAlarmStatusIndicatorStub::ClockAlarmStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void ClockAlarmStatusIndicatorStub::ClockAlarmStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -58,7 +58,7 @@ ClockAlarmStatusIndicatorStub *gClockAlarmStatusIndicatorStub = &gDefaultClockAl
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gClockAlarmStatusIndicatorStub->ClockAlarmStatusIndicatorConstructor(context, parent);
 }

@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef DUICOMPOSITORNOTIFICATIONSINK_H_
-#define DUICOMPOSITORNOTIFICATIONSINK_H_
+#ifndef MCOMPOSITORNOTIFICATIONSINK_H_
+#define MCOMPOSITORNOTIFICATIONSINK_H_
 
 #include <QHash>
 #include "widgetnotificationsink.h"
@@ -26,28 +26,28 @@
 
 class QGraphicsView;
 class QTimer;
-class DuiInfoBanner;
+class MInfoBanner;
 
 /*!
- * DuiCompositorNotificationSink implements the NotificationSink interface for
+ * MCompositorNotificationSink implements the NotificationSink interface for
  * displaying notifications on top of other applications.
  *
  * Notification is displayed for a certain time after which it is hidden.
  */
-class DuiCompositorNotificationSink : public WidgetNotificationSink
+class MCompositorNotificationSink : public WidgetNotificationSink
 {
     Q_OBJECT
 
 public:
     /*!
-     * Constructs a new DuiCompositorNotificationSink.
+     * Constructs a new MCompositorNotificationSink.
      */
-    DuiCompositorNotificationSink();
+    MCompositorNotificationSink();
 
     /*!
-     * Destroys the DuiCompositorNotificationSink.
+     * Destroys the MCompositorNotificationSink.
      */
-    virtual ~DuiCompositorNotificationSink();
+    virtual ~MCompositorNotificationSink();
 
 signals:
     /*!
@@ -68,7 +68,7 @@ private slots:
      *
      * \param orientation the new orientation
      */
-    void rotateInfoBanners(const Dui::Orientation &orientation);
+    void rotateInfoBanners(const M::Orientation &orientation);
 
     /*!
      * A slot for timing out the notification windows
@@ -104,27 +104,27 @@ private:
      * \param view the view to manipulate
      * \param infoBanner the infoBanner from which to take the size
      */
-    static void setViewSizeAndRotation(QGraphicsView &view, const DuiInfoBanner &infoBanner);
+    static void setViewSizeAndRotation(QGraphicsView &view, const MInfoBanner &infoBanner);
 
     /*!
      * A private class for storing notification information
      */
-    class DuiCompositorNotificationSinkNotification
+    class MCompositorNotificationSinkNotification
     {
     public:
-        DuiCompositorNotificationSinkNotification(QGraphicsView *view, QTimer *timer, DuiInfoBanner *infoBanner);
-        ~DuiCompositorNotificationSinkNotification();
+        MCompositorNotificationSinkNotification(QGraphicsView *view, QTimer *timer, MInfoBanner *infoBanner);
+        ~MCompositorNotificationSinkNotification();
 
         //! The view in which the widget resides
         QGraphicsView *view;
         //! A timer for dismissing the notification
         QTimer *timer;
-        //! The DuiInfoBanner
-        DuiInfoBanner *infoBanner;
+        //! The MInfoBanner
+        MInfoBanner *infoBanner;
     };
 
     //! A mapping between notification IDs and private notification information classes
-    QHash<uint, DuiCompositorNotificationSinkNotification *> idToNotification;
+    QHash<uint, MCompositorNotificationSinkNotification *> idToNotification;
 
     //! Whether the orientation change signal has been connected
     bool orientationChangeSignalConnected;
@@ -133,4 +133,4 @@ private:
     bool sinkDisabled;
 };
 
-#endif /* DUICOMPOSITORNOTIFICATIONSINK_H_ */
+#endif /* MCOMPOSITORNOTIFICATIONSINK_H_ */

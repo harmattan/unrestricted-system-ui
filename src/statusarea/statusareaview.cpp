@@ -25,12 +25,12 @@
 #include "contextframeworkcontext.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
-#include <DuiSceneWindow>
-#include <DuiSceneManager>
-#include <DuiViewCreator>
+#include <MSceneWindow>
+#include <MSceneManager>
+#include <MViewCreator>
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
-    DuiWidgetView(controller),
+    MWidgetView(controller),
     controller(controller),
     alarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
     batteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
@@ -52,7 +52,7 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopLeftCorner, clockAlarmLayout, Qt::TopLeftCorner);
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopRightCorner, clockAlarmLayout, Qt::TopRightCorner);
     clockAlarmLayout->addCornerAnchors(alarmIndicator, Qt::TopRightCorner, clock, Qt::TopRightCorner);
-    DuiWidget *clockAlarmWidget = new DuiWidget;
+    MWidget *clockAlarmWidget = new MWidget;
     clockAlarmWidget->setLayout(clockAlarmLayout);
     layout->addItem(clockAlarmWidget);
 
@@ -76,4 +76,4 @@ StatusAreaView::~StatusAreaView()
 {
 }
 
-DUI_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)
+M_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)

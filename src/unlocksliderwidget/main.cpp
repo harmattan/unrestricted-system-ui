@@ -16,26 +16,26 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <DuiTheme>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiSlider>
+#include <MTheme>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MSlider>
 
 #include "unlockslider.h"
 #include "unlocksliderview.h"
 
 int main(int argc, char** argv)
 {
-    DuiApplication app(argc, argv);
+    MApplication app(argc, argv);
 
-    DuiApplicationWindow w;
+    MApplicationWindow w;
     w.show();
 
-    DuiApplicationPage p;
+    MApplicationPage p;
     p.appear();
 
-    DuiTheme::addPixmapDirectory("./");
-    DuiTheme::loadCSS("./unlocksliderstyle.css");
+    MTheme::addPixmapDirectory("./");
+    MTheme::loadCSS("./unlocksliderstyle.css");
 
     // Create widget controller and view.
     UnlockSlider slider1;
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     slider1.setGeometry(QRectF(400, 0, 400, 400));
     slider2.setGeometry(QRectF(0, 0, 400, 400));
 
-    // Attach widget to parent widget so it will be drawn and run dui application.
+    // Attach widget to parent widget so it will be drawn and run m application.
     slider1.setParentItem(p.centralWidget());
     slider2.setParentItem(p.centralWidget());
 

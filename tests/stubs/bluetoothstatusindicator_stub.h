@@ -28,14 +28,14 @@
 class BluetoothStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void BluetoothStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void BluetoothStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void BluetoothStatusIndicatorDestructor();
     virtual void bluetoothChanged();
     ContextItem *bluetooth ;
 };
 
 // 2. IMPLEMENT STUB
-void BluetoothStatusIndicatorStub::BluetoothStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void BluetoothStatusIndicatorStub::BluetoothStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -58,7 +58,7 @@ BluetoothStatusIndicatorStub *gBluetoothStatusIndicatorStub = &gDefaultBluetooth
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gBluetoothStatusIndicatorStub->BluetoothStatusIndicatorConstructor(context, parent);
 }

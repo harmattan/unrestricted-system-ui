@@ -20,16 +20,16 @@
 #ifndef STATUSAREAMODEL_H_
 #define STATUSAREAMODEL_H_
 
-#include <duiwidgetmodel.h>
+#include <mwidgetmodel.h>
 
 /*!
  * This is the StatusArea widget's data model.
  * Data model is shared between StatusArea and StatusAreaView.
  */
-class StatusAreaModel : public DuiWidgetModel
+class StatusAreaModel : public MWidgetModel
 {
     Q_OBJECT
-    DUI_MODEL(StatusAreaModel)
+    M_MODEL(StatusAreaModel)
 };
 
 #endif /* STATUSAREAMODEL_H_ */

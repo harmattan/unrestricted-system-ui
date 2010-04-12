@@ -19,29 +19,29 @@
 
 #include "notificationareaview.h"
 #include "notificationarea.h"
-#include <DuiViewCreator>
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiInfoBanner>
-#include <DuiContainer>
+#include <MViewCreator>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MInfoBanner>
+#include <MContainer>
 #include <QGraphicsLinearLayout>
 
 NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
-    DuiWidgetView(controller)
+    MWidgetView(controller)
 {
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(mainLayout);
-    DuiContainer *container = new DuiContainer("Notifications");
+    MContainer *container = new MContainer("Notifications");
     mainLayout->addItem(container);
 
     // Set layout
-    DuiLayout *layout = new DuiLayout;
-    layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    MLayout *layout = new MLayout;
+    layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     layoutPolicy->setObjectName("NotificationAreaLayoutPolicy");
     container->centralWidget()->setLayout(layout);
 
-    // DuiLayout properties can only be set after the layout has a parent
+    // MLayout properties can only be set after the layout has a parent
     layout->setContentsMargins(0, 0, 0, 0);
 }
 
@@ -60,11 +60,11 @@ void NotificationAreaView::updateData(const QList<const char *>& modifications)
             }
 
             // Add banners from the model to the layout
-            foreach(DuiInfoBanner * banner, model()->banners()) {
+            foreach(MInfoBanner * banner, model()->banners()) {
                 layoutPolicy->addItem(banner);
             }
         }
     }
 }
 
-DUI_REGISTER_VIEW_NEW(NotificationAreaView, NotificationArea)
+M_REGISTER_VIEW_NEW(NotificationAreaView, NotificationArea)

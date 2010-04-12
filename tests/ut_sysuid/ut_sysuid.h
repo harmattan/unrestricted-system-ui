@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QPointF>
 
-class DuiApplication;
+class MApplication;
 class Sysuid;
 
 class Ut_Sysuid : public QObject
@@ -32,7 +32,7 @@ class Ut_Sysuid : public QObject
 
 private:
     Sysuid *sysuid;
-    DuiApplication *app;
+    MApplication *app;
 
 private slots:
     // Executed once before every test case

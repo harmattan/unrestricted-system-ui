@@ -20,8 +20,8 @@
 #ifndef STATUSAREAVIEW_H
 #define STATUSAREAVIEW_H
 
-#include <DuiButtonView>
-#include <DuiNamespace>
+#include <MButtonView>
+#include <MNamespace>
 
 #include "statusareastyle.h"
 #include "statusareamodel.h"
@@ -30,15 +30,15 @@
 class Notifier;
 class StatusArea;
 class StatusIndicator;
-class DuiSceneWindow;
+class MSceneWindow;
 
 /*!
  * Status area view draws the status area.
  */
-class StatusAreaView : public DuiWidgetView
+class StatusAreaView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(StatusAreaModel, StatusAreaStyle)
+    M_VIEW(StatusAreaModel, StatusAreaStyle)
 
 public:
     /*!
@@ -76,7 +76,7 @@ private:
     StatusIndicator *bluetoothIndicator;
 
     //! Placeholder for the launcher button
-    DuiButton *launcherButtonPlaceholder;
+    MButton *launcherButtonPlaceholder;
 
     //! Notifier
     Notifier *notifier;

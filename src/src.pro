@@ -1,13 +1,13 @@
-include(../duiconfig.pri)
+include(../mconfig.pri)
 
 MOC_DIR = .moc
-DUIGEN_OUTDIR = .gen
+MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 
 TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
-CONFIG += dui \
+CONFIG += meegotouch \
           qmsystem \
           silent \
           link_pkgconfig
@@ -15,7 +15,7 @@ CONFIG += dui \
 QT += dbus
 
 SYSTEMUI_SOURCE_DIR = .
-DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 contains(cov, true) {
     message("Coverage options enabled")

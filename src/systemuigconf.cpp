@@ -20,7 +20,7 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "systemuigconf.h"
 
-#include <DuiGConfItem>
+#include <MGConfItem>
 #include <QDebug>
 
 #define DEBUG
@@ -31,32 +31,32 @@ SystemUIGConf::SystemUIGConf (
 	QObject(parent)
 {
     // init the gconf keys
-    duiGConfItems.insert (SystemUIGConf::BatteryPSMAutoKey, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));
+    mGConfItems.insert (SystemUIGConf::BatteryPSMAutoKey, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::BatteryPSMAutoKey)));
 
-    duiGConfItems.insert (SystemUIGConf::BatteryPSMThresholdKey, 
-            new DuiGConfItem (
+    mGConfItems.insert (SystemUIGConf::BatteryPSMThresholdKey, 
+            new MGConfItem (
                 mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
     
-    duiGConfItems.insert (SystemUIGConf::LedAllEnabled, 
-            new DuiGConfItem (
+    mGConfItems.insert (SystemUIGConf::LedAllEnabled, 
+            new MGConfItem (
                 mapGConfKey(SystemUIGConf::LedAllEnabled)));
     
-    duiGConfItems.insert (SystemUIGConf::MissedCallLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::MissedCallLed)));
-    duiGConfItems.insert (SystemUIGConf::SMSReceivedLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::SMSReceivedLed)));
-    duiGConfItems.insert (SystemUIGConf::EmailReceivedLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::EmailReceivedLed)));
-    duiGConfItems.insert (SystemUIGConf::InstantMessageReceivedLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::InstantMessageReceivedLed)));
-    duiGConfItems.insert (SystemUIGConf::ChargingLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::ChargingLed)));
-    duiGConfItems.insert (SystemUIGConf::OtherNotificationsLed, 
-            new DuiGConfItem (mapGConfKey(SystemUIGConf::OtherNotificationsLed)));
+    mGConfItems.insert (SystemUIGConf::MissedCallLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::MissedCallLed)));
+    mGConfItems.insert (SystemUIGConf::SMSReceivedLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::SMSReceivedLed)));
+    mGConfItems.insert (SystemUIGConf::EmailReceivedLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::EmailReceivedLed)));
+    mGConfItems.insert (SystemUIGConf::InstantMessageReceivedLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::InstantMessageReceivedLed)));
+    mGConfItems.insert (SystemUIGConf::ChargingLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::ChargingLed)));
+    mGConfItems.insert (SystemUIGConf::OtherNotificationsLed, 
+            new MGConfItem (mapGConfKey(SystemUIGConf::OtherNotificationsLed)));
     
-    QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
-    for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i)
+    QHash<SystemUIGConf::GConfKey, MGConfItem *>::iterator i;
+    for (i = mGConfItems.begin(); i != mGConfItems.end(); ++i)
         connect (i.value (), SIGNAL (valueChanged()), 
                 this, SLOT (keyValueChanged()));
 
@@ -64,8 +64,8 @@ SystemUIGConf::SystemUIGConf (
 
 SystemUIGConf::~SystemUIGConf()
 {
-    QHash<SystemUIGConf::GConfKey, DuiGConfItem *>::iterator i;
-    for (i = duiGConfItems.begin(); i != duiGConfItems.end(); ++i) {
+    QHash<SystemUIGConf::GConfKey, MGConfItem *>::iterator i;
+    for (i = mGConfItems.begin(); i != mGConfItems.end(); ++i) {
         delete i.value();
         i.value() = NULL;
     }
@@ -76,8 +76,8 @@ int
 SystemUIGConf::keyCount (
         SystemUIGConf::GConfKeyGroup keyGroup)
 {
-    DuiGConfItem duiGConfItem(mapGConfKeyGroup(keyGroup));
-    QList<QString> list = duiGConfItem.listEntries();
+    MGConfItem mGConfItem(mapGConfKeyGroup(keyGroup));
+    QList<QString> list = mGConfItem.listEntries();
 
     return list.size();
 }
@@ -93,7 +93,7 @@ SystemUIGConf::setValue (
     SYS_DEBUG ("*** key      = %d", (int) key);
     SYS_DEBUG ("*** value    = %s", SYS_BOOL(value.toBool()));
 
-    duiGConfItems.value(key)->set (value);
+    mGConfItems.value(key)->set (value);
 }
 
 /*!
@@ -104,7 +104,7 @@ SystemUIGConf::value (
         SystemUIGConf::GConfKey key, 
         QVariant                def)
 {
-    return duiGConfItems.value(key)->value (def);
+    return mGConfItems.value(key)->value (def);
 }
 
 /*!
@@ -114,8 +114,8 @@ SystemUIGConf::value (
 void 
 SystemUIGConf::keyValueChanged ()
 {
-    DuiGConfItem *item = static_cast<DuiGConfItem *>(this->sender());
-    emit valueChanged(duiGConfItems.key(item), item->value());
+    MGConfItem *item = static_cast<MGConfItem *>(this->sender());
+    emit valueChanged(mGConfItems.key(item), item->value());
 }
 
 /*!

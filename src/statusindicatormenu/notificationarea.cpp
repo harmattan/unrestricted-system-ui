@@ -20,12 +20,12 @@
 #include "sysuid.h"
 #include "notificationarea.h"
 #include "notificationareasink.h"
-#include "duicompositornotificationsink.h"
-#include <DuiInfoBanner>
+#include "mcompositornotificationsink.h"
+#include <MInfoBanner>
 #include <QTimer>
 
-NotificationArea::NotificationArea(DuiWidget *parent) :
-    DuiWidgetController(new NotificationAreaModel, parent),
+NotificationArea::NotificationArea(MWidget *parent) :
+    MWidgetController(new NotificationAreaModel, parent),
     notificationAreaSink(new NotificationAreaSink)
 {
     // Connect notification signals
@@ -35,11 +35,11 @@ NotificationArea::NotificationArea(DuiWidget *parent) :
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
-    connect(notificationAreaSink, SIGNAL(addNotification(DuiInfoBanner &)), this, SLOT(addNotification(DuiInfoBanner &)));
-    connect(notificationAreaSink, SIGNAL(removeNotification(DuiInfoBanner &)), this, SLOT(removeNotification(DuiInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(addNotification(MInfoBanner &)), this, SLOT(addNotification(MInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(removeNotification(MInfoBanner &)), this, SLOT(removeNotification(MInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
-    connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(DuiInfoBanner &)), this, SLOT(moveNotificationToTop(DuiInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(MInfoBanner &)), this, SLOT(moveNotificationToTop(MInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
 }
 
@@ -48,30 +48,30 @@ NotificationArea::~NotificationArea()
     delete notificationAreaSink;
 }
 
-void NotificationArea::moveNotificationToTop(DuiInfoBanner &notification)
+void NotificationArea::moveNotificationToTop(MInfoBanner &notification)
 {
-    QList<DuiInfoBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     if(banners.count() != 0) {
         banners.move(banners.indexOf(&notification), 0);
         model()->setBanners(banners);
     }
 }
 
-void NotificationArea::addNotification(DuiInfoBanner &notification)
+void NotificationArea::addNotification(MInfoBanner &notification)
 {
     // Put the notification into the model of the notification area
     notification.setParentItem(this);
-    QList<DuiInfoBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     banners.push_front(&notification);
     model()->setBanners(banners);
 
     emit notificationCountChanged(model()->banners().count());
 }
 
-void NotificationArea::removeNotification(DuiInfoBanner &notification)
+void NotificationArea::removeNotification(MInfoBanner &notification)
 {
     // Remove the notification from the model of the notification area
-    QList<DuiInfoBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     banners.removeOne(&notification);
     model()->setBanners(banners);
     notification.setParentItem(NULL);

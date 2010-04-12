@@ -17,12 +17,12 @@
 **
 ****************************************************************************/
 
-#ifndef DUISTATUSINDICATORMENUPLUGININTERFACE_H
-#define DUISTATUSINDICATORMENUPLUGININTERFACE_H
+#ifndef MSTATUSINDICATORMENUPLUGININTERFACE_H
+#define MSTATUSINDICATORMENUPLUGININTERFACE_H
 
 #include <QtPlugin>
 
-class DuiWidget;
+class MWidget;
 
 /**
  * The DuiStatusIndicatorMenuInterface interface represents a status indicator
@@ -62,16 +62,16 @@ public:
     virtual ~DuiStatusIndicatorMenuPluginInterface() {}
 
     /*!
-     * This method is called to construct a new DuiWidget instance.
+     * This method is called to construct a new MWidget instance.
      * Caller will maintain the ownership of the constructed widget and
      * will destroy it when it is no longer needed.
      *
      * \param statusIndicatorMenu an interface for controlling the status indicator menu
-     * \return New DuiWidget class instance that visualizes this plugin.
+     * \return New MWidget class instance that visualizes this plugin.
      */
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu) = 0;
+    virtual MWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu) = 0;
 };
 
 Q_DECLARE_INTERFACE(DuiStatusIndicatorMenuPluginInterface, "com.nokia.dui.core.StatusIndicatorMenuPluginInterface/1.0")
 
-#endif // DUISTATUSINDICATORMENUPLUGININTERFACE_H
+#endif // MSTATUSINDICATORMENUPLUGININTERFACE_H

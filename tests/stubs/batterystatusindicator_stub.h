@@ -28,7 +28,7 @@
 class BatteryStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void BatteryStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void BatteryStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void BatteryStatusIndicatorDestructor();
     virtual void batteryLevelChanged();
     virtual void batteryChargingChanged();
@@ -37,7 +37,7 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void BatteryStatusIndicatorStub::BatteryStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void BatteryStatusIndicatorStub::BatteryStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -65,7 +65,7 @@ BatteryStatusIndicatorStub *gBatteryStatusIndicatorStub = &gDefaultBatteryStatus
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gBatteryStatusIndicatorStub->BatteryStatusIndicatorConstructor(context, parent);
 }

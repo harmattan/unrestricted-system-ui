@@ -17,15 +17,15 @@
 **
 ****************************************************************************/
 
-#include "ut_duicompositornotificationsink.h"
+#include "ut_mcompositornotificationsink.h"
 
 #include <QtTest/QtTest>
-#include <DuiRemoteAction>
-#include <DuiInfoBanner>
-#include <DuiApplication>
-#include <DuiScene>
-#include <DuiSceneManager>
-#include "duicompositornotificationsink.h"
+#include <MRemoteAction>
+#include <MInfoBanner>
+#include <MApplication>
+#include <MScene>
+#include <MSceneManager>
+#include "mcompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "testnotificationparameters.h"
 #include "eventtypestore_stub.h"
@@ -45,7 +45,7 @@ maemosec::storage::~storage()
 {
 }
 
-// Mock notification manager (used by DuiCompositorNotificationSink)
+// Mock notification manager (used by MCompositorNotificationSink)
 MockNotificationManager::MockNotificationManager() :
     nextAvailableNotificationID(0)
 {
@@ -123,159 +123,159 @@ QList< uint > MockNotificationManager::notificationIdList(uint /*notificationUse
     return tmp;
 }
 
-// QGraphicsWidget stubs (used by DuiCompositorNotificationSink)
+// QGraphicsWidget stubs (used by MCompositorNotificationSink)
 void QGraphicsWidget::addAction(QAction *action)
 {
-    Ut_DuiCompositorNotificationSink::actions[this].append(action);
+    Ut_MCompositorNotificationSink::actions[this].append(action);
 
-    DuiRemoteAction *dra = dynamic_cast<DuiRemoteAction *>(action);
+    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
     if (dra != NULL) {
-        Ut_DuiCompositorNotificationSink::contents.append(dra->toString());
+        Ut_MCompositorNotificationSink::contents.append(dra->toString());
     }
 }
 
 void QGraphicsWidget::removeAction(QAction *action)
 {
-    Ut_DuiCompositorNotificationSink::actions[this].removeAll(action);
+    Ut_MCompositorNotificationSink::actions[this].removeAll(action);
 
-    DuiRemoteAction *dra = dynamic_cast<DuiRemoteAction *>(action);
+    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
     if (dra != NULL) {
-        Ut_DuiCompositorNotificationSink::contents.removeAll(dra->toString());
+        Ut_MCompositorNotificationSink::contents.removeAll(dra->toString());
     }
 }
 
 QList<QAction *> QGraphicsWidget::actions() const
 {
-    return Ut_DuiCompositorNotificationSink::actions[this];
+    return Ut_MCompositorNotificationSink::actions[this];
 }
 
-// QWidget stubs (used by DuiCompositorNotificationSink)
+// QWidget stubs (used by MCompositorNotificationSink)
 void QWidget::setVisible(bool)
 {
 }
 
 void QWidget::setFixedSize(int w, int h)
 {
-    Ut_DuiCompositorNotificationSink::lastFixedWidth = w;
-    Ut_DuiCompositorNotificationSink::lastFixedHeight = h;
+    Ut_MCompositorNotificationSink::lastFixedWidth = w;
+    Ut_MCompositorNotificationSink::lastFixedHeight = h;
 }
 
-// QTimer stubs (used by DuiCompositorNotificationSink)
+// QTimer stubs (used by MCompositorNotificationSink)
 void QTimer::start(int msec)
 {
-    Ut_DuiCompositorNotificationSink::lastTimeout = msec;
+    Ut_MCompositorNotificationSink::lastTimeout = msec;
 
     if (msec <= 1) {
         emit timeout();
     }
 }
 
-// QGraphicsScene stubs (used by DuiCompositorNotificationSink)
+// QGraphicsScene stubs (used by MCompositorNotificationSink)
 void QGraphicsScene::addItem(QGraphicsItem *item)
 {
-    DuiInfoBanner *n = dynamic_cast<DuiInfoBanner *>(item);
+    MInfoBanner *n = dynamic_cast<MInfoBanner *>(item);
     if (n != NULL) {
-        Ut_DuiCompositorNotificationSink::types.append(n->bannerType());
-        Ut_DuiCompositorNotificationSink::icons.append(n->model()->imageID());
-        Ut_DuiCompositorNotificationSink::bodies.append(n->model()->bodyText());
-        Ut_DuiCompositorNotificationSink::buttonIcons.append(n->model()->iconID());
-        Ut_DuiCompositorNotificationSink::notifications.append(n);
+        Ut_MCompositorNotificationSink::types.append(n->bannerType());
+        Ut_MCompositorNotificationSink::icons.append(n->model()->imageID());
+        Ut_MCompositorNotificationSink::bodies.append(n->model()->bodyText());
+        Ut_MCompositorNotificationSink::buttonIcons.append(n->model()->iconID());
+        Ut_MCompositorNotificationSink::notifications.append(n);
     }
 }
 
 void QGraphicsScene::removeItem(QGraphicsItem *item)
 {
-    DuiInfoBanner *n = dynamic_cast<DuiInfoBanner *>(item);
+    MInfoBanner *n = dynamic_cast<MInfoBanner *>(item);
     if (n != NULL) {
-        int index = Ut_DuiCompositorNotificationSink::notifications.indexOf(n);
+        int index = Ut_MCompositorNotificationSink::notifications.indexOf(n);
 
-        Ut_DuiCompositorNotificationSink::types.removeAt(index);
-        Ut_DuiCompositorNotificationSink::icons.removeAt(index);
-        Ut_DuiCompositorNotificationSink::bodies.removeAt(index);
-        Ut_DuiCompositorNotificationSink::contents.removeAt(index);
-        Ut_DuiCompositorNotificationSink::actions[n].clear();
-        Ut_DuiCompositorNotificationSink::buttonIcons.removeAt(index);
-        Ut_DuiCompositorNotificationSink::notifications.removeAt(index);
+        Ut_MCompositorNotificationSink::types.removeAt(index);
+        Ut_MCompositorNotificationSink::icons.removeAt(index);
+        Ut_MCompositorNotificationSink::bodies.removeAt(index);
+        Ut_MCompositorNotificationSink::contents.removeAt(index);
+        Ut_MCompositorNotificationSink::actions[n].clear();
+        Ut_MCompositorNotificationSink::buttonIcons.removeAt(index);
+        Ut_MCompositorNotificationSink::notifications.removeAt(index);
     }
 }
 
-// QGraphicsView stubs (used by DuiCompositorNotificationSink)
+// QGraphicsView stubs (used by MCompositorNotificationSink)
 void QGraphicsView::setTransform(const QTransform &matrix, bool)
 {
-    Ut_DuiCompositorNotificationSink::lastTransform = matrix;
+    Ut_MCompositorNotificationSink::lastTransform = matrix;
 }
 
-// DuiSceneWindow stubs (used by DuiCompositorNotificationSink)
-void DuiSceneWindow::disappear()
+// MSceneWindow stubs (used by MCompositorNotificationSink)
+void MSceneWindow::disappear()
 {
     emit disappeared();
 }
 
-// DuiInfoBanner stubs (used by DuiCompositorNotificationSink)
-void DuiInfoBanner::setImageID(const QString &image)
+// MInfoBanner stubs (used by MCompositorNotificationSink)
+void MInfoBanner::setImageID(const QString &image)
 {
-    int index = Ut_DuiCompositorNotificationSink::notifications.indexOf(this);
+    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
     if (index >= 0) {
-        Ut_DuiCompositorNotificationSink::icons.replace(index, image);
+        Ut_MCompositorNotificationSink::icons.replace(index, image);
     }
     model()->setImageID(image);
 }
 
-void DuiInfoBanner::setBodyText(const QString &body)
+void MInfoBanner::setBodyText(const QString &body)
 {
-    int index = Ut_DuiCompositorNotificationSink::notifications.indexOf(this);
+    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
     if (index >= 0) {
-        Ut_DuiCompositorNotificationSink::bodies.replace(index, body);
+        Ut_MCompositorNotificationSink::bodies.replace(index, body);
     }
     model()->setBodyText(body);
 }
 
-void DuiInfoBanner::setIconID(const QString &iconId)
+void MInfoBanner::setIconID(const QString &iconId)
 {
-    int index = Ut_DuiCompositorNotificationSink::notifications.indexOf(this);
+    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
     if (index >= 0) {
-        Ut_DuiCompositorNotificationSink::buttonIcons.replace(index, iconId);
+        Ut_MCompositorNotificationSink::buttonIcons.replace(index, iconId);
     }
     model()->setIconID(iconId);
 }
 
-QList<DuiInfoBanner::BannerType> Ut_DuiCompositorNotificationSink::types;
-QList<QString> Ut_DuiCompositorNotificationSink::icons;
-QList<QString> Ut_DuiCompositorNotificationSink::bodies;
-QList<QString> Ut_DuiCompositorNotificationSink::buttonIcons;
-QList<QString> Ut_DuiCompositorNotificationSink::contents;
-QHash<const QGraphicsWidget *, QList<QAction *> > Ut_DuiCompositorNotificationSink::actions;
-QList<DuiInfoBanner *> Ut_DuiCompositorNotificationSink::notifications;
-int Ut_DuiCompositorNotificationSink::lastTimeout;
-int Ut_DuiCompositorNotificationSink::lastFixedWidth;
-int Ut_DuiCompositorNotificationSink::lastFixedHeight;
-QTransform Ut_DuiCompositorNotificationSink::lastTransform;
+QList<MInfoBanner::BannerType> Ut_MCompositorNotificationSink::types;
+QList<QString> Ut_MCompositorNotificationSink::icons;
+QList<QString> Ut_MCompositorNotificationSink::bodies;
+QList<QString> Ut_MCompositorNotificationSink::buttonIcons;
+QList<QString> Ut_MCompositorNotificationSink::contents;
+QHash<const QGraphicsWidget *, QList<QAction *> > Ut_MCompositorNotificationSink::actions;
+QList<MInfoBanner *> Ut_MCompositorNotificationSink::notifications;
+int Ut_MCompositorNotificationSink::lastTimeout;
+int Ut_MCompositorNotificationSink::lastFixedWidth;
+int Ut_MCompositorNotificationSink::lastFixedHeight;
+QTransform Ut_MCompositorNotificationSink::lastTransform;
 
 // Tests
-void Ut_DuiCompositorNotificationSink::initTestCase()
+void Ut_MCompositorNotificationSink::initTestCase()
 {
     static int argc = 1;
-    static char *app_name = (char *)"./ut_duicompositornotificationsink";
-    app = new DuiApplication(argc, &app_name);
+    static char *app_name = (char *)"./ut_mcompositornotificationsink";
+    app = new MApplication(argc, &app_name);
     sysuid = new Sysuid();
     settings = new QSettings();
     gSysuidStub->stubSetReturnValue("sysuid",sysuid);
 }
 
-void Ut_DuiCompositorNotificationSink::cleanupTestCase()
+void Ut_MCompositorNotificationSink::cleanupTestCase()
 {
     delete settings;
     delete sysuid;
     delete app;
 }
 
-void Ut_DuiCompositorNotificationSink::init()
+void Ut_MCompositorNotificationSink::init()
 {
     notificationManager = new MockNotificationManager();
-    sink = new DuiCompositorNotificationSink();
+    sink = new MCompositorNotificationSink();
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), sink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationUpdated(Notification)), sink, SLOT(addNotification(Notification)));
-    connect(this, SIGNAL(orientationChangeFinished(Dui::Orientation)), sink, SLOT(rotateInfoBanners(Dui::Orientation)));
+    connect(this, SIGNAL(orientationChangeFinished(M::Orientation)), sink, SLOT(rotateInfoBanners(M::Orientation)));
     lastTimeout = -1;
     types.clear();
     icons.clear();
@@ -287,17 +287,17 @@ void Ut_DuiCompositorNotificationSink::init()
     lastFixedWidth = -1;
     lastFixedHeight = -1;
     lastTransform = QTransform();
-    gSysuidStub->stubSetReturnValue("orientation", Dui::Landscape);
-    gSysuidStub->stubSetReturnValue("orientationAngle", Dui::Angle0);
+    gSysuidStub->stubSetReturnValue("orientation", M::Landscape);
+    gSysuidStub->stubSetReturnValue("orientationAngle", M::Angle0);
 }
 
-void Ut_DuiCompositorNotificationSink::cleanup()
+void Ut_MCompositorNotificationSink::cleanup()
 {
     delete sink;
     delete notificationManager;
 }
 
-void Ut_DuiCompositorNotificationSink::testAddNotification()
+void Ut_MCompositorNotificationSink::testAddNotification()
 {
     // Create three notifications - two with a content link and one without
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -306,26 +306,26 @@ void Ut_DuiCompositorNotificationSink::testAddNotification()
     notificationManager->addNotification(0, parameters0, 0);
     notificationManager->addNotification(0, parameters1);
 
-    // Check that two DuiInfoBanners were created
+    // Check that two MInfoBanners were created
     QCOMPARE(notifications.count(), 2);
 
     // Make sure the view size and rotation was set correctly
-    DuiInfoBanner infoBanner1(types[1]);
+    MInfoBanner infoBanner1(types[1]);
     QTransform transform1;
     transform1.rotate(Sysuid::sysuid()->orientationAngle());
     QCOMPARE(lastFixedWidth, (int)infoBanner1.preferredWidth());
     QCOMPARE(lastFixedHeight, (int)infoBanner1.preferredHeight());
     QCOMPARE(lastTransform, transform1);
 
-    gSysuidStub->stubSetReturnValue("orientation", Dui::Portrait);
-    gSysuidStub->stubSetReturnValue("orientationAgle", Dui::Angle90);
+    gSysuidStub->stubSetReturnValue("orientation", M::Portrait);
+    gSysuidStub->stubSetReturnValue("orientationAgle", M::Angle90);
     // Create a notification without a content link
     TestNotificationParameters parameters3("icon3", "body3", "buttonicon3", "");
     notificationManager->addNotification(0, parameters3);
 
-    // Check that a DuiInfoBanner was created with the given parameters
+    // Check that a MInfoBanner was created with the given parameters
     QCOMPARE(types.length(), 3);
-    QCOMPARE(types[2], DuiInfoBanner::Event);
+    QCOMPARE(types[2], MInfoBanner::Event);
     QCOMPARE(icons.length(), 3);
     QCOMPARE(icons[2], QString("icon3"));
     QCOMPARE(bodies.length(), 3);
@@ -335,7 +335,7 @@ void Ut_DuiCompositorNotificationSink::testAddNotification()
     QCOMPARE(contents.length(), 2);
 
     // Make sure the view size and rotation was set correctly
-    DuiInfoBanner infoBanner2(types[2]);
+    MInfoBanner infoBanner2(types[2]);
     QTransform transform2;
     transform2.rotate(Sysuid::sysuid()->orientationAngle());
     QCOMPARE(lastFixedWidth, (int)infoBanner2.preferredHeight());
@@ -343,7 +343,7 @@ void Ut_DuiCompositorNotificationSink::testAddNotification()
     QCOMPARE(lastTransform, transform2);
 }
 
-void Ut_DuiCompositorNotificationSink::testUpdateNotification()
+void Ut_MCompositorNotificationSink::testUpdateNotification()
 {
     // Create two notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -355,10 +355,10 @@ void Ut_DuiCompositorNotificationSink::testUpdateNotification()
     TestNotificationParameters parametersX("iconX", "bodyX", "buttoniconX", "contentX X X X");
     notificationManager->updateNotification(0, id, parametersX);
 
-    // Check that two DuiInfoBanners were created with the given parameters
+    // Check that two MInfoBanners were created with the given parameters
     QCOMPARE(types.length(), 2);
-    QCOMPARE(types[0], DuiInfoBanner::Event);
-    QCOMPARE(types[1], DuiInfoBanner::Event);
+    QCOMPARE(types[0], MInfoBanner::Event);
+    QCOMPARE(types[1], MInfoBanner::Event);
     QCOMPARE(icons.length(), 2);
     QCOMPARE(icons[0], QString("icon0"));
     QCOMPARE(icons[1], QString("iconX"));
@@ -373,7 +373,7 @@ void Ut_DuiCompositorNotificationSink::testUpdateNotification()
     QCOMPARE(contents[1], QString("contentX X X X"));
 }
 
-void Ut_DuiCompositorNotificationSink::testRemoveNotification()
+void Ut_MCompositorNotificationSink::testRemoveNotification()
 {
     // Create three notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -387,7 +387,7 @@ void Ut_DuiCompositorNotificationSink::testRemoveNotification()
     // Remove the second one
     notificationManager->removeNotification(0, id);
 
-    // Check that two DuiInfoBanners exist with the given icon parameters (to identify them)
+    // Check that two MInfoBanners exist with the given icon parameters (to identify them)
     QCOMPARE(icons.length(), 2);
     QCOMPARE(icons[0], QString("icon0"));
     QCOMPARE(icons[1], QString("icon2"));
@@ -404,7 +404,7 @@ void Ut_DuiCompositorNotificationSink::testRemoveNotification()
     QCOMPARE(icons[3], QString("icon3"));
 }
 
-void Ut_DuiCompositorNotificationSink::testTimeout()
+void Ut_MCompositorNotificationSink::testTimeout()
 {
     // Create a notification with a timeout of 1000 milliseconds
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -427,10 +427,10 @@ void Ut_DuiCompositorNotificationSink::testTimeout()
     QCOMPARE(notifications.length(), 1);
 }
 
-void Ut_DuiCompositorNotificationSink::testOrientationChanged()
+void Ut_MCompositorNotificationSink::testOrientationChanged()
 {
     // Make sure landscape is activated
-    emit orientationChangeFinished(Dui::Landscape);
+    emit orientationChangeFinished(M::Landscape);
 
     // Create a notification
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -443,7 +443,7 @@ void Ut_DuiCompositorNotificationSink::testOrientationChanged()
     QCOMPARE(buttonIcons.length(), 1);
 
     // Make sure the view size and rotation was set correctly
-    DuiInfoBanner infoBanner(types[0]);
+    MInfoBanner infoBanner(types[0]);
     QTransform transform;
     transform.rotate(Sysuid::sysuid()->orientationAngle());
     QCOMPARE(lastFixedWidth, (int)infoBanner.preferredWidth());
@@ -451,9 +451,9 @@ void Ut_DuiCompositorNotificationSink::testOrientationChanged()
     QCOMPARE(lastTransform, transform);
 
     // Rotate the screen
-    gSysuidStub->stubSetReturnValue("orientation", Dui::Portrait);
-    gSysuidStub->stubSetReturnValue("orientationAngle", Dui::Angle90);
-    emit orientationChangeFinished(Dui::Portrait);
+    gSysuidStub->stubSetReturnValue("orientation", M::Portrait);
+    gSysuidStub->stubSetReturnValue("orientationAngle", M::Angle90);
+    emit orientationChangeFinished(M::Portrait);
 
     // Make sure the view size and rotation was set correctly
     QTransform transform2;
@@ -464,7 +464,7 @@ void Ut_DuiCompositorNotificationSink::testOrientationChanged()
     QCOMPARE(lastTransform, transform2);
 }
 
-void Ut_DuiCompositorNotificationSink::testNotificationWhileApplicationEventsDisabled()
+void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisabled()
 {
     // Create notification
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
@@ -479,7 +479,7 @@ void Ut_DuiCompositorNotificationSink::testNotificationWhileApplicationEventsDis
     QCOMPARE(notifications.count(), 1);
 }
 
-void Ut_DuiCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
+void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
 {
     connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
     emit statusIndictorMenuVisibilityChanged(true);
@@ -493,4 +493,4 @@ void Ut_DuiCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
     QCOMPARE(notifications.count(), 1);
 }
 
-QTEST_APPLESS_MAIN(Ut_DuiCompositorNotificationSink)
+QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

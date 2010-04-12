@@ -19,13 +19,13 @@
 
 #include "statusindicatorimageview.h"
 #include "statusindicator.h"
-#include <DuiTheme>
-#include <DuiLabel>
-#include <DuiViewCreator>
+#include <MTheme>
+#include <MLabel>
+#include <MViewCreator>
 #include <QTimeLine>
 
 StatusIndicatorImageView::StatusIndicatorImageView(StatusIndicator *controller) :
-    DuiWidgetView(controller),
+    MWidgetView(controller),
     controller(controller),
     animationFrame(0),
     animationTimeline(new QTimeLine(0, this))
@@ -42,7 +42,7 @@ StatusIndicatorImageView::~StatusIndicatorImageView()
 
 void StatusIndicatorImageView::setupModel()
 {
-    DuiWidgetView::setupModel();
+    MWidgetView::setupModel();
 
     setAnimationFrame(model()->value().toDouble() * images.size());
     if (model()->animate()) {
@@ -54,7 +54,7 @@ void StatusIndicatorImageView::setupModel()
 
 void StatusIndicatorImageView::updateData(const QList<const char *>& modifications)
 {
-    DuiWidgetView::updateData(modifications);
+    MWidgetView::updateData(modifications);
 
     const char *member;
     foreach(member, modifications) {
@@ -73,7 +73,7 @@ void StatusIndicatorImageView::updateData(const QList<const char *>& modificatio
 
 void StatusIndicatorImageView::applyStyle()
 {
-    DuiWidgetView::applyStyle();
+    MWidgetView::applyStyle();
 
     clearImageList();
 
@@ -116,7 +116,7 @@ void StatusIndicatorImageView::drawContents(QPainter *painter, const QStyleOptio
     if (animationFrame < images.size()) {
         if (images[animationFrame] == NULL) {
             // Load the image if it has not been loaded yet
-            images[animationFrame] = DuiTheme::pixmapCopy(imageList.at(animationFrame), QSize(size().width(), size().height()));
+            images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame), QSize(size().width(), size().height()));
         }
 
         if (images[animationFrame] != NULL) {
@@ -136,4 +136,4 @@ void StatusIndicatorImageView::clearImageList()
     images.clear();
 }
 
-DUI_REGISTER_VIEW_NEW(StatusIndicatorImageView, StatusIndicator)
+M_REGISTER_VIEW_NEW(StatusIndicatorImageView, StatusIndicator)

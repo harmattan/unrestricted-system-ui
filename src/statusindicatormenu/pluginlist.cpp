@@ -18,19 +18,19 @@
 ****************************************************************************/
 
 #include "pluginlist.h"
-#include <DuiButton>
+#include <MButton>
 #include "duistatusindicatormenuplugininterface.h"
-#include <DuiWindow>
-#include <DuiApplicationPage>
+#include <MWindow>
+#include <MApplicationPage>
 #include <QPluginLoader>
 #include <QGraphicsLinearLayout>
-#include <DuiApplicationIfProxy>
+#include <MApplicationIfProxy>
 #include "notificationarea.h"
 
-const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
+const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.MControlPanel";
 
-PluginList::PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applicationPage, QGraphicsItem *parent) :
-    DuiWidget(parent),
+PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) :
+    MWidget(parent),
     mainLayout(new QGraphicsLinearLayout(Qt::Vertical)),
     applicationWindow(applicationWindow),
     applicationPage(applicationPage)
@@ -103,7 +103,7 @@ PluginList::addPlugin(
 
     DuiStatusIndicatorMenuPluginInterface* plugin = qobject_cast<DuiStatusIndicatorMenuPluginInterface*>(object);
     if (plugin != NULL) {
-        DuiWidget *widget = plugin->constructWidget(*this);
+        MWidget *widget = plugin->constructWidget(*this);
         if (widget != NULL) {
             mainLayout->addItem(widget);
         }
@@ -114,7 +114,7 @@ PluginList::addPlugin(
 void PluginList::addSettingsButton()
 {
     // Create a button for accessing the full settings
-    DuiButton *settingsButton = new DuiButton("Settings");
+    MButton *settingsButton = new MButton("Settings");
     settingsButton->setObjectName("StatusIndicatorMenuSettingsButton");
     connect(settingsButton, SIGNAL(clicked()), this, SLOT(settingsButtonClicked()));
 
@@ -145,10 +145,10 @@ void PluginList::hideStatusIndicatorMenu()
 
 void PluginList::settingsButtonClicked()
 {
-    DuiApplicationIfProxy duiApplicationIfProxy(CONTROL_PANEL_SERVICE_NAME, this);
+    MApplicationIfProxy mApplicationIfProxy(CONTROL_PANEL_SERVICE_NAME, this);
 
-    if (duiApplicationIfProxy.connection().isConnected()) {
-        duiApplicationIfProxy.launch();
+    if (mApplicationIfProxy.connection().isConnected()) {
+        mApplicationIfProxy.launch();
     } else {
         qWarning() << "Could not launch" << CONTROL_PANEL_SERVICE_NAME << "- DBus not connected?";
     }

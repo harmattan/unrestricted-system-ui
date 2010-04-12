@@ -18,8 +18,8 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <DuiApplicationWindow>
-#include <DuiSceneManager>
+#include <MApplicationWindow>
+#include <MSceneManager>
 #include <QDBusInterface>
 #include <QDebug>
 #include <QTime>
@@ -30,7 +30,7 @@
 #include "sysuid.h"
 
 #include <X11/Xlib.h>
-// TODO: this include can be removed when duicompositor
+// TODO: this include can be removed when mcompositor
 // sets the _NET_WM_STATE attribute according to the message.
 #include <X11/Xatom.h>
 
@@ -220,7 +220,7 @@ LockScreenBusinessLogic::hidefromTaskBar ()
                 (SubstructureNotifyMask | SubstructureRedirectMask),
                 &e);
 
-    // TODO: setting this property by hand can be removed when duicompositor
+    // TODO: setting this property by hand can be removed when mcompositor
     // sets the _NET_WM_STATE attribute according to the message.
     QVector<Atom> atoms;
     atoms.append(skipTaskbarAtom);

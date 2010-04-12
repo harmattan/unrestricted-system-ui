@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
+#include <MApplication>
 #include <QByteArray>
 #include "ut_notification.h"
 #include "notificationparameters.h"

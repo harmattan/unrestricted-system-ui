@@ -17,24 +17,24 @@
 **
 ****************************************************************************/
 
-#include "duifeedbacknotificationsink.h"
-#include <DuiApplication>
-#include <DuiFeedbackPlayer>
+#include "mfeedbacknotificationsink.h"
+#include <MApplication>
+#include <MFeedbackPlayer>
 #include "feedbackparameterfactory.h"
 #include "eventtypestore.h"
 #include <QSettings>
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
 
-DuiFeedbackNotificationSink::DuiFeedbackNotificationSink()
+MFeedbackNotificationSink::MFeedbackNotificationSink()
 {
 }
 
-DuiFeedbackNotificationSink::~DuiFeedbackNotificationSink()
+MFeedbackNotificationSink::~MFeedbackNotificationSink()
 {
 }
 
-QString DuiFeedbackNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
+QString MFeedbackNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
 {
     QString feedbackId = parameters.value(FeedbackParameterFactory::feedbackIdKey()).toString();
     if (feedbackId.isEmpty()) {
@@ -47,22 +47,22 @@ QString DuiFeedbackNotificationSink::determineFeedbackId(const NotificationParam
     return feedbackId;
 }
 
-void DuiFeedbackNotificationSink::addNotification(const Notification &notification)
+void MFeedbackNotificationSink::addNotification(const Notification &notification)
 {
     if (!canAddNotification(notification)) return;
 
     QString feedbackId = determineFeedbackId(notification.parameters());
-    if (!feedbackId.isEmpty() && DuiApplication::feedbackPlayer() != NULL) {
-        DuiApplication::feedbackPlayer()->play(feedbackId);
+    if (!feedbackId.isEmpty() && MApplication::feedbackPlayer() != NULL) {
+        MApplication::feedbackPlayer()->play(feedbackId);
     }
 }
 
-void DuiFeedbackNotificationSink::removeNotification(uint notificationId)
+void MFeedbackNotificationSink::removeNotification(uint notificationId)
 {
     Q_UNUSED(notificationId)
 }
 
-NotificationManager &DuiFeedbackNotificationSink::notificationManager()
+NotificationManager &MFeedbackNotificationSink::notificationManager()
 {
     return Sysuid::sysuid()->notificationManager();
 }

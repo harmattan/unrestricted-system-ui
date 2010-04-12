@@ -48,7 +48,7 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
     m_active (false),
     m_connected (false)
 {
-    m_setting = new DuiGConfItem (USB_GCONF_KEY, this);
+    m_setting = new MGConfItem (USB_GCONF_KEY, this);
 
     m_process = new QProcess;
 

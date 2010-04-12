@@ -18,8 +18,8 @@
 ****************************************************************************/
 #include "ut_unlockslider.h"
 
-#include <DuiApplication>
-#include <DuiTheme>
+#include <MApplication>
+#include <MTheme>
 
 void Ut_UnlockSlider::init()
 {
@@ -33,12 +33,12 @@ void Ut_UnlockSlider::cleanup()
     m_subject = NULL;
 }
 
-DuiApplication *app;
+MApplication *app;
 void Ut_UnlockSlider::initTestCase()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_unlockslider";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_UnlockSlider::cleanupTestCase()

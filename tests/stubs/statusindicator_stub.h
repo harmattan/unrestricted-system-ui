@@ -28,7 +28,7 @@
 class StatusIndicatorStub : public StubBase
 {
 public:
-    virtual void StatusIndicatorConstructor(DuiWidget *parent);
+    virtual void StatusIndicatorConstructor(MWidget *parent);
     virtual void StatusIndicatorDestructor();
     virtual void enterDisplayEvent();
     virtual void exitDisplayEvent();
@@ -39,7 +39,7 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void StatusIndicatorStub::StatusIndicatorConstructor(DuiWidget *parent)
+void StatusIndicatorStub::StatusIndicatorConstructor(MWidget *parent)
 {
     Q_UNUSED(parent);
 
@@ -91,7 +91,7 @@ StatusIndicatorStub *gStatusIndicatorStub = &gDefaultStatusIndicatorStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusIndicator::StatusIndicator(DuiWidget *parent)
+StatusIndicator::StatusIndicator(MWidget *parent)
 {
     gStatusIndicatorStub->StatusIndicatorConstructor(parent);
 }

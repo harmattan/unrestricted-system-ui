@@ -19,10 +19,10 @@
 #include "shutdownui.h"
 #include "sysuid.h"
 
-#include <DuiLabel>
-#include <DuiSceneManager>
-#include <DuiApplicationWindow>
-#include <DuiLocale>
+#include <MLabel>
+#include <MSceneManager>
+#include <MApplicationWindow>
+#include <MLocale>
 
 #include <QDebug>
 
@@ -32,8 +32,8 @@ ShutdownUI::ShutdownUI() :
     setPannable (false);
 
     // let's hide home button
-    setComponentsDisplayMode (DuiApplicationPage::AllComponents,
-                              DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode (MApplicationPage::AllComponents,
+                              MApplicationPageModel::Hide);
 }
 
 ShutdownUI::~ShutdownUI()
@@ -43,12 +43,12 @@ ShutdownUI::~ShutdownUI()
 void ShutdownUI::createContent()
 {
     qDebug() << "ShutdownUI::createContent()";
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     QGraphicsWidget* panel = centralWidget();
 
     //% "Shutting down, good bye!"
-    text = new DuiLabel (qtTrId ("qtn_shut_down"), panel);
+    text = new MLabel (qtTrId ("qtn_shut_down"), panel);
     text->setAlignment(Qt::AlignCenter);
 
     alignText();
@@ -56,7 +56,7 @@ void ShutdownUI::createContent()
 
 void ShutdownUI::showWindow()
 {
-    DuiApplicationWindow &win = Sysuid::sysuid()->applicationWindow();
+    MApplicationWindow &win = Sysuid::sysuid()->applicationWindow();
     if (win.isHidden()) {
         win.show();
     }
@@ -66,7 +66,7 @@ void ShutdownUI::showWindow()
 void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
 {
     qDebug() << "ShutdownUI::resizeEvent()";
-    DuiApplicationPage::resizeEvent(event);
+    MApplicationPage::resizeEvent(event);
 
     alignText();
 }

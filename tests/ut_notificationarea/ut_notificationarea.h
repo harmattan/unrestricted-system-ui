@@ -42,9 +42,9 @@
 #include <QObject>
 #include "notificationareamodel.h"
 
-class DuiApplication;
+class MApplication;
 class NotificationArea;
-class DuiInfoBanner;
+class MInfoBanner;
 class QGraphicsLayoutItem;
 
 class Ut_NotificationArea : public QObject
@@ -71,9 +71,9 @@ private slots:
     void testUpdatedNotificationComesFirst();
 
 signals:
-    void addNotification(DuiInfoBanner &notification);
-    void removeNotification(DuiInfoBanner &notification);
-    void notificationUpdated(DuiInfoBanner &notification);
+    void addNotification(MInfoBanner &notification);
+    void removeNotification(MInfoBanner &notification);
+    void notificationUpdated(MInfoBanner &notification);
 
 public:
     static QGraphicsLayoutItem *addedItem;
@@ -81,7 +81,7 @@ public:
     static int itemCount;
 
 private:
-    DuiApplication *app;
+    MApplication *app;
 
     // The object being tested
     NotificationArea *m_subject;

@@ -25,7 +25,7 @@
 #include "clockview.h"
 
 class Clock;
-class DuiApplication;
+class MApplication;
 
 class TestClockStyle : public ClockStyle
 {
@@ -42,7 +42,7 @@ public:
 
 class TestClockView : public ClockView
 {
-    DUI_VIEW(ClockModel, TestClockStyle)
+    M_VIEW(ClockModel, TestClockStyle)
 
 public:
     TestClockView(Clock *controller);
@@ -75,7 +75,7 @@ public:
     static QString timeAsString;
 
 private:
-    DuiApplication *app;
+    MApplication *app;
     TestClockView *m_subject;
     Clock *testClock;
 };

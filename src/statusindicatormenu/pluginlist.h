@@ -20,11 +20,11 @@
 #ifndef PLUGINLIST_H_
 #define PLUGINLIST_H_
 
-#include <DuiWidget>
+#include <MWidget>
 #include "duistatusindicatormenuplugininterface.h"
 
-class DuiWindow;
-class DuiApplicationPage;
+class MWindow;
+class MApplicationPage;
 class QGraphicsLinearLayout;
 class NotificationArea;
 
@@ -32,7 +32,7 @@ class NotificationArea;
  * The plugin list displays a list of plugins instantiated from shared
  * libraries.
  */
-class PluginList : public DuiWidget, public DuiStatusIndicatorMenuInterface {
+class PluginList : public MWidget, public DuiStatusIndicatorMenuInterface {
     Q_OBJECT
 
 public:
@@ -43,7 +43,7 @@ public:
      * \param applicationPage the application page to show if the plugin returns from a subpage
      * \param parent the parent item
      */
-    PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applicationPage, QGraphicsItem *parent = NULL);
+    PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent = NULL);
 
     /*!
      * Destroys the plugin list.
@@ -89,10 +89,10 @@ private:
     QGraphicsLinearLayout *mainLayout;
 
     //! The application page to minimize if the application should be hidden
-    DuiWindow *applicationWindow;
+    MWindow *applicationWindow;
 
     //! The application page to show if the plugin returns from a subpage
-    DuiApplicationPage *applicationPage;
+    MApplicationPage *applicationPage;
 
     //! The notification area widget
     NotificationArea *notificationArea;

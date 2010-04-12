@@ -21,16 +21,16 @@
 #ifndef LOCKSCREENUI_H
 #define LOCKSCREENUI_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 #include <QBasicTimer>
 
-class DuiLabel;
-class DuiImageWidget;
-class DuiButton;
-class DuiLayout;
+class MLabel;
+class MImageWidget;
+class MButton;
+class MLayout;
 class UnlockSlider;
 
-class LockScreenUI : public DuiApplicationPage
+class LockScreenUI : public MApplicationPage
 {
     Q_OBJECT
 
@@ -48,11 +48,11 @@ public slots:
     void updateDateTime ();
 
 private:
-    DuiLayout* createWidgets ();
+    MLayout* createWidgets ();
 
 private:
-    DuiLabel *timeLabel; // qtn_scrlock_current_time
-    DuiLabel *dateLabel; // qtn_scrlock_current_daydate
+    MLabel *timeLabel; // qtn_scrlock_current_time
+    MLabel *dateLabel; // qtn_scrlock_current_daydate
 
     UnlockSlider *slider;
 };

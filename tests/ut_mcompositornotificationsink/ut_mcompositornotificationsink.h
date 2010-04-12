@@ -17,18 +17,18 @@
 **
 ****************************************************************************/
 
-#ifndef UT_DUICOMPOSITORNOTIFICATIONSINK_H
-#define UT_DUICOMPOSITORNOTIFICATIONSINK_H
+#ifndef UT_MCOMPOSITORNOTIFICATIONSINK_H
+#define UT_MCOMPOSITORNOTIFICATIONSINK_H
 
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <DuiInfoBanner>
+#include <MInfoBanner>
 #include "notification.h"
 
-class DuiApplication;
+class MApplication;
 class Sysuid;
-class DuiCompositorNotificationSink;
+class MCompositorNotificationSink;
 
 class MockNotificationManager : public QObject, public NotificationManagerInterface
 {
@@ -55,18 +55,18 @@ signals:
     void notificationUpdated(const Notification &notification);
 };
 
-class Ut_DuiCompositorNotificationSink : public QObject
+class Ut_MCompositorNotificationSink : public QObject
 {
     Q_OBJECT
 
 public:
-    static QList<DuiInfoBanner::BannerType> types;
+    static QList<MInfoBanner::BannerType> types;
     static QList<QString> icons;
     static QList<QString> bodies;
     static QList<QString> buttonIcons;
     static QList<QString> contents;
     static QHash<const QGraphicsWidget *, QList<QAction *> > actions;
-    static QList<DuiInfoBanner *> notifications;
+    static QList<MInfoBanner *> notifications;
     static int lastTimeout;
     static bool desktopIsOnTop;
     static int lastFixedWidth;
@@ -74,13 +74,13 @@ public:
     static QTransform lastTransform;
 
 private:
-    DuiApplication *app;
-    DuiCompositorNotificationSink *sink;
+    MApplication *app;
+    MCompositorNotificationSink *sink;
     MockNotificationManager *notificationManager;
     Sysuid *sysuid;
 
 signals:
-    void orientationChangeFinished(const Dui::Orientation &orientation);
+    void orientationChangeFinished(const M::Orientation &orientation);
     void statusIndictorMenuVisibilityChanged(bool);
 
 private slots:
@@ -109,4 +109,4 @@ private slots:
     void testWhenSinkDisableTrueNoBannerCreated();
 };
 
-#endif // UT_DUICOMPOSITORNOTIFICATIONSINK_H
+#endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

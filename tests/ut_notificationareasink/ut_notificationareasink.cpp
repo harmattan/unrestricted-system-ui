@@ -21,9 +21,9 @@
 #include "notificationwidgetparameterfactory.h"
 
 #include <QtTest/QtTest>
-#include <DuiInfoBanner>
-#include <DuiRemoteAction>
-#include <DuiApplication>
+#include <MInfoBanner>
+#include <MRemoteAction>
+#include <MApplication>
 #include "../stubs/testnotificationparameters.h"
 #include "notificationmanager_stub.h"
 #include "eventtypestore_stub.h"
@@ -38,19 +38,19 @@ QStringList QCoreApplication::arguments()
     return QStringList();
 }
 
-// DuiRemoteAction stubs (used by NotificationAreaSink)
-DuiRemoteAction::DuiRemoteAction(const QString &action, QObject *parent) : DuiAction(parent)
+// MRemoteAction stubs (used by NotificationAreaSink)
+MRemoteAction::MRemoteAction(const QString &action, QObject *parent) : MAction(parent)
 {
     Ut_NotificationAreaSink::contents.append(action);
 }
 
-// DuiInfoBanner stubs (used by NotificationAreaSink)
-DuiInfoBanner::~DuiInfoBanner()
+// MInfoBanner stubs (used by NotificationAreaSink)
+MInfoBanner::~MInfoBanner()
 {
     Ut_NotificationAreaSink::destroyedNotifications.append(this);
 }
 
-void DuiInfoBanner::setImageID(const QString &imageId)
+void MInfoBanner::setImageID(const QString &imageId)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
@@ -60,7 +60,7 @@ void DuiInfoBanner::setImageID(const QString &imageId)
     }
 }
 
-void DuiInfoBanner::setBodyText(const QString &body)
+void MInfoBanner::setBodyText(const QString &body)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
@@ -70,7 +70,7 @@ void DuiInfoBanner::setBodyText(const QString &body)
     }
 }
 
-void DuiInfoBanner::setIconID(const QString &iconId)
+void MInfoBanner::setIconID(const QString &iconId)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
@@ -80,8 +80,8 @@ void DuiInfoBanner::setIconID(const QString &iconId)
     }
 }
 
-// DuiSceneWindow stubs (used by NotificationAreaSink)
-void DuiSceneWindow::disappear()
+// MSceneWindow stubs (used by NotificationAreaSink)
+void MSceneWindow::disappear()
 {
     emit disappeared();
 }
@@ -111,21 +111,21 @@ QList<QString> Ut_NotificationAreaSink::icons;
 QList<QString> Ut_NotificationAreaSink::bodies;
 QList<QString> Ut_NotificationAreaSink::buttonIcons;
 QList<QString> Ut_NotificationAreaSink::contents;
-QList<DuiInfoBanner *> Ut_NotificationAreaSink::notifications;
-QList<DuiInfoBanner *> Ut_NotificationAreaSink::destroyedNotifications;
+QList<MInfoBanner *> Ut_NotificationAreaSink::notifications;
+QList<MInfoBanner *> Ut_NotificationAreaSink::destroyedNotifications;
 
 // Tests
 void Ut_NotificationAreaSink::initTestCase()
 {
-    // Create a DuiAapplication
+    // Create a MAapplication
     static int argc = 1;
     static char *app_name = (char *)"./ut_notificationareasink";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_NotificationAreaSink::cleanupTestCase()
 {
-    // Destroy DuiApplication
+    // Destroy MApplication
     delete app;
     delete settings;
 }
@@ -138,18 +138,18 @@ void Ut_NotificationAreaSink::init()
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(addGroup(uint, const NotificationParameters &)), sink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(this, SIGNAL(removeGroup(uint)), sink, SLOT(removeGroup(uint)));
-    connect(sink, SIGNAL(addNotification(DuiInfoBanner &)), this, SLOT(addNotification(DuiInfoBanner &)));
-    connect(sink, SIGNAL(removeNotification(DuiInfoBanner &)), this, SLOT(removeNotification(DuiInfoBanner &)));
+    connect(sink, SIGNAL(addNotification(MInfoBanner &)), this, SLOT(addNotification(MInfoBanner &)));
+    connect(sink, SIGNAL(removeNotification(MInfoBanner &)), this, SLOT(removeNotification(MInfoBanner &)));
 }
 
-void Ut_NotificationAreaSink::addNotification(DuiInfoBanner &notification)
+void Ut_NotificationAreaSink::addNotification(MInfoBanner &notification)
 {
     Ut_NotificationAreaSink::notifications.append(&notification);
 
-    notification.setParentItem(new DuiWidget());
+    notification.setParentItem(new MWidget());
 }
 
-void Ut_NotificationAreaSink::removeNotification(DuiInfoBanner &notification)
+void Ut_NotificationAreaSink::removeNotification(MInfoBanner &notification)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(&notification);
 
@@ -176,7 +176,7 @@ void Ut_NotificationAreaSink::cleanup()
 
 void Ut_NotificationAreaSink::testAddNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(DuiInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
 
     // Create three notifications - two with a content link and one without
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
@@ -193,7 +193,7 @@ void Ut_NotificationAreaSink::testAddNotification()
 
 void Ut_NotificationAreaSink::testUpdateNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(DuiInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
 
     // Add two notifications with the same id; the second should update the existing one.
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
@@ -204,7 +204,7 @@ void Ut_NotificationAreaSink::testUpdateNotification()
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
 
-    // TODO: even though contents.length is 2, there's only 1 action in the duinotification
+    // TODO: even though contents.length is 2, there's only 1 action in the mnotification
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);
     QCOMPARE(contents[0], QString("content0"));
@@ -213,8 +213,8 @@ void Ut_NotificationAreaSink::testUpdateNotification()
 
 void Ut_NotificationAreaSink::testRemoveNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(DuiInfoBanner &)));
-    QSignalSpy removeSpy(sink, SIGNAL(removeNotification(DuiInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
+    QSignalSpy removeSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
 
     // Create three notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
@@ -250,9 +250,9 @@ void Ut_NotificationAreaSink::testRemoveNotification()
 
 void Ut_NotificationAreaSink::testAddGroup()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(DuiInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
 
-    // Creating a group should not send signals, just create the duinotification
+    // Creating a group should not send signals, just create the mnotification
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
     emit addGroup(1, parameters0);
     QCOMPARE(addSpy.count(), 0);
@@ -261,7 +261,7 @@ void Ut_NotificationAreaSink::testAddGroup()
 
 void Ut_NotificationAreaSink::testRemoveGroup()
 {
-    QSignalSpy remSpy(sink, SIGNAL(removeNotification(DuiInfoBanner &)));
+    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
 
     // A signal from removeGroup is not sent if no notification has been added to the group
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0");
@@ -278,7 +278,7 @@ void Ut_NotificationAreaSink::testRemoveGroup()
 
 void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGroupBannerIsRemoved()
 {
-    QSignalSpy remSpy(sink, SIGNAL(removeNotification(DuiInfoBanner &)));
+    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
 
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
@@ -297,7 +297,7 @@ void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGro
 
 void Ut_NotificationAreaSink::testAddNotificationToGroup()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(DuiInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");
@@ -309,7 +309,7 @@ void Ut_NotificationAreaSink::testAddNotificationToGroup()
 
 void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationArea()
 {
-    QSignalSpy updateSpy(sink, SIGNAL(notificationAddedToGroup(DuiInfoBanner &)));
+    QSignalSpy updateSpy(sink, SIGNAL(notificationAddedToGroup(MInfoBanner &)));
     TestNotificationParameters parameters0("image0", "body0", "icon0", "content0");
     emit addGroup(1, parameters0);
     TestNotificationParameters parameters1("image1", "body1", "icon1", "content1");
@@ -343,7 +343,7 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     QCOMPARE(bodies[0], QString("body1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
-    // TODO: even though contents.length is 2, there's only 1 action in the duinotification
+    // TODO: even though contents.length is 2, there's only 1 action in the mnotification
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);
     QCOMPARE(contents[1], QString("content1"));

@@ -20,7 +20,7 @@
 #ifndef NOTIFIER_H_
 #define NOTIFIER_H_
 
-#include <DuiLabel>
+#include <MLabel>
 
 class NotifierNotificationSink ;
 
@@ -28,7 +28,7 @@ class NotifierNotificationSink ;
  * The Notifier is a widget that displays the number of
  * notifications that have not been dismissed (if any).
  */
-class Notifier : public DuiLabel
+class Notifier : public MLabel
 {
     Q_OBJECT
 
@@ -38,7 +38,7 @@ public:
      *
      * \param parent the parent widget
      */
-    Notifier(DuiWidget *parent = NULL);
+    Notifier(MWidget *parent = NULL);
 
     /*!
      * Destroys the Notifier.

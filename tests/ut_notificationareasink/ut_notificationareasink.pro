@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ut_notificationareasink
 INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR
 INCLUDEPATH += /usr/include/contextsubscriber
-DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$DUI_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
+DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 # unit test and unit classes
 SOURCES += ut_notificationareasink.cpp \

@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include "duinamespace.h"
+#include "mnamespace.h"
 #include <QSharedPointer>
 #include "applicationcontext.h"
 
@@ -34,9 +34,9 @@ class LedBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaWindow;
 class NotificationManager;
-class DuiCompositorNotificationSink;
-class DuiFeedbackNotificationSink;
-class DuiApplicationWindow;
+class MCompositorNotificationSink;
+class MFeedbackNotificationSink;
+class MApplicationWindow;
 
 class Sysuid : public QObject
 {
@@ -61,30 +61,30 @@ public:
      *
      * \return a reference to the compositor notification sink
      */
-    DuiCompositorNotificationSink& compositorNotificationSink ();
+    MCompositorNotificationSink& compositorNotificationSink ();
 
     /*!
      * Returns the current orientation of the status area window's scene.
      */
-    virtual Dui::Orientation orientation () const;
+    virtual M::Orientation orientation () const;
 
     /*!
      * Returns the current orientation angle of the status area window's scene.
      */
-    virtual Dui::OrientationAngle orientationAngle () const;
+    virtual M::OrientationAngle orientationAngle () const;
 
     /*!
      * Returns a reference to the application window.
      *
      * \return a reference to the application window
      */
-    DuiApplicationWindow &applicationWindow ();
+    MApplicationWindow &applicationWindow ();
 
 signals:
     /*!
       * Inform about orientation changes
       */
-    void orientationChangeFinished (const Dui::Orientation &);
+    void orientationChangeFinished (const M::Orientation &);
 
 public slots:
     void retranslate ();
@@ -107,16 +107,16 @@ private:
     StatusAreaWindow        *m_statusAreaWindow;
 
     //! Application window
-    DuiApplicationWindow    *m_applicationWindow;
+    MApplicationWindow    *m_applicationWindow;
 
     //! Notification manager
     NotificationManager     *m_notificationManager;
 
     //! Compositor notification sink for visualizing the notification outside home
-    DuiCompositorNotificationSink *m_compositorNotificationSink;
+    MCompositorNotificationSink *m_compositorNotificationSink;
 
     //! Feedback notification sink for presenting the notification as a feedback
-    DuiFeedbackNotificationSink   *m_feedbackNotificationSink;
+    MFeedbackNotificationSink   *m_feedbackNotificationSink;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

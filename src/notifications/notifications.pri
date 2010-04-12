@@ -14,8 +14,8 @@ HEADERS += $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanagerinterface.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationareasink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/widgetnotificationsink.h \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/duicompositornotificationsink.h \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/duifeedbacknotificationsink.h \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mcompositornotificationsink.h \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mfeedbacknotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notifiernotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.h \
 
@@ -30,8 +30,8 @@ SOURCES += $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationareasink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/widgetnotificationsink.cpp \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/duicompositornotificationsink.cpp \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/duifeedbacknotificationsink.cpp \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mcompositornotificationsink.cpp \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mfeedbacknotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notifiernotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.cpp
 

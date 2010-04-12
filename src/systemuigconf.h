@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QVariant>
 
-class DuiGConfItem;
+class MGConfItem;
 
 /*!
  * Implements a permanent storage for the settings handled by the sysuid daemon.
@@ -72,7 +72,7 @@ private: //methods
     QString mapGConfKey(SystemUIGConf::GConfKey key);
 
 private: //attributes
-    QHash<SystemUIGConf::GConfKey, DuiGConfItem *> duiGConfItems;
+    QHash<SystemUIGConf::GConfKey, MGConfItem *> mGConfItems;
 
 };
 

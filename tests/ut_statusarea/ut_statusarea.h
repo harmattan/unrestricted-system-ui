@@ -26,18 +26,18 @@
 #include "statusareastyle.h"
 
 class StatusArea;
-class DuiApplication;
+class MApplication;
 
 class Ut_StatusArea : public QObject
 {
     Q_OBJECT
 
 public:
-    static bool duiApplicationIfProxyLaunchCalled;
+    static bool mApplicationIfProxyLaunchCalled;
 
 private:
     StatusArea *statusArea;
-    DuiApplication *app;
+    MApplication *app;
 
 private slots:
     // Executed once before every test case

@@ -19,20 +19,20 @@
 #ifndef CLOCKVIEW_H
 #define CLOCKVIEW_H
 
-#include <DuiWidgetView>
+#include <MWidgetView>
 #include "clockmodel.h"
 #include "clockstyle.h"
 
 class Clock;
-class DuiLabel;
+class MLabel;
 
 /*!
  * A view class for the Clock.
  */
-class ClockView : public DuiWidgetView
+class ClockView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(ClockModel, ClockStyle)
+    M_VIEW(ClockModel, ClockStyle)
 
 public:
     /*!
@@ -48,7 +48,7 @@ protected:
     //! \reimp_end
 
     //! A label to be used to render the clock time
-    DuiLabel *label;
+    MLabel *label;
 
 protected slots:
     //! \reimp

@@ -19,7 +19,7 @@
 #include "unlocksliderview.h"
 #include "unlockslider.h"
 
-#include <DuiTheme>
+#include <MTheme>
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
@@ -33,7 +33,7 @@ const int UPDATEFREQ(1000 / 25);
 const qreal RESETACCEL(1.0f / 25.0f);
 
 UnlockSliderView::UnlockSliderView(UnlockSlider* controller) :
-        DuiWidgetView(controller),
+        MWidgetView(controller),
         sliderRect(-1, -1, -1, -1),
         handlePos(-1, -1),
         resetVelocity(0),
@@ -52,7 +52,7 @@ UnlockSliderView::~UnlockSliderView()
 
 void UnlockSliderView::resizeEvent(QGraphicsSceneResizeEvent* event)
 {
-    DuiWidgetView::resizeEvent(event);
+    MWidgetView::resizeEvent(event);
 
     recalcRects();
     update();
@@ -60,7 +60,7 @@ void UnlockSliderView::resizeEvent(QGraphicsSceneResizeEvent* event)
 
 void UnlockSliderView::updateData(const QList<const char*>& modifications)
 {
-    DuiWidgetView::updateData(modifications);
+    MWidgetView::updateData(modifications);
 
     const char* member;
     foreach(member, modifications) {
@@ -90,14 +90,14 @@ void UnlockSliderView::updateData(const QList<const char*>& modifications)
 
 void UnlockSliderView::setupModel()
 {
-    DuiWidgetView::setupModel();
+    MWidgetView::setupModel();
 
     recalcRects();
 }
 
 void UnlockSliderView::applyStyle()
 {
-    DuiWidgetView::applyStyle();
+    MWidgetView::applyStyle();
 
     recalcRects();
 }
@@ -119,7 +119,7 @@ void UnlockSliderView::drawBackground(QPainter* painter, const QStyleOptionGraph
         }
     }
 
-    const DuiScalableImage* image = style()->backgroundTileImage();
+    const MScalableImage* image = style()->backgroundTileImage();
 
     for (int i = 0; i < backgroundTileCount; i++) {
         drawImage(image, tile.toRect(), painter, angle);
@@ -310,7 +310,7 @@ void UnlockSliderView::releaseHandle()
     }
 }
 
-void UnlockSliderView::drawImage(const DuiScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle) const
+void UnlockSliderView::drawImage(const MScalableImage* image, const QRect& rect, QPainter* painter, const qreal angle) const
 {
     if (image != NULL) {
         if (angle < -0.1f || angle > 0.1f) {

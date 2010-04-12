@@ -24,21 +24,21 @@
 
 #include <QDebug>
 
-#include <DuiLabel>
-#include <DuiImageWidget>
-#include <DuiButton>
-#include <DuiLayout>
-#include <DuiGridLayoutPolicy>
-#include <DuiSceneManager>
-#include <DuiApplicationWindow>
-#include <DuiTheme>
-#include <DuiLocale>
+#include <MLabel>
+#include <MImageWidget>
+#include <MButton>
+#include <MLayout>
+#include <MGridLayoutPolicy>
+#include <MSceneManager>
+#include <MApplicationWindow>
+#include <MTheme>
+#include <MLocale>
 
 #include <QTime>
 #include <QDateTime>
 
-#include "duiwidgetcreator.h"
-DUI_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
+#include "mwidgetcreator.h"
+M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
 #define DEBUG
 #include "debug.h"
@@ -52,8 +52,8 @@ LockScreenUI::LockScreenUI () :
     setPannable (false);
 
     // let's hide home button
-    setComponentsDisplayMode (DuiApplicationPage::AllComponents,
-                              DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode (MApplicationPage::AllComponents,
+                              MApplicationPageModel::Hide);
 }
 
 LockScreenUI::~LockScreenUI ()
@@ -72,7 +72,7 @@ LockScreenUI::createContent ()
 {
     SYS_DEBUG ("");
 
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     /*
      * I had to modify this function because it caused a leak, and that led us
@@ -81,21 +81,21 @@ LockScreenUI::createContent ()
      * new UI spec anyway. I left the old code here, so we can see what was the
      * original idea.
      */
-    //DuiLayout* layout = new DuiLayout;
-    DuiLayout* widgets = createWidgets();
+    //MLayout* layout = new MLayout;
+    MLayout* widgets = createWidgets();
 
 #if 0
-    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(Dui::Landscape);
+    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(M::Landscape);
 
-    DuiGridLayoutPolicy* l_policy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy* l_policy = new MGridLayoutPolicy(layout);
     l_policy->setSpacing(10);
     l_policy->setRowFixedHeight(1, size.height());
     l_policy->setColumnFixedWidth(0, size.width());
     l_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
 
-    size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(Dui::Portrait);
+    size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(M::Portrait);
 
-    DuiGridLayoutPolicy* p_policy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy* p_policy = new MGridLayoutPolicy(layout);
     p_policy->setSpacing(10);
     p_policy->setRowFixedHeight(1, size.height());
     p_policy->setColumnFixedWidth(0, size.width());
@@ -121,13 +121,13 @@ LockScreenUI::sliderUnlocked ()
     emit unlocked ();
 }
 
-DuiLayout *
+MLayout *
 LockScreenUI::createWidgets ()
 {
     SYS_DEBUG ("");
-    DuiLayout* layout = new DuiLayout();
+    MLayout* layout = new MLayout();
 
-    DuiGridLayoutPolicy* policy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy* policy = new MGridLayoutPolicy(layout);
 
     policy->setColumnAlignment (0, Qt::AlignCenter);
 
@@ -135,11 +135,11 @@ LockScreenUI::createWidgets ()
     spacert->setSizePolicy (
             QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-    timeLabel = new DuiLabel;
+    timeLabel = new MLabel;
     timeLabel->setObjectName ("lockscreenTimeLabel");
     timeLabel->setAlignment (Qt::AlignCenter);
 
-    dateLabel = new DuiLabel;
+    dateLabel = new MLabel;
     dateLabel->setObjectName ("lockscreenDateLabel");
     dateLabel->setAlignment (Qt::AlignCenter);
 
@@ -171,14 +171,14 @@ LockScreenUI::updateDateTime ()
     if (isContentCreated () == false)
         return;
 
-    DuiLocale locale;
+    MLocale locale;
 
     QDateTime now (QDateTime::currentDateTime());
 
     timeLabel->setText (locale.formatDateTime (
-                now, DuiLocale::DateNone, DuiLocale::TimeShort));
+                now, MLocale::DateNone, MLocale::TimeShort));
     dateLabel->setText (locale.formatDateTime (
-                now, DuiLocale::DateFull, DuiLocale::TimeNone));
+                now, MLocale::DateFull, MLocale::TimeNone));
     update();
 }
 

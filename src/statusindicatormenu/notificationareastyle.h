@@ -20,17 +20,17 @@
 #ifndef NOTIFICATIONAREASTYLE_H
 #define NOTIFICATIONAREASTYLE_H
 
-#include <DuiWidgetStyle>
+#include <MWidgetStyle>
 
-class NotificationAreaStyle : public DuiWidgetStyle
+class NotificationAreaStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(NotificationAreaStyle)
+    M_STYLE(NotificationAreaStyle)
 };
 
-class NotificationAreaStyleContainer : public DuiWidgetStyleContainer
+class NotificationAreaStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(NotificationAreaStyle)
+    M_STYLE_CONTAINER(NotificationAreaStyle)
 };
 
 #endif

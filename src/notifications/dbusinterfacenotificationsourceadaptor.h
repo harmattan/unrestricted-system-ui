@@ -24,14 +24,14 @@ class QStringList;
 class QVariant;
 
 /*
- * Adaptor class for interface com.nokia.dui.NotificationManager
+ * Adaptor class for interface com.nokia.m.NotificationManager
  */
 class DBusInterfaceNotificationSourceAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.dui.NotificationManager")
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.m.NotificationManager")
     Q_CLASSINFO("D-Bus Introspection", ""
-"  <interface name=\"com.nokia.dui.NotificationManager\">\n"
+"  <interface name=\"com.nokia.m.NotificationManager\">\n"
 "    <method name=\"notificationUserId\">\n"
 "      <arg direction=\"out\" type=\"u\" name=\"notificationUserId\"/>\n"
 "    </method>\n"

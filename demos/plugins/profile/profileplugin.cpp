@@ -37,7 +37,7 @@
 
 Q_EXPORT_PLUGIN2(profile, ProfilePlugin)
 
-DuiWidget* ProfilePlugin::constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu)
+MWidget* ProfilePlugin::constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu)
 {
     return new Profile(statusIndicatorMenu);
 }

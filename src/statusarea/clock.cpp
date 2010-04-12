@@ -19,7 +19,7 @@
 
 #include "clock.h"
 
-Clock::Clock(QGraphicsItem *parent) : DuiWidgetController(new ClockModel, parent)
+Clock::Clock(QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
 {
     // Set the initial 24 hour mode
     model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);

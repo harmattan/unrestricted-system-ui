@@ -1,10 +1,10 @@
 include(../check.pri)
-include(../../duiconfig.pri)
+include(../../mconfig.pri)
 SRCDIR = ../../src
 STUBSDIR = ../stubs
-INCLUDEPATH += $$DUI_INSTALL_HEADERS $$SRCDIR $$STUBSDIR ../../include
+INCLUDEPATH += $$M_INSTALL_HEADERS $$SRCDIR $$STUBSDIR ../../include
 DEPENDPATH = $$INCLUDEPATH
-CONFIG += debug dui silent link_pkgconfig qmsystem
+CONFIG += debug meegotouch silent link_pkgconfig qmsystem
 QT += testlib network gui dbus xml
 exists($$[QT_INSTALL_LIBS]/libQtOpenGL.so):QT += opengl
 TEMPLATE = app

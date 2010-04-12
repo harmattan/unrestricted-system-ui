@@ -39,9 +39,9 @@
 #include <QObject>
 #include <DuiStatusIndicatorMenuPluginInterface>
 
-class DuiApplication;
-class DuiApplicationWindow;
-class DuiApplicationPage;
+class MApplication;
+class MApplicationWindow;
+class MApplicationPage;
 class PluginList;
 
 class TestPlugin : public QObject, DuiStatusIndicatorMenuPluginInterface
@@ -50,7 +50,7 @@ class TestPlugin : public QObject, DuiStatusIndicatorMenuPluginInterface
     Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
 
 public:
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &);
+    virtual MWidget *constructWidget(DuiStatusIndicatorMenuInterface &);
 };
 
 class Ut_PluginList : public QObject
@@ -58,7 +58,7 @@ class Ut_PluginList : public QObject
     Q_OBJECT
 
 public:
-    static bool duiApplicationIfProxyLaunchCalled;
+    static bool mApplicationIfProxyLaunchCalled;
     static bool applicationWindowMinimized;
     static bool applicationPageShown;
     static QStringList loadedPlugins;
@@ -88,12 +88,12 @@ signals:
     void settingsButtonClicked();
 
 private:
-    // DuiApplication
-    DuiApplication *app;
-    // DuiApplicationWindow for testing
-    DuiApplicationWindow *applicationWindow;
-    // DuiApplicationPage for testing
-    DuiApplicationPage *applicationPage;
+    // MApplication
+    MApplication *app;
+    // MApplicationWindow for testing
+    MApplicationWindow *applicationWindow;
+    // MApplicationPage for testing
+    MApplicationPage *applicationPage;
     // The object being tested
     PluginList *pluginList;
 };

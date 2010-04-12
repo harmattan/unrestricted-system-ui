@@ -19,26 +19,26 @@
 #ifndef UNLOCKSLIDERSTYLE_H
 #define UNLOCKSLIDERSTYLE_H
 
-#include <duiwidgetstyle.h>
-#include <DuiScalableImage>
+#include <mwidgetstyle.h>
+#include <MScalableImage>
 
-class UnlockSliderStyle : public DuiWidgetStyle
+class UnlockSliderStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(UnlockSliderStyle)
+    M_STYLE(UnlockSliderStyle)
 
-    DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, handleImage,             HandleImage)
-    DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, handleHilightedImage,    HandleHilightedImage)
-    DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, backgroundTileImage,     BackgroundTileImage)
-    DUI_STYLE_PTR_ATTRIBUTE(DuiScalableImage*, iconImage,               IconImage)
-    DUI_STYLE_ATTRIBUTE(qreal,             thickness,               Thickness)
-    DUI_STYLE_ATTRIBUTE(int,               blinkTime,               BlinkTime)
-    DUI_STYLE_ATTRIBUTE(int,               blinkCount,              BlinkCount)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, handleImage,             HandleImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, handleHilightedImage,    HandleHilightedImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, backgroundTileImage,     BackgroundTileImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, iconImage,               IconImage)
+    M_STYLE_ATTRIBUTE(qreal,             thickness,               Thickness)
+    M_STYLE_ATTRIBUTE(int,               blinkTime,               BlinkTime)
+    M_STYLE_ATTRIBUTE(int,               blinkCount,              BlinkCount)
 };
 
-class UnlockSliderStyleContainer : public DuiWidgetStyleContainer
+class UnlockSliderStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(UnlockSliderStyle)
+    M_STYLE_CONTAINER(UnlockSliderStyle)
 };
 
 #endif // UNLOCKSLIDERSTYLE_H

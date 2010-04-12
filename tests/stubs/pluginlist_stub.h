@@ -27,7 +27,7 @@
 // FIXME - stubgen is not yet finished
 class PluginListStub : public StubBase {
   public:
-  virtual void PluginListConstructor(DuiWindow *applicationWindow, DuiApplicationPage *applicationPage, QGraphicsItem *parent);
+  virtual void PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent);
   virtual void PluginListDestructor();
   virtual void showStatusIndicatorMenu();
   virtual void settingsButtonClicked();
@@ -38,7 +38,7 @@ class PluginListStub : public StubBase {
 }; 
 
 // 2. IMPLEMENT STUB
-void PluginListStub::PluginListConstructor(DuiWindow *applicationWindow, DuiApplicationPage *applicationPage, QGraphicsItem *parent) {
+void PluginListStub::PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
   Q_UNUSED(applicationWindow);
   Q_UNUSED(applicationPage);
   Q_UNUSED(parent);
@@ -83,7 +83,7 @@ PluginListStub* gPluginListStub = &gDefaultPluginListStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-PluginList::PluginList(DuiWindow *applicationWindow, DuiApplicationPage *applicationPage, QGraphicsItem *parent) {
+PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
   gPluginListStub->PluginListConstructor(applicationWindow, applicationPage, parent);
 }
 

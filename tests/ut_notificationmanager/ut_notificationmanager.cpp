@@ -21,8 +21,8 @@
 
 #include <QtTest/QtTest>
 #include <QMetaType>
-#include <duinotification.h>
-#include <duifiledatastore.h>
+#include <mnotification.h>
+#include <mfiledatastore.h>
 #include "notificationmanager.h"
 #include "notification.h"
 #include "notificationgroup.h"
@@ -357,7 +357,7 @@ void Ut_NotificationManager::testUpdateNotification()
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
-    // TODO this cannot be fully tested until DuiInfoBanner supports updates
+    // TODO this cannot be fully tested until MInfoBanner supports updates
 }
 
 void Ut_NotificationManager::testRemoveNotification()

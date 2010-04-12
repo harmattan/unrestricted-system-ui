@@ -35,17 +35,17 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include <DuiWidget>
+#include <MWidget>
 
 class DuiStatusIndicatorMenuInterface;
-class DuiApplicationPage;
-class DuiButton;
+class MApplicationPage;
+class MButton;
 
 /*!
  * The Profile widget makes it possible to select the currently
  * active profile.
  */
-class Profile : public DuiWidget
+class Profile : public MWidget
 {
     Q_OBJECT
 
@@ -67,14 +67,14 @@ private slots:
     /*!
      * \brief A slot for receiving information about button clicks.
      */
-    void buttonClicked(DuiButton *button);
+    void buttonClicked(MButton *button);
 
 private:
     //! Interface for controlling the status indicator menu
     DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
 
     //! Application page for the profile modification
-    DuiApplicationPage *profileModificationPage;
+    MApplicationPage *profileModificationPage;
 };
 
 #endif // PROFILE_H

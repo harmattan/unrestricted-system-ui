@@ -35,73 +35,73 @@ DBusInterfaceNotificationSourceAdaptor::~DBusInterfaceNotificationSourceAdaptor(
 
 uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    // handle method call com.nokia.dui.NotificationManager.addGroup
+    // handle method call com.nokia.m.NotificationManager.addGroup
     return parent()->addGroup(notificationUserId, eventType, summary, body, action, imageURI, count);
 }
 
 uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint notificationUserId, const QString &eventType)
 {
-    // handle method call com.nokia.dui.NotificationManager.addGroup
+    // handle method call com.nokia.m.NotificationManager.addGroup
     return parent()->addGroup(notificationUserId, eventType);
 }
 
 uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    // handle method call com.nokia.dui.NotificationManager.addNotification
+    // handle method call com.nokia.m.NotificationManager.addNotification
     return parent()->addNotification(notificationUserId, groupId, eventType, summary, body, action, imageURI, count);
 }
 
 uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint notificationUserId, uint groupId, const QString &eventType)
 {
-    // handle method call com.nokia.dui.NotificationManager.addNotification
+    // handle method call com.nokia.m.NotificationManager.addNotification
     return parent()->addNotification(notificationUserId, groupId, eventType);
 }
 
 QList < uint >  DBusInterfaceNotificationSourceAdaptor::notificationIdList(uint notificationUserId)
 {
-    // handle method call com.nokia.dui.NotificationManager.notificationIdList
+    // handle method call com.nokia.m.NotificationManager.notificationIdList
     return parent()->notificationIdList(notificationUserId);
 }
 
 uint DBusInterfaceNotificationSourceAdaptor::notificationUserId()
 {
-    // handle method call com.nokia.dui.NotificationManager.notificationUserId
+    // handle method call com.nokia.m.NotificationManager.notificationUserId
     return parent()->notificationUserId();
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::removeGroup(uint notificationUserId, uint groupId)
 {
-    // handle method call com.nokia.dui.NotificationManager.removeGroup
+    // handle method call com.nokia.m.NotificationManager.removeGroup
     return parent()->removeGroup(notificationUserId, groupId);
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::removeNotification(uint notificationUserId, uint notificationId)
 {
-    // handle method call com.nokia.dui.NotificationManager.removeNotification
+    // handle method call com.nokia.m.NotificationManager.removeNotification
     return parent()->removeNotification(notificationUserId, notificationId);
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    // handle method call com.nokia.dui.NotificationManager.updateGroup
+    // handle method call com.nokia.m.NotificationManager.updateGroup
     return parent()->updateGroup(notificationUserId, groupId, eventType, summary, body, action, imageURI, count);
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint notificationUserId, uint groupId, const QString &eventType)
 {
-    // handle method call com.nokia.dui.NotificationManager.updateGroup
+    // handle method call com.nokia.m.NotificationManager.updateGroup
     return parent()->updateGroup(notificationUserId, groupId, eventType);
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    // handle method call com.nokia.dui.NotificationManager.updateNotification
+    // handle method call com.nokia.m.NotificationManager.updateNotification
     return parent()->updateNotification(notificationUserId, notificationId, eventType, summary, body, action, imageURI, count);
 }
 
 bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType)
 {
-    // handle method call com.nokia.dui.NotificationManager.updateNotification
+    // handle method call com.nokia.m.NotificationManager.updateNotification
     return parent()->updateNotification(notificationUserId, notificationId, eventType);
 }
 

@@ -19,11 +19,11 @@
 #ifndef SHUTDOWNUI_H
 #define SHUTDOWNUI_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class DuiLabel;
+class MLabel;
 
-class ShutdownUI : public DuiApplicationPage
+class ShutdownUI : public MApplicationPage
 {
     Q_OBJECT
 
@@ -39,7 +39,7 @@ protected:
     void alignText();
 
 private:
-    DuiLabel* text;
+    MLabel* text;
 };
 
 #endif // SHUTDOWNUI_H

@@ -20,18 +20,18 @@
 #ifndef NOTIFICATIONAREAVIEW_H_
 #define NOTIFICATIONAREAVIEW_H_
 
-#include <DuiWidgetView>
+#include <MWidgetView>
 
 #include "notificationareastyle.h"
 #include "notificationareamodel.h"
 
 class NotificationArea;
-class DuiLinearLayoutPolicy;
+class MLinearLayoutPolicy;
 
-class NotificationAreaView : public DuiWidgetView
+class NotificationAreaView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(NotificationAreaModel, NotificationAreaStyle)
+    M_VIEW(NotificationAreaModel, NotificationAreaStyle)
 
 public:
     /*!
@@ -53,7 +53,7 @@ protected:
 
 private:
     //! The layout policy of the notification area
-    DuiLinearLayoutPolicy *layoutPolicy;
+    MLinearLayoutPolicy *layoutPolicy;
 };
 
 #endif /* NOTIFICATIONAREAVIEW_H_ */

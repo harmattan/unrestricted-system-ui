@@ -21,23 +21,23 @@
 #ifndef STATUSINDICATORIMAGESTYLE_H_
 #define STATUSINDICATORIMAGESTYLE_H_
 
-#include <DuiWidgetStyle>
+#include <MWidgetStyle>
 
-class StatusIndicatorImageStyle : public DuiWidgetStyle
+class StatusIndicatorImageStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(StatusIndicatorImageStyle)
+    M_STYLE(StatusIndicatorImageStyle)
 
     //! The list of IDs of the images to be shown in the status indicator separated by spaces
-    DUI_STYLE_ATTRIBUTE(QString, imageList, ImageList)
+    M_STYLE_ATTRIBUTE(QString, imageList, ImageList)
 
     //! The number of milliseconds in which the images in imageList are animated
-    DUI_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
+    M_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
 };
 
-class StatusIndicatorImageStyleContainer : public DuiWidgetStyleContainer
+class StatusIndicatorImageStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(StatusIndicatorImageStyle)
+    M_STYLE_CONTAINER(StatusIndicatorImageStyle)
 };
 
 #endif /* STATUSINDICATORIMAGESTYLE_H_ */

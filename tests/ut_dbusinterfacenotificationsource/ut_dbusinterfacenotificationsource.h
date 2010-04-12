@@ -24,7 +24,7 @@
 #include <QObject>
 #include "notificationmanagerinterface.h"
 
-// class DuiApplication;
+// class MApplication;
 class DBusInterfaceNotificationSource;
 
 // MockNotificationManager used by the DBusInterfaceNotificationSource

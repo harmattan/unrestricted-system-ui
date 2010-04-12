@@ -17,15 +17,15 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
+#include <MApplication>
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
 #include "statusindicatorimageview.h"
 #include "statusindicatorlabelview.h"
 #include "applicationcontext.h"
 
-StatusIndicator::StatusIndicator(DuiWidget *parent) :
-    DuiWidgetController(new StatusIndicatorModel, parent),
+StatusIndicator::StatusIndicator(MWidget *parent) :
+    MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
     modelUpdatesEnabled(true),
     currentValue(QVariant())
@@ -77,7 +77,7 @@ void StatusIndicator::updateAnimationStatus()
     }
 }
 
-PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -98,7 +98,7 @@ void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
     setValue(signalStrength->value().toDouble() * 0.01f);
 }
 
-BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(QString(metaObject()->className()) + "Level");
@@ -135,7 +135,7 @@ void BatteryStatusIndicator::batteryChargingChanged()
     updateAnimationStatus();
 }
 
-ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -154,7 +154,7 @@ void ClockAlarmStatusIndicator::clockAlarmChanged()
     setValue(clockAlarm->value().toBool() ? 1 : 0);
 }
 
-BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -173,7 +173,7 @@ void BluetoothStatusIndicator::bluetoothChanged()
     setValue(bluetooth->value().toBool() ? 1 : 0);
 }
 
-InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -201,7 +201,7 @@ void InternetConnectionStatusIndicator::internetConnectionChanged()
     // TODO: change to 3G or WiFi signal strength based on connection type
 }
 
-PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, DuiWidget *parent) :
+PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());

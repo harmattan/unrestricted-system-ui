@@ -20,8 +20,8 @@
 #ifndef STATUSAREAWINDOW_H_
 #define STATUSAREAWINDOW_H_
 
-#include <DuiWindow>
-#include <DuiNamespace>
+#include <MWindow>
+#include <MNamespace>
 
 class QGraphicsScene;
 class StatusArea;
@@ -29,7 +29,7 @@ class StatusArea;
 /*!
  * Creates a window which contains a status area.
  */
-class StatusAreaWindow : public DuiWindow
+class StatusAreaWindow : public MWindow
 {
     Q_OBJECT
 
@@ -60,7 +60,7 @@ private slots:
      *
      * \param angle the new angle
      */
-    void rotate(const Dui::OrientationAngle &angle);
+    void rotate(const M::OrientationAngle &angle);
 
 signals:
     /*!

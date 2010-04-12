@@ -24,7 +24,7 @@
 #include <QList>
 #include <QString>
 #include <QVariant>
-#include <duinotification.h>
+#include <mnotification.h>
 
 class NotificationManager;
 class TestNotificationManager;

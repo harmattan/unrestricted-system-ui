@@ -22,12 +22,12 @@
 #include "batterybusinesslogic.h"
 #include "displaystatestub.h"
 
-#include <DuiApplication>
-#include <DuiTheme>
+#include <MApplication>
+#include <MTheme>
 
 #include <QTime>
 #include <QThread>
-#include <DuiLocale>
+#include <MLocale>
 
 #define TRANSLATION_CATALOG "systemui"
 
@@ -75,20 +75,20 @@ void Ut_LowBatteryNotifier::cleanup ()
     m_helper = NULL;
 }
 
-DuiApplication *app;
+MApplication *app;
 void Ut_LowBatteryNotifier::initTestCase ()
 {
     int argc = 1;
     char* app_name = (char*) "./ut_lowbatterynotifier";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 
-    DuiLocale        locale;
+    MLocale        locale;
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
     // Install real translation
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
-    DuiLocale::setDefault (locale);
+    MLocale::setDefault (locale);
 }
 
 void Ut_LowBatteryNotifier::cleanupTestCase ()

@@ -6,11 +6,11 @@
 @const COLOR_ACTIVE_FOREGROUND: #ffffff; /* activated item title */
 @const COLOR_ACTIVE_BACKGROUND: #CCFF33; /* activated item background */
 
-DuiApplicationPageStyle#StatusIndicatorMenuPage {
+MApplicationPageStyle#StatusIndicatorMenuPage {
     background-image: status-indicator-menu-background;
 }
 
-DuiButtonStyle#StatusIndicatorMenuSettingsButton {
+MButtonStyle#StatusIndicatorMenuSettingsButton {
     font: $FONT_DEFAULT;
     preferred-size: 432 86;
     minimum-size: 432 86;
@@ -27,7 +27,7 @@ NotificationAreaStyle {
     margin-bottom: 0;
 }
                 
-DuiSceneWindowAnimatorStyle:event_notification {
+MSceneWindowAnimatorStyle:event_notification {
     transition-in-type: "move.right";
     transition-out-type: "move.to";
     transition-out-destination: 0 78;
@@ -63,7 +63,7 @@ StatusAreaStyle {
 }
 
 
-DuiLabelStyle#Notifier {
+MLabelStyle#Notifier {
     background-image: icon-s-status-notifier 9 9 9 9;
     font: $FONT_XSMALL;
     color: #FFFFFF;
@@ -89,7 +89,7 @@ ClockStyle {
 ClockStyle:twelvehour {
     time-format: "hh:mm'<font size=0.8>'AP'</font>'";
 }
-DuiLabelStyle#ClockLabel {
+MLabelStyle#ClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
     margin-left: 0;
@@ -120,7 +120,7 @@ StatusIndicatorLabelStyle {
     padding-bottom: 0;
 }
 
-DuiLabelStyle#StatusIndicatorLabel {
+MLabelStyle#StatusIndicatorLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
 }

@@ -19,18 +19,18 @@
 #include "ut_clockview.h"
 #include "clockview.h"
 #include "clock_stub.h"
-#include <DuiApplication>
-#include <DuiLabel>
+#include <MApplication>
+#include <MLabel>
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 
-// DuiWidgetController stubs
+// MWidgetController stubs
 ClockModel clockModel;
-DuiWidgetModel *DuiWidgetController::model()
+MWidgetModel *MWidgetController::model()
 {
     return &clockModel;
 }
-const DuiWidgetModel *DuiWidgetController::model() const
+const MWidgetModel *MWidgetController::model() const
 {
     return &clockModel;
 }
@@ -40,7 +40,7 @@ void QGraphicsLinearLayout::insertItem(int , QGraphicsLayoutItem *)
 {
 }
 
-void DuiLabel::setText(const QString &text)
+void MLabel::setText(const QString &text)
 {
     Ut_ClockView::timeAsString = text;
 }
@@ -56,7 +56,7 @@ void Ut_ClockView::initTestCase()
 {
     static int argc = 1;
     static char *app_name = (char *)"./ut_clockview";
-    app = new DuiApplication(argc, &app_name);
+    app = new MApplication(argc, &app_name);
 }
 
 // Called after the last testfunction was executed

@@ -20,7 +20,7 @@
 #include "widgetnotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
-#include <DuiRemoteAction>
+#include <MRemoteAction>
 #include "sysuid.h"
 #include "eventtypestore.h"
 #include <QSettings>
@@ -117,21 +117,21 @@ bool WidgetNotificationSink::determineUserRemovability(const NotificationParamet
     }
 }
 
-DuiInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
+MInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
-    DuiInfoBanner *infoBanner = createInfoBanner(notification.type() == Notification::ApplicationEvent ? DuiInfoBanner::Event : DuiInfoBanner::Information,
+    MInfoBanner *infoBanner = createInfoBanner(notification.type() == Notification::ApplicationEvent ? MInfoBanner::Event : MInfoBanner::Information,
                                 notification.groupId(), notification.parameters());
     infoBanner->setProperty(NOTIFICATION_ID_PROPERTY, notification.notificationId());
 
     return infoBanner;
 }
 
-DuiInfoBanner *WidgetNotificationSink::createInfoBanner(DuiInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
+MInfoBanner *WidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
 {
     QString imageId = parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
     QString body = parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
     QString iconId = determineIconId(parameters);
-    DuiInfoBanner *infoBanner = new DuiInfoBanner(type);
+    MInfoBanner *infoBanner = new MInfoBanner(type);
 
     if (QFileInfo(imageId).isAbsolute()) {
         infoBanner->setPixmap(loadAndScalePixmap(imageId));
@@ -152,7 +152,7 @@ DuiInfoBanner *WidgetNotificationSink::createInfoBanner(DuiInfoBanner::BannerTyp
     return infoBanner;
 }
 
-void WidgetNotificationSink::updateActions(DuiInfoBanner *infoBanner, const NotificationParameters &parameters)
+void WidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters)
 {
     // Remove the old actions
     foreach(QAction * qAction, infoBanner->actions()) {
@@ -163,7 +163,7 @@ void WidgetNotificationSink::updateActions(DuiInfoBanner *infoBanner, const Noti
     // Add the action if it exists
     QString action = parameters.value(NotificationWidgetParameterFactory::actionKey()).toString();
     if (!action.isEmpty()) {
-        DuiRemoteAction *remoteAction = new DuiRemoteAction(action, infoBanner);
+        MRemoteAction *remoteAction = new MRemoteAction(action, infoBanner);
         remoteAction->setVisible(false);
         infoBanner->addAction(remoteAction);
     }
@@ -171,12 +171,12 @@ void WidgetNotificationSink::updateActions(DuiInfoBanner *infoBanner, const Noti
 
 void WidgetNotificationSink::infoBannerClicked()
 {
-    DuiInfoBanner *infoBanner = qobject_cast<DuiInfoBanner *>(sender());
+    MInfoBanner *infoBanner = qobject_cast<MInfoBanner *>(sender());
 
     if (infoBanner != NULL) {
         // Trigger each remote action associated with the clicked info banner
         foreach(QAction * qAction, infoBanner->actions()) {
-            DuiRemoteAction *remoteAction = dynamic_cast<DuiRemoteAction *>(qAction);
+            MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(qAction);
             if (remoteAction) {
                 remoteAction->trigger();
             }

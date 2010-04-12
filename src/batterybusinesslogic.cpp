@@ -20,10 +20,10 @@
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "batterybusinesslogic.h"
 
-#include <DuiLocale>
+#include <MLocale>
 #include <QTimer>
 #include <QTime>
-#include <DuiNotification>
+#include <MNotification>
 
 using namespace Maemo;
 
@@ -73,14 +73,14 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
 // This macro will hide the previous notification
-#define NOTIFICATION(duinotification) \
+#define NOTIFICATION(mnotification) \
         if (m_notification != 0) \
         { \
             m_notification->remove (); \
             delete m_notification; \
             m_notification = 0; \
         } \
-        m_notification = (duinotification); \
+        m_notification = (mnotification); \
         m_notification->publish();
 
 /******************************************************************************
@@ -118,7 +118,7 @@ LowBatteryNotifier::showLowBatteryNotification()
 {
     SYS_DEBUG ("");
 
-    NOTIFICATION(new DuiNotification (DuiNotification::DeviceEvent, "", qtTrId (LowBatteryText)));
+    NOTIFICATION(new MNotification (MNotification::DeviceEvent, "", qtTrId (LowBatteryText)));
     // Needed by ut_lowbatterynotification
     SYS_DEBUG ("emitting showNotification ()");
 
@@ -334,7 +334,7 @@ BatteryBusinessLogic::batteryStatusChanged (
             SYS_DEBUG ("Charging");
             emit batteryCharging (animationRate (m_Battery->getChargerType()));
             utiliseLED (true, QString("PatternBatteryCharging"));
-            NOTIFICATION(new DuiNotification (DuiNotification::DeviceEvent, "", qtTrId (ChargingText)));
+            NOTIFICATION(new MNotification (MNotification::DeviceEvent, "", qtTrId (ChargingText)));
             if (m_LowBatteryNotifier != NULL) {
                 delete m_LowBatteryNotifier;
                 m_LowBatteryNotifier = NULL;
@@ -351,7 +351,7 @@ BatteryBusinessLogic::batteryStatusChanged (
             SYS_DEBUG ("Charging not started");
             emit batteryNotCharging ();
             utiliseLED (false, QString("PatternBatteryCharging"));
-            NOTIFICATION(new DuiNotification (DuiNotification::DeviceEvent, "",
+            NOTIFICATION(new MNotification (MNotification::DeviceEvent, "",
                              qtTrId (ChargingNotStartedText)));
             break;
 
@@ -372,7 +372,7 @@ BatteryBusinessLogic::batteryLevelChanged (
     case QmBattery::LevelFull:
         if (m_Battery->getState() == QmBattery::StateCharging)
         {
-            NOTIFICATION(new DuiNotification(DuiNotification::DeviceEvent, "",
+            NOTIFICATION(new MNotification(MNotification::DeviceEvent, "",
                          qtTrId (ChargingCompleteText)));
             utiliseLED(true, QString("PatternBatteryFull"));
             emit batteryFullyCharged ();
@@ -420,7 +420,7 @@ BatteryBusinessLogic::batteryChargerEvent (
     switch (type) {
     case QmBattery::None: // No  charger connected
         if (m_Battery->getLevel() == QmBattery::LevelFull)
-            NOTIFICATION(new DuiNotification(DuiNotification::DeviceEvent, "",
+            NOTIFICATION(new MNotification(MNotification::DeviceEvent, "",
                              qtTrId (DisconnectChargerText))); //show reminder
         break;
 
@@ -442,11 +442,11 @@ BatteryBusinessLogic::devicePSMStateChanged (
     SYS_DEBUG ("");
 
     if (PSMState == QmDeviceMode::PSMStateOff) {
-        NOTIFICATION(new DuiNotification(DuiNotification::DeviceEvent, "", qtTrId (ExitPSMText)));
+        NOTIFICATION(new MNotification(MNotification::DeviceEvent, "", qtTrId (ExitPSMText)));
         SYS_DEBUG ("Emitting DBus signal on PSM off");
         emit PSMValueChanged (false);
     } else if (PSMState == QmDeviceMode::PSMStateOn) {
-        NOTIFICATION(new DuiNotification(DuiNotification::DeviceEvent, "", qtTrId (EnterPSMText)));
+        NOTIFICATION(new MNotification(MNotification::DeviceEvent, "", qtTrId (EnterPSMText)));
         SYS_DEBUG ("Emitting DBus signal on PSM on");
         emit PSMValueChanged (true);
     }

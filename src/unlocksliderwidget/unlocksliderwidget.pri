@@ -1,4 +1,4 @@
-DUIGEN_OUTDIR = unlocksliderwidget
+MGEN_OUTDIR = unlocksliderwidget
 SOURCES += unlocksliderwidget/unlockslider.cpp \
     unlocksliderwidget/unlockslidermodel.cpp \
     unlocksliderwidget/unlocksliderview.cpp

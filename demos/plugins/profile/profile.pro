@@ -1,11 +1,11 @@
 MOC_DIR = .moc
-DUIGEN_OUTDIR = .gen
+MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 
-include(../../../duiconfig.pri)
+include(../../../mconfig.pri)
 
 TEMPLATE      = lib
-CONFIG       += plugin gui dui duistatusindicatormenu silent
+CONFIG       += plugin gui meegotouch duistatusindicatormenu silent
 INCLUDEPATH  += \
     ../../../src/statusindicatormenu
 

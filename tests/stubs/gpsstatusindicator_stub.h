@@ -28,14 +28,14 @@
 class GPSStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent);
+    virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void GPSStatusIndicatorDestructor();
     virtual void gpsChanged();
     ContextItem *gps ;
 };
 
 // 2. IMPLEMENT STUB
-void GPSStatusIndicatorStub::GPSStatusIndicatorConstructor(ApplicationContext &context, DuiWidget *parent)
+void GPSStatusIndicatorStub::GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -58,7 +58,7 @@ GPSStatusIndicatorStub *gGPSStatusIndicatorStub = &gDefaultGPSStatusIndicatorStu
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, DuiWidget *parent)
+GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, MWidget *parent)
 {
     gGPSStatusIndicatorStub->GPSStatusIndicatorConstructor(context, parent);
 }

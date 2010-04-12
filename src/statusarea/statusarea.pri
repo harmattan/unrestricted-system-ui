@@ -1,4 +1,4 @@
-include(../../duiconfig.pri)
+include(../../mconfig.pri)
 
 INCLUDEPATH += statusarea
 INCLUDEPATH += ../notifications
