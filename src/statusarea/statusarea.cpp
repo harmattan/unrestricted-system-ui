@@ -38,7 +38,7 @@ StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) :
     // Register status indicator menu object on DBus
     new StatusIndicatorMenuAdaptor(statusIndicatorMenuWindow.data());
     QDBusConnection::sessionBus().registerService("com.nokia.duistatusindicatormenu");
-    QDBusConnection::sessionBus().registerObject("/duistatusindicatormenu", statusIndicatorMenuWindow.data());
+    QDBusConnection::sessionBus().registerObject("/statusindicatormenu", statusIndicatorMenuWindow.data());
 }
 
 StatusArea::~StatusArea()

@@ -23,10 +23,19 @@
 #include <QDBusAbstractAdaptor>
 #include "statusindicatormenuwindow.h"
 
+/*
+ * Adaptor class for interface com.nokia.duistatusindicatoradaptor
+ */
 class StatusIndicatorMenuAdaptor : QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.nokia.duistatusindicatormenu")
+    Q_CLASSINFO("D-Bus Introspection", ""
+                "  <interface name=\"com.nokia.duistatusindocatormenu\">\n"
+                "    <method name=\"open\">\n"
+                "    </method>\n"
+                "  </interface>\n"
+                "")
 
 public:
     StatusIndicatorMenuAdaptor(StatusIndicatorMenuWindow *parent);
