@@ -32,7 +32,6 @@ public:
     virtual void rotate(const Dui::OrientationAngle& angle);
     virtual bool init();
     virtual void sceneChanged(const QList<QRectF> &region);
-    virtual void setSceneRender(Maemo::QmDisplayState::DisplayState state);
 };
 
 void StatusAreaWindowStub::StatusAreaWindowConstructor()
@@ -71,13 +70,6 @@ void StatusAreaWindowStub::sceneChanged(const QList<QRectF> &region)
     stubMethodEntered("sceneChanged", params);
 }
 
-void StatusAreaWindowStub::setSceneRender(Maemo::QmDisplayState::DisplayState state)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<Maemo::QmDisplayState::DisplayState>(state));
-    stubMethodEntered("setSceneRender", params);
-}
-
 
 StatusAreaWindowStub gDefaultStatusAreaWindowStub;
 StatusAreaWindowStub *gStatusAreaWindowStub = &gDefaultStatusAreaWindowStub;
@@ -113,11 +105,6 @@ bool StatusAreaWindow::init()
 void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
 {
     return gStatusAreaWindowStub->sceneChanged(region);
-}
-
-void StatusAreaWindow::setSceneRender(Maemo::QmDisplayState::DisplayState state)
-{
-    return gStatusAreaWindowStub->setSceneRender(state);
 }
 
 #endif
