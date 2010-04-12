@@ -9,8 +9,8 @@
  * before re-generating it.
  */
 
-#ifndef DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1269931783
-#define DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1269931783
+#ifndef DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1271085753
+#define DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1271085753
 
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
@@ -24,14 +24,14 @@ class QStringList;
 class QVariant;
 
 /*
- * Adaptor class for interface com.nokia.m.NotificationManager
+ * Adaptor class for interface com.meego.core.MNotificationManager
  */
 class DBusInterfaceNotificationSourceAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.m.NotificationManager")
+    Q_CLASSINFO("D-Bus Interface", "com.meego.core.MNotificationManager")
     Q_CLASSINFO("D-Bus Introspection", ""
-"  <interface name=\"com.nokia.m.NotificationManager\">\n"
+"  <interface name=\"com.meego.core.MNotificationManager\">\n"
 "    <method name=\"notificationUserId\">\n"
 "      <arg direction=\"out\" type=\"u\" name=\"notificationUserId\"/>\n"
 "    </method>\n"
