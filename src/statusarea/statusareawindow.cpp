@@ -30,7 +30,9 @@ StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     DuiWindow(NULL, parent),
     scene(new QGraphicsScene()),
     statusArea_(new StatusArea(NULL,this)),
-    statusAreaPixmap(NULL)
+    statusAreaPixmap(NULL),
+    displayState(new QmDisplayState()),
+    renderScene(true)
 {
     // Set the window type to _NET_WM_WINDOW_TYPE_DOCK
     setAttribute(Qt::WA_X11NetWmWindowTypeDock);
@@ -38,6 +40,7 @@ StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     // Rotate to current orientation
     rotate(this->orientationAngle());
     connect(this, SIGNAL(orientationAngleChanged(const Dui::OrientationAngle &)), this, SLOT(rotate(const Dui::OrientationAngle &)));
+    connect(displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
 }
 
 void StatusAreaWindow::initializeScene()
@@ -62,7 +65,7 @@ bool StatusAreaWindow::init()
 
 void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
 {
-    if (!region.empty() && !statusAreaPixmap->isNull()) {
+    if (!region.empty() && !statusAreaPixmap->isNull() && renderScene) {
         QPainter painter(statusAreaPixmap);
         QRectF changeRect(0,0,0,0);
         foreach(const QRectF & r, region) {
@@ -86,6 +89,7 @@ StatusAreaWindow::~StatusAreaWindow()
     scene->removeItem(statusArea_);
     delete statusArea_;
     delete scene;
+    delete displayState;
 }
 
 StatusArea *StatusAreaWindow::statusArea() const
@@ -116,3 +120,17 @@ void StatusAreaWindow::rotate(const Dui::OrientationAngle &angle)
     transform.rotate(angle);
     setTransform(transform);
 }
+
+void StatusAreaWindow::setSceneRender(Maemo::QmDisplayState::DisplayState state)
+{
+    switch(state) {
+    case Maemo::QmDisplayState::Dimmed:
+    case Maemo::QmDisplayState::Off:
+        renderScene = false;
+        break;
+    case Maemo::QmDisplayState::On:
+        renderScene = true;
+        break;
+    }
+}
+

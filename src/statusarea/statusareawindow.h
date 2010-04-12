@@ -22,6 +22,9 @@
 
 #include <DuiWindow>
 #include <DuiNamespace>
+#include "qmdisplaystate.h"
+
+using namespace Maemo;
 
 class QGraphicsScene;
 class StatusArea;
@@ -72,6 +75,11 @@ private slots:
     */
     virtual void sceneChanged(const QList<QRectF> &region);
 
+    /*!
+     * \brief A slot for setting if the scene renders to pixmap or not
+     */
+    void setSceneRender(Maemo::QmDisplayState::DisplayState);
+
 signals:
     /*!
      * Signal that status indicator menu is visible
@@ -93,6 +101,12 @@ private:
 
     //! Logical ID of shared pixmap which is used for rendering the status area
     static QString STATUS_AREA_PIXMAP_LOGICAL_ID;
+
+    //! Keep track of device display state
+    QmDisplayState* displayState;
+
+    //! Keep track whether scene should render or not
+    bool renderScene;
 };
 
 #endif /* STATUSAREAWINDOW_H_ */

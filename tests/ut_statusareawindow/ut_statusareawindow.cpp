@@ -23,6 +23,8 @@
 #include "statusarea_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 
+using namespace Maemo;
+
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaWindow_Scene_Render_Called = false;
 QRectF rectReceived(0,0,0,0);
@@ -54,11 +56,8 @@ void Ut_StatusAreaWindow::init()
 
 void Ut_StatusAreaWindow::cleanup()
 {
-<<<<<<< HEAD:tests/ut_statusareawindow/ut_statusareawindow.cpp
-=======
     Ut_StatusAreaWindow_Scene_Render_Called = false;
     rectReceived.setRect(0,0,0,0);
->>>>>>> New : Rendering of statusarea window to a pixmap:tests/ut_statusareawindow/ut_statusareawindow.cpp
     delete statusAreaWindow;
 }
 
@@ -71,10 +70,7 @@ void Ut_StatusAreaWindow::initTestCase()
 
 void Ut_StatusAreaWindow::cleanupTestCase()
 {
-<<<<<<< HEAD:tests/ut_statusareawindow/ut_statusareawindow.cpp
     Ut_StatusAreaWindow_Scene_Render_Called = false;
-=======
->>>>>>> New : Rendering of statusarea window to a pixmap:tests/ut_statusareawindow/ut_statusareawindow.cpp
     delete app;
 }
 
@@ -107,6 +103,49 @@ void Ut_StatusAreaWindow::testSceneChanged()
     QRectF unitedRect = rect3.united(rect4) ;
     QRectF expectedRect = unitedRect.intersected(QRectF(0,0,30,80)); // 0,0,30,80 come from the size of the pixmap
     QCOMPARE(rectReceived,expectedRect);
+}
+
+QList<QRectF>* setupRect()
+{
+    QList<QRectF>* rectList = new QList<QRectF>;
+    QRectF rect1(0,0,30,80);
+    rectList->append(rect1);
+    return rectList;
+}
+
+QList<QRectF>* Ut_StatusAreaWindow::setupRenderTests()
+{
+    QList<QRectF>* rectList = setupRect();
+    connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+    connect(this, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    return rectList;
+}
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOn()
+{
+    QList<QRectF>* rectList = setupRenderTests();
+    emit displayStateChanged(Maemo::QmDisplayState::On);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+   delete rectList;
+}
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOff()
+{
+    QList<QRectF>* rectList = setupRenderTests();
+    emit displayStateChanged(Maemo::QmDisplayState::Off);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+    delete rectList;
+}
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateDimmed()
+{
+    QList<QRectF>* rectList = setupRenderTests();
+    emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+    delete rectList;
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaWindow)
