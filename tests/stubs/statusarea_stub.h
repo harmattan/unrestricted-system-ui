@@ -16,70 +16,56 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #ifndef STATUSAREASTUB_H
 #define STATUSAREASTUB_H
 
-#include "statusarea.h"
 #include <stubbase.h>
+#include <statusarea.h>
 
+class StatusAreaStub : public StubBase
+{
+public:
+    virtual void statusAreaConstructor(DuiWidget *parent = NULL);
+    virtual void showStatusIndicatorMenu();
+    virtual bool sceneEvent(QEvent *event);
+};
 
-// 1. DECLARE STUB
-// FIXME - stubgen is not yet finished
-class StatusAreaStub : public StubBase {
-  public:
-  virtual void StatusAreaConstructor(DuiWidget *parent, StatusAreaWindow *statusAreaWindow);
-  virtual void StatusAreaDestructor();
-  virtual bool sceneEvent(QEvent *event);
-   const QString STATUS_INDICATOR_MENU_SERVICE_NAME ;
-   QPointF firstPos, lastPos ;
-   QSharedPointer<StatusIndicatorMenuWindow> statusIndicatorMenuWindow ;
-  virtual void showStatusIndicatorMenu();
-}; 
-
-// 2. IMPLEMENT STUB
-void StatusAreaStub::StatusAreaConstructor(DuiWidget *parent, StatusAreaWindow *statusAreaWindow) {
-  Q_UNUSED(parent);
-  Q_UNUSED(statusAreaWindow);
-
-}
-void StatusAreaStub::StatusAreaDestructor() {
-
-}
-bool StatusAreaStub::sceneEvent(QEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QEvent * >(event));
-  stubMethodEntered("sceneEvent",params);
-  return stubReturnValue<bool>("sceneEvent");
+void StatusAreaStub::statusAreaConstructor(DuiWidget *parent)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWidget *>(parent));
+    stubMethodEntered("statusAreaConstructor", params);
 }
 
-void StatusAreaStub::showStatusIndicatorMenu() {
-  stubMethodEntered("showStatusIndicatorMenu");
+void StatusAreaStub::showStatusIndicatorMenu()
+{
+    stubMethodEntered("showStatusIndicatorMenu");
 }
 
+bool StatusAreaStub::sceneEvent(QEvent *event)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QEvent *>(event));
+    stubMethodEntered("sceneEvent", params);
+    return stubReturnValue<bool>("sceneEvent");
+}
 
-
-// 3. CREATE A STUB INSTANCE
 StatusAreaStub gDefaultStatusAreaStub;
-StatusAreaStub* gStatusAreaStub = &gDefaultStatusAreaStub;
+StatusAreaStub *gStatusAreaStub = &gDefaultStatusAreaStub;
 
-
-// 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusArea::StatusArea(DuiWidget *parent, StatusAreaWindow *statusAreaWindow) {
-  gStatusAreaStub->StatusAreaConstructor(parent, statusAreaWindow);
+StatusArea::StatusArea(DuiWidget *parent)
+{
+    gStatusAreaStub->statusAreaConstructor(parent);
 }
 
-StatusArea::~StatusArea() {
-  gStatusAreaStub->StatusAreaDestructor();
+void StatusArea::showStatusIndicatorMenu()
+{
+    gStatusAreaStub->showStatusIndicatorMenu();
 }
 
-bool StatusArea::sceneEvent(QEvent *event) {
-  return gStatusAreaStub->sceneEvent(event);
+bool StatusArea::sceneEvent(QEvent *event)
+{
+    return gStatusAreaStub->sceneEvent(event);
 }
-
-void StatusArea::showStatusIndicatorMenu() {
-  gStatusAreaStub->showStatusIndicatorMenu();
-}
-
 
 #endif

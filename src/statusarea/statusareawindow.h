@@ -54,11 +54,6 @@ public:
      */
     StatusArea *statusArea() const;
 
-    /*!
-     * Initializes the status area window. Currently initializes scene
-     */
-    bool init();
-
 private slots:
     /*!
      * \brief Rotates the status area to a new orientation
@@ -66,11 +61,6 @@ private slots:
      * \param angle the new angle
      */
     void rotate(const Dui::OrientationAngle &angle);
-
-   /*!
-    * \brief A slot for notifying that the scene has changed and needs to be painted
-    */
-    virtual void sceneChanged(const QList<QRectF> &region);
 
 signals:
     /*!
@@ -84,15 +74,6 @@ private:
 
     //! The status area to be displayed in this window
     StatusArea *statusArea_;
-
-    //! Shared Pixmap between libdui and systemui for the status area.
-    QPixmap* statusAreaPixmap;
-
-    //! Initializes the shared pixmap for use
-    inline bool initializePixmap();
-
-    //! Logical ID of shared pixmap which is used for rendering the status area
-    static QString STATUS_AREA_PIXMAP_LOGICAL_ID;
 };
 
 #endif /* STATUSAREAWINDOW_H_ */

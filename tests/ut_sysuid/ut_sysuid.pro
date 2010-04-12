@@ -2,7 +2,6 @@ include(../common_top.pri)
 TARGET = ut_sysuid
 INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea $$SRCDIR/unlocksliderwidget
 INCLUDEPATH += /usr/include/contextsubscriber
-INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
 # unit test and unit classes
 SOURCES += \
@@ -65,7 +64,6 @@ HEADERS += \
     $$SRCDIR/unlocksliderwidget/unlockslider.h \
     $$SRCDIR/statusarea/statusareawindow.h \
     $$SRCDIR/applicationcontext.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
 
 # service classes
 HEADERS += \

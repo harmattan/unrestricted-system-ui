@@ -105,7 +105,7 @@ Sysuid::Sysuid () : QObject (),
 
     // Show status area window when sysui daemon starts
     m_statusAreaWindow = new StatusAreaWindow;
-    m_statusAreaWindow->init();
+    m_statusAreaWindow->show ();
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));

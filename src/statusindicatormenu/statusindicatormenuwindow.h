@@ -20,9 +20,10 @@
 #ifndef STATUSINDICATORMENUWINDOW_H
 #define STATUSINDICATORMENUWINDOW_H
 
-#include <DuiEscapeButtonPanel>
 #include <DuiWindow>
-#include <DuiApplicationPage>
+
+class DuiApplicationPage;
+class DuiEscapeButtonPanel;
 
 /*!
  * Main window for the DUI Status Indicator Menu.
