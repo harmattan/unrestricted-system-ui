@@ -1,8 +1,8 @@
 usr/bin/sysuid
 usr/bin/pcsuite-enable.sh
-usr/share/themes/base/dui/sysuid/*.conf
-usr/share/themes/base/dui/sysuid/style/*.css
-usr/share/themes/base/dui/sysuid/svg/*.svg
-usr/share/dui/notifications/eventtypes/*.conf
+usr/share/themes/base/meegotouch/sysuid/*.conf
+usr/share/themes/base/meegotouch/sysuid/style/*.css
+usr/share/themes/base/meegotouch/sysuid/svg/*.svg
+usr/share/meegotouch/notifications/eventtypes/*.conf
 etc/sudoers.d/usb.sudoers
 etc/dbus-1/system.d/systemui.conf

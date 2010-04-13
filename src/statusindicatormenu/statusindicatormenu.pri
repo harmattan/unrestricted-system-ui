@@ -1,4 +1,3 @@
-
 include(../../mconfig.pri)
 
 INCLUDEPATH += statusindicatormenu
@@ -22,9 +21,9 @@ STYLE_HEADERS += statusindicatormenu/notificationareastyle.h
 
 DEFINES += DUISTATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$DUISTATUSINDICATORMENU_PLUGIN_DIR\")\'
 
-headers.path = /usr/include/mstatusindicatormenu
-headers.files = statusindicatormenu/mstatusindicatormenuplugininterface.h statusindicatormenu/DuiStatusIndicatorMenuPluginInterface
+headers.path = /usr/include/duistatusindicatormenu
+headers.files = statusindicatormenu/duistatusindicatormenuplugininterface.h statusindicatormenu/DuiStatusIndicatorMenuPluginInterface
 prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
-prf.files = statusindicatormenu/mstatusindicatormenu.prf
+prf.files = statusindicatormenu/duistatusindicatormenu.prf
 
 INSTALLS += headers prf
