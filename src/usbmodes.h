@@ -19,7 +19,7 @@
 #ifndef USBMODES_H
 #define USBMODES_H
 
-#define USB_GCONF_KEY   "/M/System/UsbMode"
+#define USB_GCONF_KEY   "/Dui/System/UsbMode"
 
 typedef enum {
     USB_OVI_SUITE = 0,
