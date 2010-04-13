@@ -24,14 +24,14 @@
 #include "statusindicatormenuwindow.h"
 
 /*
- * Adaptor class for interface com.nokia.duistatusindicatoradaptor
+ * Adaptor class for interface com.meego.core.MStatusIndicatorMenu
  */
 class StatusIndicatorMenuAdaptor : QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.duistatusindicatormenu")
+    Q_CLASSINFO("D-Bus Interface", "com.meego.core.MStatusIndicatorMenu")
     Q_CLASSINFO("D-Bus Introspection", ""
-                "  <interface name=\"com.nokia.duistatusindocatormenu\">\n"
+                "  <interface name=\"com.meego.core.MStatusIndicatorMenu\">\n"
                 "    <method name=\"open\">\n"
                 "    </method>\n"
                 "  </interface>\n"
