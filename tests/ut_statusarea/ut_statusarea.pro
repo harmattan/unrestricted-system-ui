@@ -12,6 +12,7 @@ SOURCES += \
     ut_statusarea.cpp \
     $$SRCDIR/statusarea/statusarea.cpp \
     $$SRCDIR/statusindicatormenu/pluginlist.cpp \
+    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.cpp
 #    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
 
 # service classes
@@ -26,6 +27,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusareamodel.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/contextframeworkcontext.h \
 

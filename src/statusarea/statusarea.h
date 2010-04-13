@@ -54,8 +54,6 @@ public:
     //! \reimp_end
 
 private:
-    //! The name of the status indicator menu service
-    static const QString STATUS_INDICATOR_MENU_SERVICE_NAME;
     //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
     QPointF firstPos, lastPos;
     //! Status indicator menu

@@ -22,8 +22,8 @@
 #include <MApplicationIfProxy>
 #include <QGraphicsSceneMouseEvent>
 #include "statusindicatormenuwindow.h"
+#include "statusindicatormenuadaptor.h"
 
-const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.mstatusindicatormenu";
 // To prevent swipe inside the status bar. Must end swiping atlease some distance away from status bar
 const int SWIPE_THRESHOLD = 30;
 
@@ -34,6 +34,11 @@ StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) :
     if (statusAreaWindow != NULL) {
         connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
     }
+
+    // Register status indicator menu object on DBus
+    new StatusIndicatorMenuAdaptor(statusIndicatorMenuWindow.data());
+    QDBusConnection::sessionBus().registerService("com.nokia.duistatusindicatormenu");
+    QDBusConnection::sessionBus().registerObject("/duistatusindicatormenu", statusIndicatorMenuWindow.data());
 }
 
 StatusArea::~StatusArea()
