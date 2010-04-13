@@ -49,6 +49,9 @@
 #define WARNING
 #include "debug.h"
 
+#include <QX11Info>
+#include <X11/Xutil.h>
+
 #define TRANSLATION_CATALOG "systemui"
 
 namespace
@@ -105,6 +108,14 @@ Sysuid::Sysuid () : QObject (),
 
     // Show status area window when sysui daemon starts
     m_statusAreaWindow = new StatusAreaWindow;
+    XWMHints *wmHints = XGetWMHints(QX11Info::display(), m_statusAreaWindow->winId());
+    if (wmHints != NULL) {
+        // The window should not ask for input focus
+        wmHints->flags |= InputHint;
+        wmHints->input = False;
+        XSetWMHints(QX11Info::display(), m_statusAreaWindow->winId(), wmHints);
+        XFree(wmHints);
+    }
     m_statusAreaWindow->show ();
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
