@@ -11,11 +11,11 @@
       <case name="ut_dbusinterfacenotificationsource" type="Functional" description="Test notification source" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_dbusinterfacenotificationsource</step>
       </case>
-      <case name="ut_duicompositornotificationsink" type="Functional" description="Test notification sink" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_duicompositornotificationsink</step>
+      <case name="ut_mcompositornotificationsink" type="Functional" description="Test notification sink" level="Component">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_mcompositornotificationsink</step>
       </case>
-      <case name="ut_duifeedbacknotificationsink" type="Functional" description="Test feedback notification sink" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_duifeedbacknotificationsink</step>
+      <case name="ut_mfeedbacknotificationsink" type="Functional" description="Test feedback notification sink" level="Component">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_mfeedbacknotificationsink</step>
       </case>
       <case name="ut_eventtypestore" type="Functional" description="Test event type store" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_eventtypestore</step>
