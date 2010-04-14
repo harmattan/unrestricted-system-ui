@@ -42,7 +42,7 @@ char *argv[] = {
     (char *) "./ut_lockscreenui",
     NULL };
 
-const QString themeDir = "/usr/share/themes/base/m/sysuid/";
+const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
 const QString styleDir = themeDir + "style/";
 const QString svgDir = themeDir + "svg/";
 
@@ -52,6 +52,7 @@ void Ut_LockScreenUI::initTestCase()
 
     qDebug() << "Creating application.";
     m_App = new MApplication(argc, argv);
+    m_App->setQuitOnLastWindowClosed (false);
 
     qDebug() << "Initializing our own themes.";
     MTheme::addPixmapDirectory (svgDir);
