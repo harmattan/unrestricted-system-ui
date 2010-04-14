@@ -80,8 +80,8 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
     // Set the X window properties so that the window does not appear in the task bar
     excludeFromTaskBar();
-    connect(this, SIGNAL(enteredDisplay()), this, SLOT(displayActive()));
-    connect(this, SIGNAL(exitedDisplay()), this, SLOT(displayInActive()));
+    connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
+    connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 }
 
 void StatusIndicatorMenuWindow::displayActive()
