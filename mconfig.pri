@@ -4,10 +4,7 @@ load(meegotouch_defines)
 CONFIG += silent
 # Directories
 unix {
-    DUISTATUSINDICATORMENU_PREFIX = /usr
-    DUISTATUSINDICATORMENU_DIR = $$DUISTATUSINDICATORMENU_PREFIX/share/duistatusindicatormenu
-    DUISTATUSINDICATORMENU_PLUGIN_DIR = $$DUISTATUSINDICATORMENU_PREFIX/lib/duistatusindicatormenu/plugins
-     
+    STATUSINDICATORMENU_PLUGIN_DIR = /usr/lib/meegotouch/statusindicatormenuplugins
     SYSTEMUI_THEMES_DIR = /usr/share/themes/base/meegotouch/sysuid
 }
 mac {

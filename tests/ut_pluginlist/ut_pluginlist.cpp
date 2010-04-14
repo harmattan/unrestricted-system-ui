@@ -108,14 +108,14 @@ void Ut_PluginList::testInitialization()
 {
     // The loaded plugin list should be known
     QCOMPARE(loadedPlugins.count(), 8);
-    QCOMPARE(loadedPlugins.at(0), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(1), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(2), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(3), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(4), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(5), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(6), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(7), QDir(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(0), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(1), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(2), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(3), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(4), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(5), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(6), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(7), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so").canonicalPath());
 
     // The layout should contain a widget for each plugin plus one widget for the button
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());

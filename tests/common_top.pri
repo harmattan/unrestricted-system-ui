@@ -18,7 +18,7 @@ QMAKE_CXXFLAGS += -ftest-coverage \
     -fprofile-arcs 
 }
 
-DEFINES += DUISTATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$DUISTATUSINDICATORMENU_PLUGIN_DIR\")\'
+DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
 
 # install tests
 target.path = $$[QT_INSTALL_LIBS]/system-ui-tests

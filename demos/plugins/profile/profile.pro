@@ -25,16 +25,16 @@ SOURCES = \
 TARGET        = $$qtLibraryTarget(profile)
 DESTDIR       = ../../../lib
 
-target.path += $$DUISTATUSINDICATORMENU_PLUGIN_DIR
+target.path += $$STATUSINDICATORMENU_PLUGIN_DIR
 
 INSTALLS += \
     target \
     svg \
     images
 
-svg.path = $$DUISTATUSINDICATORMENU_THEMES_DIR/svg
+svg.path = $$SYSTEMUI_THEMES_DIR/svg
 svg.files = images/*.svg
-images.path = $$DUISTATUSINDICATORMENU_THEMES_DIR/images
+images.path = $$SYSTEMUI_THEMES_DIR/images
 images.files = images/*.png
 
 include(../check.pri)

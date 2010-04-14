@@ -19,7 +19,7 @@ HEADERS += \
 MODEL_HEADERS += statusindicatormenu/notificationareamodel.h
 STYLE_HEADERS += statusindicatormenu/notificationareastyle.h
 
-DEFINES += DUISTATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$DUISTATUSINDICATORMENU_PLUGIN_DIR\")\'
+DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
 
 headers.path = /usr/include/duistatusindicatormenu
 headers.files = statusindicatormenu/duistatusindicatormenuplugininterface.h statusindicatormenu/DuiStatusIndicatorMenuPluginInterface

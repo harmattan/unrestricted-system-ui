@@ -27,7 +27,7 @@
 #include <MApplicationIfProxy>
 #include "notificationarea.h"
 
-const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.MControlPanel";
+const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
 PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) :
     MWidget(parent),
@@ -46,14 +46,14 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
     // Load the plugins
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
-    addPlugin(DUISTATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
 
     // Create a button for accessing the full settings
     addSettingsButton();
