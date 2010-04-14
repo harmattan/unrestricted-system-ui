@@ -30,6 +30,7 @@
 #include "statusindicator_stub.h"
 #include "phonenetworkstatusindicator_stub.h"
 #include "notificationarea_stub.h"
+#include "statusindicatormenuadaptor_stub.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>
 #include <MWidget>

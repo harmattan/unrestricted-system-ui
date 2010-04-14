@@ -12,7 +12,6 @@ SOURCES += \
     ut_statusarea.cpp \
     $$SRCDIR/statusarea/statusarea.cpp \
     $$SRCDIR/statusindicatormenu/pluginlist.cpp \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.cpp
 #    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
 
 # service classes
@@ -33,6 +32,8 @@ HEADERS += \
 
 # service classes
 HEADERS += \
+    $$STUBSDIR/stubbase.cpp \
+    $$STUBSDIR/statusindicatormenuadaptor_stub.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)

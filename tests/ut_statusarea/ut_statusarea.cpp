@@ -28,6 +28,7 @@
 #include <MSceneManager>
 #include <MEscapeButtonPanel>
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuadaptor_stub.h"
 #include <MWidget>
 
 
