@@ -105,6 +105,8 @@ MLabelStyle#ClockLabel {
 StatusIndicatorImageStyle {
     margin-top: 4;
     margin-bottom: 0;
+    margin-left: 6;
+    margin-right: 6;
     /* The number of milliseconds in which the images in imageList are animated */
     animation-duration: 3000;
 }
