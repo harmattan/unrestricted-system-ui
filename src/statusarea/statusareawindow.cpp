@@ -22,22 +22,51 @@
 #include <MDeviceProfile>
 #include "statusareawindow.h"
 #include "statusarea.h"
+#include <MStyle>
+#include "statusareastyle.h"
+
+#include <QFile>
+#include <QDir>
+#include <QApplication>
+#include <QDebug>
 
 StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     MWindow(NULL, parent),
     scene(new QGraphicsScene),
-    statusArea_(new StatusArea(NULL,this))
+    statusArea_(new StatusArea(NULL,this)),
+    statusAreaPixmap(NULL)
 {
-    // Set the window type to _NET_WM_WINDOW_TYPE_DOCK
-    setAttribute(Qt::WA_X11NetWmWindowTypeDock);
-
-    // Set the scene and add the status area to the scene
-    setScene(scene);
     scene->addItem(statusArea_);
+    // Get signaled when the scene changes
+    connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+    setSizeFromStyle();
+    if(!createSharedPixmapHandle()) {
+        qWarning() << "Shared Pixmap was not created. Status area will not render";
+    }
+}
 
-    // Rotate to current orientation
-    rotate(this->orientationAngle());
-    connect(this, SIGNAL(orientationAngleChanged(const M::OrientationAngle &)), this, SLOT(rotate(const M::OrientationAngle &)));
+void StatusAreaWindow::setSizeFromStyle()
+{
+    const StatusAreaStyle *style = static_cast<const StatusAreaStyle *> (MTheme::style("StatusAreaStyle", "", "", "", M::Landscape, NULL));
+    if(style) {
+        statusAreaHeight = style->preferredSize().height();
+        statusAreaWidth = style->preferredSize().width();
+    }
+}
+
+bool StatusAreaWindow::createSharedPixmapHandle()
+{
+    // Create a pixmap in which top portion TopLeft(0,0) BottomRight(status area width,status area height) is landscpae.
+    // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
+    statusAreaPixmap = new QPixmap(statusAreaWidth, 2*statusAreaHeight);
+    QApplication::syncX();
+    QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
+    if (!handleTempFile.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+    QDataStream dataStream(&handleTempFile);
+    dataStream << static_cast<quint32> (statusAreaPixmap->handle());
+    return true;
 }
 
 StatusAreaWindow::~StatusAreaWindow()
@@ -45,33 +74,25 @@ StatusAreaWindow::~StatusAreaWindow()
     scene->removeItem(statusArea_);
     delete statusArea_;
     delete scene;
+    delete statusAreaPixmap;
 }
 
-StatusArea *StatusAreaWindow::statusArea() const
+void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
 {
-    return statusArea_;
-}
+    if (!region.empty() && !statusAreaPixmap->isNull()) {
+        QPainter painter(statusAreaPixmap);
+        QRectF changeRect(0,0,0,0);
+        foreach(const QRectF & r, region) {
+            changeRect = changeRect.united(r);
+        }
 
-void StatusAreaWindow::rotate(const M::OrientationAngle &angle)
-{
-    // Set the size of the window
-    if (angle == M::Angle90 || angle == M::Angle270) {
-        setFixedSize(28, MDeviceProfile::instance()->resolution().height());
-    } else {
-        setFixedSize(MDeviceProfile::instance()->resolution().width(), 28);
+	// Don't draw areas that are outside the pixmap
+        if(changeRect.intersects(statusAreaPixmap->rect())) {
+            QRectF sourceRect = changeRect.intersected(statusAreaPixmap->rect());
+            if (painter.isActive()) {
+                painter.fillRect(sourceRect, QColor(Qt::black));
+                scene->render(&painter, sourceRect, sourceRect);
+            }
+        }
     }
-
-    // Move the window to the correct position
-    if (angle == M::Angle0 || angle == M::Angle270) {
-        move(0, 0);
-    } else if (angle == M::Angle90) {
-        move(MDeviceProfile::instance()->resolution().width() - width(), 0);
-    } else {
-        move(0, MDeviceProfile::instance()->resolution().height() - height());
-    }
-
-    // Rotate the view
-    QTransform transform;
-    transform.rotate(angle);
-    setTransform(transform);
 }

@@ -27,7 +27,8 @@ class QGraphicsScene;
 class StatusArea;
 
 /*!
- * Creates a window which contains a status area.
+ * Creates a window which contains a status area. This window is not a top level window and is not visible.
+ *  It renders the contents of the scene to a shared pixmap which is then shown by libmeegotouch.
  */
 class StatusAreaWindow : public MWindow
 {
@@ -47,20 +48,11 @@ public:
      */
     virtual ~StatusAreaWindow();
 
-    /*!
-     * Returns the status area of this window.
-     *
-     * \return the status area of this window
-     */
-    StatusArea *statusArea() const;
-
 private slots:
-    /*!
-     * \brief Rotates the status area to a new orientation
-     *
-     * \param angle the new angle
-     */
-    void rotate(const M::OrientationAngle &angle);
+   /*!
+    * \brief A slot for notifying that the scene has changed and needs to be painted
+    */
+    virtual void sceneChanged(const QList<QRectF> &region);
 
 signals:
     /*!
@@ -74,6 +66,24 @@ private:
 
     //! The status area to be displayed in this window
     StatusArea *statusArea_;
+
+    //! Shared Pixmap between libmeegotouch and systemui for the status area.
+    QPixmap* statusAreaPixmap;
+
+    //! creates a pixmap and writes the handle to a temp file
+    bool createSharedPixmapHandle();
+
+    //! set the status bar size with information from style
+    void setSizeFromStyle();
+
+    //! Status Area dimensions.
+    uint statusAreaHeight;
+    uint statusAreaWidth;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusAreaWindow;
+#endif
+
 };
 
 #endif /* STATUSAREAWINDOW_H_ */

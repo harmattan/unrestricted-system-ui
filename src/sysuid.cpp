@@ -105,18 +105,8 @@ Sysuid::Sysuid () : QObject (),
         qCritical () << Q_FUNC_INFO << "failed to register dbus object";
         abort();
     }
-
     // Show status area window when sysui daemon starts
     m_statusAreaWindow = new StatusAreaWindow;
-    XWMHints *wmHints = XGetWMHints(QX11Info::display(), m_statusAreaWindow->winId());
-    if (wmHints != NULL) {
-        // The window should not ask for input focus
-        wmHints->flags |= InputHint;
-        wmHints->input = False;
-        XSetWMHints(QX11Info::display(), m_statusAreaWindow->winId(), wmHints);
-        XFree(wmHints);
-    }
-    m_statusAreaWindow->show ();
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));

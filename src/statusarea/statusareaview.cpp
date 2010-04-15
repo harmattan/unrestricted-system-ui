@@ -37,13 +37,31 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     internetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
-    notifier(new Notifier(controller))
+    notifier(new Notifier(controller)),
+    portraitAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
+    portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
+    portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
+    portraitInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
+    portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    portraitNotifier(new Notifier(controller))
+{
+    QGraphicsLinearLayout *landscapeLayout = setupLandscapeLayout();
+    QGraphicsLinearLayout *portraitLayout = setupPortraitLayout();
+    QGraphicsLinearLayout *compositeLayout = new QGraphicsLinearLayout(Qt::Vertical);
+
+    compositeLayout->setContentsMargins(0, 0, 0, 0);
+    compositeLayout->setSpacing(0);
+    compositeLayout->addItem(landscapeLayout);
+    compositeLayout->addItem(portraitLayout);
+    controller->setLayout(compositeLayout);
+}
+
+QGraphicsLinearLayout* StatusAreaView::setupLandscapeLayout()
 {
     // Layout for clock and search button
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-    controller->setLayout(layout);
 
     // Create a composite widget with a clock and the alarm indicator
     Clock *clock = new Clock;
@@ -69,8 +87,39 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Stretch
     layout->addStretch();
 
+    return layout;
 }
 
+QGraphicsLinearLayout* StatusAreaView::setupPortraitLayout()
+{
+    QGraphicsLinearLayout *portraitLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    portraitLayout->setContentsMargins(0, 0, 0, 0);
+    portraitLayout->setSpacing(0);
+
+    Clock *portraitClock = new Clock;
+    QGraphicsAnchorLayout *portraitClockAlarmLayout = new QGraphicsAnchorLayout;
+    portraitClockAlarmLayout->setContentsMargins(0, 0, 0, 0);
+    portraitClockAlarmLayout->addCornerAnchors(portraitClock, Qt::TopLeftCorner, portraitClockAlarmLayout, Qt::TopLeftCorner);
+    portraitClockAlarmLayout->addCornerAnchors(portraitClock, Qt::TopRightCorner, portraitClockAlarmLayout, Qt::TopRightCorner);
+    portraitClockAlarmLayout->addCornerAnchors(portraitAlarmIndicator, Qt::TopRightCorner, portraitClock, Qt::TopRightCorner);
+    MWidget *portraitClockAlarmWidget = new MWidget;
+    portraitClockAlarmWidget->setLayout(portraitClockAlarmLayout);
+    portraitLayout->addItem(portraitClockAlarmWidget);
+
+    portraitLayout->addItem(portraitBatteryIndicator);
+    portraitLayout->addItem(portraitPhoneSignalStrengthIndicator);
+    portraitLayout->addItem(portraitInternetConnectionIndicator);
+    portraitLayout->addItem(portraitBluetoothIndicator);
+
+    // Create the notifier
+    notifier->setObjectName("Notifier");
+    portraitLayout->addItem(portraitNotifier);
+
+    // Stretch
+    portraitLayout->addStretch();
+
+    return portraitLayout;
+}
 
 StatusAreaView::~StatusAreaView()
 {

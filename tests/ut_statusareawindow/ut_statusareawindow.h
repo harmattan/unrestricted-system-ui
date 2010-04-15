@@ -16,28 +16,24 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_STATUSBAR_
-#define _UT_STATUSBAR_
+#ifndef _UT_STATUSAREAWINDOW_
+#define _UT_STATUSAREAWINDOW_
 
 #include <QtTest/QtTest>
-#include <QObject>
-#include <QPointF>
-#include "statusareamodel.h"
-#include "statusareastyle.h"
 
-class StatusArea;
+class StatusAreaWindow;
 class MApplication;
 
-class Ut_StatusArea : public QObject
+class Ut_StatusAreaWindow : public QObject
 {
     Q_OBJECT
 
-public:
-    static bool mApplicationIfProxyLaunchCalled;
-
 private:
-    StatusArea *statusArea;
+    StatusAreaWindow *statusAreaWindow;
     MApplication *app;
+
+    signals:
+            void changed(QList<QRectF> rectList);
 
 private slots:
     // Executed once before every test case
@@ -48,11 +44,8 @@ private slots:
     void initTestCase();
     // Executed once after last test case
     void cleanupTestCase();
-
-    // Tests the showing of status indicator menu with swipe
-    void testWhenSwipeStatusAreaStatusIndicatorMenuAppears();
-    // Test when swipe less than a particular amount, status indicator will not be triggered.
-    void testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear();
+    // Test scene changed events render the scene
+    void testSceneChanged();
 };
 
-#endif //_UT_STATUSBAR_
+#endif //_UT_STATUSAREAWINDOW_

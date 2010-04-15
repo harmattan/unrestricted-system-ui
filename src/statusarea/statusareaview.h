@@ -31,6 +31,7 @@ class Notifier;
 class StatusArea;
 class StatusIndicator;
 class MSceneWindow;
+class QGraphicsLinearLayout;
 
 /*!
  * Status area view draws the status area.
@@ -41,7 +42,7 @@ class StatusAreaView : public MWidgetView
     M_VIEW(StatusAreaModel, StatusAreaStyle)
 
 public:
-    /*!
+   /*!
      * Constructs a view for a status area button.
      *
      * \param controller the controller of this StatusAreaView
@@ -80,6 +81,30 @@ private:
 
     //! Notifier
     Notifier *notifier;
+
+    //! Alarm indicator
+    StatusIndicator *portraitAlarmIndicator;
+
+    //! Battery indicator
+    StatusIndicator *portraitBatteryIndicator;
+
+    //! Phone signal strength indicator
+    StatusIndicator *portraitPhoneSignalStrengthIndicator;
+
+    //! Internet connection indicator
+    StatusIndicator *portraitInternetConnectionIndicator;
+
+    //! Bluetooth indicator
+    StatusIndicator *portraitBluetoothIndicator;
+
+    //! Notifier
+    Notifier *portraitNotifier;
+
+    //! set up the layout for status area in portrait mode
+    QGraphicsLinearLayout *setupPortraitLayout();
+
+    //! set up the layout for status area in landscape mode
+    QGraphicsLinearLayout *setupLandscapeLayout();
 };
 
 #endif // STATUSAREAVIEW_H

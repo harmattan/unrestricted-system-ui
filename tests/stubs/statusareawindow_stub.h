@@ -28,8 +28,7 @@ class StatusAreaWindowStub : public StubBase
 public:
     virtual void StatusAreaWindowConstructor();
     virtual void StatusAreaWindowDestructor();
-    virtual StatusArea *statusArea() const;
-    virtual void rotate(const M::OrientationAngle& angle);
+    virtual void sceneChanged(const QList<QRectF> &region);
 };
 
 void StatusAreaWindowStub::StatusAreaWindowConstructor()
@@ -42,18 +41,13 @@ void StatusAreaWindowStub::StatusAreaWindowDestructor()
     stubMethodEntered("StatusAreaWindowDestructor");
 }
 
-StatusArea * StatusAreaWindowStub::statusArea() const
-{
-    stubMethodEntered("statusArea");
-    return stubReturnValue<StatusArea *>("statusArea");
-}
-
-void StatusAreaWindowStub::rotate(const M::OrientationAngle& angle)
+void StatusAreaWindowStub::sceneChanged(const QList<QRectF> &region)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<M::OrientationAngle>(angle));
-    stubMethodEntered("rotate", params);
+    params.append(new Parameter<QList<QRectF> >(region));
+    stubMethodEntered("sceneChanged", params);
 }
+
 
 StatusAreaWindowStub gDefaultStatusAreaWindowStub;
 StatusAreaWindowStub *gStatusAreaWindowStub = &gDefaultStatusAreaWindowStub;
@@ -71,14 +65,9 @@ StatusAreaWindow::~StatusAreaWindow()
     gStatusAreaWindowStub->StatusAreaWindowDestructor();
 }
 
-StatusArea *StatusAreaWindow::statusArea() const
+void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
 {
-    return gStatusAreaWindowStub->statusArea();
-}
-
-void StatusAreaWindow::rotate(const M::OrientationAngle &angle)
-{
-    gStatusAreaWindowStub->rotate(angle);
+    return gStatusAreaWindowStub->sceneChanged(region);
 }
 
 #endif

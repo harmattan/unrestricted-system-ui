@@ -24,8 +24,7 @@
 #include "statusindicatormenuwindow.h"
 #include "statusindicatormenuadaptor.h"
 
-// To prevent swipe inside the status bar. Must end swiping atlease some distance away from status bar
-const int SWIPE_THRESHOLD = 30;
+const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.mstatusindicatormenu";
 
 StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) :
     MWidgetController(parent),
@@ -43,39 +42,6 @@ StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) :
 
 StatusArea::~StatusArea()
 {
-}
-
-bool StatusArea::sceneEvent(QEvent *event)
-{
-    switch (event->type()) {
-    case QEvent::GraphicsSceneMousePress: {
-        QGraphicsSceneMouseEvent *mouseEvent = dynamic_cast<QGraphicsSceneMouseEvent *>(event);
-        if (mouseEvent) {
-            firstPos = mouseEvent->pos();
-        }
-        return true;
-    }
-    case QEvent::GraphicsSceneMouseMove: {
-        QGraphicsSceneMouseEvent *mouseEvent = dynamic_cast<QGraphicsSceneMouseEvent *>(event);
-        if (mouseEvent) {
-            lastPos = mouseEvent->pos();
-            return true;
-        }
-        break;
-    }
-    case QEvent::GraphicsSceneMouseRelease: {
-        if (firstPos.y() + SWIPE_THRESHOLD < lastPos.y()) {
-            showStatusIndicatorMenu();
-            lastPos = QPointF();
-            return true;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    //Event not handled here, so return false
-    return false;
 }
 
 void StatusArea::showStatusIndicatorMenu()

@@ -20,11 +20,12 @@
 #ifndef STATUSAREA_H
 #define STATUSAREA_H
 
+#include "statusindicatormenuwindow.h"
 #include "statusareamodel.h"
 
 #include <MButton>
 #include <QSharedPointer>
-class StatusIndicatorMenuWindow;
+
 class StatusAreaWindow;
 
 /*!
@@ -49,13 +50,9 @@ public:
      */
     virtual ~StatusArea();
 
-    //! \reimp
-    bool sceneEvent(QEvent *event);
-    //! \reimp_end
-
 private:
-    //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
-    QPointF firstPos, lastPos;
+    //! The name of the status indicator menu service
+    static const QString STATUS_INDICATOR_MENU_SERVICE_NAME;
     //! Status indicator menu
     QSharedPointer<StatusIndicatorMenuWindow> statusIndicatorMenuWindow;
 

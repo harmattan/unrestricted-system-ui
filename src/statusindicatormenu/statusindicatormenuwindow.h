@@ -22,8 +22,8 @@
 
 #include <MWindow>
 
-class MApplicationPage;
-class MEscapeButtonPanel;
+#include <MEscapeButtonPanel>
+#include <MApplicationPage>
 
 /*!
  * Main window for the M Status Indicator Menu.
