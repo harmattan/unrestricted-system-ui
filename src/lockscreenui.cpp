@@ -19,14 +19,13 @@
 **
 ****************************************************************************/
 #include "lockscreenui.h"
-#include "unlocksliderwidget/unlockslider.h"
+#include "unlockwidgets.h"
 #include "sysuid.h"
 
 #include <QTime>
+#include <QDrag>
+#include <QMimeData>
 #include <QDateTime>
-#include <QDragEnterEvent>
-#include <QDragMoveEvent>
-#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsLinearLayout>
 
 #include <MLabel>
@@ -45,6 +44,7 @@
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
 #define DEBUG
+#define WARNING
 #include "debug.h"
 
 LockScreenUI::LockScreenUI () :
@@ -66,71 +66,6 @@ LockScreenUI::~LockScreenUI ()
     SYS_DEBUG ("");
 }
 
-class MyImage : public MWidget
-{
-public:
-    MyImage (const char *img) : MWidget ()
-    {
-        m_img = new MImageWidget (img);
-        QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-        layout->addItem (m_img);
-        setLayout (layout);
-    }
-
-    virtual void dragEnterEvent (QDragEnterEvent *event)
-    {
-        SYS_DEBUG("");
-
-        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
-        {
-            SYS_DEBUG ("enter drag");
-            event->setDropAction (Qt::MoveAction);
-            event->accept ();
-        }
-        else
-            event->ignore ();
-    }
-
-    virtual void dragMoveEvent (QDragMoveEvent *event)
-    {
-        SYS_DEBUG("");
-
-        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
-        {
-            SYS_DEBUG ("dragmove");
-            event->setDropAction (Qt::MoveAction);
-            event->accept ();
-        }
-        else
-            event->ignore ();
-
-    }
-
-    virtual void dropEvent (QDropEvent *event)
-    {
-        SYS_DEBUG("");
-
-        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
-        {
-            SYS_DEBUG ("Dropped");
-            // TODO: Do the unlocking here...
-            event->setDropAction (Qt::MoveAction);
-            event->accept ();
-        }
-        else
-            event->ignore ();
-    }
-
-    virtual void mousePressEvent (QGraphicsSceneMouseEvent *event)
-    {
-        SYS_DEBUG("");
-
-        SYS_DEBUG ("press (%f.%f)", event->pos().x(), event->pos().y ());
-    }
-private:
-    MImageWidget  *m_img;
-};
-
 void
 LockScreenUI::createContent ()
 {
@@ -141,7 +76,6 @@ LockScreenUI::createContent ()
         SYS_WARNING (" this function called more then once!");
         return;
     }
-
     m_initialized = true;
 
     MApplicationPage::createContent ();
@@ -175,8 +109,8 @@ LockScreenUI::createContent ()
      *
      * icon-m-common-locked and icon-m-common-unlocked?
      */
-    m_ImgSource = new MyImage ("icon-m-common-locked");
-    m_ImgTarget = new MyImage ("icon-m-common-unlocked");
+    m_ImgSource = new UnlockIcon;
+    m_ImgTarget = new UnlockArea;
 
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
     datetimeBox->addItem (m_TimeLabel);
@@ -190,27 +124,14 @@ LockScreenUI::createContent ()
     lockliftBox->addItem (m_ImgSource);
     lockliftBox->setAlignment (m_ImgSource, Qt::AlignRight | Qt::AlignVCenter);
 
-    /*
-     * The m_slider: it is deprecated, but we use it until we have something else
-     */
-    m_slider = new UnlockSlider;
-    m_slider->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
-                                        QSizePolicy::Expanding));
-    m_slider->setVisible (true);
-    m_slider->setObjectName ("unlockslider");
-    m_slider->setMinimumWidth (450);
-    m_slider->setMaximumWidth (450);
-    m_slider->setMaximumHeight (80);
-
     policy->addItem (lockliftBox);
-    policy->addItem (m_slider, Qt::AlignCenter);
     policy->addItem (m_ImgTarget);
 
     updateDateTime ();
 
     centralWidget ()->setLayout (layout);
 
-    connect (m_slider, SIGNAL (unlocked ()),
+    connect (m_ImgTarget, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
 }
 
@@ -220,14 +141,13 @@ LockScreenUI::sliderUnlocked ()
     SYS_DEBUG ("");
 
     disappear ();
-    m_slider->reset ();
     emit unlocked ();
 }
 
 void
 LockScreenUI::updateDateTime ()
 {
-    SYS_DEBUG ("");
+//    SYS_DEBUG ("");
 
     if (isContentCreated () == false)
         return;

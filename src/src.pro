@@ -40,9 +40,10 @@ HEADERS +=                              \
     usbmodes.h                          \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
-    usbui.h \
-    contextframeworkcontext.h \
-    applicationcontext.h \
+    usbui.h                             \
+    contextframeworkcontext.h           \
+    applicationcontext.h                \
+    unlockwidgets.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -62,10 +63,10 @@ SOURCES +=                              \
     usbmodes.cpp                        \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
-    usbui.cpp \
-    contextframeworkcontext.cpp
+    usbui.cpp                           \
+    contextframeworkcontext.cpp         \
+    unlockwidgets.cpp
 
-include(unlocksliderwidget/unlocksliderwidget.pri)
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
@@ -74,7 +75,7 @@ PKGCONFIG += contextsubscriber-1.0 \
                           maemosec
 
 
-# TODO: remove these when ke-recv going to be integrated:
+# TODO: remove these when usb_moded got integrated:
 usb_scripts.files += pcsuite-enable.sh
 usb_scripts.path = $$(DEBIAN_DESTDIR)/usr/bin
 
