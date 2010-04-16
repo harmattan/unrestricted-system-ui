@@ -33,14 +33,14 @@
  */
 
 #include "profile.h"
-#include <DuiStatusIndicatorMenuPluginInterface>
+#include <MStatusIndicatorMenuPluginInterface>
 #include <MButton>
 #include <MButtonGroup>
 #include <MContainer>
 #include <MApplicationPage>
 #include <QGraphicsLinearLayout>
 
-Profile::Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
+Profile::Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
     MWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
     profileModificationPage(new MApplicationPage)

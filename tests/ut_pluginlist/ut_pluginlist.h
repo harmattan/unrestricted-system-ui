@@ -37,20 +37,20 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <DuiStatusIndicatorMenuPluginInterface>
+#include <MStatusIndicatorMenuPluginInterface>
 
 class MApplication;
 class MApplicationWindow;
 class MApplicationPage;
 class PluginList;
 
-class TestPlugin : public QObject, DuiStatusIndicatorMenuPluginInterface
+class TestPlugin : public QObject, MStatusIndicatorMenuPluginInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
 
 public:
-    virtual MWidget *constructWidget(DuiStatusIndicatorMenuInterface &);
+    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &);
 };
 
 class Ut_PluginList : public QObject

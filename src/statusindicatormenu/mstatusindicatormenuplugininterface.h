@@ -25,12 +25,12 @@
 class MWidget;
 
 /**
- * The DuiStatusIndicatorMenuInterface interface represents a status indicator
+ * The MStatusIndicatorMenuInterface interface represents a status indicator
  * menu application, its window and main page. The interface can be used to
  * show the main status indicator menu application page or to hide the status
  * indicator menu window.
  */
-class DuiStatusIndicatorMenuInterface
+class MStatusIndicatorMenuInterface
 {
 public:
     /*!
@@ -45,7 +45,7 @@ public:
 };
 
 /**
- * DuiStatusIndicatorMenuPluginInterface is the base class for status indicator
+ * MStatusIndicatorMenuPluginInterface is the base class for status indicator
  * menu plugin classes.
  *
  * Plugin developers need to implement this interface in their plugin binary
@@ -53,13 +53,13 @@ public:
  * an inventory of available plugins and instantiate them using this interface
  * when needed.
  */
-class DuiStatusIndicatorMenuPluginInterface
+class MStatusIndicatorMenuPluginInterface
 {
 public:
     /*!
      * Destroys the plugin.
      */
-    virtual ~DuiStatusIndicatorMenuPluginInterface() {}
+    virtual ~MStatusIndicatorMenuPluginInterface() {}
 
     /*!
      * This method is called to construct a new MWidget instance.
@@ -69,9 +69,9 @@ public:
      * \param statusIndicatorMenu an interface for controlling the status indicator menu
      * \return New MWidget class instance that visualizes this plugin.
      */
-    virtual MWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu) = 0;
+    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu) = 0;
 };
 
-Q_DECLARE_INTERFACE(DuiStatusIndicatorMenuPluginInterface, "com.nokia.dui.core.StatusIndicatorMenuPluginInterface/1.0")
+Q_DECLARE_INTERFACE(MStatusIndicatorMenuPluginInterface, "com.meego.core.MStatusIndicatorMenuPluginInterface/1.0")
 
 #endif // MSTATUSINDICATORMENUPLUGININTERFACE_H

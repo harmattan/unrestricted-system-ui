@@ -1,11 +1,11 @@
-/*! \page statusindicatormenu Duistatusindicatormenu
+/*! \page statusindicatormenu Status Indicator Menu
 
-This page documents various aspects about the DUI Status Indicator Menu.
+This page documents various aspects about the Status Indicator Menu.
 
 The status indicator menu loads a predefined set of plugins as described in
 Direct UI – Status Indicator System UI Specification (H00405111-EN). The
 plugins are displayed on top of each other and loaded from
-/usr/lib/duistatusindicatormenu/plugins in the following order:
+/usr/lib/meegotouch/statusindicatormenuplugins in the following order:
 
 <table>
 <tr>
@@ -59,40 +59,40 @@ Each plugin is written as a shared library that contains a class that
 is exported as a Qt plugin as follows:
 
 <pre>
-class MyPluginClass : public QObject, public DuiStatusIndicatorMenuPluginInterface
+class MyPluginClass : public QObject, public MStatusIndicatorMenuPluginInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
 
 public:
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
+    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu);
 };
 
 Q_EXPORT_PLUGIN2(mypluginname, MyPluginClass)
 
-DuiWidget* MyPluginClass::constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu)
+MWidget* MyPluginClass::constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu)
 {
     return new MyPluginWidget(statusIndicatorMenu);
 }
 </pre>
 
-The class should implement DuiStatusIndicatorMenuPluginInterface which only
-contains one function, constructWidget(DuiStatusIndicatorMenuInterface &),
-which should return a pointer to a DuiWidget for the plugin. This DuiWidget
+The class should implement MStatusIndicatorMenuPluginInterface which only
+contains one function, constructWidget(MStatusIndicatorMenuInterface &),
+which should return a pointer to a MWidget for the plugin. This MWidget
 is then inserted into the status indicator menu layout by the status indicator
 menu. The parameter to constructWidget() is an interface to the status
 indicator menu which allows the plugin to show the main application page of
 the status indicator menu and to hide the status indicator menu. 
 
-To display a subpage the plugin widget should create a new DuiApplicationPage
+To display a subpage the plugin widget should create a new MApplicationPage
 and make it appear() when necessary. The plugin widget should then call the
-given DuiStatusIndicatorMenuInterface's showStatusIndicatorMenu() to return
+given MStatusIndicatorMenuInterface's showStatusIndicatorMenu() to return
 back to the status indicator menu main view.
 
 Plugins register their views using the DUI view registration macros.
-The plugins load their CSS files (if any) using DuiTheme::loadCSS().
+The plugins load their CSS files (if any) using MTheme::loadCSS().
 The preferred location for the CSS files is
-/usr/share/duistatusindicatormenu/themes/style and the suggested CSS
+/usr/share/themes/base/meegotouch/system-ui/style and the suggested CSS
 file name is the same as the shared library name without the lib prefix and
 the .so postfix. 
 
@@ -101,16 +101,16 @@ Here's an example implementation of the profile plugin.
 profileplugin.h
 
 <pre>
-#include <DuiStatusIndicatorMenuPluginInterface>
+#include <MStatusIndicatorMenuPluginInterface>
 #include <QObject>
 
-class ProfilePlugin : public QObject, public DuiStatusIndicatorMenuPluginInterface
+class ProfilePlugin : public QObject, public MStatusIndicatorMenuPluginInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
 
 public:
-    virtual DuiWidget *constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu);
+    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu);
 };
 </pre>
 
@@ -122,7 +122,7 @@ profileplugin.cpp
 
 Q_EXPORT_PLUGIN2(profile, ProfilePlugin)
 
-DuiWidget* ProfilePlugin::constructWidget(DuiStatusIndicatorMenuInterface &statusIndicatorMenu)
+MWidget* ProfilePlugin::constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu)
 {
     return new Profile(statusIndicatorMenu);
 }
@@ -131,32 +131,32 @@ DuiWidget* ProfilePlugin::constructWidget(DuiStatusIndicatorMenuInterface &statu
 profile.h
 
 <pre>
-#include <DuiWidget>
+#include <MWidget>
 
-class DuiStatusIndicatorMenuInterface;
-class DuiApplicationPage;
-class DuiButton;
+class MStatusIndicatorMenuInterface;
+class MApplicationPage;
+class MButton;
 
 // The Profile widget makes it possible to select the currently active profile.
-class Profile : public DuiWidget
+class Profile : public MWidget
 {
     Q_OBJECT
 
 public:
-    Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
+    Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
     virtual ~Profile();
 
 private slots:
     // A slot for receiving information about button clicks.
     void buttonClicked();
     // A slot for receiving information about button clicks.
-    void buttonClicked(DuiButton *button);
+    void buttonClicked(MButton *button);
 
 private:
     // Interface for controlling the status indicator menu
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
+    MStatusIndicatorMenuInterface &statusIndicatorMenu;
     // Application page for the profile modification
-    DuiApplicationPage *profileModificationPage;
+    MApplicationPage *profileModificationPage;
 };
 </pre>
 
@@ -164,25 +164,25 @@ profile.cpp
 
 <pre>
 #include "profile.h"
-#include <DuiStatusIndicatorMenuPluginInterface>
-#include <DuiButton>
-#include <DuiButtonGroup>
-#include <DuiContainer>
-#include <DuiApplicationPage>
+#include <MStatusIndicatorMenuPluginInterface>
+#include <MButton>
+#include <MButtonGroup>
+#include <MContainer>
+#include <MApplicationPage>
 #include <QGraphicsLinearLayout>
 
 Profile::Profile(QGraphicsItem *parent) :
-    DuiWidget(parent),
+    MWidget(parent),
     statusIndicatorMenu(statusIndicatorMenu),
-    profileModificationPage(new DuiApplicationPage)
+    profileModificationPage(new MApplicationPage)
 {
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
     setLayout(mainLayout);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     // Create a container for the profiles
-    DuiContainer *container = new DuiContainer;
-    DuiWidget *widget = new DuiWidget;
+    MContainer *container = new MContainer;
+    MWidget *widget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
     widget->setLayout(layout);
@@ -192,32 +192,32 @@ Profile::Profile(QGraphicsItem *parent) :
     mainLayout->addItem(container);
 
     // Create a button group for the profiles
-    DuiButtonGroup *buttonGroup = new DuiButtonGroup(widget);
-    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(DuiButton *)), this, SLOT(buttonClicked(DuiButton *)));
+    MButtonGroup *buttonGroup = new MButtonGroup(widget);
+    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(MButton *)), this, SLOT(buttonClicked(MButton *)));
 
     // Place the buttons in the button group and in the layout
-    DuiButton *button;
-    button = new DuiButton("Ringing");
+    MButton *button;
+    button = new MButton("Ringing");
     button->setCheckable(true);
     button->setChecked(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Silent");
+    button = new MButton("Silent");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Beep");
+    button = new MButton("Beep");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
-    button = new DuiButton("Loud");
+    button = new MButton("Loud");
     button->setCheckable(true);
     layout->addItem(button);
     buttonGroup->addButton(button);
 
     // Set up the profile modification page
     profileModificationPage->setTitle("Profile");
-    profileModificationPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
+    profileModificationPage->setEscapeButtonMode(MEscapeButtonPanelModel::BackMode);
     connect(profileModificationPage, SIGNAL(backButtonClicked()), this, SLOT(buttonClicked()));
 }
 
@@ -236,7 +236,7 @@ void Profile::buttonClicked()
     statusIndicatorMenu.showStatusIndicatorMenu();
 }
 
-void Profile::buttonClicked(DuiButton *)
+void Profile::buttonClicked(MButton *)
 {
     statusIndicatorMenu.hideStatusIndicatorMenu();
 }

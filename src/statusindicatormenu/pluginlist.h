@@ -21,7 +21,7 @@
 #define PLUGINLIST_H_
 
 #include <MWidget>
-#include "duistatusindicatormenuplugininterface.h"
+#include "mstatusindicatormenuplugininterface.h"
 
 class MWindow;
 class MApplicationPage;
@@ -32,7 +32,7 @@ class NotificationArea;
  * The plugin list displays a list of plugins instantiated from shared
  * libraries.
  */
-class PluginList : public MWidget, public DuiStatusIndicatorMenuInterface {
+class PluginList : public MWidget, public MStatusIndicatorMenuInterface {
     Q_OBJECT
 
 public:

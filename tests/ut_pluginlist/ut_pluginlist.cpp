@@ -64,7 +64,7 @@ QObject *QPluginLoader::instance()
     return new TestPlugin;
 }
 
-MWidget *TestPlugin::constructWidget(DuiStatusIndicatorMenuInterface &)
+MWidget *TestPlugin::constructWidget(MStatusIndicatorMenuInterface &)
 {
     return new MWidget;
 }

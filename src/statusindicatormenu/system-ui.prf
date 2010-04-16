@@ -1,0 +1,8 @@
+######################################################################
+# MFeature
+######################################################################
+!contains(DEFINES, BUILD_SYSTEMUI) {
+    SYSTEMUI_INC_DIR = /usr/include/system-ui
+
+    INCLUDEPATH += $${SYSTEMUI_INC_DIR}
+}

@@ -37,7 +37,7 @@
 
 #include <MWidget>
 
-class DuiStatusIndicatorMenuInterface;
+class MStatusIndicatorMenuInterface;
 class MApplicationPage;
 class MButton;
 
@@ -50,7 +50,7 @@ class Profile : public MWidget
     Q_OBJECT
 
 public:
-    Profile(DuiStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
+    Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
     virtual ~Profile();
 
 private slots:
@@ -71,7 +71,7 @@ private slots:
 
 private:
     //! Interface for controlling the status indicator menu
-    DuiStatusIndicatorMenuInterface &statusIndicatorMenu;
+    MStatusIndicatorMenuInterface &statusIndicatorMenu;
 
     //! Application page for the profile modification
     MApplicationPage *profileModificationPage;

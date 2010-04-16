@@ -1,8 +1,0 @@
-######################################################################
-# DuiFeature
-######################################################################
-!contains(DEFINES, BUILD_DUISTATUSINDICATORMENU) {
-    DUISTATUSINDICATORMENU_INC_DIR = /usr/include/duistatusindicatormenu
-
-    INCLUDEPATH += $${DUISTATUSINDICATORMENU_INC_DIR}
-}

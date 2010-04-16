@@ -19,7 +19,7 @@
 
 #include "pluginlist.h"
 #include <MButton>
-#include "duistatusindicatormenuplugininterface.h"
+#include "mstatusindicatormenuplugininterface.h"
 #include <MWindow>
 #include <MApplicationPage>
 #include <QPluginLoader>
@@ -101,7 +101,7 @@ PluginList::addPlugin(
 
     QObject* object = loader.instance();
 
-    DuiStatusIndicatorMenuPluginInterface* plugin = qobject_cast<DuiStatusIndicatorMenuPluginInterface*>(object);
+    MStatusIndicatorMenuPluginInterface* plugin = qobject_cast<MStatusIndicatorMenuPluginInterface*>(object);
     if (plugin != NULL) {
         MWidget *widget = plugin->constructWidget(*this);
         if (widget != NULL) {

@@ -23,9 +23,9 @@ STYLE_HEADERS += statusindicatormenu/notificationareastyle.h
 
 DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
 
-headers.path = /usr/include/duistatusindicatormenu
-headers.files = statusindicatormenu/duistatusindicatormenuplugininterface.h statusindicatormenu/DuiStatusIndicatorMenuPluginInterface
+headers.path = /usr/include/system-ui
+headers.files = statusindicatormenu/mstatusindicatormenuplugininterface.h statusindicatormenu/MStatusIndicatorMenuPluginInterface
 prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
-prf.files = statusindicatormenu/duistatusindicatormenu.prf
+prf.files = statusindicatormenu/system-ui.prf
 
 INSTALLS += headers prf
