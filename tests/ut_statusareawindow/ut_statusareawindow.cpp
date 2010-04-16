@@ -13,7 +13,7 @@
 ** modify it under the terms of the GNU Lesser General Public
 ** License version 2.1 as published by the Free Software Foundation
 ** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
+** of this file .
 **
 ****************************************************************************/
 #include "ut_statusareawindow.h"
@@ -27,11 +27,11 @@ bool Ut_StatusAreaWindow_Scene_Render_Called = false;
 QRectF rectReceived(0,0,0,0);
 
 const MStyle* MTheme::style(const char *styleClassName,
-                             const QString &objectName,
-                             const QString &mode,
-                             const QString &type,
-                             M::Orientation orientation,
-                             const MWidgetController *parent)
+                            const QString &objectName,
+                            const QString &mode,
+                            const QString &type,
+                            M::Orientation orientation,
+                            const MWidgetController *parent)
 {
     Q_UNUSED(styleClassName);
     Q_UNUSED(objectName);
@@ -106,6 +106,56 @@ void Ut_StatusAreaWindow::testSceneChanged()
     QRectF unitedRect = rect3.united(rect4) ;
     QRectF expectedRect = unitedRect.intersected(QRectF(0,0,30,80));
     QCOMPARE(rectReceived,expectedRect);
+}
+
+// Render test helper class definitions
+void RenderTestsHelper::setupRect()
+{
+    rectList = new QList<QRectF>;
+    QRectF rect1(0,0,30,80);
+    rectList->append(rect1);
+}
+
+QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaWindow* testClass, StatusAreaWindow* statusAreaWindow)
+{
+    setupRect();
+    connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+    connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    return rectList;
+}
+
+RenderTestsHelper::~RenderTestsHelper()
+{
+    delete rectList;
+}
+
+// end RenderTestsHelper
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOn()
+{
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    emit displayStateChanged(Maemo::QmDisplayState::On);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+}
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOff()
+{
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    emit displayStateChanged(Maemo::QmDisplayState::Off);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+}
+
+void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateDimmed()
+{
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaWindow)

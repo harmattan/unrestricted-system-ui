@@ -22,6 +22,7 @@
 
 #include <MWindow>
 #include <MNamespace>
+#include "qmdisplaystate.h"
 
 class QGraphicsScene;
 class StatusArea;
@@ -54,6 +55,12 @@ private slots:
     */
     virtual void sceneChanged(const QList<QRectF> &region);
 
+    /*!
+     * \brief A slot for setting if the scene renders to pixmap or not.
+     * \param Maemo::QmDisplayState::DisplayState. When Maemo::QmDisplayState::Off / Maemo::QmDisplayState::Dimmed the scene does not render. When Maemo::QmDisplayState::On scene renders to pixmap
+     */
+    void setSceneRender(Maemo::QmDisplayState::DisplayState state);
+
 signals:
     /*!
      * Signal that status indicator menu is visible
@@ -79,6 +86,11 @@ private:
     //! Status Area dimensions.
     uint statusAreaHeight;
     uint statusAreaWidth;
+ 
+    //! Keep track of device display state
+    Maemo::QmDisplayState* displayState;
+    //! Keep track whether scene should render or not
+    bool renderScene;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaWindow;
