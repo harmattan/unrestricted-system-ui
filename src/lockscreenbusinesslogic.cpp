@@ -39,9 +39,9 @@
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
-    QObject (parent), 
-    display ( new QmDisplayState(this)),
-    locks (new QmLocks(this)),
+    QObject (parent),
+    display ( new QmDisplayState (this)),
+    locks (new QmLocks (this)),
     lockUI (new LockScreenUI)
 {
     SYS_DEBUG ("");
@@ -50,13 +50,13 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
             this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect (lockUI, SIGNAL(unlocked()), 
-            this, SLOT(unlockScreen()));
-    connect (lockUI, SIGNAL(unlocked()), 
-            this, SIGNAL(unlockConfirmed()));
+    connect (lockUI, SIGNAL (unlocked ()),
+             this, SLOT (unlockScreen ()));
+    connect (lockUI, SIGNAL (unlocked ()),
+             this, SIGNAL (unlockConfirmed ()));
 
-    connect (&timer, SIGNAL(timeout()), 
-            lockUI, SLOT(updateDateTime()));
+    connect (&timer, SIGNAL (timeout ()),
+             lockUI, SLOT (updateDateTime ()));
 
     /*
      * Just to be sure: maybe the screen is already locked when this daemon
@@ -86,29 +86,23 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 }
 
 
-void 
+void
 LockScreenBusinessLogic::locksChanged (
-        Maemo::QmLocks::Lock  lock, 
+        Maemo::QmLocks::Lock  lock,
         Maemo::QmLocks::State state)
 {
-    if (lock == QmLocks::Device)
+    if (lock != QmLocks::TouchAndKeyboard)
         return;
 
     knownLock = state;
 
-    if (knownLock == QmLocks::Locked) {
-        SYS_DEBUG ("Locked");
-        toggleScreenLockUI (true);
-        mayStartTimer ();
-    } else {
-        SYS_DEBUG ("Unlocked");
-        toggleScreenLockUI (false);
-        stopTimer ();
-    }
+    SYS_DEBUG ("locked: %s", SYS_BOOL (knownLock == QmLocks::Locked));
+
+    toggleScreenLockUI (knownLock == QmLocks::Locked);
 }
 
 
-void 
+void
 LockScreenBusinessLogic::displayStateChanged (
         Maemo::QmDisplayState::DisplayState state)
 {
@@ -159,46 +153,50 @@ LockScreenBusinessLogic::displayStateChanged (
  * This function is called when the lock slider is moved by the user so the
  * screen should be unlocked.
  */
-void 
+void
 LockScreenBusinessLogic::unlockScreen ()
 {
     SYS_DEBUG ("");
     toggleScreenLockUI (false); //turn off the UI
 }
 
-void 
+void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        Sysuid::sysuid()->applicationWindow().show();
-        Sysuid::sysuid()->applicationWindow().raise();
+        mayStartTimer ();
+
+        Sysuid::sysuid ()->applicationWindow ().show ();
+        Sysuid::sysuid ()->applicationWindow ().raise ();
     } else {
+        stopTimer ();
+
         hidefromTaskBar ();
-        Sysuid::sysuid()->applicationWindow().hide();
+        Sysuid::sysuid ()->applicationWindow ().hide ();
     }
 }
 
-void 
+void
 LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("");
-    if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off) {
+    if (knownLock == QmLocks::Locked &&
+        knownDisplay != QmDisplayState::Off)
+    {
         // It's better to update the time straight away.
-        lockUI->updateDateTime();
+        lockUI->updateDateTime ();
 
-        QTime t(QTime::currentTime());
-        // TODO: some adjustments of time may be done
         timer.start (1000);
     }
 }
 
-void 
+void
 LockScreenBusinessLogic::stopTimer ()
 {
-    timer.stop();
+    timer.stop ();
 }
 
 void
@@ -220,7 +218,7 @@ LockScreenBusinessLogic::hidefromTaskBar ()
     e.xclient.window = Sysuid::sysuid()->applicationWindow().internalWinId();
     e.xclient.format = 32;
     e.xclient.data.l[0] = 1;
-    e.xclient.data.l[1] = skipTaskbarAtom; 
+    e.xclient.data.l[1] = skipTaskbarAtom;
     e.xclient.data.l[2] = 0;
     e.xclient.data.l[3] = 0;
     e.xclient.data.l[4] = 0;
