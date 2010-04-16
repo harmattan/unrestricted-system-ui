@@ -25,13 +25,13 @@
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class EventTypeStoreStub : public StubBase
-{
-public:
-    virtual void EventTypeStoreConstructor(const QString &eventTypesPath, uint maxStoredEventTypes);
-    virtual const QSettings *settingsForEventType(const QString &eventType) const;
-    virtual void loadSettings(const QString &eventType);
-    virtual void updateEventTypeFileList();
+class EventTypeStoreStub : public StubBase {
+  public:
+  virtual void EventTypeStoreConstructor(const QString &eventTypesPath, uint maxStoredEventTypes);
+  virtual const QSettings * settingsForEventType(const QString &eventType) const;
+  virtual void updateEventTypeFileList();
+  virtual void updateEventTypeFile(const QString &path);
+  virtual void loadSettings(const QString &eventType);
 };
 
 // 2. IMPLEMENT STUB
@@ -46,7 +46,7 @@ const QSettings *EventTypeStoreStub::settingsForEventType(const QString &eventTy
     QList<ParameterBase *> params;
     params.append(new Parameter<const QString & >(eventType));
     stubMethodEntered("settingsForEventType", params);
-    return stubReturnValue<const QSettings *>("settingsForEventType");
+    return stubReturnValue<QSettings *>("settingsForEventType");
 }
 
 void EventTypeStoreStub::loadSettings(const QString &eventType)
@@ -56,9 +56,15 @@ void EventTypeStoreStub::loadSettings(const QString &eventType)
     stubMethodEntered("loadSettings", params);
 }
 
-void EventTypeStoreStub::updateEventTypeFileList()
-{
-    stubMethodEntered("updateEventTypeFileList");
+
+void EventTypeStoreStub::updateEventTypeFileList() {
+  stubMethodEntered("updateEventTypeFileList");
+}
+
+void EventTypeStoreStub::updateEventTypeFile(const QString &path) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QString & >(path));
+  stubMethodEntered("updateEventTypeFile",params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -86,5 +92,9 @@ void EventTypeStore::updateEventTypeFileList()
 {
     gEventTypeStoreStub->updateEventTypeFileList();
 } 
+
+void EventTypeStore::updateEventTypeFile(const QString &path) {
+  gEventTypeStoreStub->updateEventTypeFile(path);
+}
 
 #endif

@@ -21,9 +21,9 @@
 #include "ut_widgetnotificationsink.h"
 #include "widgetnotificationsink.h"
 #include "../stubs/testnotificationparameters.h"
-#include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
 #include "notificationmanager_stub.h"
+#include "eventtypestore_stub.h"
 #include <QImageReader>
 #include <MApplication>
 #include "sysuid_stub.h"
@@ -73,26 +73,6 @@ QString TestWidgetNotificationSink::determineIconId(const NotificationParameters
 void TestWidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const Notification &notification)
 {
     WidgetNotificationSink::updateActions(infoBanner, notification.parameters());
-}
-
-//EventTypeStore stubs
-EventTypeStore::EventTypeStore(const QString &, const uint)
-{
-}
-
-const QSettings *EventTypeStore::settingsForEventType(QString const &eventType) const
-{
-    QSettings *settings = new QSettings;
-    if (eventType == "message-received") {
-        settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
-    } else if (eventType == "voicemail") {
-        settings->setValue(NotificationWidgetParameterFactory::userRemovableKey(), false);
-    }
-    return settings;
-}
-
-void EventTypeStore::updateEventTypeFileList()
-{
 }
 
 maemosec::storage::~storage()
@@ -237,6 +217,10 @@ void Ut_WidgetNotificationSink::cleanup()
 
 void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
 {
+    QSettings *settings = new QSettings;
+    settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
+    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", settings);
+
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter("icon0"));
@@ -245,6 +229,10 @@ void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
 
 void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
 {
+    QSettings *settings = new QSettings;
+    settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
+    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", settings);
+
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
     parameters.add(NotificationWidgetParameterFactory::createIconIdParameter(""));
@@ -396,6 +384,10 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableInPara
 
 void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableByEventType()
 {
+    QSettings settings;
+    settings.setValue(NotificationWidgetParameterFactory::userRemovableKey(), false);
+    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", &settings);
+
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "voicemail");
 

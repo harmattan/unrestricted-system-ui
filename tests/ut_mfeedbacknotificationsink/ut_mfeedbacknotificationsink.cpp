@@ -110,7 +110,7 @@ void Ut_MFeedbackNotificationSink::initTestCase()
     static char *app_name = (char *)"./ut_mfeedbacknotificationsink";
     app = new MApplication(argc, &app_name);
     eventTypeSettings = new QSettings;
-    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", const_cast<const QSettings *>(eventTypeSettings));
+    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", eventTypeSettings);
 }
 
 void Ut_MFeedbackNotificationSink::cleanupTestCase()

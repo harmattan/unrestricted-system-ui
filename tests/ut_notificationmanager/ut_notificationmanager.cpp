@@ -152,6 +152,9 @@ void EventTypeStore::loadSettings(const QString &)
 {
 }
 
+void EventTypeStore::updateEventTypeFile(const QString &)
+{
+}
 // Helper function for loading the last given user id and group information from gStateBuffer
 // and repopulating gPersistentGroupSet and gGroupList accordingly
 void loadStateData()

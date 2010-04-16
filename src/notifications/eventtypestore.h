@@ -66,7 +66,21 @@ private slots:
      */
     void updateEventTypeFileList();
 
+    /*!
+     * Updates the event type representing the given file
+     *
+     * Only updates the event type if file is modified. Removing an event type file is handled
+     * by updateEventTypeFileList() slot
+     */
+    void updateEventTypeFile(const QString &path);
+
 signals:
+    /*!
+     * A signal sent whenever an event type has been modified
+     * \param eventType the event type that was modified
+     */
+    void eventTypeModified(const QString &eventType);
+
     /*!
      * A signal sent whenever an event type has been uninstalled
      * \param eventType the event type that was removed

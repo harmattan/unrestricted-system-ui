@@ -90,6 +90,9 @@ protected:
      */
     void updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters);
 
+    //! MInfoBanner property to store the user removability into
+    static const char *USER_REMOVABLE_PROPERTY;
+
 private:
     /*!
      * Determines icon id of a notification based on the given event type.
@@ -110,8 +113,6 @@ private:
     static const char *NOTIFICATION_ID_PROPERTY;
     //! MInfoBanner property to store the group ID into
     static const char *GROUP_ID_PROPERTY;
-    //! MInfoBanner property to store the user removability into
-    static const char *USER_REMOVABLE_PROPERTY;
 
 private slots:
     /*!

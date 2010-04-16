@@ -199,6 +199,8 @@ void NotificationManager::initializeEventTypeStore()
 
     connect(notificationEventTypeStore.data(), SIGNAL(eventTypeUninstalled(QString)),
             this, SLOT(removeNotificationsAndGroupsWithEventType(QString)));
+    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeModified(QString)),
+            this, SLOT(updateNotificationsWithEventType(QString)));
 }
 
 void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType)
@@ -214,6 +216,16 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
         if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
             removeGroup(0, group.groupId());
+        }
+    }
+}
+
+void NotificationManager::updateNotificationsWithEventType(const QString &eventType)
+{
+    foreach(const Notification &notification, notifications) {
+        if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
+           toString() == eventType) {
+            updateNotification(notification.userId(), notification.notificationId(), notification.parameters());
         }
     }
 }

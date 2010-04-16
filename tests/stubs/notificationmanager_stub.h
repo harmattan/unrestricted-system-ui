@@ -43,8 +43,10 @@ class NotificationManagerStub : public StubBase {
   virtual bool removeNotificationsInGroup(uint groupId);
   virtual const EventTypeStore & eventTypeStore() const;
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
+  virtual void updateNotificationsWithEventType(const QString &eventType);
   virtual void relayNextNotification();
   virtual bool determinePersistence(const NotificationParameters &parameters);
+  virtual Notification::NotificationType determineType(const NotificationParameters &parameters);
   virtual void submitNotification(const Notification &notification);
   virtual int findNotificationFromWaitQueue(uint notificationId);
   virtual uint nextAvailableNotificationID();
@@ -161,6 +163,12 @@ void NotificationManagerStub::removeNotificationsAndGroupsWithEventType(const QS
   stubMethodEntered("removeNotificationsAndGroupsWithEventType",params);
 }
 
+void NotificationManagerStub::updateNotificationsWithEventType(const QString &eventType) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QString & >(eventType));
+  stubMethodEntered("updateNotificationsWithEventType",params);
+}
+
 void NotificationManagerStub::relayNextNotification() {
   stubMethodEntered("relayNextNotification");
 }
@@ -170,6 +178,13 @@ bool NotificationManagerStub::determinePersistence(const NotificationParameters 
   params.append( new Parameter<const NotificationParameters & >(parameters));
   stubMethodEntered("determinePersistence",params);
   return stubReturnValue<bool>("determinePersistence");
+}
+
+Notification::NotificationType NotificationManagerStub::determineType(const NotificationParameters &parameters) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const NotificationParameters & >(parameters));
+  stubMethodEntered("determineType",params);
+  return stubReturnValue<Notification::NotificationType>("determineType");
 }
 
 void NotificationManagerStub::submitNotification(const Notification &notification) {
@@ -288,12 +303,20 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
   gNotificationManagerStub->removeNotificationsAndGroupsWithEventType(eventType);
 }
 
+void NotificationManager::updateNotificationsWithEventType(const QString &eventType) {
+  gNotificationManagerStub->updateNotificationsWithEventType(eventType);
+}
+
 void NotificationManager::relayNextNotification() {
   gNotificationManagerStub->relayNextNotification();
 }
 
 bool NotificationManager::determinePersistence(const NotificationParameters &parameters) {
   return gNotificationManagerStub->determinePersistence(parameters);
+}
+
+Notification::NotificationType NotificationManager::determineType(const NotificationParameters &parameters) {
+  return gNotificationManagerStub->determineType(parameters);
 }
 
 void NotificationManager::submitNotification(const Notification &notification) {

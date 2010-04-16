@@ -35,6 +35,7 @@ EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEven
     // Watch for changes in event type files
     eventTypePathWatcher.addPath(this->eventTypesPath);
     connect(&eventTypePathWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(updateEventTypeFileList()));
+    connect(&eventTypePathWatcher, SIGNAL(fileChanged(QString)), this, SLOT(updateEventTypeFile(QString)));
     updateEventTypeFileList();
 }
 
@@ -50,11 +51,31 @@ void EventTypeStore::updateEventTypeFileList()
 
         foreach(const QString &removedEventType, removedFiles) {
             QString eventType = QFileInfo(removedEventType).baseName();
+            QString eventFilePath = eventTypesPath + removedEventType;
+            eventTypePathWatcher.removePath(eventFilePath);
             eventTypesMap.remove(eventType);
             emit eventTypeUninstalled(eventType);
         }
 
         eventTypeFiles = files;
+
+        // add event type files to watcher
+        foreach(QString file, eventTypeFiles){
+            QString eventTypeFilePath = eventTypesPath + file;
+            if (!eventTypePathWatcher.files().contains(eventTypeFilePath)) {
+                eventTypePathWatcher.addPath(eventTypeFilePath);
+            }
+        }
+    }
+}
+
+void EventTypeStore::updateEventTypeFile(const QString &path)
+{
+    QFileInfo fileInfo(path);
+    if (fileInfo.exists()) {
+       QString eventType = fileInfo.baseName();
+       loadSettings(eventType);
+       emit eventTypeModified(eventType);
     }
 }
 

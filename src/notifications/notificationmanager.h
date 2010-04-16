@@ -119,6 +119,16 @@ public slots:
      */
     void removeNotificationsAndGroupsWithEventType(const QString &eventType);
 
+    /*!
+     * \brief Update event type data of all notifications with the specified event type
+     *
+     * Sends a notificationUpdated(Notification &) signal for all notifications of specified type
+     * so that sinks can update the event type data from the event type store
+     *
+     * \param eventType the event type of the notifications to update
+     */
+    void updateNotificationsWithEventType(const QString &eventType);
+
 signals:
     /*!
      * A signal for notifying that the contents of a notification
