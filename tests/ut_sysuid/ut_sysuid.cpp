@@ -30,7 +30,7 @@
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "statusareawindow_stub.h"
-#include "unlockslider_stub.h"
+#include "unlockwidgets_stub.h"
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 

@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_sysuid
-INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea $$SRCDIR/unlocksliderwidget
+INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea
 INCLUDEPATH += /usr/include/contextsubscriber
 INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
@@ -62,7 +62,7 @@ HEADERS += \
     $$SRCDIR/notifications/mcompositornotificationsink.h \
     $$SRCDIR/notifications/mfeedbacknotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
-    $$SRCDIR/unlocksliderwidget/unlockslider.h \
+    $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/statusarea/statusareawindow.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
@@ -81,6 +81,6 @@ HEADERS += \
     $$STUBSDIR/eventtypestore_stub.h \
     $$STUBSDIR/notificationmanager_stub.h \
     $$STUBSDIR/statusareawindow_stub.h \
-    $$STUBSDIR/unlockslider_stub.h \
+    $$STUBSDIR/unlockwidgets_stub.h
 
 include(../common_bot.pri)

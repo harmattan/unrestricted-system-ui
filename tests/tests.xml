@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <testdefinition version="0.1">
   <suite name="system-ui-tests"> 
-    <set name="unlockslider" description="API tests">
+    <set name="system-ui" description="API tests">
       <case name="ut_clock" type="Functional" description="Test clock" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_clock</step>
       </case>
@@ -67,11 +67,6 @@
       </case>
       <case name="ut_widgetnotificationsink" type="Functional" description="Test widget notification sink" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_widgetnotificationsink</step>
-      </case>
-
-
-      <case name="ut_unlockslider" type="Functional" description="Test the unlock slider API" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockslider</step>
       </case>
       <case name="ut_lockscreenui" type="Functional" description="Test the unlock slider API" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lockscreenui</step>
