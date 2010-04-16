@@ -51,10 +51,11 @@ private:
     MLayout* createWidgets ();
 
 private:
-    MLabel *timeLabel; // qtn_scrlock_current_time
-    MLabel *dateLabel; // qtn_scrlock_current_daydate
-
-    UnlockSlider *slider;
+    MLabel          *m_TimeLabel;
+    MLabel          *m_DateLabel;
+    MImageWidget    *m_ImgSource;
+    MImageWidget    *m_ImgTarget;
+    UnlockSlider    *slider;
 };
 
-#endif // LOCKSCREENUI_H
+#endif

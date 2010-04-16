@@ -606,8 +606,14 @@ BatteryBusinessLogic::PSMThresholdValue()
 void 
 BatteryBusinessLogic::batteryStatus ()
 {
-    SYS_DEBUG ("");
-    switch (m_Battery->getState()) {
+    QmBattery::State state;
+
+    SYS_DEBUG ("What is the state now???!");
+
+    state = m_Battery->getState();
+    SYS_DEBUG ("*** state = %d", (int) state);
+
+    switch (state) {
         case QmBattery::StateCharging:
             emit batteryCharging (animationRate(m_Battery->getChargerType()));
             break;

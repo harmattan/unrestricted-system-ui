@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,13 +18,12 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "lockscreenui.h"
 #include "unlocksliderwidget/unlockslider.h"
 #include "sysuid.h"
 
 #include <QDebug>
+#include <QGraphicsLinearLayout>
 
 #include <MLabel>
 #include <MImageWidget>
@@ -30,6 +31,7 @@
 #include <MLayout>
 #include <MGridLayoutPolicy>
 #include <MSceneManager>
+#include <MLinearLayoutPolicy>
 #include <MApplicationWindow>
 #include <MTheme>
 #include <MLocale>
@@ -44,8 +46,8 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #include "debug.h"
 
 LockScreenUI::LockScreenUI () :
-        timeLabel (0),
-        dateLabel (0)
+        m_TimeLabel (0),
+        m_DateLabel (0)
 {
     SYS_DEBUG ("");
 
@@ -125,41 +127,68 @@ MLayout *
 LockScreenUI::createWidgets ()
 {
     SYS_DEBUG ("");
-    MLayout* layout = new MLayout();
 
-    MGridLayoutPolicy* policy = new MGridLayoutPolicy(layout);
+    QGraphicsLinearLayout *datetimeBox;
+    QGraphicsLinearLayout *lockliftBox;
+    MLinearLayoutPolicy   *policy;
+    MLayout               *layout;
+    
+    /*
+     * The main layout and its policy
+     */
+    layout = new MLayout;
+    policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
 
-    policy->setColumnAlignment (0, Qt::AlignCenter);
+    /*
+     * The label that shows the hour and minute
+     */
+    m_TimeLabel = new MLabel;
+    m_TimeLabel->setObjectName ("lockscreenm_TimeLabel");
 
-    QGraphicsWidget* spacert = new QGraphicsWidget;
-    spacert->setSizePolicy (
-            QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
+    /*
+     * The label that shows the date
+     */
+    m_DateLabel = new MLabel;
+    m_DateLabel->setObjectName ("lockscreenm_DateLabel");
+    
+    /*
+     * The two images, one that we start the unlocking (source) and one that we
+     * have to drop the source (target) to unlock the screen.
+     *
+     * icon-m-common-locked and icon-m-common-unlocked?
+     */
+    m_ImgSource = new MImageWidget ("icon-m-common-locked");
+    m_ImgTarget = new MImageWidget ("icon-m-common-unlocked");
 
-    timeLabel = new MLabel;
-    timeLabel->setObjectName ("lockscreenTimeLabel");
-    timeLabel->setAlignment (Qt::AlignCenter);
+    datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
+    datetimeBox->addItem (m_TimeLabel);
+    datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
+    datetimeBox->addItem (m_DateLabel);
+    datetimeBox->setAlignment (m_DateLabel, Qt::AlignLeft);
+   
+    lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
+    lockliftBox->addItem (datetimeBox);
+    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
+    lockliftBox->addItem (m_ImgSource);
+    lockliftBox->setAlignment (m_ImgSource, Qt::AlignRight | Qt::AlignVCenter);
 
-    dateLabel = new MLabel;
-    dateLabel->setObjectName ("lockscreenDateLabel");
-    dateLabel->setAlignment (Qt::AlignCenter);
-
-    updateDateTime();
-
+    /*
+     * The slider: it is deprecated, but we use it until we have something else
+     */
     slider = new UnlockSlider;
     slider->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
                                         QSizePolicy::Expanding));
     slider->setVisible (true);
-
     slider->setObjectName ("unlockslider");
     slider->setMinimumWidth (450);
     slider->setMaximumWidth (450);
     slider->setMaximumHeight (80);
 
-    policy->addItem (spacert,                 0, 0, 1, 6);
-    policy->addItem (timeLabel,               1, 0, 1, 6);
-    policy->addItem (dateLabel,               2, 0, 1, 6);
-    policy->addItem (slider,                  3, 0, 1, 6);
+    policy->addItem (lockliftBox);
+    policy->addItem (slider, Qt::AlignCenter);
+    policy->addItem (m_ImgTarget);
 
+    updateDateTime();
     return layout;
 }
 
@@ -175,10 +204,11 @@ LockScreenUI::updateDateTime ()
 
     QDateTime now (QDateTime::currentDateTime());
 
-    timeLabel->setText (locale.formatDateTime (
+    m_TimeLabel->setText (locale.formatDateTime (
                 now, MLocale::DateNone, MLocale::TimeShort));
-    dateLabel->setText (locale.formatDateTime (
+    m_DateLabel->setText (locale.formatDateTime (
                 now, MLocale::DateFull, MLocale::TimeNone));
+
     update();
 }
 
