@@ -35,7 +35,7 @@ class LockScreenUI : public MApplicationPage
     Q_OBJECT
 
 public:
-    LockScreenUI();
+    LockScreenUI ();
     virtual ~LockScreenUI();
 
     virtual void createContent ();
@@ -46,9 +46,6 @@ signals:
 public slots:
     void sliderUnlocked ();
     void updateDateTime ();
-
-private:
-    MLayout* createWidgets ();
 
 private:
     MLabel          *m_TimeLabel;

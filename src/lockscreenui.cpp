@@ -74,65 +74,16 @@ LockScreenUI::createContent ()
 {
     SYS_DEBUG ("");
 
-    MApplicationPage::createContent();
+    if (isContentCreated () == true)
+        return;
 
-    /*
-     * I had to modify this function because it caused a leak, and that led us
-     * to failed unit test. Now the screen looks a little bit different, but
-     * that doesn't matter, because we have to change the UI according to the
-     * new UI spec anyway. I left the old code here, so we can see what was the
-     * original idea.
-     */
-    //MLayout* layout = new MLayout;
-    MLayout* widgets = createWidgets();
-
-#if 0
-    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(M::Landscape);
-
-    MGridLayoutPolicy* l_policy = new MGridLayoutPolicy(layout);
-    l_policy->setSpacing(10);
-    l_policy->setRowFixedHeight(1, size.height());
-    l_policy->setColumnFixedWidth(0, size.width());
-    l_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
-
-    size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize(M::Portrait);
-
-    MGridLayoutPolicy* p_policy = new MGridLayoutPolicy(layout);
-    p_policy->setSpacing(10);
-    p_policy->setRowFixedHeight(1, size.height());
-    p_policy->setColumnFixedWidth(0, size.width());
-    p_policy->addItem(widgets, 1, 0, Qt::AlignCenter);
-
-    layout->setLandscapePolicy(l_policy);
-    layout->setPortraitPolicy(p_policy);
-
-#endif
-    //centralWidget()->setLayout(layout);
-    centralWidget()->setLayout(widgets);
-
-    connect(slider, SIGNAL(unlocked()), this, SLOT(sliderUnlocked()));
-}
-
-void 
-LockScreenUI::sliderUnlocked ()
-{
-    SYS_DEBUG ("");
-
-    disappear ();
-    slider->reset ();
-    emit unlocked ();
-}
-
-MLayout *
-LockScreenUI::createWidgets ()
-{
-    SYS_DEBUG ("");
+    MApplicationPage::createContent ();
 
     QGraphicsLinearLayout *datetimeBox;
     QGraphicsLinearLayout *lockliftBox;
     MLinearLayoutPolicy   *policy;
     MLayout               *layout;
-    
+
     /*
      * The main layout and its policy
      */
@@ -150,7 +101,7 @@ LockScreenUI::createWidgets ()
      */
     m_DateLabel = new MLabel;
     m_DateLabel->setObjectName ("lockscreenm_DateLabel");
-    
+
     /*
      * The two images, one that we start the unlocking (source) and one that we
      * have to drop the source (target) to unlock the screen.
@@ -165,7 +116,7 @@ LockScreenUI::createWidgets ()
     datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
     datetimeBox->addItem (m_DateLabel);
     datetimeBox->setAlignment (m_DateLabel, Qt::AlignLeft);
-   
+
     lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
     lockliftBox->addItem (datetimeBox);
     lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
@@ -188,11 +139,25 @@ LockScreenUI::createWidgets ()
     policy->addItem (slider, Qt::AlignCenter);
     policy->addItem (m_ImgTarget);
 
-    updateDateTime();
-    return layout;
+    updateDateTime ();
+
+    centralWidget ()->setLayout (layout);
+
+    connect (slider, SIGNAL (unlocked ()),
+             this, SLOT (sliderUnlocked ()));
 }
 
-void 
+void
+LockScreenUI::sliderUnlocked ()
+{
+    SYS_DEBUG ("");
+
+    disappear ();
+    slider->reset ();
+    emit unlocked ();
+}
+
+void
 LockScreenUI::updateDateTime ()
 {
     SYS_DEBUG ("");
