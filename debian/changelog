@@ -1,8 +1,11 @@
 system-ui (0.15.2-1) harmattan; urgency=low
 
   * Updating notifications when modifying event type file
+  * Renamed the DuiStatusIndicatorMenuInterface to
+    MStatusIndicatorMenuInterface since it wasn't compatible
+    with the old one anyway
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 16 Apr 2010 14:23:32 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 16 Apr 2010 14:34:44 +0200
 
 system-ui (0.15.1-2) harmattan; urgency=low
 
