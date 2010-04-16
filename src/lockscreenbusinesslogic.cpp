@@ -34,7 +34,7 @@
 // sets the _NET_WM_STATE attribute according to the message.
 #include <X11/Xatom.h>
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
@@ -68,6 +68,16 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     locksChanged (
             QmLocks::TouchAndKeyboard,
             locks->getState (QmLocks::TouchAndKeyboard));
+
+    /*
+     * XXX: Remove these lines... it is for myself for simplier developing the
+     *      new touch-screen-unlock ui
+     */
+#if defined (DEBUG) && defined (i386)
+    // Show the unlock-screen-ui
+    locksChanged (QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    displayStateChanged (QmDisplayState::On);
+#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()

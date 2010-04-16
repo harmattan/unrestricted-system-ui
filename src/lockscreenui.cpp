@@ -22,10 +22,15 @@
 #include "unlocksliderwidget/unlockslider.h"
 #include "sysuid.h"
 
-#include <QDebug>
+#include <QTime>
+#include <QDateTime>
+#include <QDragEnterEvent>
+#include <QDragMoveEvent>
+#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsLinearLayout>
 
 #include <MLabel>
+#include <MWidget>
 #include <MImageWidget>
 #include <MButton>
 #include <MLayout>
@@ -36,9 +41,6 @@
 #include <MTheme>
 #include <MLocale>
 
-#include <QTime>
-#include <QDateTime>
-
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
@@ -47,7 +49,8 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
 LockScreenUI::LockScreenUI () :
         m_TimeLabel (0),
-        m_DateLabel (0)
+        m_DateLabel (0),
+        m_initialized (false)
 {
     SYS_DEBUG ("");
 
@@ -63,19 +66,83 @@ LockScreenUI::~LockScreenUI ()
     SYS_DEBUG ("");
 }
 
-/*!
- * FIXME: This is a public method and there is no protection against multiple
- * calling.
- * FIXME: It is not clear why we need createWidgets() and createContent(), one
- * should be enough.
- */
+class MyImage : public MWidget
+{
+public:
+    MyImage (const char *img) : MWidget ()
+    {
+        m_img = new MImageWidget (img);
+        QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+        layout->addItem (m_img);
+        setLayout (layout);
+    }
+
+    virtual void dragEnterEvent (QDragEnterEvent *event)
+    {
+        SYS_DEBUG("");
+
+        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
+        {
+            SYS_DEBUG ("enter drag");
+            event->setDropAction (Qt::MoveAction);
+            event->accept ();
+        }
+        else
+            event->ignore ();
+    }
+
+    virtual void dragMoveEvent (QDragMoveEvent *event)
+    {
+        SYS_DEBUG("");
+
+        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
+        {
+            SYS_DEBUG ("dragmove");
+            event->setDropAction (Qt::MoveAction);
+            event->accept ();
+        }
+        else
+            event->ignore ();
+
+    }
+
+    virtual void dropEvent (QDropEvent *event)
+    {
+        SYS_DEBUG("");
+
+        if (event->mimeData ()->hasFormat ("application/x-dnditemdata"))
+        {
+            SYS_DEBUG ("Dropped");
+            // TODO: Do the unlocking here...
+            event->setDropAction (Qt::MoveAction);
+            event->accept ();
+        }
+        else
+            event->ignore ();
+    }
+
+    virtual void mousePressEvent (QGraphicsSceneMouseEvent *event)
+    {
+        SYS_DEBUG("");
+
+        SYS_DEBUG ("press (%f.%f)", event->pos().x(), event->pos().y ());
+    }
+private:
+    MImageWidget  *m_img;
+};
+
 void
 LockScreenUI::createContent ()
 {
     SYS_DEBUG ("");
 
-    if (isContentCreated () == true)
+    if (m_initialized == true)
+    {
+        SYS_WARNING (" this function called more then once!");
         return;
+    }
+
+    m_initialized = true;
 
     MApplicationPage::createContent ();
 
@@ -108,8 +175,8 @@ LockScreenUI::createContent ()
      *
      * icon-m-common-locked and icon-m-common-unlocked?
      */
-    m_ImgSource = new MImageWidget ("icon-m-common-locked");
-    m_ImgTarget = new MImageWidget ("icon-m-common-unlocked");
+    m_ImgSource = new MyImage ("icon-m-common-locked");
+    m_ImgTarget = new MyImage ("icon-m-common-unlocked");
 
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
     datetimeBox->addItem (m_TimeLabel);
@@ -124,26 +191,26 @@ LockScreenUI::createContent ()
     lockliftBox->setAlignment (m_ImgSource, Qt::AlignRight | Qt::AlignVCenter);
 
     /*
-     * The slider: it is deprecated, but we use it until we have something else
+     * The m_slider: it is deprecated, but we use it until we have something else
      */
-    slider = new UnlockSlider;
-    slider->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
+    m_slider = new UnlockSlider;
+    m_slider->setSizePolicy (QSizePolicy (QSizePolicy::Expanding,
                                         QSizePolicy::Expanding));
-    slider->setVisible (true);
-    slider->setObjectName ("unlockslider");
-    slider->setMinimumWidth (450);
-    slider->setMaximumWidth (450);
-    slider->setMaximumHeight (80);
+    m_slider->setVisible (true);
+    m_slider->setObjectName ("unlockslider");
+    m_slider->setMinimumWidth (450);
+    m_slider->setMaximumWidth (450);
+    m_slider->setMaximumHeight (80);
 
     policy->addItem (lockliftBox);
-    policy->addItem (slider, Qt::AlignCenter);
+    policy->addItem (m_slider, Qt::AlignCenter);
     policy->addItem (m_ImgTarget);
 
     updateDateTime ();
 
     centralWidget ()->setLayout (layout);
 
-    connect (slider, SIGNAL (unlocked ()),
+    connect (m_slider, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
 }
 
@@ -153,7 +220,7 @@ LockScreenUI::sliderUnlocked ()
     SYS_DEBUG ("");
 
     disappear ();
-    slider->reset ();
+    m_slider->reset ();
     emit unlocked ();
 }
 
@@ -167,14 +234,13 @@ LockScreenUI::updateDateTime ()
 
     MLocale locale;
 
-    QDateTime now (QDateTime::currentDateTime());
+    QDateTime now (QDateTime::currentDateTime ());
 
     m_TimeLabel->setText (locale.formatDateTime (
                 now, MLocale::DateNone, MLocale::TimeShort));
     m_DateLabel->setText (locale.formatDateTime (
                 now, MLocale::DateFull, MLocale::TimeNone));
 
-    update();
+    update ();
 }
-
 

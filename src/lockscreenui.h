@@ -25,7 +25,7 @@
 #include <QBasicTimer>
 
 class MLabel;
-class MImageWidget;
+class MWidget;
 class MButton;
 class MLayout;
 class UnlockSlider;
@@ -50,9 +50,10 @@ public slots:
 private:
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
-    MImageWidget    *m_ImgSource;
-    MImageWidget    *m_ImgTarget;
-    UnlockSlider    *slider;
+    MWidget         *m_ImgSource;
+    MWidget         *m_ImgTarget;
+    UnlockSlider    *m_slider;
+    bool             m_initialized;
 };
 
 #endif
