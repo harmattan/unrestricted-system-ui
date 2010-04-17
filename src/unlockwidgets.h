@@ -51,7 +51,7 @@ public:
     UnlockArea ();
     virtual ~UnlockArea ();
     virtual void dragEnterEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void dragMoveEvent (QGraphicsSceneDragDropEvent *event);
+    virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
 
 signals:

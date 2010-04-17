@@ -47,7 +47,7 @@ UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 }
 
 void
-UnlockArea::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
+UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
 }

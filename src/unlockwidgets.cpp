@@ -41,7 +41,11 @@ UnlockHeader::UnlockHeader () : MWidget (),
     m_icon = new MImageWidget ("locket");
     m_icon->setObjectName ("lockscreenIconLocked");
 
-    m_dnd_icon = new QPixmap (* (MTheme::pixmap ("big_lock")));
+    m_dnd_icon = new QPixmap (* (MTheme::pixmap ("flat_big_lock")));
+#if 0
+    // FIXME: use some alpha max... (i think flat ^ images should be needed ) 
+//    m_dnd_icon->setAlphaChannel (* (MTheme::pixmap ("big_dnd_mask")));
+#endif
 
     layout = new QGraphicsLinearLayout;
 
@@ -98,6 +102,8 @@ UnlockArea::UnlockArea () : MWidget ()
 
     setLayout (layout);
 
+    setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     setAcceptDrops (true);
 }
 
@@ -111,22 +117,28 @@ UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
     {
-//        SYS_DEBUG ("")
+//        SYS_DEBUG ("");
         event->setDropAction (Qt::MoveAction);
         event->accept ();
+
+        // TODO: set border to blue one
+        m_unlock_icon->setImage ("unlock_drop");
     }
     else
         event->ignore ();
 }
 
 void
-UnlockArea::dragMoveEvent (QGraphicsSceneDragDropEvent *event)
+UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
     {
-//        SYS_DEBUG ("")
+//        SYS_DEBUG ("");
         event->setDropAction (Qt::MoveAction);
         event->accept ();
+
+        // TODO: set border to gray one
+        m_unlock_icon->setImage ("unlocked");
     }
     else
         event->ignore ();
@@ -144,6 +156,9 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
 
         // Emit the "unlocked" signal
         emit unlocked ();
+
+        // Restore the old image...
+        m_unlock_icon->setImage ("unlocked");
     }
     else
         event->ignore ();

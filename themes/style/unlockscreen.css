@@ -7,35 +7,34 @@
     preferred-size: 100 100;
     minimum-size:   100 100;
     maximum-size:   100 100;
-}
+};
 
 #lockscreenHeaderContainer {
     width:  100%;
 
-    background-image: "top_fade";
-}
+    background-image: "top_fade" 0 0 0 0;
+};
 
 #lockscreenTimeLabel {
     color: white;
     font: "Nokia Sans Wide" 54;
-}
+};
 
 #lockscreenDateLabel {
     color: white;
     font: "Nokia Sans Wide" 24;
-}
+};
 
 #lockscreenUnlockArea {
-    background  : white;
     border-width: 20px;
     border-image: "border_dragging" 20 20 20 20 stretch stretch;
-    /*
-    height:     100%;
-    min-height: 100%;
-     */
-}
+
+    minimum-size: 100% 100%;
+    preferred-size: 100% 100%;
+    maximum-size: 100% 100%;
+};
 
 #lockscreenIconUnlock {
     /* TODO */
-}
+};
 
