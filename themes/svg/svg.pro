@@ -2,11 +2,10 @@ include(../../mconfig.pri)
 
 TEMPLATE = subdirs
 
-INSTALLS += \
-    svg
-
 svg.files =*.svg
 svg.path = $$SYSTEMUI_THEMES_DIR/svg
+
+INSTALLS += svg
 
 QMAKE_EXTRA_TARGETS += check
 check.commands = $$system(true)

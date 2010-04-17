@@ -57,7 +57,7 @@ void Ut_LockScreenUI::initTestCase()
     qDebug() << "Initializing our own themes.";
     MTheme::addPixmapDirectory (svgDir);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlocksliderstyle.css");
+    MTheme::loadCSS (styleDir + "unlockscreen.css");
 
     qDebug() << "Creating main window.";
     m_MainWindow = new MApplicationWindow;

@@ -21,9 +21,8 @@
 #include "unlockwidgets.h"
 
 #include <QPixmap>
+#include <MTheme>
 #include <MImageWidget>
-#include <MLayout>
-#include <MLinearLayoutPolicy>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsLinearLayout>
@@ -34,15 +33,15 @@
 
 #define DND_MIME_TYPE "application/x-dnditemdata"
 
-UnlockIcon::UnlockIcon () : MWidget (),
+UnlockHeader::UnlockHeader () : MWidget (),
     m_dnd_icon (0)
 {
     QGraphicsLinearLayout   *layout;
 
-    m_icon = new MImageWidget ("icon-m-common-locked");
-    m_icon->setObjectName ("lockscreen_icon_locked");
+    m_icon = new MImageWidget ("locket");
+    m_icon->setObjectName ("lockscreenIconLocked");
 
-    setObjectName ("lockscreen_icon_container");
+    m_dnd_icon = new QPixmap (* (MTheme::pixmap ("big_lock")));
 
     layout = new QGraphicsLinearLayout;
 
@@ -51,7 +50,7 @@ UnlockIcon::UnlockIcon () : MWidget (),
     setLayout (layout);
 }
 
-UnlockIcon::~UnlockIcon ()
+UnlockHeader::~UnlockHeader ()
 {
     if (m_dnd_icon != 0)
     {
@@ -61,7 +60,7 @@ UnlockIcon::~UnlockIcon ()
 }
 
 void
-UnlockIcon::mousePressEvent (QGraphicsSceneMouseEvent *event)
+UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
     QDrag *drag = new QDrag (event->widget ());
 
@@ -69,13 +68,6 @@ UnlockIcon::mousePressEvent (QGraphicsSceneMouseEvent *event)
     mimeData->setData (DND_MIME_TYPE, 0);
 
     drag->setMimeData (mimeData);
-
-    if (m_dnd_icon == 0)
-    {
-        // FIXME: this icon should be an other icon,
-        // and would be best to load it in constructor
-        m_dnd_icon = new QPixmap (* (m_icon->pixmap ()));
-    }
 
     if (m_dnd_icon != 0)
     {
@@ -94,20 +86,15 @@ UnlockIcon::mousePressEvent (QGraphicsSceneMouseEvent *event)
 
 UnlockArea::UnlockArea () : MWidget ()
 {
-    MLayout *layout = new MLayout; 
+    QGraphicsLinearLayout   *layout =
+        new QGraphicsLinearLayout;
 
-    MLinearLayoutPolicy *policy =
-        new MLinearLayoutPolicy (layout, Qt::Vertical);
-
-    setObjectName ("lockscreen_unlock_area");
-
-    m_unlock_icon = new MImageWidget ("icon-m-common-unlocked");
-    m_unlock_icon->setObjectName ("lockscreen_icon_unlock");
+    m_unlock_icon = new MImageWidget ("unlocked");
+    m_unlock_icon->setObjectName ("lockscreenIconUnlock");
 
     // Add the unlock icon centered
-    policy->addStretch (5);
-    policy->addItem (m_unlock_icon, Qt::AlignCenter);
-    policy->addStretch (5);
+    layout->addItem (m_unlock_icon);
+    layout->setAlignment (m_unlock_icon, Qt::AlignCenter);
 
     setLayout (layout);
 

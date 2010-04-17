@@ -29,13 +29,13 @@ class MImageWidget;
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneDragDropEvent;
 
-class UnlockIcon : public MWidget
+class UnlockHeader : public MWidget
 {
     Q_OBJECT
 
 public:
-    UnlockIcon ();
-    virtual ~UnlockIcon ();
+    UnlockHeader ();
+    virtual ~UnlockHeader ();
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
 
 private:

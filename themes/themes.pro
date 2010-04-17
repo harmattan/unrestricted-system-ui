@@ -2,12 +2,13 @@ include(../mconfig.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
-    ./images \
-    ./style \
-    ./svg
+    images \
+    style \
+    svg
 
 INSTALLS += \
     conf
+
 conf.files = \
     sysuid.conf
 conf.path = $$SYSTEMUI_THEMES_DIR

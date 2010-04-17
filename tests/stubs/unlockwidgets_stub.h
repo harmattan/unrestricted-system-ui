@@ -16,22 +16,18 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UNLOCKWIDGETS_STUB
-#define UNLOCKWIDGETS_STUB
-
-#include <MWidget>
 #include <unlockwidgets.h>
 
-UnlockIcon::UnlockIcon() {
+UnlockHeader::UnlockHeader() {
 
 }
 
-UnlockIcon::~UnlockIcon() {
+UnlockHeader::~UnlockHeader() {
 
 }
 
 void
-UnlockIcon::mousePressEvent (QGraphicsSceneMouseEvent *event)
+UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
 }
@@ -61,5 +57,3 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
 }
-
-#endif

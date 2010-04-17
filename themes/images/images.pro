@@ -2,11 +2,10 @@ include(../../mconfig.pri)
 
 TEMPLATE = subdirs
 
-INSTALLS += \
-    images
-
 images.files = *.png
 images.path = $$SYSTEMUI_THEMES_DIR/images
+
+INSTALLS += images
 
 QMAKE_EXTRA_TARGETS += check
 check.commands = $$system(true)

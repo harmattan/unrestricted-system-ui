@@ -95,13 +95,13 @@ LockScreenUI::createContent ()
      * The label that shows the hour and minute
      */
     m_TimeLabel = new MLabel;
-    m_TimeLabel->setObjectName ("lockscreenm_TimeLabel");
+    m_TimeLabel->setObjectName ("lockscreenTimeLabel");
 
     /*
      * The label that shows the date
      */
     m_DateLabel = new MLabel;
-    m_DateLabel->setObjectName ("lockscreenm_DateLabel");
+    m_DateLabel->setObjectName ("lockscreenDateLabel");
 
     /*
      * The two images, one that we start the unlocking (source) and one that we
@@ -109,8 +109,11 @@ LockScreenUI::createContent ()
      *
      * icon-m-common-locked and icon-m-common-unlocked?
      */
-    m_ImgSource = new UnlockIcon;
+    m_ImgSource = new UnlockHeader;
+    m_ImgSource->setObjectName ("lockscreenIconLocked");
     m_ImgTarget = new UnlockArea;
+    m_ImgTarget->setObjectName ("lockscreenUnlockArea");
+
 
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
     datetimeBox->addItem (m_TimeLabel);

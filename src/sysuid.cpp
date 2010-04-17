@@ -45,7 +45,7 @@
 #include "mfeedbacknotificationsink.h"
 #include "contextframeworkcontext.h"
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -70,9 +70,9 @@ Sysuid::Sysuid () : QObject (),
 
     m_Sysuid = this;
 
-    MTheme::addPixmapDirectory (svgDir); // or ..(themeDir, true); ?
+    MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlocksliderstyle.css");
+    MTheme::loadCSS (styleDir + "unlockscreen.css");
 
     // Load translation of System-UI
     retranslate ();
