@@ -50,8 +50,8 @@
       <case name="ut_pluginlist" type="Functional" description="Test pluginlist" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_pluginlist</step>
       </case>
-      <case name="ut_statusarea" type="Functional" description="Test status area" level="Component">
-        <step expected_result="0">/usr/lib/system-ui-tests/ut_statusarea</step>
+      <case name="ut_statusareawindow" type="Functional" description="Test status area" level="Component">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_statusareawindow</step>
       </case>
       <case name="ut_statusareaview" type="Functional" description="Test status area view" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_statusareaview</step>
