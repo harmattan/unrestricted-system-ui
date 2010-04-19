@@ -35,17 +35,6 @@ MSceneWindowAnimatorStyle:event_notification {
 }
 
 
-#lockscreenTimeLabel {
-    color: #00DD00;
-    font: "Nokia Sans Wide" 52;
-}
-
-#lockscreenDateLabel {
-    color: #00DD00;
-    font: "Nokia Sans Wide" 24;
-}
-
-
 StatusAreaStyle {
     background-image:;
     background-color: #000000;
