@@ -19,6 +19,7 @@ CASE 3:
 
 Touch-screen lock UI
 ------------------------
+CASE 1:
   (Basic locking/unlocking test...)
 
   Prerequisite:
@@ -43,6 +44,15 @@ Touch-screen lock UI
   or
   2) Try to unlock the screen: screen should be unlocked
                           (and screen-lights restored)
+
+CASE 2:
+    (Event eater testing...)
+
+    - Open some application.
+    - Wait until display (dims) [isn't turned off yet]
+    - tap on the screen
+    -> a widget on the application shouldn't be activated
+
 
 Battery UI
 ------------------------
