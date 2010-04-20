@@ -174,16 +174,6 @@ UnlockArea::UnlockArea () : MWidget ()
     setLayout (layout);
 
     setAcceptDrops (true);
-
-    // For centering the unlock-icon
-    connect (MApplication::activeApplicationWindow (),
-             SIGNAL (orientationChanged (M::Orientation)),
-             this, SLOT(orientationChanged (M::Orientation)));
-
-    orientationChanged (MApplication::activeApplicationWindow ()
-                                                ->orientation ());
-
-//    this->setContentsMargins (20., 200., 20., 200.);
 }
 
 UnlockArea::~UnlockArea ()
@@ -239,18 +229,5 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
     }
     else
         event->ignore ();
-}
-
-void
-UnlockArea::orientationChanged (M::Orientation orientation)
-{
-    // TODO: Center the m_unlock_icon
-    QSize pagesize = MApplication::activeApplicationWindow ()
-                                ->visibleSceneSize (orientation);
-
-    SYS_DEBUG ("Size: %dx%d",
-               pagesize.width (),
-               pagesize.height ());
-
 }
 

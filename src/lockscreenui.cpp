@@ -93,13 +93,13 @@ LockScreenUI::createContent ()
      * TODO:
      *  policy-addItem (m_NotificationArea)
      */
-    policy->addItem (m_LockLiftArea);
-    policy->setStretchFactor (m_LockLiftArea, 1);
-    policy->addItem (m_LockLandArea);
-    policy->setStretchFactor (m_LockLandArea, 10);
 
-    centralWidget ()->setLayout (layout);
-//    setLayout (layout);
+    m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Minimum);
+    policy->addItem (m_LockLiftArea);
+    m_LockLandArea->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Expanding);
+    policy->addItem (m_LockLandArea);
+
+    setLayout (layout);
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));

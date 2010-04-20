@@ -64,8 +64,3 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
     Q_UNUSED(event);
 }
 
-void
-UnlockArea::orientationChanged (M::Orientation orientation)
-{
-    Q_UNUSED(orientation);
-}

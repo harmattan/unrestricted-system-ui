@@ -65,9 +65,6 @@ public:
 signals:
     void unlocked ();
 
-private slots:
-    void orientationChanged (M::Orientation orientation);
-
 private:
     MImageWidget    *m_unlock_icon;
 };
