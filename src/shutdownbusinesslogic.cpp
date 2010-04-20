@@ -74,6 +74,8 @@ ShutdownBusinessLogic::showUI ()
         m_Ui = new ShutdownUI;
     }
 
+    Sysuid::sysuid ()->applicationWindow ().showFullScreen ();
+
     // Make sure the shutdown UI is shown in the application window by
     // registering it explicitly to the application window scene manager
     Sysuid::sysuid ()->applicationWindow ()
