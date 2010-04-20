@@ -79,6 +79,7 @@ UnlockHeader::UnlockHeader () : MWidget (),
      * Construct the Date/Time box
      */
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
+    datetimeBox->setSpacing (0.0);
     datetimeBox->addItem (m_TimeLabel);
     datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
     datetimeBox->addItem (m_DateLabel);
@@ -137,6 +138,11 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
     QDrag *drag = new QDrag (event->widget ());
 
+    // TBD: i used 160px for active lock lift area
+    if (geometry ().topRight ().x () >
+        (event->pos ().x () + 160.0))
+        return;
+
     QMimeData *mimeData = new QMimeData;
     mimeData->setData (DND_MIME_TYPE, 0);
 
@@ -188,7 +194,7 @@ UnlockArea::UnlockArea () : MWidget (),
     m_unlock_icon = new MImageWidget ("unlocked");
     m_unlock_icon->setObjectName ("lockscreenIconUnlock");
 
-    layout->addStretch (10);
+    layout->addStretch ();
 
     // Add the unlock icon centered
     layout->addItem (m_unlock_icon);
@@ -196,7 +202,7 @@ UnlockArea::UnlockArea () : MWidget (),
 
     m_unlock_icon->setVisible (m_enabled);
 
-    layout->addStretch (10);
+    layout->addStretch ();
 
     setLayout (layout);
 
