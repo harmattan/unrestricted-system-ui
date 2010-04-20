@@ -35,10 +35,10 @@ namespace
 {
     const int Act = 1000;
     const int Inact = 2000;
-    // Acceptable delay in milliseconds. I have seen as much as 363 milliseconds
+    // Acceptable delay in milliseconds. I have seen as much as 561 milliseconds
     // delay in the CITA server, so we have to fine tune the original 100
     // milliseconds tolerance here.
-    const int aDelay = 500;
+    const int aDelay = 1000;
 }
 
 void LowBatteryHelper::start ()
