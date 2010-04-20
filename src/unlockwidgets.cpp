@@ -46,7 +46,8 @@
 UnlockHeader::UnlockHeader () : MWidget (),
     m_dnd_icon (0),
     m_TimeLabel (0),
-    m_DateLabel (0)
+    m_DateLabel (0),
+    m_dndAction (Qt::IgnoreAction)
 {
     QGraphicsLinearLayout   *datetimeBox;
     QGraphicsLinearLayout   *lockliftBox;
@@ -150,10 +151,30 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
     else
         SYS_WARNING ("ERROR, pixmap is empty!");
 
+    connect (drag, SIGNAL (destroyed ()),
+             this, SLOT (dndDone ()));
+    connect (drag, SIGNAL (actionChanged (Qt::DropAction)),
+             this, SLOT (dndActionChanged (Qt::DropAction)));
 
     drag->exec (Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
 }
 
+void
+UnlockHeader::dndActionChanged (Qt::DropAction action)
+{
+    // Store the last DnD action
+    m_dndAction = action;
+}
+
+void
+UnlockHeader::dndDone ()
+{
+    // QDrag destroyed, check the last action,
+    // when it is ignore then dropped outside on the area
+    //  -> then i should disable it (hide the icon and border)
+    if (m_dndAction == Qt::IgnoreAction)
+        emit disableArea ();
+}
 
 UnlockArea::UnlockArea () : MWidget ()
 {

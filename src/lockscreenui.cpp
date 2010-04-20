@@ -91,12 +91,16 @@ LockScreenUI::createContent ()
 
     /*
      * TODO:
+     *  m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
+     *                                     QSizePolicy::Minimum);
      *  policy-addItem (m_NotificationArea)
      */
 
-    m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Minimum);
+    m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
+                                   QSizePolicy::Minimum);
     policy->addItem (m_LockLiftArea);
-    m_LockLandArea->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Expanding);
+    m_LockLandArea->setSizePolicy (QSizePolicy::Preferred,
+                                   QSizePolicy::Expanding);
     policy->addItem (m_LockLandArea);
 
     setLayout (layout);

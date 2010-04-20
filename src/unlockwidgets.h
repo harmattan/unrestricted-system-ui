@@ -44,11 +44,21 @@ public:
 
     void updateDateTime ();
 
+signals:
+    /* Emitted when drag and drop is cancelled */
+    void disableArea ();
+
+private slots:
+    void dndActionChanged (Qt::DropAction action);
+    void dndDone ();
+
 private:
     MImageWidget    *m_icon;
     QPixmap         *m_dnd_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
+
+    Qt::DropAction   m_dndAction;
 };
 
 class UnlockArea : public MWidget

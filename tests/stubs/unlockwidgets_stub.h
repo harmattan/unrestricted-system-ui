@@ -38,6 +38,18 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
 }
 
+void
+UnlockHeader::dndActionChanged (Qt::DropAction action)
+{
+    Q_UNUSED(action);
+}
+
+void
+UnlockHeader::dndDone ()
+{
+
+}
+
 UnlockArea::UnlockArea() {
 
 }
