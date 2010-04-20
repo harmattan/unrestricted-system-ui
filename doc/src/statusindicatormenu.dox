@@ -17,7 +17,7 @@ plugins are displayed on top of each other and loaded from
 <td>1</td>
 <td>Profile setting</td>
 <td>libprofile.so</td>
-</tr> 
+</tr>
 <tr>
 <td>2</td>
 <td>Date & Time</td>
@@ -53,6 +53,16 @@ plugins are displayed on top of each other and loaded from
 <td>Accessories</td>
 <td>libaccessories.so</td>
 </tr>
+<tr>
+<td>9</td>
+<td>Call UI</td>
+<td>libcallui.so</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Transfer UI</td>
+<td>libtransferui.so</td>
+</tr>
 </table>
 
 Each plugin is written as a shared library that contains a class that
@@ -82,7 +92,7 @@ which should return a pointer to a MWidget for the plugin. This MWidget
 is then inserted into the status indicator menu layout by the status indicator
 menu. The parameter to constructWidget() is an interface to the status
 indicator menu which allows the plugin to show the main application page of
-the status indicator menu and to hide the status indicator menu. 
+the status indicator menu and to hide the status indicator menu.
 
 To display a subpage the plugin widget should create a new MApplicationPage
 and make it appear() when necessary. The plugin widget should then call the
@@ -94,7 +104,7 @@ The plugins load their CSS files (if any) using MTheme::loadCSS().
 The preferred location for the CSS files is
 /usr/share/themes/base/meegotouch/system-ui/style and the suggested CSS
 file name is the same as the shared library name without the lib prefix and
-the .so postfix. 
+the .so postfix.
 
 Here's an example implementation of the profile plugin.
 
@@ -241,5 +251,5 @@ void Profile::buttonClicked(MButton *)
     statusIndicatorMenu.hideStatusIndicatorMenu();
 }
 </pre>
- 
+
 */

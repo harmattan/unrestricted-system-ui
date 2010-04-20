@@ -54,6 +54,8 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so");
 
     // Create a button for accessing the full settings
     addSettingsButton();
@@ -82,13 +84,13 @@ void PluginList::setNotificationCount(int notificationCount)
 /*!
  * This function will actually load a plugin.
  */
-void 
+void
 PluginList::addPlugin(
         const QString &path)
 {
     bool success;
     QPluginLoader loader(path);
-    
+
     /*
      * We have to resolve all the symbols early, so we will not abort when there
      * are unresolved symbols in the library. It is really important!

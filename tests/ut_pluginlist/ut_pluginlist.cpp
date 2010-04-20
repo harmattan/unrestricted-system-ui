@@ -107,7 +107,7 @@ void Ut_PluginList::cleanup()
 void Ut_PluginList::testInitialization()
 {
     // The loaded plugin list should be known
-    QCOMPARE(loadedPlugins.count(), 8);
+    QCOMPARE(loadedPlugins.count(), 10);
     QCOMPARE(loadedPlugins.at(0), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so").canonicalPath());
     QCOMPARE(loadedPlugins.at(1), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so").canonicalPath());
     QCOMPARE(loadedPlugins.at(2), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so").canonicalPath());
@@ -116,6 +116,8 @@ void Ut_PluginList::testInitialization()
     QCOMPARE(loadedPlugins.at(5), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so").canonicalPath());
     QCOMPARE(loadedPlugins.at(6), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so").canonicalPath());
     QCOMPARE(loadedPlugins.at(7), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(8), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so").canonicalPath());
+    QCOMPARE(loadedPlugins.at(9), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so").canonicalPath());
 
     // The layout should contain a widget for each plugin plus one widget for the button
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());
