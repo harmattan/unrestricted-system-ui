@@ -21,11 +21,21 @@
 #include "unlockwidgets.h"
 
 #include <QPixmap>
-#include <MTheme>
-#include <MImageWidget>
+#include <QTime>
+#include <QDateTime>
+#include <QMimeData>
+
+#include <QDrag>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsLinearLayout>
+
+#include <MTheme>
+#include <MLocale>
+#include <MLabel>
+#include <MImageWidget>
+#include <MApplicationWindow>
+#include <MApplication>
 
 #define DEBUG
 #define WARNING
@@ -34,24 +44,63 @@
 #define DND_MIME_TYPE "application/x-dnditemdata"
 
 UnlockHeader::UnlockHeader () : MWidget (),
-    m_dnd_icon (0)
+    m_dnd_icon (0),
+    m_TimeLabel (0),
+    m_DateLabel (0)
 {
-    QGraphicsLinearLayout   *layout;
+    QGraphicsLinearLayout   *datetimeBox;
+    QGraphicsLinearLayout   *lockliftBox;
 
+    /*
+     * The label that shows the hour and minute
+     */
+    m_TimeLabel = new MLabel;
+    m_TimeLabel->setObjectName ("lockscreenTimeLabel");
+
+    /*
+     * The label that shows the date
+     */
+    m_DateLabel = new MLabel;
+    m_DateLabel->setObjectName ("lockscreenDateLabel");
+
+    /*
+     * The lock icon @ right side
+     */
     m_icon = new MImageWidget ("locket");
     m_icon->setObjectName ("lockscreenIconLocked");
 
+    /*
+     * Pre-load the DnD icon
+     */
     m_dnd_icon = new QPixmap (* (MTheme::pixmap ("flat_big_lock")));
-#if 0
-    // FIXME: use some alpha max... (i think flat ^ images should be needed ) 
-//    m_dnd_icon->setAlphaChannel (* (MTheme::pixmap ("big_dnd_mask")));
-#endif
 
-    layout = new QGraphicsLinearLayout;
+    /*
+     * Construct the Date/Time box
+     */
+    datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
+    datetimeBox->addItem (m_TimeLabel);
+    datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
+    datetimeBox->addItem (m_DateLabel);
+    datetimeBox->setAlignment (m_DateLabel, Qt::AlignLeft);
 
-    layout->addItem (m_icon);
+    /*
+     * Create the main container
+     */
+    lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
+    lockliftBox->addItem (datetimeBox);
+    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
+    lockliftBox->addItem (m_icon);
+    lockliftBox->setAlignment (m_icon, Qt::AlignRight | Qt::AlignVCenter);
 
-    setLayout (layout);
+    /*
+     * And set the layout
+     */
+    setLayout (lockliftBox);
+
+    /*
+     * And initialize the widgets contents
+     */
+    updateDateTime ();
 }
 
 UnlockHeader::~UnlockHeader ()
@@ -61,6 +110,25 @@ UnlockHeader::~UnlockHeader ()
         delete m_dnd_icon;
         m_dnd_icon = 0;
     }
+}
+
+void
+UnlockHeader::updateDateTime ()
+{
+    if ((m_TimeLabel == 0) ||
+        (m_DateLabel == 0))
+        return;
+
+    MLocale locale;
+
+    QDateTime now (QDateTime::currentDateTime ());
+
+    m_TimeLabel->setText (locale.formatDateTime (
+                now, MLocale::DateNone, MLocale::TimeShort));
+    m_DateLabel->setText (locale.formatDateTime (
+                now, MLocale::DateFull, MLocale::TimeNone));
+
+    update ();
 }
 
 void
@@ -87,7 +155,6 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
 }
 
 
-
 UnlockArea::UnlockArea () : MWidget ()
 {
     QGraphicsLinearLayout   *layout =
@@ -96,15 +163,27 @@ UnlockArea::UnlockArea () : MWidget ()
     m_unlock_icon = new MImageWidget ("unlocked");
     m_unlock_icon->setObjectName ("lockscreenIconUnlock");
 
+    layout->addStretch (10);
+
     // Add the unlock icon centered
     layout->addItem (m_unlock_icon);
     layout->setAlignment (m_unlock_icon, Qt::AlignCenter);
 
+    layout->addStretch (10);
+
     setLayout (layout);
 
-    setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding);
-
     setAcceptDrops (true);
+
+    // For centering the unlock-icon
+    connect (MApplication::activeApplicationWindow (),
+             SIGNAL (orientationChanged (M::Orientation)),
+             this, SLOT(orientationChanged (M::Orientation)));
+
+    orientationChanged (MApplication::activeApplicationWindow ()
+                                                ->orientation ());
+
+//    this->setContentsMargins (20., 200., 20., 200.);
 }
 
 UnlockArea::~UnlockArea ()
@@ -117,7 +196,6 @@ UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
     {
-//        SYS_DEBUG ("");
         event->setDropAction (Qt::MoveAction);
         event->accept ();
 
@@ -133,7 +211,6 @@ UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
     {
-//        SYS_DEBUG ("");
         event->setDropAction (Qt::MoveAction);
         event->accept ();
 
@@ -162,5 +239,18 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
     }
     else
         event->ignore ();
+}
+
+void
+UnlockArea::orientationChanged (M::Orientation orientation)
+{
+    // TODO: Center the m_unlock_icon
+    QSize pagesize = MApplication::activeApplicationWindow ()
+                                ->visibleSceneSize (orientation);
+
+    SYS_DEBUG ("Size: %dx%d",
+               pagesize.width (),
+               pagesize.height ());
+
 }
 

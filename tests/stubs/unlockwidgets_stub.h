@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QSizeF>
 #include <unlockwidgets.h>
 
 UnlockHeader::UnlockHeader() {
@@ -23,6 +24,11 @@ UnlockHeader::UnlockHeader() {
 }
 
 UnlockHeader::~UnlockHeader() {
+
+}
+
+void
+UnlockHeader::updateDateTime() {
 
 }
 
@@ -56,4 +62,10 @@ void
 UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
+}
+
+void
+UnlockArea::orientationChanged (M::Orientation orientation)
+{
+    Q_UNUSED(orientation);
 }

@@ -22,23 +22,12 @@
 #include "unlockwidgets.h"
 #include "sysuid.h"
 
-#include <QTime>
-#include <QDrag>
-#include <QMimeData>
-#include <QDateTime>
 #include <QGraphicsLinearLayout>
 
-#include <MLabel>
 #include <MWidget>
-#include <MImageWidget>
-#include <MButton>
 #include <MLayout>
-#include <MGridLayoutPolicy>
 #include <MSceneManager>
 #include <MLinearLayoutPolicy>
-#include <MApplicationWindow>
-#include <MTheme>
-#include <MLocale>
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
@@ -48,8 +37,9 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #include "debug.h"
 
 LockScreenUI::LockScreenUI () :
-        m_TimeLabel (0),
-        m_DateLabel (0),
+        MApplicationPage (),
+        m_LockLiftArea (0),
+        m_LockLandArea (0),
         m_initialized (false)
 {
     SYS_DEBUG ("");
@@ -63,7 +53,7 @@ LockScreenUI::LockScreenUI () :
 
 LockScreenUI::~LockScreenUI ()
 {
-    SYS_DEBUG ("");
+    // Free the resources here...
 }
 
 void
@@ -80,8 +70,6 @@ LockScreenUI::createContent ()
 
     MApplicationPage::createContent ();
 
-    QGraphicsLinearLayout *datetimeBox;
-    QGraphicsLinearLayout *lockliftBox;
     MLinearLayoutPolicy   *policy;
     MLayout               *layout;
 
@@ -92,49 +80,28 @@ LockScreenUI::createContent ()
     policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
 
     /*
-     * The label that shows the hour and minute
+     * TODO: notification ui isn't implemented yet
+     *  m_NotificationArea = new UnlockNotifications;
+     *  m_NotificationArea->setObjectName ("lockscreenNotifications");
      */
-    m_TimeLabel = new MLabel;
-    m_TimeLabel->setObjectName ("lockscreenTimeLabel");
+    m_LockLiftArea = new UnlockHeader;
+    m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
+    m_LockLandArea = new UnlockArea;
+    m_LockLandArea->setObjectName ("lockscreenUnlockArea");
 
     /*
-     * The label that shows the date
+     * TODO:
+     *  policy-addItem (m_NotificationArea)
      */
-    m_DateLabel = new MLabel;
-    m_DateLabel->setObjectName ("lockscreenDateLabel");
-
-    /*
-     * The two images, one that we start the unlocking (source) and one that we
-     * have to drop the source (target) to unlock the screen.
-     *
-     * icon-m-common-locked and icon-m-common-unlocked?
-     */
-    m_ImgSource = new UnlockHeader;
-    m_ImgSource->setObjectName ("lockscreenIconLocked");
-    m_ImgTarget = new UnlockArea;
-    m_ImgTarget->setObjectName ("lockscreenUnlockArea");
-
-
-    datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
-    datetimeBox->addItem (m_TimeLabel);
-    datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
-    datetimeBox->addItem (m_DateLabel);
-    datetimeBox->setAlignment (m_DateLabel, Qt::AlignLeft);
-
-    lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
-    lockliftBox->addItem (datetimeBox);
-    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
-    lockliftBox->addItem (m_ImgSource);
-    lockliftBox->setAlignment (m_ImgSource, Qt::AlignRight | Qt::AlignVCenter);
-
-    policy->addItem (lockliftBox);
-    policy->addItem (m_ImgTarget);
-
-    updateDateTime ();
+    policy->addItem (m_LockLiftArea);
+    policy->setStretchFactor (m_LockLiftArea, 1);
+    policy->addItem (m_LockLandArea);
+    policy->setStretchFactor (m_LockLandArea, 10);
 
     centralWidget ()->setLayout (layout);
+//    setLayout (layout);
 
-    connect (m_ImgTarget, SIGNAL (unlocked ()),
+    connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
 }
 
@@ -150,20 +117,9 @@ LockScreenUI::sliderUnlocked ()
 void
 LockScreenUI::updateDateTime ()
 {
-//    SYS_DEBUG ("");
-
     if (isContentCreated () == false)
         return;
 
-    MLocale locale;
-
-    QDateTime now (QDateTime::currentDateTime ());
-
-    m_TimeLabel->setText (locale.formatDateTime (
-                now, MLocale::DateNone, MLocale::TimeShort));
-    m_DateLabel->setText (locale.formatDateTime (
-                now, MLocale::DateFull, MLocale::TimeNone));
-
-    update ();
+    static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
 }
 

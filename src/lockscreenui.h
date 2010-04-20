@@ -24,11 +24,7 @@
 #include <MApplicationPage>
 #include <QBasicTimer>
 
-class MLabel;
 class MWidget;
-class MButton;
-class MLayout;
-class UnlockSlider;
 
 class LockScreenUI : public MApplicationPage
 {
@@ -48,11 +44,10 @@ public slots:
     void updateDateTime ();
 
 private:
-    MLabel          *m_TimeLabel;
-    MLabel          *m_DateLabel;
-    MWidget         *m_ImgSource;
-    MWidget         *m_ImgTarget;
-    UnlockSlider    *m_slider;
+    MWidget         *m_NotificationArea;
+    MWidget         *m_LockLiftArea;
+    MWidget         *m_LockLandArea;
+
     bool             m_initialized;
 };
 

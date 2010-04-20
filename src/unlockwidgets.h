@@ -21,10 +21,13 @@
 #ifndef _UNLOCKWIDGETS_H
 #define _UNLOCKWIDGETS_H
 
+#include <QSizeF>
 #include <QObject>
 #include <MWidget>
+#include <MWindow>
 
 class QPixmap;
+class MLabel;
 class MImageWidget;
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneDragDropEvent;
@@ -36,11 +39,16 @@ class UnlockHeader : public MWidget
 public:
     UnlockHeader ();
     virtual ~UnlockHeader ();
+
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
+
+    void updateDateTime ();
 
 private:
     MImageWidget    *m_icon;
     QPixmap         *m_dnd_icon;
+    MLabel          *m_TimeLabel;
+    MLabel          *m_DateLabel;
 };
 
 class UnlockArea : public MWidget
@@ -56,6 +64,9 @@ public:
 
 signals:
     void unlocked ();
+
+private slots:
+    void orientationChanged (M::Orientation orientation);
 
 private:
     MImageWidget    *m_unlock_icon;

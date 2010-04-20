@@ -23,7 +23,7 @@
 #include <MGConfItem>
 #include <QDebug>
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 SystemUIGConf::SystemUIGConf (
