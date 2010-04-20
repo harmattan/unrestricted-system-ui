@@ -1,12 +1,15 @@
-Testing:
-
+Unit Testing:
+-------------------------------------------------------------------------------------
 sb2 -Re apt-get install system-ui-tests
 or
 sb2 -Re dpkg -i system-ui-tests*.deb
-
 --
-
-maemo-sdk start gui
-maemo-sdk enter runtime
-
+# In Sbox
 testrunner.py -f /usr/share/system-ui-tests/tests.xml -o system-ui-tests-results.xml
+-------------------------------------------------------------------------------------
+
+Manual Testing:
+-------------------------------------------------------------------------------------
+See: tests/manual_test_cases.txt
+-------------------------------------------------------------------------------------
+
