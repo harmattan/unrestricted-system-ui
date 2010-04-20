@@ -151,6 +151,9 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
     else
         SYS_WARNING ("ERROR, pixmap is empty!");
 
+    // Emit the 'drag started' signal
+    emit activateArea (true);
+
     connect (drag, SIGNAL (destroyed ()),
              this, SLOT (dndDone ()));
     connect (drag, SIGNAL (actionChanged (Qt::DropAction)),
@@ -173,10 +176,11 @@ UnlockHeader::dndDone ()
     // when it is ignore then dropped outside on the area
     //  -> then i should disable it (hide the icon and border)
     if (m_dndAction == Qt::IgnoreAction)
-        emit disableArea ();
+        emit activateArea (false);
 }
 
-UnlockArea::UnlockArea () : MWidget ()
+UnlockArea::UnlockArea () : MWidget (),
+    m_enabled (false)
 {
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
@@ -189,6 +193,8 @@ UnlockArea::UnlockArea () : MWidget ()
     // Add the unlock icon centered
     layout->addItem (m_unlock_icon);
     layout->setAlignment (m_unlock_icon, Qt::AlignCenter);
+
+    m_unlock_icon->setVisible (m_enabled);
 
     layout->addStretch (10);
 
@@ -237,7 +243,7 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
     {
-        SYS_DEBUG ("Dropped");
+//        SYS_DEBUG ("Dropped");
 
         event->setDropAction (Qt::MoveAction);
         event->accept ();
@@ -250,5 +256,19 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
     }
     else
         event->ignore ();
+}
+
+void
+UnlockArea::setEnabled (bool enabled)
+{
+    if (m_enabled == enabled)
+        return;
+
+    m_enabled = enabled;
+
+    // TODO: draw a border when it is enabled,
+    //       and hide it when it isn't
+
+    m_unlock_icon->setVisible (m_enabled);
 }
 

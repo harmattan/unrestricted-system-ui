@@ -45,8 +45,10 @@ public:
     void updateDateTime ();
 
 signals:
-    /* Emitted when drag and drop is cancelled */
-    void disableArea ();
+    /* Emitted with
+     * - true:  when drag is started
+     * - false: when drag and drop is cancelled */
+    void activateArea (bool enable);
 
 private slots:
     void dndActionChanged (Qt::DropAction action);
@@ -72,11 +74,15 @@ public:
     virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
 
+public slots:
+    void setEnabled (bool enabled);
+
 signals:
     void unlocked ();
 
 private:
     MImageWidget    *m_unlock_icon;
+    bool             m_enabled;
 };
 
 #endif

@@ -103,6 +103,9 @@ LockScreenUI::createContent ()
                                    QSizePolicy::Expanding);
     policy->addItem (m_LockLandArea);
 
+    connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
+             m_LockLandArea, SLOT (setEnabled (bool)));
+
     setLayout (layout);
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),

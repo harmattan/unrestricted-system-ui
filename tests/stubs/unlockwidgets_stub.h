@@ -76,3 +76,8 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
     Q_UNUSED(event);
 }
 
+void
+UnlockArea::setEnabled (bool enabled)
+{
+    Q_UNUSED(enabled);
+}
