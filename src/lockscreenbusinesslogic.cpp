@@ -244,3 +244,15 @@ LockScreenBusinessLogic::hidefromTaskBar ()
     XFlush (display);
 }
 
+void
+LockScreenBusinessLogic::updateMissedEventAmounts (
+        int a,
+        int b,
+        int c,
+        int d)
+{
+    SYS_DEBUG ("%d, %d, %d, %d", a, b, c ,d);
+
+    lockUI->updateMissedEventAmounts (a, b, c, d);
+}
+

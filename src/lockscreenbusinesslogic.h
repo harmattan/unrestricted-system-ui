@@ -41,6 +41,10 @@ public:
     LockScreenBusinessLogic (QObject* parent = 0);
     virtual ~LockScreenBusinessLogic ();
 
+public slots:
+    // from dbus
+    void updateMissedEventAmounts(int, int, int, int);
+
 private slots:
     void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
     void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
