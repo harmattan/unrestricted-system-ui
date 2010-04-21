@@ -24,6 +24,7 @@
 
 #include <QGraphicsLinearLayout>
 
+#include <MGConfItem>
 #include <MWidget>
 #include <MLayout>
 #include <MSceneManager>
@@ -36,13 +37,23 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #define WARNING
 #include "debug.h"
 
+#define GCONF_BG_LANDSCAPE \
+    "/desktop/standard/background/portrait/picture_filename"
+#define GCONF_BG_PORTRAIT \
+    "/desktop/standard/background/landscape/picture_filename"
+
 LockScreenUI::LockScreenUI () :
         MApplicationPage (),
         m_LockLiftArea (0),
         m_LockLandArea (0),
+        m_bgLandscape (0),
+        m_bgPortrait (0),
         m_initialized (false)
 {
     SYS_DEBUG ("");
+
+    m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
+    m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
 
     setPannable (false);
 
@@ -54,6 +65,17 @@ LockScreenUI::LockScreenUI () :
 LockScreenUI::~LockScreenUI ()
 {
     // Free the resources here...
+    if (m_bgLandscape != 0)
+    {
+        delete m_bgLandscape;
+        m_bgLandscape = 0;
+    }
+
+    if (m_bgPortrait != 0)
+    {
+        delete m_bgPortrait;
+        m_bgPortrait = 0;
+    }
 }
 
 void
@@ -110,6 +132,10 @@ LockScreenUI::createContent ()
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
+
+    // Load the backgrounds if any...
+    reloadLandscapeBackground ();
+    reloadPortraitBackground ();
 }
 
 void
@@ -128,5 +154,63 @@ LockScreenUI::updateDateTime ()
         return;
 
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
+}
+
+void
+LockScreenUI::reloadLandscapeBackground ()
+{
+    // TODO: drop this hard-coded default one
+    const char *defaultbg = "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png";
+
+    QPixmap toCheck (m_confBgLandscape->value (QVariant (defaultbg)).toString ());
+
+    if (toCheck.isNull () == false)
+    {
+        if (m_bgLandscape != 0)
+            delete m_bgLandscape;
+
+        m_bgLandscape = new QPixmap (toCheck);
+    }
+}
+
+void
+LockScreenUI::reloadPortraitBackground ()
+{
+    // TODO: drop this hard-coded default one
+    const char *defaultbg = "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperPortrait.png";
+
+    QPixmap toCheck (m_confBgPortrait->value (QVariant (defaultbg)).toString ());
+
+    if (toCheck.isNull () == false)
+    {
+        if (m_bgPortrait != 0)
+            delete m_bgPortrait;
+
+        m_bgPortrait = new QPixmap (toCheck);
+    }
+}
+
+void
+LockScreenUI::paint (QPainter *painter,
+                     const QStyleOptionGraphicsItem *option,
+                     QWidget *widget)
+{
+#if 0
+    // Not calling the parent method
+    MApplicationPage::paint (painter, option, widget);
+#else
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+#endif
+
+    if ((m_bgPortrait != 0) &&
+        (geometry ().height () > geometry ().width ()))
+    {
+        painter->drawPixmap (geometry ().toRect (), *m_bgPortrait);
+    }
+    else if (m_bgLandscape != 0)
+    {
+        painter->drawPixmap (geometry ().toRect (), *m_bgLandscape);
+    }
 }
 

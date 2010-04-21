@@ -24,7 +24,9 @@
 #include <MApplicationPage>
 #include <QBasicTimer>
 
+class QPixmap;
 class MWidget;
+class MGConfItem;
 
 class LockScreenUI : public MApplicationPage
 {
@@ -35,6 +37,9 @@ public:
     virtual ~LockScreenUI();
 
     virtual void createContent ();
+    virtual void paint (QPainter *painter,
+                        const QStyleOptionGraphicsItem *option,
+                        QWidget *widget = 0);
 
 signals:
     void unlocked ();
@@ -43,10 +48,19 @@ public slots:
     void sliderUnlocked ();
     void updateDateTime ();
 
+private slots:
+    void reloadLandscapeBackground ();
+    void reloadPortraitBackground ();
+
 private:
     MWidget         *m_NotificationArea;
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
+
+    QPixmap         *m_bgLandscape;
+    QPixmap         *m_bgPortrait;
+    MGConfItem      *m_confBgLandscape;
+    MGConfItem      *m_confBgPortrait;
 
     bool             m_initialized;
 };
