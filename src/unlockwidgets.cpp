@@ -47,6 +47,7 @@ UnlockHeader::UnlockHeader () : MWidget (),
     m_dnd_icon (0),
     m_TimeLabel (0),
     m_DateLabel (0),
+    m_background (0),
     m_dndAction (Qt::IgnoreAction)
 {
     QGraphicsLinearLayout   *datetimeBox;
@@ -72,8 +73,10 @@ UnlockHeader::UnlockHeader () : MWidget (),
 
     /*
      * Pre-load the DnD icon
+     * and the background
      */
-    m_dnd_icon = new QPixmap (* (MTheme::pixmap ("flat_big_lock")));
+    m_dnd_icon = MTheme::pixmapCopy ("flat_big_lock");
+    m_background = MTheme::pixmapCopy ("top_fade");
 
     /*
      * Construct the Date/Time box
@@ -107,11 +110,8 @@ UnlockHeader::UnlockHeader () : MWidget (),
 
 UnlockHeader::~UnlockHeader ()
 {
-    if (m_dnd_icon != 0)
-    {
-        delete m_dnd_icon;
-        m_dnd_icon = 0;
-    }
+    delete m_dnd_icon;
+    delete m_background;
 }
 
 void
@@ -185,8 +185,27 @@ UnlockHeader::dndDone ()
         emit activateArea (false);
 }
 
+void
+UnlockHeader::paint (QPainter *painter,
+                     const QStyleOptionGraphicsItem *option,
+                     QWidget *widget)
+{
+    Q_UNUSED (option);
+    Q_UNUSED (widget);
+
+    const int margin = 10; // FIXME
+
+    painter->drawPixmap (-margin,
+                         -margin,
+                         (int) geometry ().width () + 2 * margin,
+                         (int) m_background->height (),
+                         * m_background);
+}
+
+
 UnlockArea::UnlockArea () : MWidget (),
-    m_enabled (false)
+    m_enabled (false),
+    m_active (false)
 {
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
@@ -224,6 +243,10 @@ UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
 
         // TODO: set border to blue one
         m_unlock_icon->setImage ("unlock_drop");
+
+        m_active = true;
+
+        update ();
     }
     else
         event->ignore ();
@@ -239,6 +262,10 @@ UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
 
         // TODO: set border to gray one
         m_unlock_icon->setImage ("unlocked");
+
+        m_active = false;
+
+        update ();
     }
     else
         event->ignore ();
@@ -259,6 +286,9 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
 
         // Restore the old image...
         m_unlock_icon->setImage ("unlocked");
+
+        m_active = false;
+        m_enabled = false;
     }
     else
         event->ignore ();
@@ -272,9 +302,58 @@ UnlockArea::setEnabled (bool enabled)
 
     m_enabled = enabled;
 
-    // TODO: draw a border when it is enabled,
-    //       and hide it when it isn't
-
     m_unlock_icon->setVisible (m_enabled);
+
+    update ();
 }
+
+void
+UnlockArea::paint (QPainter *painter,
+                   const QStyleOptionGraphicsItem *option,
+                   QWidget *widget)
+{
+    Q_UNUSED (option);
+    Q_UNUSED (widget);
+
+    const qreal borderwidth = 20.; // FIXME
+
+    if (m_enabled)
+    {
+        // TODO: parse it from some theme or css file
+        QColor border_color;
+        if (m_active)
+            border_color.setRgbF (0., .67, .97, .5);
+        else
+            border_color.setRgbF (1., 1., 1., .5);
+
+        // Top
+        painter->fillRect (0.,
+                           0.,
+                           size ().width (),
+                           borderwidth,
+                           border_color);
+
+        // Bottom
+        painter->fillRect (0.,
+                           size ().height () - borderwidth,
+                           size ().width (),
+                           borderwidth,
+                           border_color);
+
+        // Left
+        painter->fillRect (0.,
+                           borderwidth,
+                           borderwidth,
+                           size ().height () - 2 * borderwidth,
+                           border_color);
+
+        // Right
+        painter->fillRect (size ().width () - borderwidth,
+                           borderwidth,
+                           borderwidth,
+                           size ().height () - 2 * borderwidth,
+                           border_color);
+    }
+}
+
 

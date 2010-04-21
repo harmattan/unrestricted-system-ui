@@ -41,6 +41,9 @@ public:
     virtual ~UnlockHeader ();
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
+    virtual void paint (QPainter *painter,
+                        const QStyleOptionGraphicsItem *option,
+                        QWidget *widget = 0);
 
     void updateDateTime ();
 
@@ -59,6 +62,7 @@ private:
     QPixmap         *m_dnd_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
+    QPixmap         *m_background;
 
     Qt::DropAction   m_dndAction;
 };
@@ -73,6 +77,9 @@ public:
     virtual void dragEnterEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
+    virtual void paint (QPainter *painter,
+                        const QStyleOptionGraphicsItem *option,
+                        QWidget *widget = 0);
 
 public slots:
     void setEnabled (bool enabled);
@@ -83,6 +90,7 @@ signals:
 private:
     MImageWidget    *m_unlock_icon;
     bool             m_enabled;
+    bool             m_active;
 };
 
 #endif
