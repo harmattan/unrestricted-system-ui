@@ -44,11 +44,16 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
 LockScreenUI::LockScreenUI () :
         MApplicationPage (),
+        m_notificationArea (0),
         m_LockLiftArea (0),
         m_LockLandArea (0),
         m_bgLandscape (0),
         m_bgPortrait (0),
-        m_initialized (false)
+        m_initialized (false),
+        m_emails (0),
+        m_messages (0),
+        m_calls (0),
+        m_im (0)
 {
     SYS_DEBUG ("");
 
@@ -92,38 +97,31 @@ LockScreenUI::createContent ()
 
     MApplicationPage::createContent ();
 
-    MLinearLayoutPolicy   *policy;
     MLayout               *layout;
 
     /*
      * The main layout and its policy
      */
     layout = new MLayout;
-    policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
+    m_policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
 
-    /*
-     * TODO: notification ui isn't implemented yet
-     *  m_NotificationArea = new UnlockNotifications;
-     *  m_NotificationArea->setObjectName ("lockscreenNotifications");
-     */
+    m_notificationArea = new UnlockNotifications;
+    m_notificationArea->setObjectName ("lockscreenNotifications");
     m_LockLiftArea = new UnlockHeader;
     m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
     m_LockLandArea = new UnlockArea;
     m_LockLandArea->setObjectName ("lockscreenUnlockArea");
 
-    /*
-     * TODO:
-     *  m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
-     *                                     QSizePolicy::Minimum);
-     *  policy-addItem (m_NotificationArea)
-     */
+    m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
+                                       QSizePolicy::Minimum);
+    m_policy->addItem (m_notificationArea);
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
-    policy->addItem (m_LockLiftArea);
+    m_policy->addItem (m_LockLiftArea);
     m_LockLandArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Expanding);
-    policy->addItem (m_LockLandArea);
+    m_policy->addItem (m_LockLandArea);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
@@ -136,6 +134,9 @@ LockScreenUI::createContent ()
     // Load the backgrounds if any...
     reloadLandscapeBackground ();
     reloadPortraitBackground ();
+
+    // I'm calling this for updating the m_notificationArea
+    updateMissedEventAmounts (m_emails, m_messages, m_calls, m_im);
 }
 
 void
@@ -211,6 +212,45 @@ LockScreenUI::paint (QPainter *painter,
     else if (m_bgLandscape != 0)
     {
         painter->drawPixmap (geometry ().toRect (), *m_bgLandscape);
+    }
+}
+
+void
+LockScreenUI::updateMissedEventAmounts (int emails,
+                                        int messages,
+                                        int calls,
+                                        int im)
+{
+    SYS_DEBUG ("");
+
+    m_emails = emails;
+    m_messages = messages;
+    m_calls = calls;
+    m_im = im;
+
+    if (m_notificationArea != 0)
+    {
+        static_cast<UnlockNotifications *> (m_notificationArea)-> 
+                    updateMissedEvents (emails, messages, calls, im);
+
+        // Hide the whole missed events notification area when
+        // there is no any missed events...
+        if (m_notificationArea->isVisible () &&
+            ((emails + messages + calls + im) == 0))
+        {
+            m_notificationArea->setVisible (false);
+            m_policy->removeItem (m_notificationArea);
+        }
+
+        // Add notification area to policy when previously was
+        // hidden, but there are some missed events...
+        if ((m_notificationArea->isVisible () == false) &&
+            (emails + messages + calls + im) > 0)
+        {
+            m_notificationArea->setVisible (true);
+            // TODO: FIXME: is this working ?
+            m_policy->insertItem (0, m_notificationArea);
+        }
     }
 }
 

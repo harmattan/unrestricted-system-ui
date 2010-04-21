@@ -93,5 +93,25 @@ private:
     bool             m_active;
 };
 
-#endif
+class UnlockNotifications : public MWidget
+{
+    Q_OBJECT
 
+public:
+    UnlockNotifications ();
+    virtual ~UnlockNotifications ();
+
+    virtual void paint (QPainter *painter,
+                        const QStyleOptionGraphicsItem *option,
+                        QWidget *widget = 0);
+public slots:
+    void updateMissedEvents (int emails,
+                             int messages,
+                             int calls,
+                             int im);
+
+private:
+    QPixmap         *m_background;
+};
+
+#endif

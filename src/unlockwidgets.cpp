@@ -357,3 +357,31 @@ UnlockArea::paint (QPainter *painter,
 }
 
 
+UnlockNotifications::UnlockNotifications ()
+{
+
+}
+
+UnlockNotifications::~UnlockNotifications ()
+{
+    // Free the resources here...
+}
+
+void
+UnlockNotifications::updateMissedEvents (int emails,
+                                         int messages,
+                                         int calls,
+                                         int im)
+{
+
+}
+
+void
+UnlockNotifications::paint (QPainter *painter,
+                            const QStyleOptionGraphicsItem *option,
+                            QWidget *widget)
+{
+
+    // TODO
+}
+

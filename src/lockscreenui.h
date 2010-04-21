@@ -26,6 +26,7 @@
 
 class QPixmap;
 class MWidget;
+class MLinearLayoutPolicy;
 class MGConfItem;
 
 class LockScreenUI : public MApplicationPage
@@ -45,15 +46,21 @@ signals:
     void unlocked ();
 
 public slots:
-    void sliderUnlocked ();
     void updateDateTime ();
+    void updateMissedEventAmounts (int emails,
+                                   int messages,
+                                   int calls,
+                                   int im);
 
 private slots:
+    void sliderUnlocked ();
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
 
 private:
-    MWidget         *m_NotificationArea;
+    MLinearLayoutPolicy *m_policy;
+
+    MWidget         *m_notificationArea;
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
 
@@ -63,6 +70,11 @@ private:
     MGConfItem      *m_confBgPortrait;
 
     bool             m_initialized;
+
+    int              m_emails;
+    int              m_messages;
+    int              m_calls;
+    int              m_im;
 };
 
 #endif
