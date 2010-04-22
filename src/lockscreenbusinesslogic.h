@@ -41,9 +41,12 @@ public:
     LockScreenBusinessLogic(QObject* parent = 0);
     virtual ~LockScreenBusinessLogic();
 
+    void toggleScreenLockUI (bool toggle);
+    void toggleEventEater   (bool toggle);
+
 private slots:
-    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
-    void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    //void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    //void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
     void unlockScreen();
 
 signals:
@@ -51,15 +54,15 @@ signals:
     void unlockConfirmed ();
 
 private: //methods
-    void toggleScreenLockUI(bool toggle);
+    //void toggleScreenLockUI(bool toggle);
     void mayStartTimer();
     void stopTimer();
     void hidefromTaskBar();
 
-private: //attributes
-    QmDisplayState *display;
-    QmLocks *locks;
-    LockScreenUI *lockUI;
+private: 
+    //QmDisplayState   *display;
+    //QmLocks          *locks;
+    LockScreenUI     *lockUI;
 
     QTimer timer;
 

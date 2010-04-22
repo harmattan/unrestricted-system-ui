@@ -22,7 +22,7 @@
  * The first part of the header can be loaded and loaded again, so we can turn
  * on and off the debug facility for each source file.
  */
-#undef DEBUG
+//#undef DEBUG
 
 
 /*

@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,20 +18,20 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include "QDBusInterface"
 #include "lockscreenbusinesslogicadaptor.h"
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
         QObject                 *obj, 
         LockScreenBusinessLogic *logic) :
-    QDBusAbstractAdaptor (obj)
+    QDBusAbstractAdaptor (obj),
+    m_LockScreenBusinessLogic (logic)
 {
+    Q_ASSERT (logic != 0);
     connect (this, SIGNAL(delegateSetMissedEvents(int, int, int, int)),
             logic, SLOT(updateMissedEventAmounts(int, int, int, int)));
 
@@ -56,7 +58,17 @@ LockScreenBusinessLogicAdaptor::SetMissedEvents (
 }
 
 
-
+/*!
+ * \param service DBus service to call when unlock is performed.
+ * \param path DBus path to call when unlock is performed.
+ * \param interface DBus interface to call when unlock is performed.
+ * \param method DBus method to call when unlock is performed.
+ * \param mode The LockScreenBusinessLogicAdaptor::TkLockMode opcode.
+ * \param silent Whether to show a notification or not (deprecated)
+ * \param flicker Deprecated/not used
+ * 
+ * DBus method to show the lock screen ui or the event eater window.
+ */
 int 
 LockScreenBusinessLogicAdaptor::tklock_open (
         const QString  &service,
@@ -72,6 +84,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
 #if 1
     SYS_DEBUG (
+"--------------------------------------\n"
 "\n*** service   = '%s'"
 "\n*** path      = '%s'"
 "\n*** interface = '%s'"
@@ -99,6 +112,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         
         case TkLockModeEnable:
             SYS_DEBUG ("### TkLockModeEnable");
+	    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
             break;
 
         case TkLockModeHelp:
@@ -111,10 +125,12 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
         case TkLockModeOneInput:
             SYS_DEBUG ("### TkLockModeOneInput");
+	    m_LockScreenBusinessLogic->toggleEventEater (true);
             break;
 
         case TkLockEnableVisual:
             SYS_DEBUG ("### TkLockEnableVisual");
+	    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
             break;
 
         default:
@@ -122,22 +138,22 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
     }
 
+    SYS_DEBUG ("--------------------------------------\n");
     return (int) TkLockReplyOk;
 }
 
-/*
- * Here the MCE reports back that the lock screen should be closed. We actually
- * closed it already, so we do nothing, but we need this method otherwise MCE
- * will lock the screen again.
- *
- * FIXME: Maybe we should hide the screen locker here? 
+/*!
+ * \param silent Whether to show notificatio or not (deprecated).
+ * 
+ * DBus method that is called to hide the lock screen UI.
  */
 int
 LockScreenBusinessLogicAdaptor::tklock_close (
-        bool   b)
+        bool   silent)
 {
-    Q_UNUSED(b);
-    SYS_DEBUG ("*** b = %s", b ? "true" : "false");
+    Q_UNUSED (silent);
+
+    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
 
     return (int) TkLockReplyOk;
 }
