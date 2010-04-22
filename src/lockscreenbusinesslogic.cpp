@@ -52,12 +52,14 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
 
+#if 0
 #if defined (DEBUG) && defined (i386)
     // XXX: Remove this... only for debugging/devoloping purposes
 
      lockUI->updateMissedEventAmounts (3, 10, 0, 4);
 
      toggleScreenLockUI (true);
+#endif
 #endif
 }
 

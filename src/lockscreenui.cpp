@@ -35,7 +35,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 

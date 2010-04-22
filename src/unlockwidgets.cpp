@@ -37,7 +37,7 @@
 #include <MApplicationWindow>
 #include <MApplication>
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
