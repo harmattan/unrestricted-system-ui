@@ -43,6 +43,9 @@
 
 #define DND_MIME_TYPE "application/x-dnditemdata"
 
+#define ACTIVE_RGBA     0., .67, .97, .5
+#define INACTIVE_RGBA   1.,  1.,  1., .5
+
 UnlockHeader::UnlockHeader () : MWidget (),
     m_dnd_icon (0),
     m_TimeLabel (0),
@@ -322,9 +325,9 @@ UnlockArea::paint (QPainter *painter,
         // TODO: parse it from some theme or css file
         QColor border_color;
         if (m_active)
-            border_color.setRgbF (0., .67, .97, .5);
+            border_color.setRgbF (ACTIVE_RGBA);
         else
-            border_color.setRgbF (1., 1., 1., .5);
+            border_color.setRgbF (INACTIVE_RGBA);
 
         // Top
         painter->fillRect (0.,
@@ -359,12 +362,32 @@ UnlockArea::paint (QPainter *painter,
 
 UnlockNotifications::UnlockNotifications ()
 {
+    m_layout = new QGraphicsLinearLayout (Qt::Horizontal);
+    m_layout->addStretch (25);
 
+    for (int i = 0; i < NOTIFY_LAST; i++)
+    {
+        m_labels [i] = new MLabel;
+        m_labels [i]->setVisible (false);
+        m_icons [i] = new MImageWidget;
+        m_icons [i]->setVisible (false);
+    }
+
+    m_icons [NOTIFY_CALLS]->setImage ("icon-m-content-call", QSize (32, 32));
+    m_icons [NOTIFY_SMS]->setImage ("icon-m-content-sms", QSize (32, 32));
+    m_icons [NOTIFY_EMAIL]->setImage ("icon-m-content-email", QSize (32, 32));
+    m_icons [NOTIFY_CHAT]->setImage ("icon-m-content-chat", QSize (32, 32));
+
+    setLayout (m_layout);
 }
 
 UnlockNotifications::~UnlockNotifications ()
 {
-    // Free the resources here...
+    for (int i = 0; i < NOTIFY_LAST; i++)
+    {
+        delete m_labels [i];
+        delete m_icons [i];
+    }
 }
 
 void
@@ -373,7 +396,55 @@ UnlockNotifications::updateMissedEvents (int emails,
                                          int calls,
                                          int im)
 {
+    for (int i = 0; i < NOTIFY_LAST; i++)
+    {
+        m_icons [i]->setVisible (true);
+        m_labels [i]->setVisible (false);
+    }
 
+    if (calls > 0)
+    {
+        m_labels[NOTIFY_CALLS]->setText (QString ("%1").arg (calls));
+        m_labels[NOTIFY_CALLS]->setVisible (true);
+        m_icons[NOTIFY_CALLS]->setVisible (true);
+    }
+
+    if (messages > 0)
+    {
+        m_labels[NOTIFY_SMS]->setText (QString ("%1").arg (messages));
+        m_labels[NOTIFY_SMS]->setVisible (true);
+        m_icons[NOTIFY_SMS]->setVisible (true);
+    }
+
+    if (emails > 0)
+    {
+        m_labels[NOTIFY_EMAIL]->setText (QString ("%1").arg (emails));
+        m_labels[NOTIFY_EMAIL]->setVisible (true);
+        m_icons[NOTIFY_EMAIL]->setVisible (true);
+    }
+
+    if (im > 0)
+    {
+        m_labels[NOTIFY_CHAT]->setText (QString ("%1").arg (im));
+        m_labels[NOTIFY_CHAT]->setVisible (true);
+        m_icons[NOTIFY_CHAT]->setVisible (true);
+    }
+
+    // Remove the old items
+    for (int c = m_layout->count () - 1; c >= 0; c--)
+        m_layout->removeAt (c);
+
+    // Add the new ones
+    for (int id = 0; id < NOTIFY_LAST; id++)
+    {
+        if (m_labels [id]->isVisible () == true)
+        {
+            m_layout->insertItem (id * 2, m_icons [id]);
+            m_layout->setAlignment (m_icons [id], Qt::AlignRight);
+            m_layout->insertItem (id * 2 + 1, m_labels [id]);
+            m_layout->setAlignment (m_labels [id], Qt::AlignLeft);
+        }
+    }
 }
 
 void
@@ -381,7 +452,18 @@ UnlockNotifications::paint (QPainter *painter,
                             const QStyleOptionGraphicsItem *option,
                             QWidget *widget)
 {
+    Q_UNUSED (option);
+    Q_UNUSED (widget);
 
-    // TODO
+#if 0
+    // TODO: draw background here
+    SYS_DEBUG ("size: %dx%d",
+               (int) geometry ().width (),
+               (int) geometry ().height ());
+
+    painter->fillRect (geometry ().toRect (), QColor (ACTIVE_RGBA));
+#else
+    Q_UNUSED (painter);
+#endif
 }
 

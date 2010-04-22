@@ -67,6 +67,8 @@ LockScreenUI::LockScreenUI () :
     // let's hide home button
     setComponentsDisplayMode (MApplicationPage::AllComponents,
                               MApplicationPageModel::Hide);
+
+    setContentsMargins (0., 0., 0., 0.);
 }
 
 LockScreenUI::~LockScreenUI ()
@@ -165,7 +167,7 @@ void
 LockScreenUI::reloadLandscapeBackground ()
 {
     // TODO: drop this hard-coded default one
-    const char *defaultbg = "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png";
+    const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
 
     QPixmap toCheck (m_confBgLandscape->value (QVariant (defaultbg)).toString ());
 
@@ -185,7 +187,7 @@ void
 LockScreenUI::reloadPortraitBackground ()
 {
     // TODO: drop this hard-coded default one
-    const char *defaultbg = "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperPortrait.png";
+    const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_portrait.png";
 
     QPixmap toCheck (m_confBgPortrait->value (QVariant (defaultbg)).toString ());
 

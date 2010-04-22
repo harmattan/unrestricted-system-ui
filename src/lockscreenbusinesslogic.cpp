@@ -89,8 +89,8 @@ LockScreenBusinessLogic::toggleScreenLockUI (
             appearSceneWindowNow (lockUI);
         lockUI->setActive (true);
 
-        //Sysuid::sysuid()->applicationWindow().showFullScreen();
         Sysuid::sysuid()->applicationWindow().show ();
+        Sysuid::sysuid()->applicationWindow().showFullScreen();
         Sysuid::sysuid()->applicationWindow().raise();
 
         mayStartTimer ();
@@ -114,7 +114,7 @@ LockScreenBusinessLogic::toggleEventEater (
 
         // Show the event-eater window...
         Sysuid::sysuid()->applicationWindow().show ();
-        //Sysuid::sysuid()->applicationWindow().showFullScreen ();
+        Sysuid::sysuid()->applicationWindow().showFullScreen ();
         Sysuid::sysuid()->applicationWindow().raise ();
     } else {
         // Hide the event eater
