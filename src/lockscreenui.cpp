@@ -24,6 +24,8 @@
 
 #include <QGraphicsLinearLayout>
 
+#include <MApplication>
+#include <MWindow>
 #include <MGConfItem>
 #include <MWidget>
 #include <MLayout>
@@ -115,7 +117,7 @@ LockScreenUI::createContent ()
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    /* updateMissedEventAmounts will add this ^ to policy */
+    // updateMissedEventAmounts will add this ^ to policy
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
@@ -124,10 +126,11 @@ LockScreenUI::createContent ()
                                    QSizePolicy::Expanding);
     m_policy->addItem (m_LockLandArea);
 
+    // Set the main layout
+    setLayout (layout);
+
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
-
-    setLayout (layout);
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
@@ -168,10 +171,13 @@ LockScreenUI::reloadLandscapeBackground ()
 
     if (toCheck.isNull () == false)
     {
+        QSize landscape_size =
+            MApplication::activeWindow ()->visibleSceneSize (M::Landscape);
+
         if (m_bgLandscape != 0)
             delete m_bgLandscape;
 
-        m_bgLandscape = new QPixmap (toCheck);
+        m_bgLandscape = new QPixmap (toCheck.scaled (landscape_size));
     }
 }
 
@@ -185,10 +191,13 @@ LockScreenUI::reloadPortraitBackground ()
 
     if (toCheck.isNull () == false)
     {
+        QSize portrait_size =
+            MApplication::activeWindow ()->visibleSceneSize (M::Portrait);
+
         if (m_bgPortrait != 0)
             delete m_bgPortrait;
 
-        m_bgPortrait = new QPixmap (toCheck);
+        m_bgPortrait = new QPixmap (toCheck.scaled (portrait_size));
     }
 }
 
@@ -197,22 +206,22 @@ LockScreenUI::paint (QPainter *painter,
                      const QStyleOptionGraphicsItem *option,
                      QWidget *widget)
 {
-#if 0
-    // Not calling the parent method
-    MApplicationPage::paint (painter, option, widget);
-#else
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-#endif
-
     if ((m_bgPortrait != 0) &&
         (geometry ().height () > geometry ().width ()))
     {
         painter->drawPixmap (geometry ().toRect (), *m_bgPortrait);
     }
-    else if (m_bgLandscape != 0)
+    else if ((m_bgLandscape != 0) &&
+            (geometry ().height () < geometry ().width ()))
     {
         painter->drawPixmap (geometry ().toRect (), *m_bgLandscape);
+    }
+    else
+    {
+        // No pixmap loaded :-O
+        // So calling the Page (the parent class)
+        // paint method to painting the default background:
+        MApplicationPage::paint (painter, option, widget);
     }
 }
 
@@ -249,7 +258,6 @@ LockScreenUI::updateMissedEventAmounts (int emails,
             (emails + messages + calls + im) > 0)
         {
             m_notificationArea->setVisible (true);
-            // TODO: FIXME: is this working ?
             m_policy->insertItem (0, m_notificationArea);
         }
     }
