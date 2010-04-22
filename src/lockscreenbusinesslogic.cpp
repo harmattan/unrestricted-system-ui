@@ -39,7 +39,7 @@
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
-    QObject (parent), 
+    QObject (parent),
     //display ( new QmDisplayState(this)),
     //locks (new QmLocks(this)),
     lockUI (new LockScreenUI)
@@ -53,13 +53,21 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
     #endif
 
-    connect (lockUI, SIGNAL(unlocked()), 
+    connect (lockUI, SIGNAL(unlocked()),
             this, SLOT(unlockScreen()));
-    connect (lockUI, SIGNAL(unlocked()), 
+    connect (lockUI, SIGNAL(unlocked()),
             this, SIGNAL(unlockConfirmed()));
 
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
+
+#if defined (DEBUG) && defined (i386)
+    // XXX: Remove this... only for debugging/devoloping purposes
+
+     lockUI->updateMissedEventAmounts (3, 10, 0, 4);
+
+     toggleScreenLockUI (true);
+#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -71,7 +79,7 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 /*
  * Saved this one, creating an other implementation will remove when tested.
  */
-void 
+void
 LockScreenBusinessLogic::locksChanged (
         Maemo::QmLocks::Lock  lock,
         Maemo::QmLocks::State state)
@@ -91,7 +99,7 @@ LockScreenBusinessLogic::locksChanged (
 /*
  * Saved this one, creating an other implementation will remove when tested.
  */
-void 
+void
 LockScreenBusinessLogic::displayStateChanged (
         Maemo::QmDisplayState::DisplayState state)
 {
@@ -147,14 +155,14 @@ void
 LockScreenBusinessLogic::unlockScreen ()
 {
     SYS_DEBUG ("");
-    toggleScreenLockUI (false); 
+    toggleScreenLockUI (false);
 }
 
 #if 0
 /*
  * Saved this one, creating an other implementation will remove when tested.
  */
-void 
+void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
@@ -174,7 +182,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 }
 #endif
 
-void 
+void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
@@ -186,7 +194,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
             appearSceneWindowNow (lockUI);
         lockUI->setActive (true);
 
-        Sysuid::sysuid()->applicationWindow().show();
+        Sysuid::sysuid()->applicationWindow().showFullScreen();
         Sysuid::sysuid()->applicationWindow().raise();
 
         mayStartTimer ();
@@ -197,7 +205,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     }
 }
 
-void 
+void
 LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
@@ -209,7 +217,7 @@ LockScreenBusinessLogic::toggleEventEater (
             lockUI->createContent ();
 
         // Show the event-eater window...
-        Sysuid::sysuid()->applicationWindow().show ();
+        Sysuid::sysuid()->applicationWindow().showFullScreen ();
         Sysuid::sysuid()->applicationWindow().raise ();
     } else {
         // Hide the event eater
@@ -221,7 +229,7 @@ LockScreenBusinessLogic::toggleEventEater (
 /*
  * Saved this one, creating an other implementation will remove when tested.
  */
-void 
+void
 LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("");
@@ -236,7 +244,7 @@ LockScreenBusinessLogic::mayStartTimer ()
 }
 #endif
 
-void 
+void
 LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("Starting timer");
