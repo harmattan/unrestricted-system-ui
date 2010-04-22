@@ -77,6 +77,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     // Show the unlock-screen-ui
     locksChanged (QmLocks::TouchAndKeyboard, QmLocks::Locked);
     displayStateChanged (QmDisplayState::On);
+
+    lockUI->updateMissedEventAmounts (1, 3, 2, 5);
 #endif
 }
 

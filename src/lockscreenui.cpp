@@ -112,9 +112,10 @@ LockScreenUI::createContent ()
     m_LockLandArea = new UnlockArea;
     m_LockLandArea->setObjectName ("lockscreenUnlockArea");
 
+    m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    m_policy->addItem (m_notificationArea);
+    /* updateMissedEventAmounts will add this ^ to policy */
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
