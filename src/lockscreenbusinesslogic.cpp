@@ -39,47 +39,27 @@
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
-    QObject (parent),
-    display ( new QmDisplayState (this)),
-    locks (new QmLocks (this)),
+    QObject (parent), 
+    //display ( new QmDisplayState(this)),
+    //locks (new QmLocks(this)),
     lockUI (new LockScreenUI)
 {
     SYS_DEBUG ("");
 
+    #if 0
     connect(locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
             this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
     connect(display, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
             this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect (lockUI, SIGNAL (unlocked ()),
-             this, SLOT (unlockScreen ()));
-    connect (lockUI, SIGNAL (unlocked ()),
-             this, SIGNAL (unlockConfirmed ()));
+    #endif
+
+    connect (lockUI, SIGNAL(unlocked()), 
+            this, SLOT(unlockScreen()));
+    connect (lockUI, SIGNAL(unlocked()), 
+            this, SIGNAL(unlockConfirmed()));
 
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
-
-    /*
-     * Just to be sure: maybe the screen is already locked when this daemon
-     * started...
-     */
-
-    displayStateChanged (display->get ());
-
-    locksChanged (
-            QmLocks::TouchAndKeyboard,
-            locks->getState (QmLocks::TouchAndKeyboard));
-
-    /*
-     * XXX: Remove these lines... it is for myself for simplier developing the
-     *      new touch-screen-unlock ui
-     */
-#if defined (DEBUG) && defined (i386)
-    // Show the unlock-screen-ui
-    locksChanged (QmLocks::TouchAndKeyboard, QmLocks::Locked);
-    displayStateChanged (QmDisplayState::On);
-
-    lockUI->updateMissedEventAmounts (1, 3, 2, 5);
-#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -87,8 +67,11 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
     delete lockUI;
 }
 
-
-void
+#if 0
+/*
+ * Saved this one, creating an other implementation will remove when tested.
+ */
+void 
 LockScreenBusinessLogic::locksChanged (
         Maemo::QmLocks::Lock  lock,
         Maemo::QmLocks::State state)
@@ -102,9 +85,13 @@ LockScreenBusinessLogic::locksChanged (
 
     toggleScreenLockUI (knownLock == QmLocks::Locked);
 }
+#endif
 
-
-void
+#if 0
+/*
+ * Saved this one, creating an other implementation will remove when tested.
+ */
+void 
 LockScreenBusinessLogic::displayStateChanged (
         Maemo::QmDisplayState::DisplayState state)
 {
@@ -150,6 +137,7 @@ LockScreenBusinessLogic::displayStateChanged (
             break;
     }
 }
+#endif
 
 /*!
  * This function is called when the lock slider is moved by the user so the
@@ -159,10 +147,14 @@ void
 LockScreenBusinessLogic::unlockScreen ()
 {
     SYS_DEBUG ("");
-    toggleScreenLockUI (false); //turn off the UI
+    toggleScreenLockUI (false); 
 }
 
-void
+#if 0
+/*
+ * Saved this one, creating an other implementation will remove when tested.
+ */
+void 
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
@@ -180,8 +172,56 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         Sysuid::sysuid ()->applicationWindow ().hide ();
     }
 }
+#endif
 
-void
+void 
+LockScreenBusinessLogic::toggleScreenLockUI (
+        bool toggle)
+{
+    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+
+    if (toggle) {
+        lockUI->setOpacity (1.0);
+        Sysuid::sysuid ()->applicationWindow ().sceneManager ()->
+            appearSceneWindowNow (lockUI);
+        lockUI->setActive (true);
+
+        Sysuid::sysuid()->applicationWindow().show();
+        Sysuid::sysuid()->applicationWindow().raise();
+
+        mayStartTimer ();
+    } else {
+        hidefromTaskBar ();
+        Sysuid::sysuid()->applicationWindow().hide();
+        stopTimer ();
+    }
+}
+
+void 
+LockScreenBusinessLogic::toggleEventEater (
+        bool toggle)
+{
+    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+
+    if (toggle) {
+        // Create lockUI content on first dimming...
+        if (! lockUI->isContentCreated ())
+            lockUI->createContent ();
+
+        // Show the event-eater window...
+        Sysuid::sysuid()->applicationWindow().show ();
+        Sysuid::sysuid()->applicationWindow().raise ();
+    } else {
+        // Hide the event eater
+        Sysuid::sysuid()->applicationWindow().hide ();
+    }
+}
+
+#if 0
+/*
+ * Saved this one, creating an other implementation will remove when tested.
+ */
+void 
 LockScreenBusinessLogic::mayStartTimer ()
 {
     SYS_DEBUG ("");
@@ -191,6 +231,22 @@ LockScreenBusinessLogic::mayStartTimer ()
         // It's better to update the time straight away.
         lockUI->updateDateTime ();
 
+        timer.start (1000);
+    }
+}
+#endif
+
+void 
+LockScreenBusinessLogic::mayStartTimer ()
+{
+    SYS_DEBUG ("Starting timer");
+    /*if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off)*/
+    {
+        // It's better to update the time straight away.
+        lockUI->updateDateTime();
+
+        QTime t(QTime::currentTime());
+        // TODO: some adjustments of time may be done
         timer.start (1000);
     }
 }
