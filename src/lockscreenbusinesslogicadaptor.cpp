@@ -84,7 +84,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
 #if 1
     SYS_DEBUG (
-"--------------------------------------\n"
+"---------------Start------------------\n"
 "\n*** service   = '%s'"
 "\n*** path      = '%s'"
 "\n*** interface = '%s'"
@@ -112,24 +112,44 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         
         case TkLockModeEnable:
             SYS_DEBUG ("### TkLockModeEnable");
+	    /*
+	     * This mode is reported by MCE when the screen is locked and turned
+	     * off. A bit strange that the lock mode is enabled and we hide the
+	     * lockscreenui, but the screen is turned off, so we hide the unlock
+	     * screen.
+	     */
 	    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
             break;
 
         case TkLockModeHelp:
+	    /*
+	     * Not used/deprecated.
+	     */
             SYS_DEBUG ("### TkLockModeHelp");
             break;
 
         case TkLockModeSelect:
+	    /*
+	     * Not used/deprecated.
+	     */
             SYS_DEBUG ("### TkLockModeSelect");
             break;
 
         case TkLockModeOneInput:
             SYS_DEBUG ("### TkLockModeOneInput");
+	    /*
+	     * The event eater supposed to consume exactly one event, hence the
+	     * name. 
+	     */
 	    m_LockScreenBusinessLogic->toggleEventEater (true);
             break;
 
         case TkLockEnableVisual:
             SYS_DEBUG ("### TkLockEnableVisual");
+	    /*
+	     * This mode is where we actually should show the screen to unlock
+	     * the screen.
+	     */
 	    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
             break;
 
@@ -138,7 +158,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
     }
 
-    SYS_DEBUG ("--------------------------------------\n");
+    SYS_DEBUG ("-------------End----------------------\n");
     return (int) TkLockReplyOk;
 }
 
@@ -170,6 +190,16 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
             m_MCECallbackInterface, //"com.nokia.mce.request",
             QDBusConnection::systemBus ());
 
+    /*
+     * We have some information from the MCE team:
+typedef enum {
+        TKLOCK_UNLOCK = 1,
+        TKLOCK_RETRY,
+        TKLOCK_TIMEOUT,
+        TKLOCK_CLOSED
+} tklock_status;
+     * Where TKLOCK_UNLOCK == TkLockReplyOk so I just leave it now.
+     */
     dbusIf->call (QDBus::NoBlock, 
             m_MCECallbackMethod, //QString ("tklock_callback"), 
             (int) TkLockReplyOk);

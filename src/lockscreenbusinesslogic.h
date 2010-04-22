@@ -21,17 +21,11 @@
 #ifndef LOCKSCREENBUSINESSLOGIC_H
 #define LOCKSCREENBUSINESSLOGIC_H
 
-#include <qmsystem/qmlocks.h>
-#include <qmsystem/qmdisplaystate.h>
-//#include "eventeater.h"
-
 #include <QObject>
 #include <QTimer>
 
 class LockScreenUI;
 class QDBusInterface;
-
-using namespace Maemo;
 
 class LockScreenBusinessLogic : public QObject
 {
@@ -49,8 +43,6 @@ public slots:
     void toggleEventEater   (bool toggle);
 
 private slots:
-    //void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
-    //void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
     void unlockScreen();
 
 signals:
@@ -58,20 +50,13 @@ signals:
     void unlockConfirmed ();
 
 private: //methods
-    //void toggleScreenLockUI(bool toggle);
     void mayStartTimer();
     void stopTimer();
     void hidefromTaskBar();
 
 private: 
-    //QmDisplayState   *display;
-    //QmLocks          *locks;
     LockScreenUI     *lockUI;
-
     QTimer           timer;
-
-    QmLocks::State   knownLock;
-    QmDisplayState::DisplayState knownDisplay;
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H
