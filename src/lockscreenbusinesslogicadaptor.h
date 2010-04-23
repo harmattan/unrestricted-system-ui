@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,6 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef LOCKSCREENBUSINESSLOGICADAPTOR_H
 #define LOCKSCREENBUSINESSLOGICADAPTOR_H
 
@@ -42,7 +42,7 @@ class LockScreenBusinessLogicAdaptor : public QDBusAbstractAdaptor
 public:
     LockScreenBusinessLogicAdaptor (
             QObject *                obj, 
-            LockScreenBusinessLogic *logic);
+            LockScreenBusinessLogic *delegate);
 
     /*
      * I have no information about these, copyed from osso-systemui-tklock.
@@ -53,12 +53,12 @@ public:
     } TklockReply;
 
     enum {
-        TkLockModeNone,      // Unused, maybe deprecated
-        TkLockModeEnable,    // Show the lock UI in lock mode
-        TkLockModeHelp,      // Unused, deprecated
-        TkLockModeSelect,    // Unused, deprecated
-        TkLockModeOneInput,  // Turn the event eater on
-        TkLockEnableVisual   // Show unlock ui
+        TkLockModeNone,
+        TkLockModeEnable,
+        TkLockModeHelp,
+        TkLockModeSelect,
+        TkLockModeOneInput,
+        TkLockEnableVisual
     } TkLockMode;
     
 public slots:
@@ -89,11 +89,10 @@ signals:
     void delegateSetMissedEvents (int, int, int, int);
 
 private:
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
-    QString                    m_MCECallbackService;
-    QString                    m_MCECallbackPath;
-    QString                    m_MCECallbackInterface;
-    QString                    m_MCECallbackMethod;
+    QString  m_MCECallbackService;
+    QString  m_MCECallbackPath;
+    QString  m_MCECallbackInterface;
+    QString  m_MCECallbackMethod;
 };
 
 #endif 
