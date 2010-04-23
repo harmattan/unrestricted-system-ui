@@ -67,6 +67,7 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
 // This macro will hide the previous notification
+#ifndef UNIT_TEST
 #define NOTIFICATION(mnotification) \
         if (m_notification != 0) \
         { \
@@ -76,6 +77,11 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
         } \
         m_notification = (mnotification); \
         m_notification->publish ();
+#else
+// Do nothing on unit testing (no need to show the notification,
+//                             and that could cause slow-down...)
+#define NOTIFICATION(mnotification)
+#endif
 
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.
@@ -597,7 +603,7 @@ BatteryBusinessLogic::batteryStatus ()
 {
     QmBattery::State state;
 
-    SYS_DEBUG ("What is the state now???!");
+    SYS_DEBUG ("What is the state now?");
 
     state = m_Battery->getState ();
     SYS_DEBUG ("*** state = %d", (int) state);
