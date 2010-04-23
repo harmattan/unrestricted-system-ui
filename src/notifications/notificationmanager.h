@@ -20,7 +20,6 @@
 #ifndef NOTIFICATIONMANAGER_H_
 #define NOTIFICATIONMANAGER_H_
 
-#include "notificationmanagerinterface.h"
 #include "notification.h"
 #include "notificationgroup.h"
 

@@ -25,6 +25,7 @@
 #include <QString>
 #include <MInfoBanner>
 #include "notification.h"
+#include <QTimer>
 
 class MApplication;
 class Sysuid;
@@ -55,32 +56,17 @@ signals:
     void notificationUpdated(const Notification &notification);
 };
 
-class Ut_MCompositorNotificationSink : public QObject
+class Ut_MCompositorNotificationSink : public QTimer
 {
     Q_OBJECT
 
 public:
-    static QList<MInfoBanner::BannerType> types;
-    static QList<QString> icons;
-    static QList<QString> bodies;
-    static QList<QString> buttonIcons;
-    static QList<QString> contents;
-    static QHash<const QGraphicsWidget *, QList<QAction *> > actions;
-    static QList<MInfoBanner *> notifications;
-    static int lastTimeout;
-    static bool desktopIsOnTop;
-    static int lastFixedWidth;
-    static int lastFixedHeight;
-    static QTransform lastTransform;
-
 private:
     MApplication *app;
     MCompositorNotificationSink *sink;
     MockNotificationManager *notificationManager;
-    Sysuid *sysuid;
 
 signals:
-    void orientationChangeFinished(const M::Orientation &orientation);
     void statusIndictorMenuVisibilityChanged(bool);
 
 private slots:
@@ -101,8 +87,6 @@ private slots:
     void testRemoveNotification();
     // Test that notification windows are destroyed after a timeout
     void testTimeout();
-    // Test that changing the orientation rotates the existing notifications
-    void testOrientationChanged();
     // Test that notifications are NOT added while recording
     void testNotificationWhileApplicationEventsDisabled();
     // Test when sink is set to disabled, no notifications are generated

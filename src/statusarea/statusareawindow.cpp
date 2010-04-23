@@ -113,4 +113,3 @@ void StatusAreaWindow::setSceneRender(Maemo::QmDisplayState::DisplayState state)
         break;
     }
 }
-

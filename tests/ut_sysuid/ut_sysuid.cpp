@@ -33,12 +33,17 @@
 #include "unlockwidgets_stub.h"
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "mcompositornotificationsink_stub.h"
 
 maemosec::storage::~storage()
 {
 }
 
 Notification::~Notification()
+{
+}
+
+Notification::Notification()
 {
 }
 
@@ -67,42 +72,18 @@ void NotificationSink::removeGroup(uint)
 {
 }
 
-QHash <NotificationSink *, bool> sinkSetEnabled;
+bool Ut_SysuidCompositorNotificationState = false;
+bool Ut_SysuidFeedbackNotificationState = false;
+
 void NotificationSink::setApplicationEventsEnabled(bool enabled)
 {
-    sinkSetEnabled[this] = enabled;
+    if(dynamic_cast<MCompositorNotificationSink*>(this) != NULL) {
+        Ut_SysuidCompositorNotificationState = enabled;
+    } else if(dynamic_cast<NGFNotificationSink*>(this) != NULL) {
+        Ut_SysuidFeedbackNotificationState = enabled;
+    }
 }
 
-// MCompositorNotificationSink stubs (used by Sysuid)
-MCompositorNotificationSink *mCompositorNotificationSink = 0;
-MCompositorNotificationSink::MCompositorNotificationSink()
-{
-    mCompositorNotificationSink = this;
-}
-
-MCompositorNotificationSink::~MCompositorNotificationSink()
-{
-}
-
-void MCompositorNotificationSink::addNotification(const Notification &)
-{
-}
-
-void MCompositorNotificationSink::removeNotification(uint)
-{
-}
-
-void MCompositorNotificationSink::timeout()
-{
-}
-
-void MCompositorNotificationSink::rotateInfoBanners(const M::Orientation &)
-{
-}
-
-void MCompositorNotificationSink::setDisabled(bool)
-{
-}
 // NGFNotificationSink stubs (used by Sysuid)
 NGFNotificationSink *mNGFNotificationSink = 0;
 NGFNotificationSink::NGFNotificationSink()
@@ -167,6 +148,8 @@ void Ut_Sysuid::init()
 
     app = new MApplication(argc, args);
     sysuid = new Sysuid();
+    Ut_SysuidCompositorNotificationState = false;
+    Ut_SysuidFeedbackNotificationState = false;
 }
 
 void Ut_Sysuid::cleanup()
@@ -178,11 +161,11 @@ void Ut_Sysuid::cleanup()
 void Ut_Sysuid::testUseMode()
 {
     testContextItem->setValue("");
-    QVERIFY(sinkSetEnabled[mCompositorNotificationSink]);
-    QVERIFY(sinkSetEnabled[mNGFNotificationSink]);
+    QVERIFY(Ut_SysuidCompositorNotificationState);
+    QVERIFY(Ut_SysuidFeedbackNotificationState);
     testContextItem->setValue("recording");
-    QVERIFY(!sinkSetEnabled[mCompositorNotificationSink]);
-    QVERIFY(!sinkSetEnabled[mNGFNotificationSink]);
+    QVERIFY(!Ut_SysuidCompositorNotificationState);
+    QVERIFY(!Ut_SysuidFeedbackNotificationState);
 }
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

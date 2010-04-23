@@ -22,9 +22,7 @@
 
 #include <QHash>
 #include "widgetnotificationsink.h"
-#include <X11/Xlib.h>
 
-class QGraphicsView;
 class QTimer;
 class MInfoBanner;
 
@@ -64,13 +62,6 @@ private slots:
     //! \reimp_end
 
     /*!
-     * \brief Rotates the info banner to a new orientation
-     *
-     * \param orientation the new orientation
-     */
-    void rotateInfoBanners(const M::Orientation &orientation);
-
-    /*!
      * A slot for timing out the notification windows
      */
     void timeout();
@@ -80,6 +71,16 @@ private slots:
      * \param bool disabled true for suppressing notification banner from sink. false if sink should generate notification banners
      */
     void setDisabled(bool disabled);
+
+    /*!
+      * Adds an infobanner to a fullscreen window which was created earlier.
+      */
+    void addInfoBannerToWindow();
+
+    /*!
+      * Hides window when the infobanner disappears off the screen after timeout.
+      */
+    void hideWindow();
 
 private:
     /*!
@@ -98,39 +99,22 @@ private:
     void notificationDone(uint notificationId, bool notificationIdInUse);
 
     /*!
-     * Sets the size and rotation of a view based on the size of an info
-     * banner and the current orientation.
-     *
-     * \param view the view to manipulate
-     * \param infoBanner the infoBanner from which to take the size
+     * sets up a timer for the window disappearing
+     * \param banner MInfoBanner whose disappearance it handles. Timer would be parented to this banner.
      */
-    static void setViewSizeAndRotation(QGraphicsView &view, const MInfoBanner &infoBanner);
+    void setupWindowTimer(MInfoBanner *banner);
 
-    /*!
-     * A private class for storing notification information
-     */
-    class MCompositorNotificationSinkNotification
-    {
-    public:
-        MCompositorNotificationSinkNotification(QGraphicsView *view, QTimer *timer, MInfoBanner *infoBanner);
-        ~MCompositorNotificationSinkNotification();
-
-        //! The view in which the widget resides
-        QGraphicsView *view;
-        //! A timer for dismissing the notification
-        QTimer *timer;
-        //! The MInfoBanner
-        MInfoBanner *infoBanner;
-    };
-
-    //! A mapping between notification IDs and private notification information classes
-    QHash<uint, MCompositorNotificationSinkNotification *> idToNotification;
-
-    //! Whether the orientation change signal has been connected
-    bool orientationChangeSignalConnected;
+    //! A mapping between notification IDs and info banners
+    QHash<uint, MInfoBanner *> idToBanner;
 
     //! Whether the sink is currently showing notifications or just transferring them
     bool sinkDisabled;
+
+    //! Full screen window for the notification
+    MWindow* window;
+
+    //! Current notification which is being shown
+    Notification currentNotification;
 };
 
 #endif /* MCOMPOSITORNOTIFICATIONSINK_H_ */

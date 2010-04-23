@@ -36,10 +36,7 @@
 #include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
 #include <QSettings>
-
-#define NUMBER_OF_WINDOWS 2
-
-static QSettings *settings;
+#include <MOnDisplayChangeEvent>
 
 maemosec::storage::~storage()
 {
@@ -123,86 +120,39 @@ QList< uint > MockNotificationManager::notificationIdList(uint /*notificationUse
     return tmp;
 }
 
-// QGraphicsWidget stubs (used by MCompositorNotificationSink)
-void QGraphicsWidget::addAction(QAction *action)
-{
-    Ut_MCompositorNotificationSink::actions[this].append(action);
-
-    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
-    if (dra != NULL) {
-        Ut_MCompositorNotificationSink::contents.append(dra->toString());
-    }
-}
-
-void QGraphicsWidget::removeAction(QAction *action)
-{
-    Ut_MCompositorNotificationSink::actions[this].removeAll(action);
-
-    MRemoteAction *dra = dynamic_cast<MRemoteAction *>(action);
-    if (dra != NULL) {
-        Ut_MCompositorNotificationSink::contents.removeAll(dra->toString());
-    }
-}
-
-QList<QAction *> QGraphicsWidget::actions() const
-{
-    return Ut_MCompositorNotificationSink::actions[this];
-}
-
 // QWidget stubs (used by MCompositorNotificationSink)
-void QWidget::setVisible(bool)
+bool Ut_WindowShown = false;
+QWidget* notificationWindow = NULL;
+void QWidget::setVisible(bool visible)
 {
+    Ut_WindowShown = visible;
+    notificationWindow = this;
 }
 
-void QWidget::setFixedSize(int w, int h)
+MSceneWindow *infoBanner = NULL;
+bool Ut_DestroyWhenDonePolicy = false;
+void MSceneManager::appearSceneWindow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy)
 {
-    Ut_MCompositorNotificationSink::lastFixedWidth = w;
-    Ut_MCompositorNotificationSink::lastFixedHeight = h;
+    infoBanner = sceneWindow;
+    if(policy == MSceneWindow::DestroyWhenDone) {
+        Ut_DestroyWhenDonePolicy = true;
+    }
+}
+
+bool Ut_DisappearSceneWindow= false;
+MSceneWindow *disappearingWindow= NULL;
+void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
+{
+    Ut_DisappearSceneWindow= true;
+    disappearingWindow = sceneWindow;
 }
 
 // QTimer stubs (used by MCompositorNotificationSink)
+bool Ut_TimerStarted = false;
 void QTimer::start(int msec)
 {
-    Ut_MCompositorNotificationSink::lastTimeout = msec;
-
-    if (msec <= 1) {
-        emit timeout();
-    }
-}
-
-// QGraphicsScene stubs (used by MCompositorNotificationSink)
-void QGraphicsScene::addItem(QGraphicsItem *item)
-{
-    MInfoBanner *n = dynamic_cast<MInfoBanner *>(item);
-    if (n != NULL) {
-        Ut_MCompositorNotificationSink::types.append(n->bannerType());
-        Ut_MCompositorNotificationSink::icons.append(n->model()->imageID());
-        Ut_MCompositorNotificationSink::bodies.append(n->model()->bodyText());
-        Ut_MCompositorNotificationSink::buttonIcons.append(n->model()->iconID());
-        Ut_MCompositorNotificationSink::notifications.append(n);
-    }
-}
-
-void QGraphicsScene::removeItem(QGraphicsItem *item)
-{
-    MInfoBanner *n = dynamic_cast<MInfoBanner *>(item);
-    if (n != NULL) {
-        int index = Ut_MCompositorNotificationSink::notifications.indexOf(n);
-
-        Ut_MCompositorNotificationSink::types.removeAt(index);
-        Ut_MCompositorNotificationSink::icons.removeAt(index);
-        Ut_MCompositorNotificationSink::bodies.removeAt(index);
-        Ut_MCompositorNotificationSink::contents.removeAt(index);
-        Ut_MCompositorNotificationSink::actions[n].clear();
-        Ut_MCompositorNotificationSink::buttonIcons.removeAt(index);
-        Ut_MCompositorNotificationSink::notifications.removeAt(index);
-    }
-}
-
-// QGraphicsView stubs (used by MCompositorNotificationSink)
-void QGraphicsView::setTransform(const QTransform &matrix, bool)
-{
-    Ut_MCompositorNotificationSink::lastTransform = matrix;
+    Ut_TimerStarted = true;
+    Q_UNUSED(msec);
 }
 
 // MSceneWindow stubs (used by MCompositorNotificationSink)
@@ -211,61 +161,16 @@ void MSceneWindow::disappear()
     emit disappeared();
 }
 
-// MInfoBanner stubs (used by MCompositorNotificationSink)
-void MInfoBanner::setImageID(const QString &image)
-{
-    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
-    if (index >= 0) {
-        Ut_MCompositorNotificationSink::icons.replace(index, image);
-    }
-    model()->setImageID(image);
-}
-
-void MInfoBanner::setBodyText(const QString &body)
-{
-    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
-    if (index >= 0) {
-        Ut_MCompositorNotificationSink::bodies.replace(index, body);
-    }
-    model()->setBodyText(body);
-}
-
-void MInfoBanner::setIconID(const QString &iconId)
-{
-    int index = Ut_MCompositorNotificationSink::notifications.indexOf(this);
-    if (index >= 0) {
-        Ut_MCompositorNotificationSink::buttonIcons.replace(index, iconId);
-    }
-    model()->setIconID(iconId);
-}
-
-QList<MInfoBanner::BannerType> Ut_MCompositorNotificationSink::types;
-QList<QString> Ut_MCompositorNotificationSink::icons;
-QList<QString> Ut_MCompositorNotificationSink::bodies;
-QList<QString> Ut_MCompositorNotificationSink::buttonIcons;
-QList<QString> Ut_MCompositorNotificationSink::contents;
-QHash<const QGraphicsWidget *, QList<QAction *> > Ut_MCompositorNotificationSink::actions;
-QList<MInfoBanner *> Ut_MCompositorNotificationSink::notifications;
-int Ut_MCompositorNotificationSink::lastTimeout;
-int Ut_MCompositorNotificationSink::lastFixedWidth;
-int Ut_MCompositorNotificationSink::lastFixedHeight;
-QTransform Ut_MCompositorNotificationSink::lastTransform;
-
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
     static int argc = 1;
     static char *app_name = (char *)"./ut_mcompositornotificationsink";
     app = new MApplication(argc, &app_name);
-    sysuid = new Sysuid();
-    settings = new QSettings();
-    gSysuidStub->stubSetReturnValue("sysuid",sysuid);
 }
 
 void Ut_MCompositorNotificationSink::cleanupTestCase()
 {
-    delete settings;
-    delete sysuid;
     delete app;
 }
 
@@ -275,20 +180,13 @@ void Ut_MCompositorNotificationSink::init()
     sink = new MCompositorNotificationSink();
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), sink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationUpdated(Notification)), sink, SLOT(addNotification(Notification)));
-    connect(this, SIGNAL(orientationChangeFinished(M::Orientation)), sink, SLOT(rotateInfoBanners(M::Orientation)));
-    lastTimeout = -1;
-    types.clear();
-    icons.clear();
-    bodies.clear();
-    buttonIcons.clear();
-    contents.clear();
-    actions.clear();
-    notifications.clear();
-    lastFixedWidth = -1;
-    lastFixedHeight = -1;
-    lastTransform = QTransform();
-    gSysuidStub->stubSetReturnValue("orientation", M::Landscape);
-    gSysuidStub->stubSetReturnValue("orientationAngle", M::Angle0);
+    Ut_WindowShown = false;
+    notificationWindow = NULL;
+    infoBanner = NULL;
+    Ut_DestroyWhenDonePolicy = false;
+    Ut_TimerStarted = false;
+    Ut_DisappearSceneWindow = false;
+    disappearingWindow = NULL;
 }
 
 void Ut_MCompositorNotificationSink::cleanup()
@@ -299,184 +197,118 @@ void Ut_MCompositorNotificationSink::cleanup()
 
 void Ut_MCompositorNotificationSink::testAddNotification()
 {
-    // Create three notifications - two with a content link and one without
+    QSignalSpy spy(sink, SIGNAL(notificationAdded(const Notification&)));
+
+    // Create a notification
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
     notificationManager->addNotification(0, parameters0, 0);
-    notificationManager->addNotification(0, parameters1);
 
-    // Check that two MInfoBanners were created
-    QCOMPARE(notifications.count(), 2);
+    // Check that a MWindow was created and shown(window->show() called)
+    QCOMPARE(Ut_WindowShown, true);
 
-    // Make sure the view size and rotation was set correctly
-    MInfoBanner infoBanner1(types[1]);
-    QTransform transform1;
-    transform1.rotate(Sysuid::sysuid()->orientationAngle());
-    QCOMPARE(lastFixedWidth, (int)infoBanner1.preferredWidth());
-    QCOMPARE(lastFixedHeight, (int)infoBanner1.preferredHeight());
-    QCOMPARE(lastTransform, transform1);
-
-    gSysuidStub->stubSetReturnValue("orientation", M::Portrait);
-    gSysuidStub->stubSetReturnValue("orientationAgle", M::Angle90);
-    // Create a notification without a content link
-    TestNotificationParameters parameters3("icon3", "body3", "buttonicon3", "");
-    notificationManager->addNotification(0, parameters3);
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow,event);
 
     // Check that a MInfoBanner was created with the given parameters
-    QCOMPARE(types.length(), 3);
-    QCOMPARE(types[2], MInfoBanner::Event);
-    QCOMPARE(icons.length(), 3);
-    QCOMPARE(icons[2], QString("icon3"));
-    QCOMPARE(bodies.length(), 3);
-    QCOMPARE(bodies[2], QString("body3"));
-    QCOMPARE(buttonIcons.length(), 3);
-    QCOMPARE(buttonIcons[2], QString("buttonicon3"));
-    QCOMPARE(contents.length(), 2);
+    QCOMPARE(Ut_DestroyWhenDonePolicy, true);
 
-    // Make sure the view size and rotation was set correctly
-    MInfoBanner infoBanner2(types[2]);
-    QTransform transform2;
-    transform2.rotate(Sysuid::sysuid()->orientationAngle());
-    QCOMPARE(lastFixedWidth, (int)infoBanner2.preferredHeight());
-    QCOMPARE(lastFixedHeight, (int)infoBanner2.preferredWidth());
-    QCOMPARE(lastTransform, transform2);
+    MInfoBanner *banner = static_cast<MInfoBanner*>(infoBanner);
+    QCOMPARE(banner->bannerType(), MInfoBanner::Event);
+    QCOMPARE(banner->iconID(), QString("buttonicon0"));
+    QCOMPARE(banner->bodyText(), QString("body0"));
+    QCOMPARE(banner->imageID(), QString("icon0"));
+
+    // check that the timeout timer was started
+    QCOMPARE(Ut_TimerStarted, true);
+
+    // check that the transfer notification signal was emitted
+    QCOMPARE(spy.count(), 1);
 }
 
 void Ut_MCompositorNotificationSink::testUpdateNotification()
 {
     // Create two notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
     notificationManager->addNotification(0, parameters0);
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow,event);
+    MInfoBanner *banner1 = static_cast<MInfoBanner*>(infoBanner);
+
+    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
     uint id = notificationManager->addNotification(0, parameters1);
+    // Window will not drop to displaychange event slot unless window is explicitly hidden
+    notificationWindow->hide();
+    QApplication::sendEvent(notificationWindow,event);
+    MInfoBanner *banner2 = static_cast<MInfoBanner*>(infoBanner);
 
     // Update the second notification
     TestNotificationParameters parametersX("iconX", "bodyX", "buttoniconX", "contentX X X X");
     notificationManager->updateNotification(0, id, parametersX);
 
-    // Check that two MInfoBanners were created with the given parameters
-    QCOMPARE(types.length(), 2);
-    QCOMPARE(types[0], MInfoBanner::Event);
-    QCOMPARE(types[1], MInfoBanner::Event);
-    QCOMPARE(icons.length(), 2);
-    QCOMPARE(icons[0], QString("icon0"));
-    QCOMPARE(icons[1], QString("iconX"));
-    QCOMPARE(bodies.length(), 2);
-    QCOMPARE(bodies[0], QString("body0"));
-    QCOMPARE(bodies[1], QString("bodyX"));
-    QCOMPARE(buttonIcons.length(), 2);
-    QCOMPARE(buttonIcons[0], QString("buttonicon0"));
-    QCOMPARE(buttonIcons[1], QString("buttoniconX"));
-    QCOMPARE(contents.length(), 2);
-    QCOMPARE(contents[0], QString("content0 0 0 0"));
-    QCOMPARE(contents[1], QString("contentX X X X"));
+    QCOMPARE(banner2->imageID(), QString("iconX"));
+    QCOMPARE(banner2->bodyText(), QString("bodyX"));
+    QCOMPARE(banner2->iconID(), QString("buttoniconX"));
+
+    // Make sure the fist notification banner has still the same content
+    QCOMPARE(banner1->imageID(), QString("icon0"));
+    QCOMPARE(banner1->bodyText(), QString("body0"));
+    QCOMPARE(banner1->iconID(), QString("buttonicon0"));
 }
 
 void Ut_MCompositorNotificationSink::testRemoveNotification()
 {
     // Create three notifications
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    TestNotificationParameters parameters2("icon2", "body2", "buttonicon2", "");
     parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
     notificationManager->addNotification(0, parameters0, 0);
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow,event);
+
+    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
     uint id = notificationManager->addNotification(0, parameters1);
+    // Window will not drop to displaychange event slot unless window is explicitly hidden
+    notificationWindow->hide();
+    QApplication::sendEvent(notificationWindow,event);
+    MInfoBanner *banner = static_cast<MInfoBanner*>(infoBanner);
+
+    TestNotificationParameters parameters2("icon2", "body2", "buttonicon2", "");
     notificationManager->addNotification(0, parameters2);
+    // Window will not drop to displaychange event slot unless window is explicitly hidden
+    notificationWindow->hide();
+    QApplication::sendEvent(notificationWindow,event);
 
     // Remove the second one
     notificationManager->removeNotification(0, id);
-
-    // Check that two MInfoBanners exist with the given icon parameters (to identify them)
-    QCOMPARE(icons.length(), 2);
-    QCOMPARE(icons[0], QString("icon0"));
-    QCOMPARE(icons[1], QString("icon2"));
-
-    // Recreate the second notification and create an additional one
-    notificationManager->addNotification(0, parameters1);
-    TestNotificationParameters parameters4("icon3", "body3", "buttonicon3", "");
-    parameters4.add(GenericNotificationParameterFactory::classKey(), "system");
-    notificationManager->addNotification(0, parameters4, 0);
-    QCOMPARE(icons.length(), 4);
-    QCOMPARE(icons[0], QString("icon0"));
-    QCOMPARE(icons[1], QString("icon2"));
-    QCOMPARE(icons[2], QString("icon1"));
-    QCOMPARE(icons[3], QString("icon3"));
+    // Check that the window was removed
+    QCOMPARE(banner, disappearingWindow);
 }
 
 void Ut_MCompositorNotificationSink::testTimeout()
 {
-    // Create a notification with a timeout of 1000 milliseconds
     TestNotificationParameters parameters0("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    notificationManager->addNotification(0, parameters0);
+    uint notificationId = notificationManager->addNotification(0, parameters0);
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow,event);
 
-    // Check that the timeout was set
-    QCOMPARE(lastTimeout, 1000);
-
-    // The notification should be created
-    QCOMPARE(notifications.length(), 1);
-
-    // Create a notification with a timeout of 0 milliseconds
-    TestNotificationParameters parameters1("icon1", "body1", "buttonicon1", "content1 1 1 1");
-    notificationManager->addNotification(0, parameters1, 0, 0);
-
-    // Check that the timeout was set
-    QCOMPARE(lastTimeout, 0);
-
-    // The notification should be immediately destroyed
-    QCOMPARE(notifications.length(), 1);
-}
-
-void Ut_MCompositorNotificationSink::testOrientationChanged()
-{
-    // Make sure landscape is activated
-    emit orientationChangeFinished(M::Landscape);
-
-    // Create a notification
-    TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    notificationManager->addNotification(0, parameters);
-
-    // The notification should be created
-    QCOMPARE(types.length(), 1);
-    QCOMPARE(icons.length(), 1);
-    QCOMPARE(bodies.length(), 1);
-    QCOMPARE(buttonIcons.length(), 1);
-
-    // Make sure the view size and rotation was set correctly
-    MInfoBanner infoBanner(types[0]);
-    QTransform transform;
-    transform.rotate(Sysuid::sysuid()->orientationAngle());
-    QCOMPARE(lastFixedWidth, (int)infoBanner.preferredWidth());
-    QCOMPARE(lastFixedHeight, (int)infoBanner.preferredHeight());
-    QCOMPARE(lastTransform, transform);
-
-    // Rotate the screen
-    gSysuidStub->stubSetReturnValue("orientation", M::Portrait);
-    gSysuidStub->stubSetReturnValue("orientationAngle", M::Angle90);
-    emit orientationChangeFinished(M::Portrait);
-
-    // Make sure the view size and rotation was set correctly
-    QTransform transform2;
-    transform2.rotate(Sysuid::sysuid()->orientationAngle());
-    QCOMPARE((int)infoBanner.preferredHeight(), lastFixedWidth);
-    QCOMPARE((int)infoBanner.preferredWidth(), lastFixedHeight);
-
-    QCOMPARE(lastTransform, transform2);
+    connect(this, SIGNAL(timeout()), sink, SLOT(timeout()));
+    setProperty("notificationId", notificationId);
+    emit(timeout());
+    // Check that the window disappeared
+    QCOMPARE(infoBanner, disappearingWindow);
+    QCOMPARE(Ut_DisappearSceneWindow, true);
 }
 
 void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisabled()
 {
     // Create notification
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
-    sink->setApplicationEventsEnabled(true);
-    notificationManager->addNotification(0, parameters);
-    // Check that notification was added when application events enabled
-    QCOMPARE(notifications.count(), 1);
-
     sink->setApplicationEventsEnabled(false);
     notificationManager->addNotification(0, parameters);
-    // Check that notification was NOT added when application events are NOT enabled
-    QCOMPARE(notifications.count(), 1);
+    QCOMPARE(Ut_WindowShown, false);
+
+    sink->setApplicationEventsEnabled(true);
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(Ut_WindowShown, true);
 }
 
 void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
@@ -486,11 +318,12 @@ void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
     // Create notification
     TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters);
-    // Check that notification banner was not created when status indicator menu is visible
-    QCOMPARE(notifications.count(), 0);
+    QCOMPARE(Ut_WindowShown, false);
     emit statusIndictorMenuVisibilityChanged(false);
     notificationManager->addNotification(0, parameters);
-    QCOMPARE(notifications.count(), 1);
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow,event);
+    QCOMPARE(Ut_WindowShown, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)
