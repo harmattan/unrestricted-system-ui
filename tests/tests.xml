@@ -68,8 +68,11 @@
       <case name="ut_widgetnotificationsink" type="Functional" description="Test widget notification sink" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_widgetnotificationsink</step>
       </case>
-      <case name="ut_lockscreenui" type="Functional" description="Test the unlock slider API" level="Component">
+      <case name="ut_lockscreenui" type="Functional" description="Test the unlock screen" level="Component">
         <step expected_result="0">/usr/lib/system-ui-tests/ut_lockscreenui</step>
+      </case>
+      <case name="ut_unlockwidgets" type="Functional" description="Test the unlock widgets" level="Component">
+        <step expected_result="0">/usr/lib/system-ui-tests/ut_unlockwidgets</step>
       </case>
     </set>
     <set name="batterybusinesslogic" description="middleware tests">

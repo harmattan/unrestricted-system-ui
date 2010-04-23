@@ -37,7 +37,7 @@
 #include <MApplicationWindow>
 #include <MApplication>
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -142,8 +142,7 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
     QDrag *drag = new QDrag (event->widget ());
 
     // TBD: i used 160px for active lock lift area
-    if (geometry ().topRight ().x () >
-        (event->pos ().x () + 160.0))
+    if (geometry ().topRight ().x () > (event->pos ().x () + 160.0))
         return;
 
     QMimeData *mimeData = new QMimeData;
