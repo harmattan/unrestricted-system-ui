@@ -1,8 +1,8 @@
-system-ui (0.15.5~1) harmattan; urgency=low
+system-ui (0.15.5-1) harmattan; urgency=low
 
-  * NEW VERSION
+  * Release with the renderpixmap changes
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Apr 2010 09:21:30 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Apr 2010 14:48:27 +0200
 
 system-ui (0.15.4-1) harmattan; urgency=low
 
