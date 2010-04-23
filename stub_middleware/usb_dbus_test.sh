@@ -13,7 +13,7 @@ sleep 3; # wait for sysuid startup
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:false
 sleep 3;
 echo "Usb connect with Ovi Suite setting"
-gconftool-2 -t string -s /Dui/System/UsbMode ovi_suite
+gconftool-2 -t string -s /Meego/System/UsbMode ovi_suite
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 3;
@@ -22,7 +22,7 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 sleep 3;
 
 echo "Usb connect with Mass Storage setting"
-gconftool-2 -t string -s /Dui/System/UsbMode mass_storage
+gconftool-2 -t string -s /Meego/System/UsbMode mass_storage
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 3;
@@ -31,7 +31,7 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 sleep 3;
 
 echo "Usb connect with do nothing setting"
-gconftool-2 -t string -s /Dui/System/UsbMode charging_only
+gconftool-2 -t string -s /Meego/System/UsbMode charging_only
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 3;
@@ -40,7 +40,7 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 sleep 3;
 
 echo Usb connect with "Ask on connection" setting
-gconftool-2 -t string -s /Dui/System/UsbMode ask
+gconftool-2 -t string -s /Meego/System/UsbMode ask
 dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.systemui.usb.testUsbConnection boolean:true
 dbus-send --print-reply --session --dest=com.nokia.systemui / com.nokia.systemui.usb.isActive
 sleep 15;
@@ -49,3 +49,4 @@ dbus-send --session --type=method_call --dest=com.nokia.systemui / com.nokia.sys
 
 echo "DONE"
 kill ${SYSUIDPID}
+

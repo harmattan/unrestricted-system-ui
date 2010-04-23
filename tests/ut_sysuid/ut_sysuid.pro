@@ -8,7 +8,6 @@ INCLUDEPATH += $$SRCDIR/statusindicatormenu
 SOURCES += \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/shutdownui.cpp \
-    $$SRCDIR/usbmodes.cpp \
     $$SRCDIR/usbui.cpp \
     $$SRCDIR/lockscreenui.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
@@ -39,7 +38,6 @@ SOURCES += \
 HEADERS += \
     $$SRCDIR/debug.h \
     $$SRCDIR/shutdownui.h \
-    $$SRCDIR/usbmodes.h \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreenui.h \
     $$SRCDIR/shutdownbusinesslogic.h \

@@ -26,9 +26,12 @@
 #include <QDBusInterface>
 #include <QDBusMessage>
 
-class QProcess;
-
-#include "usbmodes.h"
+typedef enum {
+    USB_OVI_SUITE = 10,
+    USB_MASS_STORAGE,
+    USB_NOOP,
+    USB_AUTO
+} usb_modes;
 
 class UsbBusinessLogic : public QObject
 {
@@ -40,6 +43,7 @@ class UsbBusinessLogic : public QObject
 
         void setMode (usb_modes new_mode);
         usb_modes getModeSetting ();
+
         bool isActive ();
         bool isConnected ();
 
@@ -53,18 +57,13 @@ class UsbBusinessLogic : public QObject
         void Connected (bool connected);
 
     private slots:
-        void usb_prop_changed (const QDBusMessage &msg);
-        void query_finished (QDBusPendingCallWatcher *call);
+        void usb_moded_handler (QString mode);
 
     private:
-        void init_device (QString &udi);
-        int  getCableType ();
-
-        MGConfItem    *m_setting; 
-        QDBusInterface  *m_hal;
+        MGConfItem      *m_setting;
+        QDBusInterface  *m_usb_moded;
         bool             m_active;
         bool             m_connected;
-        QProcess        *m_process;
 
 };
 

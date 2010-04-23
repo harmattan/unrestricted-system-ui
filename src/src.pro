@@ -9,7 +9,6 @@ TARGET = sysuid
 target.path = /usr/bin
 CONFIG += meegotouch \
           qmsystem \
-          silent \
           link_pkgconfig
 
 QT += dbus
@@ -37,7 +36,6 @@ HEADERS +=                              \
     ledbusinesslogicadaptor.h           \
     systemuigconf.h                     \
     lockscreenbusinesslogicadaptor.h    \
-    usbmodes.h                          \
     usbbusinesslogic.h                  \
     usbbusinesslogicadaptor.h           \
     usbui.h                             \
@@ -60,7 +58,6 @@ SOURCES +=                              \
     ledbusinesslogicadaptor.cpp         \
     systemuigconf.cpp                   \
     lockscreenbusinesslogicadaptor.cpp  \
-    usbmodes.cpp                        \
     usbbusinesslogic.cpp                \
     usbbusinesslogicadaptor.cpp         \
     usbui.cpp                           \
@@ -71,22 +68,14 @@ include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 
-PKGCONFIG += contextsubscriber-1.0 \
-                          maemosec
-
-
-# TODO: remove these when usb_moded got integrated:
-usb_scripts.files += pcsuite-enable.sh
-usb_scripts.path = $$(DEBIAN_DESTDIR)/usr/bin
-
-usb_sudoers.files += usb.sudoers
-usb_sudoers.path = $$(DEBIAN_DESTDIR)/etc/sudoers.d
+PKGCONFIG += \
+    contextsubscriber-1.0 \
+    maemosec \
+    usb_moded
 
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
 INSTALLS += target \
-            dbus_policy \
-            usb_scripts \
-            usb_sudoers
+            dbus_policy
 
