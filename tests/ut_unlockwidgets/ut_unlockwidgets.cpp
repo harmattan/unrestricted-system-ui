@@ -23,6 +23,8 @@
 #include <unlockwidgets.h>
 #include <QGraphicsSceneMouseEvent>
 
+#define DND_MIME_TYPE "application/x-dnditemdata"
+
 int   argc = 1;
 char *argv[] = {
     (char *) "./ut_unlockwidgets",
@@ -71,7 +73,7 @@ void ut_unlockwidgets::test_unlock_header ()
     press.setButton (Qt::LeftButton);
     press.setScenePos (header->geometry ().topRight ());
     header->mousePressEvent (&press);
-    // an activateArea (true) should come 
+    // an activateArea (true) should come
 
     QTest::qWait(100);
 
@@ -85,6 +87,51 @@ void ut_unlockwidgets::test_unlock_header ()
 void ut_unlockwidgets::test_unlock_area ()
 {
     UnlockArea  *area = new UnlockArea;
+
+    // Set the drag&drop mime type
+    QMimeData mimeData;
+    mimeData.setData (DND_MIME_TYPE, 0);
+
+    QSignalSpy spy(area, SIGNAL (unlocked ()));
+
+    // Activate the area:
+    area->setEnabled (true);
+
+    // Enter drag
+    QGraphicsSceneDragDropEvent dragEnter (QEvent::GraphicsSceneDragEnter);
+    dragEnter.setScenePos (QPointF (0., 0.));
+    dragEnter.setButtons (Qt::LeftButton);
+    dragEnter.setMimeData (&mimeData);
+
+    area->dragEnterEvent (&dragEnter);
+    QVERIFY(dragEnter.isAccepted());
+    QCOMPARE(dragEnter.dropAction (), Qt::MoveAction);
+
+    // Leave drag
+    QGraphicsSceneDragDropEvent dragLeave (QEvent::GraphicsSceneDragLeave);
+    dragLeave.setScenePos (QPointF (-0.1, -1.1));
+    dragLeave.setButtons (Qt::LeftButton);
+    dragLeave.setMimeData (&mimeData);
+
+    area->dragLeaveEvent (&dragLeave);
+    QVERIFY(dragLeave.isAccepted());
+    QCOMPARE(dragLeave.dropAction (), Qt::MoveAction);
+
+    // Drop the to the unlock area
+    QGraphicsSceneDragDropEvent dragDrop (QEvent::GraphicsSceneDrop);
+    dragDrop.setScenePos (area->geometry ().center ());
+    dragDrop.setButtons (Qt::LeftButton);
+    dragDrop.setMimeData (&mimeData);
+
+    area->dropEvent (&dragDrop);
+
+    QVERIFY(dragDrop.isAccepted ());
+    QCOMPARE(dragDrop.dropAction (), Qt::MoveAction);
+
+    // Check the unlock signal
+    QTest::qWait (100);
+    // 1 unlocked () signal should came
+    QCOMPARE(spy.count(), 1);
 
     delete area;
 }
