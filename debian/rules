@@ -40,7 +40,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
-	@qmake $(QMAKE_OPTIONS)
+	qmake -recursive $(QMAKE_OPTIONS)
 
 	touch configure-stamp
 

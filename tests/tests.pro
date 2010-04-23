@@ -13,7 +13,10 @@ QMAKE_EXTRA_TARGETS += check-xml
 
 QMAKE_CLEAN += **/*.log.xml ./coverage.log.xml
 
-tests_xml.path = /usr/share/system-ui-tests
-tests_xml.files = tests.xml
+support_files.commands += $$PWD/gen-tests-xml.sh > $$OUT_PWD/tests.xml
+support_files.target = support_files
+support_files.files += $$OUT_PWD/tests.xml
+support_files.path = /usr/share/system-ui-tests
+support_files.CONFIG += no_check_exist
 
-INSTALLS += tests_xml
+INSTALLS += support_files
