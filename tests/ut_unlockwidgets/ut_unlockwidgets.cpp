@@ -141,6 +141,7 @@ void ut_unlockwidgets::test_unlock_missedevents ()
     UnlockNotifications *missedEvents =
         new UnlockNotifications;
 
+    // TODO: how this can be tested properly?
 
     delete missedEvents;
 }

@@ -12,6 +12,7 @@
 *.gcno
 *.gcda
 *.pro.user
+*tags
 lib
 *.qm
 *.ts
