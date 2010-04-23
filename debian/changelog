@@ -1,3 +1,9 @@
+system-ui (0.15.5~1) harmattan; urgency=low
+
+  * NEW VERSION
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Apr 2010 09:21:30 +0200
+
 system-ui (0.15.4-1) harmattan; urgency=low
 
   * Fixes: NB#164933 - tklock doesn't close when requested to do so via D-Bus
