@@ -61,7 +61,7 @@ void Ut_LowBatteryNotifier::init ()
 {
     m_subject = new LowBatteryNotifier ();
     m_helper = new LowBatteryHelper ();
-    connect (m_subject, SIGNAL (showNotification (QString)),
+    connect (m_subject, SIGNAL (showNotification ()),
              m_helper, SLOT (notificationShown ()));
     m_subject->m_ActiveInterval = Act;
     m_subject->m_InactiveInterval = Inact;

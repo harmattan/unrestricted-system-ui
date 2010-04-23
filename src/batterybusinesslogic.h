@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary (-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino=" (0,W2s,i2s,t0,l1,:0" */
 #ifndef BATTERYBUSINESSLOGIC_H
 #define BATTERYBUSINESSLOGIC_H
 
@@ -44,8 +44,6 @@
 class QTimer;
 class MNotification;
 
-using namespace Maemo;
-
 class LowBatteryNotifier : public QObject
 {
     Q_OBJECT
@@ -55,22 +53,24 @@ public:
     virtual ~LowBatteryNotifier ();
 
 public slots:
-    void showLowBatteryNotification();
+    void showLowBatteryNotification ();
 
 private slots:
-    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
 
+#ifdef UNIT_TEST
 signals:
-    void showNotification(QString);
+    void showNotification ();
+#endif
 
 private:
-    QmDisplayState  *m_Display;
-    QTimer          *m_Timer;
-    QTime            m_Time;
-    bool             m_Sleep;
-    int              m_ActiveInterval;
-    int              m_InactiveInterval;
-    MNotification *m_notification;
+    Maemo::QmDisplayState       *m_Display;
+    QTimer                      *m_Timer;
+    QTime                        m_Time;
+    bool                         m_Sleep;
+    int                          m_ActiveInterval;
+    int                          m_InactiveInterval;
+    MNotification               *m_notification;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;
@@ -87,19 +87,19 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    BatteryBusinessLogic(SystemUIGConf *systemUIGConf, QObject* parent = 0);
-    virtual ~BatteryBusinessLogic();
+    BatteryBusinessLogic (SystemUIGConf *systemUIGConf, QObject* parent = 0);
+    virtual ~BatteryBusinessLogic ();
 
-    void setPSMThreshold(const QString &threshold);
-    void togglePSM(bool toggle);
-    void togglePSMAuto(bool toggle);
-    int batteryBarValue(int percentage = -1);
-    bool PSMValue();
-    void batteryStatus();
-    QVariant GConfItemValue(SystemUIGConf::GConfKey key);
-    QStringList remainingTimeValues();
-    QStringList PSMThresholdValues();
-    QString PSMThresholdValue();
+    void setPSMThreshold (const QString &threshold);
+    void togglePSM (bool toggle);
+    void togglePSMAuto (bool toggle);
+    int batteryBarValue (int percentage = -1);
+    bool PSMValue ();
+    void batteryStatus ();
+    QVariant GConfItemValue (SystemUIGConf::GConfKey key);
+    QStringList remainingTimeValues ();
+    QStringList PSMThresholdValues ();
+    QString PSMThresholdValue ();
 
 signals:
     void batteryCharging (int);
@@ -108,20 +108,24 @@ signals:
     void PSMValueChanged (bool);
     void PSMAutoDisabled ();
     void remainingTimeValuesChanged (QStringList);
-    void showNotification (QString);
     void batteryFullyCharged ();
 
+#ifdef UNIT_TEST
+    void showNotification ();
+#endif
+
+
 public slots:
-    void initBattery();
+    void initBattery ();
 
 private:
-    SystemUIGConf      *m_SystemUIGConf;
-    QmBattery          *m_Battery;
-    QmDeviceMode       *m_DeviceMode;
-    QmLED              *m_Led;
-    LowBatteryNotifier *m_LowBatteryNotifier;
-    QStringList         m_PSMThresholds;
-    MNotification    *m_notification;
+    SystemUIGConf             *m_SystemUIGConf;
+    Maemo::QmBattery          *m_Battery;
+    Maemo::QmDeviceMode       *m_DeviceMode;
+    Maemo::QmLED              *m_Led;
+    LowBatteryNotifier        *m_LowBatteryNotifier;
+    QStringList                m_PSMThresholds;
+    MNotification             *m_notification;
 
     void setPSMState (bool on);
     void initSystemUIGConfKeys ();
@@ -129,12 +133,12 @@ private:
     int animationRate (Maemo::QmBattery::ChargerType type);
 
 private slots:
-    void batteryLevelChanged(Maemo::QmBattery::Level level);
-    void batteryEnergyLevelChanged(int energyLevel);
-    void batteryStatusChanged(Maemo::QmBattery::State state);
-    void batteryChargerEvent(Maemo::QmBattery::ChargerType type);
-    void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);
-    void utiliseLED(bool activate, const QString &pattern);
+    void batteryLevelChanged (Maemo::QmBattery::Level level);
+    void batteryEnergyLevelChanged (int energyLevel);
+    void batteryStatusChanged (Maemo::QmBattery::State state);
+    void batteryChargerEvent (Maemo::QmBattery::ChargerType type);
+    void devicePSMStateChanged (Maemo::QmDeviceMode::PSMState PSMState);
+    void utiliseLED (bool activate, const QString &pattern);
 
 #ifdef UNIT_TEST
     friend class Ut_BatteryBusinessLogic;
