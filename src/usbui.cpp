@@ -20,10 +20,11 @@
 #include "usbbusinesslogic.h"
 
 #include <QGraphicsLinearLayout>
-#include <MContainer>
+#include <MLayout>
 #include <MNotification>
 #include <MSceneWindow>
 #include <MButton>
+#include <MLabel>
 #include <MDialog>
 #include <MLocale>
 #include <QTimer>
@@ -63,7 +64,7 @@ UsbUi::ShowDialog ()
 {
     SYS_DEBUG ("");
     MButton     *button;
-    MContainer  *hbox;
+    MLabel      *label;
 
     if (m_dialog)
     {
@@ -74,38 +75,37 @@ UsbUi::ShowDialog ()
 
     m_dialog = new MDialog;
 
-    //% "Usb connected"
-    m_dialog->setTitle (qtTrId ("qtn_usb_connected_title"));
+    //% "Connected to USB device"
+    m_dialog->setTitle (qtTrId ("qtn_usb_connected"));
     m_dialog->setSystemModal (true);
-    m_dialog->setCloseButtonVisible (false);
-    //FIXME: seems dialog should hide itself from task-selector too ^^^
+    m_dialog->setCloseButtonVisible (true);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout (Qt::Vertical);
 
-    //% "Ovi Suite"
-    button = new MButton (qtTrId ("qtn_usb_ovi_suite"));
+    //% "Current state: Charging only"
+    label = new MLabel (qtTrId ("qtn_usb_charging"));
+    label->setAlignment (Qt::AlignLeft);
 
-    layout->addItem (button);
-    layout->setStretchFactor (button, 1);
+    layout->addItem (label);
 
-    QObject::connect (button, SIGNAL (clicked ()),
-                      this, SLOT (OviSuiteSelected ()));
-
-    //% "Mass Storage"
+    //% "Mass Storage mode"
     button = new MButton (qtTrId ("qtn_usb_mass_storage"));
 
     layout->addItem (button);
-    layout->setStretchFactor (button, 1);
 
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
-    hbox = new MContainer;
-    hbox->setHeaderVisible (false);
-    hbox->setLayout (layout);
+    //% "Ovi Suite mode"
+    button = new MButton (qtTrId ("qtn_usb_ovi_suite"));
 
-    m_dialog->setCentralWidget (hbox);
+    layout->addItem (button);
+
+    QObject::connect (button, SIGNAL (clicked ()),
+                      this, SLOT (OviSuiteSelected ()));
+
     m_dialog->setButtonBoxVisible (false);
+    m_dialog->setLayout (layout);
 
     // Modal dialogs always create a new top level window and a scene manager
     // so no need to worry about registering to a specific scene manager here
@@ -138,6 +138,7 @@ UsbUi::MassStorageSelected ()
 }
 
 // Showing notification on connection/disconnection
+// TODO: Drop this function
 void
 UsbUi::UsbEvent (bool connected)
 {
@@ -153,12 +154,16 @@ UsbUi::UsbEvent (bool connected)
             m_notification = 0;
         }
 
-        //% "Usb disconnected"
-        m_notification = new MNotification (MNotification::DeviceRemovedEvent, "", qtTrId ("qtn_usb_disconnected"));
+// FIXME: According to UI spec no need for usb disconnected message
+#if 0
+        m_notification = new MNotification (MNotification::DeviceRemovedEvent,
+                                            "",
+                                            //% "Usb disconnected"
+                                            qtTrId ("qtn_usb_disconnected"));
         m_notification->publish();
-
+#endif
         // Hide the mode-selection dialog
-        if (m_dialog)
+        if (m_dialog && m_dialog->isVisible ())
             m_dialog->disappear ();
 
         return;
@@ -169,15 +174,12 @@ UsbUi::UsbEvent (bool connected)
     if (config != USB_AUTO)
     {
         m_logic->setMode (config);
-        // TODO: result checking?
     }
     else // Or show the mode-selection dialog
     {
         ShowDialog ();
         return;
     }
-
-    show_notification ((int) config);
 }
 
 // for dbus adaptor
@@ -188,6 +190,8 @@ UsbUi::getLogic ()
 }
 
 // id should be an usb_modes enum value
+// TODO: This should be a slot and
+// logic should call this...
 void
 UsbUi::show_notification (int id)
 {
@@ -196,23 +200,20 @@ UsbUi::show_notification (int id)
     switch (id)
     {
         case USB_OVI_SUITE:
-            //% "Ovi Suite"
+            //% "Ovi Suite mode"
             mode_text = new QString (qtTrId ("qtn_usb_ovi_suite"));
             break;
         case USB_MASS_STORAGE:
-            //% "Mass Storage"
+            //% "Mass Storage mode"
             mode_text = new QString (qtTrId ("qtn_usb_mass_storage"));
             break;
         case USB_NOOP:
-            //% "Do nothing"
-            mode_text = new QString (qtTrId ("qtn_usb_do_nothing"));
-            break;
         case USB_AUTO:
         default:
             // no notification should be shown...
             return;
             break;
-    } 
+    }
 
     // remove previous one
     if (m_notification)
@@ -222,7 +223,10 @@ UsbUi::show_notification (int id)
         m_notification = 0;
     }
 
-    //% "<b>Usb connected</b><br />Selected mode: <b>%1</b>"
-    m_notification = new MNotification (MNotification::DeviceAddedEvent, "", qtTrId ("qtn_usb_connected_%1").arg (*mode_text));
-    m_notification->publish();
+    m_notification = new MNotification (MNotification::DeviceAddedEvent,
+                                        "",
+                                        //% "USB connected.<br />%1"
+                                        qtTrId ("qtn_usb_info_connected").arg (*mode_text));
+    m_notification->publish ();
 }
+

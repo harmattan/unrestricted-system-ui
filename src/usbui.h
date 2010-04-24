@@ -42,8 +42,8 @@ class UsbUi : public QObject
 
     private:
         UsbBusinessLogic    *m_logic;
-        MNotification     *m_notification;
-        MDialog           *m_dialog;
+        MNotification       *m_notification;
+        MDialog             *m_dialog;
 
         void show_notification (int id);
 };
