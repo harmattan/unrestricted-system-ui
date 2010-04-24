@@ -4,6 +4,8 @@ INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea
 INCLUDEPATH += /usr/include/contextsubscriber
 INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
+PKGCONFIG += usb_moded dbus-1
+
 # unit test and unit classes
 SOURCES += \
     $$SRCDIR/debug.cpp \

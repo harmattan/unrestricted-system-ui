@@ -415,8 +415,10 @@ BatteryBusinessLogic::batteryChargerEvent (
     switch (type) {
     case QmBattery::None: // No  charger connected
         if (m_Battery->getLevel () == QmBattery::LevelFull)
+	{
             NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
                              qtTrId (DisconnectChargerText))); //show reminder
+	}
         break;
 
     case QmBattery::Wall: // Wall charger

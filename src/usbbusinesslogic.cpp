@@ -18,15 +18,12 @@
 ****************************************************************************/
 #include "usbbusinesslogic.h"
 
-#include "usb_moded-modes.h"
-#include "usb_moded-dbus.h"
+#include <usb_moded-modes.h>
+#include <usb_moded-dbus.h>
 
 #include <QDBusMessage>
 #include <QDBusConnection>
 #include <QDBusInterface>
-#include <QDBusPendingCall>
-#include <QDBusPendingReply>
-#include <QDBusPendingCallWatcher>
 
 #include <QString>
 
@@ -45,9 +42,10 @@ UsbBusinessLogic::UsbBusinessLogic (QObject *parent) :
 {
     m_setting = new MGConfItem (USB_GCONF_KEY);
 
-    m_usb_moded = new (USB_MODE_SERVICE,
-                       USB_MODE_OBJECT,
-                       USB_MODE_INTERFACE,
+    m_usb_moded = new QDBusInterface
+                      (QString (USB_MODE_SERVICE),
+                       QString (USB_MODE_OBJECT),
+                       QString (USB_MODE_INTERFACE),
                        QDBusConnection::systemBus ());
 
     connect (m_usb_moded, SIGNAL (sig_usb_state_ind (QString)),
@@ -75,7 +73,7 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
             m_usb_moded->call (USB_MODE_STATE_SET, MODE_MASS_STORAGE);
 
             // TODO: check the result...
-            active = true;
+            m_active = true;
             emit Active (true);
             break;
         case USB_MASS_STORAGE:

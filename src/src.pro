@@ -71,6 +71,7 @@ include(notifications/notifications.pri)
 PKGCONFIG += \
     contextsubscriber-1.0 \
     maemosec \
+    dbus-1 \
     usb_moded
 
 dbus_policy.files += systemui.conf
