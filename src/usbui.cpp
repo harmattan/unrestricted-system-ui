@@ -23,11 +23,11 @@
 #include <MLayout>
 #include <MNotification>
 #include <MSceneWindow>
-#include <MButton>
+#include <MWidget>
+#include <MContentItem>
 #include <MLabel>
 #include <MDialog>
 #include <MLocale>
-#include <QTimer>
 
 #define DEBUG
 #define WARNING
@@ -63,8 +63,9 @@ void
 UsbUi::ShowDialog ()
 {
     SYS_DEBUG ("");
-    MButton     *button;
-    MLabel      *label;
+    MWidget       *centralwidget;
+    MContentItem  *button;
+    MLabel        *label;
 
     if (m_dialog)
     {
@@ -78,7 +79,6 @@ UsbUi::ShowDialog ()
     //% "Connected to USB device"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected"));
     m_dialog->setSystemModal (true);
-    m_dialog->setCloseButtonVisible (true);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout (Qt::Vertical);
 
@@ -88,24 +88,29 @@ UsbUi::ShowDialog ()
 
     layout->addItem (label);
 
+    button = new MContentItem (MContentItem::SingleTextLabel);
     //% "Mass Storage mode"
-    button = new MButton (qtTrId ("qtn_usb_mass_storage"));
+    button->setTitle (qtTrId ("qtn_usb_mass_storage"));
 
     layout->addItem (button);
 
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (MassStorageSelected ()));
 
+    button = new MContentItem (MContentItem::SingleTextLabel);
     //% "Ovi Suite mode"
-    button = new MButton (qtTrId ("qtn_usb_ovi_suite"));
+    button->setTitle (qtTrId ("qtn_usb_ovi_suite"));
 
     layout->addItem (button);
 
     QObject::connect (button, SIGNAL (clicked ()),
                       this, SLOT (OviSuiteSelected ()));
 
+    centralwidget = new MWidget;
+    centralwidget->setLayout (layout);
+
     m_dialog->setButtonBoxVisible (false);
-    m_dialog->setLayout (layout);
+    m_dialog->setCentralWidget (centralwidget);
 
     // Modal dialogs always create a new top level window and a scene manager
     // so no need to worry about registering to a specific scene manager here
@@ -122,7 +127,8 @@ UsbUi::OviSuiteSelected ()
 
     m_dialog->disappear ();
 
-    show_notification (USB_OVI_SUITE);
+    // FIXME: backend should query this:
+    ShowNotification (USB_OVI_SUITE);
 }
 
 void
@@ -134,11 +140,12 @@ UsbUi::MassStorageSelected ()
 
     m_dialog->disappear ();
 
-    show_notification (USB_MASS_STORAGE);
+    // FIXME: backend should query this:
+    ShowNotification (USB_MASS_STORAGE);
 }
 
 // Showing notification on connection/disconnection
-// TODO: Drop this function
+// TODO: Drop this function if disconnect notification not needed
 void
 UsbUi::UsbEvent (bool connected)
 {
@@ -146,13 +153,17 @@ UsbUi::UsbEvent (bool connected)
 
     if (connected == false)
     {
-        // remove previous one
+        // remove the previous notification
         if (m_notification)
         {
             m_notification->remove ();
             delete m_notification;
             m_notification = 0;
         }
+
+        // Hide the mode-selection dialog
+        if (m_dialog && m_dialog->isVisible ())
+            m_dialog->disappear ();
 
 // FIXME: According to UI spec no need for usb disconnected message
 #if 0
@@ -162,24 +173,11 @@ UsbUi::UsbEvent (bool connected)
                                             qtTrId ("qtn_usb_disconnected"));
         m_notification->publish();
 #endif
-        // Hide the mode-selection dialog
-        if (m_dialog && m_dialog->isVisible ())
-            m_dialog->disappear ();
-
         return;
     }
 
-    usb_modes   config    = m_logic->getModeSetting ();
-    // Activate the desired usb mode
-    if (config != USB_AUTO)
-    {
-        m_logic->setMode (config);
-    }
-    else // Or show the mode-selection dialog
-    {
+    if (connected == true)
         ShowDialog ();
-        return;
-    }
 }
 
 // for dbus adaptor
@@ -190,12 +188,18 @@ UsbUi::getLogic ()
 }
 
 // id should be an usb_modes enum value
-// TODO: This should be a slot and
-// logic should call this...
 void
-UsbUi::show_notification (int id)
+UsbUi::ShowNotification (int id)
 {
     QString *mode_text;
+
+    // remove previous one
+    if (m_notification)
+    {
+        m_notification->remove ();
+        delete m_notification;
+        m_notification = 0;
+    }
 
     switch (id)
     {
@@ -213,14 +217,6 @@ UsbUi::show_notification (int id)
             // no notification should be shown...
             return;
             break;
-    }
-
-    // remove previous one
-    if (m_notification)
-    {
-        m_notification->remove ();
-        delete m_notification;
-        m_notification = 0;
     }
 
     m_notification = new MNotification (MNotification::DeviceAddedEvent,

@@ -93,24 +93,6 @@ UsbBusinessLogic::setMode (usb_modes new_mode)
     }
 }
 
-usb_modes
-UsbBusinessLogic::getModeSetting ()
-{
-    if (m_setting->value ().type () == QVariant::Invalid)
-        return USB_AUTO;
-
-    QString val = m_setting->value ().toString ();
-
-    if (val == MODE_MASS_STORAGE)
-        return USB_MASS_STORAGE;
-    else if (val == MODE_OVI_SUITE)
-        return USB_OVI_SUITE;
-    else if (val == MODE_CHARGING)
-        return USB_NOOP;
-    else /* MODE_UNDEFINED && MODE_ASK */
-        return USB_AUTO;
-}
-
 void
 UsbBusinessLogic::usb_moded_handler (QString mode)
 {
