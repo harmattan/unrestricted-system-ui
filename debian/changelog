@@ -1,3 +1,9 @@
+system-ui (0.15.6~1) harmattan; urgency=low
+
+  * USB: Use usb_moded
+
+ -- David Kedves <dkedves@blumsoft.eu>  Sun, 25 Apr 2010 10:02:56 +0200
+
 system-ui (0.15.5-1) harmattan; urgency=low
 
   * Release with the renderpixmap changes
