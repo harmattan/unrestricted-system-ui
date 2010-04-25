@@ -40,12 +40,8 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
 {
     m_logic = new UsbBusinessLogic (this);
 
-    QObject::connect (m_logic, SIGNAL (Connected (bool)),
-                      this, SLOT (UsbEvent (bool)));
-
-    // It is for UsbBusinessLogicAdaptor:
-    QObject::connect (m_logic, SIGNAL (ShowDialog ()),
-                      this, SLOT (ShowDialog ()));
+    connect (m_logic, SIGNAL (currentModeChanged (usb_modes)),
+             this, SLOT (currentModeChanged (usb_modes)));
 }
 
 UsbUi::~UsbUi ()
@@ -58,7 +54,6 @@ UsbUi::~UsbUi ()
 }
 
 // Showing the mode selection dialog
-// (when mode is usb-auto / "ask on connection")
 void
 UsbUi::ShowDialog ()
 {
@@ -124,11 +119,7 @@ UsbUi::OviSuiteSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_OVI_SUITE);
-
     m_dialog->disappear ();
-
-    // FIXME: backend should query this:
-    ShowNotification (USB_OVI_SUITE);
 }
 
 void
@@ -137,47 +128,41 @@ UsbUi::MassStorageSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (USB_MASS_STORAGE);
-
     m_dialog->disappear ();
-
-    // FIXME: backend should query this:
-    ShowNotification (USB_MASS_STORAGE);
 }
 
-// Showing notification on connection/disconnection
-// TODO: Drop this function if disconnect notification not needed
 void
-UsbUi::UsbEvent (bool connected)
+UsbUi::currentModeChanged (usb_modes mode)
 {
-    SYS_DEBUG ("");
-
-    if (connected == false)
+    switch (mode)
     {
-        // remove the previous notification
-        if (m_notification)
-        {
-            m_notification->remove ();
-            delete m_notification;
-            m_notification = 0;
-        }
+        case USB_AUTO:
+            ShowDialog ();
+            break;
+        case USB_NOTCONNECTED:
+            // remove the previous notification
+            if (m_notification)
+            {
+                m_notification->remove ();
+                delete m_notification;
+                m_notification = 0;
+            }
 
-        // Hide the mode-selection dialog
-        if (m_dialog && m_dialog->isVisible ())
-            m_dialog->disappear ();
+            // Hide the mode-selection dialog
+            if (m_dialog && m_dialog->isVisible ())
+                m_dialog->disappear ();
 
-// FIXME: According to UI spec no need for usb disconnected message
-#if 0
-        m_notification = new MNotification (MNotification::DeviceRemovedEvent,
-                                            "",
-                                            //% "Usb disconnected"
-                                            qtTrId ("qtn_usb_disconnected"));
-        m_notification->publish();
-#endif
-        return;
+            break;
+        case USB_NOOP:
+        case USB_DATA_IN_USE:
+            SYS_DEBUG ("What about mode = %d?", mode);
+            // doing nothing, no ui interaction specified here...
+            break;
+        case USB_OVI_SUITE:
+        case USB_MASS_STORAGE:
+            ShowNotification ((int) mode);
+            break;
     }
-
-    if (connected == true)
-        ShowDialog ();
 }
 
 // for dbus adaptor

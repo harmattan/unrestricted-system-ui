@@ -20,51 +20,47 @@
 #define USBBUSINESSLOGIC_H
 
 #include <QObject>
-#include <QString>
-#include <MGConfItem>
-#include <QDBusPendingCallWatcher>
-#include <QDBusInterface>
-#include <QDBusMessage>
+#include <QDBusError>
+#include <QMetaType>
 
-typedef enum {
+enum usb_modes {
     USB_OVI_SUITE = 10,
     USB_MASS_STORAGE,
     USB_NOOP,
-    USB_AUTO
-} usb_modes;
+    USB_AUTO,
+    USB_NOTCONNECTED,
+    USB_DATA_IN_USE
+};
+
+Q_DECLARE_METATYPE(usb_modes);
+
+class QDBusInterface;
 
 class UsbBusinessLogic : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(usb_modes)
 
     public:
         UsbBusinessLogic (QObject *parent = 0);
         ~UsbBusinessLogic ();
 
         void setMode (usb_modes new_mode);
-        usb_modes getModeSetting ();
+        usb_modes getCurrentMode ();
 
-        bool isActive ();
-        bool isConnected ();
-
-        void emitShowDialog ();
-        // Its for testing:
-        void emitConnected (bool connected);
+        // For UI testing only:
+        void testModeChanged (QString mode);
 
     signals:
-        void ShowDialog ();
-        void Active (bool active);
-        void Connected (bool connected);
+        void currentModeChanged (usb_modes mode);
 
     private slots:
         void usb_moded_handler (QString mode);
+        void dbusError (QDBusError error);
 
     private:
-        MGConfItem      *m_setting;
         QDBusInterface  *m_usb_moded;
-        bool             m_active;
-        bool             m_connected;
-
+        usb_modes        m_currentMode;
 };
 
 #endif

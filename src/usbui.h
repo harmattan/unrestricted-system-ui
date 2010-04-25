@@ -35,14 +35,14 @@ class UsbUi : public QObject
         UsbBusinessLogic * getLogic ();
 
     private slots:
-        void ShowDialog ();
-        void ShowNotification (int id);
-
-        void UsbEvent (bool Connected);
+        void currentModeChanged (usb_modes mode);
         void OviSuiteSelected ();
         void MassStorageSelected ();
 
     private:
+        void ShowDialog ();
+        void ShowNotification (int id);
+
         UsbBusinessLogic    *m_logic;
         MNotification       *m_notification;
         MDialog             *m_dialog;

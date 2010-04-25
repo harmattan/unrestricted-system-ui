@@ -23,7 +23,7 @@
 
 #include <QDBusAbstractAdaptor>
 
-// Implements the DBus API interface for the USB UI
+// Implements the DBus API interface for the USB UI (testing)
 class UsbBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
@@ -34,21 +34,10 @@ public:
             QObject             *parent,
             UsbBusinessLogic    *usb);
 
-signals:
-    // Its emitted when some USB mode activated/deactivated
-    // (Ovi Suite mode, Mass Storage mode)
-    // This can be used eg. for the status-area usb icon
-    void Active (bool active);
-    void Connected (bool connected);
-
 public slots:
-    // Its for testing: 
-    Q_NOREPLY void testUsbConnection (bool connected);
-    // Its for eg.: statusindicator menu plugin:
-    Q_NOREPLY void ShowModeSelectionDialog ();
-
-    bool isActive (); 
-    bool isConnected ();
+    // Possible parameter values available in the
+    // usb_moded development package headers
+    Q_NOREPLY void simulateUsbModedSignal (QString param);
 
 private:
     UsbBusinessLogic   *m_usb;
