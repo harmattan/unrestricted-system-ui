@@ -31,6 +31,8 @@ Ut_UsbBusinessLogic::initTestCase()
 
     m_app = new MApplication (argc, &app_name);
     m_logic = new UsbBusinessLogic;
+
+    QTest::qWait (300);
 }
 
 void 
