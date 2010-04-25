@@ -53,8 +53,9 @@ Ut_UsbBusinessLogic::testUsbModedRelation ()
     m_logic->testModeChanged (QString (DATA_IN_USE));
     m_logic->testModeChanged (QString (USB_CONNECTED_DIALOG_SHOW));
 
-    QTest::qWait (100);
+    QTest::qWait (150);
 
+    SYS_DEBUG ("count = %d", spy.count ());
     QVERIFY (spy.count () == 6);
 
     // Do some checks here...
