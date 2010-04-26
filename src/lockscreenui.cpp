@@ -40,9 +40,9 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #include "debug.h"
 
 #define GCONF_BG_LANDSCAPE \
-    "/desktop/standard/background/portrait/picture_filename"
+    "/desktop/meego/background/landscape"
 #define GCONF_BG_PORTRAIT \
-    "/desktop/standard/background/landscape/picture_filename"
+    "/desktop/meego/background/portrait"
 
 LockScreenUI::LockScreenUI () :
         MApplicationPage (),
