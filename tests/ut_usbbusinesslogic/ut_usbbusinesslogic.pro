@@ -1,3 +1,4 @@
+include(../common_top.pri)
 SRC_PREFIX = ../../src/
 STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX
