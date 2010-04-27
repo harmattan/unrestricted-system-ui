@@ -83,4 +83,7 @@ HEADERS += \
     $$STUBSDIR/statusareawindow_stub.h \
     $$STUBSDIR/unlockwidgets_stub.h
 
+# FIXME: HACK!!! REMOVE THIS!!!
+message("HACK: fixing usb-moded headers" $$system(cp -f /usr/include/usb-moded/* $$PWD))
+
 include(../common_bot.pri)
