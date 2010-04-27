@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | grep -v ut_template | sed 's!/.*!!')
 
 QMAKE_STRIP = echo
 

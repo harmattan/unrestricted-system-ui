@@ -7,7 +7,7 @@ LEVEL="Component"
 
 UT_TESTCASES=""
 
-for TEST in $(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!'); do
+for TEST in $(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | grep -v ut_template | sed 's!/.*!!'); do
 	if [ -x $TEST/$TEST ]; then
 
 TESTCASE_TEMPLATE="<case name=\"$TEST\" description=\"$TEST\" requirement=\"\" timeout=\"60\">
