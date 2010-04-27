@@ -1,8 +1,9 @@
 system-ui (0.15.6~1) harmattan; urgency=low
 
   * USB: Use usb_moded
+  * ShutdownUI: follow UI design changes
 
- -- David Kedves <dkedves@blumsoft.eu>  Sun, 25 Apr 2010 10:02:56 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 27 Apr 2010 13:49:37 +0200
 
 system-ui (0.15.5-1) harmattan; urgency=low
 

@@ -166,10 +166,10 @@ StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
 }
 
 #shutdownTextBig {
-    font: $FONT_XLARGE;
+    font: "Nokia Sans" 6.22mm;
 }
 
 #shutdownTextSmaller {
-    font: $FONT_SMALL;
+    font: $FONT_XLARGE;
 }
 

@@ -66,15 +66,16 @@ ShutdownUI::createContent ()
     QGraphicsLinearLayout *layout
         = new QGraphicsLinearLayout (Qt::Vertical);
 
-    layout->addStretch (2);
+    layout->addStretch ();
     layout->addItem (m_text1);
-    layout->addStretch (2);
+    layout->addStretch ();
     layout->addItem (m_text2);
-    layout->addStretch (2);
+    layout->addStretch ();
 
-    centralWidget ()->setLayout (layout);
+    setLayout (layout);
 
     m_logo = new MImageWidget ("nokia_logo");
+    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
 }
 
 void
@@ -102,7 +103,8 @@ ShutdownUI::showLogo ()
     Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();
     Sysuid::sysuid ()->applicationWindow ().lockOrientation ();
 
-    centralWidget ()->setLayout (0);
+    delete m_text1;
+    delete m_text2;
 
     setCentralWidget (m_logo);
 

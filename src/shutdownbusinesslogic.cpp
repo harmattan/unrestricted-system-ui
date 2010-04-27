@@ -145,6 +145,6 @@ void
 ShutdownBusinessLogic::testTimeoutSlot ()
 {
     SYS_DEBUG ("");
-    systemStateChanged (QmSystemState::ShutdownDeniedUSB);
+    systemStateChanged (QmSystemState::Shutdown);
 }
 #endif
