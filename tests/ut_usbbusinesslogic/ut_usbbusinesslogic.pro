@@ -38,3 +38,4 @@ SOURCES += \
     $$SRC_PREFIX/usbbusinesslogic.cpp \
     $$SRC_PREFIX/usbbusinesslogicadaptor.cpp
 
+include(../common_bot.pri)
