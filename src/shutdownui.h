@@ -22,24 +22,27 @@
 #include <MApplicationPage>
 
 class MLabel;
+class MImageWidget;
 
 class ShutdownUI : public MApplicationPage
 {
     Q_OBJECT
 
 public:
-    ShutdownUI();
-    virtual ~ShutdownUI();
-    virtual void createContent();
+    ShutdownUI ();
+    virtual ~ShutdownUI ();
+    virtual void createContent ();
 
-    static void showWindow();
+    void showWindow ();
 
-protected:
-    virtual void resizeEvent(QGraphicsSceneResizeEvent* event);
-    void alignText();
+private slots:
+    void showLogo ();
+    void turnOffScreen ();
 
 private:
-    MLabel* text;
+    MLabel          *m_text1;
+    MLabel          *m_text2;
+    MImageWidget    *m_logo;
 };
 
 #endif // SHUTDOWNUI_H

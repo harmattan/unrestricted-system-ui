@@ -165,3 +165,11 @@ StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
     maximum-size: 24 18;
 }
 
+#shutdownTextBig {
+    font: $FONT_XLARGE;
+}
+
+#shutdownTextSmaller {
+    font: $FONT_SMALL;
+}
+

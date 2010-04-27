@@ -20,60 +20,117 @@
 #include "sysuid.h"
 
 #include <MLabel>
+#include <QTimer>
+#include <QGraphicsLinearLayout>
 #include <MSceneManager>
+#include <MImageWidget>
 #include <MApplicationWindow>
 #include <MLocale>
 
-#include <QDebug>
+#include <qmdisplaystate.h>
 
-ShutdownUI::ShutdownUI() :
-        text(0)
+#define DEBUG
+#define WARNING
+#include "debug.h"
+
+ShutdownUI::ShutdownUI () :
+        m_text1 (0),
+        m_text2 (0),
+        m_logo (0)
 {
     setPannable (false);
-
-    // let's hide home button
     setComponentsDisplayMode (MApplicationPage::AllComponents,
                               MApplicationPageModel::Hide);
 }
 
-ShutdownUI::~ShutdownUI()
+ShutdownUI::~ShutdownUI ()
 {
+
 }
 
-void ShutdownUI::createContent()
+void
+ShutdownUI::createContent ()
 {
-    qDebug() << "ShutdownUI::createContent()";
-    MApplicationPage::createContent();
+    MApplicationPage::createContent ();
 
-    QGraphicsWidget* panel = centralWidget();
+    //% "Shutting down"
+    m_text1 = new MLabel (qtTrId ("qtn_shut_down"));
+    m_text1->setObjectName ("shutdownTextBig");
+    m_text1->setAlignment (Qt::AlignCenter);
 
-    //% "Shutting down, good bye!"
-    text = new MLabel (qtTrId ("qtn_shut_down"), panel);
-    text->setAlignment(Qt::AlignCenter);
+    //% "Good bye!"
+    m_text2 = new MLabel (qtTrId ("qtn_shut_greeting"));
+    m_text2->setObjectName ("shutdownTextSmaller");
+    m_text2->setAlignment (Qt::AlignCenter);
 
-    alignText();
+    QGraphicsLinearLayout *layout
+        = new QGraphicsLinearLayout (Qt::Vertical);
+
+    layout->addStretch (2);
+    layout->addItem (m_text1);
+    layout->addStretch (2);
+    layout->addItem (m_text2);
+    layout->addStretch (2);
+
+    centralWidget ()->setLayout (layout);
+
+    m_logo = new MImageWidget ("nokia_logo");
 }
 
-void ShutdownUI::showWindow()
+void
+ShutdownUI::showWindow()
 {
-    MApplicationWindow &win = Sysuid::sysuid()->applicationWindow();
-    if (win.isHidden()) {
-        win.show();
+    SYS_DEBUG ("");
+
+    MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
+
+    if (win.isHidden ())
+    {
+        win.show ();
+        win.showFullScreen ();
     }
-    qDebug() << Q_FUNC_INFO << "win.isHidden()" << win.isHidden();
+
+    QTimer::singleShot (2000, this, SLOT (showLogo ()));
 }
 
-void ShutdownUI::resizeEvent(QGraphicsSceneResizeEvent* event)
+void
+ShutdownUI::showLogo ()
 {
-    qDebug() << "ShutdownUI::resizeEvent()";
-    MApplicationPage::resizeEvent(event);
+    SYS_DEBUG ("");
 
-    alignText();
+    // FIXME: we need logo for both orientations...
+    Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();
+    Sysuid::sysuid ()->applicationWindow ().lockOrientation ();
+
+    centralWidget ()->setLayout (0);
+
+    setCentralWidget (m_logo);
+
+    QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
 
-void ShutdownUI::alignText()
+void
+ShutdownUI::turnOffScreen ()
 {
-    qDebug() << "ShutdownUI::alignText()";
-    QSize size = Sysuid::sysuid()->applicationWindow().sceneManager()->visibleSceneSize();
-    text->setGeometry(QRectF(0, 0, size.width(), size.height()));
+    SYS_DEBUG ("");
+    bool success;
+
+    Maemo::QmDisplayState  display;
+
+    // Try to dim
+    success = display.set (Maemo::QmDisplayState::Dimmed);
+
+    if (! success)
+    {
+        SYS_WARNING ("Dimming the display failed!");
+    }
+
+    // Try to turn off
+    success = display.set (Maemo::QmDisplayState::Off);
+
+    if (! success)
+    {
+        SYS_WARNING ("Turning off the display failed!");
+    }
 }
+

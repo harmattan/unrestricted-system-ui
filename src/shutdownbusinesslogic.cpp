@@ -38,10 +38,9 @@ using namespace Maemo;
 #  include <QTimer>
 #endif
 
-ShutdownBusinessLogic::ShutdownBusinessLogic (
-        QObject *parent) :
+ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     QObject (parent),
-    m_Ui (NULL),
+    m_Ui (0),
     m_State (new QmSystemState (this))
 {
     connect (
@@ -59,7 +58,7 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
     if (m_Ui) {
-        m_Ui->deleteLater();
+        m_Ui->deleteLater ();
         m_Ui = NULL;
     }
 }
@@ -68,12 +67,10 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 void 
 ShutdownBusinessLogic::showUI ()
 {
-    ShutdownUI::showWindow ();
-
-    if (!m_Ui) {
+    if (m_Ui == 0)
         m_Ui = new ShutdownUI;
-    }
 
+    m_Ui->showWindow ();
     Sysuid::sysuid ()->applicationWindow ().showFullScreen ();
 
     // Make sure the shutdown UI is shown in the application window by

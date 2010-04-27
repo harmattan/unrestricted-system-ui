@@ -32,7 +32,7 @@ class ShutdownUI;
  * mechanism, but it was very simple to implement and I could test the messages
  * with it.
  */
-//#define TEST_SHUTDOWN_LOGIC
+#define TEST_SHUTDOWN_LOGIC
 
 /*!
  * \brief Business logic for the shutdown subsystem. 
