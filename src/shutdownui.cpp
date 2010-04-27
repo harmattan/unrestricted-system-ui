@@ -20,6 +20,7 @@
 #include "sysuid.h"
 
 #include <MLabel>
+#include <MApplication>
 #include <QTimer>
 #include <QGraphicsLinearLayout>
 #include <MSceneManager>
@@ -91,6 +92,11 @@ ShutdownUI::showWindow()
         win.showFullScreen ();
     }
 
+    MApplication::instance ()->processEvents (
+            QEventLoop::ExcludeUserInputEvents |
+            QEventLoop::ExcludeSocketNotifiers,
+            2000);
+
     QTimer::singleShot (2000, this, SLOT (showLogo ()));
 }
 
@@ -107,6 +113,11 @@ ShutdownUI::showLogo ()
     delete m_text2;
 
     setCentralWidget (m_logo);
+
+    MApplication::instance ()->processEvents (
+            QEventLoop::ExcludeUserInputEvents |
+            QEventLoop::ExcludeSocketNotifiers,
+            2000);
 
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
