@@ -19,19 +19,21 @@
 
 #include "ngfnotificationsink.h"
 #include <MApplication>
-#include <MFeedbackPlayer>
 #include "feedbackparameterfactory.h"
 #include "eventtypestore.h"
 #include <QSettings>
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
+#include "ngfadapter.h"
 
 NGFNotificationSink::NGFNotificationSink()
 {
+    adapter = new NGFAdapter;
 }
 
 NGFNotificationSink::~NGFNotificationSink()
 {
+    delete adapter;
 }
 
 QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
@@ -49,11 +51,11 @@ QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &p
 
 void NGFNotificationSink::addNotification(const Notification &notification)
 {
-    if (!canAddNotification(notification)) return;
-
-    QString feedbackId = determineFeedbackId(notification.parameters());
-    if (!feedbackId.isEmpty() && MApplication::feedbackPlayer() != NULL) {
-        MApplication::feedbackPlayer()->play(feedbackId);
+    if (canAddNotification(notification)) {
+        QString feedbackId = determineFeedbackId(notification.parameters());
+        if (!feedbackId.isEmpty()) {
+            adapter->play(feedbackId);
+        }
     }
 }
 

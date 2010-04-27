@@ -72,7 +72,8 @@ PKGCONFIG += \
     contextsubscriber-1.0 \
     maemosec \
     dbus-1 \
-    usb_moded
+    usb_moded \
+    libngf0
 
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d

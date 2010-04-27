@@ -20,16 +20,12 @@
 
 #include "ut_ngfnotificationsink.h"
 #include <MApplication>
-#include <MFeedbackPlayer>
 #include "ngfnotificationsink.h"
 #include "feedbackparameterfactory.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "sysuid_stub.h"
-
-#if 0
-#include "mfeedbackplayer_p.h"
-#endif
+#include "ngfadapter.h"
 
 // xlib.h defines Status, undef it so we can use QSettings::Status
 #ifdef Status
@@ -38,22 +34,26 @@
 
 static NotificationManager *manager;
 
-// MFeedbackPlayer stubs (used by MApplication)
-void MFeedbackPlayer::play(const QString &feedbackName)
+NGFAdapter::NGFAdapter()
 {
-    Ut_NGFNotificationSink::played.append(feedbackName);
+
 }
 
-#if 0
-// XXX: FIXME
-// Seems the libdui returns true like here, but that
-// is also initalizing a connection to mfeedbackd
-bool MFeedbackPlayerPrivate::init(const QString &)
+NGFAdapter::~NGFAdapter()
+{
+
+}
+
+void NGFAdapter::play(const QString &id)
+{
+    Ut_NGFNotificationSink::played.append(id);
+}
+
+bool NGFAdapter::isValid()
 {
     return true;
 }
-#endif
-
+    
 // maemosec stubs
 int maemosec::storage::get_file(const char *pathname, unsigned char **to_buf, ssize_t *bytes)
 {
@@ -141,7 +141,7 @@ void Ut_NGFNotificationSink::testAddNotification()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was called for the feedback
+    // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
@@ -153,12 +153,12 @@ void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     sink->setApplicationEventsEnabled(true);
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that MFeedbackPlayer::play() was called for the feedback when application events enabled
+    // Check that NGFAdapter::play() was called for the feedback when application events enabled
     QCOMPARE(played.count(), 1);
 
     sink->setApplicationEventsEnabled(false);
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that MFeedbackPlayer::play() was NOT called for the feedback when application events are NOT enabled
+    // Check that NGFAdapter::play() was NOT called for the feedback when application events are NOT enabled
     QCOMPARE(played.count(), 1);
 }
 
@@ -174,7 +174,7 @@ void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was called for the feedback
+    // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
@@ -188,7 +188,7 @@ void Ut_NGFNotificationSink::testWithEventTypeWithoutFeedbackId()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was called for the feedback
+    // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }
@@ -200,7 +200,7 @@ void Ut_NGFNotificationSink::testWithoutEventTypeOrFeedbackId()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was not called for the feedback
+    // Check that NGFAdapter::play() was not called for the feedback
     QCOMPARE(played.count(), 0);
 }
 
@@ -211,7 +211,7 @@ void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was called for the feedback
+    // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
 }
@@ -224,7 +224,7 @@ void Ut_NGFNotificationSink::testDetermineFeedBackId()
     parameters.add("eventType", "message-received");
     emit addNotification(Notification(0, 0, 0,  parameters, Notification::ApplicationEvent, 1000));
 
-    // Check that MFeedbackPlayer::play() was called for the feedback
+    // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }

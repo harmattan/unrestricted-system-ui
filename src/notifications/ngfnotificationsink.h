@@ -22,6 +22,9 @@
 
 #include "notificationsink.h"
 
+
+class NGFAdapter;
+
 /*!
  * NGFNotificationSink implements the NotificationSink interface for
  * presenting notifications as feedbacks.
@@ -52,6 +55,12 @@ private:
      * Helper method to return the NotificationManager used.
      */
     NotificationManager &notificationManager();
+
+
+    /*!
+     * The NGF Adapter
+     */
+    NGFAdapter* adapter;
 
 private slots:
     //! \reimp

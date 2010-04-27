@@ -11,6 +11,10 @@ TEMPLATE = app
 DEFINES += UNIT_TEST
 LIBS += -L../../lib
 
+PKGCONFIG += \
+          libngf0 \
+          dbus-1
+
 # For setting the coverage flag ON
 contains(COV_OPTION, on) {
 LIBS += -lgcov

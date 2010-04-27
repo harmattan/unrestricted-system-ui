@@ -32,6 +32,7 @@ HEADERS += \
     $$SRCDIR/notifications/notificationparameters.h \
     $$SRCDIR/notifications/notificationparameter.h \
     $$SRCDIR/notifications/notification.h \
+    $$SRCDIR/notifications/ngfadapter.h \
     $$SRCDIR/notifications/notificationgroup.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/notifications/eventtypestore.h \
