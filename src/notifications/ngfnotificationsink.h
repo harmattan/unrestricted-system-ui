@@ -17,28 +17,28 @@
 **
 ****************************************************************************/
 
-#ifndef MFEEDBACKNOTIFICATIONSINK_H_
-#define MFEEDBACKNOTIFICATIONSINK_H_
+#ifndef NGFNOTIFICATIONSINK_H_
+#define NGFNOTIFICATIONSINK_H_
 
 #include "notificationsink.h"
 
 /*!
- * MFeedbackNotificationSink implements the NotificationSink interface for
+ * NGFNotificationSink implements the NotificationSink interface for
  * presenting notifications as feedbacks.
  */
-class MFeedbackNotificationSink : public NotificationSink
+class NGFNotificationSink : public NotificationSink
 {
     Q_OBJECT
 public:
     /*!
-     * Constructs a new MFeedbackNotificationSink.
+     * Constructs a new NGFNotificationSink.
      */
-    MFeedbackNotificationSink();
+    NGFNotificationSink();
 
     /*!
-     * Destroys the MFeedbackNotificationSink.
+     * Destroys the NGFNotificationSink.
      */
-    virtual ~MFeedbackNotificationSink();
+    virtual ~NGFNotificationSink();
 
 private:
     /*!
@@ -60,4 +60,4 @@ private slots:
     //! \reimp_end
 };
 
-#endif /* MFEEDBACKNOTIFICATIONSINK_H_ */
+#endif /* NGFNOTIFICATIONSINK_H_ */

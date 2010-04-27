@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MFEEDBACKNOTIFICATIONSINK_H
-#define UT_MFEEDBACKNOTIFICATIONSINK_H
+#ifndef UT_NGFNOTIFICATIONSINK_H
+#define UT_NGFNOTIFICATIONSINK_H
 
 #include <QtTest/QtTest>
 #include <QObject>
@@ -26,10 +26,10 @@
 #include "notification.h"
 
 class MApplication;
-class MFeedbackNotificationSink;
+class NGFNotificationSink;
 class QSettings;
 
-class Ut_MFeedbackNotificationSink : public QObject
+class Ut_NGFNotificationSink : public QObject
 {
     Q_OBJECT
 
@@ -62,7 +62,7 @@ private:
     // MApplication
     MApplication *app;
     // The object being tested
-    MFeedbackNotificationSink *sink;
+    NGFNotificationSink *sink;
     // QSettings for the event type store
     QSettings *eventTypeSettings;
 

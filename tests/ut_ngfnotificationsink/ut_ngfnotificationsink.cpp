@@ -18,10 +18,10 @@
 ****************************************************************************/
 
 
-#include "ut_mfeedbacknotificationsink.h"
+#include "ut_ngfnotificationsink.h"
 #include <MApplication>
 #include <MFeedbackPlayer>
-#include "mfeedbacknotificationsink.h"
+#include "ngfnotificationsink.h"
 #include "feedbackparameterfactory.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
@@ -41,7 +41,7 @@ static NotificationManager *manager;
 // MFeedbackPlayer stubs (used by MApplication)
 void MFeedbackPlayer::play(const QString &feedbackName)
 {
-    Ut_MFeedbackNotificationSink::played.append(feedbackName);
+    Ut_NGFNotificationSink::played.append(feedbackName);
 }
 
 #if 0
@@ -102,39 +102,39 @@ maemosec::storage::~storage()
 {
 }
 
-QList<QString> Ut_MFeedbackNotificationSink::played;
+QList<QString> Ut_NGFNotificationSink::played;
 
-void Ut_MFeedbackNotificationSink::initTestCase()
+void Ut_NGFNotificationSink::initTestCase()
 {
     static int argc = 1;
-    static char *app_name = (char *)"./ut_mfeedbacknotificationsink";
+    static char *app_name = (char *)"./ut_ngfnotificationsink";
     app = new MApplication(argc, &app_name);
     eventTypeSettings = new QSettings;
     gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", eventTypeSettings);
 }
 
-void Ut_MFeedbackNotificationSink::cleanupTestCase()
+void Ut_NGFNotificationSink::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_MFeedbackNotificationSink::init()
+void Ut_NGFNotificationSink::init()
 {
     played.clear();
-    sink = new MFeedbackNotificationSink();
+    sink = new NGFNotificationSink();
     manager = new NotificationManager();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     eventTypeSettings->clear();
 }
 
-void Ut_MFeedbackNotificationSink::cleanup()
+void Ut_NGFNotificationSink::cleanup()
 {
     delete sink;
     delete manager;
 }
 
-void Ut_MFeedbackNotificationSink::testAddNotification()
+void Ut_NGFNotificationSink::testAddNotification()
 {
     // Create a notification
     NotificationParameters parameters;
@@ -146,7 +146,7 @@ void Ut_MFeedbackNotificationSink::testAddNotification()
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_MFeedbackNotificationSink::testNotificationWhileApplicationEventsDisabled()
+void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
 {
     // Create a notification
     NotificationParameters parameters;
@@ -162,12 +162,12 @@ void Ut_MFeedbackNotificationSink::testNotificationWhileApplicationEventsDisable
     QCOMPARE(played.count(), 1);
 }
 
-void Ut_MFeedbackNotificationSink::testRemoveNotification()
+void Ut_NGFNotificationSink::testRemoveNotification()
 {
     emit removeNotification(1);
 }
 
-void Ut_MFeedbackNotificationSink::testWithEventTypeAndFeedbackId()
+void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
@@ -179,7 +179,7 @@ void Ut_MFeedbackNotificationSink::testWithEventTypeAndFeedbackId()
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_MFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
+void Ut_NGFNotificationSink::testWithEventTypeWithoutFeedbackId()
 {
     eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
 
@@ -193,7 +193,7 @@ void Ut_MFeedbackNotificationSink::testWithEventTypeWithoutFeedbackId()
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }
 
-void Ut_MFeedbackNotificationSink::testWithoutEventTypeOrFeedbackId()
+void Ut_NGFNotificationSink::testWithoutEventTypeOrFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "");
@@ -204,7 +204,7 @@ void Ut_MFeedbackNotificationSink::testWithoutEventTypeOrFeedbackId()
     QCOMPARE(played.count(), 0);
 }
 
-void Ut_MFeedbackNotificationSink::testWithoutEventTypeWithFeedbackId()
+void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
 {
     NotificationParameters parameters;
     parameters.add("eventType", "");
@@ -216,7 +216,7 @@ void Ut_MFeedbackNotificationSink::testWithoutEventTypeWithFeedbackId()
     QCOMPARE(played[0], QString("feedback"));
 }
 
-void Ut_MFeedbackNotificationSink::testDetermineFeedBackId()
+void Ut_NGFNotificationSink::testDetermineFeedBackId()
 {
     eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
 
@@ -229,4 +229,4 @@ void Ut_MFeedbackNotificationSink::testDetermineFeedBackId()
     QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
 }
 
-QTEST_APPLESS_MAIN(Ut_MFeedbackNotificationSink)
+QTEST_APPLESS_MAIN(Ut_NGFNotificationSink)

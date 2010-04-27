@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "mfeedbacknotificationsink.h"
+#include "ngfnotificationsink.h"
 #include <MApplication>
 #include <MFeedbackPlayer>
 #include "feedbackparameterfactory.h"
@@ -26,15 +26,15 @@
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
 
-MFeedbackNotificationSink::MFeedbackNotificationSink()
+NGFNotificationSink::NGFNotificationSink()
 {
 }
 
-MFeedbackNotificationSink::~MFeedbackNotificationSink()
+NGFNotificationSink::~NGFNotificationSink()
 {
 }
 
-QString MFeedbackNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
+QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
 {
     QString feedbackId = parameters.value(FeedbackParameterFactory::feedbackIdKey()).toString();
     if (feedbackId.isEmpty()) {
@@ -47,7 +47,7 @@ QString MFeedbackNotificationSink::determineFeedbackId(const NotificationParamet
     return feedbackId;
 }
 
-void MFeedbackNotificationSink::addNotification(const Notification &notification)
+void NGFNotificationSink::addNotification(const Notification &notification)
 {
     if (!canAddNotification(notification)) return;
 
@@ -57,12 +57,12 @@ void MFeedbackNotificationSink::addNotification(const Notification &notification
     }
 }
 
-void MFeedbackNotificationSink::removeNotification(uint notificationId)
+void NGFNotificationSink::removeNotification(uint notificationId)
 {
     Q_UNUSED(notificationId)
 }
 
-NotificationManager &MFeedbackNotificationSink::notificationManager()
+NotificationManager &NGFNotificationSink::notificationManager()
 {
     return Sysuid::sysuid()->notificationManager();
 }

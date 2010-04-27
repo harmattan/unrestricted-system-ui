@@ -22,7 +22,7 @@
 #include <QDBusConnection>
 #include <MApplication>
 #include "mcompositornotificationsink.h"
-#include "mfeedbacknotificationsink.h"
+#include "ngfnotificationsink.h"
 #include "testcontextitem.h"
 #include "contextframeworkcontext.h"
 #include "sysuid.h"
@@ -103,22 +103,22 @@ void MCompositorNotificationSink::rotateInfoBanners(const M::Orientation &)
 void MCompositorNotificationSink::setDisabled(bool)
 {
 }
-// MFeedbackNotificationSink stubs (used by Sysuid)
-MFeedbackNotificationSink *mFeedbackNotificationSink = 0;
-MFeedbackNotificationSink::MFeedbackNotificationSink()
+// NGFNotificationSink stubs (used by Sysuid)
+NGFNotificationSink *mNGFNotificationSink = 0;
+NGFNotificationSink::NGFNotificationSink()
 {
-    mFeedbackNotificationSink = this;
+    mNGFNotificationSink = this;
 }
 
-MFeedbackNotificationSink::~MFeedbackNotificationSink()
-{
-}
-
-void MFeedbackNotificationSink::addNotification(const Notification &)
+NGFNotificationSink::~NGFNotificationSink()
 {
 }
 
-void MFeedbackNotificationSink::removeNotification(uint)
+void NGFNotificationSink::addNotification(const Notification &)
+{
+}
+
+void NGFNotificationSink::removeNotification(uint)
 {
 }
 
@@ -179,10 +179,10 @@ void Ut_Sysuid::testUseMode()
 {
     testContextItem->setValue("");
     QVERIFY(sinkSetEnabled[mCompositorNotificationSink]);
-    QVERIFY(sinkSetEnabled[mFeedbackNotificationSink]);
+    QVERIFY(sinkSetEnabled[mNGFNotificationSink]);
     testContextItem->setValue("recording");
     QVERIFY(!sinkSetEnabled[mCompositorNotificationSink]);
-    QVERIFY(!sinkSetEnabled[mFeedbackNotificationSink]);
+    QVERIFY(!sinkSetEnabled[mNGFNotificationSink]);
 }
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

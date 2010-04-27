@@ -60,7 +60,7 @@ HEADERS += \
     $$SRCDIR/notifications/notificationsink.h \
     $$SRCDIR/notifications/widgetnotificationsink.h \
     $$SRCDIR/notifications/mcompositornotificationsink.h \
-    $$SRCDIR/notifications/mfeedbacknotificationsink.h \
+    $$SRCDIR/notifications/ngfnotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/statusarea/statusareawindow.h \

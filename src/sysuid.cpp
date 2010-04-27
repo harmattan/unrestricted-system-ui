@@ -42,7 +42,7 @@
 #include "statusareawindow.h"
 #include "notificationmanager.h"
 #include "mcompositornotificationsink.h"
-#include "mfeedbacknotificationsink.h"
+#include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 
 #undef DEBUG
@@ -89,7 +89,7 @@ Sysuid::Sysuid () : QObject (),
 
     m_notificationManager = new NotificationManager(3000);
     m_compositorNotificationSink = new MCompositorNotificationSink;
-    m_feedbackNotificationSink = new MFeedbackNotificationSink;
+    m_ngfNotificationSink = new NGFNotificationSink;
 
     // D-Bus registration and stuff
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
@@ -122,9 +122,9 @@ Sysuid::Sysuid () : QObject (),
 
     // Connect the notification signals for the feedback notification sink
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
-             m_feedbackNotificationSink, SLOT (addNotification (const Notification &)));
+             m_ngfNotificationSink, SLOT (addNotification (const Notification &)));
     connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
-              m_feedbackNotificationSink, SLOT (removeNotification (uint)));
+              m_ngfNotificationSink, SLOT (removeNotification (uint)));
     connect (m_statusAreaWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
              this, SIGNAL (orientationChangeFinished (const M::Orientation &)));
 
@@ -229,6 +229,6 @@ void Sysuid::applyUseMode ()
         useMode->value ().toString () == "recording";
 
     m_compositorNotificationSink->setApplicationEventsEnabled (!videoRecording);
-    m_feedbackNotificationSink->setApplicationEventsEnabled (!videoRecording);
+    m_ngfNotificationSink->setApplicationEventsEnabled (!videoRecording);
 }
 

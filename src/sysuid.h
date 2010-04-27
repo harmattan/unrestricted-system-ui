@@ -35,7 +35,7 @@ class ShutdownBusinessLogic;
 class StatusAreaWindow;
 class NotificationManager;
 class MCompositorNotificationSink;
-class MFeedbackNotificationSink;
+class NGFNotificationSink;
 class MApplicationWindow;
 
 class Sysuid : public QObject
@@ -116,7 +116,7 @@ private:
     MCompositorNotificationSink *m_compositorNotificationSink;
 
     //! Feedback notification sink for presenting the notification as a feedback
-    MFeedbackNotificationSink   *m_feedbackNotificationSink;
+    NGFNotificationSink   *m_ngfNotificationSink;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;
