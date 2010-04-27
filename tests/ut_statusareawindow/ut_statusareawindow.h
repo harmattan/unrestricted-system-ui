@@ -56,11 +56,10 @@ private slots:
     void testSceneRenderControlDisplayStateDimmed();
 };
 
-class RenderTestsHelper: public QObject
+class RenderTestsHelper
 {
-    Q_OBJECT
 public:
-    RenderTestsHelper(){}
+    RenderTestsHelper();
     ~RenderTestsHelper();
     QList<QRectF>* setupRenderTests(Ut_StatusAreaWindow* testClass, StatusAreaWindow* statusAreaWindow);
 private:

@@ -111,6 +111,7 @@ void Ut_StatusAreaWindow::testSceneChanged()
 // Render test helper class definitions
 void RenderTestsHelper::setupRect()
 {
+    delete rectList;
     rectList = new QList<QRectF>;
     QRectF rect1(0,0,30,80);
     rectList->append(rect1);
@@ -119,9 +120,14 @@ void RenderTestsHelper::setupRect()
 QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaWindow* testClass, StatusAreaWindow* statusAreaWindow)
 {
     setupRect();
-    connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
-    connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+    QObject::connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
     return rectList;
+}
+
+RenderTestsHelper::RenderTestsHelper() :
+        rectList(NULL)
+{
 }
 
 RenderTestsHelper::~RenderTestsHelper()
