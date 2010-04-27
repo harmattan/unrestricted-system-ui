@@ -208,6 +208,9 @@ LockScreenUI::paint (QPainter *painter,
                      const QStyleOptionGraphicsItem *option,
                      QWidget *widget)
 {
+    if (isVisible () == false)
+        return;
+
     if ((m_bgPortrait != 0) &&
         (geometry ().height () > geometry ().width ()))
     {
