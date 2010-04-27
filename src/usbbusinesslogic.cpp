@@ -103,6 +103,8 @@ UsbBusinessLogic::usb_moded_handler (QString mode)
         m_currentMode = USB_OVI_SUITE;
     else if (mode == USB_CONNECTED_DIALOG_SHOW)
         m_currentMode = USB_AUTO;
+    else if (mode == MODE_ASK)
+        m_currentMode = USB_AUTO;
     else if (mode == DATA_IN_USE)
         m_currentMode = USB_DATA_IN_USE;
     else
