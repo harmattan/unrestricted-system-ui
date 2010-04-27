@@ -76,9 +76,6 @@ private:
     //! Bluetooth indicator
     StatusIndicator *bluetoothIndicator;
 
-    //! Placeholder for the launcher button
-    MButton *launcherButtonPlaceholder;
-
     //! Notifier
     Notifier *notifier;
 
