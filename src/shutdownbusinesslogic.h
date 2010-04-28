@@ -22,6 +22,7 @@
 #define SHUTDOWNBUSINESSLOGIC_H
 
 #include <qmsystem/qmsystemstate.h>
+#include <QDBusAbstractAdaptor>
 #include <QObject>
 
 class ShutdownUI;
@@ -45,9 +46,6 @@ class ShutdownUI;
  * 3) Battery low shutdown is happening.
  * 4) The shutdown is aborted because the USB is connected.
  *
- * FIXME: The shutdown system has no adaptor, the DBus interface is not
- * implemented. There is no documentation, so we don't know if we have to
- * implement a DBus interface and if yes, what exactly we should to implement.
  */
 class ShutdownBusinessLogic : public QObject
 {
@@ -55,9 +53,11 @@ class ShutdownBusinessLogic : public QObject
 
 public:
     ShutdownBusinessLogic (QObject *parent = 0);
-    virtual ~ShutdownBusinessLogic();
+    virtual ~ShutdownBusinessLogic ();
 
-    void showUI();
+    void showUI (QString text1 = QString (""),
+                 QString text2 = QString (""),
+                 int timeout = 2000);
 
 public slots:
     void systemStateChanged (Maemo::QmSystemState::StateIndication what);
@@ -73,6 +73,23 @@ private:
 private:
     ShutdownUI             *m_Ui;
     Maemo::QmSystemState   *m_State;
+};
+
+class ShutdownBusinessLogicAdaptor : public QDBusAbstractAdaptor
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.shutdownui")
+
+public:
+    ShutdownBusinessLogicAdaptor (
+            QObject                  *parent,
+            ShutdownBusinessLogic    *logic);
+
+public slots:
+    Q_NOREPLY void showScreen (QString text1, QString text2, int timeout);
+
+private:
+    ShutdownBusinessLogic   *m_logic;
 };
 
 #endif

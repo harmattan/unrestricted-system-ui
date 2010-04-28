@@ -92,6 +92,7 @@ Sysuid::Sysuid () : QObject (),
     m_ngfNotificationSink = new NGFNotificationSink;
 
     // D-Bus registration and stuff
+    new ShutdownBusinessLogicAdaptor (this, m_ShutdownLogic);
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
     new LedBusinessLogicAdaptor (this, m_LedLogic);
     new UsbBusinessLogicAdaptor (this, m_UsbUi->getLogic ());

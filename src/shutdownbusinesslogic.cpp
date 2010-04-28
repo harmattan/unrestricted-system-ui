@@ -63,20 +63,16 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic ()
     }
 }
 
-
 void 
-ShutdownBusinessLogic::showUI ()
+ShutdownBusinessLogic::showUI (
+    QString  text1,
+    QString  text2,
+    int      timeout)
 {
     if (m_Ui == 0)
         m_Ui = new ShutdownUI;
 
-    m_Ui->showWindow ();
-    Sysuid::sysuid ()->applicationWindow ().showFullScreen ();
-
-    // Make sure the shutdown UI is shown in the application window by
-    // registering it explicitly to the application window scene manager
-    Sysuid::sysuid ()->applicationWindow ()
-        .sceneManager ()->appearSceneWindow (m_Ui);
+    m_Ui->showWindow (text1, text2, timeout);
 }
 
 /*!
@@ -148,3 +144,24 @@ ShutdownBusinessLogic::testTimeoutSlot ()
     systemStateChanged (QmSystemState::Shutdown);
 }
 #endif
+
+ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor (
+    QObject                 *parent,
+    ShutdownBusinessLogic   *logic) :
+    QDBusAbstractAdaptor (parent),
+    m_logic (logic)
+{
+}
+
+void
+ShutdownBusinessLogicAdaptor::showScreen (
+    QString text1,
+    QString text2,
+    int     timeout)
+{
+    SYS_DEBUG ("text1 = %s, text2 = %s, timeout = %d",
+               SYS_STR (text1), SYS_STR (text2), timeout);
+
+    m_logic->showUI (text1, text2, timeout);
+}
+

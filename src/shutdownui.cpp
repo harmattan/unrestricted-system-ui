@@ -30,7 +30,7 @@
 
 #include <qmdisplaystate.h>
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -80,24 +80,31 @@ ShutdownUI::createContent ()
 }
 
 void
-ShutdownUI::showWindow()
+ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 {
     SYS_DEBUG ("");
 
     MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
 
-    if (win.isHidden ())
+    win.show ();
+    win.showFullScreen ();
+    win.sceneManager ()->appearSceneWindowNow (this);
+
+    if (! (text1.isEmpty () && text2.isEmpty ()))
     {
-        win.show ();
-        win.showFullScreen ();
+        m_text1->setText (text1);
+        m_text2->setText (text2);
     }
 
     MApplication::instance ()->processEvents (
-            QEventLoop::ExcludeUserInputEvents |
-            QEventLoop::ExcludeSocketNotifiers,
+            QEventLoop::ExcludeUserInputEvents,
             2000);
 
-    QTimer::singleShot (2000, this, SLOT (showLogo ()));
+    // show the texts max. for 10 ~sec
+    if (timeout < 0)
+        timeout = 10000;
+
+    QTimer::singleShot (timeout, this, SLOT (showLogo ()));
 }
 
 void
@@ -109,10 +116,11 @@ ShutdownUI::showLogo ()
     Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();
     Sysuid::sysuid ()->applicationWindow ().lockOrientation ();
 
-    delete m_text1;
-    delete m_text2;
+    m_text1->setVisible (false);
+    m_text2->setVisible (false);
 
-    setCentralWidget (m_logo);
+    if (centralWidget () != static_cast <QGraphicsWidget *> (m_logo))
+        setCentralWidget (m_logo);
 
     MApplication::instance ()->processEvents (
             QEventLoop::ExcludeUserInputEvents |

@@ -33,7 +33,7 @@ public:
     virtual ~ShutdownUI ();
     virtual void createContent ();
 
-    void showWindow ();
+    void showWindow (QString& text1, QString& text2, int timeout);
 
 private slots:
     void showLogo ();
