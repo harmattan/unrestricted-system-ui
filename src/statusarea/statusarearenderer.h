@@ -17,10 +17,9 @@
 **
 ****************************************************************************/
 
-#ifndef STATUSAREAWINDOW_H_
-#define STATUSAREAWINDOW_H_
+#ifndef STATUSAREARENDERER_H_
+#define STATUSAREARENDERER_H_
 
-#include <MWindow>
 #include <MNamespace>
 #include "qmdisplaystate.h"
 
@@ -28,26 +27,25 @@ class QGraphicsScene;
 class StatusArea;
 
 /*!
- * Creates a window which contains a status area. This window is not a top level window and is not visible.
- *  It renders the contents of the scene to a shared pixmap which is then shown by libmeegotouch.
+ *  StatusAreaRenderer renders the contents of the scene to a shared pixmap which is then shown by libmeegotouch.
  */
-class StatusAreaWindow : public MWindow
+class StatusAreaRenderer : public QObject
 {
     Q_OBJECT
 
 public:
     /*!
-     * Creates a new status area window
+     * Creates a new status area renderer
      *
      * \param statusArea the status area to be displayed in this window
      * \param parent the parent widget
      */
-    StatusAreaWindow(QWidget *parent = NULL);
+    StatusAreaRenderer(QWidget *parent = NULL);
 
     /*!
-     * Destroys the status area window
+     * Destroys the status area renderer
      */
-    virtual ~StatusAreaWindow();
+    virtual ~StatusAreaRenderer();
 
 private slots:
    /*!
@@ -68,7 +66,7 @@ signals:
     void statusIndicatorMenuVisibilityChanged(bool visible);
 
 private:
-    //! Scene for this window
+    //! Scene which is rendererd
     QGraphicsScene *scene;
 
     //! The status area to be displayed in this window
@@ -93,9 +91,9 @@ private:
     bool renderScene;
 
 #ifdef UNIT_TEST
-    friend class Ut_StatusAreaWindow;
+    friend class Ut_StatusAreaRenderer;
 #endif
 
 };
 
-#endif /* STATUSAREAWINDOW_H_ */
+#endif /* STATUSAREARENDERER_H_ */

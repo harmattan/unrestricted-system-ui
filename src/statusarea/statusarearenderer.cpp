@@ -20,7 +20,7 @@
 #include <MOrientationChangeEvent>
 #include <MOnDisplayChangeEvent>
 #include <MDeviceProfile>
-#include "statusareawindow.h"
+#include "statusarearenderer.h"
 #include "statusarea.h"
 #include <MStyle>
 #include "statusareastyle.h"
@@ -30,8 +30,8 @@
 #include <QApplication>
 #include <QDebug>
 
-StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
-    MWindow(NULL, parent),
+StatusAreaRenderer::StatusAreaRenderer(QWidget *parent) :
+    QObject(parent),
     scene(new QGraphicsScene),
     statusArea_(new StatusArea(NULL,this)),
     statusAreaPixmap(NULL),
@@ -48,7 +48,7 @@ StatusAreaWindow::StatusAreaWindow(QWidget *parent) :
     }
 }
 
-void StatusAreaWindow::setSizeFromStyle()
+void StatusAreaRenderer::setSizeFromStyle()
 {
     const StatusAreaStyle *style = static_cast<const StatusAreaStyle *> (MTheme::style("StatusAreaStyle", "", "", "", M::Landscape, NULL));
     if(style) {
@@ -57,7 +57,7 @@ void StatusAreaWindow::setSizeFromStyle()
     }
 }
 
-bool StatusAreaWindow::createSharedPixmapHandle()
+bool StatusAreaRenderer::createSharedPixmapHandle()
 {
     // Create a pixmap in which top portion TopLeft(0,0) BottomRight(status area width,status area height) is landscpae.
     // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
@@ -72,7 +72,7 @@ bool StatusAreaWindow::createSharedPixmapHandle()
     return true;
 }
 
-StatusAreaWindow::~StatusAreaWindow()
+StatusAreaRenderer::~StatusAreaRenderer()
 {
     scene->removeItem(statusArea_);
     delete statusArea_;
@@ -81,7 +81,7 @@ StatusAreaWindow::~StatusAreaWindow()
     delete displayState;
 }
 
-void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
+void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
 {
     if (!region.empty() && !statusAreaPixmap->isNull() && renderScene) {
         QPainter painter(statusAreaPixmap);
@@ -101,7 +101,7 @@ void StatusAreaWindow::sceneChanged(const QList<QRectF> &region)
     }
 }
 
-void StatusAreaWindow::setSceneRender(Maemo::QmDisplayState::DisplayState state)
+void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state)
 {
     switch(state) {
     case Maemo::QmDisplayState::Dimmed:
@@ -111,5 +111,7 @@ void StatusAreaWindow::setSceneRender(Maemo::QmDisplayState::DisplayState state)
     case Maemo::QmDisplayState::On:
         renderScene = true;
         break;
+    default:
+        renderScene = true;
     }
 }
