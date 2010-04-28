@@ -26,7 +26,7 @@
 #include <MButton>
 #include <QSharedPointer>
 
-class StatusAreaWindow;
+class StatusAreaRenderer;
 
 /*!
  * Status area is the top part on the home screen. It contains the clock,
@@ -43,7 +43,7 @@ public:
      *
      * \param parent the parent widget of the status area
      */
-    StatusArea(MWidget *parent = NULL, StatusAreaWindow *statusAreaWindow = NULL);
+    StatusArea(MWidget *parent = NULL, StatusAreaRenderer *statusAreaWindow = NULL);
 
     /*!
      * \brief Destructor

@@ -32,7 +32,7 @@ class SystemUIGConf;
 class BatteryBusinessLogic;
 class LedBusinessLogic;
 class ShutdownBusinessLogic;
-class StatusAreaWindow;
+class StatusAreaRenderer;
 class NotificationManager;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
@@ -62,16 +62,6 @@ public:
      * \return a reference to the compositor notification sink
      */
     MCompositorNotificationSink& compositorNotificationSink ();
-
-    /*!
-     * Returns the current orientation of the status area window's scene.
-     */
-    virtual M::Orientation orientation () const;
-
-    /*!
-     * Returns the current orientation angle of the status area window's scene.
-     */
-    virtual M::OrientationAngle orientationAngle () const;
 
     /*!
      * Returns a reference to the application window.
@@ -104,7 +94,7 @@ private:
     static Sysuid           *m_Sysuid;
 
     //! Status area window
-    StatusAreaWindow        *m_statusAreaWindow;
+    StatusAreaRenderer        *m_statusAreaWindow;
 
     //! Application window
     MApplicationWindow    *m_applicationWindow;

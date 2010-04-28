@@ -63,7 +63,7 @@ HEADERS += \
     $$SRCDIR/notifications/ngfnotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/statusarea/statusareawindow.h \
+    $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
 
@@ -80,7 +80,7 @@ HEADERS += \
     $$STUBSDIR/widgetnotificationsink_stub.h \
     $$STUBSDIR/eventtypestore_stub.h \
     $$STUBSDIR/notificationmanager_stub.h \
-    $$STUBSDIR/statusareawindow_stub.h \
+    $$STUBSDIR/statusarearenderer_stub.h \
     $$STUBSDIR/unlockwidgets_stub.h
 
 # FIXME: HACK!!! REMOVE THIS!!!

@@ -39,7 +39,7 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
-#include "statusareawindow.h"
+#include "statusarearenderer.h"
 #include "notificationmanager.h"
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
@@ -107,7 +107,7 @@ Sysuid::Sysuid () : QObject (),
         abort();
     }
     // Show status area window when sysui daemon starts
-    m_statusAreaWindow = new StatusAreaWindow;
+    m_statusAreaWindow = new StatusAreaRenderer;
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));
@@ -207,16 +207,6 @@ NotificationManager &Sysuid::notificationManager ()
 MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 {
     return *m_compositorNotificationSink;
-}
-
-M::Orientation Sysuid::orientation () const
-{
-    return m_statusAreaWindow->orientation ();
-}
-
-M::OrientationAngle Sysuid::orientationAngle () const
-{
-    return m_statusAreaWindow->orientationAngle ();
 }
 
 MApplicationWindow &Sysuid::applicationWindow ()

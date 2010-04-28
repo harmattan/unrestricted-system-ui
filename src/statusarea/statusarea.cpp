@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "statusarea.h"
-#include "statusareawindow.h"
+#include "statusarearenderer.h"
 #include <MApplicationIfProxy>
 #include <QGraphicsSceneMouseEvent>
 #include "statusindicatormenuwindow.h"
@@ -26,7 +26,7 @@
 
 const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.mstatusindicatormenu";
 
-StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) :
+StatusArea::StatusArea(MWidget *parent, StatusAreaRenderer *statusAreaWindow) :
     MWidgetController(parent),
     statusIndicatorMenuWindow(new StatusIndicatorMenuWindow)
 {

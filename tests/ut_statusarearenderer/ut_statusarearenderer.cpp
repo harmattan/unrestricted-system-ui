@@ -16,14 +16,14 @@
 ** of this file .
 **
 ****************************************************************************/
-#include "ut_statusareawindow.h"
+#include "ut_statusarearenderer.h"
 #include <MApplication>
-#include "statusareawindow.h"
+#include "statusarearenderer.h"
 #include "statusarea_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 
 QPixmap *statusAreaPixmap = NULL;
-bool Ut_StatusAreaWindow_Scene_Render_Called = false;
+bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
 QRectF rectReceived(0,0,0,0);
 
 const MStyle* MTheme::style(const char *styleClassName,
@@ -44,40 +44,40 @@ const MStyle* MTheme::style(const char *styleClassName,
 
 void QGraphicsScene::render(QPainter *painter, const QRectF &target, const QRectF &source, Qt::AspectRatioMode aspectRatioMode)
 {
-    Ut_StatusAreaWindow_Scene_Render_Called = true;
+    Ut_StatusAreaRenderer_Scene_Render_Called = true;
     rectReceived= source;
     Q_UNUSED(target);
     Q_UNUSED(painter);
     Q_UNUSED(aspectRatioMode);
 }
 
-void Ut_StatusAreaWindow::init()
+void Ut_StatusAreaRenderer::init()
 {
-    statusAreaWindow = new StatusAreaWindow();
+    statusAreaWindow = new StatusAreaRenderer();
     statusAreaPixmap = new QPixmap(30,80);
     statusAreaWindow->statusAreaPixmap = statusAreaPixmap;
 }
 
-void Ut_StatusAreaWindow::cleanup()
+void Ut_StatusAreaRenderer::cleanup()
 {
-    Ut_StatusAreaWindow_Scene_Render_Called = false;
+    Ut_StatusAreaRenderer_Scene_Render_Called = false;
     rectReceived.setRect(0,0,0,0);
     delete statusAreaWindow;
 }
 
-void Ut_StatusAreaWindow::initTestCase()
+void Ut_StatusAreaRenderer::initTestCase()
 {
     int argc = 1;
-    char *app_name = (char *)"./Ut_StatusAreaWindow";
+    char *app_name = (char *)"./ut_statusarearenderer";
     app = new MApplication(argc, &app_name);
 }
 
-void Ut_StatusAreaWindow::cleanupTestCase()
+void Ut_StatusAreaRenderer::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_StatusAreaWindow::testSceneChanged()
+void Ut_StatusAreaRenderer::testSceneChanged()
 {
     // Test an intersected rect
     QList<QRectF> rectList;
@@ -85,15 +85,15 @@ void Ut_StatusAreaWindow::testSceneChanged()
     rectList.append(rect1);
     connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
     emit changed(rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
 
     // Test when rect has no intersection with pixmap
-    Ut_StatusAreaWindow_Scene_Render_Called = false;
+    Ut_StatusAreaRenderer_Scene_Render_Called = false;
     rectList.pop_front();
     QRectF rect2(40,50,30,80);
     rectList.append(rect2);
     emit changed(rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 
     // Test when two rects called then scene render called with complete intersection rect( final rect should be Rect1 U Rect2 Intersectin sharedPixmapRect)
     rectList.pop_front();
@@ -102,7 +102,7 @@ void Ut_StatusAreaWindow::testSceneChanged()
     rectList.append(rect3);
     rectList.append(rect4);
     emit changed(rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
     QRectF unitedRect = rect3.united(rect4) ;
     QRectF expectedRect = unitedRect.intersected(QRectF(0,0,30,80));
     QCOMPARE(rectReceived,expectedRect);
@@ -117,7 +117,7 @@ void RenderTestsHelper::setupRect()
     rectList->append(rect1);
 }
 
-QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaWindow* testClass, StatusAreaWindow* statusAreaWindow)
+QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaWindow)
 {
     setupRect();
     QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
@@ -137,31 +137,31 @@ RenderTestsHelper::~RenderTestsHelper()
 
 // end RenderTestsHelper
 
-void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOn()
+void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOn()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
     emit displayStateChanged(Maemo::QmDisplayState::On);
     emit changed(*rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, true);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
 }
 
-void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateOff()
+void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOff()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
     emit displayStateChanged(Maemo::QmDisplayState::Off);
     emit changed(*rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 }
 
-void Ut_StatusAreaWindow::testSceneRenderControlDisplayStateDimmed()
+void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateDimmed()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
     emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
     emit changed(*rectList);
-    QCOMPARE(Ut_StatusAreaWindow_Scene_Render_Called, false);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 }
 
-QTEST_APPLESS_MAIN(Ut_StatusAreaWindow)
+QTEST_APPLESS_MAIN(Ut_StatusAreaRenderer)

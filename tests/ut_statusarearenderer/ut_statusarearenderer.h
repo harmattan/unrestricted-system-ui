@@ -16,21 +16,21 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_STATUSAREAWINDOW_
-#define _UT_STATUSAREAWINDOW_
+#ifndef _UT_STATUSAREARENDERER_
+#define _UT_STATUSAREARENDERER_
 
 #include <QtTest/QtTest>
 #include "qmdisplaystate.h"
 
-class StatusAreaWindow;
+class StatusAreaRenderer;
 class MApplication;
 
-class Ut_StatusAreaWindow : public QObject
+class Ut_StatusAreaRenderer : public QObject
 {
     Q_OBJECT
 
 private:
-    StatusAreaWindow *statusAreaWindow;
+    StatusAreaRenderer *statusAreaWindow;
     MApplication *app;
 
 signals:
@@ -61,10 +61,10 @@ class RenderTestsHelper
 public:
     RenderTestsHelper();
     ~RenderTestsHelper();
-    QList<QRectF>* setupRenderTests(Ut_StatusAreaWindow* testClass, StatusAreaWindow* statusAreaWindow);
+    QList<QRectF>* setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaWindow);
 private:
     QList<QRectF>* rectList;
     void setupRect();
 };
 
-#endif //_UT_STATUSAREAWINDOW_
+#endif //_UT_STATUSAREARENDERER_

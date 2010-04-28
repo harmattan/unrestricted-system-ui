@@ -28,7 +28,7 @@
 // FIXME - stubgen is not yet finished
 class StatusAreaStub : public StubBase {
   public:
-  virtual void StatusAreaConstructor(MWidget *parent, StatusAreaWindow *statusAreaWindow);
+  virtual void StatusAreaConstructor(MWidget *parent, StatusAreaRenderer *statusAreaWindow);
   virtual void StatusAreaDestructor();
   virtual bool sceneEvent(QEvent *event);
    const QString STATUS_INDICATOR_MENU_SERVICE_NAME ;
@@ -38,7 +38,7 @@ class StatusAreaStub : public StubBase {
 }; 
 
 // 2. IMPLEMENT STUB
-void StatusAreaStub::StatusAreaConstructor(MWidget *parent, StatusAreaWindow *statusAreaWindow) {
+void StatusAreaStub::StatusAreaConstructor(MWidget *parent, StatusAreaRenderer *statusAreaWindow) {
   Q_UNUSED(parent);
   Q_UNUSED(statusAreaWindow);
 }
@@ -64,7 +64,7 @@ StatusAreaStub* gStatusAreaStub = &gDefaultStatusAreaStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusArea::StatusArea(MWidget *parent, StatusAreaWindow *statusAreaWindow) {
+StatusArea::StatusArea(MWidget *parent, StatusAreaRenderer *statusAreaWindow) {
   gStatusAreaStub->StatusAreaConstructor(parent, statusAreaWindow);
 }
 

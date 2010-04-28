@@ -34,8 +34,6 @@ class SysuidStub : public StubBase {
   virtual QString dbusPath();
   virtual NotificationManager & notificationManager();
   virtual MCompositorNotificationSink & compositorNotificationSink();
-  virtual M::Orientation orientation() const;
-  virtual M::OrientationAngle orientationAngle() const;
   virtual MApplicationWindow &applicationWindow();
   virtual void retranslate();
   virtual void applyUseMode();
@@ -71,16 +69,6 @@ NotificationManager & SysuidStub::notificationManager() {
 MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
   stubMethodEntered("compositorNotificationSink");
   return stubReturnValue<MCompositorNotificationSink &>("compositorNotificationSink");
-}
-
-M::Orientation SysuidStub::orientation() const {
-  stubMethodEntered("orientation");
-  return stubReturnValue<M::Orientation>("orientation");
-}
-
-M::OrientationAngle SysuidStub::orientationAngle() const {
-  stubMethodEntered("orientationAngle");
-  return stubReturnValue<M::OrientationAngle>("orientationAngle");
 }
 
 MApplicationWindow &SysuidStub::applicationWindow() {
@@ -130,14 +118,6 @@ NotificationManager & Sysuid::notificationManager() {
 
 MCompositorNotificationSink & Sysuid::compositorNotificationSink() {
   return gSysuidStub->compositorNotificationSink();
-}
-
-M::Orientation Sysuid::orientation() const {
-  return gSysuidStub->orientation();
-}
-
-M::OrientationAngle Sysuid::orientationAngle() const {
-  return gSysuidStub->orientationAngle();
 }
 
 MApplicationWindow &Sysuid::applicationWindow() {

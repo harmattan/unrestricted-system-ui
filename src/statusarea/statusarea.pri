@@ -5,7 +5,7 @@ INCLUDEPATH += ../notifications
 
 SOURCES += statusarea/statusarea.cpp \
     statusarea/statusareaview.cpp \
-    statusarea/statusareawindow.cpp \
+    statusarea/statusarearenderer.cpp \
     statusarea/clock.cpp \
     statusarea/clockview.cpp \
     statusarea/notifier.cpp \
@@ -15,7 +15,7 @@ SOURCES += statusarea/statusarea.cpp \
 
 HEADERS += statusarea/statusarea.h \
     statusarea/statusareaview.h \
-    statusarea/statusareawindow.h \
+    statusarea/statusarearenderer.h \
     statusarea/statusareamodel.h \
     statusarea/statusareastyle.h \
     statusarea/clock.h \
