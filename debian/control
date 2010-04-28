@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20),
                libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev,
-               usb-moded-dev
+               usb-moded-dev (>= 0.3)
 Standards-Version: 3.7.3
 
 Package: system-ui

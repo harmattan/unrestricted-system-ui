@@ -16,9 +16,6 @@ DEFINES += UNIT_TEST
 TARGET = ut_usbbusinesslogic
 target.path = /usr/lib/system-ui-tests
 
-# FIXME: HACK!!! REMOVE THIS!!!
-message("HACK: fixing usb-moded headers" $$system(cp -f /usr/include/usb-moded/* $$PWD))
-
 CONFIG += \
 	debug \
     gui \

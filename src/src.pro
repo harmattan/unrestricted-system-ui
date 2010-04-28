@@ -74,9 +74,6 @@ PKGCONFIG += \
     dbus-1 \
     usb_moded
 
-# FIXME: HACK!!! REMOVE THIS!!!
-message("HACK: fixing usb-moded headers" $$system(cp -f /usr/include/usb-moded/* $$PWD))
-
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
