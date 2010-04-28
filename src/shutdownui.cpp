@@ -79,6 +79,20 @@ ShutdownUI::createContent ()
     m_logo->setGeometry (QRectF (0., 0., 864., 480.));
 }
 
+// Hack for RFS/CUD
+#ifdef NOTDEFINED
+static const char * const ids [] =
+{
+    //% "Restoring settings"
+    QT_TRID_NOOP("qtn_rset_restore_down"),
+    //% "Clearing device"
+    QT_TRID_NOOP("qtn_rset_clear_down"),
+    //% "Please wait!"
+    QT_TRID_NOOP("qtn_rset_wait"),
+    0,
+};
+#endif
+
 void
 ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 {
@@ -92,8 +106,15 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 
     if (! (text1.isEmpty () && text2.isEmpty ()))
     {
-        m_text1->setText (text1);
-        m_text2->setText (text2);
+        if (text1.startsWith ("qtn"))
+            m_text1->setText (qtTrId (text1.toLatin1 ().constData ()));
+        else
+            m_text1->setText (text1);
+
+        if (text2.startsWith ("qtn"))
+            m_text2->setText (qtTrId (text2.toLatin1 ().constData ()));
+        else
+            m_text2->setText (text2);
     }
 
     MApplication::instance ()->processEvents (
