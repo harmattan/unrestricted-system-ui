@@ -4,8 +4,10 @@ system-ui (0.15.6~1) harmattan; urgency=low
   * ShutdownUI: follow UI design changes
   * Fixes: NB#165307 - UI is displayed for a while after the device is
                        shut down by pressing the power key
+  * Fixes: NB#163028 - Unlock screen is not closed after it is once
+                       displayed
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 27 Apr 2010 13:54:40 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 28 Apr 2010 09:21:38 +0200
 
 system-ui (0.15.5-1) harmattan; urgency=low
 
