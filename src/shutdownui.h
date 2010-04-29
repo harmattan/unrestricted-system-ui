@@ -22,6 +22,7 @@
 #include <MApplicationPage>
 
 class MLabel;
+class MFeedback;
 class MImageWidget;
 
 class ShutdownUI : public MApplicationPage
@@ -43,6 +44,7 @@ private:
     MLabel          *m_text1;
     MLabel          *m_text2;
     MImageWidget    *m_logo;
+    MFeedback       *m_feedback;
 };
 
 #endif // SHUTDOWNUI_H

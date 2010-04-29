@@ -20,6 +20,7 @@
 #include "sysuid.h"
 
 #include <MLabel>
+#include <MFeedback>
 #include <MApplication>
 #include <QTimer>
 #include <QGraphicsLinearLayout>
@@ -37,7 +38,8 @@
 ShutdownUI::ShutdownUI () :
         m_text1 (0),
         m_text2 (0),
-        m_logo (0)
+        m_logo (0),
+        m_feedback (0)
 {
     setPannable (false);
     setComponentsDisplayMode (MApplicationPage::AllComponents,
@@ -53,6 +55,10 @@ void
 ShutdownUI::createContent ()
 {
     MApplicationPage::createContent ();
+
+    // Initilaize non-graphical feedback
+    m_feedback = new MFeedback (this);
+    m_feedback->setName ("DF_POWER_OFF");
 
     //% "Shutting down"
     m_text1 = new MLabel (qtTrId ("qtn_shut_down"));
@@ -116,6 +122,8 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
         else
             m_text2->setText (text2);
     }
+
+    m_feedback->play ();
 
     MApplication::instance ()->processEvents (
             QEventLoop::ExcludeUserInputEvents,
