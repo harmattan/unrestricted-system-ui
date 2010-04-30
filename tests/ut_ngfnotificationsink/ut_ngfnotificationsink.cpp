@@ -36,7 +36,8 @@ static NotificationManager *manager;
 
 NGFAdapter::NGFAdapter()
 {
-
+    client = NULL;
+    connection = NULL;
 }
 
 NGFAdapter::~NGFAdapter()
