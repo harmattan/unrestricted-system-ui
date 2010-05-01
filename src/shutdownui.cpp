@@ -127,7 +127,7 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 
     MApplication::instance ()->processEvents (
             QEventLoop::ExcludeUserInputEvents,
-            2000);
+            500);
 
     // show the texts max. for 10 ~sec
     if (timeout < 0)
@@ -152,9 +152,8 @@ ShutdownUI::showLogo ()
         setCentralWidget (m_logo);
 
     MApplication::instance ()->processEvents (
-            QEventLoop::ExcludeUserInputEvents |
-            QEventLoop::ExcludeSocketNotifiers,
-            2000);
+            QEventLoop::ExcludeUserInputEvents,
+            500);
 
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
