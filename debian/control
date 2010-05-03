@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: David Kedves <dkedves@blumsoft.eu>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20),
                libqmsystem-dev, libmaemosec-dev, libcontextsubscriber-dev,
-               usb-moded-dev (>= 0.3), libngf-dev
+               libngf-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -13,7 +13,7 @@ Conflicts: duistatusindicatormenu
 Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
-         libmaemosec0, libcontextsubscriber0, libqmsystem0, usb-moded [armel],
+         libmaemosec0, libcontextsubscriber0, libqmsystem0,
          libmeegotouchcore0 (>= 0.20), libmeegotouchviews0 (>= 0.20), libngf0
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:

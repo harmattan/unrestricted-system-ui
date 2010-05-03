@@ -15,8 +15,6 @@ SOURCES += \
     $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogicadaptor.cpp \
-    $$SRCDIR/usbbusinesslogic.cpp \
-    $$SRCDIR/usbbusinesslogicadaptor.cpp \
     $$SRCDIR/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreenbusinesslogicadaptor.cpp \
     $$SRCDIR/systemuigconf.cpp \
@@ -43,8 +41,6 @@ HEADERS += \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/batterybusinesslogicadaptor.h \
-    $$SRCDIR/usbbusinesslogic.h \
-    $$SRCDIR/usbbusinesslogicadaptor.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreenbusinesslogicadaptor.h \
     $$SRCDIR/systemuigconf.h \
