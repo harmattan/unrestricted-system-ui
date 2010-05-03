@@ -25,6 +25,7 @@
 #include <QTimer>
 
 class LockScreenUI;
+class EventEaterUI;
 class QDBusInterface;
 
 class LockScreenBusinessLogic : public QObject
@@ -44,6 +45,7 @@ public slots:
 
 private slots:
     void unlockScreen();
+    void oneInput();
 
 signals:
     void updateTime ();
@@ -56,7 +58,8 @@ private: //methods
 
 private: 
     LockScreenUI     *lockUI;
-    QTimer           timer;
+    EventEaterUI     *eventEater;
+    QTimer            timer;
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H
