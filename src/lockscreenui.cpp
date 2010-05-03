@@ -57,10 +57,17 @@ LockScreenUI::LockScreenUI () :
         m_calls (0),
         m_im (0)
 {
-    SYS_DEBUG ("");
+    SYS_DEBUG ("*** landscape_key = %s", SYS_STR(GCONF_BG_LANDSCAPE));
+    SYS_DEBUG ("*** portrait_key = %s", SYS_STR(GCONF_BG_PORTRAIT));
 
     m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
     m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
+
+    connect (m_confBgLandscape, SIGNAL(valueChanged()),
+            this, SLOT(reloadLandscapeBackground));
+    connect (m_confBgPortrait, SIGNAL(valueChanged()),
+            this, SLOT(reloadPortraitBackground));
+
 
     setPannable (false);
 
@@ -169,6 +176,7 @@ LockScreenUI::reloadLandscapeBackground ()
     // TODO: drop this hard-coded default one
     const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
 
+    SYS_DEBUG ();
     QPixmap toCheck (m_confBgLandscape->value (QVariant (defaultbg)).toString ());
 
     if (toCheck.isNull () == false)
