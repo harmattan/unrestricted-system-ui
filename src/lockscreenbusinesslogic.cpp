@@ -83,22 +83,27 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
+    MWindow& mainwindow =
+        Sysuid::sysuid ()->applicationWindow ();
+
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
         lockUI->setOpacity (1.0);
-        Sysuid::sysuid ()->applicationWindow ().sceneManager ()->
-            appearSceneWindowNow (lockUI);
+        mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
         lockUI->setActive (true);
 
-        Sysuid::sysuid()->applicationWindow().show ();
-        Sysuid::sysuid()->applicationWindow().showFullScreen();
-        Sysuid::sysuid()->applicationWindow().raise();
+        mainwindow.show ();
+        mainwindow.showFullScreen ();
+        mainwindow.raise ();
 
         mayStartTimer ();
     } else {
         hidefromTaskBar ();
-        Sysuid::sysuid()->applicationWindow().hide();
+
+        mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
+        mainwindow.hide ();
+
         stopTimer ();
     }
 }
@@ -107,6 +112,9 @@ void
 LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
+    MWindow& mainwindow =
+        Sysuid::sysuid ()->applicationWindow ();
+
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
@@ -115,12 +123,14 @@ LockScreenBusinessLogic::toggleEventEater (
             lockUI->createContent ();
 
         // Show the event-eater window...
-        Sysuid::sysuid()->applicationWindow().show ();
-        Sysuid::sysuid()->applicationWindow().showFullScreen ();
-        Sysuid::sysuid()->applicationWindow().raise ();
+        mainwindow.show ();
+        mainwindow.showFullScreen ();
+        mainwindow.raise ();
     } else {
+        hidefromTaskBar ();
+
         // Hide the event eater
-        Sysuid::sysuid()->applicationWindow().hide ();
+        mainwindow.hide ();
     }
 }
 
