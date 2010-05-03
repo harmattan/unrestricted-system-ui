@@ -174,9 +174,13 @@ void
 LockScreenUI::reloadLandscapeBackground ()
 {
     // TODO: drop this hard-coded default one
-    const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
+    QString filename = m_confBgLandscape->value().toString();
 
-    SYS_DEBUG ();
+    if (filename.isEmpty())
+        filename = "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
+
+#if 0
+    SYS_DEBUG ("");
     QPixmap toCheck (m_confBgLandscape->value (QVariant (defaultbg)).toString ());
 
     if (toCheck.isNull () == false)
@@ -189,6 +193,7 @@ LockScreenUI::reloadLandscapeBackground ()
 
         m_bgLandscape = new QPixmap (toCheck.scaled (landscape_size));
     }
+#endif
 }
 
 void
