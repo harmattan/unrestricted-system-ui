@@ -64,8 +64,8 @@ private:
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
 
-    QPixmap         *m_bgLandscape;
-    QPixmap         *m_bgPortrait;
+    QPixmap          m_bgLandscape;
+    QPixmap          m_bgPortrait;
     MGConfItem      *m_confBgLandscape;
     MGConfItem      *m_confBgPortrait;
 

@@ -35,7 +35,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -49,24 +49,22 @@ LockScreenUI::LockScreenUI () :
         m_notificationArea (0),
         m_LockLiftArea (0),
         m_LockLandArea (0),
-        m_bgLandscape (0),
-        m_bgPortrait (0),
         m_initialized (false),
         m_emails (0),
         m_messages (0),
         m_calls (0),
         m_im (0)
 {
-    SYS_DEBUG ("*** landscape_key = %s", SYS_STR(GCONF_BG_LANDSCAPE));
-    SYS_DEBUG ("*** portrait_key = %s", SYS_STR(GCONF_BG_PORTRAIT));
+    SYS_DEBUG ("*** landscape_key = %s", GCONF_BG_LANDSCAPE);
+    SYS_DEBUG ("*** portrait_key = %s", GCONF_BG_PORTRAIT);
 
     m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
     m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
 
     connect (m_confBgLandscape, SIGNAL(valueChanged()),
-            this, SLOT(reloadLandscapeBackground));
+            this, SLOT(reloadLandscapeBackground()));
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
-            this, SLOT(reloadPortraitBackground));
+            this, SLOT(reloadPortraitBackground()));
 
 
     setPannable (false);
@@ -81,17 +79,6 @@ LockScreenUI::LockScreenUI () :
 LockScreenUI::~LockScreenUI ()
 {
     // Free the resources here...
-    if (m_bgLandscape != 0)
-    {
-        delete m_bgLandscape;
-        m_bgLandscape = 0;
-    }
-
-    if (m_bgPortrait != 0)
-    {
-        delete m_bgPortrait;
-        m_bgPortrait = 0;
-    }
 }
 
 void
@@ -173,42 +160,29 @@ LockScreenUI::updateDateTime ()
 void
 LockScreenUI::reloadLandscapeBackground ()
 {
+    QString filename = m_confBgLandscape->value().toString();
+
     // TODO: drop this hard-coded default one
-    const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
+    if (filename.isEmpty())
+        filename = 
+            "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
 
-    SYS_DEBUG ();
-    QPixmap toCheck (m_confBgLandscape->value (QVariant (defaultbg)).toString ());
-
-    if (toCheck.isNull () == false)
-    {
-        QSize landscape_size =
-            MApplication::activeWindow ()->visibleSceneSize (M::Landscape);
-
-        if (m_bgLandscape != 0)
-            delete m_bgLandscape;
-
-        m_bgLandscape = new QPixmap (toCheck.scaled (landscape_size));
-    }
+    SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
+    m_bgLandscape.load (filename);
 }
 
 void
 LockScreenUI::reloadPortraitBackground ()
 {
+    QString filename = m_confBgPortrait->value().toString();
+
     // TODO: drop this hard-coded default one
-    const char *defaultbg = "/usr/share/themes/base/meegotouch/sysuid/images/bg_portrait.png";
+    if (filename.isEmpty())
+        filename = 
+            "/usr/share/themes/base/meegotouch/sysuid/images/bg_portrait.png";
 
-    QPixmap toCheck (m_confBgPortrait->value (QVariant (defaultbg)).toString ());
-
-    if (toCheck.isNull () == false)
-    {
-        QSize portrait_size =
-            MApplication::activeWindow ()->visibleSceneSize (M::Portrait);
-
-        if (m_bgPortrait != 0)
-            delete m_bgPortrait;
-
-        m_bgPortrait = new QPixmap (toCheck.scaled (portrait_size));
-    }
+    SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
+    m_bgPortrait.load (filename);
 }
 
 void
@@ -216,19 +190,28 @@ LockScreenUI::paint (QPainter *painter,
                      const QStyleOptionGraphicsItem *option,
                      QWidget *widget)
 {
+    Q_UNUSED (option);
+    Q_UNUSED (widget);
+    bool portrait = geometry().height() > geometry().width ();
+
     if (isVisible () == false)
         return;
 
-    if ((m_bgPortrait != 0) &&
-        (geometry ().height () > geometry ().width ()))
+    if (portrait)
     {
-        painter->drawPixmap (geometry ().toRect (), *m_bgPortrait);
+        painter->drawPixmap (
+                0, 0, 
+                m_bgPortrait.width(), 
+                m_bgPortrait.height(),
+                m_bgPortrait);
+    } else {
+        painter->drawPixmap (
+                0, 0,
+                m_bgLandscape.width(), 
+                m_bgLandscape.height(),
+                m_bgLandscape);
     }
-    else if ((m_bgLandscape != 0) &&
-            (geometry ().height () < geometry ().width ()))
-    {
-        painter->drawPixmap (geometry ().toRect (), *m_bgLandscape);
-    }
+#if 0
     else
     {
         // No pixmap loaded :-O
@@ -236,6 +219,7 @@ LockScreenUI::paint (QPainter *painter,
         // paint method to painting the default background:
         MApplicationPage::paint (painter, option, widget);
     }
+#endif
 }
 
 void
