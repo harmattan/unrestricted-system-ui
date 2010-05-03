@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 #include "usbui.h"
-#include "usbbusinesslogic.h"
 
 #include <QGraphicsLinearLayout>
 #include <MLayout>
@@ -33,15 +32,19 @@
 #define WARNING
 #include "debug.h"
 
+using namespace Maemo;
+
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic (0),
     m_notification (0),
     m_dialog (0)
 {
-    m_logic = new UsbBusinessLogic (this);
+    m_logic = new QmUSBMode (this);
 
-    connect (m_logic, SIGNAL (currentModeChanged (usb_modes)),
-             this, SLOT (currentModeChanged (usb_modes)));
+    connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
+             this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
+
+    currentModeChanged (m_logic->getMode ());
 }
 
 UsbUi::~UsbUi ()
@@ -118,7 +121,7 @@ UsbUi::OviSuiteSelected ()
 {
     SYS_DEBUG ("");
 
-    m_logic->setMode (USB_OVI_SUITE);
+    m_logic->setMode (QmUSBMode::OviSuite);
     m_dialog->disappear ();
 }
 
@@ -127,19 +130,20 @@ UsbUi::MassStorageSelected ()
 {
     SYS_DEBUG ("");
 
-    m_logic->setMode (USB_MASS_STORAGE);
+    m_logic->setMode (QmUSBMode::MassStorage);
     m_dialog->disappear ();
 }
 
 void
-UsbUi::currentModeChanged (usb_modes mode)
+UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
 {
     switch (mode)
     {
-        case USB_AUTO:
+        case QmUSBMode::Ask:
+        case QmUSBMode::ModeRequest:
             ShowDialog ();
             break;
-        case USB_NOTCONNECTED:
+        case QmUSBMode::Disconnected:
             // remove the previous notification
             if (m_notification)
             {
@@ -153,23 +157,16 @@ UsbUi::currentModeChanged (usb_modes mode)
                 m_dialog->disappear ();
 
             break;
-        case USB_NOOP:
-        case USB_DATA_IN_USE:
+        case QmUSBMode::OviSuite:
+        case QmUSBMode::MassStorage:
+            ShowNotification ((int) mode);
+            break;
+        default:
             SYS_DEBUG ("What about mode = %d?", mode);
             // doing nothing, no ui interaction specified here...
             break;
-        case USB_OVI_SUITE:
-        case USB_MASS_STORAGE:
-            ShowNotification ((int) mode);
-            break;
-    }
-}
 
-// for dbus adaptor
-UsbBusinessLogic *
-UsbUi::getLogic ()
-{
-    return m_logic;
+    }
 }
 
 // id should be an usb_modes enum value
@@ -188,16 +185,14 @@ UsbUi::ShowNotification (int id)
 
     switch (id)
     {
-        case USB_OVI_SUITE:
+        case QmUSBMode::OviSuite:
             //% "Ovi Suite mode"
             mode_text = new QString (qtTrId ("qtn_usb_ovi_suite"));
             break;
-        case USB_MASS_STORAGE:
+        case QmUSBMode::MassStorage:
             //% "Mass Storage mode"
             mode_text = new QString (qtTrId ("qtn_usb_mass_storage"));
             break;
-        case USB_NOOP:
-        case USB_AUTO:
         default:
             // no notification should be shown...
             return;

@@ -34,8 +34,6 @@ HEADERS +=                              \
     batterybusinesslogicadaptor.h       \
     systemuigconf.h                     \
     lockscreenbusinesslogicadaptor.h    \
-    usbbusinesslogic.h                  \
-    usbbusinesslogicadaptor.h           \
     usbui.h                             \
     contextframeworkcontext.h           \
     applicationcontext.h                \
@@ -54,8 +52,6 @@ SOURCES +=                              \
     batterybusinesslogicadaptor.cpp     \
     systemuigconf.cpp                   \
     lockscreenbusinesslogicadaptor.cpp  \
-    usbbusinesslogic.cpp                \
-    usbbusinesslogicadaptor.cpp         \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
     unlockwidgets.cpp
@@ -68,7 +64,6 @@ PKGCONFIG += \
     contextsubscriber-1.0 \
     maemosec \
     dbus-1 \
-    usb_moded \
     libngf0
 
 dbus_policy.files += systemui.conf
