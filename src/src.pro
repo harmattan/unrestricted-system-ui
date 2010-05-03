@@ -26,14 +26,12 @@ HEADERS +=                              \
     debug.h                             \
     sysuidrequest.h                     \
     batterybusinesslogic.h              \
-    ledbusinesslogic.h                  \
     sysuid.h                            \
     lockscreenbusinesslogic.h           \
     lockscreenui.h                      \
     shutdownui.h                        \
     shutdownbusinesslogic.h             \
     batterybusinesslogicadaptor.h       \
-    ledbusinesslogicadaptor.h           \
     systemuigconf.h                     \
     lockscreenbusinesslogicadaptor.h    \
     usbbusinesslogic.h                  \
@@ -48,14 +46,12 @@ SOURCES +=                              \
     main.cpp                            \
     sysuidrequest.cpp                   \
     batterybusinesslogic.cpp            \
-    ledbusinesslogic.cpp                \
     sysuid.cpp                          \
     lockscreenbusinesslogic.cpp         \
     lockscreenui.cpp                    \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \
     batterybusinesslogicadaptor.cpp     \
-    ledbusinesslogicadaptor.cpp         \
     systemuigconf.cpp                   \
     lockscreenbusinesslogicadaptor.cpp  \
     usbbusinesslogic.cpp                \

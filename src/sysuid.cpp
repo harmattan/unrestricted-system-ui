@@ -34,8 +34,6 @@
 #include "systemuigconf.h"
 #include "batterybusinesslogic.h"
 #include "batterybusinesslogicadaptor.h"
-#include "ledbusinesslogic.h"
-#include "ledbusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
@@ -84,7 +82,6 @@ Sysuid::Sysuid () : QObject (),
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
-    m_LedLogic        = new LedBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
 
     m_notificationManager = new NotificationManager(3000);
@@ -94,7 +91,6 @@ Sysuid::Sysuid () : QObject (),
     // D-Bus registration and stuff
     new ShutdownBusinessLogicAdaptor (this, m_ShutdownLogic);
     new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
-    new LedBusinessLogicAdaptor (this, m_LedLogic);
     new UsbBusinessLogicAdaptor (this, m_UsbUi->getLogic ());
 
     QDBusConnection bus = QDBusConnection::sessionBus ();

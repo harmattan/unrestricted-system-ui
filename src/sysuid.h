@@ -30,7 +30,6 @@
 class UsbUi;
 class SystemUIGConf;
 class BatteryBusinessLogic;
-class LedBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaRenderer;
 class NotificationManager;
@@ -88,7 +87,6 @@ private slots:
 private:
     SystemUIGConf           *m_SystemUIGConf;
     BatteryBusinessLogic    *m_BatteryLogic;
-    LedBusinessLogic        *m_LedLogic;
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;

@@ -6,6 +6,12 @@ system-ui (0.15.6~1) harmattan; urgency=low
                        shut down by pressing the power key
   * Fixes: NB#163028 - Unlock screen is not closed after it is once
                        displayed
+  * LedDbusInterface has been removed for the led settings has been removed from
+    the 'Direct UI - Lights UI Specification' version 1.0. This will fix two
+    bugs:
+  * Fixes: NB#166396 - SystemUI disables LED
+  * Fixes: NB#165873 - LED's should be enabled by default
+
 
  -- David Kedves <dkedves@blumsoft.eu>  Sat, 01 May 2010 14:33:35 +0200
 

@@ -13,8 +13,6 @@ SOURCES += \
     $$SRCDIR/usbui.cpp \
     $$SRCDIR/lockscreenui.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
-    $$SRCDIR/ledbusinesslogic.cpp \
-    $$SRCDIR/ledbusinesslogicadaptor.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogicadaptor.cpp \
     $$SRCDIR/usbbusinesslogic.cpp \
@@ -43,8 +41,6 @@ HEADERS += \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreenui.h \
     $$SRCDIR/shutdownbusinesslogic.h \
-    $$SRCDIR/ledbusinesslogic.h \
-    $$SRCDIR/ledbusinesslogicadaptor.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/batterybusinesslogicadaptor.h \
     $$SRCDIR/usbbusinesslogic.h \
