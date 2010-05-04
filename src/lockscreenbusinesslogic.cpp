@@ -21,6 +21,7 @@
 #include <MApplicationWindow>
 #include <MSceneManager>
 #include <QDBusInterface>
+#include <QDebug>
 #include <QTime>
 #include <QX11Info>
 
@@ -28,30 +29,28 @@
 #include "lockscreenbusinesslogic.h"
 #include "sysuid.h"
 
+#include <X11/Xlib.h>
+// TODO: this include can be removed when mcompositor
+// sets the _NET_WM_STATE attribute according to the message.
+#include <X11/Xatom.h>
+
 #define DEBUG
 #include "debug.h"
-
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
     QObject (parent),
-    lockUI (new LockScreenUI),
-    eventEater (new EventEaterUI)
+    lockUI (new LockScreenUI)
 {
     SYS_DEBUG ("");
 
-    connect (lockUI, SIGNAL (unlocked ()),
-             this, SLOT (unlockScreen ()));
-    connect (lockUI, SIGNAL (unlocked ()),
-             this, SIGNAL (unlockConfirmed ()));
+    connect (lockUI, SIGNAL(unlocked()),
+            this, SLOT(unlockScreen()));
+    connect (lockUI, SIGNAL(unlocked()),
+            this, SIGNAL(unlockConfirmed()));
 
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
-
-    connect (eventEater, SIGNAL (OneInput ()),
-             this, SLOT (oneInput ()));
 
 #if 0
 #if defined (DEBUG) && defined (i386)
@@ -67,7 +66,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
     delete lockUI;
-    delete eventEater;
 }
 
 /*!
@@ -90,10 +88,8 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
-    if (eventEater->isOnDisplay ())
-        mainwindow.sceneManager ()->disappearSceneWindowNow (eventEater);
-
     if (toggle) {
+        lockUI->setOpacity (1.0);
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
         lockUI->setActive (true);
 
@@ -113,13 +109,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 }
 
 void
-LockScreenBusinessLogic::oneInput ()
-{
-    SYS_DEBUG ("");
-    toggleEventEater (false);
-}
-
-void
 LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
@@ -128,25 +117,19 @@ LockScreenBusinessLogic::toggleEventEater (
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
-    if (lockUI->isOnDisplay ())
-        mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
-
     if (toggle) {
         // Create lockUI content on first dimming...
         if (! lockUI->isContentCreated ())
             lockUI->createContent ();
 
-        mainwindow.sceneManager ()->appearSceneWindowNow (eventEater);
-
         // Show the event-eater window...
         mainwindow.show ();
         mainwindow.showFullScreen ();
         mainwindow.raise ();
-
-        hidefromTaskBar ();
     } else {
+        hidefromTaskBar ();
+
         // Hide the event eater
-        mainwindow.sceneManager ()->disappearSceneWindowNow (eventEater);
         mainwindow.hide ();
     }
 }
@@ -158,9 +141,9 @@ LockScreenBusinessLogic::mayStartTimer ()
     /*if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off)*/
     {
         // It's better to update the time straight away.
-        lockUI->updateDateTime ();
+        lockUI->updateDateTime();
 
-        QTime t (QTime::currentTime ());
+        QTime t(QTime::currentTime());
         // TODO: some adjustments of time may be done
         timer.start (1000);
     }
