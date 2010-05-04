@@ -74,6 +74,7 @@ Sysuid::Sysuid () : QObject (),
     // Load translation of System-UI
     retranslate ();
 
+    m_applicationWindow->setTranslucentBackground (true);
     m_applicationWindow->setWindowOpacity (0.0);
     m_applicationWindow->setWindowFlags (Qt::FramelessWindowHint |
                                          Qt::CustomizeWindowHint |
