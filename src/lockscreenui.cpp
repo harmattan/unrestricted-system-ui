@@ -260,3 +260,20 @@ LockScreenUI::updateMissedEventAmounts (int emails,
     }
 }
 
+EventEaterUI::EventEaterUI ()
+{
+    setPannable (false);
+    // let's hide home button
+    setComponentsDisplayMode (MApplicationPage::AllComponents,
+                              MApplicationPageModel::Hide);
+    setContentsMargins (0., 0., 0., 0.);
+    setOpacity (0.0);
+}
+
+void
+EventEaterUI::mousePressEvent (QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED (event);
+    emit OneInput ();
+}
+
