@@ -106,6 +106,8 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 
     MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
 
+    win.lockOrientation ();
+
     win.show ();
     win.showFullScreen ();
     win.sceneManager ()->appearSceneWindowNow (this);
