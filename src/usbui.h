@@ -20,6 +20,7 @@
 #define USBUI_H
 
 #include <QObject>
+#include <qmlocks.h>
 #include <qmusbmode.h>
 
 class MDialog;
@@ -35,16 +36,19 @@ class UsbUi : public QObject
 
     private slots:
         void currentModeChanged (Maemo::QmUSBMode::Mode mode);
+        void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
         void OviSuiteSelected ();
         void MassStorageSelected ();
+        void ShowDialog ();
 
     private:
-        void ShowDialog ();
         void ShowNotification (int id);
 
         Maemo::QmUSBMode    *m_logic;
+        Maemo::QmLocks      *m_locks;
         MNotification       *m_notification;
         MDialog             *m_dialog;
+        bool                 m_showdialog;
 };
 
 #endif

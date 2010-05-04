@@ -27,6 +27,7 @@
 #include <MLabel>
 #include <MDialog>
 #include <MLocale>
+#include <QTimer>
 
 #define DEBUG
 #define WARNING
@@ -36,10 +37,13 @@ using namespace Maemo;
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic (0),
+    m_locks (0),
     m_notification (0),
-    m_dialog (0)
+    m_dialog (0),
+    m_showdialog (false)
 {
     m_logic = new QmUSBMode (this);
+    m_locks = new QmLocks (this);
 
     connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
              this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
@@ -141,9 +145,16 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
     {
         case QmUSBMode::Ask:
         case QmUSBMode::ModeRequest:
-            ShowDialog ();
+            if ((m_locks->getState (QmLocks::Device) == QmLocks::Locked) ||
+                (m_locks->getState (QmLocks::TouchAndKeyboard) == QmLocks::Locked))
+                // Show the dialog once the device is unlocked
+                m_showdialog = true;
+            else
+                ShowDialog ();
             break;
         case QmUSBMode::Disconnected:
+            m_showdialog = false;
+
             // remove the previous notification
             if (m_notification)
             {
@@ -159,13 +170,33 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             break;
         case QmUSBMode::OviSuite:
         case QmUSBMode::MassStorage:
+            m_showdialog = false;
+
             ShowNotification ((int) mode);
             break;
+        case QmUSBMode::ChargingOnly:
+            SYS_DEBUG ("mode : Charging only");
+            // no-op
+            break;
         default:
+            m_showdialog = false;
+
             SYS_DEBUG ("What about mode = %d?", mode);
             // doing nothing, no ui interaction specified here...
             break;
+    }
+}
 
+void
+UsbUi::locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+{
+    Q_UNUSED (what);
+
+    if (how == QmLocks::Unlocked)
+    {
+        m_showdialog = false;
+        // Show the mode selection dialog on idle...
+        QTimer::singleShot (10, this, SLOT (ShowDialog ()));
     }
 }
 
