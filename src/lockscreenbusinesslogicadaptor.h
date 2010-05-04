@@ -31,13 +31,7 @@
 class LockScreenBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    #if 1
-    // This is what used in MCE.
     Q_CLASSINFO("D-Bus Interface", "com.nokia.system_ui.request")
-    #else
-    // This is what others want.
-    Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.LockScreen")
-    #endif
 
 public:
     LockScreenBusinessLogicAdaptor (
