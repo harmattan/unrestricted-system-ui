@@ -25,7 +25,8 @@ Clock::Clock(QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
     model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);
 
     // Be interested in changes in the 24 hour mode
-    connect(&qmTime, SIGNAL(timeOrSettingsChanged(QmTimeWhatChanged)), this, SLOT(updateSettings(QmTimeWhatChanged)));
+    connect(&qmTime, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
+            this, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
 
     // Configure the timer
     timer.setSingleShot(true);
@@ -49,7 +50,7 @@ void Clock::updateModelAndSetupTimer()
     timer.start((currentTime.secsTo(nextUpdateTime) + 1) * 1000);
 }
 
-void Clock::updateSettings(QmTimeWhatChanged whatChanged)
+void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged)
 {
     if (whatChanged == Maemo::QmTimeOnlySettingsChanged) {
         // Set the 24 hour mode when settings have changed

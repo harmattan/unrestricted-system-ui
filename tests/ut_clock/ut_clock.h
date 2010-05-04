@@ -35,7 +35,7 @@ public:
     static Maemo::QmTime::TimeFormat expectedTimeFormat;
 
 signals:
-    void timeOrSettingsChanged(QmTimeWhatChanged);
+    void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
 
 private slots:
     void initTestCase();

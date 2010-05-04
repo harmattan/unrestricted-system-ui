@@ -62,7 +62,8 @@ void Ut_Clock::init()
 {
     expectedTimeFormat = Maemo::QmTime::format12h;
     m_subject = new Clock;
-    connect(this, SIGNAL(timeOrSettingsChanged(QmTimeWhatChanged)), m_subject, SLOT(updateSettings(QmTimeWhatChanged)));
+    connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
+            m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
 }
 
 // Called after every testfunction

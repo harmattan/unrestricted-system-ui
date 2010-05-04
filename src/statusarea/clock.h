@@ -25,8 +25,6 @@
 #include <qmtime.h>
 #include "clockmodel.h"
 
-typedef Maemo::QmTimeWhatChanged QmTimeWhatChanged;
-
 /*!
  * A widget for showing the current time.
  */
@@ -50,7 +48,7 @@ private slots:
     /*!
      * \brief Updates the 24 hour mode if the settings have changed
      */
-    void updateSettings(QmTimeWhatChanged whatChanged);
+    void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
 
 private:
     //! \reimp
