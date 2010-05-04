@@ -273,6 +273,17 @@ EventEaterUI::EventEaterUI ()
 void
 EventEaterUI::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
+    SYS_DEBUG ("");
+
+    Q_UNUSED (event);
+    emit OneInput ();
+}
+
+void
+EventEaterUI::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
+{
+    SYS_DEBUG ("");
+
     Q_UNUSED (event);
     emit OneInput ();
 }

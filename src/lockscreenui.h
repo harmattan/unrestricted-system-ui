@@ -86,6 +86,7 @@ public:
 
 protected:
     void mousePressEvent (QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
 
 signals:
     void OneInput ();
