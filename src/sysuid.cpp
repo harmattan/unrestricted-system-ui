@@ -121,7 +121,7 @@ Sysuid::Sysuid () : QObject (),
              m_ngfNotificationSink, SLOT (addNotification (const Notification &)));
     connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
               m_ngfNotificationSink, SLOT (removeNotification (uint)));
-    connect (m_statusAreaWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
+    connect (m_applicationWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
              this, SIGNAL (orientationChangeFinished (const M::Orientation &)));
 
     // Subscribe to a context property for getting information about the video recording status
