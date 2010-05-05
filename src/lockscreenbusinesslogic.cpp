@@ -53,6 +53,21 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     connect (eventEater, SIGNAL (OneInput ()),
              this, SLOT (oneInput ()));
 
+    if (! lockUI->isContentCreated ())
+        lockUI->createContent ();
+
+    MWindow& mainwindow =
+        Sysuid::sysuid ()->applicationWindow ();
+
+    // Show the mainwindow minimized,
+    // and hide it from taskbar...
+    mainwindow.show ();
+
+    hidefromTaskBar ();
+
+    mainwindow.sceneManager ()->appearSceneWindowNow (eventEater);
+    mainwindow.lower ();
+
 #if 0
 #if defined (DEBUG) && defined (i386)
     // XXX: Remove this... only for debugging/devoloping purposes
@@ -90,23 +105,17 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
-    if (eventEater->isOnDisplay ())
-        mainwindow.sceneManager ()->disappearSceneWindowNow (eventEater);
-
     if (toggle) {
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
-        lockUI->setActive (true);
-
-        mainwindow.show ();
-        mainwindow.showFullScreen ();
         mainwindow.raise ();
+        mainwindow.showFullScreen ();
+
+        lockUI->setActive (true);
 
         mayStartTimer ();
     } else {
-        hidefromTaskBar ();
-
         mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
-        mainwindow.hide ();
+        mainwindow.lower ();
 
         stopTimer ();
     }
@@ -128,26 +137,15 @@ LockScreenBusinessLogic::toggleEventEater (
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
-    if (lockUI->isOnDisplay ())
-        mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
+    mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
 
     if (toggle) {
-        // Create lockUI content on first dimming...
-        if (! lockUI->isContentCreated ())
-            lockUI->createContent ();
-
-        mainwindow.sceneManager ()->appearSceneWindowNow (eventEater);
-
         // Show the event-eater window...
-        mainwindow.show ();
-        mainwindow.showFullScreen ();
         mainwindow.raise ();
-
-        hidefromTaskBar ();
+        mainwindow.showFullScreen ();
     } else {
         // Hide the event eater
-        mainwindow.sceneManager ()->disappearSceneWindowNow (eventEater);
-        mainwindow.hide ();
+        mainwindow.lower ();
     }
 }
 

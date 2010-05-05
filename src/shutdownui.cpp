@@ -114,6 +114,7 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     display.set (Maemo::QmDisplayState::On);
 
     win.show ();
+    win.raise ();
     win.showFullScreen ();
     win.sceneManager ()->appearSceneWindowNow (this);
 
