@@ -114,9 +114,11 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     display.set (Maemo::QmDisplayState::On);
 
     win.show ();
-    win.raise ();
     win.showFullScreen ();
     win.sceneManager ()->appearSceneWindowNow (this);
+    appear ();
+
+    win.raise ();
 
     if (! (text1.isEmpty () && text2.isEmpty ()))
     {
@@ -153,11 +155,12 @@ ShutdownUI::showLogo ()
     Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();
     Sysuid::sysuid ()->applicationWindow ().lockOrientation ();
 
-    m_text1->setVisible (false);
-    m_text2->setVisible (false);
+    m_text1->hide ();
+    m_text2->hide ();
 
     if (centralWidget () != static_cast <QGraphicsWidget *> (m_logo))
         setCentralWidget (m_logo);
+    m_logo->show ();
 
     MApplication::instance ()->processEvents (
             QEventLoop::ExcludeUserInputEvents,
