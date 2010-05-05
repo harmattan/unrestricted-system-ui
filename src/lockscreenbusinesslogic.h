@@ -45,7 +45,6 @@ public slots:
 
 private slots:
     void unlockScreen();
-    void oneInput();
 
 signals:
     void updateTime ();
@@ -58,7 +57,6 @@ private: //methods
 
 private: 
     LockScreenUI     *lockUI;
-    EventEaterUI     *eventEater;
     QTimer            timer;
 };
 

@@ -177,6 +177,7 @@ int
 LockScreenBusinessLogicAdaptor::tklock_close (
         bool   silent)
 {
+    SYS_DEBUG ("");
     Q_UNUSED (silent);
 
     m_LockScreenBusinessLogic->toggleScreenLockUI (false);

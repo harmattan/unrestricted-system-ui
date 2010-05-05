@@ -144,7 +144,6 @@ LockScreenUI::sliderUnlocked ()
 {
     SYS_DEBUG ("");
 
-    disappear ();
     emit unlocked ();
 }
 
@@ -258,33 +257,5 @@ LockScreenUI::updateMissedEventAmounts (int emails,
             m_policy->insertItem (0, m_notificationArea);
         }
     }
-}
-
-EventEaterUI::EventEaterUI ()
-{
-    setPannable (false);
-    // let's hide home button
-    setComponentsDisplayMode (MApplicationPage::AllComponents,
-                              MApplicationPageModel::Hide);
-    setContentsMargins (0., 0., 0., 0.);
-    setOpacity (0.0);
-}
-
-void
-EventEaterUI::mousePressEvent (QGraphicsSceneMouseEvent *event)
-{
-    SYS_DEBUG ("");
-
-    Q_UNUSED (event);
-    emit OneInput ();
-}
-
-void
-EventEaterUI::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
-{
-    SYS_DEBUG ("");
-
-    Q_UNUSED (event);
-    emit OneInput ();
 }
 
