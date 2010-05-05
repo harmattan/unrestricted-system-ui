@@ -37,6 +37,7 @@ public:
     LockScreenBusinessLogicAdaptor (
             QObject *                obj, 
             LockScreenBusinessLogic *logic);
+    ~LockScreenBusinessLogicAdaptor();
 
     /*
      * I have no information about these, copyed from osso-systemui-tklock.
@@ -88,6 +89,7 @@ private:
     QString                    m_MCECallbackPath;
     QString                    m_MCECallbackInterface;
     QString                    m_MCECallbackMethod;
+    QDBusInterface            *m_CallbackDbusIf;
 };
 
 #endif 

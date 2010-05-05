@@ -31,6 +31,7 @@ BatteryBusinessLogicAdaptor::BatteryBusinessLogicAdaptor (
 	QDBusAbstractAdaptor (obj), 
     m_BatteryLogic (batteryLogic)
 {
+    SYS_DEBUG ("");
     connect (m_BatteryLogic, SIGNAL(batteryCharging(int)), 
             this, SIGNAL(batteryCharging(int)));
     connect (m_BatteryLogic, SIGNAL(batteryNotCharging()), 

@@ -29,7 +29,8 @@ LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
         QObject                 *obj, 
         LockScreenBusinessLogic *logic) :
     QDBusAbstractAdaptor (obj),
-    m_LockScreenBusinessLogic (logic)
+    m_LockScreenBusinessLogic (logic),
+    m_CallbackDbusIf (0)
 {
     Q_ASSERT (logic != 0);
     connect (this, SIGNAL(delegateSetMissedEvents(int, int, int, int)),
@@ -39,6 +40,11 @@ LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
             this, SLOT(unlockConfirmed ()));
 }
 
+LockScreenBusinessLogicAdaptor::~LockScreenBusinessLogicAdaptor ()
+{
+    if (m_CallbackDbusIf)
+        delete m_CallbackDbusIf;
+}
 
 void 
 LockScreenBusinessLogicAdaptor::SetMissedEvents (
@@ -112,13 +118,13 @@ LockScreenBusinessLogicAdaptor::tklock_open (
         
         case TkLockModeEnable:
             SYS_DEBUG ("### TkLockModeEnable");
-	    /*
-	     * This mode is reported by MCE when the screen is locked and turned
-	     * off. A bit strange that the lock mode is enabled and we hide the
-	     * lockscreenui, but the screen is turned off, so we hide the unlock
-	     * screen.
-	     */
-	    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
+            /*
+    	     * This mode is reported by MCE when the screen is locked and turned
+	         * off. A bit strange that the lock mode is enabled and we hide the
+	         * lockscreenui, but the screen is turned off, so we hide the unlock
+    	     * screen.
+	         */
+	        m_LockScreenBusinessLogic->toggleScreenLockUI (false);
             break;
 
         case TkLockModeHelp:
@@ -181,10 +187,12 @@ LockScreenBusinessLogicAdaptor::tklock_close (
 void 
 LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
-    QDBusInterface *dbusIf;
     SYS_DEBUG ("");
 
-    dbusIf = new QDBusInterface (
+    if (m_CallbackDbusIf)
+        delete m_CallbackDbusIf;
+
+    m_CallbackDbusIf = new QDBusInterface (
             m_MCECallbackService, //"com.nokia.mce", 
             m_MCECallbackPath, //"/com/nokia/mce/request",
             m_MCECallbackInterface, //"com.nokia.mce.request",
@@ -206,10 +214,8 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
     SYS_DEBUG ("*** interface  = %s", SYS_STR(m_MCECallbackInterface));
     SYS_DEBUG ("*** callback   = %s", SYS_STR(m_MCECallbackMethod));
     SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
-    dbusIf->call (QDBus::Block, 
+    m_CallbackDbusIf->call (QDBus::NoBlock, 
             m_MCECallbackMethod, //QString ("tklock_callback"), 
             (int) TkLockReplyOk);
-
-    delete dbusIf;
 }
 
