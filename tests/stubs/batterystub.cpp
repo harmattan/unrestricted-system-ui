@@ -36,6 +36,7 @@ QmBattery::~QmBattery()
 void QmBattery::initValues()
 {
     levels << QmBattery::LevelFull << QmBattery::LevelLow << QmBattery::LevelCritical;
+    states << QmBattery::StateFull << QmBattery::StateLow << QmBattery::StateEmpty;
     levelIndex = 0;
     levelIndexInc = 1;
     energyLevel = 100;
@@ -74,9 +75,19 @@ QmBattery::State QmBattery::getState()
     return state;
 }
 
+QmBattery::ChargingState QmBattery::getChargingState()
+{
+    return state;
+}
+
 QmBattery::Level QmBattery::getLevel()
 {
     return levels.at(levelIndex);
+}
+
+QmBattery::BatteryState QmBattery::getBatteryState()
+{
+    return states.at(levelIndex);
 }
 
 void QmBattery::changeLevel()

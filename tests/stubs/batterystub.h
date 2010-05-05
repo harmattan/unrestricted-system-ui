@@ -37,10 +37,19 @@ class QmBattery : public QObject
 public:
 
     /** Battery charge level states */
-    enum Level {
+    enum Level { /* XXX: Deprecated */
         LevelFull = 0,       /**< Battery full */
         LevelLow,            /**< Battery low */
         LevelCritical        /**< Battery level critically low */
+    };
+
+    enum BatteryState
+    {
+        StateEmpty = 0,
+        StateLow,
+        StateOK,
+        StateFull,
+        StateError
     };
 
     /** The mode in which the remaining time is to be calculated */
@@ -59,11 +68,13 @@ public:
     };
 
     /** Battery charging states */
-    enum State {
-        StateCharging = 0,    /**< Charging */
-        StateNotCharging,     /**< Not charging */
+    enum ChargingState {
+        StateNotCharging = 0,     /**< Not charging */
+        StateCharging,    /**< Charging */
         StateChargingFailed
     };
+
+    typedef ChargingState State;    /* XXX: deprecated */
 
     QmBattery(QObject *parent = 0);
     virtual ~QmBattery();
@@ -72,13 +83,17 @@ public:
     * Current battery charge level
     * @return  QmBattery::Level whether battery is low/full/critical
     */
-    QmBattery::Level getLevel();
+    QmBattery::Level getLevel(); /* XXX: Deprecated */
+
+    BatteryState getBatteryState ();
 
     /*
     * Current battery state
     * @return  QmBattery::State whether charging or not charging
     */
-    QmBattery::State getState();
+    QmBattery::State getState(); /* XXX: Deprecated */
+
+    ChargingState getChargingState ();
 
 
     /*
@@ -146,10 +161,11 @@ private: //methods
 
 private: //attributes
     QList<QmBattery::Level> levels;
+    QList<QmBattery::BatteryState> states;
     int levelIndex;
     int energyLevel;
     int levelIndexInc;
-    QmBattery::State state;
+    QmBattery::ChargingState state;
     QmBattery::ChargerType type;
 
 };

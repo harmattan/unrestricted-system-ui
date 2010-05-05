@@ -11,9 +11,9 @@ system-ui (0.15.6~1) harmattan; urgency=low
     bugs:
   * Fixes: NB#166396 - SystemUI disables LED
   * Fixes: NB#165873 - LED's should be enabled by default
+  * Using the new QmBattery API
 
-
- -- David Kedves <dkedves@blumsoft.eu>  Sat, 01 May 2010 14:33:35 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 05 May 2010 07:36:16 +0200
 
 system-ui (0.15.5-1) harmattan; urgency=low
 

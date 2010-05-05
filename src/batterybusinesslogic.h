@@ -133,9 +133,9 @@ private:
     int animationRate (Maemo::QmBattery::ChargerType type);
 
 private slots:
-    void batteryLevelChanged (Maemo::QmBattery::Level level);
     void batteryEnergyLevelChanged (int energyLevel);
-    void batteryStatusChanged (Maemo::QmBattery::State state);
+    void batteryStateChanged (Maemo::QmBattery::BatteryState state);
+    void chargingStateChanged (Maemo::QmBattery::ChargingState state);
     void batteryChargerEvent (Maemo::QmBattery::ChargerType type);
     void devicePSMStateChanged (Maemo::QmDeviceMode::PSMState PSMState);
     void utiliseLED (bool activate, const QString &pattern);

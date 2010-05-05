@@ -209,13 +209,13 @@ BatteryBusinessLogic::BatteryBusinessLogic (
 
     /* connect to QmSystem signals */
     connect (m_Battery,
-             SIGNAL (batteryLevelChanged (Maemo::QmBattery::Level)),
+             SIGNAL (batteryStateChanged (Maemo::QmBattery::BatteryState)),
              this,
-             SLOT (batteryLevelChanged (Maemo::QmBattery::Level)));
+             SLOT (batteryStateChanged (Maemo::QmBattery::BatteryState)));
     connect (m_Battery,
-             SIGNAL (batteryStatusChanged (Maemo::QmBattery::State)),
+             SIGNAL (chargingStateChanged (Maemo::QmBattery::ChargingState)),
              this,
-             SLOT (batteryStatusChanged (Maemo::QmBattery::State)));
+             SLOT (chargingStateChanged (Maemo::QmBattery::ChargingState)));
     connect (m_Battery,
              SIGNAL (batteryEnergyLevelChanged (int)),
              this,
@@ -229,7 +229,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
              this,
              SLOT (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)));
 
-    initBattery ();
+    // Init battery values when idle
+    QTimer::singleShot (10, this, SLOT (initBattery ()));
 }
 
 
@@ -269,10 +270,10 @@ BatteryBusinessLogic::initBattery ()
 {
     SYS_DEBUG ("");
     //init the charging status
-    batteryStatusChanged (m_Battery->getState ());
+    chargingStateChanged (m_Battery->getChargingState ());
 
     //init the battery level
-    batteryLevelChanged (m_Battery->getLevel ());
+    batteryStateChanged (m_Battery->getBatteryState ());
 }
 
 int
@@ -317,8 +318,8 @@ BatteryBusinessLogic::batteryBarValue (
 }
 
 void
-BatteryBusinessLogic::batteryStatusChanged (
-        QmBattery::State state)
+BatteryBusinessLogic::chargingStateChanged (
+        QmBattery::ChargingState state)
 {
     SYS_DEBUG ("");
 
@@ -356,13 +357,13 @@ BatteryBusinessLogic::batteryStatusChanged (
 }
 
 void
-BatteryBusinessLogic::batteryLevelChanged (
-        QmBattery::Level level)
+BatteryBusinessLogic::batteryStateChanged (
+        QmBattery::BatteryState state)
 {
     SYS_DEBUG ("");
 
-    switch (level) {
-    case QmBattery::LevelFull:
+    switch (state) {
+    case QmBattery::StateFull:
         if (m_Battery->getState () == QmBattery::StateCharging)
         {
             NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
@@ -372,7 +373,7 @@ BatteryBusinessLogic::batteryLevelChanged (
         }
         break;
 
-    case QmBattery::LevelLow:
+    case QmBattery::StateLow:
         // Seems LevelLow coming on start, i just checked the QmSystem
         // sources, if the value is not full or critically low the result
         // is LevelLow :-S (Why there is no LevelNormal?) <dkedves>
@@ -388,6 +389,10 @@ BatteryBusinessLogic::batteryLevelChanged (
             }
             m_LowBatteryNotifier->showLowBatteryNotification ();
         }
+        break;
+    case QmBattery::StateEmpty:
+            // TODO: FIXME:
+            // Show "Recharge battery" notificiation here...
         break;
 
     default:
