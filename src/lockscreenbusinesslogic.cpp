@@ -59,14 +59,13 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     MWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
 
-    // Show the mainwindow minimized,
-    // and hide it from taskbar...
+    // Hide mainwindow from taskbar
+    mainwindow.sceneManager ()->appearSceneWindowNow (eventEater);
     mainwindow.show ();
 
     hidefromTaskBar ();
 
-    mainwindow.sceneManager ()->appearSceneWindowNow (eventEater);
-    mainwindow.lower ();
+    mainwindow.showMinimized ();
 
 #if 0
 #if defined (DEBUG) && defined (i386)
@@ -107,15 +106,19 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
     if (toggle) {
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
+
+        lockUI->setActive (true);
+
         mainwindow.raise ();
         mainwindow.showFullScreen ();
 
-        lockUI->setActive (true);
+        hidefromTaskBar ();
 
         mayStartTimer ();
     } else {
         mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
-        mainwindow.lower ();
+        hidefromTaskBar ();
+        mainwindow.showMinimized ();
 
         stopTimer ();
     }
@@ -143,9 +146,11 @@ LockScreenBusinessLogic::toggleEventEater (
         // Show the event-eater window...
         mainwindow.raise ();
         mainwindow.showFullScreen ();
+
+        hidefromTaskBar ();
     } else {
         // Hide the event eater
-        mainwindow.lower ();
+        mainwindow.showMinimized ();
     }
 }
 
