@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,8 +18,6 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "batterybusinesslogic.h"
 
 #include <MLocale>
@@ -26,9 +26,6 @@
 #include <MNotification>
 
 using namespace Maemo;
-
-#define DEBUG
-#include "debug.h"
 
 /* TODO List
 
@@ -79,6 +76,9 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
 //                             and that could cause slow-down...)
 #define NOTIFICATION(mnotification)
 #endif
+
+#define DEBUG
+#include "debug.h"
 
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.
@@ -136,6 +136,7 @@ LowBatteryNotifier::showLowBatteryNotification ()
 
         default:
             // FIXME: what about the other states [Unknown]?
+            SYS_WARNING ("Unknown display state");
             break;
     }
 }
@@ -186,7 +187,7 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_LowBatteryNotifier (0),
     m_notification (0)
 {
-    SYS_DEBUG ("");
+    //SYS_DEBUG ("----------------- start ----------------------");
 
     /* init the PSM thresholds */
     m_PSMThresholds <<
@@ -205,29 +206,37 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     initSystemUIGConfKeys ();
 
     /* connect to QmSystem signals */
+    SYS_DEBUG ("Connecting QmSystem signals");
     connect (m_Battery,
              SIGNAL (batteryStateChanged (Maemo::QmBattery::BatteryState)),
              this,
              SLOT (batteryStateChanged (Maemo::QmBattery::BatteryState)));
+    SYS_DEBUG ("1");
     connect (m_Battery,
              SIGNAL (chargingStateChanged (Maemo::QmBattery::ChargingState)),
              this,
              SLOT (chargingStateChanged (Maemo::QmBattery::ChargingState)));
+    SYS_DEBUG ("2");
     connect (m_Battery,
              SIGNAL (batteryEnergyLevelChanged (int)),
              this,
              SLOT (batteryEnergyLevelChanged (int)));
+    SYS_DEBUG ("3");
     connect (m_Battery,
              SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
              this,
              SLOT (batteryChargerEvent (Maemo::QmBattery::ChargerType)));
+    SYS_DEBUG ("4");
     connect (m_DeviceMode,
              SIGNAL (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)),
              this,
              SLOT (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)));
 
     // Init battery values when idle
+    SYS_DEBUG ("calling singleShot...");
     QTimer::singleShot (10, this, SLOT (initBattery ()));
+
+    SYS_DEBUG ("------------------ end -----------------------");
 }
 
 
