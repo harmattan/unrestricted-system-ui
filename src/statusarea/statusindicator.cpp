@@ -20,8 +20,7 @@
 #include <MApplication>
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
-#include "statusindicatorimageview.h"
-#include "statusindicatorlabelview.h"
+#include "inputmethodstatusindicatoradaptor.h"
 #include "applicationcontext.h"
 
 StatusIndicator::StatusIndicator(MWidget *parent) :
@@ -34,6 +33,11 @@ StatusIndicator::StatusIndicator(MWidget *parent) :
 
 StatusIndicator::~StatusIndicator()
 {
+}
+
+void StatusIndicator::updateGeometry()
+{
+    MWidgetController::updateGeometry();
 }
 
 void StatusIndicator::setValue(QVariant v)
@@ -217,6 +221,21 @@ PhoneNetworkStatusIndicator::~PhoneNetworkStatusIndicator()
 
 void PhoneNetworkStatusIndicator::phoneNetworkChanged()
 {
-    QVariant value = networkName.data()->value();
-    setValue((value.isValid() && !value.isNull()) ? value : QVariant("Offline"));
+    setValue(networkName.data()->value().toString().left(13));
+}
+
+InputMethodStatusIndicator::InputMethodStatusIndicator(MWidget *parent) :
+    StatusIndicator(parent)
+{
+    setObjectName(metaObject()->className());
+    new InputMethodStatusIndicatorAdaptor(this);
+}
+
+InputMethodStatusIndicator::~InputMethodStatusIndicator()
+{
+}
+
+void InputMethodStatusIndicator::setIconID(const QString &iconID)
+{
+    setValue(iconID);
 }

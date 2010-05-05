@@ -20,9 +20,10 @@
 #include <MOnDisplayChangeEvent>
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
-#include "statusindicatorimageview.h"
+#include "statusindicatoranimationview.h"
 #include "statusindicatorlabelview.h"
 #include "testcontextitem.h"
+#include "inputmethodstatusindicatoradaptor_stub.h"
 
 QHash<QString, TestContextItem *> testContextItems;
 
@@ -43,12 +44,12 @@ public:
 
 QVariant gModelValue;
 
-TestStatusIndicatorImageView::TestStatusIndicatorImageView(StatusIndicator *controller) :
-    StatusIndicatorImageView(controller)
+TestStatusIndicatorAnimationView::TestStatusIndicatorAnimationView(StatusIndicator *controller) :
+    StatusIndicatorAnimationView(controller)
 {
 }
 
-void TestStatusIndicatorImageView::updateData(const QList<const char *>& modifications)
+void TestStatusIndicatorAnimationView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
     const char *member;
@@ -60,7 +61,7 @@ void TestStatusIndicatorImageView::updateData(const QList<const char *>& modific
 }
 
 TestStatusIndicatorLabelView::TestStatusIndicatorLabelView(StatusIndicator *controller) :
-    StatusIndicatorImageView(controller)
+    StatusIndicatorAnimationView(controller)
 {
 }
 
@@ -96,7 +97,7 @@ void Ut_StatusIndicator::testModelUpdates()
 {
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-    statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
 
     // When the application is visible the model should be updated
     qApp->sendEvent(statusIndicator, &enterDisplayEvent);
@@ -117,8 +118,8 @@ void Ut_StatusIndicator::testModelUpdates()
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 {
-    statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
-    statusIndicator->setView(new TestStatusIndicatorImageView(statusIndicator));
+    StatusIndicator *statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
+    statusIndicator->setView(new TestStatusIndicatorAnimationView(statusIndicator));
 
     testContextItems["Cellular.SignalStrength"]->setValue(QVariant(100));
 
@@ -130,7 +131,7 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 
 void Ut_StatusIndicator::testBattery()
 {
-    statusIndicator = new BatteryStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new BatteryStatusIndicator(*testContext);
 
     testContextItems["Battery.ChargePercentage"]->setValue(QVariant(100));
     QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
@@ -147,7 +148,7 @@ void Ut_StatusIndicator::testBattery()
 
 void Ut_StatusIndicator::testAlarm()
 {
-    statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
     QCOMPARE(statusIndicator->model()->value(), QVariant(false));
@@ -160,7 +161,7 @@ void Ut_StatusIndicator::testAlarm()
 
 void Ut_StatusIndicator::testBluetooth()
 {
-    statusIndicator = new BluetoothStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new BluetoothStatusIndicator(*testContext);
 
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
     QCOMPARE(statusIndicator->model()->value(), QVariant(false));
@@ -173,7 +174,7 @@ void Ut_StatusIndicator::testBluetooth()
 
 void Ut_StatusIndicator::testInternetConnection()
 {
-    statusIndicator = new InternetConnectionStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new InternetConnectionStatusIndicator(*testContext);
 
     testContextItems["Internet.SignalStrength"]->setValue(QVariant(100));
     QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
@@ -186,7 +187,7 @@ void Ut_StatusIndicator::testAnimation()
 {
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-    statusIndicator = new BatteryStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new BatteryStatusIndicator(*testContext);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     qApp->sendEvent(statusIndicator, &exitDisplayEvent);
@@ -199,11 +200,21 @@ void Ut_StatusIndicator::testAnimation()
 
 void Ut_StatusIndicator::testPhoneNetwork()
 {
-    statusIndicator = new PhoneNetworkStatusIndicator(*testContext);
-    testContextItems["Cellular.NetworkName"]->setValue(QVariant("foobar"));
+    StatusIndicator *statusIndicator = new PhoneNetworkStatusIndicator(*testContext);
+    testContextItems["Cellular.NetworkName"]->setValue(QVariant("foobarbarabush"));
 
     QVERIFY(statusIndicator->model()->value().type() == QVariant::String);
-    QCOMPARE(statusIndicator->model()->value(), QVariant("foobar"));
+    QCOMPARE(statusIndicator->model()->value(), QVariant("foobarbarabus"));
+
+    delete statusIndicator;
+}
+
+void Ut_StatusIndicator::testInputMethod()
+{
+    InputMethodStatusIndicator *statusIndicator = new InputMethodStatusIndicator;
+    statusIndicator->setIconID("test");
+    QVERIFY(statusIndicator->model()->value().type() == QVariant::String);
+    QCOMPARE(statusIndicator->model()->value(), QVariant("test"));
 
     delete statusIndicator;
 }

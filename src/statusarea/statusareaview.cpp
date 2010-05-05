@@ -25,6 +25,7 @@
 #include "contextframeworkcontext.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
+#include <QDBusConnection>
 #include <MDeviceProfile>
 #include <MViewCreator>
 
@@ -45,6 +46,7 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeNotifier(new Notifier(controller)),
     portraitNotifier(new Notifier(controller))
 {
@@ -63,6 +65,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     compositeLayout->addCornerAnchors(portraitWidget, Qt::TopLeftCorner, landscapeWidget, Qt::BottomLeftCorner);
     compositeLayout->addCornerAnchors(portraitWidget, Qt::BottomLeftCorner, compositeLayout, Qt::BottomLeftCorner);
     controller->setLayout(compositeLayout);
+
+    // Connect to D-Bus and register the DBus source as an object
+    QDBusConnection::sessionBus().registerService("com.meego.core.MInputMethodStatusIndicator");
+    QDBusConnection::sessionBus().registerObject("/inputmethodstatusindicator", landscapeInputMethodIndicator);
 }
 
 StatusAreaView::~StatusAreaView()
@@ -95,6 +101,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addStretch();
     layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeBluetoothIndicator);
+    layout->addItem(landscapeInputMethodIndicator);
     layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
 
     return layout;

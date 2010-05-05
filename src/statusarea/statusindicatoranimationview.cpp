@@ -17,14 +17,12 @@
 **
 ****************************************************************************/
 
-#include "statusindicatorimageview.h"
+#include "statusindicatoranimationview.h"
 #include "statusindicator.h"
-#include <MTheme>
-#include <MLabel>
 #include <MViewCreator>
 #include <QTimeLine>
 
-StatusIndicatorImageView::StatusIndicatorImageView(StatusIndicator *controller) :
+StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *controller) :
     MWidgetView(controller),
     controller(controller),
     animationFrame(0),
@@ -35,12 +33,12 @@ StatusIndicatorImageView::StatusIndicatorImageView(StatusIndicator *controller) 
     connect(animationTimeline, SIGNAL(frameChanged(int)), this, SLOT(setAnimationFrame(int)));
 }
 
-StatusIndicatorImageView::~StatusIndicatorImageView()
+StatusIndicatorAnimationView::~StatusIndicatorAnimationView()
 {
     clearImageList();
 }
 
-void StatusIndicatorImageView::setupModel()
+void StatusIndicatorAnimationView::setupModel()
 {
     MWidgetView::setupModel();
 
@@ -52,7 +50,7 @@ void StatusIndicatorImageView::setupModel()
     }
 }
 
-void StatusIndicatorImageView::updateData(const QList<const char *>& modifications)
+void StatusIndicatorAnimationView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
 
@@ -71,7 +69,7 @@ void StatusIndicatorImageView::updateData(const QList<const char *>& modificatio
     }
 }
 
-void StatusIndicatorImageView::applyStyle()
+void StatusIndicatorAnimationView::applyStyle()
 {
     MWidgetView::applyStyle();
 
@@ -87,7 +85,7 @@ void StatusIndicatorImageView::applyStyle()
     animationTimeline->setUpdateInterval(style()->animationDuration() / (images.size() > 0 ? images.size() : 1));
 }
 
-void StatusIndicatorImageView::setAnimationFrame(int frame)
+void StatusIndicatorAnimationView::setAnimationFrame(int frame)
 {
     frame = qBound(0, frame, images.size() - 1);
 
@@ -97,21 +95,21 @@ void StatusIndicatorImageView::setAnimationFrame(int frame)
     }
 }
 
-void StatusIndicatorImageView::startAnimation()
+void StatusIndicatorAnimationView::startAnimation()
 {
     if (animationTimeline->state() == QTimeLine::NotRunning) {
         animationTimeline->start();
     }
 }
 
-void StatusIndicatorImageView::stopAnimation()
+void StatusIndicatorAnimationView::stopAnimation()
 {
     if (animationTimeline->state() == QTimeLine::Running) {
         animationTimeline->stop();
     }
 }
 
-void StatusIndicatorImageView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
+void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
 {
     if (animationFrame < images.size()) {
         if (images[animationFrame] == NULL) {
@@ -126,7 +124,7 @@ void StatusIndicatorImageView::drawContents(QPainter *painter, const QStyleOptio
     }
 }
 
-void StatusIndicatorImageView::clearImageList()
+void StatusIndicatorAnimationView::clearImageList()
 {
     for (int i = 0; i < images.size(); i++) {
         delete images[i];
@@ -136,4 +134,4 @@ void StatusIndicatorImageView::clearImageList()
     images.clear();
 }
 
-M_REGISTER_VIEW_NEW(StatusIndicatorImageView, StatusIndicator)
+M_REGISTER_VIEW_NEW(StatusIndicatorAnimationView, StatusIndicator)

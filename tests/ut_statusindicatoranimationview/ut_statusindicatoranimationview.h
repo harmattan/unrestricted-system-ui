@@ -17,23 +17,23 @@
 **
 ****************************************************************************/
 
-#ifndef UT_STATUSINDICATORIMAGEVIEW_H
-#define UT_STATUSINDICATORIMAGEVIEW_H
+#ifndef UT_STATUSINDICATORANIMATIONVIEW_H
+#define UT_STATUSINDICATORANIMATIONVIEW_H
 
 #include <QtTest/QtTest>
 #include <QObject>
 
-#include "statusindicatorimageview.h"
+#include "statusindicatoranimationview.h"
 
 class MApplication;
 
-class TestStatusIndicatorImageView : public StatusIndicatorImageView
+class TestStatusIndicatorAnimationView : public StatusIndicatorAnimationView
 {
     Q_OBJECT
-    M_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorAnimationStyle)
 
 public:
-    TestStatusIndicatorImageView(StatusIndicator *controller);
+    TestStatusIndicatorAnimationView(StatusIndicator *controller);
 
     StatusIndicatorModel *getModel();
 
@@ -41,12 +41,12 @@ public:
 
     void callableDrawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
 
-    StatusIndicatorImageStyle *modifiableStyle();
+    StatusIndicatorAnimationStyle *modifiableStyle();
 
 };
 
 
-class Ut_StatusIndicatorImageView : public QObject
+class Ut_StatusIndicatorAnimationView : public QObject
 {
     Q_OBJECT
 
@@ -75,7 +75,7 @@ private:
     // A controller for the test subject
     StatusIndicator *controller;
     // The object being tested
-    TestStatusIndicatorImageView *m_subject;
+    TestStatusIndicatorAnimationView *m_subject;
 };
 
 #endif

@@ -17,38 +17,39 @@
 **
 ****************************************************************************/
 
-#include "ut_statusindicatorimageview.h"
-#include "statusindicatorimageview.h"
+#include "ut_statusindicatoranimationview.h"
+#include "statusindicatoranimationview.h"
+#include "inputmethodstatusindicatoradaptor_stub.h"
 
 #include <MApplication>
 #include <MTheme>
 #include <QPainter>
 
-TestStatusIndicatorImageView::TestStatusIndicatorImageView(StatusIndicator *controller) :
-    StatusIndicatorImageView(controller)
+TestStatusIndicatorAnimationView::TestStatusIndicatorAnimationView(StatusIndicator *controller) :
+    StatusIndicatorAnimationView(controller)
 {
 }
 
-StatusIndicatorModel *TestStatusIndicatorImageView::getModel()
+StatusIndicatorModel *TestStatusIndicatorAnimationView::getModel()
 {
     return model();
 }
 
-void TestStatusIndicatorImageView::executeStyleChanged()
+void TestStatusIndicatorAnimationView::executeStyleChanged()
 {
     applyStyle();
 }
 
-void TestStatusIndicatorImageView::callableDrawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void TestStatusIndicatorAnimationView::callableDrawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     drawContents(painter, option);
 }
 
-StatusIndicatorImageStyle *TestStatusIndicatorImageView::modifiableStyle()
+StatusIndicatorAnimationStyle *TestStatusIndicatorAnimationView::modifiableStyle()
 {
-    StatusIndicatorImageStyleContainer &sc = style();
-    const StatusIndicatorImageStyle *const_s = sc.operator ->();
-    StatusIndicatorImageStyle *s = const_cast<StatusIndicatorImageStyle *>(const_s);
+    StatusIndicatorAnimationStyleContainer &sc = style();
+    const StatusIndicatorAnimationStyle *const_s = sc.operator ->();
+    StatusIndicatorAnimationStyle *s = const_cast<StatusIndicatorAnimationStyle *>(const_s);
     return s;
 }
 
@@ -106,19 +107,19 @@ QTimeLine::State QTimeLine::state() const
     return gQTimeLineState;
 }
 
-void Ut_StatusIndicatorImageView::initTestCase()
+void Ut_StatusIndicatorAnimationView::initTestCase()
 {
     static int argc = 1;
-    static char *app_name = (char *)"./ut_statusindicatorimageview";
+    static char *app_name = (char *)"./ut_statusindicatoranimationview";
     app = new MApplication(argc, &app_name);
 }
 
-void Ut_StatusIndicatorImageView::cleanupTestCase()
+void Ut_StatusIndicatorAnimationView::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_StatusIndicatorImageView::init()
+void Ut_StatusIndicatorAnimationView::init()
 {
     gMThemePixmapPixmaps.clear();
 
@@ -133,17 +134,17 @@ void Ut_StatusIndicatorImageView::init()
 
     // Construct the test subject
     controller = new StatusIndicator;
-    m_subject = new TestStatusIndicatorImageView(controller);
+    m_subject = new TestStatusIndicatorAnimationView(controller);
     m_subject->setModel(controller->model());
 }
 
-void Ut_StatusIndicatorImageView::cleanup()
+void Ut_StatusIndicatorAnimationView::cleanup()
 {
     delete m_subject;
     delete controller;
 }
 
-void Ut_StatusIndicatorImageView::testImageListInitialized()
+void Ut_StatusIndicatorAnimationView::testImageListInitialized()
 {
     m_subject->modifiableStyle()->setImageList("1 2");
     m_subject->executeStyleChanged();
@@ -151,7 +152,7 @@ void Ut_StatusIndicatorImageView::testImageListInitialized()
     QCOMPARE(gMThemePixmapPixmaps.size(), 0);
 }
 
-void Ut_StatusIndicatorImageView::testSetAnimationFrame()
+void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
 {
     // Test that the latest image list is used
     m_subject->modifiableStyle()->setImageList("3 4");
@@ -185,7 +186,7 @@ void Ut_StatusIndicatorImageView::testSetAnimationFrame()
     QCOMPARE(gMThemePixmapPixmaps.size(), 0);
 }
 
-void Ut_StatusIndicatorImageView::testSetAnimationFrameToInvalid()
+void Ut_StatusIndicatorAnimationView::testSetAnimationFrameToInvalid()
 {
     m_subject->modifiableStyle()->setImageList("");
     m_subject->executeStyleChanged();
@@ -232,7 +233,7 @@ void Ut_StatusIndicatorImageView::testSetAnimationFrameToInvalid()
     QVERIFY(gMThemePixmapPixmaps.key("2") != NULL);
 }
 
-void Ut_StatusIndicatorImageView::testSetAnimationDuration()
+void Ut_StatusIndicatorAnimationView::testSetAnimationDuration()
 {
     m_subject->modifiableStyle()->setImageList("1 2 3");
     m_subject->modifiableStyle()->setAnimationDuration(33);
@@ -242,7 +243,7 @@ void Ut_StatusIndicatorImageView::testSetAnimationDuration()
     QCOMPARE(gQTimeLineUpdateInterval, 11);
 }
 
-void Ut_StatusIndicatorImageView::testValueChanged()
+void Ut_StatusIndicatorAnimationView::testValueChanged()
 {
     m_subject->modifiableStyle()->setImageList("1 2 3");
     m_subject->executeStyleChanged();
@@ -257,7 +258,7 @@ void Ut_StatusIndicatorImageView::testValueChanged()
     QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("2"));
 }
 
-void Ut_StatusIndicatorImageView::testValueChangedToInvalid()
+void Ut_StatusIndicatorAnimationView::testValueChangedToInvalid()
 {
     m_subject->modifiableStyle()->setImageList("1 2 3");
     m_subject->executeStyleChanged();
@@ -281,7 +282,7 @@ void Ut_StatusIndicatorImageView::testValueChangedToInvalid()
     QCOMPARE(gQPainterPixmaps.at(0), gMThemePixmapPixmaps.key("3"));
 }
 
-void Ut_StatusIndicatorImageView::testChangingAnimate()
+void Ut_StatusIndicatorAnimationView::testChangingAnimate()
 {
     QCOMPARE(m_subject->getModel()->animate(), false);
 
@@ -306,4 +307,4 @@ void Ut_StatusIndicatorImageView::testChangingAnimate()
     QCOMPARE(gQTimeLineStoppedCalled, true);
 }
 
-QTEST_APPLESS_MAIN(Ut_StatusIndicatorImageView)
+QTEST_APPLESS_MAIN(Ut_StatusIndicatorAnimationView)

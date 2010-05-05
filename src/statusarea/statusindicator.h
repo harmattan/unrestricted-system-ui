@@ -51,6 +51,11 @@ public:
      */
     virtual ~StatusIndicator();
 
+    //! \reimp
+    // Reimplemented here as public so that the view can call it
+    virtual void updateGeometry();
+    //! \reimp_end
+
 protected:
     /*!
      * Sets the value of the indicator. This will be used by the dynamic
@@ -226,7 +231,6 @@ private:
     ContextItem *wifiSignalStrength;
 };
 
-
 /*!
  * A status indicator for showing the used phone network name
  */
@@ -251,6 +255,27 @@ public slots:
 
 private:
     QSharedPointer<ContextItem> networkName;
+};
+
+/*!
+ * A status indicator for showing the current input method.
+ */
+class InputMethodStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(InputMethodStatusIndicator)
+
+public:
+    /*!
+     * Constructs a InputMethodStatusIndicator.
+     *
+     * \param parent parent MWidget
+     */
+    explicit InputMethodStatusIndicator(MWidget *parent = NULL);
+
+    virtual ~InputMethodStatusIndicator();
+
+    void setIconID(const QString &iconID);
 };
 
 #endif // STATUSINDICATOR_H

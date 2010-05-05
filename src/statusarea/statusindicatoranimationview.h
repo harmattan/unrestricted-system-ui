@@ -17,12 +17,12 @@
 **
 ****************************************************************************/
 
-#ifndef STATUSINDICATORIMAGEVIEW_H
-#define STATUSINDICATORIMAGEVIEW_H
+#ifndef STATUSINDICATORANIMATIONVIEW_H
+#define STATUSINDICATORANIMATIONVIEW_H
 
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
-#include "statusindicatorimagestyle.h"
+#include "statusindicatoranimationstyle.h"
 #include <MWidgetView>
 
 class StatusIndicator;
@@ -30,31 +30,32 @@ class QPainter;
 class QTimeLine;
 
 /*!
- * \class StatusIndicatorImageView
+ * \class StatusIndicatorAnimationView
  * \brief a view class for the status indicator widgets.
 */
-class StatusIndicatorImageView : public MWidgetView
+class StatusIndicatorAnimationView : public MWidgetView
 {
     Q_OBJECT
-    M_VIEW(StatusIndicatorModel, StatusIndicatorImageStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorAnimationStyle)
 
 public:
     /*!
-     * \brief Constructs a new StatusIndicatorImageView.
+     * \brief Constructs a new StatusIndicatorAnimationView.
      *
      * \param controller The view's controller
      */
-    StatusIndicatorImageView(StatusIndicator *controller);
+    StatusIndicatorAnimationView(StatusIndicator *controller);
 
     /*!
-     * \brief Destroys the StatusIndicatorImageView.
+     * \brief Destroys the StatusIndicatorAnimationView.
      */
-    virtual ~StatusIndicatorImageView();
+    virtual ~StatusIndicatorAnimationView();
 
 protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void applyStyle();
+    virtual void setupModel();
     //! \reimp_end
 
 public slots:
@@ -78,11 +79,6 @@ public slots:
 protected slots:
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
-    //! \reimp_end
-
-protected:
-    //! \reimp
-    virtual void setupModel();
     //! \reimp_end
 
 private:

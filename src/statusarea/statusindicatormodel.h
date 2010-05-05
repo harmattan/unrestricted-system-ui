@@ -72,4 +72,9 @@ class GPSStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(GPSStatusIndicatorModel)
 };
 
+class InputMethodStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(InputMethodStatusIndicatorModel)
+};
+
 #endif /* STATUSINDICATORMODEL_H_ */

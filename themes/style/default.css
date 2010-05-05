@@ -90,7 +90,31 @@ MLabelStyle#ClockLabel {
     padding-bottom: 0;
 }
 
-StatusIndicatorImageStyle {
+StatusIndicatorIconStyle {
+    /* This style is used when there is no icon ID defined (width is 0) */
+    margin-top: 6;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle:icon {
+    /* This style is used when there is an icon ID defined (width is 14) */
+    margin-left: 6;
+    margin-right: 6;
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
+StatusIndicatorAnimationStyle {
     margin-top: 6;
     margin-bottom: 0;
     margin-left: 6;
@@ -123,7 +147,7 @@ MLabelStyle#StatusIndicatorLabel {
     padding-bottom: 0;
 }
 
-StatusIndicatorImageStyle#PhoneNetworkSignalStrengthStatusIndicator {
+StatusIndicatorAnimationStyle#PhoneNetworkSignalStrengthStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-network0 icon-s-status-network1 icon-s-status-network2 icon-s-status-network3 icon-s-status-network4 icon-s-status-network5";
     preferred-size: 14 18;
@@ -131,7 +155,7 @@ StatusIndicatorImageStyle#PhoneNetworkSignalStrengthStatusIndicator {
     maximum-size: 14 18;
 }
 
-StatusIndicatorImageStyle#BatteryStatusIndicatorLevel {
+StatusIndicatorAnimationStyle#BatteryStatusIndicatorLevel {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
     preferred-size: 29 18;
@@ -139,7 +163,7 @@ StatusIndicatorImageStyle#BatteryStatusIndicatorLevel {
     maximum-size: 29 18;
 }
 
-StatusIndicatorImageStyle#BatteryStatusIndicatorCharging {
+StatusIndicatorAnimationStyle#BatteryStatusIndicatorCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
     preferred-size: 29 18;
@@ -147,7 +171,7 @@ StatusIndicatorImageStyle#BatteryStatusIndicatorCharging {
     maximum-size: 29 18;
 }
 
-StatusIndicatorImageStyle#ClockAlarmStatusIndicator {
+StatusIndicatorAnimationStyle#ClockAlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-alarm icon-s-status-alarm";
     preferred-size: 10 11;
@@ -156,7 +180,7 @@ StatusIndicatorImageStyle#ClockAlarmStatusIndicator {
     margin-top: 2;
 }
 
-StatusIndicatorImageStyle#BluetoothStatusIndicator {
+StatusIndicatorAnimationStyle#BluetoothStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-bluetooth icon-s-status-bluetooth-active";
     preferred-size: 10 18;
@@ -164,7 +188,7 @@ StatusIndicatorImageStyle#BluetoothStatusIndicator {
     maximum-size: 10 18;
 }
 
-StatusIndicatorImageStyle#InternetConnectionStatusIndicator {
+StatusIndicatorAnimationStyle#InternetConnectionStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan";
     preferred-size: 24 18;

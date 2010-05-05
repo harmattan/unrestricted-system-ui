@@ -19,6 +19,7 @@
 
 #include "ut_statusindicatorlabelview.h"
 #include "statusindicatorlabelview.h"
+#include "inputmethodstatusindicatoradaptor_stub.h"
 
 #include <MApplication>
 #include <MLabel>

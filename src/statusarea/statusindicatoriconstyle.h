@@ -17,27 +17,23 @@
 **
 ****************************************************************************/
 
-
-#ifndef STATUSINDICATORIMAGESTYLE_H_
-#define STATUSINDICATORIMAGESTYLE_H_
+#ifndef STATUSINDICATORICONSTYLE_H_
+#define STATUSINDICATORICONSTYLE_H_
 
 #include <MWidgetStyle>
 
-class StatusIndicatorImageStyle : public MWidgetStyle
+class StatusIndicatorIconStyle : public MWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(StatusIndicatorImageStyle)
-
-    //! The list of IDs of the images to be shown in the status indicator separated by spaces
-    M_STYLE_ATTRIBUTE(QString, imageList, ImageList)
-
-    //! The number of milliseconds in which the images in imageList are animated
-    M_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
+    M_STYLE(StatusIndicatorIconStyle)
 };
 
-class StatusIndicatorImageStyleContainer : public MWidgetStyleContainer
+class StatusIndicatorIconStyleContainer : public MWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(StatusIndicatorImageStyle)
+    M_STYLE_CONTAINER(StatusIndicatorIconStyle)
+
+    //! \brief Icon mode.
+    M_STYLE_MODE(Icon)
 };
 
-#endif /* STATUSINDICATORIMAGESTYLE_H_ */
+#endif /* STATUSINDICATORICONSTYLE_H_ */

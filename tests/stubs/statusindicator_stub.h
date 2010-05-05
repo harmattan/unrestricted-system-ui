@@ -30,6 +30,7 @@ class StatusIndicatorStub : public StubBase
 public:
     virtual void StatusIndicatorConstructor(MWidget *parent);
     virtual void StatusIndicatorDestructor();
+    virtual void updateGeometry();
     virtual void enterDisplayEvent();
     virtual void exitDisplayEvent();
     virtual void setValue(QVariant v);
@@ -48,6 +49,11 @@ void StatusIndicatorStub::StatusIndicatorDestructor()
 {
 
 }
+void StatusIndicatorStub::updateGeometry()
+{
+    stubMethodEntered("updateGeometry");
+}
+
 void StatusIndicatorStub::enterDisplayEvent()
 {
     stubMethodEntered("enterDisplayEvent");
@@ -114,6 +120,11 @@ QVariant StatusIndicator::value() const
 void StatusIndicator::updateAnimationStatus()
 {
     gStatusIndicatorStub->updateAnimationStatus();
+}
+
+void StatusIndicator::updateGeometry()
+{
+    gStatusIndicatorStub->updateGeometry();
 }
 
 void StatusIndicator::enterDisplayEvent()

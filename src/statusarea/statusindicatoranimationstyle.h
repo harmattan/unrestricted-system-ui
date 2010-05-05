@@ -17,21 +17,26 @@
 **
 ****************************************************************************/
 
-#include "contextframeworkcontext.h"
-#include <QVariant>
+#ifndef STATUSINDICATORANIMATIONSTYLE_H_
+#define STATUSINDICATORANIMATIONSTYLE_H_
 
-ContextFrameworkItem::ContextFrameworkItem(const QString &key)
-    : property(key)
-{
-    connect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
-}
+#include <MWidgetStyle>
 
-QVariant ContextFrameworkItem::value() const
+class StatusIndicatorAnimationStyle : public MWidgetStyle
 {
-    return property.value();
-}
+    Q_OBJECT
+    M_STYLE(StatusIndicatorAnimationStyle)
 
-ContextItem *ContextFrameworkContext::createContextItem(const QString &key)
+    //! The list of IDs of the images to be shown in the status indicator separated by spaces
+    M_STYLE_ATTRIBUTE(QString, imageList, ImageList)
+
+    //! The number of milliseconds in which the images in imageList are animated
+    M_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
+};
+
+class StatusIndicatorAnimationStyleContainer : public MWidgetStyleContainer
 {
-    return new ContextFrameworkItem(key);
-}
+    M_STYLE_CONTAINER(StatusIndicatorAnimationStyle)
+};
+
+#endif /* STATUSINDICATORANIMATIONSTYLE_H_ */

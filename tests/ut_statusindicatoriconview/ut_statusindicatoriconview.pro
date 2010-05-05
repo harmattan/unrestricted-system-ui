@@ -1,22 +1,25 @@
 include(../common_top.pri)
-TARGET = ut_statusindicatorlabelview
+TARGET = ut_statusindicatoriconview
 
 INCLUDEPATH += $$SRCDIR/statusarea
 
-STYLE_HEADERS += $$SRCDIR/statusarea/statusindicatorlabelstyle.h
+STYLE_HEADERS += $$SRCDIR/statusarea/statusindicatoriconstyle.h
 MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h
 
 # unit test and unit
 SOURCES += \
-    ut_statusindicatorlabelview.cpp \
-    $$SRCDIR/statusarea/statusindicatorlabelview.cpp \
-    $$SRCDIR/statusarea/statusindicator.cpp \
+    ut_statusindicatoriconview.cpp \
+    $$SRCDIR/statusarea/statusindicatoriconview.cpp \
+    $$SRCDIR/statusarea/statusindicator.cpp
+
+# base classes
+SOURCES += \
     $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
-    ut_statusindicatorlabelview.h \
-    $$SRCDIR/statusarea/statusindicatorlabelview.h \
+    ut_statusindicatoriconview.h \
+    $$SRCDIR/statusarea/statusindicatoriconview.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h \
     $$STYLE_HEADERS \
