@@ -32,6 +32,7 @@ class StatusArea;
 class StatusIndicator;
 class MSceneWindow;
 class QGraphicsLinearLayout;
+class QGraphicsWidget;
 
 /*!
  * Status area view draws the status area.
@@ -54,6 +55,10 @@ public:
      */
     virtual ~StatusAreaView();
 
+    //! \reimp
+    virtual void setGeometry(const QRectF &rect);
+    //! \reimp_end
+
 private:
     //! Context framework application context for the indicators
     ContextFrameworkContext contextFrameworkContext;
@@ -61,47 +66,46 @@ private:
     //! The controller instance
     StatusArea *controller;
 
-    //! Alarm indicator
-    StatusIndicator *alarmIndicator;
+    //! Widgets for the landscape and portrait areas
+    QGraphicsWidget *landscapeWidget;
+    QGraphicsWidget *portraitWidget;
 
-    //! Battery indicator
-    StatusIndicator *batteryIndicator;
-
-    //! Phone signal strength indicator
-    StatusIndicator *phoneSignalStrengthIndicator;
-
-    //! Internet connection indicator
-    StatusIndicator *internetConnectionIndicator;
-
-    //! Bluetooth indicator
-    StatusIndicator *bluetoothIndicator;
-
-    //! Notifier
-    Notifier *notifier;
+    //! Phone network indicator
+    StatusIndicator *landscapePhoneNetworkIndicator;
+    StatusIndicator *portraitPhoneNetworkIndicator;
 
     //! Alarm indicator
+    StatusIndicator *landscapeAlarmIndicator;
     StatusIndicator *portraitAlarmIndicator;
 
     //! Battery indicator
+    StatusIndicator *landscapeBatteryIndicator;
     StatusIndicator *portraitBatteryIndicator;
 
     //! Phone signal strength indicator
+    StatusIndicator *landscapePhoneSignalStrengthIndicator;
     StatusIndicator *portraitPhoneSignalStrengthIndicator;
 
     //! Internet connection indicator
+    StatusIndicator *landscapeInternetConnectionIndicator;
     StatusIndicator *portraitInternetConnectionIndicator;
 
     //! Bluetooth indicator
+    StatusIndicator *landscapeBluetoothIndicator;
     StatusIndicator *portraitBluetoothIndicator;
 
     //! Notifier
+    Notifier *landscapeNotifier;
     Notifier *portraitNotifier;
 
-    //! set up the layout for status area in portrait mode
-    QGraphicsLinearLayout *setupPortraitLayout();
+    //! Create the layout for status area in landscape mode
+    QGraphicsLinearLayout *createLandscapeLayout();
 
-    //! set up the layout for status area in landscape mode
-    QGraphicsLinearLayout *setupLandscapeLayout();
+    //! Create the layout for status area in portrait mode
+    QGraphicsLinearLayout *createPortraitLayout();
+
+    //! Creates a composite clock/alarm widget
+    static MWidget *createClockAlarmWidget(StatusIndicator *alarmIndicator);
 };
 
 #endif // STATUSAREAVIEW_H
