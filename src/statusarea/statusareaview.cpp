@@ -42,6 +42,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
+    landscapePhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
+    portraitPhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
     landscapeInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     portraitInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
@@ -61,6 +63,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Set up notifiers
     landscapeNotifier->setObjectName("Notifier");
     portraitNotifier->setObjectName("Notifier");
+
+    // Connect related phone network indicators
+    connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+    connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());
@@ -103,6 +109,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     // Put indicators into the layout
     layout->addItem(landscapeBatteryIndicator);
     layout->addItem(landscapePhoneSignalStrengthIndicator);
+    layout->addItem(landscapePhoneNetworkTypeIndicator);
     layout->addItem(landscapePhoneNetworkIndicator);
     layout->addStretch();
     layout->addItem(landscapeNotifier);
@@ -128,6 +135,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     // Put indicators into the layout
     layout->addItem(portraitBatteryIndicator);
     layout->addItem(portraitPhoneSignalStrengthIndicator);
+    layout->addItem(portraitPhoneNetworkTypeIndicator);
     layout->addItem(portraitPhoneNetworkIndicator);
     layout->addStretch();
     layout->addItem(portraitNotifier);

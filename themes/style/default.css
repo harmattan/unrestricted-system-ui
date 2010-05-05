@@ -152,6 +152,56 @@ StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
     maximum-size: 14 18;
 }
 
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2G {
+    image-list: "icon-s-status-gsm";
+    preferred-size: 16 18;
+    minimum-size: 16 18;
+    maximum-size: 16 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25G {
+    image-list: "icon-s-status-25g";
+    preferred-size: 31 18;
+    minimum-size: 31 18;
+    maximum-size: 31 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3G {
+    image-list: "icon-s-status-3g";
+    preferred-size: 31 18;
+    minimum-size: 31 18;
+    maximum-size: 31 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35G {
+    image-list: "icon-s-status-35g";
+    preferred-size: 31 18;
+    minimum-size: 31 18;
+    maximum-size: 31 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorNoSIM {
+    image-list: "icon-s-status-no-simcard";
+    preferred-size: 18 18;
+    minimum-size: 18 18;
+    maximum-size: 18 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorNoNetwork {
+    image-list: "icon-s-status-no-gsm-connection";
+    preferred-size: 16 18;
+    minimum-size: 16 18;
+    maximum-size: 16 18;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorOffline {
+    image-list: "icon-s-status-offline";
+    preferred-size: 21 18;
+    minimum-size: 21 18;
+    maximum-size: 21 18;
+}
+
+
 StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";

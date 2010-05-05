@@ -112,7 +112,7 @@ void Ut_StatusIndicator::testModelUpdates()
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 {
-    StatusIndicator *statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
+    PhoneNetworkSignalStrengthStatusIndicator *statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
     statusIndicator->setView(new TestStatusIndicatorIconView(statusIndicator));
 
     testContextItems["Cellular.SignalStrength"]->setValue(QVariant(100));
@@ -120,7 +120,44 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
     QCOMPARE(qRound(statusIndicator->model()->value().toDouble() * 100), 100);
 
+    QVERIFY(statusIndicator->objectName() == "");
+    statusIndicator->setDisplay(true);
+    QVERIFY(statusIndicator->objectName() != "");
+
     delete statusIndicator;
+}
+
+void Ut_StatusIndicator::testPhoneNetworkType()
+{
+    StatusIndicator *statusIndicator = new PhoneNetworkTypeStatusIndicator(*testContext);
+    QSignalSpy spy(statusIndicator, SIGNAL(networkAvailabilityChanged(bool)));
+
+    QVERIFY(statusIndicator->objectName().indexOf("Offline") >= 0);
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("no-sim"));
+    QVERIFY(statusIndicator->objectName().indexOf("NoSIM") >= 0);
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
+    QVERIFY(statusIndicator->objectName().indexOf("Offline") >= 0);
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("forbidden"));
+    QVERIFY(statusIndicator->objectName().indexOf("Offline") >= 0);
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
+    QVERIFY(statusIndicator->objectName().indexOf("NoNetwork") >= 0);
+    testContextItems["Cellular.Technology"]->setValue(QVariant("gsm"));
+    QVERIFY(statusIndicator->objectName().indexOf("2G") >= 0);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0)[0], QVariant(true));
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
+    QVERIFY(statusIndicator->objectName().indexOf("25G") >= 0);
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("egprs"));
+    QVERIFY(statusIndicator->objectName().indexOf("25G") >= 0);
+    testContextItems["Cellular.Technology"]->setValue(QVariant("umts"));
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("umts"));
+    QVERIFY(statusIndicator->objectName().indexOf("3G") >= 0);
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("hspa"));
+    QVERIFY(statusIndicator->objectName().indexOf("35G") >= 0);
+    spy.clear();
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0)[0], QVariant(false));
 }
 
 void Ut_StatusIndicator::testBattery()

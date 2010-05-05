@@ -31,6 +31,7 @@ public:
     virtual void PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void PhoneNetworkSignalStrengthStatusIndicatorDestructor();
     virtual void signalStrengthChanged();
+    virtual void setDisplay(bool display);
 };
 
 // 2. IMPLEMENT STUB
@@ -49,6 +50,12 @@ void PhoneNetworkSignalStrengthStatusIndicatorStub::signalStrengthChanged()
     stubMethodEntered("signalStrengthChanged");
 }
 
+void PhoneNetworkSignalStrengthStatusIndicatorStub::setDisplay(bool display)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<bool>(display));
+    stubMethodEntered("setDisplay", params);
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -72,5 +79,9 @@ void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
     gPhoneNetworkSignalStrengthStatusIndicatorStub->signalStrengthChanged();
 }
 
+void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
+{
+    gPhoneNetworkSignalStrengthStatusIndicatorStub->setDisplay(display);
+}
 
 #endif

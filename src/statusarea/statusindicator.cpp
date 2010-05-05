@@ -90,6 +90,7 @@ PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndic
     connect(signalStrength, SIGNAL(contentsChanged()), this, SLOT(signalStrengthChanged()));
 
     setValue(0.0);
+    setDisplay(false);
 }
 
 PhoneNetworkSignalStrengthStatusIndicator::~PhoneNetworkSignalStrengthStatusIndicator()
@@ -100,6 +101,77 @@ PhoneNetworkSignalStrengthStatusIndicator::~PhoneNetworkSignalStrengthStatusIndi
 void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
 {
     setValue(signalStrength->value().toDouble() * 0.01f);
+}
+
+void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
+{
+    if(display) {
+        setObjectName(metaObject()->className());
+    } else {
+        setObjectName("");
+    }
+}
+
+
+PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent) :
+        StatusIndicator(parent), networkAvailable(false)
+{
+    cellularTechnology = context.createContextItem("Cellular.Technology");
+    connect(cellularTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
+    cellularDataTechnology = context.createContextItem("Cellular.DataTechnology");
+    connect(cellularDataTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
+    cellularRegistrationStatus = context.createContextItem("Cellular.RegistrationStatus");
+    connect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
+    setNetworkType();
+}
+
+PhoneNetworkTypeStatusIndicator::~PhoneNetworkTypeStatusIndicator()
+{
+    delete cellularTechnology;
+    delete cellularDataTechnology;
+    delete cellularRegistrationStatus;
+}
+
+void PhoneNetworkTypeStatusIndicator::setNetworkType()
+{
+    QString postFix = "NoNetwork";
+
+    QString technology     = cellularTechnology->value().toString();         // gsm umts
+    QString dataTechnology = cellularDataTechnology->value().toString();     // gprs egprs umts hspa
+    QString status         = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
+
+    setValue(0);
+
+    if(status == "no-sim") {
+        postFix = "NoSIM";
+    } else if(status == "" || status == "offline" || status == "forbidden") {
+        postFix = "Offline";
+    } else {
+        if(technology == "gsm") {
+            if(dataTechnology == "") {
+                postFix = "2G";
+            } else if(dataTechnology == "gprs" || dataTechnology == "egprs") {
+                postFix = "25G";
+            }
+        } else if(technology == "umts") {
+            if(dataTechnology == "umts") {
+                postFix = "3G";
+            } else if(dataTechnology == "hspa") {
+                postFix = "35G";
+            }
+        }
+    }
+
+    bool n = !(postFix == "NoNetwork" || postFix == "Offline" || postFix == "NoSIM");
+    if(n != networkAvailable) {
+        networkAvailable = n;
+        emit networkAvailabilityChanged(n);
+    }
+
+    setObjectName(metaObject()->className() + postFix);
 }
 
 BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWidget *parent) :

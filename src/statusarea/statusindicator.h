@@ -120,9 +120,46 @@ public:
 private slots:
     void signalStrengthChanged();
 
+public slots:
+    void setDisplay(bool display);
+
 private:
     ContextItem *signalStrength;
 };
+
+/*!
+ * A status indicator for showing the phone network type
+ */
+class PhoneNetworkTypeStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(PhoneNetworkTypeStatusIndicator);
+
+public:
+    /*!
+     * Constructor
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget
+     */
+    explicit PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+
+    virtual ~PhoneNetworkTypeStatusIndicator();
+
+signals:
+    void networkAvailabilityChanged(bool available);
+
+private slots:
+    void setNetworkType();
+
+private:
+    ContextItem *cellularTechnology;
+    ContextItem *cellularDataTechnology;
+    ContextItem *cellularRegistrationStatus;
+
+    bool networkAvailable;
+};
+
 
 /*!
  * A status indicator for showing the battery charge level or

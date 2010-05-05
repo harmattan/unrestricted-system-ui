@@ -25,6 +25,7 @@
 #include "clockalarmstatusindicator_stub.h"
 #include "batterystatusindicator_stub.h"
 #include "phonenetworksignalstrengthstatusindicator_stub.h"
+#include "phonenetworktypestatusindicator_stub.h"
 #include "internetconnectionstatusindicator_stub.h"
 #include "bluetoothstatusindicator_stub.h"
 #include "gpsstatusindicator_stub.h"

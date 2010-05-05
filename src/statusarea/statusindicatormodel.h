@@ -37,6 +37,11 @@ class PhoneNetworkSignalStrengthStatusIndicatorModel : public StatusIndicatorMod
     M_MODEL(PhoneNetworkSignalStrengthStatusIndicatorModel)
 };
 
+class PhoneNetworkTypeStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(PhoneNetworkTypeStatusIndicatorModel)
+};
+
 class PhoneNetworkStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(PhoneNetworkStatusIndicatorModel)

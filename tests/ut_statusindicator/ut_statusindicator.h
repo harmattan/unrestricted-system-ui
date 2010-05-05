@@ -72,6 +72,7 @@ private slots:
 
     void testModelUpdates();
     void testPhoneNetworkSignalStrength();
+    void testPhoneNetworkType();
     void testBattery();
     void testAlarm();
     void testBluetooth();

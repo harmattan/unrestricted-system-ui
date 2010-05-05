@@ -86,6 +86,10 @@ private:
     StatusIndicator *landscapePhoneSignalStrengthIndicator;
     StatusIndicator *portraitPhoneSignalStrengthIndicator;
 
+    //! Phone network type indicator
+    StatusIndicator *landscapePhoneNetworkTypeIndicator;
+    StatusIndicator *portraitPhoneNetworkTypeIndicator;
+
     //! Internet connection indicator
     StatusIndicator *landscapeInternetConnectionIndicator;
     StatusIndicator *portraitInternetConnectionIndicator;
