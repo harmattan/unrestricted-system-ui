@@ -71,12 +71,14 @@ ClockStyle {
     padding-top: 0;
     padding-bottom: 0;
     time-format: "hh:mm";
+    time-format-with-alarm: "hh:mm";
     preferred-size: 84 3mm;
     minimum-size: 84 3mm;
     maximum-size: 84 3mm;
 }
 ClockStyle:twelvehour {
-    time-format: "hh:mm'<font size=0.8>'AP'</font>'";
+    time-format: "h:mmap";
+    time-format-with-alarm: "h:mm";
 }
 MLabelStyle#ClockLabel {
     font: $FONT_SMALL;

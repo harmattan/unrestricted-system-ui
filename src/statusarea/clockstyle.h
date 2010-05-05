@@ -30,8 +30,10 @@ class ClockStyle : public MWidgetStyle
     Q_OBJECT
     M_STYLE(ClockStyle)
 
-    //! Formatting string for the time
+    //! Formatting string for the time when alarm indicator is not shown
     M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
+    //! Formatting string for the time when alarm indicator is shown
+    M_STYLE_ATTRIBUTE(QString, timeFormatWithAlarm, TimeFormat)
 };
 
 class ClockStyleContainer : public MWidgetStyleContainer
