@@ -137,7 +137,7 @@ LockScreenBusinessLogic::toggleEventEater (
         // Show the event-eater window...
         mainwindow.show ();
         mainwindow.raise ();
-        mainwindow.showNormal ();
+        mainwindow.showFullScreen ();
     } else {
         // Hide the event eater
         hidefromTaskBar ();
