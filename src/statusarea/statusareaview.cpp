@@ -25,104 +25,113 @@
 #include "contextframeworkcontext.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
-#include <MSceneWindow>
-#include <MSceneManager>
+#include <MDeviceProfile>
 #include <MViewCreator>
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
     MWidgetView(controller),
     controller(controller),
-    alarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
-    batteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
-    phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
-    internetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
-    bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
-    notifier(new Notifier(controller)),
+    landscapeWidget(new QGraphicsWidget),
+    portraitWidget(new QGraphicsWidget),
+    landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
+    portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
+    landscapeAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
     portraitAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
+    landscapeBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
+    landscapePhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
+    landscapeInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     portraitInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
+    landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    landscapeNotifier(new Notifier(controller)),
     portraitNotifier(new Notifier(controller))
 {
-    QGraphicsLinearLayout *landscapeLayout = setupLandscapeLayout();
-    QGraphicsLinearLayout *portraitLayout = setupPortraitLayout();
-    QGraphicsLinearLayout *compositeLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    // Set up notifiers
+    landscapeNotifier->setObjectName("Notifier");
+    portraitNotifier->setObjectName("Notifier");
 
+    // Set up landscape and portrait widgets and anchor them on top of each other
+    landscapeWidget->setLayout(createLandscapeLayout());
+    portraitWidget->setLayout(createPortraitLayout());
+    QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);
     compositeLayout->setSpacing(0);
-    compositeLayout->addItem(landscapeLayout);
-    compositeLayout->addItem(portraitLayout);
+    compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopLeftCorner, compositeLayout, Qt::TopLeftCorner);
+    compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopRightCorner, compositeLayout, Qt::TopRightCorner);
+    compositeLayout->addCornerAnchors(portraitWidget, Qt::TopLeftCorner, landscapeWidget, Qt::BottomLeftCorner);
+    compositeLayout->addCornerAnchors(portraitWidget, Qt::BottomLeftCorner, compositeLayout, Qt::BottomLeftCorner);
     controller->setLayout(compositeLayout);
 }
 
-QGraphicsLinearLayout* StatusAreaView::setupLandscapeLayout()
+StatusAreaView::~StatusAreaView()
 {
-    // Layout for clock and search button
+}
+
+void StatusAreaView::setGeometry(const QRectF &rect)
+{
+    int screenWidth = MDeviceProfile::instance()->resolution().width();
+    int screenHeight = MDeviceProfile::instance()->resolution().height();
+    qreal areaHeight = rect.height() / 2;
+    landscapeWidget->setMinimumSize(screenWidth, areaHeight);
+    landscapeWidget->setMaximumSize(screenWidth, areaHeight);
+    portraitWidget->setMinimumSize(screenHeight, areaHeight);
+    portraitWidget->setMaximumSize(screenHeight, areaHeight);
+}
+
+QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
+{
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    // Create a composite widget with a clock and the alarm indicator
+    // Put indicators into the layout
+    layout->addItem(landscapeBatteryIndicator);
+    layout->addItem(landscapePhoneSignalStrengthIndicator);
+    layout->addItem(landscapePhoneNetworkIndicator);
+    layout->addStretch();
+    layout->addItem(landscapeNotifier);
+    layout->addStretch();
+    layout->addItem(landscapeInternetConnectionIndicator);
+    layout->addItem(landscapeBluetoothIndicator);
+    layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
+
+    return layout;
+}
+
+QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
+{
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    // Put indicators into the layout
+    layout->addItem(portraitBatteryIndicator);
+    layout->addItem(portraitPhoneSignalStrengthIndicator);
+    layout->addItem(portraitPhoneNetworkIndicator);
+    layout->addStretch();
+    layout->addItem(portraitNotifier);
+    layout->addStretch();
+    layout->addItem(portraitInternetConnectionIndicator);
+    layout->addItem(portraitBluetoothIndicator);
+    layout->addItem(createClockAlarmWidget(portraitAlarmIndicator));
+
+    return layout;
+}
+
+MWidget *StatusAreaView::createClockAlarmWidget(StatusIndicator *alarmIndicator)
+{
     Clock *clock = new Clock;
     QGraphicsAnchorLayout *clockAlarmLayout = new QGraphicsAnchorLayout;
     clockAlarmLayout->setContentsMargins(0, 0, 0, 0);
+    clockAlarmLayout->setSpacing(0);
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopLeftCorner, clockAlarmLayout, Qt::TopLeftCorner);
     clockAlarmLayout->addCornerAnchors(clock, Qt::TopRightCorner, clockAlarmLayout, Qt::TopRightCorner);
     clockAlarmLayout->addCornerAnchors(alarmIndicator, Qt::TopRightCorner, clock, Qt::TopRightCorner);
     MWidget *clockAlarmWidget = new MWidget;
     clockAlarmWidget->setLayout(clockAlarmLayout);
-    layout->addItem(clockAlarmWidget);
-
-    // Put the rest of the indicators to the layout
-    layout->addItem(batteryIndicator);
-    layout->addItem(phoneSignalStrengthIndicator);
-    layout->addItem(internetConnectionIndicator);
-    layout->addItem(bluetoothIndicator);
-
-    // Create the notifier
-    notifier->setObjectName("Notifier");
-    layout->addItem(notifier);
-
-    // Stretch
-    layout->addStretch();
-
-    return layout;
-}
-
-QGraphicsLinearLayout* StatusAreaView::setupPortraitLayout()
-{
-    QGraphicsLinearLayout *portraitLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    portraitLayout->setContentsMargins(0, 0, 0, 0);
-    portraitLayout->setSpacing(0);
-
-    Clock *portraitClock = new Clock;
-    QGraphicsAnchorLayout *portraitClockAlarmLayout = new QGraphicsAnchorLayout;
-    portraitClockAlarmLayout->setContentsMargins(0, 0, 0, 0);
-    portraitClockAlarmLayout->addCornerAnchors(portraitClock, Qt::TopLeftCorner, portraitClockAlarmLayout, Qt::TopLeftCorner);
-    portraitClockAlarmLayout->addCornerAnchors(portraitClock, Qt::TopRightCorner, portraitClockAlarmLayout, Qt::TopRightCorner);
-    portraitClockAlarmLayout->addCornerAnchors(portraitAlarmIndicator, Qt::TopRightCorner, portraitClock, Qt::TopRightCorner);
-    MWidget *portraitClockAlarmWidget = new MWidget;
-    portraitClockAlarmWidget->setLayout(portraitClockAlarmLayout);
-    portraitLayout->addItem(portraitClockAlarmWidget);
-
-    portraitLayout->addItem(portraitBatteryIndicator);
-    portraitLayout->addItem(portraitPhoneSignalStrengthIndicator);
-    portraitLayout->addItem(portraitInternetConnectionIndicator);
-    portraitLayout->addItem(portraitBluetoothIndicator);
-
-    // Create the notifier
-    notifier->setObjectName("Notifier");
-    portraitLayout->addItem(portraitNotifier);
-
-    // Stretch
-    portraitLayout->addStretch();
-
-    return portraitLayout;
-}
-
-StatusAreaView::~StatusAreaView()
-{
+    return clockAlarmWidget;
 }
 
 M_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)

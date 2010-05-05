@@ -187,7 +187,7 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_LowBatteryNotifier (0),
     m_notification (0)
 {
-    //SYS_DEBUG ("----------------- start ----------------------");
+    SYS_DEBUG ("----------------- start ----------------------");
 
     /* init the PSM thresholds */
     m_PSMThresholds <<
@@ -211,22 +211,18 @@ BatteryBusinessLogic::BatteryBusinessLogic (
              SIGNAL (batteryStateChanged (Maemo::QmBattery::BatteryState)),
              this,
              SLOT (batteryStateChanged (Maemo::QmBattery::BatteryState)));
-    SYS_DEBUG ("1");
     connect (m_Battery,
              SIGNAL (chargingStateChanged (Maemo::QmBattery::ChargingState)),
              this,
              SLOT (chargingStateChanged (Maemo::QmBattery::ChargingState)));
-    SYS_DEBUG ("2");
     connect (m_Battery,
              SIGNAL (batteryEnergyLevelChanged (int)),
              this,
              SLOT (batteryEnergyLevelChanged (int)));
-    SYS_DEBUG ("3");
     connect (m_Battery,
              SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
              this,
              SLOT (batteryChargerEvent (Maemo::QmBattery::ChargerType)));
-    SYS_DEBUG ("4");
     connect (m_DeviceMode,
              SIGNAL (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)),
              this,
@@ -234,7 +230,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
 
     // Init battery values when idle
     SYS_DEBUG ("calling singleShot...");
-    QTimer::singleShot (10, this, SLOT (initBattery ()));
+    //QTimer::singleShot (100, this, SLOT (initBattery ()));
+    initBattery();
 
     SYS_DEBUG ("------------------ end -----------------------");
 }
@@ -370,6 +367,7 @@ BatteryBusinessLogic::batteryStateChanged (
 
     switch (state) {
     case QmBattery::StateFull:
+        SYS_DEBUG ("QmBattery::StateFull");
         if (m_Battery->getChargingState () == QmBattery::StateCharging)
         {
             NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
@@ -378,24 +376,28 @@ BatteryBusinessLogic::batteryStateChanged (
             emit batteryFullyCharged ();
         }
         break;
+
     case QmBattery::StateOK:
+        SYS_DEBUG ("QmBattery::StateOK");
         /* no-operation here... */
         break;
+
     case QmBattery::StateLow:
-        if (m_Battery->getChargingState () != QmBattery::StateCharging)
-        {
-          if (m_LowBatteryNotifier == 0) {
-              m_LowBatteryNotifier = new LowBatteryNotifier ();
-#ifdef UNIT_TEST
-              connect (m_LowBatteryNotifier, SIGNAL (showNotification ()),
-                      this, SIGNAL (showNotification ()));
-#endif
+        SYS_DEBUG ("QmBattery::StateLow");
+        if (m_Battery->getChargingState () != QmBattery::StateCharging) {
+            if (m_LowBatteryNotifier == 0) {
+                m_LowBatteryNotifier = new LowBatteryNotifier ();
+                #ifdef UNIT_TEST
+                connect (m_LowBatteryNotifier, SIGNAL (showNotification ()),
+                    this, SIGNAL (showNotification ()));
+                #endif
             }
             m_LowBatteryNotifier->showLowBatteryNotification ();
         }
         break;
-    case QmBattery::StateEmpty:
 
+    case QmBattery::StateEmpty:
+        SYS_DEBUG ("QmBattery::StateEmpty");
         NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
                        qtTrId (RechargeBatteryText)));
         break;
@@ -425,22 +427,31 @@ BatteryBusinessLogic::batteryChargerEvent (
     SYS_DEBUG ("");
 
     switch (type) {
-    case QmBattery::None: // No  charger connected
-        if (m_Battery->getBatteryState () == QmBattery::StateFull)
-	{
-            NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
-                             qtTrId (DisconnectChargerText))); //show reminder
-	}
-        break;
+        case QmBattery::None: 
+            SYS_DEBUG ("QmBattery::None");
+            // No  charger connected
+            if (m_Battery->getBatteryState () == QmBattery::StateFull) {
+                NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
+                    qtTrId (DisconnectChargerText))); //show reminder
+	        }
+            break;
 
-    case QmBattery::Wall: // Wall charger
-    case QmBattery::USB_500mA: // USB with 500mA output
-    case QmBattery::USB_100mA: // USB with 100mA output
-        emit batteryCharging (animationRate (type));
-        break;
+        case QmBattery::Wall: 
+            // Wall charger
+            SYS_DEBUG ("QmBattery::Wall");
+        case QmBattery::USB_500mA: 
+            // USB with 500mA output
+            SYS_DEBUG ("QmBattery::USB_500mA");
+        case QmBattery::USB_100mA: 
+            // USB with 100mA output
+            SYS_DEBUG ("QmBattery::USB_500mA");
+            emit batteryCharging (animationRate (type));
+            break;
 
-    default: //QmBattery::Unknown
-        break;
+        default: 
+            //QmBattery::Unknown
+            SYS_WARNING ("Unknown charger state");
+            break;
     }
 }
 

@@ -38,9 +38,9 @@ MSceneWindowAnimatorStyle:event_notification {
 StatusAreaStyle {
     background-image:;
     background-color: #000000;
-    minimum-size: 100% 28;
-    preferred-size: 100% 28;
-    maximum-size: 100% 28;
+    minimum-size: 100% 56;
+    preferred-size: 100% 56;
+    maximum-size: 100% 56;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
@@ -50,7 +50,6 @@ StatusAreaStyle {
     padding-top: 0;
     padding-bottom: 0;
 }
-
 
 MLabelStyle#Notifier {
     background-image: icon-s-status-notifier 9 9 9 9;
@@ -81,18 +80,18 @@ ClockStyle:twelvehour {
 MLabelStyle#ClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
-    margin-left: 0;
+    margin-left: 1.6mm;
     margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding-left: 1.6mm;
+    padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
 }
 
 StatusIndicatorImageStyle {
-    margin-top: 4;
+    margin-top: 6;
     margin-bottom: 0;
     margin-left: 6;
     margin-right: 6;
@@ -114,6 +113,14 @@ StatusIndicatorLabelStyle {
 MLabelStyle#StatusIndicatorLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 StatusIndicatorImageStyle#PhoneNetworkSignalStrengthStatusIndicator {
@@ -146,7 +153,7 @@ StatusIndicatorImageStyle#ClockAlarmStatusIndicator {
     preferred-size: 10 11;
     minimum-size: 10 11;
     maximum-size: 10 11;
-    margin-top: 0;
+    margin-top: 2;
 }
 
 StatusIndicatorImageStyle#BluetoothStatusIndicator {
