@@ -100,6 +100,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         if (mainwindow.currentPage () !=
             static_cast<MApplicationPage *> (lockUI))
             mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
+        lockUI->appear ();
 
         mainwindow.raise ();
 
