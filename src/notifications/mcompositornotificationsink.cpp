@@ -58,12 +58,16 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         // Create info banner widget
         MInfoBanner *infoBanner = createInfoBanner(currentNotification);
 
+        // Set up window mask so that mouse events are passed on to lower widgets.
+        QSizeF preferredSize = infoBanner->preferredSize();
+        QRegion region(QRect(0,0, preferredSize.width(), preferredSize.height()), QRegion::Rectangle);
+        window->setMask(region);
+
         setupWindowTimer(infoBanner);
 
         // Keep track of the mapping between IDs and private notification information classes
         idToBanner.insert(currentNotification.notificationId(), infoBanner);
         emit notificationAdded(currentNotification);
-
         //TODO: Remove sending fake displaychange events when setTranslucentBackground bug is solved
         MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
         QApplication::sendEvent(window,event);

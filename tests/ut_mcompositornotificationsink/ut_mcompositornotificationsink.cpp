@@ -161,6 +161,13 @@ void MSceneWindow::disappear()
     emit disappeared();
 }
 
+//QWidget Stubs
+QRegion maskRegionReceived(0,0,0,0,QRegion::Rectangle);
+void QWidget::setMask(const QRegion & region)
+{
+    maskRegionReceived = region;
+}
+
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
@@ -187,6 +194,7 @@ void Ut_MCompositorNotificationSink::init()
     Ut_TimerStarted = false;
     Ut_DisappearSceneWindow = false;
     disappearingWindow = NULL;
+    maskRegionReceived = QRegion();
 }
 
 void Ut_MCompositorNotificationSink::cleanup()
@@ -217,6 +225,10 @@ void Ut_MCompositorNotificationSink::testAddNotification()
     QCOMPARE(banner->iconID(), QString("buttonicon0"));
     QCOMPARE(banner->bodyText(), QString("body0"));
     QCOMPARE(banner->imageID(), QString("icon0"));
+
+    // Check that proper mask was done
+    QRegion maskRegionExpected = QRegion(QRect(0,0, banner->preferredSize().width(), banner->preferredSize().height()), QRegion::Rectangle);
+    QCOMPARE(maskRegionReceived, maskRegionExpected);
 
     // check that the timeout timer was started
     QCOMPARE(Ut_TimerStarted, true);
