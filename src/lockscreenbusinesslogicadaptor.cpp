@@ -192,15 +192,21 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 
     /*
      * We have some information from the MCE team:
-typedef enum {
-        TKLOCK_UNLOCK = 1,
-        TKLOCK_RETRY,
-        TKLOCK_TIMEOUT,
-        TKLOCK_CLOSED
-} tklock_status;
+        typedef enum {
+            TKLOCK_UNLOCK = 1,
+            TKLOCK_RETRY,
+            TKLOCK_TIMEOUT,
+            TKLOCK_CLOSED
+        } tklock_status;
      * Where TKLOCK_UNLOCK == TkLockReplyOk so I just leave it now.
      */
-    dbusIf->call (QDBus::NoBlock, 
+    SYS_DEBUG ("Sending answer:");
+    SYS_DEBUG ("*** service    = %s", SYS_STR(m_MCECallbackService));
+    SYS_DEBUG ("*** path       = %s", SYS_STR(m_MCECallbackPath));
+    SYS_DEBUG ("*** interface  = %s", SYS_STR(m_MCECallbackInterface));
+    SYS_DEBUG ("*** callback   = %s", SYS_STR(m_MCECallbackMethod));
+    SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
+    dbusIf->call (QDBus::Block, 
             m_MCECallbackMethod, //QString ("tklock_callback"), 
             (int) TkLockReplyOk);
 
