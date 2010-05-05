@@ -32,11 +32,9 @@ using namespace Maemo;
 
 /* TODO List
 
-   1) Create notification for RechargeBatteryText. Connect it to the signal
-      from QmSystemState which inforsm the reason for shut down.
-   2) What are correct animation rates when charging with USB / Wall?
-   3) If USB 100 mA is used, do we show animation at all? In Fremantle not.
-   4) Connect sounds with notifications
+   1) What are correct animation rates when charging with USB / Wall?
+   2) If USB 100 mA is used, do we show animation at all? In Fremantle not.
+   3) Connect sounds with notifications
 
 */
 
@@ -56,10 +54,9 @@ const char *LowBatteryText = QT_TRID_NOOP ("qtn_ener_lowbatt");
 const char *EnterPSMText = QT_TRID_NOOP ("qtn_ener_ent_psnote");
 //% "Exiting power save mode"
 const char *ExitPSMText = QT_TRID_NOOP ("qtn_ener_exit_psnote");
-/* TODO: ^^
 //% "Recharge battery"
 const char *RechargeBatteryText = QT_TRID_NOOP ("qtn_ener_rebatt");
- */
+
 const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
 const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
 const int   ChargingAnimationRateUSB = 800; // 800 ms
@@ -364,7 +361,7 @@ BatteryBusinessLogic::batteryStateChanged (
 
     switch (state) {
     case QmBattery::StateFull:
-        if (m_Battery->getState () == QmBattery::StateCharging)
+        if (m_Battery->getChargingState () == QmBattery::StateCharging)
         {
             NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
                          qtTrId (ChargingCompleteText)));
@@ -372,13 +369,11 @@ BatteryBusinessLogic::batteryStateChanged (
             emit batteryFullyCharged ();
         }
         break;
-
+    case QmBattery::StateOK:
+        /* no-operation here... */
+        break;
     case QmBattery::StateLow:
-        // Seems LevelLow coming on start, i just checked the QmSystem
-        // sources, if the value is not full or critically low the result
-        // is LevelLow :-S (Why there is no LevelNormal?) <dkedves>
-        if ((m_Battery->getState () != QmBattery::StateCharging) &&
-            (m_Battery->getBatteryEnergyLevel () <= 10))
+        if (m_Battery->getChargingState () != QmBattery::StateCharging)
         {
           if (m_LowBatteryNotifier == 0) {
               m_LowBatteryNotifier = new LowBatteryNotifier ();
@@ -391,11 +386,14 @@ BatteryBusinessLogic::batteryStateChanged (
         }
         break;
     case QmBattery::StateEmpty:
-            // TODO: FIXME:
-            // Show "Recharge battery" notificiation here...
+
+        NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
+                       qtTrId (RechargeBatteryText)));
         break;
 
-    default:
+    case QmBattery::StateError:
+        // TODO: Get information somewhere...
+        SYS_WARNING ("battery state : error ? what about this state?");
         break;
     }
 }
@@ -419,7 +417,7 @@ BatteryBusinessLogic::batteryChargerEvent (
 
     switch (type) {
     case QmBattery::None: // No  charger connected
-        if (m_Battery->getLevel () == QmBattery::LevelFull)
+        if (m_Battery->getBatteryState () == QmBattery::StateFull)
 	{
             NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
                              qtTrId (DisconnectChargerText))); //show reminder
@@ -526,7 +524,7 @@ BatteryBusinessLogic::remainingTimeValues ()
     SYS_DEBUG ("");
 
     QStringList values;
-    if (m_Battery->getState () == QmBattery::StateCharging)
+    if (m_Battery->getChargingState () == QmBattery::StateCharging)
         values << qtTrId (ChargingText) << qtTrId (ChargingText);
     else {
         QmDeviceMode::PSMState state = m_DeviceMode->getPSMState ();
@@ -608,11 +606,11 @@ BatteryBusinessLogic::PSMThresholdValue ()
 void
 BatteryBusinessLogic::batteryStatus ()
 {
-    QmBattery::State state;
+    QmBattery::ChargingState state;
 
     SYS_DEBUG ("What is the state now?");
 
-    state = m_Battery->getState ();
+    state = m_Battery->getChargingState ();
     SYS_DEBUG ("*** state = %d", (int) state);
 
     switch (state) {
