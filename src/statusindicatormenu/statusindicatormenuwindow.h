@@ -22,8 +22,21 @@
 
 #include <MWindow>
 
-#include <MEscapeButtonPanel>
 #include <MApplicationPage>
+#include <MOverlay>
+class QGraphicsSceneMouseEvent;
+
+/*!
+  * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
+  * which will not allow mouse events to pass through.
+  */
+class OverlayDummyWidget: public QGraphicsWidget
+{
+public:
+    //! \reimp
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    //! \reimp_end
+};
 
 /*!
  * Main window for the M Status Indicator Menu.
@@ -75,8 +88,12 @@ private:
     //! The main application page
     QSharedPointer<MApplicationPage> applicationPage;
 
-    //! The escape button
-    QSharedPointer<MEscapeButtonPanel> escapeButtonPanel;
+    //! An overlay for the close button
+    QSharedPointer<MOverlay> closeButtonOverlay;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicatorMenuWindow;
+#endif
 };
 
 #endif // STATUSINDICATORMENUWINDOW_H

@@ -16,19 +16,27 @@
 ** of this file.
 **
 ****************************************************************************/
-
+#include <QGraphicsSceneMouseEvent>
 #include <MApplicationPage>
 #include <MSceneManager>
 #include <MEscapeButtonPanel>
 #include <QX11Info>
 #include "pluginlist.h"
 #include "statusindicatormenuwindow.h"
+#include <MButton>
+#include <MOverlay>
+#include <QGraphicsLinearLayout>
 
 #include <X11/Xlib.h>
 
 // TODO: this include can be removed when mcompositor
 // sets the _NET_WM_STATE attribute according to the message.
 #include <X11/Xatom.h>
+
+void OverlayDummyWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    event->accept();
+}
 
 
 /*!
@@ -58,25 +66,38 @@ void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0)
     XSync(display, FALSE);
 }
 
-
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
     applicationPage(new MApplicationPage),
-    escapeButtonPanel(new MEscapeButtonPanel)
+    closeButtonOverlay(new MOverlay)
 {
     // Create an application page for the plugin list
     applicationPage->setObjectName("StatusIndicatorMenuPage");
     applicationPage->setTitle("Status Indicator Menu");
-    applicationPage->setComponentsDisplayMode(MApplicationPage::NavigationBar, MApplicationPageModel::Hide);
-    applicationPage->setComponentsDisplayMode(MApplicationPage::HomeButton, MApplicationPageModel::Hide);
-    applicationPage->setComponentsDisplayMode(MApplicationPage::EscapeButton, MApplicationPageModel::Show);
+    applicationPage->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
     applicationPage->setCentralWidget(new PluginList(this, applicationPage.data()));
     sceneManager()->appearSceneWindowNow(applicationPage.data());
 
-    // Create an escape button
-    escapeButtonPanel->connect(escapeButtonPanel.data(),
-                   SIGNAL(buttonClicked()), this, SLOT(hide()));
-    sceneManager()->appearSceneWindowNow(escapeButtonPanel.data());
+    // Add an overlay consisting of close button
+    closeButtonOverlay->setObjectName("closeButtonOverlay");
+
+    QGraphicsLinearLayout *windowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    windowLayout->setContentsMargins(0, 0, 0, 0);
+    windowLayout->setSpacing(0);
+
+    MButton *closeButton = new MButton(closeButtonOverlay.data());
+    closeButton->setViewType("icon");
+    closeButton->setObjectName("StatusIndicatorMenuCloseButton");
+    closeButton->setIconID("icon-m-framework-close");
+
+    // Add two overlay widgets that will not allow mouse events to pass through them
+    windowLayout->addItem(new OverlayDummyWidget);
+    windowLayout->addItem(closeButton);
+    windowLayout->addItem(new OverlayDummyWidget);
+
+    closeButtonOverlay->setLayout(windowLayout);
+    sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(hide()));
 
     // Set the X window properties so that the window does not appear in the task bar
     excludeFromTaskBar();

@@ -8,6 +8,7 @@
 
 MApplicationPageStyle#StatusIndicatorMenuPage {
     background-image: status-indicator-menu-background;
+    padding-bottom: 70;
 }
 
 MButtonStyle#StatusIndicatorMenuSettingsButton {
@@ -204,3 +205,21 @@ StatusIndicatorAnimationStyle#InternetConnectionStatusIndicator {
     font: $FONT_XLARGE;
 }
 
+MButtonStyle#StatusIndicatorMenuCloseButton {
+    icon-size: 40 40;
+    preferred-size: 64 64;
+    minimum-size: 64 64;
+    maximum-size: 64 64;
+
+}
+
+MOverlayStyle#closeButtonOverlay {
+    background-image: "duistatusmenuclose-background" 0px 0px 0px 0px;
+    minimum-size: 100% 6mm;
+    preferred-size: 100% 6mm;
+    maximum-size: 100% 6mm;
+    offset: 0 0;
+    vertical-align: bottom;
+    horizontal-align: left;
+
+}

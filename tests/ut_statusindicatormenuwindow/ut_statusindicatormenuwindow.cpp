@@ -22,6 +22,9 @@
 #include <MApplication>
 #include <QtTest/QtTest>
 #include <X11/Xutil.h>
+#include <MOverlay>
+#include <MButton>
+#include <QGraphicsLinearLayout>
 
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
@@ -65,6 +68,27 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible()
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && gSetVisible.second);
+}
+
+void Ut_StatusIndicatorMenuWindow::testCloseButtonOverlay()
+{
+    QVERIFY(statusIndicatorMenuWindow->closeButtonOverlay);
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->objectName(), QString("closeButtonOverlay"));
+
+    // Check the number of children of overlay and its layout
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->childItems().count(), 4);
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->layout()->count(), 3);
+
+    // Check the type of the children of the overlay
+    QVERIFY(dynamic_cast<OverlayDummyWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(0)));
+    QVERIFY(dynamic_cast<MButton *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(1)));
+    QVERIFY(dynamic_cast<OverlayDummyWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(2)));
+
+    // Test status indicator menu window visibility
+    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
+    connect(this, SIGNAL(clicked()), statusIndicatorMenuWindow, SLOT(hide()));
+    emit clicked();
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

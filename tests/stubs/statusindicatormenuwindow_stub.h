@@ -70,7 +70,7 @@ StatusIndicatorMenuWindowStub *gStatusIndicatorMenuWindowStub = &gDefaultStatusI
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
     applicationPage(0),
-    escapeButtonPanel(0)
+    closeButtonOverlay(0)
 {
     gStatusIndicatorMenuWindowStub->StatusIndicatorMenuWindowConstructor();
 }

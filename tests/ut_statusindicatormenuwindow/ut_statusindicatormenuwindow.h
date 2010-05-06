@@ -20,13 +20,24 @@
 #define _UT_STATUSINDICATORMENUWINDOW_
 
 #include <QObject>
+#include <QGraphicsSceneMouseEvent>
+#include "statusindicatormenuwindow.h"
 
 class StatusIndicatorMenuWindow;
 class MApplication;
 
+/*
+class TestOverlayWidget: public OverlayWidget
+{
+     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+};
+*/
 class Ut_StatusIndicatorMenuWindow : public QObject
 {
     Q_OBJECT
+
+signals:
+    void clicked();
 
 private:
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
@@ -44,6 +55,7 @@ private slots:
 
     // Test cases
     void testMakeVisible();
+    void testCloseButtonOverlay();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_
