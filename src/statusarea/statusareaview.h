@@ -28,6 +28,7 @@
 #include "contextframeworkcontext.h"
 
 class Notifier;
+class Clock;
 class StatusArea;
 class StatusIndicator;
 class MSceneWindow;
@@ -121,14 +122,15 @@ private:
     Notifier *landscapeNotifier;
     Notifier *portraitNotifier;
 
+    //! Clock
+    Clock *landscapeClock;
+    Clock *portraitClock;
+
     //! Create the layout for status area in landscape mode
     QGraphicsLinearLayout *createLandscapeLayout();
 
     //! Create the layout for status area in portrait mode
     QGraphicsLinearLayout *createPortraitLayout();
-
-    //! Creates a composite clock/alarm widget
-    static MWidget *createClockAlarmWidget(StatusIndicator *alarmIndicator);
 };
 
 #endif // STATUSAREAVIEW_H

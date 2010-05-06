@@ -18,8 +18,9 @@
 ****************************************************************************/
 
 #include "clock.h"
+#include "applicationcontext.h"
 
-Clock::Clock(QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
+Clock::Clock(ApplicationContext &context, QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
 {
     // Set the initial 24 hour mode
     model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);
@@ -32,13 +33,23 @@ Clock::Clock(QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateModelAndSetupTimer()));
     updateModelAndSetupTimer();
+
+    // Track alarm
+    alarm = context.createContextItem("UserAlarm.Present");
+    connect(alarm, SIGNAL(contentsChanged()),  this, SLOT(updateAlarmSet()));
+    updateAlarmSet();
+}
+
+Clock::~Clock()
+{
+    delete alarm;
 }
 
 void Clock::updateModelAndSetupTimer()
 {
     // Set the current time to the model
     QDateTime currentTime = QDateTime::currentDateTime();
-    model()->setTime(currentTime);
+    model()->setTime(currentTime.time());
 
     // Calculate the time for the next update
     QDateTime nextUpdateTime = currentTime.addSecs(60);
@@ -58,10 +69,16 @@ void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged)
     }
 }
 
+void Clock::updateAlarmSet() {
+    // Set the "alarm set" model field
+    model()->setAlarmSet(alarm->value().toBool());
+}
+
 void Clock::enterDisplayEvent()
 {
     timer.stop();
     updateModelAndSetupTimer();
+    updateAlarmSet();
 }
 
 void Clock::exitDisplayEvent()

@@ -58,7 +58,9 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapePresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     portraitPresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotifier(new Notifier(controller)),
-    portraitNotifier(new Notifier(controller))
+    portraitNotifier(new Notifier(controller)),
+    landscapeClock(new Clock(contextFrameworkContext, controller)),
+    portraitClock(new Clock(contextFrameworkContext, controller))
 {
     // Set up notifiers
     landscapeNotifier->setObjectName("Notifier");
@@ -122,6 +124,8 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeInputMethodIndicator);
     layout->addItem(landscapeCallIndicator);
     layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
+    layout->addItem(landscapeClock);
+    layout->addItem(landscapeAlarmIndicator);
 
     return layout;
 }
@@ -147,22 +151,10 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitProfileIndicator);
     layout->addItem(portraitCallIndicator);
     layout->addItem(createClockAlarmWidget(portraitAlarmIndicator));
+    layout->addItem(portraitClock);
+    layout->addItem(portraitAlarmIndicator);
 
     return layout;
-}
-
-MWidget *StatusAreaView::createClockAlarmWidget(StatusIndicator *alarmIndicator)
-{
-    Clock *clock = new Clock;
-    QGraphicsAnchorLayout *clockAlarmLayout = new QGraphicsAnchorLayout;
-    clockAlarmLayout->setContentsMargins(0, 0, 0, 0);
-    clockAlarmLayout->setSpacing(0);
-    clockAlarmLayout->addCornerAnchors(clock, Qt::TopLeftCorner, clockAlarmLayout, Qt::TopLeftCorner);
-    clockAlarmLayout->addCornerAnchors(clock, Qt::TopRightCorner, clockAlarmLayout, Qt::TopRightCorner);
-    clockAlarmLayout->addCornerAnchors(alarmIndicator, Qt::TopRightCorner, clock, Qt::TopRightCorner);
-    MWidget *clockAlarmWidget = new MWidget;
-    clockAlarmWidget->setLayout(clockAlarmLayout);
-    return clockAlarmWidget;
 }
 
 M_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)

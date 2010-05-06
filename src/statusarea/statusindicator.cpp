@@ -209,6 +209,7 @@ ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context
 
     clockAlarm = context.createContextItem("UserAlarm.Present");
     connect(clockAlarm, SIGNAL(contentsChanged()), this, SLOT(clockAlarmChanged()));
+    clockAlarmChanged();
 }
 
 ClockAlarmStatusIndicator::~ClockAlarmStatusIndicator()
@@ -218,7 +219,11 @@ ClockAlarmStatusIndicator::~ClockAlarmStatusIndicator()
 
 void ClockAlarmStatusIndicator::clockAlarmChanged()
 {
-    setValue(clockAlarm->value().toBool() ? 1 : 0);
+    if (clockAlarm->value().toBool()) {
+        setObjectName(QString(metaObject()->className()));
+    } else {
+        setObjectName(QString(metaObject()->className()) + "NoAlarm");
+    }
 }
 
 BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, MWidget *parent) :

@@ -55,9 +55,10 @@ void ClockView::updateData(const QList<const char *>& modifications)
     MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
-        if (member == ClockModel::Time) {
+        if (member == ClockModel::Time || member == ClockModel::AlarmSet) {
             updateLabel();
         } else if (member == ClockModel::TimeFormat24h) {
+
             if (model()->timeFormat24h()) {
                 style().setModeDefault();
             } else {
@@ -70,7 +71,28 @@ void ClockView::updateData(const QList<const char *>& modifications)
 
 void ClockView::updateLabel()
 {
-    QString text = model()->time().toString(style()->timeFormat());
+    QString timeFormat;
+    QString text;
+
+    if (model()->alarmSet()) {
+        timeFormat = style()->timeFormatWithAlarm();
+    } else {
+        timeFormat = style()->timeFormat();
+    }
+
+    if (model()->timeFormat24h()) {
+        text = model()->time().toString(timeFormat);
+    } else {
+        /* There is no way to obtain time in 12-hour format from QTime
+         * without the am/pm indicator. We will force an am/pm indicator
+         * at the beginning of the string so that the string has time in
+         * 12-hour format and will remove this forced indicator. The style
+         * string is then free to use 'ap' if they want to show the
+         * indicator.
+         */
+        text = model()->time().toString(QString("ap:") + timeFormat);
+        text.remove(0, text.indexOf(':') + 1);
+    }
 
     if (text != previousLabel) {
         // Only update the label if the text has changed

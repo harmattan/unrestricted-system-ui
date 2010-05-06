@@ -33,14 +33,14 @@ class ClockStyle : public MWidgetStyle
     //! Formatting string for the time when alarm indicator is not shown
     M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
     //! Formatting string for the time when alarm indicator is shown
-    M_STYLE_ATTRIBUTE(QString, timeFormatWithAlarm, TimeFormat)
+    M_STYLE_ATTRIBUTE(QString, timeFormatWithAlarm, TimeFormatWithAlarm)
 };
 
 class ClockStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(ClockStyle)
 
-    //! \brief Style mode for 12 hour mode.
+    //! \brief Style mode for 12 hour mode
     M_STYLE_MODE(TwelveHour)
 };
 

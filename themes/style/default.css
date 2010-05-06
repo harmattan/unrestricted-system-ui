@@ -62,8 +62,8 @@ MLabelStyle#Notifier {
 }
 
 ClockStyle {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 6;
+    margin-right: 6;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -72,11 +72,8 @@ ClockStyle {
     padding-bottom: 0;
     time-format: "hh:mm";
     time-format-with-alarm: "hh:mm";
-    preferred-size: 84 3mm;
-    minimum-size: 84 3mm;
-    maximum-size: 84 3mm;
 }
-ClockStyle:twelvehour {
+ClockStyle:twelve-hour {
     time-format: "h:mmap";
     time-format-with-alarm: "h:mm";
 }
@@ -222,11 +219,23 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
 
 StatusIndicatorIconStyle#ClockAlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-alarm icon-s-status-alarm";
+    image-list: "icon-s-status-alarm";
     preferred-size: 10 11;
     minimum-size: 10 11;
     maximum-size: 10 11;
-    margin-top: 2;
+    margin-left: 0;
+}
+
+StatusIndicatorImageStyle#ClockAlarmStatusIndicatorNoAlarm {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-alarm";
+    preferred-size: 0 0;
+    minimum-size: 0 0;
+    maximum-size: 0 0;
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
 }
 
 StatusIndicatorIconStyle#BluetoothStatusIndicator {
