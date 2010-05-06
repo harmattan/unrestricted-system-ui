@@ -39,6 +39,7 @@
 #include <MContainer>
 #include <MApplicationPage>
 #include <QGraphicsLinearLayout>
+#include <MLabel>
 
 Profile::Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
     MWidget(parent),
@@ -85,9 +86,25 @@ Profile::Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsIt
     buttonGroup->addButton(button);
 
     // Set up the profile modification page
-    profileModificationPage->setTitle("Profile");
-    profileModificationPage->setEscapeMode(MApplicationPageModel::EscapeManualBack);
-    connect(profileModificationPage, SIGNAL(backButtonClicked()), this, SLOT(buttonClicked()));
+    profileModificationPage->setTitle("Profile Modification Page");
+    MWidget *pageWidget = new MWidget;
+
+    // Add the back button to go back to status indicator menu window
+    QGraphicsLinearLayout *pageLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    pageLayout->setContentsMargins(0, 0, 0, 0);
+    pageLayout->addStretch();
+    pageLayout->addItem(new MLabel("Profile Modification Page"));
+    pageLayout->addStretch();
+    MButton *pageButton = new MButton("Go back");
+    pageLayout->addItem(pageButton);
+    pageLayout->addStretch();
+
+    pageWidget->setLayout(pageLayout);
+    // Widget will be deleted by the page
+    profileModificationPage->setCentralWidget(pageWidget);
+
+    connect(pageButton, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+    connect(profileModificationPage, SIGNAL(displayExited()), this, SLOT(buttonClicked()));
 }
 
 Profile::~Profile()
