@@ -214,6 +214,14 @@ StatusIndicatorIconStyle#CallStatusIndicatorOngoing {
     maximum-size: 24 18;
 }
 
+StatusIndicatorIconStyle#ProfileStatusIndicatorSilent {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-silent";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
 #shutdownTextBig {
     font: "Nokia Sans" 6.22mm;
 }
@@ -227,7 +235,6 @@ MButtonStyle#StatusIndicatorMenuCloseButton {
     preferred-size: 64 64;
     minimum-size: 64 64;
     maximum-size: 64 64;
-
 }
 
 MOverlayStyle#closeButtonOverlay {
@@ -238,5 +245,4 @@ MOverlayStyle#closeButtonOverlay {
     offset: 0 0;
     vertical-align: bottom;
     horizontal-align: left;
-
 }

@@ -253,4 +253,15 @@ void Ut_StatusIndicator::testCall()
     QCOMPARE(statusIndicator->model()->value(), QVariant(0));
 }
 
+void Ut_StatusIndicator::testProfile()
+{
+    StatusIndicator *statusIndicator = new ProfileStatusIndicator(*testContext);
+    testContextItems["Profile.Name"]->setValue(QVariant("silent"));
+    QVERIFY(statusIndicator->objectName().indexOf("Silent") >= 0);
+    testContextItems["Profile.Name"]->setValue(QVariant("default"));
+    QVERIFY(statusIndicator->objectName().indexOf("Silent") < 0);
+
+    delete statusIndicator;
+}
+
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)
