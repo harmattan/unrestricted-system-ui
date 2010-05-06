@@ -30,11 +30,13 @@ The \c NotificationManagerInterface also supports a concept of notification grou
 
 %Notification sinks (\c NotificationSink) get notified by notification manager when a notification they should act upon is triggered. %Notification sinks can create various feedback when a notification is triggered. For instance a \c NotificationSink can create and show a notification widget, play a sound or launch haptic feedback upon a notification.
 
-\c DuiCompositorNotificationSink communicates to DuiCompositor when a notification is triggered. This sink will create a special notification window and a \c DuiInfoBanner widget. A \b _NET_WM_TYPE_NOTIFICATION window hint is set to the created window. DuiCompositor will identify the notification window by the set window hint. \c DuiCompositorNotificationSink will handle the interaction affecting the notification widget. \c DuiCompositorNotificationSink will also destroy the notification widget and close the notification window when required. %Notification widget can be either cancelled or it can timeout. \c DuiCompositorNotificationSink will communicate the cause that closed the notification window to the DuiCompositor using custom X Atom. DuiCompositor is responsible for showing the notification window on top of any application as well as the transition animation of the notification window. After displaying the info banner the sink places the \c DuiInfoBanner widget onto the \c NotificationArea.
+\c MCompositorNotificationSink communicates to MCompositor when a notification is triggered. This sink will create a special notification window and a \c MInfoBanner widget. A \b _NET_WM_TYPE_NOTIFICATION window hint is set to the created window. MCompositor will identify the notification window by the set window hint. \c MCompositorNotificationSink will handle the interaction affecting the notification widget. \c MCompositorNotificationSink will also destroy the notification widget and close the notification window when required. %Notification widget can be either cancelled or it can timeout. \c MCompositorNotificationSink will communicate the cause that closed the notification window to the MCompositor using custom X Atom. MCompositor is responsible for showing the notification window on top of any application as well as the transition animation of the notification window. After displaying the info banner the sink places the \c MInfoBanner widget onto the \c NotificationArea.
+
+\c NGFNotificationSink (Non Graphical Notification Sink) integrates to the low level notification framework libngf to produce the required notification sound, vibrations, led indications etc. The \c NGFNotificationSink uses the \c feedbackId key from the event type to determine which feedback to request from the \c libngf.
 
 \section event_types Event types
 
-The event type parameter of a notification is used to describe the overall properties of a notification, such as the icon, sound etc. The event type is a string. For each supported event type there is a configuration file in \c /usr/share/dui/notifications/eventtypes that defines the properties for that particular type of event. The base name of the file defines the event type name: the properties for an event of type \c sms are defined in \c /usr/share/dui/notifications/eventtypes/sms\c.conf and so on. Each configuration file consists of lines with key=value pairs. The keys are notification sink API parameter names such as iconId and feedbackId and the values are the values to be assigned to the notification sink API parameter defined by the key. An example configuration file could be as follows:
+The event type parameter of a notification is used to describe the overall properties of a notification, such as the icon, sound, vibration etc. The event type is a string. For each supported event type there is a configuration file in \c /usr/share/dui/notifications/eventtypes that defines the properties for that particular type of event. The base name of the file defines the event type name: the properties for an event of type \c sms are defined in \c /usr/share/dui/notifications/eventtypes/sms\c.conf and so on. Each configuration file consists of lines with key=value pairs. The keys are notification sink API parameter names such as iconId and feedbackId and the values are the values to be assigned to the notification sink API parameter defined by the key. An example configuration file could be as follows:
 
 \verbatim
 iconId=Icon-close
@@ -47,6 +49,8 @@ The \c userRemovable key can be used to define whether a notification of given t
 
 The \c class key can be used to define whether a notification of given type is a system notification or an application notification. If class equals system the notification is a system notification. It class equals application or the key is missing the notification is an application notification. System notifications may be treated differently by the notification sinks. For instance, system notifications are not displayed by the \c NotificationAreaSink. They may also have a higher priority than the application notifications.
 
+The \c feedbackId key can be used to define whether a notification of given type produces a feed back. A notification sink may choose to diregard this key if it is not approprioate behaviour for that sink. As an example the \c NGFNotificationSink will use the \c feedbackId to play the associated sound, vibration or led indication or a combination of these. The \ NGFNotificationSink used \libngf to play these indications.
+
 \section links Links
 
 - <a href="https://cwiki.nokia.com/DirectUIFramework">Direct UI wiki</a>
@@ -56,5 +60,6 @@ The \c class key can be used to define whether a notification of given type is a
 - NotificationSource
 - NotificationManagerInterface
 - NotificationSink
-- DuiCompositorNotificationSink
+- MCompositorNotificationSink
+- NGFNotificationSink
 */
