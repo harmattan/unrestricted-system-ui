@@ -20,6 +20,8 @@
 #include "statusindicatoranimationview.h"
 #include "statusindicator.h"
 #include <MViewCreator>
+#include <MTheme>
+#include <QGraphicsLinearLayout>
 #include <QTimeLine>
 
 StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *controller) :
@@ -42,12 +44,10 @@ void StatusIndicatorAnimationView::setupModel()
 {
     MWidgetView::setupModel();
 
-    setAnimationFrame(model()->value().toDouble() * images.size());
-    if (model()->animate()) {
-        startAnimation();
-    } else {
-        stopAnimation();
-    }
+    QList<const char *> modifications;
+    modifications << StatusIndicatorModel::Value;
+    modifications << StatusIndicatorModel::Animate;
+    updateData(modifications);
 }
 
 void StatusIndicatorAnimationView::updateData(const QList<const char *>& modifications)
@@ -57,8 +57,10 @@ void StatusIndicatorAnimationView::updateData(const QList<const char *>& modific
     const char *member;
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
-            // Set the animation frame based on the model value
-            setAnimationFrame(model()->value().toDouble() * images.size());
+            if (model()->value().type() == QVariant::String) {
+                setAnimationFrame(0);
+                setupImageList(model()->value().toString());
+           }
         } else if (member == BatteryStatusIndicatorModel::Animate) {
             if (model()->animate()) {
                 startAnimation();
@@ -73,13 +75,12 @@ void StatusIndicatorAnimationView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    clearImageList();
+    setupAnimationTimeline();
+    controller->update();
+}
 
-    // Get the list of images to use as animation frames of the indicator
-    imageList = style()->imageList().trimmed().split(QChar(' '));
-    images = QVector<const QPixmap *>(imageList.length(), NULL);
-
-    // Get the duration of the animation
+void StatusIndicatorAnimationView::setupAnimationTimeline()
+{
     animationTimeline->setDuration(style()->animationDuration());
     animationTimeline->setFrameRange(0, images.size());
     animationTimeline->setUpdateInterval(style()->animationDuration() / (images.size() > 0 ? images.size() : 1));
@@ -132,6 +133,29 @@ void StatusIndicatorAnimationView::clearImageList()
 
     imageList.clear();
     images.clear();
+}
+
+void StatusIndicatorAnimationView::setupImageList(const QString &iconIDs)
+{
+    clearImageList();
+
+    if (!iconIDs.isEmpty()) {
+        // Use the "icon exists" style
+        style().setModeIcon();
+
+        // Create an icon list
+        imageList = iconIDs.trimmed().split(QChar(' '));
+        images = QVector<const QPixmap *>(imageList.length(), NULL);
+
+        setupAnimationTimeline();
+    } else {
+        // Use the "no icon" (default) style
+        style().setModeDefault();
+    }
+
+    // Redraw
+    controller->updateGeometry();
+    controller->update();
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorAnimationView, StatusIndicator)

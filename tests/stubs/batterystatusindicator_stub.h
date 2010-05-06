@@ -32,8 +32,6 @@ public:
     virtual void BatteryStatusIndicatorDestructor();
     virtual void batteryLevelChanged();
     virtual void batteryChargingChanged();
-    ContextItem *batteryLevel ;
-    ContextItem *batteryCharging ;
 };
 
 // 2. IMPLEMENT STUB

@@ -32,8 +32,6 @@ public:
     virtual void InternetConnectionStatusIndicatorDestructor();
     virtual void wifiSignalStrengthChanged();
     virtual void internetConnectionChanged();
-    ContextItem *internetConnection ;
-    ContextItem *wifiSignalStrength ;
 };
 
 // 2. IMPLEMENT STUB

@@ -117,7 +117,7 @@ public:
 
     virtual ~PhoneNetworkSignalStrengthStatusIndicator();
 
-public slots:
+private slots:
     void signalStrengthChanged();
 
 private:
@@ -144,7 +144,7 @@ public:
 
     virtual ~BatteryStatusIndicator();
 
-public slots:
+private slots:
     void batteryLevelChanged();
     void batteryChargingChanged();
 
@@ -172,7 +172,7 @@ public:
 
     virtual ~ClockAlarmStatusIndicator();
 
-public slots:
+private slots:
     void clockAlarmChanged();
 
 private:
@@ -200,7 +200,7 @@ public:
 
     virtual ~BluetoothStatusIndicator();
 
-public slots:
+private slots:
     void bluetoothChanged();
 
 private:
@@ -222,7 +222,7 @@ public:
 
     virtual ~InternetConnectionStatusIndicator();
 
-public slots:
+private slots:
     void wifiSignalStrengthChanged();
     void internetConnectionChanged();
 
@@ -232,7 +232,9 @@ private:
 };
 
 /*!
- * A status indicator for showing the used phone network name
+ * A status indicator for showing the used phone network name.
+ * The phone network name is cropped to 13 characters.
+ * Sets the value to the phone network name.
  */
 class PhoneNetworkStatusIndicator : public StatusIndicator
 {
@@ -250,7 +252,7 @@ public:
 
     virtual ~PhoneNetworkStatusIndicator();
 
-public slots:
+private slots:
     void phoneNetworkChanged();
 
 private:
@@ -259,6 +261,7 @@ private:
 
 /*!
  * A status indicator for showing the current input method.
+ * Sets the value to the related icon ID.
  */
 class InputMethodStatusIndicator : public StatusIndicator
 {
@@ -276,6 +279,29 @@ public:
     virtual ~InputMethodStatusIndicator();
 
     void setIconID(const QString &iconID);
+};
+
+/*!
+ * A status indicator for showing the call status.
+ * Displays incoming, ongoing or ongoing + muted call status.
+ * Sets the value to the related icon ID.
+ */
+class CallStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(CallStatusIndicator)
+
+public:
+    explicit CallStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+
+    virtual ~CallStatusIndicator();
+
+private slots:
+    void callOrMutedChanged();
+
+private:
+    ContextItem *call;
+    ContextItem *muted;
 };
 
 #endif // STATUSINDICATOR_H

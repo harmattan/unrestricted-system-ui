@@ -31,7 +31,6 @@ public:
     virtual void PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void PhoneNetworkSignalStrengthStatusIndicatorDestructor();
     virtual void signalStrengthChanged();
-    ContextItem *signalStrength ;
 };
 
 // 2. IMPLEMENT STUB

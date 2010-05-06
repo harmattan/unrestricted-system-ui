@@ -20,67 +20,34 @@
 #include "statusindicatoriconview.h"
 #include "statusindicator.h"
 #include <MViewCreator>
-#include <MTheme>
-#include <QGraphicsLinearLayout>
-#include <QDebug>
 
 StatusIndicatorIconView::StatusIndicatorIconView(StatusIndicator *controller) :
-    MWidgetView(controller),
-    controller(controller),
-    pixmap(NULL)
+    StatusIndicatorAnimationView(controller)
 {
 }
 
 StatusIndicatorIconView::~StatusIndicatorIconView()
 {
-    if (pixmap != NULL) {
-        MTheme::releasePixmap(pixmap);
-    }
-}
-
-void StatusIndicatorIconView::setupModel()
-{
-    MWidgetView::setupModel();
-
-    QList<const char *> modifications;
-    modifications << StatusIndicatorModel::Value;
-    updateData(modifications);
 }
 
 void StatusIndicatorIconView::updateData(const QList<const char *>& modifications)
 {
-    MWidgetView::updateData(modifications);
+    StatusIndicatorAnimationView::updateData(modifications);
 
     const char *member;
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
-            if (pixmap != NULL) {
-                // Release the old pixmap
-                MTheme::releasePixmap(pixmap);
-                pixmap = NULL;
-            }
-
-            QString iconID = model()->value().toString();
-            if (!iconID.isEmpty()) {
-                // Get the pixmap from the theme
-                style().setModeIcon();
-                pixmap = MTheme::pixmap(iconID, QSize(style()->preferredSize().width(), style()->preferredSize().height()));
-            } else {
-                style().setModeDefault();
-            }
-
-            // Redraw
-            controller->updateGeometry();
-            controller->update();
+            // Set the animation frame based on the model value
+            setAnimationFrame(model()->value().toDouble() * images.size());
         }
     }
 }
 
-void StatusIndicatorIconView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
+void StatusIndicatorIconView::applyStyle()
 {
-    if (pixmap != NULL) {
-        painter->drawPixmap(QPointF(0, 0), *pixmap);
-    }
+    StatusIndicatorAnimationView::applyStyle();
+
+    setupImageList(style()->imageList());
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorIconView, StatusIndicator)

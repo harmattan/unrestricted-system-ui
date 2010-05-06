@@ -27,16 +27,16 @@ class StatusIndicatorAnimationStyle : public MWidgetStyle
     Q_OBJECT
     M_STYLE(StatusIndicatorAnimationStyle)
 
-    //! The list of IDs of the images to be shown in the status indicator separated by spaces
-    M_STYLE_ATTRIBUTE(QString, imageList, ImageList)
-
-    //! The number of milliseconds in which the images in imageList are animated
+    //! The number of milliseconds in which the given images are animated
     M_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
 };
 
 class StatusIndicatorAnimationStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(StatusIndicatorAnimationStyle)
+
+    //! \brief Icon mode.
+    M_STYLE_MODE(Icon)
 };
 
 #endif /* STATUSINDICATORANIMATIONSTYLE_H_ */

@@ -23,15 +23,17 @@
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
 #include "statusindicatoriconstyle.h"
-#include <MWidgetView>
+#include "statusindicatoranimationview.h"
 
-class QPixmap;
+class StatusIndicator;
+class QPainter;
+class QTimeLine;
 
 /*!
  * \class StatusIndicatorIconView
  * \brief a view class for the status indicator widgets.
 */
-class StatusIndicatorIconView : public MWidgetView
+class StatusIndicatorIconView : public StatusIndicatorAnimationView
 {
     Q_OBJECT
     M_VIEW(StatusIndicatorModel, StatusIndicatorIconStyle)
@@ -51,25 +53,13 @@ public:
 
 protected:
     //! \reimp
-    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void setupModel();
+    virtual void applyStyle();
     //! \reimp_end
 
 protected slots:
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
-
-private:
-    //! The controller for this view
-    StatusIndicator *controller;
-
-    //! The pixmap to be drawn
-    const QPixmap *pixmap;
-
-#ifdef UNIT_TEST
-    friend class Ut_StatusIndicatorIconView;
-#endif
 };
 
 #endif

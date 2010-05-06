@@ -21,7 +21,6 @@
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
 #include "statusindicatoranimationview.h"
-#include "statusindicatorlabelview.h"
 #include "testcontextitem.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
 
@@ -44,12 +43,12 @@ public:
 
 QVariant gModelValue;
 
-TestStatusIndicatorAnimationView::TestStatusIndicatorAnimationView(StatusIndicator *controller) :
-    StatusIndicatorAnimationView(controller)
+TestStatusIndicatorIconView::TestStatusIndicatorIconView(StatusIndicator *controller) :
+    StatusIndicatorIconView(controller)
 {
 }
 
-void TestStatusIndicatorAnimationView::updateData(const QList<const char *>& modifications)
+void TestStatusIndicatorIconView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
     const char *member;
@@ -58,11 +57,6 @@ void TestStatusIndicatorAnimationView::updateData(const QList<const char *>& mod
             gModelValue = model()->value();
         }
     }
-}
-
-TestStatusIndicatorLabelView::TestStatusIndicatorLabelView(StatusIndicator *controller) :
-    StatusIndicatorAnimationView(controller)
-{
 }
 
 
@@ -119,7 +113,7 @@ void Ut_StatusIndicator::testModelUpdates()
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 {
     StatusIndicator *statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
-    statusIndicator->setView(new TestStatusIndicatorAnimationView(statusIndicator));
+    statusIndicator->setView(new TestStatusIndicatorIconView(statusIndicator));
 
     testContextItems["Cellular.SignalStrength"]->setValue(QVariant(100));
 
@@ -217,6 +211,46 @@ void Ut_StatusIndicator::testInputMethod()
     QCOMPARE(statusIndicator->model()->value(), QVariant("test"));
 
     delete statusIndicator;
+}
+
+void Ut_StatusIndicator::testCall()
+{
+    StatusIndicator *statusIndicator = new CallStatusIndicator(*testContext);
+    testContextItems["Phone.Call"]->setValue(QVariant("inactive"));
+    QVERIFY(statusIndicator->model()->value().type() == QVariant::Int);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Ongoing") < 0);
+
+    testContextItems["Phone.Call"]->setValue(QVariant("ringing"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("active"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ongoing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("knocking"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("inactive"));
+    testContextItems["Phone.Muted"]->setValue(QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Ongoing") < 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("ringing"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("active"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ongoing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(1));
+
+    testContextItems["Phone.Call"]->setValue(QVariant("knocking"));
+    QVERIFY(statusIndicator->objectName().indexOf("Ringing") >= 0);
+    QCOMPARE(statusIndicator->model()->value(), QVariant(0));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)

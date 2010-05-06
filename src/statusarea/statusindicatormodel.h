@@ -77,4 +77,9 @@ class InputMethodStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(InputMethodStatusIndicatorModel)
 };
 
+class CallStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(CallStatusIndicatorModel)
+};
+
 #endif /* STATUSINDICATORMODEL_H_ */

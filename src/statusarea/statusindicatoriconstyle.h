@@ -20,20 +20,20 @@
 #ifndef STATUSINDICATORICONSTYLE_H_
 #define STATUSINDICATORICONSTYLE_H_
 
-#include <MWidgetStyle>
+#include "statusindicatoranimationstyle.h"
 
-class StatusIndicatorIconStyle : public MWidgetStyle
+class StatusIndicatorIconStyle : public StatusIndicatorAnimationStyle
 {
     Q_OBJECT
     M_STYLE(StatusIndicatorIconStyle)
+
+    //! The list of IDs of the images to be shown in the status indicator separated by spaces
+    M_STYLE_ATTRIBUTE(QString, imageList, ImageList)
 };
 
-class StatusIndicatorIconStyleContainer : public MWidgetStyleContainer
+class StatusIndicatorIconStyleContainer : public StatusIndicatorAnimationStyleContainer
 {
     M_STYLE_CONTAINER(StatusIndicatorIconStyle)
-
-    //! \brief Icon mode.
-    M_STYLE_MODE(Icon)
 };
 
 #endif /* STATUSINDICATORICONSTYLE_H_ */

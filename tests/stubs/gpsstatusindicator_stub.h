@@ -31,7 +31,6 @@ public:
     virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void GPSStatusIndicatorDestructor();
     virtual void gpsChanged();
-    ContextItem *gps ;
 };
 
 // 2. IMPLEMENT STUB

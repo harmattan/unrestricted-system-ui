@@ -1,10 +1,10 @@
-/***************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of system-ui.
+** This file is part of systemui.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,50 +17,46 @@
 **
 ****************************************************************************/
 
-#include <QtTest/QtTest>
 #include <MApplication>
 #include "ut_statusindicatoriconview.h"
 #include "statusindicatoriconview.h"
-#include "statusindicator.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
+#include "statusindicatoranimationview_stub.h"
 
-class TestStyleContainer : public MStyleContainer
+TestStatusIndicatorIconView::TestStatusIndicatorIconView(StatusIndicator *controller) :
+    StatusIndicatorIconView(controller)
 {
-public:
-    static QString getCurrentMode(TestStyleContainer *styleContainer) { return styleContainer->currentMode(); }
-};
-
-// MTheme stubs
-QString mThemePixmapId;
-QSize mThemePixmapSize;
-const QPixmap *mThemePixmapPixmap;
-const QPixmap *MTheme::pixmap(const QString &id, const QSize &size)
-{
-    mThemePixmapId = id;
-    mThemePixmapSize = size;
-    return mThemePixmapPixmap;
 }
 
-const QPixmap *mThemeReleasePixmapPixmap;
-void MTheme::releasePixmap(const QPixmap *pixmap)
+StatusIndicatorModel *TestStatusIndicatorIconView::getModel()
 {
-    mThemeReleasePixmapPixmap = pixmap;
+    return model();
 }
 
-// QPainter stubs
-QPointF qPainterDrawPixmapPoint;
-const QPixmap *qPainterDrawPixmapPixmap;
-void QPainter::drawPixmap(const QPointF &point, const QPixmap &pixmap)
+void TestStatusIndicatorIconView::executeStyleChanged()
 {
-    qPainterDrawPixmapPoint = point;
-    qPainterDrawPixmapPixmap = &pixmap;
+    applyStyle();
+}
+
+void TestStatusIndicatorIconView::setImageList(const QStringList &imageList)
+{
+    this->imageList = imageList;
+    images = QVector<const QPixmap *>(imageList.length(), NULL);
+}
+
+StatusIndicatorIconStyle *TestStatusIndicatorIconView::modifiableStyle()
+{
+    StatusIndicatorIconStyleContainer &sc = style();
+    const StatusIndicatorIconStyle *const_s = sc.operator ->();
+    StatusIndicatorIconStyle *s = const_cast<StatusIndicatorIconStyle *>(const_s);
+    return s;
 }
 
 void Ut_StatusIndicatorIconView::initTestCase()
 {
     static int argc = 1;
-    static char *app_name[1] = { (char *) "./ut_statusindicatoriconview" };
-    app = new MApplication(argc, app_name);
+    static char *app_name = (char *)"./ut_statusindicatoranimationview";
+    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusIndicatorIconView::cleanupTestCase()
@@ -70,15 +66,14 @@ void Ut_StatusIndicatorIconView::cleanupTestCase()
 
 void Ut_StatusIndicatorIconView::init()
 {
-    mThemePixmapId.clear();
-    mThemePixmapSize = QSize();
-    mThemePixmapPixmap = NULL;
-    mThemeReleasePixmapPixmap = NULL;
-    qPainterDrawPixmapPoint = QPointF(-1, -1);
-    qPainterDrawPixmapPixmap = NULL;
+    // Construct the test subject
     controller = new StatusIndicator;
-    m_subject = new StatusIndicatorIconView(controller);
+    m_subject = new TestStatusIndicatorIconView(controller);
     m_subject->setModel(controller->model());
+    gStatusIndicatorAnimationViewStub->stubReset();
+    gStatusIndicatorAnimationViewStub->stubSetReturnValue("model", controller->model());
+
+    connect(this, SIGNAL(updateData(const QList<const char *>&)), m_subject, SLOT(updateData(const QList<const char *>&)));
 }
 
 void Ut_StatusIndicatorIconView::cleanup()
@@ -87,54 +82,24 @@ void Ut_StatusIndicatorIconView::cleanup()
     delete controller;
 }
 
-void Ut_StatusIndicatorIconView::testSetupModel()
-{
-    QString pixmapId("test");
-    m_subject->model()->setValue(pixmapId);
-    m_subject->setupModel();
-    QCOMPARE(mThemePixmapId, pixmapId);
-}
-
 void Ut_StatusIndicatorIconView::testUpdateData()
 {
+    m_subject->setImageList(QStringList() << "1" << "2" << "3" << "4" << "5" << "6");
+    m_subject->getModel()->setValue(0.5);
     QList<const char *> modifications;
     modifications << StatusIndicatorModel::Value;
-
-    // Test that setting a pixmap ID loads the pixmap and sets the mode to icon
-    QString pixmapId("test");
-    m_subject->model()->setValue(pixmapId);
-    m_subject->updateData(modifications);
-    QCOMPARE(mThemePixmapId, pixmapId);
-    QCOMPARE(TestStyleContainer::getCurrentMode(reinterpret_cast<TestStyleContainer *>(&m_subject->style())), QString("icon"));
-
-    // Test that setting an empty pixmap ID releases the pixmap and sets the mode to default
-    pixmapId.clear();
-    mThemePixmapId.clear();
-    m_subject->model()->setValue(pixmapId);
-    m_subject->updateData(modifications);
-    QCOMPARE(mThemePixmapId, pixmapId);
-    QCOMPARE(mThemeReleasePixmapPixmap, mThemePixmapPixmap);
-    QCOMPARE(TestStyleContainer::getCurrentMode(reinterpret_cast<TestStyleContainer *>(&m_subject->style())), QString());
+    emit updateData(modifications);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setAnimationFrame"), 1);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setAnimationFrame").parameter<int>(0), 3);
 }
 
-void Ut_StatusIndicatorIconView::testDrawContents()
+void Ut_StatusIndicatorIconView::testApplyStyle()
 {
-    QPainter painter;
-
-    // Drawing without a pixmap should do nothing
-    m_subject->drawContents(&painter, NULL);
-    QCOMPARE(qPainterDrawPixmapPoint, QPointF(-1, -1));
-    QCOMPARE(qPainterDrawPixmapPixmap, (QPixmap *)NULL);
-
-    QPixmap pixmap(50, 50);
-    QString pixmapId("test");
-    mThemePixmapPixmap = &pixmap;
-    m_subject->model()->setValue(pixmapId);
-    m_subject->setupModel();
-    m_subject->drawContents(&painter, NULL);
-    QCOMPARE(qPainterDrawPixmapPoint, QPointF());
-    QCOMPARE(qPainterDrawPixmapPixmap, mThemePixmapPixmap);
+    QString imageList("1 2 3 4 5 6");
+    m_subject->modifiableStyle()->setImageList(imageList);
+    m_subject->executeStyleChanged();
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setupImageList"), 1);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setupImageList").parameter<QString>(0), imageList);
 }
-
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorIconView)

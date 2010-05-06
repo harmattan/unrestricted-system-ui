@@ -31,7 +31,6 @@ public:
     virtual void PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void PhoneNetworkStatusIndicatorDestructor();
     virtual void phoneNetworkChanged();
-    ContextItem *networkName ;
 };
 
 // 2. IMPLEMENT STUB

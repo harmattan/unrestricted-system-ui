@@ -25,22 +25,22 @@
 #include <mapplication.h>
 #include <mwidget.h>
 #include "statusindicator.h"
-#include "statusindicatoranimationview.h"
+#include "statusindicatoriconview.h"
 #include "applicationcontext.h"
 
-class TestStatusIndicatorAnimationView : public StatusIndicatorAnimationView
+class TestStatusIndicatorIconView : public StatusIndicatorIconView
 {
     Q_OBJECT
-    M_VIEW(StatusIndicatorModel, StatusIndicatorAnimationStyle)
+    M_VIEW(StatusIndicatorModel, StatusIndicatorIconStyle)
 
 public:
-    TestStatusIndicatorAnimationView(StatusIndicator *controller);
+    TestStatusIndicatorIconView(StatusIndicator *controller);
 
 protected slots:
     virtual void updateData(const QList<const char *>& modifications);
 };
 
-class TestStatusIndicatorLabelView : public StatusIndicatorAnimationView
+class TestStatusIndicatorLabelView : public StatusIndicatorIconView
 {
 public:
     TestStatusIndicatorLabelView(StatusIndicator *controller);
@@ -79,6 +79,7 @@ private slots:
     void testAnimation();
     void testPhoneNetwork();
     void testInputMethod();
+    void testCall();
 };
 
 #endif //_UT_STATUSINDICATOR_

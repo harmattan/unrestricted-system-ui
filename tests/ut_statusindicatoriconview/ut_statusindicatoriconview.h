@@ -1,10 +1,10 @@
-/***************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of system-ui.
+** This file is part of systemui.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,11 +20,27 @@
 #ifndef UT_STATUSINDICATORICONVIEW_H
 #define UT_STATUSINDICATORICONVIEW_H
 
+#include <QtTest/QtTest>
 #include <QObject>
 
+#include "statusindicatoriconview.h"
+
 class MApplication;
-class StatusIndicatorIconView;
-class StatusIndicator;
+
+class TestStatusIndicatorIconView : public StatusIndicatorIconView
+{
+    Q_OBJECT
+    M_VIEW(StatusIndicatorModel, StatusIndicatorIconStyle)
+
+public:
+    TestStatusIndicatorIconView(StatusIndicator *controller);
+
+    StatusIndicatorModel *getModel();
+    void executeStyleChanged();
+    void setImageList(const QStringList &imageList);
+    StatusIndicatorIconStyle *modifiableStyle();
+};
+
 
 class Ut_StatusIndicatorIconView : public QObject
 {
@@ -41,17 +57,19 @@ private slots:
     void cleanup();
 
     // Test cases
-    void testSetupModel();
     void testUpdateData();
-    void testDrawContents();
+    void testApplyStyle();
+
+signals:
+    void updateData(const QList<const char *>& modifications);
 
 private:
     // MApplication
     MApplication *app;
-    // The object being tested
-    StatusIndicatorIconView *m_subject;
-    // A controller for the object
+    // A controller for the test subject
     StatusIndicator *controller;
+    // The object being tested
+    TestStatusIndicatorIconView *m_subject;
 };
 
 #endif

@@ -97,6 +97,10 @@ private:
     //! Input method indicator (only in landscape)
     StatusIndicator *landscapeInputMethodIndicator;
 
+    //! Call indicator
+    StatusIndicator *landscapeCallIndicator;
+    StatusIndicator *portraitCallIndicator;
+
     //! Notifier
     Notifier *landscapeNotifier;
     Notifier *portraitNotifier;

@@ -47,6 +47,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
+    landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
+    portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotifier(new Notifier(controller)),
     portraitNotifier(new Notifier(controller))
 {
@@ -102,6 +104,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeBluetoothIndicator);
     layout->addItem(landscapeInputMethodIndicator);
+    layout->addItem(landscapeCallIndicator);
     layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
 
     return layout;
@@ -122,6 +125,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addStretch();
     layout->addItem(portraitInternetConnectionIndicator);
     layout->addItem(portraitBluetoothIndicator);
+    layout->addItem(portraitCallIndicator);
     layout->addItem(createClockAlarmWidget(portraitAlarmIndicator));
 
     return layout;

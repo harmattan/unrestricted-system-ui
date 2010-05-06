@@ -239,3 +239,41 @@ void InputMethodStatusIndicator::setIconID(const QString &iconID)
 {
     setValue(iconID);
 }
+
+CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, MWidget *parent) :
+    StatusIndicator(parent)
+{
+    setObjectName(metaObject()->className());
+
+    call = context.createContextItem("Phone.Call");
+    connect(call, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
+
+    muted = context.createContextItem("Phone.Muted");
+    connect(muted, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
+}
+
+CallStatusIndicator::~CallStatusIndicator()
+{
+    delete call;
+    delete muted;
+}
+
+void CallStatusIndicator::callOrMutedChanged()
+{
+    QString callType = call->value().toString();
+    if (callType == "ringing" || callType == "knocking") {
+        setObjectName(QString(metaObject()->className()) + "Ringing");
+        setValue(0);
+        animateIfPossible = true;
+    } else if (callType == "active") {
+        setObjectName(QString(metaObject()->className()) + "Ongoing");
+        setValue(muted->value().toBool() ? 1 : 0);
+        animateIfPossible = false;
+    } else {
+        setObjectName(metaObject()->className());
+        setValue(0);
+        animateIfPossible = false;
+    }
+
+    updateAnimationStatus();
+}

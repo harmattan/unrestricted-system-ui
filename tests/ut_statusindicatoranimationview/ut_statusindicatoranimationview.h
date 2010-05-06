@@ -1,10 +1,10 @@
-/****************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of systemui.
+** This file is part of system-ui.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,12 +20,11 @@
 #ifndef UT_STATUSINDICATORANIMATIONVIEW_H
 #define UT_STATUSINDICATORANIMATIONVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-
-#include "statusindicatoranimationview.h"
+#include "statusindicatoriconview.h"
 
 class MApplication;
+class StatusIndicator;
 
 class TestStatusIndicatorAnimationView : public StatusIndicatorAnimationView
 {
@@ -45,6 +44,12 @@ public:
 
 };
 
+class TestStyleContainer : public MStyleContainer
+{
+public:
+    static QString getCurrentMode(TestStyleContainer *styleContainer) { return styleContainer->currentMode(); }
+};
+
 
 class Ut_StatusIndicatorAnimationView : public QObject
 {
@@ -61,21 +66,20 @@ private slots:
     void cleanup();
 
     // Test cases
+    void testSetupModel();
     void testImageListInitialized();
     void testSetAnimationFrame();
     void testSetAnimationFrameToInvalid();
     void testSetAnimationDuration();
-    void testValueChanged();
-    void testValueChangedToInvalid();
     void testChangingAnimate();
 
 private:
     // MApplication
     MApplication *app;
-    // A controller for the test subject
-    StatusIndicator *controller;
     // The object being tested
     TestStatusIndicatorAnimationView *m_subject;
+    // A controller for the object
+    StatusIndicator *controller;
 };
 
 #endif

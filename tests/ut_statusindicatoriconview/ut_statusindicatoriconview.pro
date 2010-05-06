@@ -3,22 +3,21 @@ TARGET = ut_statusindicatoriconview
 
 INCLUDEPATH += $$SRCDIR/statusarea
 
-STYLE_HEADERS += $$SRCDIR/statusarea/statusindicatoriconstyle.h
+STYLE_HEADERS += $$SRCDIR/statusarea/statusindicatoranimationstyle.h \
+    $$SRCDIR/statusarea/statusindicatoriconstyle.h
 MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h
 
 # unit test and unit
 SOURCES += \
     ut_statusindicatoriconview.cpp \
     $$SRCDIR/statusarea/statusindicatoriconview.cpp \
-    $$SRCDIR/statusarea/statusindicator.cpp
-
-# base classes
-SOURCES += \
+    $$SRCDIR/statusarea/statusindicator.cpp \
     $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
     ut_statusindicatoriconview.h \
+    $$SRCDIR/statusarea/statusindicatoranimationview.h \
     $$SRCDIR/statusarea/statusindicatoriconview.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h \

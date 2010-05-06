@@ -31,7 +31,6 @@ public:
     virtual void ProfileStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void ProfileStatusIndicatorDestructor();
     virtual void profileChanged();
-    ContextItem *profileStatus ;
 };
 
 // 2. IMPLEMENT STUB

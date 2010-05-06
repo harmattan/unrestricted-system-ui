@@ -22,11 +22,10 @@
 
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
-#include "statusindicatoranimationstyle.h"
+#include "statusindicatoriconstyle.h"
 #include <MWidgetView>
 
-class StatusIndicator;
-class QPainter;
+class QPixmap;
 class QTimeLine;
 
 /*!
@@ -51,14 +50,11 @@ public:
      */
     virtual ~StatusIndicatorAnimationView();
 
-protected:
+protected slots:
     //! \reimp
-    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void applyStyle();
-    virtual void setupModel();
+    virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
-public slots:
     /*!
      * \brief A slot for starting the animation
      */
@@ -76,16 +72,29 @@ public slots:
      */
     virtual void setAnimationFrame(int frame);
 
-protected slots:
+protected:
     //! \reimp
-    virtual void updateData(const QList<const char *>& modifications);
+    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void setupModel();
+    virtual void applyStyle();
     //! \reimp_end
 
-private:
+    /*!
+     * Sets up the animation timeline
+     */
+    void setupAnimationTimeline();
+
     /*!
      * Clears the images list
      */
     void clearImageList();
+
+    /*!
+     * Sets up the images list from an icon ID string
+     *
+     * \param iconIDs a list of icon IDs to create the image list from
+     */
+    void setupImageList(const QString &iconIDs);
 
     //! The controller for this view
     StatusIndicator *controller;
@@ -101,6 +110,10 @@ private:
 
     //! Timeline for the animation
     QTimeLine *animationTimeline;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicatorAnimationView;
+#endif
 };
 
 #endif

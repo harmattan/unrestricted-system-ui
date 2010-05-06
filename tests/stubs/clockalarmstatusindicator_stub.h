@@ -31,7 +31,6 @@ public:
     virtual void ClockAlarmStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void ClockAlarmStatusIndicatorDestructor();
     virtual void clockAlarmChanged();
-    ContextItem *clockAlarm ;
 };
 
 // 2. IMPLEMENT STUB
