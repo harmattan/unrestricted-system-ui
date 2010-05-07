@@ -39,10 +39,17 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #define WARNING
 #include "debug.h"
 
+static const QString defaultLandscapeImageFile = 
+"/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png";
+static const QString defaultPortraitImageFile = 
+"/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperPortrait.png";
+
 #define GCONF_BG_LANDSCAPE \
     "/desktop/meego/background/landscape/picture_filename"
 #define GCONF_BG_PORTRAIT \
     "/desktop/meego/background/portrait/picture_filename"
+
+
 
 LockScreenUI::LockScreenUI () :
         MApplicationPage (),
@@ -161,10 +168,11 @@ LockScreenUI::reloadLandscapeBackground ()
 {
     QString filename = m_confBgLandscape->value().toString();
 
-    // TODO: drop this hard-coded default one
+    /*
+     * This is hard-coded into duihome, so we have to hardcode too.
+     */
     if (filename.isEmpty())
-        filename = 
-            "/usr/share/themes/base/meegotouch/sysuid/images/bg_landscape.png";
+        filename = defaultLandscapeImageFile;
 
     SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
     m_bgLandscape.load (filename);
@@ -175,10 +183,11 @@ LockScreenUI::reloadPortraitBackground ()
 {
     QString filename = m_confBgPortrait->value().toString();
 
-    // TODO: drop this hard-coded default one
+    /*
+     * This is hard-coded into duihome, so we have to hardcode too.
+     */
     if (filename.isEmpty())
-        filename = 
-            "/usr/share/themes/base/meegotouch/sysuid/images/bg_portrait.png";
+        filename = defaultPortraitImageFile; 
 
     SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
     m_bgPortrait.load (filename);
