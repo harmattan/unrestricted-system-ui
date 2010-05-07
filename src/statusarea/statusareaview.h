@@ -98,6 +98,10 @@ private:
     StatusIndicator *landscapeGPSIndicator;
     StatusIndicator *portraitGPSIndicator;
 
+    //! Presence indicator
+    StatusIndicator *landscapePresenceIndicator;
+    StatusIndicator *portraitPresenceIndicator;
+
     //! Profile indicator
     StatusIndicator *landscapeProfileIndicator;
     StatusIndicator *portraitProfileIndicator;

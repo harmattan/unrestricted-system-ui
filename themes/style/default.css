@@ -233,6 +233,36 @@ StatusIndicatorIconStyle#ProfileStatusIndicatorSilent {
     maximum-size: 14 18;
 }
 
+/* "Offline" presence, no indicator */
+StatusIndicatorIconStyle#PresenceStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#PresenceStatusIndicatorAvailable {
+    image-list: "icon-s-status-presence-online";
+    preferred-size: 18 18;
+    minimum-size: 18 18;
+    maximum-size: 18 18;
+}
+
+StatusIndicatorIconStyle#PresenceStatusIndicatorBusy {
+    image-list: "icon-s-status-presence-busy";
+    preferred-size: 18 18;
+    minimum-size: 18 18;
+    maximum-size: 18 18;
+}
+
+StatusIndicatorIconStyle#PresenceStatusIndicatorAway {
+    image-list: "icon-s-status-presence-away";
+    preferred-size: 18 18;
+    minimum-size: 18 18;
+    maximum-size: 18 18;
+}
+
 #shutdownTextBig {
     font: "Nokia Sans" 6.22mm;
 }

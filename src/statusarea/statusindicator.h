@@ -208,6 +208,33 @@ private:
 };
 
 /*!
+ * A status indicator for showing the global presence setting.
+ */
+class PresenceStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(PresenceStatusIndicator)
+
+public:
+    /*!
+     * Constructs a PresenceStatusIndicator.
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget
+     */
+    explicit PresenceStatusIndicator(ApplicationContext &context,
+                                      MWidget *parent = NULL);
+
+    virtual ~PresenceStatusIndicator();
+
+public slots:
+    void presenceChanged();
+
+private:
+    ContextItem *presence;
+};
+
+/*!
  * A status indicator for showing the internet connection status.
  * Displays either a WiFi signal strength or a 3G symbol if 3G
  * connection is in use.

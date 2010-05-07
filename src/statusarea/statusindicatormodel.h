@@ -62,6 +62,11 @@ class GPSStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(GPSStatusIndicatorModel)
 };
 
+class PresenceStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(PresenceStatusIndicatorModel)
+};
+
 class InternetConnectionStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(InternetConnectionStatusIndicatorModel)

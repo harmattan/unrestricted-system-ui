@@ -177,6 +177,36 @@ void BluetoothStatusIndicator::bluetoothChanged()
     setValue(bluetooth->value().toBool() ? 1 : 0);
 }
 
+PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, MWidget *parent) :
+    StatusIndicator(parent)
+{
+    setObjectName(metaObject()->className());
+
+    presence = context.createContextItem("Presence.State");
+    connect(presence, SIGNAL(contentsChanged()), this, SLOT(presenceChanged()));
+    presenceChanged();
+}
+
+PresenceStatusIndicator::~PresenceStatusIndicator()
+{
+    delete presence;
+}
+
+void PresenceStatusIndicator::presenceChanged()
+{
+    QString status = presence->value().toString();
+    QString suffix;
+
+    if (status == "busy" || status == "available" || status == "away") {
+        // Capitalize the status
+        status.replace(0, 1, status[0].toUpper());
+        setObjectName(QString(metaObject()->className()) + status);
+    } else if (status == "offline" || status == "") {
+        // No presence information is treated as "offline"
+        setObjectName(QString(metaObject()->className()));
+    }
+}
+
 InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
