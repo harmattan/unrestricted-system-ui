@@ -26,6 +26,7 @@
 
 class Clock;
 class MApplication;
+class TestContext;
 
 class TestClockStyle : public ClockStyle
 {
@@ -69,7 +70,9 @@ private slots:
     void cleanup();
 
     void testUpdateTime();
+    void testUpdateAlarmSet();
     void testUpdateTimeFormat();
+    void testTwelveHour();
 
 public:
     static QString timeAsString;
@@ -78,6 +81,7 @@ private:
     MApplication *app;
     TestClockView *m_subject;
     Clock *testClock;
+    TestContext *testContext;
 };
 
 #endif

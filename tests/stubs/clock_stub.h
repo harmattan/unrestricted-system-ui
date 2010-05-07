@@ -27,18 +27,25 @@
 // FIXME - stubgen is not yet finished
 class ClockStub : public StubBase {
   public:
-  virtual void ClockConstructor(QGraphicsItem *parent);
+  virtual void ClockConstructor(ApplicationContext &context, QGraphicsItem *parent);
+  virtual void ClockDestructor();
+
   virtual void updateModelAndSetupTimer();
   virtual void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+  virtual void updateAlarmSet();
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
 }; 
 
 // 2. IMPLEMENT STUB
-void ClockStub::ClockConstructor(QGraphicsItem *parent) {
+void ClockStub::ClockConstructor(ApplicationContext &context, QGraphicsItem *parent) {
+  Q_UNUSED(context);
   Q_UNUSED(parent);
-
 }
+
+void ClockStub::ClockDestructor() {
+}
+
 void ClockStub::updateModelAndSetupTimer() {
   stubMethodEntered("updateModelAndSetupTimer");
 }
@@ -47,6 +54,10 @@ void ClockStub::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   QList<ParameterBase*> params;
   params.append( new Parameter<Maemo::QmTimeWhatChanged >(whatChanged));
   stubMethodEntered("updateSettings",params);
+}
+
+void ClockStub::updateAlarmSet() {
+  stubMethodEntered("updateAlarmSet");
 }
 
 void ClockStub::enterDisplayEvent() {
@@ -65,8 +76,12 @@ ClockStub* gClockStub = &gDefaultClockStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-Clock::Clock(QGraphicsItem *parent) {
-  gClockStub->ClockConstructor(parent);
+Clock::Clock(ApplicationContext &context, QGraphicsItem *parent) {
+  gClockStub->ClockConstructor(context, parent);
+}
+
+Clock::~Clock() {
+  gClockStub->ClockDestructor();
 }
 
 void Clock::updateModelAndSetupTimer() {
@@ -75,6 +90,10 @@ void Clock::updateModelAndSetupTimer() {
 
 void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   gClockStub->updateSettings(whatChanged);
+}
+
+void Clock::updateAlarmSet() {
+  gClockStub->updateAlarmSet();
 }
 
 void Clock::enterDisplayEvent() {

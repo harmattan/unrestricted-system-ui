@@ -11,11 +11,20 @@ SOURCES += \
     ut_clock.cpp \
     $$SRCDIR/statusarea/clock.cpp
 
+# helper classes
+SOURCES += \
+    $$STUBSDIR/testcontextitem.cpp
+
 # unit test and unit
 HEADERS += \
     ut_clock.h \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/clockstyle.h \
-    $$SRCDIR/statusarea/clockmodel.h
+    $$SRCDIR/statusarea/clockmodel.h \
+    $$SRCDIR/applicationcontext.h
+
+# helper classes
+HEADERS += \
+    $$STUBSDIR/testcontextitem.h
 
 include(../common_bot.pri)

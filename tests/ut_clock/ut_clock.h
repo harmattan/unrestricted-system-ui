@@ -25,6 +25,8 @@
 #include <qmtime.h>
 #include "clock.h"
 
+class TestContext;
+
 class Ut_Clock : public QObject
 {
     Q_OBJECT
@@ -48,8 +50,12 @@ private slots:
     void test24HourModeNotToggledWhenSettingsAreNotChanged();
     void testModelUpdates();
 
+    void testAlarmDuringCreation();
+    void testAlarmToggling();
+
 private:
     Clock *m_subject;
+    TestContext *testContext;
 };
 
 #endif
