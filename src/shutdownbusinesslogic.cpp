@@ -29,7 +29,7 @@
 #include <MNotification>
 #include <MLocale>
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 using namespace Maemo;
@@ -59,7 +59,7 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
     if (m_Ui) {
         m_Ui->deleteLater ();
-        m_Ui = NULL;
+        m_Ui = 0;
     }
 }
 
