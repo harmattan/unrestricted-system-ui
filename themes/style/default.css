@@ -241,6 +241,30 @@ StatusIndicatorIconStyle#ProfileStatusIndicatorSilent {
     font: $FONT_XLARGE;
 }
 
+StatusIndicatorIconStyle#GPSStatusIndicator {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#GPSStatusIndicatorOn  {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-gps-on";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
+
+StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-gps-searching1 icon-s-status-gps-searching2";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
+
 MButtonStyle#StatusIndicatorMenuCloseButton {
     icon-size: 40 40;
     preferred-size: 64 64;

@@ -81,6 +81,7 @@ private slots:
     void testInputMethod();
     void testCall();
     void testProfile();
+    void testGPS();
 };
 
 #endif //_UT_STATUSINDICATOR_

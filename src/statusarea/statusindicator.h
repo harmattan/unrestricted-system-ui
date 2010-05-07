@@ -325,4 +325,30 @@ private:
     ContextItem *profile;
 };
 
+/*!
+* A status indicator for showing the GPS connection state
+ */
+class GPSStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(GPSStatusIndicator)
+
+public:
+    /*!
+     * Constructs a GPSStatusIndicator.
+     *
+     * \param context the application context to get GPS status information from
+     * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
+     */
+    explicit GPSStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+
+    virtual ~GPSStatusIndicator();
+
+private slots:
+    void gpsStateChanged();
+
+private:
+    QSharedPointer<ContextItem> gpsState;
+};
+
 #endif // STATUSINDICATOR_H

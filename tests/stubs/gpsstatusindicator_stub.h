@@ -30,7 +30,7 @@ class GPSStatusIndicatorStub : public StubBase
 public:
     virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void GPSStatusIndicatorDestructor();
-    virtual void gpsChanged();
+    virtual void gpsStateChanged();
 };
 
 // 2. IMPLEMENT STUB
@@ -44,9 +44,9 @@ void GPSStatusIndicatorStub::GPSStatusIndicatorDestructor()
 {
 
 }
-void GPSStatusIndicatorStub::gpsChanged()
+void GPSStatusIndicatorStub::gpsStateChanged()
 {
-    stubMethodEntered("gpsChanged");
+    stubMethodEntered("gpsStateChanged");
 }
 
 
@@ -67,9 +67,9 @@ GPSStatusIndicator::~GPSStatusIndicator()
     gGPSStatusIndicatorStub->GPSStatusIndicatorDestructor();
 }
 
-void GPSStatusIndicator::gpsChanged()
+void GPSStatusIndicator::gpsStateChanged()
 {
-    gGPSStatusIndicatorStub->gpsChanged();
+    gGPSStatusIndicatorStub->gpsStateChanged();
 }
 
 
