@@ -1,8 +1,13 @@
-system-ui (0.15.7~1) harmattan; urgency=low
+system-ui (0.15.7-1) harmattan; urgency=low
 
-  * New release [UNRELEASED]
+  * Status area fixes..
+  * Touch-screen-lock fixes...
+  * Shutdown ui fixes...
+  * Fixes: NB#166960 - Hard to invoke the unlock screen
+  * Fixes: NB#167675 - Shutdown notification not displayed when powering
+                       off the device
 
- -- Mikko Levonmaa <mikko.levonmaa@ixonos.com>  Thu, 06 May 2010 11:32:45 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 07 May 2010 15:16:26 +0200
 
 system-ui (0.15.6-2) harmattan; urgency=low
 
