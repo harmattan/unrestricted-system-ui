@@ -297,6 +297,6 @@ void ProfileStatusIndicator::profileChanged()
     if (profile->value().toString() == "silent") {
         setObjectName(QString(metaObject()->className()) + "Silent");
     } else {
-        setObjectName(QString());
+        setObjectName(metaObject()->className());
     }
 }
