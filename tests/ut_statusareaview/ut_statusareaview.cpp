@@ -28,6 +28,7 @@
 #include "internetconnectionstatusindicator_stub.h"
 #include "bluetoothstatusindicator_stub.h"
 #include "gpsstatusindicator_stub.h"
+#include "presencestatusindicator_stub.h"
 #include "statusindicator_stub.h"
 #include "phonenetworkstatusindicator_stub.h"
 #include "inputmethodstatusindicator_stub.h"

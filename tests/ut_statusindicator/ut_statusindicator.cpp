@@ -166,6 +166,38 @@ void Ut_StatusIndicator::testBluetooth()
     delete statusIndicator;
 }
 
+void Ut_StatusIndicator::testPresence()
+{
+    StatusIndicator *statusIndicator = new PresenceStatusIndicator(*testContext);
+
+    // Offline mode by default
+    QVERIFY(statusIndicator->objectName().indexOf("Busy") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Available") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Away") < 0);
+    // Busy
+    testContextItems["Presence.State"]->setValue(QVariant("busy"));
+    QVERIFY(statusIndicator->objectName().indexOf("Busy") >= 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Available") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Away") < 0);
+    // Available
+    testContextItems["Presence.State"]->setValue(QVariant("available"));
+    QVERIFY(statusIndicator->objectName().indexOf("Busy") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Available") >= 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Away") < 0);
+    // Away
+    testContextItems["Presence.State"]->setValue(QVariant("away"));
+    QVERIFY(statusIndicator->objectName().indexOf("Busy") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Available") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Away") >= 0);
+    // Offline (explicitly)
+    testContextItems["Presence.State"]->setValue(QVariant("offline"));
+    QVERIFY(statusIndicator->objectName().indexOf("Busy") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Available") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Away") < 0);
+
+    delete statusIndicator;
+}
+
 void Ut_StatusIndicator::testInternetConnection()
 {
     StatusIndicator *statusIndicator = new InternetConnectionStatusIndicator(*testContext);
