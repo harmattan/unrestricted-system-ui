@@ -94,6 +94,10 @@ private:
     StatusIndicator *landscapeBluetoothIndicator;
     StatusIndicator *portraitBluetoothIndicator;
 
+    //! GPS indicator
+    StatusIndicator *landscapeGPSIndicator;
+    StatusIndicator *portraitGPSIndicator;
+
     //! Profile indicator
     StatusIndicator *landscapeProfileIndicator;
     StatusIndicator *portraitProfileIndicator;

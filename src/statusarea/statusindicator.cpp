@@ -300,3 +300,33 @@ void ProfileStatusIndicator::profileChanged()
         setObjectName(metaObject()->className());
     }
 }
+
+GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, MWidget *parent) :
+    StatusIndicator(parent)
+{
+    setObjectName(metaObject()->className());
+
+    gpsState = QSharedPointer<ContextItem>(context.createContextItem("Location.SatPositioningState"));
+    connect(gpsState.data(), SIGNAL(contentsChanged()), this, SLOT(gpsStateChanged()));
+}
+
+GPSStatusIndicator::~GPSStatusIndicator()
+{
+}
+
+void GPSStatusIndicator::gpsStateChanged()
+{
+    if (gpsState.data()->value().toString() == "on") {
+        setObjectName(QString(metaObject()->className()) + "On");
+        animateIfPossible = false;
+    }
+    else if (gpsState.data()->value().toString() == "search") {
+        setObjectName(QString(metaObject()->className()) + "Search");
+        animateIfPossible = true;
+    }
+    else {
+        setObjectName(QString(metaObject()->className()));
+        animateIfPossible = false;
+    }
+    updateAnimationStatus();
+}

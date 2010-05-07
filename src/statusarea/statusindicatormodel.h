@@ -57,14 +57,14 @@ class BluetoothStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(BluetoothStatusIndicatorModel)
 };
 
-class InternetConnectionStatusIndicatorModel : public StatusIndicatorModel
-{
-    M_MODEL(InternetConnectionStatusIndicatorModel)
-};
-
 class GPSStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(GPSStatusIndicatorModel)
+};
+
+class InternetConnectionStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(InternetConnectionStatusIndicatorModel)
 };
 
 class InputMethodStatusIndicatorModel : public StatusIndicatorModel

@@ -264,4 +264,16 @@ void Ut_StatusIndicator::testProfile()
     delete statusIndicator;
 }
 
+void Ut_StatusIndicator::testGPS()
+{
+    StatusIndicator *gpsIndicator = new GPSStatusIndicator(*testContext);
+    testContextItems["Location.SatPositioningState"]->setValue(QVariant("on"));
+    QVERIFY(gpsIndicator->objectName().indexOf("On") >= 0);
+    testContextItems["Location.SatPositioningState"]->setValue(QVariant("search"));
+    QVERIFY(gpsIndicator->objectName().indexOf("Search") >= 0);
+    QVERIFY(gpsIndicator->objectName().indexOf("On") < 0);
+
+    delete gpsIndicator;
+}
+
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)
