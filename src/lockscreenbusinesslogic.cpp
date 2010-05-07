@@ -49,10 +49,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
 
-    // Create contents of lockscreen ui early...
-    if (! lockUI->isContentCreated ())
-        lockUI->createContent ();
-
 #if 0
 #if defined (DEBUG) && defined (i386)
     // XXX: Remove this... only for debugging/devoloping purposes

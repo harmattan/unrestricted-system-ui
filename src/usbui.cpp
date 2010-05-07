@@ -45,10 +45,7 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic = new QmUSBMode (this);
     m_locks = new QmLocks (this);
 
-    connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
-             this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
-
-    currentModeChanged (m_logic->getMode ());
+    QTimer::singleShot (1000, this, SLOT (initialize ()));
 }
 
 UsbUi::~UsbUi ()
@@ -58,6 +55,15 @@ UsbUi::~UsbUi ()
         delete m_dialog;
         m_dialog = 0;
     }
+}
+
+void
+UsbUi::initialize ()
+{
+    connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
+             this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
+
+    currentModeChanged (m_logic->getMode ());
 }
 
 // Showing the mode selection dialog

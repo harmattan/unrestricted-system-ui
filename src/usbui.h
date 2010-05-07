@@ -41,6 +41,8 @@ class UsbUi : public QObject
         void MassStorageSelected ();
         void ShowDialog ();
 
+        void initialize ();
+
     private:
         void ShowNotification (int id);
 
