@@ -91,16 +91,16 @@ void Ut_StatusIndicator::testModelUpdates()
 {
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new BluetoothStatusIndicator(*testContext);
 
     // When the application is visible the model should be updated
     qApp->sendEvent(statusIndicator, &enterDisplayEvent);
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
+    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application is not visible the model should not be updated
     qApp->sendEvent(statusIndicator, &exitDisplayEvent);
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
+    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application becomes visible the model should be updated
@@ -179,10 +179,10 @@ void Ut_StatusIndicator::testAlarm()
     StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("NoAlarm") >= 0);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("NoAlarm") == -1);
 
     delete statusIndicator;
 }
