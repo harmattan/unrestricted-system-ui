@@ -227,7 +227,7 @@ public:
 
     virtual ~PresenceStatusIndicator();
 
-public slots:
+private slots:
     void presenceChanged();
 
 private:
