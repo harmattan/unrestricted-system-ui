@@ -113,11 +113,16 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     // Turn on
     display.set (Maemo::QmDisplayState::On);
 
-    win.show ();
-    win.showFullScreen ();
-    win.sceneManager ()->appearSceneWindowNow (this);
-    appear ();
+    if (win.isHidden ())
+    {
+        win.show ();
+        win.showFullScreen ();
+    }
 
+    setOpacity (1.0);
+    show ();
+
+    win.sceneManager ()->appearSceneWindowNow (this);
     win.raise ();
 
     if (! (text1.isEmpty () && text2.isEmpty ()))

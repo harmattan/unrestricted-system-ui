@@ -37,7 +37,8 @@
 LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
     QObject (parent),
-    lockUI (new LockScreenUI)
+    lockUI (new LockScreenUI),
+    eaterUI (new EventEaterUI)
 {
     SYS_DEBUG ("");
 
@@ -82,7 +83,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 {
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
-
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
@@ -93,11 +93,10 @@ LockScreenBusinessLogic::toggleScreenLockUI (
             hidefromTaskBar ();
         }
 
-        if (mainwindow.currentPage () !=
-            static_cast<MApplicationPage *> (lockUI))
-            mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
-        lockUI->appear ();
+        mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
 
+        lockUI->setOpacity (1.0);
+        lockUI->show ();
         mainwindow.raise ();
 
         mayStartTimer ();
@@ -105,11 +104,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         if (mainwindow.isVisible ())
         {
             hidefromTaskBar ();
-
-            if (mainwindow.currentPage () ==
-                static_cast<MApplicationPage *> (lockUI))
-                mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
-
+            mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
             mainwindow.hide ();
         }
         stopTimer ();
@@ -126,20 +121,31 @@ LockScreenBusinessLogic::toggleEventEater (
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
     if (toggle) {
-        // Hide unlock ui if that is the current page...
-        if (mainwindow.currentPage () ==
-            static_cast<MApplicationPage *> (lockUI))
-            mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
+        if (mainwindow.isHidden ())
+        {
+            mainwindow.show ();
+            mainwindow.showFullScreen ();
+            hidefromTaskBar ();
+        }
+
+        // Hide the unlock ui if visible
+        if (lockUI->isVisible ())
+            lockUI->hide ();
 
         // Show the event-eater window...
-        mainwindow.show ();
-        mainwindow.raise ();
-        mainwindow.showFullScreen ();
-    } else {
-        // Hide the event eater
-        hidefromTaskBar ();
+        eaterUI->setOpacity (0.0);
+        eaterUI->show ();
+        mainwindow.sceneManager ()->appearSceneWindowNow (eaterUI);
 
-        mainwindow.hide ();
+        mainwindow.raise ();
+    } else {
+        if (mainwindow.isVisible ())
+        {
+            // Hide the event eater
+            hidefromTaskBar ();
+            mainwindow.sceneManager ()->disappearSceneWindowNow (eaterUI);
+            mainwindow.hide ();
+        }
     }
 }
 
@@ -167,7 +173,6 @@ LockScreenBusinessLogic::stopTimer ()
 void
 LockScreenBusinessLogic::hidefromTaskBar ()
 {
-    SYS_DEBUG ("");
     XEvent e;
     e.xclient.type = ClientMessage;
     Display *display = QX11Info::display ();
@@ -216,8 +221,6 @@ LockScreenBusinessLogic::updateMissedEventAmounts (
         int c,
         int d)
 {
-    SYS_DEBUG ("%d, %d, %d, %d", a, b, c ,d);
-
     lockUI->updateMissedEventAmounts (a, b, c, d);
 }
 

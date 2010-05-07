@@ -77,4 +77,22 @@ private:
     int              m_im;
 };
 
+class EventEaterUI : public MApplicationPage
+{
+    Q_OBJECT
+
+public:
+    EventEaterUI ();
+
+protected:
+    void createContent ();
+
+protected:
+    void mousePressEvent (QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
+
+signals:
+    void OneInput ();
+};
+
 #endif

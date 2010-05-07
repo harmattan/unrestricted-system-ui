@@ -57,6 +57,7 @@ private: //methods
 
 private: 
     LockScreenUI     *lockUI;
+    EventEaterUI     *eaterUI;
     QTimer            timer;
 };
 
