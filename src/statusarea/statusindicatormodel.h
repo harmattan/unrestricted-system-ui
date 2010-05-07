@@ -52,9 +52,9 @@ class BatteryStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(BatteryStatusIndicatorModel)
 };
 
-class ClockAlarmStatusIndicatorModel : public StatusIndicatorModel
+class AlarmStatusIndicatorModel : public StatusIndicatorModel
 {
-    M_MODEL(ClockAlarmStatusIndicatorModel)
+    M_MODEL(AlarmStatusIndicatorModel)
 };
 
 class BluetoothStatusIndicatorModel : public StatusIndicatorModel

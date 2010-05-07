@@ -36,8 +36,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitWidget(new QGraphicsWidget),
     landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
-    landscapeAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
-    portraitAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
+    landscapeAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
+    portraitAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     landscapeBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
@@ -123,7 +123,6 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeProfileIndicator);
     layout->addItem(landscapeInputMethodIndicator);
     layout->addItem(landscapeCallIndicator);
-    layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
     layout->addItem(landscapeClock);
     layout->addItem(landscapeAlarmIndicator);
 
@@ -150,7 +149,6 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPresenceIndicator);
     layout->addItem(portraitProfileIndicator);
     layout->addItem(portraitCallIndicator);
-    layout->addItem(createClockAlarmWidget(portraitAlarmIndicator));
     layout->addItem(portraitClock);
     layout->addItem(portraitAlarmIndicator);
 

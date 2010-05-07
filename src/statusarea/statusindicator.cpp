@@ -202,27 +202,27 @@ void BatteryStatusIndicator::batteryChargingChanged()
     updateAnimationStatus();
 }
 
-ClockAlarmStatusIndicator::ClockAlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
+AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
 
-    clockAlarm = context.createContextItem("UserAlarm.Present");
-    connect(clockAlarm, SIGNAL(contentsChanged()), this, SLOT(clockAlarmChanged()));
-    clockAlarmChanged();
+    alarm = context.createContextItem("UserAlarm.Present");
+    connect(alarm, SIGNAL(contentsChanged()), this, SLOT(alarmChanged()));
+    alarmChanged();
 }
 
-ClockAlarmStatusIndicator::~ClockAlarmStatusIndicator()
+AlarmStatusIndicator::~AlarmStatusIndicator()
 {
-    delete clockAlarm;
+    delete alarm;
 }
 
-void ClockAlarmStatusIndicator::clockAlarmChanged()
+void AlarmStatusIndicator::alarmChanged()
 {
-    if (clockAlarm->value().toBool()) {
-        setObjectName(QString(metaObject()->className()));
+    if (alarm->value().toBool()) {
+        setObjectName(QString(metaObject()->className()) + "Set");
     } else {
-        setObjectName(QString(metaObject()->className()) + "NoAlarm");
+        setObjectName(QString(metaObject()->className()));
     }
 }
 

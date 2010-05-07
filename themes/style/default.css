@@ -217,25 +217,23 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     maximum-size: 29 18;
 }
 
-StatusIndicatorIconStyle#ClockAlarmStatusIndicator {
+StatusIndicatorIconStyle#AlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-alarm";
-    preferred-size: 10 11;
-    minimum-size: 10 11;
-    maximum-size: 10 11;
-    margin-left: 0;
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
 }
 
-StatusIndicatorImageStyle#ClockAlarmStatusIndicatorNoAlarm {
+StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-alarm";
-    preferred-size: 0 0;
-    minimum-size: 0 0;
-    maximum-size: 0 0;
+    preferred-size: 16 16;
+    minimum-size: 16 16;
+    maximum-size: 16 16;
+    padding-top: 1;
+    padding-bottom: 1;
     margin-left: 0;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
 }
 
 StatusIndicatorIconStyle#BluetoothStatusIndicator {

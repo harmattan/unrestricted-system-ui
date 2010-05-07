@@ -22,7 +22,7 @@
 #include "clock_stub.h"
 #include "notifier_stub.h"
 #include "contextframeworkcontext_stub.h"
-#include "clockalarmstatusindicator_stub.h"
+#include "alarmstatusindicator_stub.h"
 #include "batterystatusindicator_stub.h"
 #include "phonenetworksignalstrengthstatusindicator_stub.h"
 #include "phonenetworktypestatusindicator_stub.h"

@@ -176,13 +176,13 @@ void Ut_StatusIndicator::testBattery()
 
 void Ut_StatusIndicator::testAlarm()
 {
-    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new AlarmStatusIndicator(*testContext);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
-    QVERIFY(statusIndicator->objectName().indexOf("NoAlarm") >= 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Set") < 0);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
-    QVERIFY(statusIndicator->objectName().indexOf("NoAlarm") == -1);
+    QVERIFY(statusIndicator->objectName().indexOf("Set") >= 0);
 
     delete statusIndicator;
 }
