@@ -39,9 +39,9 @@ MSceneWindowAnimatorStyle:event_notification {
 StatusAreaStyle {
     background-image:;
     background-color: #000000;
-    minimum-size: 100% 56;
-    preferred-size: 100% 56;
-    maximum-size: 100% 56;
+    minimum-size: 100% 6mm;
+    preferred-size: 100% 6mm;
+    maximum-size: 100% 6mm;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
@@ -71,9 +71,9 @@ ClockStyle {
     padding-top: 0;
     padding-bottom: 0;
     time-format: "hh:mm";
-    preferred-size: 84 28;
-    minimum-size: 84 28;
-    maximum-size: 84 28;
+    preferred-size: 84 3mm;
+    minimum-size: 84 3mm;
+    maximum-size: 84 3mm;
 }
 ClockStyle:twelvehour {
     time-format: "hh:mm'<font size=0.8>'AP'</font>'";
@@ -126,6 +126,9 @@ StatusIndicatorLabelStyle {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    preferred-size: 130 3mm;
+    minimum-size: 130 3mm;
+    maximum-size: 130 3mm;
 }
 
 MLabelStyle#StatusIndicatorLabel {
@@ -133,7 +136,7 @@ MLabelStyle#StatusIndicatorLabel {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 1;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
