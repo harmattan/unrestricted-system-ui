@@ -304,4 +304,25 @@ private:
     ContextItem *muted;
 };
 
+/*!
+ * A status indicator for showing the current profile.
+ * Displayed only when the profile is silent.
+ */
+class ProfileStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(ProfileStatusIndicator)
+
+public:
+    explicit ProfileStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+
+    virtual ~ProfileStatusIndicator();
+
+private slots:
+    void profileChanged();
+
+private:
+    ContextItem *profile;
+};
+
 #endif // STATUSINDICATOR_H

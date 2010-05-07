@@ -94,6 +94,10 @@ private:
     StatusIndicator *landscapeBluetoothIndicator;
     StatusIndicator *portraitBluetoothIndicator;
 
+    //! Profile indicator
+    StatusIndicator *landscapeProfileIndicator;
+    StatusIndicator *portraitProfileIndicator;
+
     //! Input method indicator (only in landscape)
     StatusIndicator *landscapeInputMethodIndicator;
 

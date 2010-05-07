@@ -277,3 +277,26 @@ void CallStatusIndicator::callOrMutedChanged()
 
     updateAnimationStatus();
 }
+
+ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, MWidget *parent) :
+    StatusIndicator(parent)
+{
+    setObjectName(metaObject()->className());
+
+    profile = context.createContextItem("Profile.Name");
+    connect(profile, SIGNAL(contentsChanged()), this, SLOT(profileChanged()));
+}
+
+ProfileStatusIndicator::~ProfileStatusIndicator()
+{
+    delete profile;
+}
+
+void ProfileStatusIndicator::profileChanged()
+{
+    if (profile->value().toString() == "silent") {
+        setObjectName(QString(metaObject()->className()) + "Silent");
+    } else {
+        setObjectName(QString());
+    }
+}

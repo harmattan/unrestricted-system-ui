@@ -80,6 +80,7 @@ private slots:
     void testPhoneNetwork();
     void testInputMethod();
     void testCall();
+    void testProfile();
 };
 
 #endif //_UT_STATUSINDICATOR_

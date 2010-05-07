@@ -32,11 +32,6 @@ class StatusIndicatorModel : public MWidgetModel
     M_MODEL_PROPERTY(bool, animate, Animate, true, false)
 };
 
-class ProfileStatusIndicatorModel : public StatusIndicatorModel
-{
-    M_MODEL(ProfileStatusIndicatorModel)
-};
-
 class PhoneNetworkSignalStrengthStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(PhoneNetworkSignalStrengthStatusIndicatorModel)
@@ -80,6 +75,11 @@ class InputMethodStatusIndicatorModel : public StatusIndicatorModel
 class CallStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(CallStatusIndicatorModel)
+};
+
+class ProfileStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(ProfileStatusIndicatorModel)
 };
 
 #endif /* STATUSINDICATORMODEL_H_ */

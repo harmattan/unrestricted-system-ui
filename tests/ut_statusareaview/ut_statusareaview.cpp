@@ -31,6 +31,7 @@
 #include "phonenetworkstatusindicator_stub.h"
 #include "inputmethodstatusindicator_stub.h"
 #include "callstatusindicator_stub.h"
+#include "profilestatusindicator_stub.h"
 #include "notificationarea_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include <MSceneWindow>
