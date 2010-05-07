@@ -35,7 +35,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -73,6 +73,9 @@ LockScreenUI::LockScreenUI () :
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
+    // Load the backgrounds if any...
+    reloadLandscapeBackground ();
+    reloadPortraitBackground ();
 
     setPannable (false);
 
@@ -137,10 +140,6 @@ LockScreenUI::createContent ()
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
-
-    // Load the backgrounds if any...
-    reloadLandscapeBackground ();
-    reloadPortraitBackground ();
 
     // I'm calling this for updating the m_notificationArea
     updateMissedEventAmounts (m_emails, m_messages, m_calls, m_im);
