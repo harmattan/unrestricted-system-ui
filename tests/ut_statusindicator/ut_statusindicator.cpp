@@ -168,7 +168,7 @@ void Ut_StatusIndicator::testBluetooth()
 
 void Ut_StatusIndicator::testPresence()
 {
-    statusIndicator = new PresenceStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new PresenceStatusIndicator(*testContext);
 
     // Offline mode by default
     QVERIFY(statusIndicator->objectName().indexOf("Busy") < 0);
