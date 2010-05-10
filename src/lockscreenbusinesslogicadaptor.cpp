@@ -19,7 +19,8 @@
 **
 ****************************************************************************/
 
-#include "QDBusInterface"
+#include <QDBusInterface>
+#include <QTimer>
 #include "lockscreenbusinesslogicadaptor.h"
 
 #define DEBUG
@@ -147,7 +148,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 	     * The event eater supposed to consume exactly one event, hence the
 	     * name. 
 	     */
-	    m_LockScreenBusinessLogic->toggleEventEater (true);
+            QTimer::singleShot (0, this, SLOT (enableEater ()));
             break;
 
         case TkLockEnableVisual:
@@ -156,7 +157,7 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 	     * This mode is where we actually should show the screen to unlock
 	     * the screen.
 	     */
-	    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+            QTimer::singleShot (0, this, SLOT (enableVisual ()));
             break;
 
         default:
@@ -166,6 +167,20 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
     SYS_DEBUG ("-------------End----------------------\n");
     return (int) TkLockReplyOk;
+}
+
+void
+LockScreenBusinessLogicAdaptor::enableVisual ()
+{
+    SYS_DEBUG ("");
+    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+}
+
+void
+LockScreenBusinessLogicAdaptor::enableEater ()
+{
+    SYS_DEBUG ("");
+    m_LockScreenBusinessLogic->toggleEventEater (true);
 }
 
 /*!
