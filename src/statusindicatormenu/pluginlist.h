@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -27,6 +29,7 @@ class MWindow;
 class MApplicationPage;
 class QGraphicsLinearLayout;
 class NotificationArea;
+class QStringList;
 
 /*!
  * The plugin list displays a list of plugins instantiated from shared
@@ -104,6 +107,11 @@ private:
 
     //! The name of the control panel service
     const static QString CONTROL_PANEL_SERVICE_NAME;
+
+    //! Stuff to handle sequential delayed plugin loading. Some of the plugins
+    //are loading slow, we have to get a chance to run while tey are loading.
+    int                 m_LoadingPluginNumber;
+    QStringList         m_PluginFiles;
 };
 
 #endif /* PLUGINLIST_H_ */

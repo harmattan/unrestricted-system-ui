@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -23,6 +25,7 @@
 #include "mstatusindicatormenuplugininterface.h"
 #include <MWindow>
 #include <MApplicationPage>
+#include <QStringList>
 #include <QPluginLoader>
 #include <QGraphicsLinearLayout>
 #include <MApplicationIfProxy>
@@ -31,6 +34,8 @@
 #define DEBUG
 #define WARNING
 #include "debug.h"
+
+static const LoadDelay = 100;
 
 const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
@@ -52,7 +57,20 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
-    QTimer::singleShot(0, this, SLOT(loadPlugins()));
+    m_LoadingPluginNumber = 0;
+    m_PluginFiles << 
+	    "/libprofile.so" <<
+	    "/libdatetime.so" << 
+	    "/libclockalarm.so" << 
+	    "/libconnectivity.so" << 
+	    "/libpresence.so" << 
+	    "/libbattery.so" << 
+	    "/libvolume.so" << 
+	    "/libaccessories.so" << 
+	    "/libcallui.so" << 
+	    "/libtransferui.so";
+
+    QTimer::singleShot(LoadDelay, this, SLOT(loadPlugins()));
 }
 
 PluginList::~PluginList()
@@ -63,17 +81,21 @@ PluginList::~PluginList()
 void PluginList::loadPlugins()
 {
     // Load the plugins
+    if (m_LoadingPluginNumber < m_PluginFiles.size()) {
+        const QString fullPath = 
+            STATUSINDICATORMENU_PLUGIN_DIR + 
+            m_PluginFiles[m_LoadingPluginNumber];
 
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so");
+        SYS_DEBUG ("********************************************");
+        SYS_DEBUG ("*** loading : %s", SYS_STR(fullPath));
+        SYS_DEBUG ("********************************************");
+        addPlugin (fullPath);
+
+        ++m_LoadingPluginNumber;
+        QTimer::singleShot(LoadDelay, this, SLOT(loadPlugins()));
+
+        return;
+    }
 
     // Create a button for accessing the full settings
     addSettingsButton();
