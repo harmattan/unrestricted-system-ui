@@ -97,6 +97,9 @@ void Ut_PluginList::init()
     loadedPlugins.clear();
     pluginList = new PluginList(applicationWindow, applicationPage);
     connect(this, SIGNAL(settingsButtonClicked()), pluginList, SLOT(settingsButtonClicked()));
+
+    // Now plugins are loaded on Idle, so we have to wait some more time...
+    QTest::qWait (2000);
 }
 
 void Ut_PluginList::cleanup()
