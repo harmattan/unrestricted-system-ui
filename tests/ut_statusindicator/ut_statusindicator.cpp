@@ -191,11 +191,26 @@ void Ut_StatusIndicator::testBluetooth()
 {
     StatusIndicator *statusIndicator = new BluetoothStatusIndicator(*testContext);
 
+    // !enabled && !connected == BluetoothStatusIndicator
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(false));
+    testContextItems["Bluetooth.Connected"]->setValue(QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
 
+    // enabled && !connected == BluetoothStatusIndicatorOn
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("On") >= 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
+
+    // enabled && connected == BluetoothStatusIndicatorActice
+    testContextItems["Bluetooth.Connected"]->setValue(QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") >= 0);
+
+    // !enabled && connected == BluetoothStatusIndicator
+    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
 
     delete statusIndicator;
 }

@@ -229,10 +229,26 @@ StatusIndicatorIconStyle#ClockAlarmStatusIndicator {
 
 StatusIndicatorIconStyle#BluetoothStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-bluetooth icon-s-status-bluetooth-active";
-    preferred-size: 10 18;
-    minimum-size: 10 18;
-    maximum-size: 10 18;
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#BluetoothStatusIndicatorOn {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
+StatusIndicatorIconStyle#BluetoothStatusIndicatorActive {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth-active";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
 }
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicator {

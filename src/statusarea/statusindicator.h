@@ -240,7 +240,8 @@ private slots:
     void bluetoothChanged();
 
 private:
-    ContextItem *bluetooth;
+    ContextItem *bluetoothEnabled;
+    ContextItem *bluetoothConnected;
 };
 
 /*!

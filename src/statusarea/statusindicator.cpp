@@ -226,18 +226,32 @@ BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, 
 {
     setObjectName(metaObject()->className());
 
-    bluetooth = context.createContextItem("Bluetooth.Enabled");
-    connect(bluetooth, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
+    bluetoothEnabled = context.createContextItem("Bluetooth.Enabled");
+    connect(bluetoothEnabled, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
+    bluetoothConnected = context.createContextItem("Bluetooth.Connected");
+    connect(bluetoothConnected, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
 }
 
 BluetoothStatusIndicator::~BluetoothStatusIndicator()
 {
-    delete bluetooth;
+    delete bluetoothEnabled;
+    delete bluetoothConnected;
 }
 
 void BluetoothStatusIndicator::bluetoothChanged()
 {
-    setValue(bluetooth->value().toBool() ? 1 : 0);
+    bool enabled = bluetoothEnabled->value().toBool();
+    bool connected = bluetoothConnected->value().toBool();
+
+    if (enabled) {
+        if (connected) {
+            setObjectName(QString(metaObject()->className()) + "Active");
+        } else {
+            setObjectName(QString(metaObject()->className()) + "On");
+        }
+    } else {
+        setObjectName(QString(metaObject()->className()));
+    }
 }
 
 PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, MWidget *parent) :
