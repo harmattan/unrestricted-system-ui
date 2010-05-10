@@ -1,3 +1,9 @@
+system-ui (0.15.8~2) harmattan; urgency=low
+
+  * Fixes: NB#163239 - Network Indicators are not displayed in the home screen
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 10 May 2010 15:23:46 +0300
+
 system-ui (0.15.8-1) harmattan; urgency=low
 
   * Fixes: NB#167665 - Device is locked even while in use 
