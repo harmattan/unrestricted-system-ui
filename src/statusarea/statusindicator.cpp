@@ -116,9 +116,6 @@ void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
 PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent) :
         StatusIndicator(parent), networkAvailable(false)
 {
-    cellularTechnology = context.createContextItem("Cellular.Technology");
-    connect(cellularTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
-
     cellularDataTechnology = context.createContextItem("Cellular.DataTechnology");
     connect(cellularDataTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
@@ -130,7 +127,6 @@ PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationCont
 
 PhoneNetworkTypeStatusIndicator::~PhoneNetworkTypeStatusIndicator()
 {
-    delete cellularTechnology;
     delete cellularDataTechnology;
     delete cellularRegistrationStatus;
 }
@@ -139,7 +135,6 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
     QString postFix = "NoNetwork";
 
-    QString technology     = cellularTechnology->value().toString();         // gsm umts
     QString dataTechnology = cellularDataTechnology->value().toString();     // gprs egprs umts hspa
     QString status         = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
 
@@ -150,18 +145,14 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     } else if(status == "" || status == "offline" || status == "forbidden") {
         postFix = "Offline";
     } else {
-        if(technology == "gsm") {
-            if(dataTechnology == "") {
-                postFix = "2G";
-            } else if(dataTechnology == "gprs" || dataTechnology == "egprs") {
-                postFix = "25G";
-            }
-        } else if(technology == "umts") {
-            if(dataTechnology == "umts") {
-                postFix = "3G";
-            } else if(dataTechnology == "hspa") {
-                postFix = "35G";
-            }
+        if(dataTechnology == "gprs") {
+            postFix = "2G";
+        } else if(dataTechnology == "egprs") {
+            postFix = "25G";
+        } else if(dataTechnology == "umts") {
+            postFix = "3G";
+        } else if(dataTechnology == "hspa") {
+            postFix = "35G";
         }
     }
 

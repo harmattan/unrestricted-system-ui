@@ -70,7 +70,7 @@ void PluginList::loadPlugins()
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
-    //addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
+    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so");

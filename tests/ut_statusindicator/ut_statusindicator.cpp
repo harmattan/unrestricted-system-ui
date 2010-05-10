@@ -141,15 +141,12 @@ void Ut_StatusIndicator::testPhoneNetworkType()
     QVERIFY(statusIndicator->objectName().indexOf("Offline") >= 0);
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
     QVERIFY(statusIndicator->objectName().indexOf("NoNetwork") >= 0);
-    testContextItems["Cellular.Technology"]->setValue(QVariant("gsm"));
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
     QVERIFY(statusIndicator->objectName().indexOf("2G") >= 0);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0)[0], QVariant(true));
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
-    QVERIFY(statusIndicator->objectName().indexOf("25G") >= 0);
     testContextItems["Cellular.DataTechnology"]->setValue(QVariant("egprs"));
     QVERIFY(statusIndicator->objectName().indexOf("25G") >= 0);
-    testContextItems["Cellular.Technology"]->setValue(QVariant("umts"));
     testContextItems["Cellular.DataTechnology"]->setValue(QVariant("umts"));
     QVERIFY(statusIndicator->objectName().indexOf("3G") >= 0);
     testContextItems["Cellular.DataTechnology"]->setValue(QVariant("hspa"));

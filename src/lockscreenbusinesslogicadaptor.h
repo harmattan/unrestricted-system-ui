@@ -79,6 +79,8 @@ public slots:
 
 private slots:
     void unlockConfirmed ();
+    void enableVisual ();
+    void enableEater ();
 
 signals:
     void delegateSetMissedEvents (int, int, int, int);
