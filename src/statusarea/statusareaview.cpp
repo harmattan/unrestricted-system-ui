@@ -36,8 +36,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitWidget(new QGraphicsWidget),
     landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
-    landscapeAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
-    portraitAlarmIndicator(new ClockAlarmStatusIndicator(contextFrameworkContext, controller)),
+    landscapeAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
+    portraitAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     landscapeBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
@@ -50,15 +50,17 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     landscapeGPSIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
     portraitGPSIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
+    landscapePresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
+    portraitPresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     landscapeProfileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     portraitProfileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
-    landscapePresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
-    portraitPresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotifier(new Notifier(controller)),
-    portraitNotifier(new Notifier(controller))
+    portraitNotifier(new Notifier(controller)),
+    landscapeClock(new Clock(controller)),
+    portraitClock(new Clock(controller))
 {
     // Set up notifiers
     landscapeNotifier->setObjectName("Notifier");
@@ -67,6 +69,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Connect related phone network indicators
     connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
     connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+
+    // Set the clock to short time display when alarm is present
+    connect(portraitAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), portraitClock, SLOT(setShortDisplay(bool)));
+    connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());
@@ -121,7 +127,8 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeProfileIndicator);
     layout->addItem(landscapeInputMethodIndicator);
     layout->addItem(landscapeCallIndicator);
-    layout->addItem(createClockAlarmWidget(landscapeAlarmIndicator));
+    layout->addItem(landscapeClock);
+    layout->addItem(landscapeAlarmIndicator);
 
     return layout;
 }
@@ -146,23 +153,10 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPresenceIndicator);
     layout->addItem(portraitProfileIndicator);
     layout->addItem(portraitCallIndicator);
-    layout->addItem(createClockAlarmWidget(portraitAlarmIndicator));
+    layout->addItem(portraitClock);
+    layout->addItem(portraitAlarmIndicator);
 
     return layout;
-}
-
-MWidget *StatusAreaView::createClockAlarmWidget(StatusIndicator *alarmIndicator)
-{
-    Clock *clock = new Clock;
-    QGraphicsAnchorLayout *clockAlarmLayout = new QGraphicsAnchorLayout;
-    clockAlarmLayout->setContentsMargins(0, 0, 0, 0);
-    clockAlarmLayout->setSpacing(0);
-    clockAlarmLayout->addCornerAnchors(clock, Qt::TopLeftCorner, clockAlarmLayout, Qt::TopLeftCorner);
-    clockAlarmLayout->addCornerAnchors(clock, Qt::TopRightCorner, clockAlarmLayout, Qt::TopRightCorner);
-    clockAlarmLayout->addCornerAnchors(alarmIndicator, Qt::TopRightCorner, clock, Qt::TopRightCorner);
-    MWidget *clockAlarmWidget = new MWidget;
-    clockAlarmWidget->setLayout(clockAlarmLayout);
-    return clockAlarmWidget;
 }
 
 M_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)

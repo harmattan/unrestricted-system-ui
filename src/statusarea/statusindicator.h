@@ -96,6 +96,10 @@ private:
 
     //! The current value of the status indicator
     QVariant currentValue;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
 };
 
 /*!
@@ -192,27 +196,30 @@ private:
 /*!
  * A status indicator for showing whether a clock alarm has been set.
  */
-class ClockAlarmStatusIndicator : public StatusIndicator
+class AlarmStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    M_CONTROLLER(ClockAlarmStatusIndicator)
+    M_CONTROLLER(AlarmStatusIndicator)
 
 public:
     /*!
-     * Constructs a ClockAlarmStatusIndicator.
+     * Constructs a AlarmStatusIndicator.
      *
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit ClockAlarmStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit AlarmStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
 
-    virtual ~ClockAlarmStatusIndicator();
+    virtual ~AlarmStatusIndicator();
+
+signals:
+    void alarmSettingChanged(bool isSet);
 
 private slots:
-    void clockAlarmChanged();
+    void alarmChanged();
 
 private:
-    ContextItem *clockAlarm;
+    ContextItem *alarm;
 };
 
 /*!
@@ -240,7 +247,8 @@ private slots:
     void bluetoothChanged();
 
 private:
-    ContextItem *bluetooth;
+    ContextItem *bluetoothEnabled;
+    ContextItem *bluetoothConnected;
 };
 
 /*!

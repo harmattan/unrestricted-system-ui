@@ -39,6 +39,12 @@ public:
      */
     explicit Clock(QGraphicsItem *parent = NULL);
 
+public slots:
+    /* !
+     * \brief Select whether to show time using the normal or short time format.
+     */
+    void setShortDisplay(bool isShort);
+
 private slots:
     /*!
      * \brief Updates the current time to the model and configures the timer for the next update.

@@ -69,7 +69,9 @@ private slots:
     void cleanup();
 
     void testUpdateTime();
+    void testSetShortDisplay();
     void testUpdateTimeFormat();
+    void testTwelveHour();
 
 public:
     static QString timeAsString;

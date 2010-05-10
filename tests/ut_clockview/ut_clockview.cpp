@@ -23,6 +23,7 @@
 #include <MLabel>
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
+#include "applicationcontext.h"
 
 // MWidgetController stubs
 ClockModel clockModel;
@@ -70,6 +71,10 @@ void Ut_ClockView::init()
 {
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
+
+    // Set model defaults
+    clockModel.setTimeFormat24h(true);
+    clockModel.setShortDisplay(false);
 }
 
 // Called after every testfunction
@@ -84,8 +89,20 @@ void Ut_ClockView::testUpdateTime()
 {
     m_subject->setModel(&clockModel);
     m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
-    clockModel.setTime(QDateTime(QDate(1, 1, 1), QTime(1, 1)));
+    clockModel.setTime(QTime(1, 1));
     QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
+}
+
+void Ut_ClockView::testSetShortDisplay()
+{
+    m_subject->setModel(&clockModel);
+    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
+    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
+    clockModel.setTime(QTime(1, 1));
+    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
+
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01"));
 }
 
 void Ut_ClockView::testUpdateTimeFormat()
@@ -96,5 +113,18 @@ void Ut_ClockView::testUpdateTimeFormat()
     clockModel.setTimeFormat24h(true);
     QCOMPARE(m_subject->styleContainer().currentMode(), QString());
 }
+
+void Ut_ClockView::testTwelveHour()
+{
+    m_subject->setModel(&clockModel);
+    clockModel.setTimeFormat24h(false);
+    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mm"));
+    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
+    clockModel.setTime(QTime(23, 10));
+    QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
+}
+
 
 QTEST_APPLESS_MAIN(Ut_ClockView)

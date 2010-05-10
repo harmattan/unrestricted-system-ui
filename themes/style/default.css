@@ -62,8 +62,8 @@ MLabelStyle#Notifier {
 }
 
 ClockStyle {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 6;
+    margin-right: 6;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -71,12 +71,11 @@ ClockStyle {
     padding-top: 0;
     padding-bottom: 0;
     time-format: "hh:mm";
-    preferred-size: 84 3mm;
-    minimum-size: 84 3mm;
-    maximum-size: 84 3mm;
+    short-time-format: "hh:mm";
 }
-ClockStyle:twelvehour {
-    time-format: "hh:mm'<font size=0.8>'AP'</font>'";
+ClockStyle:twelve-hour {
+    time-format: "h:mmap";
+    short-time-format: "h:mm";
 }
 MLabelStyle#ClockLabel {
     font: $FONT_SMALL;
@@ -218,21 +217,47 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     maximum-size: 29 18;
 }
 
-StatusIndicatorIconStyle#ClockAlarmStatusIndicator {
+StatusIndicatorIconStyle#AlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-alarm icon-s-status-alarm";
-    preferred-size: 10 11;
-    minimum-size: 10 11;
-    maximum-size: 10 11;
-    margin-top: 2;
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-alarm";
+    preferred-size: 16 16;
+    minimum-size: 16 16;
+    maximum-size: 16 16;
+    padding-top: 1;
+    padding-bottom: 1;
+    margin-left: 0;
 }
 
 StatusIndicatorIconStyle#BluetoothStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-bluetooth icon-s-status-bluetooth-active";
-    preferred-size: 10 18;
-    minimum-size: 10 18;
-    maximum-size: 10 18;
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#BluetoothStatusIndicatorOn {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
+}
+
+StatusIndicatorIconStyle#BluetoothStatusIndicatorActive {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-bluetooth-active";
+    preferred-size: 14 18;
+    minimum-size: 14 18;
+    maximum-size: 14 18;
 }
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicator {

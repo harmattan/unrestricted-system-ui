@@ -25,6 +25,8 @@
 #include <qmtime.h>
 #include "clock.h"
 
+class TestContext;
+
 class Ut_Clock : public QObject
 {
     Q_OBJECT
@@ -36,6 +38,7 @@ public:
 
 signals:
     void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
+    void shortDisplayMode(bool isSet);
 
 private slots:
     void initTestCase();
@@ -47,6 +50,8 @@ private slots:
     void test24HourModeToggling();
     void test24HourModeNotToggledWhenSettingsAreNotChanged();
     void testModelUpdates();
+
+    void testShortDisplayToggling();
 
 private:
     Clock *m_subject;

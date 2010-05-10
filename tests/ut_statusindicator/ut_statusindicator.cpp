@@ -91,16 +91,16 @@ void Ut_StatusIndicator::testModelUpdates()
 {
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new StatusIndicator();
 
     // When the application is visible the model should be updated
     qApp->sendEvent(statusIndicator, &enterDisplayEvent);
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
+    statusIndicator->setValue(QVariant(true));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application is not visible the model should not be updated
     qApp->sendEvent(statusIndicator, &exitDisplayEvent);
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
+    statusIndicator->setValue(QVariant(false));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application becomes visible the model should be updated
@@ -176,13 +176,13 @@ void Ut_StatusIndicator::testBattery()
 
 void Ut_StatusIndicator::testAlarm()
 {
-    StatusIndicator *statusIndicator = new ClockAlarmStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new AlarmStatusIndicator(*testContext);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("Set") < 0);
 
     testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("Set") >= 0);
 
     delete statusIndicator;
 }
@@ -191,11 +191,26 @@ void Ut_StatusIndicator::testBluetooth()
 {
     StatusIndicator *statusIndicator = new BluetoothStatusIndicator(*testContext);
 
+    // !enabled && !connected == BluetoothStatusIndicator
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(false));
+    testContextItems["Bluetooth.Connected"]->setValue(QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
 
+    // enabled && !connected == BluetoothStatusIndicatorOn
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("On") >= 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
+
+    // enabled && connected == BluetoothStatusIndicatorActice
+    testContextItems["Bluetooth.Connected"]->setValue(QVariant(true));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") >= 0);
+
+    // !enabled && connected == BluetoothStatusIndicator
+    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
+    QVERIFY(statusIndicator->objectName().indexOf("On") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
 
     delete statusIndicator;
 }

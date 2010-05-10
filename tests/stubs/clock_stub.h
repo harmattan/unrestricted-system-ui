@@ -28,8 +28,10 @@
 class ClockStub : public StubBase {
   public:
   virtual void ClockConstructor(QGraphicsItem *parent);
+
   virtual void updateModelAndSetupTimer();
   virtual void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+  virtual void setShortDisplay(bool isShort);
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
 }; 
@@ -37,8 +39,8 @@ class ClockStub : public StubBase {
 // 2. IMPLEMENT STUB
 void ClockStub::ClockConstructor(QGraphicsItem *parent) {
   Q_UNUSED(parent);
-
 }
+
 void ClockStub::updateModelAndSetupTimer() {
   stubMethodEntered("updateModelAndSetupTimer");
 }
@@ -47,6 +49,12 @@ void ClockStub::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   QList<ParameterBase*> params;
   params.append( new Parameter<Maemo::QmTimeWhatChanged >(whatChanged));
   stubMethodEntered("updateSettings",params);
+}
+
+void ClockStub::setShortDisplay(bool isShort) {
+  QList<ParameterBase*> params;
+  params.append(new Parameter<bool>(isShort));
+  stubMethodEntered("setShortDisplay", params);
 }
 
 void ClockStub::enterDisplayEvent() {
@@ -75,6 +83,10 @@ void Clock::updateModelAndSetupTimer() {
 
 void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   gClockStub->updateSettings(whatChanged);
+}
+
+void Clock::setShortDisplay(bool isShort) {
+  gClockStub->setShortDisplay(isShort);
 }
 
 void Clock::enterDisplayEvent() {

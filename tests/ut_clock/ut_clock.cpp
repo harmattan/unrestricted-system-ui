@@ -61,9 +61,11 @@ void Ut_Clock::cleanupTestCase()
 void Ut_Clock::init()
 {
     expectedTimeFormat = Maemo::QmTime::format12h;
-    m_subject = new Clock;
+    m_subject = new Clock();
     connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
             m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
+    connect(this, SIGNAL(shortDisplayMode(bool)),
+            m_subject, SLOT(setShortDisplay(bool)));
 }
 
 // Called after every testfunction
@@ -106,7 +108,7 @@ void Ut_Clock::testModelUpdates()
 
     // The timer should be running by default and the model should contain the current time
     QVERIFY(timerTimeout >= 0);
-    QCOMPARE(m_subject->model()->time(), expectedDateTime);
+    QCOMPARE(m_subject->model()->time(), expectedDateTime.time());
 
     // When the application becomes invisible the timer should stop
     qApp->sendEvent(m_subject, &exitDisplayEvent);
@@ -116,7 +118,16 @@ void Ut_Clock::testModelUpdates()
     expectedDateTime = QDateTime(QDate(2001, 1, 1));
     qApp->sendEvent(m_subject, &enterDisplayEvent);
     QVERIFY(timerTimeout >= 0);
-    QCOMPARE(m_subject->model()->time(), expectedDateTime);
+    QCOMPARE(m_subject->model()->time(), expectedDateTime.time());
+}
+
+void Ut_Clock::testShortDisplayToggling()
+{
+    // Check that the "setShortDisplay" slot sets the correct model field
+    emit shortDisplayMode(true);
+    QCOMPARE(m_subject->model()->shortDisplay(), true);
+    emit shortDisplayMode(false);
+    QCOMPARE(m_subject->model()->shortDisplay(), false);
 }
 
 QTEST_MAIN(Ut_Clock)

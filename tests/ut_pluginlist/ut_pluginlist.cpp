@@ -64,6 +64,11 @@ QObject *QPluginLoader::instance()
     return new TestPlugin;
 }
 
+bool QPluginLoader::load()
+{
+    return true;
+}
+
 MWidget *TestPlugin::constructWidget(MStatusIndicatorMenuInterface &)
 {
     return new MWidget;
@@ -97,9 +102,6 @@ void Ut_PluginList::init()
     loadedPlugins.clear();
     pluginList = new PluginList(applicationWindow, applicationPage);
     connect(this, SIGNAL(settingsButtonClicked()), pluginList, SLOT(settingsButtonClicked()));
-
-    // Now plugins are loaded on Idle, so we have to wait some more time...
-    QTest::qWait (2000);
 }
 
 void Ut_PluginList::cleanup()
@@ -109,6 +111,9 @@ void Ut_PluginList::cleanup()
 
 void Ut_PluginList::testInitialization()
 {
+    // Now plugins are loaded on Idle, so we have to wait some more time...
+    QTest::qWait (2000);
+
     // The loaded plugin list should be known
     QCOMPARE(loadedPlugins.count(), 10);
     QCOMPARE(loadedPlugins.at(0), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so").canonicalPath());

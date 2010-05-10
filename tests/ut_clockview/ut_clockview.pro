@@ -12,7 +12,8 @@ SOURCES += \
     $$SRCDIR/statusarea/clockview.cpp
 
 # service classes
-SOURCES += ../stubs/stubbase.cpp
+SOURCES += \
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
