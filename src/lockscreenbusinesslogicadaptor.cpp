@@ -190,7 +190,7 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
     SYS_DEBUG ("");
 
-    if (m_CallbackDbusIf)
+    if (m_CallbackDbusIf) 
         delete m_CallbackDbusIf;
 
     m_CallbackDbusIf = new QDBusInterface (
@@ -215,9 +215,16 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
     SYS_DEBUG ("*** interface  = %s", SYS_STR(m_MCECallbackInterface));
     SYS_DEBUG ("*** callback   = %s", SYS_STR(m_MCECallbackMethod));
     SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
-    m_CallbackDbusIf->call (QDBus::NoBlock, 
+   	QDBusMessage message;
+
+    message = m_CallbackDbusIf->call (QDBus::Block, 
             m_MCECallbackMethod, //QString ("tklock_callback"), 
             (int) TkLockReplyOk);
     SYS_DEBUG ("Answer sent...");
+
+    QString errorString = message.errorMessage();
+    QString errorName = message.errorName ();
+    SYS_DEBUG ("*** errorMessage = %s", SYS_STR(errorString));
+    SYS_DEBUG ("*** errorName    = %s", SYS_STR(errorName));
 }
 

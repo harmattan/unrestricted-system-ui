@@ -28,6 +28,10 @@
 #include <MApplicationIfProxy>
 #include "notificationarea.h"
 
+#define DEBUG
+#define WARNING
+#include "debug.h"
+
 const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
 PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) :
@@ -43,6 +47,8 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     // Create the notification area
     notificationArea = new NotificationArea(this);
     notificationArea->setVisible(false);
+
+
     connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
@@ -57,13 +63,14 @@ PluginList::~PluginList()
 void PluginList::loadPlugins()
 {
     // Load the plugins
+
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so");
-    addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
+    //addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so");
@@ -97,6 +104,7 @@ PluginList::addPlugin(
     bool success;
     QPluginLoader loader(path);
 
+    SYS_DEBUG ("Loading plugin from %s", SYS_STR(path));
     /*
      * We have to resolve all the symbols early, so we will not abort when there
      * are unresolved symbols in the library. It is really important!
@@ -105,17 +113,23 @@ PluginList::addPlugin(
     success = loader.load();
     if (!success) {
         qDebug() << "Error loading plugin: " << loader.errorString();
+	return;
     }
 
+    SYS_DEBUG ("Loaded.");
     QObject* object = loader.instance();
 
-    MStatusIndicatorMenuPluginInterface* plugin = qobject_cast<MStatusIndicatorMenuPluginInterface*>(object);
+    MStatusIndicatorMenuPluginInterface* plugin = 
+	    qobject_cast<MStatusIndicatorMenuPluginInterface*>(object);
+    SYS_DEBUG ("Loaded plugin at %p", object);
     if (plugin != NULL) {
         MWidget *widget = plugin->constructWidget(*this);
+	SYS_DEBUG ("*** widget = %p", widget);
         if (widget != NULL) {
             mainLayout->addItem(widget);
         }
     }
+
     delete object;
 }
 

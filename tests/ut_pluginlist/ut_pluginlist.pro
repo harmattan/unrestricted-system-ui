@@ -5,11 +5,13 @@ INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
 
 # unit test and unit
 SOURCES += \
+    $$SRCDIR/debug.cpp \
     ut_pluginlist.cpp \
     $$SRCDIR/statusindicatormenu/pluginlist.cpp
 
 # unit test and unit
 HEADERS += \
+    $$SRCDIR/debug.h \
     ut_pluginlist.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
 

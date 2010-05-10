@@ -8,6 +8,7 @@ MODEL_HEADERS += $$SRCDIR/statusarea/statusareamodel.h
 
 # unit test and unit
 SOURCES += \
+    $$SRCDIR/debug.cpp \
     ut_statusareaview.cpp \
     $$SRCDIR/statusarea/statusareaview.cpp \
     $$SRCDIR/statusarea/statusarea.cpp \
@@ -19,6 +20,7 @@ SOURCES += ../stubs/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
+    $$SRCDIR/debug.h \
     ut_statusareaview.h \
     $$SRCDIR/statusarea/statusareastyle.h \
     $$SRCDIR/statusarea/statusareamodel.h \
