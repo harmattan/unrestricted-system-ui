@@ -11,7 +11,7 @@ CONFIG += meegotouch \
           qmsystem \
           link_pkgconfig
 
-QT += dbus
+QT += dbus gui
 
 SYSTEMUI_SOURCE_DIR = .
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'

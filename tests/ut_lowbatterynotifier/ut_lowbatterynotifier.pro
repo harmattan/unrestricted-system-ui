@@ -8,6 +8,8 @@ INCLUDEPATH += $$SRC_PREFIX \
 
 CONFIG += qmsystem silent
 
+QT += gui
+
 SOURCES += \
     ut_lowbatterynotifier.cpp \
     $$SRC_PREFIX/debug.cpp \
