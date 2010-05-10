@@ -19,6 +19,7 @@
 
 #include "pluginlist.h"
 #include <MButton>
+#include <QTimer>
 #include "mstatusindicatormenuplugininterface.h"
 #include <MWindow>
 #include <MApplicationPage>
@@ -45,6 +46,16 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
+    QTimer::singleShot(0, this, SLOT(loadPlugins()));
+}
+
+PluginList::~PluginList()
+{
+    delete notificationArea;
+}
+
+void PluginList::loadPlugins()
+{
     // Load the plugins
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so");
     addPlugin(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so");
@@ -59,11 +70,6 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
 
     // Create a button for accessing the full settings
     addSettingsButton();
-}
-
-PluginList::~PluginList()
-{
-    delete notificationArea;
 }
 
 void PluginList::setNotificationCount(int notificationCount)

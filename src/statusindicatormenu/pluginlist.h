@@ -66,6 +66,11 @@ private slots:
      */
     void setNotificationCount(int notificationCount);
 
+    /*!
+     * \brief Slot for loading the status-menu plugins when we're idle
+     */
+    void loadPlugins();
+
 public slots:
     /*!
      * \brief Slot for hiding thestatus indicator menu.
