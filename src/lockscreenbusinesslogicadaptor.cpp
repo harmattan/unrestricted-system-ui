@@ -217,7 +217,7 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
     SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
    	QDBusMessage message;
 
-    message = m_CallbackDbusIf->call (QDBus::Block, 
+    message = m_CallbackDbusIf->call (QDBus::NoBlock, 
             m_MCECallbackMethod, //QString ("tklock_callback"), 
             (int) TkLockReplyOk);
     SYS_DEBUG ("Answer sent...");
