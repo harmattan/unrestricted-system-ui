@@ -219,11 +219,15 @@ AlarmStatusIndicator::~AlarmStatusIndicator()
 
 void AlarmStatusIndicator::alarmChanged()
 {
-    if (alarm->value().toBool()) {
+    bool isSet = alarm->value().toBool();
+
+    if (isSet) {
         setObjectName(QString(metaObject()->className()) + "Set");
     } else {
         setObjectName(QString(metaObject()->className()));
     }
+
+    emit alarmSettingChanged(isSet);
 }
 
 BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, MWidget *parent) :

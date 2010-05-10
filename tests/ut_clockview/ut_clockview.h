@@ -26,7 +26,6 @@
 
 class Clock;
 class MApplication;
-class TestContext;
 
 class TestClockStyle : public ClockStyle
 {
@@ -70,7 +69,7 @@ private slots:
     void cleanup();
 
     void testUpdateTime();
-    void testUpdateAlarmSet();
+    void testSetShortDisplay();
     void testUpdateTimeFormat();
     void testTwelveHour();
 
@@ -81,7 +80,6 @@ private:
     MApplication *app;
     TestClockView *m_subject;
     Clock *testClock;
-    TestContext *testContext;
 };
 
 #endif

@@ -38,6 +38,7 @@ public:
 
 signals:
     void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
+    void shortDisplayMode(bool isSet);
 
 private slots:
     void initTestCase();
@@ -50,12 +51,10 @@ private slots:
     void test24HourModeNotToggledWhenSettingsAreNotChanged();
     void testModelUpdates();
 
-    void testAlarmDuringCreation();
-    void testAlarmToggling();
+    void testShortDisplayToggling();
 
 private:
     Clock *m_subject;
-    TestContext *testContext;
 };
 
 #endif

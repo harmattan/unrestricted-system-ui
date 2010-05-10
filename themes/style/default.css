@@ -71,11 +71,11 @@ ClockStyle {
     padding-top: 0;
     padding-bottom: 0;
     time-format: "hh:mm";
-    time-format-with-alarm: "hh:mm";
+    short-time-format: "hh:mm";
 }
 ClockStyle:twelve-hour {
     time-format: "h:mmap";
-    time-format-with-alarm: "h:mm";
+    short-time-format: "h:mm";
 }
 MLabelStyle#ClockLabel {
     font: $FONT_SMALL;

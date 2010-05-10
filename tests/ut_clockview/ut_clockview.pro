@@ -13,8 +13,7 @@ SOURCES += \
 
 # service classes
 SOURCES += \
-    $$STUBSDIR/stubbase.cpp \
-    $$STUBSDIR/testcontextitem.cpp
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
@@ -22,11 +21,6 @@ HEADERS += \
     $$SRCDIR/statusarea/clockview.h \
     $$SRCDIR/statusarea/clockmodel.h \
     $$SRCDIR/statusarea/clockstyle.h \
-    $$SRCDIR/statusarea/clock.h \
-    $$SRCDIR/applicationcontext.h
-
-# service classes
-HEADERS += \
-    $$STUBSDIR/testcontextitem.h
+    $$SRCDIR/statusarea/clock.h
 
 include(../common_bot.pri)

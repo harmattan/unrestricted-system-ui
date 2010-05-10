@@ -24,24 +24,6 @@
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 #include "applicationcontext.h"
-#include "testcontextitem.h"
-
-QHash<QString, TestContextItem *> testContextItems;
-
-// Test context
-class TestContext : public ApplicationContext
-{
-public:
-    virtual ContextItem *createContextItem(const QString &key) {
-        Q_UNUSED(key);
-
-        if (testContextItems[key] == NULL) {
-            testContextItems[key] = new TestContextItem;
-        }
-
-        return testContextItems[key];
-    }
-};
 
 // MWidgetController stubs
 ClockModel clockModel;
@@ -87,15 +69,12 @@ void Ut_ClockView::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_ClockView::init()
 {
-    testContext = new TestContext();
-    testContextItems.clear();
-
-    testClock = new Clock(*testContext);
+    testClock = new Clock();
     m_subject = new TestClockView(testClock);
 
     // Set model defaults
     clockModel.setTimeFormat24h(true);
-    clockModel.setAlarmSet(false);
+    clockModel.setShortDisplay(false);
 }
 
 // Called after every testfunction
@@ -104,8 +83,6 @@ void Ut_ClockView::cleanup()
     delete testClock;  // this also deletes the view
     testClock = NULL;
     m_subject = NULL;
-    delete testContext;
-    testContext = NULL;
 }
 
 void Ut_ClockView::testUpdateTime()
@@ -116,15 +93,15 @@ void Ut_ClockView::testUpdateTime()
     QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
 }
 
-void Ut_ClockView::testUpdateAlarmSet()
+void Ut_ClockView::testSetShortDisplay()
 {
     m_subject->setModel(&clockModel);
     m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
-    m_subject->modifiableStyle()->setTimeFormatWithAlarm(QString("hh:mm"));
+    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
     clockModel.setTime(QTime(1, 1));
     QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
 
-    clockModel.setAlarmSet(true);
+    clockModel.setShortDisplay(true);
     QCOMPARE(Ut_ClockView::timeAsString, QString("01:01"));
 }
 
@@ -142,10 +119,10 @@ void Ut_ClockView::testTwelveHour()
     m_subject->setModel(&clockModel);
     clockModel.setTimeFormat24h(false);
     m_subject->modifiableStyle()->setTimeFormat(QString("hh:mm"));
-    m_subject->modifiableStyle()->setTimeFormatWithAlarm(QString("hh:mm"));
+    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
     clockModel.setTime(QTime(23, 10));
     QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
-    clockModel.setAlarmSet(true);
+    clockModel.setShortDisplay(true);
     QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
 }
 

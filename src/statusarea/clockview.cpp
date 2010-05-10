@@ -55,7 +55,7 @@ void ClockView::updateData(const QList<const char *>& modifications)
     MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
-        if (member == ClockModel::Time || member == ClockModel::AlarmSet) {
+        if (member == ClockModel::Time || member == ClockModel::ShortDisplay) {
             updateLabel();
         } else if (member == ClockModel::TimeFormat24h) {
 
@@ -74,8 +74,8 @@ void ClockView::updateLabel()
     QString timeFormat;
     QString text;
 
-    if (model()->alarmSet()) {
-        timeFormat = style()->timeFormatWithAlarm();
+    if (model()->shortDisplay()) {
+        timeFormat = style()->shortTimeFormat();
     } else {
         timeFormat = style()->timeFormat();
     }

@@ -25,9 +25,6 @@
 #include <qmtime.h>
 #include "clockmodel.h"
 
-class ApplicationContext;
-class ContextItem;
-
 /*!
  * A widget for showing the current time.
  */
@@ -40,8 +37,13 @@ public:
     /*!
      * Constructs a new Clock.
      */
-    explicit Clock(ApplicationContext &context, QGraphicsItem *parent = NULL);
-    virtual ~Clock();
+    explicit Clock(QGraphicsItem *parent = NULL);
+
+public slots:
+    /* !
+     * \brief Select whether to show time using the normal or short time format.
+     */
+    void setShortDisplay(bool isShort);
 
 private slots:
     /*!
@@ -54,11 +56,6 @@ private slots:
      */
     void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
 
-    /*!
-     * \brief Update the "alarm set" field to the model.
-     */
-    void updateAlarmSet();
-
 private:
     //! \reimp
     virtual void enterDisplayEvent();
@@ -70,9 +67,6 @@ private:
 
     //! QmTime object to get the time format is
     Maemo::QmTime qmTime;
-
-    //! A ContextItem object to track the changes to the alarm state
-    ContextItem *alarm;
 };
 
 #endif

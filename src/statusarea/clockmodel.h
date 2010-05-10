@@ -35,8 +35,8 @@ class ClockModel : public MWidgetModel
     M_MODEL_PROPERTY(QTime, time, Time, true, QTime::currentTime())
     //! Whether 24 hour clock mode is used
     M_MODEL_PROPERTY(bool, timeFormat24h, TimeFormat24h, true, true)
-    //! Whether an alarm is currently set
-    M_MODEL_PROPERTY(bool, alarmSet, AlarmSet, true, false)
+    //! Whether to use normal or short time format to display clock
+    M_MODEL_PROPERTY(bool, shortDisplay, ShortDisplay, true, false)
 };
 
 #endif /* CLOCKMODEL_H_ */

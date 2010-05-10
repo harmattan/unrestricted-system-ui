@@ -21,25 +21,6 @@
 #include <MOnDisplayChangeEvent>
 #include "ut_clock.h"
 #include "clock.h"
-#include "applicationcontext.h"
-#include "testcontextitem.h"
-
-QHash<QString, TestContextItem *> testContextItems;
-
-// Test context
-class TestContext : public ApplicationContext
-{
-public:
-    virtual ContextItem *createContextItem(const QString &key) {
-        Q_UNUSED(key);
-
-        if (testContextItems[key] == NULL) {
-            testContextItems[key] = new TestContextItem;
-        }
-
-        return testContextItems[key];
-    }
-};
 
 Maemo::QmTime::TimeFormat Maemo::QmTime::getTimeFormat()
 {
@@ -79,22 +60,18 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
-    testContext = new TestContext();
-    testContextItems.clear();
-    testContext->createContextItem("UserAlarm.Present");
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
-
     expectedTimeFormat = Maemo::QmTime::format12h;
-    m_subject = new Clock(*testContext);
+    m_subject = new Clock();
     connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
             m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
+    connect(this, SIGNAL(shortDisplayMode(bool)),
+            m_subject, SLOT(setShortDisplay(bool)));
 }
 
 // Called after every testfunction
 void Ut_Clock::cleanup()
 {
     delete m_subject;
-    delete testContext;
 }
 
 void Ut_Clock::test24HourModeDuringCreation()
@@ -144,21 +121,13 @@ void Ut_Clock::testModelUpdates()
     QCOMPARE(m_subject->model()->time(), expectedDateTime.time());
 }
 
-void Ut_Clock::testAlarmDuringCreation()
+void Ut_Clock::testShortDisplayToggling()
 {
-    // In init() the "UserAlarm.Present" value is set to "true"
-    QCOMPARE(m_subject->model()->alarmSet(), true);
-}
-
-void Ut_Clock::testAlarmToggling()
-{
-    // Check that setting "UserAlarm.Present" value to "false" produces set the same in the model
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
-    QCOMPARE(m_subject->model()->alarmSet(), false);
-
-    // Check that setting "UserAlarm.Present" value to "true" produces set the same in the model
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
-    QCOMPARE(m_subject->model()->alarmSet(), true);
+    // Check that the "setShortDisplay" slot sets the correct model field
+    emit shortDisplayMode(true);
+    QCOMPARE(m_subject->model()->shortDisplay(), true);
+    emit shortDisplayMode(false);
+    QCOMPARE(m_subject->model()->shortDisplay(), false);
 }
 
 QTEST_MAIN(Ut_Clock)

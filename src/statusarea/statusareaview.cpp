@@ -59,8 +59,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitPresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotifier(new Notifier(controller)),
     portraitNotifier(new Notifier(controller)),
-    landscapeClock(new Clock(contextFrameworkContext, controller)),
-    portraitClock(new Clock(contextFrameworkContext, controller))
+    landscapeClock(new Clock(controller)),
+    portraitClock(new Clock(controller))
 {
     // Set up notifiers
     landscapeNotifier->setObjectName("Notifier");
@@ -69,6 +69,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Connect related phone network indicators
     connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
     connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+
+    // Set the clock to short time display when alarm is present
+    connect(portraitAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), portraitClock, SLOT(setShortDisplay(bool)));
+    connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());

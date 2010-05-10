@@ -208,6 +208,9 @@ public:
 
     virtual ~AlarmStatusIndicator();
 
+signals:
+    void alarmSettingChanged(bool isSet);
+
 private slots:
     void alarmChanged();
 
