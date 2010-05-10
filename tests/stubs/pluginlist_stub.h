@@ -107,6 +107,10 @@ void PluginList::hideStatusIndicatorMenu() {
   gPluginListStub->hideStatusIndicatorMenu();
 }
 
+void PluginList::loadPlugins() {
+
+}
+
 void PluginList::addPlugin(const QString &path) {
   gPluginListStub->addPlugin(path);
 }
