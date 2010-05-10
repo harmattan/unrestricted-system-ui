@@ -37,7 +37,6 @@ public:
     LockScreenUI ();
     virtual ~LockScreenUI();
 
-    virtual void createContent ();
     virtual void paint (QPainter *painter,
                         const QStyleOptionGraphicsItem *option,
                         QWidget *widget = 0);
@@ -53,11 +52,13 @@ public slots:
                                    int im);
 
 private slots:
+    void realize ();
     void sliderUnlocked ();
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
 
 private:
+    bool             m_Realized;
     MLinearLayoutPolicy *m_policy;
 
     MWidget         *m_notificationArea;
@@ -68,8 +69,6 @@ private:
     QPixmap          m_bgPortrait;
     MGConfItem      *m_confBgLandscape;
     MGConfItem      *m_confBgPortrait;
-
-    bool             m_initialized;
 
     int              m_emails;
     int              m_messages;

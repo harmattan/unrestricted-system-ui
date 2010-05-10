@@ -94,7 +94,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         }
 
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
-
         lockUI->setOpacity (1.0);
         lockUI->show ();
         mainwindow.raise ();

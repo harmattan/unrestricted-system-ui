@@ -23,6 +23,7 @@
 #include "sysuid.h"
 
 #include <QGraphicsLinearLayout>
+#include <QTimer>
 
 #include <MApplication>
 #include <MWindow>
@@ -53,18 +54,41 @@ static const QString defaultPortraitImageFile =
 
 LockScreenUI::LockScreenUI () :
         MApplicationPage (),
+        m_Realized (false),
         m_notificationArea (0),
         m_LockLiftArea (0),
         m_LockLandArea (0),
-        m_initialized (false),
+        m_confBgLandscape (0),
+        m_confBgPortrait (0),
         m_emails (0),
         m_messages (0),
         m_calls (0),
         m_im (0)
 {
+    SYS_DEBUG ("");
+    QTimer::singleShot (0, this, SLOT(realize()));
+}
+
+LockScreenUI::~LockScreenUI ()
+{
+    // Free the resources here...
+    SYS_DEBUG ("");
+}
+
+void
+LockScreenUI::realize ()
+{
+    MLayout               *layout;
+    SYS_DEBUG ("");
+
+    if (m_Realized)
+        return;
+    
+    /*
+     * Creating the GConf keys to sense the wallpaper changes.
+     */
     SYS_DEBUG ("*** landscape_key = %s", GCONF_BG_LANDSCAPE);
     SYS_DEBUG ("*** portrait_key = %s", GCONF_BG_PORTRAIT);
-
     m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
     m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
 
@@ -73,10 +97,6 @@ LockScreenUI::LockScreenUI () :
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
-    // Load the backgrounds if any...
-    reloadLandscapeBackground ();
-    reloadPortraitBackground ();
-
     setPannable (false);
 
     // let's hide home button
@@ -84,28 +104,6 @@ LockScreenUI::LockScreenUI () :
                               MApplicationPageModel::Hide);
 
     setContentsMargins (0., 0., 0., 0.);
-}
-
-LockScreenUI::~LockScreenUI ()
-{
-    // Free the resources here...
-}
-
-void
-LockScreenUI::createContent ()
-{
-    SYS_DEBUG ("");
-
-    if (m_initialized == true)
-    {
-        SYS_WARNING (" this function called more then once!");
-        return;
-    }
-    m_initialized = true;
-
-    MApplicationPage::createContent ();
-
-    MLayout               *layout;
 
     /*
      * The main layout and its policy
@@ -143,6 +141,12 @@ LockScreenUI::createContent ()
 
     // I'm calling this for updating the m_notificationArea
     updateMissedEventAmounts (m_emails, m_messages, m_calls, m_im);
+
+    // Load the backgrounds if any...
+    reloadLandscapeBackground ();
+    reloadPortraitBackground ();
+
+    m_Realized = true;
 }
 
 void
@@ -218,15 +222,6 @@ LockScreenUI::paint (QPainter *painter,
                 m_bgLandscape.height(),
                 m_bgLandscape);
     }
-#if 0
-    else
-    {
-        // No pixmap loaded :-O
-        // So calling the Page (the parent class)
-        // paint method to painting the default background:
-        MApplicationPage::paint (painter, option, widget);
-    }
-#endif
 }
 
 void
