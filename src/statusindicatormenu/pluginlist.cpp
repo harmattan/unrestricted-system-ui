@@ -101,8 +101,9 @@ void
 PluginList::addPlugin(
         const QString &path)
 {
-    bool success;
-    QPluginLoader loader(path);
+    bool           success;
+    QObject       *object;
+    QPluginLoader  loader(path);
 
     SYS_DEBUG ("Loading plugin from %s", SYS_STR(path));
     /*
@@ -116,15 +117,12 @@ PluginList::addPlugin(
 	return;
     }
 
-    SYS_DEBUG ("Loaded.");
-    QObject* object = loader.instance();
+    object = loader.instance();
 
     MStatusIndicatorMenuPluginInterface* plugin = 
 	    qobject_cast<MStatusIndicatorMenuPluginInterface*>(object);
-    SYS_DEBUG ("Loaded plugin at %p", object);
     if (plugin != NULL) {
         MWidget *widget = plugin->constructWidget(*this);
-	SYS_DEBUG ("*** widget = %p", widget);
         if (widget != NULL) {
             mainLayout->addItem(widget);
         }
