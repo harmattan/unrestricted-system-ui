@@ -91,16 +91,16 @@ void Ut_StatusIndicator::testModelUpdates()
 {
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-    StatusIndicator *statusIndicator = new BluetoothStatusIndicator(*testContext);
+    StatusIndicator *statusIndicator = new StatusIndicator();
 
     // When the application is visible the model should be updated
     qApp->sendEvent(statusIndicator, &enterDisplayEvent);
-    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
+    statusIndicator->setValue(QVariant(true));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application is not visible the model should not be updated
     qApp->sendEvent(statusIndicator, &exitDisplayEvent);
-    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
+    statusIndicator->setValue(QVariant(false));
     QCOMPARE(statusIndicator->model()->value(), QVariant(1));
 
     // When the application becomes visible the model should be updated

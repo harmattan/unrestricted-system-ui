@@ -96,6 +96,10 @@ private:
 
     //! The current value of the status indicator
     QVariant currentValue;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
 };
 
 /*!
