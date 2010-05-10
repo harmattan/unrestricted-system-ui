@@ -35,7 +35,7 @@
 #define WARNING
 #include "debug.h"
 
-static const LoadDelay = 100;
+static const int LoadDelay = 100;
 
 const QString PluginList::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
