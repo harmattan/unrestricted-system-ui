@@ -33,7 +33,7 @@
 // sets the _NET_WM_STATE attribute according to the message.
 #include <X11/Xatom.h>
 
-void OverlayDummyWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
 }
@@ -91,9 +91,9 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     closeButton->setIconID("icon-m-framework-close");
 
     // Add two overlay widgets that will not allow mouse events to pass through them
-    windowLayout->addItem(new OverlayDummyWidget);
+    windowLayout->addItem(new EventEaterWidget);
     windowLayout->addItem(closeButton);
-    windowLayout->addItem(new OverlayDummyWidget);
+    windowLayout->addItem(new EventEaterWidget);
 
     closeButtonOverlay->setLayout(windowLayout);
     sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());

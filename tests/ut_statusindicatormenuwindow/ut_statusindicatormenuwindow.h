@@ -26,12 +26,6 @@
 class StatusIndicatorMenuWindow;
 class MApplication;
 
-/*
-class TestOverlayWidget: public OverlayWidget
-{
-     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-};
-*/
 class Ut_StatusIndicatorMenuWindow : public QObject
 {
     Q_OBJECT

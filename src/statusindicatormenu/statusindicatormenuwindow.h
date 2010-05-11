@@ -30,7 +30,7 @@ class QGraphicsSceneMouseEvent;
   * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
   * which will not allow mouse events to pass through.
   */
-class OverlayDummyWidget: public QGraphicsWidget
+class EventEaterWidget: public QGraphicsWidget
 {
 public:
     //! \reimp
