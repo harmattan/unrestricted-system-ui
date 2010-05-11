@@ -262,11 +262,56 @@ StatusIndicatorIconStyle#BluetoothStatusIndicatorActive {
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "";
+    preferred-size: 0 18;
+    minimum-size: 0 18;
+    maximum-size: 0 18;
+}
+
+StatusIndicatorIconStyle#InternetConnectionStatusIndicatorWLAN {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan";
     preferred-size: 24 18;
     minimum-size: 24 18;
     maximum-size: 24 18;
 }
+
+StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketData {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-packagedata";
+    preferred-size: 20 18;
+    minimum-size: 20 18;
+    maximum-size: 20 18;
+}
+
+StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketDataActive {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-packetdata-active";
+    preferred-size: 20 18;
+    minimum-size: 20 18;
+    maximum-size: 20 18;
+}
+
+StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketDataConnecting {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    /* TODO: use the following image list when the icons are available in the theme */
+    /* image-list: "icon-s-status-packetdata-connecting-1 icon-s-status-packetdata-connecting-2 icon-s-status-packetdata-connecting-3 icon-s-status-packetdata-connecting-4"; */
+    image-list: "";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
+
+StatusIndicatorIconStyle#InternetConnectionStatusIndicatorWLANConnecting {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    /* TODO: use the following image list when the icons are available in the theme */
+    /* image-list: "icon-s-status-wlan-connecting-1 icon-s-status-wlan-connecting-2 icon-s-status-wlan-connecting-3 icon-s-status-wlan-connecting-4"; */
+    image-list: "";
+    preferred-size: 24 18;
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
+
 
 StatusIndicatorIconStyle#CallStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */

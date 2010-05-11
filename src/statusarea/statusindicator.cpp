@@ -296,29 +296,63 @@ void PresenceStatusIndicator::presenceChanged()
 InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    connectionType = context.createContextItem("Internet.NetworkType");
+    connect(connectionType, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    internetConnection = context.createContextItem("Internet.NetworkType");
-    connect(internetConnection, SIGNAL(contentsChanged()), this, SLOT(internetConnectionChanged()));
+    connectionState = context.createContextItem("Internet.NetworkState");
+    connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    wifiSignalStrength = context.createContextItem("Internet.SignalStrength");
-    connect(wifiSignalStrength, SIGNAL(contentsChanged()), this, SLOT(wifiSignalStrengthChanged()));
+    trafficIn  = context.createContextItem("Internet.TrafficIn");
+    connect(trafficIn, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
+
+    trafficOut = context.createContextItem("Internet.TrafficOut");
+    connect(trafficOut, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
+
+    updateStatus();
 }
 
 InternetConnectionStatusIndicator::~InternetConnectionStatusIndicator()
 {
-    delete internetConnection;
-    delete wifiSignalStrength;
+    delete trafficOut;
+    delete trafficIn;
+    delete connectionState;
+    delete connectionType;
 }
 
-void InternetConnectionStatusIndicator::wifiSignalStrengthChanged()
+void InternetConnectionStatusIndicator::updateStatus()
 {
-    setValue(wifiSignalStrength->value().toDouble() * 0.01f);
-}
+    QString postFix = "";
 
-void InternetConnectionStatusIndicator::internetConnectionChanged()
-{
-    // TODO: change to 3G or WiFi signal strength based on connection type
+    QString state      = connectionState->value().toString(); // disconnected connecting connected
+    QString connection = connectionType->value().toString();  // GPRS WLAN
+
+    uint trafficInPercentage  = trafficIn->value().toInt();
+    uint trafficOutPercentage = trafficOut->value().toInt();
+
+    setValue(0);
+
+    if(connection == "WLAN") {
+        postFix = "WLAN";
+    } else if(connection == "GPRS") {
+        postFix = "PacketData";
+        if(state == "connected" && (trafficInPercentage > 0 || trafficOutPercentage > 0)) {
+            postFix += "Active";
+        }
+    }
+
+    if(state == "connecting") {
+        postFix += "Connecting";
+        animateIfPossible = true;
+    } else if(state == "connected") {
+        animateIfPossible = false;
+    } else {
+        postFix = "";
+        animateIfPossible = false;
+    }
+
+    setObjectName(metaObject()->className() + postFix);
+
+    updateAnimationStatus();
 }
 
 PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent) :

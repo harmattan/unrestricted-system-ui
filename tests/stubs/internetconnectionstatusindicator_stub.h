@@ -30,8 +30,7 @@ class InternetConnectionStatusIndicatorStub : public StubBase
 public:
     virtual void InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
     virtual void InternetConnectionStatusIndicatorDestructor();
-    virtual void wifiSignalStrengthChanged();
-    virtual void internetConnectionChanged();
+    virtual void updateStatus();
 };
 
 // 2. IMPLEMENT STUB
@@ -45,16 +44,10 @@ void InternetConnectionStatusIndicatorStub::InternetConnectionStatusIndicatorDes
 {
 
 }
-void InternetConnectionStatusIndicatorStub::wifiSignalStrengthChanged()
+void InternetConnectionStatusIndicatorStub::updateStatus()
 {
-    stubMethodEntered("wifiSignalStrengthChanged");
+    stubMethodEntered("updateStatus");
 }
-
-void InternetConnectionStatusIndicatorStub::internetConnectionChanged()
-{
-    stubMethodEntered("internetConnectionChanged");
-}
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -73,14 +66,9 @@ InternetConnectionStatusIndicator::~InternetConnectionStatusIndicator()
     gInternetConnectionStatusIndicatorStub->InternetConnectionStatusIndicatorDestructor();
 }
 
-void InternetConnectionStatusIndicator::wifiSignalStrengthChanged()
+void InternetConnectionStatusIndicator::updateStatus()
 {
-    gInternetConnectionStatusIndicatorStub->wifiSignalStrengthChanged();
-}
-
-void InternetConnectionStatusIndicator::internetConnectionChanged()
-{
-    gInternetConnectionStatusIndicatorStub->internetConnectionChanged();
+    gInternetConnectionStatusIndicatorStub->updateStatus();
 }
 
 

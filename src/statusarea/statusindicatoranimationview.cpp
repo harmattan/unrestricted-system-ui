@@ -133,6 +133,8 @@ void StatusIndicatorAnimationView::clearImageList()
 
     imageList.clear();
     images.clear();
+
+    animationFrame = 0;
 }
 
 void StatusIndicatorAnimationView::setupImageList(const QString &iconIDs)

@@ -251,9 +251,38 @@ void Ut_StatusIndicator::testInternetConnection()
 {
     StatusIndicator *statusIndicator = new InternetConnectionStatusIndicator(*testContext);
 
-    testContextItems["Internet.SignalStrength"]->setValue(QVariant(100));
-    QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(statusIndicator->model()->value().toDouble() * 100), 100);
+    QVERIFY(statusIndicator->objectName().indexOf("WLAN") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("PacketData") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Connecting") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
+
+    testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
+    QVERIFY(statusIndicator->objectName().indexOf("WLANConnecting") >= 0);
+
+    testContextItems["Internet.NetworkType"]->setValue(QVariant("GPRS"));
+    QVERIFY(statusIndicator->objectName().indexOf("PacketDataConnecting") >= 0);
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
+    QVERIFY(statusIndicator->objectName().indexOf("PacketData") >= 0);
+
+    testContextItems["Internet.TrafficIn"]->setValue(QVariant(1));
+    QVERIFY(statusIndicator->objectName().indexOf("PacketDataActive") >= 0);
+
+    testContextItems["Internet.TrafficOut"]->setValue(QVariant(1));
+    QVERIFY(statusIndicator->objectName().indexOf("PacketDataActive") >= 0);
+
+    testContextItems["Internet.TrafficIn"]->setValue(QVariant(0));
+    QVERIFY(statusIndicator->objectName().indexOf("PacketDataActive") >= 0);
+
+    testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
+    QVERIFY(statusIndicator->objectName().indexOf("WLAN") >= 0);
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
+    QVERIFY(statusIndicator->objectName().indexOf("WLAN") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("PacketData") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Connecting") < 0);
+    QVERIFY(statusIndicator->objectName().indexOf("Active") < 0);
 
     delete statusIndicator;
 }

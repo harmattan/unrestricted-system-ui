@@ -294,12 +294,13 @@ public:
     virtual ~InternetConnectionStatusIndicator();
 
 private slots:
-    void wifiSignalStrengthChanged();
-    void internetConnectionChanged();
+    void updateStatus();
 
 private:
-    ContextItem *internetConnection;
-    ContextItem *wifiSignalStrength;
+    ContextItem *connectionType;
+    ContextItem *connectionState;
+    ContextItem *trafficIn;
+    ContextItem *trafficOut;
 };
 
 /*!
