@@ -92,7 +92,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
             #ifdef USE_FULLSCREEN
             mainwindow.showFullScreen ();
             #endif
-            hidefromTaskBar ();
         }
 
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
@@ -128,7 +127,6 @@ LockScreenBusinessLogic::toggleEventEater (
             #ifdef USE_FULLSCREEN
             mainwindow.showFullScreen ();
             #endif
-            hidefromTaskBar ();
         }
 
         // Hide the unlock ui if visible
