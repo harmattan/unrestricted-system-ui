@@ -1,8 +1,10 @@
-system-ui (0.15.8~2) harmattan; urgency=low
+system-ui (0.15.9~1) harmattan; urgency=low
 
   * Fixes: NB#163239 - Network Indicators are not displayed in the home screen
+  * Fixes: NB#168091 - USB pop-up not displayed in device on connecting
+                       the USB cable to device
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 10 May 2010 15:23:46 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 11 May 2010 10:36:50 +0200
 
 system-ui (0.15.8-1) harmattan; urgency=low
 
