@@ -80,15 +80,22 @@ void Ut_StatusIndicatorMenuWindow::testCloseButtonOverlay()
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->layout()->count(), 3);
 
     // Check the type of the children of the overlay
-    QVERIFY(dynamic_cast<OverlayDummyWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(0)));
+    QVERIFY(dynamic_cast<EventEaterWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(0)));
     QVERIFY(dynamic_cast<MButton *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(1)));
-    QVERIFY(dynamic_cast<OverlayDummyWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(2)));
+    QVERIFY(dynamic_cast<EventEaterWidget *> (statusIndicatorMenuWindow->closeButtonOverlay->layout()->itemAt(2)));
 
     // Test status indicator menu window visibility
     QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
     connect(this, SIGNAL(clicked()), statusIndicatorMenuWindow, SLOT(hide()));
     emit clicked();
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+
+    // Test that status indicator menu close overlay accept events outside close button
+    EventEaterWidget *overlayWidget = new EventEaterWidget;
+    QGraphicsSceneMouseEvent event;
+    overlayWidget->mousePressEvent(&event);
+    QCOMPARE(event.isAccepted(), true);
+    delete overlayWidget;
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)
