@@ -147,49 +147,6 @@ void Ut_StatusIndicatorAnimationView::testSetupModel()
     QVERIFY(qTimeLineStartedCalled);
 }
 
-/*
-void Ut_StatusIndicatorAnimationView::testUpdateData()
-{
-    QList<const char *> modifications;
-    modifications << StatusIndicatorModel::Value;
-
-    // Test that setting a pixmap ID loads the pixmap and sets the mode to icon
-    QString pixmapId("test");
-    m_subject->model()->setValue(pixmapId);
-    m_subject->updateData(modifications);
-    QCOMPARE(mThemePixmapId, pixmapId);
-    QCOMPARE(TestStyleContainer::getCurrentMode(reinterpret_cast<TestStyleContainer *>(&m_subject->style())), QString("icon"));
-
-    // Test that setting an empty pixmap ID releases the pixmap and sets the mode to default
-    pixmapId.clear();
-    mThemePixmapId.clear();
-    m_subject->model()->setValue(pixmapId);
-    m_subject->updateData(modifications);
-    QCOMPARE(mThemePixmapId, pixmapId);
-    QCOMPARE(mThemeReleasePixmapPixmap, mThemePixmapPixmap);
-    QCOMPARE(TestStyleContainer::getCurrentMode(reinterpret_cast<TestStyleContainer *>(&m_subject->style())), QString());
-}
-
-void Ut_StatusIndicatorAnimationView::testDrawContents()
-{
-    QPainter painter;
-
-    // Drawing without a pixmap should do nothing
-    m_subject->drawContents(&painter, NULL);
-    QCOMPARE(qPainterDrawPixmapPoint, QPointF(-1, -1));
-    QCOMPARE(qPainterDrawPixmapPixmap, (QPixmap *)NULL);
-
-    QPixmap pixmap(50, 50);
-    QString pixmapId("test");
-    mThemePixmapPixmap = &pixmap;
-    m_subject->model()->setValue(pixmapId);
-    m_subject->setupModel();
-    m_subject->drawContents(&painter, NULL);
-    QCOMPARE(qPainterDrawPixmapPoint, QPointF());
-    QCOMPARE(qPainterDrawPixmapPixmap, mThemePixmapPixmap);
-}
-*/
-
 void Ut_StatusIndicatorAnimationView::testImageListInitialized()
 {
     m_subject->getModel()->setValue("1 2");
@@ -200,6 +157,7 @@ void Ut_StatusIndicatorAnimationView::testImageListInitialized()
 void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
 {
     // Test that the latest image list is used
+    controller->setGeometry(QRectF(0, 0, 50, 50));
     m_subject->getModel()->setValue("3 4");
     m_subject->getModel()->setValue("1 2");
     QPainter painter;
@@ -232,6 +190,7 @@ void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
 void Ut_StatusIndicatorAnimationView::testSetAnimationFrameToInvalid()
 {
     // First test painting when there is no image
+    controller->setGeometry(QRectF(0, 0, 50, 50));
     m_subject->getModel()->setValue("");
     QPainter painter;
 
@@ -304,6 +263,19 @@ void Ut_StatusIndicatorAnimationView::testChangingAnimate()
     m_subject->getModel()->setAnimate(false);
     QCOMPARE(qTimeLineStartedCalled, false);
     QCOMPARE(qTimeLineStoppedCalled, true);
+}
+
+void Ut_StatusIndicatorAnimationView::testPaintingWhenSizeIsZero()
+{
+    // Test that the latest image list is used
+    m_subject->getModel()->setValue("1 2");
+    QPainter painter;
+
+    // Nothing should be loaded or drawn
+    m_subject->setAnimationFrame(0);
+    m_subject->callableDrawContents(&painter, NULL);
+    QCOMPARE(mThemePixmapPixmaps.size(), 0);
+    QCOMPARE(qPainterDrawPixmapPixmaps.size(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorAnimationView)

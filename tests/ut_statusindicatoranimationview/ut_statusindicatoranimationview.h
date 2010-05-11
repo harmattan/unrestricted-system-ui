@@ -72,6 +72,7 @@ private slots:
     void testSetAnimationFrameToInvalid();
     void testSetAnimationDuration();
     void testChangingAnimate();
+    void testPaintingWhenSizeIsZero();
 
 private:
     // MApplication

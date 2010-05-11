@@ -112,10 +112,10 @@ void StatusIndicatorAnimationView::stopAnimation()
 
 void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
 {
-    if (animationFrame < images.size()) {
+    if (animationFrame < images.size() && size().width() > 0 && size().height() > 0) {
         if (images[animationFrame] == NULL) {
             // Load the image if it has not been loaded yet
-            images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame), QSize(size().width(), size().height()));
+            images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame));
         }
 
         if (images[animationFrame] != NULL) {
