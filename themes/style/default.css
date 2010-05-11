@@ -126,7 +126,7 @@ StatusIndicatorLabelStyle {
     padding-top: 0;
     padding-bottom: 0;
     preferred-size: 130 3mm;
-    minimum-size: 130 3mm;
+    minimum-size: 0 3mm;
     maximum-size: 130 3mm;
 }
 
@@ -141,6 +141,9 @@ MLabelStyle#StatusIndicatorLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    preferred-size: 130 3mm;
+    minimum-size: 0 3mm;
+    maximum-size: 130 3mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
