@@ -153,11 +153,15 @@ LockScreenBusinessLogicAdaptor::tklock_open (
 
         case TkLockEnableVisual:
             SYS_DEBUG ("### TkLockEnableVisual");
-	    /*
-	     * This mode is where we actually should show the screen to unlock
-	     * the screen.
-	     */
+	        /*
+    	     * This mode is where we actually should show the screen to unlock
+	         * the screen.
+	         */
+            #ifdef USE_FULLSCREEN
             QTimer::singleShot (0, this, SLOT (enableVisual ()));
+            #else
+            enableVisual ();
+            #endif
             break;
 
         default:

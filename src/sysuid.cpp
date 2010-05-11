@@ -78,6 +78,8 @@ Sysuid::Sysuid () : QObject (),
     m_applicationWindow->setWindowFlags (Qt::FramelessWindowHint |
                                          Qt::CustomizeWindowHint |
                                          Qt::WindowStaysOnTopHint);
+    //m_applicationWindow->setWindowState (Qt::WindowFullScreen);
+
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);

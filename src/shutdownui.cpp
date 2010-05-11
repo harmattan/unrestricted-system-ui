@@ -31,7 +31,7 @@
 
 #include <qmdisplaystate.h>
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -116,7 +116,9 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     if (win.isHidden ())
     {
         win.show ();
+	#ifdef USE_FULLSCREEN
         win.showFullScreen ();
+	#endif	
     }
 
     setOpacity (1.0);

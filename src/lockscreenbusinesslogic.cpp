@@ -89,7 +89,9 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         if (mainwindow.isHidden ())
         {
             mainwindow.show ();
+            #ifdef USE_FULLSCREEN
             mainwindow.showFullScreen ();
+            #endif
             hidefromTaskBar ();
         }
 
@@ -123,7 +125,9 @@ LockScreenBusinessLogic::toggleEventEater (
         if (mainwindow.isHidden ())
         {
             mainwindow.show ();
+            #ifdef USE_FULLSCREEN
             mainwindow.showFullScreen ();
+            #endif
             hidefromTaskBar ();
         }
 
