@@ -197,7 +197,7 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorNoNetwork {
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorOffline {
-    image-list: "icon-s-status-offline";
+    image-list: "";
     preferred-size: 21 18;
     minimum-size: 21 18;
     maximum-size: 21 18;
@@ -206,7 +206,7 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorOffline {
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
     preferred-size: 29 18;
     minimum-size: 29 18;
     maximum-size: 29 18;
@@ -214,7 +214,7 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-battery0 icon-s-status-battery13 icon-s-status-battery25 icon-s-status-battery38 icon-s-status-battery50 icon-s-status-battery62 icon-s-status-battery75 icon-s-status-battery88 icon-s-status-battery100";
+    image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
     preferred-size: 29 18;
     minimum-size: 29 18;
     maximum-size: 29 18;
