@@ -197,7 +197,7 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorNoNetwork {
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorOffline {
-    image-list: "";
+    image-list: "icon-s-status-offline";
     preferred-size: 21 18;
     minimum-size: 21 18;
     maximum-size: 21 18;
