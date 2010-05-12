@@ -1,4 +1,4 @@
-system-ui (0.15.9~1) harmattan; urgency=low
+system-ui (0.15.9-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-2413 Adding missing status bar indicators
   * Fixes: NB#163239 - Network Indicators are not displayed in the home screen
@@ -8,8 +8,9 @@ system-ui (0.15.9~1) harmattan; urgency=low
                        visible in the switcher
   * Fixes: NB#168545 - Sysuid crash at MCompositorNotificationSink::notification
                        Done
+  * Added mcompositor (>= 0.4.2-1) dependency...
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 12 May 2010 08:37:36 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 12 May 2010 12:45:41 +0200
 
 system-ui (0.15.8-1) harmattan; urgency=low
 
