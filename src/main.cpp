@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,13 +18,19 @@
 ** of this file.
 **
 ****************************************************************************/
+#define HANDLE_CRASH
+#ifdef HANDLE_CRASH
+#  define BACKTRACE_SIZE 128
+#  include <execinfo.h>
+#endif
+
 #include "sysuid.h"
 
 #include <MApplication>
 
 #include <QObject>
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 #include "signal.h"
@@ -38,15 +46,101 @@ void sysuid_exit (int sig)
     }
 }
 
+#ifdef HANDLE_CRASH
+void
+some_crash_happened (
+        void)
+{
+    void     *backtrace_array [BACKTRACE_SIZE];
+    char    **backtrace_strings;
+    size_t    backtrace_size;
+
+    SYS_WARNING ("Crash...");
+    backtrace_size = backtrace (backtrace_array, BACKTRACE_SIZE);
+    backtrace_strings = backtrace_symbols (backtrace_array, backtrace_size);
+
+    /*
+     * Let's print the backtrace from the stack.
+     */
+    fprintf (stderr, "--- Crash backtrace of sysuid ---\n");
+    for (size_t i = 0; i < backtrace_size; i++) {
+        fprintf (stderr, "%03u %s\n", i, backtrace_strings[i]);
+    }
+    fprintf (stderr, "---------------------------------\n");
+    fflush (stderr);
+}
+
+void
+termination_signal_handler (
+        int signum)
+{
+    SYS_DEBUG ("*** signum = %d", signum);
+    switch (signum) {
+        case SIGINT:
+		    //sysuid_exit (signum);
+        case SIGTERM:
+        case SIGHUP:
+        case SIGQUIT:
+            /*
+             * These are the signals that are not caused by any bug in the code.
+             * We can do something with these, but now we just exit.
+             */
+            some_crash_happened ();
+            exit (0);
+            break;
+       
+        case SIGILL:
+        case SIGSEGV:
+        case SIGBUS:
+        case SIGABRT:
+        case SIGFPE:
+            /*
+             * And here are those that are caused by errors.
+             */
+            some_crash_happened ();
+            break;
+    }
+
+    /*
+     * If we discovered an applet crash we raise the same signal so that the
+     * parent will know that we need to be restarted.
+     */
+    signal (signum, SIG_DFL);
+    raise (signum);
+}
+#endif
+
 int main (int argc, char** argv)
 {
     SYS_DEBUG ("- System-UI start");
+    #ifdef DEBUG
+    SYS_DEBUG ("+++ Arguments:");
+    for (int n = 0; n < argc; ++n) {
+        SYS_DEBUG ("*arg[%d] = %s", n, argv[n]);
+    }
+    SYS_DEBUG ("+++ Environtment:");
+    system ("set");
+    #endif
+
+    #ifdef HANDLE_CRASH
+    signal (SIGTERM, termination_signal_handler);
+    signal (SIGHUP,  termination_signal_handler);
+    signal (SIGINT,  termination_signal_handler);
+    signal (SIGQUIT,  termination_signal_handler);
+    
+    signal (SIGILL,  termination_signal_handler);
+    signal (SIGSEGV, termination_signal_handler);
+    signal (SIGBUS, termination_signal_handler);
+    signal (SIGABRT, termination_signal_handler);
+    signal (SIGFPE,  termination_signal_handler);
+    #else
+    signal (SIGINT, sysuid_exit);
+    #endif
+    
     MApplication app (argc, argv);
     exitPtr = &app;
 
     app.setQuitOnLastWindowClosed (false);
-
-    signal (SIGINT, sysuid_exit);
 
     Sysuid daemon;
 
