@@ -36,10 +36,12 @@
 #include "debug.h"
 
 ShutdownUI::ShutdownUI () :
+        m_timer (new QTimer),
         m_text1 (0),
         m_text2 (0),
         m_logo (0),
-        m_feedback (0)
+        m_feedback (0),
+        m_realized (false)
 {
     setPannable (false);
     setComponentsDisplayMode (MApplicationPage::AllComponents,
@@ -48,6 +50,9 @@ ShutdownUI::ShutdownUI () :
     // We have to pre-created/load the shutdown ui content
     // because when it should show, the in should show NOW
     QTimer::singleShot (5000, this, SLOT (realize ()));
+
+    connect (m_timer, SIGNAL (timeout ()),
+             this, SLOT (showLogo ()));
 }
 
 ShutdownUI::~ShutdownUI ()
@@ -56,13 +61,27 @@ ShutdownUI::~ShutdownUI ()
 }
 
 void
+ShutdownUI::createContent ()
+{
+    if (! m_realized)
+        realize ();
+}
+
+void
 ShutdownUI::realize ()
 {
     SYS_DEBUG ("");
 
+    if (m_realized)
+        return;
+
     // Initilaize non-graphical feedback
     m_feedback = new MFeedback (this);
+#ifdef FEEDBACK_SUPPLIED
     m_feedback->setName ("DF_POWER_OFF");
+#else
+    m_feedback->setName ("press");
+#endif
 
     //% "Shutting down"
     m_text1 = new MLabel (qtTrId ("qtn_shut_down"));
@@ -87,6 +106,8 @@ ShutdownUI::realize ()
 
     m_logo = new MImageWidget ("nokia_logo");
     m_logo->setGeometry (QRectF (0., 0., 864., 480.));
+
+    m_realized = true;
 }
 
 // Hack for RFS/CUD
@@ -109,6 +130,13 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     SYS_DEBUG ("");
     MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
 
+    if (!m_realized)
+        realize ();
+
+    // Stop the previous timer...
+    m_timer->stop ();
+
+    win.setWindowState (Qt::WindowFullScreen);
     win.lockOrientation ();
     if (win.isHidden ())
         win.show ();
@@ -140,17 +168,16 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 
     m_feedback->play ();
 
-    // show the texts max. for 10 ~sec
-    if (timeout < 0)
-        timeout = 10000;
-
-    QTimer::singleShot (timeout, this, SLOT (showLogo ()));
+    // Set the interval and start the timer...
+    m_timer->setInterval (timeout);
+    m_timer->start ();
 }
 
 void
 ShutdownUI::showLogo ()
 {
     SYS_DEBUG ("");
+    m_timer->stop ();
 
     // FIXME: we need logo for both orientations...
     Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();

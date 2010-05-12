@@ -51,6 +51,9 @@ public slots:
                                    int calls,
                                    int im);
 
+protected:
+    void createContent ();
+
 private slots:
     void realize ();
     void sliderUnlocked ();

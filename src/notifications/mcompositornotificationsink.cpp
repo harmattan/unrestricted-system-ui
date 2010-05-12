@@ -108,7 +108,7 @@ void MCompositorNotificationSink::notificationDone(uint notificationId, bool not
 {
     MInfoBanner *infoBanner = idToBanner.take(notificationId);
     if (infoBanner != NULL) {
-        infoBanner->sceneManager()->disappearSceneWindow(infoBanner);
+        window->sceneManager()->disappearSceneWindow(infoBanner);
         connect(infoBanner, SIGNAL(disappeared()), this, SLOT(hideWindow()));
     }
     if (notificationIdInUse) {

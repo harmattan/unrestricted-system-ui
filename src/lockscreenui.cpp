@@ -76,6 +76,13 @@ LockScreenUI::~LockScreenUI ()
 }
 
 void
+LockScreenUI::createContent ()
+{
+    if (! m_Realized)
+        realize ();
+}
+
+void
 LockScreenUI::realize ()
 {
     MLayout               *layout;
