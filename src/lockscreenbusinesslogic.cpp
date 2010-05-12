@@ -88,27 +88,25 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         Sysuid::sysuid ()->applicationWindow ();
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
+    if (eaterUI->isVisible ())
+        eaterUI->hide ();
+
     if (toggle) {
         if (mainwindow.isHidden ())
-        {
             mainwindow.show ();
-            #ifdef USE_FULLSCREEN
-            mainwindow.showFullScreen ();
-            #endif
-        }
 
-        mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
         lockUI->setOpacity (1.0);
+        mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
         lockUI->show ();
+
+        mainwindow.showFullScreen ();
         mainwindow.raise ();
 
         mayStartTimer ();
     } else {
         if (mainwindow.isVisible ())
-        {
-            mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
             mainwindow.hide ();
-        }
+
         stopTimer ();
     }
 }
@@ -122,32 +120,25 @@ LockScreenBusinessLogic::toggleEventEater (
 
     SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
 
+    // Hide the unlock ui if visible
+    if (lockUI->isVisible ())
+        lockUI->hide ();
+
     if (toggle) {
         if (mainwindow.isHidden ())
-        {
             mainwindow.show ();
-            #ifdef USE_FULLSCREEN
-            mainwindow.showFullScreen ();
-            #endif
-        }
 
-        // Hide the unlock ui if visible
-        if (lockUI->isVisible ())
-            lockUI->hide ();
-
-        // Show the event-eater window...
         eaterUI->setOpacity (0.0);
-        eaterUI->show ();
         mainwindow.sceneManager ()->appearSceneWindowNow (eaterUI);
+        eaterUI->show ();
 
+        mainwindow.showFullScreen ();
         mainwindow.raise ();
     } else {
         if (mainwindow.isVisible ())
-        {
-            // Hide the event eater
-            mainwindow.sceneManager ()->disappearSceneWindowNow (eaterUI);
             mainwindow.hide ();
-        }
+
+        stopTimer ();
     }
 }
 

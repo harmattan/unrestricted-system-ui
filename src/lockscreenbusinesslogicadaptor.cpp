@@ -23,11 +23,11 @@
 #include <QTimer>
 #include "lockscreenbusinesslogicadaptor.h"
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
-        QObject                 *obj, 
+        QObject                 *obj,
         LockScreenBusinessLogic *logic) :
     QDBusAbstractAdaptor (obj),
     m_LockScreenBusinessLogic (logic),
@@ -47,11 +47,11 @@ LockScreenBusinessLogicAdaptor::~LockScreenBusinessLogicAdaptor ()
         delete m_CallbackDbusIf;
 }
 
-void 
+void
 LockScreenBusinessLogicAdaptor::SetMissedEvents (
-        int emails, 
-        int messages, 
-        int calls, 
+        int emails,
+        int messages,
+        int calls,
         int im)
 {
     SYS_DEBUG (
@@ -73,10 +73,10 @@ LockScreenBusinessLogicAdaptor::SetMissedEvents (
  * \param mode The LockScreenBusinessLogicAdaptor::TkLockMode opcode.
  * \param silent Whether to show a notification or not (deprecated)
  * \param flicker Deprecated/not used
- * 
+ *
  * DBus method to show the lock screen ui or the event eater window.
  */
-int 
+int
 LockScreenBusinessLogicAdaptor::tklock_open (
         const QString  &service,
         const QString  &path,
@@ -112,56 +112,61 @@ LockScreenBusinessLogicAdaptor::tklock_open (
     m_MCECallbackInterface = interface;
     m_MCECallbackMethod = method;
 
+    /*
+     * Functions are called by singleShot because send a TkLockReplyOk
+     * to MCE as soon as possible is mandatory...
+     */
     switch (mode) {
         case TkLockModeNone:
             SYS_DEBUG ("### TkLockModeNone");
             break;
-        
+
         case TkLockModeEnable:
             SYS_DEBUG ("### TkLockModeEnable");
+
             /*
-    	     * This mode is reported by MCE when the screen is locked and turned
-	         * off. A bit strange that the lock mode is enabled and we hide the
-	         * lockscreenui, but the screen is turned off, so we hide the unlock
-    	     * screen.
-	         */
-	        m_LockScreenBusinessLogic->toggleScreenLockUI (false);
+             * Show the visual earliest...
+             * in this way we can avoid the full-screen window
+             * creation time when EnableVisual requested later...
+             *
+             * XXX: Previously window-creation when screen off
+             *      caused X11 crashes... now it seems to work.
+             */
+            QTimer::singleShot (100, this, SLOT (enableVisual ()));
             break;
 
         case TkLockModeHelp:
-	    /*
-	     * Not used/deprecated.
-	     */
+            /*
+             * Not used/deprecated.
+             */
             SYS_DEBUG ("### TkLockModeHelp");
             break;
 
         case TkLockModeSelect:
-	    /*
-	     * Not used/deprecated.
-	     */
+            /*
+             * Not used/deprecated.
+             */
             SYS_DEBUG ("### TkLockModeSelect");
             break;
 
         case TkLockModeOneInput:
             SYS_DEBUG ("### TkLockModeOneInput");
-	    /*
-	     * The event eater supposed to consume exactly one event, hence the
-	     * name. 
-	     */
+            /*
+             * The event eater supposed to consume exactly one event, hence the
+             * name.
+             */
             QTimer::singleShot (0, this, SLOT (enableEater ()));
             break;
 
         case TkLockEnableVisual:
             SYS_DEBUG ("### TkLockEnableVisual");
-	        /*
-    	     * This mode is where we actually should show the screen to unlock
-	         * the screen.
-	         */
-            #ifdef USE_FULLSCREEN
+            /*
+             * This mode is where we actually should show the screen to unlock
+             * the screen.
+             *
+             * Calling again the enableVisual to raise the unlock-ui window.
+             */
             QTimer::singleShot (0, this, SLOT (enableVisual ()));
-            #else
-            enableVisual ();
-            #endif
             break;
 
         default:
@@ -187,9 +192,20 @@ LockScreenBusinessLogicAdaptor::enableEater ()
     m_LockScreenBusinessLogic->toggleEventEater (true);
 }
 
+void
+LockScreenBusinessLogicAdaptor::hideVisualAndEater ()
+{
+    SYS_DEBUG ("");
+    /*
+     * This functions will hides both page,
+     * the event eater and the unlock-ui
+     */
+    m_LockScreenBusinessLogic->toggleEventEater (false);
+}
+
 /*!
  * \param silent Whether to show notificatio or not (deprecated).
- * 
+ *
  * DBus method that is called to hide the lock screen UI.
  */
 int
@@ -199,21 +215,21 @@ LockScreenBusinessLogicAdaptor::tklock_close (
     SYS_DEBUG ("");
     Q_UNUSED (silent);
 
-    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
+    QTimer::singleShot (0, this, SLOT (hideVisualAndEater ()));
 
     return (int) TkLockReplyOk;
 }
 
-void 
+void
 LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
     SYS_DEBUG ("");
 
-    if (m_CallbackDbusIf) 
+    if (m_CallbackDbusIf)
         delete m_CallbackDbusIf;
 
     m_CallbackDbusIf = new QDBusInterface (
-            m_MCECallbackService, //"com.nokia.mce", 
+            m_MCECallbackService, //"com.nokia.mce",
             m_MCECallbackPath, //"/com/nokia/mce/request",
             m_MCECallbackInterface, //"com.nokia.mce.request",
             QDBusConnection::systemBus ());
@@ -236,8 +252,8 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
     SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
    	QDBusMessage message;
 
-    message = m_CallbackDbusIf->call (QDBus::NoBlock, 
-            m_MCECallbackMethod, //QString ("tklock_callback"), 
+    message = m_CallbackDbusIf->call (QDBus::NoBlock,
+            m_MCECallbackMethod, //QString ("tklock_callback"),
             (int) TkLockReplyOk);
     SYS_DEBUG ("Answer sent...");
 

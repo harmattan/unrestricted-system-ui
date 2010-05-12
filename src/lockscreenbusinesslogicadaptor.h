@@ -73,14 +73,16 @@ public slots:
             bool       b2);
 
     /*
-     * This is not working. 
+     * This is not working always.
      */
     int tklock_close (bool b);
 
 private slots:
     void unlockConfirmed ();
+
     void enableVisual ();
     void enableEater ();
+    void hideVisualAndEater ();
 
 signals:
     void delegateSetMissedEvents (int, int, int, int);
