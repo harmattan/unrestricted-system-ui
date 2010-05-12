@@ -50,6 +50,9 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
 
+    // Hide from taskbar at the beginning
+    hidefromTaskBar ();
+
 #if 0
 #if defined (DEBUG) && defined (i386)
     // XXX: Remove this... only for debugging/devoloping purposes
@@ -103,7 +106,6 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     } else {
         if (mainwindow.isVisible ())
         {
-            hidefromTaskBar ();
             mainwindow.sceneManager ()->disappearSceneWindowNow (lockUI);
             mainwindow.hide ();
         }
@@ -143,7 +145,6 @@ LockScreenBusinessLogic::toggleEventEater (
         if (mainwindow.isVisible ())
         {
             // Hide the event eater
-            hidefromTaskBar ();
             mainwindow.sceneManager ()->disappearSceneWindowNow (eaterUI);
             mainwindow.hide ();
         }

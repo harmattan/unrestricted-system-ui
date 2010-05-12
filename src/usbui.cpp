@@ -45,7 +45,7 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic = new QmUSBMode (this);
     m_locks = new QmLocks (this);
 
-    QTimer::singleShot (1000, this, SLOT (initialize ()));
+    QTimer::singleShot (5000, this, SLOT (initialize ()));
 }
 
 UsbUi::~UsbUi ()
