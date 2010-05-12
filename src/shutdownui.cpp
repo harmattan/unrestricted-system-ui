@@ -44,6 +44,10 @@ ShutdownUI::ShutdownUI () :
     setPannable (false);
     setComponentsDisplayMode (MApplicationPage::AllComponents,
                               MApplicationPageModel::Hide);
+
+    // We have to pre-created/load the shutdown ui content
+    // because when it should show, the in should show NOW
+    QTimer::singleShot (5000, this, SLOT (realize ()));
 }
 
 ShutdownUI::~ShutdownUI ()
@@ -52,9 +56,9 @@ ShutdownUI::~ShutdownUI ()
 }
 
 void
-ShutdownUI::createContent ()
+ShutdownUI::realize ()
 {
-    MApplicationPage::createContent ();
+    SYS_DEBUG ("");
 
     // Initilaize non-graphical feedback
     m_feedback = new MFeedback (this);
@@ -103,29 +107,23 @@ void
 ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
 {
     SYS_DEBUG ("");
-
     MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
 
     win.lockOrientation ();
+    if (win.isHidden ())
+        win.show ();
+
+    setOpacity (1.0);
+    win.sceneManager ()->appearSceneWindowNow (this);
+    show ();
+
+    win.showFullScreen ();
+    win.raise ();
 
     Maemo::QmDisplayState  display;
 
     // Turn on
     display.set (Maemo::QmDisplayState::On);
-
-    if (win.isHidden ())
-    {
-        win.show ();
-	#ifdef USE_FULLSCREEN
-        win.showFullScreen ();
-	#endif	
-    }
-
-    setOpacity (1.0);
-    show ();
-
-    win.sceneManager ()->appearSceneWindowNow (this);
-    win.raise ();
 
     if (! (text1.isEmpty () && text2.isEmpty ()))
     {

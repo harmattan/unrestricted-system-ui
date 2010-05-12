@@ -25,6 +25,7 @@
 #include <qmsystem/qmsystemstate.h>
 
 #include <MApplicationWindow>
+#include <MApplication>
 #include <MSceneManager>
 #include <MNotification>
 #include <MLocale>
@@ -33,6 +34,12 @@
 #include "debug.h"
 
 using namespace Maemo;
+
+#ifndef UNIT_TEST
+extern MApplication *exitPtr;
+#else
+MApplication *exitPtr;
+#endif
 
 #ifdef TEST_SHUTDOWN_LOGIC
 #  include <QTimer>
@@ -85,6 +92,8 @@ ShutdownBusinessLogic::systemStateChanged (
     switch (what) {
         case QmSystemState::Shutdown:
             SYS_DEBUG ("QmSystemState::Shutdown");
+            // To avoid early quitting on shutdown...
+            exitPtr = 0;
             showUI ();
             break;
 

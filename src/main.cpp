@@ -27,7 +27,7 @@
 
 #include "signal.h"
 
-static MApplication *exitPtr;
+MApplication *exitPtr;
 
 void sysuid_exit (int sig)
 {
@@ -40,14 +40,11 @@ void sysuid_exit (int sig)
 
 int main (int argc, char** argv)
 {
+    SYS_DEBUG ("- System-UI start");
     MApplication app (argc, argv);
     exitPtr = &app;
 
-    qInstallMsgHandler (0);
-
     app.setQuitOnLastWindowClosed (false);
-
-    SYS_DEBUG ("- System-UI start");
 
     signal (SIGINT, sysuid_exit);
 
