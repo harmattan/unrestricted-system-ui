@@ -228,8 +228,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
              this,
              SLOT (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)));
 
-    // Init battery values when idle
-    QTimer::singleShot (100, this, SLOT (initBattery ()));
+    // Init battery values delayed...
+    QTimer::singleShot (3000, this, SLOT (initBattery ()));
 
     SYS_DEBUG ("------------------ end -----------------------");
 }
