@@ -21,6 +21,7 @@
 
 #include <MApplicationPage>
 
+class QTimer;
 class MLabel;
 class MFeedback;
 class MImageWidget;
@@ -35,16 +36,21 @@ public:
 
     void showWindow (QString& text1, QString& text2, int timeout);
 
+protected:
+    void createContent ();
+
 private slots:
     void showLogo ();
     void turnOffScreen ();
     void realize ();
 
 private:
+    QTimer          *m_timer;
     MLabel          *m_text1;
     MLabel          *m_text2;
     MImageWidget    *m_logo;
     MFeedback       *m_feedback;
+    bool             m_realized;
 };
 
 #endif // SHUTDOWNUI_H
