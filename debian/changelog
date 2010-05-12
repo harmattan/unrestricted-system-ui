@@ -6,6 +6,8 @@ system-ui (0.15.9~1) harmattan; urgency=low
                        the USB cable to device
   * Fixes: NB#168421 - Lock screen and event eater windows should not be
                        visible in the switcher
+  * Fixes: NB#168545 - Sysuid crash at MCompositorNotificationSink::notification
+                       Done
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 12 May 2010 08:37:36 +0200
 
