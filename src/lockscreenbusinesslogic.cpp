@@ -86,16 +86,15 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
+
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
     SYS_DEBUG ("*** toggle     = %s", SYS_BOOL(toggle));
-    SYS_DEBUG ("*** mainwindow = %p",
-            Sysuid::sysuid ()->applicationWindow ());
 
-    MApplicationWindow *window = 
-        MApplication::instance()->activeApplicationWindow();
-    SYS_DEBUG ("*** active win = %p",
-            window);
+    MApplicationWindow *window;
+    SYS_DEBUG ("*** mainwindow = %p", &mainwindow);
+    window = MApplication::instance()->activeApplicationWindow();
+    SYS_DEBUG ("*** active win = %p", window);
     
     if (eaterUI->isVisible ())
         eaterUI->hide ();
@@ -131,7 +130,12 @@ LockScreenBusinessLogic::toggleEventEater (
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
 
-    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
+    
+    MApplicationWindow *window;
+    SYS_DEBUG ("*** mainwindow = %p", &mainwindow);
+    window = MApplication::instance()->activeApplicationWindow();
+    SYS_DEBUG ("*** active win = %p", window);
 
     // Hide the unlock ui if visible
     if (lockUI->isVisible ())

@@ -139,6 +139,7 @@ PluginList::addPlugin(
     loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
     success = loader.load();
     if (!success) {
+        SYS_WARNING ("ERROR: %s", SYS_STR(loader.errorString()));
         qDebug() << "Error loading plugin: " << loader.errorString();
 	    return;
     }

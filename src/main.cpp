@@ -18,7 +18,7 @@
 ** of this file.
 **
 ****************************************************************************/
-#define HANDLE_CRASH
+#undef HANDLE_CRASH
 #ifdef HANDLE_CRASH
 #  define BACKTRACE_SIZE 128
 #  include <execinfo.h>
@@ -62,11 +62,11 @@ some_crash_happened (
     /*
      * Let's print the backtrace from the stack.
      */
-    fprintf (stderr, "--- Crash backtrace of sysuid ---\n");
+    fprintf (stderr, "++++++++++ Crash backtrace of sysuid ++++++++++\n");
     for (size_t i = 0; i < backtrace_size; i++) {
-        fprintf (stderr, "%03u %s\n", i, backtrace_strings[i]);
+        fprintf (stderr, "+++ %03u %-20s +++\n", i, backtrace_strings[i]);
     }
-    fprintf (stderr, "---------------------------------\n");
+    fprintf (stderr, "+++++++++++++++++++++++++++++++++++++++++++++++\n");
     fflush (stderr);
 }
 
