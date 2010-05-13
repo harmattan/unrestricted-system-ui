@@ -92,9 +92,10 @@ void PluginList::loadPlugins()
 
         SYS_DEBUG ("********************************************");
         SYS_DEBUG ("*** loading : %s", SYS_STR(fullPath));
-        SYS_DEBUG ("********************************************");
         addPlugin (fullPath);
-
+        SYS_DEBUG ("*** loaded  : %s", SYS_STR(fullPath));
+        SYS_DEBUG ("********************************************");
+        
         ++m_LoadingPluginNumber;
         QTimer::singleShot(LoadDelay, this, SLOT(loadPlugins()));
 
@@ -131,7 +132,6 @@ PluginList::addPlugin(
     QObject       *object;
     QPluginLoader  loader(path);
 
-    SYS_DEBUG ("Loading plugin from %s", SYS_STR(path));
     /*
      * We have to resolve all the symbols early, so we will not abort when there
      * are unresolved symbols in the library. It is really important!
@@ -139,8 +139,9 @@ PluginList::addPlugin(
     loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
     success = loader.load();
     if (!success) {
+        SYS_WARNING ("ERROR: %s", SYS_STR(loader.errorString()));
         qDebug() << "Error loading plugin: " << loader.errorString();
-	return;
+	    return;
     }
 
     object = loader.instance();

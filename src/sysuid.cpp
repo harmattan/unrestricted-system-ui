@@ -42,7 +42,7 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -206,6 +206,7 @@ MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 
 MApplicationWindow &Sysuid::applicationWindow ()
 {
+    SYS_DEBUG ("*** m_applicationWindow = %p", m_applicationWindow);
     return *m_applicationWindow;
 }
 
