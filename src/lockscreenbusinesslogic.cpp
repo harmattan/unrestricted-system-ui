@@ -18,8 +18,10 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <MApplication>
 #include <MApplicationWindow>
 #include <MSceneManager>
+
 #include <QDBusInterface>
 #include <QTime>
 #include <QX11Info>
@@ -86,14 +88,25 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 {
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
-    SYS_DEBUG ("*** toggle = %s", toggle ? "true" : "false");
+    SYS_DEBUG ("*** toggle     = %s", SYS_BOOL(toggle));
+    SYS_DEBUG ("*** mainwindow = %p",
+            Sysuid::sysuid ()->applicationWindow ());
 
+    MApplicationWindow *window = 
+        MApplication::instance()->activeApplicationWindow();
+    SYS_DEBUG ("*** active win = %p",
+            window);
+    
     if (eaterUI->isVisible ())
         eaterUI->hide ();
 
     if (toggle) {
-        if (mainwindow.isHidden ())
+        if (mainwindow.isHidden ()) {
+            SYS_DEBUG ("Showing main window");
             mainwindow.show ();
+        } else {
+            SYS_DEBUG ("The main window already visible");
+        }
 
         lockUI->setOpacity (1.0);
         mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
