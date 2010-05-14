@@ -4,7 +4,7 @@ SRCDIR = ../../src
 STUBSDIR = ../stubs
 INCLUDEPATH += $$M_INSTALL_HEADERS $$SRCDIR $$STUBSDIR ../../include
 DEPENDPATH = $$INCLUDEPATH
-CONFIG += debug meegotouch silent link_pkgconfig qmsystem
+CONFIG += meegotouch silent link_pkgconfig
 QT += testlib network gui dbus xml
 exists($$[QT_INSTALL_LIBS]/libQtOpenGL.so):QT += opengl
 TEMPLATE = app
@@ -12,6 +12,7 @@ DEFINES += UNIT_TEST
 LIBS += -L../../lib
 
 PKGCONFIG += \
+          qmsystem \
           libngf0 \
           dbus-1
 

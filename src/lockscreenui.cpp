@@ -246,8 +246,10 @@ LockScreenUI::updateMissedEventAmounts (int emails,
 
     if (m_notificationArea != 0)
     {
+#if 0
         static_cast<UnlockNotifications *> (m_notificationArea)-> 
                     updateMissedEvents (emails, messages, calls, im);
+#endif
 
         // Hide the whole missed events notification area when
         // there is no any missed events...

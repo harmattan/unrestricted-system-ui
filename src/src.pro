@@ -8,7 +8,6 @@ TEMPLATE = app
 TARGET = sysuid
 target.path = /usr/bin
 CONFIG += meegotouch \
-          qmsystem \
           link_pkgconfig
 
 QT += dbus gui
@@ -64,6 +63,7 @@ include(notifications/notifications.pri)
 
 PKGCONFIG += \
     contextsubscriber-1.0 \
+    qmsystem \
     maemosec \
     dbus-1 \
     libngf0

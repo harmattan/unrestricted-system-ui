@@ -6,7 +6,10 @@ STUB_PREFIX = ../stubs
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 
-CONFIG += qmsystem silent
+CONFIG += silent \
+          link_pkgconfig
+
+PKGCONFIG += qmsystem
 
 QT += gui
 
