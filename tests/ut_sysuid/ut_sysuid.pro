@@ -55,7 +55,6 @@ HEADERS += \
     $$SRCDIR/notifications/ngfnotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/unlocknotifications.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
