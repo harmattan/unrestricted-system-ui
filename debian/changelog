@@ -1,3 +1,10 @@
+system-ui (0.15.11~1) harmattan; urgency=low
+
+  * [NEW VERSION]
+  * Fix build warnings...
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 14 May 2010 10:41:04 +0200
+
 system-ui (0.15.10-1) harmattan; urgency=low
 
   * Add a workaround for qmsystem...
