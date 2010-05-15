@@ -441,7 +441,7 @@ BatteryBusinessLogic::batteryChargerEvent (
             SYS_DEBUG ("QmBattery::USB_500mA");
         case QmBattery::USB_100mA: 
             // USB with 100mA output
-            SYS_DEBUG ("QmBattery::USB_500mA");
+            SYS_DEBUG ("QmBattery::USB_100mA");
             emit batteryCharging (animationRate (type));
             break;
 
@@ -456,8 +456,6 @@ void
 BatteryBusinessLogic::devicePSMStateChanged (
         QmDeviceMode::PSMState PSMState)
 {
-    SYS_DEBUG ("");
-
     if (PSMState == QmDeviceMode::PSMStateOff) {
         NOTIFICATION (qtTrId (ExitPSMText));
         SYS_DEBUG ("Emitting DBus signal on PSM off");
@@ -538,9 +536,8 @@ BatteryBusinessLogic::togglePSMAuto (
 QStringList
 BatteryBusinessLogic::remainingTimeValues ()
 {
-    SYS_DEBUG ("");
-
     QStringList values;
+
     if (m_Battery->getChargingState () == QmBattery::StateCharging)
         values << qtTrId (ChargingText) << qtTrId (ChargingText);
     else {
@@ -562,7 +559,7 @@ BatteryBusinessLogic::remainingTimeValues ()
             << QString ("%1").arg (m_Battery->getRemainingIdleTime (mode) / 60);
     }
 
-    #ifdef DEBUG
+    #if 0
     int n = 0;
     foreach (QString thisone, values) {
         SYS_DEBUG ("values[%d] = %s", n, SYS_STR (values[n]));
