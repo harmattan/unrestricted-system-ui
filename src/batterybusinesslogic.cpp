@@ -395,7 +395,9 @@ BatteryBusinessLogic::batteryStateChanged (
 
     case QmBattery::StateEmpty:
         SYS_DEBUG ("QmBattery::StateEmpty");
+#ifdef __ARMEL__
         NOTIFICATION (qtTrId (RechargeBatteryText));
+#endif
         break;
 
     case QmBattery::StateError:
