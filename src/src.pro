@@ -36,6 +36,8 @@ HEADERS +=                              \
     usbui.h                             \
     contextframeworkcontext.h           \
     applicationcontext.h                \
+    unlocknotifications.h               \
+    unlocknotificationsink.h            \
     unlockwidgets.h
 
 SOURCES +=                              \
@@ -53,6 +55,8 @@ SOURCES +=                              \
     lockscreenbusinesslogicadaptor.cpp  \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
+    unlocknotifications.cpp             \
+    unlocknotificationsink.cpp          \
     unlockwidgets.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)

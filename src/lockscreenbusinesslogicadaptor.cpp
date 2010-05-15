@@ -34,10 +34,8 @@ LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
     m_CallbackDbusIf (0)
 {
     Q_ASSERT (logic != 0);
-    connect (this, SIGNAL(delegateSetMissedEvents(int, int, int, int)),
-            logic, SLOT(updateMissedEventAmounts(int, int, int, int)));
 
-    connect (logic, SIGNAL(unlockConfirmed()),
+    connect (logic, SIGNAL(unlockConfirmed ()),
             this, SLOT(unlockConfirmed ()));
 }
 
@@ -46,24 +44,6 @@ LockScreenBusinessLogicAdaptor::~LockScreenBusinessLogicAdaptor ()
     if (m_CallbackDbusIf)
         delete m_CallbackDbusIf;
 }
-
-void
-LockScreenBusinessLogicAdaptor::SetMissedEvents (
-        int emails,
-        int messages,
-        int calls,
-        int im)
-{
-    SYS_DEBUG (
-"\n*** emails    = %d"
-"\n*** messages  = %d"
-"\n*** calls     = %d"
-"\n*** im        = %d",
-    emails, messages, calls, im);
-
-    emit delegateSetMissedEvents (emails, messages, calls, im);
-}
-
 
 /*!
  * \param service DBus service to call when unlock is performed.

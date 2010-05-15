@@ -128,7 +128,8 @@ LockScreenUI::realize ()
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    // updateMissedEventAmounts will add this ^ to policy
+    // TODO: Connect to UnlockNotificationSink signals...
+    // FIXME: updateMissedEventAmounts will add this ^ to policy
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
@@ -145,9 +146,6 @@ LockScreenUI::realize ()
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
-
-    // I'm calling this for updating the m_notificationArea
-    updateMissedEventAmounts (m_emails, m_messages, m_calls, m_im);
 
     // Load the backgrounds if any...
     reloadLandscapeBackground ();
@@ -231,6 +229,7 @@ LockScreenUI::paint (QPainter *painter,
     }
 }
 
+#if 0
 void
 LockScreenUI::updateMissedEventAmounts (int emails,
                                         int messages,
@@ -246,10 +245,8 @@ LockScreenUI::updateMissedEventAmounts (int emails,
 
     if (m_notificationArea != 0)
     {
-#if 0
         static_cast<UnlockNotifications *> (m_notificationArea)-> 
                     updateMissedEvents (emails, messages, calls, im);
-#endif
 
         // Hide the whole missed events notification area when
         // there is no any missed events...
@@ -270,6 +267,7 @@ LockScreenUI::updateMissedEventAmounts (int emails,
         }
     }
 }
+#endif
 
 EventEaterUI::EventEaterUI ()
 {

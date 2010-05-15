@@ -36,6 +36,7 @@ class NotificationManager;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
 class MApplicationWindow;
+class UnlockNotificationSink;
 
 class Sysuid : public QObject
 {
@@ -61,6 +62,13 @@ public:
      * \return a reference to the compositor notification sink
      */
     MCompositorNotificationSink& compositorNotificationSink ();
+
+    /*!
+     * Returns a reference to the unlock-screen notification sink.
+     *
+     * \return a reference to the unlock-screen notification sink
+     */
+    UnlockNotificationSink& unlockNotificationSink ();
 
     /*!
      * Returns a reference to the application window.
@@ -92,10 +100,10 @@ private:
     static Sysuid           *m_Sysuid;
 
     //! Status area window
-    StatusAreaRenderer        *m_statusAreaWindow;
+    StatusAreaRenderer      *m_statusAreaWindow;
 
     //! Application window
-    MApplicationWindow    *m_applicationWindow;
+    MApplicationWindow      *m_applicationWindow;
 
     //! Notification manager
     NotificationManager     *m_notificationManager;
@@ -104,7 +112,10 @@ private:
     MCompositorNotificationSink *m_compositorNotificationSink;
 
     //! Feedback notification sink for presenting the notification as a feedback
-    NGFNotificationSink   *m_ngfNotificationSink;
+    NGFNotificationSink     *m_ngfNotificationSink;
+
+    //! Unlock screen notification sink for presenting missed events on ui
+    UnlockNotificationSink  *m_unlockNotificationSink;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

@@ -37,9 +37,6 @@ public:
     virtual ~LockScreenBusinessLogic ();
 
 public slots:
-    // from dbus
-    void updateMissedEventAmounts(int, int, int, int);
-
     void toggleScreenLockUI (bool toggle);
     void toggleEventEater   (bool toggle);
 
