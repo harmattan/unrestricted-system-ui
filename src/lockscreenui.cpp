@@ -20,6 +20,7 @@
 ****************************************************************************/
 #include "lockscreenui.h"
 #include "unlockwidgets.h"
+#include "unlocknotificationsink.h"
 #include "sysuid.h"
 
 #include <QGraphicsLinearLayout>
@@ -59,13 +60,10 @@ LockScreenUI::LockScreenUI () :
         m_LockLiftArea (0),
         m_LockLandArea (0),
         m_confBgLandscape (0),
-        m_confBgPortrait (0),
-        m_emails (0),
-        m_messages (0),
-        m_calls (0),
-        m_im (0)
+        m_confBgPortrait (0)
 {
     SYS_DEBUG ("");
+
     QTimer::singleShot (0, this, SLOT(realize()));
 }
 
@@ -128,8 +126,11 @@ LockScreenUI::realize ()
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    // TODO: Connect to UnlockNotificationSink signals...
-    // FIXME: updateMissedEventAmounts will add this ^ to policy
+    // Connect to notification sink (which is only enabled on locked state...)
+    connect (&Sysuid::sysuid ()->unlockNotificationSink (),
+             SIGNAL (updateNotificationsCount (int, int, int, int)),
+             this,
+             SLOT (updateMissedEvents (int, int, int, int)));
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
@@ -229,19 +230,13 @@ LockScreenUI::paint (QPainter *painter,
     }
 }
 
-#if 0
 void
-LockScreenUI::updateMissedEventAmounts (int emails,
-                                        int messages,
-                                        int calls,
-                                        int im)
+LockScreenUI::updateMissedEvents (int emails,
+                                  int messages,
+                                  int calls,
+                                  int im)
 {
     SYS_DEBUG ("");
-
-    m_emails = emails;
-    m_messages = messages;
-    m_calls = calls;
-    m_im = im;
 
     if (m_notificationArea != 0)
     {
@@ -267,7 +262,6 @@ LockScreenUI::updateMissedEventAmounts (int emails,
         }
     }
 }
-#endif
 
 EventEaterUI::EventEaterUI ()
 {

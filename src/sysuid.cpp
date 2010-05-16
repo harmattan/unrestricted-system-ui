@@ -212,6 +212,11 @@ MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
     return *m_compositorNotificationSink;
 }
 
+UnlockNotificationSink& Sysuid::unlockNotificationSink ()
+{
+    return *m_unlockNotificationSink;
+}
+
 MApplicationWindow &Sysuid::applicationWindow ()
 {
     SYS_DEBUG ("*** m_applicationWindow = %p", m_applicationWindow);

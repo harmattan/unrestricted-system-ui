@@ -28,6 +28,7 @@
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
+#include "unlocknotificationsink.h"
 #include "sysuid.h"
 
 #define DEBUG
@@ -111,6 +112,8 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
         stopTimer ();
     }
+
+    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }
 
 void
@@ -147,6 +150,9 @@ LockScreenBusinessLogic::toggleEventEater (
 
         stopTimer ();
     }
+
+    // Enable the unlock notification sink also for dimmed state:
+    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }
 
 void

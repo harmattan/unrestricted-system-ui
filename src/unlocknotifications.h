@@ -8,6 +8,7 @@ class QPixmap;
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
+class UnlockNotificationSink;
 
 class UnlockNotifications : public MWidget
 {
@@ -28,6 +29,12 @@ public:
     virtual void paint (QPainter *painter,
                         const QStyleOptionGraphicsItem *option,
                         QWidget *widget = 0);
+
+public slots:
+    void updateMissedEvents (int emails,
+                             int messages,
+                             int calls,
+                             int im);
 
 private:
     QPixmap                 *m_background;

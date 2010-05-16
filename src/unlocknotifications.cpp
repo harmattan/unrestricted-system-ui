@@ -19,7 +19,6 @@
 **
 ****************************************************************************/
 #include "unlocknotifications.h"
-#include "unlocknotificationsink.h"
 
 #include <QGraphicsLinearLayout>
 #include <MLabel>
@@ -56,7 +55,6 @@ UnlockNotifications::~UnlockNotifications ()
     }
 }
 
-#if 0
 void
 UnlockNotifications::updateMissedEvents (int emails,
                                          int messages,
@@ -113,7 +111,6 @@ UnlockNotifications::updateMissedEvents (int emails,
         }
     }
 }
-#endif
 
 #define ACTIVE_RGBA     0., .67, .97, .5
 
