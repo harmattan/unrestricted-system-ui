@@ -55,6 +55,10 @@ UnlockNotificationSink::setLockedState (bool islocked)
     m_messages = 0;
     m_calls = 0;
     m_im = 0;
+
+    // Emit the notification-count update signal,
+    // in this way ui can hide the previous ones...
+    emit updateNotificationsCount (m_emails, m_messages, m_calls, m_im);
 }
 
 bool
