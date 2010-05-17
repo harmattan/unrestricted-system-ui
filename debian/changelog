@@ -2,6 +2,8 @@ system-ui (0.15.10~1) harmattan; urgency=low
 
   * [NEW RELEASE]
   * Add a workaround for qmsystem...
+  * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
+                       correctly
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 14 May 2010 09:38:47 +0200
 

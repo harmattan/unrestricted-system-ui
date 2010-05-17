@@ -24,6 +24,10 @@
 #include <QGraphicsLinearLayout>
 #include <QTimeLine>
 
+#define DEBUG
+#define WARNING
+#include "debug.h"
+
 StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *controller) :
     MWidgetView(controller),
     controller(controller),

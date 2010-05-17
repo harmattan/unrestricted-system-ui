@@ -21,6 +21,10 @@
 #include "statusindicator.h"
 #include <MViewCreator>
 
+//#define DEBUG
+#define WARNING
+#include "debug.h"
+
 StatusIndicatorIconView::StatusIndicatorIconView(StatusIndicator *controller) :
     StatusIndicatorAnimationView(controller)
 {
@@ -36,9 +40,17 @@ void StatusIndicatorIconView::updateData(const QList<const char *>& modification
 
     const char *member;
     foreach(member, modifications) {
-        if (member == StatusIndicatorModel::Value) {
+	SYS_DEBUG ("*** member = %s", member);
+        if (member == StatusIndicatorModel::Value ||
+			member == StatusIndicatorModel::Animate) {
+	    int frameNumber = model()->value().toDouble() * images.size();
             // Set the animation frame based on the model value
-            setAnimationFrame(model()->value().toDouble() * images.size());
+	    SYS_DEBUG ("*** images.size() = %d", images.size());
+	    SYS_DEBUG ("*** model()->value().toDouble() = %g", 
+			    model()->value().toDouble());
+	    SYS_DEBUG ("*** calling setAnimationFrame (%d)", 
+			    frameNumber);
+            setAnimationFrame(frameNumber);
         }
     }
 }

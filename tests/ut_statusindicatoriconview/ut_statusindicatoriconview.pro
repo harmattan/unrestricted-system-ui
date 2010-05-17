@@ -10,6 +10,7 @@ MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h
 # unit test and unit
 SOURCES += \
     ut_statusindicatoriconview.cpp \
+    $$SRCDIR/debug.cpp \
     $$SRCDIR/statusarea/statusindicatoriconview.cpp \
     $$SRCDIR/statusarea/statusindicator.cpp \
     $$STUBSDIR/stubbase.cpp
@@ -17,6 +18,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_statusindicatoriconview.h \
+    $$SRCDIR/debug.h \
     $$SRCDIR/statusarea/statusindicatoranimationview.h \
     $$SRCDIR/statusarea/statusindicatoriconview.h \
     $$SRCDIR/statusarea/statusindicator.h \

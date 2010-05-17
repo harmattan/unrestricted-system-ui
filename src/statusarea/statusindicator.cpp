@@ -23,6 +23,10 @@
 #include "inputmethodstatusindicatoradaptor.h"
 #include "applicationcontext.h"
 
+//#define DEBUG
+#define WARNING
+#include "debug.h"
+
 StatusIndicator::StatusIndicator(MWidget *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
@@ -50,6 +54,7 @@ void StatusIndicator::setValue(QVariant v)
 
 QVariant StatusIndicator::value() const
 {
+    SYS_DEBUG ("*** currentValue = %g", currentValue.toDouble());
     return currentValue;
 }
 
@@ -75,8 +80,10 @@ void StatusIndicator::setModelUpdatesEnabled(bool modelUpdatesEnabled)
 void StatusIndicator::updateAnimationStatus()
 {
     if (modelUpdatesEnabled) {
+	SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
         model()->setAnimate(animateIfPossible);
     } else {
+	SYS_DEBUG ("setAnimate(false)");
         model()->setAnimate(false);
     }
 }
@@ -175,6 +182,8 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
 
     batteryCharging = context.createContextItem("Battery.IsCharging");
     connect(batteryCharging, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
+
+    batteryLevelChanged ();
 }
 
 BatteryStatusIndicator::~BatteryStatusIndicator()
@@ -199,7 +208,10 @@ void BatteryStatusIndicator::batteryChargingChanged()
         setObjectName(QString(metaObject()->className()) + "Level");
         animateIfPossible = false;
     }
+
     updateAnimationStatus();
+    //SYS_DEBUG ("extra batteryLevelChanged() call");
+    batteryLevelChanged ();
 }
 
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :

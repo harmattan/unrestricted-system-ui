@@ -31,7 +31,7 @@
 #include <MApplicationIfProxy>
 #include "notificationarea.h"
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -139,7 +139,9 @@ PluginList::addPlugin(
     loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
     success = loader.load();
     if (!success) {
-        SYS_WARNING ("ERROR: %s", SYS_STR(loader.errorString()));
+        SYS_WARNING ("ERROR: %s: %s", 
+                SYS_STR(loader.errorString()),
+                SYS_STR(path));
         qDebug() << "Error loading plugin: " << loader.errorString();
 	    return;
     }
