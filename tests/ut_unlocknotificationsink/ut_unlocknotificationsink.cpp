@@ -25,6 +25,8 @@
 
 #include <QtTest/QtTest>
 #include <MApplication>
+#include <QList>
+#include <QVariant>
 
 // Users group and user id:
 #define GID 29999
@@ -161,39 +163,41 @@ Ut_UnlockNotificationSink::testAddNotification ()
 
     // SIGNAL:
     // void updateNotificationsCount (int emails, int messages, int calls, int im);
-    QList<QVariant> arguments = spy.takeFirst ();
+    QList<QVariant> arguments1 = spy.takeFirst ();
     // One e-mail arrived...
-    QVERIFY (arguments.at (0).toInt () == 1);
-    QVERIFY (arguments.at (1).toInt () == 0);
-    QVERIFY (arguments.at (2).toInt () == 0);
-    QVERIFY (arguments.at (3).toInt () == 0);
+    QVERIFY (arguments1.at (0).toInt () == 1);
+    QVERIFY (arguments1.at (1).toInt () == 0);
+    QVERIFY (arguments1.at (2).toInt () == 0);
+    QVERIFY (arguments1.at (3).toInt () == 0);
 
-    QList<QVariant> arguments = spy.takeFirst ();
+    QList<QVariant> arguments2 = spy.takeFirst ();
     // One message arrived...
-    QVERIFY (arguments.at (0).toInt () == 1);
-    QVERIFY (arguments.at (1).toInt () == 1);
-    QVERIFY (arguments.at (2).toInt () == 0);
-    QVERIFY (arguments.at (3).toInt () == 0);
+    QVERIFY (arguments2.at (0).toInt () == 1);
+    QVERIFY (arguments2.at (1).toInt () == 1);
+    QVERIFY (arguments2.at (2).toInt () == 0);
+    QVERIFY (arguments2.at (3).toInt () == 0);
 
-    QList<QVariant> arguments = spy.takeFirst ();
+    QList<QVariant> arguments3 = spy.takeFirst ();
     // One call arrived...
-    QVERIFY (arguments.at (0).toInt () == 1);
-    QVERIFY (arguments.at (1).toInt () == 1);
-    QVERIFY (arguments.at (2).toInt () == 1);
-    QVERIFY (arguments.at (3).toInt () == 0);
+    QVERIFY (arguments3.at (0).toInt () == 1);
+    QVERIFY (arguments3.at (1).toInt () == 1);
+    QVERIFY (arguments3.at (2).toInt () == 1);
+    QVERIFY (arguments3.at (3).toInt () == 0);
 
-    QList<QVariant> arguments = spy.takeFirst ();
+    QList<QVariant> arguments4 = spy.takeFirst ();
     // One instant message arrived...
-    QVERIFY (arguments.at (0).toInt () == 1);
-    QVERIFY (arguments.at (1).toInt () == 1);
-    QVERIFY (arguments.at (2).toInt () == 1);
-    QVERIFY (arguments.at (3).toInt () == 1);
+    QVERIFY (arguments4.at (0).toInt () == 1);
+    QVERIFY (arguments4.at (1).toInt () == 1);
+    QVERIFY (arguments4.at (2).toInt () == 1);
+    QVERIFY (arguments4.at (3).toInt () == 1);
 }
 
 void
 Ut_UnlockNotificationSink::testEnableDisableLocking ()
 {
     QSignalSpy  spy (sink, SIGNAL (updateNotificationsCount (int, int, int, int)));
+
+    qInstallMsgHandler (0);
 
     // Test notifications
     NotificationParameters im_params;
@@ -226,7 +230,7 @@ Ut_UnlockNotificationSink::testEnableDisableLocking ()
     // 5.) setLockedState (false) emit update counts with zeros...
     QVERIFY (spy.count () == 5);
 
-    QList<QVariant> arguments = spy.takeAt (2);
+    QList<QVariant> arguments = spy.takeAt (3); // signal after adding im3
     // One instant message arrived...
     QVERIFY (arguments.at (0).toInt () == 0);
     QVERIFY (arguments.at (1).toInt () == 0);

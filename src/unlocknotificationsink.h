@@ -28,6 +28,10 @@ private:
     int              m_messages;
     int              m_calls;
     int              m_im;
+
+#ifdef UNIT_TEST
+friend class Ut_UnlockNotificationSink;
+#endif
 };
 
 #endif
