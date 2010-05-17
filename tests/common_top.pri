@@ -16,13 +16,6 @@ PKGCONFIG += \
           libngf0 \
           dbus-1
 
-# For setting the coverage flag ON
-contains(COV_OPTION, on) {
-LIBS += -lgcov
-QMAKE_CXXFLAGS += -ftest-coverage \
-    -fprofile-arcs 
-}
-
 DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
 
 # install tests

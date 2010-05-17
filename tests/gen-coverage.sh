@@ -7,15 +7,9 @@ if [ "${BCOVPATH}x" == "x" ]; then
     exit 1
 fi
 
-export COV_OPTION=on
 export SBOX_USE_CCACHE=no
 
-if [ -f Makefile ]; then
-    make clean > /dev/null
-    make distclean > /dev/null
-fi
-
-qmake COV_OPTION=on tests.pro
+qmake tests.pro
 make -j4
 
 echo "command make check" > .bcovdump.all
