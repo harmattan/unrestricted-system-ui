@@ -41,6 +41,7 @@ private slots:
     void testSetPSMThreshold();
     void testTogglePSM();
     void testTogglePSMAuto();
+    void testBatteryBarValue();
 
 private:
     SystemUIGConf *systemUIGConf;

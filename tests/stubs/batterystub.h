@@ -131,8 +131,11 @@ signals:
     * Sent when battery charge level has changed. See enumeration of
     * #Maemo::QmBattery::Level
     * @param level Current battery charge level.
+    * XXX: Deprecated
     */
     void batteryLevelChanged(Maemo::QmBattery::Level level);
+    /* The newer one */
+    void batteryStateChanged(Maemo::QmBattery::BatteryState batteryState);
 
     /**
     * Sent when a charger event has occurred.
@@ -150,8 +153,11 @@ signals:
     /**
     * Sent when battery charging state has changed.
     * @param state Current battery charging status.
+    * XXX: Deprecated
     */
     void batteryStatusChanged(Maemo::QmBattery::State state);
+    /* The newer one */
+    void chargingStateChanged(Maemo::QmBattery::ChargingState chargingState);
 
 private slots:
     void changeLevel(); //own addition

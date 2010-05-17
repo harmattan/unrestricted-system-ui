@@ -100,13 +100,19 @@ void QmBattery::changeLevel()
 
     levelIndex += levelIndexInc;
 
+    // Deprecated:
     emit batteryLevelChanged(levels.at(levelIndex));
+
+    emit batteryStateChanged(states.at(levelIndex));
 
     switch (levelIndex) {
     case 0:
         energyLevel = 90;
         state = QmBattery::StateNotCharging;
+        // Deprecated:
         emit batteryStatusChanged(QmBattery::StateNotCharging);
+
+        emit chargingStateChanged(QmBattery::StateNotCharging);
         break;
     case 1:
         energyLevel = 15;
@@ -114,7 +120,10 @@ void QmBattery::changeLevel()
     default: //2
         energyLevel = 5;
         state = QmBattery::StateCharging;
+        // Deprecated:
         emit batteryStatusChanged(QmBattery::StateCharging);
+
+        emit chargingStateChanged(QmBattery::StateCharging);
         break;
     }
     emit batteryEnergyLevelChanged(energyLevel);

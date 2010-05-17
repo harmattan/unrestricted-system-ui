@@ -152,4 +152,35 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
 
 }
 
+void
+Ut_BatteryBusinessLogic::testBatteryBarValue()
+{
+    // Test invalid values:
+    QVERIFY (m_subject->batteryBarValue (111) == 2);
+    // This one varying on battery current status:
+    QVERIFY (m_subject->batteryBarValue (-5)  > 0);
+
+    // Test percentage values in valid range
+    // >= 88
+    QVERIFY (m_subject->batteryBarValue (99) == 9);
+    // 75 <= value < 88
+    QVERIFY (m_subject->batteryBarValue (77) == 8);
+    // 62 <= value < 75
+    QVERIFY (m_subject->batteryBarValue (66) == 7);
+    // 50 <= value < 62
+    QVERIFY (m_subject->batteryBarValue (55) == 6);
+    // 38 <= value < 50
+    QVERIFY (m_subject->batteryBarValue (44) == 5);
+    // 25 <= value < 38
+    QVERIFY (m_subject->batteryBarValue (33) == 4);
+    // 13 <= value < 25
+    QVERIFY (m_subject->batteryBarValue (22) == 3);
+    // 10 <= value < 13
+    QVERIFY (m_subject->batteryBarValue (11) == 2);
+    //  5 <= value < 10
+    QVERIFY (m_subject->batteryBarValue (7)  == 1);
+    // < 5
+    QVERIFY (m_subject->batteryBarValue (3)  == 0);
+}
+
 QTEST_APPLESS_MAIN(Ut_BatteryBusinessLogic)
