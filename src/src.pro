@@ -3,6 +3,7 @@ include(../mconfig.pri)
 MOC_DIR = .moc
 MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
+QMAKE_RPATH = -Wl
 
 TEMPLATE = app
 TARGET = sysuid
@@ -36,6 +37,8 @@ HEADERS +=                              \
     usbui.h                             \
     contextframeworkcontext.h           \
     applicationcontext.h                \
+    unlocknotifications.h               \
+    unlocknotificationsink.h            \
     unlockwidgets.h
 
 SOURCES +=                              \
@@ -53,6 +56,8 @@ SOURCES +=                              \
     lockscreenbusinesslogicadaptor.cpp  \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
+    unlocknotifications.cpp             \
+    unlocknotificationsink.cpp          \
     unlockwidgets.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)

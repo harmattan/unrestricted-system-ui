@@ -41,6 +41,7 @@
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
+#include "unlocknotificationsink.h"
 
 #define DEBUG
 #define WARNING
@@ -84,9 +85,10 @@ Sysuid::Sysuid () : QObject (),
     m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
     m_UsbUi           = new UsbUi (this);
 
-    m_notificationManager = new NotificationManager(3000);
+    m_notificationManager        = new NotificationManager (3000);
     m_compositorNotificationSink = new MCompositorNotificationSink;
-    m_ngfNotificationSink = new NGFNotificationSink;
+    m_ngfNotificationSink        = new NGFNotificationSink;
+    m_unlockNotificationSink     = new UnlockNotificationSink;
 
     // D-Bus registration and stuff
     new ShutdownBusinessLogicAdaptor (this, m_ShutdownLogic);
@@ -123,6 +125,12 @@ Sysuid::Sysuid () : QObject (),
               m_ngfNotificationSink, SLOT (removeNotification (uint)));
     connect (m_applicationWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
              this, SIGNAL (orientationChangeFinished (const M::Orientation &)));
+
+    // Connect the notification signals for the unlock-screen notification sink
+    connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
+             m_unlockNotificationSink, SLOT (addNotification (const Notification &)));
+    connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
+              m_unlockNotificationSink, SLOT (removeNotification (uint)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
@@ -202,6 +210,11 @@ NotificationManager &Sysuid::notificationManager ()
 MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 {
     return *m_compositorNotificationSink;
+}
+
+UnlockNotificationSink& Sysuid::unlockNotificationSink ()
+{
+    return *m_unlockNotificationSink;
 }
 
 MApplicationWindow &Sysuid::applicationWindow ()

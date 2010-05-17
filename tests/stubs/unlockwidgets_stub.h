@@ -113,18 +113,6 @@ UnlockNotifications::~UnlockNotifications ()
 }
 
 void
-UnlockNotifications::updateMissedEvents (int emails,
-                                         int messages,
-                                         int calls,
-                                         int im)
-{
-    Q_UNUSED(emails);
-    Q_UNUSED(messages);
-    Q_UNUSED(calls);
-    Q_UNUSED(im);
-}
-
-void
 UnlockNotifications::paint (QPainter *painter,
                             const QStyleOptionGraphicsItem *option,
                             QWidget *widget)

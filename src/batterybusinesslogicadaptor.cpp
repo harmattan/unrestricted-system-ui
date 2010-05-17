@@ -61,7 +61,7 @@ void
 BatteryBusinessLogicAdaptor::setPSMAutoValue (
         bool toggle)
 {
-    SYS_DEBUG ("");
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
     m_BatteryLogic->togglePSMAuto(toggle);
 }
 

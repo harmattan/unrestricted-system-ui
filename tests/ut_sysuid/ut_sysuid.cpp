@@ -34,6 +34,7 @@
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 #include "mcompositornotificationsink_stub.h"
+#include "unlocknotificationsinkstub.h"
 
 maemosec::storage::~storage()
 {

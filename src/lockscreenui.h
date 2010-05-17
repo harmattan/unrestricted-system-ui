@@ -46,10 +46,6 @@ signals:
 
 public slots:
     void updateDateTime ();
-    void updateMissedEventAmounts (int emails,
-                                   int messages,
-                                   int calls,
-                                   int im);
 
 protected:
     void createContent ();
@@ -59,6 +55,10 @@ private slots:
     void sliderUnlocked ();
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
+    void updateMissedEvents (int emails,
+                             int messages,
+                             int calls,
+                             int im);
 
 private:
     bool             m_Realized;
@@ -72,11 +72,6 @@ private:
     QPixmap          m_bgPortrait;
     MGConfItem      *m_confBgLandscape;
     MGConfItem      *m_confBgPortrait;
-
-    int              m_emails;
-    int              m_messages;
-    int              m_calls;
-    int              m_im;
 };
 
 class EventEaterUI : public MApplicationPage

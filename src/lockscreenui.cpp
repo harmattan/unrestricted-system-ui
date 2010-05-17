@@ -20,6 +20,7 @@
 ****************************************************************************/
 #include "lockscreenui.h"
 #include "unlockwidgets.h"
+#include "unlocknotificationsink.h"
 #include "sysuid.h"
 
 #include <QGraphicsLinearLayout>
@@ -59,13 +60,10 @@ LockScreenUI::LockScreenUI () :
         m_LockLiftArea (0),
         m_LockLandArea (0),
         m_confBgLandscape (0),
-        m_confBgPortrait (0),
-        m_emails (0),
-        m_messages (0),
-        m_calls (0),
-        m_im (0)
+        m_confBgPortrait (0)
 {
     SYS_DEBUG ("");
+
     QTimer::singleShot (0, this, SLOT(realize()));
 }
 
@@ -128,7 +126,11 @@ LockScreenUI::realize ()
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    // updateMissedEventAmounts will add this ^ to policy
+    // Connect to notification sink (which is only enabled on locked state...)
+    connect (&Sysuid::sysuid ()->unlockNotificationSink (),
+             SIGNAL (updateNotificationsCount (int, int, int, int)),
+             this,
+             SLOT (updateMissedEvents (int, int, int, int)));
 
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
@@ -145,9 +147,6 @@ LockScreenUI::realize ()
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
-
-    // I'm calling this for updating the m_notificationArea
-    updateMissedEventAmounts (m_emails, m_messages, m_calls, m_im);
 
     // Load the backgrounds if any...
     reloadLandscapeBackground ();
@@ -232,24 +231,17 @@ LockScreenUI::paint (QPainter *painter,
 }
 
 void
-LockScreenUI::updateMissedEventAmounts (int emails,
-                                        int messages,
-                                        int calls,
-                                        int im)
+LockScreenUI::updateMissedEvents (int emails,
+                                  int messages,
+                                  int calls,
+                                  int im)
 {
     SYS_DEBUG ("");
 
-    m_emails = emails;
-    m_messages = messages;
-    m_calls = calls;
-    m_im = im;
-
     if (m_notificationArea != 0)
     {
-#if 0
         static_cast<UnlockNotifications *> (m_notificationArea)-> 
                     updateMissedEvents (emails, messages, calls, im);
-#endif
 
         // Hide the whole missed events notification area when
         // there is no any missed events...

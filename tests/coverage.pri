@@ -16,11 +16,9 @@ QMAKE_EXTRA_TARGETS += coverage
 coverage.depends = check-xml
 coverage.commands = @../coverage.py $$srcList($$TEST_SOURCES) .obj 90
 
-
 QMAKE_EXTRA_TARGETS += coverage-xml
 coverage-xml.depends = check-xml
 coverage-xml.commands = @../coverage.py $$srcList($$TEST_SOURCES) .obj 90
-
 
 QMAKE_CLEAN += *.gcda *.gcno *.gcov *.log *.xml ./.moc/*
 QMAKE_DISTCLEAN += *.gcda *.gcno *.gcov *.log *.xml ./.moc/*

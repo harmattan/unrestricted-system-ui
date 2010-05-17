@@ -57,12 +57,6 @@ public:
     } TkLockMode;
     
 public slots:
-    Q_NOREPLY void SetMissedEvents (
-            int emails, 
-            int messages, 
-            int calls, 
-            int im);
-
     int tklock_open (
             const QString  &a,
             const QString  &b,
@@ -83,9 +77,6 @@ private slots:
     void enableVisual ();
     void enableEater ();
     void hideVisualAndEater ();
-
-signals:
-    void delegateSetMissedEvents (int, int, int, int);
 
 private:
     LockScreenBusinessLogic   *m_LockScreenBusinessLogic;

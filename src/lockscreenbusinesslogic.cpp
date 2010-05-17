@@ -28,6 +28,7 @@
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
+#include "unlocknotificationsink.h"
 #include "sysuid.h"
 
 #define DEBUG
@@ -54,16 +55,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 
     // Hide from taskbar at the beginning
     hidefromTaskBar ();
-
-#if 0
-#if defined (DEBUG) && defined (i386)
-    // XXX: Remove this... only for debugging/devoloping purposes
-
-     lockUI->updateMissedEventAmounts (3, 10, 0, 4);
-
-     toggleScreenLockUI (true);
-#endif
-#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -121,6 +112,8 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
         stopTimer ();
     }
+
+    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }
 
 void
@@ -157,6 +150,9 @@ LockScreenBusinessLogic::toggleEventEater (
 
         stopTimer ();
     }
+
+    // Enable the unlock notification sink also for dimmed state:
+    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }
 
 void
@@ -222,15 +218,5 @@ LockScreenBusinessLogic::hidefromTaskBar ()
                      atoms.count ());
 
     XFlush (display);
-}
-
-void
-LockScreenBusinessLogic::updateMissedEventAmounts (
-        int a,
-        int b,
-        int c,
-        int d)
-{
-    lockUI->updateMissedEventAmounts (a, b, c, d);
 }
 

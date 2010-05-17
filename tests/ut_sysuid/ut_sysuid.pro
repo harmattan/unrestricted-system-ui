@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_sysuid
-INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusarea
+INCLUDEPATH += $$SRCDIR $$SRCDIR/notifications $$SRCDIR/statusarea
 INCLUDEPATH += /usr/include/contextsubscriber
 INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
@@ -55,6 +55,8 @@ HEADERS += \
     $$SRCDIR/notifications/ngfnotificationsink.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/unlockwidgets.h \
+    $$SRCDIR/unlocknotifications.h \
+    $$SRCDIR/unlocknotificationsink.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h

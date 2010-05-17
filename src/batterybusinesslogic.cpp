@@ -60,25 +60,26 @@ const int   ChargingAnimationRateUSB = 800; // 800 ms
 const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
+#define DEBUG
+#include "debug.h"
+
 // This macro will hide the previous notification
 #ifndef UNIT_TEST
-#define NOTIFICATION(mnotification) \
+#define NOTIFICATION(text) \
         if (m_notification != 0) \
         { \
             m_notification->remove (); \
             delete m_notification; \
             m_notification = 0; \
         } \
-        m_notification = (mnotification); \
+        m_notification = new MNotification (MNotification::DeviceEvent, "", (text)); \
         m_notification->publish ();
 #else
 // Do nothing on unit testing (no need to show the notification,
 //                             and that could cause slow-down...)
-#define NOTIFICATION(mnotification)
+#define NOTIFICATION(text) \
+        SYS_DEBUG("UNIT_TEST Notification: \"%s\"",SYS_STR(text));
 #endif
-
-#define DEBUG
-#include "debug.h"
 
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.
@@ -115,7 +116,7 @@ LowBatteryNotifier::showLowBatteryNotification ()
 {
     SYS_DEBUG ("");
 
-    NOTIFICATION (new MNotification (MNotification::DeviceEvent, "", qtTrId (LowBatteryText)));
+    NOTIFICATION (qtTrId (LowBatteryText));
 
 #ifdef UNIT_TEST
     emit showNotification ();
@@ -329,7 +330,7 @@ BatteryBusinessLogic::chargingStateChanged (
             SYS_DEBUG ("Charging");
             emit batteryCharging (animationRate (m_Battery->getChargerType ()));
             utiliseLED (true, QString ("PatternBatteryCharging"));
-            NOTIFICATION (new MNotification (MNotification::DeviceEvent, "", qtTrId (ChargingText)));
+            NOTIFICATION (qtTrId (ChargingText));
             if (m_LowBatteryNotifier != 0) {
                 delete m_LowBatteryNotifier;
                 m_LowBatteryNotifier = 0;
@@ -346,8 +347,7 @@ BatteryBusinessLogic::chargingStateChanged (
             SYS_DEBUG ("Charging not started");
             emit batteryNotCharging ();
             utiliseLED (false, QString ("PatternBatteryCharging"));
-            NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
-                             qtTrId (ChargingNotStartedText)));
+            NOTIFICATION (qtTrId (ChargingNotStartedText));
             break;
 
         default:
@@ -368,8 +368,7 @@ BatteryBusinessLogic::batteryStateChanged (
         SYS_DEBUG ("QmBattery::StateFull");
         if (m_Battery->getChargingState () == QmBattery::StateCharging)
         {
-            NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
-                         qtTrId (ChargingCompleteText)));
+            NOTIFICATION (qtTrId (ChargingCompleteText));
             utiliseLED (true, QString ("PatternBatteryFull"));
             emit batteryFullyCharged ();
         }
@@ -396,8 +395,9 @@ BatteryBusinessLogic::batteryStateChanged (
 
     case QmBattery::StateEmpty:
         SYS_DEBUG ("QmBattery::StateEmpty");
-        NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
-                       qtTrId (RechargeBatteryText)));
+#ifdef __ARMEL__
+        NOTIFICATION (qtTrId (RechargeBatteryText));
+#endif
         break;
 
     case QmBattery::StateError:
@@ -429,8 +429,7 @@ BatteryBusinessLogic::batteryChargerEvent (
             SYS_DEBUG ("QmBattery::None");
             // No  charger connected
             if (m_Battery->getBatteryState () == QmBattery::StateFull) {
-                NOTIFICATION (new MNotification (MNotification::DeviceEvent, "",
-                    qtTrId (DisconnectChargerText))); //show reminder
+                NOTIFICATION (qtTrId (DisconnectChargerText)); //show reminder
 	        }
             break;
 
@@ -442,7 +441,7 @@ BatteryBusinessLogic::batteryChargerEvent (
             SYS_DEBUG ("QmBattery::USB_500mA");
         case QmBattery::USB_100mA: 
             // USB with 100mA output
-            SYS_DEBUG ("QmBattery::USB_500mA");
+            SYS_DEBUG ("QmBattery::USB_100mA");
             emit batteryCharging (animationRate (type));
             break;
 
@@ -457,14 +456,12 @@ void
 BatteryBusinessLogic::devicePSMStateChanged (
         QmDeviceMode::PSMState PSMState)
 {
-    SYS_DEBUG ("");
-
     if (PSMState == QmDeviceMode::PSMStateOff) {
-        NOTIFICATION (new MNotification (MNotification::DeviceEvent, "", qtTrId (ExitPSMText)));
+        NOTIFICATION (qtTrId (ExitPSMText));
         SYS_DEBUG ("Emitting DBus signal on PSM off");
         emit PSMValueChanged (false);
     } else if (PSMState == QmDeviceMode::PSMStateOn) {
-        NOTIFICATION (new MNotification (MNotification::DeviceEvent, "", qtTrId (EnterPSMText)));
+        NOTIFICATION (qtTrId (EnterPSMText));
         SYS_DEBUG ("Emitting DBus signal on PSM on");
         emit PSMValueChanged (true);
     }
@@ -539,9 +536,8 @@ BatteryBusinessLogic::togglePSMAuto (
 QStringList
 BatteryBusinessLogic::remainingTimeValues ()
 {
-    SYS_DEBUG ("");
-
     QStringList values;
+
     if (m_Battery->getChargingState () == QmBattery::StateCharging)
         values << qtTrId (ChargingText) << qtTrId (ChargingText);
     else {
@@ -563,7 +559,7 @@ BatteryBusinessLogic::remainingTimeValues ()
             << QString ("%1").arg (m_Battery->getRemainingIdleTime (mode) / 60);
     }
 
-    #ifdef DEBUG
+    #if 0
     int n = 0;
     foreach (QString thisone, values) {
         SYS_DEBUG ("values[%d] = %s", n, SYS_STR (values[n]));
