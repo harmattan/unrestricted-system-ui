@@ -63,7 +63,7 @@ const int   ChargingAnimationRateUSB = 800; // 800 ms
 const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-//#define DEBUG
+#define DEBUG
 #include "debug.h"
 
 // This macro will hide the previous notification
@@ -306,9 +306,6 @@ BatteryBusinessLogic::batteryBarValue (
 {
     SYS_DEBUG ("percentage = %d", percentage);
 
-    if (percentage < 0)
-        percentage = m_Battery->getBatteryEnergyLevel ();
-
     // in case of overflow (eg. in sbox) when we get value that greater than 100
     // percent we use 10 percent intentionaly
     if (percentage < 0)
@@ -495,11 +492,13 @@ void
 BatteryBusinessLogic::checkPSMThreshold ()
 {
     SYS_DEBUG ("");
+    int PSMThresholdIndex = m_SystemUIGConf->value (SystemUIGConf::BatteryPSMThresholdKey).toInt ();
+    int PSMThreshold = m_PSMThresholds.at (PSMThresholdIndex).toInt ();
 
     if (m_SystemUIGConf->value (SystemUIGConf::BatteryPSMAutoKey).toBool ()) {
         // we only handle this if the auto PSM is on
-        if (batteryBarValue (m_Battery->getBatteryEnergyLevel ()) <=
-                m_SystemUIGConf->value (SystemUIGConf::BatteryPSMThresholdKey).toInt ()) {
+        if (m_Battery->getBatteryEnergyLevel () <= PSMThreshold)
+        {
             if (m_DeviceMode->getPSMState () == QmDeviceMode::PSMStateOff)
                 setPSMState (true);
         } else {

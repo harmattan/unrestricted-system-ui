@@ -54,10 +54,10 @@ void Ut_BatteryBusinessLogic::cleanupTestCase()
 void Ut_BatteryBusinessLogic::testSetPSMThreshold()
 {
     // set the battery level to 15%
-    m_subject->m_Battery->setBatteryEnergyLevel(15);
+    m_subject->m_Battery->setBatteryEnergyLevel (14);
 
-    // set the threshold level to 10%
-    const QString test = "10";
+    // set the threshold level to 20%
+    const QString test = "20";
     m_subject->setPSMThreshold(test);
 
     // check that the value is set
@@ -67,10 +67,10 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOff);
 
     // set the PSM auto on
-    systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
+    systemUIGConf->setValue (SystemUIGConf::BatteryPSMAutoKey, true);
 
-    // set the threshold level to 25%
-    const QString test2 = "25";
+    // set the threshold level to 30%
+    const QString test2 = "30";
     m_subject->setPSMThreshold(test2);
 
     // check that the value is set
@@ -79,8 +79,8 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     // check that the PSM is toggled on
     QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
 
-    // set the threshold level to 5%
-    const QString test3 = "5";
+    // set the threshold level to 10%
+    const QString test3 = "10";
     m_subject->setPSMThreshold(test3);
 
     // check that the value is set
@@ -142,7 +142,7 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     m_subject->m_Battery->setBatteryEnergyLevel(5);
 
     // set the threshold level to 10%
-    systemUIGConf->setValue(SystemUIGConf::BatteryPSMThresholdKey, QVariant("10"));
+    m_subject->setPSMThreshold ("10");
 
     // toggle the PSM auto on
     m_subject->togglePSMAuto(true);
@@ -157,8 +157,6 @@ Ut_BatteryBusinessLogic::testBatteryBarValue()
 {
     // Test invalid values:
     QVERIFY (m_subject->batteryBarValue (111) == 2);
-    // This one varying on battery current status:
-    QVERIFY (m_subject->batteryBarValue (-5)  > 0);
 
     // Test percentage values in valid range
     // >= 84
