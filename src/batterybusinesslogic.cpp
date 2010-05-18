@@ -317,25 +317,25 @@ BatteryBusinessLogic::batteryBarValue (
         percentage = 10;
 
     int index = 0;
-    if (percentage >= 88)
+    if (percentage >= 84)
         index = m_BarValues.indexOf ("100");
-    else if (percentage < 88 && percentage >= 75)
+    else if (percentage < 84 && percentage >= 73)
         index = m_BarValues.indexOf ("85");
-    else if (percentage < 75 && percentage >= 62)
+    else if (percentage < 73 && percentage >= 62)
         index = m_BarValues.indexOf ("75");
-    else if (percentage < 62 && percentage >= 50)
+    else if (percentage < 62 && percentage >= 51)
         index = m_BarValues.indexOf ("60");
-    else if (percentage < 50 && percentage >= 38)
+    else if (percentage < 51 && percentage >= 39)
         index = m_BarValues.indexOf ("50");
-    else if (percentage < 38 && percentage >= 25)
+    else if (percentage < 39 && percentage >= 28)
         index = m_BarValues.indexOf ("35");
-    else if (percentage < 25 && percentage >= 13)
+    else if (percentage < 28 && percentage >= 17)
         index = m_BarValues.indexOf ("25");
-    else if (percentage < 13 && percentage >= 10)
+    else if (percentage < 17 && percentage >= 5)
         index = m_BarValues.indexOf ("15");
-    else if (percentage < 10 && percentage >= 5)
+    else if (percentage < 5 && percentage > 1)
         index = m_BarValues.indexOf ("10");
-    else if (percentage < 5)
+    else // if (percentage == 0)
         index = m_BarValues.indexOf ("5");
 
     return index;

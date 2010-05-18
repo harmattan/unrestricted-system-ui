@@ -161,26 +161,26 @@ Ut_BatteryBusinessLogic::testBatteryBarValue()
     QVERIFY (m_subject->batteryBarValue (-5)  > 0);
 
     // Test percentage values in valid range
-    // >= 88
+    // >= 84
     QVERIFY (m_subject->batteryBarValue (99) == 9);
-    // 75 <= value < 88
+    // 73 <= value < 84
     QVERIFY (m_subject->batteryBarValue (77) == 8);
-    // 62 <= value < 75
+    // 62 <= value < 73
     QVERIFY (m_subject->batteryBarValue (66) == 7);
-    // 50 <= value < 62
+    // 51 <= value < 62
     QVERIFY (m_subject->batteryBarValue (55) == 6);
-    // 38 <= value < 50
+    // 39 <= value < 51
     QVERIFY (m_subject->batteryBarValue (44) == 5);
-    // 25 <= value < 38
+    // 28 <= value < 39
     QVERIFY (m_subject->batteryBarValue (33) == 4);
-    // 13 <= value < 25
+    // 17 <= value < 28
     QVERIFY (m_subject->batteryBarValue (22) == 3);
-    // 10 <= value < 13
+    //  5 <= value < 17
     QVERIFY (m_subject->batteryBarValue (11) == 2);
-    //  5 <= value < 10
-    QVERIFY (m_subject->batteryBarValue (7)  == 1);
-    // < 5
-    QVERIFY (m_subject->batteryBarValue (3)  == 0);
+    //  0 <  value < 5
+    QVERIFY (m_subject->batteryBarValue (3)  == 1);
+    //  0
+    QVERIFY (m_subject->batteryBarValue (0)  == 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_BatteryBusinessLogic)
