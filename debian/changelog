@@ -1,3 +1,12 @@
+system-ui (0.15.10-2) harmattan; urgency=low
+
+  * Remove some bugs from changelog
+    (i increased the version number because meanwhile tagged a 10-1
+     which contained a workaround for QmSystem problem, but that not needed
+     anymore... it is based on 0.15.9-1, only the changelog changed)
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 18 May 2010 16:26:55 +0200
+
 system-ui (0.15.9-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-2413 Adding missing status bar indicators
@@ -25,8 +34,6 @@ system-ui (0.15.7-1) harmattan; urgency=low
   * Touch-screen-lock fixes...
   * Shutdown ui fixes...
   * Fixes: NB#166960 - Hard to invoke the unlock screen
-  * Fixes: NB#167675 - Shutdown notification not displayed when powering
-                       off the device
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 07 May 2010 15:16:26 +0200
 
