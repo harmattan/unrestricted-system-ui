@@ -638,8 +638,17 @@ BatteryBusinessLogic::PSMThresholdValues ()
 QString
 BatteryBusinessLogic::PSMThresholdValue ()
 {
-    return m_PSMThresholds.at (m_SystemUIGConf->value (
-                SystemUIGConf::BatteryPSMThresholdKey).toInt ());
+    int index;
+
+    index = m_SystemUIGConf->value (
+            SystemUIGConf::BatteryPSMThresholdKey).toInt ();
+
+    if (index < 0 || index >= m_PSMThresholds.size())
+        index = 0;
+    if (m_PSMThresholds.size() == 0)
+        return "";
+    
+    return m_PSMThresholds[index];
 }
 
 void
