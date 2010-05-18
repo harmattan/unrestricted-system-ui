@@ -34,6 +34,7 @@ public:
     enum GConfKey {
         BatteryPSMAutoKey,
         BatteryPSMThresholdKey,
+        BatteryPSMThresholdsKey,
         DisplayBrightnessMaxLevelKey,
         DisplayBrightnessLevelStepKey,
         DisplayBrightnessKey,

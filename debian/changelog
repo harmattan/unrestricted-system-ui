@@ -4,6 +4,8 @@ system-ui (0.15.11~1) harmattan; urgency=low
   * Fix build warnings...
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
                        correctly
+  * Fixes: NB#169297 - Enabling 'auto activate power save' does not enable 
+                       automatic PSM
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 14 May 2010 10:41:04 +0200
 

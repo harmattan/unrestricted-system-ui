@@ -14,8 +14,7 @@ Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, 
          libmaemosec0, libcontextsubscriber0, libqmsystem0 (>= 0.1.64),
-         libmeegotouchcore0 (>= 0.20), libmeegotouchviews0 (>= 0.20), libngf0,
-         mcompositor (>= 0.4.2-1)
+         libmeegotouchcore0 (>= 0.20), libmeegotouchviews0 (>= 0.20), libngf0
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - status area

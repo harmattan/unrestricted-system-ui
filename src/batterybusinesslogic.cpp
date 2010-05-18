@@ -19,11 +19,14 @@
 **
 ****************************************************************************/
 #include "batterybusinesslogic.h"
+#include "systemuigconf.h"
 
 #include <MLocale>
 #include <QTimer>
 #include <QTime>
+
 #include <MNotification>
+#include <MGConfItem>
 
 using namespace Maemo;
 
@@ -60,7 +63,7 @@ const int   ChargingAnimationRateUSB = 800; // 800 ms
 const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#define DEBUG
+//#define DEBUG
 #include "debug.h"
 
 // This macro will hide the previous notification
@@ -97,6 +100,7 @@ LowBatteryNotifier::LowBatteryNotifier (
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
+
     connect (m_Display,
             SIGNAL (displayStateChanged (Maemo::QmDisplayState::DisplayState)),
             this,
@@ -190,8 +194,25 @@ BatteryBusinessLogic::BatteryBusinessLogic (
 {
     SYS_DEBUG ("----------------- start ----------------------");
 
-    /* init the PSM thresholds */
-    m_PSMThresholds <<
+    /*
+     * Initializing the automatic power save mode possible values list. 
+     */
+    m_PSMThresholds = m_SystemUIGConf->value (
+            SystemUIGConf::BatteryPSMThresholdsKey).toStringList();
+
+    if (m_PSMThresholds.isEmpty()) {
+        SYS_DEBUG ("m_PSMThresholds is empty: Setting the wired in values!!");
+
+        m_PSMThresholds << "10" << "20" << "30" << "40" << "50";
+        m_SystemUIGConf->setValue (
+                SystemUIGConf::BatteryPSMThresholdsKey,
+                QVariant(m_PSMThresholds));
+    }
+
+    /*
+     * Initializing a list for the battery icons/bars.
+     */
+    m_BarValues <<
 	    QString ("5") <<
 	    QString ("10") <<
 	    QString ("15") <<
@@ -251,6 +272,7 @@ BatteryBusinessLogic::~BatteryBusinessLogic ()
 void
 BatteryBusinessLogic::initSystemUIGConfKeys ()
 {
+    // What?! This is not robust!
     if (m_SystemUIGConf->keyCount (SystemUIGConf::Battery) < 2) {
         /*
          * GConf keys have not yet been set.
@@ -296,25 +318,25 @@ BatteryBusinessLogic::batteryBarValue (
 
     int index = 0;
     if (percentage >= 88)
-        index = m_PSMThresholds.indexOf ("100");
+        index = m_BarValues.indexOf ("100");
     else if (percentage < 88 && percentage >= 75)
-        index = m_PSMThresholds.indexOf ("85");
+        index = m_BarValues.indexOf ("85");
     else if (percentage < 75 && percentage >= 62)
-        index = m_PSMThresholds.indexOf ("75");
+        index = m_BarValues.indexOf ("75");
     else if (percentage < 62 && percentage >= 50)
-        index = m_PSMThresholds.indexOf ("60");
+        index = m_BarValues.indexOf ("60");
     else if (percentage < 50 && percentage >= 38)
-        index = m_PSMThresholds.indexOf ("50");
+        index = m_BarValues.indexOf ("50");
     else if (percentage < 38 && percentage >= 25)
-        index = m_PSMThresholds.indexOf ("35");
+        index = m_BarValues.indexOf ("35");
     else if (percentage < 25 && percentage >= 13)
-        index = m_PSMThresholds.indexOf ("25");
+        index = m_BarValues.indexOf ("25");
     else if (percentage < 13 && percentage >= 10)
-        index = m_PSMThresholds.indexOf ("15");
+        index = m_BarValues.indexOf ("15");
     else if (percentage < 10 && percentage >= 5)
-        index = m_PSMThresholds.indexOf ("10");
+        index = m_BarValues.indexOf ("10");
     else if (percentage < 5)
-        index = m_PSMThresholds.indexOf ("5");
+        index = m_BarValues.indexOf ("5");
 
     return index;
 }
@@ -599,17 +621,20 @@ BatteryBusinessLogic::GConfItemValue (
     return m_SystemUIGConf->value (key);
 }
 
+/*
+ * Returns a 5 elements long list of possible PSM threshold value list. 
+ */
 QStringList
 BatteryBusinessLogic::PSMThresholdValues ()
 {
-    //TODO: replace hardcoded values with real ones when they are available
-    QStringList values;
-    for (int i = 0; i < 5; ++i)
-        values << m_PSMThresholds.at (i);
-
-    return values;
+    return m_PSMThresholds;
 }
 
+/*
+ * Returns the string value of the threshold stored in the GConf database. The 
+ * threshold value is saved as an index for the possible threshold values that
+ * is a list of strings.
+ */
 QString
 BatteryBusinessLogic::PSMThresholdValue ()
 {

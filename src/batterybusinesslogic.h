@@ -125,6 +125,7 @@ private:
     Maemo::QmLED              *m_Led;
     LowBatteryNotifier        *m_LowBatteryNotifier;
     QStringList                m_PSMThresholds;
+    QStringList                m_BarValues;
     MNotification             *m_notification;
 
     void setPSMState (bool on);

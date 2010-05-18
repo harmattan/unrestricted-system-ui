@@ -23,7 +23,7 @@
 #include <MGConfItem>
 #include <QDebug>
 
-#undef DEBUG
+//#define DEBUG
 #include "debug.h"
 
 SystemUIGConf::SystemUIGConf (
@@ -38,22 +38,9 @@ SystemUIGConf::SystemUIGConf (
             new MGConfItem (
                 mapGConfKey(SystemUIGConf::BatteryPSMThresholdKey)));
     
-    mGConfItems.insert (SystemUIGConf::LedAllEnabled, 
+    mGConfItems.insert (SystemUIGConf::BatteryPSMThresholdsKey, 
             new MGConfItem (
-                mapGConfKey(SystemUIGConf::LedAllEnabled)));
-    
-    mGConfItems.insert (SystemUIGConf::MissedCallLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::MissedCallLed)));
-    mGConfItems.insert (SystemUIGConf::SMSReceivedLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::SMSReceivedLed)));
-    mGConfItems.insert (SystemUIGConf::EmailReceivedLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::EmailReceivedLed)));
-    mGConfItems.insert (SystemUIGConf::InstantMessageReceivedLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::InstantMessageReceivedLed)));
-    mGConfItems.insert (SystemUIGConf::ChargingLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::ChargingLed)));
-    mGConfItems.insert (SystemUIGConf::OtherNotificationsLed, 
-            new MGConfItem (mapGConfKey(SystemUIGConf::OtherNotificationsLed)));
+                mapGConfKey(SystemUIGConf::BatteryPSMThresholdsKey)));
     
     QHash<SystemUIGConf::GConfKey, MGConfItem *>::iterator i;
     for (i = mGConfItems.begin(); i != mGConfItems.end(); ++i)
@@ -92,8 +79,8 @@ SystemUIGConf::setValue (
 {
     SYS_DEBUG ("*** key      = %d", (int) key);
     SYS_DEBUG ("*** value    = %s", SYS_BOOL(value.toBool()));
-
-    mGConfItems.value(key)->set (value);
+    SYS_DEBUG ("*** value    = %s", SYS_STR(value.toString()));
+    mGConfItems[key]->set (value);
 }
 
 /*!
@@ -129,11 +116,10 @@ SystemUIGConf::mapGConfKeyGroup (
 
     switch (keyGroup) {
         case SystemUIGConf::Battery:
-            keyGroupStr = "/systemui/settings/battery";
-            break;
-
-        case SystemUIGConf::Led:
-            keyGroupStr = "/systemui/settings/leds";
+	    /*
+	     * NB#169297
+	     */ 
+            keyGroupStr = "/system/osso/dsm/energymanagement";
             break;
 
         default:
@@ -152,51 +138,24 @@ SystemUIGConf::mapGConfKey (
 {
     QString keyStr;
 
+    /*
+     * The battery gconf keys are found in NB#169297.
+     */ 
     switch (key) {
         case SystemUIGConf::BatteryPSMAutoKey:
             keyStr = mapGConfKeyGroup(SystemUIGConf::Battery) +
-                    "/batteryPSMAuto";
+                    "/enable_power_saving";
             break;
 
         case SystemUIGConf::BatteryPSMThresholdKey:
             keyStr = mapGConfKeyGroup(SystemUIGConf::Battery) +
-                    "/batteryPSMThreshold";
-            break;
+                    "/psm_threshold";
+	    break;
 
-        case SystemUIGConf::LedAllEnabled:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/allLedsEnabled";
-            break;
-        
-        case SystemUIGConf::MissedCallLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/MissedCallLedEnabled";
-            break;
-        
-	case SystemUIGConf::SMSReceivedLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/SMSReceivedLedEnabled";
-            break;
-        
-	case SystemUIGConf::EmailReceivedLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/EmailReceivedLedEnabled";
-            break;
-        
-	case SystemUIGConf::InstantMessageReceivedLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/InstantMessageReceivedLedEnabled";
-            break;
-        
-	case SystemUIGConf::ChargingLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/ChargingLedEnabled";
-            break;
-	
-	case SystemUIGConf::OtherNotificationsLed:
-            keyStr = mapGConfKeyGroup(SystemUIGConf::Led) +
-                    "/OtherNotificationsLed";
-            break;
+	case SystemUIGConf::BatteryPSMThresholdsKey:
+            keyStr = mapGConfKeyGroup(SystemUIGConf::Battery) +
+		    "/possible_psm_thresholds";
+	    break;
 
         default:
             break;

@@ -39,19 +39,12 @@ public:
 
     enum GConfKeyGroup {
         Battery = 0,
-        Led
     };
 
     enum GConfKey {
         BatteryPSMAutoKey       = 0,
         BatteryPSMThresholdKey,
-        LedAllEnabled,
-	MissedCallLed,
-        SMSReceivedLed,
-        EmailReceivedLed,
-        InstantMessageReceivedLed,
-        ChargingLed,
-        OtherNotificationsLed,
+	BatteryPSMThresholdsKey,
     };
 
     SystemUIGConf(QObject* parent = 0);
