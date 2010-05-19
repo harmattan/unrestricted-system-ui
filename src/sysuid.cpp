@@ -61,7 +61,7 @@ const QString svgDir = themeDir + "svg/";
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid () : QObject (),
+Sysuid::Sysuid (QObject* parent) : QObject (parent),
         m_applicationWindow(new MApplicationWindow)
 {
     SYS_DEBUG ("Starting sysuidaemon");
@@ -104,7 +104,7 @@ Sysuid::Sysuid () : QObject (),
         abort();
     }
     // Show status area window when sysui daemon starts
-    m_statusAreaWindow = new StatusAreaRenderer;
+    m_statusAreaWindow = new StatusAreaRenderer(this);
 
     connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));
@@ -152,7 +152,6 @@ Sysuid::Sysuid () : QObject (),
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
-    delete m_statusAreaWindow;
     delete m_applicationWindow;
 }
 

@@ -40,7 +40,7 @@ public:
      * \param statusArea the status area to be displayed in this window
      * \param parent the parent widget
      */
-    StatusAreaRenderer(QWidget *parent = NULL);
+    StatusAreaRenderer(QObject *parent = NULL);
 
     /*!
      * Destroys the status area renderer

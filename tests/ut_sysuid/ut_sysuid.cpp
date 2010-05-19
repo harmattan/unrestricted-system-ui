@@ -148,7 +148,7 @@ void Ut_Sysuid::init()
     static int argc = sizeof(args) / sizeof(char *);
 
     app = new MApplication(argc, args);
-    sysuid = new Sysuid();
+    sysuid = new Sysuid(NULL);
     Ut_SysuidCompositorNotificationState = false;
     Ut_SysuidFeedbackNotificationState = false;
 }

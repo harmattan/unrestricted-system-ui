@@ -43,7 +43,7 @@ class Sysuid : public QObject
     Q_OBJECT
 
 public:
-    Sysuid ();
+    Sysuid (QObject* parent);
     virtual ~Sysuid ();
     static Sysuid* sysuid ();
     static QString dbusService ();

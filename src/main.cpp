@@ -142,7 +142,9 @@ int main (int argc, char** argv)
 
     app.setQuitOnLastWindowClosed (false);
 
-    Sysuid daemon;
+    signal (SIGINT, sysuid_exit);
+
+    Sysuid daemon(&app);
 
     SYS_DEBUG ("- System-UI daemon initialized");
 

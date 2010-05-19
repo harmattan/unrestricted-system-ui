@@ -63,8 +63,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitClock(new Clock(controller))
 {
     // Set up notifiers
-    landscapeNotifier->setObjectName("Notifier");
-    portraitNotifier->setObjectName("Notifier");
 
     // Connect related phone network indicators
     connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
@@ -76,6 +74,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
 
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());
+    landscapeWidget->setParent(controller);
+    portraitWidget->setParent(controller);
     portraitWidget->setLayout(createPortraitLayout());
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);
@@ -89,6 +89,76 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Connect to D-Bus and register the DBus source as an object
     QDBusConnection::sessionBus().registerService("com.meego.core.MInputMethodStatusIndicator");
     QDBusConnection::sessionBus().registerObject("/inputmethodstatusindicator", landscapeInputMethodIndicator);
+
+    //Set up the class for functional testing
+    setupTestability();
+}
+
+void StatusAreaView::setupTestabilityObjectNames()
+{
+    landscapePhoneNetworkIndicator->setObjectName("landscapephonenetworkindicator");
+    portraitPhoneNetworkIndicator->setObjectName("portraitphonenetworkindicator");
+    landscapeAlarmIndicator->setObjectName("landscapealarmindicator");
+    portraitAlarmIndicator->setObjectName("portraitalarmindicator");
+    landscapeBatteryIndicator->setObjectName("landscapebatteryindicator");
+    portraitBatteryIndicator->setObjectName("portraitbatteryindicator");
+    landscapePhoneSignalStrengthIndicator->setObjectName("landscapephonesignalstrengthindicator");
+    portraitPhoneSignalStrengthIndicator->setObjectName("portraitphonesignalstrengthindicator");
+    landscapePhoneNetworkTypeIndicator->setObjectName("landscapephonenetworktypeindicator");
+    portraitPhoneNetworkTypeIndicator->setObjectName("portraitphonenetworktypeindicator");
+    landscapeInternetConnectionIndicator->setObjectName("landscapeinternetconnectionindicator");
+    portraitInternetConnectionIndicator->setObjectName("portraitinternetconnectionindicator");
+    landscapeBluetoothIndicator->setObjectName("landscapebluetoothindicator");
+    portraitBluetoothIndicator->setObjectName("portraitbluetoothindicator");
+    landscapeGPSIndicator->setObjectName("landscapegpsindicator");
+    portraitGPSIndicator->setObjectName("portraitgpsindicator");
+    landscapePresenceIndicator->setObjectName("landscapepresenceindicator");
+    portraitPresenceIndicator->setObjectName("portraitpresenceindicator");
+    landscapeProfileIndicator->setObjectName("landscapeprofileindicator");
+    portraitProfileIndicator->setObjectName("portraitprofileindicator");
+    landscapeInputMethodIndicator->setObjectName("landscapeinputmethodindicator");
+    landscapeCallIndicator->setObjectName("landscapecallindicator");
+    portraitCallIndicator->setObjectName("portraitcallindicator");
+    landscapeNotifier->setObjectName("landscapenotifier");
+    portraitNotifier->setObjectName("portraitnotifier");
+    landscapeClock->setObjectName("landscapeclock");
+    portraitClock->setObjectName("portraitclock");
+}
+
+void StatusAreaView::setupTestabilityParents()
+{
+    portraitPhoneNetworkIndicator->setParent(portraitWidget);;
+    landscapeAlarmIndicator->setParent(landscapeWidget);;
+    portraitAlarmIndicator->setParent(portraitWidget);;
+    landscapeBatteryIndicator->setParent(landscapeWidget);;
+    portraitBatteryIndicator->setParent(portraitWidget);;
+    landscapePhoneSignalStrengthIndicator->setParent(landscapeWidget);;
+    portraitPhoneSignalStrengthIndicator->setParent(portraitWidget);;
+    landscapePhoneNetworkTypeIndicator->setParent(landscapeWidget);;
+    portraitPhoneNetworkTypeIndicator->setParent(portraitWidget);;
+    landscapeInternetConnectionIndicator->setParent(landscapeWidget);;
+    portraitInternetConnectionIndicator->setParent(portraitWidget);;
+    landscapeBluetoothIndicator->setParent(landscapeWidget);;
+    portraitBluetoothIndicator->setParent(portraitWidget);;
+    landscapeGPSIndicator->setParent(landscapeWidget);;
+    portraitGPSIndicator->setParent(portraitWidget);;
+    landscapePresenceIndicator->setParent(landscapeWidget);;
+    portraitPresenceIndicator->setParent(portraitWidget);;
+    landscapeProfileIndicator->setParent(landscapeWidget);;
+    portraitProfileIndicator->setParent(portraitWidget);;
+    landscapeInputMethodIndicator->setParent(landscapeWidget);
+    landscapeCallIndicator->setParent(landscapeWidget);;
+    portraitCallIndicator->setParent(portraitWidget);;
+    landscapeNotifier->setParent(landscapeWidget);
+    portraitNotifier->setParent(portraitWidget);
+    landscapeClock->setParent(landscapeWidget);;
+    portraitClock->setParent(portraitWidget);;
+}
+
+void StatusAreaView::setupTestability()
+{
+    setupTestabilityObjectNames();
+    setupTestabilityParents();
 }
 
 StatusAreaView::~StatusAreaView()

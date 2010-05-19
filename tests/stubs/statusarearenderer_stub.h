@@ -9,7 +9,7 @@
 // FIXME - stubgen is not yet finished
 class StatusAreaRendererStub : public StubBase {
   public:
-  virtual void StatusAreaRendererConstructor(QWidget *parent);
+  virtual void StatusAreaRendererConstructor(QObject *parent);
   virtual void StatusAreaRendererDestructor();
   virtual void sceneChanged(const QList<QRectF> &region);
   virtual void setSceneRender(Maemo::QmDisplayState::DisplayState state);
@@ -25,7 +25,7 @@ class StatusAreaRendererStub : public StubBase {
 }; 
 
 // 2. IMPLEMENT STUB
-void StatusAreaRendererStub::StatusAreaRendererConstructor(QWidget *parent) {
+void StatusAreaRendererStub::StatusAreaRendererConstructor(QObject *parent) {
   Q_UNUSED(parent);
 
 }
@@ -61,7 +61,7 @@ StatusAreaRendererStub* gStatusAreaRendererStub = &gDefaultStatusAreaRendererStu
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusAreaRenderer::StatusAreaRenderer(QWidget *parent) {
+StatusAreaRenderer::StatusAreaRenderer(QObject *parent) {
   gStatusAreaRendererStub->StatusAreaRendererConstructor(parent);
 }
 

@@ -30,7 +30,7 @@
 #include <QApplication>
 #include <QDebug>
 
-StatusAreaRenderer::StatusAreaRenderer(QWidget *parent) :
+StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
     scene(new QGraphicsScene),
     statusArea_(new StatusArea(NULL,this)),
@@ -38,7 +38,10 @@ StatusAreaRenderer::StatusAreaRenderer(QWidget *parent) :
     displayState(new Maemo::QmDisplayState()),
     renderScene(true)
 {
+    scene->setParent(this);
+    scene->setObjectName("statusareascene");
     scene->addItem(statusArea_);
+    statusArea_->setObjectName("statusarea");
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
     connect(displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
@@ -76,7 +79,6 @@ StatusAreaRenderer::~StatusAreaRenderer()
 {
     scene->removeItem(statusArea_);
     delete statusArea_;
-    delete scene;
     delete statusAreaPixmap;
     delete displayState;
 }

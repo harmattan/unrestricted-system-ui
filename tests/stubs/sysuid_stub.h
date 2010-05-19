@@ -27,7 +27,7 @@
 // FIXME - stubgen is not yet finished
 class SysuidStub : public StubBase {
   public:
-  virtual void SysuidConstructor();
+  virtual void SysuidConstructor(QObject *parent);
   virtual void SysuidDestructor();
   virtual Sysuid * sysuid();
   virtual QString dbusService();
@@ -40,12 +40,15 @@ class SysuidStub : public StubBase {
 }; 
 
 // 2. IMPLEMENT STUB
-void SysuidStub::SysuidConstructor() {
-
+void SysuidStub::SysuidConstructor(QObject *parent) {
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QObject*>(parent));
+    stubMethodEntered("SysuidConstructor", params);
 }
+
 void SysuidStub::SysuidDestructor() {
-
 }
+
 Sysuid * SysuidStub::sysuid() {
   stubMethodEntered("sysuid");
   return stubReturnValue<Sysuid *>("sysuid");
@@ -92,8 +95,8 @@ SysuidStub* gSysuidStub = &gDefaultSysuidStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-Sysuid::Sysuid() {
-  gSysuidStub->SysuidConstructor();
+Sysuid::Sysuid(QObject* parent) {
+  gSysuidStub->SysuidConstructor(parent);
 }
 
 Sysuid::~Sysuid() {

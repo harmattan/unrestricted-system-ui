@@ -131,6 +131,15 @@ private:
 
     //! Create the layout for status area in portrait mode
     QGraphicsLinearLayout *createPortraitLayout();
+
+    //! sets up object names for functional testing
+    void setupTestabilityObjectNames();
+
+    //! sets up parents relationship for functional testing
+    void setupTestabilityParents();
+
+    //! set up class for functional testing
+    void setupTestability();
 };
 
 #endif // STATUSAREAVIEW_H
