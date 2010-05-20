@@ -130,7 +130,6 @@ private:
 
     void setPSMState (bool on);
     void initSystemUIGConfKeys ();
-    void checkPSMThreshold ();
     int animationRate (Maemo::QmBattery::ChargerType type);
 
 private slots:

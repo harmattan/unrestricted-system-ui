@@ -39,7 +39,6 @@ private slots:
     void cleanupTestCase();
 
     void testSetPSMThreshold();
-    void testTogglePSM();
     void testTogglePSMAuto();
     void testBatteryBarValue();
 

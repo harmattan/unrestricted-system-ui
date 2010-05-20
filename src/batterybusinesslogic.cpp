@@ -434,7 +434,6 @@ BatteryBusinessLogic::batteryEnergyLevelChanged (
 
     emit batteryBarValueChanged (batteryBarValue (percentage));
     emit remainingTimeValuesChanged (remainingTimeValues ());
-    checkPSMThreshold ();
 }
 
 void
@@ -488,26 +487,6 @@ BatteryBusinessLogic::devicePSMStateChanged (
     emit remainingTimeValuesChanged (remainingTimeValues ());
 }
 
-void
-BatteryBusinessLogic::checkPSMThreshold ()
-{
-    SYS_DEBUG ("");
-    int PSMThresholdIndex = m_SystemUIGConf->value (SystemUIGConf::BatteryPSMThresholdKey).toInt ();
-    int PSMThreshold = m_PSMThresholds.at (PSMThresholdIndex).toInt ();
-
-    if (m_SystemUIGConf->value (SystemUIGConf::BatteryPSMAutoKey).toBool ()) {
-        // we only handle this if the auto PSM is on
-        if (m_Battery->getBatteryEnergyLevel () <= PSMThreshold)
-        {
-            if (m_DeviceMode->getPSMState () == QmDeviceMode::PSMStateOff)
-                setPSMState (true);
-        } else {
-            if (m_DeviceMode->getPSMState () == QmDeviceMode::PSMStateOn)
-                setPSMState (false);
-        }
-    }
-}
-
 bool
 BatteryBusinessLogic::PSMValue ()
 {
@@ -525,15 +504,9 @@ void
 BatteryBusinessLogic::togglePSM (
         bool toggle)
 {
-    SYS_DEBUG ("");
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
 
     setPSMState (toggle);
-
-    //when ever we toggle PSM manually, we turn off the automatic PSM
-    m_SystemUIGConf->setValue (
-            SystemUIGConf::BatteryPSMAutoKey,
-            QVariant (false));
-    emit PSMAutoDisabled ();
 }
 
 void
@@ -545,13 +518,6 @@ BatteryBusinessLogic::togglePSMAuto (
     m_SystemUIGConf->setValue (
             SystemUIGConf::BatteryPSMAutoKey,
             QVariant (toggle));
-    if (toggle) // if we turn on the Auto PSM, we must check the threshold
-        checkPSMThreshold ();
-    else { // if we turn off the Auto PSM, we must disable the PSM in all cases
-        if (m_DeviceMode->getPSMState () == QmDeviceMode::PSMStateOn)
-            setPSMState (false);
-    }
-
 }
 
 QStringList
@@ -610,7 +576,6 @@ BatteryBusinessLogic::setPSMThreshold (
     m_SystemUIGConf->setValue (
             SystemUIGConf::BatteryPSMThresholdKey,
             QVariant (m_PSMThresholds.indexOf (threshold)));
-    checkPSMThreshold ();
 }
 
 QVariant

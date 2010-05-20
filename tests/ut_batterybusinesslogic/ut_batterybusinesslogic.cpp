@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino=" (0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -77,7 +79,13 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     QCOMPARE(m_subject->PSMThresholdValue(), test2);
 
     // check that the PSM is toggled on
-    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
+    // Well, we are not doing in the sysuid any more.
+    // See NB#169777 - Power save mode logic problems
+    #if 0
+    QCOMPARE(
+            m_subject->m_DeviceMode->getPSMState(), 
+            Maemo::QmDeviceMode::PSMStateOn);
+    #endif
 
     // set the threshold level to 10%
     const QString test3 = "10";
@@ -87,38 +95,16 @@ void Ut_BatteryBusinessLogic::testSetPSMThreshold()
     QCOMPARE(m_subject->PSMThresholdValue(), test3);
 
     // check that the PSM is toggled off
-    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
-
-}
-
-void Ut_BatteryBusinessLogic::testTogglePSM()
-{
-    QSignalSpy spy(m_subject, SIGNAL(PSMAutoDisabled()));
-
-    // set the PSM auto on
-    systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
-
-    // turn off the PSM
-    m_subject->togglePSM(false);
-
-    // check that the PSM auto is turned off
-    QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
-
-    // check that the PSM auto turn off signal is emitted
-    QCOMPARE(spy.count(), 1);
-    spy.takeFirst();
-
-    // set the PSM auto on
-    systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
-
-    // turn on the PSM
-    m_subject->togglePSM(true);
-
-    // check that the PSM auto is turned off
-    QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
-
-    // check that the PSM auto turn off signal is emitted
-    QCOMPARE(spy.count(), 1);
+    // Well, we are not doing in the sysuid any more.
+    // See NB#169777 - Power save mode logic problems
+    #if 0
+    QCOMPARE(
+            m_subject->m_DeviceMode->getPSMState(), 
+            Maemo::QmDeviceMode::PSMStateOn);
+    #endif
+    QCOMPARE(
+            m_subject->m_DeviceMode->getPSMState(), 
+            Maemo::QmDeviceMode::PSMStateOff);
 }
 
 void Ut_BatteryBusinessLogic::testTogglePSMAuto()
@@ -128,15 +114,18 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
 
     // set the PSM on
     m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOn);
-
     // toggle the PSM auto off
     m_subject->togglePSMAuto(false);
 
-    // check that the PSM auto is toggled off
-    QCOMPARE(systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), false);
-
     // check that the PSM is toggled off
-    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOff);
+    QCOMPARE(
+            m_subject->m_DeviceMode->getPSMState(), 
+            Maemo::QmDeviceMode::PSMStateOn);
+
+    // Check that the psm auto is off.
+    QCOMPARE(
+            systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), 
+            false);
 
     // set the battery level to 5%
     m_subject->m_Battery->setBatteryEnergyLevel(5);
@@ -148,8 +137,13 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     m_subject->togglePSMAuto(true);
 
     // check that the PSM is toggled on
-    QCOMPARE(m_subject->m_DeviceMode->getPSMState(), Maemo::QmDeviceMode::PSMStateOn);
-
+    // Well, we are not doing in the sysuid any more.
+    // See NB#169777 - Power save mode logic problems
+    #if 0
+    QCOMPARE(
+            m_subject->m_DeviceMode->getPSMState(), 
+            Maemo::QmDeviceMode::PSMStateOn);
+    #endif
 }
 
 void
