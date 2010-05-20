@@ -62,8 +62,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeClock(new Clock(controller)),
     portraitClock(new Clock(controller))
 {
-    // Set up notifiers
-
     // Connect related phone network indicators
     connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
     connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
@@ -96,29 +94,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
 
 void StatusAreaView::setupTestabilityObjectNames()
 {
-    landscapePhoneNetworkIndicator->setObjectName("landscapephonenetworkindicator");
-    portraitPhoneNetworkIndicator->setObjectName("portraitphonenetworkindicator");
-    landscapeAlarmIndicator->setObjectName("landscapealarmindicator");
-    portraitAlarmIndicator->setObjectName("portraitalarmindicator");
-    landscapeBatteryIndicator->setObjectName("landscapebatteryindicator");
-    portraitBatteryIndicator->setObjectName("portraitbatteryindicator");
-    landscapePhoneSignalStrengthIndicator->setObjectName("landscapephonesignalstrengthindicator");
-    portraitPhoneSignalStrengthIndicator->setObjectName("portraitphonesignalstrengthindicator");
-    landscapePhoneNetworkTypeIndicator->setObjectName("landscapephonenetworktypeindicator");
-    portraitPhoneNetworkTypeIndicator->setObjectName("portraitphonenetworktypeindicator");
-    landscapeInternetConnectionIndicator->setObjectName("landscapeinternetconnectionindicator");
-    portraitInternetConnectionIndicator->setObjectName("portraitinternetconnectionindicator");
-    landscapeBluetoothIndicator->setObjectName("landscapebluetoothindicator");
-    portraitBluetoothIndicator->setObjectName("portraitbluetoothindicator");
-    landscapeGPSIndicator->setObjectName("landscapegpsindicator");
-    portraitGPSIndicator->setObjectName("portraitgpsindicator");
-    landscapePresenceIndicator->setObjectName("landscapepresenceindicator");
-    portraitPresenceIndicator->setObjectName("portraitpresenceindicator");
-    landscapeProfileIndicator->setObjectName("landscapeprofileindicator");
-    portraitProfileIndicator->setObjectName("portraitprofileindicator");
-    landscapeInputMethodIndicator->setObjectName("landscapeinputmethodindicator");
-    landscapeCallIndicator->setObjectName("landscapecallindicator");
-    portraitCallIndicator->setObjectName("portraitcallindicator");
     landscapeNotifier->setObjectName("landscapenotifier");
     portraitNotifier->setObjectName("portraitnotifier");
     landscapeClock->setObjectName("landscapeclock");
