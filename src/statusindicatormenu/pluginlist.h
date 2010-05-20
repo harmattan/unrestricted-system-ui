@@ -30,6 +30,7 @@ class MApplicationPage;
 class QGraphicsLinearLayout;
 class NotificationArea;
 class QStringList;
+class MApplicationExtensionArea;
 
 /*!
  * The plugin list displays a list of plugins instantiated from shared
@@ -105,11 +106,14 @@ private:
     //! The notification area widget
     NotificationArea *notificationArea;
 
+    //! The extension area for the top row plugins
+    MApplicationExtensionArea *extensionArea;
+
     //! The name of the control panel service
     const static QString CONTROL_PANEL_SERVICE_NAME;
 
     //! Stuff to handle sequential delayed plugin loading. Some of the plugins
-    //are loading slow, we have to get a chance to run while tey are loading.
+    //! are loading slow, we have to get a chance to run while tey are loading.
     int                 m_LoadingPluginNumber;
     QStringList         m_PluginFiles;
 };

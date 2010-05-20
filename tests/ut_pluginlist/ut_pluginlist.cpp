@@ -60,7 +60,10 @@ void MSceneWindow::appear(enum DeletionPolicy)
 // QPluginLoader stubs (used by PluginList)
 QObject *QPluginLoader::instance()
 {
-    Ut_PluginList::loadedPlugins.append(fileName());
+    if(!QFileInfo(fileName()).absolutePath().endsWith(APPLICATION_EXTENSION_DIR)) {
+        Ut_PluginList::loadedPlugins.append(fileName());
+    }
+
     return new TestPlugin;
 }
 
@@ -114,23 +117,10 @@ void Ut_PluginList::testInitialization()
     // Now plugins are loaded on Idle, so we have to wait some more time...
     QTest::qWait (2000);
 
-    // The loaded plugin list should be known
-    QCOMPARE(loadedPlugins.count(), 10);
-    QCOMPARE(loadedPlugins.at(0), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libprofile.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(1), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libdatetime.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(2), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libclockalarm.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(3), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libconnectivity.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(4), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libpresence.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(5), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libbattery.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(6), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libvolume.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(7), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libaccessories.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(8), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libcallui.so").canonicalPath());
-    QCOMPARE(loadedPlugins.at(9), QDir(STATUSINDICATORMENU_PLUGIN_DIR "/libtransferui.so").canonicalPath());
-
     // The layout should contain a widget for each plugin plus one widget for the button
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());
     QVERIFY(layout != NULL);
-    QCOMPARE(layout->count(), loadedPlugins.count() + 1);
+    QCOMPARE(layout->count(), loadedPlugins.count() + 2);
 }
 
 void Ut_PluginList::testShowStatusIndicatorMenu()

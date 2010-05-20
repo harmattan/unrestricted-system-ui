@@ -16,7 +16,8 @@ PKGCONFIG += \
           libngf0 \
           dbus-1
 
-DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
+DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\' \
+    APPLICATION_EXTENSION_DIR=\'$$quote(\"$$M_APPLICATION_EXTENSION_DIR\")\'
 
 # install tests
 target.path = $$[QT_INSTALL_LIBS]/system-ui-tests

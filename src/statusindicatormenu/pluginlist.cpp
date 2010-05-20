@@ -30,6 +30,7 @@
 #include <QGraphicsLinearLayout>
 #include <MApplicationIfProxy>
 #include "notificationarea.h"
+#include <MApplicationExtensionArea>
 
 #undef DEBUG
 #define WARNING
@@ -53,10 +54,18 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     mainLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(mainLayout);
 
+    // Create an extension area for the top row plugins
+    extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
+    extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
+    QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    topRowLayout->addStretch();
+    topRowLayout->addItem(extensionArea);
+    topRowLayout->addStretch();
+    mainLayout->addItem(topRowLayout);
+
     // Create the notification area
     notificationArea = new NotificationArea(this);
     notificationArea->setVisible(false);
-
 
     connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
@@ -79,6 +88,7 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
 
 PluginList::~PluginList()
 {
+    delete extensionArea;
     delete notificationArea;
 }
 
@@ -111,7 +121,7 @@ void PluginList::setNotificationCount(int notificationCount)
     if(notificationCount > 0) {
         if(!notificationArea->isVisible()) {
             notificationArea->setVisible(true);
-            mainLayout->insertItem(0, notificationArea);
+            mainLayout->insertItem(1, notificationArea);
         }
     } else {
         if(notificationArea->isVisible()) {
