@@ -1,13 +1,14 @@
 system-ui (0.15.11~1) harmattan; urgency=low
 
-  * [NEW VERSION]
   * Fix build warnings...
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
                        correctly
   * Fixes: NB#169297 - Enabling 'auto activate power save' does not enable 
                        automatic PSM
+  * Fixes: NB#164195 - No vibration happens when pressing the power key
+                       to switch off device.
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 14 May 2010 10:41:04 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 20 May 2010 09:42:54 +0200
 
 system-ui (0.15.10-1) harmattan; urgency=low
 
@@ -46,8 +47,6 @@ system-ui (0.15.7-1) harmattan; urgency=low
   * Touch-screen-lock fixes...
   * Shutdown ui fixes...
   * Fixes: NB#166960 - Hard to invoke the unlock screen
-  * Fixes: NB#167675 - Shutdown notification not displayed when powering
-                       off the device
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 07 May 2010 15:16:26 +0200
 
