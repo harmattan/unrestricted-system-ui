@@ -5,3 +5,5 @@ usr/share/themes/base/meegotouch/sysuid/images/*.png
 usr/share/themes/base/meegotouch/sysuid/svg/*.svg
 usr/share/meegotouch/notifications/eventtypes/*.conf
 etc/dbus-1/system.d/systemui.conf
+usr/bin/pcsuite-enable.sh
+etc/sudoers.d/usb.sudoers
