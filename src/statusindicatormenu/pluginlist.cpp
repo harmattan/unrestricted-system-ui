@@ -58,6 +58,7 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+    extensionArea->init();
 
     // Create a button for accessing the full settings
     //% "Settings"

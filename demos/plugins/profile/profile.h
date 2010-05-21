@@ -38,7 +38,6 @@
 #include <MButton>
 
 class MStatusIndicatorMenuInterface;
-class MButton;
 class ProfilePlugin;
 
 /*!
