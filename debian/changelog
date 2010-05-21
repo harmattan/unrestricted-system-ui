@@ -1,3 +1,11 @@
+system-ui (0.15.11-1) harmattan; urgency=low
+
+  * Added a workaround for obexd:
+  * Fixes: NB#169757 - Obexd doesn't hook on to /dev/ttyGS0 on choosing
+                       Ovi Suite mode in the USB mode pop-up
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 08:51:46 +0200
+
 system-ui (0.15.10-2) harmattan; urgency=low
 
   * Remove some bugs from changelog
