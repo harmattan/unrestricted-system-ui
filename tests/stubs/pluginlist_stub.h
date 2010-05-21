@@ -35,7 +35,6 @@ public:
     virtual void setNotificationCount(int notificationCount);
     virtual void hideStatusIndicatorMenu();
     virtual void addPlugin(const QString &path);
-    virtual void addSettingsButton();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -80,10 +79,6 @@ void PluginListStub::addPlugin(const QString &path) {
     stubMethodEntered("addPlugin",params);
 }
 
-void PluginListStub::addSettingsButton() {
-    stubMethodEntered("addSettingsButton");
-}
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -122,10 +117,6 @@ void PluginList::loadPlugins() {
 
 void PluginList::addPlugin(const QString &path) {
     gPluginListStub->addPlugin(path);
-}
-
-void PluginList::addSettingsButton() {
-    gPluginListStub->addSettingsButton();
 }
 
 void PluginList::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)

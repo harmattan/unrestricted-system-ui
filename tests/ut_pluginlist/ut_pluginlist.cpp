@@ -117,10 +117,10 @@ void Ut_PluginList::testInitialization()
     // Now plugins are loaded on Idle, so we have to wait some more time...
     QTest::qWait (2000);
 
-    // The layout should contain a widget for each plugin plus one widget for the button
+    // The layout should contain a widget for each plugin plus one for the top row
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());
     QVERIFY(layout != NULL);
-    QCOMPARE(layout->count(), loadedPlugins.count() + 2);
+    QCOMPARE(layout->count(), loadedPlugins.count() + 1);
 }
 
 void Ut_PluginList::testShowStatusIndicatorMenu()

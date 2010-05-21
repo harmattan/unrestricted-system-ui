@@ -95,11 +95,6 @@ private:
      */
     void addPlugin(const QString &path);
 
-    /*!
-     * Adds a settings button to the list.
-     */
-    void addSettingsButton();
-
     //! The layout for the list
     QGraphicsLinearLayout *mainLayout;
 

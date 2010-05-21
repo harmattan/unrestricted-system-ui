@@ -58,9 +58,20 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+
+    // Create a button for accessing the full settings
+    //% "Settings"
+    MButton *settingsButton = new MButton(qtTrId("qtn_stat_menu_settings"));
+    settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
+    settingsButton->setViewType(MButton::iconType);
+    settingsButton->setIconID("icon-m-common-settings");
+    connect(settingsButton, SIGNAL(clicked()), this, SLOT(settingsButtonClicked()));
+
+    // Put the extension area and the settings button to a horizontal layout
     QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     topRowLayout->addStretch();
     topRowLayout->addItem(extensionArea);
+    topRowLayout->addItem(settingsButton);
     topRowLayout->addStretch();
     mainLayout->addItem(topRowLayout);
 
@@ -118,9 +129,6 @@ void PluginList::loadPlugins()
 
         return;
     }
-
-    // Create a button for accessing the full settings
-    addSettingsButton();
 }
 
 void PluginList::setNotificationCount(int notificationCount)
@@ -175,24 +183,6 @@ PluginList::addPlugin(
     }
 
     delete object;
-}
-
-void PluginList::addSettingsButton()
-{
-    // Create a button for accessing the full settings
-    MButton *settingsButton = new MButton("Settings");
-    settingsButton->setObjectName("StatusIndicatorMenuSettingsButton");
-    connect(settingsButton, SIGNAL(clicked()), this, SLOT(settingsButtonClicked()));
-
-    // Add the settings button to a horizontal mainLayout for centering
-    QGraphicsLinearLayout *settingsLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    settingsLayout->setContentsMargins(0, 0, 0, 0);
-    settingsLayout->addStretch();
-    settingsLayout->addItem(settingsButton);
-    settingsLayout->addStretch();
-
-    // Add the horizontal mainLayout to the main mainLayout
-    mainLayout->addItem(settingsLayout);
 }
 
 void PluginList::showStatusIndicatorMenu()
