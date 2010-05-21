@@ -1,11 +1,11 @@
-system-ui (0.15.12~1) harmattan; urgency=low
+system-ui (0.15.12-1) harmattan; urgency=low
 
   * Added a workaround for obexd:
   * Fixes: NB#169757 - Obexd doesn't hook on to /dev/ttyGS0 on choosing
                        Ovi Suite mode in the USB mode pop-up
   * Fixes: NB#169773 - Missed/rejected call triggers infinite ringtone playback
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 10:00:53 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 10:30:52 +0200
 
 system-ui (0.15.10-2) harmattan; urgency=low
 
