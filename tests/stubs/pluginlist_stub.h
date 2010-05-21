@@ -26,53 +26,62 @@
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
 class PluginListStub : public StubBase {
-  public:
-  virtual void PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent);
-  virtual void PluginListDestructor();
-  virtual void showStatusIndicatorMenu();
-  virtual void settingsButtonClicked();
-  virtual void setNotificationCount(int notificationCount);
-  virtual void hideStatusIndicatorMenu();
-  virtual void addPlugin(const QString &path);
-  virtual void addSettingsButton();
+public:
+    virtual void PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent);
+    virtual void PluginListDestructor();
+    virtual void showStatusIndicatorMenu();
+    virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
+    virtual void settingsButtonClicked();
+    virtual void setNotificationCount(int notificationCount);
+    virtual void hideStatusIndicatorMenu();
+    virtual void addPlugin(const QString &path);
+    virtual void addSettingsButton();
 }; 
 
 // 2. IMPLEMENT STUB
 void PluginListStub::PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
-  Q_UNUSED(applicationWindow);
-  Q_UNUSED(applicationPage);
-  Q_UNUSED(parent);
+    Q_UNUSED(applicationWindow);
+    Q_UNUSED(applicationPage);
+    Q_UNUSED(parent);
 
 }
 void PluginListStub::PluginListDestructor() {
 
 }
+
+void PluginListStub::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<MApplicationExtensionInterface*>(extension));
+    stubMethodEntered("setStatusIndicatorMenuInterface", params);
+}
+
 void PluginListStub::showStatusIndicatorMenu() {
-  stubMethodEntered("showStatusIndicatorMenu");
+    stubMethodEntered("showStatusIndicatorMenu");
 }
 
 void PluginListStub::settingsButtonClicked() {
-  stubMethodEntered("settingsButtonClicked");
+    stubMethodEntered("settingsButtonClicked");
 }
 
 void PluginListStub::setNotificationCount(int notificationCount) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<int >(notificationCount));
-  stubMethodEntered("setNotificationCount",params);
+    QList<ParameterBase*> params;
+    params.append( new Parameter<int >(notificationCount));
+    stubMethodEntered("setNotificationCount",params);
 }
 
 void PluginListStub::hideStatusIndicatorMenu() {
-  stubMethodEntered("hideStatusIndicatorMenu");
+    stubMethodEntered("hideStatusIndicatorMenu");
 }
 
 void PluginListStub::addPlugin(const QString &path) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(path));
-  stubMethodEntered("addPlugin",params);
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(path));
+    stubMethodEntered("addPlugin",params);
 }
 
 void PluginListStub::addSettingsButton() {
-  stubMethodEntered("addSettingsButton");
+    stubMethodEntered("addSettingsButton");
 }
 
 
@@ -84,27 +93,27 @@ PluginListStub* gPluginListStub = &gDefaultPluginListStub;
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
-  gPluginListStub->PluginListConstructor(applicationWindow, applicationPage, parent);
+    gPluginListStub->PluginListConstructor(applicationWindow, applicationPage, parent);
 }
 
 PluginList::~PluginList() {
-  gPluginListStub->PluginListDestructor();
+    gPluginListStub->PluginListDestructor();
 }
 
 void PluginList::showStatusIndicatorMenu() {
-  gPluginListStub->showStatusIndicatorMenu();
+    gPluginListStub->showStatusIndicatorMenu();
 }
 
 void PluginList::settingsButtonClicked() {
-  gPluginListStub->settingsButtonClicked();
+    gPluginListStub->settingsButtonClicked();
 }
 
 void PluginList::setNotificationCount(int notificationCount) {
-  gPluginListStub->setNotificationCount(notificationCount);
+    gPluginListStub->setNotificationCount(notificationCount);
 }
 
 void PluginList::hideStatusIndicatorMenu() {
-  gPluginListStub->hideStatusIndicatorMenu();
+    gPluginListStub->hideStatusIndicatorMenu();
 }
 
 void PluginList::loadPlugins() {
@@ -112,12 +121,16 @@ void PluginList::loadPlugins() {
 }
 
 void PluginList::addPlugin(const QString &path) {
-  gPluginListStub->addPlugin(path);
+    gPluginListStub->addPlugin(path);
 }
 
 void PluginList::addSettingsButton() {
-  gPluginListStub->addSettingsButton();
+    gPluginListStub->addSettingsButton();
 }
 
+void PluginList::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
+{
+    gPluginListStub->setStatusIndicatorMenuInterface(extension);
+}
 
 #endif

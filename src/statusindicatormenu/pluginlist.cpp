@@ -22,7 +22,7 @@
 #include "pluginlist.h"
 #include <MButton>
 #include <QTimer>
-#include "mstatusindicatormenuplugininterface.h"
+#include "mstatusindicatormenuextensioninterface.h"
 #include <MWindow>
 #include <MApplicationPage>
 #include <QStringList>
@@ -57,6 +57,7 @@ PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *application
     // Create an extension area for the top row plugins
     extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
+    connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
     QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     topRowLayout->addStretch();
     topRowLayout->addItem(extensionArea);
@@ -90,6 +91,12 @@ PluginList::~PluginList()
 {
     delete extensionArea;
     delete notificationArea;
+}
+
+void PluginList::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
+{
+    MStatusIndicatorMenuExtensionInterface *menuExtension = static_cast<MStatusIndicatorMenuExtensionInterface *>(extension);
+    menuExtension->setStatusIndicatorMenuInterface(*this);
 }
 
 void PluginList::loadPlugins()

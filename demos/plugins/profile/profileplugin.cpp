@@ -37,7 +37,30 @@
 
 Q_EXPORT_PLUGIN2(profile, ProfilePlugin)
 
-MWidget* ProfilePlugin::constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu)
+
+ProfilePlugin::ProfilePlugin() : statusIndicatorMenu(0), profile(0)
 {
-    return new Profile(statusIndicatorMenu);
+}
+
+void ProfilePlugin::setStatusIndicatorMenuInterface(MStatusIndicatorMenuInterface &menuInterface)
+{
+    statusIndicatorMenu = &menuInterface;
+}
+
+MStatusIndicatorMenuInterface *ProfilePlugin::statusIndicatorMenuInterface() const
+{
+    return statusIndicatorMenu;
+}
+
+// Methods derived from MApplicationExtensionInterface
+bool ProfilePlugin::initialize(const QString &)
+{
+    profile = new Profile(this);
+
+    return true;
+}
+
+MWidget *ProfilePlugin::widget()
+{
+    return profile;
 }

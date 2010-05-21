@@ -35,18 +35,34 @@
 #ifndef PROFILEPLUGIN_H
 #define PROFILEPLUGIN_H
 
-#include <MStatusIndicatorMenuPluginInterface>
+#include <MStatusIndicatorMenuExtensionInterface>
 #include <QObject>
 
-// This class doesn't do anything else but creates a widget
-class ProfilePlugin : public QObject, public MStatusIndicatorMenuPluginInterface
+class Profile;
+class MStatusIndicatorMenuInterface;
+
+
+class ProfilePlugin : public QObject, public MStatusIndicatorMenuExtensionInterface
 {
     Q_OBJECT
-    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(MStatusIndicatorMenuExtensionInterface MApplicationExtensionInterface)
 
 public:
+    ProfilePlugin();
+
+    // Getter for the status indicator menu interface
+    MStatusIndicatorMenuInterface *statusIndicatorMenuInterface() const;
+
     // Methods derived from MStatusIndicatorMenuPlugin
-    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu);
+    virtual void setStatusIndicatorMenuInterface(MStatusIndicatorMenuInterface &menuInterface);
+
+    // Methods derived from MApplicationExtensionInterface
+    virtual bool initialize(const QString &interface);
+    virtual MWidget *widget();
+
+private:
+    MStatusIndicatorMenuInterface *statusIndicatorMenu;
+    Profile *profile;
 };
 
 #endif // PROFILEPLUGIN_H

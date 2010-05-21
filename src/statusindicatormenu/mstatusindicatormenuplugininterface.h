@@ -21,28 +21,9 @@
 #define MSTATUSINDICATORMENUPLUGININTERFACE_H
 
 #include <QtPlugin>
+#include <mstatusindicatormenuinterface.h>
 
 class MWidget;
-
-/**
- * The MStatusIndicatorMenuInterface interface represents a status indicator
- * menu application, its window and main page. The interface can be used to
- * show the main status indicator menu application page or to hide the status
- * indicator menu window.
- */
-class MStatusIndicatorMenuInterface
-{
-public:
-    /*!
-     * Shows the main status indicator menu application page.
-     */
-    virtual void showStatusIndicatorMenu() = 0;
-
-    /*!
-     * Hides the status indicator menu window.
-     */
-    virtual void hideStatusIndicatorMenu() = 0;
-};
 
 /**
  * MStatusIndicatorMenuPluginInterface is the base class for status indicator

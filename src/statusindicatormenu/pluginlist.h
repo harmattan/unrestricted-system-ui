@@ -31,6 +31,7 @@ class QGraphicsLinearLayout;
 class NotificationArea;
 class QStringList;
 class MApplicationExtensionArea;
+class MApplicationExtensionInterface;
 
 /*!
  * The plugin list displays a list of plugins instantiated from shared
@@ -74,6 +75,11 @@ private slots:
      * \brief Slot for loading the status-menu plugins when we're idle
      */
     void loadPlugins();
+
+    /*!
+     * \brief Sets the status indicator menu interface for the application extensions
+     */
+    void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
 
 public slots:
     /*!

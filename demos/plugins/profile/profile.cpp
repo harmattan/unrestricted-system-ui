@@ -33,37 +33,41 @@
  */
 
 #include "profile.h"
-#include <MStatusIndicatorMenuPluginInterface>
+#include "profileplugin.h"
 #include <MButton>
 #include <MButtonGroup>
-#include <MContainer>
-#include <MApplicationPage>
 #include <QGraphicsLinearLayout>
-#include <MLabel>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MDialog>
 
-Profile::Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent) :
-    MWidget(parent),
-    statusIndicatorMenu(statusIndicatorMenu),
-    profileModificationPage(new MApplicationPage)
+Profile::Profile(ProfilePlugin *profilePlugin, QGraphicsItem *parent) :
+    MButton(parent),
+    plugin(profilePlugin)
 {
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    setLayout(mainLayout);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    setText("Silent");
+    setViewType(MButton::iconType);
+    setObjectName("StatusIndicatorMenuTopRowExtensionButton");
+    setIconID("icon-m-profile-silent");
+    connect(this, SIGNAL(clicked()), this, SLOT(showProfileDialog()));
+}
 
-    // Create a container for the profiles
-    MContainer *container = new MContainer;
-    MWidget *widget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    widget->setLayout(layout);
-    container->setTitle("Profiles");
-    container->setCentralWidget(widget);
-    connect(container, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
-    mainLayout->addItem(container);
+Profile::~Profile()
+{
+}
+
+void Profile::showProfileDialog()
+{
+    // Create a dialog for choosing the profile
+    MDialog* dialog = new MDialog("Profile", M::NoStandardButton);
+    MWidget *centralWidget = new MWidget;
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    centralWidget->setLayout(layout);
+    dialog->setCentralWidget(centralWidget);
 
     // Create a button group for the profiles
-    MButtonGroup *buttonGroup = new MButtonGroup(widget);
-    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(MButton *)), this, SLOT(buttonClicked(MButton *)));
+    MButtonGroup *buttonGroup = new MButtonGroup(centralWidget);
+    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(MButton *)), dialog, SLOT(accept()));
 
     // Place the buttons in the button group and in the layout
     MButton *button;
@@ -85,44 +89,11 @@ Profile::Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsIt
     layout->addItem(button);
     buttonGroup->addButton(button);
 
-    // Set up the profile modification page
-    profileModificationPage->setTitle("Profile Modification Page");
-    MWidget *pageWidget = new MWidget;
+    // Show the dialog
+    dialog->exec();
 
-    // Add the back button to go back to status indicator menu window
-    QGraphicsLinearLayout *pageLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    pageLayout->setContentsMargins(0, 0, 0, 0);
-    pageLayout->addStretch();
-    pageLayout->addItem(new MLabel("Profile Modification Page"));
-    pageLayout->addStretch();
-    MButton *pageButton = new MButton("Go back");
-    pageLayout->addItem(pageButton);
-    pageLayout->addStretch();
-
-    pageWidget->setLayout(pageLayout);
-    // Widget will be deleted by the page
-    profileModificationPage->setCentralWidget(pageWidget);
-
-    connect(pageButton, SIGNAL(clicked()), this, SLOT(buttonClicked()));
-    connect(profileModificationPage, SIGNAL(displayExited()), this, SLOT(buttonClicked()));
-}
-
-Profile::~Profile()
-{
-    delete profileModificationPage;
-}
-
-void Profile::showProfileModificationPage()
-{
-    profileModificationPage->appear();
-}
-
-void Profile::buttonClicked()
-{
-    statusIndicatorMenu.showStatusIndicatorMenu();
-}
-
-void Profile::buttonClicked(MButton *)
-{
-    statusIndicatorMenu.hideStatusIndicatorMenu();
+    // Hide the status indicator menu
+    if(MStatusIndicatorMenuInterface *menu = plugin->statusIndicatorMenuInterface()) {
+        menu->hideStatusIndicatorMenu();
+    }
 }

@@ -9,32 +9,24 @@ CONFIG       += plugin gui meegotouch system-ui silent
 INCLUDEPATH  += \
     ../../../src/statusindicatormenu
 
-MODEL_HEADERS =
-STYLE_HEADERS =
-
 HEADERS = \
     profileplugin.h \
     profile.h \
-    $$MODEL_HEADERS \
-    $$STYLE_HEADERS
 
 SOURCES = \
     profileplugin.cpp \
     profile.cpp \
 
-TARGET        = $$qtLibraryTarget(profile)
+TARGET        = $$qtLibraryTarget(statusindicatormenu-profile)
 DESTDIR       = ../../../lib
 
-target.path += $$STATUSINDICATORMENU_PLUGIN_DIR
+target.path += $$M_APPLICATION_EXTENSION_DIR
+
+desktop_entry.path = $$M_APPLICATION_EXTENSION_DATA_DIR
+desktop_entry.files = *.desktop
 
 INSTALLS += \
     target \
-    svg \
-    images
-
-svg.path = $$SYSTEMUI_THEMES_DIR/svg
-svg.files = images/*.svg
-images.path = $$SYSTEMUI_THEMES_DIR/images
-images.files = images/*.png
+    desktop_entry
 
 include(../check.pri)

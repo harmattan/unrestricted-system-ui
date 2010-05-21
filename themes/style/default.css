@@ -440,3 +440,10 @@ MApplicationExtensionAreaStyle#StatusIndicatorMenuTopRowExtensionArea {
     container-mode: false;
 }
 
+MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
+    /* TODO: replace with correct sizes once the alg doc is available */
+    minimum-size:   100 80;
+    preferred-size: 100 80;
+    maximum-size:   100 80;
+}
+

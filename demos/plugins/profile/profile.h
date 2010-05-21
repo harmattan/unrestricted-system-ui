@@ -35,46 +35,33 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include <MWidget>
+#include <MButton>
 
 class MStatusIndicatorMenuInterface;
-class MApplicationPage;
 class MButton;
+class ProfilePlugin;
 
 /*!
  * The Profile widget makes it possible to select the currently
  * active profile.
  */
-class Profile : public MWidget
+class Profile : public MButton
 {
     Q_OBJECT
 
 public:
-    Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
+    Profile(ProfilePlugin *profilePlugin, QGraphicsItem *parent = NULL);
     virtual ~Profile();
 
 private slots:
     /*!
-     * \brief A slot for showing the profile modification page.
+     * \brief Shows the profile dialog
      */
-    void showProfileModificationPage();
-
-    /*!
-     * \brief A slot for receiving information about button clicks.
-     */
-    void buttonClicked();
-
-    /*!
-     * \brief A slot for receiving information about button clicks.
-     */
-    void buttonClicked(MButton *button);
+    void showProfileDialog();
 
 private:
-    //! Interface for controlling the status indicator menu
-    MStatusIndicatorMenuInterface &statusIndicatorMenu;
-
-    //! Application page for the profile modification
-    MApplicationPage *profileModificationPage;
+    //! The profile plugin for accessing the status indicator menu
+    ProfilePlugin *plugin;
 };
 
 #endif // PROFILE_H
