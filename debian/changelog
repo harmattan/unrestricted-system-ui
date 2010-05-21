@@ -10,7 +10,7 @@ system-ui (0.15.12~1) harmattan; urgency=low
   * Fixes: NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
-  * Just increase the version number... 
+  * Fixes: NB#169773 - Missed/rejected call triggers infinite ringtone playback
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 08:54:53 +0200
 
