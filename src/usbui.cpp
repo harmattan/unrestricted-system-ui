@@ -28,6 +28,7 @@
 #include <MDialog>
 #include <MLocale>
 #include <QTimer>
+#include <QProcess>
 
 #define DEBUG
 #define WARNING
@@ -40,7 +41,8 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_locks (0),
     m_notification (0),
     m_dialog (0),
-    m_showdialog (false)
+    m_showdialog (false),
+    m_process (new QProcess)
 {
     m_logic = new QmUSBMode (this);
     m_locks = new QmLocks (this);
@@ -55,6 +57,8 @@ UsbUi::~UsbUi ()
         delete m_dialog;
         m_dialog = 0;
     }
+
+    delete m_process;
 }
 
 void
@@ -133,6 +137,10 @@ UsbUi::OviSuiteSelected ()
 
     m_logic->setMode (QmUSBMode::OviSuite);
     m_dialog->disappear ();
+
+    // HACK: FIXME: Remove this...
+    m_process->start ("/usr/bin/sudo /usr/bin/pcsuite-enable.sh");
+    SYS_WARNING ("Work-around started: /usr/bin/pcsuite-enable.sh");
 }
 
 void

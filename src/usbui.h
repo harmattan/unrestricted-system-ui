@@ -25,6 +25,7 @@
 
 class MDialog;
 class MNotification;
+class QProcess;
 
 class UsbUi : public QObject
 {
@@ -51,6 +52,7 @@ class UsbUi : public QObject
         MNotification       *m_notification;
         MDialog             *m_dialog;
         bool                 m_showdialog;
+        QProcess            *m_process;
 };
 
 #endif
