@@ -21,7 +21,7 @@
 #include "sysuid.h"
 #include "mcompositornotificationsink.h"
 
-Notifier::Notifier(MWidget *parent) : MLabel(parent),
+Notifier::Notifier(MWidget *parent) : MLabel("0", parent),
  notifierSink(new NotifierNotificationSink)
 {
     NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
