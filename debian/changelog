@@ -1,4 +1,4 @@
-system-ui (0.15.11~1) harmattan; urgency=low
+system-ui (0.15.12~1) harmattan; urgency=low
 
   * Fix build warnings...
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
@@ -10,8 +10,9 @@ system-ui (0.15.11~1) harmattan; urgency=low
   * Fixes: NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
+  * Just increase the version number... 
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 20 May 2010 13:41:29 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 08:54:53 +0200
 
 system-ui (0.15.10-1) harmattan; urgency=low
 
