@@ -16,46 +16,14 @@
 ** of this file.
 **
 ****************************************************************************/
-/*
- * ut_pluginlist.cpp
- *
- * This file is part of system ui
- *
- * Copyright (C) 2009 Nokia Corporation. All rights reserved.
- *
- * This software, including documentation, is protected by copyright
- * controlled by Nokia Corporation. All rights are reserved.
- * Copying, including reproducing, storing, adapting or translating,
- * any or all of this material requires the prior written consent of
- * Nokia Corporation. This material also contains confidential
- * information which may not be disclosed to others without the prior
- * written consent of Nokia.
- */
 
 #include <MApplication>
 #include <MSceneWindow>
-#include <MApplicationWindow>
-#include <MApplicationPage>
 #include <MButton>
 #include <QGraphicsLinearLayout>
-#include <MApplicationIfProxy>
 #include "ut_pluginlist.h"
 #include "pluginlist.h"
-#include "notificationarea_stub.h"
-
-// MApplicationIfProxy stubs (used by StatusArea)
-QDBusPendingReply<> MApplicationIfProxy::launch()
-{
-    Ut_PluginList::mApplicationIfProxyLaunchCalled = true;
-
-    return QDBusPendingReply<>();
-}
-
-// MApplicationPage stubs (used by PluginList)
-void MSceneWindow::appear(enum DeletionPolicy)
-{
-    Ut_PluginList::applicationPageShown = true;
-}
+#include "statusindicatormenuwindow_stub.h"
 
 // QPluginLoader stubs (used by PluginList)
 QObject *QPluginLoader::instance()
@@ -77,9 +45,7 @@ MWidget *TestPlugin::constructWidget(MStatusIndicatorMenuInterface &)
     return new MWidget;
 }
 
-bool Ut_PluginList::mApplicationIfProxyLaunchCalled;
-bool Ut_PluginList::applicationWindowMinimized;
-bool Ut_PluginList::applicationPageShown;
+bool Ut_PluginList::windowMinimized;
 QStringList Ut_PluginList::loadedPlugins;
 
 void Ut_PluginList::initTestCase()
@@ -87,24 +53,20 @@ void Ut_PluginList::initTestCase()
     int argc = 1;
     char *app_name = (char *)"./ut_pluginlist";
     app = new MApplication(argc, &app_name);
-    applicationWindow = new MApplicationWindow;
-    applicationPage = new MApplicationPage;
+    window = new StatusIndicatorMenuWindow;
 }
 
 void Ut_PluginList::cleanupTestCase()
 {
-    delete applicationPage;
-    delete applicationWindow;
+    delete window;
     delete app;
 }
 
 void Ut_PluginList::init()
 {
-    mApplicationIfProxyLaunchCalled = false;
-    applicationPageShown = false;
+    gStatusIndicatorMenuWindowStub->stubReset();
     loadedPlugins.clear();
-    pluginList = new PluginList(applicationWindow, applicationPage);
-    connect(this, SIGNAL(settingsButtonClicked()), pluginList, SLOT(settingsButtonClicked()));
+    pluginList = new PluginList(window);
 }
 
 void Ut_PluginList::cleanup()
@@ -114,48 +76,30 @@ void Ut_PluginList::cleanup()
 
 void Ut_PluginList::testInitialization()
 {
-    // Now plugins are loaded on Idle, so we have to wait some more time...
-    QTest::qWait (2000);
+    for (int i = 0; i < 10; i++) {
+        // Process the delayed loading timer events
+        QCoreApplication::processEvents();
+    }
 
     // The layout should contain a widget for each plugin plus one for the top row
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());
     QVERIFY(layout != NULL);
-    QCOMPARE(layout->count(), loadedPlugins.count() + 1);
+    QCOMPARE(loadedPlugins.count(), 10);
+    QCOMPARE(layout->count(), loadedPlugins.count());
 }
 
 void Ut_PluginList::testShowStatusIndicatorMenu()
 {
     pluginList->showStatusIndicatorMenu();
 
-    QVERIFY(applicationPageShown);
+    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("showStatusIndicatorMenu"), 1);
 }
 
 void Ut_PluginList::testHideStatusIndicatorMenu()
 {
     pluginList->hideStatusIndicatorMenu();
 
-    QVERIFY(!applicationWindow->isVisible());
-}
-
-void Ut_PluginList::testSettingsButtonClicked()
-{
-    emit settingsButtonClicked();
-
-    QVERIFY(mApplicationIfProxyLaunchCalled);
-}
-
-void Ut_PluginList::testNotificationAreaVisibility()
-{
-    NotificationArea *notificationArea =
-            gNotificationAreaStub->stubLastCallTo("notificationAreaConstructor").parameter<NotificationArea*>(0);
-
-    QVERIFY(!notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 1));
-    QVERIFY(notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 10));
-    QVERIFY(notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 0));
-    QVERIFY(!notificationArea->isVisible());
+    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("hideStatusIndicatorMenu"), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_PluginList)

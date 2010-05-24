@@ -17,15 +17,19 @@
 **
 ****************************************************************************/
 #include <QGraphicsSceneMouseEvent>
-#include <MApplicationPage>
 #include <MSceneManager>
+#include <MSceneWindow>
+#include <MApplicationExtensionArea>
 #include <MEscapeButtonPanel>
-#include <QX11Info>
-#include "pluginlist.h"
-#include "statusindicatormenuwindow.h"
 #include <MButton>
 #include <MOverlay>
+#include <MApplicationIfProxy>
+#include <MPannableViewport>
 #include <QGraphicsLinearLayout>
+#include <QX11Info>
+#include "pluginlist.h"
+#include "notificationarea.h"
+#include "statusindicatormenuwindow.h"
 
 #include <X11/Xlib.h>
 
@@ -37,7 +41,6 @@ void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
 }
-
 
 /*!
  * Changes the _NET_WM_STATE property of a widget's window.
@@ -66,43 +69,96 @@ void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0)
     XSync(display, FALSE);
 }
 
+const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
+
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
-    applicationPage(new MApplicationPage),
+    sceneWindow(new MSceneWindow),
+    pannableLayout(new QGraphicsLinearLayout(Qt::Vertical)),
+    notificationArea(new NotificationArea),
     closeButtonOverlay(new MOverlay)
 {
-    // Create an application page for the plugin list
-    applicationPage->setObjectName("StatusIndicatorMenuPage");
-    applicationPage->setTitle("Status Indicator Menu");
-    applicationPage->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
-    applicationPage->setCentralWidget(new PluginList(this, applicationPage.data()));
-    sceneManager()->appearSceneWindowNow(applicationPage.data());
+    setWindowTitle("Status Indicator Menu");
+    connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
+    connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 
-    // Add an overlay consisting of close button
-    closeButtonOverlay->setObjectName("closeButtonOverlay");
+    // Create an extension area for the top row plugins
+    MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
+    extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
+    connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+    extensionArea->init();
 
-    QGraphicsLinearLayout *windowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    windowLayout->setContentsMargins(0, 0, 0, 0);
-    windowLayout->setSpacing(0);
+    // Create a button for accessing the full settings
+    //% "Settings"
+    MButton *settingsButton = new MButton(qtTrId("qtn_stat_menu_settings"));
+    settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
+    settingsButton->setViewType(MButton::iconType);
+    settingsButton->setIconID("icon-m-common-settings");
+    connect(settingsButton, SIGNAL(clicked()), this, SLOT(settingsButtonClicked()));
 
+    // Put the extension area and the settings button to a horizontal layout
+    QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    topRowLayout->addStretch();
+    topRowLayout->addItem(extensionArea);
+    topRowLayout->addItem(settingsButton);
+    topRowLayout->addStretch();
+
+    // Create a notification area
+    notificationArea->setVisible(false);
+    connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
+    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+
+    // Create a container widget for the pannable area
+    QGraphicsWidget *pannableWidget = new QGraphicsWidget;
+    pannableLayout->setContentsMargins(0, 0, 0, 0);
+    pannableLayout->setSpacing(0);
+    pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
+    pannableWidget->setLayout(pannableLayout);
+
+    // Create a pannable viewport
+    MPannableViewport *pannableViewport = new MPannableViewport;
+    pannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    pannableViewport->setWidget(pannableWidget);
+
+    // Put all the stuff into the scene window layout
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addItem(topRowLayout);
+    layout->addItem(pannableViewport);
+    sceneWindow->setLayout(layout);
+    sceneWindow->setObjectName("StatusIndicatorMenuWindow");
+    sceneManager()->appearSceneWindowNow(sceneWindow.data());
+
+    // Add an overlay that has the close button in it
     MButton *closeButton = new MButton(closeButtonOverlay.data());
     closeButton->setViewType("icon");
     closeButton->setObjectName("StatusIndicatorMenuCloseButton");
     closeButton->setIconID("icon-m-framework-close");
-
-    // Add two overlay widgets that will not allow mouse events to pass through them
-    windowLayout->addItem(new EventEaterWidget);
-    windowLayout->addItem(closeButton);
-    windowLayout->addItem(new EventEaterWidget);
-
-    closeButtonOverlay->setLayout(windowLayout);
-    sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
     connect(closeButton, SIGNAL(clicked()), this, SLOT(hide()));
+
+    // Add two overlay widgets that will not allow mouse events to pass through them next to the close button
+    layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addItem(new EventEaterWidget);
+    layout->addItem(closeButton);
+    layout->addItem(new EventEaterWidget);
+
+    closeButtonOverlay->setLayout(layout);
+    closeButtonOverlay->setObjectName("CloseButtonOverlay");
+    sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
 
     // Set the X window properties so that the window does not appear in the task bar
     excludeFromTaskBar();
-    connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
-    connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
+}
+
+StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
+{
+    if(!notificationArea->isVisible()) {
+        // If the notification area is not in the layout destroy it manually
+        delete notificationArea;
+    }
 }
 
 void StatusIndicatorMenuWindow::displayActive()
@@ -115,8 +171,10 @@ void StatusIndicatorMenuWindow::displayInActive()
     emit visibilityChanged(false);
 }
 
-StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
+void StatusIndicatorMenuWindow::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
 {
+    MStatusIndicatorMenuExtensionInterface *menuExtension = static_cast<MStatusIndicatorMenuExtensionInterface *>(extension);
+    menuExtension->setStatusIndicatorMenuInterface(*this);
 }
 
 void StatusIndicatorMenuWindow::makeVisible()
@@ -128,9 +186,31 @@ void StatusIndicatorMenuWindow::makeVisible()
         // Otherwise, raise it
         raise();
     }
+}
 
-    // Make sure the application page is centered on display
-    centerOn(applicationPage.data());
+void StatusIndicatorMenuWindow::showStatusIndicatorMenu()
+{
+    sceneWindow->appear();
+}
+
+void StatusIndicatorMenuWindow::hideStatusIndicatorMenu()
+{
+    hide();
+}
+
+void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount)
+{
+    if(notificationCount > 0) {
+        if(!notificationArea->isVisible()) {
+            notificationArea->setVisible(true);
+            pannableLayout->insertItem(0, notificationArea);
+        }
+    } else {
+        if(notificationArea->isVisible()) {
+            notificationArea->setVisible(false);
+            pannableLayout->removeItem(notificationArea);
+        }
+    }
 }
 
 void StatusIndicatorMenuWindow::excludeFromTaskBar()
@@ -145,4 +225,17 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     QVector<Atom> atoms;
     atoms.append(skipTaskbarAtom);
     XChangeProperty(QX11Info::display(), internalWinId(), netWmStateAtom, XA_ATOM, 32, PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
+}
+
+void StatusIndicatorMenuWindow::settingsButtonClicked()
+{
+    MApplicationIfProxy mApplicationIfProxy(CONTROL_PANEL_SERVICE_NAME, this);
+
+    if (mApplicationIfProxy.connection().isConnected()) {
+        mApplicationIfProxy.launch();
+    } else {
+        qWarning() << "Could not launch" << CONTROL_PANEL_SERVICE_NAME << "- DBus not connected?";
+    }
+
+    hideStatusIndicatorMenu();
 }

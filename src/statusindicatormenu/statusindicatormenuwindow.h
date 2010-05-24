@@ -21,16 +21,19 @@
 #define STATUSINDICATORMENUWINDOW_H
 
 #include <MWindow>
-
-#include <MApplicationPage>
+#include <MSceneWindow>
 #include <MOverlay>
+#include "mstatusindicatormenuextensioninterface.h"
+
 class QGraphicsSceneMouseEvent;
+class QGraphicsLinearLayout;
+class NotificationArea;
 
 /*!
   * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
   * which will not allow mouse events to pass through.
   */
-class EventEaterWidget: public QGraphicsWidget
+class EventEaterWidget : public QGraphicsWidget
 {
 public:
     //! \reimp
@@ -43,7 +46,7 @@ public:
  * The window contains an application page which is populated
  * with a list of plugins.
  */
-class StatusIndicatorMenuWindow : public MWindow
+class StatusIndicatorMenuWindow : public MWindow, public MStatusIndicatorMenuInterface
 {
     Q_OBJECT
 
@@ -65,6 +68,10 @@ public:
      */
     void makeVisible();
 
+    //! \reimp
+    virtual void showStatusIndicatorMenu();
+    //! \reimp_end
+
 signals:
     /*!
      * Signal the current visility status of window
@@ -72,11 +79,33 @@ signals:
      */
     void visibilityChanged(bool visible);
 
+public slots:
+    //! \reimp
+    virtual void hideStatusIndicatorMenu();
+    //! \reimp_end
+
 private slots:
     //! Slot when window becomes top window
     void displayActive();
+
     //! Slot when window is no longer top window
     void displayInActive();
+
+    /*!
+     * \brief Sets the status indicator menu interface for the application extensions
+     */
+    void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
+
+    /*!
+     * \brief Sets the visibility of the notification area based on the notification count
+     * \param notificationCount the number of notifications visible
+     */
+    void setNotificationCount(int notificationCount);
+
+    /*!
+     * \brief Slot for getting information about settings button clicks
+     */
+    void settingsButtonClicked();
 
 private:
     /*!
@@ -85,8 +114,20 @@ private:
      */
     void excludeFromTaskBar();
 
-    //! The main application page
-    QSharedPointer<MApplicationPage> applicationPage;
+    //! The name of the control panel service
+    const static QString CONTROL_PANEL_SERVICE_NAME;
+
+    //! The main scene window
+    QSharedPointer<MSceneWindow> sceneWindow;
+
+    //! The layout for the pannable area
+    QGraphicsLinearLayout *pannableLayout;
+
+    //! The window to minimize if the menu should be hidden
+    StatusIndicatorMenuWindow *window;
+
+    //! The notification area widget
+    NotificationArea *notificationArea;
 
     //! An overlay for the close button
     QSharedPointer<MOverlay> closeButtonOverlay;

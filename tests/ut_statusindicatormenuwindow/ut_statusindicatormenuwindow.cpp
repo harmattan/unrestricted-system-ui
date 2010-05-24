@@ -20,15 +20,26 @@
 #include "statusindicatormenuwindow.h"
 #include "pluginlist_stub.h"
 #include <MApplication>
+#include <MApplicationIfProxy>
 #include <QtTest/QtTest>
 #include <X11/Xutil.h>
 #include <MOverlay>
 #include <MButton>
 #include <QGraphicsLinearLayout>
+#include "notificationarea_stub.h"
 
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
 {
+}
+
+// MApplicationIfProxy stubs (used by StatusIndicatorMenuWindow)
+bool mApplicationIfProxyLaunchCalled = false;
+QDBusPendingReply<> MApplicationIfProxy::launch()
+{
+    mApplicationIfProxyLaunchCalled = true;
+
+    return QDBusPendingReply<>();
 }
 
 QPair<void*, bool> gSetVisible(0, false);
@@ -43,6 +54,8 @@ void Ut_StatusIndicatorMenuWindow::init()
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
+    mApplicationIfProxyLaunchCalled = false;
+    connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(settingsButtonClicked()));
 }
 
 void Ut_StatusIndicatorMenuWindow::cleanup()
@@ -73,7 +86,7 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible()
 void Ut_StatusIndicatorMenuWindow::testCloseButtonOverlay()
 {
     QVERIFY(statusIndicatorMenuWindow->closeButtonOverlay);
-    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->objectName(), QString("closeButtonOverlay"));
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->objectName(), QString("CloseButtonOverlay"));
 
     // Check the number of children of overlay and its layout
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->childItems().count(), 4);
@@ -96,6 +109,26 @@ void Ut_StatusIndicatorMenuWindow::testCloseButtonOverlay()
     overlayWidget->mousePressEvent(&event);
     QCOMPARE(event.isAccepted(), true);
     delete overlayWidget;
+}
+
+void Ut_StatusIndicatorMenuWindow::testSettingsButtonClicked()
+{
+    emit settingsButtonClicked();
+
+    QVERIFY(mApplicationIfProxyLaunchCalled);
+}
+
+void Ut_StatusIndicatorMenuWindow::testNotificationAreaVisibility()
+{
+    NotificationArea *notificationArea = gNotificationAreaStub->stubLastCallTo("notificationAreaConstructor").parameter<NotificationArea*>(0);
+
+    QVERIFY(!notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 1));
+    QVERIFY(notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 10));
+    QVERIFY(notificationArea->isVisible());
+    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 0));
+    QVERIFY(!notificationArea->isVisible());
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

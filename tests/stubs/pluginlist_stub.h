@@ -27,20 +27,16 @@
 // FIXME - stubgen is not yet finished
 class PluginListStub : public StubBase {
 public:
-    virtual void PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent);
+    virtual void PluginListConstructor(StatusIndicatorMenuWindow *window, QGraphicsItem *parent);
     virtual void PluginListDestructor();
     virtual void showStatusIndicatorMenu();
-    virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
-    virtual void settingsButtonClicked();
-    virtual void setNotificationCount(int notificationCount);
     virtual void hideStatusIndicatorMenu();
     virtual void addPlugin(const QString &path);
 }; 
 
 // 2. IMPLEMENT STUB
-void PluginListStub::PluginListConstructor(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
-    Q_UNUSED(applicationWindow);
-    Q_UNUSED(applicationPage);
+void PluginListStub::PluginListConstructor(StatusIndicatorMenuWindow *window, QGraphicsItem *parent) {
+    Q_UNUSED(window);
     Q_UNUSED(parent);
 
 }
@@ -48,25 +44,8 @@ void PluginListStub::PluginListDestructor() {
 
 }
 
-void PluginListStub::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
-{
-    QList<ParameterBase*> params;
-    params.append(new Parameter<MApplicationExtensionInterface*>(extension));
-    stubMethodEntered("setStatusIndicatorMenuInterface", params);
-}
-
 void PluginListStub::showStatusIndicatorMenu() {
     stubMethodEntered("showStatusIndicatorMenu");
-}
-
-void PluginListStub::settingsButtonClicked() {
-    stubMethodEntered("settingsButtonClicked");
-}
-
-void PluginListStub::setNotificationCount(int notificationCount) {
-    QList<ParameterBase*> params;
-    params.append( new Parameter<int >(notificationCount));
-    stubMethodEntered("setNotificationCount",params);
 }
 
 void PluginListStub::hideStatusIndicatorMenu() {
@@ -87,8 +66,8 @@ PluginListStub* gPluginListStub = &gDefaultPluginListStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-PluginList::PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent) {
-    gPluginListStub->PluginListConstructor(applicationWindow, applicationPage, parent);
+PluginList::PluginList(StatusIndicatorMenuWindow *window, QGraphicsItem *parent) {
+    gPluginListStub->PluginListConstructor(window, parent);
 }
 
 PluginList::~PluginList() {
@@ -97,14 +76,6 @@ PluginList::~PluginList() {
 
 void PluginList::showStatusIndicatorMenu() {
     gPluginListStub->showStatusIndicatorMenu();
-}
-
-void PluginList::settingsButtonClicked() {
-    gPluginListStub->settingsButtonClicked();
-}
-
-void PluginList::setNotificationCount(int notificationCount) {
-    gPluginListStub->setNotificationCount(notificationCount);
 }
 
 void PluginList::hideStatusIndicatorMenu() {
@@ -117,11 +88,6 @@ void PluginList::loadPlugins() {
 
 void PluginList::addPlugin(const QString &path) {
     gPluginListStub->addPlugin(path);
-}
-
-void PluginList::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)
-{
-    gPluginListStub->setStatusIndicatorMenuInterface(extension);
 }
 
 #endif

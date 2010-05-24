@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_statusindicatormenuwindow
-INCLUDEPATH += $$SRCDIR/statusindicatormenu
+INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
 
 # unit test and unit classes
 SOURCES += \
@@ -16,5 +16,6 @@ HEADERS += \
     ut_statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/pluginlist.h \
+    $$SRCDIR/statusindicatormenu/notificationarea.h \
 
 include(../common_bot.pri)

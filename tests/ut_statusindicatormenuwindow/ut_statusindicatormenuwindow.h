@@ -32,6 +32,7 @@ class Ut_StatusIndicatorMenuWindow : public QObject
 
 signals:
     void clicked();
+    void settingsButtonClicked();
 
 private:
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
@@ -50,6 +51,8 @@ private slots:
     // Test cases
     void testMakeVisible();
     void testCloseButtonOverlay();
+    void testSettingsButtonClicked();
+    void testNotificationAreaVisibility();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

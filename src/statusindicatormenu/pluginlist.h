@@ -23,13 +23,9 @@
 #include <MWidget>
 #include "mstatusindicatormenuplugininterface.h"
 
-class MWindow;
-class MApplicationPage;
+class StatusIndicatorMenuWindow;
 class QGraphicsLinearLayout;
-class NotificationArea;
 class QStringList;
-class MApplicationExtensionArea;
-class MApplicationExtensionInterface;
 
 /*!
  * The plugin list displays a list of plugins instantiated from shared
@@ -42,11 +38,10 @@ public:
     /*!
      * Creates a new plugin list.
      *
-     * \param applicationWindow the application window to minimize if the application should be hidden
-     * \param applicationPage the application page to show if the plugin returns from a subpage
+     * \param window the window to minimize if the application should be hidden
      * \param parent the parent item
      */
-    PluginList(MWindow *applicationWindow, MApplicationPage *applicationPage, QGraphicsItem *parent = NULL);
+    PluginList(StatusIndicatorMenuWindow *window, QGraphicsItem *parent = NULL);
 
     /*!
      * Destroys the plugin list.
@@ -55,35 +50,18 @@ public:
 
     //! \reimp
     virtual void showStatusIndicatorMenu();
-   //! \reimp_end
+    //! \reimp_end
+
+public slots:
+    //! \reimp
+    virtual void hideStatusIndicatorMenu();
+    //! \reimp_end
 
 private slots:
-    /*!
-     * \brief Slot for getting information about settings button clicks
-     */
-    void settingsButtonClicked();
-
-    /*!
-     * \brief Sets the visibility of the notification area based on the notification count
-     * \param notificationCount the number of notifications visible
-     */
-    void setNotificationCount(int notificationCount);
-
     /*!
      * \brief Slot for loading the status-menu plugins when we're idle
      */
     void loadPlugins();
-
-    /*!
-     * \brief Sets the status indicator menu interface for the application extensions
-     */
-    void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
-
-public slots:
-    /*!
-     * \brief Slot for hiding thestatus indicator menu.
-     */
-    virtual void hideStatusIndicatorMenu();
 
 private:
     /*!
@@ -96,25 +74,12 @@ private:
     //! The layout for the list
     QGraphicsLinearLayout *mainLayout;
 
-    //! The application page to minimize if the application should be hidden
-    MWindow *applicationWindow;
-
-    //! The application page to show if the plugin returns from a subpage
-    MApplicationPage *applicationPage;
-
-    //! The notification area widget
-    NotificationArea *notificationArea;
-
-    //! The extension area for the top row plugins
-    MApplicationExtensionArea *extensionArea;
-
-    //! The name of the control panel service
-    const static QString CONTROL_PANEL_SERVICE_NAME;
+    //! The window to minimize if the menu should be hidden
+    StatusIndicatorMenuWindow *window;
 
     //! Stuff to handle sequential delayed plugin loading. Some of the plugins
-    //! are loading slow, we have to get a chance to run while tey are loading.
-    int                 m_LoadingPluginNumber;
-    QStringList         m_PluginFiles;
+    //! are loading slow, we have to get a chance to run while they are loading.
+    QStringList pluginsToBeLoaded;
 };
 
 #endif /* PLUGINLIST_H_ */

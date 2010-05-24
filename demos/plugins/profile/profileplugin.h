@@ -26,7 +26,6 @@
 class Profile;
 class MStatusIndicatorMenuInterface;
 
-
 class ProfilePlugin : public QObject, public MStatusIndicatorMenuExtensionInterface
 {
     Q_OBJECT

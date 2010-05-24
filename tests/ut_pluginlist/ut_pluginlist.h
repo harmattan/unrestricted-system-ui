@@ -16,21 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-/*
- * ut_pluginlist.h
- *
- * This file is part of system ui
- *
- * Copyright (C) 2009 Nokia Corporation. All rights reserved.
- *
- * This software, including documentation, is protected by copyright
- * controlled by Nokia Corporation. All rights are reserved.
- * Copying, including reproducing, storing, adapting or translating,
- * any or all of this material requires the prior written consent of
- * Nokia Corporation. This material also contains confidential
- * information which may not be disclosed to others without the prior
- * written consent of Nokia.
- */
 
 #ifndef UT_PLUGINLIST_H
 #define UT_PLUGINLIST_H
@@ -40,8 +25,7 @@
 #include <MStatusIndicatorMenuPluginInterface>
 
 class MApplication;
-class MApplicationWindow;
-class MApplicationPage;
+class StatusIndicatorMenuWindow;
 class PluginList;
 
 class TestPlugin : public QObject, MStatusIndicatorMenuPluginInterface
@@ -58,9 +42,7 @@ class Ut_PluginList : public QObject
     Q_OBJECT
 
 public:
-    static bool mApplicationIfProxyLaunchCalled;
-    static bool applicationWindowMinimized;
-    static bool applicationPageShown;
+    static bool windowMinimized;
     static QStringList loadedPlugins;
 
 private slots:
@@ -79,21 +61,12 @@ private slots:
     void testShowStatusIndicatorMenu();
     // Test hiding the application
     void testHideStatusIndicatorMenu();
-    // Test clicking the settings button
-    void testSettingsButtonClicked();
-    // Test that the notification area shows/hides based on available notifications
-    void testNotificationAreaVisibility();
-
-signals:
-    void settingsButtonClicked();
 
 private:
     // MApplication
     MApplication *app;
-    // MApplicationWindow for testing
-    MApplicationWindow *applicationWindow;
-    // MApplicationPage for testing
-    MApplicationPage *applicationPage;
+    // Window for testing
+    StatusIndicatorMenuWindow *window;
     // The object being tested
     PluginList *pluginList;
 };
