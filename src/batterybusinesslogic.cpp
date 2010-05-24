@@ -632,9 +632,13 @@ BatteryBusinessLogic::batteryStatus ()
 
         case QmBattery::StateNotCharging:
         case QmBattery::StateChargingFailed:
-            emit batteryNotCharging ();
-            break;
         default:
+            /*
+             * default:
+             * When state isn't StateCharging i'm clearly sure
+             * battery is not really charging...
+             */
+            emit batteryNotCharging ();
             break;
     }
 }
