@@ -21,7 +21,7 @@
 #ifndef LOCKSCREENUI_H
 #define LOCKSCREENUI_H
 
-#include <MApplicationPage>
+#include <MWindow>
 #include <QBasicTimer>
 
 class QPixmap;
@@ -29,7 +29,7 @@ class MWidget;
 class MLinearLayoutPolicy;
 class MGConfItem;
 
-class LockScreenUI : public MApplicationPage
+class LockScreenUI : public MWindow
 {
     Q_OBJECT
 
@@ -74,7 +74,7 @@ private:
     MGConfItem      *m_confBgPortrait;
 };
 
-class EventEaterUI : public MApplicationPage
+class EventEaterUI : public MWindow
 {
     Q_OBJECT
 

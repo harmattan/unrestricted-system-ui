@@ -77,7 +77,11 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
-
+    if (toggle)
+        lockUI->show();
+    else
+        lockUI->hide();
+#if 0
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
     SYS_DEBUG ("*** toggle     = %s", SYS_BOOL(toggle));
@@ -112,7 +116,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 
         stopTimer ();
     }
-
+#endif
     Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }
 
@@ -120,6 +124,11 @@ void
 LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
+    if (toggle)
+        eaterUI->show ();
+    else
+        eaterUI->hide ();
+#if 0
     MApplicationWindow& mainwindow =
         Sysuid::sysuid ()->applicationWindow ();
 
@@ -150,7 +159,7 @@ LockScreenBusinessLogic::toggleEventEater (
 
         stopTimer ();
     }
-
+#endif
     // Enable the unlock notification sink also for dimmed state:
     Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
 }

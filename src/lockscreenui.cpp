@@ -20,6 +20,7 @@
 ****************************************************************************/
 #include "lockscreenui.h"
 #include "unlockwidgets.h"
+#include "unlocknotifications.h"
 #include "unlocknotificationsink.h"
 #include "sysuid.h"
 
@@ -37,7 +38,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -54,7 +55,6 @@ static const QString defaultPortraitImageFile =
 
 
 LockScreenUI::LockScreenUI () :
-        MApplicationPage (),
         m_Realized (false),
         m_notificationArea (0),
         m_LockLiftArea (0),
@@ -83,6 +83,7 @@ LockScreenUI::createContent ()
 void
 LockScreenUI::realize ()
 {
+#if 1
     MLayout               *layout;
     SYS_DEBUG ("");
 
@@ -102,11 +103,11 @@ LockScreenUI::realize ()
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
-    setPannable (false);
+    //setPannable (false);
 
     // let's hide home button
-    setComponentsDisplayMode (MApplicationPage::AllComponents,
-                              MApplicationPageModel::Hide);
+    //setComponentsDisplayMode (MApplicationPage::AllComponents,
+    //                          MApplicationPageModel::Hide);
 
     setContentsMargins (0., 0., 0., 0.);
 
@@ -115,13 +116,9 @@ LockScreenUI::realize ()
      */
     layout = new MLayout;
     m_policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
-
+#if 0
     m_notificationArea = new UnlockNotifications;
     m_notificationArea->setObjectName ("lockscreenNotifications");
-    m_LockLiftArea = new UnlockHeader;
-    m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
-    m_LockLandArea = new UnlockArea;
-    m_LockLandArea->setObjectName ("lockscreenUnlockArea");
 
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
@@ -131,16 +128,28 @@ LockScreenUI::realize ()
              SIGNAL (updateNotificationsCount (int, int, int, int)),
              this,
              SLOT (updateMissedEvents (int, int, int, int)));
-
+#endif
+    /*
+     *
+     */
+    m_LockLiftArea = new UnlockHeader;
+    m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
     m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Minimum);
     m_policy->addItem (m_LockLiftArea);
+    /*
+     *
+     */
+    m_LockLandArea = new UnlockArea;
+    m_LockLandArea->setObjectName ("lockscreenUnlockArea");
     m_LockLandArea->setSizePolicy (QSizePolicy::Preferred,
                                    QSizePolicy::Expanding);
     m_policy->addItem (m_LockLandArea);
 
     // Set the main layout
-    setLayout (layout);
+    MSceneWindow *sceneWindow = new MSceneWindow;
+    sceneWindow->setLayout (layout);
+    sceneWindow->appear (this);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
@@ -153,6 +162,7 @@ LockScreenUI::realize ()
     reloadPortraitBackground ();
 
     m_Realized = true;
+#endif
 }
 
 void
@@ -166,7 +176,8 @@ LockScreenUI::sliderUnlocked ()
 void
 LockScreenUI::updateDateTime ()
 {
-    if (isContentCreated () == false)
+    //if (isContentCreated () == false)
+    if (!m_Realized)
         return;
 
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
@@ -176,6 +187,7 @@ void
 LockScreenUI::reloadLandscapeBackground ()
 {
     QString filename = m_confBgLandscape->value().toString();
+    bool    success;
 
     /*
      * This is hard-coded into duihome, so we have to hardcode too.
@@ -184,13 +196,17 @@ LockScreenUI::reloadLandscapeBackground ()
         filename = defaultLandscapeImageFile;
 
     SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
-    m_bgLandscape.load (filename);
+    success = m_bgLandscape.load (filename);
+    if (!success) {
+        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
+    }
 }
 
 void
 LockScreenUI::reloadPortraitBackground ()
 {
     QString filename = m_confBgPortrait->value().toString();
+    bool    success;
 
     /*
      * This is hard-coded into duihome, so we have to hardcode too.
@@ -199,7 +215,10 @@ LockScreenUI::reloadPortraitBackground ()
         filename = defaultPortraitImageFile; 
 
     SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
-    m_bgPortrait.load (filename);
+    success = m_bgPortrait.load (filename);
+    if (!success) {
+        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
+    }
 }
 
 void
@@ -211,9 +230,7 @@ LockScreenUI::paint (QPainter *painter,
     Q_UNUSED (widget);
     bool portrait = geometry().height() > geometry().width ();
 
-    if (isVisible () == false)
-        return;
-
+    SYS_DEBUG ("PAINT");
     if (portrait)
     {
         painter->drawPixmap (
@@ -237,7 +254,7 @@ LockScreenUI::updateMissedEvents (int emails,
                                   int im)
 {
     SYS_DEBUG ("");
-
+#if 0
     if (m_notificationArea != 0)
     {
         static_cast<UnlockNotifications *> (m_notificationArea)-> 
@@ -261,16 +278,17 @@ LockScreenUI::updateMissedEvents (int emails,
             m_policy->insertItem (0, m_notificationArea);
         }
     }
+#endif
 }
 
 EventEaterUI::EventEaterUI ()
 {
-    setPannable (false);
+    //setPannable (false);
     // let's hide home button
-    setComponentsDisplayMode (MApplicationPage::AllComponents,
-                              MApplicationPageModel::Hide);
+    //setComponentsDisplayMode (MApplicationPage::AllComponents,
+    //                          MApplicationPageModel::Hide);
     setContentsMargins (0., 0., 0., 0.);
-    setOpacity (0.0);
+    //setOpacity (0.0);
 }
 
 void

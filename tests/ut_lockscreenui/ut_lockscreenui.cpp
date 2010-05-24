@@ -28,6 +28,9 @@
 #include <MSceneManager>
 #include <MTheme>
 
+#define DEBUG
+#include "../../src/debug.h"
+
 void Ut_LockScreenUI::init()
 {
 }
@@ -44,22 +47,21 @@ char *argv[] = {
 
 const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
 const QString styleDir = themeDir + "style/";
-const QString svgDir = themeDir + "svg/";
 
 void Ut_LockScreenUI::initTestCase()
 {
     m_LockScreenUI = 0;
 
-    qDebug() << "Creating application.";
+    SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
 
-    qDebug() << "Initializing our own themes.";
-    MTheme::addPixmapDirectory (svgDir);
+    SYS_DEBUG ("Initializing our own themes.");
+    MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
     MTheme::loadCSS (styleDir + "unlockscreen.css");
 
-    qDebug() << "Creating main window.";
+    SYS_DEBUG ("Creating main window.");
     m_MainWindow = new MApplicationWindow;
 
     Qt::WindowFlags flags = 0;
@@ -87,14 +89,14 @@ void
 Ut_LockScreenUI::testLockScreenUI ()
 {
     showLockScreenUI ();
-    QTest::qWait (2000);
+    QTest::qWait (20000);
     hideLockScreenUI ();
-    QTest::qWait (2000);
+    QTest::qWait (20000);
     
     showLockScreenUI ();
-    QTest::qWait (2000);
+    QTest::qWait (20000);
     hideLockScreenUI ();
-    QTest::qWait (2000);
+    QTest::qWait (20000);
 
     /*
      * We should be able to hide/show the tklock ui multiple times
@@ -114,13 +116,8 @@ Ut_LockScreenUI::showLockScreenUI ()
 
     QVERIFY (m_LockScreenUI != 0);
 
-    m_MainWindow->show ();
-    m_MainWindow->raise ();
-
-    m_LockScreenUI->setOpacity (1.0);
-    m_LockScreenUI->setActive (true);
-
-    m_MainWindow->sceneManager()->appearSceneWindowNow (m_LockScreenUI);
+    m_LockScreenUI->show ();
+    m_LockScreenUI->raise ();
 }
 
 void

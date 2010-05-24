@@ -56,7 +56,6 @@ namespace
 {
 const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
 const QString styleDir = themeDir + "style/";
-const QString svgDir = themeDir + "svg/";
 }
 
 Sysuid* Sysuid::m_Sysuid = NULL;
