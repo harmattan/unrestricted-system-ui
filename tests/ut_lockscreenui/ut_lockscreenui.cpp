@@ -20,6 +20,7 @@
 ****************************************************************************/
 
 #include "ut_lockscreenui.h"
+#include "xchecker.h"
 #include "lockscreenui.h"
 #include "sysuid_stub.h"
 
@@ -31,20 +32,12 @@
 #define DEBUG
 #include "../../src/debug.h"
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
+/*
+ * We wait this much until we check if the window is actually appeared
+ * disappeared from the stack of the window manager.
+ */
+static int WMDelay = 200;
 
-void
-checkwindow () {
-	Display *dpy;
-	Window root;
-
-    SYS_DEBUG ("");
-	dpy = XOpenDisplay (NULL);
-    QVERIFY (dpy != 0);
-
-    root = XDefaultRootWindow(dpy);
-}
 
 void Ut_LockScreenUI::init()
 {
@@ -66,6 +59,7 @@ const QString styleDir = themeDir + "style/";
 void Ut_LockScreenUI::initTestCase()
 {
     m_LockScreenUI = 0;
+    m_MainWindow = 0;
 
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
@@ -75,7 +69,7 @@ void Ut_LockScreenUI::initTestCase()
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
     MTheme::loadCSS (styleDir + "unlockscreen.css");
-
+#if 1
     SYS_DEBUG ("Creating main window.");
     m_MainWindow = new MApplicationWindow;
 
@@ -85,6 +79,7 @@ void Ut_LockScreenUI::initTestCase()
     flags |= Qt::WindowStaysOnTopHint;
     m_MainWindow->setWindowOpacity (0.0);
     m_MainWindow->setWindowFlags (flags);
+#endif
 }
 
 void 
@@ -95,37 +90,49 @@ Ut_LockScreenUI::cleanupTestCase()
 }
 
 /*!
- * This function will do the basic testing of the lockscreenui. It seems, that
- * we are not checking anything, but actually it is important to see if the test
- * program crashes or not. So consider this a 'compiled' and 'not crashed' test
- * case.
+ * Will create a lockscreenUI window, show and hide it several times and check
+ * if the window is actually shown by the XServer.
  */
 void
-Ut_LockScreenUI::testLockScreenUI ()
+Ut_LockScreenUI::testLockScreenUIShowHide ()
 {
-    showLockScreenUI ();
-    QTest::qWait (20000);
-    hideLockScreenUI ();
-    QTest::qWait (20000);
+    Window WindowID;
+    createLockScreenUI ();
+   
+    for (int n = 0; n < 5; ++n) {
+        /*
+         * Showing the lockscreenUI window.
+         */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Showing lockscreenUI **************************");
+        SYS_DEBUG ("***************************************************");
+        m_LockScreenUI->show ();
+        QTest::qWait (WMDelay);
+        /*
+         * From this point the lock screen should be realized, shown and visible.
+         */
+        QVERIFY (m_LockScreenUI->m_Realized);
+        QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+        QVERIFY (m_LockScreenUI->isVisible());
+        WindowID = m_LockScreenUI->internalWinId();
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     
-    showLockScreenUI ();
-    QTest::qWait (20000);
-    hideLockScreenUI ();
-    QTest::qWait (20000);
-
-    /*
-     * We should be able to hide/show the tklock ui multiple times
-     * [ -> so it shouldn't be destroyed meantime... ]
-     * ^ so if calling show/hide multiple times is not crashing
-     *   this test is passed.
-     */
-    QVERIFY (true);
+        QTest::qWait (500);
+        /*
+        * Hiding the window again.
+        */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
+        SYS_DEBUG ("***************************************************");
+        m_LockScreenUI->hide();
+        QTest::qWait (WMDelay);
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
+    }
 }
 
 void
 Ut_LockScreenUI::showLockScreenUI ()
 {
-    checkwindow ();
     qDebug() << "Showing LockScreenUI";
     if (!m_LockScreenUI)
         m_LockScreenUI = new LockScreenUI ();
@@ -144,6 +151,13 @@ Ut_LockScreenUI::hideLockScreenUI ()
     qDebug() << "Hiding LockScreenUI";
     m_LockScreenUI->hide ();
     m_MainWindow->hide ();
+}
+
+void
+Ut_LockScreenUI::createLockScreenUI ()
+{
+    if (!m_LockScreenUI)
+        m_LockScreenUI = new LockScreenUI ();
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)

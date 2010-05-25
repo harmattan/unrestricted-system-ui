@@ -80,12 +80,16 @@ private slots:
                              int im);
 
 private:
-    bool             m_Realized;
+    bool                 m_Realized;
     MLinearLayoutPolicy *m_policy;
+    LockScreenWindow    *m_SceneWindow;
 
     MWidget         *m_notificationArea;
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenUI;
+#endif
 };
 
 class EventEaterUI : public MWindow

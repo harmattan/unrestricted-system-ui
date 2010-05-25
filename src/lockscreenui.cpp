@@ -38,7 +38,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -151,6 +151,7 @@ LockScreenWindow::paint (
  */
 LockScreenUI::LockScreenUI () :
         m_Realized (false),
+        m_SceneWindow (0),
         m_notificationArea (0),
         m_LockLiftArea (0),
         m_LockLandArea (0)
@@ -176,7 +177,6 @@ LockScreenUI::createContent ()
 void
 LockScreenUI::realize ()
 {
-#if 1
     MLayout               *layout;
     SYS_DEBUG ("");
 
@@ -221,9 +221,9 @@ LockScreenUI::realize ()
     m_policy->addItem (m_LockLandArea);
 
     // Set the main layout
-    LockScreenWindow *sceneWindow = new LockScreenWindow;
-    sceneWindow->setLayout (layout);
-    sceneWindow->appear (this);
+    m_SceneWindow = new LockScreenWindow;
+    m_SceneWindow->setLayout (layout);
+    m_SceneWindow->appear (this);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
@@ -232,7 +232,6 @@ LockScreenUI::realize ()
              this, SLOT (sliderUnlocked ()));
 
     m_Realized = true;
-#endif
 }
 
 void

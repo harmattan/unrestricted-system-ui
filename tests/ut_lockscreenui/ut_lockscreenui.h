@@ -23,6 +23,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include "xchecker.h"
 
 class MApplication;
 class MApplicationWindow;
@@ -38,14 +39,16 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreenUI ();
+    void testLockScreenUIShowHide ();
 
 private:
+    void createLockScreenUI ();
     void showLockScreenUI ();
     void hideLockScreenUI ();
-    
+
+    XChecker             m_XChecker;
     MApplicationWindow  *m_MainWindow;
-    LockScreenUI          *m_LockScreenUI;
+    LockScreenUI        *m_LockScreenUI;
     MApplication        *m_App;
 };
 
