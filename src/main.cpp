@@ -27,7 +27,6 @@
 #include "sysuid.h"
 
 #include <MApplication>
-
 #include <QObject>
 
 #undef DEBUG
@@ -141,6 +140,7 @@ int main (int argc, char** argv)
     exitPtr = &app;
 
     app.setQuitOnLastWindowClosed (false);
+    app.setPrestartMode (M::TerminateOnClose);
 
     signal (SIGINT, sysuid_exit);
 
