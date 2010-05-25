@@ -21,17 +21,24 @@
 #ifndef LOCKSCREENBUSINESSLOGICADAPTOR_H
 #define LOCKSCREENBUSINESSLOGICADAPTOR_H
 
+#if defined (UNIT_TEST) && defined (ADAPTOR_TEST)
+#include "lockscreenbusinesslogic_stub.h"
+#else
 #include "lockscreenbusinesslogic.h"
+#endif
 
+class QDBusInterface;
 #include <QDBusAbstractAdaptor>
 
 /*!
- * Implements the DBus API interface for the crceen locking mechanism.
+ * Implements the DBus API interface for the screen locking mechanism.
  */
 class LockScreenBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+#ifndef UNIT_TEST
     Q_CLASSINFO("D-Bus Interface", "com.nokia.system_ui.request")
+#endif
 
 public:
     LockScreenBusinessLogicAdaptor (
@@ -85,6 +92,10 @@ private:
     QString                    m_MCECallbackInterface;
     QString                    m_MCECallbackMethod;
     QDBusInterface            *m_CallbackDbusIf;
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenBusinessLogicAdaptor;
+#endif
 };
 
 #endif 

@@ -26,7 +26,6 @@
 
 class LockScreenUI;
 class EventEaterUI;
-class QDBusInterface;
 
 class LockScreenBusinessLogic : public QObject
 {
