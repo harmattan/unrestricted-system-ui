@@ -1,3 +1,10 @@
+system-ui (0.15.13~1) harmattan; urgency=low
+
+  * Fixes: NB#158901 - Sysuid is causing very high wakeups which prevents
+                       the device to go in idle mode
+
+ -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Tue, 25 May 2010 15:50:37 +0300
+
 system-ui (0.15.12-1) harmattan; urgency=low
 
   * Added a workaround for obexd:
