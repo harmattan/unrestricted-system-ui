@@ -40,11 +40,9 @@ private slots:
     void cleanupTestCase();
 
     void testLockScreenUIShowHide ();
-
+    void testLockScreenUIShowHideWithMainWindow ();
 private:
     void createLockScreenUI ();
-    void showLockScreenUI ();
-    void hideLockScreenUI ();
 
     XChecker             m_XChecker;
     MApplicationWindow  *m_MainWindow;

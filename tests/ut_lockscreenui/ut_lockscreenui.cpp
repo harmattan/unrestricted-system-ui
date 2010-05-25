@@ -69,17 +69,6 @@ void Ut_LockScreenUI::initTestCase()
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
     MTheme::loadCSS (styleDir + "unlockscreen.css");
-#if 1
-    SYS_DEBUG ("Creating main window.");
-    m_MainWindow = new MApplicationWindow;
-
-    Qt::WindowFlags flags = 0;
-    flags |= Qt::FramelessWindowHint;
-    flags |= Qt::CustomizeWindowHint;
-    flags |= Qt::WindowStaysOnTopHint;
-    m_MainWindow->setWindowOpacity (0.0);
-    m_MainWindow->setWindowFlags (flags);
-#endif
 }
 
 void 
@@ -97,9 +86,10 @@ void
 Ut_LockScreenUI::testLockScreenUIShowHide ()
 {
     Window WindowID;
+
     createLockScreenUI ();
    
-    for (int n = 0; n < 5; ++n) {
+    for (int n = 0; n < 2; ++n) {
         /*
          * Showing the lockscreenUI window.
          */
@@ -118,6 +108,7 @@ Ut_LockScreenUI::testLockScreenUIShowHide ()
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     
         QTest::qWait (500);
+        m_XChecker.debug_dump_windows ();
         /*
         * Hiding the window again.
         */
@@ -126,31 +117,70 @@ Ut_LockScreenUI::testLockScreenUIShowHide ()
         SYS_DEBUG ("***************************************************");
         m_LockScreenUI->hide();
         QTest::qWait (WMDelay);
+        QVERIFY (!m_LockScreenUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
     }
 }
 
+/*!
+ * Again we show/hide the lockscreenUI but before we do that we create an
+ * MApplicationWindow.
+ */
 void
-Ut_LockScreenUI::showLockScreenUI ()
+Ut_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
 {
-    qDebug() << "Showing LockScreenUI";
-    if (!m_LockScreenUI)
-        m_LockScreenUI = new LockScreenUI ();
+    Window WindowID;
+    Window MWindowID;
 
-    QVERIFY (m_LockScreenUI != 0);
+    createLockScreenUI ();
 
-    m_LockScreenUI->show ();
-    m_LockScreenUI->raise ();
-}
+    SYS_DEBUG ("Creating main window.");
+    m_MainWindow = new MApplicationWindow;
 
-void
-Ut_LockScreenUI::hideLockScreenUI ()
-{
-    QVERIFY (m_LockScreenUI != 0);
+    Qt::WindowFlags flags = 0;
+    flags |= Qt::FramelessWindowHint;
+    flags |= Qt::CustomizeWindowHint;
+    flags |= Qt::WindowStaysOnTopHint;
+    m_MainWindow->setWindowOpacity (0.0);
+    m_MainWindow->setWindowFlags (flags);
+    MWindowID = m_MainWindow->internalWinId ();
+    
+    SYS_DEBUG ("*** MWindowID    = 0x%lx", MWindowID);
 
-    qDebug() << "Hiding LockScreenUI";
-    m_LockScreenUI->hide ();
-    m_MainWindow->hide ();
+    for (int n = 0; n < 2; ++n) {
+        /*
+         * Showing the lockscreenUI window.
+         */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Showing lockscreenUI **************************");
+        SYS_DEBUG ("***************************************************");
+        m_LockScreenUI->show ();
+        QTest::qWait (WMDelay);
+        /*
+         * From this point the lock screen should be realized, shown and visible.
+         */
+        QVERIFY (m_LockScreenUI->m_Realized);
+        QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+        QVERIFY (m_LockScreenUI->isVisible());
+        WindowID = m_LockScreenUI->internalWinId();
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
+        QVERIFY (m_XChecker.check_window(MWindowID, XChecker::CheckIsInvisible));
+        SYS_DEBUG ("*** lockScreenUI = 0x%lx", WindowID);
+    
+        QTest::qWait (500);
+        m_XChecker.debug_dump_windows ();
+        /*
+        * Hiding the window again.
+        */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
+        SYS_DEBUG ("***************************************************");
+        m_LockScreenUI->hide();
+        QTest::qWait (WMDelay);
+        QVERIFY (!m_LockScreenUI->isVisible());
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
+        QVERIFY (m_XChecker.check_window(MWindowID, XChecker::CheckIsInvisible));
+    }
 }
 
 void

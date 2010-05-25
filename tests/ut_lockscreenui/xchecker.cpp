@@ -242,7 +242,9 @@ XChecker::get_map_state (
 void 
 XChecker::print_children (
         Display *dpy, 
-        Window   WindowID, int level)
+        Window   WindowID, 
+        int      level,
+        int      nthWindow)
 {
     QString indent;
 
@@ -261,14 +263,8 @@ XChecker::print_children (
 
 	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
 
-	if (level > 0)
-		for (i = 0; i < level; ++i)
-			indent += "    ";
-	else {
-		printf("The root (cur. app. 0x%lx, theme %s) ",
-			get_win_prop(dpy, WindowID, current_app_atom),
-			get_str_prop(dpy, WindowID, theme_atom));
-	}
+	for (i = 0; i < level; ++i)
+		indent += "    ";
 
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
@@ -297,7 +293,9 @@ XChecker::print_children (
     QString windowName2 = (wmname2 ? wmname2 : "(none)");
     windowName = windowName + "/" + windowName2;
     if (n_children == 0) {
-        SYS_DEBUG ("%s0x%lx %8s %12s %s", SYS_STR(indent), 
+        SYS_DEBUG ("%03d %s0x%lx %8s %12s %s", 
+                nthWindow,
+                SYS_STR(indent), 
                 WindowID,
                 get_map_state(attrs.map_state),
 			    wmclass ? wmclass : "(none)",
@@ -323,7 +321,9 @@ XChecker::print_children (
                         non_comp != -1 ? "non-comp.":"");
 #endif
 	} else {
-        SYS_DEBUG ("%s0x%lx %8s %12s %s", SYS_STR(indent), 
+        SYS_DEBUG ("%03d %s0x%lx %8s %12s %s", 
+                nthWindow,
+                SYS_STR(indent), 
                 WindowID,
                 get_map_state(attrs.map_state),
 			    wmclass ? wmclass : "(none)",
@@ -349,7 +349,8 @@ XChecker::print_children (
 			n_children);
 #endif
 		for (i = 0; i < n_children; ++i) {
-			print_children(dpy, child_l[i], level + 1);
+            ++nthWindow;
+			print_children(dpy, child_l[i], level + 1, nthWindow);
 		}
 		XFree(child_l);
 	}
@@ -417,7 +418,7 @@ XChecker::debug_dump_windows()
 	Window root;
 
 	root = XDefaultRootWindow(dpy);
-	print_children(dpy, root, 0);
+	print_children(dpy, root, 0, 0);
 }
 
 

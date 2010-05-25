@@ -56,7 +56,11 @@ private:
     char *get_str_prop(Display *dpy, Window w, Atom atom);
     char * get_utf8_prop ( Display *dpy, Window w, Atom atom);
     const char * get_map_state ( int state);
-    void print_children ( Display *dpy, Window   WindowID, int level);
+    void print_children (
+            Display *dpy, 
+            Window WindowID, 
+            int level, 
+            int nthWindow);
 
 private:
     Atom class_atom, name_atom, name_atom2, xembed_atom, pid_atom,
