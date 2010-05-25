@@ -27,6 +27,7 @@
 #include "sysuid.h"
 
 #include <MApplication>
+#include <QVariant>
 #include <QObject>
 
 #undef DEBUG
@@ -141,6 +142,8 @@ int main (int argc, char** argv)
 
     app.setQuitOnLastWindowClosed (false);
     app.setPrestartMode (M::TerminateOnClose);
+    // XXX: HACK: this is a workaround, and this one can cause other problems
+    app.setProperty ("NoMStyle", true);
 
     signal (SIGINT, sysuid_exit);
 
