@@ -45,7 +45,7 @@ bool CallPlugin::initialize(const QString &)
     return true;
 }
 
-MWidget *CallPlugin::widget()
+QGraphicsWidget *CallPlugin::widget()
 {
     return call;
 }
