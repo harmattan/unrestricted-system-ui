@@ -1,4 +1,4 @@
-system-ui (0.15.13~1) harmattan; urgency=low
+system-ui (0.16.0~1) harmattan; urgency=low
 
   * Fix build warnings...
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
