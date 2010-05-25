@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,11 +18,10 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef LOCKSCREENUI_H
 #define LOCKSCREENUI_H
 
+#include <MSceneWindow>
 #include <MWindow>
 #include <QBasicTimer>
 
@@ -29,6 +30,30 @@ class MWidget;
 class MLinearLayoutPolicy;
 class MGConfItem;
 
+class LockScreenWindow : public MSceneWindow
+{
+    Q_OBJECT
+
+public:
+    LockScreenWindow ();
+    ~LockScreenWindow ();
+    virtual void paint (
+            QPainter                       *painter, 
+            const QStyleOptionGraphicsItem *option, 
+            QWidget                        *widget = 0);
+
+
+private slots:
+    void reloadLandscapeBackground ();
+    void reloadPortraitBackground ();
+
+private:
+    MGConfItem      *m_confBgLandscape;
+    MGConfItem      *m_confBgPortrait;
+    QPixmap          m_bgLandscape;
+    QPixmap          m_bgPortrait;
+};
+
 class LockScreenUI : public MWindow
 {
     Q_OBJECT
@@ -36,10 +61,6 @@ class LockScreenUI : public MWindow
 public:
     LockScreenUI ();
     virtual ~LockScreenUI();
-
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
 
 signals:
     void unlocked ();
@@ -53,8 +74,6 @@ protected:
 private slots:
     void realize ();
     void sliderUnlocked ();
-    void reloadLandscapeBackground ();
-    void reloadPortraitBackground ();
     void updateMissedEvents (int emails,
                              int messages,
                              int calls,
@@ -67,11 +86,6 @@ private:
     MWidget         *m_notificationArea;
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
-
-    QPixmap          m_bgLandscape;
-    QPixmap          m_bgPortrait;
-    MGConfItem      *m_confBgLandscape;
-    MGConfItem      *m_confBgPortrait;
 };
 
 class EventEaterUI : public MWindow

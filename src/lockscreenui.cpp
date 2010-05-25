@@ -53,14 +53,107 @@ static const QString defaultPortraitImageFile =
     "/desktop/meego/background/portrait/picture_filename"
 
 
+/******************************************************************************
+ * LockScreenWindow implementation.
+ */
+LockScreenWindow::LockScreenWindow ()
+{
+    /*
+     * Creating the GConf keys to sense the wallpaper changes.
+     */
+    SYS_DEBUG ("*** landscape_key = %s", GCONF_BG_LANDSCAPE);
+    SYS_DEBUG ("*** portrait_key = %s", GCONF_BG_PORTRAIT);
+    m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
+    m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
 
+    connect (m_confBgLandscape, SIGNAL(valueChanged()),
+            this, SLOT(reloadLandscapeBackground()));
+    connect (m_confBgPortrait, SIGNAL(valueChanged()),
+            this, SLOT(reloadPortraitBackground()));
+    
+    // Load the backgrounds if any...
+    reloadLandscapeBackground ();
+    reloadPortraitBackground ();
+}
+
+LockScreenWindow::~LockScreenWindow ()
+{
+    delete m_confBgLandscape;
+    delete m_confBgPortrait;
+}  
+
+void
+LockScreenWindow::reloadLandscapeBackground ()
+{
+    QString filename = m_confBgLandscape->value().toString();
+    bool    success;
+
+    /*
+     * This is hard-coded into duihome, so we have to hardcode too.
+     */
+    if (filename.isEmpty())
+        filename = defaultLandscapeImageFile;
+
+    SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
+    success = m_bgLandscape.load (filename);
+    if (!success) {
+        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
+    }
+}
+
+void
+LockScreenWindow::reloadPortraitBackground ()
+{
+    QString filename = m_confBgPortrait->value().toString();
+    bool    success;
+
+    /*
+     * This is hard-coded into duihome, so we have to hardcode too.
+     */
+    if (filename.isEmpty())
+        filename = defaultPortraitImageFile; 
+
+    SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
+    success = m_bgPortrait.load (filename);
+    if (!success) {
+        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
+    }
+}
+
+void
+LockScreenWindow::paint (
+        QPainter                       *painter,
+        const QStyleOptionGraphicsItem *option,
+        QWidget                        *widget)
+{
+    Q_UNUSED (option);
+    Q_UNUSED (widget);
+    bool portrait = geometry().height() > geometry().width ();
+
+    if (portrait) {
+        painter->drawPixmap (
+                0, 0, 
+                m_bgPortrait.width(), 
+                m_bgPortrait.height(),
+                m_bgPortrait);
+    } else {
+        painter->drawPixmap (
+                0, 0,
+                m_bgLandscape.width(), 
+                m_bgLandscape.height(),
+                m_bgLandscape);
+    }
+}
+
+
+/******************************************************************************
+ * LockScreenUI implementation.
+ */
 LockScreenUI::LockScreenUI () :
         m_Realized (false),
         m_notificationArea (0),
         m_LockLiftArea (0),
-        m_LockLandArea (0),
-        m_confBgLandscape (0),
-        m_confBgPortrait (0)
+        m_LockLandArea (0)
 {
     SYS_DEBUG ("");
 
@@ -90,25 +183,6 @@ LockScreenUI::realize ()
     if (m_Realized)
         return;
     
-    /*
-     * Creating the GConf keys to sense the wallpaper changes.
-     */
-    SYS_DEBUG ("*** landscape_key = %s", GCONF_BG_LANDSCAPE);
-    SYS_DEBUG ("*** portrait_key = %s", GCONF_BG_PORTRAIT);
-    m_confBgLandscape = new MGConfItem (GCONF_BG_LANDSCAPE, this);
-    m_confBgPortrait  = new MGConfItem (GCONF_BG_PORTRAIT, this);
-
-    connect (m_confBgLandscape, SIGNAL(valueChanged()),
-            this, SLOT(reloadLandscapeBackground()));
-    connect (m_confBgPortrait, SIGNAL(valueChanged()),
-            this, SLOT(reloadPortraitBackground()));
-
-    //setPannable (false);
-
-    // let's hide home button
-    //setComponentsDisplayMode (MApplicationPage::AllComponents,
-    //                          MApplicationPageModel::Hide);
-
     setContentsMargins (0., 0., 0., 0.);
 
     /*
@@ -147,7 +221,7 @@ LockScreenUI::realize ()
     m_policy->addItem (m_LockLandArea);
 
     // Set the main layout
-    MSceneWindow *sceneWindow = new MSceneWindow;
+    LockScreenWindow *sceneWindow = new LockScreenWindow;
     sceneWindow->setLayout (layout);
     sceneWindow->appear (this);
 
@@ -156,10 +230,6 @@ LockScreenUI::realize ()
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));
-
-    // Load the backgrounds if any...
-    reloadLandscapeBackground ();
-    reloadPortraitBackground ();
 
     m_Realized = true;
 #endif
@@ -183,69 +253,6 @@ LockScreenUI::updateDateTime ()
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
 }
 
-void
-LockScreenUI::reloadLandscapeBackground ()
-{
-    QString filename = m_confBgLandscape->value().toString();
-    bool    success;
-
-    /*
-     * This is hard-coded into duihome, so we have to hardcode too.
-     */
-    if (filename.isEmpty())
-        filename = defaultLandscapeImageFile;
-
-    SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
-    success = m_bgLandscape.load (filename);
-    if (!success) {
-        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
-    }
-}
-
-void
-LockScreenUI::reloadPortraitBackground ()
-{
-    QString filename = m_confBgPortrait->value().toString();
-    bool    success;
-
-    /*
-     * This is hard-coded into duihome, so we have to hardcode too.
-     */
-    if (filename.isEmpty())
-        filename = defaultPortraitImageFile; 
-
-    SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
-    success = m_bgPortrait.load (filename);
-    if (!success) {
-        SYS_WARNING ("Loading image failed: %s", SYS_STR(filename));
-    }
-}
-
-void
-LockScreenUI::paint (QPainter *painter,
-                     const QStyleOptionGraphicsItem *option,
-                     QWidget *widget)
-{
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
-    bool portrait = geometry().height() > geometry().width ();
-
-    SYS_DEBUG ("PAINT");
-    if (portrait)
-    {
-        painter->drawPixmap (
-                0, 0, 
-                m_bgPortrait.width(), 
-                m_bgPortrait.height(),
-                m_bgPortrait);
-    } else {
-        painter->drawPixmap (
-                0, 0,
-                m_bgLandscape.width(), 
-                m_bgLandscape.height(),
-                m_bgLandscape);
-    }
-}
 
 void
 LockScreenUI::updateMissedEvents (int emails,

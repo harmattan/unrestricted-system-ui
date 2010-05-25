@@ -31,6 +31,21 @@
 #define DEBUG
 #include "../../src/debug.h"
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
+void
+checkwindow () {
+	Display *dpy;
+	Window root;
+
+    SYS_DEBUG ("");
+	dpy = XOpenDisplay (NULL);
+    QVERIFY (dpy != 0);
+
+    root = XDefaultRootWindow(dpy);
+}
+
 void Ut_LockScreenUI::init()
 {
 }
@@ -110,6 +125,7 @@ Ut_LockScreenUI::testLockScreenUI ()
 void
 Ut_LockScreenUI::showLockScreenUI ()
 {
+    checkwindow ();
     qDebug() << "Showing LockScreenUI";
     if (!m_LockScreenUI)
         m_LockScreenUI = new LockScreenUI ();
