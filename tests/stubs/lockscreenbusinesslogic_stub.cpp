@@ -91,6 +91,7 @@ LockScreenBusinessLogic::hidefromTaskBar()
 void
 LockScreenBusinessLogic::unlockScreen()
 {
+    toggleScreenLockUI (false);
 }
 
 

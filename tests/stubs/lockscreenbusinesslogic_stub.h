@@ -15,12 +15,15 @@ public:
 public slots:
     void toggleScreenLockUI (bool toggle);
     void toggleEventEater   (bool toggle);
+    void unlockScreen();
+
+signals:
+    void unlockConfirmed ();
 
 private: //methods
     void mayStartTimer();
     void stopTimer();
     void hidefromTaskBar();
-    void unlockScreen();
 
     // These are very useful for unit testing...
 public: 
