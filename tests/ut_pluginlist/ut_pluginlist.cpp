@@ -24,6 +24,7 @@
 #include "ut_pluginlist.h"
 #include "pluginlist.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuscenewindow_stub.h"
 
 // QPluginLoader stubs (used by PluginList)
 QObject *QPluginLoader::instance()

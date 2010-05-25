@@ -24,6 +24,7 @@
 #include <MEscapeButtonPanel>
 #include "statusindicatormenuadaptor.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuscenewindow_stub.h"
 
 void Ut_StatusIndicatorMenuAdaptor::init()
 {

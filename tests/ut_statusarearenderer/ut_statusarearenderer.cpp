@@ -21,6 +21,7 @@
 #include "statusarearenderer.h"
 #include "statusarea_stub.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuscenewindow_stub.h"
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;

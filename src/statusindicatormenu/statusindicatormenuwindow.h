@@ -27,6 +27,7 @@
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsLinearLayout;
+class MPannableViewport;
 class NotificationArea;
 
 /*!
@@ -39,6 +40,35 @@ public:
     //! \reimp
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
+};
+
+/*!
+ * A scene window for the status indicator menu. Listens to mouse clicks
+ * for closing the menu if the area outside the menu is clicked.
+ */
+class StatusIndicatorMenuSceneWindow : public MSceneWindow
+{
+    Q_OBJECT
+
+public:
+    /*!
+     * Constructs a scene window for the status indicator menu.
+     *
+     * \param parent the parent QGraphicsItem
+     */
+    StatusIndicatorMenuSceneWindow(QGraphicsItem *parent = NULL);
+
+    //! \reimp
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    //! \reimp_end
+
+signals:
+    /*!
+     * Sent when the scene window is clicked.
+     *
+     * \param scenePos the scene position of the click
+     */
+    void clicked(QPointF scenePos);
 };
 
 /*!
@@ -105,7 +135,14 @@ private slots:
     /*!
      * \brief Slot for getting information about settings button clicks
      */
-    void settingsButtonClicked();
+    void launchControlPanelAndHide();
+
+    /*!
+     * Hides the status indicator menu window if the given point is outside the menu area.
+     *
+     * \param point the point to check
+     */
+    void hideIfPointBeyondMenu(QPointF point);
 
 private:
     /*!
@@ -120,11 +157,11 @@ private:
     //! The main scene window
     QSharedPointer<MSceneWindow> sceneWindow;
 
+    //! The pannable area viewport
+    MPannableViewport *pannableViewport;
+
     //! The layout for the pannable area
     QGraphicsLinearLayout *pannableLayout;
-
-    //! The window to minimize if the menu should be hidden
-    StatusIndicatorMenuWindow *window;
 
     //! The notification area widget
     NotificationArea *notificationArea;

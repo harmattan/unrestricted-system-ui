@@ -19,5 +19,4 @@ HEADERS += \
     $$SRCDIR/statusarea/statusarea.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
 
-
 include(../common_bot.pri)

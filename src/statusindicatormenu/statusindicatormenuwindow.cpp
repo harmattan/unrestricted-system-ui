@@ -42,6 +42,15 @@ void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 }
 
+StatusIndicatorMenuSceneWindow::StatusIndicatorMenuSceneWindow(QGraphicsItem *parent) : MSceneWindow(parent)
+{
+}
+
+void StatusIndicatorMenuSceneWindow::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    emit clicked(event->scenePos());
+}
+
 /*!
  * Changes the _NET_WM_STATE property of a widget's window.
  *
@@ -73,7 +82,8 @@ const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
-    sceneWindow(new MSceneWindow),
+    sceneWindow(new StatusIndicatorMenuSceneWindow),
+    pannableViewport(new MPannableViewport),
     pannableLayout(new QGraphicsLinearLayout(Qt::Vertical)),
     notificationArea(new NotificationArea),
     closeButtonOverlay(new MOverlay)
@@ -81,6 +91,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     setWindowTitle("Status Indicator Menu");
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
+    connect(sceneWindow.data(), SIGNAL(clicked(QPointF)), this, SLOT(hideIfPointBeyondMenu(QPointF)));
 
     // Create an extension area for the top row plugins
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
@@ -94,7 +105,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
     settingsButton->setViewType(MButton::iconType);
     settingsButton->setIconID("icon-m-common-settings");
-    connect(settingsButton, SIGNAL(clicked()), this, SLOT(settingsButtonClicked()));
+    connect(settingsButton, SIGNAL(clicked()), this, SLOT(launchControlPanelAndHide()));
 
     // Put the extension area and the settings button to a horizontal layout
     QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -115,8 +126,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
     pannableWidget->setLayout(pannableLayout);
 
-    // Create a pannable viewport
-    MPannableViewport *pannableViewport = new MPannableViewport;
+    // Setup the pannable viewport
     pannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pannableViewport->setWidget(pannableWidget);
 
@@ -227,7 +237,7 @@ void StatusIndicatorMenuWindow::excludeFromTaskBar()
     XChangeProperty(QX11Info::display(), internalWinId(), netWmStateAtom, XA_ATOM, 32, PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
 }
 
-void StatusIndicatorMenuWindow::settingsButtonClicked()
+void StatusIndicatorMenuWindow::launchControlPanelAndHide()
 {
     MApplicationIfProxy mApplicationIfProxy(CONTROL_PANEL_SERVICE_NAME, this);
 
@@ -238,4 +248,15 @@ void StatusIndicatorMenuWindow::settingsButtonClicked()
     }
 
     hideStatusIndicatorMenu();
+}
+
+void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point)
+{
+    QGraphicsWidget *widget = pannableViewport->widget();
+    if (widget != NULL) {
+        QRectF menuRect(sceneWindow->mapToScene(QPointF()), widget->mapToScene(QPointF(widget->geometry().width(), widget->geometry().height())));
+        if (!menuRect.contains(point)) {
+           hide();
+        }
+    }
 }

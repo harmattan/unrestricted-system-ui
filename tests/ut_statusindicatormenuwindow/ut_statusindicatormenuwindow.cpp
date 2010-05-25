@@ -55,7 +55,8 @@ void Ut_StatusIndicatorMenuWindow::init()
     gSetVisible.first = 0;
     gSetVisible.second = false;
     mApplicationIfProxyLaunchCalled = false;
-    connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(settingsButtonClicked()));
+    connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(launchControlPanelAndHide()));
+    connect(this, SIGNAL(clicked(QPointF)), statusIndicatorMenuWindow, SLOT(hideIfPointBeyondMenu(QPointF)));
 }
 
 void Ut_StatusIndicatorMenuWindow::cleanup()
@@ -129,6 +130,15 @@ void Ut_StatusIndicatorMenuWindow::testNotificationAreaVisibility()
     QVERIFY(notificationArea->isVisible());
     QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 0));
     QVERIFY(!notificationArea->isVisible());
+}
+
+void Ut_StatusIndicatorMenuWindow::testHideIfPointBeyondMenu()
+{
+    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
+    emit clicked(QPointF(0, 0));
+    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
+    emit clicked(QPointF(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height()));
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

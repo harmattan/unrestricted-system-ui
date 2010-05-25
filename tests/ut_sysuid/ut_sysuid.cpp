@@ -33,6 +33,7 @@
 #include "unlockwidgets_stub.h"
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuscenewindow_stub.h"
 #include "mcompositornotificationsink_stub.h"
 #include "unlocknotificationsinkstub.h"
 

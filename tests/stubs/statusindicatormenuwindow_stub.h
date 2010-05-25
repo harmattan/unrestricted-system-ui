@@ -36,14 +36,9 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void displayInActive();
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
   virtual void setNotificationCount(int notificationCount);
-  virtual void settingsButtonClicked();
+  virtual void launchControlPanelAndHide();
   virtual void excludeFromTaskBar();
-   const QString CONTROL_PANEL_SERVICE_NAME ;
-   QSharedPointer<MSceneWindow> sceneWindow ;
-   QGraphicsLinearLayout *pannableLayout ;
-   StatusIndicatorMenuWindow *window ;
-   NotificationArea *notificationArea ;
-   QSharedPointer<MOverlay> closeButtonOverlay ;
+  virtual void hideIfPointBeyondMenu(QPointF point);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -86,12 +81,18 @@ void StatusIndicatorMenuWindowStub::setNotificationCount(int notificationCount) 
   stubMethodEntered("setNotificationCount",params);
 }
 
-void StatusIndicatorMenuWindowStub::settingsButtonClicked() {
-  stubMethodEntered("settingsButtonClicked");
+void StatusIndicatorMenuWindowStub::launchControlPanelAndHide() {
+  stubMethodEntered("launchControlPanelAndHide");
 }
 
 void StatusIndicatorMenuWindowStub::excludeFromTaskBar() {
   stubMethodEntered("excludeFromTaskBar");
+}
+
+void StatusIndicatorMenuWindowStub::hideIfPointBeyondMenu(QPointF point) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QPointF >(point));
+  stubMethodEntered("hideIfPointBeyondMenu",params);
 }
 
 
@@ -138,12 +139,16 @@ void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount) {
   gStatusIndicatorMenuWindowStub->setNotificationCount(notificationCount);
 }
 
-void StatusIndicatorMenuWindow::settingsButtonClicked() {
-  gStatusIndicatorMenuWindowStub->settingsButtonClicked();
+void StatusIndicatorMenuWindow::launchControlPanelAndHide() {
+  gStatusIndicatorMenuWindowStub->launchControlPanelAndHide();
 }
 
 void StatusIndicatorMenuWindow::excludeFromTaskBar() {
   gStatusIndicatorMenuWindowStub->excludeFromTaskBar();
+}
+
+void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point) {
+  gStatusIndicatorMenuWindowStub->hideIfPointBeyondMenu(point);
 }
 
 
