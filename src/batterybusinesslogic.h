@@ -29,12 +29,14 @@
 #include "devicemodestub.h"
 #include "displaystatestub.h"
 #include "gconfstub.h"
+#define UT_VIRT virtual
 #else
 #include <qmsystem/qmled.h>
 #include <qmsystem/qmbattery.h>
 #include <qmsystem/qmdevicemode.h>
 #include <qmsystem/qmdisplaystate.h>
 #include "systemuigconf.h"
+#define UT_VIRT
 #endif
 
 #include <QObject>
@@ -90,16 +92,16 @@ public:
     BatteryBusinessLogic (SystemUIGConf *systemUIGConf, QObject* parent = 0);
     virtual ~BatteryBusinessLogic ();
 
-    void setPSMThreshold (const QString &threshold);
-    void togglePSM (bool toggle);
-    void togglePSMAuto (bool toggle);
+    UT_VIRT void setPSMThreshold (const QString &threshold);
+    UT_VIRT void togglePSM (bool toggle);
+    UT_VIRT void togglePSMAuto (bool toggle);
     int batteryBarValue (int percentage = -1);
-    bool PSMValue ();
+    UT_VIRT bool PSMValue ();
     void batteryStatus ();
     QVariant GConfItemValue (SystemUIGConf::GConfKey key);
     QStringList remainingTimeValues ();
     QStringList PSMThresholdValues ();
-    QString PSMThresholdValue ();
+    UT_VIRT QString PSMThresholdValue ();
 
 signals:
     void batteryCharging (int);

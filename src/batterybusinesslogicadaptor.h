@@ -34,7 +34,9 @@ class BatteryBusinessLogic;
 class BatteryBusinessLogicAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+#ifndef UNIT_TEST
     Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.battery")
+#endif
 
 public:
     BatteryBusinessLogicAdaptor (
