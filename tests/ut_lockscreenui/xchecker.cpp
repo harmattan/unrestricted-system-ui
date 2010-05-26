@@ -362,12 +362,30 @@ XChecker::print_children (
 
 bool
 XChecker::check_window (
-        Window       WindowID,
+        Window                 WindowID,
         XChecker::RequestCode  OpCode)
 {
     Display          *Display = QX11Info::display ();
     bool              retval = false;
     XWindowAttributes attrs = { 0 };
+
+    SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
+
+    if (WindowID == None) {
+        switch (OpCode) {
+            case CheckIsVisible:
+                SYS_WARNING ("Window 0x%lx should be visible it is 'None'.",
+                        WindowID);
+                retval = false;
+                break;
+
+            case CheckIsInvisible:
+                retval = true;
+                break;
+        }
+
+        goto finalize;
+    }
 
 	if (!XGetWindowAttributes (Display, WindowID, &attrs)) {
         switch (OpCode) {

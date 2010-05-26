@@ -43,7 +43,8 @@ private slots:
     void testEventEaterUIShowHide ();
     void testLockScreenUIShowHide ();
     void testLockScreenUIShowHideWithMainWindow ();
-
+    void testEventEaterUIShowHideWithMainWindow ();
+    
 private:
     void createLockScreenUI ();
     void createEventEaterUI ();

@@ -75,6 +75,8 @@ void Ut_LockScreenUI::initTestCase()
 void 
 Ut_LockScreenUI::cleanupTestCase()
 {
+    delete m_LockScreenUI;
+    delete m_EventEaterUI;
     delete m_MainWindow; 
     delete m_App;
 }
@@ -87,6 +89,13 @@ Ut_LockScreenUI::testEventEaterUIShowHide ()
     createEventEaterUI ();
 
     SYS_DEBUG ("*** m_EventEaterUI = %p", m_EventEaterUI);
+    for (int i = 0; i < 3; ++i) {
+        /*
+         * Showing the eventEaterUI window.
+         */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Showing eventeaterUI **************************");
+        SYS_DEBUG ("***************************************************");
         m_EventEaterUI->showFullScreen ();
         QTest::qWait (WMDelay);
         
@@ -94,47 +103,24 @@ Ut_LockScreenUI::testEventEaterUIShowHide ()
          * From this point the event eater must be shown and visible.
          */
         WindowID = m_EventEaterUI->internalWinId();
-        SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
-
         QVERIFY (m_EventEaterUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
 
         m_XChecker.debug_dump_windows ();
-        QTest::qWait (50000);
-        //exit (1);
-#if 0 
-    for (int n = 0; n < 2; ++n) {
-        /*
-         * Showing the lockscreenUI window.
-         */
-        SYS_DEBUG ("***************************************************");
-        SYS_DEBUG ("*** Showing lockscreenUI **************************");
-        SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->show ();
-        QTest::qWait (WMDelay);
-        /*
-         * From this point the lock screen should be realized, shown and visible.
-         */
-        QVERIFY (m_LockScreenUI->m_Realized);
-        QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
-        QVERIFY (m_LockScreenUI->isVisible());
-        WindowID = m_LockScreenUI->internalWinId();
-        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
-    
         QTest::qWait (500);
-        m_XChecker.debug_dump_windows ();
         /*
-        * Hiding the window again.
-        */
+         * Hiding the window again.
+         */
         SYS_DEBUG ("***************************************************");
-        SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
+        SYS_DEBUG ("*** Hiding eventeaterUI ***************************");
         SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->hide();
+        m_EventEaterUI->hide();
         QTest::qWait (WMDelay);
-        QVERIFY (!m_LockScreenUI->isVisible());
+        WindowID = m_EventEaterUI->internalWinId();
+        SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
+        QVERIFY (!m_EventEaterUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
     }
-#endif
 }
 
 /*!
@@ -176,6 +162,7 @@ Ut_LockScreenUI::testLockScreenUIShowHide ()
         SYS_DEBUG ("***************************************************");
         m_LockScreenUI->hide();
         QTest::qWait (WMDelay);
+        WindowID = m_LockScreenUI->internalWinId();
         QVERIFY (!m_LockScreenUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
     }
@@ -236,9 +223,57 @@ Ut_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         SYS_DEBUG ("***************************************************");
         m_LockScreenUI->hide();
         QTest::qWait (WMDelay);
+        WindowID = m_LockScreenUI->internalWinId();
         QVERIFY (!m_LockScreenUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
         QVERIFY (m_XChecker.check_window(MWindowID, XChecker::CheckIsInvisible));
+    }
+}
+
+/*!
+ * When this test is executed the main window is already created, so this test
+ * will show/hide the event eater again with the main window created and
+ * registered.
+ */
+void
+Ut_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
+{
+    Window WindowID;
+
+    createEventEaterUI ();
+
+    SYS_DEBUG ("*** m_EventEaterUI = %p", m_EventEaterUI);
+    for (int i = 0; i < 3; ++i) {
+        /*
+         * Showing the eventEaterUI window.
+         */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Showing eventeaterUI **************************");
+        SYS_DEBUG ("***************************************************");
+        m_EventEaterUI->showFullScreen ();
+        QTest::qWait (WMDelay);
+        
+        /*
+         * From this point the event eater must be shown and visible.
+         */
+        WindowID = m_EventEaterUI->internalWinId();
+        QVERIFY (m_EventEaterUI->isVisible());
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
+
+        m_XChecker.debug_dump_windows ();
+        QTest::qWait (500);
+        /*
+         * Hiding the window again.
+         */
+        SYS_DEBUG ("***************************************************");
+        SYS_DEBUG ("*** Hiding eventeaterUI ***************************");
+        SYS_DEBUG ("***************************************************");
+        m_EventEaterUI->hide();
+        QTest::qWait (WMDelay);
+        WindowID = m_EventEaterUI->internalWinId();
+        SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
+        QVERIFY (!m_EventEaterUI->isVisible());
+        QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
     }
 }
 
