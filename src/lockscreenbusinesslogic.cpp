@@ -47,14 +47,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
              this, SLOT (unlockScreen ()));
     connect (lockUI, SIGNAL (unlocked ()),
              this, SIGNAL (unlockConfirmed ()));
-
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
-
-#if 0
-    // Hide from taskbar at the beginning
-    hidefromTaskBar ();
-#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -63,8 +57,7 @@ LockScreenBusinessLogic::~LockScreenBusinessLogic()
 }
 
 /*!
- * This function is called when the lock slider is moved by the user so the
- * screen should be unlocked.
+ * This function is called when the user unlocks the screen manually.
  */
 void
 LockScreenBusinessLogic::unlockScreen ()
@@ -77,46 +70,14 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
-    if (toggle)
-        lockUI->show();
-    else
-        lockUI->hide();
-#if 0
-    MApplicationWindow& mainwindow =
-        Sysuid::sysuid ()->applicationWindow ();
-    SYS_DEBUG ("*** toggle     = %s", SYS_BOOL(toggle));
-
-    MApplicationWindow *window;
-    SYS_DEBUG ("*** mainwindow = %p", &mainwindow);
-    window = MApplication::instance()->activeApplicationWindow();
-    SYS_DEBUG ("*** active win = %p", window);
-    
-    if (eaterUI->isVisible ())
-        eaterUI->hide ();
-
     if (toggle) {
-        if (mainwindow.isHidden ()) {
-            SYS_DEBUG ("Showing main window");
-            mainwindow.show ();
-        } else {
-            SYS_DEBUG ("The main window already visible");
-        }
-
-        lockUI->setOpacity (1.0);
-        mainwindow.sceneManager ()->appearSceneWindowNow (lockUI);
-        lockUI->show ();
-
-        mainwindow.showFullScreen ();
-        mainwindow.raise ();
-
+        lockUI->show();
         mayStartTimer ();
     } else {
-        if (mainwindow.isVisible ())
-            mainwindow.hide ();
-
+        lockUI->hide();
         stopTimer ();
     }
-#endif
+    
     emit screenIsLocked (toggle);
 }
 
@@ -124,42 +85,13 @@ void
 LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
-    if (toggle)
-        eaterUI->showFullScreen ();
-    else
-        eaterUI->hide ();
-#if 0
-    MApplicationWindow& mainwindow =
-        Sysuid::sysuid ()->applicationWindow ();
-
-    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
-    
-    MApplicationWindow *window;
-    SYS_DEBUG ("*** mainwindow = %p", &mainwindow);
-    window = MApplication::instance()->activeApplicationWindow();
-    SYS_DEBUG ("*** active win = %p", window);
-
-    // Hide the unlock ui if visible
-    if (lockUI->isVisible ())
-        lockUI->hide ();
-
     if (toggle) {
-        if (mainwindow.isHidden ())
-            mainwindow.show ();
-
-        eaterUI->setOpacity (0.0);
-        mainwindow.sceneManager ()->appearSceneWindowNow (eaterUI);
         eaterUI->show ();
-
-        mainwindow.showFullScreen ();
-        mainwindow.raise ();
+        eaterUI->showFullScreen ();
     } else {
-        if (mainwindow.isVisible ())
-            mainwindow.hide ();
-
-        stopTimer ();
+        eaterUI->hide ();
     }
-#endif
+    
     // Enable the unlock notification sink also for dimmed state:
     emit screenIsLocked (toggle);
 }
@@ -185,57 +117,6 @@ LockScreenBusinessLogic::stopTimer ()
     timer.stop ();
 }
 
-#if 0
-/*
- * According to MeegoTouch guy there is no need for this,
- * because eg.: we aren't really using a real window for
- * event-eater window...
- */
-void
-LockScreenBusinessLogic::hidefromTaskBar ()
-{
-    XEvent e;
-    e.xclient.type = ClientMessage;
-    Display *display = QX11Info::display ();
-    Atom netWmStateAtom = XInternAtom (display,
-                                       "_NET_WM_STATE",
-                                       False);
-    Atom skipTaskbarAtom = XInternAtom (QX11Info::display (),
-                                        "_NET_WM_STATE_SKIP_TASKBAR",
-                                       False);
-
-    e.xclient.message_type = netWmStateAtom;
-    e.xclient.display = display;
-    e.xclient.window = Sysuid::sysuid()->applicationWindow().internalWinId();
-    e.xclient.format = 32;
-    e.xclient.data.l[0] = 1;
-    e.xclient.data.l[1] = skipTaskbarAtom;
-    e.xclient.data.l[2] = 0;
-    e.xclient.data.l[3] = 0;
-    e.xclient.data.l[4] = 0;
-    XSendEvent (display,
-                RootWindow (display, Sysuid::sysuid()->applicationWindow().x11Info ().screen ()),
-                FALSE,
-                (SubstructureNotifyMask | SubstructureRedirectMask),
-                &e);
-
-    // TODO: setting this property by hand can be removed when mcompositor
-    // sets the _NET_WM_STATE attribute according to the message.
-    QVector<Atom> atoms;
-    atoms.append(skipTaskbarAtom);
-    XChangeProperty (QX11Info::display (),
-                     Sysuid::sysuid()->applicationWindow().internalWinId(),
-                     netWmStateAtom,
-                     XA_ATOM,
-                     32,
-                     PropModeReplace,
-                     (unsigned char *) atoms.data (),
-                     atoms.count ());
-
-    XFlush (display);
-}
-#endif
-
 void
 LockScreenBusinessLogic::updateMissedEvents (
     int emails,
@@ -243,7 +124,11 @@ LockScreenBusinessLogic::updateMissedEvents (
     int calls,
     int im)
 {
-    static_cast<LockScreenUI*> (lockUI)->updateMissedEvents (
-                                        emails, messages, calls, im);
+    SYS_DEBUG ("*** emails   = %d", emails);
+    SYS_DEBUG ("*** messages = %d", messages);
+    SYS_DEBUG ("*** calls    = %d", calls);
+    SYS_DEBUG ("*** im       = %d", im);
+
+    lockUI->updateMissedEvents (emails, messages, calls, im);
 }
 
