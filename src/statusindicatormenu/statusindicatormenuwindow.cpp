@@ -29,7 +29,6 @@
 #include "pluginlist.h"
 #include "notificationarea.h"
 #include "statusindicatormenuwindow.h"
-#include "mstatusbar.h"
 #include <MWidgetView>
 
 void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -46,27 +45,15 @@ void StatusIndicatorMenuSceneWindow::mousePressEvent(QGraphicsSceneMouseEvent *e
     emit clicked(event->scenePos());
 }
 
-LayoutRequestListenerWidget::LayoutRequestListenerWidget(QGraphicsItem *parent) :
+PannedWidgetController::PannedWidgetController(QGraphicsItem *parent) :
     MWidgetController(parent)
 {
 }
 
-bool LayoutRequestListenerWidget::event(QEvent *event)
+void PannedWidgetController::setGeometry(const QRectF &rect)
 {
-    bool returnValue = QGraphicsWidget::event(event);
-    if (event->type() == QEvent::LayoutRequest) {
-        emit positionOrSizeChanged();
-    }
-    return returnValue;
-}
-
-QVariant LayoutRequestListenerWidget::itemChange(GraphicsItemChange change, const QVariant & value)
-{
-    QVariant returnValue = QGraphicsWidget::itemChange(change, value);
-    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
-        emit positionOrSizeChanged();
-    }
-    return returnValue;
+    MWidgetController::setGeometry(rect);
+    emit positionOrSizeChanged();
 }
 
 const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
@@ -163,14 +150,15 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     pannableLayout->addItem(createCloseButtonRow());
 
     // Create a container widget for the pannable area
-    MWidgetController *pannableWidget = new MWidgetController;
-    pannableWidget->setView(new MWidgetView(pannableWidget));
-    pannableWidget->setObjectName("StatusIndicatorMenuPannableWidget");
-    pannableWidget->setLayout(pannableLayout);
+    PannedWidgetController *pannedWidget = new PannedWidgetController;
+    pannedWidget->setView(new MWidgetView(pannedWidget));
+    pannedWidget->setObjectName("StatusIndicatorMenuPannableWidget");
+    pannedWidget->setLayout(pannableLayout);
+    connect(pannedWidget, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
 
     // Setup the pannable viewport
     pannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    pannableViewport->setWidget(pannableWidget);
+    pannableViewport->setWidget(pannedWidget);
 
     return pannableViewport;
 }
@@ -193,12 +181,10 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createCloseButtonRow()
     layout->addItem(new EventEaterWidget);
 
     // Create the area itself
-    LayoutRequestListenerWidget *closeButtonArea = new LayoutRequestListenerWidget;
-    closeButtonArea->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    MWidgetController *closeButtonArea = new MWidgetController;
     closeButtonArea->setView(new MWidgetView(closeButtonArea));
     closeButtonArea->setObjectName("CloseButtonArea");
     closeButtonArea->setLayout(layout);
-    connect(closeButtonArea, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
 
     return closeButtonArea;
 }
@@ -242,26 +228,9 @@ void StatusIndicatorMenuWindow::setPannabilityAndLayout()
     // Appear or disappear the close button overlay based on close area position
     QGraphicsWidget *widget = pannableViewport->widget();
     qreal screenHeight = sceneManager()->visibleSceneSize().height();
-    qreal yPos = 0;
+    qreal yPos = widget->mapToItem(sceneWindow.data(), QPointF(widget->geometry().width(), widget->geometry().height())).y();
 
-    switch(sceneManager()->orientationAngle()) {
-    case M::Angle0:
-        yPos = widget->scenePos().y();
-        break;
-    case M::Angle90:
-        yPos = screenHeight - widget->scenePos().x();
-        break;
-    case M::Angle180:
-        yPos = screenHeight - widget->scenePos().y();
-        break;
-    case M::Angle270:
-        yPos = widget->scenePos().x();
-        break;
-    }
-
-    yPos += widget->geometry().height();
-
-    if ((yPos) < screenHeight) {
+    if (yPos < screenHeight) {
         sceneManager()->disappearSceneWindowNow(closeButtonOverlay.data());
     } else {
         sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());

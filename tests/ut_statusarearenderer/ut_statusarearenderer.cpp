@@ -20,7 +20,7 @@
 #include <MApplication>
 #include "statusarearenderer.h"
 #include "statusarea_stub.h"
-#include "layoutrequestlistenerwidget_stub.h"
+#include "pannedwidgetcontroller_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 #include "statusindicatormenuscenewindow_stub.h"
 

@@ -36,7 +36,7 @@
 #include "statusindicatormenuscenewindow_stub.h"
 #include "mcompositornotificationsink_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "layoutrequestlistenerwidget_stub.h"
+#include "pannedwidgetcontroller_stub.h"
 #include "statusindicatormenuscenewindow_stub.h"
 
 maemosec::storage::~storage()

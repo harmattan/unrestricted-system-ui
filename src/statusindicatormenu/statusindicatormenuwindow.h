@@ -23,6 +23,7 @@
 #include <MWindow>
 #include <MSceneWindow>
 #include <MOverlay>
+#include <mstatusbar.h>
 #include "mstatusindicatormenuextensioninterface.h"
 #include "mstatusbar.h"
 
@@ -77,7 +78,7 @@ signals:
 /*!
   * A widget for listening to layout change requests
   */
-class LayoutRequestListenerWidget : public MWidgetController
+class PannedWidgetController : public MWidgetController
 {
     Q_OBJECT
 public:
@@ -86,19 +87,17 @@ public:
      *
      * \param parent the parent QGraphicsItem
      */
-    LayoutRequestListenerWidget(QGraphicsItem *parent = NULL);
+    PannedWidgetController(QGraphicsItem *parent = NULL);
+
+    //! \reimp
+    virtual void setGeometry(const QRectF &rect);
+    //! \reimp_end
 
 signals:
     /*!
      * Sent when the position or the size of the item changes
      */
     void positionOrSizeChanged();
-
-protected:
-    //! \reimp
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    virtual bool event(QEvent *event);
-    //! \reimp_end
 };
 
 /*!
