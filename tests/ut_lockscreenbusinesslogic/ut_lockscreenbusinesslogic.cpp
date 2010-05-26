@@ -31,12 +31,13 @@
 #define DEBUG
 #include "../../src/debug.h"
 
-/*********************************************************************************
+/******************************************************************************
  * EventSink implementation.
  */
 EventSink::EventSink() :
     m_ScreenIsLockedCame (false),
-    m_ScreenIsLocked (false)
+    m_ScreenIsLocked (false),
+    m_Timeouts (0)
 {
 }
  
@@ -49,7 +50,15 @@ EventSink::screenIsLocked (
     m_ScreenIsLocked = toggle;
 }
 
-/*********************************************************************************
+void 
+EventSink::timeout ()
+{
+    ++m_Timeouts;
+
+    SYS_DEBUG ("*** m_Timeouts = %d", m_Timeouts);
+}
+
+/*******************************************************************************
  * The Ut_LockScreenBusinessLogic implements the unit tests.
  */
 void Ut_LockScreenBusinessLogic::init()
@@ -95,6 +104,10 @@ Ut_LockScreenBusinessLogic::cleanupTestCase()
     delete m_App;
 }
 
+/*
+ * This test will check if the signal that indicates the screen
+ * locking/unlocking is there and properly sent.
+ */
 void 
 Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicSignals ()
 {
@@ -158,8 +171,48 @@ Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicSignals ()
 
     QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
     QVERIFY (m_EventSink.m_ScreenIsLocked == false);
+
+    delete m_LockScreenBusinessLogic;
+    m_LockScreenBusinessLogic = 0;
 }
 
+/*
+ * This test will check if the timer in the screenlokui is started when the
+ * screen lock is shown and it is stopped when the screen lock is hidden.
+ */
+void 
+Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
+{
+    bool connectSuccess;
+
+    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
+    connectSuccess = connect (
+            &m_LockScreenBusinessLogic->timer, SIGNAL (timeout()),
+            &m_EventSink, SLOT(timeout()));
+    QVERIFY (connectSuccess);
+
+    /*
+     * 
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** toggleEventEater (true) ***********************");
+    SYS_DEBUG ("***************************************************");
+    m_EventSink.m_Timeouts = 0;
+    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+    QTest::qWait (5000);
+
+    SYS_DEBUG ("came %d", m_EventSink.m_Timeouts);
+    QVERIFY (m_EventSink.m_Timeouts >= 4);
+
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** toggleEventEater (false) ***********************");
+    SYS_DEBUG ("***************************************************");
+    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
+    m_EventSink.m_Timeouts = 0;
+    QTest::qWait (5000);
+
+    QVERIFY (m_EventSink.m_Timeouts == 0);
+}
 
 
 QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)

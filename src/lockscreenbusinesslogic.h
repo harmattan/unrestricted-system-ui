@@ -52,7 +52,7 @@ signals:
     void screenIsLocked (bool locked);
 
 private: //methods
-    void mayStartTimer();
+    void startTimer();
     void stopTimer();
 
 private: 

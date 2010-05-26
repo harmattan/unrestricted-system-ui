@@ -72,7 +72,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
 {
     if (toggle) {
         lockUI->show();
-        mayStartTimer ();
+        startTimer ();
     } else {
         lockUI->hide();
         stopTimer ();
@@ -97,23 +97,20 @@ LockScreenBusinessLogic::toggleEventEater (
 }
 
 void
-LockScreenBusinessLogic::mayStartTimer ()
+LockScreenBusinessLogic::startTimer ()
 {
     SYS_DEBUG ("Starting timer");
-    /*if (knownLock == QmLocks::Locked && knownDisplay != QmDisplayState::Off)*/
-    {
-        // It's better to update the time straight away.
-        lockUI->updateDateTime ();
+    // It's better to update the time straight away.
+    lockUI->updateDateTime ();
 
-        QTime t (QTime::currentTime ());
-        // TODO: some adjustments of time may be done
-        timer.start (1000);
-    }
+    // TODO: some adjustments of time may be done
+    timer.start (1000);
 }
 
 void
 LockScreenBusinessLogic::stopTimer ()
 {
+    SYS_DEBUG ("Stopping timer");
     timer.stop ();
 }
 

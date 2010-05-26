@@ -38,10 +38,12 @@ public:
 
 public slots:
     void screenIsLocked (bool toggle);
+    void timeout ();
 
 public:
     bool         m_ScreenIsLockedCame;
     bool         m_ScreenIsLocked;
+    int          m_Timeouts;
 };
 
 class Ut_LockScreenBusinessLogic : public QObject
@@ -55,6 +57,7 @@ private slots:
     void cleanupTestCase();
 
     void testLockScreenBusinessLogicSignals ();
+    void testLockScreenBusinessLogicTimer ();
 
 private:
     EventSink                 m_EventSink;
