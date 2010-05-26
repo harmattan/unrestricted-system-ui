@@ -39,6 +39,23 @@ static int normalDelay = 200;
 #define DEBUG
 #include "../../src/debug.h"
 
+/*********************************************************************************
+ * The helper class to watch the signals.
+ */
+LockScreenUIEventSink::LockScreenUIEventSink() :
+    m_OneInputCome (false)
+{
+}
+
+void
+LockScreenUIEventSink::OneInput ()
+{
+    m_OneInputCome = true;
+}
+
+/*********************************************************************************
+ * The Ut_LockScreenUI implements the unit tests.
+ */
 void Ut_LockScreenUI::init()
 {
 }
@@ -152,5 +169,21 @@ Ut_LockScreenUI::testLockScreenUI ()
     m_LockScreenUI = 0;
 }
 
+void
+Ut_LockScreenUI::testEventEaterUI ()
+{
+    bool connectSuccess;
+
+    Q_ASSERT (m_EventEaterUI == 0);
+    m_EventEaterUI = new EventEaterUI;
+
+    m_EventSink.m_OneInputCome = false;
+    connectSuccess = connect (m_EventEaterUI, SIGNAL(OneInput()),
+            &m_EventSink, SLOT(OneInput()));
+    QVERIFY (connectSuccess);
+
+    delete m_EventEaterUI;
+    m_EventEaterUI = 0;
+}
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)

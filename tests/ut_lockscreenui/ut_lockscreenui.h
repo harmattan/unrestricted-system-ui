@@ -30,6 +30,20 @@ class MApplicationWindow;
 class LockScreenUI;
 class EventEaterUI;
 
+class LockScreenUIEventSink : public QObject 
+{
+    Q_OBJECT
+
+public:
+    LockScreenUIEventSink ();
+
+public slots:
+    void OneInput ();
+
+public:
+    bool      m_OneInputCome;
+};
+
 class Ut_LockScreenUI : public QObject
 {
     Q_OBJECT
@@ -42,13 +56,15 @@ private slots:
 
     void testLockScreenWindow ();
     void testLockScreenUI ();
+    void testEventEaterUI ();
 
 private:
-    XChecker             m_XChecker;
-    MApplicationWindow  *m_MainWindow;
-    LockScreenUI        *m_LockScreenUI;
-    EventEaterUI        *m_EventEaterUI;
-    MApplication        *m_App;
+    XChecker               m_XChecker;
+    LockScreenUIEventSink  m_EventSink;
+    MApplicationWindow    *m_MainWindow;
+    LockScreenUI          *m_LockScreenUI;
+    EventEaterUI          *m_EventEaterUI;
+    MApplication          *m_App;
 };
 
 #endif
