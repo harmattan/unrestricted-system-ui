@@ -103,10 +103,6 @@ class EventEaterUI : public QWidget
 
 public:
     EventEaterUI ();
-
-protected:
-    void mousePressEvent (QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent (QMouseEvent *event);
     virtual void mouseReleaseEvent (QMouseEvent *event);
 

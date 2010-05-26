@@ -43,14 +43,14 @@ static int normalDelay = 200;
  * The helper class to watch the signals.
  */
 LockScreenUIEventSink::LockScreenUIEventSink() :
-    m_OneInputCome (false)
+    m_OneInputCame (false)
 {
 }
 
 void
 LockScreenUIEventSink::OneInput ()
 {
-    m_OneInputCome = true;
+    m_OneInputCame = true;
 }
 
 /*********************************************************************************
@@ -174,13 +174,29 @@ Ut_LockScreenUI::testEventEaterUI ()
 {
     bool connectSuccess;
 
+    /*
+     * We need a new event eater widget.
+     */
     Q_ASSERT (m_EventEaterUI == 0);
     m_EventEaterUI = new EventEaterUI;
-
-    m_EventSink.m_OneInputCome = false;
+    
+    /*
+     * We test if we can connect to the OneInput() signal.
+     */
     connectSuccess = connect (m_EventEaterUI, SIGNAL(OneInput()),
             &m_EventSink, SLOT(OneInput()));
     QVERIFY (connectSuccess);
+    
+    /*
+     * Let's see if the event is actually generates a signal. 
+     */
+    m_EventSink.m_OneInputCame = false;
+    m_EventEaterUI->mousePressEvent ((QMouseEvent *)NULL);
+    QVERIFY (m_EventSink.m_OneInputCame);
+    
+    m_EventSink.m_OneInputCame = false;
+    m_EventEaterUI->mouseReleaseEvent ((QMouseEvent *)NULL);
+    QVERIFY (m_EventSink.m_OneInputCame);
 
     delete m_EventEaterUI;
     m_EventEaterUI = 0;

@@ -41,7 +41,7 @@ public slots:
     void OneInput ();
 
 public:
-    bool      m_OneInputCome;
+    bool      m_OneInputCame;
 };
 
 class Ut_LockScreenUI : public QObject
