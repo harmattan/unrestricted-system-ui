@@ -26,18 +26,11 @@
 #include <MApplicationIfProxy>
 #include <MPannableViewport>
 #include <QGraphicsLinearLayout>
-#include <QX11Info>
 #include "pluginlist.h"
 #include "notificationarea.h"
 #include "statusindicatormenuwindow.h"
 #include "mstatusbar.h"
 #include <MWidgetView>
-
-#include <X11/Xlib.h>
-
-// TODO: this include can be removed when mcompositor
-// sets the _NET_WM_STATE attribute according to the message.
-#include <X11/Xatom.h>
 
 void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -74,33 +67,6 @@ QVariant LayoutRequestListenerWidget::itemChange(GraphicsItemChange change, cons
         emit positionOrSizeChanged();
     }
     return returnValue;
-}
-
-/*!
- * Changes the _NET_WM_STATE property of a widget's window.
- *
- * \param w the widget whose window's property to change
- * \param set \c true if the first data value will be 1, \c false if it will be 0
- * \param one the first Atom to put in the value
- * \param two the second Atom to put in the value
- */
-void changeNetWmState(const QWidget* w, bool set, Atom one, Atom two = 0)
-{
-    XEvent e;
-    e.xclient.type = ClientMessage;
-    Display *display = QX11Info::display();
-    Atom netWmStateAtom = XInternAtom(display, "_NET_WM_STATE", FALSE);
-    e.xclient.message_type = netWmStateAtom;
-    e.xclient.display = display;
-    e.xclient.window = w->internalWinId();
-    e.xclient.format = 32;
-    e.xclient.data.l[0] = set ? 1 : 0;
-    e.xclient.data.l[1] = one;
-    e.xclient.data.l[2] = two;
-    e.xclient.data.l[3] = 0;
-    e.xclient.data.l[4] = 0;
-    XSendEvent(display, RootWindow(display, w->x11Info().screen()), FALSE, (SubstructureNotifyMask | SubstructureRedirectMask), &e);
-    XSync(display, FALSE);
 }
 
 const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
@@ -142,8 +108,9 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     // Create close button overlay
     closeButtonOverlay = QSharedPointer<MOverlay>(createCloseButtonOverlay());
 
-    // Set the X window properties so that the window does not appear in the task bar
-    excludeFromTaskBar();
+    // Set the X window type, so that the window does not appear in the switcher and 
+    // home screen con provide the correct UI flow
+    setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
 }
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
@@ -351,20 +318,6 @@ void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount)
             pannableLayout->removeItem(notificationArea);
         }
     }
-}
-
-void StatusIndicatorMenuWindow::excludeFromTaskBar()
-{
-    // Tell the window to not to be shown in the switcher
-    Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
-    changeNetWmState(this, true, skipTaskbarAtom);
-
-    // TODO: setting this property by hand can be removed when mcompositor
-    // sets the _NET_WM_STATE attribute according to the message.
-    Atom netWmStateAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE", False);
-    QVector<Atom> atoms;
-    atoms.append(skipTaskbarAtom);
-    XChangeProperty(QX11Info::display(), internalWinId(), netWmStateAtom, XA_ATOM, 32, PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
 }
 
 void StatusIndicatorMenuWindow::launchControlPanelAndHide()

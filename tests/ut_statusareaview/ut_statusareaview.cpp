@@ -40,6 +40,7 @@
 #include <MSceneWindow>
 #include <QGraphicsLayout>
 #include <MWidget>
+#include "x11wrapper_stub.h"
 
 int Ut_StatusAreaView::windowExecutionCount;
 int Ut_StatusAreaView::windowRejectionCount;

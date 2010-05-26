@@ -178,11 +178,6 @@ private slots:
     void setPannabilityAndLayout();
 
 private:
-    /*!
-     * Sets the X window properties for the window so that the window is not
-     * included in the task bar.
-     */
-    void excludeFromTaskBar();
 
     //! The name of the control panel service
     const static QString CONTROL_PANEL_SERVICE_NAME;

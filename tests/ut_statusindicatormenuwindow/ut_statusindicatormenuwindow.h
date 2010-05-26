@@ -58,6 +58,7 @@ private slots:
     void testHideIfPointBeyondMenu();
     void testCloseButtonPosition();
     void testSetPannability();
+    void testWindowType();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

@@ -16,23 +16,20 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QDebug>
+
 #include "ut_statusindicatormenuwindow.h"
 #include "statusindicatormenuwindow.h"
 #include "pluginlist_stub.h"
 #include <MApplication>
 #include <MApplicationIfProxy>
 #include <QtTest/QtTest>
-#include <X11/Xutil.h>
 #include <MOverlay>
 #include <MButton>
 #include <QGraphicsLinearLayout>
 #include "notificationarea_stub.h"
 #include <MPannableViewport>
-
-// X stubs to avoid crashes
-void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
-{
-}
+#include "x11wrapper_stub.h"
 
 // MApplicationIfProxy stubs (used by StatusIndicatorMenuWindow)
 bool mApplicationIfProxyLaunchCalled = false;
@@ -52,6 +49,7 @@ void QWidget::setVisible(bool visible)
 
 void Ut_StatusIndicatorMenuWindow::init()
 {
+    gX11WrapperStub->stubReset();    
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
@@ -162,6 +160,11 @@ void Ut_StatusIndicatorMenuWindow::testSetPannability()
     statusIndicatorMenuWindow->pannableViewport->widget()->setPos(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height());
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), true);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWindowType()
+{
+    QVERIFY(statusIndicatorMenuWindow->testAttribute(Qt::WA_X11NetWmWindowTypeMenu));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

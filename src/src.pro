@@ -39,7 +39,8 @@ HEADERS +=                              \
     applicationcontext.h                \
     unlocknotifications.h               \
     unlocknotificationsink.h            \
-    unlockwidgets.h
+    unlockwidgets.h                     \
+    x11wrapper.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -58,7 +59,8 @@ SOURCES +=                              \
     contextframeworkcontext.cpp         \
     unlocknotifications.cpp             \
     unlocknotificationsink.cpp          \
-    unlockwidgets.cpp
+    unlockwidgets.cpp                   \
+    x11wrapper.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
@@ -69,7 +71,8 @@ PKGCONFIG += \
     qmsystem \
     maemosec \
     dbus-1 \
-    libngf0
+    libngf0 \
+    xcomposite
 
 # TODO: remove these very quickly when obexd is okay
 usb_scripts.files += pcsuite-enable.sh
