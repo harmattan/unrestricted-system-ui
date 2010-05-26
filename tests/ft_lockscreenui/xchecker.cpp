@@ -21,6 +21,7 @@
 #include "xchecker.h"
 #include "QX11Info"
 
+#define SHORT_DEBUG
 #define DEBUG
 #include "../../src/debug.h"
 
@@ -240,7 +241,8 @@ XChecker::get_map_state (
 }
 
 void 
-XChecker::print_children (
+XChecker::pr (
+        Window   highlighted,
         Display *dpy, 
         Window   WindowID, 
         int      level,
@@ -292,11 +294,15 @@ XChecker::print_children (
     QString windowName = (wmname ? wmname : "(none)");
     QString windowName2 = (wmname2 ? wmname2 : "(none)");
     windowName = windowName + "/" + windowName2;
+
+    bool        Highlight = highlighted != None && highlighted == WindowID;
+    const char *HighlightStart = Highlight ? "\033[1;31m" : "";
+    const char *HighlightEnd = Highlight ? "\033[0;39m" : "";
     if (n_children == 0) {
-        SYS_DEBUG ("%03d %s0x%lx %8s %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %12s %s", 
                 nthWindow,
                 SYS_STR(indent), 
-                WindowID,
+                HighlightStart, WindowID, HighlightEnd,
                 get_map_state(attrs.map_state),
 			    wmclass ? wmclass : "(none)",
                 SYS_STR(windowName));
@@ -321,10 +327,10 @@ XChecker::print_children (
                         non_comp != -1 ? "non-comp.":"");
 #endif
 	} else {
-        SYS_DEBUG ("%03d %s0x%lx %8s %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %12s %s", 
                 nthWindow,
                 SYS_STR(indent), 
-                WindowID,
+                HighlightStart, WindowID, HighlightEnd,
                 get_map_state(attrs.map_state),
 			    wmclass ? wmclass : "(none)",
                 SYS_STR(windowName));
@@ -350,7 +356,7 @@ XChecker::print_children (
 #endif
 		for (i = 0; i < n_children; ++i) {
             ++nthWindow;
-			print_children(dpy, child_l[i], level + 1, nthWindow);
+			pr (highlighted, dpy, child_l[i], level + 1, nthWindow);
 		}
 		XFree(child_l);
 	}
@@ -425,18 +431,19 @@ XChecker::check_window (
 
 finalize:
     if (!retval) 
-        debug_dump_windows ();
+        debug_dump_windows (WindowID);
     return retval;
 }
 
 void 
-XChecker::debug_dump_windows()
+XChecker::debug_dump_windows(
+        Window highlighted)
 {
 	Display *dpy = display();
 	Window root;
 
 	root = XDefaultRootWindow(dpy);
-	print_children(dpy, root, 0, 0);
+	pr (highlighted, dpy, root, 0, 0);
 }
 
 

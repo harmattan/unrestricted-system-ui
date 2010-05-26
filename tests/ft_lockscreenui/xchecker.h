@@ -43,7 +43,7 @@ public:
     } RequestCode;
 
     bool check_window (Window WindowID, XChecker::RequestCode  OpCode);
-    void debug_dump_windows();
+    void debug_dump_windows(Window highlighted = None);
 
 private:
     Display *display();
@@ -56,11 +56,12 @@ private:
     char *get_str_prop(Display *dpy, Window w, Atom atom);
     char * get_utf8_prop ( Display *dpy, Window w, Atom atom);
     const char * get_map_state ( int state);
-    void print_children (
+    void pr (
+            Window   highlighted,
             Display *dpy, 
-            Window WindowID, 
-            int level, 
-            int nthWindow);
+            Window   WindowID, 
+            int      level, 
+            int      nthWindow);
 
 private:
     Atom class_atom, name_atom, name_atom2, xembed_atom, pid_atom,

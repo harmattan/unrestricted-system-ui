@@ -36,8 +36,12 @@
  * We wait this much until we check if the window is actually appeared
  * disappeared from the stack of the window manager.
  */
-static int WMDelay = 200;
+static int WMDelay = 400;
 
+/*
+ * This much we wait between the tests.
+ */
+static int DelayBetweenTests = 5000;
 
 void 
 Ft_LockScreenBusinessLogic::init()
@@ -111,7 +115,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (EventEaterWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
@@ -119,7 +123,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -134,7 +138,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (EventEaterWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -142,7 +146,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -157,7 +161,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -165,7 +169,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -180,7 +184,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -188,7 +192,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     delete m_LockScreenBusinessLogic;
     m_LockScreenBusinessLogic = NULL;
@@ -233,7 +237,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (EventEaterWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
@@ -241,7 +245,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -256,7 +260,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (EventEaterWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -264,7 +268,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -279,7 +283,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -287,7 +291,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     /*
      *
@@ -302,7 +306,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
-    m_XChecker.debug_dump_windows ();
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
     QVERIFY (m_XChecker.check_window(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
@@ -310,7 +314,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
-    QTest::qWait (500);
+    QTest::qWait (DelayBetweenTests);
 
     delete m_MainWindow;
     m_MainWindow = 0;

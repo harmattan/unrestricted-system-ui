@@ -36,7 +36,12 @@
  * We wait this much until we check if the window is actually appeared
  * disappeared from the stack of the window manager.
  */
-static int WMDelay = 200;
+static int WMDelay = 400;
+
+/*
+ * This much we wait between the tests.
+ */
+static int DelayBetweenTests = 5000;
 
 
 void Ft_LockScreenUI::init()
@@ -106,8 +111,8 @@ Ft_LockScreenUI::testEventEaterUIShowHide ()
         QVERIFY (m_EventEaterUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
 
-        m_XChecker.debug_dump_windows ();
-        QTest::qWait (500);
+        m_XChecker.debug_dump_windows (WindowID);
+        QTest::qWait (DelayBetweenTests);
         /*
          * Hiding the window again.
          */
@@ -152,8 +157,8 @@ Ft_LockScreenUI::testLockScreenUIShowHide ()
         WindowID = m_LockScreenUI->internalWinId();
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     
-        QTest::qWait (500);
-        m_XChecker.debug_dump_windows ();
+        QTest::qWait (DelayBetweenTests);
+        m_XChecker.debug_dump_windows (WindowID);
         /*
         * Hiding the window again.
         */
@@ -214,8 +219,8 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         QVERIFY (m_XChecker.check_window(MWindowID, XChecker::CheckIsInvisible));
         SYS_DEBUG ("*** lockScreenUI = 0x%lx", WindowID);
     
-        QTest::qWait (500);
-        m_XChecker.debug_dump_windows ();
+        QTest::qWait (DelayBetweenTests);
+        m_XChecker.debug_dump_windows (WindowID);
         /*
         * Hiding the window again.
         */
@@ -277,8 +282,8 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
         QVERIFY (m_EventEaterUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
 
-        m_XChecker.debug_dump_windows ();
-        QTest::qWait (500);
+        m_XChecker.debug_dump_windows (WindowID);
+        QTest::qWait (DelayBetweenTests);
         /*
          * Hiding the window again.
          */

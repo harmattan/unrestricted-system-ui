@@ -38,10 +38,17 @@
  */
 #undef SYS_DEBUG
 #ifdef DEBUG
-#  define SYS_DEBUG(...) SysDebug::sysPrintMsg (\
-        QtDebugMsg, \
-        __PRETTY_FUNCTION__, \
-        __VA_ARGS__)
+#  ifdef SHORT_DEBUG
+#    define SYS_DEBUG(...) SysDebug::sysPrintMsg (\
+          QtDebugMsg, \
+          "sysuid", \
+          __VA_ARGS__)
+#  else
+#    define SYS_DEBUG(...) SysDebug::sysPrintMsg (\
+          QtDebugMsg, \
+          __PRETTY_FUNCTION__, \
+          __VA_ARGS__)
+#  endif
 #else
 #  define SYS_DEBUG(...) { /* Nothing... */ }
 #endif
