@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #ifndef EVENTEATERWIDGET_STUB
 #define EVENTEATERWIDGET_STUB
 
@@ -28,7 +29,7 @@
 class EventEaterWidgetStub : public StubBase {
   public:
   virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void EventEaterWidgetStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -36,8 +37,6 @@ void EventEaterWidgetStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
   stubMethodEntered("mousePressEvent",params);
 }
-
-
 
 // 3. CREATE A STUB INSTANCE
 EventEaterWidgetStub gDefaultEventEaterWidgetStub;
@@ -48,6 +47,5 @@ EventEaterWidgetStub* gEventEaterWidgetStub = &gDefaultEventEaterWidgetStub;
 void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   gEventEaterWidgetStub->mousePressEvent(event);
 }
-
 
 #endif

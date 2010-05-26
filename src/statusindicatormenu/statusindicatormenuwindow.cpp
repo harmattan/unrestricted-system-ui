@@ -30,6 +30,8 @@
 #include "pluginlist.h"
 #include "notificationarea.h"
 #include "statusindicatormenuwindow.h"
+#include "mstatusbar.h"
+#include <MWidgetView>
 
 #include <X11/Xlib.h>
 
@@ -49,6 +51,29 @@ StatusIndicatorMenuSceneWindow::StatusIndicatorMenuSceneWindow(QGraphicsItem *pa
 void StatusIndicatorMenuSceneWindow::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     emit clicked(event->scenePos());
+}
+
+LayoutRequestListenerWidget::LayoutRequestListenerWidget(QGraphicsItem *parent) :
+    MWidgetController(parent)
+{
+}
+
+bool LayoutRequestListenerWidget::event(QEvent *event)
+{
+    bool returnValue = QGraphicsWidget::event(event);
+    if (event->type() == QEvent::LayoutRequest) {
+        emit positionOrSizeChanged();
+    }
+    return returnValue;
+}
+
+QVariant LayoutRequestListenerWidget::itemChange(GraphicsItemChange change, const QVariant & value)
+{
+    QVariant returnValue = QGraphicsWidget::itemChange(change, value);
+    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
+        emit positionOrSizeChanged();
+    }
+    return returnValue;
 }
 
 /*!
@@ -83,16 +108,54 @@ const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
     sceneWindow(new StatusIndicatorMenuSceneWindow),
+    statusBar(new MStatusBar),
     pannableViewport(new MPannableViewport),
     pannableLayout(new QGraphicsLinearLayout(Qt::Vertical)),
     notificationArea(new NotificationArea),
     closeButtonOverlay(new MOverlay)
 {
+    setTranslucentBackground(true);
     setWindowTitle("Status Indicator Menu");
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
     connect(sceneWindow.data(), SIGNAL(clicked(QPointF)), this, SLOT(hideIfPointBeyondMenu(QPointF)));
 
+    // Show status bar
+    sceneManager()->appearSceneWindowNow(statusBar.data());
+
+    // Set up a notification area
+    notificationArea->setVisible(false);
+    connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
+    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+
+    // Put all the stuff into the scene window layout
+    pannableViewport = createPannableArea();
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addItem(createTopRow());
+    layout->addItem(pannableViewport);
+    sceneWindow->setLayout(layout);
+    sceneWindow->setObjectName("StatusIndicatorMenuWindow");
+    sceneManager()->appearSceneWindowNow(sceneWindow.data());
+
+    // Create close button overlay
+    closeButtonOverlay = QSharedPointer<MOverlay>(createCloseButtonOverlay());
+
+    // Set the X window properties so that the window does not appear in the task bar
+    excludeFromTaskBar();
+}
+
+StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
+{
+    if(!notificationArea->isVisible()) {
+        // If the notification area is not in the layout destroy it manually
+        delete notificationArea;
+    }
+}
+
+QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
+{
     // Create an extension area for the top row plugins
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
@@ -114,60 +177,127 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     topRowLayout->addItem(settingsButton);
     topRowLayout->addStretch();
 
-    // Create a notification area
-    notificationArea->setVisible(false);
-    connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
-    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+    // Create a container widget for extension area and settings button layout
+    MWidgetController *topRowWidget = new MWidgetController;
+    topRowWidget->setView(new MWidgetView(topRowWidget));
+    topRowWidget->setObjectName("StatusIndicatorMenuExtensionAreaWidget");
+    topRowWidget->setLayout(topRowLayout);
 
-    // Create a container widget for the pannable area
-    QGraphicsWidget *pannableWidget = new QGraphicsWidget;
+    return topRowWidget;
+}
+
+MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
+{
+    // Create pannable area contents
+    pannableLayout = new QGraphicsLinearLayout(Qt::Vertical);
     pannableLayout->setContentsMargins(0, 0, 0, 0);
     pannableLayout->setSpacing(0);
     pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
+    pannableLayout->addItem(createCloseButtonRow());
+
+    // Create a container widget for the pannable area
+    MWidgetController *pannableWidget = new MWidgetController;
+    pannableWidget->setView(new MWidgetView(pannableWidget));
+    pannableWidget->setObjectName("StatusIndicatorMenuPannableWidget");
     pannableWidget->setLayout(pannableLayout);
 
     // Setup the pannable viewport
     pannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pannableViewport->setWidget(pannableWidget);
 
-    // Put all the stuff into the scene window layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-    layout->addItem(topRowLayout);
-    layout->addItem(pannableViewport);
-    sceneWindow->setLayout(layout);
-    sceneWindow->setObjectName("StatusIndicatorMenuWindow");
-    sceneManager()->appearSceneWindowNow(sceneWindow.data());
+    return pannableViewport;
+}
 
-    // Add an overlay that has the close button in it
-    MButton *closeButton = new MButton(closeButtonOverlay.data());
+QGraphicsWidget* StatusIndicatorMenuWindow::createCloseButtonRow()
+{
+    // Create a close button for the pannable area
+    MButton *closeButton = new MButton;
     closeButton->setViewType("icon");
     closeButton->setObjectName("StatusIndicatorMenuCloseButton");
     closeButton->setIconID("icon-m-framework-close");
     connect(closeButton, SIGNAL(clicked()), this, SLOT(hide()));
 
     // Add two overlay widgets that will not allow mouse events to pass through them next to the close button
-    layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     layout->addItem(new EventEaterWidget);
     layout->addItem(closeButton);
     layout->addItem(new EventEaterWidget);
 
-    closeButtonOverlay->setLayout(layout);
-    closeButtonOverlay->setObjectName("CloseButtonOverlay");
-    sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
+    // Create the area itself
+    LayoutRequestListenerWidget *closeButtonArea = new LayoutRequestListenerWidget;
+    closeButtonArea->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    closeButtonArea->setView(new MWidgetView(closeButtonArea));
+    closeButtonArea->setObjectName("CloseButtonArea");
+    closeButtonArea->setLayout(layout);
+    connect(closeButtonArea, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
 
-    // Set the X window properties so that the window does not appear in the task bar
-    excludeFromTaskBar();
+    return closeButtonArea;
 }
 
-StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
+MOverlay *StatusIndicatorMenuWindow::createCloseButtonOverlay()
 {
-    if(!notificationArea->isVisible()) {
-        // If the notification area is not in the layout destroy it manually
-        delete notificationArea;
+    // Create a close button
+    MButton *closeButton = new MButton;
+    closeButton->setViewType("icon");
+    closeButton->setObjectName("StatusIndicatorMenuCloseButton");
+    closeButton->setIconID("icon-m-framework-close");
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(hide()));
+
+    // Add two overlay widgets that will not allow mouse events to pass through them next to the close button
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addItem(new EventEaterWidget);
+    layout->addItem(closeButton);
+    layout->addItem(new EventEaterWidget);
+
+    // Create the overlay itself
+    MOverlay *closeButtonOverlay = new MOverlay;
+    closeButtonOverlay->setLayout(layout);
+    closeButtonOverlay->setObjectName("CloseButtonOverlay");
+    sceneManager()->appearSceneWindowNow(closeButtonOverlay);
+    sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
+
+    return closeButtonOverlay;
+}
+
+void StatusIndicatorMenuWindow::setPannabilityAndLayout()
+{
+    // Enable pannability if there is too much content to fit on the screen
+    if (pannableViewport->geometry().height() > pannableViewport->widget()->geometry().height()) {
+        pannableViewport->setEnabled(false);
+    } else {
+        pannableViewport->setEnabled(true);
+    }
+
+    // Appear or disappear the close button overlay based on close area position
+    QGraphicsWidget *widget = pannableViewport->widget();
+    qreal screenHeight = sceneManager()->visibleSceneSize().height();
+    qreal yPos = 0;
+
+    switch(sceneManager()->orientationAngle()) {
+    case M::Angle0:
+        yPos = widget->scenePos().y();
+        break;
+    case M::Angle90:
+        yPos = screenHeight - widget->scenePos().x();
+        break;
+    case M::Angle180:
+        yPos = screenHeight - widget->scenePos().y();
+        break;
+    case M::Angle270:
+        yPos = widget->scenePos().x();
+        break;
+    }
+
+    yPos += widget->geometry().height();
+
+    if ((yPos) < screenHeight) {
+        sceneManager()->disappearSceneWindowNow(closeButtonOverlay.data());
+    } else {
+        sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
     }
 }
 

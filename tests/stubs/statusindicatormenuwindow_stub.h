@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #ifndef STATUSINDICATORMENUWINDOW_STUB
 #define STATUSINDICATORMENUWINDOW_STUB
 
@@ -39,6 +40,7 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void launchControlPanelAndHide();
   virtual void excludeFromTaskBar();
   virtual void hideIfPointBeyondMenu(QPointF point);
+  virtual void setPannabilityAndLayout();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -95,7 +97,9 @@ void StatusIndicatorMenuWindowStub::hideIfPointBeyondMenu(QPointF point) {
   stubMethodEntered("hideIfPointBeyondMenu",params);
 }
 
-
+void StatusIndicatorMenuWindowStub::setPannabilityAndLayout() {
+  stubMethodEntered("setPannabilityAndLayout");
+}
 
 // 3. CREATE A STUB INSTANCE
 StatusIndicatorMenuWindowStub gDefaultStatusIndicatorMenuWindowStub;
@@ -151,5 +155,8 @@ void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point) {
   gStatusIndicatorMenuWindowStub->hideIfPointBeyondMenu(point);
 }
 
+void StatusIndicatorMenuWindow::setPannabilityAndLayout() {
+  gStatusIndicatorMenuWindowStub->setPannabilityAndLayout();
+}
 
 #endif

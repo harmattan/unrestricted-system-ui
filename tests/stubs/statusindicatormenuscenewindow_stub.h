@@ -42,8 +42,6 @@ void StatusIndicatorMenuSceneWindowStub::mousePressEvent(QGraphicsSceneMouseEven
   stubMethodEntered("mousePressEvent",params);
 }
 
-
-
 // 3. CREATE A STUB INSTANCE
 StatusIndicatorMenuSceneWindowStub gDefaultStatusIndicatorMenuSceneWindowStub;
 StatusIndicatorMenuSceneWindowStub* gStatusIndicatorMenuSceneWindowStub = &gDefaultStatusIndicatorMenuSceneWindowStub;
@@ -57,6 +55,5 @@ StatusIndicatorMenuSceneWindow::StatusIndicatorMenuSceneWindow(QGraphicsItem *pa
 void StatusIndicatorMenuSceneWindow::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   gStatusIndicatorMenuSceneWindowStub->mousePressEvent(event);
 }
-
 
 #endif

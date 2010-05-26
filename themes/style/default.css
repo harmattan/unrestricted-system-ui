@@ -7,7 +7,20 @@
 @const COLOR_ACTIVE_BACKGROUND: #CCFF33; /* activated item background */
 
 MSceneWindowStyle#StatusIndicatorMenuWindow {
+    /* Add top padding so that the status indicator menu window does not go under the status area */
+    padding-top: 28;
+}
+
+MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
     background-image: "duiapplicationpage-background";
+}
+
+MWidgetStyle#CloseButtonArea {
+   background-image: "duistatusmenuclose-background";
+}
+
+MWidgetStyle#StatusIndicatorMenuPannableWidget {
+    background-image: status-indicator-menu-background;
 }
 
 NotificationAreaStyle {

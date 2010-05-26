@@ -23,6 +23,7 @@
 #include <QGraphicsLinearLayout>
 #include "ut_pluginlist.h"
 #include "pluginlist.h"
+#include "layoutrequestlistenerwidget_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 #include "statusindicatormenuscenewindow_stub.h"
 

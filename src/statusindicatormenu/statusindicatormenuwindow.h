@@ -29,6 +29,9 @@ class QGraphicsSceneMouseEvent;
 class QGraphicsLinearLayout;
 class MPannableViewport;
 class NotificationArea;
+class MStatusBar;
+class StatusIndicatorMenuWindow;
+class MPannableViewport;
 
 /*!
   * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
@@ -69,6 +72,33 @@ signals:
      * \param scenePos the scene position of the click
      */
     void clicked(QPointF scenePos);
+};
+
+/*!
+  * A widget for listening to layout change requests
+  */
+class LayoutRequestListenerWidget : public MWidgetController
+{
+    Q_OBJECT
+public:
+    /*!
+     * Constructs a layout change request listener widget
+     *
+     * \param parent the parent QGraphicsItem
+     */
+    LayoutRequestListenerWidget(QGraphicsItem *parent = NULL);
+
+signals:
+    /*!
+     * Sent when the position or the size of the item changes
+     */
+    void positionOrSizeChanged();
+
+protected:
+    //! \reimp
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    virtual bool event(QEvent *event);
+    //! \reimp_end
 };
 
 /*!
@@ -144,6 +174,9 @@ private slots:
      */
     void hideIfPointBeyondMenu(QPointF point);
 
+    //! Set the pannability and layout based on the size and position of the pannable area
+    void setPannabilityAndLayout();
+
 private:
     /*!
      * Sets the X window properties for the window so that the window is not
@@ -157,6 +190,9 @@ private:
     //! The main scene window
     QSharedPointer<MSceneWindow> sceneWindow;
 
+    //! Status Bar
+    QSharedPointer<MStatusBar> statusBar;
+
     //! The pannable area viewport
     MPannableViewport *pannableViewport;
 
@@ -168,6 +204,18 @@ private:
 
     //! An overlay for the close button
     QSharedPointer<MOverlay> closeButtonOverlay;
+
+    //! Creates windows top row containing extension area and settings button
+    QGraphicsWidget *createTopRow();
+
+    //! Creates pannable area
+    MPannableViewport *createPannableArea();
+
+    //! Creates close button row
+    QGraphicsWidget *createCloseButtonRow();
+
+    //! Creates close button overlay
+    MOverlay *createCloseButtonOverlay();
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuWindow;

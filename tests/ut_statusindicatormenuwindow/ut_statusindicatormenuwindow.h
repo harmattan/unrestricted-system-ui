@@ -34,6 +34,7 @@ signals:
     void clicked();
     void settingsButtonClicked();
     void clicked(QPointF point);
+    void positionOrSizeChanged();
 
 private:
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
@@ -55,6 +56,8 @@ private slots:
     void testSettingsButtonClicked();
     void testNotificationAreaVisibility();
     void testHideIfPointBeyondMenu();
+    void testCloseButtonPosition();
+    void testSetPannability();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

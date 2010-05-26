@@ -27,6 +27,7 @@
 #include <MButton>
 #include <QGraphicsLinearLayout>
 #include "notificationarea_stub.h"
+#include <MPannableViewport>
 
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
@@ -57,6 +58,7 @@ void Ut_StatusIndicatorMenuWindow::init()
     mApplicationIfProxyLaunchCalled = false;
     connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(launchControlPanelAndHide()));
     connect(this, SIGNAL(clicked(QPointF)), statusIndicatorMenuWindow, SLOT(hideIfPointBeyondMenu(QPointF)));
+    connect(this, SIGNAL(positionOrSizeChanged()), statusIndicatorMenuWindow, SLOT(setPannabilityAndLayout()));
 }
 
 void Ut_StatusIndicatorMenuWindow::cleanup()
@@ -139,6 +141,27 @@ void Ut_StatusIndicatorMenuWindow::testHideIfPointBeyondMenu()
     QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
     emit clicked(QPointF(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height()));
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+}
+    void Ut_StatusIndicatorMenuWindow::testCloseButtonPosition()
+{
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0,0);
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), false);
+
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(statusIndicatorMenuWindow->geometry().width(),statusIndicatorMenuWindow->geometry().height());
+    QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), true);
+}
+
+void Ut_StatusIndicatorMenuWindow::testSetPannability()
+{
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
+    statusIndicatorMenuWindow->pannableViewport->widget()->setMinimumHeight(0);
+    emit positionOrSizeChanged();
+    QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), false);
+
+    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0,0,100,100));
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height());
+    emit positionOrSizeChanged();
+    QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)
