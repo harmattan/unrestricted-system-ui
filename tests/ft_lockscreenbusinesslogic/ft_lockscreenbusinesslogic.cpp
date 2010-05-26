@@ -323,5 +323,54 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     m_LockScreenBusinessLogic = NULL;
 }
 
+void 
+Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicMissedEvents ()
+{
+    bool missedEventsAreVisible; 
+
+    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
+    
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** toggleScreenLockUI (true) *********************");
+    SYS_DEBUG ("***************************************************");
+    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+    QTest::qWait (DelayBetweenTests);
+    QVERIFY (m_LockScreenBusinessLogic->lockUI->m_notificationArea != 0);
+
+    m_LockScreenBusinessLogic->updateMissedEvents (0, 0, 0, 0);
+    QTest::qWait (DelayBetweenTests);
+    missedEventsAreVisible = 
+        m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
+    QVERIFY (missedEventsAreVisible == false);
+    
+    m_LockScreenBusinessLogic->updateMissedEvents (1, 0, 0, 0);
+    QTest::qWait (DelayBetweenTests);
+    missedEventsAreVisible = 
+        m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
+    QTest::qWait (DelayBetweenTests);
+    QVERIFY (missedEventsAreVisible == true);
+    
+    m_LockScreenBusinessLogic->updateMissedEvents (2, 4, 0, 0);
+    QTest::qWait (DelayBetweenTests);
+    missedEventsAreVisible = 
+        m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
+    QTest::qWait (DelayBetweenTests);
+    QVERIFY (missedEventsAreVisible == true);
+    
+    m_LockScreenBusinessLogic->updateMissedEvents (2, 4, 5, 6);
+    QTest::qWait (DelayBetweenTests);
+    missedEventsAreVisible = 
+        m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
+    QTest::qWait (DelayBetweenTests);
+    QVERIFY (missedEventsAreVisible == true);
+    
+    m_LockScreenBusinessLogic->updateMissedEvents (0, 0, 0, 6);
+    QTest::qWait (DelayBetweenTests);
+    missedEventsAreVisible = 
+        m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
+    QTest::qWait (DelayBetweenTests);
+    QVERIFY (missedEventsAreVisible == true);
+}
+
 QTEST_APPLESS_MAIN(Ft_LockScreenBusinessLogic)
 

@@ -58,6 +58,7 @@ private slots:
 
     void testLockScreenBusinessLogicSignals ();
     void testLockScreenBusinessLogicTimer ();
+    void testLockScreenBusinessLogicUnlock ();
 
 private:
     EventSink                 m_EventSink;

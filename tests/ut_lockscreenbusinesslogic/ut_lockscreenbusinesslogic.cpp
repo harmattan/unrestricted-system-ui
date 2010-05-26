@@ -21,6 +21,7 @@
 
 #include "ut_lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogic.h"
+#include "lockscreenui.h"
 #include "sysuid_stub.h"
 
 #include <MApplication>
@@ -192,7 +193,7 @@ Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
     QVERIFY (connectSuccess);
 
     /*
-     * 
+     * When the screen is locked the timer should be started. 
      */
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** toggleEventEater (true) ***********************");
@@ -204,6 +205,9 @@ Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
     SYS_DEBUG ("came %d", m_EventSink.m_Timeouts);
     QVERIFY (m_EventSink.m_Timeouts >= 4);
 
+    /*
+     * When the screen is unlocked the timer should be stopped. 
+     */
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** toggleEventEater (false) ***********************");
     SYS_DEBUG ("***************************************************");
@@ -212,6 +216,50 @@ Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
     QTest::qWait (5000);
 
     QVERIFY (m_EventSink.m_Timeouts == 0);
+
+    delete m_LockScreenBusinessLogic;
+    m_LockScreenBusinessLogic = 0;
+}
+
+/*
+ * This function is testing if the lockscreenbusinesslogic actually connected to
+ * the unlocked() signal of the unlockui.
+ */
+void 
+Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicUnlock ()
+{
+    bool connectSuccess;
+
+    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
+    connectSuccess = connect (
+            m_LockScreenBusinessLogic, SIGNAL(screenIsLocked(bool)),
+            &m_EventSink, SLOT(screenIsLocked(bool)));
+    QVERIFY (connectSuccess);
+
+    /*
+     * First we lock the screen and check if it is really locked.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** toggleScreenLockUI (true) *********************");
+    SYS_DEBUG ("***************************************************");
+    m_EventSink.m_ScreenIsLockedCame = false;
+    m_EventSink.m_ScreenIsLocked = false;
+    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+
+    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
+    QVERIFY (m_EventSink.m_ScreenIsLocked == true);
+
+    /*
+     *
+     */
+    m_EventSink.m_ScreenIsLockedCame = false;
+    emit m_LockScreenBusinessLogic->lockUI->unlocked();
+
+    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
+    QVERIFY (m_EventSink.m_ScreenIsLocked == false);
+    
+    delete m_LockScreenBusinessLogic;
+    m_LockScreenBusinessLogic = 0;
 }
 
 

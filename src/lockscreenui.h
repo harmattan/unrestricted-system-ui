@@ -94,6 +94,8 @@ private:
 #ifdef UNIT_TEST
     friend class Ut_LockScreenUI;
     friend class Ft_LockScreenUI;
+    friend class Ut_LockScreenBusinessLogic;
+    friend class Ft_LockScreenBusinessLogic;
 #endif
 };
 
