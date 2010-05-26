@@ -2,254 +2,101 @@
 
 This page documents various aspects about the Status Indicator Menu.
 
-The status indicator menu loads a predefined set of plugins as described in
-Direct UI – Status Indicator System UI Specification (H00405111-EN). The
-plugins are displayed on top of each other and loaded from
-/usr/lib/meegotouch/statusindicatormenuplugins in the following order:
+The status indicator menu loads a predefined set of plugins implemented using
+application extensions. The set is defined in Direct UI – Status Indicator
+System UI Specification (H00405111-EN). The plugins are displayed on one row
+next to of each other and loaded from the following application extension
+.desktop files:
 
 <table>
 <tr>
 <th>Order</th>
 <th>Plugin</th>
-<th>Shared library file name</th>
+<th>Application extension .desktop file name</th>
 </tr>
 <tr>
 <td>1</td>
-<td>Profile setting</td>
-<td>libprofile.so</td>
+<td>Alarms</td>
+<td>statusindicatormenu-alarms.desktop</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Date & Time</td>
-<td>libdatetime.so</td>
+<td>Internet Connection</td>
+<td>statusindicatormenu-internetconnection.desktop</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Clock alarm</td>
-<td>libclockalarm.so</td>
+<td>Presence</td>
+<td>statusindicatormenu-presence.desktop</td>
 </tr>
 <tr>
 <td>4</td>
-<td>Connectivity (Offline mode, Internet connection, Bluetooth, Positioning and Phone network)</td>
-<td>libconnectivity.so</td>
-</tr>
-<tr>
-<td>5</td>
-<td>My presence</td>
-<td>libpresence.so</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Volume control</td>
-<td>libvolume.so</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Energy (battery)</td>
-<td>libbattery.so</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Accessories</td>
-<td>libaccessories.so</td>
-</tr>
-<tr>
-<td>9</td>
-<td>Call UI</td>
-<td>libcallui.so</td>
-</tr>
-<tr>
-<td>10</td>
-<td>Transfer UI</td>
-<td>libtransferui.so</td>
+<td>Profile</td>
+<td>statusindicatormenu-profile.desktop</td>
 </tr>
 </table>
 
-Each plugin is written as a shared library that contains a class that
-is exported as a Qt plugin as follows:
+Each plugin is written as an application extension that implements
+MStatusIndicatorMenuExtensionInterface as follows:
 
 <pre>
-class MyPluginClass : public QObject, public MStatusIndicatorMenuPluginInterface
+class MyExtension : public QObject, public MStatusIndicatorMenuExtensionInterface
 {
     Q_OBJECT
-    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
+    Q_INTERFACES(MStatusIndicatorMenuExtensionInterface MApplicationExtensionInterface)
 
 public:
-    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu);
-};
+    MyExtension(QObject *parent);
+    virtual ~MyExtension();
 
-Q_EXPORT_PLUGIN2(mypluginname, MyPluginClass)
-
-MWidget* MyPluginClass::constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu)
-{
-    return new MyPluginWidget(statusIndicatorMenu);
-}
-</pre>
-
-The class should implement MStatusIndicatorMenuPluginInterface which only
-contains one function, constructWidget(MStatusIndicatorMenuInterface &),
-which should return a pointer to a MWidget for the plugin. This MWidget
-is then inserted into the status indicator menu layout by the status indicator
-menu. The parameter to constructWidget() is an interface to the status
-indicator menu which allows the plugin to show the main application page of
-the status indicator menu and to hide the status indicator menu.
-
-To display a subpage the plugin widget should create a new MApplicationPage
-and make it appear() when necessary. The plugin widget should then call the
-given MStatusIndicatorMenuInterface's showStatusIndicatorMenu() to return
-back to the status indicator menu main view.
-
-Plugins register their views using the DUI view registration macros.
-The plugins load their CSS files (if any) using MTheme::loadCSS().
-The preferred location for the CSS files is
-/usr/share/themes/base/meegotouch/system-ui/style and the suggested CSS
-file name is the same as the shared library name without the lib prefix and
-the .so postfix.
-
-Here's an example implementation of the profile plugin.
-
-profileplugin.h
-
-<pre>
-#include <MStatusIndicatorMenuPluginInterface>
-#include <QObject>
-
-class ProfilePlugin : public QObject, public MStatusIndicatorMenuPluginInterface
-{
-    Q_OBJECT
-    Q_INTERFACES(MStatusIndicatorMenuPluginInterface)
-
-public:
-    virtual MWidget *constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu);
-};
-</pre>
-
-profileplugin.cpp
-
-<pre>
-#include "profileplugin.h"
-#include "profile.h"
-
-Q_EXPORT_PLUGIN2(profile, ProfilePlugin)
-
-MWidget* ProfilePlugin::constructWidget(MStatusIndicatorMenuInterface &statusIndicatorMenu)
-{
-    return new Profile(statusIndicatorMenu);
-}
-</pre>
-
-profile.h
-
-<pre>
-#include <MWidget>
-
-class MStatusIndicatorMenuInterface;
-class MApplicationPage;
-class MButton;
-
-// The Profile widget makes it possible to select the currently active profile.
-class Profile : public MWidget
-{
-    Q_OBJECT
-
-public:
-    Profile(MStatusIndicatorMenuInterface &statusIndicatorMenu, QGraphicsItem *parent = NULL);
-    virtual ~Profile();
-
-private slots:
-    // A slot for receiving information about button clicks.
-    void buttonClicked();
-    // A slot for receiving information about button clicks.
-    void buttonClicked(MButton *button);
+    // Methods derived from MApplicationExtensionInterface
+    virtual bool initialize(const QString &interface);
+    virtual QGraphicsWidget *widget();
+    virtual void setStatusIndicatorMenuInterface(MStatusIndicatorMenuInterface &menuInterface);
 
 private:
-    // Interface for controlling the status indicator menu
-    MStatusIndicatorMenuInterface &statusIndicatorMenu;
-    // Application page for the profile modification
-    MApplicationPage *profileModificationPage;
+    QGraphicsWidget *myWidget;
 };
-</pre>
 
-profile.cpp
-
-<pre>
-#include "profile.h"
-#include <MStatusIndicatorMenuPluginInterface>
-#include <MButton>
-#include <MButtonGroup>
-#include <MContainer>
-#include <MApplicationPage>
-#include <QGraphicsLinearLayout>
-
-Profile::Profile(QGraphicsItem *parent) :
-    MWidget(parent),
-    statusIndicatorMenu(statusIndicatorMenu),
-    profileModificationPage(new MApplicationPage)
+MyExtension::MyExtension(QObject *parent) : QObject(parent)
 {
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    setLayout(mainLayout);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-
-    // Create a container for the profiles
-    MContainer *container = new MContainer;
-    MWidget *widget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    widget->setLayout(layout);
-    container->setTitle("Profiles");
-    container->setCentralWidget(widget);
-    connect(container, SIGNAL(headerClicked()), this, SLOT(showProfileModificationPage()));
-    mainLayout->addItem(container);
-
-    // Create a button group for the profiles
-    MButtonGroup *buttonGroup = new MButtonGroup(widget);
-    buttonGroup->connect(buttonGroup, SIGNAL(buttonClicked(MButton *)), this, SLOT(buttonClicked(MButton *)));
-
-    // Place the buttons in the button group and in the layout
-    MButton *button;
-    button = new MButton("Ringing");
-    button->setCheckable(true);
-    button->setChecked(true);
-    layout->addItem(button);
-    buttonGroup->addButton(button);
-    button = new MButton("Silent");
-    button->setCheckable(true);
-    layout->addItem(button);
-    buttonGroup->addButton(button);
-    button = new MButton("Beep");
-    button->setCheckable(true);
-    layout->addItem(button);
-    buttonGroup->addButton(button);
-    button = new MButton("Loud");
-    button->setCheckable(true);
-    layout->addItem(button);
-    buttonGroup->addButton(button);
-
-    // Set up the profile modification page
-    profileModificationPage->setTitle("Profile");
-    profileModificationPage->setEscapeButtonMode(MEscapeButtonPanelModel::BackMode);
-    connect(profileModificationPage, SIGNAL(backButtonClicked()), this, SLOT(buttonClicked()));
 }
 
-Profile::~Profile()
+MyExtension::~MyExtension()
 {
-    delete profileModificationPage;
+    delete myWidget;
 }
 
-void Profile::showProfileModificationPage()
+bool MyExtension::initialize(const QString &)
 {
-    profileModificationPage->appear();
+    myWidget = new MyWidget;
+    return true;
 }
 
-void Profile::buttonClicked()
+QGraphicsWidget *MyExtension::widget()
 {
-    statusIndicatorMenu.showStatusIndicatorMenu();
+    return myWidget;
 }
 
-void Profile::buttonClicked(MButton *)
+void setStatusIndicatorMenuInterface(MStatusIndicatorMenuInterface &menuInterface)
 {
-    statusIndicatorMenu.hideStatusIndicatorMenu();
+    // ...
 }
 </pre>
+
+initialize(const QString &interface) should initialize the plugin.
+
+widget() should return a pointer to a GraphicsWidget for the plugin.
+This QGraphicsWidget is then inserted into the status indicator menu
+layout by the status indicator menu.
+
+setStatusIndicatorMenuInterface(MStatusIndicatorMenuInterface &menuInterface)
+lets the plugin know about an interface to the status indicator menu which
+allows the plugin to show and hide the status indicator menu using
+showStatusIndicatorMenu() and hideStatusIndicatorMenu().
+
+More information about application extension development is available
+in the libmeegotouch documentation. An example plugin is available in
+the system-ui source package.
 
 */
