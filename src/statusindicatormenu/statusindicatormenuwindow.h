@@ -24,12 +24,12 @@
 #include <MSceneWindow>
 #include <MOverlay>
 #include "mstatusindicatormenuextensioninterface.h"
+#include "mstatusbar.h"
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsLinearLayout;
 class MPannableViewport;
 class NotificationArea;
-class MStatusBar;
 class StatusIndicatorMenuWindow;
 class MPannableViewport;
 

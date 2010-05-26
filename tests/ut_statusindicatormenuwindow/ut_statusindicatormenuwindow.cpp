@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <QDebug>
 
 #include "ut_statusindicatormenuwindow.h"
 #include "statusindicatormenuwindow.h"

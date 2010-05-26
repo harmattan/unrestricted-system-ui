@@ -38,7 +38,6 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
   virtual void setNotificationCount(int notificationCount);
   virtual void launchControlPanelAndHide();
-  virtual void excludeFromTaskBar();
   virtual void hideIfPointBeyondMenu(QPointF point);
   virtual void setPannabilityAndLayout();
 }; 
@@ -85,10 +84,6 @@ void StatusIndicatorMenuWindowStub::setNotificationCount(int notificationCount) 
 
 void StatusIndicatorMenuWindowStub::launchControlPanelAndHide() {
   stubMethodEntered("launchControlPanelAndHide");
-}
-
-void StatusIndicatorMenuWindowStub::excludeFromTaskBar() {
-  stubMethodEntered("excludeFromTaskBar");
 }
 
 void StatusIndicatorMenuWindowStub::hideIfPointBeyondMenu(QPointF point) {
@@ -145,10 +140,6 @@ void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount) {
 
 void StatusIndicatorMenuWindow::launchControlPanelAndHide() {
   gStatusIndicatorMenuWindowStub->launchControlPanelAndHide();
-}
-
-void StatusIndicatorMenuWindow::excludeFromTaskBar() {
-  gStatusIndicatorMenuWindowStub->excludeFromTaskBar();
 }
 
 void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point) {
