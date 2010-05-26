@@ -34,6 +34,7 @@
 #define GCONF_BG_PORTRAIT \
     "/desktop/meego/background/portrait/picture_filename"
 
+static int normalDelay = 200;
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -86,6 +87,13 @@ Ut_LockScreenUI::cleanupTestCase()
     delete m_App;
 }
 
+/*
+ * The LockScreenWindow is a simple window that shows two sperate images, one
+ * for portrait and one for landscape. The images are set by using a pair of
+ * GConf keys and a wired in default. Running the test on a clean device the
+ * GConf items are probable empty, but the default image should be loaded with
+ * the right size.
+ */
 void 
 Ut_LockScreenUI::testLockScreenWindow ()
 {
@@ -121,17 +129,28 @@ Ut_LockScreenUI::testLockScreenWindow ()
 }
 
 void
-Ut_LockScreenUI::createLockScreenUI ()
+Ut_LockScreenUI::testLockScreenUI ()
 {
-    if (!m_LockScreenUI)
-        m_LockScreenUI = new LockScreenUI ();
+    Q_ASSERT (m_LockScreenUI == 0);
+    
+    /*
+     * When the lockscreenUI is created it just delays its realize function. We
+     * wait a small amount of time then we chack that the internal widgets are
+     * created. For this delayed realization the widget does not need to be
+     * shown, so the widget will be shown fast even at the first time.
+     */
+    m_LockScreenUI = new LockScreenUI;
+    QTest::qWait (normalDelay);
+
+    QVERIFY (m_LockScreenUI->m_Realized);
+    QVERIFY (m_LockScreenUI->m_policy != NULL);
+    QVERIFY (m_LockScreenUI->m_LockLiftArea != NULL);
+    QVERIFY (m_LockScreenUI->m_LockLandArea != NULL);
+    QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+
+    delete m_LockScreenUI;
+    m_LockScreenUI = 0;
 }
 
-void
-Ut_LockScreenUI::createEventEaterUI ()
-{
-    if (!m_EventEaterUI)
-        m_EventEaterUI = new EventEaterUI ();
-}
 
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)

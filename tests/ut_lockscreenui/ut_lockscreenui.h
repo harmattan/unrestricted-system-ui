@@ -41,10 +41,7 @@ private slots:
     void cleanupTestCase();
 
     void testLockScreenWindow ();
-    
-private:
-    void createLockScreenUI ();
-    void createEventEaterUI ();
+    void testLockScreenUI ();
 
 private:
     XChecker             m_XChecker;
