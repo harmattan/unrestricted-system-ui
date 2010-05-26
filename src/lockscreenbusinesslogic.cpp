@@ -125,7 +125,7 @@ LockScreenBusinessLogic::toggleEventEater (
         bool toggle)
 {
     if (toggle)
-        eaterUI->show ();
+        eaterUI->showFullScreen ();
     else
         eaterUI->hide ();
 #if 0

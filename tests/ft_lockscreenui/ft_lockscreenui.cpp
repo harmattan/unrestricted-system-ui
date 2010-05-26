@@ -178,7 +178,6 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
     Window WindowID;
     Window MWindowID;
 
-    createLockScreenUI ();
 
     SYS_DEBUG ("Creating main window.");
     m_MainWindow = new MApplicationWindow;
@@ -192,6 +191,8 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
     MWindowID = m_MainWindow->internalWinId ();
     
     SYS_DEBUG ("*** MWindowID    = 0x%lx", MWindowID);
+    
+    createLockScreenUI ();
 
     for (int n = 0; n < 2; ++n) {
         /*
@@ -228,6 +229,9 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
         QVERIFY (m_XChecker.check_window(MWindowID, XChecker::CheckIsInvisible));
     }
+
+    delete m_MainWindow;
+    m_MainWindow = 0;
 }
 
 /*!
@@ -239,6 +243,19 @@ void
 Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
 {
     Window WindowID;
+    Window MWindowID;
+
+    SYS_DEBUG ("Creating main window.");
+    m_MainWindow = new MApplicationWindow;
+
+    Qt::WindowFlags flags = 0;
+    flags |= Qt::FramelessWindowHint;
+    flags |= Qt::CustomizeWindowHint;
+    flags |= Qt::WindowStaysOnTopHint;
+    m_MainWindow->setWindowOpacity (0.0);
+    m_MainWindow->setWindowFlags (flags);
+    MWindowID = m_MainWindow->internalWinId ();
+    SYS_DEBUG ("*** MWindowID    = 0x%lx", MWindowID);
 
     createEventEaterUI ();
 
@@ -275,6 +292,9 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
         QVERIFY (!m_EventEaterUI->isVisible());
         QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
     }
+
+    delete m_MainWindow;
+    m_MainWindow = 0;
 }
 
 void

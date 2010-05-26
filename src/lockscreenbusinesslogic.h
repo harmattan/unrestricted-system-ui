@@ -62,6 +62,11 @@ private:
     LockScreenUI     *lockUI;
     EventEaterUI     *eaterUI;
     QTimer            timer;
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenBusinessLogic;
+    friend class Ft_LockScreenBusinessLogic;
+#endif
+
 };
 
 #endif // LOCKSCREENBUSINESSLOGIC_H
