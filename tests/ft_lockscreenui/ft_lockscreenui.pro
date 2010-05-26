@@ -13,12 +13,7 @@ SOURCES += ft_lockscreenui.cpp \
     $$SRC_PREFIX/unlockwidgets.cpp \
     $$SRC_PREFIX/lockscreenui.cpp  \
     $$STUB_PREFIX/stubbase.cpp \
-    $$SRC_PREFIX/unlocknotificationsink.cpp \
-    $$SRC_PREFIX/notifications/notificationsink.cpp \
-    $$SRC_PREFIX/notifications/notification.cpp \
-    $$SRC_PREFIX/notifications/notificationgroup.cpp \
-    $$SRC_PREFIX/notifications/notificationparameter.cpp \
-    $$SRC_PREFIX/notifications/notificationparameters.cpp
+    $$SRC_PREFIX/unlocknotifications.cpp
 
 HEADERS += ft_lockscreenui.h \
     xchecker.h \
@@ -26,13 +21,7 @@ HEADERS += ft_lockscreenui.h \
     $$SRC_PREFIX/unlockwidgets.h \
     $$SRC_PREFIX/lockscreenui.h \
     $$SRC_PREFIX/sysuid.h \
-    $$SRC_PREFIX/unlocknotificationsink.h \
-    $$SRC_PREFIX/notifications/notificationsink.h \
-    $$SRC_PREFIX/notifications/notification.h \
-    $$SRC_PREFIX/notifications/notificationgroup.h \
-    $$SRC_PREFIX/notifications/notificationparameter.h \
-    $$SRC_PREFIX/notifications/notificationparameters.h
-
+    $$SRC_PREFIX/unlocknotifications.h
 
 include(../common_bot.pri)
 

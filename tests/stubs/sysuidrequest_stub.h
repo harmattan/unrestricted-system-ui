@@ -31,6 +31,7 @@ class SysUidRequestStub : public StubBase {
   virtual QString dbusService();
   virtual QString dbusPath();
   virtual void dbusError(QDBusConnection &connection, bool abortProgram);
+  virtual LockScreenBusinessLogic *getLockScreenLogic();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -45,6 +46,12 @@ QString SysUidRequestStub::dbusService() {
 QString SysUidRequestStub::dbusPath() {
   stubMethodEntered("dbusPath");
   return stubReturnValue<QString>("dbusPath");
+}
+
+LockScreenBusinessLogic *SysUidRequestStub::getLockScreenLogic()
+{
+  stubMethodEntered("getLockScreenLogic");
+  return 0;
 }
 
 void SysUidRequestStub::dbusError(QDBusConnection &connection, bool abortProgram) {
@@ -78,5 +85,9 @@ void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram) {
   gSysUidRequestStub->dbusError(connection, abortProgram);
 }
 
+LockScreenBusinessLogic *SysUidRequest::getLockScreenLogic()
+{
+  return gSysUidRequestStub->getLockScreenLogic();
+}
 
 #endif
