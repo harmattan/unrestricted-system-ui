@@ -71,6 +71,10 @@ signals:
 
 public slots:
     void updateDateTime ();
+    void updateMissedEvents (int emails,
+                             int messages,
+                             int calls,
+                             int im);
 
 protected:
     void createContent ();
@@ -78,10 +82,6 @@ protected:
 private slots:
     void realize ();
     void sliderUnlocked ();
-    void updateMissedEvents (int emails,
-                             int messages,
-                             int calls,
-                             int im);
 
 private:
     bool                 m_Realized;

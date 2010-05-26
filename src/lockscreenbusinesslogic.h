@@ -38,6 +38,10 @@ public:
 public slots:
     void toggleScreenLockUI (bool toggle);
     void toggleEventEater   (bool toggle);
+    void updateMissedEvents (int emails,
+                             int messages,
+                             int calls,
+                             int im);
 
 private slots:
     void unlockScreen();
@@ -45,11 +49,14 @@ private slots:
 signals:
     void updateTime ();
     void unlockConfirmed ();
+    void screenIsLocked (bool locked);
 
 private: //methods
     void mayStartTimer();
     void stopTimer();
+#if 0
     void hidefromTaskBar();
+#endif
 
 private: 
     LockScreenUI     *lockUI;

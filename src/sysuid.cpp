@@ -34,7 +34,6 @@
 #include "batterybusinesslogic.h"
 #include "batterybusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
-#include "lockscreenbusinesslogicadaptor.h"
 #include "shutdownbusinesslogic.h"
 #include "statusarearenderer.h"
 #include "notificationmanager.h"
@@ -129,7 +128,7 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent),
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
              m_unlockNotificationSink, SLOT (addNotification (const Notification &)));
     connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
-              m_unlockNotificationSink, SLOT (removeNotification (uint)));
+             m_unlockNotificationSink, SLOT (removeNotification (uint)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
@@ -145,13 +144,25 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent),
      * The screen locking is implemented in this separate class, because it is
      * bound to the system bus (MCE wants to contact us on the system bus).
      */
-    new SysUidRequest;
+    m_sysuidRequest = new SysUidRequest;
+
+    // Connect the unlock-screen notification sink to LockScreenBusinessLogic
+    connect (m_unlockNotificationSink,
+             SIGNAL (updateNotificationsCount (int, int, int, int)),
+             m_sysuidRequest->getLockScreenLogic (),
+             SLOT (updateMissedEvents (int, int, int, int)));
+
+    connect (m_sysuidRequest->getLockScreenLogic (),
+             SIGNAL (screenIsLocked (bool)),
+             m_unlockNotificationSink,
+             SLOT (setLockedState (bool)));
 }
 
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
     delete m_applicationWindow;
+    delete m_sysuidRequest;
 }
 
 Sysuid* Sysuid::sysuid ()

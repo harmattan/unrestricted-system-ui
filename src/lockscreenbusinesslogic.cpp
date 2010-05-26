@@ -28,8 +28,6 @@
 
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
-#include "unlocknotificationsink.h"
-#include "sysuid.h"
 
 #define DEBUG
 #include "debug.h"
@@ -53,8 +51,10 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
 
+#if 0
     // Hide from taskbar at the beginning
     hidefromTaskBar ();
+#endif
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -117,7 +117,7 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         stopTimer ();
     }
 #endif
-    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
+    emit screenIsLocked (toggle);
 }
 
 void
@@ -161,7 +161,7 @@ LockScreenBusinessLogic::toggleEventEater (
     }
 #endif
     // Enable the unlock notification sink also for dimmed state:
-    Sysuid::sysuid ()->unlockNotificationSink ().setLockedState (toggle);
+    emit screenIsLocked (toggle);
 }
 
 void
@@ -185,6 +185,12 @@ LockScreenBusinessLogic::stopTimer ()
     timer.stop ();
 }
 
+#if 0
+/*
+ * According to MeegoTouch guy there is no need for this,
+ * because eg.: we aren't really using a real window for
+ * event-eater window...
+ */
 void
 LockScreenBusinessLogic::hidefromTaskBar ()
 {
@@ -227,5 +233,17 @@ LockScreenBusinessLogic::hidefromTaskBar ()
                      atoms.count ());
 
     XFlush (display);
+}
+#endif
+
+void
+LockScreenBusinessLogic::updateMissedEvents (
+    int emails,
+    int messages,
+    int calls,
+    int im)
+{
+    static_cast<LockScreenUI*> (lockUI)->updateMissedEvents (
+                                        emails, messages, calls, im);
 }
 

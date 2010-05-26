@@ -38,6 +38,7 @@ class SysUidRequest : public QObject
 
 public:
     SysUidRequest ();
+    LockScreenBusinessLogic * getLockScreenLogic ();
 
 private:
     QString dbusService ();

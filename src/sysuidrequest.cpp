@@ -87,3 +87,9 @@ SysUidRequest::dbusPath ()
     return QString ("/com/nokia/system_ui/request");
 }
 
+LockScreenBusinessLogic *
+SysUidRequest::getLockScreenLogic ()
+{
+    return m_LockScreenLogic;
+}
+

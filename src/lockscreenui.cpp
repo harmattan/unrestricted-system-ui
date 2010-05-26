@@ -190,21 +190,21 @@ LockScreenUI::realize ()
      */
     layout = new MLayout;
     m_policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
-#if 0
+
+    /*
+     * The topmost part of the lock-screen ui
+     * (this one is optional, based on missed events count)
+     * see: updateMissedEvents
+     */
     m_notificationArea = new UnlockNotifications;
     m_notificationArea->setObjectName ("lockscreenNotifications");
 
     m_notificationArea->setVisible (false);
     m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
                                        QSizePolicy::Minimum);
-    // Connect to notification sink (which is only enabled on locked state...)
-    connect (&Sysuid::sysuid ()->unlockNotificationSink (),
-             SIGNAL (updateNotificationsCount (int, int, int, int)),
-             this,
-             SLOT (updateMissedEvents (int, int, int, int)));
-#endif
     /*
-     *
+     * The upper part of the lock-screen ui, this shows the
+     * big lock icon at right side, and the date/time at left side
      */
     m_LockLiftArea = new UnlockHeader;
     m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
@@ -212,7 +212,7 @@ LockScreenUI::realize ()
                                    QSizePolicy::Minimum);
     m_policy->addItem (m_LockLiftArea);
     /*
-     *
+     * And the big drag and drop area
      */
     m_LockLandArea = new UnlockArea;
     m_LockLandArea->setObjectName ("lockscreenUnlockArea");
@@ -260,7 +260,6 @@ LockScreenUI::updateMissedEvents (int emails,
                                   int im)
 {
     SYS_DEBUG ("");
-#if 0
     if (m_notificationArea != 0)
     {
         static_cast<UnlockNotifications *> (m_notificationArea)-> 
@@ -284,7 +283,6 @@ LockScreenUI::updateMissedEvents (int emails,
             m_policy->insertItem (0, m_notificationArea);
         }
     }
-#endif
 }
 
 EventEaterUI::EventEaterUI ()

@@ -10,6 +10,8 @@ class UnlockNotificationSink : public NotificationSink
 
 public:
     UnlockNotificationSink ();
+
+public slots:
     void setLockedState (bool islocked);
 
 signals:

@@ -8,7 +8,6 @@ class QPixmap;
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
-class UnlockNotificationSink;
 
 class UnlockNotifications : public MWidget
 {
