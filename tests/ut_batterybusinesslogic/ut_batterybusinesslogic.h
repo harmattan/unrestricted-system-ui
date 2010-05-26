@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino=" (0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -28,6 +30,28 @@
 #include "displaystatestub.h"
 #include "ledstub.h"
 
+class SignalSink : public QObject
+{
+    Q_OBJECT
+public:
+    SignalSink ();
+    void reset ();
+    void print ();
+
+public slots:
+    void batteryCharging (int animationLevel);
+    void batteryNotCharging ();
+    void batteryBarValueChanged (int barValue);
+    
+public:
+    bool    m_BatteryChargingCame;
+    bool    m_BatteryNotChargingCame;
+    bool    m_BatteryBarValueCame;
+
+    int     m_AnimationRate;
+    int     m_BarValue;
+};
+
 class Ut_BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
@@ -38,13 +62,16 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testBatteryChargingSignal ();
+    void testBatteryBarValueChangedSignal ();
     void testSetPSMThreshold();
     void testTogglePSMAuto();
     void testBatteryBarValue();
 
 private:
-    SystemUIGConf *systemUIGConf;
-    BatteryBusinessLogic* m_subject;
+    SignalSink             m_SignalSink;
+    SystemUIGConf         *systemUIGConf;
+    BatteryBusinessLogic*  m_subject;
 };
 
 #endif

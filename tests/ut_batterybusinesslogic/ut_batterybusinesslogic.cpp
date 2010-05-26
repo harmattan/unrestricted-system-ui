@@ -26,6 +26,71 @@
 
 #include <QVariant>
 
+#define DEBUG
+#include "../../src/debug.h"
+
+/******************************************************************************
+ * SignalSink implementation.
+ */
+SignalSink::SignalSink() 
+{
+    reset ();
+}
+
+void
+SignalSink::reset()
+{
+    m_BatteryChargingCame = false;
+    m_BatteryNotChargingCame = false;
+    m_AnimationRate = -1;
+
+    m_BatteryBarValueCame = false;
+    m_BarValue = -1;
+}
+
+void
+SignalSink::print() 
+{
+    SYS_DEBUG ("*** m_BatteryChargingCame    = %s", 
+            SYS_BOOL(m_BatteryChargingCame));
+    SYS_DEBUG ("*** m_BatteryNotChargingCame = %s", 
+            SYS_BOOL(m_BatteryNotChargingCame));
+    SYS_DEBUG ("*** m_AnimationRate          = %d",
+            m_AnimationRate);
+
+    SYS_DEBUG ("*** m_BatteryBarValueCame    = %s",
+            SYS_BOOL(m_BatteryBarValueCame));
+    SYS_DEBUG ("*** m_BarValue               = %d",
+            m_BarValue);
+}
+
+void 
+SignalSink::batteryCharging (
+        int animationLevel)
+{
+    SYS_DEBUG ("*** animationLevel = %d", animationLevel);
+    m_BatteryChargingCame = true;
+    m_AnimationRate = animationLevel;
+}
+
+void
+SignalSink::batteryNotCharging ()
+{
+    SYS_DEBUG ("");
+    m_BatteryNotChargingCame = true;
+}
+
+void
+SignalSink::batteryBarValueChanged (
+        int barValue)
+{
+    m_BatteryBarValueCame = true;
+    m_BarValue = barValue;
+}
+
+/******************************************************************************
+ * Ut_BatteryBusinessLogic implementation.
+ */
 void Ut_BatteryBusinessLogic::init()
 {
     systemUIGConf = new SystemUIGConf();
@@ -48,12 +113,75 @@ void Ut_BatteryBusinessLogic::initTestCase()
     app = new MApplication(argc, &app_name);
 }
 
-void Ut_BatteryBusinessLogic::cleanupTestCase()
+void 
+Ut_BatteryBusinessLogic::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_BatteryBusinessLogic::testSetPSMThreshold()
+/*!
+ * Asks the battery applet for the battery status, checks one of the 
+ * batteryCharging(int) and batteryNotCharging() signals arrive.
+ */
+void 
+Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
+{
+    bool connectSuccess;
+
+    /*
+     * We connect to the relevant signals and check if the signals are there.
+     */
+    connectSuccess = connect (
+            m_subject, SIGNAL(batteryCharging(int)),
+            &m_SignalSink, SLOT(batteryCharging(int)));
+    QVERIFY (connectSuccess);
+    
+    connectSuccess = connect (
+            m_subject, SIGNAL(batteryNotCharging()),
+            &m_SignalSink, SLOT(batteryNotCharging()));
+    QVERIFY (connectSuccess);
+
+    SYS_DEBUG ("*************************************************");
+    SYS_DEBUG ("*** calling batteryStatus() *********************");
+    SYS_DEBUG ("*************************************************");
+    m_SignalSink.reset();
+    m_subject->batteryStatus ();
+    m_SignalSink.print();
+
+    // Battery can not be charging and not charging in the same time.
+    QVERIFY (!(m_SignalSink.m_BatteryChargingCame && 
+                m_SignalSink.m_BatteryNotChargingCame));
+    // But it has to do somethhing! 
+    QVERIFY (!(!m_SignalSink.m_BatteryChargingCame && 
+                !m_SignalSink.m_BatteryNotChargingCame));
+}
+
+void 
+Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
+{
+    bool connectSuccess;
+
+    /*
+     * We connect to the relevant signals and check if the signals are there.
+     */
+    connectSuccess = connect (
+            m_subject, SIGNAL(batteryBarValueChanged(int)),
+            &m_SignalSink, SLOT(batteryBarValueChanged(int)));
+    QVERIFY (connectSuccess);
+
+    /*
+     * Let's try on 3%...
+     */
+    m_SignalSink.reset();
+    m_subject->batteryEnergyLevelChanged (3);
+    m_SignalSink.print();
+
+    QVERIFY (m_SignalSink.m_BatteryBarValueCame);
+    QVERIFY (m_SignalSink.m_BarValue == 1);
+}
+
+void 
+Ut_BatteryBusinessLogic::testSetPSMThreshold()
 {
     // set the battery level to 15%
     m_subject->m_Battery->setBatteryEnergyLevel (14);
