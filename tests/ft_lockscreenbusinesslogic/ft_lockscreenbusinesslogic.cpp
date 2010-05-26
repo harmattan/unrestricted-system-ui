@@ -41,7 +41,7 @@ static int WMDelay = 400;
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 5000;
+static int DelayBetweenTests = 1000;
 
 void 
 Ft_LockScreenBusinessLogic::init()
