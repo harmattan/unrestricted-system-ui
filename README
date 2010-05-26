@@ -7,6 +7,7 @@ System User Interface
    Miikka Kulmala
    Jan Lapinkataja
    Telle-Tiia Pitkanen
+
 current authors (/maintainers):
    Laszlo Pere
    David Kedves
@@ -25,7 +26,6 @@ current authors (/maintainers):
 
 Release
 -------
-
  sb2 -e dpkg-buildpackage -rfakeroot -b
  # Do these in master branch:
  git tag system-ui-VERSION
