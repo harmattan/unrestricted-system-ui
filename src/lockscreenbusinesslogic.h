@@ -54,9 +54,6 @@ signals:
 private: //methods
     void mayStartTimer();
     void stopTimer();
-#if 0
-    void hidefromTaskBar();
-#endif
 
 private: 
     LockScreenUI     *lockUI;
