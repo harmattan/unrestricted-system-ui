@@ -1,5 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_lockscreenui.disabled
+TARGET = ut_lockscreenui
 
 SRC_PREFIX = ../../src
 STUB_PREFIX = ../stubs

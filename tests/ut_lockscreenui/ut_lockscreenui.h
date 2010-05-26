@@ -40,10 +40,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testEventEaterUIShowHide ();
-    void testLockScreenUIShowHide ();
-    void testLockScreenUIShowHideWithMainWindow ();
-    void testEventEaterUIShowHideWithMainWindow ();
+    void testLockScreenWindow ();
     
 private:
     void createLockScreenUI ();

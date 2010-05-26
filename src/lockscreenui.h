@@ -52,6 +52,10 @@ private:
     MGConfItem      *m_confBgPortrait;
     QPixmap          m_bgLandscape;
     QPixmap          m_bgPortrait;
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenUI;
+    friend class Ft_LockScreenUI;
+#endif
 };
 
 class LockScreenUI : public MWindow
