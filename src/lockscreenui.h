@@ -89,6 +89,7 @@ private:
     MWidget         *m_LockLandArea;
 #ifdef UNIT_TEST
     friend class Ut_LockScreenUI;
+    friend class Ft_LockScreenUI;
 #endif
 };
 

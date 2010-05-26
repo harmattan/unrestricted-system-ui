@@ -1,2 +1,3 @@
 usr/share/system-ui-tests/tests.xml
 usr/lib/system-ui-tests/ut_*
+usr/lib/system-ui-tests/ft_*
