@@ -38,7 +38,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -289,22 +289,13 @@ LockScreenUI::updateMissedEvents (int emails,
 
 EventEaterUI::EventEaterUI ()
 {
-    //setPannable (false);
-    // let's hide home button
-    //setComponentsDisplayMode (MApplicationPage::AllComponents,
-    //                          MApplicationPageModel::Hide);
-    setContentsMargins (0., 0., 0., 0.);
-    //setOpacity (0.0);
+    SYS_DEBUG ("");
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 void
-EventEaterUI::createContent ()
-{
-
-}
-
-void
-EventEaterUI::mousePressEvent (QGraphicsSceneMouseEvent *event)
+EventEaterUI::mousePressEvent (
+        QMouseEvent *event)
 {
     SYS_DEBUG ("");
 
@@ -313,7 +304,8 @@ EventEaterUI::mousePressEvent (QGraphicsSceneMouseEvent *event)
 }
 
 void
-EventEaterUI::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
+EventEaterUI::mouseReleaseEvent (
+        QMouseEvent *event)
 {
     SYS_DEBUG ("");
 

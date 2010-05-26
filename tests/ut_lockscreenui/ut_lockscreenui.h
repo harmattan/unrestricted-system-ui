@@ -28,6 +28,7 @@
 class MApplication;
 class MApplicationWindow;
 class LockScreenUI;
+class EventEaterUI;
 
 class Ut_LockScreenUI : public QObject
 {
@@ -39,14 +40,19 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testEventEaterUIShowHide ();
     void testLockScreenUIShowHide ();
     void testLockScreenUIShowHideWithMainWindow ();
+
 private:
     void createLockScreenUI ();
+    void createEventEaterUI ();
 
+private:
     XChecker             m_XChecker;
     MApplicationWindow  *m_MainWindow;
     LockScreenUI        *m_LockScreenUI;
+    EventEaterUI        *m_EventEaterUI;
     MApplication        *m_App;
 };
 

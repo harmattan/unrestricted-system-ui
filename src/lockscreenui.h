@@ -92,7 +92,7 @@ private:
 #endif
 };
 
-class EventEaterUI : public MWindow
+class EventEaterUI : public QWidget
 {
     Q_OBJECT
 
@@ -100,11 +100,10 @@ public:
     EventEaterUI ();
 
 protected:
-    void createContent ();
-
-protected:
     void mousePressEvent (QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
+    virtual void mousePressEvent (QMouseEvent *event);
+    virtual void mouseReleaseEvent (QMouseEvent *event);
 
 signals:
     void OneInput ();
