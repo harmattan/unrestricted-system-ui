@@ -82,17 +82,12 @@ Ft_ShutdownUI::initTestCase()
 void 
 Ft_ShutdownUI::cleanupTestCase()
 {
-    if (m_ShutDownUI) {
-        SYS_DEBUG ("deleting m_ShutDownUI");
+    if (m_ShutDownUI) 
         delete m_ShutDownUI;
-    }
 
-    if (m_MainWindow) {
-        SYS_DEBUG ("deleting m_MainWindow");
+    if (m_MainWindow) 
         delete m_MainWindow; 
-    }
 
-    SYS_DEBUG ("deleting m_App");
     delete m_App;
 }
 
@@ -110,7 +105,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     m_ShutDownUI->showWindow (
             "ft_shutdownUI functional test",
             "testShutdownUIShowHide() function",
-            500);
+            2000);
     QTest::qWait (WMDelay);
 
     WindowID = m_ShutDownUI->internalWinId();

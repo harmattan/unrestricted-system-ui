@@ -100,7 +100,7 @@ ShutdownUI::realize ()
 
     m_logo = new MImageWidget ("nokia_logo");
     m_logo->setGeometry (QRectF (0., 0., 864., 480.));
-
+    m_logo->hide ();
 
     QGraphicsLinearLayout *layout
         = new QGraphicsLinearLayout (Qt::Vertical);
@@ -140,7 +140,11 @@ static const char * const ids [] =
 /*!
  * \param text1 The text of the primary message line
  * \param text2 The text of the secondary message line
- * \param 
+ * \param timeout After this timeout we will hide the texts and show the logo
+ *
+ * Shows a full screen window with two lines of text, then waits for the
+ * specified amount of time and will hide the text lines and show an image.
+ * After the image image shown for some time will dimm the screen.
  */
 void
 ShutdownUI::showWindow (
@@ -152,6 +156,22 @@ ShutdownUI::showWindow (
 
     if (!m_realized)
         realize ();
+    
+    /*
+     * We set the labels to show the text strings that we got.
+     */
+    if (! (text1.isEmpty () && text2.isEmpty ())) {
+        if (text1.startsWith ("qtn"))
+            m_text1->setText (qtTrId (text1.toLatin1 ().constData ()));
+        else
+            m_text1->setText (text1);
+
+        if (text2.startsWith ("qtn"))
+            m_text2->setText (qtTrId (text2.toLatin1 ().constData ()));
+        else
+            m_text2->setText (text2);
+    }
+
 
     // Stop the previous timer...
     m_timer->stop ();
@@ -166,19 +186,6 @@ ShutdownUI::showWindow (
     // Turn on
     display.set (Maemo::QmDisplayState::On);
 
-    if (! (text1.isEmpty () && text2.isEmpty ()))
-    {
-        if (text1.startsWith ("qtn"))
-            m_text1->setText (qtTrId (text1.toLatin1 ().constData ()));
-        else
-            m_text1->setText (text1);
-
-        if (text2.startsWith ("qtn"))
-            m_text2->setText (qtTrId (text2.toLatin1 ().constData ()));
-        else
-            m_text2->setText (text2);
-    }
-
     m_feedback->play ();
 
     // Set the interval and start the timer...
@@ -192,10 +199,14 @@ ShutdownUI::showLogo ()
     SYS_DEBUG ("");
     m_timer->stop ();
 
+    /*
+     * We hide the labels and show the image.
+     */
     m_text1->hide ();
     m_text2->hide ();
-    
     m_logo->show ();
+    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
+
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
 
