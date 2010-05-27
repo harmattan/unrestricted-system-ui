@@ -42,7 +42,8 @@ private slots:
     void testLockScreenBusinessLogic ();
     void testLockScreenBusinessLogicWithMainWindow ();
     void testLockScreenBusinessLogicMissedEvents ();
-    
+    void testLockScreenBusinessLogicWithLocking ();
+
 private:
     XChecker                   m_XChecker;
     MApplicationWindow        *m_MainWindow;

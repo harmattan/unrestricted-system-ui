@@ -29,6 +29,10 @@
 #include <MSceneManager>
 #include <MTheme>
 
+#include <qmlocks.h>
+
+using namespace Maemo;
+
 #define DEBUG
 #include "../../src/debug.h"
 
@@ -370,6 +374,94 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicMissedEvents ()
         m_LockScreenBusinessLogic->lockUI->m_notificationArea->isVisible();
     QTest::qWait (DelayBetweenTests);
     QVERIFY (missedEventsAreVisible == true);
+}
+
+/*!
+ * This test will try to emulate the situation when we lock the screen (touch
+ * screen lock becomes black) show the lockscreenui and then we turn on the
+ * touch screen again. 
+ */
+void 
+Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
+{
+    QmLocks locks;
+    bool    lockingSuccess, unlockingSuccess;
+    Window  LockScreenUIWindowID;
+    Window  EventEaterWindowID;
+
+    /*
+     * Locking the screen first.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Locking the screen ****************************");
+    SYS_DEBUG ("***************************************************");
+    lockingSuccess = locks.setState (QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    #ifndef __i386__
+    QVERIFY (lockingSuccess);
+    #endif
+    QTest::qWait (DelayBetweenTests);
+
+    /*
+     *
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** calling toggleScreenLockUI (true) **************");
+    SYS_DEBUG ("***************************************************");
+    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+    QTest::qWait (WMDelay);
+
+    /*
+     * Then unlocking the screen again so the lockscreenUI will be visible.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Unlocking the screen **************************");
+    SYS_DEBUG ("***************************************************");
+    unlockingSuccess = locks.setState (
+            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+    #ifndef __i386__
+    QVERIFY (unlockingSuccess);
+    #endif
+    QTest::qWait (WMDelay);
+
+    /*
+     * Now that the screen is on the lockscreenUI should be up and visible.
+     */
+    LockScreenUIWindowID = m_LockScreenBusinessLogic->lockUI->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eaterUI->internalWinId();
+    SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
+    SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
+
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
+    QVERIFY (m_XChecker.check_window(
+                EventEaterWindowID, 
+                XChecker::CheckIsInvisible));
+    QVERIFY (m_XChecker.check_window(
+                LockScreenUIWindowID, 
+                XChecker::CheckIsVisible));
+
+    QTest::qWait (DelayBetweenTests);
+
+    /*
+     * We simply don't want to leave the window there, so let's hide it again,
+     * and of course once we hide we can check if it is hidden.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** calling toggleScreenLockUI (false) ************");
+    SYS_DEBUG ("***************************************************");
+    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
+    QTest::qWait (WMDelay);
+    LockScreenUIWindowID = m_LockScreenBusinessLogic->lockUI->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eaterUI->internalWinId();
+    SYS_DEBUG ("*** LockScreenUIWindowID = 0x%lx", LockScreenUIWindowID);
+    SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
+
+    m_XChecker.debug_dump_windows (LockScreenUIWindowID);
+    QVERIFY (m_XChecker.check_window(
+                EventEaterWindowID, 
+                XChecker::CheckIsInvisible));
+    QVERIFY (m_XChecker.check_window(
+                LockScreenUIWindowID, 
+                XChecker::CheckIsInvisible));
 }
 
 QTEST_APPLESS_MAIN(Ft_LockScreenBusinessLogic)
