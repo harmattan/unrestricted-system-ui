@@ -39,11 +39,12 @@ MSceneWindowAnimatorStyle:event_notification {
 }
 
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
-    font: $FONT_SMALL;
-    minimum-size: 96 80;
-    preferred-size: 96 80;
-    maximum-size: 96 80;
-    margin-top: 16;
+    font: $FONT_XSMALL;
+    minimum-size: 8.8mm 7.3mm;
+    preferred-size: 8.8mm 7.3mm;
+    maximum-size: 8.8mm 7.3mm;
+    margin-top: 1.5mm;
+    icon-size: 4mm 4mm;
     text-margin-left: 0;
     text-margin-top: 0;
     text-margin-right: 0;
@@ -450,6 +451,11 @@ MOverlayStyle#CloseButtonOverlay {
 }
 
 MApplicationExtensionAreaStyle#StatusIndicatorMenuTopRowExtensionArea {
+    background-image: ;
     layout-orientation: horizontal;
     container-mode: false;
+}
+
+MContainerStyle#MExtensionAreaInvisibleContainer {
+    background-image: ;
 }

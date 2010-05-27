@@ -126,6 +126,8 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
 
     // Put the extension area and the settings button to a horizontal layout
     QGraphicsLinearLayout *topRowLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    topRowLayout->setContentsMargins(0, 0, 0, 0);
+    topRowLayout->setSpacing(0);
     topRowLayout->addStretch();
     topRowLayout->addItem(extensionArea);
     topRowLayout->addItem(settingsButton);
