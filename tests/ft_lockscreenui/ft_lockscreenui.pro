@@ -4,6 +4,9 @@ TARGET = ft_lockscreenui
 SRC_PREFIX = ../../src
 STUB_PREFIX = ../stubs
 
+PKGCONFIG += \
+    qmsystem 
+
 INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 

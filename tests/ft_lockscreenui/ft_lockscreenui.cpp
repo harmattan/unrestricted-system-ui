@@ -28,6 +28,9 @@
 #include <MApplicationWindow>
 #include <MSceneManager>
 #include <MTheme>
+#include <qmlocks.h>
+
+using namespace Maemo;
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -41,7 +44,7 @@ static int WMDelay = 400;
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 5000;
+static int DelayBetweenTests = 1000;
 
 
 void Ft_LockScreenUI::init()
@@ -301,6 +304,58 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
     delete m_MainWindow;
     m_MainWindow = 0;
 }
+
+void 
+Ft_LockScreenUI::testLockScreenUIWithLocking ()
+{
+    QmLocks locks;
+    bool    lockingSuccess, unlockingSuccess;
+    Window  WindowID;
+
+    createEventEaterUI ();
+    /*
+     * Locking the screen first.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Locking the screen ****************************");
+    SYS_DEBUG ("***************************************************");
+    lockingSuccess = locks.setState (QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    #ifndef __i386__
+    QVERIFY (lockingSuccess);
+    #endif
+    QTest::qWait (DelayBetweenTests);
+
+    /*
+     * Then we show the lockscreenUI
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Showing lockscreenUI **************************");
+    SYS_DEBUG ("***************************************************");
+    m_LockScreenUI->show ();
+    QTest::qWait (WMDelay);
+
+    /*
+     * Then unlocking the screen again so the lockscreenUI will be visible.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Unlocking the screen **************************");
+    SYS_DEBUG ("***************************************************");
+    unlockingSuccess = locks.setState (
+            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+    #ifndef __i386__
+    QVERIFY (unlockingSuccess);
+    #endif
+
+    /*
+     * From this point the lock screen should be realized, shown and visible.
+     */
+    QVERIFY (m_LockScreenUI->m_Realized);
+    QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+    QVERIFY (m_LockScreenUI->isVisible());
+    WindowID = m_LockScreenUI->internalWinId();
+    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
+}
+
 
 void
 Ft_LockScreenUI::createLockScreenUI ()
