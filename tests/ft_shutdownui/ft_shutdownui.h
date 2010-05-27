@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,44 +18,35 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef SHUTDOWNUI_H
-#define SHUTDOWNUI_H
+#ifndef FT_SHUTDOWNUI_H
+#define FT_SHUTDOWNUI_H
 
-#include <MApplicationPage>
+#include <QtTest/QtTest>
+#include <QObject>
+#include "../ft_lockscreenui/xchecker.h"
 
-class QTimer;
-class MLabel;
-class MFeedback;
-class MImageWidget;
+class MApplication;
+class MApplicationWindow;
+class ShutdownUI;
 
-class ShutdownUI : public MWindow
+class Ft_ShutdownUI : public QObject
 {
     Q_OBJECT
 
-public:
-    ShutdownUI ();
-    virtual ~ShutdownUI ();
-    void showWindow (
-		    const QString& text1, 
-		    const QString& text2, 
-		    int timeout);
-
-protected:
-    void createContent ();
-
 private slots:
-    void showLogo ();
-    void turnOffScreen ();
-    void realize ();
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testShutdownUIShowHide ();
 
 private:
-    bool             m_realized;
-    MSceneWindow    *m_SceneWindow;
-    QTimer          *m_timer;
-    MLabel          *m_text1;
-    MLabel          *m_text2;
-    MImageWidget    *m_logo;
-    MFeedback       *m_feedback;
+    XChecker                   m_XChecker;
+    MApplicationWindow        *m_MainWindow;
+    MApplication              *m_App;
+    ShutdownUI                *m_ShutDownUI;
 };
 
 #endif
+

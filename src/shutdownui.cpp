@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -36,20 +38,19 @@
 #include "debug.h"
 
 ShutdownUI::ShutdownUI () :
+        m_realized (false),
+        m_SceneWindow (0),
         m_timer (new QTimer),
         m_text1 (0),
         m_text2 (0),
         m_logo (0),
-        m_feedback (0),
-        m_realized (false)
+        m_feedback (0)
 {
-    setPannable (false);
-    setComponentsDisplayMode (MApplicationPage::AllComponents,
-                              MApplicationPageModel::Hide);
-
-    // We have to pre-created/load the shutdown ui content
-    // because when it should show, the in should show NOW
-    QTimer::singleShot (5000, this, SLOT (realize ()));
+    /*
+     * We have to pre-created/load the shutdown ui content because when it
+     * should show, the in should show quickly
+     */
+    QTimer::singleShot (5000, this, SLOT (realize()));
 
     connect (m_timer, SIGNAL (timeout ()),
              this, SLOT (showLogo ()));
@@ -57,13 +58,12 @@ ShutdownUI::ShutdownUI () :
 
 ShutdownUI::~ShutdownUI ()
 {
-
 }
 
 void
 ShutdownUI::createContent ()
 {
-    if (! m_realized)
+    if (!m_realized)
         realize ();
 }
 
@@ -93,20 +93,28 @@ ShutdownUI::realize ()
     m_text2->setObjectName ("shutdownTextSmaller");
     m_text2->setAlignment (Qt::AlignCenter);
 
+    m_logo = new MImageWidget ("nokia_logo");
+    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
+
+
     QGraphicsLinearLayout *layout
         = new QGraphicsLinearLayout (Qt::Vertical);
 
     layout->addStretch ();
     layout->addItem (m_text1);
     layout->addStretch ();
+    layout->addItem (m_logo);
+    layout->addStretch ();
     layout->addItem (m_text2);
     layout->addStretch ();
 
-    setLayout (layout);
-
-    m_logo = new MImageWidget ("nokia_logo");
-    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
-
+    /*
+     * Creating a scene window and putting everything into it.
+     */
+    m_SceneWindow = new MSceneWindow;
+    m_SceneWindow->setLayout (layout);
+    m_SceneWindow->appear (this);
+    
     m_realized = true;
 }
 
@@ -124,11 +132,18 @@ static const char * const ids [] =
 };
 #endif
 
+/*!
+ * \param text1 The text of the primary message line
+ * \param text2 The text of the secondary message line
+ * \param 
+ */
 void
-ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
+ShutdownUI::showWindow (
+        const QString    &text1, 
+        const QString    &text2, 
+        int               timeout)
 {
     SYS_DEBUG ("");
-    MApplicationWindow &win = Sysuid::sysuid ()->applicationWindow ();
 
     if (!m_realized)
         realize ();
@@ -136,17 +151,10 @@ ShutdownUI::showWindow (QString& text1, QString& text2, int timeout)
     // Stop the previous timer...
     m_timer->stop ();
 
-    win.setWindowState (Qt::WindowFullScreen);
-    win.lockOrientation ();
-    if (win.isHidden ())
-        win.show ();
-
-    setOpacity (1.0);
-    win.sceneManager ()->appearSceneWindowNow (this);
+    /*
+     *
+     */
     show ();
-
-    win.showFullScreen ();
-    win.raise ();
 
     Maemo::QmDisplayState  display;
 
@@ -185,9 +193,10 @@ ShutdownUI::showLogo ()
 
     m_text1->hide ();
     m_text2->hide ();
-
+#if 0
     if (centralWidget () != static_cast <QGraphicsWidget *> (m_logo))
         setCentralWidget (m_logo);
+#endif
     m_logo->show ();
 
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
