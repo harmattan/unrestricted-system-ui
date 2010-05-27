@@ -104,6 +104,7 @@ Ft_LockScreenUI::testEventEaterUIShowHide ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Showing eventeaterUI **************************");
         SYS_DEBUG ("***************************************************");
+        m_EventEaterUI->show ();
         m_EventEaterUI->showFullScreen ();
         QTest::qWait (WMDelay);
         
@@ -275,6 +276,7 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Showing eventeaterUI **************************");
         SYS_DEBUG ("***************************************************");
+        m_EventEaterUI->show ();
         m_EventEaterUI->showFullScreen ();
         QTest::qWait (WMDelay);
         
