@@ -9,6 +9,8 @@
 MSceneWindowStyle#StatusIndicatorMenuWindow {
     /* Add top padding so that the status indicator menu window does not go under the status area */
     padding-top: 28;
+    background-color: #000000;
+    background-opacity: 0.4;
 }
 
 MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
