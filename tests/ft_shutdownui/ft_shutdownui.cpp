@@ -68,7 +68,7 @@ Ft_ShutdownUI::initTestCase()
     m_ShutDownUI = 0;
 
     SYS_DEBUG ("+++ Creating application.");
-    m_App = new MApplication(argc, argv);
+    m_App = new MApplication (argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
 
     SYS_DEBUG ("Initializing our own themes.");
@@ -82,9 +82,17 @@ Ft_ShutdownUI::initTestCase()
 void 
 Ft_ShutdownUI::cleanupTestCase()
 {
-    if (m_MainWindow)
-        delete m_MainWindow; 
+    if (m_ShutDownUI) {
+        SYS_DEBUG ("deleting m_ShutDownUI");
+        delete m_ShutDownUI;
+    }
 
+    if (m_MainWindow) {
+        SYS_DEBUG ("deleting m_MainWindow");
+        delete m_MainWindow; 
+    }
+
+    SYS_DEBUG ("deleting m_App");
     delete m_App;
 }
 
@@ -106,9 +114,17 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     QTest::qWait (WMDelay);
 
     WindowID = m_ShutDownUI->internalWinId();
+    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     m_XChecker.debug_dump_windows (WindowID);
 
     QTest::qWait (5000);
+
+    /*
+     * Then we hide the window...
+     */
+    m_ShutDownUI->hide ();
+    QTest::qWait (WMDelay);
+    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownUI)

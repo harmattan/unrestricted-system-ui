@@ -58,6 +58,7 @@ ShutdownUI::ShutdownUI () :
 
 ShutdownUI::~ShutdownUI ()
 {
+    delete m_SceneWindow;
 }
 
 void
@@ -74,6 +75,10 @@ ShutdownUI::realize ()
 
     if (m_realized)
         return;
+
+    // FIXME: we need logo for both orientations...
+    setLandscapeOrientation ();
+    lockOrientation ();
 
     // Initilaize non-graphical feedback
     m_feedback = new MFeedback (this);
@@ -187,18 +192,10 @@ ShutdownUI::showLogo ()
     SYS_DEBUG ("");
     m_timer->stop ();
 
-    // FIXME: we need logo for both orientations...
-    Sysuid::sysuid ()->applicationWindow ().setLandscapeOrientation ();
-    Sysuid::sysuid ()->applicationWindow ().lockOrientation ();
-
     m_text1->hide ();
     m_text2->hide ();
-#if 0
-    if (centralWidget () != static_cast <QGraphicsWidget *> (m_logo))
-        setCentralWidget (m_logo);
-#endif
+    
     m_logo->show ();
-
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
 
