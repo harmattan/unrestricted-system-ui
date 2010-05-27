@@ -38,7 +38,7 @@
 #include "debug.h"
 
 ShutdownUI::ShutdownUI () :
-        m_realized (false),
+        m_Realized (false),
         m_SceneWindow (0),
         m_timer (new QTimer),
         m_Label1 (0),
@@ -58,6 +58,7 @@ ShutdownUI::ShutdownUI () :
 
 ShutdownUI::~ShutdownUI ()
 {
+    delete m_timer;
     delete m_SceneWindow;
 }
 
@@ -66,7 +67,7 @@ ShutdownUI::realize ()
 {
     SYS_DEBUG ("");
 
-    if (m_realized)
+    if (m_Realized)
         return;
 
     // FIXME: we need logo for both orientations...
@@ -95,7 +96,6 @@ ShutdownUI::realize ()
      * A full screen logo that we show when the labels are already gone.
      */
     m_Image = new MImageWidget ("nokia_logo");
-    m_Image->setGeometry (QRectF (0., 0., 864., 480.));
     m_Image->hide ();
 
     QGraphicsLinearLayout *layout
@@ -116,7 +116,7 @@ ShutdownUI::realize ()
     m_SceneWindow->setLayout (layout);
     m_SceneWindow->appear (this);
     
-    m_realized = true;
+    m_Realized = true;
 }
 
 // Hack for RFS/CUD
@@ -153,7 +153,7 @@ ShutdownUI::showWindow (
     /*
      * If the widgets are not created we create them now.
      */
-    if (!m_realized)
+    if (!m_Realized)
         realize ();
     
     /*

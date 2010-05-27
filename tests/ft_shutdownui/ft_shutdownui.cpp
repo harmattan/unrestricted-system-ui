@@ -21,7 +21,6 @@
 
 #include "ft_shutdownui.h"
 #include "shutdownui.h"
-#include "shutdownui.h"
 #include "sysuid_stub.h"
 
 #include <MApplication>
@@ -41,7 +40,7 @@ static int WMDelay = 400;
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 10000;
+//static int DelayBetweenTests = 10000;
 
 void 
 Ft_ShutdownUI::init()
@@ -75,8 +74,6 @@ Ft_ShutdownUI::initTestCase()
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
     MTheme::loadCSS (styleDir + "unlockscreen.css");
-
-    m_ShutDownUI = new ShutdownUI;
 }
 
 void 
@@ -92,16 +89,40 @@ Ft_ShutdownUI::cleanupTestCase()
 }
 
 void 
+Ft_ShutdownUI::testShutdownUIRealizing ()
+{ 
+    m_ShutDownUI = new ShutdownUI;
+    
+    /*
+     * After 2s the shutdownUI should realize itself. We could wait more, but
+     * this value seems to be reasonable.
+     */
+    QTest::qWait (2000);
+    QVERIFY (m_ShutDownUI->m_Realized);
+    QVERIFY (m_ShutDownUI->m_SceneWindow != 0);
+    QVERIFY (m_ShutDownUI->m_timer != 0);
+    QVERIFY (m_ShutDownUI->m_Label1 != 0);
+    QVERIFY (m_ShutDownUI->m_Label2 != 0);
+    QVERIFY (m_ShutDownUI->m_Image != 0);
+    QVERIFY (m_ShutDownUI->m_feedback != 0);
+
+
+    delete m_ShutDownUI;
+    m_ShutDownUI = 0;
+}
+
+void 
 Ft_ShutdownUI::testShutdownUIShowHide ()
 {
     Window WindowID;
 
     SYS_DEBUG ("");
+
+    m_ShutDownUI = new ShutdownUI;
     
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Showing shutdownUI ****************************");
     SYS_DEBUG ("***************************************************");
-
     m_ShutDownUI->showWindow (
             "ft_shutdownUI functional test",
             "testShutdownUIShowHide() function",
@@ -115,11 +136,17 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     QTest::qWait (6000);
 
     /*
-     * Then we hide the window...
+     * Then we hide the window and so we can see if it is really gone.
      */
     m_ShutDownUI->hide ();
     QTest::qWait (WMDelay);
     QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
+
+    /*
+     * Cleaning up.
+     */
+    delete m_ShutDownUI;
+    m_ShutDownUI = 0;
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownUI)

@@ -44,13 +44,17 @@ private slots:
     void realize ();
 
 private:
-    bool             m_realized;
+    bool             m_Realized;
     MSceneWindow    *m_SceneWindow;
     QTimer          *m_timer;
     MLabel          *m_Label1;
     MLabel          *m_Label2;
     MImageWidget    *m_Image;
     MFeedback       *m_feedback;
+#ifdef UNIT_TEST
+    friend class Ft_ShutdownUI;
+    friend class Ut_ShutdownUI;
+#endif
 };
 
 #endif

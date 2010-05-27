@@ -40,6 +40,7 @@ private slots:
     void cleanupTestCase();
 
     void testShutdownUIShowHide ();
+    void testShutdownUIRealizing ();
 
 private:
     XChecker                   m_XChecker;
