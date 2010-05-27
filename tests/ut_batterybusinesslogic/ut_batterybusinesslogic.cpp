@@ -178,6 +178,16 @@ Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
 
     QVERIFY (m_SignalSink.m_BatteryBarValueCame);
     QVERIFY (m_SignalSink.m_BarValue == 1);
+    
+    /*
+     * And then on 97%
+     */
+    m_SignalSink.reset();
+    m_subject->batteryEnergyLevelChanged (97);
+    m_SignalSink.print();
+
+    QVERIFY (m_SignalSink.m_BatteryBarValueCame);
+    QVERIFY (m_SignalSink.m_BarValue == 9);
 }
 
 void 
