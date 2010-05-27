@@ -112,7 +112,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     m_XChecker.debug_dump_windows (WindowID);
 
-    QTest::qWait (5000);
+    QTest::qWait (6000);
 
     /*
      * Then we hide the window...

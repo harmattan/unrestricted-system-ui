@@ -41,16 +41,16 @@ ShutdownUI::ShutdownUI () :
         m_realized (false),
         m_SceneWindow (0),
         m_timer (new QTimer),
-        m_text1 (0),
-        m_text2 (0),
-        m_logo (0),
+        m_Label1 (0),
+        m_Label2 (0),
+        m_Image (0),
         m_feedback (0)
 {
     /*
      * We have to pre-created/load the shutdown ui content because when it
      * should show, the in should show quickly
      */
-    QTimer::singleShot (5000, this, SLOT (realize()));
+    QTimer::singleShot (500, this, SLOT (realize()));
 
     connect (m_timer, SIGNAL (timeout ()),
              this, SLOT (showLogo ()));
@@ -59,13 +59,6 @@ ShutdownUI::ShutdownUI () :
 ShutdownUI::~ShutdownUI ()
 {
     delete m_SceneWindow;
-}
-
-void
-ShutdownUI::createContent ()
-{
-    if (!m_realized)
-        realize ();
 }
 
 void
@@ -89,28 +82,31 @@ ShutdownUI::realize ()
 #endif
 
     //% "Shutting down"
-    m_text1 = new MLabel (qtTrId ("qtn_shut_down"));
-    m_text1->setObjectName ("shutdownTextBig");
-    m_text1->setAlignment (Qt::AlignCenter);
+    m_Label1 = new MLabel (qtTrId ("qtn_shut_down"));
+    m_Label1->setObjectName ("shutdownTextBig");
+    m_Label1->setAlignment (Qt::AlignCenter);
 
     //% "Good bye!"
-    m_text2 = new MLabel (qtTrId ("qtn_shut_greeting"));
-    m_text2->setObjectName ("shutdownTextSmaller");
-    m_text2->setAlignment (Qt::AlignCenter);
+    m_Label2 = new MLabel (qtTrId ("qtn_shut_greeting"));
+    m_Label2->setObjectName ("shutdownTextSmaller");
+    m_Label2->setAlignment (Qt::AlignCenter);
 
-    m_logo = new MImageWidget ("nokia_logo");
-    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
-    m_logo->hide ();
+    /*
+     * A full screen logo that we show when the labels are already gone.
+     */
+    m_Image = new MImageWidget ("nokia_logo");
+    m_Image->setGeometry (QRectF (0., 0., 864., 480.));
+    m_Image->hide ();
 
     QGraphicsLinearLayout *layout
         = new QGraphicsLinearLayout (Qt::Vertical);
 
     layout->addStretch ();
-    layout->addItem (m_text1);
+    layout->addItem (m_Label1);
     layout->addStretch ();
-    layout->addItem (m_logo);
+    layout->addItem (m_Image);
     layout->addStretch ();
-    layout->addItem (m_text2);
+    layout->addItem (m_Label2);
     layout->addStretch ();
 
     /*
@@ -153,7 +149,10 @@ ShutdownUI::showWindow (
         int               timeout)
 {
     SYS_DEBUG ("");
-
+    
+    /*
+     * If the widgets are not created we create them now.
+     */
     if (!m_realized)
         realize ();
     
@@ -162,14 +161,14 @@ ShutdownUI::showWindow (
      */
     if (! (text1.isEmpty () && text2.isEmpty ())) {
         if (text1.startsWith ("qtn"))
-            m_text1->setText (qtTrId (text1.toLatin1 ().constData ()));
+            m_Label1->setText (qtTrId (text1.toLatin1 ().constData ()));
         else
-            m_text1->setText (text1);
+            m_Label1->setText (text1);
 
         if (text2.startsWith ("qtn"))
-            m_text2->setText (qtTrId (text2.toLatin1 ().constData ()));
+            m_Label2->setText (qtTrId (text2.toLatin1 ().constData ()));
         else
-            m_text2->setText (text2);
+            m_Label2->setText (text2);
     }
 
 
@@ -181,9 +180,9 @@ ShutdownUI::showWindow (
      */
     show ();
 
-    Maemo::QmDisplayState  display;
 
     // Turn on
+    Maemo::QmDisplayState  display;
     display.set (Maemo::QmDisplayState::On);
 
     m_feedback->play ();
@@ -202,10 +201,10 @@ ShutdownUI::showLogo ()
     /*
      * We hide the labels and show the image.
      */
-    m_text1->hide ();
-    m_text2->hide ();
-    m_logo->show ();
-    m_logo->setGeometry (QRectF (0., 0., 864., 480.));
+    m_Label1->hide ();
+    m_Label2->hide ();
+    m_Image->show ();
+    m_Image->setGeometry (QRectF (0., 0., 864., 480.));
 
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
@@ -213,25 +212,35 @@ ShutdownUI::showLogo ()
 void
 ShutdownUI::turnOffScreen ()
 {
-    SYS_DEBUG ("");
-    bool success;
+    bool success = false;
 
+    SYS_DEBUG ("");
+
+    #ifndef __i386__
     Maemo::QmDisplayState  display;
 
     // Try to dim
     success = display.set (Maemo::QmDisplayState::Dimmed);
-
-    if (! success)
-    {
+    if (! success) {
         SYS_WARNING ("Dimming the display failed!");
     }
 
     // Try to turn off
     success = display.set (Maemo::QmDisplayState::Off);
-
-    if (! success)
-    {
+    if (! success) {
         SYS_WARNING ("Turning off the display failed!");
+    }
+    #endif
+    
+    if (!success) {
+        SYS_DEBUG ("No way dimming the screen on scratchbox.");
+        QPalette Palette (palette());
+
+        Palette.setColor(QPalette::Background, QColor ("black"));
+        setPalette(Palette);
+
+        setBackgroundRole (QPalette::Background);
+        m_Image->hide ();
     }
 }
 

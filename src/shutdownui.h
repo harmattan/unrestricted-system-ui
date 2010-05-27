@@ -38,9 +38,6 @@ public:
 		    const QString& text2, 
 		    int timeout);
 
-protected:
-    void createContent ();
-
 private slots:
     void showLogo ();
     void turnOffScreen ();
@@ -50,9 +47,9 @@ private:
     bool             m_realized;
     MSceneWindow    *m_SceneWindow;
     QTimer          *m_timer;
-    MLabel          *m_text1;
-    MLabel          *m_text2;
-    MImageWidget    *m_logo;
+    MLabel          *m_Label1;
+    MLabel          *m_Label2;
+    MImageWidget    *m_Image;
     MFeedback       *m_feedback;
 };
 
