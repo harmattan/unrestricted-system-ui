@@ -41,10 +41,6 @@ extern MApplication *exitPtr;
 MApplication *exitPtr;
 #endif
 
-#ifdef TEST_SHUTDOWN_LOGIC
-#  include <QTimer>
-#endif
-
 ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     QObject (parent),
     m_Ui (0),
@@ -55,11 +51,6 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
         SIGNAL(systemStateChanged (Maemo::QmSystemState::StateIndication)),
         this, 
         SLOT(systemStateChanged (Maemo::QmSystemState::StateIndication)));
-
-    #ifdef TEST_SHUTDOWN_LOGIC
-    SYS_DEBUG ("Register test timeout.");
-    QTimer::singleShot (5000, this, SLOT(testTimeoutSlot()));
-    #endif
 }
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
@@ -135,7 +126,7 @@ void
 ShutdownBusinessLogic::batteryShutdown ()
 {
     //% "Battery empty. Device shutting down."
-    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_batt_empty")).publish();
+    MNotification (MNotification::DeviceEvent, "", qtTrId ("qtn_shut_batt_empty")).publish();
 }
 
 void 
@@ -145,15 +136,9 @@ ShutdownBusinessLogic::shutdownDeniedUSB ()
     MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_unplug_usb")).publish();
 }
 
-#ifdef TEST_SHUTDOWN_LOGIC
-void 
-ShutdownBusinessLogic::testTimeoutSlot ()
-{
-    SYS_DEBUG ("");
-    systemStateChanged (QmSystemState::Shutdown);
-}
-#endif
-
+/******************************************************************************
+ * Implementation for ShutdownBusinessLogicAdaptor.
+ */
 ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor (
     QObject                 *parent,
     ShutdownBusinessLogic   *logic) :

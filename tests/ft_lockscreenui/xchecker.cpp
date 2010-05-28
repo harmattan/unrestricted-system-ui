@@ -254,16 +254,24 @@ XChecker::pr (
 	Window *child_l = NULL;
 	Window root_ret, parent_ret;
 	int i;
-	char *wmclass;
-    char *wmname, *wmname2;
-    char *wmtype, *wmstate;
-        unsigned long por_sup, por_req;
+	char               *wmclass;
+    char               *wmname, *wmname2;
+    char               *wmtype, *wmstate;
+    unsigned long por_sup, por_req;
 	Window trans_for;
 	char buf[100], xembed_buf[50];
 	XWindowAttributes attrs = { 0 };
 	long xembed, hildon_stack, non_comp;
 
+    int x_return, y_return;
+    unsigned int width_return, height_return;
+    unsigned int border_width_return, depth_return;
+
 	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
+    XGetGeometry (dpy, WindowID, &root_ret,
+              &x_return, &y_return, &width_return,
+              &height_return, &border_width_return,
+              &depth_return);
 
 	for (i = 0; i < level; ++i)
 		indent += "    ";
@@ -299,62 +307,25 @@ XChecker::pr (
     const char *HighlightStart = Highlight ? "\033[1;31m" : "";
     const char *HighlightEnd = Highlight ? "\033[0;39m" : "";
     if (n_children == 0) {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %dx%d %12s %s", 
                 nthWindow,
                 SYS_STR(indent), 
                 HighlightStart, WindowID, HighlightEnd,
                 get_map_state(attrs.map_state),
+                width_return, height_return,
 			    wmclass ? wmclass : "(none)",
                 SYS_STR(windowName));
-#if 0
-		printf("0x%lx %s %s %s HStack:%ld [PID %lu] WM_CLASS:%s WM_NAME:%s "
-                       "_NET_WM_NAME:%s %s %s %s %s %s %s %s %s\n",
-			w, wmtype,
-			wmstate, get_map_state(attrs.map_state),
-			hildon_stack,
-			get_card_prop(dpy, w, pid_atom),
-			wmclass ? wmclass : "(none)",
-			wmname2 ? wmname2 : "(none)",
-			wmname ? wmname : "(none)",
-			xembed_buf,
-			buf, attrs.override_redirect ? "override-redirect": "",
-			attrs.all_event_masks & SubstructureRedirectMask ?
-			"Substr.Redirect":"",
-			attrs.all_event_masks & SubstructureNotifyMask ?
-			"Substr.Notify":"",
-                        por_sup ? "por.sup":"",
-                        por_req ? "por.req":"",
-                        non_comp != -1 ? "non-comp.":"");
-#endif
 	} else {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %dx%d %12s %s", 
                 nthWindow,
                 SYS_STR(indent), 
                 HighlightStart, WindowID, HighlightEnd,
                 get_map_state(attrs.map_state),
+                width_return, height_return,
 			    wmclass ? wmclass : "(none)",
                 SYS_STR(windowName));
-#if 0
-		printf("0x%lx %s %s %s HStack:%ld [PID %lu] WM_CLASS:%s WM_NAME:%s "
-                       "_NET_WM_NAME:%s %s %s %s %s %s %s %s %s (%u children):\n",
-			w, wmtype, wmstate, get_map_state(attrs.map_state),
-			hildon_stack,
-			get_card_prop(dpy, w, pid_atom),
-			wmclass ? wmclass : "(none)",
-			wmname2 ? wmname2 : "(none)",
-			wmname ? wmname : "(none)",
-			xembed_buf,
-			buf, attrs.override_redirect ? "override-redirect": "",
-			attrs.all_event_masks & SubstructureRedirectMask ?
-			"Substr.Redirect":"",
-			attrs.all_event_masks & SubstructureNotifyMask ?
-			"Substr.Notify":"",
-                        por_sup ? "por.sup":"",
-                        por_req ? "por.req":"",
-                        non_comp != -1 ? "non-comp.":"",
-			n_children);
-#endif
-		for (i = 0; i < n_children; ++i) {
+		
+        for (i = 0; i < n_children; ++i) {
             ++nthWindow;
 			pr (highlighted, dpy, child_l[i], level + 1, nthWindow);
 		}
@@ -374,13 +345,23 @@ XChecker::check_window (
     Display          *Display = QX11Info::display ();
     bool              retval = false;
     XWindowAttributes attrs = { 0 };
+    int               x_return, y_return;
+    unsigned int      width_return, height_return;
+    unsigned int      border_width_return, depth_return;
+    Window            root_ret;
+
 
     SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
 
     if (WindowID == None) {
         switch (OpCode) {
             case CheckIsVisible:
-                SYS_WARNING ("Window 0x%lx should be visible it is 'None'.",
+                SYS_WARNING ("Window 0x%lx should be visible but it is 'None'.",
+                        WindowID);
+                retval = false;
+                break;
+            case CheckIsFullscreen:
+                SYS_WARNING ("Window 0x%lx should be fullscreen but it is 'None'.",
                         WindowID);
                 retval = false;
                 break;
@@ -395,9 +376,28 @@ XChecker::check_window (
 
 	if (!XGetWindowAttributes (Display, WindowID, &attrs)) {
         switch (OpCode) {
+            case CheckIsFullscreen:
             case CheckIsVisible:
-                SYS_WARNING ("Window 0x%lx should be visible but does not "
-                        "exists.", WindowID);
+                SYS_WARNING ("Window 0x%lx does not exists.", WindowID);
+                retval = false;
+                break;
+
+            case CheckIsInvisible:
+                retval = true;
+                break;
+        }
+
+        goto finalize;
+    }
+
+    if (!XGetGeometry (Display, WindowID, &root_ret,
+              &x_return, &y_return, &width_return,
+              &height_return, &border_width_return,
+              &depth_return)) {
+        switch (OpCode) {
+            case CheckIsFullscreen:
+            case CheckIsVisible:
+                SYS_WARNING ("Window 0x%lx does not exists.", WindowID);
                 retval = false;
                 break;
 
@@ -425,6 +425,21 @@ XChecker::check_window (
             } else {
                 SYS_WARNING ("Window 0x%lx should not be visible, but it is.",
                         WindowID);
+            }
+            break;
+
+        case CheckIsFullscreen:
+            if (width_return == 864 && height_return == 480)
+                retval = true;
+
+            if (width_return == 480 && height_return == 864)
+                retval = true;
+
+            if (!retval) {
+                SYS_WARNING ("Window 0x%lx should not be fullscreen, but it "
+                        "has size %dx%d",
+                        WindowID,
+                        width_return, height_return);
             }
             break;
     }

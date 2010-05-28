@@ -27,13 +27,6 @@
 
 class ShutdownUI;
 
-/*
- * If this macro is defined the ShutdownBusinessLogic will emulate some shutdown
- * signals 5 seconds after it has been created. I know it is a crude test
- * mechanism, but it was very simple to implement and I could test the messages
- * with it.
- */
-#undef TEST_SHUTDOWN_LOGIC
 
 /*!
  * \brief Business logic for the shutdown subsystem. 
@@ -61,9 +54,6 @@ public:
 
 public slots:
     void systemStateChanged (Maemo::QmSystemState::StateIndication what);
-    #ifdef TEST_SHUTDOWN_LOGIC
-    void testTimeoutSlot ();
-    #endif
 
 private:
     void thermalShutdown ();
@@ -73,6 +63,10 @@ private:
 private:
     ShutdownUI             *m_Ui;
     Maemo::QmSystemState   *m_State;
+#ifdef UNIT_TEST
+    friend class Ft_ShutdownBusinessLogic;
+    friend class Ut_ShutdownBusinessLogic;
+#endif
 };
 
 class ShutdownBusinessLogicAdaptor : public QDBusAbstractAdaptor
@@ -90,6 +84,10 @@ public slots:
 
 private:
     ShutdownBusinessLogic   *m_logic;
+#ifdef UNIT_TEST
+    friend class Ft_ShutdownBusinessLogic;
+    friend class Ut_ShutdownBusinessLogic;
+#endif
 };
 
 #endif

@@ -39,7 +39,8 @@ public:
     
     typedef enum {
         CheckIsVisible,
-        CheckIsInvisible
+        CheckIsInvisible,
+        CheckIsFullscreen,
     } RequestCode;
 
     bool check_window (Window WindowID, XChecker::RequestCode  OpCode);

@@ -136,6 +136,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
      */
     WindowID = m_ShutDownUI->internalWinId();
     QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsFullscreen));
     m_XChecker.debug_dump_windows (WindowID);
 
     /*
