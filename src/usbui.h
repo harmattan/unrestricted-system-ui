@@ -20,8 +20,14 @@
 #define USBUI_H
 
 #include <QObject>
-#include <qmlocks.h>
+
+#ifndef UNIT_TEST
 #include <qmusbmode.h>
+#include <qmlocks.h>
+#else
+#include "usbmode_stub.h"
+#include "locksstub.h"
+#endif
 
 class MDialog;
 class MNotification;
@@ -53,6 +59,10 @@ class UsbUi : public QObject
         MDialog             *m_dialog;
         bool                 m_showdialog;
         QProcess            *m_process;
+
+#ifdef UNIT_TEST
+    friend class Ut_UsbUi;
+#endif
 };
 
 #endif

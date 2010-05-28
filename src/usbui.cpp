@@ -34,6 +34,12 @@
 #define WARNING
 #include "debug.h"
 
+#ifdef UNIT_TEST
+#define INIT_TIME 0
+#else
+#define INIT_TIME 5000
+#endif
+
 using namespace Maemo;
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
@@ -47,7 +53,7 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic = new QmUSBMode (this);
     m_locks = new QmLocks (this);
 
-    QTimer::singleShot (5000, this, SLOT (initialize ()));
+    QTimer::singleShot (INIT_TIME, this, SLOT (initialize ()));
 }
 
 UsbUi::~UsbUi ()
@@ -136,7 +142,9 @@ UsbUi::OviSuiteSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (QmUSBMode::OviSuite);
-    m_dialog->disappear ();
+
+    if (m_dialog)
+        m_dialog->disappear ();
 
     // HACK: FIXME: Remove this...
     m_process->start ("/usr/bin/sudo /usr/bin/pcsuite-enable.sh");
@@ -149,7 +157,9 @@ UsbUi::MassStorageSelected ()
     SYS_DEBUG ("");
 
     m_logic->setMode (QmUSBMode::MassStorage);
-    m_dialog->disappear ();
+
+    if (m_dialog)
+        m_dialog->disappear ();
 }
 
 void
@@ -218,6 +228,7 @@ UsbUi::locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
 void
 UsbUi::ShowNotification (int id)
 {
+    SYS_DEBUG ("");
     QString *mode_text;
 
     // remove previous one
