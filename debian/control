@@ -12,7 +12,7 @@ Provides: duistatusindicatormenu
 Conflicts: duistatusindicatormenu
 Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english
+Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, sudo
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
   - status area
