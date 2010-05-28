@@ -63,6 +63,7 @@ private:
 private:
     ShutdownUI             *m_Ui;
     Maemo::QmSystemState   *m_State;
+
 #ifdef UNIT_TEST
     friend class Ft_ShutdownBusinessLogic;
     friend class Ut_ShutdownBusinessLogic;

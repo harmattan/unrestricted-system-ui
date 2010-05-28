@@ -40,11 +40,11 @@
 ShutdownUI::ShutdownUI () :
         m_Realized (false),
         m_SceneWindow (0),
-        m_timer (new QTimer),
+        m_Timer (new QTimer),
         m_Label1 (0),
         m_Label2 (0),
         m_Image (0),
-        m_feedback (0)
+        m_Feedback (0)
 {
     /*
      * We have to pre-created/load the shutdown ui content because when it
@@ -52,16 +52,24 @@ ShutdownUI::ShutdownUI () :
      */
     QTimer::singleShot (500, this, SLOT (realize()));
 
-    connect (m_timer, SIGNAL (timeout ()),
+    connect (m_Timer, SIGNAL (timeout ()),
              this, SLOT (showLogo ()));
 }
 
 ShutdownUI::~ShutdownUI ()
 {
-    delete m_timer;
-    delete m_SceneWindow;
+    delete m_Timer;
+
+    if (m_SceneWindow)
+        delete m_SceneWindow;
+
+    // FIXME: What about m_Feedback?
 }
 
+/*
+ * Here we create the widgets that we use, and we put them into the layout that
+ * we use. The logo will not be shown yet.
+ */
 void
 ShutdownUI::realize ()
 {
@@ -70,16 +78,17 @@ ShutdownUI::realize ()
     if (m_Realized)
         return;
 
-    // FIXME: we need logo for both orientations...
+    // FIXME: We need logo for both orientations...
+    // FIXME: It seems that this is not working.
     setLandscapeOrientation ();
     lockOrientation ();
 
     // Initilaize non-graphical feedback
-    m_feedback = new MFeedback (this);
+    m_Feedback = new MFeedback (this);
 #ifdef FEEDBACK_SUPPLIED
-    m_feedback->setName ("DF_POWER_OFF");
+    m_Feedback->setName ("DF_POWER_OFF");
 #else
-    m_feedback->setName ("press");
+    m_Feedback->setName ("press");
 #endif
 
     //% "Shutting down"
@@ -173,30 +182,34 @@ ShutdownUI::showWindow (
 
 
     // Stop the previous timer...
-    m_timer->stop ();
+    m_Timer->stop ();
 
     /*
-     *
+     * It is as simple as this when we use MWindow.
      */
     show ();
 
-
-    // Turn on
+    // Turn on the touchscreen
     Maemo::QmDisplayState  display;
     display.set (Maemo::QmDisplayState::On);
 
-    m_feedback->play ();
+    m_Feedback->play ();
 
-    // Set the interval and start the timer...
-    m_timer->setInterval (timeout);
-    m_timer->start ();
+    // Set the interval and start the timer to the next phase: hiding the labels
+    // and showing the logo.
+    m_Timer->setInterval (timeout);
+    m_Timer->start ();
 }
 
+/*
+ * Hides the labels, shows the logo image and starts up a timer to turn off the
+ * screen.
+ */
 void
 ShutdownUI::showLogo ()
 {
     SYS_DEBUG ("");
-    m_timer->stop ();
+    m_Timer->stop ();
 
     /*
      * We hide the labels and show the image.
@@ -209,6 +222,13 @@ ShutdownUI::showLogo ()
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
 
+/*!
+ * We need to turn off the screen so that the user will not see the actual
+ * shutdown on the GUI. We could show a black screen but we might be prematurely
+ * killed, so this window will be removed early. Turning off the screen is an
+ * excellent way to solve this issue... except that we might be killed even
+ * sooner.
+ */
 void
 ShutdownUI::turnOffScreen ()
 {
@@ -216,6 +236,9 @@ ShutdownUI::turnOffScreen ()
 
     SYS_DEBUG ("");
 
+    /*
+     * No way dimming or turning off the screen inside scratchbox.
+     */
     #ifndef __i386__
     Maemo::QmDisplayState  display;
 
@@ -233,7 +256,6 @@ ShutdownUI::turnOffScreen ()
     #endif
     
     if (!success) {
-        SYS_DEBUG ("No way dimming the screen on scratchbox.");
         QPalette Palette (palette());
 
         Palette.setColor(QPalette::Background, QColor ("black"));

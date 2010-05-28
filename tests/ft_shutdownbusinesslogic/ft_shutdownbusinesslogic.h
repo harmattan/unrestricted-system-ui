@@ -38,6 +38,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testThermalState ();
+    void testShutDownDenied ();
+    void testBatteryStateEmpty ();
     void testShutDown ();
 private:
     XChecker                   m_XChecker;

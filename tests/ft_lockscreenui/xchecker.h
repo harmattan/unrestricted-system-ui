@@ -45,6 +45,7 @@ public:
 
     bool check_window (Window WindowID, XChecker::RequestCode  OpCode);
     void debug_dump_windows(Window highlighted = None);
+    void debugDumpNotifications ();
 
 private:
     Display *display();

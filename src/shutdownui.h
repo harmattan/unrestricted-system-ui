@@ -26,6 +26,12 @@ class MLabel;
 class MFeedback;
 class MImageWidget;
 
+/*!
+ * A full screen window that is shown when the device is shutting down. The
+ * window first shows a two line text, then---after a time period---it shows a
+ * logo image. After the second time period the touch screen is going to be
+ * turned off.
+ */
 class ShutdownUI : public MWindow
 {
     Q_OBJECT
@@ -34,9 +40,9 @@ public:
     ShutdownUI ();
     virtual ~ShutdownUI ();
     void showWindow (
-		    const QString& text1, 
-		    const QString& text2, 
-		    int timeout);
+		    const QString  &text1, 
+		    const QString  &text2, 
+		    int             timeout);
 
 private slots:
     void showLogo ();
@@ -46,11 +52,11 @@ private slots:
 private:
     bool             m_Realized;
     MSceneWindow    *m_SceneWindow;
-    QTimer          *m_timer;
+    QTimer          *m_Timer;
     MLabel          *m_Label1;
     MLabel          *m_Label2;
     MImageWidget    *m_Image;
-    MFeedback       *m_feedback;
+    MFeedback       *m_Feedback;
 #ifdef UNIT_TEST
     friend class Ft_ShutdownUI;
     friend class Ut_ShutdownUI;

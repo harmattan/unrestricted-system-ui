@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -112,10 +114,25 @@ ShutdownBusinessLogic::systemStateChanged (
 void 
 ShutdownBusinessLogic::thermalShutdown ()
 {
-    SYS_DEBUG ("");
-    //% "Temperature too high. Device shutting down."
-    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_high_temp")).publish();
+    MNotification *notification;
+    bool           success;
 
+    SYS_DEBUG ("Creating a notification");
+    //% "Temperature too high. Device shutting down."
+    notification = new MNotification (
+		   MNotification::DeviceEvent, 
+           "", 
+           //% "Temperature too high. Device shutting down."
+           qtTrId ("qtn_shut_high_temp"));
+
+    notification->setImage ("icon-m-notification-temperature");
+
+    success = notification->publish ();
+    if (!success) {
+        SYS_WARNING ("Failed to publish notification.");
+    }
+
+    delete notification;
     /* TODO: do we need to call showUI here?
      * UI spec says: Ten seconds before the shutdown takes place, thermal 
      * shutdown notification is displayed accompanying ‘System alert’ sound.
@@ -125,15 +142,54 @@ ShutdownBusinessLogic::thermalShutdown ()
 void
 ShutdownBusinessLogic::batteryShutdown ()
 {
-    //% "Battery empty. Device shutting down."
-    MNotification (MNotification::DeviceEvent, "", qtTrId ("qtn_shut_batt_empty")).publish();
+    MNotification *notification;
+    bool           success;
+
+    SYS_DEBUG ("Creating a notification");
+    //% "Temperature too high. Device shutting down."
+    notification = new MNotification (
+		   MNotification::DeviceEvent, 
+           //% "Battery empty."
+           qtTrId ("qtn_shut_batt_empty"), 
+           //% "Device will be shut down."
+           qtTrId ("qtn_shut_will_shut_down"));
+
+    notification->setImage ("icon-m-energy-management-battery-verylow");
+
+    success = notification->publish ();
+    if (!success) {
+        SYS_WARNING ("Failed to publish notification.");
+    }
+
+    delete notification;
+    /* TODO: do we need to call showUI here?
+     * UI spec says: Ten seconds before the shutdown takes place, thermal 
+     * shutdown notification is displayed accompanying ‘System alert’ sound.
+     */
 }
 
 void 
 ShutdownBusinessLogic::shutdownDeniedUSB ()
 {
-    //% "USB cable plugged in. Unplug the USB cable to shutdown."
-    MNotification(MNotification::DeviceEvent, "", qtTrId ("qtn_shut_unplug_usb")).publish();
+    MNotification *notification;
+    bool           success;
+
+    SYS_DEBUG ("Creating a notification");
+    //% "Temperature too high. Device shutting down."
+    notification = new MNotification (
+		   MNotification::DeviceEvent, 
+           "", 
+           //% "USB cable plugged in. Unplug the USB cable to shutdown."
+           qtTrId ("qtn_shut_unplug_usb"));
+
+    notification->setImage ("icon-m-USBhandling-usb");
+
+    success = notification->publish ();
+    if (!success) {
+        SYS_WARNING ("Failed to publish notification.");
+    }
+
+    delete notification;
 }
 
 /******************************************************************************

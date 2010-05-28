@@ -47,7 +47,7 @@ static int WMDelay = 400;
 /*
  * This much we wait between the tests.
  */
-//static int DelayBetweenTests = 10000;
+static int DelayBetweenTests = 5000;
 
 void 
 Ft_ShutdownBusinessLogic::init()
@@ -92,6 +92,78 @@ Ft_ShutdownBusinessLogic::cleanupTestCase()
 }
 
 void 
+Ft_ShutdownBusinessLogic::testThermalState ()
+{
+    ShutdownBusinessLogic *logic;
+    Window                 WindowID;
+    logic = new ShutdownBusinessLogic;
+
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Simulating ThermalStateFatal state ******");
+    SYS_DEBUG ("*********************************************");
+    logic->systemStateChanged (QmSystemState::ThermalStateFatal);
+    QTest::qWait (WMDelay);
+    
+    m_XChecker.debugDumpNotifications ();
+    /*
+     * FIXME: We should check here if the notification is published but it seems
+     * that m_XChecker is failed to get the notification data. It might be a bug
+     * in Meego.
+     */
+
+    QTest::qWait (DelayBetweenTests);
+    delete logic;
+}
+
+void 
+Ft_ShutdownBusinessLogic::testShutDownDenied ()
+{
+    ShutdownBusinessLogic *logic;
+    Window                 WindowID;
+    logic = new ShutdownBusinessLogic;
+
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Simulating ShutdownDeniedUSB ************");
+    SYS_DEBUG ("*********************************************");
+    logic->systemStateChanged (QmSystemState::ShutdownDeniedUSB);
+    QTest::qWait (WMDelay);
+    
+    m_XChecker.debugDumpNotifications ();
+    /*
+     * FIXME: We should check here if the notification is published but it seems
+     * that m_XChecker is failed to get the notification data. It might be a bug
+     * in Meego.
+     */
+
+    QTest::qWait (DelayBetweenTests);
+    delete logic;
+}
+
+void 
+Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
+{
+    ShutdownBusinessLogic *logic;
+    Window                 WindowID;
+    logic = new ShutdownBusinessLogic;
+
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Simulating BatteryStateEmpty ************");
+    SYS_DEBUG ("*********************************************");
+    logic->systemStateChanged (QmSystemState::BatteryStateEmpty);
+    QTest::qWait (WMDelay);
+    
+    m_XChecker.debugDumpNotifications ();
+    /*
+     * FIXME: We should check here if the notification is published but it seems
+     * that m_XChecker is failed to get the notification data. It might be a bug
+     * in Meego.
+     */
+
+    QTest::qWait (DelayBetweenTests);
+    delete logic;
+}
+
+void 
 Ft_ShutdownBusinessLogic::testShutDown ()
 {
     ShutdownBusinessLogic *logic;
@@ -115,7 +187,7 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsFullscreen));
     m_XChecker.debug_dump_windows (WindowID);
 
-    QTest::qWait (3000);
+    QTest::qWait (5000);
 
     delete logic;
 }

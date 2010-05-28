@@ -90,6 +90,19 @@ Ft_ShutdownUI::cleanupTestCase()
     delete m_App;
 }
 
+/*
+ * We had some crashes because the delayed initialization (realization). It is
+ * tested here.
+ */
+void
+Ft_ShutdownUI::testConstructDestruct ()
+{
+    m_ShutDownUI = new ShutdownUI;
+    QVERIFY (!m_ShutDownUI->m_Realized);
+    delete m_ShutDownUI;
+    m_ShutDownUI = 0;
+}
+
 void 
 Ft_ShutdownUI::testShutdownUIRealizing ()
 { 
@@ -102,11 +115,11 @@ Ft_ShutdownUI::testShutdownUIRealizing ()
     QTest::qWait (2000);
     QVERIFY (m_ShutDownUI->m_Realized);
     QVERIFY (m_ShutDownUI->m_SceneWindow != 0);
-    QVERIFY (m_ShutDownUI->m_timer != 0);
+    QVERIFY (m_ShutDownUI->m_Timer != 0);
     QVERIFY (m_ShutDownUI->m_Label1 != 0);
     QVERIFY (m_ShutDownUI->m_Label2 != 0);
     QVERIFY (m_ShutDownUI->m_Image != 0);
-    QVERIFY (m_ShutDownUI->m_feedback != 0);
+    QVERIFY (m_ShutDownUI->m_Feedback != 0);
 
 
     delete m_ShutDownUI;

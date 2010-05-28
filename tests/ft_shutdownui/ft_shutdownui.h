@@ -39,8 +39,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testShutdownUIShowHide ();
+    void testConstructDestruct ();
     void testShutdownUIRealizing ();
+    void testShutdownUIShowHide ();
 
 private:
     XChecker                   m_XChecker;

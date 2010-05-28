@@ -21,6 +21,8 @@
 #include "xchecker.h"
 #include "QX11Info"
 
+#include <MNotification>
+
 #define SHORT_DEBUG
 #define DEBUG
 #include "../../src/debug.h"
@@ -462,6 +464,29 @@ XChecker::debug_dump_windows(
 }
 
 
+void 
+XChecker::debugDumpNotifications ()
+{
+    QList<MNotification *> notifications;
+    int                    n = 0;
 
+    notifications = MNotification::notifications();
+    foreach (MNotification *notification, notifications) {
+        QString  body;
+        QString  image;
+        QString  summary;
+
+        body = notification->body ();
+        image = notification->image ();
+        summary = notification->summary ();
+        SYS_DEBUG ("************ Notification %d *****************", n);
+        SYS_DEBUG ("*** summary     = %s", SYS_STR(summary));
+        SYS_DEBUG ("*** body        = %s", SYS_STR(body));
+        SYS_DEBUG ("*** image       = %s", SYS_STR(image));
+        SYS_DEBUG ("*** isPublished = %s", SYS_BOOL(notification->isPublished()));
+
+        ++n;
+    }
+}
 
 
