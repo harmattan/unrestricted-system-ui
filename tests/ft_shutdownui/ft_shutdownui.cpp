@@ -140,7 +140,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     m_XChecker.debug_dump_windows (WindowID);
 
     /*
-     * Also the 
+     * Also the labels has to be visible. 
      */
     QVERIFY (m_ShutDownUI->m_Label1 != 0 && 
             m_ShutDownUI->m_Label1->isVisible());

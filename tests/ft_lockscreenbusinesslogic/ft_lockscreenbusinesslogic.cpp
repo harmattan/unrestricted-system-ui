@@ -124,6 +124,9 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
     QVERIFY (m_XChecker.check_window(
+                EventEaterWindowID, 
+                XChecker::CheckIsFullscreen));
+    QVERIFY (m_XChecker.check_window(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
@@ -172,6 +175,9 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     QVERIFY (m_XChecker.check_window(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.check_window(
+                LockScreenUIWindowID, 
+                XChecker::CheckIsFullscreen));
     
     QTest::qWait (DelayBetweenTests);
 
@@ -246,6 +252,9 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
     QVERIFY (m_XChecker.check_window(
+                EventEaterWindowID, 
+                XChecker::CheckIsFullscreen));
+    QVERIFY (m_XChecker.check_window(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
@@ -294,6 +303,9 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     QVERIFY (m_XChecker.check_window(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.check_window(
+                LockScreenUIWindowID, 
+                XChecker::CheckIsFullscreen));
     
     QTest::qWait (DelayBetweenTests);
 
@@ -438,6 +450,9 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     QVERIFY (m_XChecker.check_window(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.check_window(
+                LockScreenUIWindowID, 
+                XChecker::CheckIsFullscreen));
 
     QTest::qWait (DelayBetweenTests);
 
