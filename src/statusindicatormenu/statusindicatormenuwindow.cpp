@@ -114,7 +114,8 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
-    extensionArea->init();
+    // Revert this once the new MeegoTouch has been released...
+    // extensionArea->init();
 
     // Create a button for accessing the full settings
     //% "Settings"
