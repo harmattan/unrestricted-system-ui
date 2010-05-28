@@ -1,4 +1,4 @@
-system-ui (0.15.13~1) harmattan; urgency=low
+system-ui (0.15.13-1) harmattan; urgency=low
 
   * Fixes: NB#158901 - Sysuid is causing very high wakeups which prevents
                        the device to go in idle mode
