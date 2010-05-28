@@ -27,6 +27,8 @@
 #include <MApplicationWindow>
 #include <MSceneManager>
 #include <MTheme>
+#include <MLabel>
+#include <MImageWidget>
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -129,11 +131,33 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
             2000);
     QTest::qWait (WMDelay);
 
+    /*
+     * After the WMDelay the window has to be visible.
+     */
     WindowID = m_ShutDownUI->internalWinId();
     QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
     m_XChecker.debug_dump_windows (WindowID);
 
-    QTest::qWait (6000);
+    /*
+     * Also the 
+     */
+    QVERIFY (m_ShutDownUI->m_Label1 != 0 && 
+            m_ShutDownUI->m_Label1->isVisible());
+    QVERIFY (m_ShutDownUI->m_Label2 != 0 && 
+            m_ShutDownUI->m_Label2->isVisible());
+
+    /*
+     * Then we wait a little bit more than the reguiested delay while the labels
+     * disappear and the image is shown.
+     */
+    QTest::qWait (2500);
+    QVERIFY (m_ShutDownUI->m_Image != 0 && 
+            m_ShutDownUI->m_Image->isVisible());
+
+    /*
+     * A bit more to see the screen dimming.
+     */
+    QTest::qWait (3000);
 
     /*
      * Then we hide the window and so we can see if it is really gone.
