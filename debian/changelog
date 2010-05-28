@@ -84,7 +84,7 @@ system-ui (0.15.6-1) harmattan; urgency=low
     bugs:
   * Fixes: NB#166396 - SystemUI disables LED
   * Fixes: NB#165873 - LED's should be enabled by default
-  * Implemented: SWP#2048 Integrate notification system with non-graphical feedback framework
+  * Implemented: SWP#DUI-2048 Integrate notification system with non-graphical feedback framework
 
  -- Mikko Levonmaa <mikko.levonmaa@ixonos.com>  Wed, 06 May 2010 11:00:10 +0200
 
