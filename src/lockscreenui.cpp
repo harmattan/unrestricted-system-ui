@@ -158,6 +158,7 @@ LockScreenUI::LockScreenUI () :
 {
     SYS_DEBUG ("");
 
+    setBackgroundBrush (QBrush(Qt::black));
     QTimer::singleShot (0, this, SLOT(realize()));
 }
 
@@ -285,6 +286,9 @@ LockScreenUI::updateMissedEvents (int emails,
     }
 }
 
+/*********************************************************************************
+ * The EventEaterUI implementation.
+ */
 EventEaterUI::EventEaterUI ()
 {
     SYS_DEBUG ("");
