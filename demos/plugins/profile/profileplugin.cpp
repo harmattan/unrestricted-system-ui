@@ -45,7 +45,7 @@ bool ProfilePlugin::initialize(const QString &)
     return true;
 }
 
-QGraphicsWidget *ProfilePlugin::widget()
+MWidget *ProfilePlugin::widget()
 {
     return profile;
 }

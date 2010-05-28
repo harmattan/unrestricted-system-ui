@@ -42,7 +42,7 @@ public:
 
     // Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
-    virtual QGraphicsWidget *widget();
+    virtual MWidget *widget();
 
 private:
     MStatusIndicatorMenuInterface *statusIndicatorMenu;
