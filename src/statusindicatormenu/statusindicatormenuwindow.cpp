@@ -62,10 +62,8 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
     sceneWindow(new StatusIndicatorMenuSceneWindow),
     statusBar(new MStatusBar),
-    pannableViewport(new MPannableViewport),
-    pannableLayout(new QGraphicsLinearLayout(Qt::Vertical)),
-    notificationArea(new NotificationArea),
-    closeButtonOverlay(new MOverlay)
+    pannableViewport(NULL),
+    closeButtonOverlay(NULL)
 {
     setTranslucentBackground(true);
     setWindowTitle("Status Indicator Menu");
@@ -76,10 +74,8 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     // Show status bar
     sceneManager()->appearSceneWindowNow(statusBar.data());
 
-    // Set up a notification area
-    notificationArea->setVisible(false);
-    connect(notificationArea, SIGNAL(notificationCountChanged(int)), this, SLOT(setNotificationCount(int)));
-    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+    // Create close button overlay
+    closeButtonOverlay = QSharedPointer<MOverlay>(createCloseButtonOverlay());
 
     // Put all the stuff into the scene window layout
     pannableViewport = createPannableArea();
@@ -92,20 +88,13 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     sceneWindow->setObjectName("StatusIndicatorMenuWindow");
     sceneManager()->appearSceneWindowNow(sceneWindow.data());
 
-    // Create close button overlay
-    closeButtonOverlay = QSharedPointer<MOverlay>(createCloseButtonOverlay());
-
     // Set the X window type, so that the window does not appear in the switcher and 
-    // home screen con provide the correct UI flow
+    // home screen can provide the correct UI flow
     setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
 }
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
-    if(!notificationArea->isVisible()) {
-        // If the notification area is not in the layout destroy it manually
-        delete notificationArea;
-    }
 }
 
 QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
@@ -146,9 +135,13 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
 MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
 {
     // Create pannable area contents
-    pannableLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    NotificationArea *notificationArea = new NotificationArea;
+    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+
+    QGraphicsLinearLayout *pannableLayout = new QGraphicsLinearLayout(Qt::Vertical);
     pannableLayout->setContentsMargins(0, 0, 0, 0);
     pannableLayout->setSpacing(0);
+    pannableLayout->addItem(notificationArea);
     pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
     pannableLayout->addItem(createCloseButtonRow());
 
@@ -160,6 +153,7 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     connect(pannedWidget, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
 
     // Setup the pannable viewport
+    MPannableViewport *pannableViewport = new MPannableViewport;
     pannableViewport->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pannableViewport->setWidget(pannedWidget);
 
@@ -275,21 +269,6 @@ void StatusIndicatorMenuWindow::showStatusIndicatorMenu()
 void StatusIndicatorMenuWindow::hideStatusIndicatorMenu()
 {
     hide();
-}
-
-void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount)
-{
-    if(notificationCount > 0) {
-        if(!notificationArea->isVisible()) {
-            notificationArea->setVisible(true);
-            pannableLayout->insertItem(0, notificationArea);
-        }
-    } else {
-        if(notificationArea->isVisible()) {
-            notificationArea->setVisible(false);
-            pannableLayout->removeItem(notificationArea);
-        }
-    }
 }
 
 void StatusIndicatorMenuWindow::launchControlPanelAndHide()

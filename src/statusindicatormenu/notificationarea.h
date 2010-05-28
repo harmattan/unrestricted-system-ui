@@ -75,11 +75,6 @@ private slots:
 
 signals:
     /*!
-     * \brief A signal for notifying about changes in the notification count.
-     */
-    void notificationCountChanged(int notificationCount);
-
-    /*!
      * \brief A signal that is emitted whenever an event banner on the notification area is clicked
      */
     void bannerClicked();

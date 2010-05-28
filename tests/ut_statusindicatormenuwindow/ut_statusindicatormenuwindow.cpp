@@ -118,19 +118,6 @@ void Ut_StatusIndicatorMenuWindow::testSettingsButtonClicked()
     QVERIFY(mApplicationIfProxyLaunchCalled);
 }
 
-void Ut_StatusIndicatorMenuWindow::testNotificationAreaVisibility()
-{
-    NotificationArea *notificationArea = gNotificationAreaStub->stubLastCallTo("notificationAreaConstructor").parameter<NotificationArea*>(0);
-
-    QVERIFY(!notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 1));
-    QVERIFY(notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 10));
-    QVERIFY(notificationArea->isVisible());
-    QMetaObject::invokeMethod(notificationArea, "notificationCountChanged", Q_ARG(int, 0));
-    QVERIFY(!notificationArea->isVisible());
-}
-
 void Ut_StatusIndicatorMenuWindow::testHideIfPointBeyondMenu()
 {
     QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);

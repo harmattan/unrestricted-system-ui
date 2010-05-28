@@ -54,7 +54,6 @@ private slots:
     void testMakeVisible();
     void testCloseButtonOverlay();
     void testSettingsButtonClicked();
-    void testNotificationAreaVisibility();
     void testHideIfPointBeyondMenu();
     void testCloseButtonPosition();
     void testSetPannability();

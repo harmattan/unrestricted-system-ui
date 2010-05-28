@@ -65,8 +65,6 @@ void NotificationArea::addNotification(MInfoBanner &notification)
     QList<MInfoBanner *> banners(model()->banners());
     banners.push_front(&notification);
     model()->setBanners(banners);
-
-    emit notificationCountChanged(model()->banners().count());
 }
 
 void NotificationArea::removeNotification(MInfoBanner &notification)
@@ -76,6 +74,4 @@ void NotificationArea::removeNotification(MInfoBanner &notification)
     banners.removeOne(&notification);
     model()->setBanners(banners);
     notification.setParentItem(NULL);
-
-    emit notificationCountChanged(model()->banners().count());
 }

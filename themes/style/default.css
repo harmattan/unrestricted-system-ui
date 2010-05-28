@@ -26,20 +26,13 @@ MWidgetStyle#StatusIndicatorMenuPannableWidget {
 }
 
 NotificationAreaStyle {
-    minimum-size: 100% 80;
+    minimum-size: 100% 0;
     margin-left:   0;
     margin-top:    0;
     margin-right:  0;
     margin-bottom: 0;
 }
                 
-MSceneWindowAnimatorStyle:event_notification {
-    transition-in-type: "move.right";
-    transition-out-type: "move.to";
-    transition-out-destination: 0 78;
-    transition-out-fade: false;
-}
-
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
     font: $FONT_XSMALL;
     minimum-size: 8.8mm 7.3mm;
