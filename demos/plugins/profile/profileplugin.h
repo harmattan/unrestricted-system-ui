@@ -20,7 +20,6 @@
 #ifndef PROFILEPLUGIN_H
 #define PROFILEPLUGIN_H
 
-#include <MWidget>
 #include <MStatusIndicatorMenuExtensionInterface>
 #include <QObject>
 
