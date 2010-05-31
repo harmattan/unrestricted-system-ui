@@ -182,7 +182,7 @@ ShutdownBusinessLogic::shutdownDeniedUSB ()
            //% "USB cable plugged in. Unplug the USB cable to shutdown."
            qtTrId ("qtn_shut_unplug_usb"));
 
-    notification->setImage ("icon-m-USBhandling-usb");
+    notification->setImage ("icon-m-common-usb");
 
     success = notification->publish ();
     if (!success) {
