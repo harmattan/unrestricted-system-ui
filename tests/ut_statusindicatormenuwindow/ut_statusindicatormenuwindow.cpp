@@ -22,6 +22,7 @@
 #include "pluginlist_stub.h"
 #include <MApplication>
 #include <MApplicationIfProxy>
+#include <MSceneManager>
 #include <QtTest/QtTest>
 #include <MOverlay>
 #include <MButton>
@@ -126,24 +127,29 @@ void Ut_StatusIndicatorMenuWindow::testHideIfPointBeyondMenu()
     emit clicked(QPointF(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height()));
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
-    void Ut_StatusIndicatorMenuWindow::testCloseButtonPosition()
+
+void Ut_StatusIndicatorMenuWindow::testCloseButtonPosition()
 {
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0,0);
+    // When the pannable viewport has not been panned the close button overlay should not be visible
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), false);
 
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(statusIndicatorMenuWindow->geometry().width(),statusIndicatorMenuWindow->geometry().height());
+    // When the pannable viewport has not been panned outside the screen the close button overlay should be visible
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, statusIndicatorMenuWindow->geometry().height());
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), true);
 }
 
 void Ut_StatusIndicatorMenuWindow::testSetPannability()
 {
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
-    statusIndicatorMenuWindow->pannableViewport->widget()->setMinimumHeight(0);
+    qreal pannedWidgetHeight = statusIndicatorMenuWindow->pannableViewport->widget()->geometry().height();
+
+    // When the pannable viewport is taller than the panned widget there is no need to pan and the pannability should be disabled
+    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetHeight + 1));
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), false);
 
-    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0,0,100,100));
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height());
+    // When the pannable viewport is not taller than the panned widget there is a need to pan and the pannability should be enabled
+    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetHeight - 1));
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), true);
 }
@@ -155,16 +161,18 @@ void Ut_StatusIndicatorMenuWindow::testWindowType()
 
 void Ut_StatusIndicatorMenuWindow::testPannableAreaBackgroundWidget()
 {
-    statusIndicatorMenuWindow->pannableViewport->widget()->setMinimumHeight(0);
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0,0);
+    // When the pannable viewport has not been panned the background height should be 0
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), qreal(0));
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), qreal(0));
 
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 420);
+    // When the pannable viewport has been panned the background height should reach the bottom of the screen
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 10);
     emit positionOrSizeChanged();
-    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), qreal(420));
-    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), qreal(420));
+    qreal expectedHeight = statusIndicatorMenuWindow->sceneManager()->visibleSceneSize().height() - statusIndicatorMenuWindow->pannableViewport->mapToItem(statusIndicatorMenuWindow->sceneWindow.data(), QPointF()).y();
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), expectedHeight);
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), expectedHeight);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)
