@@ -14,7 +14,7 @@ MSceneWindowStyle#StatusIndicatorMenuWindow {
 }
 
 MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
-    background-image: "duiapplicationpage-background";
+    background-image: "meegotouch-applicationpage-background";
 }
 
 MWidgetStyle#CloseButtonArea {
@@ -26,7 +26,7 @@ MWidgetStyle#StatusIndicatorMenuPannableWidget {
 }
 
 MWidgetStyle#StatusIndicatorMenuWindowBackground {
-    background-image: "duiapplicationpage-background";
+    background-image: "meegotouch-applicationpage-background";
     minimum-size: 100% 0;
     maximum-size: 100% 0;
 }
