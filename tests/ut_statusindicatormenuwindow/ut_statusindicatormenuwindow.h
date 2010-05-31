@@ -58,6 +58,7 @@ private slots:
     void testCloseButtonPosition();
     void testSetPannability();
     void testWindowType();
+    void testPannableAreaBackgroundWidget();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

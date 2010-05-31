@@ -153,4 +153,18 @@ void Ut_StatusIndicatorMenuWindow::testWindowType()
     QVERIFY(statusIndicatorMenuWindow->testAttribute(Qt::WA_X11NetWmWindowTypeMenu));
 }
 
+void Ut_StatusIndicatorMenuWindow::testPannableAreaBackgroundWidget()
+{
+    statusIndicatorMenuWindow->pannableViewport->widget()->setMinimumHeight(0);
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0,0);
+    emit positionOrSizeChanged();
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), qreal(0));
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), qreal(0));
+
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 420);
+    emit positionOrSizeChanged();
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), qreal(420));
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), qreal(420));
+}
+
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

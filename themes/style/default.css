@@ -25,6 +25,12 @@ MWidgetStyle#StatusIndicatorMenuPannableWidget {
     background-image: status-indicator-menu-background;
 }
 
+MWidgetStyle#StatusIndicatorMenuWindowBackground {
+    background-image: "duiapplicationpage-background";
+    minimum-size: 100% 0;
+    maximum-size: 100% 0;
+}
+
 NotificationAreaStyle {
     minimum-size: 100% 0;
     margin-left:   0;
