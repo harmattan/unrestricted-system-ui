@@ -183,8 +183,8 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     QVERIFY (logic->m_Ui != 0);
     WindowID = logic->m_Ui->internalWinId();
     SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
-    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsFullscreen));
+    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
     m_XChecker.debug_dump_windows (WindowID);
 
     QTest::qWait (5000);

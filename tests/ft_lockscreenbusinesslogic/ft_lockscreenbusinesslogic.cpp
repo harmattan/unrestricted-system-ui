@@ -120,13 +120,13 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (EventEaterWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsFullscreen));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
@@ -146,10 +146,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (EventEaterWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
@@ -169,13 +169,13 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsFullscreen));
     
@@ -195,10 +195,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
@@ -248,13 +248,13 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (EventEaterWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsFullscreen));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 
@@ -274,10 +274,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (EventEaterWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
@@ -297,13 +297,13 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsFullscreen));
     
@@ -323,10 +323,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
     
@@ -444,13 +444,13 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsFullscreen));
 
@@ -471,10 +471,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("*** EventEaterWindowID   = 0x%lx", EventEaterWindowID);
 
     m_XChecker.debug_dump_windows (LockScreenUIWindowID);
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID, 
                 XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.check_window(
+    QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 }

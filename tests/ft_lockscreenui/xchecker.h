@@ -43,13 +43,21 @@ public:
         CheckIsFullscreen,
     } RequestCode;
 
-    bool check_window (Window WindowID, XChecker::RequestCode  OpCode);
+    bool checkWindow (Window WindowID, XChecker::RequestCode OpCode);
+    bool checkWindow (const QString &WMClass, XChecker::RequestCode OpCode);
+
     void debug_dump_windows(Window highlighted = None);
     void debugDumpNotifications ();
 
 private:
     Display *display();
-    
+
+    bool check_window_rec (
+            Display               *dpy, 
+            Window                 WindowID, 
+            const QString         &WMClass,
+            XChecker::RequestCode  opCode);
+ 
     char *get_atom_prop (Display *dpy, Window w, Atom atom);
     Window get_win_prop(Display *dpy, Window w, Atom atom);
     unsigned long get_card_prop(Display *dpy, Window w, Atom atom);

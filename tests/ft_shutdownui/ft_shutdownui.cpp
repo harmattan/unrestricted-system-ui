@@ -148,8 +148,8 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
      * After the WMDelay the window has to be visible.
      */
     WindowID = m_ShutDownUI->internalWinId();
-    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsFullscreen));
+    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
+    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
     m_XChecker.debug_dump_windows (WindowID);
 
     /*
@@ -178,7 +178,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
      */
     m_ShutDownUI->hide ();
     QTest::qWait (WMDelay);
-    QVERIFY (m_XChecker.check_window(WindowID, XChecker::CheckIsInvisible));
+    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsInvisible));
 
     /*
      * Cleaning up.

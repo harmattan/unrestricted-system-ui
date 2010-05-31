@@ -49,6 +49,10 @@ public:
     qint32   m_Reply;
 };
 
+/*!
+ * Tests the lockscreenui showing/hiding by sending dbus messages to the
+ * sysuid.
+ */
 class Ft_LockDBusInterface : public QObject
 {
     Q_OBJECT
@@ -64,6 +68,8 @@ private slots:
 private:
     void lockScreen ();
     void unLockScreen ();
+    void checkLockIsVisible ();
+    void checkLockIsInvisible ();
 
 private:
     XChecker             m_XChecker;

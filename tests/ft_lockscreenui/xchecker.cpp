@@ -236,7 +236,7 @@ XChecker::get_map_state (
 		case IsUnviewable:
 			return "IsUnviewable";
 		case IsViewable:
-			return "IsViewable";
+			return "\033[1mIsViewable\033[0;39m";
 		default:
 			return "";
 	}
@@ -276,7 +276,7 @@ XChecker::pr (
               &depth_return);
 
 	for (i = 0; i < level; ++i)
-		indent += "    ";
+		indent += " ";
 
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
@@ -309,7 +309,7 @@ XChecker::pr (
     const char *HighlightStart = Highlight ? "\033[1;31m" : "";
     const char *HighlightEnd = Highlight ? "\033[0;39m" : "";
     if (n_children == 0) {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %dx%d %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s  %3dx%3d  %-16s %s", 
                 nthWindow,
                 SYS_STR(indent), 
                 HighlightStart, WindowID, HighlightEnd,
@@ -318,7 +318,7 @@ XChecker::pr (
 			    wmclass ? wmclass : "(none)",
                 SYS_STR(windowName));
 	} else {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s %dx%d %12s %s", 
+        SYS_DEBUG ("%03d %s%s0x%lx%s %8s  %3dx%3d  %-16s %s", 
                 nthWindow,
                 SYS_STR(indent), 
                 HighlightStart, WindowID, HighlightEnd,
@@ -339,8 +339,109 @@ XChecker::pr (
 	free(wmstate);
 }
 
+
 bool
-XChecker::check_window (
+XChecker::check_window_rec (
+        Display               *dpy, 
+        Window                 WindowID, 
+        const QString         &WMClass,
+        XChecker::RequestCode  opCode)
+{
+    Window            rootR;
+    Window            parentR;
+    unsigned int      n_children = 0;
+    Window           *child_l = NULL;
+    char             *wmclass;
+	XWindowAttributes attrs = { 0 };
+
+    wmclass = get_str_prop (dpy, WindowID, class_atom);
+    XGetWindowAttributes(dpy, WindowID, &attrs);
+    
+    /*
+     * With this opcode we check if the window stack has at least one window
+     * with the given wmclass that is trully visible. It is not a perfect test
+     * but we know only the wmclass and of course multiple windows might have
+     * the same wmclass.
+     */
+    if (opCode == CheckIsVisible) {
+        /*
+         * First we check if this window has the wmclass in question and it is
+         * trully visible.
+         */
+        if (WMClass == wmclass && attrs.map_state == IsViewable) {
+            SYS_DEBUG ("FOUND");
+            return true;
+        }
+
+        /*
+         * If not we check all the child windows...
+         */
+        XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
+        for (int i = 0; i < n_children; ++i) {
+			if (check_window_rec (dpy, child_l[i], WMClass, opCode))
+                return true;
+		}
+    } else if (opCode == CheckIsInvisible) {
+        /*
+         * This case we check all the window with the given wmclass, none of
+         * them should be visible.
+         */
+
+        /*
+         * First the current window.
+         */
+        if (WMClass == wmclass && attrs.map_state == IsViewable)
+            return false;
+
+        /*
+         * Then all the child windows.
+         */
+        XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
+        for (int i = 0; i < n_children; ++i) {
+			if (!check_window_rec (dpy, child_l[i], WMClass, opCode))
+                return false;
+		}
+
+        /*
+         * If none of the windows are visible only then we return true;
+         */
+        return true;
+    } else {
+        SYS_WARNING ("opCode %d not supported.", opCode);
+    }
+
+    return false;
+}
+
+bool
+XChecker::checkWindow (
+        const QString         &WMClass,
+        XChecker::RequestCode  OpCode)
+{
+    Display *dpy = display();
+    bool     retval = false;
+    Window   root;
+
+    root = XDefaultRootWindow (dpy);
+
+    retval = check_window_rec (dpy, root, WMClass, OpCode);
+    if (!retval && OpCode == CheckIsVisible) {
+        SYS_WARNING ("A window with WMClass set to %s should be visible.",
+                SYS_STR(WMClass));
+    } else if (!retval && OpCode == CheckIsVisible) {
+        SYS_WARNING ("None of the windows with WMClass set to %s should be "
+                "visible.", SYS_STR(WMClass));
+    }
+
+    if (!retval) 
+        debug_dump_windows ();
+
+    return retval;
+}
+
+
+bool
+XChecker::checkWindow (
         Window                 WindowID,
         XChecker::RequestCode  OpCode)
 {
@@ -459,7 +560,10 @@ XChecker::debug_dump_windows(
 	Display *dpy = display();
 	Window root;
 
-	root = XDefaultRootWindow(dpy);
+    SYS_DEBUG (" # Window  MapState   Size WMclass           Name");
+    SYS_DEBUG ("-------------------------------------------------");
+	
+    root = XDefaultRootWindow(dpy);
 	pr (highlighted, dpy, root, 0, 0);
 }
 
@@ -483,7 +587,8 @@ XChecker::debugDumpNotifications ()
         SYS_DEBUG ("*** summary     = %s", SYS_STR(summary));
         SYS_DEBUG ("*** body        = %s", SYS_STR(body));
         SYS_DEBUG ("*** image       = %s", SYS_STR(image));
-        SYS_DEBUG ("*** isPublished = %s", SYS_BOOL(notification->isPublished()));
+        SYS_DEBUG ("*** isPublished = %s", 
+                SYS_BOOL(notification->isPublished()));
 
         ++n;
     }

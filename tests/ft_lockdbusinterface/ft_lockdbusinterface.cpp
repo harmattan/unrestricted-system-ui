@@ -166,11 +166,26 @@ void
 Ft_LockDBusInterface::testLockScreen ()
 {
     lockScreen ();
+    checkLockIsVisible ();
 
     unLockScreen ();
+    checkLockIsInvisible ();
 }
 
 
+
+void 
+Ft_LockDBusInterface::cleanupTestCase()
+{
+    delete m_DbusIf;
+    if (m_MainWindow)
+        delete m_MainWindow; 
+    delete m_App;
+}
+
+/*********************************************************************************
+ * Low level methods for the Ft_LockDBusInterface class.
+ */
 /*
 dbus-send --print-reply --system --dest=com.nokia.system_ui /com/nokia/system_ui/request com.nokia.system_ui.request.tklock_open string: string: string: string: uint32:5  boolean:false boolean:false
 */
@@ -203,6 +218,7 @@ Ft_LockDBusInterface::lockScreen ()
     m_SignalSink.debugPrint();
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
+    QVERIFY (m_SignalSink.m_Reply == 1);
 
     QTest::qWait (DelayBetweenTests);
 }
@@ -230,21 +246,29 @@ Ft_LockDBusInterface::unLockScreen ()
     m_SignalSink.debugPrint();
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
+    QVERIFY (m_SignalSink.m_Reply == 1);
 
     QTest::qWait (DelayBetweenTests);
 }
 
 
-
 void 
-Ft_LockDBusInterface::cleanupTestCase()
+Ft_LockDBusInterface::checkLockIsVisible ()
 {
-    delete m_DbusIf;
-    if (m_MainWindow)
-        delete m_MainWindow; 
-    delete m_App;
+    bool windowVisible;
+        
+    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsVisible);
+    QVERIFY (windowVisible);
 }
 
+void 
+Ft_LockDBusInterface::checkLockIsInvisible ()
+{
+    bool windowVisible;
+        
+    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsInvisible);
+    QVERIFY (windowVisible);
+}
 
 QTEST_APPLESS_MAIN(Ft_LockDBusInterface)
 
