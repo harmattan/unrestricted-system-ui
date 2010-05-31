@@ -181,6 +181,7 @@ LockScreenBusinessLogicAdaptor::hideVisualAndEater ()
      * the event eater and the unlock-ui
      */
     m_LockScreenBusinessLogic->toggleEventEater (false);
+    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
 }
 
 /*!
