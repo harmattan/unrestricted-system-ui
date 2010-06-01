@@ -26,7 +26,6 @@
 
 #include <qmsystem/qmsystemstate.h>
 
-#include <MApplicationWindow>
 #include <MApplication>
 #include <MSceneManager>
 #include <MNotification>

@@ -35,7 +35,6 @@ class StatusAreaRenderer;
 class NotificationManager;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
-class MApplicationWindow;
 class UnlockNotificationSink;
 class SysUidRequest;
 
@@ -71,13 +70,6 @@ public:
      */
     UnlockNotificationSink& unlockNotificationSink ();
 
-    /*!
-     * Returns a reference to the application window.
-     *
-     * \return a reference to the application window
-     */
-    MApplicationWindow &applicationWindow ();
-
 signals:
     /*!
       * Inform about orientation changes
@@ -102,9 +94,6 @@ private:
 
     //! Status area window
     StatusAreaRenderer      *m_statusAreaWindow;
-
-    //! Application window
-    MApplicationWindow      *m_applicationWindow;
 
     //! Notification manager
     NotificationManager     *m_notificationManager;
