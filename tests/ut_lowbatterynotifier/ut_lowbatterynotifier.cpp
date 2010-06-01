@@ -59,10 +59,15 @@ void LowBatteryHelper::notificationShown ()
 
 void Ut_LowBatteryNotifier::init ()
 {
+    bool connectSuccess;
+
     m_subject = new LowBatteryNotifier ();
     m_helper = new LowBatteryHelper ();
-    connect (m_subject, SIGNAL (showNotification ()),
+
+    connectSuccess = connect (m_subject, SIGNAL (lowBatteryAlert ()),
              m_helper, SLOT (notificationShown ()));
+    QVERIFY (connectSuccess);
+
     m_subject->m_ActiveInterval = Act;
     m_subject->m_InactiveInterval = Inact;
 }
