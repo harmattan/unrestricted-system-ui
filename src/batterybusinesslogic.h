@@ -76,7 +76,6 @@ private:
     bool                         m_Sleep;
     int                          m_ActiveInterval;
     int                          m_InactiveInterval;
-    MNotification               *m_notification;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;
