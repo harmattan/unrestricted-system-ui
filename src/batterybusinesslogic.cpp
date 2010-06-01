@@ -67,7 +67,7 @@ const int   ChargingAnimationRateWall = 400; // 400 ms
 #include "debug.h"
 
 // This macro will hide the previous notification
-#ifndef UNIT_TESTING_DO_NOT_SHOW
+#ifndef UNIT_TEST
 #define NOTIFICATION(text) \
         if (m_notification != 0) \
         { \

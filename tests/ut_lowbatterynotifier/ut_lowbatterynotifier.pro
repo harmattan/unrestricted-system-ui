@@ -1,8 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_lowbatterynotifier
 
-DEFINES += UNIT_TESTING_DO_NOT_SHOW
-
 SOURCES += \
     ut_lowbatterynotifier.cpp \
     $$SRCDIR/debug.cpp \
