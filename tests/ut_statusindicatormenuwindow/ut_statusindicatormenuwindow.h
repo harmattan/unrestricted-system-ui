@@ -54,7 +54,7 @@ private slots:
     void testMakeVisible();
     void testCloseButtonOverlay();
     void testSettingsButtonClicked();
-    void testHideIfPointBeyondMenu();
+    void testWhenPressedBelowMenuContentsThenWindowShouldHide();
     void testCloseButtonPosition();
     void testSetPannability();
     void testWindowType();

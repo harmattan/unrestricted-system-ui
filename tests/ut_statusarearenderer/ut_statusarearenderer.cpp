@@ -23,7 +23,6 @@
 #include "statusarea_stub.h"
 #include "pannedwidgetcontroller_stub.h"
 #include "statusindicatormenuwindow_stub.h"
-#include "statusindicatormenuscenewindow_stub.h"
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
@@ -186,11 +185,11 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
 {
     // Initial condition
     RenderTestsHelper helper;
-    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    helper.setupRenderTests(this, statusAreaWindow);
     emit displayStateChanged(Maemo::QmDisplayState::On);
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
 
-    // Change to Dimmed state should produce a 
+    // Change to Dimmed state should produce a
     // MOnDisplayedChangeEvent with FullyOffDisplay state
     emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);

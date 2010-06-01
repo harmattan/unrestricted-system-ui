@@ -37,18 +37,20 @@ void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 }
 
-StatusIndicatorMenuSceneWindow::StatusIndicatorMenuSceneWindow(QGraphicsItem *parent) : MSceneWindow(parent)
-{
-}
-
-void StatusIndicatorMenuSceneWindow::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    emit clicked(event->scenePos());
-}
-
 PannedWidgetController::PannedWidgetController(QGraphicsItem *parent) :
-    MWidgetController(parent)
+    MWidgetController(parent),
+    bottommostWidget_(NULL)
 {
+}
+
+const QGraphicsWidget *PannedWidgetController::bottommostWidget() const
+{
+    return bottommostWidget_;
+}
+
+void PannedWidgetController::setBottommostWidget(const QGraphicsWidget *widget)
+{
+    bottommostWidget_ = widget;
 }
 
 void PannedWidgetController::setGeometry(const QRectF &rect)
@@ -57,11 +59,22 @@ void PannedWidgetController::setGeometry(const QRectF &rect)
     emit positionOrSizeChanged();
 }
 
+void PannedWidgetController::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (bottommostWidget_) {
+        // Test that the y position of the event is bigger than the bottom edge of the bottommost widget.
+        // The calculations are done in this widget's coordinate space.
+        if (event->pos().y() > bottommostWidget_->y() + bottommostWidget_->geometry().height()) {
+            emit pressedOutSideContents();
+        }
+    }
+}
+
 const QString StatusIndicatorMenuWindow::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
-    sceneWindow(new StatusIndicatorMenuSceneWindow),
+    sceneWindow(new MSceneWindow),
     statusBar(new MStatusBar),
     pannableViewport(NULL),
     closeButtonOverlay(NULL),
@@ -71,7 +84,6 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     setWindowTitle("Status Indicator Menu");
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
-    connect(sceneWindow.data(), SIGNAL(clicked(QPointF)), this, SLOT(hideIfPointBeyondMenu(QPointF)));
 
     // Show status bar
     sceneManager()->appearSceneWindowNow(statusBar.data());
@@ -101,7 +113,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     sceneWindow->setObjectName("StatusIndicatorMenuWindow");
     sceneManager()->appearSceneWindowNow(sceneWindow.data());
 
-    // Set the X window type, so that the window does not appear in the switcher and 
+    // Set the X window type, so that the window does not appear in the switcher and
     // home screen can provide the correct UI flow
     setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
 }
@@ -155,14 +167,18 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     pannableLayout->setSpacing(0);
     pannableLayout->addItem(notificationArea);
     pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
-    pannableLayout->addItem(createCloseButtonRow());
+    QGraphicsWidget *closeButtonRow = createCloseButtonRow();
+    pannableLayout->addItem(closeButtonRow);
+    pannableLayout->addStretch();
 
     // Create a container widget for the pannable area
     PannedWidgetController *pannedWidget = new PannedWidgetController;
     pannedWidget->setView(new MWidgetView(pannedWidget));
     pannedWidget->setObjectName("StatusIndicatorMenuPannableWidget");
     pannedWidget->setLayout(pannableLayout);
+    pannedWidget->setBottommostWidget(closeButtonRow);
     connect(pannedWidget, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
+    connect(pannedWidget, SIGNAL(pressedOutSideContents()), this, SLOT(hide()));
 
     // Setup the pannable viewport
     MPannableViewport *pannableViewport = new MPannableViewport;
@@ -226,27 +242,29 @@ MOverlay *StatusIndicatorMenuWindow::createCloseButtonOverlay()
 
 void StatusIndicatorMenuWindow::setPannabilityAndLayout()
 {
+    QGraphicsWidget *pannableWidget = pannableViewport->widget();
+
     // Enable pannability if there is too much content to fit on the screen
-    if (pannableViewport->geometry().height() > pannableViewport->widget()->geometry().height()) {
+    if (pannableViewport->geometry().height() > pannableWidget->effectiveSizeHint(Qt::PreferredSize).height()) {
         pannableViewport->setEnabled(false);
     } else {
         pannableViewport->setEnabled(true);
     }
 
     // Appear or disappear the close button overlay based on close area position
-    QGraphicsWidget *widget = pannableViewport->widget();
+    const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(pannableViewport->widget())->bottommostWidget();
     qreal screenHeight = sceneManager()->visibleSceneSize().height();
-    qreal yPos = widget->mapToItem(sceneWindow.data(), QPointF(widget->geometry().width(), widget->geometry().height())).y();
+    qreal yPos = closeButtonRow->mapToItem(sceneWindow.data(), QPointF(0, closeButtonRow->geometry().height())).y();
 
-    if (yPos < screenHeight) {
+    if (yPos <= screenHeight) {
         sceneManager()->disappearSceneWindowNow(closeButtonOverlay.data());
     } else {
         sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
     }
 
     // Make pannable area background window to appear when pannable widget is panned
-    qreal widgetCurrentYPos = pannableViewport->widget()->mapToItem(sceneWindow.data(), pannableViewport->widget()->geometry().topLeft()).y();
-    qreal widgetOriginalYPos = pannableViewport->widget()->mapToItem(sceneWindow.data(), QPointF()).y();
+    qreal widgetCurrentYPos = pannableWidget->mapToItem(sceneWindow.data(), pannableWidget->geometry().topLeft()).y();
+    qreal widgetOriginalYPos = pannableWidget->mapToItem(sceneWindow.data(), QPointF()).y();
     qreal viewPortYPos = pannableViewport->mapToItem(sceneWindow.data(), QPointF()).y();
 
     if (widgetCurrentYPos > widgetOriginalYPos) {
@@ -308,15 +326,3 @@ void StatusIndicatorMenuWindow::launchControlPanelAndHide()
 
     hideStatusIndicatorMenu();
 }
-
-void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point)
-{
-    QGraphicsWidget *widget = pannableViewport->widget();
-    if (widget != NULL) {
-        QRectF menuRect(sceneWindow->mapToScene(QPointF()), widget->mapToScene(QPointF(widget->geometry().width(), widget->geometry().height())));
-        if (!menuRect.contains(point)) {
-           hide();
-        }
-    }
-}
-

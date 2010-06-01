@@ -31,6 +31,7 @@ class PannedWidgetControllerStub : public StubBase {
 public:
     virtual void PannedWidgetControllerConstructor(QGraphicsItem *parent);
     virtual void setGeometry(const QRectF &rect);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
 // 2. IMPLEMENT STUB
@@ -42,6 +43,12 @@ void PannedWidgetControllerStub::setGeometry(const QRectF &rect) {
     QList<ParameterBase*> params;
     params.append( new Parameter<QRectF >(rect));
     stubMethodEntered("setGeometry",params);
+}
+
+void PannedWidgetControllerStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    QList<ParameterBase*> params;
+    params.append(new Parameter<QGraphicsSceneMouseEvent*>(event));
+    stubMethodEntered("mousePressEvent", params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -56,6 +63,10 @@ PannedWidgetController::PannedWidgetController(QGraphicsItem *parent) {
 
 void PannedWidgetController::setGeometry(const QRectF &rect) {
     gPannedWidgetControllerStub->setGeometry(rect);
+}
+
+void PannedWidgetController::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    gPannedWidgetControllerStub->mousePressEvent(event);
 }
 
 
