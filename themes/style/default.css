@@ -86,12 +86,12 @@ ClockStyle {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    time-format: "hh:mm";
-    short-time-format: "hh:mm";
+    time-format: "%R";
+    short-remove-am-pm-indicator: false;
 }
 ClockStyle:twelve-hour {
-    time-format: "h:mmap";
-    short-time-format: "h:mm";
+    time-format: "%r";
+    short-remove-am-pm-indicator: true;
 }
 MLabelStyle#ClockLabel {
     font: $FONT_SMALL;

@@ -33,7 +33,7 @@ class ClockStyle : public MWidgetStyle
     //! Formatting string for the time
     M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
     //! Formatting string for the time, short variant
-    M_STYLE_ATTRIBUTE(QString, shortTimeFormat, ShortTimeFormat)
+    M_STYLE_ATTRIBUTE(bool, shortRemoveAmPmIndicator, ShortRemoveAmPmIndicator)
 };
 
 class ClockStyleContainer : public MWidgetStyleContainer

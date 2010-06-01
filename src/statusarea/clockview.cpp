@@ -24,8 +24,11 @@
 #include <QGraphicsLinearLayout>
 #include <MViewCreator>
 #include <MLabel>
+#include <MLocale>
 
-ClockView::ClockView(Clock *controller) : MWidgetView(controller)
+ClockView::ClockView(Clock *controller) :
+    MWidgetView(controller),
+    locale(MLocale::createSystemMLocale())
 {
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->setContentsMargins(0, 0, 0, 0);
@@ -34,6 +37,10 @@ ClockView::ClockView(Clock *controller) : MWidgetView(controller)
     label = new MLabel(NULL);
     label->setObjectName("ClockLabel");
     l->addItem(label);
+
+    // React to system-wide locale changes
+    locale->connectSettings();
+    connect(locale, SIGNAL(settingsChanged()), this, SLOT(updateLabel()));
 }
 
 void ClockView::styleUpdated()
@@ -71,27 +78,17 @@ void ClockView::updateData(const QList<const char *>& modifications)
 
 void ClockView::updateLabel()
 {
-    QString timeFormat;
-    QString text;
+    QDateTime time = model()->time();
+    QString text = locale->formatDateTime(time, style()->timeFormat());
 
-    if (model()->shortDisplay()) {
-        timeFormat = style()->shortTimeFormat();
-    } else {
-        timeFormat = style()->timeFormat();
-    }
-
-    if (model()->timeFormat24h()) {
-        text = model()->time().toString(timeFormat);
-    } else {
-        /* There is no way to obtain time in 12-hour format from QTime
-         * without the am/pm indicator. We will force an am/pm indicator
-         * at the beginning of the string so that the string has time in
-         * 12-hour format and will remove this forced indicator. The style
-         * string is then free to use 'ap' if they want to show the
-         * indicator.
+    if (model()->shortDisplay() && style()->shortRemoveAmPmIndicator()) {
+        /* Remove the AM/PM indicator in the "short display" mode if the
+         * theme dictates so. Also remove possible spaces that were between
+         * the time and the AM/PM indicator.
          */
-        text = model()->time().toString(QString("ap:") + timeFormat);
-        text.remove(0, text.indexOf(':') + 1);
+        QString indicator = locale->formatDateTime(time, "%p");
+        text.remove(indicator);
+        text = text.trimmed();
     }
 
     if (text != previousLabel) {

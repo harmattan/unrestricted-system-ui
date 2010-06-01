@@ -38,7 +38,7 @@ void Clock::updateModelAndSetupTimer()
 {
     // Set the current time to the model
     QDateTime currentTime = QDateTime::currentDateTime();
-    model()->setTime(currentTime.time());
+    model()->setTime(currentTime);
 
     // Calculate the time for the next update
     QDateTime nextUpdateTime = currentTime.addSecs(60);
@@ -52,7 +52,23 @@ void Clock::updateModelAndSetupTimer()
 
 void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged)
 {
+    bool timeChanged = false;
+    bool settingsChanged = false;
+
     if (whatChanged == Maemo::QmTimeOnlySettingsChanged) {
+        settingsChanged = true;
+    } else if (whatChanged == Maemo::QmTimeTimeChanged) {
+        timeChanged = true;
+        settingsChanged = true;
+    }
+
+    if (whatChanged == Maemo::QmTimeTimeChanged) {
+        // Set the time when it was changed (set by the user)
+        updateModelAndSetupTimer();
+    }
+
+    if (whatChanged == Maemo::QmTimeOnlySettingsChanged ||
+        whatChanged == Maemo::QmTimeTimeChanged) {
         // Set the 24 hour mode when settings have changed
         model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);
     }

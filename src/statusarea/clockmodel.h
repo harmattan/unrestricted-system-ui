@@ -31,8 +31,8 @@ class ClockModel : public MWidgetModel
     Q_OBJECT
     M_MODEL(ClockModel)
 
-    //! The current time
-    M_MODEL_PROPERTY(QTime, time, Time, true, QTime::currentTime())
+    //! The current date and time
+    M_MODEL_PROPERTY(QDateTime, time, Time, true, QDateTime::currentDateTime())
     //! Whether 24 hour clock mode is used
     M_MODEL_PROPERTY(bool, timeFormat24h, TimeFormat24h, true, true)
     //! Whether to use normal or short time format to display clock
