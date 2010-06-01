@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -20,12 +22,16 @@
 #include <QTimer>
 #include <QDebug>
 
+#define DEBUG
+#include "../../../src/debug.h"
+
 namespace Maemo
 {
 
 QmBattery::QmBattery(QObject *parent) :
         QObject(parent)
 {
+    SYS_DEBUG ("");
     initValues();
 }
 
@@ -70,7 +76,8 @@ int QmBattery::getBatteryEnergyLevel()
     return energyLevel;
 }
 
-QmBattery::State QmBattery::getState()
+QmBattery::State 
+QmBattery::getState ()
 {
     return state;
 }
@@ -129,9 +136,31 @@ void QmBattery::changeLevel()
     emit batteryEnergyLevelChanged(energyLevel);
 }
 
-void QmBattery::setBatteryEnergyLevel(int level)
+void 
+QmBattery::setBatteryEnergyLevel(int level)
 {
     energyLevel = level;
+}
+
+void 
+QmBattery::emitBatteryStateChanged (
+        Maemo::QmBattery::BatteryState state)
+{
+    SYS_DEBUG ("emitting batteryStateChanged (%d)", state);
+    emit batteryStateChanged (state);
+}
+void
+QmBattery::emitChargerEvent (
+        Maemo::QmBattery::ChargerType type)
+{
+    emit chargerEvent (type);
+}
+
+void 
+QmBattery::emitChargingStateChanged (
+        Maemo::QmBattery::ChargingState state)
+{
+    emit chargingStateChanged (state);
 }
 
 }

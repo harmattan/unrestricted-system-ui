@@ -34,6 +34,9 @@ namespace Maemo
 class QmBattery : public QObject
 {
     Q_OBJECT
+
+    friend class Ft_BatteryBusinessLogic;
+
 public:
 
     /** Battery charge level states */
@@ -124,9 +127,12 @@ public:
     */
     int  getRemainingTalkTime(RemainingTimeMode mode) const;
 
+public:
+   void emitBatteryStateChanged (Maemo::QmBattery::BatteryState state);
+   void emitChargerEvent (Maemo::QmBattery::ChargerType type);
+   void emitChargingStateChanged (Maemo::QmBattery::ChargingState state);
 
 signals:
-
     /**
     * Sent when battery charge level has changed. See enumeration of
     * #Maemo::QmBattery::Level
@@ -173,8 +179,8 @@ private: //attributes
     int levelIndexInc;
     QmBattery::ChargingState state;
     QmBattery::ChargerType type;
-
 };
+
 }
 
 #endif // BATTERYSTUB_H
