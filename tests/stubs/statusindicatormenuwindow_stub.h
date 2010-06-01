@@ -36,7 +36,6 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void displayActive();
   virtual void displayInActive();
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
-  virtual void setNotificationCount(int notificationCount);
   virtual void launchControlPanelAndHide();
   virtual void hideIfPointBeyondMenu(QPointF point);
   virtual void setPannabilityAndLayout();
@@ -74,12 +73,6 @@ void StatusIndicatorMenuWindowStub::setStatusIndicatorMenuInterface(MApplication
   QList<ParameterBase*> params;
   params.append( new Parameter<MApplicationExtensionInterface * >(extension));
   stubMethodEntered("setStatusIndicatorMenuInterface",params);
-}
-
-void StatusIndicatorMenuWindowStub::setNotificationCount(int notificationCount) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<int >(notificationCount));
-  stubMethodEntered("setNotificationCount",params);
 }
 
 void StatusIndicatorMenuWindowStub::launchControlPanelAndHide() {
@@ -132,10 +125,6 @@ void StatusIndicatorMenuWindow::displayInActive() {
 
 void StatusIndicatorMenuWindow::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension) {
   gStatusIndicatorMenuWindowStub->setStatusIndicatorMenuInterface(extension);
-}
-
-void StatusIndicatorMenuWindow::setNotificationCount(int notificationCount) {
-  gStatusIndicatorMenuWindowStub->setNotificationCount(notificationCount);
 }
 
 void StatusIndicatorMenuWindow::launchControlPanelAndHide() {

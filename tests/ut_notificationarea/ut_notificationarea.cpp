@@ -16,24 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-/***************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of system ui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
 
 #include <MApplication>
 #include <MInfoBanner>
@@ -79,24 +61,18 @@ void Ut_NotificationArea::cleanup()
 
 void Ut_NotificationArea::testAddNotification()
 {
-    QSignalSpy notificationCountSpy(m_subject, SIGNAL(notificationCountChanged(int)));
     MInfoBanner notification(MInfoBanner::Information);
     emit addNotification(notification);
     QVERIFY(notification.parentItem() != NULL);
     QVERIFY(m_subject->model()->banners().contains(&notification));
-    QCOMPARE(notificationCountSpy.count(), 1);
-    QCOMPARE(notificationCountSpy.takeAt(0).at(0).toInt(), 1);
 }
 
 void Ut_NotificationArea::testRemoveNotification()
 {
-    QSignalSpy notificationCountSpy(m_subject, SIGNAL(notificationCountChanged(int)));
     MInfoBanner notification(MInfoBanner::Information);
     emit removeNotification(notification);
     QVERIFY(notification.parentItem() == NULL);
     QVERIFY(! m_subject->model()->banners().contains(&notification));
-    QCOMPARE(notificationCountSpy.count(), 1);
-    QCOMPARE(notificationCountSpy.takeAt(0).at(0).toInt(), 0);
 }
 
 void Ut_NotificationArea::testAddNotificationLatestComesFirst()

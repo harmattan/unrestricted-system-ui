@@ -26,7 +26,7 @@
 #include "notificationareamodel.h"
 
 class NotificationArea;
-class MLinearLayoutPolicy;
+class QGraphicsLinearLayout;
 
 class NotificationAreaView : public MWidgetView
 {
@@ -52,8 +52,8 @@ protected:
     //! \reimp_end
 
 private:
-    //! The layout policy of the notification area
-    MLinearLayoutPolicy *layoutPolicy;
+    //! The layout of the notification area
+    QGraphicsLinearLayout *layout;
 };
 
 #endif /* NOTIFICATIONAREAVIEW_H_ */

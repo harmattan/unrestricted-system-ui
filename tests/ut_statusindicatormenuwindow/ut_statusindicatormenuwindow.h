@@ -54,11 +54,11 @@ private slots:
     void testMakeVisible();
     void testCloseButtonOverlay();
     void testSettingsButtonClicked();
-    void testNotificationAreaVisibility();
     void testHideIfPointBeyondMenu();
     void testCloseButtonPosition();
     void testSetPannability();
     void testWindowType();
+    void testPannableAreaBackgroundWidget();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

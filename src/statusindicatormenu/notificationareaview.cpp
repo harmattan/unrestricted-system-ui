@@ -29,20 +29,11 @@
 NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     MWidgetView(controller)
 {
-    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    controller->setLayout(mainLayout);
-    MContainer *container = new MContainer("Notifications");
-    mainLayout->addItem(container);
-
     // Set layout
-    MLayout *layout = new MLayout;
-    layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    layoutPolicy->setObjectName("NotificationAreaLayoutPolicy");
-    container->centralWidget()->setLayout(layout);
-
-    // MLayout properties can only be set after the layout has a parent
+    layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    controller->setLayout(layout);
 }
 
 NotificationAreaView::~NotificationAreaView()
@@ -55,13 +46,13 @@ void NotificationAreaView::updateData(const QList<const char *>& modifications)
     foreach(member, modifications) {
         if (member == NotificationAreaModel::Banners) {
             // Remove all banners from the layoutpolicy (do not destroy them)
-            while (layoutPolicy->count() > 0) {
-                layoutPolicy->removeAt(0);
+            while (layout->count() > 0) {
+                layout->removeAt(0);
             }
 
             // Add banners from the model to the layout
             foreach(MInfoBanner * banner, model()->banners()) {
-                layoutPolicy->addItem(banner);
+                layout->addItem(banner);
             }
         }
     }

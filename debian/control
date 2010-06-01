@@ -2,7 +2,7 @@ Source: system-ui
 Section: devel
 Priority: optional
 Maintainer: Gabriel Schulhof <gabriel.schulhof@nokia.com>
-Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20),
+Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.12),
                libqmsystem-dev (>= 0.1.64), libmaemosec-dev,
                libcontextsubscriber-dev, libngf-dev, libxcomposite-dev, libxext-dev
 Standards-Version: 3.7.3
@@ -33,7 +33,8 @@ Package: system-ui-tests
 Section: devel
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, meegotestrunner, system-ui, testrunner
+Depends: ${shlibs:Depends}, meegotestrunner, system-ui,
+         testrunner, meego-env-dimming, meego-env-matti
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui

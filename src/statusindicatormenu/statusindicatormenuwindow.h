@@ -156,12 +156,6 @@ private slots:
     void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
 
     /*!
-     * \brief Sets the visibility of the notification area based on the notification count
-     * \param notificationCount the number of notifications visible
-     */
-    void setNotificationCount(int notificationCount);
-
-    /*!
      * \brief Slot for getting information about settings button clicks
      */
     void launchControlPanelAndHide();
@@ -190,12 +184,6 @@ private:
     //! The pannable area viewport
     MPannableViewport *pannableViewport;
 
-    //! The layout for the pannable area
-    QGraphicsLinearLayout *pannableLayout;
-
-    //! The notification area widget
-    NotificationArea *notificationArea;
-
     //! An overlay for the close button
     QSharedPointer<MOverlay> closeButtonOverlay;
 
@@ -210,6 +198,9 @@ private:
 
     //! Creates close button overlay
     MOverlay *createCloseButtonOverlay();
+
+    //! Pannable area background widget
+    MWidgetController *backgroundWidget;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuWindow;

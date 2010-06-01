@@ -19,7 +19,6 @@
 /* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
-#include <MApplicationWindow>
 #include <MLocale>
 #include <MTheme>
 #include <MLocale>
@@ -59,8 +58,7 @@ const QString styleDir = themeDir + "style/";
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid (QObject* parent) : QObject (parent),
-        m_applicationWindow(new MApplicationWindow)
+Sysuid::Sysuid (QObject* parent) : QObject (parent)
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
@@ -72,11 +70,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent),
 
     // Load translation of System-UI
     retranslate ();
-
-    m_applicationWindow->setWindowOpacity (0.0);
-    m_applicationWindow->setWindowFlags (Qt::FramelessWindowHint |
-                                         Qt::CustomizeWindowHint |
-                                         Qt::WindowStaysOnTopHint);
 
     m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
@@ -121,8 +114,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent),
              m_ngfNotificationSink, SLOT (addNotification (const Notification &)));
     connect (m_notificationManager, SIGNAL (notificationRemoved (uint)),
               m_ngfNotificationSink, SLOT (removeNotification (uint)));
-    connect (m_applicationWindow, SIGNAL (orientationChangeFinished (const M::Orientation &)),
-             this, SIGNAL (orientationChangeFinished (const M::Orientation &)));
 
     // Connect the notification signals for the unlock-screen notification sink
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
@@ -166,7 +157,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent),
 Sysuid::~Sysuid ()
 {
     m_Sysuid = NULL;
-    delete m_applicationWindow;
     delete m_sysuidRequest;
 }
 
@@ -229,12 +219,6 @@ MCompositorNotificationSink& Sysuid::compositorNotificationSink ()
 UnlockNotificationSink& Sysuid::unlockNotificationSink ()
 {
     return *m_unlockNotificationSink;
-}
-
-MApplicationWindow &Sysuid::applicationWindow ()
-{
-    SYS_DEBUG ("*** m_applicationWindow = %p", m_applicationWindow);
-    return *m_applicationWindow;
 }
 
 void Sysuid::applyUseMode ()
