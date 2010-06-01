@@ -50,16 +50,6 @@ UnlockHeader::dndDone ()
 
 }
 
-void
-UnlockHeader::paint (QPainter *painter,
-                     const QStyleOptionGraphicsItem *option,
-                     QWidget *widget)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-}
-
 UnlockArea::UnlockArea() {
 
 }
@@ -92,16 +82,6 @@ UnlockArea::setEnabled (bool enabled)
     Q_UNUSED(enabled);
 }
 
-void
-UnlockArea::paint (QPainter *painter,
-                   const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-}
-
 UnlockNotifications::UnlockNotifications ()
 {
 
@@ -110,15 +90,5 @@ UnlockNotifications::UnlockNotifications ()
 UnlockNotifications::~UnlockNotifications ()
 {
 
-}
-
-void
-UnlockNotifications::paint (QPainter *painter,
-                            const QStyleOptionGraphicsItem *option,
-                            QWidget *widget)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
 }
 

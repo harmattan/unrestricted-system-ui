@@ -2,14 +2,14 @@
 #define UNLOCKNOTIFICATIONS_H
 
 #include <QObject>
-#include <MWidget>
+#include <MSceneWindow>
 
 class QPixmap;
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
 
-class UnlockNotifications : public MWidget
+class UnlockNotifications : public MSceneWindow
 {
     Q_OBJECT
 
@@ -24,10 +24,6 @@ class UnlockNotifications : public MWidget
 public:
     UnlockNotifications ();
     virtual ~UnlockNotifications ();
-
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
 
 public slots:
     void updateMissedEvents (int emails,

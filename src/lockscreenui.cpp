@@ -25,6 +25,7 @@
 #include "sysuid.h"
 
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 
 #include <MApplication>
@@ -70,17 +71,27 @@ LockScreenWindow::LockScreenWindow ()
             this, SLOT(reloadLandscapeBackground()));
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
-    
+
+    m_DnDicon.setImage ("icon-m-common-locked");
+    m_DnDicon.setObjectName ("LockScreenDnDIcon");
+    m_DnDicon.setZoomFactor (1.0);
+    m_DnDicon.setParent (this);
+    m_DnDicon.setVisible (false);
+    m_DnDicon.setPos (100.0, 100.0);
+    // Check this out, what i need here ?
+
     // Load the backgrounds if any...
     reloadLandscapeBackground ();
     reloadPortraitBackground ();
+
+    setObjectName ("LockScreenWindow");
 }
 
 LockScreenWindow::~LockScreenWindow ()
 {
     delete m_confBgLandscape;
     delete m_confBgPortrait;
-}  
+}
 
 void
 LockScreenWindow::reloadLandscapeBackground ()
@@ -145,6 +156,15 @@ LockScreenWindow::paint (
     }
 }
 
+void
+LockScreenWindow::enableDnDicon (bool enable)
+{
+    SYS_DEBUG ("enable = %s", SYS_BOOL (enable));
+
+    m_DnDicon.setVisible (enable);
+
+    // TODO: Move the DnDIcon somehow...
+}
 
 /******************************************************************************
  * LockScreenUI implementation.
@@ -183,7 +203,7 @@ LockScreenUI::realize ()
 
     if (m_Realized)
         return;
-    
+
     setContentsMargins (0., 0., 0., 0.);
 
     /*
@@ -191,6 +211,8 @@ LockScreenUI::realize ()
      */
     layout = new MLayout;
     m_policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
+    m_policy->setContentsMargins (0., 0., 0., 0.);
+    m_policy->setSpacing (0.);
 
     /*
      * The topmost part of the lock-screen ui
@@ -201,33 +223,31 @@ LockScreenUI::realize ()
     m_notificationArea->setObjectName ("lockscreenNotifications");
 
     m_notificationArea->setVisible (false);
-    m_notificationArea->setSizePolicy (QSizePolicy::Preferred,
-                                       QSizePolicy::Minimum);
     /*
      * The upper part of the lock-screen ui, this shows the
      * big lock icon at right side, and the date/time at left side
      */
     m_LockLiftArea = new UnlockHeader;
-    m_LockLiftArea->setObjectName ("lockscreenHeaderContainer");
-    m_LockLiftArea->setSizePolicy (QSizePolicy::Preferred,
-                                   QSizePolicy::Minimum);
     m_policy->addItem (m_LockLiftArea);
     /*
      * And the big drag and drop area
      */
     m_LockLandArea = new UnlockArea;
-    m_LockLandArea->setObjectName ("lockscreenUnlockArea");
-    m_LockLandArea->setSizePolicy (QSizePolicy::Preferred,
-                                   QSizePolicy::Expanding);
     m_policy->addItem (m_LockLandArea);
 
     // Set the main layout
     m_SceneWindow = new LockScreenWindow;
     m_SceneWindow->setLayout (layout);
+    /* XXX: TODO ????
+    m_SceneWindow->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Preferred);
+    m_SceneWindow->setMaximumHeight (480.0);
+    */
     m_SceneWindow->appear (this);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
+    connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
+             m_SceneWindow, SLOT (enableDnDicon (bool)));
 
     connect (m_LockLandArea, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()));

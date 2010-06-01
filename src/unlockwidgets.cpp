@@ -20,7 +20,6 @@
 ****************************************************************************/
 #include "unlockwidgets.h"
 
-#include <QPixmap>
 #include <QTime>
 #include <QDateTime>
 #include <QMimeData>
@@ -30,7 +29,6 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsLinearLayout>
 
-#include <MTheme>
 #include <MLocale>
 #include <MLabel>
 #include <MImageWidget>
@@ -41,18 +39,15 @@
 
 #define DND_MIME_TYPE "application/x-dnditemdata"
 
-#define ACTIVE_RGBA     0., .67, .97, .5
-#define INACTIVE_RGBA   1.,  1.,  1., .5
-
-UnlockHeader::UnlockHeader () : MWidget (),
-    m_dnd_icon (0),
+UnlockHeader::UnlockHeader () :
     m_TimeLabel (0),
     m_DateLabel (0),
-    m_background (0),
     m_dndAction (Qt::IgnoreAction)
 {
     QGraphicsLinearLayout   *datetimeBox;
     QGraphicsLinearLayout   *lockliftBox;
+
+    setObjectName ("LockLiftArea");
 
     /*
      * The label that shows the hour and minute
@@ -69,20 +64,15 @@ UnlockHeader::UnlockHeader () : MWidget (),
     /*
      * The lock icon @ right side
      */
-    m_icon = new MImageWidget ("locket");
+    m_icon = new MImageWidget ("icon-m-common-locked");
+    m_icon->setZoomFactor (1.0);
     m_icon->setObjectName ("lockscreenIconLocked");
-
-    /*
-     * Pre-load the DnD icon
-     * and the background
-     */
-    m_dnd_icon = MTheme::pixmapCopy ("flat_big_lock");
-    m_background = MTheme::pixmapCopy ("top_fade");
 
     /*
      * Construct the Date/Time box
      */
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
+    datetimeBox->setContentsMargins (0., 0., 0., 0.);
     datetimeBox->setSpacing (0.0);
     datetimeBox->addItem (m_TimeLabel);
     datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
@@ -93,8 +83,9 @@ UnlockHeader::UnlockHeader () : MWidget (),
      * Create the main container
      */
     lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
+    lockliftBox->setContentsMargins (0., 0., 0., 0.);
     lockliftBox->addItem (datetimeBox);
-    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
+    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignTop);
     lockliftBox->addItem (m_icon);
     lockliftBox->setAlignment (m_icon, Qt::AlignRight | Qt::AlignVCenter);
 
@@ -111,8 +102,6 @@ UnlockHeader::UnlockHeader () : MWidget (),
 
 UnlockHeader::~UnlockHeader ()
 {
-    delete m_dnd_icon;
-    delete m_background;
 }
 
 void
@@ -148,15 +137,6 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
 
     drag->setMimeData (mimeData);
 
-    if (m_dnd_icon != 0)
-    {
-        drag->setPixmap (* m_dnd_icon);
-        drag->setHotSpot (QPoint (m_dnd_icon->width () / 2,
-                                  m_dnd_icon->height () / 2));
-    }
-    else
-        SYS_WARNING ("ERROR, pixmap is empty!");
-
     // Emit the 'drag started' signal
     emit activateArea (true);
 
@@ -185,30 +165,14 @@ UnlockHeader::dndDone ()
         emit activateArea (false);
 }
 
-void
-UnlockHeader::paint (QPainter *painter,
-                     const QStyleOptionGraphicsItem *option,
-                     QWidget *widget)
-{
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
-
-    const int margin = 10; // FIXME
-
-    painter->drawPixmap (-margin,
-                         -margin,
-                         (int) geometry ().width () + 2 * margin,
-                         (int) m_background->height (),
-                         * m_background);
-}
-
-
-UnlockArea::UnlockArea () : MWidget (),
+UnlockArea::UnlockArea () :
     m_enabled (false),
     m_active (false)
 {
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
+
+    setObjectName ("LockLandArea");
 
     m_unlock_icon = new MImageWidget ("unlocked");
     m_unlock_icon->setObjectName ("lockscreenIconUnlock");
@@ -241,7 +205,8 @@ UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
         event->setDropAction (Qt::MoveAction);
         event->accept ();
 
-        // TODO: set border to blue one
+        setObjectName ("LockLandAreaActive");
+
         m_unlock_icon->setImage ("unlock_drop");
 
         m_active = true;
@@ -260,8 +225,7 @@ UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
         event->setDropAction (Qt::MoveAction);
         event->accept ();
 
-        // TODO: set border to gray one
-        m_unlock_icon->setImage ("unlocked");
+        setObjectName ("LockLandAreaDragged");
 
         m_active = false;
 
@@ -288,7 +252,7 @@ UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
         m_unlock_icon->setImage ("unlocked");
 
         m_active = false;
-        m_enabled = false;
+        setEnabled (false);
     }
     else
         event->ignore ();
@@ -300,59 +264,24 @@ UnlockArea::setEnabled (bool enabled)
     if (m_enabled == enabled)
         return;
 
+    
     m_enabled = enabled;
 
     m_unlock_icon->setVisible (m_enabled);
 
-    update ();
-}
-
-void
-UnlockArea::paint (QPainter *painter,
-                   const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
-{
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
-
-    const qreal borderwidth = 20.; // FIXME
-
-    if (m_enabled)
+    if (! m_enabled)
     {
-        // TODO: parse it from some theme or css file
-        QColor border_color;
-        if (m_active)
-            border_color.setRgbF (ACTIVE_RGBA);
-        else
-            border_color.setRgbF (INACTIVE_RGBA);
-
-        // Top
-        painter->fillRect (0.,
-                           0.,
-                           size ().width (),
-                           borderwidth,
-                           border_color);
-
-        // Bottom
-        painter->fillRect (0.,
-                           size ().height () - borderwidth,
-                           size ().width (),
-                           borderwidth,
-                           border_color);
-
-        // Left
-        painter->fillRect (0.,
-                           borderwidth,
-                           borderwidth,
-                           size ().height () - 2 * borderwidth,
-                           border_color);
-
-        // Right
-        painter->fillRect (size ().width () - borderwidth,
-                           borderwidth,
-                           borderwidth,
-                           size ().height () - 2 * borderwidth,
-                           border_color);
+        setObjectName ("LockLandArea");
     }
+    else if (! m_active)
+    {
+        setObjectName ("LockLandAreaDragged");
+    }
+    else
+    {
+        setObjectName ("LockLandAreaActive");
+    }
+
+    update ();
 }
 

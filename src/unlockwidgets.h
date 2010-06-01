@@ -21,12 +21,9 @@
 #ifndef _UNLOCKWIDGETS_H
 #define _UNLOCKWIDGETS_H
 
-#include <QSizeF>
 #include <QObject>
-#include <MWidget>
-#include <MWindow>
+#include <MSceneWindow>
 
-class QPixmap;
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
@@ -35,7 +32,7 @@ class QGraphicsSceneDragDropEvent;
 
 #include "unlocknotifications.h"
 
-class UnlockHeader : public MWidget
+class UnlockHeader : public MSceneWindow
 {
     Q_OBJECT
 
@@ -44,10 +41,6 @@ public:
     virtual ~UnlockHeader ();
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
-
     void updateDateTime ();
 
 signals:
@@ -62,15 +55,13 @@ private slots:
 
 private:
     MImageWidget    *m_icon;
-    QPixmap         *m_dnd_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
-    QPixmap         *m_background;
 
     Qt::DropAction   m_dndAction;
 };
 
-class UnlockArea : public MWidget
+class UnlockArea : public MSceneWindow
 {
     Q_OBJECT
 
@@ -80,9 +71,6 @@ public:
     virtual void dragEnterEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
     virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
 
 public slots:
     void setEnabled (bool enabled);

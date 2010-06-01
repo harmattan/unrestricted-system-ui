@@ -22,12 +22,14 @@
 #define LOCKSCREENUI_H
 
 #include <MSceneWindow>
+#include <MImageWidget>
 #include <MWindow>
 #include <QBasicTimer>
 
 class QPixmap;
 class MWidget;
 class MLinearLayoutPolicy;
+class QGraphicsSceneMouseEvent;
 class MGConfItem;
 
 class LockScreenWindow : public MSceneWindow
@@ -42,6 +44,8 @@ public:
             const QStyleOptionGraphicsItem *option, 
             QWidget                        *widget = 0);
 
+public slots:
+    void enableDnDicon (bool enable);
 
 private slots:
     void reloadLandscapeBackground ();
@@ -52,6 +56,7 @@ private:
     MGConfItem      *m_confBgPortrait;
     QPixmap          m_bgLandscape;
     QPixmap          m_bgPortrait;
+    MImageWidget     m_DnDicon;
 #ifdef UNIT_TEST
     friend class Ut_LockScreenUI;
     friend class Ft_LockScreenUI;
