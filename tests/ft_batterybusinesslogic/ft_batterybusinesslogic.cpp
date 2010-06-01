@@ -167,6 +167,30 @@ Ft_BatteryBusinessLogic::cleanupTestCase()
     delete app;
 }
 
+void 
+Ft_BatteryBusinessLogic::testEnterPSM ()
+{
+    m_SignalSink.reset ();
+
+    m_Subject->m_DeviceMode->setPSMState (QmDeviceMode::PSMStateOn);
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_ent_psnote");
+
+    QTest::qWait (DelayBetweenTests);
+}
+
+void 
+Ft_BatteryBusinessLogic::testLeavePSM ()
+{
+    m_SignalSink.reset ();
+
+    m_Subject->m_DeviceMode->setPSMState (QmDeviceMode::PSMStateOff);
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_exit_psnote");
+
+    QTest::qWait (DelayBetweenTests);
+}
+
 void
 Ft_BatteryBusinessLogic::testChargingComplete ()
 {

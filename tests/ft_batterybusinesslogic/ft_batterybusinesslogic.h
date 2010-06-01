@@ -72,6 +72,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testEnterPSM ();
+    void testLeavePSM ();
     void testChargingComplete ();
     void testCharging ();
     void testChargingFailed ();
