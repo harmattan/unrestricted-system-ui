@@ -428,7 +428,7 @@ XChecker::checkWindow (
     if (!retval && OpCode == CheckIsVisible) {
         SYS_WARNING ("A window with WMClass set to %s should be visible.",
                 SYS_STR(WMClass));
-    } else if (!retval && OpCode == CheckIsVisible) {
+    } else if (!retval && OpCode == CheckIsInvisible) {
         SYS_WARNING ("None of the windows with WMClass set to %s should be "
                 "visible.", SYS_STR(WMClass));
     }
