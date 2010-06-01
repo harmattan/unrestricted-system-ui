@@ -49,6 +49,11 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
              this, SIGNAL (unlockConfirmed ()));
     connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
+
+    lockUI->setWindowFlags (Qt::FramelessWindowHint |
+                            Qt::WindowStaysOnTopHint);
+    eaterUI->setWindowFlags (Qt::FramelessWindowHint |
+                             Qt::WindowStaysOnTopHint);
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
