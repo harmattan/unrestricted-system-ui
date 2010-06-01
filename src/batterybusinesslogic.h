@@ -139,13 +139,13 @@ private slots:
 private:
     typedef enum {
         NotificationCharging,
-	NotificationChargingComplete,
-	NotificationRemoveCharger,
-	NotificationChargingNotStarted,
-	NotificationRechargeBattery,
-	NotificationEnteringPSM,
-	NotificationExitingPSM,
-	NotificationLowBattery,
+	    NotificationChargingComplete,
+    	NotificationRemoveCharger,
+	    NotificationChargingNotStarted,
+    	NotificationRechargeBattery,
+	    NotificationEnteringPSM,
+    	NotificationExitingPSM,
+	    NotificationLowBattery,
     } NotificationID;
 
     void setPSMState (bool on);

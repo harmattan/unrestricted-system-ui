@@ -240,6 +240,12 @@ Ft_BatteryBusinessLogic::testChargingFailed ()
     QTest::qWait (DelayBetweenTests);
 }
 
+/*!
+ * Tests the low battery notifications. Please note, that the 'very low battery'
+ * condition is not handled here. 
+ *
+ * Please check NB#171837 for more details.
+ */
 void
 Ft_BatteryBusinessLogic::testLowBattery ()
 {

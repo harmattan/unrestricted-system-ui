@@ -210,6 +210,7 @@ BatteryBusinessLogic::BatteryBusinessLogic (
              SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
              this,
              SLOT (batteryChargerEvent (Maemo::QmBattery::ChargerType)));
+
     connect (m_DeviceMode,
              SIGNAL (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)),
              this,
