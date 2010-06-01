@@ -747,6 +747,13 @@ BatteryBusinessLogic::sendNotification (
     }
 
    SYS_DEBUG ("+++ Sending MNotification");
+#ifdef UNIT_TEST
+   /*
+    * We send this signal before the actual notification so it will arrive as
+    * soon as possible.
+    */
+   emit notificationSent (text, icon);
+#endif   
    m_notification = new MNotification (MNotification::DeviceEvent, text); 
    m_notification->setImage (icon);
    m_notification->publish ();

@@ -32,6 +32,8 @@
 
 #include "../ft_lockscreenui/xchecker.h"
 
+class QString;
+
 class SignalSink : public QObject
 {
     Q_OBJECT
@@ -44,14 +46,20 @@ public slots:
     void batteryCharging (int animationLevel);
     void batteryNotCharging ();
     void batteryBarValueChanged (int barValue);
-    
-public:
-    bool    m_BatteryChargingCame;
-    bool    m_BatteryNotChargingCame;
-    bool    m_BatteryBarValueCame;
+    void notificationSent (
+            QString      text,
+            QString      icon);
 
-    int     m_AnimationRate;
-    int     m_BarValue;
+public:
+    bool       m_NotificationCame;
+    QString    m_NotificationText;
+    QString    m_NotificationIcon;
+    bool       m_BatteryChargingCame;
+    bool       m_BatteryNotChargingCame;
+    bool       m_BatteryBarValueCame;
+
+    int        m_AnimationRate;
+    int        m_BarValue;
 };
 
 class Ft_BatteryBusinessLogic : public QObject

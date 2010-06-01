@@ -48,6 +48,9 @@ SignalSink::SignalSink()
 void
 SignalSink::reset()
 {
+    m_NotificationCame = false;
+    m_NotificationText = "";
+    m_NotificationIcon = "";
     m_BatteryChargingCame = false;
     m_BatteryNotChargingCame = false;
     m_AnimationRate = -1;
@@ -59,6 +62,13 @@ SignalSink::reset()
 void
 SignalSink::print() 
 {
+    SYS_DEBUG ("*** m_NotificationCame       = %s", 
+            SYS_BOOL(m_NotificationCame));
+    SYS_DEBUG ("*** m_NotificationText       = %s", 
+            SYS_STR(m_NotificationText));
+    SYS_DEBUG ("*** m_NotificationIcon       = %s", 
+            SYS_STR(m_NotificationIcon));
+
     SYS_DEBUG ("*** m_BatteryChargingCame    = %s", 
             SYS_BOOL(m_BatteryChargingCame));
     SYS_DEBUG ("*** m_BatteryNotChargingCame = %s", 
@@ -96,6 +106,20 @@ SignalSink::batteryBarValueChanged (
     m_BarValue = barValue;
 }
 
+void 
+SignalSink::notificationSent (
+        QString      text,
+        QString      icon)
+{
+    SYS_DEBUG ("*** text = %s", SYS_STR(text));
+    SYS_DEBUG ("*** icon = %s", SYS_STR(icon));
+
+    m_NotificationCame = true;
+    m_NotificationText = text;
+    m_NotificationIcon = icon;
+}
+
+
 /******************************************************************************
  * Ft_BatteryBusinessLogic implementation.
  */
@@ -110,14 +134,24 @@ void Ft_BatteryBusinessLogic::cleanup()
 MApplication *app;
 void Ft_BatteryBusinessLogic::initTestCase()
 {
-    int argc = 1;
-    char* app_name = (char*) "./ft_batterybusinesslogic";
+    int   argc = 1;
+    char *app_name = (char*) "./ft_batterybusinesslogic";
+    bool  connectSuccess;
+
     app = new MApplication(argc, &app_name);
     
     systemUIGConf = new SystemUIGConf();
-    
+   
+    /*
+     * Creating one batterybusinesslogic and connecting to its relevant signals.
+     */
     SYS_DEBUG ("+++ Creating BatteryBusinessLogic");
     m_Subject = new BatteryBusinessLogic (systemUIGConf);
+
+    connectSuccess = connect (
+            m_Subject, SIGNAL(notificationSent(QString, QString)),
+            &m_SignalSink, SLOT(notificationSent(QString, QString)));
+    QVERIFY (connectSuccess);
 }
 
 void 
@@ -136,17 +170,31 @@ Ft_BatteryBusinessLogic::cleanupTestCase()
 void
 Ft_BatteryBusinessLogic::testChargingComplete ()
 {
+    m_SignalSink.reset ();
+
     m_Subject->m_Battery->emitBatteryStateChanged (QmBattery::StateFull);
-    m_XChecker.debugDumpNotifications ();
+
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_charcomp");
+    QVERIFY (m_SignalSink.m_NotificationIcon ==
+            "icon-m-energy-management-charging-complete");
+    
     QTest::qWait (DelayBetweenTests);
 }
 
 void
 Ft_BatteryBusinessLogic::testCharging ()
 {
+    m_SignalSink.reset ();
+
     m_Subject->m_Battery->emitChargerEvent (QmBattery::Wall);
     m_Subject->m_Battery->emitChargingStateChanged (QmBattery::StateCharging);
-    m_XChecker.debugDumpNotifications ();
+    
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_charging");
+    QVERIFY (m_SignalSink.m_NotificationIcon ==
+            "icon-m-energy-management-charging");
+    
     QTest::qWait (DelayBetweenTests);
 }
 
@@ -154,19 +202,33 @@ Ft_BatteryBusinessLogic::testCharging ()
 void
 Ft_BatteryBusinessLogic::testChargingFailed ()
 {
+    m_SignalSink.reset ();
+
     m_Subject->m_Battery->emitChargerEvent(QmBattery::Unknown);
-    m_Subject->m_Battery->emitChargingStateChanged (QmBattery::StateChargingFailed);
-    m_XChecker.debugDumpNotifications ();
+    m_Subject->m_Battery->emitChargingStateChanged (
+            QmBattery::StateChargingFailed);
+
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_repcharger");
+    QVERIFY (m_SignalSink.m_NotificationIcon ==
+            "icon-m-energy-management-replace-charger");
+
     QTest::qWait (DelayBetweenTests);
 }
 
 void
 Ft_BatteryBusinessLogic::testLowBattery ()
 {
-    SYS_DEBUG ("====================");
+    m_SignalSink.reset ();
+
     m_Subject->m_Battery->emitChargerEvent(QmBattery::Unknown);
     m_Subject->m_Battery->emitBatteryStateChanged (QmBattery::StateLow);
-    m_XChecker.debugDumpNotifications ();
+
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_lowbatt");
+    QVERIFY (m_SignalSink.m_NotificationIcon ==
+            "icon-m-energy-management-low-battery");
+
     QTest::qWait (DelayBetweenTests);
 }
 

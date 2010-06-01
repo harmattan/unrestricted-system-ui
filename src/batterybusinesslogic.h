@@ -109,7 +109,13 @@ signals:
     void batteryFullyCharged ();
 
 #ifdef UNIT_TEST
-    void showNotification ();
+    /*
+     * To simplify the test case we use this signal that we can catch. See 
+     * NB#171466 for further details.
+     */
+    void notificationSent (
+            QString      text,
+            QString      icon);
 #endif
 
 public slots:
