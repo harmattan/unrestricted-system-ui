@@ -175,6 +175,7 @@ Ft_BatteryBusinessLogic::testEnterPSM ()
     m_Subject->m_DeviceMode->setPSMState (QmDeviceMode::PSMStateOn);
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_ent_psnote");
+    QVERIFY (m_SignalSink.m_NotificationIcon == "");
 
     QTest::qWait (DelayBetweenTests);
 }
@@ -187,6 +188,7 @@ Ft_BatteryBusinessLogic::testLeavePSM ()
     m_Subject->m_DeviceMode->setPSMState (QmDeviceMode::PSMStateOff);
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_exit_psnote");
+    QVERIFY (m_SignalSink.m_NotificationIcon == "");
 
     QTest::qWait (DelayBetweenTests);
 }
