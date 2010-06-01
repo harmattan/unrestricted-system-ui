@@ -46,6 +46,12 @@
 class QTimer;
 class MNotification;
 
+/*!
+ * Please note that this class will emit the lowBatteryAlert() when the user
+ * needed to be alerted about the low battery condition, that is this class will
+ * not generate new notifications. The BatteryBusinessLogic will connect to this
+ * signal and handle the notifications.
+ */
 class LowBatteryNotifier : public QObject
 {
     Q_OBJECT
@@ -148,7 +154,8 @@ private:
     
     void sendNotification (BatteryBusinessLogic::NotificationID id); 
     void sendNotification (
-		    const QString &text, 
+		    const QString &text,
+            const QString &feedback = QString(""),
 		    const QString &icon = QString(""));
 
     SystemUIGConf             *m_SystemUIGConf;

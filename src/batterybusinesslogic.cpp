@@ -26,6 +26,7 @@
 #include <QTime>
 
 #include <MNotification>
+#include <MFeedback>
 #include <MGConfItem>
 
 using namespace Maemo;
@@ -38,29 +39,13 @@ using namespace Maemo;
 
 */
 
-namespace
-{
-//% "Charging"
-const char *ChargingText = QT_TRID_NOOP ("qtn_ener_charging");
-//% "Charging not started. Replace charger."
-const char *ChargingNotStartedText = QT_TRID_NOOP ("qtn_ener_repcharger");
-//% "Charging complete"
-const char *ChargingCompleteText = QT_TRID_NOOP ("qtn_ener_charcomp");
-//% "Disconnect charger from power supply to save energy"
-const char *DisconnectChargerText = QT_TRID_NOOP ("qtn_ener_remcha");
-//% "Low battery"
-const char *LowBatteryText = QT_TRID_NOOP ("qtn_ener_lowbatt");
-//% "Entering power save mode"
-const char *EnterPSMText = QT_TRID_NOOP ("qtn_ener_ent_psnote");
-//% "Exiting power save mode"
-const char *ExitPSMText = QT_TRID_NOOP ("qtn_ener_exit_psnote");
-//% "Recharge battery"
-const char *RechargeBatteryText = QT_TRID_NOOP ("qtn_ener_rebatt");
-
-const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
-const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
-const int   ChargingAnimationRateUSB = 800; // 800 ms
-const int   ChargingAnimationRateWall = 400; // 400 ms
+namespace {
+    //% "Charging"
+    const char *ChargingText = QT_TRID_NOOP ("qtn_ener_charging");
+    const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
+    const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
+    const int   ChargingAnimationRateUSB = 800; // 800 ms
+    const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
 #define DEBUG
@@ -669,6 +654,7 @@ BatteryBusinessLogic::sendNotification (
             sendNotification (
                     //% "Charging"
                     qtTrId ("qtn_ener_charging"),
+                    "",
                     "icon-m-energy-management-charging");
             break;
 
@@ -678,6 +664,7 @@ BatteryBusinessLogic::sendNotification (
             sendNotification (
                     //% "Charging complete"
                     qtTrId ("qtn_ener_charcomp"),
+                    "",
                     "icon-m-energy-management-charging-complete");
             break;
 
@@ -685,8 +672,7 @@ BatteryBusinessLogic::sendNotification (
             SYS_DEBUG ("Notifying NotificationRemoveCharger");
             sendNotification (
                     //% "Disconnect charger from power supply to save energy"
-                    qtTrId ("qtn_ener_remcha"),
-                    "");
+                    qtTrId ("qtn_ener_remcha"));
             break;
 
         case NotificationChargingNotStarted:
@@ -694,40 +680,38 @@ BatteryBusinessLogic::sendNotification (
             sendNotification (
                     //% "Charging not started. Replace charger."
                     qtTrId ("qtn_ener_repcharger"),
+                    "IDF_WRONG_CHARGER",
                     "icon-m-energy-management-replace-charger");
-            // Sound [IDF_WRONG_CHARGER]
             break;
 
         case NotificationRechargeBattery:
             sendNotification (
                     //% "Recharge battery"
                     qtTrId ("qtn_ener_rebatt"),
+                    "IDF_RECHARGE_BATTERY",
                     "icon-m-energy-management-recharge");
-            // Sound [IDF_RECHARGE_BATTERY]
             break;
         
         case NotificationEnteringPSM:
             sendNotification (
                     //% "Entering power save mode"
                     qtTrId ("qtn_ener_ent_psnote"),
-                    "");
-            // Sound IDF_INFORMATION_STRONG
+                    "IDF_INFORMATION_STRONG");
             break;
         
         case NotificationExitingPSM:
             sendNotification (
                     //% "Exiting power save mode"
                     qtTrId ("qtn_ener_exit_psnote"),
-                    "");
-            // Sound IDF_INFORMATION_SOUND
+                    "IDF_INFORMATION_SOUND");
             break;
         
         case NotificationLowBattery:
             sendNotification (
                     //% "Low battery"
                     qtTrId ("qtn_ener_lowbatt"),
+                    "IDF_BATTERY_LOW",
                     "icon-m-energy-management-low-battery");
-            // Sound [IDF_BATTERY_LOW]
             break;
     }
 }
@@ -735,10 +719,12 @@ BatteryBusinessLogic::sendNotification (
 void 
 BatteryBusinessLogic::sendNotification (
         const QString &text,
+        const QString &feedback,
         const QString &icon)
 {
-    SYS_DEBUG ("*** text = %s", SYS_STR(text));
-    SYS_DEBUG ("*** icon = %s", SYS_STR(icon));
+    SYS_DEBUG ("*** text     = %s", SYS_STR(text));
+    SYS_DEBUG ("*** feedback = %s", SYS_STR(feedback));
+    SYS_DEBUG ("*** icon     = %s", SYS_STR(icon));
 
     if (m_notification != 0) { 
         m_notification->remove (); 
@@ -757,6 +743,11 @@ BatteryBusinessLogic::sendNotification (
    m_notification = new MNotification (MNotification::DeviceEvent, text); 
    m_notification->setImage (icon);
    m_notification->publish ();
+
+   if (!feedback.isEmpty()) {
+       MFeedback player (feedback);
+       player.play();
+   }
 }
 
 /*!
