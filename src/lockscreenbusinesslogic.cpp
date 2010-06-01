@@ -18,8 +18,6 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <MApplication>
-#include <MApplicationWindow>
 #include <MSceneManager>
 
 #include <QDBusInterface>

@@ -28,7 +28,6 @@
 #include <QGraphicsLinearLayout>
 #include <MSceneManager>
 #include <MImageWidget>
-#include <MApplicationWindow>
 #include <MLocale>
 
 #include <qmdisplaystate.h>
