@@ -78,7 +78,8 @@ private slots:
     void testCharging ();
     void testChargingFailed ();
     void testLowBattery ();
-
+    void testRemoveCharger ();
+    
 private:
     SignalSink             m_SignalSink;
     XChecker               m_XChecker;

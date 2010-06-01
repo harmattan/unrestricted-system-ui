@@ -166,7 +166,7 @@ private:
     QStringList                m_PSMThresholds;
     QStringList                m_BarValues;
     MNotification             *m_notification;
-
+    Maemo::QmBattery::ChargerType m_ChargerType;
 
 #ifdef UNIT_TEST
     friend class Ut_BatteryBusinessLogic;

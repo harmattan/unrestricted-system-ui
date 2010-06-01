@@ -18,8 +18,8 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "ft_batterybusinesslogic.h"
 #include "batterystub.h"
+#include "ft_batterybusinesslogic.h"
 
 #include <MApplication>
 #include <MTheme>
@@ -251,7 +251,9 @@ Ft_BatteryBusinessLogic::testLowBattery ()
 {
     m_SignalSink.reset ();
 
-    m_Subject->m_Battery->emitChargerEvent(QmBattery::Unknown);
+    m_Subject->m_Battery->emitChargerEvent(
+            // FIXME: Maemo::QmBattery::None
+            (Maemo::QmBattery::ChargerType) 0);
     m_Subject->m_Battery->emitBatteryStateChanged (QmBattery::StateLow);
 
     QVERIFY (m_SignalSink.m_NotificationCame);
@@ -262,6 +264,31 @@ Ft_BatteryBusinessLogic::testLowBattery ()
     QTest::qWait (DelayBetweenTests);
 }
 
+/*
+ * After the user plugs out the charger from the device, this system banner is
+ * displayed to remind the users to unplug charger from the power supply for
+ * conserving energy.  Remove charger notification should not be shown in case
+ * if USB cable is used for charging the device.
+ */
+void
+Ft_BatteryBusinessLogic::testRemoveCharger ()
+{
+    /*
+     * First we need a dedicated charger.
+     */
+    m_Subject->m_Battery->emitChargerEvent (QmBattery::Wall);
+    QTest::qWait (DelayBetweenTests);
+
+    m_SignalSink.reset ();
+    m_Subject->m_Battery->emitChargerEvent (
+            // FIXME: Maemo::QmBattery::None
+            (Maemo::QmBattery::ChargerType) 0);
+
+    QVERIFY (m_SignalSink.m_NotificationCame);
+    QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_remcha");
+    QVERIFY (m_SignalSink.m_NotificationIcon == "");
+    
+}
 
 QTEST_APPLESS_MAIN(Ft_BatteryBusinessLogic)
 

@@ -59,8 +59,7 @@ LowBatteryNotifier::LowBatteryNotifier (
         QObject *parent) :
         QObject (parent),
         m_Display (new QmDisplayState ()),
-        m_Timer (new QTimer (this)),
-        m_notification (0)
+        m_Timer (new QTimer (this))
 {
     SYS_DEBUG ("----------------------------------------------");
 
@@ -155,7 +154,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_DeviceMode (new QmDeviceMode),
     m_Led (new QmLED),
     m_LowBatteryNotifier (0),
-    m_notification (0)
+    m_notification (0),
+    m_ChargerType (QmBattery::Unknown)
 {
     SYS_DEBUG ("----------------- start ----------------------");
 
@@ -417,10 +417,15 @@ BatteryBusinessLogic::batteryChargerEvent (
     switch (type) {
         case QmBattery::None: 
             SYS_DEBUG ("QmBattery::None");
-            // No  charger connected
-            if (m_Battery->getBatteryState () == QmBattery::StateFull) {
+            /*
+             * After the user plugs out the charger from the device, this system
+             * banner is displayed to remind the users to unplug charger from
+             * the power supply for conserving energy.  Remove charger
+             * notification should not be shown in case if USB cable is used for
+             * charging the device.
+             */
+            if (m_ChargerType == QmBattery::Wall)
                 sendNotification (NotificationRemoveCharger);
-	        }
             break;
 
         case QmBattery::Wall: 
@@ -446,6 +451,8 @@ BatteryBusinessLogic::batteryChargerEvent (
             SYS_WARNING ("Unknown charger state");
             break;
     }
+
+    m_ChargerType = type;
 }
 
 void
