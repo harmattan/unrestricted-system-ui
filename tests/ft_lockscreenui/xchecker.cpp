@@ -623,7 +623,8 @@ XChecker::checkPIDs ()
     pid = pidof ("mcompositor");
     if (pid != m_CompositorPID) {
         SYS_WARNING (
-" \n"
+" \n\n\n"
+"----------------------------------------------------------------------------\n"
 "                          MCompositor crash warning \n"
 " WARNING: The PID of the mcompositor process has been changed. This probably\n"
 " means that the mcompositor has been crashed. The old PID was %d, the new\n"
@@ -632,6 +633,7 @@ XChecker::checkPIDs ()
 " the showing of certain windows will not work. If this test fails showing\n"
 " a window (e.g. the lockscreenUI or the EventEater) it is most probably\n"
 " because of the mcompositor crash.\n"
+"----------------------------------------------------------------------------\n"
 " \n", 
 m_CompositorPID, pid);
         m_CompositorPID = pid;
