@@ -257,9 +257,7 @@ XChecker::pr (
     unsigned int border_width_return, depth_return;
     QString      windowName;
 
-    SYS_DEBUG ("1");
 	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
-    SYS_DEBUG ("2");
     XGetGeometry (dpy, WindowID, &root_ret,
               &x_return, &y_return, &width_return,
               &height_return, &border_width_return,
@@ -270,23 +268,14 @@ XChecker::pr (
     for (i = 3; i >= level; --i)
         indent1 += "  ";
 
-    SYS_DEBUG ("3");
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
-    SYS_DEBUG ("4");
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
-    SYS_DEBUG ("5");
 	wmname2 = get_str_prop(dpy, WindowID, name_atom2);
-    SYS_DEBUG ("6");
 	wmtype = get_atom_prop(dpy, WindowID, win_type_atom);
-    SYS_DEBUG ("8");
 	trans_for = get_win_prop(dpy, WindowID, trans_atom);
-    SYS_DEBUG ("9");
 	hildon_stack = get_int_prop(dpy, WindowID, hildon_stack_atom);
-    SYS_DEBUG ("a");
     non_comp = get_int_prop(dpy, WindowID, non_comp_atom);
-    SYS_DEBUG ("b");
 	XGetWindowAttributes(dpy, WindowID, &attrs);
-    SYS_DEBUG ("c");
 
 	if (trans_for)
 		snprintf(buf, 100, "(transient for 0x%lx)", trans_for);
