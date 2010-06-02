@@ -1,0 +1,13 @@
+#VolumeOverlay {
+    padding-left:   10px;
+    padding-right:  10px;
+    padding-top:    10px;
+    padding-bottom: 10px;
+
+    minimum-size: -1 400;
+    preferred-size: -1 -1;
+    maximum-size: 100% 100%;
+
+    background-image : "meegotouch-notification-event-background" 10px 10px 10px 10px;
+}
+

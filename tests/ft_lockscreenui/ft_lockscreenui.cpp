@@ -38,12 +38,12 @@ using namespace Maemo;
  * We wait this much until we check if the window is actually appeared
  * disappeared from the stack of the window manager.
  */
-static int WMDelay = 400;
+static int WMDelay = 1000;
 
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 1000;
+static int DelayBetweenTests = 2500;
 
 
 void Ft_LockScreenUI::init()

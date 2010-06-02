@@ -82,6 +82,11 @@ void Ut_Clock::test24HourModeDuringCreation()
 
 void Ut_Clock::test24HourModeToggling()
 {
+    // QMSystem has two states of "whatChanged":
+    //  - QmTimeOnlySettingsChanged -- only settings changed
+    //  - QmTimeTimeChanged -- time (and possibly settings) changed
+    //  Test both modes...
+
     // Check that if qmsystem returns 24 hour mode the clock is in 24 hour mode
     expectedTimeFormat = Maemo::QmTime::format24h;
     emit timeOrSettingsChanged(Maemo::QmTimeOnlySettingsChanged);
@@ -91,14 +96,28 @@ void Ut_Clock::test24HourModeToggling()
     expectedTimeFormat = Maemo::QmTime::format12h;
     emit timeOrSettingsChanged(Maemo::QmTimeOnlySettingsChanged);
     QCOMPARE(m_subject->model()->timeFormat24h(), false);
-}
 
-void Ut_Clock::test24HourModeNotToggledWhenSettingsAreNotChanged()
-{
-    // If something else than settings changes we should not care
+    // Check that if qmsystem returns 24 hour mode the clock is in 24 hour mode
     expectedTimeFormat = Maemo::QmTime::format24h;
     emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
+    QCOMPARE(m_subject->model()->timeFormat24h(), true);
+
+    // Check that if qmsystem returns 12 hour mode the clock is in 12 hour mode
+    expectedTimeFormat = Maemo::QmTime::format12h;
+    emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
     QCOMPARE(m_subject->model()->timeFormat24h(), false);
+
+}
+
+void Ut_Clock::testTimeUpdate()
+{
+    // Check that time was initialized correctly
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
+
+    // If qmsystem notifies up that time changed, model should be updated accordingly
+    expectedDateTime = QDateTime(QDate(2010, 1, 1));
+    emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
 
 void Ut_Clock::testModelUpdates()
@@ -108,7 +127,7 @@ void Ut_Clock::testModelUpdates()
 
     // The timer should be running by default and the model should contain the current time
     QVERIFY(timerTimeout >= 0);
-    QCOMPARE(m_subject->model()->time(), expectedDateTime.time());
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
 
     // When the application becomes invisible the timer should stop
     qApp->sendEvent(m_subject, &exitDisplayEvent);
@@ -118,7 +137,7 @@ void Ut_Clock::testModelUpdates()
     expectedDateTime = QDateTime(QDate(2001, 1, 1));
     qApp->sendEvent(m_subject, &enterDisplayEvent);
     QVERIFY(timerTimeout >= 0);
-    QCOMPARE(m_subject->model()->time(), expectedDateTime.time());
+    QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
 
 void Ut_Clock::testShortDisplayToggling()

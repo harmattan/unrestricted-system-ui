@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et sw=4 ts=4 sts=4: */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,32 +18,31 @@
 ** of this file.
 **
 ****************************************************************************/
+#ifndef UT_VOLUMEBARLOGIC_H
+#define UT_VOLUMEBARLOGIC_H
 
-#ifndef CLOCKSTYLE_H_
-#define CLOCKSTYLE_H_
+#include <QtTest/QtTest>
+#include <QObject>
 
-#include <MWidgetStyle>
+class QCoreApplication;
+class VolumeBarLogic;
 
-/*!
- * A style class for the Clock widget.
- */
-class ClockStyle : public MWidgetStyle
+class Ut_VolumeBarLogic : public QObject 
 {
-    Q_OBJECT
-    M_STYLE(ClockStyle)
+Q_OBJECT
 
-    //! Formatting string for the time
-    M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
-    //! Formatting string for the time, short variant
-    M_STYLE_ATTRIBUTE(bool, shortRemoveAmPmIndicator, ShortRemoveAmPmIndicator)
+private slots:
+    void init ();
+    void cleanup ();
+    void initTestCase ();
+    void cleanupTestCase ();
+
+    void testVolumeSetGet ();
+    void testVolumeChangeByPa ();
+    void testSignaling ();
+    
+private:
+    VolumeBarLogic  *m_Api;
 };
 
-class ClockStyleContainer : public MWidgetStyleContainer
-{
-    M_STYLE_CONTAINER(ClockStyle)
-
-    //! \brief Style mode for 12 hour mode
-    M_STYLE_MODE(TwelveHour)
-};
-
-#endif /* CLOCKSTYLE_H_ */
+#endif

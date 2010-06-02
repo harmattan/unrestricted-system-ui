@@ -181,6 +181,7 @@ LockScreenUI::LockScreenUI () :
 
     setBackgroundBrush (QBrush(Qt::black));
     QTimer::singleShot (0, this, SLOT(realize()));
+    setObjectName ("LockScreenUI");
 }
 
 LockScreenUI::~LockScreenUI ()
@@ -303,15 +304,47 @@ LockScreenUI::updateMissedEvents (int emails,
     }
 }
 
-/*********************************************************************************
+#ifdef SET_WM_NAME
+#  include <X11/Xlib.h>
+#  include <X11/Xatom.h>
+void 
+LockScreenUI::showEvent (
+        QShowEvent *event)
+{
+    Q_UNUSED (event);
+
+    Window      windowID;
+    Display    *display;
+    Atom        nameAtom;
+    Atom        utf8StringAtom;
+    const char *windowName = "LockScreenUI";
+
+    display = QX11Info::display ();
+    nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
+    utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
+    windowID = internalWinId();
+
+    SYS_DEBUG ("*** windowID = 0x%lx", windowID);
+    XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
+            8, PropModeReplace, 
+            (unsigned char *) windowName, strlen(windowName));
+}
+#endif
+
+/******************************************************************************
  * The EventEaterUI implementation.
  */
 EventEaterUI::EventEaterUI ()
 {
     SYS_DEBUG ("");
     setAttribute(Qt::WA_TranslucentBackground);
+    setObjectName ("EventEaterUI");
 }
 
+/*!
+ * We got the mouse events, so we can close the event eater window even if MCE
+ * does not ask for the closing.
+ */
 void
 EventEaterUI::mousePressEvent (
         QMouseEvent *event)
@@ -322,6 +355,10 @@ EventEaterUI::mousePressEvent (
     emit OneInput ();
 }
 
+/*!
+ * We got the mouse events, so we can close the event eater window even if MCE
+ * does not ask for the closing.
+ */
 void
 EventEaterUI::mouseReleaseEvent (
         QMouseEvent *event)
@@ -332,3 +369,27 @@ EventEaterUI::mouseReleaseEvent (
     emit OneInput ();
 }
 
+#ifdef SET_WM_NAME
+void 
+EventEaterUI::showEvent (
+        QShowEvent *event)
+{
+    Q_UNUSED (event);
+
+    Window      windowID;
+    Display    *display;
+    Atom        nameAtom;
+    Atom        utf8StringAtom;
+    const char *windowName = "EventEaterUI";
+
+    display = QX11Info::display ();
+    nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
+    utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
+    windowID = internalWinId();
+
+    SYS_DEBUG ("*** windowID = 0x%lx", windowID);
+    XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
+            8, PropModeReplace, 
+            (unsigned char *) windowName, strlen(windowName));
+}
+#endif

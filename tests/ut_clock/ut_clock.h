@@ -48,9 +48,8 @@ private slots:
 
     void test24HourModeDuringCreation();
     void test24HourModeToggling();
-    void test24HourModeNotToggledWhenSettingsAreNotChanged();
+    void testTimeUpdate();
     void testModelUpdates();
-
     void testShortDisplayToggling();
 
 private:

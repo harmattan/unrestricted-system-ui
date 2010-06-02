@@ -26,11 +26,15 @@
 #include <MWindow>
 #include <QBasicTimer>
 
+
+#define SET_WM_NAME
+
 class QPixmap;
 class MWidget;
 class MLinearLayoutPolicy;
 class QGraphicsSceneMouseEvent;
 class MGConfItem;
+class QShowEvent;
 
 class LockScreenWindow : public MSceneWindow
 {
@@ -83,6 +87,9 @@ public slots:
 
 protected:
     void createContent ();
+#ifdef SET_WM_NAME
+    virtual void showEvent(QShowEvent *event);
+#endif
 
 private slots:
     void realize ();
@@ -112,6 +119,11 @@ public:
     EventEaterUI ();
     virtual void mousePressEvent (QMouseEvent *event);
     virtual void mouseReleaseEvent (QMouseEvent *event);
+    
+protected:
+#ifdef SET_WM_NAME
+    virtual void showEvent(QShowEvent *event);
+#endif
 
 signals:
     void OneInput ();

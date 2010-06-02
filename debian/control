@@ -3,8 +3,9 @@ Section: devel
 Priority: optional
 Maintainer: Gabriel Schulhof <gabriel.schulhof@nokia.com>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.12),
-               libqmsystem-dev (>= 0.1.64), libmaemosec-dev,
-               libcontextsubscriber-dev, libngf-dev, libxcomposite-dev, libxext-dev
+               libqmsystem-dev (>= 0.1.64), libmaemosec-dev, libresourceqt-dev,
+               libcontextsubscriber-dev, libngf-dev, libxcomposite-dev, libxext-dev,
+               libdbus-1-dev, libdbus-glib-1-dev, libglib2.0-dev
 Standards-Version: 3.7.3
 
 Package: system-ui
@@ -12,6 +13,7 @@ Provides: duistatusindicatormenu
 Conflicts: duistatusindicatormenu
 Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
+Recommends: pulseaudio-module-meego-mainvolume
 Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, sudo
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
@@ -21,6 +23,7 @@ Description: Various system user interfaces.
   - screenlock
   - shutdown dialog
   - usb mode selection dialog
+  - volume control ui
 
 Package: system-ui-dbg
 Section: devel
@@ -34,7 +37,7 @@ Section: devel
 Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, meegotestrunner, system-ui,
-         testrunner, meego-env-dimming, meego-env-matti
+         testrunner, meego-env-dimming
 XB-Maemo-CI-Packages: system-ui
 XB-Maemo-CI-Stage: fast, staging
 Description: Test package for system-ui

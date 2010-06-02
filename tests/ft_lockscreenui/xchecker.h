@@ -62,7 +62,6 @@ private:
     Window get_win_prop(Display *dpy, Window w, Atom atom);
     unsigned long get_card_prop(Display *dpy, Window w, Atom atom);
     long get_int_prop(Display *dpy, Window w, Atom atom);
-    long get_xembed_prop(Display *dpy, Window w);
     char *get_str_prop(Display *dpy, Window w, Atom atom);
     char * get_utf8_prop ( Display *dpy, Window w, Atom atom);
     const char * get_map_state ( int state);
@@ -73,11 +72,15 @@ private:
             int      level, 
             int      nthWindow);
 
+    int pidof (const char *program);
+    bool checkPIDs ();
+
 private:
-    Atom class_atom, name_atom, name_atom2, xembed_atom, pid_atom,
+    Atom class_atom, name_atom, name_atom2, pid_atom,
     trans_atom, hildon_stack_atom, utf8_string_atom,
-    current_app_atom, win_type_atom, wm_state_atom, theme_atom,
-    portrait_support, portrait_request, non_comp_atom;
+    win_type_atom, wm_state_atom, non_comp_atom;
+    
+    int                  m_CompositorPID;
 };
 
 #endif

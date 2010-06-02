@@ -25,6 +25,7 @@
 
 class Clock;
 class MLabel;
+class MLocale;
 
 /*!
  * A view class for the Clock.
@@ -55,14 +56,17 @@ protected slots:
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
-private:
     /*!
      * Updates the visuals of this view
      */
     void updateLabel();
+private:
 
     //! The previous label
     QString previousLabel;
+
+    //! A pointer to the system locale object
+    MLocale* locale;
 };
 
 #endif

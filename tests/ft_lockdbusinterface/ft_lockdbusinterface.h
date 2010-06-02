@@ -63,13 +63,19 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreen ();
-
+    void testEventEaterShowHide ();
+    void testLockScreenShowHide ();
+    void testLockScreenShowHideWithLocking ();
 private:
     void lockScreen ();
     void unLockScreen ();
+    
+    void showEventEater ();
+
     void checkLockIsVisible ();
     void checkLockIsInvisible ();
+    void checkEaterIsVisible ();
+    void checkEaterIsInvisible ();
 
 private:
     XChecker             m_XChecker;

@@ -21,6 +21,7 @@
 #include "clock_stub.h"
 #include <MApplication>
 #include <MLabel>
+#include <MLocale>
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 #include "applicationcontext.h"
@@ -71,6 +72,7 @@ void Ut_ClockView::init()
 {
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
+    locale = MLocale::createSystemMLocale();
 
     // Set model defaults
     clockModel.setTimeFormat24h(true);
@@ -83,26 +85,56 @@ void Ut_ClockView::cleanup()
     delete testClock;  // this also deletes the view
     testClock = NULL;
     m_subject = NULL;
+    delete locale;
+    locale = NULL;
 }
 
 void Ut_ClockView::testUpdateTime()
 {
     m_subject->setModel(&clockModel);
-    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
-    clockModel.setTime(QTime(1, 1));
-    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
+    m_subject->modifiableStyle()->setTimeFormat(QString("%R"));
+    QDateTime time(QDate(), QTime(23, 23));
+
+    clockModel.setTime(time);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%R"));
 }
 
 void Ut_ClockView::testSetShortDisplay()
 {
     m_subject->setModel(&clockModel);
-    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mmap"));
-    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
-    clockModel.setTime(QTime(1, 1));
-    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01am"));
+    m_subject->modifiableStyle()->setShortRemoveAmPmIndicator(true);
+    QDateTime time(QDate(), QTime(1, 1));
 
     clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, QString("01:01"));
+    clockModel.setTime(time);
+
+    // Test am/pm indicator behind
+    m_subject->modifiableStyle()->setTimeFormat(QString("%I:%M%p"));
+    clockModel.setShortDisplay(false);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M%p"));
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+
+    // Test am/pm indicator behind, with a space
+    m_subject->modifiableStyle()->setTimeFormat(QString("%I:%M %p"));
+    clockModel.setShortDisplay(false);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M %p"));
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+
+    // Test am/pm indicator in front
+    m_subject->modifiableStyle()->setTimeFormat(QString("%p%I:%M"));
+    clockModel.setShortDisplay(false);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%p%I:%M"));
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+
+    // Test am/pm indicator in front, with a space
+    m_subject->modifiableStyle()->setTimeFormat(QString("%p %I:%M"));
+    clockModel.setShortDisplay(false);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%p %I:%M"));
+    clockModel.setShortDisplay(true);
+    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
 }
 
 void Ut_ClockView::testUpdateTimeFormat()
@@ -113,18 +145,5 @@ void Ut_ClockView::testUpdateTimeFormat()
     clockModel.setTimeFormat24h(true);
     QCOMPARE(m_subject->styleContainer().currentMode(), QString());
 }
-
-void Ut_ClockView::testTwelveHour()
-{
-    m_subject->setModel(&clockModel);
-    clockModel.setTimeFormat24h(false);
-    m_subject->modifiableStyle()->setTimeFormat(QString("hh:mm"));
-    m_subject->modifiableStyle()->setShortTimeFormat(QString("hh:mm"));
-    clockModel.setTime(QTime(23, 10));
-    QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
-    clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, QString("11:10"));
-}
-
 
 QTEST_APPLESS_MAIN(Ut_ClockView)

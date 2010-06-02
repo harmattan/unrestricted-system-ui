@@ -18,7 +18,7 @@
 ** of this file.
 **
 ****************************************************************************/
-#define HANDLE_CRASH
+#undef HANDLE_CRASH
 #ifdef HANDLE_CRASH
 #  define BACKTRACE_SIZE 128
 #  include <execinfo.h>
