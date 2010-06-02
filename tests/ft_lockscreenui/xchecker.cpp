@@ -270,8 +270,8 @@ XChecker::pr (
         windowName = "(none)";
 
     bool        Highlight = highlighted != None && highlighted == WindowID;
-    const char *HighlightStart = Highlight ? "\033[1;31m" : "";
-    const char *HighlightEnd = Highlight ? "\033[0;39m" : "";
+    const char *HighlightStart = Highlight ? TERM_RED : "";
+    const char *HighlightEnd = Highlight ? TERM_NORMAL : "";
 
     SYS_DEBUG ("%03d %s%s0x%06lx%s%s %-12s  %3dx%-3d  %-16s %s", 
                 nthWindow,
@@ -574,7 +574,7 @@ XChecker::pidof (
     char    line[256];
     char   *part;
 
-    snprintf (commandLine, 256, "ps axu | grep %s", program);
+    snprintf (commandLine, 256, "ps axu | grep %s | grep -v grep", program);
     pipe = popen (commandLine, "r");
     if (pipe == NULL) {
         SYS_WARNING ("popen() failed");

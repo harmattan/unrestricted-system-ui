@@ -86,6 +86,24 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#ifdef UNIT_TEST
+#  define DEBUG_SUPPRESS_COLOR
+#endif
+
+#ifdef DEBUG_SUPPRESS_COLOR
+#  define TERM_RED     ""
+#  define TERM_YELLOW  ""
+#  define TERM_GREEN   ""
+#  define TERM_NORMAL  ""
+#  define TERM_BOLD    ""
+#else 
+#  define TERM_RED     "\033[1;33m"
+#  define TERM_YELLOW  "\033[1;31m"
+#  define TERM_GREEN   "\033[1;32m"
+#  define TERM_NORMAL  "\033[0;39m"
+#  define TERM_BOLD    "\033[1m"
+#endif
+
 #include <QtDebug>
 
 namespace SysDebug
@@ -97,9 +115,9 @@ namespace SysDebug
         ...);
 };
 
-#define SYS_STR(qstring) ("\033[1m" + qstring + "\033[0;39m").toLatin1().constData()
+#define SYS_STR(qstring) (TERM_BOLD + qstring + TERM_NORMAL).toLatin1().constData()
 #define SYS_BOOL(boolean) (boolean ? \
-        "\033[1mtrue\033[0;39m" : \
-        "\033[1mfalse\033[0;39m")
+        TERM_BOLD "true"  TERM_NORMAL : \
+        TERM_BOLD "false" TERM_NORMAL)
 
 #endif

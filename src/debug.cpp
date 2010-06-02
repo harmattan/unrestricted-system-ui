@@ -25,21 +25,6 @@
 #include <QString>
 #include "debug.h"
 
-
-#ifdef DEBUG_SUPPRESS_COLOR
-#  define TERM_RED     ""
-#  define TERM_YELLOW  ""
-#  define TERM_GREEN   ""
-#  define TERM_NORMAL  ""
-#  define TERM_BOLD    ""
-#else 
-#  define TERM_RED     "\033[1;33m"
-#  define TERM_YELLOW  "\033[1;31m"
-#  define TERM_GREEN   "\033[1;32m"
-#  define TERM_NORMAL  "\033[0;39m"
-#  define TERM_BOLD    "\033[1m"
-#endif
-
 /*
  * This function is used to print debug and error messages, an enhanced version
  * of the SysDebug::sysMsg(). Please use this function anly through macros (like
