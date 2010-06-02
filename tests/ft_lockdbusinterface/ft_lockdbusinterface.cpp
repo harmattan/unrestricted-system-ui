@@ -163,13 +163,39 @@ void Ft_LockDBusInterface::initTestCase()
 }
 
 void
-Ft_LockDBusInterface::testLockScreen ()
+Ft_LockDBusInterface::testEventEater ()
 {
-    lockScreen ();
-    checkLockIsVisible ();
+    /*
+     * Actually we had some problems so we do a little stress testing here.
+     * Sometimes the window does not show up for the second/third time.
+     */
+    for (int q = 0; q < 5; ++q) {
+        showEventEater ();
+        checkEaterIsVisible ();
 
-    unLockScreen ();
-    checkLockIsInvisible ();
+        unLockScreen ();
+        checkEaterIsInvisible ();
+    }
+}
+
+/*!
+ * Shows and hides the lockscreen through the dbus interface and checks if the
+ * window is really there.
+ */
+void
+Ft_LockDBusInterface::testLockScreenShowHide ()
+{
+    /*
+     * Actually we had some problems so we do a little stress testing here.
+     * Sometimes the window does not show up for the second/third time.
+     */
+    for (int q = 0; q < 5; ++q) {
+        lockScreen ();
+        checkLockIsVisible ();
+
+        unLockScreen ();
+        checkLockIsInvisible ();
+    }
 }
 
 
@@ -183,7 +209,7 @@ Ft_LockDBusInterface::cleanupTestCase()
     delete m_App;
 }
 
-/*********************************************************************************
+/******************************************************************************
  * Low level methods for the Ft_LockDBusInterface class.
  */
 /*
@@ -199,7 +225,7 @@ Ft_LockDBusInterface::lockScreen ()
         QVariant (answerPath) << 
         QVariant (answerinterface) <<
         QVariant (answerMethod) <<
-        QVariant ((quint32) TkLockModeEnable) << 
+        QVariant ((quint32) TkLockEnableVisual) << 
         QVariant (true) << //silent 
         QVariant (true); // flicker
 
@@ -215,7 +241,39 @@ Ft_LockDBusInterface::lockScreen ()
 
     QTest::qWait (DBusDelay);
 
-    m_SignalSink.debugPrint();
+    QVERIFY (!m_SignalSink.m_ErrorCame);
+    QVERIFY (m_SignalSink.m_ReplyCame);
+    QVERIFY (m_SignalSink.m_Reply == 1);
+
+    QTest::qWait (DelayBetweenTests);
+}
+
+void
+Ft_LockDBusInterface::showEventEater ()
+{
+    QList <QVariant> arguments;
+
+    arguments << 
+        QVariant (answerService) <<
+        QVariant (answerPath) << 
+        QVariant (answerinterface) <<
+        QVariant (answerMethod) <<
+        QVariant ((quint32) TkLockModeOneInput) << 
+        QVariant (true) << //silent 
+        QVariant (true); // flicker
+
+    /*
+     * Locking the screen through the dbus interface.
+     */
+    SYS_DEBUG ("Sending tklock_open (TkLockModeOneInput)");
+    m_SignalSink.reset();
+    m_DbusIf->callWithCallback (
+            QString ("tklock_open"), arguments, &m_SignalSink,
+            SLOT (screenLockReply(qint32)),
+            SLOT (DBusMessagingFailure (QDBusError)));
+
+    QTest::qWait (DBusDelay);
+
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
     QVERIFY (m_SignalSink.m_Reply == 1);
@@ -243,7 +301,6 @@ Ft_LockDBusInterface::unLockScreen ()
 
     QTest::qWait (DBusDelay);
 
-    m_SignalSink.debugPrint();
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
     QVERIFY (m_SignalSink.m_Reply == 1);
@@ -257,18 +314,51 @@ Ft_LockDBusInterface::checkLockIsVisible ()
 {
     bool windowVisible;
         
-    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsVisible);
+    windowVisible = m_XChecker.checkWindow (
+            "LockScreenUI", 
+            XChecker::CheckIsVisible);
+
+    //m_XChecker.debug_dump_windows ();
     QVERIFY (windowVisible);
 }
 
 void 
 Ft_LockDBusInterface::checkLockIsInvisible ()
 {
+    bool windowInVisible;
+        
+    windowInVisible = m_XChecker.checkWindow (
+            "LockScreenUI", 
+            XChecker::CheckIsInvisible);
+    //m_XChecker.debug_dump_windows ();
+    QVERIFY (windowInVisible);
+}
+
+void 
+Ft_LockDBusInterface::checkEaterIsVisible ()
+{
     bool windowVisible;
         
-    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsInvisible);
-    //QVERIFY (windowVisible);
+    windowVisible = m_XChecker.checkWindow (
+            "EventEaterUI", 
+            XChecker::CheckIsVisible);
+
+    m_XChecker.debug_dump_windows ();
+    QVERIFY (windowVisible);
 }
+
+void 
+Ft_LockDBusInterface::checkEaterIsInvisible ()
+{
+    bool windowInVisible;
+        
+    windowInVisible = m_XChecker.checkWindow (
+            "EventEaterUI", 
+            XChecker::CheckIsInvisible);
+    //m_XChecker.debug_dump_windows ();
+    QVERIFY (windowInVisible);
+}
+
 
 QTEST_APPLESS_MAIN(Ft_LockDBusInterface)
 
