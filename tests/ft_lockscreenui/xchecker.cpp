@@ -38,9 +38,18 @@ XChecker::XChecker()
     trans_atom = XInternAtom(dpy, "WM_TRANSIENT_FOR", False);
     utf8_string_atom = XInternAtom(dpy, "UTF8_STRING", False);
     win_type_atom = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
-    wm_state_atom = XInternAtom(dpy, "_NET_WM_STATE", False);
     hildon_stack_atom = XInternAtom(dpy, "_HILDON_STACKABLE_WINDOW", False);
     non_comp_atom = XInternAtom(dpy, "_HILDON_NON_COMPOSITED_WINDOW", False);
+
+    Q_ASSERT (class_atom != None);
+    Q_ASSERT (name_atom != None);
+    Q_ASSERT (name_atom2 != None);
+    Q_ASSERT (pid_atom != None);
+    Q_ASSERT (trans_atom != None);
+    Q_ASSERT (utf8_string_atom != None);
+    Q_ASSERT (win_type_atom != None);
+    Q_ASSERT (hildon_stack_atom != None);
+    Q_ASSERT (non_comp_atom != None);
 
     m_CompositorPID = pidof ("mcompositor");
     SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);    
@@ -237,7 +246,7 @@ XChecker::pr (
 	int i;
 	char               *wmclass;
     char               *wmname, *wmname2;
-    char               *wmtype, *wmstate;
+    char               *wmtype;
 	Window trans_for;
 	char buf[100];
 	XWindowAttributes attrs = { 0 };
@@ -248,7 +257,9 @@ XChecker::pr (
     unsigned int border_width_return, depth_return;
     QString      windowName;
 
+    SYS_DEBUG ("1");
 	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
+    SYS_DEBUG ("2");
     XGetGeometry (dpy, WindowID, &root_ret,
               &x_return, &y_return, &width_return,
               &height_return, &border_width_return,
@@ -259,15 +270,23 @@ XChecker::pr (
     for (i = 3; i >= level; --i)
         indent1 += "  ";
 
+    SYS_DEBUG ("3");
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
+    SYS_DEBUG ("4");
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
+    SYS_DEBUG ("5");
 	wmname2 = get_str_prop(dpy, WindowID, name_atom2);
+    SYS_DEBUG ("6");
 	wmtype = get_atom_prop(dpy, WindowID, win_type_atom);
-	wmstate = get_atom_prop(dpy, WindowID, wm_state_atom);
+    SYS_DEBUG ("8");
 	trans_for = get_win_prop(dpy, WindowID, trans_atom);
+    SYS_DEBUG ("9");
 	hildon_stack = get_int_prop(dpy, WindowID, hildon_stack_atom);
+    SYS_DEBUG ("a");
     non_comp = get_int_prop(dpy, WindowID, non_comp_atom);
+    SYS_DEBUG ("b");
 	XGetWindowAttributes(dpy, WindowID, &attrs);
+    SYS_DEBUG ("c");
 
 	if (trans_for)
 		snprintf(buf, 100, "(transient for 0x%lx)", trans_for);
@@ -309,7 +328,6 @@ XChecker::pr (
 	free(wmclass);
 	free(wmname);
 	free(wmtype);
-	free(wmstate);
 }
 
 /*!

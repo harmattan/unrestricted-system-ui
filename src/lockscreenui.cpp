@@ -305,9 +305,28 @@ LockScreenUI::showEvent (
     const char *windowName = "LockScreenUI";
 
     display = QX11Info::display ();
+    if (!display) {
+        SYS_WARNING ("QX11Info::display() failed");
+        return;
+    }
+
     nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
+    if (nameAtom == None) {
+        SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
+        return;
+    }
+
     utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
+    if (utf8StringAtom == None) {
+        SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
+        return;
+    }
+
     windowID = internalWinId();
+    if (windowID == None) {
+        SYS_WARNING ("internalWinId() failed");
+        return;
+    }
 
     SYS_DEBUG ("*** windowID = 0x%lx", windowID);
     XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
@@ -368,9 +387,28 @@ EventEaterUI::showEvent (
     const char *windowName = "EventEaterUI";
 
     display = QX11Info::display ();
+    if (!display) {
+        SYS_WARNING ("QX11Info::display() failed");
+        return;
+    }
+
     nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
+    if (nameAtom == None) {
+        SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
+        return;
+    }
+
     utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
+    if (utf8StringAtom == None) {
+        SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
+        return;
+    }
+
     windowID = internalWinId();
+    if (windowID == None) {
+        SYS_WARNING ("internalWinId() failed");
+        return;
+    }
 
     SYS_DEBUG ("*** windowID = 0x%lx", windowID);
     XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
