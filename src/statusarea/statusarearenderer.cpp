@@ -105,6 +105,8 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
 
 void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state)
 {
+    bool oldRenderScene = renderScene;
+
     switch(state) {
     case Maemo::QmDisplayState::Dimmed:
     case Maemo::QmDisplayState::Off:
@@ -115,5 +117,15 @@ void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState stat
         break;
     default:
         renderScene = true;
+    }
+
+    if (renderScene != oldRenderScene) {
+        MOnDisplayChangeEvent::State state = renderScene ?
+           MOnDisplayChangeEvent::FullyOnDisplay : MOnDisplayChangeEvent::FullyOffDisplay;
+
+        MOnDisplayChangeEvent event(state, QRectF());
+        foreach(QGraphicsItem *item, scene->items()) {
+            scene->sendEvent(item, &event);
+        }
     }
 }

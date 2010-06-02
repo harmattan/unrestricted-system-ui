@@ -54,6 +54,8 @@ private slots:
     void testSceneRenderControlDisplayStateOff();
     // Test rendering does not happen when display state is dimmed
     void testSceneRenderControlDisplayStateDimmed();
+    // Test MOnDisplayChangeEvent dispatching
+    void testMOnDisplayChangeEvent();
 };
 
 class RenderTestsHelper

@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include "ut_statusarearenderer.h"
 #include <MApplication>
+#include <MOnDisplayChangeEvent>
 #include "statusarearenderer.h"
 #include "statusarea_stub.h"
 #include "pannedwidgetcontroller_stub.h"
@@ -26,7 +27,10 @@
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
+bool Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
 QRectF rectReceived(0,0,0,0);
+QEvent::Type eventReceived;
+MOnDisplayChangeEvent::State eventStateReceived;
 
 const MStyle* MTheme::style(const char *styleClassName,
                             const QString &objectName,
@@ -53,6 +57,17 @@ void QGraphicsScene::render(QPainter *painter, const QRectF &target, const QRect
     Q_UNUSED(aspectRatioMode);
 }
 
+bool QGraphicsScene::sendEvent(QGraphicsItem *item, QEvent *event)
+{
+    Ut_StatusAreaRenderer_Scene_SendEvent_Called = true;
+    eventReceived = event->type();
+    if (eventReceived == MOnDisplayChangeEvent::eventNumber()) {
+        eventStateReceived = (static_cast<MOnDisplayChangeEvent*>(event))->state();
+    }
+    Q_UNUSED(item);
+    return true;
+}
+
 void Ut_StatusAreaRenderer::init()
 {
     statusAreaWindow = new StatusAreaRenderer();
@@ -63,6 +78,7 @@ void Ut_StatusAreaRenderer::init()
 void Ut_StatusAreaRenderer::cleanup()
 {
     Ut_StatusAreaRenderer_Scene_Render_Called = false;
+    Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
     rectReceived.setRect(0,0,0,0);
     delete statusAreaWindow;
 }
@@ -164,6 +180,38 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateDimmed()
     emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
+}
+
+void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
+{
+    // Initial condition
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    emit displayStateChanged(Maemo::QmDisplayState::On);
+    Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
+
+    // Change to Dimmed state should produce a 
+    // MOnDisplayedChangeEvent with FullyOffDisplay state
+    emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
+    QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
+    QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
+
+    // Change to On state should produce a
+    // MOnDisplayedChangeEvent with FullyOnDisplay state
+    Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
+    emit displayStateChanged(Maemo::QmDisplayState::On);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
+    QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
+    QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOnDisplay);
+
+    // Change to Off state should produce a
+    // MOnDisplayedChangeEvent with FullyOffDisplay state
+    Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
+    emit displayStateChanged(Maemo::QmDisplayState::Off);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
+    QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
+    QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaRenderer)
