@@ -64,7 +64,8 @@ UnlockHeader::UnlockHeader () :
     /*
      * The lock icon @ right side
      */
-    m_icon = new MImageWidget ("icon-m-common-locked");
+    m_icon = new MImageWidget;
+    m_icon->setImage ("icon-m-common-locked", QSize (32, 32));
     m_icon->setZoomFactor (1.0);
     m_icon->setObjectName ("lockscreenIconLocked");
 
@@ -146,6 +147,13 @@ UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
              this, SLOT (dndActionChanged (Qt::DropAction)));
 
     drag->exec (Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
+}
+
+void
+UnlockHeader::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+{
+    QPointF pos = event->scenePos ();
+    SYS_DEBUG ("pos = %2.2f, %2.2f", pos.x (), pos.y ());
 }
 
 void

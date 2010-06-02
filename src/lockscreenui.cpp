@@ -72,11 +72,12 @@ LockScreenWindow::LockScreenWindow ()
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
-    m_DnDicon.setImage ("icon-m-common-locked");
+    // FIXME:!!!!
+    m_DnDicon.setImage ("icon-m-common-locked", QSize (32, 32));
     m_DnDicon.setObjectName ("LockScreenDnDIcon");
     m_DnDicon.setZoomFactor (1.0);
     m_DnDicon.setParent (this);
-    m_DnDicon.setVisible (false);
+    m_DnDicon.setVisible (true);
     m_DnDicon.setPos (100.0, 100.0);
     // Check this out, what i need here ?
 
@@ -238,10 +239,6 @@ LockScreenUI::realize ()
     // Set the main layout
     m_SceneWindow = new LockScreenWindow;
     m_SceneWindow->setLayout (layout);
-    /* XXX: TODO ????
-    m_SceneWindow->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_SceneWindow->setMaximumHeight (480.0);
-    */
     m_SceneWindow->appear (this);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),

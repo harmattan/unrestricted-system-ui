@@ -41,6 +41,7 @@ public:
     virtual ~UnlockHeader ();
 
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
     void updateDateTime ();
 
 signals:

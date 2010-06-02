@@ -41,31 +41,19 @@ MImageWidgetStyle#lockscreenIconLocked {
 MSceneWindowStyle#LockLandArea {
     background-image: none;
 
-/*
-    minimum-size: 100% 100%;
-    preferred-size: 100% 100%;
-    maximum-size: 100% 100%;
- */
+    minimum-size: 100% 100;
 }
 
 MSceneWindowStyle#LockLandAreaDragged {
     background-image: "lockscreen-lock-land-area-background-dragged" 25 25 25 25;
 
-/*
-    minimum-size: 100% 100%;
-    preferred-size: 100% 100%;
-    maximum-size: 100% 100%;
- */
+    minimum-size: 100% 100;
 }
 
 MSceneWindowStyle#LockLandAreaActive {
     background-image: "lockscreen-lock-land-area-background-active" 25 25 25 25;
 
-/*
-    minimum-size: 100% 100%;
-    preferred-size: 100% 100%;
-    maximum-size: 100% 100%;
- */
+    minimum-size: 100% 100;
 }
 
 #LockScreenDnDIcon {
