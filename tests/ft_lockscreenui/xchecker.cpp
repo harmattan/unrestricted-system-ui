@@ -309,7 +309,10 @@ XChecker::pr (
 	free(wmstate);
 }
 
-
+/*!
+ * \param WindowID The current window ID for the recursion.
+ * \param WMName The "_NET_WM_NAME" value for the windows to check.
+ */
 bool
 XChecker::check_window_rec (
         Display               *dpy, 
@@ -324,9 +327,9 @@ XChecker::check_window_rec (
     char             *wmname;
 	XWindowAttributes attrs = { 0 };
 
-    wmname = get_str_prop (dpy, WindowID, name_atom);
+    wmname = get_utf8_prop (dpy, WindowID, name_atom);
     XGetWindowAttributes(dpy, WindowID, &attrs);
-    
+   
     /*
      * With this opcode we check if the window stack has at least one window
      * with the given wmname that is trully visible. It is not a perfect test
@@ -339,7 +342,6 @@ XChecker::check_window_rec (
          * trully visible.
          */
         if (WMName == wmname && attrs.map_state == IsViewable) {
-            SYS_DEBUG ("FOUND");
             return true;
         }
 

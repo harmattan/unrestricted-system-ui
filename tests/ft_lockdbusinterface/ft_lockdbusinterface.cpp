@@ -225,7 +225,6 @@ Ft_LockDBusInterface::lockScreen ()
 
     QTest::qWait (DBusDelay);
 
-    m_SignalSink.debugPrint();
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
     QVERIFY (m_SignalSink.m_Reply == 1);
@@ -253,7 +252,6 @@ Ft_LockDBusInterface::unLockScreen ()
 
     QTest::qWait (DBusDelay);
 
-    m_SignalSink.debugPrint();
     QVERIFY (!m_SignalSink.m_ErrorCame);
     QVERIFY (m_SignalSink.m_ReplyCame);
     QVERIFY (m_SignalSink.m_Reply == 1);
