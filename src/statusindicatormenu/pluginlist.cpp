@@ -43,7 +43,6 @@ PluginList::PluginList(StatusIndicatorMenuWindow *window, QGraphicsItem *parent)
 	    "/libconnectivity.so" << 
 	    "/libpresence.so" << 
 	    "/libbattery.so" << 
-	    "/libvolume.so" << 
 	    "/libaccessories.so" << 
 	    "/libcallui.so" << 
 	    "/libtransferui.so";
