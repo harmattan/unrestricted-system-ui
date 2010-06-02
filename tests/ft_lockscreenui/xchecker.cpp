@@ -34,22 +34,12 @@ XChecker::XChecker()
     class_atom = XInternAtom(dpy, "WM_CLASS", False);
     name_atom = XInternAtom(dpy, "_NET_WM_NAME", False);
     name_atom2 = XInternAtom(dpy, "WM_NAME", False);
-    pid_atom = XInternAtom(dpy, "_NET_WM_PID", False);
-    trans_atom = XInternAtom(dpy, "WM_TRANSIENT_FOR", False);
     utf8_string_atom = XInternAtom(dpy, "UTF8_STRING", False);
-    win_type_atom = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
-    hildon_stack_atom = XInternAtom(dpy, "_HILDON_STACKABLE_WINDOW", False);
-    non_comp_atom = XInternAtom(dpy, "_HILDON_NON_COMPOSITED_WINDOW", False);
 
     Q_ASSERT (class_atom != None);
     Q_ASSERT (name_atom != None);
     Q_ASSERT (name_atom2 != None);
-    Q_ASSERT (pid_atom != None);
-    Q_ASSERT (trans_atom != None);
     Q_ASSERT (utf8_string_atom != None);
-    Q_ASSERT (win_type_atom != None);
-    Q_ASSERT (hildon_stack_atom != None);
-    Q_ASSERT (non_comp_atom != None);
 
     m_CompositorPID = pidof ("mcompositor");
     SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);    
@@ -246,11 +236,8 @@ XChecker::pr (
 	int i;
 	char               *wmclass;
     char               *wmname, *wmname2;
-    char               *wmtype;
-	Window trans_for;
-	char buf[100];
 	XWindowAttributes attrs = { 0 };
-	long hildon_stack, non_comp;
+	long hildon_stack;
 
     int x_return, y_return;
     unsigned int width_return, height_return;
@@ -271,16 +258,7 @@ XChecker::pr (
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
 	wmname2 = get_str_prop(dpy, WindowID, name_atom2);
-	wmtype = get_atom_prop(dpy, WindowID, win_type_atom);
-	trans_for = get_win_prop(dpy, WindowID, trans_atom);
-	hildon_stack = get_int_prop(dpy, WindowID, hildon_stack_atom);
-    non_comp = get_int_prop(dpy, WindowID, non_comp_atom);
 	XGetWindowAttributes(dpy, WindowID, &attrs);
-
-	if (trans_for)
-		snprintf(buf, 100, "(transient for 0x%lx)", trans_for);
-	else
-		buf[0] = '\0';
 
     if (wmname && !wmname2)
         windowName = wmname;
@@ -316,7 +294,6 @@ XChecker::pr (
 
 	free(wmclass);
 	free(wmname);
-	free(wmtype);
 }
 
 /*!

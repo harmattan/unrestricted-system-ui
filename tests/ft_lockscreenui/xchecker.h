@@ -76,9 +76,8 @@ private:
     bool checkPIDs ();
 
 private:
-    Atom class_atom, name_atom, name_atom2, pid_atom,
-    trans_atom, hildon_stack_atom, utf8_string_atom,
-    win_type_atom, non_comp_atom;
+    Atom class_atom, name_atom, name_atom2,
+    utf8_string_atom;
     
     int                  m_CompositorPID;
 };
