@@ -78,7 +78,7 @@ void Ut_PluginList::cleanup()
 
 void Ut_PluginList::testInitialization()
 {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 9; i++) {
         // Process the delayed loading timer events
         QCoreApplication::processEvents();
     }
@@ -86,7 +86,7 @@ void Ut_PluginList::testInitialization()
     // The layout should contain a widget for each plugin plus one for the top row
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(pluginList->layout());
     QVERIFY(layout != NULL);
-    QCOMPARE(loadedPlugins.count(), 10);
+    QCOMPARE(loadedPlugins.count(), 9);
     QCOMPARE(layout->count(), loadedPlugins.count());
 }
 
