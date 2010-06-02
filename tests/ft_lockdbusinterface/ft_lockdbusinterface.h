@@ -63,7 +63,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreen ();
+    void testLockScreenShowHide ();
 
 private:
     void lockScreen ();

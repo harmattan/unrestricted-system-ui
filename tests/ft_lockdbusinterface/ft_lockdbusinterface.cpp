@@ -162,14 +162,24 @@ void Ft_LockDBusInterface::initTestCase()
     QVERIFY (m_DbusIf->isValid());
 }
 
+/*!
+ * Shows and hides the lockscreen through the dbus interface and checks if the
+ * window is really there.
+ */
 void
-Ft_LockDBusInterface::testLockScreen ()
+Ft_LockDBusInterface::testLockScreenShowHide ()
 {
-    lockScreen ();
-    checkLockIsVisible ();
+    /*
+     * Actually we had some problems so we do a little stress testing here.
+     * Sometimes the window does not show up for the second/third time.
+     */
+    for (int q = 0; q < 5; ++q) {
+        lockScreen ();
+        checkLockIsVisible ();
 
-    unLockScreen ();
-    checkLockIsInvisible ();
+        unLockScreen ();
+        checkLockIsInvisible ();
+    }
 }
 
 
@@ -257,17 +267,24 @@ Ft_LockDBusInterface::checkLockIsVisible ()
 {
     bool windowVisible;
         
-    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsVisible);
+    windowVisible = m_XChecker.checkWindow (
+            "LockScreenUI", 
+            XChecker::CheckIsVisible);
+
+    //m_XChecker.debug_dump_windows ();
     QVERIFY (windowVisible);
 }
 
 void 
 Ft_LockDBusInterface::checkLockIsInvisible ()
 {
-    bool windowVisible;
+    bool windowInVisible;
         
-    windowVisible = m_XChecker.checkWindow ("sysuid", XChecker::CheckIsInvisible);
-    //QVERIFY (windowVisible);
+    windowInVisible = m_XChecker.checkWindow (
+            "LockScreenUI", 
+            XChecker::CheckIsInvisible);
+    //m_XChecker.debug_dump_windows ();
+    QVERIFY (windowInVisible);
 }
 
 QTEST_APPLESS_MAIN(Ft_LockDBusInterface)

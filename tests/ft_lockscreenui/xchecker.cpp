@@ -34,17 +34,12 @@ XChecker::XChecker()
     class_atom = XInternAtom(dpy, "WM_CLASS", False);
     name_atom = XInternAtom(dpy, "_NET_WM_NAME", False);
     name_atom2 = XInternAtom(dpy, "WM_NAME", False);
-    xembed_atom = XInternAtom(dpy, "_XEMBED_INFO", False);
     pid_atom = XInternAtom(dpy, "_NET_WM_PID", False);
     trans_atom = XInternAtom(dpy, "WM_TRANSIENT_FOR", False);
     utf8_string_atom = XInternAtom(dpy, "UTF8_STRING", False);
-    current_app_atom = XInternAtom(dpy, "_MB_CURRENT_APP_WINDOW", False);
     win_type_atom = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
     wm_state_atom = XInternAtom(dpy, "_NET_WM_STATE", False);
-    theme_atom = XInternAtom(dpy, "_MB_THEME", False);
     hildon_stack_atom = XInternAtom(dpy, "_HILDON_STACKABLE_WINDOW", False);
-    portrait_support = XInternAtom(dpy, "_HILDON_PORTRAIT_MODE_SUPPORT", False);
-    portrait_request = XInternAtom(dpy, "_HILDON_PORTRAIT_MODE_REQUEST", False);
     non_comp_atom = XInternAtom(dpy, "_HILDON_NON_COMPOSITED_WINDOW", False);
 }
 
@@ -156,49 +151,30 @@ XChecker::get_int_prop (
           }
 }
 
-long 
-XChecker::get_xembed_prop(Display *dpy, Window w)
-{ 
-          Atom type;
-          int format, rc;
-          unsigned long items;
-          unsigned long left;
-          unsigned long *value;
-
-          rc = XGetWindowProperty (dpy, w, xembed_atom, 0, 2, False,
-                              XA_CARDINAL, &type, &format,
-                              &items, &left, (unsigned char**)&value);
-          if (type == None || rc != Success)
-            return -1;
-          else
-          {
-	    long ret;
-	    ret = value[1] & (1 << 0);
-	    XFree(value);
-            return ret;
-          }
-}
 
 char *
-XChecker::get_str_prop(Display *dpy, Window w, Atom atom)
+XChecker::get_str_prop(
+        Display  *dpy, 
+        Window    w, 
+        Atom      atom)
 { 
-          Atom type;
-          int format, rc;
-          unsigned long items;
-          unsigned long left;
-          char *value;
+    Atom type;
+    int format, rc;
+    unsigned long items;
+    unsigned long left;
+    char *value;
 
-          rc = XGetWindowProperty (dpy, w, atom, 0, 200, False,
-                              XA_STRING, &type, &format,
-                              &items, &left, (unsigned char**)&value);
-          if (type == None || rc != Success)
-            return NULL;
-          else
-          {
-            char *s = strdup((const char*)value);
-	    XFree(value);
-            return s;
-          }
+    rc = XGetWindowProperty (
+            dpy, w, atom, 0, 200, False, XA_STRING, &type, &format,
+            &items, &left, (unsigned char**)&value);
+    
+    if (type == None || rc != Success) {
+        return NULL;
+    } else {
+        char *s = strdup((const char*)value);
+        XFree(value);
+        return s;
+    }
 }
 
 char *
@@ -236,7 +212,7 @@ XChecker::get_map_state (
 		case IsUnviewable:
 			return "IsUnviewable";
 		case IsViewable:
-			return "\033[1mIsViewable\033[0;39m";
+			return "IsViewable";
 		default:
 			return "";
 	}
@@ -250,7 +226,7 @@ XChecker::pr (
         int      level,
         int      nthWindow)
 {
-    QString indent;
+    QString indent, indent1;
 
 	unsigned int n_children = 0;
 	Window *child_l = NULL;
@@ -259,15 +235,15 @@ XChecker::pr (
 	char               *wmclass;
     char               *wmname, *wmname2;
     char               *wmtype, *wmstate;
-    unsigned long por_sup, por_req;
 	Window trans_for;
-	char buf[100], xembed_buf[50];
+	char buf[100];
 	XWindowAttributes attrs = { 0 };
-	long xembed, hildon_stack, non_comp;
+	long hildon_stack, non_comp;
 
     int x_return, y_return;
     unsigned int width_return, height_return;
     unsigned int border_width_return, depth_return;
+    QString      windowName;
 
 	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
     XGetGeometry (dpy, WindowID, &root_ret,
@@ -276,18 +252,18 @@ XChecker::pr (
               &depth_return);
 
 	for (i = 0; i < level; ++i)
-		indent += " ";
+		indent += "  ";
+    for (i = 3; i >= level; --i)
+        indent1 += "  ";
 
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
 	wmname = get_utf8_prop(dpy, WindowID, name_atom);
 	wmname2 = get_str_prop(dpy, WindowID, name_atom2);
 	wmtype = get_atom_prop(dpy, WindowID, win_type_atom);
 	wmstate = get_atom_prop(dpy, WindowID, wm_state_atom);
-	por_sup = get_card_prop(dpy, WindowID, portrait_support);
-	por_req = get_card_prop(dpy, WindowID, portrait_request);
 	trans_for = get_win_prop(dpy, WindowID, trans_atom);
 	hildon_stack = get_int_prop(dpy, WindowID, hildon_stack_atom);
-        non_comp = get_int_prop(dpy, WindowID, non_comp_atom);
+    non_comp = get_int_prop(dpy, WindowID, non_comp_atom);
 	XGetWindowAttributes(dpy, WindowID, &attrs);
 
 	if (trans_for)
@@ -295,44 +271,38 @@ XChecker::pr (
 	else
 		buf[0] = '\0';
 
-	xembed = get_xembed_prop(dpy, WindowID);
-	if (xembed != -1)
-		snprintf(xembed_buf, 50, "(XEmbed %ld)", xembed);
-	else
-		xembed_buf[0] = '\0';
-
-    QString windowName = (wmname ? wmname : "(none)");
-    QString windowName2 = (wmname2 ? wmname2 : "(none)");
-    windowName = windowName + "/" + windowName2;
+    if (wmname && !wmname2)
+        windowName = wmname;
+    else if (!wmname && wmname2)
+        windowName = wmname2;
+    else if (wmname && wmname2)
+        windowName = QString(wmname) + "/" + wmname2;
+    else 
+        windowName = "(none)";
 
     bool        Highlight = highlighted != None && highlighted == WindowID;
     const char *HighlightStart = Highlight ? "\033[1;31m" : "";
     const char *HighlightEnd = Highlight ? "\033[0;39m" : "";
+
+    SYS_DEBUG ("%03d %s%s0x%06lx%s%s %-12s  %3dx%-3d  %-16s %s", 
+                nthWindow,
+                SYS_STR(indent), 
+                HighlightStart, WindowID, HighlightEnd,
+                SYS_STR(indent1),
+                get_map_state(attrs.map_state),
+                width_return, height_return,
+			    wmclass ? wmclass : "",
+                SYS_STR(windowName));
     if (n_children == 0) {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s  %3dx%3d  %-16s %s", 
-                nthWindow,
-                SYS_STR(indent), 
-                HighlightStart, WindowID, HighlightEnd,
-                get_map_state(attrs.map_state),
-                width_return, height_return,
-			    wmclass ? wmclass : "(none)",
-                SYS_STR(windowName));
+        // Nothing
 	} else {
-        SYS_DEBUG ("%03d %s%s0x%lx%s %8s  %3dx%3d  %-16s %s", 
-                nthWindow,
-                SYS_STR(indent), 
-                HighlightStart, WindowID, HighlightEnd,
-                get_map_state(attrs.map_state),
-                width_return, height_return,
-			    wmclass ? wmclass : "(none)",
-                SYS_STR(windowName));
-		
         for (i = 0; i < n_children; ++i) {
             ++nthWindow;
 			pr (highlighted, dpy, child_l[i], level + 1, nthWindow);
 		}
 		XFree(child_l);
 	}
+
 	free(wmclass);
 	free(wmname);
 	free(wmtype);
@@ -344,31 +314,31 @@ bool
 XChecker::check_window_rec (
         Display               *dpy, 
         Window                 WindowID, 
-        const QString         &WMClass,
+        const QString         &WMName,
         XChecker::RequestCode  opCode)
 {
     Window            rootR;
     Window            parentR;
     unsigned int      n_children = 0;
     Window           *child_l = NULL;
-    char             *wmclass;
+    char             *wmname;
 	XWindowAttributes attrs = { 0 };
 
-    wmclass = get_str_prop (dpy, WindowID, class_atom);
+    wmname = get_str_prop (dpy, WindowID, name_atom);
     XGetWindowAttributes(dpy, WindowID, &attrs);
     
     /*
      * With this opcode we check if the window stack has at least one window
-     * with the given wmclass that is trully visible. It is not a perfect test
-     * but we know only the wmclass and of course multiple windows might have
-     * the same wmclass.
+     * with the given wmname that is trully visible. It is not a perfect test
+     * but we know only the wmname and of course multiple windows might have
+     * the same wmname.
      */
     if (opCode == CheckIsVisible) {
         /*
-         * First we check if this window has the wmclass in question and it is
+         * First we check if this window has the wmname in question and it is
          * trully visible.
          */
-        if (WMClass == wmclass && attrs.map_state == IsViewable) {
+        if (WMName == wmname && attrs.map_state == IsViewable) {
             SYS_DEBUG ("FOUND");
             return true;
         }
@@ -378,19 +348,19 @@ XChecker::check_window_rec (
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
         for (int i = 0; i < n_children; ++i) {
-			if (check_window_rec (dpy, child_l[i], WMClass, opCode))
+			if (check_window_rec (dpy, child_l[i], WMName, opCode))
                 return true;
 		}
     } else if (opCode == CheckIsInvisible) {
         /*
-         * This case we check all the window with the given wmclass, none of
+         * This case we check all the window with the given wmname, none of
          * them should be visible.
          */
 
         /*
          * First the current window.
          */
-        if (WMClass == wmclass && attrs.map_state == IsViewable)
+        if (WMName == wmname && attrs.map_state == IsViewable)
             return false;
 
         /*
@@ -398,7 +368,7 @@ XChecker::check_window_rec (
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
         for (int i = 0; i < n_children; ++i) {
-			if (!check_window_rec (dpy, child_l[i], WMClass, opCode))
+			if (!check_window_rec (dpy, child_l[i], WMName, opCode))
                 return false;
 		}
 
@@ -415,7 +385,7 @@ XChecker::check_window_rec (
 
 bool
 XChecker::checkWindow (
-        const QString         &WMClass,
+        const QString         &WMName,
         XChecker::RequestCode  OpCode)
 {
     Display *dpy = display();
@@ -424,13 +394,13 @@ XChecker::checkWindow (
 
     root = XDefaultRootWindow (dpy);
 
-    retval = check_window_rec (dpy, root, WMClass, OpCode);
+    retval = check_window_rec (dpy, root, WMName, OpCode);
     if (!retval && OpCode == CheckIsVisible) {
-        SYS_WARNING ("A window with WMClass set to %s should be visible.",
-                SYS_STR(WMClass));
+        SYS_WARNING ("A window with name set to %s should be visible.",
+                SYS_STR(WMName));
     } else if (!retval && OpCode == CheckIsInvisible) {
-        SYS_WARNING ("None of the windows with WMClass set to %s should be "
-                "visible.", SYS_STR(WMClass));
+        SYS_WARNING ("None of the windows with name set to %s should be "
+                "visible.", SYS_STR(WMName));
     }
 
     if (!retval) 
@@ -560,8 +530,10 @@ XChecker::debug_dump_windows(
 	Display *dpy = display();
 	Window root;
 
-    SYS_DEBUG (" # Window  MapState   Size WMclass           Name");
-    SYS_DEBUG ("-------------------------------------------------");
+    SYS_DEBUG (
+" #  Window           MapState      Size     WMclass          Window name");
+    SYS_DEBUG (
+"-----------------------------------------------------------------------------");
 	
     root = XDefaultRootWindow(dpy);
 	pr (highlighted, dpy, root, 0, 0);
