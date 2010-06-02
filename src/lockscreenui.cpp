@@ -296,6 +296,8 @@ void
 LockScreenUI::showEvent (
         QShowEvent *event)
 {
+    Q_UNUSED (event);
+
     Window      windowID;
     Display    *display;
     Atom        nameAtom;
@@ -357,6 +359,8 @@ void
 EventEaterUI::showEvent (
         QShowEvent *event)
 {
+    Q_UNUSED (event);
+
     Window      windowID;
     Display    *display;
     Atom        nameAtom;
