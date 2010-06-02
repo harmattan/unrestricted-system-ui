@@ -17,6 +17,13 @@ system-ui (0.16.0~1) harmattan; urgency=low
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 25 May 2010 09:01:21 +0200
 
+system-ui (0.15.13-1) harmattan; urgency=low
+
+  * Fixes: NB#158901 - Sysuid is causing very high wakeups which prevents
+                       the device to go in idle mode
+
+ -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Tue, 25 May 2010 15:50:37 +0300
+
 system-ui (0.15.12-1) harmattan; urgency=low
 
   * Added a workaround for obexd:
@@ -24,7 +31,16 @@ system-ui (0.15.12-1) harmattan; urgency=low
                        Ovi Suite mode in the USB mode pop-up
   * Fixes: NB#169773 - Missed/rejected call triggers infinite ringtone playback
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 25 May 2010 08:59:31 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 21 May 2010 10:30:52 +0200
+
+system-ui (0.15.10-2) harmattan; urgency=low
+
+  * Remove some bugs from changelog
+    (i increased the version number because meanwhile tagged a 10-1
+     which contained a workaround for QmSystem problem, but that not needed
+     anymore... it is based on 0.15.9-1, only the changelog changed)
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 18 May 2010 16:26:55 +0200
 
 system-ui (0.15.10-1) harmattan; urgency=low
 
