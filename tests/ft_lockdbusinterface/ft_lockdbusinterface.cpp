@@ -30,6 +30,8 @@
 #include <MTheme>
 #include <qmlocks.h>
 
+#include <qmlocks.h>
+
 using namespace Maemo;
 
 #define DEBUG
@@ -58,12 +60,12 @@ static const QString answerMethod = "method";
 /*
  * We will wait this much for the DBus answer.
  */
-static int DBusDelay = 400;
+static int DBusDelay = 1000;
 
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 1000;
+static int DelayBetweenTests = 2500;
 
 /*********************************************************************************
  * SingnalSink implementation.
@@ -79,7 +81,9 @@ void
 SingnalSink::DBusMessagingFailure (
         QDBusError error)
 {
-    SYS_DEBUG ("ERROR: %s: %s", SYS_STR(error.name()), SYS_STR(error.message()));
+    SYS_DEBUG ("ERROR: %s: %s", 
+            SYS_STR(error.name()), 
+            SYS_STR(error.message()));
     m_ErrorCame = true;
 }
 
@@ -87,7 +91,6 @@ void
 SingnalSink::screenLockReply (
         qint32 reply)
 {
-    SYS_DEBUG ("*** reply = %d", reply);
     m_ReplyCame = true;
     m_Reply = reply;
 }
@@ -163,7 +166,7 @@ void Ft_LockDBusInterface::initTestCase()
 }
 
 void
-Ft_LockDBusInterface::testEventEater ()
+Ft_LockDBusInterface::testEventEaterShowHide ()
 {
     /*
      * Actually we had some problems so we do a little stress testing here.
@@ -198,6 +201,48 @@ Ft_LockDBusInterface::testLockScreenShowHide ()
     }
 }
 
+void
+Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
+{
+    QmLocks locks;
+    bool    lockingSuccess, unlockingSuccess;
+
+    /*
+     * Locking the screen first.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Locking the screen ****************************");
+    SYS_DEBUG ("***************************************************");
+    lockingSuccess = locks.setState (
+            QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    #ifndef __i386__
+    QVERIFY (lockingSuccess);
+    #endif
+
+    /*
+     *
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Showing the unlockUI **************************");
+    SYS_DEBUG ("***************************************************");
+    lockScreen ();
+    checkLockIsVisible ();
+
+    /*
+     * Then unlocking the screen again so the lockscreenUI will be visible.
+     */
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Unlocking the screen **************************");
+    SYS_DEBUG ("***************************************************");
+    unlockingSuccess = locks.setState (
+            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+    #ifndef __i386__
+    QVERIFY (unlockingSuccess);
+    #endif
+
+    unLockScreen ();
+    checkLockIsInvisible ();
+}
 
 
 void 

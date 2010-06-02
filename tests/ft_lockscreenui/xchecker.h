@@ -72,10 +72,15 @@ private:
             int      level, 
             int      nthWindow);
 
+    int pidof (const char *program);
+    bool checkPIDs ();
+
 private:
     Atom class_atom, name_atom, name_atom2, pid_atom,
     trans_atom, hildon_stack_atom, utf8_string_atom,
     win_type_atom, wm_state_atom, non_comp_atom;
+    
+    int                  m_CompositorPID;
 };
 
 #endif

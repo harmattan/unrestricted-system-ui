@@ -41,6 +41,9 @@ XChecker::XChecker()
     wm_state_atom = XInternAtom(dpy, "_NET_WM_STATE", False);
     hildon_stack_atom = XInternAtom(dpy, "_HILDON_STACKABLE_WINDOW", False);
     non_comp_atom = XInternAtom(dpy, "_HILDON_NON_COMPOSITED_WINDOW", False);
+
+    m_CompositorPID = pidof ("mcompositor");
+    SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);    
 }
 
 Display *
@@ -394,6 +397,12 @@ XChecker::checkWindow (
     bool     retval = false;
     Window   root;
 
+    /*
+     * Here are some stuff that we want to check always.
+     */
+    checkPIDs ();
+
+
     root = XDefaultRootWindow (dpy);
 
     retval = check_window_rec (dpy, root, WMName, OpCode);
@@ -425,6 +434,10 @@ XChecker::checkWindow (
     unsigned int      border_width_return, depth_return;
     Window            root_ret;
 
+    /*
+     * Here are some stuff that we want to check always.
+     */
+    checkPIDs ();
 
     SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
 
@@ -568,4 +581,62 @@ XChecker::debugDumpNotifications ()
     }
 }
 
+int
+XChecker::pidof (
+        const char *program)
+{
+    char    commandLine[256];
+    FILE   *pipe;
+    char    line[256];
+    char   *part;
 
+    snprintf (commandLine, 256, "ps axu | grep %s", program);
+    pipe = popen (commandLine, "r");
+    if (pipe == NULL) {
+        SYS_WARNING ("popen() failed");
+        return -1;
+    }
+
+    line[0] = '\0';
+    if (fgets(line, 255, pipe) == NULL) {
+        pclose (pipe);
+        return -1;
+    }
+
+    part = line;
+    while (*part != 0 && *part != ' ')
+        ++part;
+    while (*part != 0 && *part == ' ')
+        ++part;
+
+    pclose (pipe);
+
+
+    return atoi (part);
+}
+
+bool
+XChecker::checkPIDs ()
+{
+    int pid;
+    
+    pid = pidof ("mcompositor");
+    if (pid != m_CompositorPID) {
+        SYS_WARNING (
+" \n"
+"                          MCompositor crash warning \n"
+" WARNING: The PID of the mcompositor process has been changed. This probably\n"
+" means that the mcompositor has been crashed. The old PID was %d, the new\n"
+" PID is %d.\n"
+" Please note that the crash of the mcompositor usually causes problems, so\n"
+" the showing of certain windows will not work. If this test fails showing\n"
+" a window (e.g. the lockscreenUI or the EventEater) it is most probably\n"
+" because of the mcompositor crash.\n"
+" \n", 
+m_CompositorPID, pid);
+        m_CompositorPID = pid;
+        return false;
+    }
+
+    return true;
+}

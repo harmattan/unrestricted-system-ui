@@ -407,7 +407,8 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Locking the screen ****************************");
     SYS_DEBUG ("***************************************************");
-    lockingSuccess = locks.setState (QmLocks::TouchAndKeyboard, QmLocks::Locked);
+    lockingSuccess = locks.setState (
+            QmLocks::TouchAndKeyboard, QmLocks::Locked);
     #ifndef __i386__
     QVERIFY (lockingSuccess);
     #endif
