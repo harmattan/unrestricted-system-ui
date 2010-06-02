@@ -40,6 +40,7 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "unlocknotificationsink.h"
+#include "volumecontrolui.h"
 
 #define DEBUG
 #define WARNING
@@ -66,7 +67,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
 
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlockscreen.css");
 
     // Load translation of System-UI
     retranslate ();
@@ -152,6 +152,11 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
                  m_unlockNotificationSink,
                  SLOT (setLockedState (bool)));
     }
+
+    /*
+     * Instantiate the volume-control UI
+     */
+    new VolumeControlUI (this);
 }
 
 Sysuid::~Sysuid ()

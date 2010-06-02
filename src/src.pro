@@ -65,12 +65,14 @@ SOURCES +=                              \
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
+include(volumecontrol/volumecontrol.pri)
 
 PKGCONFIG += \
     contextsubscriber-1.0 \
     qmsystem \
     maemosec \
     dbus-1 \
+    libresourceqt1 \
     libngf0 \
     xcomposite
 
