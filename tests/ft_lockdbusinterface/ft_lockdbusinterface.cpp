@@ -60,12 +60,12 @@ static const QString answerMethod = "method";
 /*
  * We will wait this much for the DBus answer.
  */
-static int DBusDelay = 1000;
+static int DBusDelay = 800;
 
 /*
  * This much we wait between the tests.
  */
-static int DelayBetweenTests = 2500;
+static int DelayBetweenTests = 1000;
 
 /*********************************************************************************
  * SingnalSink implementation.
