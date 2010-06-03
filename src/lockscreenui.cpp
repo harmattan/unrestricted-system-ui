@@ -122,6 +122,11 @@ LockScreenWindow::reloadPortraitBackground ()
     }
 }
 
+/*!
+ * Paints the background image for the lockscreen. I heard rumors, that there is
+ * a simpler way, the window can paint its background, but I'm not sure how,
+ * and I'm not sure if it is better that way.
+ */
 void
 LockScreenWindow::paint (
         QPainter                       *painter,

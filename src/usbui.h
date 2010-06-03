@@ -20,18 +20,19 @@
 #define USBUI_H
 
 #include <QObject>
+#include <qmlocks.h>
 
 #ifndef UNIT_TEST
 #include <qmusbmode.h>
-#include <qmlocks.h>
 #else
 #include "usbmode_stub.h"
-#include "locksstub.h"
 #endif
 
 class MDialog;
 class MNotification;
 class QProcess;
+
+using namespace Maemo;
 
 class UsbUi : public QObject
 {

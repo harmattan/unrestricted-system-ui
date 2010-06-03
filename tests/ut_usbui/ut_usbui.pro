@@ -2,7 +2,8 @@ include(../common_top.pri)
 TARGET = ut_usbui
 INCLUDEPATH += $$SRCDIR
 
-CONFIG -= qmsystem
+CONFIG += \
+    qmsystem
 
 # unit test and unit
 SOURCES += \

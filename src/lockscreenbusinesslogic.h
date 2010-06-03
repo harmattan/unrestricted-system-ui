@@ -24,8 +24,12 @@
 #include <QObject>
 #include <QTimer>
 
+#include <qmdisplaystate.h>
+
 class LockScreenUI;
 class EventEaterUI;
+
+using namespace Maemo;
 
 class LockScreenBusinessLogic : public QObject
 {
@@ -45,6 +49,7 @@ public slots:
 
 private slots:
     void unlockScreen();
+    void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
 
 signals:
     void updateTime ();
@@ -52,12 +57,13 @@ signals:
     void screenIsLocked (bool locked);
 
 private: //methods
-    void startTimer();
-    void stopTimer();
+    void mayStartTimer();
+    void mayStopTimer();
 
 private: 
     LockScreenUI     *lockUI;
     EventEaterUI     *eaterUI;
+    QmDisplayState    m_QmDisplay;
     QTimer            timer;
 #ifdef UNIT_TEST
     friend class Ut_LockScreenBusinessLogic;
@@ -66,4 +72,4 @@ private:
 
 };
 
-#endif // LOCKSCREENBUSINESSLOGIC_H
+#endif
