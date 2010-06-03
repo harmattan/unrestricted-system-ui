@@ -388,7 +388,7 @@ Ft_LockDBusInterface::checkEaterIsVisible ()
             "EventEaterUI", 
             XChecker::CheckIsVisible);
 
-    m_XChecker.debug_dump_windows ();
+    //m_XChecker.debug_dump_windows ();
     QVERIFY (windowVisible);
 }
 
