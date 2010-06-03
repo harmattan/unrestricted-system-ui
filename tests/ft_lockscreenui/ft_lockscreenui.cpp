@@ -76,7 +76,6 @@ void Ft_LockScreenUI::initTestCase()
     SYS_DEBUG ("Initializing our own themes.");
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlockscreen.css");
 }
 
 void 

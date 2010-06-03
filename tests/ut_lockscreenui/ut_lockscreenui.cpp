@@ -86,7 +86,6 @@ void Ut_LockScreenUI::initTestCase()
     SYS_DEBUG ("+++ Initializing our own themes.");
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlockscreen.css");
 }
 
 void 
@@ -116,7 +115,7 @@ Ut_LockScreenUI::testLockScreenWindow ()
 {
     LockScreenWindow *window;
 
-    window = new LockScreenWindow;
+    window = new LockScreenWindow (0, 0, 0);
 
     /*
      * Checking if the window is watching the right gconf keys.

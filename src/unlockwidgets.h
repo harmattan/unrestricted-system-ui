@@ -44,6 +44,10 @@ private:
     MImageWidget    *m_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
+
+#ifdef UNIT_TEST
+    friend class ut_unlockwidgets;
+#endif
 };
 
 class UnlockArea : public MSceneWindow
@@ -63,6 +67,10 @@ private:
     MImageWidget    *m_unlock_icon;
     bool             m_enabled;
     bool             m_active;
+
+#ifdef UNIT_TEST
+    friend class ut_unlockwidgets;
+#endif
 };
 
 #endif

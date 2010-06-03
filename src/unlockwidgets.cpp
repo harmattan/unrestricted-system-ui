@@ -131,8 +131,10 @@ UnlockArea::UnlockArea () :
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
 
-    m_unlock_icon = new MImageWidget ("icon-m-common-unlocked");
-//    m_unlock_icon->setObjectName ("lockscreenIconUnlock");
+    m_unlock_icon = new MImageWidget;
+    m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (64, 64));
+    m_unlock_icon->setZoomFactor (1.0);
+    m_unlock_icon->setObjectName ("LockScreenUnlockIcon");
 
     layout->addStretch ();
 

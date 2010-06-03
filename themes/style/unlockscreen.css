@@ -77,3 +77,13 @@ MSceneWindowStyle#LockLandAreaActive {
     maximum-size: 13.8mm 13.8mm;
 }
 
+#LockScreenUnlockIcon {
+    /* XXX: TODO: FIXME: this is not yet tested... i don't have the new assets... */
+    background-image: "lockscreen-lock-land-area-center-background";
+    background-opacity: 1.0;
+
+    minimum-size: 13.8mm 13.8mm;
+    preferred-size: 13.8mm 13.8mm;
+    maximum-size: 13.8mm 13.8mm;
+}
+

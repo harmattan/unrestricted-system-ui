@@ -25,10 +25,6 @@
 #include <QList>
 #include <QVariant>
 #include <MApplication>
-#include <MApplicationWindow>
-#include <MSceneManager>
-#include <MTheme>
-#include <qmlocks.h>
 
 #include <qmlocks.h>
 
@@ -138,11 +134,6 @@ void Ft_LockDBusInterface::initTestCase()
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
-
-    SYS_DEBUG ("Initializing our own themes.");
-    MTheme::addPixmapDirectory (themeDir, M::Recursive);
-    MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlockscreen.css");
 
     m_DbusIf = new QDBusInterface (
             "com.nokia.system_ui", 

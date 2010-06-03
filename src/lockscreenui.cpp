@@ -96,8 +96,10 @@ LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget 
 
 LockScreenWindow::~LockScreenWindow ()
 {
+#if 0
     delete m_confBgLandscape;
     delete m_confBgPortrait;
+#endif
 }
 
 void
@@ -166,6 +168,11 @@ LockScreenWindow::paint (
 void
 LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
+#ifdef UNIT_TEST
+    if (m_LockLiftArea == 0)
+        return;
+#endif
+
     // We should go to STATE_MOVING state if user tappend on
     // the top-right corner of the window...
     if (((m_LockLiftArea->scenePos ().y () +
@@ -199,6 +206,11 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 void
 LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 {
+#ifdef UNIT_TEST
+    if (m_LockLandArea == 0)
+        return;
+#endif
+
     if (m_DnDstate == STATE_NONE)
         return;
 
@@ -250,9 +262,11 @@ LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
         emit unlocked ();
     }
 
+#ifdef UNIT_TEST
     // Restore the default state ...
     static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
     static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
+#endif
 
     m_DnDstate = STATE_NONE;
     updateDnDicon ();
@@ -278,7 +292,12 @@ LockScreenWindow::updateDnDicon ()
 
     m_DnDoverlay.setVisible (enable);
     if (enable)
-        m_DnDoverlay.appear (m_Window);
+    {
+        if (m_Window != 0)
+            m_DnDoverlay.appear (m_Window);
+        else
+            m_DnDoverlay.appear ();
+    }
     else
         m_DnDoverlay.disappear ();
 }
@@ -358,9 +377,6 @@ LockScreenUI::realize ()
         new LockScreenWindow (this, m_LockLiftArea, m_LockLandArea);
     m_SceneWindow->setLayout (layout);
     m_SceneWindow->appear (this);
-
-    connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
-             m_LockLandArea, SLOT (setEnabled (bool)));
 
     connect (m_SceneWindow, SIGNAL (unlocked ()),
              this, SLOT (sliderUnlocked ()),
