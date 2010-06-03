@@ -47,9 +47,15 @@ NGFAdapter::~NGFAdapter()
 
 }
 
-void NGFAdapter::play(const QString &id)
+uint NGFAdapter::play(const QString &id)
 {
     Ut_NGFNotificationSink::played.append(id);
+    return 1;
+}
+
+void NGFAdapter::stop(uint eventId)
+{
+    Q_UNUSED(eventId);
 }
 
 bool NGFAdapter::isValid()

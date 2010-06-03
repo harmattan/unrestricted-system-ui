@@ -34,13 +34,25 @@ NGFAdapter::~NGFAdapter()
     dbus_connection_unref(connection);
 }
 
-void NGFAdapter::play(const QString &id)
+uint NGFAdapter::play(const QString &id)
 {
+    uint eventId = 0;
+
     if (isValid() && !id.isEmpty()) {
         NgfProplist *p = NULL;
-        ngf_client_play_event (client, id.toUtf8().constData(), p);
+        eventId = ngf_client_play_event (client, id.toUtf8().constData(), p);
+    }
+
+    return eventId;
+}
+
+void NGFAdapter::stop(uint eventId)
+{
+    if (eventId > 0) {
+        ngf_client_stop_event (client, eventId);
     }
 }
+
 
 bool NGFAdapter::isValid()
 {

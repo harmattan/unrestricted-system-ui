@@ -54,14 +54,22 @@ void NGFNotificationSink::addNotification(const Notification &notification)
     if (canAddNotification(notification)) {
         QString feedbackId = determineFeedbackId(notification.parameters());
         if (!feedbackId.isEmpty()) {
-            adapter->play(feedbackId);
+            uint eventId = adapter->play(feedbackId);
+            if (eventId > 0) {
+                idToEventId.insert(notification.notificationId(), eventId);
+            }
         }
     }
 }
 
 void NGFNotificationSink::removeNotification(uint notificationId)
 {
-    Q_UNUSED(notificationId)
+    if (idToEventId.contains(notificationId)) {
+        uint eventId = idToEventId.take(notificationId);
+        if (eventId > 0) {
+            adapter->stop(eventId);
+        }
+    }
 }
 
 NotificationManager &NGFNotificationSink::notificationManager()
