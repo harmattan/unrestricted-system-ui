@@ -25,7 +25,6 @@
 #include "pluginlist.h"
 #include "pannedwidgetcontroller_stub.h"
 #include "statusindicatormenuwindow_stub.h"
-#include "statusindicatormenuscenewindow_stub.h"
 
 // QPluginLoader stubs (used by PluginList)
 QObject *QPluginLoader::instance()

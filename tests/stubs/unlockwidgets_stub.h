@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <QSizeF>
 #include <unlockwidgets.h>
 
 UnlockHeader::UnlockHeader() {
@@ -33,31 +32,9 @@ UnlockHeader::updateDateTime() {
 }
 
 void
-UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
+UnlockHeader::setActive (bool active)
 {
-    Q_UNUSED(event);
-}
-
-void
-UnlockHeader::dndActionChanged (Qt::DropAction action)
-{
-    Q_UNUSED(action);
-}
-
-void
-UnlockHeader::dndDone ()
-{
-
-}
-
-void
-UnlockHeader::paint (QPainter *painter,
-                     const QStyleOptionGraphicsItem *option,
-                     QWidget *widget)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
+    Q_UNUSED(active);
 }
 
 UnlockArea::UnlockArea() {
@@ -69,37 +46,15 @@ UnlockArea::~UnlockArea() {
 }
 
 void
-UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
-{
-    Q_UNUSED(event);
-}
-
-void
-UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
-{
-    Q_UNUSED(event);
-}
-
-void
-UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
-{
-    Q_UNUSED(event);
-}
-
-void
 UnlockArea::setEnabled (bool enabled)
 {
     Q_UNUSED(enabled);
 }
 
 void
-UnlockArea::paint (QPainter *painter,
-                   const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
+UnlockArea::setActive (bool active)
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
+    Q_UNUSED(active);
 }
 
 UnlockNotifications::UnlockNotifications ()
@@ -110,15 +65,5 @@ UnlockNotifications::UnlockNotifications ()
 UnlockNotifications::~UnlockNotifications ()
 {
 
-}
-
-void
-UnlockNotifications::paint (QPainter *painter,
-                            const QStyleOptionGraphicsItem *option,
-                            QWidget *widget)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
 }
 

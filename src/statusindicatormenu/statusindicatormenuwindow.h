@@ -47,36 +47,10 @@ public:
 };
 
 /*!
- * A scene window for the status indicator menu. Listens to mouse clicks
- * for closing the menu if the area outside the menu is clicked.
- */
-class StatusIndicatorMenuSceneWindow : public MSceneWindow
-{
-    Q_OBJECT
-
-public:
-    /*!
-     * Constructs a scene window for the status indicator menu.
-     *
-     * \param parent the parent QGraphicsItem
-     */
-    StatusIndicatorMenuSceneWindow(QGraphicsItem *parent = NULL);
-
-    //! \reimp
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    //! \reimp_end
-
-signals:
-    /*!
-     * Sent when the scene window is clicked.
-     *
-     * \param scenePos the scene position of the click
-     */
-    void clicked(QPointF scenePos);
-};
-
-/*!
-  * A widget for listening to layout change requests
+  * A special panned widget for status indicator menu.
+  * - Emits a signal when a geometry change happens.
+  * - Emits a signal when a mouse press event is received below
+  *   the bottommost widget.
   */
 class PannedWidgetController : public MWidgetController
 {
@@ -89,8 +63,24 @@ public:
      */
     PannedWidgetController(QGraphicsItem *parent = NULL);
 
+    /*!
+     * Gets the widget that is considered as the bottommost inside this
+     * widget.
+     * \return widget the bottommost widget.
+     */
+    const QGraphicsWidget *bottommostWidget() const;
+
+    /*!
+     * Sets the widget that is considered as the bottommost inside this
+     * widget. The pressedOutSideContents signal is emitted if a press event
+     * is received below this widget.
+     * \param widget the bottom most widget.
+     */
+    void setBottommostWidget(const QGraphicsWidget *widget);
+
     //! \reimp
     virtual void setGeometry(const QRectF &rect);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
 
 signals:
@@ -98,6 +88,15 @@ signals:
      * Sent when the position or the size of the item changes
      */
     void positionOrSizeChanged();
+
+    /*!
+     * A signal that gets emitted when the widget is pressed outside of its contents.
+     */
+    void pressedOutSideContents();
+
+private:
+    //! The bottom most widget inside this widget
+    const QGraphicsWidget *bottommostWidget_;
 };
 
 /*!
@@ -159,13 +158,6 @@ private slots:
      * \brief Slot for getting information about settings button clicks
      */
     void launchControlPanelAndHide();
-
-    /*!
-     * Hides the status indicator menu window if the given point is outside the menu area.
-     *
-     * \param point the point to check
-     */
-    void hideIfPointBeyondMenu(QPointF point);
 
     //! Set the pannability and layout based on the size and position of the pannable area
     void setPannabilityAndLayout();

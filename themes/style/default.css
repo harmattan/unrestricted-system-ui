@@ -24,10 +24,6 @@ MWidgetStyle#CloseButtonArea {
    background-image: "duistatusmenuclose-background";
 }
 
-MWidgetStyle#StatusIndicatorMenuPannableWidget {
-    background-image: status-indicator-menu-background;
-}
-
 MWidgetStyle#StatusIndicatorMenuWindowBackground {
     background-image: "meegotouch-applicationpage-background";
     minimum-size: 100% 0;
@@ -41,7 +37,7 @@ NotificationAreaStyle {
     margin-right:  0;
     margin-bottom: 0;
 }
-                
+
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
     font: $FONT_XSMALL;
     minimum-size: 8.8mm 7.3mm;

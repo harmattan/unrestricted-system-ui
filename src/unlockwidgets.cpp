@@ -20,39 +20,26 @@
 ****************************************************************************/
 #include "unlockwidgets.h"
 
-#include <QPixmap>
 #include <QTime>
 #include <QDateTime>
-#include <QMimeData>
 
-#include <QDrag>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsLinearLayout>
 
-#include <MTheme>
 #include <MLocale>
 #include <MLabel>
 #include <MImageWidget>
 
-#undef DEBUG
-#define WARNING
+#define DEBUG
 #include "debug.h"
 
-#define DND_MIME_TYPE "application/x-dnditemdata"
-
-#define ACTIVE_RGBA     0., .67, .97, .5
-#define INACTIVE_RGBA   1.,  1.,  1., .5
-
-UnlockHeader::UnlockHeader () : MWidget (),
-    m_dnd_icon (0),
+UnlockHeader::UnlockHeader () :
     m_TimeLabel (0),
-    m_DateLabel (0),
-    m_background (0),
-    m_dndAction (Qt::IgnoreAction)
+    m_DateLabel (0)
 {
     QGraphicsLinearLayout   *datetimeBox;
     QGraphicsLinearLayout   *lockliftBox;
+
+    setObjectName ("LockLiftArea");
 
     /*
      * The label that shows the hour and minute
@@ -69,20 +56,17 @@ UnlockHeader::UnlockHeader () : MWidget (),
     /*
      * The lock icon @ right side
      */
-    m_icon = new MImageWidget ("locket");
+    m_icon = new MImageWidget;
+    m_icon->setVisible (true);
+    m_icon->setImage ("icon-m-common-locked", QSize (32, 32));
+    m_icon->setZoomFactor (1.0);
     m_icon->setObjectName ("lockscreenIconLocked");
-
-    /*
-     * Pre-load the DnD icon
-     * and the background
-     */
-    m_dnd_icon = MTheme::pixmapCopy ("flat_big_lock");
-    m_background = MTheme::pixmapCopy ("top_fade");
 
     /*
      * Construct the Date/Time box
      */
     datetimeBox = new QGraphicsLinearLayout (Qt::Vertical);
+    datetimeBox->setContentsMargins (0., 0., 0., 0.);
     datetimeBox->setSpacing (0.0);
     datetimeBox->addItem (m_TimeLabel);
     datetimeBox->setAlignment (m_TimeLabel, Qt::AlignLeft);
@@ -93,8 +77,9 @@ UnlockHeader::UnlockHeader () : MWidget (),
      * Create the main container
      */
     lockliftBox = new QGraphicsLinearLayout (Qt::Horizontal);
+    lockliftBox->setContentsMargins (0., 0., 0., 0.);
     lockliftBox->addItem (datetimeBox);
-    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignVCenter);
+    lockliftBox->setAlignment (datetimeBox, Qt::AlignLeft | Qt::AlignTop);
     lockliftBox->addItem (m_icon);
     lockliftBox->setAlignment (m_icon, Qt::AlignRight | Qt::AlignVCenter);
 
@@ -109,10 +94,15 @@ UnlockHeader::UnlockHeader () : MWidget (),
     updateDateTime ();
 }
 
+void
+UnlockHeader::setActive (bool active)
+{
+    SYS_DEBUG ("active = %s", SYS_BOOL (active));
+    m_icon->setVisible (active);
+}
+
 UnlockHeader::~UnlockHeader ()
 {
-    delete m_dnd_icon;
-    delete m_background;
 }
 
 void
@@ -151,84 +141,17 @@ UnlockHeader::updateDateTime ()
         update ();
 }
 
-void
-UnlockHeader::mousePressEvent (QGraphicsSceneMouseEvent *event)
-{
-    QDrag *drag = new QDrag (event->widget ());
-
-    // TBD: i used 160px for active lock lift area
-    if (geometry ().topRight ().x () > (event->pos ().x () + 160.0))
-        return;
-
-    QMimeData *mimeData = new QMimeData;
-    mimeData->setData (DND_MIME_TYPE, 0);
-
-    drag->setMimeData (mimeData);
-
-    if (m_dnd_icon != 0)
-    {
-        drag->setPixmap (* m_dnd_icon);
-        drag->setHotSpot (QPoint (m_dnd_icon->width () / 2,
-                                  m_dnd_icon->height () / 2));
-    }
-    else
-        SYS_WARNING ("ERROR, pixmap is empty!");
-
-    // Emit the 'drag started' signal
-    emit activateArea (true);
-
-    connect (drag, SIGNAL (destroyed ()),
-             this, SLOT (dndDone ()));
-    connect (drag, SIGNAL (actionChanged (Qt::DropAction)),
-             this, SLOT (dndActionChanged (Qt::DropAction)));
-
-    drag->exec (Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
-}
-
-void
-UnlockHeader::dndActionChanged (Qt::DropAction action)
-{
-    // Store the last DnD action
-    m_dndAction = action;
-}
-
-void
-UnlockHeader::dndDone ()
-{
-    // QDrag destroyed, check the last action,
-    // when it is ignore then dropped outside on the area
-    //  -> then i should disable it (hide the icon and border)
-    if (m_dndAction == Qt::IgnoreAction)
-        emit activateArea (false);
-}
-
-void
-UnlockHeader::paint (QPainter *painter,
-                     const QStyleOptionGraphicsItem *option,
-                     QWidget *widget)
-{
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
-
-    const int margin = 10; // FIXME
-
-    painter->drawPixmap (-margin,
-                         -margin,
-                         (int) geometry ().width () + 2 * margin,
-                         (int) m_background->height (),
-                         * m_background);
-}
-
-
-UnlockArea::UnlockArea () : MWidget (),
+UnlockArea::UnlockArea () :
     m_enabled (false),
     m_active (false)
 {
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
 
-    m_unlock_icon = new MImageWidget ("unlocked");
-    m_unlock_icon->setObjectName ("lockscreenIconUnlock");
+    m_unlock_icon = new MImageWidget;
+    m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (64, 64));
+    m_unlock_icon->setZoomFactor (1.0);
+    m_unlock_icon->setObjectName ("LockScreenUnlockIcon");
 
     layout->addStretch ();
 
@@ -236,13 +159,11 @@ UnlockArea::UnlockArea () : MWidget (),
     layout->addItem (m_unlock_icon);
     layout->setAlignment (m_unlock_icon, Qt::AlignCenter);
 
-    m_unlock_icon->setVisible (m_enabled);
-
     layout->addStretch ();
 
     setLayout (layout);
 
-    setAcceptDrops (true);
+    updateState ();
 }
 
 UnlockArea::~UnlockArea ()
@@ -251,125 +172,56 @@ UnlockArea::~UnlockArea ()
 }
 
 void
-UnlockArea::dragEnterEvent (QGraphicsSceneDragDropEvent *event)
+UnlockArea::setActive (bool active)
 {
-    if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
-    {
-        event->setDropAction (Qt::MoveAction);
-        event->accept ();
+    SYS_DEBUG ("active = %s", SYS_BOOL (active));
+    if (m_enabled == false)
+        return; /* no-op when disabled... */
 
-        // TODO: set border to blue one
-        m_unlock_icon->setImage ("unlock_drop");
+    if (m_active == active)
+        return;
 
-        m_active = true;
+    m_active = active;
 
-        update ();
-    }
-    else
-        event->ignore ();
-}
-
-void
-UnlockArea::dragLeaveEvent (QGraphicsSceneDragDropEvent *event)
-{
-    if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
-    {
-        event->setDropAction (Qt::MoveAction);
-        event->accept ();
-
-        // TODO: set border to gray one
-        m_unlock_icon->setImage ("unlocked");
-
-        m_active = false;
-
-        update ();
-    }
-    else
-        event->ignore ();
-}
-
-void
-UnlockArea::dropEvent (QGraphicsSceneDragDropEvent *event)
-{
-    if (event->mimeData ()->hasFormat (DND_MIME_TYPE))
-    {
-//        SYS_DEBUG ("Dropped");
-
-        event->setDropAction (Qt::MoveAction);
-        event->accept ();
-
-        // Emit the "unlocked" signal
-        emit unlocked ();
-
-        // Restore the old image...
-        m_unlock_icon->setImage ("unlocked");
-
-        m_active = false;
-        m_enabled = false;
-    }
-    else
-        event->ignore ();
+    updateState ();
 }
 
 void
 UnlockArea::setEnabled (bool enabled)
 {
+    SYS_DEBUG ("enabled = %s", SYS_BOOL (enabled));
     if (m_enabled == enabled)
         return;
 
     m_enabled = enabled;
+    // Set active to false when enable val. has been changed...
+    m_active = false;
 
-    m_unlock_icon->setVisible (m_enabled);
-
-    update ();
+    updateState ();
 }
 
 void
-UnlockArea::paint (QPainter *painter,
-                   const QStyleOptionGraphicsItem *option,
-                   QWidget *widget)
+UnlockArea::updateState ()
 {
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
+    SYS_DEBUG ("");
+    // XXX: TODO: set the proper image!!!!
 
-    const qreal borderwidth = 20.; // FIXME
-
-    if (m_enabled)
+    if (m_enabled == false)
     {
-        // TODO: parse it from some theme or css file
-        QColor border_color;
-        if (m_active)
-            border_color.setRgbF (ACTIVE_RGBA);
-        else
-            border_color.setRgbF (INACTIVE_RGBA);
-
-        // Top
-        painter->fillRect (0.,
-                           0.,
-                           size ().width (),
-                           borderwidth,
-                           border_color);
-
-        // Bottom
-        painter->fillRect (0.,
-                           size ().height () - borderwidth,
-                           size ().width (),
-                           borderwidth,
-                           border_color);
-
-        // Left
-        painter->fillRect (0.,
-                           borderwidth,
-                           borderwidth,
-                           size ().height () - 2 * borderwidth,
-                           border_color);
-
-        // Right
-        painter->fillRect (size ().width () - borderwidth,
-                           borderwidth,
-                           borderwidth,
-                           size ().height () - 2 * borderwidth,
-                           border_color);
+        setObjectName ("LockLandArea");
     }
+    else if (m_active == true)
+    {
+        setObjectName ("LockLandAreaActive");
+    }
+    else
+    {
+        setObjectName ("LockLandAreaDragged");
+    }
+
+    m_unlock_icon->setVisible (m_enabled);
+
+    // After object-name change a screen-refresh is needed:
+    update ();
 }
 

@@ -1,36 +1,89 @@
-#lockscreenIconLocked {
-    padding-left:   18px;
-    padding-right:  18px;
-    padding-top:    18px;
-    padding-bottom: 18px;
-
-    preferred-size: 100 100;
-    minimum-size:   100 100;
-    maximum-size:   100 100;
+MSceneWindowStyle#LockScreenWindow {
+    vertical-align: top;
+    horizontal-align: left;
 }
 
-#lockscreenHeaderContainer {
-    width:  100%;
+MSceneWindowStyle#LockLiftArea {
+    background-image: "lockscreen-lock-lift-area-background" 0 380 0 0;
+    background-opacity: 0.9;
 
-    background-image: "top_fade" 0 0 0 0;
+    minimum-size: 100% 14mm;
+    preferred-size: 100% 14mm;
+    maximum-size: 100% 14mm;
 }
 
 #lockscreenTimeLabel {
+    margin-top: 2mm;
+    margin-left: 2mm;
+
     color: white;
-    font: "Nokia Sans Wide" 54;
+    font: "Nokia Standard Light" 81;
 }
 
 #lockscreenDateLabel {
+    margin-left: 2mm;
+
     color: white;
-    font: "Nokia Sans Wide" 24;
+    font: "Nokia Standard Light" 20;
 }
 
-#lockscreenUnlockArea {
-    border-width: 20px;
-    border-image: "border_dragging" 20 20 20 20 stretch stretch;
+MImageWidgetStyle#lockscreenIconLocked {
+    background-image: "lockscreen-lock";
+    background-opacity: 1.0;
 
-    minimum-size: 100% 100%;
-    preferred-size: 100% 100%;
-    maximum-size: 100% 100%;
+    margin-left: 2mm;
+    margin-right: 2mm;
+ 
+    preferred-size: 10mm 10mm;
+    minimum-size:   10mm 10mm;
+    maximum-size:   10mm 10mm;
+}
+
+MSceneWindowStyle#LockLandArea {
+    background-image: none;
+
+    minimum-size: 100% 100;
+}
+
+MSceneWindowStyle#LockLandAreaDragged {
+    background-image: "lockscreen-lock-land-area-background-dragged" 20 20 20 20;
+/*    background-opacity: 0.9; */
+
+    minimum-size: 100% 100;
+}
+
+MSceneWindowStyle#LockLandAreaActive {
+    background-image: "lockscreen-lock-land-area-background-active" 20 20 20 20;
+/*    background-opacity: 0.9; */
+
+    minimum-size: 100% 100;
+}
+
+#LockScreenDnDIcon {
+    background-image: "lockscreen-lock";
+    background-opacity: 1.0;
+
+    minimum-size: 13.8mm 13.8mm;
+    preferred-size: 13.8mm 13.8mm;
+    maximum-size: 13.8mm 13.8mm;
+}
+
+#LockScreenDnDIconActive {
+    background-image: "lockscreen-lock-active";
+    background-opacity: 1.0;
+
+    minimum-size: 13.8mm 13.8mm;
+    preferred-size: 13.8mm 13.8mm;
+    maximum-size: 13.8mm 13.8mm;
+}
+
+#LockScreenUnlockIcon {
+    /* XXX: TODO: FIXME: this is not yet tested... i don't have the new assets... */
+    background-image: "lockscreen-lock-land-area-center-background";
+    background-opacity: 1.0;
+
+    minimum-size: 13.8mm 13.8mm;
+    preferred-size: 13.8mm 13.8mm;
+    maximum-size: 13.8mm 13.8mm;
 }
 

@@ -76,7 +76,13 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
      */
     connectSuccess = connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
+
     Q_ASSERT (connectSuccess);
+
+    lockUI->setWindowFlags (Qt::FramelessWindowHint |
+                            Qt::WindowStaysOnTopHint);
+    eaterUI->setWindowFlags (Qt::FramelessWindowHint |
+                             Qt::WindowStaysOnTopHint);
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()

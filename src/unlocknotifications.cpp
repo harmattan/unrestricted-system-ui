@@ -112,25 +112,3 @@ UnlockNotifications::updateMissedEvents (int emails,
     }
 }
 
-#define ACTIVE_RGBA     0., .67, .97, .5
-
-void
-UnlockNotifications::paint (QPainter *painter,
-                            const QStyleOptionGraphicsItem *option,
-                            QWidget *widget)
-{
-    Q_UNUSED (option);
-    Q_UNUSED (widget);
-
-#if 0
-    // TODO: draw background here
-    SYS_DEBUG ("size: %dx%d",
-               (int) geometry ().width (),
-               (int) geometry ().height ());
-
-    painter->fillRect (geometry ().toRect (), QColor (ACTIVE_RGBA));
-#else
-    Q_UNUSED (painter);
-#endif
-}
-

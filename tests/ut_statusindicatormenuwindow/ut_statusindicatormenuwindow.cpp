@@ -49,13 +49,12 @@ void QWidget::setVisible(bool visible)
 
 void Ut_StatusIndicatorMenuWindow::init()
 {
-    gX11WrapperStub->stubReset();    
+    gX11WrapperStub->stubReset();
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
     mApplicationIfProxyLaunchCalled = false;
     connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(launchControlPanelAndHide()));
-    connect(this, SIGNAL(clicked(QPointF)), statusIndicatorMenuWindow, SLOT(hideIfPointBeyondMenu(QPointF)));
     connect(this, SIGNAL(positionOrSizeChanged()), statusIndicatorMenuWindow, SLOT(setPannabilityAndLayout()));
 }
 
@@ -119,12 +118,20 @@ void Ut_StatusIndicatorMenuWindow::testSettingsButtonClicked()
     QVERIFY(mApplicationIfProxyLaunchCalled);
 }
 
-void Ut_StatusIndicatorMenuWindow::testHideIfPointBeyondMenu()
+void Ut_StatusIndicatorMenuWindow::testWhenPressedBelowMenuContentsThenWindowShouldHide()
 {
-    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
-    emit clicked(QPointF(0, 0));
-    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
-    emit clicked(QPointF(statusIndicatorMenuWindow->geometry().width(), statusIndicatorMenuWindow->geometry().height()));
+    PannedWidgetController* pannedWidget = dynamic_cast<PannedWidgetController*>(statusIndicatorMenuWindow->pannableViewport->widget());
+    QVERIFY(pannedWidget);
+
+    QSizeF preferredSize = pannedWidget->effectiveSizeHint(Qt::PreferredSize);
+    // Set the geometry of the widget to something very high so that there is empty space below the real contents that can be pressed
+    pannedWidget->setGeometry(QRect(0, 0, preferredSize.width(), preferredSize.height() + 1000));
+
+    QGraphicsSceneMouseEvent event;
+    // Set the event position close to the bottom edge, just inside the widget
+    event.setPos(QPointF(0, pannedWidget->geometry().height() - 1));
+    pannedWidget->mousePressEvent(&event);
+
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
 
@@ -141,15 +148,18 @@ void Ut_StatusIndicatorMenuWindow::testCloseButtonPosition()
 
 void Ut_StatusIndicatorMenuWindow::testSetPannability()
 {
-    qreal pannedWidgetHeight = statusIndicatorMenuWindow->pannableViewport->widget()->geometry().height();
+    PannedWidgetController* pannedWidget = dynamic_cast<PannedWidgetController*>(statusIndicatorMenuWindow->pannableViewport->widget());
+    QVERIFY(pannedWidget);
+
+    qreal pannedWidgetContentHeight = pannedWidget->bottommostWidget()->geometry().height();
 
     // When the pannable viewport is taller than the panned widget there is no need to pan and the pannability should be disabled
-    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetHeight + 1));
+    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetContentHeight + 1000));
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), false);
 
     // When the pannable viewport is not taller than the panned widget there is a need to pan and the pannability should be enabled
-    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetHeight - 1));
+    statusIndicatorMenuWindow->pannableViewport->setGeometry(QRectF(0, 0, 1, 1));
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->pannableViewport->isEnabled(), true);
 }

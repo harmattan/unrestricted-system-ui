@@ -37,9 +37,8 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void displayInActive();
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
   virtual void launchControlPanelAndHide();
-  virtual void hideIfPointBeyondMenu(QPointF point);
   virtual void setPannabilityAndLayout();
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor(QWidget *parent) {
@@ -77,12 +76,6 @@ void StatusIndicatorMenuWindowStub::setStatusIndicatorMenuInterface(MApplication
 
 void StatusIndicatorMenuWindowStub::launchControlPanelAndHide() {
   stubMethodEntered("launchControlPanelAndHide");
-}
-
-void StatusIndicatorMenuWindowStub::hideIfPointBeyondMenu(QPointF point) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QPointF >(point));
-  stubMethodEntered("hideIfPointBeyondMenu",params);
 }
 
 void StatusIndicatorMenuWindowStub::setPannabilityAndLayout() {
@@ -129,10 +122,6 @@ void StatusIndicatorMenuWindow::setStatusIndicatorMenuInterface(MApplicationExte
 
 void StatusIndicatorMenuWindow::launchControlPanelAndHide() {
   gStatusIndicatorMenuWindowStub->launchControlPanelAndHide();
-}
-
-void StatusIndicatorMenuWindow::hideIfPointBeyondMenu(QPointF point) {
-  gStatusIndicatorMenuWindowStub->hideIfPointBeyondMenu(point);
 }
 
 void StatusIndicatorMenuWindow::setPannabilityAndLayout() {

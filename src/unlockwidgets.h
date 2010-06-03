@@ -21,21 +21,15 @@
 #ifndef _UNLOCKWIDGETS_H
 #define _UNLOCKWIDGETS_H
 
-#include <QSizeF>
 #include <QObject>
-#include <MWidget>
-#include <MWindow>
+#include <MSceneWindow>
 
-class QPixmap;
 class MLabel;
 class MImageWidget;
-class QGraphicsLinearLayout;
-class QGraphicsSceneMouseEvent;
-class QGraphicsSceneDragDropEvent;
 
 #include "unlocknotifications.h"
 
-class UnlockHeader : public MWidget
+class UnlockHeader : public MSceneWindow
 {
     Q_OBJECT
 
@@ -43,57 +37,40 @@ public:
     UnlockHeader ();
     virtual ~UnlockHeader ();
 
-    virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
-
+    virtual void setActive (bool active);
     void updateDateTime ();
-
-signals:
-    /* Emitted with
-     * - true:  when drag is started
-     * - false: when drag and drop is cancelled */
-    void activateArea (bool enable);
-
-private slots:
-    void dndActionChanged (Qt::DropAction action);
-    void dndDone ();
 
 private:
     MImageWidget    *m_icon;
-    QPixmap         *m_dnd_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
-    QPixmap         *m_background;
 
-    Qt::DropAction   m_dndAction;
+#ifdef UNIT_TEST
+    friend class ut_unlockwidgets;
+#endif
 };
 
-class UnlockArea : public MWidget
+class UnlockArea : public MSceneWindow
 {
     Q_OBJECT
 
 public:
     UnlockArea ();
     virtual ~UnlockArea ();
-    virtual void dragEnterEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void paint (QPainter *painter,
-                        const QStyleOptionGraphicsItem *option,
-                        QWidget *widget = 0);
 
-public slots:
     void setEnabled (bool enabled);
-
-signals:
-    void unlocked ();
+    virtual void setActive (bool active);
 
 private:
+    void updateState ();
+
     MImageWidget    *m_unlock_icon;
     bool             m_enabled;
     bool             m_active;
+
+#ifdef UNIT_TEST
+    friend class ut_unlockwidgets;
+#endif
 };
 
 #endif

@@ -32,9 +32,6 @@
 
 SysUidRequest::SysUidRequest ()
 {
-    m_LockScreenLogic = new LockScreenBusinessLogic (this);
-    new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
-
     /*
      * Registering on the system bus, because MCE needs us to provide interface
      * on the system bus, not the session bus. This is not going to work under 
@@ -52,6 +49,9 @@ SysUidRequest::SysUidRequest ()
         SYS_WARNING ("failed to register dbus object");
         dbusError (bus, false);
     }
+
+    m_LockScreenLogic = new LockScreenBusinessLogic (this);
+    new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
 }
 
 /*!

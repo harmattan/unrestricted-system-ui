@@ -21,9 +21,7 @@
 #include <MTheme>
 #include <MApplication>
 #include <unlockwidgets.h>
-#include <QGraphicsSceneMouseEvent>
-
-#define DND_MIME_TYPE "application/x-dnditemdata"
+#include <MImageWidget>
 
 int   argc = 1;
 char *argv[] = {
@@ -33,7 +31,6 @@ const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
 const QString styleDir = themeDir + "style/";
 
 MApplication    *m_App;
-MWindow         *m_Window;
 
 void ut_unlockwidgets::initTestCase ()
 {
@@ -41,7 +38,6 @@ void ut_unlockwidgets::initTestCase ()
 
     MTheme::addPixmapDirectory (themeDir, M::Recursive);
     MTheme::loadCSS (styleDir + "sysuid.css");
-    MTheme::loadCSS (styleDir + "unlockscreen.css");
 }
 
 void ut_unlockwidgets::cleanupTestCase ()
@@ -63,23 +59,18 @@ void ut_unlockwidgets::test_unlock_header ()
 {
     UnlockHeader *header = new UnlockHeader;
 
-    // Test whether the grab start correctly...
-    QSignalSpy spy (header, SIGNAL (activateArea (bool)));
+    header->setActive (true);
 
-    // Simulate a click event
-    //
-    QGraphicsSceneMouseEvent press (QEvent::GraphicsSceneMousePress);
-    press.ignore ();
-    press.setButton (Qt::LeftButton);
-    press.setScenePos (header->geometry ().topRight ());
-    header->mousePressEvent (&press);
-    // an activateArea (true) should come
+    MImageWidget *icon = header->m_icon;
 
-    QTest::qWait(100);
+    QVERIFY (icon != 0);
+    if (icon != 0)
+        QVERIFY (icon->isVisible () == true);
 
-    QCOMPARE(spy.count (), 1);
-    QList<QVariant> arguments = spy.takeFirst ();
-    QVERIFY(arguments.at (0).toBool () == true);
+    header->setActive (false);
+
+    if (icon != 0)
+        QVERIFY (icon->isVisible () == false);
 
     delete header;
 }
@@ -88,50 +79,21 @@ void ut_unlockwidgets::test_unlock_area ()
 {
     UnlockArea  *area = new UnlockArea;
 
-    // Set the drag&drop mime type
-    QMimeData mimeData;
-    mimeData.setData (DND_MIME_TYPE, 0);
+    MImageWidget *icon = area->m_unlock_icon;
 
-    QSignalSpy spy(area, SIGNAL (unlocked ()));
+    QVERIFY (icon != 0);
 
-    // Activate the area:
+    area->setEnabled (false);
+
+    QVERIFY (area->objectName () == "LockLandArea");
+
     area->setEnabled (true);
 
-    // Enter drag
-    QGraphicsSceneDragDropEvent dragEnter (QEvent::GraphicsSceneDragEnter);
-    dragEnter.setScenePos (QPointF (0., 0.));
-    dragEnter.setButtons (Qt::LeftButton);
-    dragEnter.setMimeData (&mimeData);
+    QVERIFY (area->objectName () == "LockLandAreaDragged");
 
-    area->dragEnterEvent (&dragEnter);
-    QVERIFY(dragEnter.isAccepted());
-    QCOMPARE(dragEnter.dropAction (), Qt::MoveAction);
+    area->setActive (true);
 
-    // Leave drag
-    QGraphicsSceneDragDropEvent dragLeave (QEvent::GraphicsSceneDragLeave);
-    dragLeave.setScenePos (QPointF (-0.1, -1.1));
-    dragLeave.setButtons (Qt::LeftButton);
-    dragLeave.setMimeData (&mimeData);
-
-    area->dragLeaveEvent (&dragLeave);
-    QVERIFY(dragLeave.isAccepted());
-    QCOMPARE(dragLeave.dropAction (), Qt::MoveAction);
-
-    // Drop the to the unlock area
-    QGraphicsSceneDragDropEvent dragDrop (QEvent::GraphicsSceneDrop);
-    dragDrop.setScenePos (area->geometry ().center ());
-    dragDrop.setButtons (Qt::LeftButton);
-    dragDrop.setMimeData (&mimeData);
-
-    area->dropEvent (&dragDrop);
-
-    QVERIFY(dragDrop.isAccepted ());
-    QCOMPARE(dragDrop.dropAction (), Qt::MoveAction);
-
-    // Check the unlock signal
-    QTest::qWait (100);
-    // 1 unlocked () signal should came
-    QCOMPARE(spy.count(), 1);
+    QVERIFY (area->objectName () == "LockLandAreaActive");
 
     delete area;
 }
