@@ -114,6 +114,8 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
+
     if (toggle) {
         lockUI->show();
         mayStartTimer ();
@@ -147,7 +149,8 @@ LockScreenBusinessLogic::mayStartTimer ()
      * We are not starting the timer when the screen is locked. We only use the
      * timer to refresh the screen.
      */
-    if (m_QmDisplay.get () == Maemo::QmDisplayState::Off)
+    SYS_DEBUG ("");
+    if (!displayIsOn())
         return;
 
     SYS_DEBUG ("Starting timer");
@@ -186,3 +189,15 @@ LockScreenBusinessLogic::updateMissedEvents (
     lockUI->updateMissedEvents (emails, messages, calls, im);
 }
 
+bool 
+LockScreenBusinessLogic::displayIsOn ()
+{
+#ifndef __i386__
+    bool retval = m_QmDisplay.get () == Maemo::QmDisplayState::On;
+#else
+    bool retval = true;
+#endif
+
+    SYS_DEBUG ("returning %s", SYS_BOOL(retval));
+    return retval;
+}

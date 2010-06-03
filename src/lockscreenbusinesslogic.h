@@ -59,6 +59,7 @@ signals:
 private: //methods
     void mayStartTimer();
     void mayStopTimer();
+    bool displayIsOn ();
 
 private: 
     LockScreenUI     *lockUI;
