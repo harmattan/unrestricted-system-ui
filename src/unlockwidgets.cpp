@@ -108,20 +108,37 @@ UnlockHeader::~UnlockHeader ()
 void
 UnlockHeader::updateDateTime ()
 {
-    if ((m_TimeLabel == 0) ||
-        (m_DateLabel == 0))
+    QString  text;
+    bool     needUpdate = false;
+
+    if ((m_TimeLabel == 0) || (m_DateLabel == 0))
         return;
 
     MLocale locale;
-
     QDateTime now (QDateTime::currentDateTime ());
 
-    m_TimeLabel->setText (locale.formatDateTime (
-                now, MLocale::DateNone, MLocale::TimeShort));
-    m_DateLabel->setText (locale.formatDateTime (
-                now, MLocale::DateFull, MLocale::TimeNone));
+    /*
+     * I suspect that the unnecessary updates are causing unnecessary damage
+     * events. We got this method called in every seconds and we show the
+     * minutes, so 59 of every 60 calls we should not update the screen.
+     *
+     * Please note, that this not prevents the updates to happen when the touch
+     * screen is off, but it lower the updates by the ratio of 1/60.
+     */
+    text = locale.formatDateTime (now, MLocale::DateNone, MLocale::TimeShort);
+    if (text != m_TimeLabel->text()) {
+        m_TimeLabel->setText (text);
+        needUpdate = true;
+    }
 
-    update ();
+    text = locale.formatDateTime (now, MLocale::DateFull, MLocale::TimeNone);
+    if (text != m_DateLabel->text()) {
+        m_DateLabel->setText (text);
+        needUpdate = true;
+    }
+
+    if (needUpdate)
+        update ();
 }
 
 UnlockArea::UnlockArea () :

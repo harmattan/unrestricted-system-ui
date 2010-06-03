@@ -39,14 +39,45 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     lockUI (new LockScreenUI),
     eaterUI (new EventEaterUI)
 {
+    bool connectSuccess;
     SYS_DEBUG ("");
 
-    connect (lockUI, SIGNAL (unlocked ()),
+    /*
+     * Connecting the lockUI signals.
+     */
+    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
              this, SLOT (unlockScreen ()));
-    connect (lockUI, SIGNAL (unlocked ()),
+    Q_ASSERT (connectSuccess);
+
+    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
              this, SIGNAL (unlockConfirmed ()));
-    connect (&timer, SIGNAL (timeout ()),
+    Q_ASSERT (connectSuccess);
+
+    /*
+     * Hiding the event eater when it is clicked.
+     */
+    connectSuccess = connect (eaterUI, SIGNAL(OneInput()),
+            this, SLOT(oneInputCame()));
+    Q_ASSERT (connectSuccess);
+
+    /*
+     * We need to sense when the screen turned on/off to prevent unnecessary
+     * screen updates and wakeups.
+     */
+    connectSuccess = connect (
+        &m_QmDisplay, 
+        SIGNAL(displayStateChanged (Maemo::QmDisplayState::DisplayState)),
+        this, 
+        SLOT(displayStateChanged (Maemo::QmDisplayState::DisplayState)));
+    Q_ASSERT (connectSuccess);
+    
+    /*
+     * Connecting to timer that refreshes the 
+     */
+    connectSuccess = connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
+
+    Q_ASSERT (connectSuccess);
 
     lockUI->setWindowFlags (Qt::FramelessWindowHint |
                             Qt::WindowStaysOnTopHint);
@@ -69,16 +100,53 @@ LockScreenBusinessLogic::unlockScreen ()
     toggleScreenLockUI (false);
 }
 
+/*!
+ * This slot is called when the display state is changed. We need this to
+ * prevent the screen updates in the 'Off' state whan no UI is visible. Please
+ * note that the unlockscreen might be showed while the screen is off and MCE
+ * does this to be able to show up the unlockscreen immediately after the power
+ * button press.
+ */
+void
+LockScreenBusinessLogic::displayStateChanged (
+        Maemo::QmDisplayState::DisplayState state)
+{
+    SYS_DEBUG ("");
+    /*
+     * When the screen is off the timer should be always turned off.
+     */
+    if (state == Maemo::QmDisplayState::Off && timer.isActive())
+        mayStopTimer ();
+
+    /*
+     * When the screen is unlocked, the lockscreen is visible and the timer is
+     * off we need to start it.
+     */
+    if (state == Maemo::QmDisplayState::On &&
+            eaterUI != NULL && eaterUI->isVisible() &&
+            !timer.isActive())
+        mayStartTimer ();
+}
+
+void 
+LockScreenBusinessLogic::oneInputCame()
+{
+    SYS_DEBUG ("");
+    toggleEventEater (false);
+}
+
 void
 LockScreenBusinessLogic::toggleScreenLockUI (
         bool toggle)
 {
+    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
+
     if (toggle) {
         lockUI->show();
-        startTimer ();
+        mayStartTimer ();
     } else {
         lockUI->hide();
-        stopTimer ();
+        mayStopTimer ();
     }
     
     emit screenIsLocked (toggle);
@@ -100,8 +168,16 @@ LockScreenBusinessLogic::toggleEventEater (
 }
 
 void
-LockScreenBusinessLogic::startTimer ()
+LockScreenBusinessLogic::mayStartTimer ()
 {
+    /*
+     * We are not starting the timer when the screen is locked. We only use the
+     * timer to refresh the screen.
+     */
+    SYS_DEBUG ("");
+    if (!displayIsOn())
+        return;
+
     SYS_DEBUG ("Starting timer");
     // It's better to update the time straight away.
     lockUI->updateDateTime ();
@@ -111,8 +187,14 @@ LockScreenBusinessLogic::startTimer ()
 }
 
 void
-LockScreenBusinessLogic::stopTimer ()
+LockScreenBusinessLogic::mayStopTimer ()
 {
+    /*
+     * We are not stopping the timer when it is not on.
+     */
+    if (!timer.isActive())
+        return;
+
     SYS_DEBUG ("Stopping timer");
     timer.stop ();
 }
@@ -132,3 +214,15 @@ LockScreenBusinessLogic::updateMissedEvents (
     lockUI->updateMissedEvents (emails, messages, calls, im);
 }
 
+bool 
+LockScreenBusinessLogic::displayIsOn ()
+{
+#ifndef __i386__
+    bool retval = m_QmDisplay.get () == Maemo::QmDisplayState::On;
+#else
+    bool retval = true;
+#endif
+
+    SYS_DEBUG ("returning %s", SYS_BOOL(retval));
+    return retval;
+}

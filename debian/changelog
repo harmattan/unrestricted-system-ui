@@ -14,8 +14,12 @@ system-ui (0.16.0~1) harmattan; urgency=low
   * Fixes: NB#171814 - No 'Disconnect charger...' banner after disconnecting 
     the dedicated charger
   * Fixes: NB#168926 - Clock in status area showing Arabic number.
+  * Fixes: NB#172157 - sysuid generates xdamages in blank screen and keypad 
+    locked
+  * Fixes: NB#169533 - event eater not functioning properly (symptom:
+                       display looks blanked when dimmed)
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 25 May 2010 09:01:21 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 03 Jun 2010 13:28:55 +0200
 
 system-ui (0.15.13-1) harmattan; urgency=low
 
