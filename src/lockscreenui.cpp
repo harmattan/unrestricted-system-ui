@@ -27,6 +27,7 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
+#include <QPointF>
 
 #include <MApplication>
 #include <MWindow>
@@ -57,7 +58,12 @@ static const QString defaultPortraitImageFile =
 /******************************************************************************
  * LockScreenWindow implementation.
  */
-LockScreenWindow::LockScreenWindow ()
+LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget *lockland) :
+    MSceneWindow (),
+    m_Window (window),
+    m_DnDstate (STATE_NONE),
+    m_LockLiftArea (locklift),
+    m_LockLandArea (lockland)
 {
     /*
      * Creating the GConf keys to sense the wallpaper changes.
@@ -72,14 +78,14 @@ LockScreenWindow::LockScreenWindow ()
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
-    // FIXME:!!!!
-    m_DnDicon.setImage ("icon-m-common-locked", QSize (32, 32));
+    // Pre-load the DnD icons...
+    m_DnDicon.setImage ("icon-m-common-locked", QSize (64, 64));
     m_DnDicon.setObjectName ("LockScreenDnDIcon");
     m_DnDicon.setZoomFactor (1.0);
-    m_DnDicon.setParent (this);
-    m_DnDicon.setVisible (true);
-    m_DnDicon.setPos (100.0, 100.0);
-    // Check this out, what i need here ?
+
+    m_DnDoverlay.setWidget (&m_DnDicon);
+    m_DnDoverlay.setVisible (false);
+    m_DnDoverlay.setManagedManually (true);
 
     // Load the backgrounds if any...
     reloadLandscapeBackground ();
@@ -158,13 +164,123 @@ LockScreenWindow::paint (
 }
 
 void
-LockScreenWindow::enableDnDicon (bool enable)
+LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
-    SYS_DEBUG ("enable = %s", SYS_BOOL (enable));
+    // We should go to STATE_MOVING state if user tappend on
+    // the top-right corner of the window...
+    if (((m_LockLiftArea->scenePos ().y () +
+          m_LockLiftArea->preferredHeight ()) >
+          event->scenePos ().y ()) &&
+        (event->scenePos ().x () >
+         m_LockLiftArea->preferredWidth () - 160))
+    {
+        m_DnDstate = STATE_MOVING;
 
-    m_DnDicon.setVisible (enable);
+        // Move the icon to the start position:
+        QSizeF size = m_DnDoverlay.preferredSize ();
+        QPointF pos (event->scenePos ());
 
-    // TODO: Move the DnDIcon somehow...
+        pos.rx () -= (size.width  () / 2);
+        pos.ry () -= (size.height () / 2);
+        m_DnDoverlay.setPos (pos);
+
+        updateDnDicon ();
+        static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (false);
+        static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (true);
+
+        // TODO: FIXME:
+        // hide the icon from the lock-lift area
+        // show the inactive border in lock-land area
+    }
+    else
+        m_DnDstate = STATE_NONE;
+}
+
+void
+LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+{
+    if (m_DnDstate == STATE_NONE)
+        return;
+
+    // First of all, icon should follow the mouse positions:
+    QSizeF size = m_DnDoverlay.preferredSize ();
+    QPointF pos (event->scenePos ());
+
+    pos.rx () -= (size.width  () / 2);
+    pos.ry () -= (size.height () / 2);
+    m_DnDoverlay.setPos (pos);
+
+    // And then check which icon we need to show:
+    int newState = STATE_MOVING;
+
+    // Check whether the DnD icon is inside the lock-land area...
+    if (event->scenePos ().y () > m_LockLandArea->scenePos ().y ())
+        newState = STATE_MOVING_ACTIVE;
+
+    // To avoid unnecessary screen updates...
+    if (newState != m_DnDstate)
+    {
+        m_DnDstate = newState;
+        switch (newState)
+        {
+            case STATE_MOVING_ACTIVE:
+                static_cast<UnlockArea*>(m_LockLandArea)->setActive (true);
+                break;
+            case STATE_MOVING:
+            default:
+                static_cast<UnlockArea*>(m_LockLandArea)->setActive (false);
+                break;
+        }
+        // And update the DnD icon based on the current state :
+        updateDnDicon ();
+    }
+}
+
+void
+LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
+{
+    SYS_DEBUG ("");
+    Q_UNUSED (event);
+
+    if (m_DnDstate == STATE_NONE)
+        return;
+
+    if (m_DnDstate == STATE_MOVING_ACTIVE)
+    {
+        emit unlocked ();
+    }
+
+    // Restore the default state ...
+    static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
+    static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
+
+    m_DnDstate = STATE_NONE;
+    updateDnDicon ();
+}
+
+void
+LockScreenWindow::updateDnDicon ()
+{
+    bool enable = (m_DnDstate != STATE_NONE);
+
+    // Update the theming...
+    if ((m_DnDstate == STATE_MOVING_ACTIVE) &&
+        (m_DnDicon.objectName () != "LockScreenDnDIconActive"))
+    {
+            m_DnDicon.setObjectName ("LockScreenDnDIconActive");
+            m_DnDicon.update ();
+    }
+    else if (m_DnDicon.objectName () != "LockScreenDnDIcon")
+    {
+        m_DnDicon.setObjectName ("LockScreenDnDIcon");
+        m_DnDicon.update ();
+    }
+
+    m_DnDoverlay.setVisible (enable);
+    if (enable)
+        m_DnDoverlay.appear (m_Window);
+    else
+        m_DnDoverlay.disappear ();
 }
 
 /******************************************************************************
@@ -238,17 +354,17 @@ LockScreenUI::realize ()
     m_policy->addItem (m_LockLandArea);
 
     // Set the main layout
-    m_SceneWindow = new LockScreenWindow;
+    m_SceneWindow =
+        new LockScreenWindow (this, m_LockLiftArea, m_LockLandArea);
     m_SceneWindow->setLayout (layout);
     m_SceneWindow->appear (this);
 
     connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
              m_LockLandArea, SLOT (setEnabled (bool)));
-    connect (m_LockLiftArea, SIGNAL (activateArea (bool)),
-             m_SceneWindow, SLOT (enableDnDicon (bool)));
 
-    connect (m_LockLandArea, SIGNAL (unlocked ()),
-             this, SLOT (sliderUnlocked ()));
+    connect (m_SceneWindow, SIGNAL (unlocked ()),
+             this, SLOT (sliderUnlocked ()),
+             Qt::DirectConnection);
 
     m_Realized = true;
 }

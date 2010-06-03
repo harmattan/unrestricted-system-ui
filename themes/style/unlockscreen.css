@@ -5,6 +5,7 @@ MSceneWindowStyle#LockScreenWindow {
 
 MSceneWindowStyle#LockLiftArea {
     background-image: "lockscreen-lock-lift-area-background" 0 380 0 0;
+    background-opacity: 0.9;
 
     minimum-size: 100% 14mm;
     preferred-size: 100% 14mm;
@@ -45,13 +46,15 @@ MSceneWindowStyle#LockLandArea {
 }
 
 MSceneWindowStyle#LockLandAreaDragged {
-    background-image: "lockscreen-lock-land-area-background-dragged" 25 25 25 25;
+    background-image: "lockscreen-lock-land-area-background-dragged" 20 20 20 20;
+/*    background-opacity: 0.9; */
 
     minimum-size: 100% 100;
 }
 
 MSceneWindowStyle#LockLandAreaActive {
-    background-image: "lockscreen-lock-land-area-background-active" 25 25 25 25;
+    background-image: "lockscreen-lock-land-area-background-active" 20 20 20 20;
+/*    background-opacity: 0.9; */
 
     minimum-size: 100% 100;
 }

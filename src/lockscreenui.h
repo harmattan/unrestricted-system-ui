@@ -25,10 +25,11 @@
 #include <MImageWidget>
 #include <MWindow>
 #include <QBasicTimer>
-
+#include <MOverlay>
 
 #define SET_WM_NAME
 
+class QPointF;
 class QPixmap;
 class MWidget;
 class MLinearLayoutPolicy;
@@ -41,26 +42,51 @@ class LockScreenWindow : public MSceneWindow
     Q_OBJECT
 
 public:
-    LockScreenWindow ();
+    LockScreenWindow (MWindow *window, MWidget *locklift, MWidget *lockland);
     ~LockScreenWindow ();
+
+    enum dnd_state {
+        STATE_NONE = 0,
+        STATE_MOVING,
+        STATE_MOVING_ACTIVE
+    };
+
+signals:
+    void unlocked (); 
+
+protected:
     virtual void paint (
             QPainter                       *painter, 
             const QStyleOptionGraphicsItem *option, 
             QWidget                        *widget = 0);
-
-public slots:
-    void enableDnDicon (bool enable);
+    virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
 
 private slots:
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
 
 private:
+    void updateDnDicon ();
+
+    // The background GConf keys:
     MGConfItem      *m_confBgLandscape;
     MGConfItem      *m_confBgPortrait;
+    // And the background images:
     QPixmap          m_bgLandscape;
     QPixmap          m_bgPortrait;
+    // Needed to show the DnD icon on the window:
+    MWindow         *m_Window;
+    // The DnD icons:
     MImageWidget     m_DnDicon;
+    MOverlay         m_DnDoverlay;
+    // The DnD state 
+    int              m_DnDstate;
+    // Needed to determine the current DnD states:
+    MWidget         *m_LockLiftArea;
+    MWidget         *m_LockLandArea;
+
 #ifdef UNIT_TEST
     friend class Ut_LockScreenUI;
     friend class Ft_LockScreenUI;

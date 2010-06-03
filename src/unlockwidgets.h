@@ -26,9 +26,6 @@
 
 class MLabel;
 class MImageWidget;
-class QGraphicsLinearLayout;
-class QGraphicsSceneMouseEvent;
-class QGraphicsSceneDragDropEvent;
 
 #include "unlocknotifications.h"
 
@@ -40,26 +37,13 @@ public:
     UnlockHeader ();
     virtual ~UnlockHeader ();
 
-    virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
-    virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
+    virtual void setActive (bool active);
     void updateDateTime ();
-
-signals:
-    /* Emitted with
-     * - true:  when drag is started
-     * - false: when drag and drop is cancelled */
-    void activateArea (bool enable);
-
-private slots:
-    void dndActionChanged (Qt::DropAction action);
-    void dndDone ();
 
 private:
     MImageWidget    *m_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
-
-    Qt::DropAction   m_dndAction;
 };
 
 class UnlockArea : public MSceneWindow
@@ -69,17 +53,13 @@ class UnlockArea : public MSceneWindow
 public:
     UnlockArea ();
     virtual ~UnlockArea ();
-    virtual void dragEnterEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void dragLeaveEvent (QGraphicsSceneDragDropEvent *event);
-    virtual void dropEvent (QGraphicsSceneDragDropEvent *event);
 
-public slots:
     void setEnabled (bool enabled);
-
-signals:
-    void unlocked ();
+    virtual void setActive (bool active);
 
 private:
+    void updateState ();
+
     MImageWidget    *m_unlock_icon;
     bool             m_enabled;
     bool             m_active;
