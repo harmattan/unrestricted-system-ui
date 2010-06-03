@@ -39,31 +39,44 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     lockUI (new LockScreenUI),
     eaterUI (new EventEaterUI)
 {
+    bool connectSuccess;
     SYS_DEBUG ("");
 
     /*
      * Connecting the lockUI signals.
      */
-    connect (lockUI, SIGNAL (unlocked ()),
+    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
              this, SLOT (unlockScreen ()));
-    connect (lockUI, SIGNAL (unlocked ()),
+    Q_ASSERT (connectSuccess);
+
+    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
              this, SIGNAL (unlockConfirmed ()));
+    Q_ASSERT (connectSuccess);
+
+    /*
+     * Hiding the event eater when it is clicked.
+     */
+    connectSuccess = connect (eaterUI, SIGNAL(OneInput()),
+            this, SLOT(oneInputCame()));
+    Q_ASSERT (connectSuccess);
 
     /*
      * We need to sense when the screen turned on/off to prevent unnecessary
      * screen updates and wakeups.
      */
-    connect (
+    connectSuccess = connect (
         &m_QmDisplay, 
         SIGNAL(displayStateChanged (Maemo::QmDisplayState::DisplayState)),
         this, 
         SLOT(displayStateChanged (Maemo::QmDisplayState::DisplayState)));
+    Q_ASSERT (connectSuccess);
     
     /*
      * Connecting to timer that refreshes the 
      */
-    connect (&timer, SIGNAL (timeout ()),
+    connectSuccess = connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
+    Q_ASSERT (connectSuccess);
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -109,6 +122,12 @@ LockScreenBusinessLogic::displayStateChanged (
         mayStartTimer ();
 }
 
+void 
+LockScreenBusinessLogic::oneInputCame()
+{
+    SYS_DEBUG ("");
+    toggleEventEater (false);
+}
 
 void
 LockScreenBusinessLogic::toggleScreenLockUI (

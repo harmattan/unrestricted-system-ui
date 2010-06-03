@@ -40,6 +40,7 @@ public:
     virtual ~LockScreenBusinessLogic ();
 
 public slots:
+    void oneInputCame ();
     void toggleScreenLockUI (bool toggle);
     void toggleEventEater   (bool toggle);
     void updateMissedEvents (int emails,
