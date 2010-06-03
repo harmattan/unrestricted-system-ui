@@ -65,7 +65,8 @@ private slots:
 
     void testEventEaterShowHide ();
     void testLockScreenShowHide ();
-    void testLockScreenShowHideWithLocking ();
+    //void testLockScreenShowHideWithLocking ();
+
 private:
     void lockScreen ();
     void unLockScreen ();
