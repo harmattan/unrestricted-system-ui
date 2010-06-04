@@ -28,7 +28,6 @@
 #include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
-class MApplicationWindow;
 
 class SingnalSink : public QObject 
 {
@@ -65,7 +64,7 @@ private slots:
 
     void testEventEaterShowHide ();
     void testLockScreenShowHide ();
-    //void testLockScreenShowHideWithLocking ();
+    void testLockScreenShowHideWithLocking ();
 
 private:
     void lockScreen ();
@@ -81,7 +80,6 @@ private:
 private:
     XChecker             m_XChecker;
     SingnalSink          m_SignalSink;
-    MApplicationWindow  *m_MainWindow;
     MApplication        *m_App;
     QDBusInterface      *m_DbusIf;
 };

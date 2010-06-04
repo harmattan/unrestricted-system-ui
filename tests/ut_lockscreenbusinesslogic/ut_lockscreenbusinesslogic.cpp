@@ -24,6 +24,8 @@
 #include "lockscreenui.h"
 #include "sysuid_stub.h"
 
+#include <qmdisplaystate.h>
+
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MGConfItem>
@@ -185,6 +187,22 @@ Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
 {
     bool connectSuccess;
 
+    /*
+     * We want to be sure we leave the screen on...
+     */
+    #ifndef __i386__
+    Maemo::QmDisplayState  display;
+    bool                   success;
+
+    success = display.set (Maemo::QmDisplayState::On);
+    if (! success) {
+        SYS_WARNING ("Turning on the display failed!");
+    }
+    #endif    
+
+    /*
+     * Connecting to the timer so we can sense the timer events.
+     */
     m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
     connectSuccess = connect (
             &m_LockScreenBusinessLogic->timer, SIGNAL (timeout()),

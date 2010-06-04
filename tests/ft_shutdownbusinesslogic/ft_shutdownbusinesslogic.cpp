@@ -193,7 +193,7 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     delete logic;
 
     /*
-     *
+     * We want to be sure we leave the screen on...
      */
     #ifndef __i386__
     Maemo::QmDisplayState  display;
@@ -204,7 +204,6 @@ Ft_ShutdownBusinessLogic::testShutDown ()
         SYS_WARNING ("Turning on the display failed!");
     }
     #endif
-
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownBusinessLogic)

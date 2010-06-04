@@ -63,7 +63,7 @@ static int DBusDelay = 800;
  */
 static int DelayBetweenTests = 1000;
 
-/*********************************************************************************
+/******************************************************************************
  * SingnalSink implementation.
  */
 SingnalSink::SingnalSink() :
@@ -129,8 +129,6 @@ const QString styleDir = themeDir + "style/";
 
 void Ft_LockDBusInterface::initTestCase()
 {
-    m_MainWindow = 0;
-
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
@@ -192,9 +190,11 @@ Ft_LockDBusInterface::testLockScreenShowHide ()
     }
 }
 
-#if 0
-// Seems that this test won't work on the device. I need to test and re-think
-// it.
+/*!
+ * This test will turn off the touch screen, show the unlockUI, turn on the
+ * screen again and check if the unlockUI is actually visible. Then the test
+ * will hide the unlockUI and check if the unlockUI is hidden from the screen.
+ */
 void
 Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
 {
@@ -205,7 +205,7 @@ Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
      * Locking the screen first.
      */
     SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Locking the screen ****************************");
+    SYS_DEBUG ("*** Turning off the touch screen ******************");
     SYS_DEBUG ("***************************************************");
     lockingSuccess = locks.setState (
             QmLocks::TouchAndKeyboard, QmLocks::Locked);
@@ -214,37 +214,45 @@ Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
     #endif
 
     /*
-     *
+     * Showing the unlockUI while the touch screen is turned off.
      */
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Showing the unlockUI **************************");
     SYS_DEBUG ("***************************************************");
     lockScreen ();
-    checkLockIsVisible ();
 
     /*
      * Then unlocking the screen again so the lockscreenUI will be visible.
      */
     SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Unlocking the screen **************************");
+    SYS_DEBUG ("*** Turning on the screen *************************");
     SYS_DEBUG ("***************************************************");
     unlockingSuccess = locks.setState (
             QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
     #ifndef __i386__
     QVERIFY (unlockingSuccess);
     #endif
+   
+    /*
+     * Now that the screen is on, the lockscreenUI should be up and visible.
+     */
+    checkLockIsVisible ();
 
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Hiding the unlockUI ***************************");
+    SYS_DEBUG ("***************************************************");
     unLockScreen ();
+    
+    /*
+     * Now the unlockUI should be hidden again.
+     */
     checkLockIsInvisible ();
 }
-#endif
 
 void 
 Ft_LockDBusInterface::cleanupTestCase()
 {
     delete m_DbusIf;
-    if (m_MainWindow)
-        delete m_MainWindow; 
     delete m_App;
 }
 
@@ -258,6 +266,7 @@ void
 Ft_LockDBusInterface::lockScreen ()
 {
     QList <QVariant> arguments;
+    bool             dbusSendSuccess;
 
     arguments << 
         QVariant (answerService) <<
@@ -273,10 +282,25 @@ Ft_LockDBusInterface::lockScreen ()
      */
     SYS_DEBUG ("Sending tklock_open...");
     m_SignalSink.reset();
-    m_DbusIf->callWithCallback (
+    dbusSendSuccess = m_DbusIf->callWithCallback (
             QString ("tklock_open"), arguments, &m_SignalSink,
             SLOT (screenLockReply(qint32)),
             SLOT (DBusMessagingFailure (QDBusError)));
+
+    // Checking the dbus message is sent.
+    if (!dbusSendSuccess) {
+        QDBusError 	error = m_DbusIf->lastError();
+
+        if (!error.isValid ()) {
+            SYS_WARNING ("DBus Error: Unknown error.");
+        } else {
+            SYS_WARNING ("DBus Error: %s: %s", 
+                    SYS_STR(error.name()),
+                    SYS_STR(error.message()));
+        }
+    }
+
+    QVERIFY (dbusSendSuccess);
 
     QTest::qWait (DBusDelay);
 

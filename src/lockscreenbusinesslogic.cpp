@@ -206,10 +206,15 @@ LockScreenBusinessLogic::updateMissedEvents (
     int calls,
     int im)
 {
+    #if 0
+    /*
+     * Sorry too much debug messages.
+     */
     SYS_DEBUG ("*** emails   = %d", emails);
     SYS_DEBUG ("*** messages = %d", messages);
     SYS_DEBUG ("*** calls    = %d", calls);
     SYS_DEBUG ("*** im       = %d", im);
+    #endif
 
     lockUI->updateMissedEvents (emails, messages, calls, im);
 }

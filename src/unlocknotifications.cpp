@@ -44,6 +44,8 @@ UnlockNotifications::UnlockNotifications ()
     m_icons [NOTIFY_CHAT]->setImage ("icon-m-content-chat", QSize (32, 32));
 
     setLayout (m_layout);
+
+    setObjectName ("LockNotifications");
 }
 
 UnlockNotifications::~UnlockNotifications ()

@@ -78,8 +78,8 @@ private:
     QPixmap          m_bgPortrait;
     // Needed to show the DnD icon on the window:
     MWindow         *m_Window;
-    // The DnD icons:
-    MImageWidget     m_DnDicon;
+    // The DnD icon:
+    MImageWidget    *m_DnDicon;
     MOverlay         m_DnDoverlay;
     // The DnD state 
     int              m_DnDstate;
