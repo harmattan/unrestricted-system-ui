@@ -276,11 +276,24 @@ BatteryBusinessLogic::lowBatteryAlert ()
     sendNotification (NotificationLowBattery);
 }
 
+/*!
+ * \param percentage The energy level percentage or -1 to ask the backend.
+ *
+ * Returns the bar value (the value that used as an icon index representing for
+ * the battery energy level) for the given percentage level. If the argument is
+ * -1 this method will ask the QmBattery for the current energy level.
+ *
+ */
 int
 BatteryBusinessLogic::batteryBarValue (
         int percentage)
 {
     SYS_DEBUG ("percentage = %d", percentage);
+
+    if (percentage == -1) {
+        percentage = m_Battery->getBatteryEnergyLevel ();
+        SYS_DEBUG ("getBatteryEnergyLevel returned %d", percentage);
+    }
 
     // in case of overflow (eg. in sbox) when we get value that greater than 100
     // percent we use 10 percent intentionaly
