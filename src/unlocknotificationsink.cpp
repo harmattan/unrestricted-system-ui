@@ -125,7 +125,8 @@ UnlockNotificationSink::addNotification (const Notification &notification)
         m_im++;
     else
     {
-        SYS_WARNING ("What about event-type: \"%s\" ?", SYS_STR (event_type));
+        // Sorry, too much debug messages.
+        //SYS_WARNING ("What about event-type: \"%s\" ?", SYS_STR (event_type));
         return;
     }
 
