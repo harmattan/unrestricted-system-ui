@@ -29,7 +29,7 @@
 #include <MLabel>
 #include <MImageWidget>
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 UnlockHeader::UnlockHeader () :
