@@ -27,8 +27,6 @@
 #include <QBasicTimer>
 #include <MOverlay>
 
-#define SET_WM_NAME
-
 class QPointF;
 class QPixmap;
 class MWidget;
@@ -113,9 +111,7 @@ public slots:
 
 protected:
     void createContent ();
-#ifdef SET_WM_NAME
     virtual void showEvent(QShowEvent *event);
-#endif
 
 private slots:
     void realize ();
@@ -147,9 +143,7 @@ public:
     virtual void mouseReleaseEvent (QMouseEvent *event);
     
 protected:
-#ifdef SET_WM_NAME
     virtual void showEvent(QShowEvent *event);
-#endif
 
 signals:
     void OneInput ();

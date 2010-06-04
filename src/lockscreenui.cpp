@@ -44,6 +44,10 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 #define WARNING
 #include "debug.h"
 
+// For WM_SET_NAME:
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 static const QString defaultLandscapeImageFile = 
 "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png";
 static const QString defaultPortraitImageFile = 
@@ -255,17 +259,16 @@ LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
     if (m_DnDstate == STATE_NONE)
         return;
 
-    if (m_DnDstate == STATE_MOVING_ACTIVE)
-    {
-        emit unlocked ();
-    }
-
-#ifdef UNIT_TEST
+#ifndef UNIT_TEST
     // Restore the default state ...
     static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
     static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
 #endif
 
+    if (m_DnDstate == STATE_MOVING_ACTIVE)
+    {
+        emit unlocked ();
+    }
     m_DnDstate = STATE_NONE;
     updateDnDicon ();
 }
@@ -445,9 +448,6 @@ LockScreenUI::updateMissedEvents (int emails,
     }
 }
 
-#ifdef SET_WM_NAME
-#  include <X11/Xlib.h>
-#  include <X11/Xatom.h>
 void 
 LockScreenUI::showEvent (
         QShowEvent *event)
@@ -489,7 +489,6 @@ LockScreenUI::showEvent (
             8, PropModeReplace, 
             (unsigned char *) windowName, strlen(windowName));
 }
-#endif
 
 /******************************************************************************
  * The EventEaterUI implementation.
@@ -529,7 +528,6 @@ EventEaterUI::mouseReleaseEvent (
     emit OneInput ();
 }
 
-#ifdef SET_WM_NAME
 void 
 EventEaterUI::showEvent (
         QShowEvent *event)
@@ -571,4 +569,3 @@ EventEaterUI::showEvent (
             8, PropModeReplace, 
             (unsigned char *) windowName, strlen(windowName));
 }
-#endif
