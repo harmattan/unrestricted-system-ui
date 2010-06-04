@@ -5,7 +5,7 @@ MSceneWindowStyle#LockScreenWindow {
 
 MSceneWindowStyle#LockNotifications {
     background-image: "lockscreen-notification-area-background" 0 0 0 0;
-    background-opacity: 0.9;
+    background-opacity: 1.0;
 
     minimum-size: 100% 7mm;
     preferred-size: 100% 7mm;
