@@ -26,6 +26,7 @@
 
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
+#include <QVariant>
 #include <QTimer>
 #include <QPointF>
 
@@ -40,7 +41,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -498,6 +499,7 @@ EventEaterUI::EventEaterUI ()
     SYS_DEBUG ("");
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName ("EventEaterUI");
+    setProperty ("NoMStyle", true);
 }
 
 /*!
