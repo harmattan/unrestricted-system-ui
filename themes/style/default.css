@@ -105,6 +105,12 @@ MLabelStyle#ClockLabel {
     padding-bottom: 0;
 }
 
+
+StatusIndicatorIconStyle {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "";
+}
+
 StatusIndicatorAnimationStyle {
     /* This style is used when there is no icon ID defined (width is 0) */
     margin-top: 6;
