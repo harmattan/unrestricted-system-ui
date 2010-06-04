@@ -233,6 +233,7 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     preferred-size: 29 18;
     minimum-size: 29 18;
     maximum-size: 29 18;
+    animation-duration: 10000;
 }
 
 StatusIndicatorIconStyle#AlarmStatusIndicator {
