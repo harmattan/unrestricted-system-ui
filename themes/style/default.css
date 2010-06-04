@@ -103,6 +103,9 @@ MLabelStyle#ClockLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    preferred-size: -1 30;
+    minimum-size: -1 30;
+    maximum-size: -1 30;
 }
 
 
