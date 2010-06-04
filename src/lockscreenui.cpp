@@ -177,17 +177,17 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 
     // We should go to STATE_MOVING state if user tappend on
     // the top-right corner of the window...
-    if (((m_LockLiftArea->scenePos ().y () +
+    if (((m_LockLiftArea->pos ().y () +
           m_LockLiftArea->preferredHeight ()) >
-          event->scenePos ().y ()) &&
-        (event->scenePos ().x () >
+          event->pos ().y ()) &&
+        (event->pos ().x () >
          m_LockLiftArea->preferredWidth () - 160))
     {
         m_DnDstate = STATE_MOVING;
 
         // Move the icon to the start position:
         QSizeF size = m_DnDoverlay.preferredSize ();
-        QPointF pos (event->scenePos ());
+        QPointF pos (event->pos ());
 
         pos.rx () -= (size.width  () / 2);
         pos.ry () -= (size.height () / 2);
@@ -218,7 +218,7 @@ LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 
     // First of all, icon should follow the mouse positions:
     QSizeF size = m_DnDoverlay.preferredSize ();
-    QPointF pos (event->scenePos ());
+    QPointF pos (event->pos ());
 
     pos.rx () -= (size.width  () / 2);
     pos.ry () -= (size.height () / 2);
@@ -228,7 +228,7 @@ LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     int newState = STATE_MOVING;
 
     // Check whether the DnD icon is inside the lock-land area...
-    if (event->scenePos ().y () > m_LockLandArea->scenePos ().y ())
+    if (event->pos ().y () > m_LockLandArea->pos ().y ())
         newState = STATE_MOVING_ACTIVE;
 
     // To avoid unnecessary screen updates...
