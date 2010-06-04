@@ -23,6 +23,11 @@
 
 #include <MNotification>
 
+#include <qmdisplaystate.h>
+
+using namespace Maemo;
+
+
 #define SHORT_DEBUG
 #define DEBUG
 #include "../../src/debug.h"
@@ -650,3 +655,47 @@ XChecker::checkPIDs ()
 
     return retval;
 }
+
+bool
+XChecker::turnOffDisplay ()
+{
+    #ifndef __i386__
+    Maemo::QmDisplayState  display;
+    bool                   success;
+
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Turning off the touch screen ******************");
+    SYS_DEBUG ("***************************************************");
+    success = display.set (Maemo::QmDisplayState::Off);
+    if (! success) {
+        SYS_WARNING ("Turning off the display failed!");
+    }
+    
+    return success;
+    #else 
+    return true;
+    #endif    
+}
+
+bool 
+XChecker::turnOnDisplay ()
+{
+    #ifndef __i386__
+    Maemo::QmDisplayState  display;
+    bool                   success;
+
+    SYS_DEBUG ("***************************************************");
+    SYS_DEBUG ("*** Turning on the screen *************************");
+    SYS_DEBUG ("***************************************************");
+    success = display.set (Maemo::QmDisplayState::On);
+    if (! success) {
+        SYS_WARNING ("Turning on the display failed!");
+    }
+
+    return success;
+    #else 
+    return true;
+    #endif    
+}
+
+

@@ -27,8 +27,14 @@
 #include <X11/Xatom.h>
 
 /*!
- * A class to contact the X Server and check if certain things are going as they
- * should. This class is used in the real life for we discovered some problems.
+ * A handy tool to perform verious GUI tests in a real life situation. This
+ * class supports the following operations:
+ * 1) Checking if a window in the X Server exists, viewable, and full-screen.
+ *    Done by window ID and by window name.
+ * 2) A very usefull window dump from the server.
+ * 3) Checking if various daemons are crashed (the PID is changed). This check
+ *    is always performed.
+ * 4) Turning on/off the touch screen.
  */
 class XChecker : public QObject
 {
@@ -48,6 +54,9 @@ public:
 
     void debug_dump_windows(Window highlighted = None);
     void debugDumpNotifications ();
+    
+    bool turnOffDisplay ();
+    bool turnOnDisplay ();
 
 private:
     Display *display();

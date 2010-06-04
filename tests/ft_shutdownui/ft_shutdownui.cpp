@@ -23,8 +23,6 @@
 #include "shutdownui.h"
 #include "sysuid_stub.h"
 
-#include <qmdisplaystate.h>
-
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MSceneManager>
@@ -191,15 +189,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
      * We want to be sure we leave the screen on...
      */
     QTest::qWait (WMDelay);
-    #ifndef __i386__
-    Maemo::QmDisplayState  display;
-    bool                   success;
-
-    success = display.set (Maemo::QmDisplayState::On);
-    if (! success) {
-        SYS_WARNING ("Turning on the display failed!");
-    }
-    #endif    
+    QVERIFY(m_XChecker.turnOnDisplay ());
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownUI)

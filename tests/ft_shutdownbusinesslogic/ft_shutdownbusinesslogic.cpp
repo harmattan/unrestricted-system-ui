@@ -25,7 +25,6 @@
 #include "sysuid_stub.h"
 
 #include <qmsystem/qmsystemstate.h>
-#include <qmdisplaystate.h>
 
 #include <MApplication>
 #include <MApplicationWindow>
@@ -195,15 +194,8 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     /*
      * We want to be sure we leave the screen on...
      */
-    #ifndef __i386__
-    Maemo::QmDisplayState  display;
-    bool                   success;
-
-    success = display.set (Maemo::QmDisplayState::On);
-    if (! success) {
-        SYS_WARNING ("Turning on the display failed!");
-    }
-    #endif
+    QTest::qWait (WMDelay);
+    QVERIFY(m_XChecker.turnOnDisplay ());
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownBusinessLogic)

@@ -64,7 +64,7 @@ private slots:
 
     void testEventEaterShowHide ();
     void testLockScreenShowHide ();
-    void testLockScreenShowHideWithLocking ();
+    void testLockScreenShowHideWithTSOff ();
 
 private:
     void lockScreen ();
@@ -76,7 +76,6 @@ private:
     void checkLockIsInvisible ();
     void checkEaterIsVisible ();
     void checkEaterIsInvisible ();
-
 private:
     XChecker             m_XChecker;
     SingnalSink          m_SignalSink;

@@ -26,9 +26,6 @@
 #include <QVariant>
 #include <MApplication>
 
-#include <qmlocks.h>
-
-using namespace Maemo;
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -161,7 +158,7 @@ Ft_LockDBusInterface::testEventEaterShowHide ()
      * Actually we had some problems so we do a little stress testing here.
      * Sometimes the window does not show up for the second/third time.
      */
-    for (int q = 0; q < 5; ++q) {
+    for (int q = 0; q < 2; ++q) {
         showEventEater ();
         checkEaterIsVisible ();
 
@@ -181,7 +178,7 @@ Ft_LockDBusInterface::testLockScreenShowHide ()
      * Actually we had some problems so we do a little stress testing here.
      * Sometimes the window does not show up for the second/third time.
      */
-    for (int q = 0; q < 5; ++q) {
+    for (int q = 0; q < 2; ++q) {
         lockScreen ();
         checkLockIsVisible ();
 
@@ -196,23 +193,12 @@ Ft_LockDBusInterface::testLockScreenShowHide ()
  * will hide the unlockUI and check if the unlockUI is hidden from the screen.
  */
 void
-Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
+Ft_LockDBusInterface::testLockScreenShowHideWithTSOff ()
 {
-    QmLocks locks;
-    bool    lockingSuccess, unlockingSuccess;
-
     /*
-     * Locking the screen first.
+     * Turning off the screen first.
      */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Turning off the touch screen ******************");
-    SYS_DEBUG ("***************************************************");
-    lockingSuccess = locks.setState (
-            QmLocks::TouchAndKeyboard, QmLocks::Locked);
-    #ifndef __i386__
-    QVERIFY (lockingSuccess);
-    #endif
-    QTest::qWait (DelayBetweenTests);
+    QVERIFY(m_XChecker.turnOffDisplay ());
 
     /*
      * Showing the unlockUI while the touch screen is turned off.
@@ -225,16 +211,7 @@ Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
     /*
      * Then unlocking the screen again so the lockscreenUI will be visible.
      */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Turning on the screen *************************");
-    SYS_DEBUG ("***************************************************");
-    unlockingSuccess = locks.setState (
-            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
-    #ifndef __i386__
-    QVERIFY (unlockingSuccess);
-    #endif
-
-    QTest::qWait (DelayBetweenTests);
+    QVERIFY(m_XChecker.turnOnDisplay ());
    
     /*
      * Now that the screen is on, the lockscreenUI should be up and visible.
