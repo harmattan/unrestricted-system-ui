@@ -59,7 +59,7 @@ static const QString defaultPortraitImageFile =
  * LockScreenWindow implementation.
  */
 LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget *lockland) :
-    MSceneWindow (),
+    MSceneWindow (0),
     m_Window (window),
     m_DnDstate (STATE_NONE),
     m_LockLiftArea (locklift),
@@ -362,7 +362,6 @@ LockScreenUI::realize ()
      * see: updateMissedEvents
      */
     m_notificationArea = new UnlockNotifications;
-    m_notificationArea->setObjectName ("lockscreenNotifications");
 
     m_notificationArea->setVisible (false);
     /*
