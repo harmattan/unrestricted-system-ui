@@ -148,8 +148,11 @@ UnlockArea::UnlockArea () :
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout;
 
+    setObjectName ("LockLandArea");
+
+
     m_unlock_icon = new MImageWidget;
-    m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (64, 64));
+    m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (32, 32));
     m_unlock_icon->setZoomFactor (1.0);
     m_unlock_icon->setObjectName ("LockScreenUnlockIcon");
 
