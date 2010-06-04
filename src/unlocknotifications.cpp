@@ -65,7 +65,8 @@ UnlockNotifications::updateMissedEvents (int emails,
 {
     for (int i = 0; i < NOTIFY_LAST; i++)
     {
-        m_icons [i]->setVisible (true);
+        // First hide everything...
+        m_icons [i]->setVisible (false);
         m_labels [i]->setVisible (false);
     }
 
