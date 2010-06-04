@@ -498,6 +498,7 @@ EventEaterUI::EventEaterUI ()
 {
     SYS_DEBUG ("");
     setAttribute(Qt::WA_TranslucentBackground);
+    setAttribute(Qt::WA_X11NetWmWindowTypeDialog);
     setObjectName ("EventEaterUI");
     setProperty ("NoMStyle", true);
 }
