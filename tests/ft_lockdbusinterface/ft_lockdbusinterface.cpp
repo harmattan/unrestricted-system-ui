@@ -107,7 +107,7 @@ SingnalSink::debugPrint ()
     SYS_DEBUG ("*** m_Reply       = %d", m_Reply);
 }
 
-/*********************************************************************************
+/*******************************************************************************
  * Ft_LockDBusInterface implementation.
  */
 void Ft_LockDBusInterface::init()
@@ -212,6 +212,7 @@ Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
     #ifndef __i386__
     QVERIFY (lockingSuccess);
     #endif
+    QTest::qWait (DelayBetweenTests);
 
     /*
      * Showing the unlockUI while the touch screen is turned off.
@@ -232,6 +233,8 @@ Ft_LockDBusInterface::testLockScreenShowHideWithLocking ()
     #ifndef __i386__
     QVERIFY (unlockingSuccess);
     #endif
+
+    QTest::qWait (DelayBetweenTests);
    
     /*
      * Now that the screen is on, the lockscreenUI should be up and visible.

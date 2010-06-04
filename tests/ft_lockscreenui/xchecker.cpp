@@ -42,7 +42,10 @@ XChecker::XChecker()
     Q_ASSERT (utf8_string_atom != None);
 
     m_CompositorPID = pidof ("mcompositor");
-    SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);    
+    SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);
+    
+    m_SysuidPID = pidof ("sysuid");
+    SYS_DEBUG ("pidof sysuid      = %d", m_SysuidPID);
 }
 
 Display *
@@ -602,7 +605,8 @@ XChecker::pidof (
 bool
 XChecker::checkPIDs ()
 {
-    int pid;
+    bool     retval = true;
+    int      pid;
     
     pid = pidof ("mcompositor");
     if (pid != m_CompositorPID) {
@@ -619,10 +623,30 @@ XChecker::checkPIDs ()
 " because of the mcompositor crash.\n"
 "----------------------------------------------------------------------------\n"
 " \n", 
-m_CompositorPID, pid);
+        m_CompositorPID, pid);
         m_CompositorPID = pid;
-        return false;
+        retval = false;
     }
 
-    return true;
+    pid = pidof ("sysuid");
+    if (pid != m_SysuidPID) {
+        SYS_WARNING (
+" \n\n\n"
+"----------------------------------------------------------------------------\n"
+"                             Sysuid crash warning \n"
+" WARNING: The PID of the sysuid has been changed. This probably means that \n"
+" the sysuid daemon has been crashed. The old PID was %d, the PID now is \n"
+"----------------------------------------------------------------------------\n"
+" %d \n",
+        m_SysuidPID, pid);
+        m_SysuidPID = pid;
+        retval = false;
+    }
+
+    if (!retval) {
+        SYS_DEBUG ("Content of /home/user/MyDocs/core-dumps/:");
+        system ("ls -lh /home/user/MyDocs/core-dumps/");
+    }
+
+    return retval;
 }

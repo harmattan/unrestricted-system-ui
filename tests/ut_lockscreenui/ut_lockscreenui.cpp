@@ -20,7 +20,6 @@
 ****************************************************************************/
 
 #include "ut_lockscreenui.h"
-#include "xchecker.h"
 #include "lockscreenui.h"
 #include "sysuid_stub.h"
 

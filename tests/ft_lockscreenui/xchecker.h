@@ -80,6 +80,7 @@ private:
     utf8_string_atom;
     
     int                  m_CompositorPID;
+    int                  m_SysuidPID;
 };
 
 #endif

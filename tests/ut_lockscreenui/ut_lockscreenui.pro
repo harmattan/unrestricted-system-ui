@@ -8,7 +8,7 @@ INCLUDEPATH += $$SRC_PREFIX \
                $$STUB_PREFIX
 
 SOURCES += ut_lockscreenui.cpp \
-    xchecker.cpp \
+    ../ft_lockscreenui/xchecker.cpp \
     $$SRC_PREFIX/debug.cpp \
     $$SRC_PREFIX/unlockwidgets.cpp \
     $$SRC_PREFIX/lockscreenui.cpp  \
@@ -16,7 +16,7 @@ SOURCES += ut_lockscreenui.cpp \
     $$SRC_PREFIX/unlocknotifications.cpp
 
 HEADERS += ut_lockscreenui.h \
-    xchecker.h \
+    ../ft_lockscreenui/xchecker.h \
     $$SRC_PREFIX/debug.h \
     $$SRC_PREFIX/unlockwidgets.h \
     $$SRC_PREFIX/lockscreenui.h \

@@ -23,7 +23,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include "xchecker.h"
+#include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
 class MApplicationWindow;

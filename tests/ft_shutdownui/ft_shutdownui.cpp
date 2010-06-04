@@ -190,6 +190,7 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     /*
      * We want to be sure we leave the screen on...
      */
+    QTest::qWait (WMDelay);
     #ifndef __i386__
     Maemo::QmDisplayState  display;
     bool                   success;
