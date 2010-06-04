@@ -99,6 +99,8 @@ UnlockHeader::setActive (bool active)
 {
     SYS_DEBUG ("active = %s", SYS_BOOL (active));
     m_icon->setVisible (active);
+
+    update ();
 }
 
 UnlockHeader::~UnlockHeader ()
@@ -149,7 +151,6 @@ UnlockArea::UnlockArea () :
         new QGraphicsLinearLayout;
 
     setObjectName ("LockLandArea");
-
 
     m_unlock_icon = new MImageWidget;
     m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (32, 32));
@@ -223,6 +224,7 @@ UnlockArea::updateState ()
     }
 
     m_unlock_icon->setVisible (m_enabled);
+    m_unlock_icon->update ();
 
     // After object-name change a screen-refresh is needed:
     update ();
