@@ -86,7 +86,7 @@ MSceneWindowStyle#LockLandAreaActive {
     maximum-size: 13.8mm 13.8mm;
 }
 
-#LockScreenUnlockIcon {
+MImageWidgetStyle#LockScreenUnlockIcon {
     background-image: "lockscreen-lock-land-area-center-background";
     background-opacity: 1.0;
 
