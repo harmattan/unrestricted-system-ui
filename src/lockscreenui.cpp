@@ -61,6 +61,7 @@ static const QString defaultPortraitImageFile =
 LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget *lockland) :
     MSceneWindow (),
     m_Window (window),
+    m_DnDicon (0),
     m_DnDstate (STATE_NONE),
     m_LockLiftArea (locklift),
     m_LockLandArea (lockland)
@@ -78,12 +79,6 @@ LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget 
     connect (m_confBgPortrait, SIGNAL(valueChanged()),
             this, SLOT(reloadPortraitBackground()));
 
-    // Pre-load the DnD icons...
-    m_DnDicon.setImage ("icon-m-common-locked", QSize (64, 64));
-    m_DnDicon.setObjectName ("LockScreenDnDIcon");
-    m_DnDicon.setZoomFactor (1.0);
-
-    m_DnDoverlay.setWidget (&m_DnDicon);
     m_DnDoverlay.setVisible (false);
     m_DnDoverlay.setManagedManually (true);
 
@@ -96,10 +91,8 @@ LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget 
 
 LockScreenWindow::~LockScreenWindow ()
 {
-#if 0
     delete m_confBgLandscape;
     delete m_confBgPortrait;
-#endif
 }
 
 void
@@ -282,17 +275,29 @@ LockScreenWindow::updateDnDicon ()
 {
     bool enable = (m_DnDstate != STATE_NONE);
 
+    // Icon not yet created... make it:
+    if (m_DnDicon == 0)
+    {
+        m_DnDicon = new MImageWidget;
+
+        m_DnDicon->setImage ("icon-m-common-locked", QSize (64, 64));
+        m_DnDicon->setObjectName ("LockScreenDnDIcon");
+        m_DnDicon->setZoomFactor (1.0);
+
+        m_DnDoverlay.setWidget (m_DnDicon);
+    }
+
     // Update the theming...
     if ((m_DnDstate == STATE_MOVING_ACTIVE) &&
-        (m_DnDicon.objectName () != "LockScreenDnDIconActive"))
+        (m_DnDicon->objectName () != "LockScreenDnDIconActive"))
     {
-            m_DnDicon.setObjectName ("LockScreenDnDIconActive");
-            m_DnDicon.update ();
+            m_DnDicon->setObjectName ("LockScreenDnDIconActive");
+            m_DnDicon->update ();
     }
-    else if (m_DnDicon.objectName () != "LockScreenDnDIcon")
+    else if (m_DnDicon->objectName () != "LockScreenDnDIcon")
     {
-        m_DnDicon.setObjectName ("LockScreenDnDIcon");
-        m_DnDicon.update ();
+        m_DnDicon->setObjectName ("LockScreenDnDIcon");
+        m_DnDicon->update ();
     }
 
     m_DnDoverlay.setVisible (enable);
