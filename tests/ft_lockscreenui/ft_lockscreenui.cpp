@@ -84,7 +84,8 @@ Ft_LockScreenUI::cleanupTestCase()
     delete m_LockScreenUI;
     delete m_EventEaterUI;
     delete m_MainWindow; 
-    delete m_App;
+
+    m_App->deleteLater ();
 }
 
 void

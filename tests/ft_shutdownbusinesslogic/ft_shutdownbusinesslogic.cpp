@@ -70,8 +70,6 @@ const QString styleDir = themeDir + "style/";
 void 
 Ft_ShutdownBusinessLogic::initTestCase()
 {
-    m_MainWindow = 0;
-
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication (argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
@@ -85,12 +83,11 @@ Ft_ShutdownBusinessLogic::initTestCase()
 void 
 Ft_ShutdownBusinessLogic::cleanupTestCase()
 {
-    if (m_MainWindow) 
-        delete m_MainWindow; 
-
-    delete m_App;
+    SYS_DEBUG ("");
+    m_App->deleteLater ();
 }
 
+#if 0
 void 
 Ft_ShutdownBusinessLogic::testThermalState ()
 {
@@ -104,7 +101,6 @@ Ft_ShutdownBusinessLogic::testThermalState ()
     logic->systemStateChanged (QmSystemState::ThermalStateFatal);
     QTest::qWait (WMDelay);
     
-    m_XChecker.debugDumpNotifications ();
     /*
      * FIXME: We should check here if the notification is published but it seems
      * that m_XChecker is failed to get the notification data. It might be a bug
@@ -112,6 +108,10 @@ Ft_ShutdownBusinessLogic::testThermalState ()
      */
 
     QTest::qWait (DelayBetweenTests);
+    
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
+    SYS_DEBUG ("*********************************************");
     delete logic;
 }
 
@@ -128,7 +128,6 @@ Ft_ShutdownBusinessLogic::testShutDownDenied ()
     logic->systemStateChanged (QmSystemState::ShutdownDeniedUSB);
     QTest::qWait (WMDelay);
     
-    m_XChecker.debugDumpNotifications ();
     /*
      * FIXME: We should check here if the notification is published but it seems
      * that m_XChecker is failed to get the notification data. It might be a bug
@@ -136,6 +135,10 @@ Ft_ShutdownBusinessLogic::testShutDownDenied ()
      */
 
     QTest::qWait (DelayBetweenTests);
+    
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
+    SYS_DEBUG ("*********************************************");
     delete logic;
 }
 
@@ -152,7 +155,6 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
     logic->systemStateChanged (QmSystemState::BatteryStateEmpty);
     QTest::qWait (WMDelay);
     
-    m_XChecker.debugDumpNotifications ();
     /*
      * FIXME: We should check here if the notification is published but it seems
      * that m_XChecker is failed to get the notification data. It might be a bug
@@ -160,8 +162,13 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
      */
 
     QTest::qWait (DelayBetweenTests);
+    
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
+    SYS_DEBUG ("*********************************************");
     delete logic;
 }
+#endif
 
 void 
 Ft_ShutdownBusinessLogic::testShutDown ()
@@ -185,10 +192,12 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
-    m_XChecker.debug_dump_windows (WindowID);
 
     QTest::qWait (5000);
 
+    SYS_DEBUG ("*********************************************");
+    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
+    SYS_DEBUG ("*********************************************");
     delete logic;
 
     /*

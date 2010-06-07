@@ -89,7 +89,7 @@ Ft_LockScreenBusinessLogic::cleanupTestCase()
     if (m_MainWindow)
         delete m_MainWindow; 
 
-    delete m_App;
+    m_App->deleteLater ();
 }
 
 void

@@ -39,6 +39,8 @@ class ShutdownUI : public MWindow
 public:
     ShutdownUI ();
     virtual ~ShutdownUI ();
+
+
     void showWindow (
 		    const QString  &text1, 
 		    const QString  &text2, 

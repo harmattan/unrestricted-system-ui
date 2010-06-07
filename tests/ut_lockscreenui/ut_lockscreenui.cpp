@@ -99,7 +99,7 @@ Ut_LockScreenUI::cleanupTestCase()
     if (m_MainWindow)
         delete m_MainWindow; 
 
-    delete m_App;
+    m_App->deleteLater ();
 }
 
 /*

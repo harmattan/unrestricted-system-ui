@@ -234,7 +234,8 @@ void
 Ft_LockDBusInterface::cleanupTestCase()
 {
     delete m_DbusIf;
-    delete m_App;
+
+    m_App->deleteLater ();
 }
 
 /******************************************************************************

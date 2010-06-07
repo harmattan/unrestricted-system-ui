@@ -32,6 +32,10 @@
 
 #include <qmdisplaystate.h>
 
+#include "mwidgetcreator.h"
+M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
+
+
 #define DEBUG
 #define WARNING
 #include "debug.h"
@@ -58,10 +62,11 @@ ShutdownUI::ShutdownUI () :
 ShutdownUI::~ShutdownUI ()
 {
     delete m_Timer;
-
-    if (m_SceneWindow)
+    
+    if (m_SceneWindow) {
+        SYS_DEBUG ("deleting m_SceneWindow");
         delete m_SceneWindow;
-
+    }
     // FIXME: What about m_Feedback?
 }
 
@@ -103,7 +108,7 @@ ShutdownUI::realize ()
     /*
      * A full screen logo that we show when the labels are already gone.
      */
-    m_Image = new MImageWidget ("nokia_logo");
+    m_Image = new MImageWidget ("icon-l-startup-nokia-logo");
     m_Image->hide ();
 
     QGraphicsLinearLayout *layout

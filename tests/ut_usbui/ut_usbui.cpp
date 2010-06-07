@@ -50,7 +50,7 @@ Ut_UsbUi::initTestCase ()
 void
 Ut_UsbUi::cleanupTestCase ()
 {
-    delete m_App;
+    m_App->deleteLater();
 }
 
 static bool dialog_visible;

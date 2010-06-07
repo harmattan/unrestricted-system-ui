@@ -42,7 +42,7 @@ void ut_unlockwidgets::initTestCase ()
 
 void ut_unlockwidgets::cleanupTestCase ()
 {
-    delete m_App;
+    m_App->deleteLater();
 }
 
 void ut_unlockwidgets::init ()

@@ -58,6 +58,7 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
     if (m_Ui) {
+        SYS_DEBUG ("Calling m_Ui->deleteLater()");
         m_Ui->deleteLater ();
         m_Ui = 0;
     }
