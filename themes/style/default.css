@@ -440,7 +440,7 @@ StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
 }
 
 MButtonStyle#StatusIndicatorMenuCloseButton {
-    icon-size: $ICON_LARGE $ICON_LARGE;
+    icon-size: $SIZE_ICON_LARGE $SIZE_ICON_LARGE;
     preferred-size: 6.4mm 6.4mm;
     minimum-size: 6.4mm 6.4mm;
     maximum-size: 6.4mm 6.4mm;
