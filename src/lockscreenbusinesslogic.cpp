@@ -57,7 +57,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
      * Hiding the event eater when it is clicked.
      */
     connectSuccess = connect (eaterUI, SIGNAL(OneInput()),
-            this, SLOT(oneInputCame()));
+            this, SLOT(hideEventEater()));
     Q_ASSERT (connectSuccess);
 
     /*
@@ -129,7 +129,7 @@ LockScreenBusinessLogic::displayStateChanged (
 }
 
 void 
-LockScreenBusinessLogic::oneInputCame()
+LockScreenBusinessLogic::hideEventEater()
 {
     SYS_DEBUG ("");
     toggleEventEater (false);

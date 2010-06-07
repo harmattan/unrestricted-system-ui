@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -19,274 +17,169 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
+
 #include "ut_lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogic.h"
-#include "lockscreenui.h"
+#include "lockscreenui_stub.h"
+#include "lockscreenwindow_stub.h"
+#include "eventeaterui_stub.h"
 #include "sysuid_stub.h"
-
 #include <qmdisplaystate.h>
-
 #include <MApplication>
 #include <MApplicationWindow>
-#include <MGConfItem>
-#include <MTheme>
 
-#define DEBUG
-#include "../../src/debug.h"
-
-/******************************************************************************
- * EventSink implementation.
- */
-EventSink::EventSink() :
-    m_ScreenIsLockedCame (false),
-    m_ScreenIsLocked (false),
-    m_Timeouts (0)
+Maemo::QmDisplayState::DisplayState qmDisplayState;
+Maemo::QmDisplayState::DisplayState QmDisplayState::get() const
 {
-}
- 
-void 
-EventSink::screenIsLocked (
-        bool toggle)
-{
-    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
-    m_ScreenIsLockedCame = true;
-    m_ScreenIsLocked = toggle;
+    return qmDisplayState;
 }
 
-void 
-EventSink::timeout ()
+// QTimer stubs
+int qTimerStart = -1;
+void QTimer::start(int msec)
 {
-    ++m_Timeouts;
-
-    SYS_DEBUG ("*** m_Timeouts = %d", m_Timeouts);
+    qTimerStart = msec;
+    id = 1;
 }
 
-/*******************************************************************************
- * The Ut_LockScreenBusinessLogic implements the unit tests.
- */
+void QTimer::stop()
+{
+    qTimerStart = -1;
+    id = -1;
+}
+
 void Ut_LockScreenBusinessLogic::init()
 {
+    qTimerStart = -1;
+    gLockScreenUIStub->stubReset();
+    qmDisplayState = Maemo::QmDisplayState::On;
 }
 
 void Ut_LockScreenBusinessLogic::cleanup()
 {
 }
 
-int   argc = 1;
+int argc = 1;
 char *argv[] = {
     (char *) "./ut_lockscreenbusinesslogic",
     NULL };
 
-const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
-const QString styleDir = themeDir + "style/";
-
 void Ut_LockScreenBusinessLogic::initTestCase()
 {
     m_MainWindow = 0;
-    m_LockScreenBusinessLogic = 0;
 
-    SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
-
-    SYS_DEBUG ("+++ Initializing our own themes.");
-    MTheme::addPixmapDirectory (themeDir, M::Recursive);
-    MTheme::loadCSS (styleDir + "sysuid.css");
 }
 
-void 
-Ut_LockScreenBusinessLogic::cleanupTestCase()
+void Ut_LockScreenBusinessLogic::cleanupTestCase()
 {
-    if (m_LockScreenBusinessLogic)
-        delete m_LockScreenBusinessLogic;
-
     if (m_MainWindow)
         delete m_MainWindow; 
 
     m_App->deleteLater ();
 }
 
-/*
- * This test will check if the signal that indicates the screen
- * locking/unlocking is there and properly sent.
- */
-void 
-Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicSignals ()
+void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 {
-    bool connectSuccess;
+    LockScreenBusinessLogic logic;
+    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
-    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
-    
-    connectSuccess = connect (
-            m_LockScreenBusinessLogic, SIGNAL(screenIsLocked(bool)),
-            &m_EventSink, SLOT(screenIsLocked(bool)));
-    QVERIFY (connectSuccess);
+    // First try with display off
+    qmDisplayState = Maemo::QmDisplayState::Off;
 
-    /*
-     *
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleScreenLockUI (true) *********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_ScreenIsLockedCame = false;
-    m_EventSink.m_ScreenIsLocked = false;
-    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+    // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
+    logic.toggleScreenLockUI(true);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), true);
+    QCOMPARE(logic.lockUI->isVisible(), true);
 
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == true);
+#ifndef __i386__
+    // The timer should not be started if the display is off
+    QCOMPARE(qTimerStart, -1);
+    QCOMPARE(gLockScreenUIStub->stubCallCount("updateDateTime"), 0);
 
-    /*
-     *
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleScreenLockUI (false) ********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_ScreenIsLockedCame = false;
-    m_EventSink.m_ScreenIsLocked = false;
-    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
-    
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == false);
-    
-    /*
-     *
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleEventEater (true) ***********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_ScreenIsLockedCame = false;
-    m_EventSink.m_ScreenIsLocked = false;
-    m_LockScreenBusinessLogic->toggleEventEater (true);
+    // Then try with display on: the timer should be started
+    qmDisplayState = Maemo::QmDisplayState::On;
+    logic.toggleScreenLockUI(true);
+#endif
 
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == true);
+    QCOMPARE(qTimerStart, 1000);
+    QCOMPARE(gLockScreenUIStub->stubCallCount("updateDateTime"), 1);
 
-    /*
-     *
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleEventEater (false) **********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_ScreenIsLockedCame = false;
-    m_EventSink.m_ScreenIsLocked = false;
-    m_LockScreenBusinessLogic->toggleEventEater (false);
-
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == false);
-
-    delete m_LockScreenBusinessLogic;
-    m_LockScreenBusinessLogic = 0;
+    // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
+    spy.clear();
+    logic.toggleScreenLockUI(false);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+    QCOMPARE(logic.lockUI->isVisible(), false);
+    QCOMPARE(qTimerStart, -1);
 }
 
-/*
- * This test will check if the timer in the screenlokui is started when the
- * screen lock is shown and it is stopped when the screen lock is hidden.
- */
-void 
-Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicTimer ()
+void Ut_LockScreenBusinessLogic::testToggleEventEater()
 {
-    bool connectSuccess;
+    LockScreenBusinessLogic logic;
+    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
-    /*
-     * We want to be sure we leave the screen on...
-     */
-    #ifndef __i386__
-    Maemo::QmDisplayState  display;
-    bool                   success;
+    // Make sure the screen locking signals are sent and the eater UI is shown/hidden
+    logic.toggleEventEater(true);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), true);
+    QCOMPARE(logic.eaterUI->isVisible(), true);
+    QCOMPARE(logic.eaterUI->isFullScreen(), true);
 
-    success = display.set (Maemo::QmDisplayState::On);
-    if (! success) {
-        SYS_WARNING ("Turning on the display failed!");
-    }
-    #endif    
-
-    /*
-     * Connecting to the timer so we can sense the timer events.
-     */
-    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
-    connectSuccess = connect (
-            &m_LockScreenBusinessLogic->timer, SIGNAL (timeout()),
-            &m_EventSink, SLOT(timeout()));
-    QVERIFY (connectSuccess);
-
-    /*
-     * When the screen is locked the timer should be started. 
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleEventEater (true) ***********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_Timeouts = 0;
-    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
-    QTest::qWait (5000);
-
-    SYS_DEBUG ("came %d", m_EventSink.m_Timeouts);
-    // FIXME: We got 2 refreshes in 5 seconds?
-    // FIXME: This test is very fragile, we need to find out what causes the
-    // loss of the timeouts.
-    //QVERIFY (m_EventSink.m_Timeouts >= 2);
-    if (m_EventSink.m_Timeouts >= 2) {
-        SYS_DEBUG ("We got the refresh.");
-    } else {
-        SYS_WARNING ("We failed to get timeouts");
-    }
-
-    /*
-     * When the screen is unlocked the timer should be stopped. 
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleEventEater (false) ***********************");
-    SYS_DEBUG ("***************************************************");
-    m_LockScreenBusinessLogic->toggleScreenLockUI (false);
-    m_EventSink.m_Timeouts = 0;
-    QTest::qWait (5000);
-
-    QVERIFY (m_EventSink.m_Timeouts == 0);
-
-    delete m_LockScreenBusinessLogic;
-    m_LockScreenBusinessLogic = 0;
+    spy.clear();
+    logic.toggleEventEater(false);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+    QCOMPARE(logic.eaterUI->isVisible(), false);
 }
 
-/*
- * This function is testing if the lockscreenbusinesslogic actually connected to
- * the unlocked() signal of the unlockui.
- */
-void 
-Ut_LockScreenBusinessLogic::testLockScreenBusinessLogicUnlock ()
+void Ut_LockScreenBusinessLogic::testUnlockScreen()
 {
-    bool connectSuccess;
+    LockScreenBusinessLogic logic;
+    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
-    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
-    connectSuccess = connect (
-            m_LockScreenBusinessLogic, SIGNAL(screenIsLocked(bool)),
-            &m_EventSink, SLOT(screenIsLocked(bool)));
-    QVERIFY (connectSuccess);
-
-    /*
-     * First we lock the screen and check if it is really locked.
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** toggleScreenLockUI (true) *********************");
-    SYS_DEBUG ("***************************************************");
-    m_EventSink.m_ScreenIsLockedCame = false;
-    m_EventSink.m_ScreenIsLocked = false;
-    m_LockScreenBusinessLogic->toggleScreenLockUI (true);
-
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == true);
-
-    /*
-     *
-     */
-    m_EventSink.m_ScreenIsLockedCame = false;
-    emit m_LockScreenBusinessLogic->lockUI->unlocked();
-
-    QVERIFY (m_EventSink.m_ScreenIsLockedCame == true);
-    QVERIFY (m_EventSink.m_ScreenIsLocked == false);
-    
-    delete m_LockScreenBusinessLogic;
-    m_LockScreenBusinessLogic = 0;
+    logic.unlockScreen();
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+    QCOMPARE(logic.lockUI->isVisible(), false);
+    QCOMPARE(qTimerStart, -1);
 }
 
+void Ut_LockScreenBusinessLogic::testHideEventEater()
+{
+    LockScreenBusinessLogic logic;
+    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
+
+    logic.hideEventEater();
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+    QCOMPARE(logic.eaterUI->isVisible(), false);
+}
+
+void Ut_LockScreenBusinessLogic::testUpdateMissedEvents()
+{
+    LockScreenBusinessLogic logic;
+    logic.updateMissedEvents(0, 1, 2, 3);
+    QCOMPARE(gLockScreenUIStub->stubCallCount("updateMissedEvents"), 1);
+    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(0), 0);
+    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(1), 1);
+    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(2), 2);
+    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(3), 3);
+}
+
+void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
+{
+    LockScreenBusinessLogic logic;
+    logic.toggleScreenLockUI(true);
+    logic.displayStateChanged(Maemo::QmDisplayState::Off);
+    QCOMPARE(qTimerStart, -1);
+
+    logic.toggleEventEater(true);
+    logic.displayStateChanged(Maemo::QmDisplayState::On);
+    QCOMPARE(qTimerStart, 1000);
+}
 
 QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)
-
