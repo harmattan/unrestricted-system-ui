@@ -1,4 +1,4 @@
-system-ui (0.16.0~1) harmattan; urgency=low
+system-ui (0.16.0~2) harmattan; urgency=low
 
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
                        correctly
@@ -18,7 +18,7 @@ system-ui (0.16.0~1) harmattan; urgency=low
   * Fixes: NB#169533 - event eater not functioning properly (symptom:
                        display looks blanked when dimmed)
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 04 Jun 2010 19:37:55 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 07 Jun 2010 15:39:55 +0300
 
 system-ui (0.15.13-1) harmattan; urgency=low
 
