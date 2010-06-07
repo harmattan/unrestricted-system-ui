@@ -20,6 +20,10 @@ MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
     background-image: "meegotouch-applicationpage-background";
 }
 
+MWidgetStyle#StatusIndicatorMenuContentWidget {
+    background-image: "meegotouch-applicationpage-background";
+}
+
 MWidgetStyle#CloseButtonArea {
    background-image: "duistatusmenuclose-background";
 }

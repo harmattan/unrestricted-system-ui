@@ -162,11 +162,21 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     NotificationArea *notificationArea = new NotificationArea;
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
+    QGraphicsLinearLayout *contentLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    contentLayout->setSpacing(0);
+    contentLayout->addItem(notificationArea);
+    contentLayout->addItem(new PluginList(this, sceneWindow.data()));
+
+    MWidgetController *contentWidget = new MWidgetController;
+    contentWidget->setView(new MWidgetView(contentWidget));
+    contentWidget->setObjectName("StatusIndicatorMenuContentWidget");
+    contentWidget->setLayout(contentLayout);
+
     QGraphicsLinearLayout *pannableLayout = new QGraphicsLinearLayout(Qt::Vertical);
     pannableLayout->setContentsMargins(0, 0, 0, 0);
     pannableLayout->setSpacing(0);
-    pannableLayout->addItem(notificationArea);
-    pannableLayout->addItem(new PluginList(this, sceneWindow.data()));
+    pannableLayout->addItem(contentWidget);
     QGraphicsWidget *closeButtonRow = createCloseButtonRow();
     pannableLayout->addItem(closeButtonRow);
     pannableLayout->addStretch();
@@ -174,7 +184,6 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     // Create a container widget for the pannable area
     PannedWidgetController *pannedWidget = new PannedWidgetController;
     pannedWidget->setView(new MWidgetView(pannedWidget));
-    pannedWidget->setObjectName("StatusIndicatorMenuPannableWidget");
     pannedWidget->setLayout(pannableLayout);
     pannedWidget->setBottommostWidget(closeButtonRow);
     connect(pannedWidget, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
