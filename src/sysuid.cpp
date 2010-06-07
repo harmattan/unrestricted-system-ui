@@ -51,12 +51,6 @@
 
 #define TRANSLATION_CATALOG "systemui"
 
-namespace
-{
-const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
-const QString styleDir = themeDir + "style/";
-}
-
 Sysuid* Sysuid::m_Sysuid = NULL;
 
 Sysuid::Sysuid (QObject* parent) : QObject (parent)
@@ -64,9 +58,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
     SYS_DEBUG ("Starting sysuidaemon");
 
     m_Sysuid = this;
-
-    MTheme::addPixmapDirectory (themeDir, M::Recursive);
-    MTheme::loadCSS (styleDir + "sysuid.css");
 
     // Load translation of System-UI
     retranslate ();
