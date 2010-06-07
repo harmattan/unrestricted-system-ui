@@ -83,8 +83,8 @@ void Ut_LowBatteryNotifier::cleanup ()
 MApplication *app;
 void Ut_LowBatteryNotifier::initTestCase ()
 {
-    int argc = 1;
-    char* app_name = (char*) "./ut_lowbatterynotifier";
+    static int argc = 1;
+    static char* app_name = (char*) "./ut_lowbatterynotifier";
     app = new MApplication(argc, &app_name);
 
     MLocale        locale;
@@ -116,17 +116,17 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
     QTest::qWait (Act * 2 + 50);
 
     // This somehow fails
-    qDebug() << "m_helper->notificationTimes().count = " << 
+    qDebug() << "m_helper->notificationTimes().count = " <<
         m_helper->notificationTimes().count() <<
         " should be 3";
 
     //QCOMPARE(m_helper->notificationTimes ().count (), 3);
     for (int i = 0; i < m_helper->notificationTimes().count (); ++i)
     {
-        qDebug () << 
-		    __func__ <<
-    		"Notification " << i << " shown after " <<
-		m_helper->notificationTimes ().at (i) << "uSec";
+        qDebug () <<
+            __func__ <<
+            "Notification " << i << " shown after " <<
+        m_helper->notificationTimes ().at (i) << "uSec";
         if (i > 0)
         {
             QVERIFY(m_helper->notificationTimes ().at (i) <= Act + aDelay);
@@ -140,7 +140,7 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
     }
 }
 
-void 
+void
 Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
 {
     int lower, higher;
@@ -174,20 +174,20 @@ Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
 
     lower = 0;
     higher = aDelay;
-    qDebug() << 
-	    __func__ <<
-	    "Notification 0 shown after " << 
+    qDebug() <<
+        __func__ <<
+        "Notification 0 shown after " <<
         m_helper->notificationTimes ().at (0) << "uSec" <<
         " (should be between" << lower << " and " << higher << ")";
-    
+
     QVERIFY(m_helper->notificationTimes ().at (0) <= higher);
     QVERIFY(m_helper->notificationTimes ().at (0) >= lower);
-    
+
     lower  = Act / 2 + Act / 2 + Act / 4;
     higher = Act / 2 + Act / 2 + Act / 4 + aDelay;
-    qDebug() << 
-	    __func__ <<
-	    "Notification 1 shown after " << 
+    qDebug() <<
+        __func__ <<
+        "Notification 1 shown after " <<
         m_helper->notificationTimes ().at (1) << "uSec" <<
         " (should be between " << lower << " and " << higher << ")";
 
@@ -219,10 +219,10 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
 
     QCOMPARE(m_helper->notificationTimes ().count (), 3);
     for (int i = 0; i < m_helper->notificationTimes ().count (); ++i) {
-        qDebug() << 
-		    __func__ <<
-    		"Notification " << i << " shown after " << 
-	    	m_helper->notificationTimes ().at (i) << "uSec";
+        qDebug() <<
+            __func__ <<
+            "Notification " << i << " shown after " <<
+            m_helper->notificationTimes ().at (i) << "uSec";
 
         if (i > 0) {
             QVERIFY(m_helper->notificationTimes ().at (i) <= Inact + aDelay);

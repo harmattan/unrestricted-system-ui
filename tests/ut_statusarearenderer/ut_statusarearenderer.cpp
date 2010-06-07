@@ -84,8 +84,8 @@ void Ut_StatusAreaRenderer::cleanup()
 
 void Ut_StatusAreaRenderer::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *)"./ut_statusarearenderer";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_statusarearenderer";
     app = new MApplication(argc, &app_name);
 }
 

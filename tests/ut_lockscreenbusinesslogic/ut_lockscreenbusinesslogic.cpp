@@ -60,23 +60,20 @@ void Ut_LockScreenBusinessLogic::cleanup()
 {
 }
 
-int argc = 1;
-char *argv[] = {
-    (char *) "./ut_lockscreenbusinesslogic",
-    NULL };
-
 void Ut_LockScreenBusinessLogic::initTestCase()
 {
     m_MainWindow = 0;
 
-    m_App = new MApplication(argc, argv);
+    static int argc = 1;
+    static char *argv = (char *) "./ut_lockscreenbusinesslogic";
+    m_App = new MApplication(argc, &argv);
     m_App->setQuitOnLastWindowClosed (false);
 }
 
 void Ut_LockScreenBusinessLogic::cleanupTestCase()
 {
     if (m_MainWindow)
-        delete m_MainWindow; 
+        delete m_MainWindow;
 
     m_App->deleteLater ();
 }

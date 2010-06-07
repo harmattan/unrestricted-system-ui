@@ -65,8 +65,8 @@ void Ut_StatusIndicatorMenuWindow::cleanup()
 
 void Ut_StatusIndicatorMenuWindow::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *)"./ut_statusarea";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_statusindicatormenuwindow";
     app = new MApplication(argc, &app_name);
 }
 

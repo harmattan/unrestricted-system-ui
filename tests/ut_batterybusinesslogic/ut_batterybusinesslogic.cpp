@@ -32,7 +32,7 @@
 /******************************************************************************
  * SignalSink implementation.
  */
-SignalSink::SignalSink() 
+SignalSink::SignalSink()
 {
     reset ();
 }
@@ -49,11 +49,11 @@ SignalSink::reset()
 }
 
 void
-SignalSink::print() 
+SignalSink::print()
 {
-    SYS_DEBUG ("*** m_BatteryChargingCame    = %s", 
+    SYS_DEBUG ("*** m_BatteryChargingCame    = %s",
             SYS_BOOL(m_BatteryChargingCame));
-    SYS_DEBUG ("*** m_BatteryNotChargingCame = %s", 
+    SYS_DEBUG ("*** m_BatteryNotChargingCame = %s",
             SYS_BOOL(m_BatteryNotChargingCame));
     SYS_DEBUG ("*** m_AnimationRate          = %d",
             m_AnimationRate);
@@ -64,7 +64,7 @@ SignalSink::print()
             m_BarValue);
 }
 
-void 
+void
 SignalSink::batteryCharging (
         int animationLevel)
 {
@@ -108,22 +108,22 @@ void Ut_BatteryBusinessLogic::cleanup()
 MApplication *app;
 void Ut_BatteryBusinessLogic::initTestCase()
 {
-    int argc = 1;
-    char* app_name = (char*) "./ut_batterybusinesslogic";
+    static int argc = 1;
+    static char* app_name = (char*) "./ut_batterybusinesslogic";
     app = new MApplication(argc, &app_name);
 }
 
-void 
+void
 Ut_BatteryBusinessLogic::cleanupTestCase()
 {
     delete app;
 }
 
 /*!
- * Asks the battery applet for the battery status, checks one of the 
+ * Asks the battery applet for the battery status, checks one of the
  * batteryCharging(int) and batteryNotCharging() signals arrive.
  */
-void 
+void
 Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
 {
     bool connectSuccess;
@@ -135,7 +135,7 @@ Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
             m_subject, SIGNAL(batteryCharging(int)),
             &m_SignalSink, SLOT(batteryCharging(int)));
     QVERIFY (connectSuccess);
-    
+
     connectSuccess = connect (
             m_subject, SIGNAL(batteryNotCharging()),
             &m_SignalSink, SLOT(batteryNotCharging()));
@@ -149,14 +149,14 @@ Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
     m_SignalSink.print();
 
     // Battery can not be charging and not charging in the same time.
-    QVERIFY (!(m_SignalSink.m_BatteryChargingCame && 
+    QVERIFY (!(m_SignalSink.m_BatteryChargingCame &&
                 m_SignalSink.m_BatteryNotChargingCame));
-    // But it has to do somethhing! 
-    QVERIFY (!(!m_SignalSink.m_BatteryChargingCame && 
+    // But it has to do somethhing!
+    QVERIFY (!(!m_SignalSink.m_BatteryChargingCame &&
                 !m_SignalSink.m_BatteryNotChargingCame));
 }
 
-void 
+void
 Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
 {
     bool connectSuccess;
@@ -178,7 +178,7 @@ Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
 
     QVERIFY (m_SignalSink.m_BatteryBarValueCame);
     QVERIFY (m_SignalSink.m_BarValue == 1);
-    
+
     /*
      * And then on 97%
      */
@@ -190,7 +190,7 @@ Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
     QVERIFY (m_SignalSink.m_BarValue == 9);
 }
 
-void 
+void
 Ut_BatteryBusinessLogic::testSetPSMThreshold()
 {
     // set the battery level to 15%
@@ -221,7 +221,7 @@ Ut_BatteryBusinessLogic::testSetPSMThreshold()
     // See NB#169777 - Power save mode logic problems
     #if 0
     QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(), 
+            m_subject->m_DeviceMode->getPSMState(),
             Maemo::QmDeviceMode::PSMStateOn);
     #endif
 
@@ -237,11 +237,11 @@ Ut_BatteryBusinessLogic::testSetPSMThreshold()
     // See NB#169777 - Power save mode logic problems
     #if 0
     QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(), 
+            m_subject->m_DeviceMode->getPSMState(),
             Maemo::QmDeviceMode::PSMStateOn);
     #endif
     QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(), 
+            m_subject->m_DeviceMode->getPSMState(),
             Maemo::QmDeviceMode::PSMStateOff);
 }
 
@@ -257,12 +257,12 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
 
     // check that the PSM is toggled off
     QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(), 
+            m_subject->m_DeviceMode->getPSMState(),
             Maemo::QmDeviceMode::PSMStateOn);
 
     // Check that the psm auto is off.
     QCOMPARE(
-            systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(), 
+            systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(),
             false);
 
     // set the battery level to 5%
@@ -279,7 +279,7 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
     // See NB#169777 - Power save mode logic problems
     #if 0
     QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(), 
+            m_subject->m_DeviceMode->getPSMState(),
             Maemo::QmDeviceMode::PSMStateOn);
     #endif
 }

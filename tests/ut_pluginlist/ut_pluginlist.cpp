@@ -51,8 +51,8 @@ QStringList Ut_PluginList::loadedPlugins;
 
 void Ut_PluginList::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *)"./ut_pluginlist";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_pluginlist";
     app = new MApplication(argc, &app_name);
     window = new StatusIndicatorMenuWindow;
 }
