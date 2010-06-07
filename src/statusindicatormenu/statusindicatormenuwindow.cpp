@@ -298,6 +298,7 @@ void StatusIndicatorMenuWindow::makeVisible()
     if (!isVisible()) {
         // If status indicator window is not visible, then show it
         show();
+        showFullScreen();
     } else {
         // Otherwise, raise it
         raise();
