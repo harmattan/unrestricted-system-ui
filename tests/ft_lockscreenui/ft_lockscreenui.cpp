@@ -27,9 +27,6 @@
 #include <MApplicationWindow>
 #include <MSceneManager>
 #include <MTheme>
-#include <qmlocks.h>
-
-using namespace Maemo;
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -115,7 +112,6 @@ Ft_LockScreenUI::testEventEaterUIShowHide ()
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
 
-        m_XChecker.debug_dump_windows (WindowID);
         QTest::qWait (DelayBetweenTests);
         /*
          * Hiding the window again.
@@ -163,7 +159,6 @@ Ft_LockScreenUI::testLockScreenUIShowHide ()
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
     
         QTest::qWait (DelayBetweenTests);
-        m_XChecker.debug_dump_windows (WindowID);
         /*
         * Hiding the window again.
         */
@@ -226,7 +221,6 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         SYS_DEBUG ("*** lockScreenUI = 0x%lx", WindowID);
     
         QTest::qWait (DelayBetweenTests);
-        m_XChecker.debug_dump_windows (WindowID);
         /*
         * Hiding the window again.
         */
@@ -290,7 +284,6 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
 
-        m_XChecker.debug_dump_windows (WindowID);
         QTest::qWait (DelayBetweenTests);
         /*
          * Hiding the window again.
@@ -311,23 +304,15 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
 }
 
 void 
-Ft_LockScreenUI::testLockScreenUIWithLocking ()
+Ft_LockScreenUI::testLockScreenUIWithTSOff ()
 {
-    QmLocks locks;
-    bool    lockingSuccess, unlockingSuccess;
     Window  WindowID;
+    /*
+     * Turning off the screen first.
+     */
+    QVERIFY(m_XChecker.turnOffDisplay ());
 
     createEventEaterUI ();
-    /*
-     * Locking the screen first.
-     */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Locking the screen ****************************");
-    SYS_DEBUG ("***************************************************");
-    lockingSuccess = locks.setState (QmLocks::TouchAndKeyboard, QmLocks::Locked);
-    #ifndef __i386__
-    QVERIFY (lockingSuccess);
-    #endif
     QTest::qWait (DelayBetweenTests);
 
     /*
@@ -340,18 +325,12 @@ Ft_LockScreenUI::testLockScreenUIWithLocking ()
     QTest::qWait (WMDelay);
 
     /*
-     * Then unlocking the screen again so the lockscreenUI will be visible.
+     * Then turning on the screen again so the lockscreenUI will be visible.
      */
-    SYS_DEBUG ("***************************************************");
-    SYS_DEBUG ("*** Unlocking the screen **************************");
-    SYS_DEBUG ("***************************************************");
-    unlockingSuccess = locks.setState (
-            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
-    #ifndef __i386__
-    QVERIFY (unlockingSuccess);
-    #endif
+    QVERIFY(m_XChecker.turnOnDisplay ());
+    QTest::qWait (DelayBetweenTests);
 
-    /*
+     /*
      * From this point the lock screen should be realized, shown and visible.
      */
     QVERIFY (m_LockScreenUI->m_Realized);

@@ -44,7 +44,7 @@ private slots:
     void testLockScreenUIShowHide ();
     void testLockScreenUIShowHideWithMainWindow ();
     void testEventEaterUIShowHideWithMainWindow ();
-    void testLockScreenUIWithLocking ();
+    void testLockScreenUIWithTSOff ();
     
 private:
     void createLockScreenUI ();
