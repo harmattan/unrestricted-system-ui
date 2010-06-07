@@ -38,12 +38,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-#if 0
     void testThermalState ();
     void testShutDownDenied ();
     void testBatteryStateEmpty ();
-#endif
     void testShutDown ();
+    
 private:
     XChecker                   m_XChecker;
     MApplication              *m_App;

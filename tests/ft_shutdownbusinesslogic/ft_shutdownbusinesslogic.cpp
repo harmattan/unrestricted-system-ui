@@ -87,7 +87,7 @@ Ft_ShutdownBusinessLogic::cleanupTestCase()
     m_App->deleteLater ();
 }
 
-#if 0
+
 void 
 Ft_ShutdownBusinessLogic::testThermalState ()
 {
@@ -168,7 +168,6 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
     SYS_DEBUG ("*********************************************");
     delete logic;
 }
-#endif
 
 void 
 Ft_ShutdownBusinessLogic::testShutDown ()
