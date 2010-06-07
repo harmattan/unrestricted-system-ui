@@ -209,7 +209,7 @@ Ft_LockDBusInterface::testLockScreenShowHideWithTSOff ()
     lockScreen ();
 
     /*
-     * Then unlocking the screen again so the lockscreenUI will be visible.
+     * Then turning on the screen again so the lockscreenUI will be visible.
      */
     QVERIFY(m_XChecker.turnOnDisplay ());
     QTest::qWait (DelayBetweenTests);
