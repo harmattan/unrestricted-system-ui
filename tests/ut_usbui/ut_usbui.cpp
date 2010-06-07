@@ -30,6 +30,16 @@
 
 using namespace Maemo;
 
+bool MNotification::publish()
+{
+    return true;
+}
+
+bool MNotification::isPublished() const
+{
+    return true;
+}
+
 int   argc = 1;
 char *argv[] = {
     (char *) "./ut_usbui",
