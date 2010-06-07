@@ -3,7 +3,7 @@ include(../mconfig.pri)
 MOC_DIR = .moc
 MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
-QMAKE_RPATH = -Wl
+QMAKE_LFLAGS_RPATH = -Wl
 
 TEMPLATE = app
 TARGET = sysuid
