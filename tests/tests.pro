@@ -1,4 +1,12 @@
 TEMPLATE = subdirs
+
+#
+# Please note that there are several ways to temprorarily disable one or more
+# tests. Using the new XML generator script it is possible to put a 'disabled'
+# or a 'deleted' file into the test directory, so the test will still be
+# compiled but left out from the xml (or the insignificant property will be set
+# using the 'disabled' file).
+#
 SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | grep -v ut_template | grep -v ut_statusindicatormenuwindow | sed 's!/.*!!')
 
 QMAKE_STRIP = echo
