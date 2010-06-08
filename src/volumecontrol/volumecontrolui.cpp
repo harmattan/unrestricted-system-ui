@@ -8,7 +8,7 @@
 VolumeControlUI::VolumeControlUI (QObject *parent) :
     QObject (parent),
     m_logic (new VolumeBarLogic),
-    m_overlay (new VolumeOverlay),
+    m_overlay (0),
     m_hwkeys (0)
 {
     SYS_DEBUG ("");
@@ -90,6 +90,14 @@ VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
 
     // This sets the volume and update the slider ...
     overlayChanged (current_volume);
+
+    if (m_overlay == 0)
+    {
+        m_overlay = new VolumeOverlay;
+
+        connect (m_overlay, SIGNAL (VolumeChanged (int)),
+                 this, SLOT (overlayChanged (int)));
+    }
     // ... and show the overlay
     m_overlay->UpdateVolume (current_volume, max_volume);
 }

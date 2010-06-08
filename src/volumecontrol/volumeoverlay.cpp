@@ -1,11 +1,16 @@
 #include "volumeoverlay.h"
+
+#include <QTimer>
+#include <QRegion>
+#include <QPointF>
+#include <QSizeF>
+
 #include <MSceneWindow>
 #include <MImageWidget>
 #include <MApplication>
 #include <MSceneManager>
 #include <QGraphicsLinearLayout>
 #include <MSlider>
-#include <QTimer>
 
 #undef DEBUG
 #include "../debug.h"
@@ -41,7 +46,7 @@ VolumeOverlay::constructUi ()
     QGraphicsLinearLayout *layout =
         new QGraphicsLinearLayout;
 
-    m_slider = new MSlider (this);
+    m_slider = new MSlider;
 
     m_slider->setOrientation (Qt::Vertical);
     m_slider->setMaxLabelIconID (QString ("icon-m-common-volume"));
@@ -63,6 +68,10 @@ VolumeOverlay::constructUi ()
     m_window = new MWindow (new MSceneManager);
     m_window->setTranslucentBackground (true);
     m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification);
+
+    // maybe this call helps:
+    m_window->sceneManager ()->appearSceneWindowNow (this);
+    m_window->sceneManager ()->disappearSceneWindowNow (this);
 
     connect (m_window,
              SIGNAL (orientationChanged (M::Orientation)),
@@ -95,7 +104,8 @@ VolumeOverlay::UpdateVolume (int val, int max)
     {
         m_window->show ();
         m_window->showFullScreen ();
-        appear (m_window, MSceneWindow::KeepWhenDone);
+        m_window->sceneManager ()->appearSceneWindow (this);
+
     }
 
     m_timer->start ();
@@ -105,7 +115,7 @@ void
 VolumeOverlay::hideMe ()
 {
     m_timer->stop ();
-    disappear ();
+    m_window->sceneManager ()->disappearSceneWindow (this);
     m_window->hide ();
 }
 
@@ -114,11 +124,35 @@ VolumeOverlay::orientationChanged (M::Orientation orientation)
 {
     QSize viewport (m_window->visibleSceneSize (orientation));
 
-    m_slider->setPreferredHeight (viewport.height ());
+    m_slider->setPreferredHeight (viewport.height () < viewport.width () ?
+                                  viewport.height () : viewport.width ());
 
     if (orientation == M::Landscape)
-        m_window->setAlignment (Qt::AlignLeft);
+        setPos (QPointF (0., 0.));
     else // Portrait
-        m_window->setAlignment (Qt::AlignRight);
+        setPos (QPointF (viewport.width () - preferredWidth (), 0.));
+
+    // This breaks the rotation somehow... so disabled for a while...
+#if 0
+    // Set up window mask so that mouse events are passed on to lower widgets.
+    if (m_window->orientation () == M::Landscape)
+    {
+        QRegion region(QRect(0, 0,
+                             preferredSize ().width (),
+                             preferredSize ().height ()),
+                             QRegion::Rectangle);
+        m_window->setMask(region);
+    }
+    else
+    {
+        QRegion region(QRect(0, 0,
+                             preferredSize ().height (),
+                             preferredSize ().width ()),
+                             QRegion::Rectangle);
+        m_window->setMask(region);
+    }
+
+    m_window->update ();
+#endif
 }
 

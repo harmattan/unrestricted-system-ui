@@ -28,7 +28,7 @@
 #define EVENT_CALL  "x-nokia.call"
 #define EVENT_IM    "im.received"
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 UnlockNotificationSink::UnlockNotificationSink () :
@@ -86,31 +86,8 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
 void
 UnlockNotificationSink::addNotification (const Notification &notification)
 {
-#if 0
-    // Debug (verbose)
+    QString lastSummary;
 
-    SYS_DEBUG ("group-id = %d", notification.groupId ());
-    SYS_DEBUG ("user-id = %d", notification.userId ());
-
-    SYS_DEBUG ("event-type = \"%s\"", SYS_STR(notification.parameters ().value 
-        (GenericNotificationParameterFactory::eventTypeKey ()).toString ()));
-    SYS_DEBUG ("class = \"%s\"", SYS_STR(notification.parameters ().value 
-        (GenericNotificationParameterFactory::classKey ()).toString ()));
-
-    if (! notification.parameters ().value 
-           (NotificationWidgetParameterFactory::actionKey ()).isNull ())
-        SYS_DEBUG ("action = \"%s\"", SYS_STR(notification.parameters ().value 
-           (NotificationWidgetParameterFactory::actionKey ()).toString ()));
-    else
-        SYS_DEBUG ("action = {empty} [[[no action set]]]");
-
-    if (! notification.parameters ().value 
-           (NotificationWidgetParameterFactory::bodyKey ()).isNull ())
-        SYS_DEBUG ("body = \"%s\"", SYS_STR(notification.parameters ().value 
-           (NotificationWidgetParameterFactory::bodyKey ()).toString ()));
-    else
-        SYS_DEBUG ("body = {empty} [[[no action set]]]");
-#endif
     QString event_type =
         notification.parameters ().value (
             GenericNotificationParameterFactory::eventTypeKey ()).toString ();
@@ -124,10 +101,22 @@ UnlockNotificationSink::addNotification (const Notification &notification)
     else if (event_type == EVENT_IM)
         m_im++;
     else
-    {
-        // Sorry, too much debug messages.
-        //SYS_WARNING ("What about event-type: \"%s\" ?", SYS_STR (event_type));
         return;
+
+    if (! notification.parameters ().value
+           (NotificationWidgetParameterFactory::bodyKey ()).isNull ())
+    {
+        // Extracting summary part from the body text...
+        QString body = notification.parameters ().value (
+            NotificationWidgetParameterFactory::bodyKey ()).toString ();
+
+        // NotificationParameters makes the body-text from the summary and body
+        // part of the notification, so here i have to extract only the summary:
+        if (body.startsWith ("<p><b>") && (body.indexOf ("</b></p>") != -1))
+        {
+            lastSummary = body.mid (6, body.indexOf ("</b></p>") - 6);
+            SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
+        }
     }
 
     emit updateNotificationsCount (m_emails, m_messages, m_calls, m_im);
@@ -139,6 +128,5 @@ UnlockNotificationSink::removeNotification (uint notificationId)
     Q_UNUSED (notificationId);
 
     // No operation here...
-    // FIXME: do i need to do anything here?
 }
 

@@ -30,7 +30,7 @@
 #include <QTimer>
 #include <QProcess>
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
