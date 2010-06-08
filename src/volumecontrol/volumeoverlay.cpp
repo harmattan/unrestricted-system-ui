@@ -91,9 +91,12 @@ VolumeOverlay::UpdateVolume (int val, int max)
 
     setOpacity (1.0);
 
-    m_window->show ();
-    m_window->showFullScreen ();
-    appear (m_window, MSceneWindow::KeepWhenDone);
+    if (m_window->isVisible () == false)
+    {
+        m_window->show ();
+        m_window->showFullScreen ();
+        appear (m_window, MSceneWindow::KeepWhenDone);
+    }
 
     m_timer->start ();
 }
