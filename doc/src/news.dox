@@ -1,5 +1,25 @@
 /*! \page news What's New in System UI
 
+\section v0160 0.16.0
+
+\subsection New
+
+- New status indicator menu layout
+
+\subsection Fixed
+
+- Battery indicator doesn't show the battery capacity correctly
+- Enabling 'auto activate power save' does not enable automatic PSM
+- No vibration happens when pressing the power key to switch off device
+- Power save mode logic problems
+- /system/osso/dsm/energymanagement/force_power_saving turns to true at some point
+- Sysuid must implement -prestart parameter
+- No 'Disconnect charger...' banner after disconnecting the dedicated charger
+- Clock in status area showing Arabic number
+- sysuid generates xdamages in blank screen and keypad locked
+- event eater not functioning properly (symptom: display looks blanked when dimmed)
+- Lock screen and event eater windows should not be visible in the switcher
+
 \section v0156 0.15.6
 
 \subsection New
