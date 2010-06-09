@@ -6,7 +6,7 @@ system-ui (0.16.0~3) harmattan; urgency=low
                        automatic PSM
   * Fixes: NB#164195 - No vibration happens when pressing the power key
                        to switch off device.
-  * Fixes: NB#169777 - Power save mode logic problems
+  * Fixed NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
   * Fixes: NB#169865 - Sysuid must implement -prestart parameter
