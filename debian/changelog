@@ -1,12 +1,19 @@
-system-ui (0.16.0~3) harmattan; urgency=low
+system-ui (0.16.0~2) harmattan; urgency=low
 
+  * [UNRELEASED]
+
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Wed, 09 Jun 2010 12:32:00 +0300
+
+system-ui (0.16.0-1) harmattan; urgency=low
+
+  * Implemented: SWP#DUI-3084 Change the layout of Status Menu
   * Fixes: NB#159315 - Battery indicator doesn't show the battery capacity 
                        correctly
   * Fixes: NB#169297 - Enabling 'auto activate power save' does not enable 
                        automatic PSM
   * Fixes: NB#164195 - No vibration happens when pressing the power key
                        to switch off device.
-  * Fixes: NB#169777 - Power save mode logic problems
+  * Fixed NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
   * Fixes: NB#169865 - Sysuid must implement -prestart parameter
@@ -17,8 +24,10 @@ system-ui (0.16.0~3) harmattan; urgency=low
     locked
   * Fixes: NB#169533 - event eater not functioning properly (symptom:
                        display looks blanked when dimmed)
+  * Fixes: NB#168421 - Lock screen and event eater windows should not be
+                       visible in the switcher
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 07 Jun 2010 16:24:00 +0300
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Wed, 09 Jun 2010 12:06:00 +0300
 
 system-ui (0.15.13-1) harmattan; urgency=low
 
