@@ -1,3 +1,9 @@
+system-ui (0.16.0~2) harmattan; urgency=low
+
+  * [UNRELEASED]
+
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Wed, 09 Jun 2010 12:32:00 +0300
+
 system-ui (0.16.0-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-3084 Change the layout of Status Menu
