@@ -17,6 +17,8 @@ system-ui (0.16.0~3) harmattan; urgency=low
     locked
   * Fixes: NB#169533 - event eater not functioning properly (symptom:
                        display looks blanked when dimmed)
+  * Fixes: NB#168421 - Lock screen and event eater windows should not be
+                       visible in the switcher
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 07 Jun 2010 16:24:00 +0300
 
