@@ -6,7 +6,7 @@ system-ui (0.16.0~3) harmattan; urgency=low
                        automatic PSM
   * Fixes: NB#164195 - No vibration happens when pressing the power key
                        to switch off device.
-  * Fixes: NB#169777 - Power save mode logic problems
+  * Fixed NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
   * Fixes: NB#169865 - Sysuid must implement -prestart parameter
@@ -18,7 +18,7 @@ system-ui (0.16.0~3) harmattan; urgency=low
   * Fixes: NB#169533 - event eater not functioning properly (symptom:
                        display looks blanked when dimmed)
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 07 Jun 2010 16:24:00 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 09 Jun 2010 08:53:32 +0200
 
 system-ui (0.15.13-1) harmattan; urgency=low
 
