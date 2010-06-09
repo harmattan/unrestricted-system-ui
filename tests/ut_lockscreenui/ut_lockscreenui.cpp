@@ -69,9 +69,6 @@ char *argv[] = {
     (char *) "./ut_lockscreenui",
     NULL };
 
-const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
-const QString styleDir = themeDir + "style/";
-
 void Ut_LockScreenUI::initTestCase()
 {
     m_EventEaterUI = 0;
@@ -81,10 +78,6 @@ void Ut_LockScreenUI::initTestCase()
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
-
-    SYS_DEBUG ("+++ Initializing our own themes.");
-    MTheme::addPixmapDirectory (themeDir, M::Recursive);
-    MTheme::loadCSS (styleDir + "sysuid.css");
 }
 
 void 

@@ -27,17 +27,12 @@ int   argc = 1;
 char *argv[] = {
     (char *) "./ut_unlockwidgets",
     NULL };
-const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
-const QString styleDir = themeDir + "style/";
 
 MApplication    *m_App;
 
 void ut_unlockwidgets::initTestCase ()
 {
     m_App = new MApplication(argc, argv);
-
-    MTheme::addPixmapDirectory (themeDir, M::Recursive);
-    MTheme::loadCSS (styleDir + "sysuid.css");
 }
 
 void ut_unlockwidgets::cleanupTestCase ()
