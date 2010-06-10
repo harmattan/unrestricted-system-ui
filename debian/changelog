@@ -1,6 +1,7 @@
 system-ui (0.16.1~1) harmattan; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#173543 - System-ui should use system bus for libngf
 
  -- David Kedves <dkedves@blumsoft.eu>  Thu, 10 Jun 2010 08:24:42 +0200
 
