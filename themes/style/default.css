@@ -135,6 +135,11 @@ StatusIndicatorAnimationStyle:icon {
     minimum-size: 1.4mm 1.8mm;
     maximum-size: 1.4mm 1.8mm;
 }
+StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
+    preferred-size: 24 18;                           
+    minimum-size: 24 18;
+    maximum-size: 24 18;
+}
 
 StatusIndicatorLabelStyle {
     margin-left: 0;
