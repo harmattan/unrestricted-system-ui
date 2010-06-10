@@ -21,6 +21,7 @@
 
 #include "ut_lockscreenui.h"
 #include "lockscreenui.h"
+#include "unlockmissedevents_stub.h"
 #include "sysuid_stub.h"
 
 #include <MApplication>

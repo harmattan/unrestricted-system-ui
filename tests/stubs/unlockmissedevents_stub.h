@@ -28,11 +28,12 @@ class UnlockMissedEventsStub : public StubBase {
   public:
   virtual void UnlockMissedEventsConstructor();
   virtual void UnlockMissedEventsDestructor();
-  virtual void updateDateTime();
-  virtual void createContent();
-  virtual void showEvent(QShowEvent *event);
-  virtual void realize();
-  virtual void sliderUnlocked();
+  virtual void getInstance();
+  virtual void getLastType();
+  virtual void getLastSubject(int type);
+  virtual void getCount(int type);
+  virtual void addNotification(int type, QString subject);
+  virtual void clearAll();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -42,37 +43,42 @@ void UnlockMissedEventsStub::UnlockMissedEventsConstructor() {
 void UnlockMissedEventsStub::UnlockMissedEventsDestructor() {
 
 }
-void UnlockMissedEventsStub::updateDateTime() {
-  stubMethodEntered("updateDateTime");
+void UnlockMissedEventsStub::getInstance() {
+  stubMethodEntered("getInstance");
 }
-
-void UnlockMissedEventsStub::createContent() {
-  stubMethodEntered("createContent");
+void UnlockMissedEventsStub::getLastType() {
+  stubMethodEntered("getLastType");
 }
-
-void UnlockMissedEventsStub::showEvent(QShowEvent *event) {
+void UnlockMissedEventsStub::getLastSubject(int type) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<QShowEvent * >(event));
-  stubMethodEntered("showEvent",params);
+  params.append (new Parameter<int>(type));
+  stubMethodEntered("getLastSubject",params);
 }
-
-void UnlockMissedEventsStub::realize() {
-  stubMethodEntered("realize");
+void UnlockMissedEventsStub::getCount(int type) {
+  QList<ParameterBase*> params;
+  params.append (new Parameter<int>(type));
+  stubMethodEntered("getCount",params);
 }
-
-void UnlockMissedEventsStub::sliderUnlocked() {
-  stubMethodEntered("sliderUnlocked");
+void UnlockMissedEventsStub::addNotification(int type, QString subject) {
+  QList<ParameterBase*> params;
+  params.append (new Parameter<int>(type));
+  params.append (new Parameter<QString>(subject));
+  stubMethodEntered("addNotification",params);
 }
-
-
+void UnlockMissedEventsStub::clearAll() {
+  stubMethodEntered("clearAll");
+}
 
 // 3. CREATE A STUB INSTANCE
 UnlockMissedEventsStub gDefaultUnlockMissedEventsStub;
 UnlockMissedEventsStub* gUnlockMissedEventsStub = &gDefaultUnlockMissedEventsStub;
 
-
 // 4. CREATE A PROXY WHICH CALLS THE STUB
+
+UnlockMissedEvents UnlockMissedEvents::m_instance;
+
 UnlockMissedEvents::UnlockMissedEvents() {
+  lastType = NotifyLast; 
   gUnlockMissedEventsStub->UnlockMissedEventsConstructor();
 }
 
@@ -80,25 +86,33 @@ UnlockMissedEvents::~UnlockMissedEvents() {
   gUnlockMissedEventsStub->UnlockMissedEventsDestructor();
 }
 
-void UnlockMissedEvents::updateDateTime() {
-  gUnlockMissedEventsStub->updateDateTime();
+UnlockMissedEvents& UnlockMissedEvents::getInstance()
+{
+  gUnlockMissedEventsStub->getInstance();
+  return m_instance;
 }
 
-void UnlockMissedEvents::createContent() {
-  gUnlockMissedEventsStub->createContent();
+UnlockMissedEvents::Types UnlockMissedEvents::getLastType() {
+  gUnlockMissedEventsStub->getLastType();
+  return lastType;
 }
 
-void UnlockMissedEvents::showEvent(QShowEvent *event) {
-  gUnlockMissedEventsStub->showEvent(event);
+QString UnlockMissedEvents::getLastSubject(Types atype) {
+  gUnlockMissedEventsStub->getLastSubject((int) atype);
+  return QString ("");
 }
 
-void UnlockMissedEvents::realize() {
-  gUnlockMissedEventsStub->realize();
+int UnlockMissedEvents::getCount(Types atype) {
+  gUnlockMissedEventsStub->getCount ((int) atype);
+  return 1;
 }
 
-void UnlockMissedEvents::sliderUnlocked() {
-  gUnlockMissedEventsStub->sliderUnlocked();
+void UnlockMissedEvents::addNotification(Types type, QString subject) {
+  gUnlockMissedEventsStub->addNotification((int) type, subject);
 }
 
+void UnlockMissedEvents::clearAll() {
+  gUnlockMissedEventsStub->clearAll();
+}
 
 #endif

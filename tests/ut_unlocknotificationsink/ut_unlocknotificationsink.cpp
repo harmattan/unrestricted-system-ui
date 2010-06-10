@@ -22,6 +22,7 @@
 #include <genericnotificationparameterfactory.h>
 
 #include "ut_unlocknotificationsink.h"
+#include "unlockmissedevents_stub.h"
 
 #include <QtTest/QtTest>
 #include <MApplication>

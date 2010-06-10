@@ -1,12 +1,13 @@
 include(../common_top.pri)
 
 TARGET = ut_unlocknotificationsink
-INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR
+INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR $$STUBSDIR
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 SOURCES += ut_unlocknotificationsink.cpp \
     $$SRCDIR/unlocknotificationsink.cpp \
     $$SRCDIR/debug.cpp \
+    $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/notifications/notificationsink.cpp \
     $$SRCDIR/notifications/notification.cpp \
     $$SRCDIR/notifications/notificationgroup.cpp \
@@ -16,6 +17,8 @@ SOURCES += ut_unlocknotificationsink.cpp \
 HEADERS += ut_unlocknotificationsink.h \
     $$SRCDIR/unlocknotificationsink.h \
     $$SRCDIR/debug.h \
+    $$SRCDIR/unlockmissedevents.h \
+    $$STUBSDIR/unlockmissedevents_stub.h \
     $$SRCDIR/notifications/notificationsink.h \
     $$SRCDIR/notifications/notification.h \
     $$SRCDIR/notifications/notificationgroup.h \

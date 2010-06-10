@@ -57,13 +57,3 @@ UnlockArea::setActive (bool active)
     Q_UNUSED(active);
 }
 
-UnlockNotifications::UnlockNotifications ()
-{
-
-}
-
-UnlockNotifications::~UnlockNotifications ()
-{
-
-}
-

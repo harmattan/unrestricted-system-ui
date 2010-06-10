@@ -16,6 +16,7 @@ SOURCES += ft_lockscreenui.cpp \
     $$SRC_PREFIX/unlockwidgets.cpp \
     $$SRC_PREFIX/lockscreenui.cpp  \
     $$STUB_PREFIX/stubbase.cpp \
+    $$SRC_PREFIX/unlockmissedevents.cpp \
     $$SRC_PREFIX/unlocknotifications.cpp
 
 HEADERS += ft_lockscreenui.h \
@@ -24,6 +25,7 @@ HEADERS += ft_lockscreenui.h \
     $$SRC_PREFIX/unlockwidgets.h \
     $$SRC_PREFIX/lockscreenui.h \
     $$SRC_PREFIX/sysuid.h \
+    $$SRC_PREFIX/unlockmissedevents.h \
     $$SRC_PREFIX/unlocknotifications.h
 
 include(../common_bot.pri)

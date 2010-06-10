@@ -21,6 +21,8 @@ HEADERS += ut_lockscreenui.h \
     $$SRC_PREFIX/unlockwidgets.h \
     $$SRC_PREFIX/lockscreenui.h \
     $$SRC_PREFIX/sysuid.h \
+    $$SRC_PREFIX/unlockmissedevents.h \
+    $$STUB_PREFIX/unlockmissedevents_stub.h \
     $$SRC_PREFIX/unlocknotifications.h
 
 include(../common_bot.pri)

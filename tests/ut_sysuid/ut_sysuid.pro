@@ -57,6 +57,7 @@ HEADERS += \
     $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/unlocknotifications.h \
     $$SRCDIR/unlocknotificationsink.h \
+    $$SRCDIR/unlockmissedevents.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
@@ -75,6 +76,8 @@ HEADERS += \
     $$STUBSDIR/eventtypestore_stub.h \
     $$STUBSDIR/notificationmanager_stub.h \
     $$STUBSDIR/statusarearenderer_stub.h \
+    $$STUBSDIR/unlocknotifications_stub.h \
+    $$STUBSDIR/unlockmissedevents_stub.h \
     $$STUBSDIR/unlockwidgets_stub.h
 
 include(../common_bot.pri)

@@ -34,6 +34,8 @@
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 #include "mcompositornotificationsink_stub.h"
+#include "unlocknotifications_stub.h"
+#include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
 

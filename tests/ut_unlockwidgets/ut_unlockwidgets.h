@@ -34,7 +34,6 @@ private slots:
 
     void test_unlock_header ();
     void test_unlock_area ();
-    void test_unlock_missedevents ();
 };
 #endif
 

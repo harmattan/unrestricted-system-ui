@@ -93,15 +93,5 @@ void ut_unlockwidgets::test_unlock_area ()
     delete area;
 }
 
-void ut_unlockwidgets::test_unlock_missedevents ()
-{
-    UnlockNotifications *missedEvents =
-        new UnlockNotifications;
-
-    // TODO: how this can be tested properly?
-
-    delete missedEvents;
-}
-
 QTEST_APPLESS_MAIN (ut_unlockwidgets)
 
