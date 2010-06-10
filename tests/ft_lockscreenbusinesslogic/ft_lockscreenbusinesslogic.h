@@ -41,7 +41,6 @@ private slots:
 
     void testLockScreenBusinessLogic ();
     void testLockScreenBusinessLogicWithMainWindow ();
-    void testLockScreenBusinessLogicMissedEvents ();
     void testLockScreenBusinessLogicWithLocking ();
 
 private:

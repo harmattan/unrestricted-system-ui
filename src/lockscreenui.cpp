@@ -41,7 +41,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -254,7 +254,6 @@ LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 void
 LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
 {
-    SYS_DEBUG ("");
     Q_UNUSED (event);
 
     if (m_DnDstate == STATE_NONE)
@@ -367,12 +366,12 @@ LockScreenUI::realize ()
 
     /*
      * The topmost part of the lock-screen ui
-     * (this one is optional, based on missed events count)
-     * see: updateMissedEvents
+     * (this one is optional, based on missed events)
      */
     m_notificationArea = new UnlockNotifications;
+    m_policy->addItem (m_notificationArea);
 
-    m_notificationArea->setVisible (false);
+    // m_notificationArea->setVisible (false);
     /*
      * The upper part of the lock-screen ui, this shows the
      * big lock icon at right side, and the date/time at left side
@@ -416,7 +415,9 @@ LockScreenUI::updateDateTime ()
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
 }
 
-
+// TODO: UnlockNotifications should emit some signal when it wants to be visible...
+//       [or maybe i could use the visibility change signal??? XXX: FIXME]
+#if 0
 void
 LockScreenUI::updateMissedEvents (int emails,
                                   int messages,
@@ -448,6 +449,7 @@ LockScreenUI::updateMissedEvents (int emails,
         }
     }
 }
+#endif
 
 void 
 LockScreenUI::showEvent (

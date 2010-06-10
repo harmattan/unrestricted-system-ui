@@ -38,7 +38,6 @@ private slots:
     void testToggleEventEater();
     void testUnlockScreen();
     void testHideEventEater();
-    void testUpdateMissedEvents();
     void testDisplayStateChanged();
 
 private:

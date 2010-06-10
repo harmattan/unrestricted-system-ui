@@ -2,9 +2,9 @@
 #define UNLOCKNOTIFICATIONS_H
 
 #include <QObject>
+#include <QHash>
 #include <MSceneWindow>
 
-class QPixmap;
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
@@ -13,29 +13,43 @@ class UnlockNotifications : public MSceneWindow
 {
     Q_OBJECT
 
-    enum {
-        NOTIFY_CALLS = 0,
-        NOTIFY_SMS,
-        NOTIFY_EMAIL,
-        NOTIFY_CHAT,
-        NOTIFY_LAST
-    };
-
 public:
     UnlockNotifications ();
     virtual ~UnlockNotifications ();
 
-public slots:
-    void updateMissedEvents (int emails,
-                             int messages,
-                             int calls,
-                             int im);
+signals:
+    void needToShow (bool visible);
+
+private slots:
+    void updateContents ();
+
+protected:  
+    virtual void orientationChangeEvent (MOrientationChangeEvent *event);
+    virtual QSizeF sizeHint (Qt::SizeHint which,
+                             const QSizeF& constraint = QSizeF()) const;
 
 private:
-    QPixmap                 *m_background;
-    MLabel                  *m_labels [NOTIFY_LAST];
-    MImageWidget            *m_icons [NOTIFY_LAST];
-    QGraphicsLinearLayout   *m_layout;
+    /*
+     * for other events area:
+     */
+    QHash<int, MLabel *>         m_labels;
+    QHash<int, MImageWidget *>   m_icons;
+    QHash<int, QString>          m_icon_ids;
+    QGraphicsLinearLayout       *m_icon_layout;
+
+    MSceneWindow                *m_otherevents_area;
+    /*
+     * for most recent event area:
+     */
+    MLabel                      *m_last_subject;
+    MImageWidget                *m_last_icon;
+    QGraphicsLinearLayout       *m_mostrecent_layout;
+
+    MSceneWindow                *m_mostrecent_area;
+    /*
+     * main vbox
+     */
+    QGraphicsLinearLayout       *m_vbox;
 };
 
 

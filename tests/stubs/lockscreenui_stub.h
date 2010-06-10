@@ -30,7 +30,6 @@ class LockScreenUIStub : public StubBase {
   virtual void LockScreenUIConstructor();
   virtual void LockScreenUIDestructor();
   virtual void updateDateTime();
-  virtual void updateMissedEvents(int emails, int messages, int calls, int im);
   virtual void createContent();
   virtual void showEvent(QShowEvent *event);
   virtual void realize();
@@ -46,15 +45,6 @@ void LockScreenUIStub::LockScreenUIDestructor() {
 }
 void LockScreenUIStub::updateDateTime() {
   stubMethodEntered("updateDateTime");
-}
-
-void LockScreenUIStub::updateMissedEvents(int emails, int messages, int calls, int im) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<int >(emails));
-  params.append( new Parameter<int >(messages));
-  params.append( new Parameter<int >(calls));
-  params.append( new Parameter<int >(im));
-  stubMethodEntered("updateMissedEvents",params);
 }
 
 void LockScreenUIStub::createContent() {
@@ -93,10 +83,6 @@ LockScreenUI::~LockScreenUI() {
 
 void LockScreenUI::updateDateTime() {
   gLockScreenUIStub->updateDateTime();
-}
-
-void LockScreenUI::updateMissedEvents(int emails, int messages, int calls, int im) {
-  gLockScreenUIStub->updateMissedEvents(emails, messages, calls, im);
 }
 
 void LockScreenUI::createContent() {

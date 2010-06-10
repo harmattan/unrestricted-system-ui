@@ -3,14 +3,60 @@ MSceneWindowStyle#LockScreenWindow {
     horizontal-align: left;
 }
 
-MSceneWindowStyle#LockNotifications {
+MSceneWindowStyle#LockMostRecentArea {
+    background-image: "lockscreen-recent-event-area-background" 0 0 0 0;
+    background-opacity: 1.0;
+
+    padding-top: 0.8mm;
+    minimum-size: 100% 7.9mm;
+    preferred-size: 100% 7.9mm;
+    maximum-size: 100% 7.9mm;
+}
+
+MLabelStyle#LockMostRecentLabel {
+    color: $COLOR_INVERTED_FOREGROUND;
+    font: "Nokia Standard Bold" 28;
+    /* or "Nokia Standard Light" ??? */
+    margin-top: 1.4mm;
+    margin-left: 2.9mm;
+    margin-right: $MARGIN_XLARGE;
+}
+
+MImageWidgetStyle#LockMostRecentIcon {
+    margin-top: 1.4mm;
+    margin-left: 2.9 mm;
+    margin-right: $MARGIN_DOUBLE;
+
+    minimum-size: 3.6mm 3.6mm;
+    preferred-size: 3.6mm 3.6mm;
+    maximum-size: 3.6mm 3.6mm;
+}
+
+MSceneWindowStyle#LockOtherEventsArea {
     background-image: "lockscreen-notification-area-background" 0 0 0 0;
     background-opacity: 1.0;
 
-    minimum-size: 100% 7mm;
-    preferred-size: 100% 7mm;
+    minimum-size: 100% 4.9mm;
     maximum-size: 100% 7mm;
 }
+
+MImageWidgetStyle#LockNotifierIcon {
+    margin-top: 1.4mm;
+    margin-left: 2.9mm;
+
+    minimum-size: 3.6mm 3.6mm;
+    preferred-size: 3.6mm 3.6mm;
+    maximum-size: 3.6mm 3.6mm;
+}
+
+MImageWidgetStyle#LockNotifierLabel {
+    font: "Nokia Standard Light" 24;
+
+    margin-top: 1.4mm;
+    margin-left: $MARGIN_LARGE;
+    margin-right: $MARGIN_DOUBLE;
+}
+
 
 MSceneWindowStyle#LockLiftArea {
     background-image: "lockscreen-lock-lift-area-background" 0 380 0 0;

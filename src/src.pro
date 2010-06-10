@@ -39,6 +39,7 @@ HEADERS +=                              \
     applicationcontext.h                \
     unlocknotifications.h               \
     unlocknotificationsink.h            \
+    unlockmissedevents.h                \
     unlockwidgets.h                     \
     x11wrapper.h
 
@@ -59,6 +60,7 @@ SOURCES +=                              \
     contextframeworkcontext.cpp         \
     unlocknotifications.cpp             \
     unlocknotificationsink.cpp          \
+    unlockmissedevents.cpp              \
     unlockwidgets.cpp                   \
     x11wrapper.cpp
 

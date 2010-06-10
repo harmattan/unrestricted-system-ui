@@ -133,11 +133,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
         SYS_WARNING ("Lock Screen Logic isn't created! [unit test ?]");
     else
     {
-        connect (m_unlockNotificationSink,
-                 SIGNAL (updateNotificationsCount (int, int, int, int)),
-                 m_sysuidRequest->getLockScreenLogic (),
-                 SLOT (updateMissedEvents (int, int, int, int)));
-
         connect (m_sysuidRequest->getLockScreenLogic (),
                  SIGNAL (screenIsLocked (bool)),
                  m_unlockNotificationSink,

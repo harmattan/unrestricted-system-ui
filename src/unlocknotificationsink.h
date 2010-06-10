@@ -14,9 +14,6 @@ public:
 public slots:
     void setLockedState (bool islocked);
 
-signals:
-    void updateNotificationsCount (int emails, int messages, int calls, int im);
-
 protected slots:
     virtual void addNotification (const Notification &notification);
     virtual void removeNotification (uint notificationId);
@@ -26,10 +23,6 @@ protected:
 
 private:
     bool             m_enabled;
-    int              m_emails;
-    int              m_messages;
-    int              m_calls;
-    int              m_im;
 
 #ifdef UNIT_TEST
 friend class Ut_UnlockNotificationSink;

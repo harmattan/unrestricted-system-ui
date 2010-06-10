@@ -27,7 +27,7 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 #include <X11/Xlib.h>
@@ -197,26 +197,6 @@ LockScreenBusinessLogic::mayStopTimer ()
 
     SYS_DEBUG ("Stopping timer");
     timer.stop ();
-}
-
-void
-LockScreenBusinessLogic::updateMissedEvents (
-    int emails,
-    int messages,
-    int calls,
-    int im)
-{
-    #if 0
-    /*
-     * Sorry too much debug messages.
-     */
-    SYS_DEBUG ("*** emails   = %d", emails);
-    SYS_DEBUG ("*** messages = %d", messages);
-    SYS_DEBUG ("*** calls    = %d", calls);
-    SYS_DEBUG ("*** im       = %d", im);
-    #endif
-
-    lockUI->updateMissedEvents (emails, messages, calls, im);
 }
 
 bool 

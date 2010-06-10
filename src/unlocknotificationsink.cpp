@@ -19,6 +19,7 @@
 **
 ****************************************************************************/
 #include "unlocknotificationsink.h"
+#include "unlockmissedevents.h"
 #include "notifications/genericnotificationparameterfactory.h"
 #include "notifications/notificationwidgetparameterfactory.h"
 
@@ -32,11 +33,7 @@
 #include "debug.h"
 
 UnlockNotificationSink::UnlockNotificationSink () :
-    m_enabled (false),
-    m_emails (0),
-    m_messages (0),
-    m_calls (0),
-    m_im (0)
+    m_enabled (false)
 {
     SYS_DEBUG ("");
 }
@@ -50,15 +47,7 @@ UnlockNotificationSink::setLockedState (bool islocked)
     // Set the internal state
     m_enabled = islocked;
 
-    // Clear previous missed events
-    m_emails = 0;
-    m_messages = 0;
-    m_calls = 0;
-    m_im = 0;
-
-    // Emit the notification-count update signal,
-    // in this way ui can hide the previous ones...
-    emit updateNotificationsCount (m_emails, m_messages, m_calls, m_im);
+    UnlockMissedEvents::getInstance ().clearAll ();
 }
 
 bool
@@ -68,6 +57,9 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
     if (m_enabled == false)
         return false;
 
+// FIXME: Need to be determined what type of notification should
+//        be visible in unlockscreen... For now only email, sms, 
+//        call and instant message will be shown...
     bool retval = false;
 
     QString event_type =
@@ -87,21 +79,20 @@ void
 UnlockNotificationSink::addNotification (const Notification &notification)
 {
     QString lastSummary;
+    UnlockMissedEvents::Types type = UnlockMissedEvents::NotifyOther;
 
     QString event_type =
         notification.parameters ().value (
             GenericNotificationParameterFactory::eventTypeKey ()).toString ();
 
     if (event_type == EVENT_EMAIL)
-        m_emails++;
+        type = UnlockMissedEvents::NotifyEmail;
     else if (event_type == EVENT_MSG)
-        m_messages++;
+        type = UnlockMissedEvents::NotifySms;
     else if (event_type == EVENT_CALL)
-        m_calls++;
+        type = UnlockMissedEvents::NotifyCall;
     else if (event_type == EVENT_IM)
-        m_im++;
-    else
-        return;
+        type = UnlockMissedEvents::NotifyMessage;
 
     if (! notification.parameters ().value
            (NotificationWidgetParameterFactory::bodyKey ()).isNull ())
@@ -119,7 +110,10 @@ UnlockNotificationSink::addNotification (const Notification &notification)
         }
     }
 
-    emit updateNotificationsCount (m_emails, m_messages, m_calls, m_im);
+    // FIXME: if lastSummary is empty, at least some text eg.: E-mail arrived
+    // should be shown in unlockscreen window
+
+    UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
 }
 
 void

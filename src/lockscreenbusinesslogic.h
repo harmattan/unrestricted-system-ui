@@ -42,10 +42,6 @@ public:
 public slots:
     void toggleScreenLockUI (bool toggle);
     void toggleEventEater   (bool toggle);
-    void updateMissedEvents (int emails,
-                             int messages,
-                             int calls,
-                             int im);
 
 private slots:
     void unlockScreen();

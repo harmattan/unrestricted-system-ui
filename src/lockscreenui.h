@@ -104,10 +104,6 @@ signals:
 
 public slots:
     void updateDateTime ();
-    void updateMissedEvents (int emails,
-                             int messages,
-                             int calls,
-                             int im);
 
 protected:
     void createContent ();

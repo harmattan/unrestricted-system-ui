@@ -156,17 +156,6 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
     QCOMPARE(logic.eaterUI->isVisible(), false);
 }
 
-void Ut_LockScreenBusinessLogic::testUpdateMissedEvents()
-{
-    LockScreenBusinessLogic logic;
-    logic.updateMissedEvents(0, 1, 2, 3);
-    QCOMPARE(gLockScreenUIStub->stubCallCount("updateMissedEvents"), 1);
-    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(0), 0);
-    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(1), 1);
-    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(2), 2);
-    QCOMPARE(gLockScreenUIStub->stubLastCallTo("updateMissedEvents").parameter<int>(3), 3);
-}
-
 void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 {
     LockScreenBusinessLogic logic;

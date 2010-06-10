@@ -19,99 +19,226 @@
 **
 ****************************************************************************/
 #include "unlocknotifications.h"
+#include "unlockmissedevents.h"
 
 #include <QGraphicsLinearLayout>
 #include <MLabel>
 #include <QPixmap>
 #include <MImageWidget>
+#include <MSceneManager>
+#include <MOrientationChangeEvent>
+
+#define DEBUG
+#include "debug.h"
 
 UnlockNotifications::UnlockNotifications ()
 {
-    m_layout = new QGraphicsLinearLayout (Qt::Horizontal);
-    m_layout->addStretch (25);
+    m_icon_ids[UnlockMissedEvents::NotifyEmail] =
+        QString ("icon-m-content-email");
+    m_icon_ids[UnlockMissedEvents::NotifySms] =
+        QString ("icon-m-content-sms");
+    m_icon_ids[UnlockMissedEvents::NotifyMessage] =
+        QString ("icon-m-content-chat");
+    m_icon_ids[UnlockMissedEvents::NotifyCall] =
+        QString ("icon-m-content-call");
+    m_icon_ids[UnlockMissedEvents::NotifyOther] =
+        QString ("icon-m-content-event");
 
-    for (int i = 0; i < NOTIFY_LAST; i++)
-    {
-        m_labels [i] = new MLabel;
-        m_labels [i]->setVisible (false);
-        m_icons [i] = new MImageWidget;
-        m_icons [i]->setVisible (false);
-    }
+ /*
+  * Create the "other events area"
+  */
+    m_otherevents_area = new MSceneWindow;
+    m_otherevents_area->setObjectName ("LockOtherEventsArea");
+    m_otherevents_area->setContentsMargins (0., 0., 0., 0.);
 
-    m_icons [NOTIFY_CALLS]->setImage ("icon-m-content-call", QSize (32, 32));
-    m_icons [NOTIFY_SMS]->setImage ("icon-m-content-sms", QSize (32, 32));
-    m_icons [NOTIFY_EMAIL]->setImage ("icon-m-content-email", QSize (32, 32));
-    m_icons [NOTIFY_CHAT]->setImage ("icon-m-content-chat", QSize (32, 32));
+    m_icon_layout = new QGraphicsLinearLayout (Qt::Horizontal);
+    m_icon_layout->setContentsMargins (0., 0., 0., 0.);
 
-    setLayout (m_layout);
+    m_otherevents_area->setLayout (m_icon_layout);
 
-    setObjectName ("LockNotifications");
+ /*
+  * Create the "most recent notification" layout
+  */
+    m_mostrecent_layout = new QGraphicsLinearLayout (Qt::Horizontal);
+    /* Everything came from CSS, no need for default margins */
+    m_mostrecent_layout->setContentsMargins (0., 0., 0., 0.);
+ 
+    m_last_icon = new MImageWidget;
+    m_last_icon->setObjectName ("LockMostRecentIcon");
+
+    m_last_subject = new MLabel;
+    m_last_subject->setObjectName ("LockMostRecentLabel");
+    m_last_subject->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Maximum);
+
+    /* We have to add the last icon / subject to the other events area at first,
+     * because the scene-window orientation is landscape by default... */
+    m_icon_layout->addItem (m_last_icon);
+    m_icon_layout->addItem (m_last_subject),
+
+ /*
+  * Create the "most recent area"
+  */
+    m_mostrecent_area = new MSceneWindow;
+    m_mostrecent_area->setObjectName ("LockMostRecentArea");
+    m_mostrecent_area->setContentsMargins (0., 0., 0., 0.);
+
+    m_mostrecent_area->setLayout (m_mostrecent_layout);
+    m_mostrecent_area->setVisible (false);
+
+ /*
+  * Create the main vertical box
+  */
+    m_vbox = new QGraphicsLinearLayout (Qt::Vertical);
+    m_vbox->setContentsMargins (0., 0., 0., 0.);
+    m_vbox->setSpacing (0.);
+
+ /*
+  * And add the "persistent item" the other events area to it
+  */
+    m_vbox->addItem (m_otherevents_area);
+
+    setLayout (m_vbox);
+
+    connect (&UnlockMissedEvents::getInstance (), SIGNAL (updated ()),
+             this, SLOT (updateContents ()));
 }
 
 UnlockNotifications::~UnlockNotifications ()
 {
-    for (int i = 0; i < NOTIFY_LAST; i++)
-    {
-        delete m_labels [i];
-        delete m_icons [i];
-    }
+    m_labels.clear ();
+    m_icon_ids.clear ();
+}
+
+QSizeF
+UnlockNotifications::sizeHint (Qt::SizeHint which,
+                               const QSizeF& constraint) const
+{
+    /*
+     * forward sizeHint queries to main vbox
+     */
+    return m_vbox->sizeHint (which, constraint);
 }
 
 void
-UnlockNotifications::updateMissedEvents (int emails,
-                                         int messages,
-                                         int calls,
-                                         int im)
+UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
 {
-    for (int i = 0; i < NOTIFY_LAST; i++)
+    if (event->orientation () == M::Landscape)
     {
-        // First hide everything...
-        m_icons [i]->setVisible (false);
-        m_labels [i]->setVisible (false);
+        /*
+         * Remove & hide the most recent area from top
+         */
+        m_vbox->removeItem (m_mostrecent_area);
+        m_mostrecent_area->setVisible (false);
+
+        /*
+         * Add most recent event widgets to other events layout
+         */
+        m_mostrecent_layout->removeItem (m_last_subject);
+        m_icon_layout->insertItem (0, m_last_subject);
+        m_mostrecent_layout->removeItem (m_last_icon);
+        m_icon_layout->insertItem (0, m_last_icon);
+
+        /*
+         * Re-size the other events area a bit bigger...
+         */
+        m_otherevents_area->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Maximum);
     }
-
-    if (calls > 0)
+    else
     {
-        m_labels[NOTIFY_CALLS]->setText (QString ("%1").arg (calls));
-        m_labels[NOTIFY_CALLS]->setVisible (true);
-        m_icons[NOTIFY_CALLS]->setVisible (true);
+        /*
+         * Remove the most recent event widgets from other events layout
+         */
+        m_icon_layout->removeItem (m_last_icon);
+        m_icon_layout->removeItem (m_last_subject);
+        m_mostrecent_layout->insertItem (0, m_last_subject);
+        m_mostrecent_layout->insertItem (0, m_last_icon);
+
+        /*
+         * Add & show the most recent area on top
+         */
+        m_vbox->insertItem (0, m_mostrecent_area);
+        m_mostrecent_area->setVisible (true);
+
+        /*
+         * Re-size the other events area to a bit smaller
+         */
+        m_otherevents_area->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Minimum);
     }
+    
+    /*
+     * to re-calculate the sizes...
+     */
+    m_vbox->invalidate ();
+}
 
-    if (messages > 0)
+void
+UnlockNotifications::updateContents ()
+{
+    SYS_DEBUG ("");
+
+    UnlockMissedEvents::Types mostRecent =
+        UnlockMissedEvents::getInstance ().getLastType ();
+
+    if (mostRecent == UnlockMissedEvents::NotifyLast)
     {
-        m_labels[NOTIFY_SMS]->setText (QString ("%1").arg (messages));
-        m_labels[NOTIFY_SMS]->setVisible (true);
-        m_icons[NOTIFY_SMS]->setVisible (true);
+        /*
+         * Clear out all the missed events...
+         */
+        /*
+         * TODO: Check this...
+         */
+        foreach (MLabel *label, m_labels)
+            delete label;
+        m_labels.clear ();
+
+        foreach (MImageWidget *icon, m_icons)
+            delete icon;
+        m_icons.clear ();
+
+        emit needToShow (false);
     }
-
-    if (emails > 0)
+    else
     {
-        m_labels[NOTIFY_EMAIL]->setText (QString ("%1").arg (emails));
-        m_labels[NOTIFY_EMAIL]->setVisible (true);
-        m_icons[NOTIFY_EMAIL]->setVisible (true);
-    }
+        m_last_icon->setImage (m_icon_ids[mostRecent]);
+        m_last_subject->setText (
+            UnlockMissedEvents::getInstance ().getLastSubject (mostRecent));
 
-    if (im > 0)
-    {
-        m_labels[NOTIFY_CHAT]->setText (QString ("%1").arg (im));
-        m_labels[NOTIFY_CHAT]->setVisible (true);
-        m_icons[NOTIFY_CHAT]->setVisible (true);
-    }
-
-    // Remove the old items
-    for (int c = m_layout->count () - 1; c >= 0; c--)
-        m_layout->removeAt (c);
-
-    // Add the new ones
-    for (int id = 0; id < NOTIFY_LAST; id++)
-    {
-        if (m_labels [id]->isVisible () == true)
+        if (m_labels.value (mostRecent, 0) != 0)
         {
-            m_layout->insertItem (id * 2, m_icons [id]);
-            m_layout->setAlignment (m_icons [id], Qt::AlignRight);
-            m_layout->insertItem (id * 2 + 1, m_labels [id]);
-            m_layout->setAlignment (m_labels [id], Qt::AlignLeft);
+            /*
+             * Icon+Label exists remove it from the layout
+             */
+            m_icon_layout->removeItem (m_labels.value (mostRecent));
+            m_icon_layout->removeItem (m_icons.value (mostRecent));
         }
+        else
+        {
+            /*
+             * Create the label & icon
+             */
+            m_labels[mostRecent] = new MLabel;
+            m_labels[mostRecent]->setObjectName ("LockNotifierLabel");
+            m_icons[mostRecent] = new MImageWidget (m_icon_ids[mostRecent]);
+            m_icons[mostRecent]->setObjectName ("LockNotifierIcon");
+        }
+
+        m_labels.value (mostRecent)->setText (QString ("%L1").arg (
+            UnlockMissedEvents::getInstance ().getCount (mostRecent)));
+
+        /*
+         * Most recent area only visible when orientation is portrait
+         */
+        int newIndex = (m_mostrecent_area->isVisible () == false) ? 2 : 0;
+
+        /*
+         * Put the new icons to the proper place...
+         */
+        m_icon_layout->insertItem (newIndex, m_labels[mostRecent]);
+        m_icon_layout->setAlignment (m_labels[mostRecent], Qt::AlignLeft);
+        m_icon_layout->insertItem (newIndex, m_icons[mostRecent]);
+        m_icon_layout->setAlignment (m_icons[mostRecent], Qt::AlignLeft);
+
+        emit needToShow (true);
     }
 }
 
