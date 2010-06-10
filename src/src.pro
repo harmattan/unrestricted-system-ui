@@ -16,10 +16,10 @@ QT += dbus gui
 SYSTEMUI_SOURCE_DIR = .
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
-contains(cov, true) {
-    message("Coverage options enabled")
-    QMAKE_CXXFLAGS += --coverage
-    QMAKE_LFLAGS += --coverage
+contains(DCP_BUILD_FEATURES,coverage) {
+  QMAKE_EXTRA_TARGETS += coverage
+  coverage.target = coverage
+  coverage.CONFIG = recursive
 }
 
 HEADERS +=                              \
