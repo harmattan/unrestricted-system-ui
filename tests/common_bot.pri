@@ -1,1 +1,3 @@
-include(coverage.pri)
+#
+# TODO: the shiny new coverage generator stuff will comes here...
+#

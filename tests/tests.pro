@@ -7,7 +7,7 @@ TEMPLATE = subdirs
 # compiled but left out from the xml (or the insignificant property will be set
 # using the 'disabled' file).
 #
-SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | grep -v ut_template | grep -v ut_statusindicatormenuwindow | sed 's!/.*!!')
+SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
 
 QMAKE_STRIP = echo
 
@@ -19,7 +19,7 @@ check-xml.target = check-xml
 check-xml.CONFIG = recursive
 QMAKE_EXTRA_TARGETS += check-xml
 
-QMAKE_CLEAN += **/*.log.xml ./coverage.log.xml
+QMAKE_CLEAN += **/*.log.xml
 
 support_files.commands += $$PWD/gen-tests-xml.sh > $$OUT_PWD/tests.xml
 support_files.target = support_files
