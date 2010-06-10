@@ -21,7 +21,7 @@
 
 NGFAdapter::NGFAdapter()
 {
-    connection = dbus_bus_get(DBUS_BUS_SESSION, NULL);
+    connection = dbus_bus_get(DBUS_BUS_SYSTEM, NULL);
     dbus_connection_setup_with_g_main(connection, NULL);
 
     client = ngf_client_create(NGF_TRANSPORT_DBUS, connection);

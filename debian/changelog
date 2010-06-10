@@ -1,8 +1,9 @@
-system-ui (0.16.0~2) harmattan; urgency=low
+system-ui (0.16.1~1) harmattan; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#173543 - System-ui should use system bus for libngf
 
- -- Aki Koskinen <aki.koskinen@nokia.com>  Wed, 09 Jun 2010 12:32:00 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 10 Jun 2010 08:24:42 +0200
 
 system-ui (0.16.0-1) harmattan; urgency=low
 
