@@ -39,10 +39,6 @@
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
 
-maemosec::storage::~storage()
-{
-}
-
 Notification::~Notification()
 {
 }
@@ -126,6 +122,7 @@ ContextItem *ContextFrameworkContext::createContextItem(const QString&)
     return testContextItem;
 }
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
 ContextFrameworkItem::ContextFrameworkItem(const QString &key)
     : property(key)
 {
@@ -136,6 +133,16 @@ QVariant ContextFrameworkItem::value() const
 {
     return property.value();
 }
+#else
+ContextFrameworkItem::ContextFrameworkItem(const QString &)
+{
+}
+
+QVariant ContextFrameworkItem::value() const
+{
+    return QVariant();
+}
+#endif
 
 void Ut_Sysuid::initTestCase()
 {

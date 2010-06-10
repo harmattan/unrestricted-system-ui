@@ -1,3 +1,5 @@
+system(./configure)
+
 TEMPLATE = subdirs
 SUBDIRS = src \
           translations \
@@ -5,6 +7,6 @@ SUBDIRS = src \
           demos \
           tests
 
-QMAKE_CLEAN += configure-stamp build-stamp
+QMAKE_CLEAN += configure-stamp build-stamp localconfig.pri
 
 include(doc/doc.pri)

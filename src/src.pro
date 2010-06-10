@@ -68,14 +68,30 @@ include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 include(volumecontrol/volumecontrol.pri)
+include(../localconfig.pri)
+
+contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
+	PKGCONFIG += contextsubscriber-1.0
+}
+
+contains(DEFINES, HAVE_QMSYSTEM) {
+	PKGCONFIG += qmsystem
+}
+
+contains(DEFINES, HAVE_MAEMOSEC) {
+	PKGCONFIG += maemosec
+}
+
+contains(DEFINES, HAVE_LIBRESOURCEQT) {
+	PKGCONFIG += libresourceqt1
+}
+
+contains(DEFINES, HAVE_LIBNGF) {
+	PKGCONFIG += libngf0
+}
 
 PKGCONFIG += \
-    contextsubscriber-1.0 \
-    qmsystem \
-    maemosec \
     dbus-1 \
-    libresourceqt1 \
-    libngf0 \
     xcomposite
 
 # TODO: remove these very quickly when obexd is okay

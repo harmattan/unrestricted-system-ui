@@ -65,6 +65,7 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
 {
 }
 
+#ifdef HAVE_MAEMOSEC
 // maemosec stubs
 int maemosec::storage::get_file(const char *pathname, unsigned char **to_buf, ssize_t *bytes)
 {
@@ -125,6 +126,7 @@ maemosec::storage::storage(const char *name, maemosec::storage::visibility_t vis
 maemosec::storage::~storage()
 {
 }
+#endif
 
 QSettings emptySettings;
 QSettings persistentSettings;
@@ -255,6 +257,7 @@ void Ut_NotificationManager::testNotificationUserId()
 
     delete manager;
 
+#ifdef HAVE_MAEMOSEC
     gTestingPersistent = true;
     manager = new TestNotificationManager(0);
 
@@ -272,6 +275,7 @@ void Ut_NotificationManager::testNotificationUserId()
     gStateBuffer.buffer().clear();
 
     delete manager;
+#endif
     manager = new TestNotificationManager(0);
 }
 
@@ -931,7 +935,7 @@ void Ut_NotificationManager::testNotificationGroupList()
     QCOMPARE(list.size(), 0);
 }
 
-
+#ifdef HAVE_MAEMOSEC
 void Ut_NotificationManager::testGroupInfoPersistentStorage()
 {
     gTestingPersistent = true;
@@ -1105,6 +1109,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
 
     gTestingPersistent = false;
 }
+#endif
 
 void Ut_NotificationManager::testRemovingNotificationsWithEventType()
 {

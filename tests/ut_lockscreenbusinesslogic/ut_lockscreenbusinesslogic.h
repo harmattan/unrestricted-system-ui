@@ -38,7 +38,9 @@ private slots:
     void testToggleEventEater();
     void testUnlockScreen();
     void testHideEventEater();
+#ifdef HAVE_QMSYSTEM
     void testDisplayStateChanged();
+#endif
 
 private:
     MApplicationWindow       *m_MainWindow;

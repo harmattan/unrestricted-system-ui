@@ -36,8 +36,10 @@ static NotificationManager *manager;
 
 NGFAdapter::NGFAdapter()
 {
+#ifdef HAVE_LIBNGF
     client = NULL;
     connection = NULL;
+#endif
 }
 
 NGFAdapter::~NGFAdapter()
@@ -55,54 +57,6 @@ bool NGFAdapter::isValid()
     return true;
 }
     
-// maemosec stubs
-int maemosec::storage::get_file(const char *pathname, unsigned char **to_buf, ssize_t *bytes)
-{
-    Q_UNUSED(pathname);
-    Q_UNUSED(to_buf);
-    Q_UNUSED(bytes);
-    return 0;
-}
-
-int maemosec::storage::put_file(const char *pathname, unsigned char *data, ssize_t bytes)
-{
-    Q_UNUSED(pathname);
-    Q_UNUSED(data);
-    Q_UNUSED(bytes);
-    return 0;
-}
-
-void maemosec::storage::release_buffer(unsigned char *data)
-{
-    Q_UNUSED(data);
-}
-
-bool maemosec::storage::contains_file(const char *pathname)
-{
-    Q_UNUSED(pathname);
-    return true;
-}
-
-void maemosec::storage::remove_file(const char *pathname)
-{
-    Q_UNUSED(pathname);
-}
-
-void maemosec::storage::commit()
-{
-}
-
-maemosec::storage::storage(const char *name, maemosec::storage::visibility_t visibility, maemosec::storage::protection_t protection)
-{
-    Q_UNUSED(name);
-    Q_UNUSED(visibility);
-    Q_UNUSED(protection);
-}
-
-maemosec::storage::~storage()
-{
-}
-
 QList<QString> Ut_NGFNotificationSink::played;
 
 void Ut_NGFNotificationSink::initTestCase()

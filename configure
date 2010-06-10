@@ -1,0 +1,38 @@
+#!/bin/sh
+
+FILENAME=localconfig.pri
+
+rm -f ${FILENAME}
+touch ${FILENAME}
+
+which pkg-config > /dev/null
+if [ $? -eq 0 ]; then
+    pkg-config --exists contextsubscriber-1.0
+    if [ $? -eq 0 ]; then
+        echo DEFINES += HAVE_CONTEXTSUBSCRIBER >> ${FILENAME}
+    fi
+
+    pkg-config --exists qmsystem
+    if [ $? -eq 0 ]; then
+        echo DEFINES += HAVE_QMSYSTEM >> ${FILENAME}
+    fi
+
+    pkg-config --exists maemosec
+    if [ $? -eq 0 ]; then
+        echo DEFINES += HAVE_MAEMOSEC >> ${FILENAME}
+    fi
+
+    pkg-config --exists libresourceqt1
+    if [ $? -eq 0 ]; then
+        echo DEFINES += HAVE_LIBRESOURCEQT >> ${FILENAME}
+    fi
+
+    pkg-config --exists libngf0
+    if [ $? -eq 0 ]; then
+        echo DEFINES += HAVE_LIBNGF >> ${FILENAME}
+    fi
+fi
+
+echo Configured system-ui as follows:
+echo ================================
+cat ${FILENAME}

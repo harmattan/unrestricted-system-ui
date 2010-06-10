@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,13 +16,9 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #include "shutdownbusinesslogic.h"
 #include "shutdownui.h"
 #include "sysuid.h"
-
-#include <qmsystem/qmsystemstate.h>
 
 #include <MApplication>
 #include <MFeedback>
@@ -35,8 +29,6 @@
 #define DEBUG
 #include "debug.h"
 
-using namespace Maemo;
-
 #ifndef UNIT_TEST
 extern MApplication *exitPtr;
 #else
@@ -45,14 +37,16 @@ MApplication *exitPtr;
 
 ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     QObject (parent),
-    m_Ui (0),
-    m_State (new QmSystemState (this))
+    m_Ui (0)
 {
+#ifdef HAVE_QMSYSTEM
+    m_State = new Maemo::QmSystemState (this);
     connect (
         m_State, 
         SIGNAL(systemStateChanged (Maemo::QmSystemState::StateIndication)),
         this, 
         SLOT(systemStateChanged (Maemo::QmSystemState::StateIndication)));
+#endif
 }
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
@@ -76,32 +70,33 @@ ShutdownBusinessLogic::showUI (
     m_Ui->showWindow (text1, text2, timeout);
 }
 
+#ifdef HAVE_QMSYSTEM
 /*!
  * This function is called when the QmSystem reports a state change.
  */
 void 
 ShutdownBusinessLogic::systemStateChanged (
-        QmSystemState::StateIndication what)
+        Maemo::QmSystemState::StateIndication what)
 {
     switch (what) {
-        case QmSystemState::Shutdown:
+        case Maemo::QmSystemState::Shutdown:
             SYS_DEBUG ("QmSystemState::Shutdown");
             // To avoid early quitting on shutdown...
             exitPtr = 0;
             showUI ();
             break;
 
-        case QmSystemState::ThermalStateFatal:
+        case Maemo::QmSystemState::ThermalStateFatal:
             SYS_DEBUG ("QmSystemState::ThermalStateFatal");
             thermalShutdown ();
             break;
             
-        case QmSystemState::ShutdownDeniedUSB:
+        case Maemo::QmSystemState::ShutdownDeniedUSB:
             SYS_DEBUG ("QmSystemState::ShutdownDeniedUSB");
             shutdownDeniedUSB ();
             break;
 
-        case QmSystemState::BatteryStateEmpty:
+        case Maemo::QmSystemState::BatteryStateEmpty:
             SYS_DEBUG ("QmSystemState::BatteryStateEmpty");
             batteryShutdown ();
             break;
@@ -111,6 +106,7 @@ ShutdownBusinessLogic::systemStateChanged (
             break;
     }
 }
+#endif
 
 void 
 ShutdownBusinessLogic::thermalShutdown ()

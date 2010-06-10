@@ -75,10 +75,6 @@ void TestWidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const No
     WidgetNotificationSink::updateActions(infoBanner, notification.parameters());
 }
 
-maemosec::storage::~storage()
-{
-}
-
 // QFileInfo stubs
 bool QFileInfo::exists() const
 {

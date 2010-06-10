@@ -25,8 +25,10 @@
 #include <glib.h>
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib-lowlevel.h>
-#include <libngf/client.h>
 
+#ifdef HAVE_LIBNGF
+#include <libngf/client.h>
+#endif
 
 /*!
  * A class that provides a simple QT'ified API to the plain C API provided
@@ -74,13 +76,13 @@ public:
 
 
 private:
-
+#ifdef HAVE_LIBNGF
     //! The low-level ngf client
     NgfClient* client;
 
     //! The DBUS low-level connection
     DBusConnection* connection;
-
+#endif
 };
 
 #endif /* NGFADAPTER_H_ */

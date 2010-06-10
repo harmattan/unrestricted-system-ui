@@ -38,10 +38,6 @@
 #include <QSettings>
 #include <MOnDisplayChangeEvent>
 
-maemosec::storage::~storage()
-{
-}
-
 // Mock notification manager (used by MCompositorNotificationSink)
 MockNotificationManager::MockNotificationManager() :
     nextAvailableNotificationID(0)
@@ -172,13 +168,6 @@ void MSceneWindow::disappear()
     emit disappeared();
 }
 
-//QWidget Stubs
-QRegion maskRegionReceived(0,0,0,0,QRegion::Rectangle);
-void QWidget::setMask(const QRegion & region)
-{
-    maskRegionReceived = region;
-}
-
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
@@ -205,7 +194,6 @@ void Ut_MCompositorNotificationSink::init()
     Ut_TimerStarted = false;
     Ut_DisappearSceneWindow = false;
     disappearingWindow = NULL;
-    maskRegionReceived = QRegion();
 }
 
 void Ut_MCompositorNotificationSink::cleanup()

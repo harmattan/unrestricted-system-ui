@@ -20,7 +20,10 @@
 #define _UT_STATUSAREARENDERER_
 
 #include <QtTest/QtTest>
+
+#ifdef HAVE_QMSYSTEM
 #include "qmdisplaystate.h"
+#endif
 
 class StatusAreaRenderer;
 class MApplication;
@@ -35,7 +38,10 @@ private:
 
 signals:
     void changed(QList<QRectF> rectList);
+
+#ifdef HAVE_QMSYSTEM
     void displayStateChanged(Maemo::QmDisplayState::DisplayState);
+#endif
 
 private slots:
     // Executed once before every test case
@@ -48,6 +54,7 @@ private slots:
     void cleanupTestCase();
     // Test scene changed events render the scene
     void testSceneChanged();
+#ifdef HAVE_QMSYSTEM
     // Test rendering happens when display state is on
     void testSceneRenderControlDisplayStateOn();
     // Test rendering does not happen when display state is off
@@ -56,6 +63,7 @@ private slots:
     void testSceneRenderControlDisplayStateDimmed();
     // Test MOnDisplayChangeEvent dispatching
     void testMOnDisplayChangeEvent();
+#endif
 };
 
 class RenderTestsHelper

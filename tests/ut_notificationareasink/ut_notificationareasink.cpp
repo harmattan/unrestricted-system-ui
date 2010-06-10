@@ -103,10 +103,6 @@ QStringList QDir::entryList(const QStringList &, Filters, SortFlags) const
     return QStringList();
 }
 
-maemosec::storage::~storage()
-{
-}
-
 QList<QString> Ut_NotificationAreaSink::icons;
 QList<QString> Ut_NotificationAreaSink::bodies;
 QList<QString> Ut_NotificationAreaSink::buttonIcons;

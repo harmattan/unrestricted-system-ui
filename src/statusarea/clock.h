@@ -22,8 +22,11 @@
 
 #include <MWidgetController>
 #include <QTimer>
-#include <qmtime.h>
 #include "clockmodel.h"
+
+#ifdef HAVE_QMSYSTEM
+#include <qmtime.h>
+#endif
 
 /*!
  * A widget for showing the current time.
@@ -51,10 +54,12 @@ private slots:
      */
     void updateModelAndSetupTimer();
 
+#ifdef HAVE_QMSYSTEM
     /*!
      * \brief Updates the 24 hour mode if the settings have changed
      */
     void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+#endif
 
 private:
     //! \reimp
@@ -65,8 +70,10 @@ private:
     //! Update timer
     QTimer timer;
 
+#ifdef HAVE_QMSYSTEM
     //! QmTime object to get the time format is
     Maemo::QmTime qmTime;
+#endif
 };
 
 #endif

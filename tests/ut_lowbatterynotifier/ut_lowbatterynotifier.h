@@ -56,9 +56,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+#ifdef HAVE_QMSYSTEM
     void testShowNotificationInActiveUse();
     void testShowNotificationInDiverseUse();
     void testShowNotificationInInactiveUse();
+#endif
 
 private: //attributes
     LowBatteryNotifier *m_subject;

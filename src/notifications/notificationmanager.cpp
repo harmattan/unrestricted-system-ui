@@ -50,8 +50,10 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     relayInterval(relayInterval),
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
-    persistentDataRestored(false),
-    persistentStorage(new maemosec::storage("com.meego.core.MNotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
+    persistentDataRestored(false)
+#ifdef HAVE_MAEMOSEC
+    , persistentStorage(new maemosec::storage("com.meego.core.MNotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
+#endif
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
 
@@ -89,6 +91,7 @@ bool NotificationManager::ensurePersistentDataPath()
 
 void NotificationManager::saveStateData()
 {
+#ifdef HAVE_MAEMOSEC
     if (ensurePersistentDataPath()) {
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
@@ -107,11 +110,13 @@ void NotificationManager::saveStateData()
 
         persistentStorage->commit();
     }
+#endif
 }
 
 
 void NotificationManager::savePersistentNotifications()
 {
+#ifdef HAVE_MAEMOSEC
     if (ensurePersistentDataPath()) {
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
@@ -132,11 +137,13 @@ void NotificationManager::savePersistentNotifications()
 
         persistentStorage->commit();
     }
+#endif
 }
 
 
 void NotificationManager::restorePersistentData()
 {
+#ifdef HAVE_MAEMOSEC
     if (!persistentDataRestored && ensurePersistentDataPath()) {
         unsigned char *data;
         ssize_t dataLength;
@@ -189,6 +196,7 @@ void NotificationManager::restorePersistentData()
             }
         }
     }
+#endif
 }
 
 

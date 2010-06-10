@@ -138,7 +138,9 @@ QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaRenderer* testCl
 {
     setupRect();
     QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+#ifdef HAVE_QMSYSTEM
     QObject::connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+#endif
     return rectList;
 }
 
@@ -153,7 +155,7 @@ RenderTestsHelper::~RenderTestsHelper()
 }
 
 // end RenderTestsHelper
-
+#ifdef HAVE_QMSYSTEM
 void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOn()
 {
     RenderTestsHelper helper;
@@ -212,5 +214,6 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
 }
+#endif
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaRenderer)

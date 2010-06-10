@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -60,6 +58,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
             this, SLOT(hideEventEater()));
     Q_ASSERT (connectSuccess);
 
+#ifdef HAVE_QMSYSTEM
     /*
      * We need to sense when the screen turned on/off to prevent unnecessary
      * screen updates and wakeups.
@@ -70,6 +69,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
         this, 
         SLOT(displayStateChanged (Maemo::QmDisplayState::DisplayState)));
     Q_ASSERT (connectSuccess);
+#endif
     
     /*
      * Connecting to timer that refreshes the 
@@ -100,6 +100,7 @@ LockScreenBusinessLogic::unlockScreen ()
     toggleScreenLockUI (false);
 }
 
+#ifdef HAVE_QMSYSTEM
 /*!
  * This slot is called when the display state is changed. We need this to
  * prevent the screen updates in the 'Off' state whan no UI is visible. Please
@@ -127,6 +128,7 @@ LockScreenBusinessLogic::displayStateChanged (
             !timer.isActive())
         mayStartTimer ();
 }
+#endif
 
 void 
 LockScreenBusinessLogic::hideEventEater()
@@ -202,7 +204,7 @@ LockScreenBusinessLogic::mayStopTimer ()
 bool 
 LockScreenBusinessLogic::displayIsOn ()
 {
-#ifndef __i386__
+#if !defined(__i386__) && defined(HAVE_QMSYSTEM)
     bool retval = m_QmDisplay.get () == Maemo::QmDisplayState::On;
 #else
     bool retval = true;

@@ -1,24 +1,42 @@
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (directui@nokia.com)
+**
+** This file is part of systemui.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at directui@nokia.com.
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
+****************************************************************************/
 #include "volumecontrolui.h"
 #include "volumeoverlay.h"
 #include "volumebarlogic.h"
 
-#define DEBUG
-#include "../debug.h"
-
 VolumeControlUI::VolumeControlUI (QObject *parent) :
     QObject (parent),
     m_logic (new VolumeBarLogic),
-    m_overlay (0),
-    m_hwkeys (0)
+    m_overlay (0)
+#ifdef HAVE_QMSYSTEM
+    , m_hwkeys (0)
+#endif
 {
-    SYS_DEBUG ("");
+#ifdef HAVE_QMSYSTEM
+    m_hwkeys = new Maemo::QmKeys (this);
+#endif
 
-    m_hwkeys = new QmKeys (this);
-
-    m_hwkeyResource = new ResourceSet ("event");
+#ifdef HAVE_LIBRESOURCEQT
+    m_hwkeyResource = new ResourcePolicy::ResourceSet ("event");
     m_hwkeyResource->setAlwaysReply ();
 
-    ScaleButtonResource *volumeKeys = new ScaleButtonResource;
+    ResourcePolicy::ScaleButtonResource *volumeKeys = new ResourcePolicy::ScaleButtonResource;
 
     m_hwkeyResource->addResourceObject (volumeKeys);
 
@@ -28,15 +46,20 @@ VolumeControlUI::VolumeControlUI (QObject *parent) :
              this, SLOT (hwKeyResourceLost ()));
 
     m_hwkeyResource->acquire ();
+#endif
 }
 
 VolumeControlUI::~VolumeControlUI ()
 {
+#ifdef HAVE_LIBRESOURCEQT
     //Free the resources here
-    m_hwkeyResource->deleteResource (ScaleButtonType);
+    m_hwkeyResource->deleteResource (ResourcePolicy::ScaleButtonType);
+#endif
 
+#ifdef HAVE_QMSYSTEM
     delete m_hwkeys;
     m_hwkeys = 0;
+#endif
 
     delete m_logic;
     m_logic = 0;
@@ -52,21 +75,21 @@ VolumeControlUI::overlayChanged (int val)
     m_logic->setVolume ((quint32) val);
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
 {
-    SYS_DEBUG ("key = %d, state = %d", (int) key, (int) state);
     int change_val = 0;
 
-    if (state == QmKeys::KeyUp)
+    if (state == Maemo::QmKeys::KeyUp)
         return;
 
     switch (key)
     {
-        case QmKeys::VolumeUp:
+        case Maemo::QmKeys::VolumeUp:
             change_val++;
             break;
-        case QmKeys::VolumeDown:
+        case Maemo::QmKeys::VolumeDown:
             change_val--;
             break;
         default:
@@ -98,25 +121,24 @@ VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
     // ... and show the overlay
     m_overlay->UpdateVolume (current_volume, max_volume);
 }
+#endif
 
 void
 VolumeControlUI::hwKeyResourceAcquired ()
 {
-    SYS_DEBUG ("");
-
+#ifdef HAVE_QMSYSTEM
     // Disconnect from everything first
     m_hwkeys->disconnect ();
 
-    connect (m_hwkeys,
-             SIGNAL (keyEvent (QmKeys::Key, QmKeys::State)),
-             this,
-             SLOT (hwKeyEvent (QmKeys::Key, QmKeys::State)));
+    // TODO: use the fully qualified signal when it becomes available
+    connect(m_hwkeys, SIGNAL(keyEvent(QmKeys::Key, QmKeys::State)), this, SLOT(hwKeyEvent(QmKeys::Key, QmKeys::State)));
+#endif
 }
 
 void
 VolumeControlUI::hwKeyResourceLost ()
 {
-    SYS_DEBUG ("");
+#ifdef HAVE_QMSYSTEM
     m_hwkeys->disconnect ();
+#endif
 }
-
