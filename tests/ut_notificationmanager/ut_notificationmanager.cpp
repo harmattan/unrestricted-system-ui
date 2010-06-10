@@ -30,8 +30,6 @@
 #include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
 
-Q_DECLARE_METATYPE(Notification)
-Q_DECLARE_METATYPE(NotificationGroup)
 Q_DECLARE_METATYPE(NotificationParameters)
 
 bool Ut_NotificationManager::catchTimerTimeouts;
@@ -887,6 +885,49 @@ void Ut_NotificationManager::testNotificationIdListNotificationListEmpty()
     uint notificationUserId = 0;
     QList<uint> list;
     list = manager->notificationIdList(notificationUserId);
+    QCOMPARE(list.size(), 0);
+}
+
+void Ut_NotificationManager::testNotificationList()
+{
+    NotificationParameters parameters;
+    manager->addNotification(1, parameters);
+    manager->addNotification(1, parameters);
+    manager->addNotification(1, parameters);
+    manager->addNotification(3, parameters);
+    manager->addNotification(2, parameters);
+    manager->addNotification(1, parameters);
+
+    QList<Notification> list = manager->notificationList(1);
+    QCOMPARE(list.size(), 4);
+
+    QCOMPARE(list.at(0).notificationId(), (uint)1);
+    QCOMPARE(list.at(1).notificationId(), (uint)2);
+    QCOMPARE(list.at(2).notificationId(), (uint)3);
+    QCOMPARE(list.at(3).notificationId(), (uint)6);
+
+    list = manager->notificationList(0);
+    QCOMPARE(list.size(), 0);
+}
+
+void Ut_NotificationManager::testNotificationGroupList()
+{
+    NotificationParameters parameters;
+    manager->addGroup(1, parameters);
+    manager->addGroup(1, parameters);
+    manager->addGroup(1, parameters);
+    manager->addGroup(3, parameters);
+    manager->addGroup(2, parameters);
+    manager->addGroup(1, parameters);
+
+    QList<NotificationGroup> list = manager->notificationGroupList(1);
+    QCOMPARE(list.size(), 4);
+    QCOMPARE(list.at(0).groupId(), (uint)1);
+    QCOMPARE(list.at(1).groupId(), (uint)2);
+    QCOMPARE(list.at(2).groupId(), (uint)3);
+    QCOMPARE(list.at(3).groupId(), (uint)6);
+
+    list = manager->notificationGroupList(0);
     QCOMPARE(list.size(), 0);
 }
 

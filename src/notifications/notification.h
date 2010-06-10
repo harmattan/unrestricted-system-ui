@@ -21,12 +21,11 @@
 #ifndef NOTIFICATION_H_
 #define NOTIFICATION_H_
 
-#include "notificationmanagerinterface.h"
 #include "notificationparameters.h"
-
 #include <QVariant>
 
 class QDataStream;
+class QDBusArgument;
 
 /*!
  * \brief A class for storing notification information.
@@ -119,6 +118,9 @@ public:
     friend QDataStream &operator<<(QDataStream &, const Notification &);
     friend QDataStream &operator>>(QDataStream &, Notification &);
 
+    friend QDBusArgument &operator<<(QDBusArgument &, const Notification &notification);
+    friend const QDBusArgument &operator>>(const QDBusArgument &, Notification &);
+
 private:
     //! The ID of the notification to be presented
     uint notificationId_;
@@ -134,6 +136,7 @@ private:
     int timeout_;
 };
 
+Q_DECLARE_METATYPE(Notification)
 
 /*!
  * Serializes the given Notification to a QDataStream

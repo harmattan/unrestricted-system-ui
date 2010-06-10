@@ -40,6 +40,8 @@ public:
     bool removeGroup(uint notificationUserId, uint groupId);
     uint notificationUserId();
     QList< uint > notificationIdList(uint notificationUserId);
+    QList<Notification> notificationList(uint notificationUserId);
+    QList<NotificationGroup> notificationGroupList(uint notificationUserId);
 
     uint addNotificationNotificationUserId;
     uint addNotificationGroupId;
@@ -58,6 +60,8 @@ public:
     uint removeGroupId;
     uint lastNotificationUserId;
     uint queryNotificationUserId;
+    bool notificationListCalled;
+    bool notificationGroupListCalled;
 };
 
 class Ut_DBusInterfaceNotificationSource : public QObject
@@ -88,6 +92,9 @@ private slots:
     void testRemoveGroup();
     //Test the query of notifications
     void testNotificationIdList();
+    void testNotificationList();
+    //Test the query of groups
+    void testNotificationGroupList();
 
 private:
     // Notification manager interface used by the test subject

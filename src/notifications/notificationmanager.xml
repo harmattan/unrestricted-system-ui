@@ -85,5 +85,15 @@
       <arg name="result" type="au" direction="out"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; uint &gt; "/>
     </method>
-</interface>
+    <method name="notificationList">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(uussssu)" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; Notification &gt; "/>
+    </method>
+    <method name="notificationGroupList">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(ussssu)" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; NotificationGroup &gt; "/>
+    </method>
+  </interface>
 </node>

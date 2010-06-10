@@ -21,12 +21,11 @@
 #ifndef NOTIFICATIONGROUP_H_
 #define NOTIFICATIONGROUP_H_
 
-#include "notificationmanagerinterface.h"
 #include "notificationparameters.h"
-
 #include <QVariant>
 
 class QDataStream;
+class QDBusArgument;
 
 /*!
  * \brief A class for storing notification group information.
@@ -87,6 +86,9 @@ public:
     friend QDataStream &operator<<(QDataStream &, const NotificationGroup &);
     friend QDataStream &operator>>(QDataStream &, NotificationGroup &);
 
+    friend QDBusArgument &operator<<(QDBusArgument &, const NotificationGroup &);
+    friend const QDBusArgument &operator>>(const QDBusArgument &, NotificationGroup &);
+
 private:
     //! The ID of the notification group
     uint groupId_;
@@ -95,6 +97,8 @@ private:
     //! The parameters for the notification group to be presented
     NotificationParameters parameters_;
 };
+
+Q_DECLARE_METATYPE(NotificationGroup)
 
 
 /*!

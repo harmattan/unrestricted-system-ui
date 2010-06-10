@@ -92,12 +92,16 @@ private slots:
     void testWaitQueueTimer();
     // Test removing notifications in a group
     void testRemoveNotificationsInGroup();
-    // Test quering notifications
+    // Test querying notification ids
     void testNotificationIdList();
     // Test with wrong/zero notification user id
     void testNotificationIdListZeroNotificationUserId();
     // Test with empty notifications list
     void testNotificationIdListNotificationListEmpty();
+    // Test querying the notification data
+    void testNotificationList();
+    // Test querying the notification group data
+    void testNotificationGroupList();
     // Test that the group info is saved to the persistent storage
     void testGroupInfoPersistentStorage();
     // Test that the persistent notifications are saved to the persistent storage

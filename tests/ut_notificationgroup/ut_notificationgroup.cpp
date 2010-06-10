@@ -18,9 +18,29 @@
 ****************************************************************************/
 
 #include <QByteArray>
+#include <QDBusArgument>
 #include "ut_notificationgroup.h"
 #include "notificationparameters.h"
 #include "notificationgroup.h"
+
+
+QList<uint> qdbusUIntArgs;
+
+QDBusArgument &QDBusArgument::operator<<(uint arg)
+{
+    qdbusUIntArgs.append(arg);
+
+    return *this;
+}
+
+QList<QString> qdbusStringArgs;
+
+QDBusArgument &QDBusArgument::operator<<(const QString &arg)
+{
+    qdbusStringArgs.append(arg);
+
+    return *this;
+}
 
 void Ut_NotificationGroup::initTestCase()
 {
@@ -32,6 +52,8 @@ void Ut_NotificationGroup::cleanupTestCase()
 
 void Ut_NotificationGroup::init()
 {
+    qdbusUIntArgs.clear();
+    qdbusStringArgs.clear();
 }
 
 void Ut_NotificationGroup::cleanup()
@@ -57,6 +79,30 @@ void Ut_NotificationGroup::testSerializationAndDeserialization()
     QCOMPARE(ng2.groupId(), uint(20));
     QCOMPARE(ng2.userId(), uint(1234));
     QCOMPARE(ng2.parameters().value("imageId").toString(), QString("icon0"));
+}
+
+void Ut_NotificationGroup::testDBusSerialization()
+{
+    QDBusArgument arg;
+
+    NotificationParameters parameters0;
+    parameters0.add("imageId", "icon");
+    parameters0.add("body", "<p><b>summary</b></p><p>body</p>");
+    parameters0.add("action", "action");
+    parameters0.add("count",  456);
+
+    NotificationGroup n1(20, 678, parameters0);
+
+    arg << n1;
+
+    QCOMPARE(qdbusUIntArgs.count(), 2);
+    QCOMPARE(qdbusUIntArgs.at(0), uint(20));
+    QCOMPARE(qdbusUIntArgs.at(1), uint(456));
+    QCOMPARE(qdbusStringArgs.count(), 4);
+    QCOMPARE(qdbusStringArgs.at(0), QString("summary"));
+    QCOMPARE(qdbusStringArgs.at(1), QString("body"));
+    QCOMPARE(qdbusStringArgs.at(2), QString("icon"));
+    QCOMPARE(qdbusStringArgs.at(3), QString("action"));
 }
 
 

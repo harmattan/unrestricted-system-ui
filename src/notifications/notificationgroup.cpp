@@ -17,7 +17,10 @@
 **
 ****************************************************************************/
 
+#include <QDBusArgument>
 #include "notificationgroup.h"
+#include "notificationwidgetparameterfactory.h"
+#include "genericnotificationparameterfactory.h"
 
 NotificationGroup::NotificationGroup() :
     groupId_(0),
@@ -72,4 +75,33 @@ QDataStream &operator>>(QDataStream &datastream, NotificationGroup &notification
     datastream >> notificationGroup.userId_;
     datastream >> notificationGroup.parameters_;
     return datastream;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const NotificationGroup &group)
+{
+    QString summary, body;
+    QString fullBody = group.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
+
+    int e = fullBody.indexOf("</p>", 0);
+    if(e != -1) {
+        QRegExp tagRE("<[^>]*>");
+        summary = fullBody.left(e + 4).replace(tagRE, "");
+        body    = fullBody.mid(e + 4).replace(tagRE, "");
+    }
+
+    argument.beginStructure();
+    argument << group.groupId_;
+    argument << summary << body;
+    argument << group.parameters_.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
+    argument << group.parameters_.value(NotificationWidgetParameterFactory::actionKey()).toString();
+    argument << group.parameters_.value(GenericNotificationParameterFactory::countKey()).toUInt();
+    argument.endStructure();
+
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, NotificationGroup &)
+{
+    /* Not used */
+    return argument;
 }

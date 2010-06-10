@@ -120,6 +120,17 @@ QList< uint > MockNotificationManager::notificationIdList(uint /*notificationUse
     return tmp;
 }
 
+QList<Notification> MockNotificationManager::notificationList(uint)
+{
+    return QList<Notification>();
+}
+
+QList<NotificationGroup> MockNotificationManager::notificationGroupList(uint)
+{
+    return QList<NotificationGroup>();
+}
+
+
 // QWidget stubs (used by MCompositorNotificationSink)
 bool Ut_WindowShown = false;
 QWidget* notificationWindow = NULL;

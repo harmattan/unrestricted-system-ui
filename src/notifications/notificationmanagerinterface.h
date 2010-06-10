@@ -22,6 +22,8 @@
 
 #include <QString>
 #include "notificationparameters.h"
+#include "notification.h"
+#include "notificationgroup.h"
 
 /*!
  * Abstract notification manager interface. Declares interface for adding,
@@ -104,6 +106,22 @@ public:
      * \return list of notification ids that belong to notificationUserId
      */
     virtual QList<uint> notificationIdList(uint notificationUserId) = 0;
+
+    /*!
+     * Returns list of notifications by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notifications that belong to notificationUserId
+     */
+    virtual QList<Notification> notificationList(uint notificationUserId) = 0;
+
+    /*!
+     * Returns list of notification groups by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notification groups that belong to notificationUserId
+     */
+    virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId) = 0;
 
 public slots:
     /*!

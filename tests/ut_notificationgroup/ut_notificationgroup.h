@@ -40,6 +40,9 @@ private slots:
 
     // Test serialization into QDataStream
     void testSerializationAndDeserialization();
+
+    // Test serialization into QDBusArgument
+    void testDBusSerialization();
 };
 
 #endif

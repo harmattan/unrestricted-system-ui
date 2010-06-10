@@ -13,6 +13,9 @@ SOURCES += \
 # base classes
 SOURCES += \
 
+# service classes
+SOURCES += \
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
@@ -24,7 +27,6 @@ HEADERS += \
 
 # base classes
 HEADERS += \
-
 
 # service classes
 HEADERS += \

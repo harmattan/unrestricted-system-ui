@@ -23,6 +23,11 @@
 DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationManagerInterface &interface)
     : NotificationSource(interface)
 {
+    qDBusRegisterMetaType<Notification>();
+    qDBusRegisterMetaType<QList<Notification> >();
+    qDBusRegisterMetaType<NotificationGroup>();
+    qDBusRegisterMetaType<QList<NotificationGroup> >();
+
     new DBusInterfaceNotificationSourceAdaptor(this);
 }
 
@@ -84,4 +89,14 @@ bool DBusInterfaceNotificationSource::removeGroup(uint notificationUserId, uint 
 QList<uint> DBusInterfaceNotificationSource::notificationIdList(uint notificationUserId)
 {
     return manager.notificationIdList(notificationUserId);
+}
+
+QList<Notification> DBusInterfaceNotificationSource::notificationList(uint notificationUserId)
+{
+    return manager.notificationList(notificationUserId);
+}
+
+QList<NotificationGroup> DBusInterfaceNotificationSource::notificationGroupList(uint notificationUserId)
+{
+    return manager.notificationGroupList(notificationUserId);
 }

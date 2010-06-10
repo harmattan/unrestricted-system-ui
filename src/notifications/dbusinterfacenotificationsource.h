@@ -21,6 +21,8 @@
 #define DBUSINTERFACENOTIFICATIONSOURCE_H
 
 #include <QObject>
+#include "notification.h"
+#include "notificationgroup.h"
 #include "notificationsource.h"
 #include "notificationmanagerinterface.h"
 
@@ -31,9 +33,10 @@
  * DBusInterfaceNotificationSourceAdaptor defines the D-Bus API which calls
  * this source to trigger the notifications.
  *
- * The new API can be tested using the following command:
+ * The new API can be tested using the following commands:
  *
- * dbus-send --print-reply --dest=com.meego.core.MNotificationManager /notificationmanager com.meego.core.MNotificationManager.addNotification uint32:0 string:'new-message' string:'Message received' string:'Hello M' string:'link' string:'Icon-close'
+ * dbus-send --print-reply --dest=com.meego.core.MNotificationManager /notificationmanager com.meego.core.MNotificationManager.notificationUserId
+ * dbus-send --print-reply --dest=com.meego.core.MNotificationManager /notificationmanager com.meego.core.MNotificationManager.addNotification uint32:<return_val_from_previous_cmd> uint32:0 string:'new-message' string:'Message received' string:'Hello M' string:'link' string:'Icon-close' uint32:1
  */
 class DBusInterfaceNotificationSource : public QObject, public NotificationSource
 {
@@ -178,6 +181,22 @@ public:
      * \return list of notification ids that belong to notificationUserId
      */
     QList<uint> notificationIdList(uint notificationUserId);
+
+    /*!
+     * Returns list of notifications by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notifications that belong to notificationUserId
+     */
+    QList<Notification> notificationList(uint notificationUserId);
+
+    /*!
+     * Returns list of notification groups by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notification groups that belong to notificationUserId
+     */
+    QList<NotificationGroup> notificationGroupList(uint notificationUserId);
 };
 
 #endif // DBUSINTERFACENOTIFICATIONSOURCE_H

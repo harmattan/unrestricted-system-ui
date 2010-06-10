@@ -39,6 +39,8 @@ class NotificationManagerStub : public StubBase {
   virtual bool removeGroup(uint notificationUserId, uint groupId);
   virtual uint notificationUserId();
   virtual QList<uint> notificationIdList(uint notificationUserId);
+  virtual QList<Notification> notificationList(uint notificationUserId);
+  virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId);
   virtual bool removeNotification(uint notificationId);
   virtual bool removeNotificationsInGroup(uint groupId);
   virtual const EventTypeStore & eventTypeStore() const;
@@ -136,6 +138,22 @@ QList<uint> NotificationManagerStub::notificationIdList(uint notificationUserId)
   params.append( new Parameter<uint >(notificationUserId));
   stubMethodEntered("notificationIdList",params);
   return stubReturnValue<QList<uint> >("notificationIdList");
+}
+
+QList<Notification> NotificationManagerStub::notificationList(uint notificationUserId)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<uint >(notificationUserId));
+    stubMethodEntered("notificationList",params);
+    return stubReturnValue<QList<Notification> >("notificationList");
+}
+
+QList<NotificationGroup> NotificationManagerStub::notificationGroupList(uint notificationUserId)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<uint >(notificationUserId));
+    stubMethodEntered("notificationGroupList",params);
+    return stubReturnValue<QList<NotificationGroup> >("notificationGroupList");
 }
 
 bool NotificationManagerStub::removeNotification(uint notificationId) {
@@ -286,6 +304,15 @@ uint NotificationManager::notificationUserId() {
 QList<uint> NotificationManager::notificationIdList(uint notificationUserId) {
   return gNotificationManagerStub->notificationIdList(notificationUserId);
 }
+
+QList<Notification> NotificationManager::notificationList(uint notificationUserId) {
+    return gNotificationManagerStub->notificationList(notificationUserId);
+}
+
+QList<NotificationGroup> NotificationManager::notificationGroupList(uint notificationUserId) {
+    return gNotificationManagerStub->notificationGroupList(notificationUserId);
+}
+
 
 bool NotificationManager::removeNotification(uint notificationId) {
   return gNotificationManagerStub->removeNotification(notificationId);

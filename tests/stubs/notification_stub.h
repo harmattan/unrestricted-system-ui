@@ -27,76 +27,69 @@
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
 class NotificationStub : public StubBase {
-  public:
-   enum NotificationType { ApplicationEvent, SystemEvent } ;
-  virtual void NotificationConstructor();
-  virtual void NotificationConstructor(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationType type, int timeout);
-  virtual void NotificationDestructor();
-  virtual uint notificationId() const;
-  virtual uint userId() const;
-  virtual uint groupId() const;
-  virtual const NotificationParameters & parameters() const;
-  virtual void setParameters(const NotificationParameters &parameters);
-  virtual NotificationType type() const;
-  virtual int timeout() const;
-   uint notificationId_ ;
-   uint groupId_ ;
-   uint userId_ ;
-   NotificationParameters parameters_ ;
-   NotificationType type_ ;
-   int timeout_ ;
-}; 
+public:
+    virtual void NotificationConstructor();
+    virtual void NotificationConstructor(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, Notification::NotificationType type, int timeout);
+    virtual void NotificationDestructor();
+    virtual uint notificationId() const;
+    virtual uint userId() const;
+    virtual uint groupId() const;
+    virtual const NotificationParameters & parameters() const;
+    virtual void setParameters(const NotificationParameters &parameters);
+    virtual Notification::NotificationType type() const;
+    virtual int timeout() const;
+};
+
 
 // 2. IMPLEMENT STUB
 void NotificationStub::NotificationConstructor() {
 
 }
-void NotificationStub::NotificationConstructor(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, NotificationType type, int timeout) {
-  Q_UNUSED(notificationId);
-  Q_UNUSED(groupId);
-  Q_UNUSED(userId);
-  Q_UNUSED(parameters);
-  Q_UNUSED(type);
-  Q_UNUSED(timeout);
-
+void NotificationStub::NotificationConstructor(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters, Notification::NotificationType type, int timeout) {
+    Q_UNUSED(notificationId);
+    Q_UNUSED(groupId);
+    Q_UNUSED(userId);
+    Q_UNUSED(parameters);
+    Q_UNUSED(type);
+    Q_UNUSED(timeout);
 }
 void NotificationStub::NotificationDestructor() {
 
 }
 uint NotificationStub::notificationId() const {
-  stubMethodEntered("notificationId");
-  return stubReturnValue<uint>("notificationId");
+    stubMethodEntered("notificationId");
+    return stubReturnValue<uint>("notificationId");
 }
 
 uint NotificationStub::userId() const {
-  stubMethodEntered("userId");
-  return stubReturnValue<uint>("userId");
+    stubMethodEntered("userId");
+    return stubReturnValue<uint>("userId");
 }
 
 uint NotificationStub::groupId() const {
-  stubMethodEntered("groupId");
-  return stubReturnValue<uint>("groupId");
+    stubMethodEntered("groupId");
+    return stubReturnValue<uint>("groupId");
 }
 
 const NotificationParameters & NotificationStub::parameters() const {
-  stubMethodEntered("parameters");
-  return stubReturnValue<const NotificationParameters &>("parameters");
+    stubMethodEntered("parameters");
+    return stubReturnValue<const NotificationParameters &>("parameters");
 }
 
 void NotificationStub::setParameters(const NotificationParameters &parameters) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  stubMethodEntered("setParameters",params);
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const NotificationParameters & >(parameters));
+    stubMethodEntered("setParameters",params);
 }
 
-NotificationStub::NotificationType NotificationStub::type() const {
-  stubMethodEntered("type");
-  return stubReturnValue<NotificationType>("type");
+Notification::NotificationType NotificationStub::type() const {
+    stubMethodEntered("type");
+    return stubReturnValue<Notification::NotificationType>("type");
 }
 
 int NotificationStub::timeout() const {
-  stubMethodEntered("timeout");
-  return stubReturnValue<int>("timeout");
+    stubMethodEntered("timeout");
+    return stubReturnValue<int>("timeout");
 }
 
 
@@ -108,36 +101,56 @@ NotificationStub* gNotificationStub = &gDefaultNotificationStub;
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 Notification::Notification() {
-  gNotificationStub->NotificationConstructor();
+    gNotificationStub->NotificationConstructor();
 }
 
+Notification::Notification(uint notificationId, uint groupId, uint userId, const NotificationParameters &parameters,
+                           Notification::NotificationType type, int timeout)
+{
+    gNotificationStub->NotificationConstructor(notificationId, groupId, userId, parameters, type, timeout);
+}
+
+
 Notification::~Notification() {
-  gNotificationStub->NotificationDestructor();
+    gNotificationStub->NotificationDestructor();
 }
 
 uint Notification::notificationId() const {
-  return gNotificationStub->notificationId();
+    return gNotificationStub->notificationId();
 }
 
 uint Notification::userId() const {
-  return gNotificationStub->userId();
+    return gNotificationStub->userId();
 }
 
 uint Notification::groupId() const {
-  return gNotificationStub->groupId();
+    return gNotificationStub->groupId();
+}
+
+Notification::NotificationType Notification::type() const {
+    return gNotificationStub->type();
 }
 
 const NotificationParameters & Notification::parameters() const {
-  return gNotificationStub->parameters();
+    return gNotificationStub->parameters();
 }
 
 void Notification::setParameters(const NotificationParameters &parameters) {
-  gNotificationStub->setParameters(parameters);
+    gNotificationStub->setParameters(parameters);
 }
 
 int Notification::timeout() const {
-  return gNotificationStub->timeout();
+    return gNotificationStub->timeout();
 }
 
+QDBusArgument &operator<<(QDBusArgument &argument, const Notification &)
+{
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, Notification &)
+{
+    return argument;
+}
 
 #endif

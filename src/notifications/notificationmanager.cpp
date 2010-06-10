@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 
+#include <QDBusMetaType>
+#include "metatypedeclarations.h"
 #include "notificationmanager.h"
 #include "notification.h"
 #include "dbusinterfacenotificationsource.h"
@@ -427,6 +429,32 @@ QList<uint> NotificationManager::notificationIdList(uint notificationUserId)
     }
 
     return listOfNotificationIds;
+}
+
+QList<Notification> NotificationManager::notificationList(uint notificationUserId)
+{
+    QList<Notification> userNotifications;
+
+    foreach(const Notification & notification, notifications) {
+        if (notification.userId() == notificationUserId) {
+            userNotifications.append(notification);
+        }
+    }
+
+    return userNotifications;
+}
+
+QList<NotificationGroup> NotificationManager::notificationGroupList(uint notificationUserId)
+{
+    QList<NotificationGroup> userGroups;
+
+    foreach(const NotificationGroup & group, groups) {
+        if (group.userId() == notificationUserId) {
+            userGroups.append(group);
+        }
+    }
+
+    return userGroups;
 }
 
 void NotificationManager::relayNextNotification()

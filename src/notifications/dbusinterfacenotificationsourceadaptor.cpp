@@ -57,10 +57,22 @@ uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint notificationUs
     return parent()->addNotification(notificationUserId, groupId, eventType);
 }
 
+QList < NotificationGroup >  DBusInterfaceNotificationSourceAdaptor::notificationGroupList(uint notificationUserId)
+{
+    // handle method call com.meego.core.MNotificationManager.notificationGroupList
+    return parent()->notificationGroupList(notificationUserId);
+}
+
 QList < uint >  DBusInterfaceNotificationSourceAdaptor::notificationIdList(uint notificationUserId)
 {
     // handle method call com.meego.core.MNotificationManager.notificationIdList
     return parent()->notificationIdList(notificationUserId);
+}
+
+QList < Notification >  DBusInterfaceNotificationSourceAdaptor::notificationList(uint notificationUserId)
+{
+    // handle method call com.meego.core.MNotificationManager.notificationList
+    return parent()->notificationList(notificationUserId);
 }
 
 uint DBusInterfaceNotificationSourceAdaptor::notificationUserId()

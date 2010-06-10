@@ -22,6 +22,8 @@
 #include "dbusinterfacenotificationsourceadaptor.h"
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
+#include "notification_stub.h"
+#include "notificationgroup_stub.h"
 
 MockNotificationManager::MockNotificationManager() :
     addNotificationNotificationUserId(12345),
@@ -40,7 +42,9 @@ MockNotificationManager::MockNotificationManager() :
     removeGroupNotificationUserId(12345),
     removeGroupId(12345),
     lastNotificationUserId(0),
-    queryNotificationUserId(0)
+    queryNotificationUserId(0),
+    notificationListCalled(false),
+    notificationGroupListCalled(false)
 {
 }
 
@@ -101,6 +105,28 @@ QList< uint > MockNotificationManager::notificationIdList(uint notificationUserI
     QList< uint > tmp;
     tmp << 1 << 2 << 3 << 4 << 5;
     return tmp;
+}
+
+QList<Notification> MockNotificationManager::notificationList(uint notificationUserId)
+{
+    queryNotificationUserId = notificationUserId;
+
+    QList<Notification> notificationList;
+
+    notificationListCalled = true;
+
+    return notificationList;
+}
+
+QList<NotificationGroup> MockNotificationManager::notificationGroupList(uint notificationUserId)
+{
+    queryNotificationUserId = notificationUserId;
+
+    QList<NotificationGroup> groupList;
+
+    notificationGroupListCalled = true;
+
+    return groupList;
 }
 
 // DBusInterfaceNotificationSourceAdaptor stubs (used by NotificationManager)
@@ -172,6 +198,18 @@ QList<uint> DBusInterfaceNotificationSourceAdaptor::notificationIdList(uint noti
     QList<uint> tmp;
     Q_UNUSED(notificationUserId);
     return tmp;
+}
+
+QList < Notification >  DBusInterfaceNotificationSourceAdaptor::notificationList(uint)
+{
+    QList<Notification> l;
+    return l;
+}
+
+QList<NotificationGroup> DBusInterfaceNotificationSourceAdaptor::notificationGroupList(uint)
+{
+    QList<NotificationGroup> l;
+    return l;
 }
 
 void Ut_DBusInterfaceNotificationSource::initTestCase()
@@ -289,5 +327,20 @@ void Ut_DBusInterfaceNotificationSource::testNotificationIdList()
     QCOMPARE(result.at(3), (uint)4);
     QCOMPARE(result.at(4), (uint)5);
 }
+
+void Ut_DBusInterfaceNotificationSource::testNotificationList()
+{
+    source->notificationList(10);
+    QCOMPARE(manager->queryNotificationUserId, (uint)10);
+    QVERIFY(manager->notificationListCalled);
+}
+
+void Ut_DBusInterfaceNotificationSource::testNotificationGroupList()
+{
+    source->notificationGroupList(10);
+    QCOMPARE(manager->queryNotificationUserId, (uint)10);
+    QVERIFY(manager->notificationGroupListCalled);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSource)

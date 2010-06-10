@@ -29,7 +29,11 @@
 #ifndef METATYPEDECLARATIONS_H
 #define METATYPEDECLARATIONS_H
 
-Q_DECLARE_METATYPE(QList<uint>)
+#include "notification.h"
+#include "notificationgroup.h"
 
+Q_DECLARE_METATYPE(QList<uint>)
+Q_DECLARE_METATYPE(QList<Notification>)
+Q_DECLARE_METATYPE(QList<NotificationGroup>)
 
 #endif
