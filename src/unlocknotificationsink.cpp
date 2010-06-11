@@ -59,9 +59,10 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
     if (m_enabled == false)
         return false;
 
-// FIXME: Need to be determined what type of notification should
-//        be visible in unlockscreen... For now only email, sms, 
-//        call and instant message will be shown...
+    return true;
+
+#if 0
+    // Filtering by notification event-type, not used for now...
     bool retval = false;
 
     QString event_type =
@@ -75,6 +76,7 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
         retval = true;
 
     return retval;
+#endif
 }
 
 void

@@ -73,15 +73,12 @@ Ut_UnlockNotificationSink::cleanup ()
 void
 Ut_UnlockNotificationSink::testAddNotification ()
 {
+    gUnlockMissedEventsStub->stubReset ();
+
     // Test enabled sink (locked-state)
     sink->setLockedState (true);
 
     QTest::qWait (100);
-
-    // check the comment below..
-#if 0
-    QSignalSpy  spy (sink, SIGNAL (updateNotificationsCount (int, int, int, int)));
-#endif
 
     NotificationParameters email_params;
     email_params.add (GenericNotificationParameterFactory::eventTypeKey (),
@@ -97,6 +94,11 @@ Ut_UnlockNotificationSink::testAddNotification ()
     // Add e-mail notification
     sink->addNotification (email);
 
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifyEmail);
+    gUnlockMissedEventsStub->stubReset ();
+
     NotificationParameters msg_params;
     msg_params.add (GenericNotificationParameterFactory::eventTypeKey (),
                     EVENT_MSG);
@@ -110,6 +112,11 @@ Ut_UnlockNotificationSink::testAddNotification ()
     QVERIFY (sink->canAddNotification (msg) == true);
     // Add SMS notification
     sink->addNotification (msg);
+
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifySms);
+    gUnlockMissedEventsStub->stubReset ();
 
     NotificationParameters call_params;
     call_params.add (GenericNotificationParameterFactory::eventTypeKey (),
@@ -125,6 +132,11 @@ Ut_UnlockNotificationSink::testAddNotification ()
     // Add call notification
     sink->addNotification (call);
 
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifyCall);
+    gUnlockMissedEventsStub->stubReset ();
+
     NotificationParameters im_params;
     im_params.add (GenericNotificationParameterFactory::eventTypeKey (),
                    EVENT_IM);
@@ -139,6 +151,11 @@ Ut_UnlockNotificationSink::testAddNotification ()
     // Add instant message notification
     sink->addNotification (im);
 
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifyMessage);
+    gUnlockMissedEventsStub->stubReset ();
+
     NotificationParameters usb_params;
     usb_params.add (GenericNotificationParameterFactory::eventTypeKey (),
                     EVENT_OTHER);
@@ -149,61 +166,21 @@ Ut_UnlockNotificationSink::testAddNotification ()
                       Notification::ApplicationEvent,
                       -1);
 
-    QVERIFY (sink->canAddNotification (usb) == false);
+    QVERIFY (sink->canAddNotification (usb) == true);
     // Add USB notification
     sink->addNotification (usb);
 
-    // Try to remove a notification (no signal should be emitted)
-    sink->removeNotification (101);
-
-    // Wait for some time, so signals can arrive...
-    QTest::qWait (150);
-
-    // TODO: FIXME: i should check the UnlockMissedEventsStub class...
-
-#if 0
-    // e-mail, msg (sms), call, im
-    QVERIFY (spy.count () == 4);
-
-    // SIGNAL:
-    // void updateNotificationsCount (int emails, int messages, int calls, int im);
-    QList<QVariant> arguments1 = spy.takeFirst ();
-    // One e-mail arrived...
-    QVERIFY (arguments1.at (0).toInt () == 1);
-    QVERIFY (arguments1.at (1).toInt () == 0);
-    QVERIFY (arguments1.at (2).toInt () == 0);
-    QVERIFY (arguments1.at (3).toInt () == 0);
-
-    QList<QVariant> arguments2 = spy.takeFirst ();
-    // One message arrived...
-    QVERIFY (arguments2.at (0).toInt () == 1);
-    QVERIFY (arguments2.at (1).toInt () == 1);
-    QVERIFY (arguments2.at (2).toInt () == 0);
-    QVERIFY (arguments2.at (3).toInt () == 0);
-
-    QList<QVariant> arguments3 = spy.takeFirst ();
-    // One call arrived...
-    QVERIFY (arguments3.at (0).toInt () == 1);
-    QVERIFY (arguments3.at (1).toInt () == 1);
-    QVERIFY (arguments3.at (2).toInt () == 1);
-    QVERIFY (arguments3.at (3).toInt () == 0);
-
-    QList<QVariant> arguments4 = spy.takeFirst ();
-    // One instant message arrived...
-    QVERIFY (arguments4.at (0).toInt () == 1);
-    QVERIFY (arguments4.at (1).toInt () == 1);
-    QVERIFY (arguments4.at (2).toInt () == 1);
-    QVERIFY (arguments4.at (3).toInt () == 1);
-#endif
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifyOther);
+    gUnlockMissedEventsStub->stubReset ();
 }
 
 void
 Ut_UnlockNotificationSink::testEnableDisableLocking ()
 {
-
-#if 0
-    QSignalSpy  spy (sink, SIGNAL (updateNotificationsCount (int, int, int, int)));
-#endif
+    sink->setLockedState (true);
+    gUnlockMissedEventsStub->stubReset ();
 
     // Test notifications
     NotificationParameters im_params;
@@ -216,10 +193,16 @@ Ut_UnlockNotificationSink::testEnableDisableLocking ()
     Notification im3 (200, GID, UID, im_params,
                       Notification::ApplicationEvent, -1);
 
+
+    // To trigger the notification clearing...
     sink->setLockedState (false);
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("clearAll"), 1);
 
     // Try to add one notification
     sink->addNotification (im1);
+
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 0);
+    gUnlockMissedEventsStub->stubReset ();
 
     sink->setLockedState (true);
 
@@ -227,24 +210,14 @@ Ut_UnlockNotificationSink::testEnableDisableLocking ()
     sink->addNotification (im2);
     sink->addNotification (im3);
 
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("addNotification"), 2);
+    QVERIFY (gUnlockMissedEventsStub->stubLastParameters<int> (0) 
+             == (int) UnlockMissedEvents::NotifyMessage);
+    gUnlockMissedEventsStub->stubReset ();
+
     sink->setLockedState (false);
 
-    // TODO: FIXME: need to check the UnlocMissedEventsStub...
-#if 0
-    // 1.) setLockedState (false) emit update counts with zeros
-    // 2.) im2
-    // 3.) im3
-    // 4.) setLockedState (true) emit update counts with zeros
-    // 5.) setLockedState (false) emit update counts with zeros...
-    QVERIFY (spy.count () == 5);
-
-    QList<QVariant> arguments = spy.takeAt (3); // signal after adding im3
-    // One instant message arrived...
-    QVERIFY (arguments.at (0).toInt () == 0);
-    QVERIFY (arguments.at (1).toInt () == 0);
-    QVERIFY (arguments.at (2).toInt () == 0);
-    QVERIFY (arguments.at (3).toInt () == 2);
-#endif
+    QCOMPARE (gUnlockMissedEventsStub->stubCallCount ("clearAll"), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_UnlockNotificationSink)

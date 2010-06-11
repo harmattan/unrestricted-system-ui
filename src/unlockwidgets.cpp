@@ -208,7 +208,6 @@ void
 UnlockArea::updateState ()
 {
     SYS_DEBUG ("");
-    // XXX: TODO: set the proper image!!!!
 
     if (m_enabled == false)
     {

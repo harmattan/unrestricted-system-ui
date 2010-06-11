@@ -2,7 +2,7 @@
 #include "volumeoverlay.h"
 #include "volumebarlogic.h"
 
-#undef DEBUG
+#define DEBUG
 #include "../debug.h"
 
 VolumeControlUI::VolumeControlUI (QObject *parent) :
@@ -12,9 +12,6 @@ VolumeControlUI::VolumeControlUI (QObject *parent) :
     m_hwkeys (0)
 {
     SYS_DEBUG ("");
-
-    connect (m_overlay, SIGNAL (VolumeChanged (int)),
-             this, SLOT (overlayChanged (int)));
 
     m_hwkeys = new QmKeys (this);
 
@@ -58,6 +55,7 @@ VolumeControlUI::overlayChanged (int val)
 void
 VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
 {
+    SYS_DEBUG ("key = %d, state = %d", (int) key, (int) state);
     int change_val = 0;
 
     if (state == QmKeys::KeyUp)
@@ -65,7 +63,6 @@ VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
 
     switch (key)
     {
-        // TODO: check the orientation stuff from UI specs.
         case QmKeys::VolumeUp:
             change_val++;
             break;
