@@ -237,10 +237,6 @@ void Ut_MCompositorNotificationSink::testAddNotification()
     QCOMPARE(banner->bodyText(), QString("body0"));
     QCOMPARE(banner->imageID(), QString("icon0"));
 
-    // Check that proper mask was done
-    QRegion maskRegionExpected = QRegion(QRect(0,0, banner->preferredSize().width(), banner->preferredSize().height()), QRegion::Rectangle);
-    QCOMPARE(maskRegionReceived, maskRegionExpected);
-
     // check that the timeout timer was started
     QCOMPARE(Ut_TimerStarted, true);
 
