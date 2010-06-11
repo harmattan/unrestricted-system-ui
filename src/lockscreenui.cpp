@@ -41,7 +41,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 
-#undef DEBUG
+#define DEBUG
 #define WARNING
 #include "debug.h"
 
@@ -197,10 +197,6 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
         updateDnDicon ();
         static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (false);
         static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (true);
-
-        // TODO: FIXME:
-        // hide the icon from the lock-lift area
-        // show the inactive border in lock-land area
     }
     else
         m_DnDstate = STATE_NONE;
@@ -369,9 +365,11 @@ LockScreenUI::realize ()
      * (this one is optional, based on missed events)
      */
     m_notificationArea = new UnlockNotifications;
-    m_policy->addItem (m_notificationArea);
+    m_notificationArea->setVisible (false);
 
-    // m_notificationArea->setVisible (false);
+    connect (m_notificationArea, SIGNAL (needToShow (bool)),
+             this, SLOT (showHideNotifications (bool)));
+
     /*
      * The upper part of the lock-screen ui, this shows the
      * big lock icon at right side, and the date/time at left side
@@ -415,41 +413,30 @@ LockScreenUI::updateDateTime ()
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
 }
 
-// TODO: UnlockNotifications should emit some signal when it wants to be visible...
-//       [or maybe i could use the visibility change signal??? XXX: FIXME]
-#if 0
 void
-LockScreenUI::updateMissedEvents (int emails,
-                                  int messages,
-                                  int calls,
-                                  int im)
+LockScreenUI::showHideNotifications (bool show)
 {
-    SYS_DEBUG ("");
-    if (m_notificationArea != 0)
+    if (m_notificationArea == 0)
+        return;
+
+    SYS_DEBUG ("show = %s", SYS_BOOL (show));
+
+    // Hide the whole missed events notification area when
+    // there is no any missed events...
+    if (m_notificationArea->isVisible () && (show == false))
     {
-        static_cast<UnlockNotifications *> (m_notificationArea)-> 
-                    updateMissedEvents (emails, messages, calls, im);
+        m_notificationArea->setVisible (false);
+        m_policy->removeItem (m_notificationArea);
+    }
 
-        // Hide the whole missed events notification area when
-        // there is no any missed events...
-        if (m_notificationArea->isVisible () &&
-            ((emails + messages + calls + im) == 0))
-        {
-            m_notificationArea->setVisible (false);
-            m_policy->removeItem (m_notificationArea);
-        }
-
-        // Add notification area to policy when previously was
-        // hidden, but there are some missed events...
-        if ((m_notificationArea->isVisible () == false) &&
-            (emails + messages + calls + im) > 0)
-        {
-            m_notificationArea->setVisible (true);
-            m_policy->insertItem (0, m_notificationArea);
-        }
+    // Add notification area to policy when previously was
+    // hidden, but there are some missed events...
+    if ((m_notificationArea->isVisible () == false) && (show == true))
+    {
+        m_notificationArea->setVisible (true);
+        m_policy->insertItem (0, m_notificationArea);
     }
 }
-#endif
 
 void 
 LockScreenUI::showEvent (

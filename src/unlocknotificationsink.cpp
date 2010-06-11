@@ -29,7 +29,7 @@
 #define EVENT_CALL  "x-nokia.call"
 #define EVENT_IM    "im.received"
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 UnlockNotificationSink::UnlockNotificationSink () :
@@ -43,6 +43,8 @@ UnlockNotificationSink::setLockedState (bool islocked)
 {
     if (islocked == m_enabled)
         return;
+
+    SYS_DEBUG ("islocked = %s", SYS_BOOL (islocked));
 
     // Set the internal state
     m_enabled = islocked;
@@ -78,6 +80,12 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
 void
 UnlockNotificationSink::addNotification (const Notification &notification)
 {
+    // not locked state... skip
+    // XXX:
+    // Why i called with addNotification when canAddNotification returns false?
+    if (m_enabled == false)
+        return;
+
     QString lastSummary;
     UnlockMissedEvents::Types type = UnlockMissedEvents::NotifyOther;
 
@@ -109,9 +117,6 @@ UnlockNotificationSink::addNotification (const Notification &notification)
             SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
         }
     }
-
-    // FIXME: if lastSummary is empty, at least some text eg.: E-mail arrived
-    // should be shown in unlockscreen window
 
     UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
 }

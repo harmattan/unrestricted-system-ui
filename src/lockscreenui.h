@@ -112,6 +112,7 @@ protected:
 private slots:
     void realize ();
     void sliderUnlocked ();
+    void showHideNotifications (bool show);
 
 private:
     bool                 m_Realized;

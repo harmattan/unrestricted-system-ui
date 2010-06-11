@@ -29,6 +29,7 @@ class LockScreenUIStub : public StubBase {
   public:
   virtual void LockScreenUIConstructor();
   virtual void LockScreenUIDestructor();
+  virtual void showHideNotifications(bool show);
   virtual void updateDateTime();
   virtual void createContent();
   virtual void showEvent(QShowEvent *event);
@@ -42,6 +43,11 @@ void LockScreenUIStub::LockScreenUIConstructor() {
 }
 void LockScreenUIStub::LockScreenUIDestructor() {
 
+}
+void LockScreenUIStub::showHideNotifications(bool show) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool>(show));
+  stubMethodEntered("showHideNotifications",params);
 }
 void LockScreenUIStub::updateDateTime() {
   stubMethodEntered("updateDateTime");
@@ -79,6 +85,10 @@ LockScreenUI::LockScreenUI() {
 
 LockScreenUI::~LockScreenUI() {
   gLockScreenUIStub->LockScreenUIDestructor();
+}
+
+void LockScreenUI::showHideNotifications(bool show) {
+  gLockScreenUIStub->showHideNotifications(show);
 }
 
 void LockScreenUI::updateDateTime() {
