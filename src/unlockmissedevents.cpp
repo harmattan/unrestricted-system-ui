@@ -52,12 +52,18 @@ UnlockMissedEvents::getLastType ()
 QString
 UnlockMissedEvents::getLastSubject (Types atype)
 {
+    if (atype == NotifyLast)
+        return QString ();
+
     return lastSubjects[atype];
 }
 
 int
 UnlockMissedEvents::getCount (Types atype)
 {
+    if (atype == NotifyLast)
+        return 0;
+
     return notificationCounts[atype];
 }
 

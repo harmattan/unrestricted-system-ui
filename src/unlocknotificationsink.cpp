@@ -55,6 +55,8 @@ UnlockNotificationSink::setLockedState (bool islocked)
 bool
 UnlockNotificationSink::canAddNotification (const Notification &notification)
 {
+    Q_UNUSED (notification);
+
     // Not locked state... skip
     if (m_enabled == false)
         return false;
