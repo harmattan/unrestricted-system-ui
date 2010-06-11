@@ -181,11 +181,10 @@ UnlockNotifications::updateContents ()
 
     if (mostRecent == UnlockMissedEvents::NotifyLast)
     {
+        emit needToShow (false);
+
         /*
          * Clear out all the missed events...
-         */
-        /*
-         * TODO: Check this...
          */
         foreach (MLabel *label, m_labels)
             delete label;
@@ -195,13 +194,31 @@ UnlockNotifications::updateContents ()
             delete icon;
         m_icons.clear ();
 
-        emit needToShow (false);
+        m_last_subject->setText ("");
+        m_last_icon->setImage ("");
     }
     else
     {
-        m_last_icon->setImage (m_icon_ids[mostRecent]);
-        m_last_subject->setText (
-            UnlockMissedEvents::getInstance ().getLastSubject (mostRecent));
+        /*
+         * Check the actually shown most-recent notification
+         * type... (yeah it is hacky a bit...)
+         */
+        int actualType = m_icon_ids.key (m_last_icon->image ());
+
+        /*
+         * Sms and call must be the highest priority....
+         * [so it should shown as most recent even there
+         *  are newer other events...]
+         */
+        if (((actualType != UnlockMissedEvents::NotifySms) &&
+             (actualType != UnlockMissedEvents::NotifyCall)) ||
+            (mostRecent == UnlockMissedEvents::NotifySms) ||
+            (mostRecent == UnlockMissedEvents::NotifyCall))
+        {
+            m_last_icon->setImage (m_icon_ids[mostRecent]);
+            m_last_subject->setText (
+                UnlockMissedEvents::getInstance ().getLastSubject (mostRecent));
+        }
 
         if (m_labels.value (mostRecent, 0) != 0)
         {
