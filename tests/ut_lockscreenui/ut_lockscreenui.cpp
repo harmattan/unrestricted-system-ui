@@ -24,6 +24,7 @@
 #include "unlockmissedevents_stub.h"
 #include "sysuid_stub.h"
 
+#include <QShowEvent>
 #include <MApplication>
 #include <MApplicationWindow>
 #include <MGConfItem>
@@ -162,6 +163,25 @@ Ut_LockScreenUI::testLockScreenUI ()
 }
 
 void
+Ut_LockScreenUI::testLockScreenUIWindowName ()
+{
+    Q_ASSERT (m_LockScreenUI == 0);
+    
+    m_LockScreenUI = new LockScreenUI;
+
+    /*
+     * I'm not sure what could we test here except that the program will not
+     * crash if the event is invalid and the internal window ID is also 
+     * invalid.
+     */
+    QShowEvent event;
+    m_LockScreenUI->showEvent(&event);
+
+    delete m_LockScreenUI;
+    m_LockScreenUI = 0;
+}
+
+void
 Ut_LockScreenUI::testEventEaterUI ()
 {
     bool connectSuccess;
@@ -189,6 +209,29 @@ Ut_LockScreenUI::testEventEaterUI ()
     m_EventSink.m_OneInputCame = false;
     m_EventEaterUI->mouseReleaseEvent ((QMouseEvent *)NULL);
     QVERIFY (m_EventSink.m_OneInputCame);
+
+    delete m_EventEaterUI;
+    m_EventEaterUI = 0;
+}
+
+void
+Ut_LockScreenUI::testEventEaterUIWindowName ()
+{
+    bool connectSuccess;
+
+    /*
+     * We need a new event eater widget.
+     */
+    Q_ASSERT (m_EventEaterUI == 0);
+    m_EventEaterUI = new EventEaterUI;
+
+    /*
+     * I'm not sure what could we test here except that the program will not
+     * crash if the event is invalid and the internal window ID is also 
+     * invalid.
+     */
+    QShowEvent event;
+    m_EventEaterUI->showEvent(&event);
 
     delete m_EventEaterUI;
     m_EventEaterUI = 0;
