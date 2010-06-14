@@ -1,5 +1,17 @@
 /*! \page news What's New in System UI
 
+\section v0161 0.16.1
+
+\subsection New
+
+- Notification manager returns all properties of notifications instead of just their IDs when requested
+
+\subsection Fixed
+
+- system-ui can not be compiled without closed source dependencies
+- System-ui should use system bus for libngf
+- Input method indicators are truncated in status bar
+
 \section v0160 0.16.0
 
 \subsection New
