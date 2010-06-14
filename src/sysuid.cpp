@@ -182,12 +182,13 @@ void Sysuid::retranslate ()
 
     SYS_DEBUG (" lang = %s", SYS_STR (locale.language ()));
 
-    // Install engineering english
-    locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
     // Install real translations
     locale.installTrCatalog ("usb");
     locale.installTrCatalog ("reset");
     locale.installTrCatalog ("energy");
+    locale.installTrCatalog ("shutdown");
+    locale.installTrCatalog ("profiles");
+    locale.installTrCatalog ("screenlock");
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     MLocale::setDefault (locale);

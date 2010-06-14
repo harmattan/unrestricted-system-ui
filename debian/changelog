@@ -1,10 +1,9 @@
-system-ui (0.16.1~1) harmattan; urgency=low
+system-ui (0.16.1~2) harmattan; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#173543 - System-ui should use system bus for libngf
   * Fixes: NB#172606 - Input method indicators are truncated in status bar
-	
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 10 Jun 2010 08:24:42 +0200
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 14 Jun 2010 15:31:22 +0200
 
 system-ui (0.16.0-1) harmattan; urgency=low
 

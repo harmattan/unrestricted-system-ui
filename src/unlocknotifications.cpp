@@ -62,7 +62,7 @@ UnlockNotifications::UnlockNotifications ()
     m_mostrecent_layout = new QGraphicsLinearLayout (Qt::Horizontal);
     /* Everything came from CSS, no need for default margins */
     m_mostrecent_layout->setContentsMargins (0., 0., 0., 0.);
- 
+
     m_last_icon = new MImageWidget;
     m_last_icon->setObjectName ("LockMostRecentIcon");
 
@@ -163,7 +163,7 @@ UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
          */
         m_otherevents_area->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Minimum);
     }
-    
+
     /*
      * to re-calculate the sizes...
      */
@@ -203,6 +203,8 @@ UnlockNotifications::updateContents ()
          * type... (yeah it is hacky a bit...)
          */
         int actualType = m_icon_ids.key (m_last_icon->image ());
+        int eventCount =
+            UnlockMissedEvents::getInstance ().getCount (mostRecent);
 
         /*
          * Sms and call must be the highest priority....
@@ -215,8 +217,40 @@ UnlockNotifications::updateContents ()
             (mostRecent == UnlockMissedEvents::NotifyCall))
         {
             m_last_icon->setImage (m_icon_ids[mostRecent]);
-            m_last_subject->setText (
-                UnlockMissedEvents::getInstance ().getLastSubject (mostRecent));
+
+            QString mostRecentText =
+                UnlockMissedEvents::getInstance ().getLastSubject (mostRecent);
+
+            if (eventCount > 0)
+            {
+                switch (actualType)
+                {
+                    case UnlockMissedEvents::NotifyCall:
+                        mostRecentText =
+                            //% "%1 missed calls"
+                            qtTrId ("qtn_scrl_missed_call").arg (eventCount);
+                        break;
+                    case UnlockMissedEvents::NotifySms:
+                        mostRecentText =
+                            //% "%1 text messages"
+                            qtTrId ("qtn_scrl_sms").arg (eventCount);
+                        break;
+                    case UnlockMissedEvents::NotifyEmail:
+                        mostRecentText =
+                            //% "%1 emails"
+                            qtTrId ("qtn_scrl_email").arg (eventCount);
+                        break;
+                    case UnlockMissedEvents::NotifyMessage:
+                        mostRecentText =
+                            //% "%1 chats"
+                            qtTrId ("qtn_scrl_chat").arg (eventCount);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            m_last_subject->setText (mostRecentText);
         }
 
         if (m_labels.value (mostRecent, 0) != 0)
@@ -238,8 +272,7 @@ UnlockNotifications::updateContents ()
             m_icons[mostRecent]->setObjectName ("LockNotifierIcon");
         }
 
-        m_labels.value (mostRecent)->setText (QString ("%L1").arg (
-            UnlockMissedEvents::getInstance ().getCount (mostRecent)));
+        m_labels.value (mostRecent)->setText (QString ("%L1").arg (eventCount));
 
         /*
          * Most recent area only visible when orientation is portrait
