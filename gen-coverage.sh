@@ -17,6 +17,8 @@ fi
 
 rm -fr ./coverage/*
 
+./configure
+
 echo "qmake BUILD_FEATURES=coverage"
 qmake BUILD_FEATURES=coverage
 
