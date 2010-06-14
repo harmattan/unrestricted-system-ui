@@ -41,7 +41,9 @@ private slots:
 
     void testLockScreenBusinessLogic ();
     void testLockScreenBusinessLogicWithMainWindow ();
+#ifdef HAVE_QMSYSTEM
     void testLockScreenBusinessLogicWithLocking ();
+#endif
 
 private:
     XChecker                   m_XChecker;

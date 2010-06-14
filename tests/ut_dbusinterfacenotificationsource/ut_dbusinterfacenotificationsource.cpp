@@ -244,7 +244,8 @@ void Ut_DBusInterfaceNotificationSource::testAddNotification()
     QCOMPARE(manager->addNotificationGroupId, (uint)4);
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(manager->addNotificationParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("1"));
-    QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
+    QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
+    QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->addNotificationParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
 
@@ -267,7 +268,8 @@ void Ut_DBusInterfaceNotificationSource::testUpdateNotification()
     QCOMPARE(manager->updateNotificationId, (uint)4);
     QCOMPARE(manager->updateNotificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(manager->updateNotificationParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
-    QCOMPARE(manager->updateNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
+    QCOMPARE(manager->updateNotificationParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
+    QCOMPARE(manager->updateNotificationParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(manager->updateNotificationParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->updateNotificationParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
 }
@@ -288,7 +290,8 @@ void Ut_DBusInterfaceNotificationSource::testAddGroup()
     QCOMPARE(manager->addGroupNotificationUserId, (uint)2);
     QCOMPARE(manager->addGroupParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(manager->addGroupParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("1"));
-    QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
+    QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
+    QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->addGroupParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
 }
@@ -304,7 +307,8 @@ void Ut_DBusInterfaceNotificationSource::testUpdateGroup()
     QCOMPARE(manager->updateGroupId, (uint)4);
     QCOMPARE(manager->updateGroupParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(manager->updateGroupParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
-    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("<p><b>summary</b></p><p>body</p>"));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
 }

@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino=" (0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -148,12 +146,14 @@ Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
     m_subject->batteryStatus ();
     m_SignalSink.print();
 
+#ifdef HAVE_QMSYSTEM
     // Battery can not be charging and not charging in the same time.
     QVERIFY (!(m_SignalSink.m_BatteryChargingCame &&
                 m_SignalSink.m_BatteryNotChargingCame));
     // But it has to do somethhing!
     QVERIFY (!(!m_SignalSink.m_BatteryChargingCame &&
                 !m_SignalSink.m_BatteryNotChargingCame));
+#endif
 }
 
 void
@@ -190,6 +190,7 @@ Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
     QVERIFY (m_SignalSink.m_BarValue == 9);
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 Ut_BatteryBusinessLogic::testSetPSMThreshold()
 {
@@ -283,6 +284,7 @@ void Ut_BatteryBusinessLogic::testTogglePSMAuto()
             Maemo::QmDeviceMode::PSMStateOn);
     #endif
 }
+#endif
 
 void
 Ut_BatteryBusinessLogic::testBatteryBarValue()

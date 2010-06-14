@@ -1,3 +1,4 @@
+include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_batterybusinesslogicadaptor
 INCLUDEPATH += $$SRCDIR
@@ -6,9 +7,9 @@ INCLUDEPATH += $$SRCDIR
 SOURCES += \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/batterybusinesslogicadaptor.cpp \
-    $$SRCDIR/batterybusinesslogic.cpp \
     $$STUBSDIR/batterystub.cpp \
     $$STUBSDIR/gconfstub.cpp \
+    $$STUBSDIR/stubbase.cpp \
     ut_batterybusinesslogicadaptor.cpp
 
 HEADERS += \

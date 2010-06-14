@@ -25,15 +25,18 @@
 #include "lockscreenwindow_stub.h"
 #include "eventeaterui_stub.h"
 #include "sysuid_stub.h"
-#include <qmdisplaystate.h>
 #include <MApplication>
 #include <MApplicationWindow>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+
 Maemo::QmDisplayState::DisplayState qmDisplayState;
-Maemo::QmDisplayState::DisplayState QmDisplayState::get() const
+Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
 {
     return qmDisplayState;
 }
+#endif
 
 // QTimer stubs
 int qTimerStart = -1;
@@ -53,7 +56,9 @@ void Ut_LockScreenBusinessLogic::init()
 {
     qTimerStart = -1;
     gLockScreenUIStub->stubReset();
+#ifdef HAVE_QMSYSTEM
     qmDisplayState = Maemo::QmDisplayState::On;
+#endif
 }
 
 void Ut_LockScreenBusinessLogic::cleanup()
@@ -83,8 +88,10 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     LockScreenBusinessLogic logic;
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
+#ifdef HAVE_QMSYSTEM
     // First try with display off
     qmDisplayState = Maemo::QmDisplayState::Off;
+#endif
 
     // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
     logic.toggleScreenLockUI(true);
@@ -92,7 +99,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(spy.at(0).at(0).toBool(), true);
     QCOMPARE(logic.lockUI->isVisible(), true);
 
-#ifndef __i386__
+#if !defined(__i386__) && defined(HAVE_QMSYSTEM)
     // The timer should not be started if the display is off
     QCOMPARE(qTimerStart, -1);
     QCOMPARE(gLockScreenUIStub->stubCallCount("updateDateTime"), 0);
@@ -156,6 +163,7 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
     QCOMPARE(logic.eaterUI->isVisible(), false);
 }
 
+#ifdef HAVE_QMSYSTEM
 void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 {
     LockScreenBusinessLogic logic;
@@ -167,5 +175,6 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
     logic.displayStateChanged(Maemo::QmDisplayState::On);
     QCOMPARE(qTimerStart, 1000);
 }
+#endif
 
 QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)

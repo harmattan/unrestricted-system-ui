@@ -7,7 +7,12 @@ TEMPLATE = subdirs
 # compiled but left out from the xml (or the insignificant property will be set
 # using the 'disabled' file).
 #
-SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+contains(BUILD_FEATURES,coverage) {
+    SUBDIRS = $$system(ls -1d ut_*/ | grep -v ut_template)
+    #SUBDIRS = $$system(ls -1d ut_*/*.pro 2>/dev/null | sed 's!/.*!!')
+} else {
+    SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+}
 
 QMAKE_STRIP = echo
 
@@ -20,6 +25,12 @@ check-xml.CONFIG = recursive
 QMAKE_EXTRA_TARGETS += check-xml
 
 QMAKE_CLEAN += **/*.log.xml
+
+contains(BUILD_FEATURES,coverage) {
+  QMAKE_EXTRA_TARGETS += coverage
+  coverage.target = coverage
+  coverage.CONFIG = recursive
+}
 
 support_files.commands += $$PWD/gen-tests-xml.sh > $$OUT_PWD/tests.xml
 support_files.target = support_files

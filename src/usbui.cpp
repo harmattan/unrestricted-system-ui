@@ -40,18 +40,16 @@
 #define INIT_TIME 5000
 #endif
 
-using namespace Maemo;
-
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
-    m_logic (0),
-    m_locks (0),
     m_notification (0),
     m_dialog (0),
     m_showdialog (false),
     m_process (new QProcess)
 {
-    m_logic = new QmUSBMode (this);
-    m_locks = new QmLocks (this);
+#ifdef HAVE_QMSYSTEM
+    m_logic = new Maemo::QmUSBMode (this);
+    m_locks = new Maemo::QmLocks (this);
+#endif
 
     QTimer::singleShot (INIT_TIME, this, SLOT (initialize ()));
 }
@@ -70,10 +68,12 @@ UsbUi::~UsbUi ()
 void
 UsbUi::initialize ()
 {
+#ifdef HAVE_QMSYSTEM
     connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
              this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
 
     currentModeChanged (m_logic->getMode ());
+#endif
 }
 
 // Showing the mode selection dialog
@@ -141,7 +141,9 @@ UsbUi::OviSuiteSelected ()
 {
     SYS_DEBUG ("");
 
-    m_logic->setMode (QmUSBMode::OviSuite);
+#ifdef HAVE_QMSYSTEM
+    m_logic->setMode (Maemo::QmUSBMode::OviSuite);
+#endif
 
     if (m_dialog)
         m_dialog->disappear ();
@@ -156,27 +158,30 @@ UsbUi::MassStorageSelected ()
 {
     SYS_DEBUG ("");
 
-    m_logic->setMode (QmUSBMode::MassStorage);
+#ifdef HAVE_QMSYSTEM
+    m_logic->setMode (Maemo::QmUSBMode::MassStorage);
+#endif
 
     if (m_dialog)
         m_dialog->disappear ();
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
 {
     switch (mode)
     {
-        case QmUSBMode::Ask:
-        case QmUSBMode::ModeRequest:
-            if ((m_locks->getState (QmLocks::Device) == QmLocks::Locked) ||
-                (m_locks->getState (QmLocks::TouchAndKeyboard) == QmLocks::Locked))
+        case Maemo::QmUSBMode::Ask:
+        case Maemo::QmUSBMode::ModeRequest:
+            if ((m_locks->getState (Maemo::QmLocks::Device) == Maemo::QmLocks::Locked) ||
+                (m_locks->getState (Maemo::QmLocks::TouchAndKeyboard) == Maemo::QmLocks::Locked))
                 // Show the dialog once the device is unlocked
                 m_showdialog = true;
             else
                 ShowDialog ();
             break;
-        case QmUSBMode::Disconnected:
+        case Maemo::QmUSBMode::Disconnected:
             m_showdialog = false;
 
             // remove the previous notification
@@ -192,13 +197,13 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
                 m_dialog->disappear ();
 
             break;
-        case QmUSBMode::OviSuite:
-        case QmUSBMode::MassStorage:
+        case Maemo::QmUSBMode::OviSuite:
+        case Maemo::QmUSBMode::MassStorage:
             m_showdialog = false;
 
             ShowNotification ((int) mode);
             break;
-        case QmUSBMode::ChargingOnly:
+        case Maemo::QmUSBMode::ChargingOnly:
             SYS_DEBUG ("mode : Charging only");
             // no-op
             break;
@@ -216,13 +221,14 @@ UsbUi::locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
 {
     Q_UNUSED (what);
 
-    if (how == QmLocks::Unlocked)
+    if (how == Maemo::QmLocks::Unlocked)
     {
         m_showdialog = false;
         // Show the mode selection dialog on idle...
         QTimer::singleShot (10, this, SLOT (ShowDialog ()));
     }
 }
+#endif
 
 // id should be an usb_modes enum value
 void
@@ -241,14 +247,16 @@ UsbUi::ShowNotification (int id)
 
     switch (id)
     {
-        case QmUSBMode::OviSuite:
+#ifdef HAVE_QMSYSTEM
+        case Maemo::QmUSBMode::OviSuite:
             //% "Ovi Suite mode"
             mode_text = new QString (qtTrId ("qtn_usb_ovi_suite"));
             break;
-        case QmUSBMode::MassStorage:
+        case Maemo::QmUSBMode::MassStorage:
             //% "Mass Storage mode"
             mode_text = new QString (qtTrId ("qtn_usb_mass_storage"));
             break;
+#endif
         default:
             // no notification should be shown...
             return;

@@ -20,46 +20,50 @@
 #define USBUI_H
 
 #include <QObject>
-#include <qmlocks.h>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
 #ifndef UNIT_TEST
 #include <qmusbmode.h>
 #else
 #include "usbmode_stub.h"
+#endif
 #endif
 
 class MDialog;
 class MNotification;
 class QProcess;
 
-using namespace Maemo;
-
 class UsbUi : public QObject
 {
     Q_OBJECT
 
-    public:
-        UsbUi (QObject *parent = 0);
-        ~UsbUi ();
+public:
+    UsbUi (QObject *parent = 0);
+    ~UsbUi ();
 
     private slots:
-        void currentModeChanged (Maemo::QmUSBMode::Mode mode);
-        void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
-        void OviSuiteSelected ();
-        void MassStorageSelected ();
-        void ShowDialog ();
+#ifdef HAVE_QMSYSTEM
+    void currentModeChanged (Maemo::QmUSBMode::Mode mode);
+    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+#endif
+    void OviSuiteSelected ();
+    void MassStorageSelected ();
+    void ShowDialog ();
 
-        void initialize ();
+    void initialize ();
 
-    private:
-        void ShowNotification (int id);
+private:
+    void ShowNotification (int id);
 
-        Maemo::QmUSBMode    *m_logic;
-        Maemo::QmLocks      *m_locks;
-        MNotification       *m_notification;
-        MDialog             *m_dialog;
-        bool                 m_showdialog;
-        QProcess            *m_process;
+#ifdef HAVE_QMSYSTEM
+    Maemo::QmUSBMode    *m_logic;
+    Maemo::QmLocks      *m_locks;
+#endif
+    MNotification       *m_notification;
+    MDialog             *m_dialog;
+    bool                 m_showdialog;
+    QProcess            *m_process;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

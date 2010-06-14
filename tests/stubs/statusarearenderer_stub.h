@@ -12,16 +12,11 @@ class StatusAreaRendererStub : public StubBase {
   virtual void StatusAreaRendererConstructor(QObject *parent);
   virtual void StatusAreaRendererDestructor();
   virtual void sceneChanged(const QList<QRectF> &region);
+#ifdef HAVE_QMSYSTEM
   virtual void setSceneRender(Maemo::QmDisplayState::DisplayState state);
-   QGraphicsScene *scene ;
-   StatusArea *statusArea_ ;
-   QPixmap *statusAreaPixmap ;
+#endif
   virtual bool createSharedPixmapHandle();
   virtual void setSizeFromStyle();
-   uint statusAreaHeight ;
-   uint statusAreaWidth ;
-   Maemo::QmDisplayState *displayState ;
-   bool renderScene ;
 }; 
 
 // 2. IMPLEMENT STUB
@@ -38,11 +33,13 @@ void StatusAreaRendererStub::sceneChanged(const QList<QRectF> &region) {
   stubMethodEntered("sceneChanged",params);
 }
 
+#ifdef HAVE_QMSYSTEM
 void StatusAreaRendererStub::setSceneRender(Maemo::QmDisplayState::DisplayState state) {
   QList<ParameterBase*> params;
   params.append( new Parameter<Maemo::QmDisplayState::DisplayState >(state));
   stubMethodEntered("setSceneRender",params);
 }
+#endif
 
 bool StatusAreaRendererStub::createSharedPixmapHandle() {
   stubMethodEntered("createSharedPixmapHandle");
@@ -73,9 +70,11 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region) {
   gStatusAreaRendererStub->sceneChanged(region);
 }
 
+#ifdef HAVE_QMSYSTEM
 void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state) {
   gStatusAreaRendererStub->setSceneRender(state);
 }
+#endif
 
 bool StatusAreaRenderer::createSharedPixmapHandle() {
   return gStatusAreaRendererStub->createSharedPixmapHandle();

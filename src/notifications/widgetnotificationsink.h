@@ -90,6 +90,14 @@ protected:
      */
     void updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters);
 
+    /*!
+     * Creates a body text string from summary and body parameters, suitable for
+     * the body text of an MInfoBanner.
+     * \param parameters the NotificationParameters to get the body text from
+     * \return the body text
+     */
+    QString infoBannerBodyText(const NotificationParameters &parameters);
+
     //! MInfoBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 

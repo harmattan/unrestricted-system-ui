@@ -35,16 +35,22 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     scene(new QGraphicsScene),
     statusArea_(new StatusArea(NULL,this)),
     statusAreaPixmap(NULL),
+#ifdef HAVE_QMSYSTEM
     displayState(new Maemo::QmDisplayState()),
+#endif
     renderScene(true)
 {
     scene->setParent(this);
     scene->setObjectName("statusareascene");
     scene->addItem(statusArea_);
     statusArea_->setObjectName("statusarea");
+
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+#ifdef HAVE_QMSYSTEM
     connect(displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+#endif
+
     setSizeFromStyle();
     if(!createSharedPixmapHandle()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
@@ -80,7 +86,10 @@ StatusAreaRenderer::~StatusAreaRenderer()
     scene->removeItem(statusArea_);
     delete statusArea_;
     delete statusAreaPixmap;
+
+#ifdef HAVE_QMSYSTEM
     delete displayState;
+#endif
 }
 
 void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
@@ -103,6 +112,7 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
     }
 }
 
+#ifdef HAVE_QMSYSTEM
 void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state)
 {
     bool oldRenderScene = renderScene;
@@ -129,3 +139,4 @@ void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState stat
         }
     }
 }
+#endif

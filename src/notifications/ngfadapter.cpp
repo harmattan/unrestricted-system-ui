@@ -19,6 +19,7 @@
 
 #include "ngfadapter.h"
 
+#ifdef HAVE_LIBNGF
 NGFAdapter::NGFAdapter()
 {
     connection = dbus_bus_get(DBUS_BUS_SYSTEM, NULL);
@@ -45,3 +46,21 @@ bool NGFAdapter::isValid()
 {
     return client != NULL;
 }
+#else
+NGFAdapter::NGFAdapter()
+{
+}
+
+NGFAdapter::~NGFAdapter()
+{
+}
+
+void NGFAdapter::play(const QString &)
+{
+}
+
+bool NGFAdapter::isValid()
+{
+    return true;
+}
+#endif

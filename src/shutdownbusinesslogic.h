@@ -16,17 +16,17 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef SHUTDOWNBUSINESSLOGIC_H
 #define SHUTDOWNBUSINESSLOGIC_H
 
-#include <qmsystem/qmsystemstate.h>
+#ifdef HAVE_QMSYSTEM
+#include <qmsystemstate.h>
+#endif
+
 #include <QDBusAbstractAdaptor>
 #include <QObject>
 
 class ShutdownUI;
-
 
 /*!
  * \brief Business logic for the shutdown subsystem. 
@@ -53,7 +53,9 @@ public:
                  int timeout = 2000);
 
 public slots:
+#ifdef HAVE_QMSYSTEM
     void systemStateChanged (Maemo::QmSystemState::StateIndication what);
+#endif
 
 private:
     void thermalShutdown ();
@@ -62,7 +64,9 @@ private:
 
 private:
     ShutdownUI             *m_Ui;
+#ifdef HAVE_QMSYSTEM
     Maemo::QmSystemState   *m_State;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ft_ShutdownBusinessLogic;

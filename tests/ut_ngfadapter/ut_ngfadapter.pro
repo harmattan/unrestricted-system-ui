@@ -1,3 +1,4 @@
+include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_ngfadapter
 INCLUDEPATH += $$SRCDIR/notifications

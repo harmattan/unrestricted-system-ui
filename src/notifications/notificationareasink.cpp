@@ -53,7 +53,7 @@ MInfoBanner *NotificationAreaSink::updateNotification(MInfoBanner *infoBanner, c
 {
     // Update the info banner widget
     infoBanner->setImageID(parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString());
-    infoBanner->setBodyText(parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString());
+    infoBanner->setBodyText(infoBannerBodyText(parameters));
     infoBanner->setIconID(determineIconId(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
 

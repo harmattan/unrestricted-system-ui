@@ -22,6 +22,9 @@
 #include "notificationmanager.h"
 #include <stubbase.h>
 
+maemosec::storage::~storage()
+{
+}
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
