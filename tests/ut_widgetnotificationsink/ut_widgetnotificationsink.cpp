@@ -397,12 +397,12 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableByEven
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
-    TestNotificationParameters parameters("icon0", "body0", "buttonicon0", "content0 0 0 0");
+    TestNotificationParameters parameters("icon0", "summary0", "body0", "buttonicon0", "content0 0 0 0");
 
     MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
     QCOMPARE(infoBanner->bannerType(), MInfoBanner::Event);
     QCOMPARE(infoBanner->imageID(), QString("icon0"));
-    QCOMPARE(infoBanner->bodyText(), QString("body0"));
+    QCOMPARE(infoBanner->bodyText(), QString("<p><b>summary0</b></p><p>body0</p>"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon0"));
     QCOMPARE(infoBanner->actions().count(), 1);
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
@@ -413,11 +413,11 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 {
-    TestNotificationParameters parameters("icon1", "body1", "buttonicon1", "");
+    TestNotificationParameters parameters("icon1", "summary1", "body1", "buttonicon1", "");
     MInfoBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020));
     QCOMPARE(infoBanner->bannerType(), MInfoBanner::Information);
     QCOMPARE(infoBanner->imageID(), QString("icon1"));
-    QCOMPARE(infoBanner->bodyText(), QString("body1"));
+    QCOMPARE(infoBanner->bodyText(), QString("<p><b>summary1</b></p><p>body1</p>"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(infoBanner->actions().count(), 0);
     delete infoBanner;
@@ -425,11 +425,11 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters()
 {
-    TestNotificationParameters parameters("icon3", "body3", "buttonicon3", "content1 2 3 4");
+    TestNotificationParameters parameters("icon3", "summary3", "body3", "buttonicon3", "content1 2 3 4");
     MInfoBanner *infoBanner = m_subject->createInfoBanner(MInfoBanner::Event, 1, parameters);
     QCOMPARE(infoBanner->bannerType(), MInfoBanner::Event);
     QCOMPARE(infoBanner->imageID(), QString("icon3"));
-    QCOMPARE(infoBanner->bodyText(), QString("body3"));
+    QCOMPARE(infoBanner->bodyText(), QString("<p><b>summary3</b></p><p>body3</p>"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon3"));
     QCOMPARE(infoBanner->actions().count(), 1);
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));

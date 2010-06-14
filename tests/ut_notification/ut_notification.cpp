@@ -92,7 +92,8 @@ void Ut_Notification::testDBusSerialization()
 
     NotificationParameters parameters0;
     parameters0.add("imageId", "icon");
-    parameters0.add("body", "<p><b>summary</b></p><p>body</p>");
+    parameters0.add("summary", "summary");
+    parameters0.add("body", "body");
     parameters0.add("action", "action");
     parameters0.add("count",  456);
 

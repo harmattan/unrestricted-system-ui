@@ -86,7 +86,7 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
     if (infoBanner) {
         // Update the info banner widget
         infoBanner->setImageID(notification.parameters().value(NotificationWidgetParameterFactory::imageIdKey()).toString());
-        infoBanner->setBodyText(notification.parameters().value(NotificationWidgetParameterFactory::bodyKey()).toString());
+        infoBanner->setBodyText(infoBannerBodyText(notification.parameters()));
         infoBanner->setIconID(determineIconId(notification.parameters()));
 
         // Update the info banner's actions

@@ -107,19 +107,12 @@ UnlockNotificationSink::addNotification (const Notification &notification)
         type = UnlockMissedEvents::NotifyMessage;
 
     if (! notification.parameters ().value
-           (NotificationWidgetParameterFactory::bodyKey ()).isNull ())
+           (NotificationWidgetParameterFactory::summaryKey ()).isNull ())
     {
-        // Extracting summary part from the body text...
-        QString body = notification.parameters ().value (
-            NotificationWidgetParameterFactory::bodyKey ()).toString ();
+        lastSummary = notification.parameters ().value (
+                NotificationWidgetParameterFactory::summaryKey ()).toString ();
 
-        // NotificationParameters makes the body-text from the summary and body
-        // part of the notification, so here i have to extract only the summary:
-        if (body.startsWith ("<p><b>") && (body.indexOf ("</b></p>") != -1))
-        {
-            lastSummary = body.mid (6, body.indexOf ("</b></p>") - 6);
-            SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
-        }
+        SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
     }
 
     UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
