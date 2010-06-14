@@ -36,7 +36,7 @@ The \c NotificationManagerInterface also supports a concept of notification grou
 
 \section event_types Event types
 
-The event type parameter of a notification is used to describe the overall properties of a notification, such as the icon, sound, vibration etc. The event type is a string. For each supported event type there is a configuration file in \c /usr/share/dui/notifications/eventtypes that defines the properties for that particular type of event. The base name of the file defines the event type name: the properties for an event of type \c sms are defined in \c /usr/share/dui/notifications/eventtypes/sms\c.conf and so on. Each configuration file consists of lines with key=value pairs. The keys are notification sink API parameter names such as iconId and feedbackId and the values are the values to be assigned to the notification sink API parameter defined by the key. An example configuration file could be as follows:
+The event type parameter of a notification is used to describe the overall properties of a notification, such as the icon, sound, vibration etc. The event type is a string. Event types should be named using the <a href="http://www.galago-project.org/specs/notification/0.9/x211.html">Desktop Notifications Specification</a> convention \c x-vendor.class.specific. \c x-vendor specifies the vendor extending the specification, such as \c x-nokia, \c class specifies the generic type of the notification, and \c specific specifies the more specific type of the notification. For each supported event type there is a configuration file in \c /usr/share/meegotouch/notifications/eventtypes that defines the properties for that particular type of event. The base name of the file defines the event type name: the properties for an event of type \c x-nokia.message\c.received are defined in \c /usr/share/dui/notifications/eventtypes/x-nokia\c.message.received\c.conf and so on. Each configuration file consists of lines with key=value pairs. The keys are notification sink API parameter names such as iconId and feedbackId and the values are the values to be assigned to the notification sink API parameter defined by the key. An example configuration file could be as follows:
 
 \verbatim
 iconId=Icon-close
@@ -49,11 +49,11 @@ The \c userRemovable key can be used to define whether a notification of given t
 
 The \c class key can be used to define whether a notification of given type is a system notification or an application notification. If class equals system the notification is a system notification. It class equals application or the key is missing the notification is an application notification. System notifications may be treated differently by the notification sinks. For instance, system notifications are not displayed by the \c NotificationAreaSink. They may also have a higher priority than the application notifications.
 
-The \c feedbackId key can be used to define whether a notification of given type produces a feed back. A notification sink may choose to diregard this key if it is not approprioate behaviour for that sink. As an example the \c NGFNotificationSink will use the \c feedbackId to play the associated sound, vibration or led indication or a combination of these. The \ NGFNotificationSink used \libngf to play these indications.
+The \c feedbackId key can be used to define whether a notification of given type produces a feed back. A notification sink may choose to diregard this key if it is not approprioate behaviour for that sink. As an example the \c NGFNotificationSink will use the \c feedbackId to play the associated sound, vibration or led indication or a combination of these. The \c NGFNotificationSink used \libngf to play these indications.
 
 \section links Links
 
-- <a href="https://cwiki.nokia.com/DirectUIFramework">Direct UI wiki</a>
+- <a href="http://www.galago-project.org/specs/notification/0.9/index.html">Desktop Notifications Specification</a>
 
 \see
 
