@@ -22,10 +22,12 @@
 #include "ut_clock.h"
 #include "clock.h"
 
+#ifdef HAVE_QMSYSTEM
 Maemo::QmTime::TimeFormat Maemo::QmTime::getTimeFormat()
 {
     return Ut_Clock::expectedTimeFormat;
 }
+#endif
 
 QDateTime QDateTime::currentDateTime()
 {
@@ -44,7 +46,9 @@ void QTimer::stop()
 
 int Ut_Clock::timerTimeout;
 QDateTime Ut_Clock::expectedDateTime;
+#ifdef HAVE_QMSYSTEM
 Maemo::QmTime::TimeFormat Ut_Clock::expectedTimeFormat;
+#endif
 
 // Called before the first testfunction is executed
 void Ut_Clock::initTestCase()
@@ -60,12 +64,18 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
+#ifdef HAVE_QMSYSTEM
     expectedTimeFormat = Maemo::QmTime::format12h;
+#endif
+
     m_subject = new Clock();
-    connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
-            m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
     connect(this, SIGNAL(shortDisplayMode(bool)),
             m_subject, SLOT(setShortDisplay(bool)));
+
+#ifdef HAVE_QMSYSTEM
+    connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
+            m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
+#endif
 }
 
 // Called after every testfunction
@@ -76,12 +86,15 @@ void Ut_Clock::cleanup()
 
 void Ut_Clock::test24HourModeDuringCreation()
 {
+#ifdef HAVE_QMSYSTEM
     // In init() qmsystem is set up to return 12 hour mode so the clock should be in 12 hour mode
     QCOMPARE(m_subject->model()->timeFormat24h(), false);
+#endif
 }
 
 void Ut_Clock::test24HourModeToggling()
 {
+#ifdef HAVE_QMSYSTEM
     // QMSystem has two states of "whatChanged":
     //  - QmTimeOnlySettingsChanged -- only settings changed
     //  - QmTimeTimeChanged -- time (and possibly settings) changed
@@ -106,7 +119,7 @@ void Ut_Clock::test24HourModeToggling()
     expectedTimeFormat = Maemo::QmTime::format12h;
     emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
     QCOMPARE(m_subject->model()->timeFormat24h(), false);
-
+#endif
 }
 
 void Ut_Clock::testTimeUpdate()
@@ -114,10 +127,12 @@ void Ut_Clock::testTimeUpdate()
     // Check that time was initialized correctly
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 
+#ifdef HAVE_QMSYSTEM
     // If qmsystem notifies up that time changed, model should be updated accordingly
     expectedDateTime = QDateTime(QDate(2010, 1, 1));
     emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
+#endif
 }
 
 void Ut_Clock::testModelUpdates()

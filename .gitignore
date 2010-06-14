@@ -29,3 +29,4 @@ debian/tmp
 debian/system-ui.substvars
 build-stamp
 configure-stamp
+localconfig.pri

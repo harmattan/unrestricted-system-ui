@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -29,9 +27,9 @@
 #include <MSceneManager>
 #include <MTheme>
 
+#ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
-
-using namespace Maemo;
+#endif
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -314,6 +312,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     m_LockScreenBusinessLogic = NULL;
 }
 
+#ifdef HAVE_QMSYSTEM
 /*!
  * This test will try to emulate the situation when we lock the screen (touch
  * screen lock becomes black) show the lockscreenui and then we turn on the
@@ -322,7 +321,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
 void 
 Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
 {
-    QmLocks locks;
+    Maemo::QmLocks locks;
     bool    lockingSuccess, unlockingSuccess;
     Window  LockScreenUIWindowID;
     Window  EventEaterWindowID;
@@ -334,7 +333,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("*** Locking the screen ****************************");
     SYS_DEBUG ("***************************************************");
     lockingSuccess = locks.setState (
-            QmLocks::TouchAndKeyboard, QmLocks::Locked);
+            Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
     #ifndef __i386__
     QVERIFY (lockingSuccess);
     #endif
@@ -356,7 +355,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("*** Unlocking the screen **************************");
     SYS_DEBUG ("***************************************************");
     unlockingSuccess = locks.setState (
-            QmLocks::TouchAndKeyboard, QmLocks::Unlocked);
+            Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
     #ifndef __i386__
     QVERIFY (unlockingSuccess);
     #endif
@@ -399,6 +398,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
                 LockScreenUIWindowID, 
                 XChecker::CheckIsInvisible));
 }
+#endif
 
 QTEST_APPLESS_MAIN(Ft_LockScreenBusinessLogic)
 

@@ -21,7 +21,10 @@
 #define CONTEXTFRAMEWORKCONTEXT_H
 
 #include "applicationcontext.h"
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
 #include <contextproperty.h>
+#endif
 
 /*!
  * Concrete ApplicationContext that creates ContextFrameworkItems from the
@@ -58,7 +61,10 @@ public:
     QVariant value() const;
 
 private:
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    //! The context property being tracked by this item
     ContextProperty property;
+#endif
 };
 
 #endif // CONTEXTFRAMEWORKCONTEXT_H

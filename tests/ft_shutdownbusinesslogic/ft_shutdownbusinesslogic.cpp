@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -24,7 +22,9 @@
 #include "shutdownui.h"
 #include "sysuid_stub.h"
 
-#include <qmsystem/qmsystemstate.h>
+#ifdef HAVE_QMSYSTEM
+#include <qmsystemstate.h>
+#endif
 
 #include <MApplication>
 #include <MApplicationWindow>
@@ -32,8 +32,6 @@
 #include <MTheme>
 #include <MLabel>
 #include <MImageWidget>
-
-using namespace Maemo;
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -87,7 +85,7 @@ Ft_ShutdownBusinessLogic::cleanupTestCase()
     m_App->deleteLater ();
 }
 
-
+#ifdef HAVE_QMSYSTEM
 void 
 Ft_ShutdownBusinessLogic::testThermalState ()
 {
@@ -98,7 +96,7 @@ Ft_ShutdownBusinessLogic::testThermalState ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating ThermalStateFatal state ******");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (QmSystemState::ThermalStateFatal);
+    logic->systemStateChanged (Maemo::QmSystemState::ThermalStateFatal);
     QTest::qWait (WMDelay);
     
     /*
@@ -125,7 +123,7 @@ Ft_ShutdownBusinessLogic::testShutDownDenied ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating ShutdownDeniedUSB ************");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (QmSystemState::ShutdownDeniedUSB);
+    logic->systemStateChanged (Maemo::QmSystemState::ShutdownDeniedUSB);
     QTest::qWait (WMDelay);
     
     /*
@@ -152,7 +150,7 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating BatteryStateEmpty ************");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (QmSystemState::BatteryStateEmpty);
+    logic->systemStateChanged (Maemo::QmSystemState::BatteryStateEmpty);
     QTest::qWait (WMDelay);
     
     /*
@@ -180,7 +178,7 @@ Ft_ShutdownBusinessLogic::testShutDown ()
      * If we change the system to shutdown, the shutdown full screen window must
      * be shown.
      */
-    logic->systemStateChanged (QmSystemState::Shutdown);
+    logic->systemStateChanged (Maemo::QmSystemState::Shutdown);
     QTest::qWait (WMDelay);
 
     /*
@@ -205,8 +203,6 @@ Ft_ShutdownBusinessLogic::testShutDown ()
     QTest::qWait (WMDelay);
     QVERIFY(m_XChecker.turnOnDisplay ());
 }
+#endif
 
 QTEST_APPLESS_MAIN(Ft_ShutdownBusinessLogic)
-
-
-

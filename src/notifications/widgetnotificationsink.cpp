@@ -129,8 +129,8 @@ MInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notifi
 MInfoBanner *WidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
 {
     QString imageId = parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
-    QString body = parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
-    QString iconId = determineIconId(parameters);
+    QString body    = infoBannerBodyText(parameters);
+    QString iconId  = determineIconId(parameters);
     MInfoBanner *infoBanner = new MInfoBanner(type);
 
     if (QFileInfo(imageId).isAbsolute()) {
@@ -167,6 +167,28 @@ void WidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const Notifi
         remoteAction->setVisible(false);
         infoBanner->addAction(remoteAction);
     }
+}
+
+QString WidgetNotificationSink::infoBannerBodyText(const NotificationParameters &parameters)
+{
+    QString summary = parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString();
+    QString body    = parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
+
+    QString text;
+
+    if (!summary.isEmpty()) {
+        text.append("<p><b>");
+        text.append(summary);
+        text.append("</b></p>");
+    }
+
+    if (!body.isEmpty()) {
+        text.append("<p>");
+        text.append(body);
+        text.append("</p>");
+    }
+
+    return text;
 }
 
 void WidgetNotificationSink::infoBannerClicked()

@@ -38,6 +38,13 @@ public:
     }
 
     /*!
+     * Returns the keyname of the summary parameter
+     */
+    static QString summaryKey() {
+        return QString("summary");
+    }
+
+    /*!
      * Returns the keyname of the body parameter
      */
     static QString bodyKey() {
@@ -83,6 +90,16 @@ public:
      */
     static NotificationParameter createBodyParameter(const QString &body) {
         return NotificationParameter(bodyKey(), QVariant(body));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given summary text.
+     *
+     * \param summary the summary text for the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createSummaryParameter(const QString &summary) {
+        return NotificationParameter(summaryKey(), QVariant(summary));
     }
 
     /*!

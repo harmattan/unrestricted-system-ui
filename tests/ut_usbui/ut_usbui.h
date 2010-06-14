@@ -32,9 +32,11 @@ class Ut_UsbUi : public QObject
         void initTestCase ();
         void cleanupTestCase ();
 
+#ifdef HAVE_QMSYSTEM
         void show_hide_dialog ();
         void usbnotifications ();
         void testdialogbuttoncallbacks ();
+#endif
 
     private:
         UsbUi   *m_subject;

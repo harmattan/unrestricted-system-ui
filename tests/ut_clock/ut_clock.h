@@ -22,8 +22,11 @@
 
 #include <QObject>
 #include <QDateTime>
-#include <qmtime.h>
 #include "clock.h"
+
+#ifdef HAVE_QMSYSTEM
+#include <qmtime.h>
+#endif
 
 class TestContext;
 
@@ -34,10 +37,14 @@ class Ut_Clock : public QObject
 public:
     static int timerTimeout;
     static QDateTime expectedDateTime;
+#ifdef HAVE_QMSYSTEM
     static Maemo::QmTime::TimeFormat expectedTimeFormat;
+#endif
 
 signals:
+#ifdef HAVE_QMSYSTEM
     void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
+#endif
     void shortDisplayMode(bool isSet);
 
 private slots:

@@ -20,6 +20,7 @@
 #include "contextframeworkcontext.h"
 #include <QVariant>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
 ContextFrameworkItem::ContextFrameworkItem(const QString &key)
     : property(key)
 {
@@ -30,6 +31,16 @@ QVariant ContextFrameworkItem::value() const
 {
     return property.value();
 }
+#else
+ContextFrameworkItem::ContextFrameworkItem(const QString &)
+{
+}
+
+QVariant ContextFrameworkItem::value() const
+{
+    return QVariant();
+}
+#endif
 
 ContextItem *ContextFrameworkContext::createContextItem(const QString &key)
 {

@@ -1,3 +1,5 @@
+system(./configure)
+
 TEMPLATE = subdirs
 
 SUBDIRS = src \
@@ -6,7 +8,7 @@ SUBDIRS = src \
 	  demos \
           tests
 
-QMAKE_CLEAN += configure-stamp build-stamp
+QMAKE_CLEAN += configure-stamp build-stamp localconfig.pri
 
 contains(BUILD_FEATURES,coverage) {
 	QMAKE_EXTRA_TARGETS += coverage

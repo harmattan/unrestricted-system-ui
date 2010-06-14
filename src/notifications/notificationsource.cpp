@@ -28,28 +28,14 @@ NotificationSource::NotificationSource(NotificationManagerInterface &m)
 
 NotificationParameters NotificationSource::notificationParameters(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    // Create the notification widget body text and icon ID
-    QString widgetBody;
-
-    if (!summary.isEmpty() || !body.isEmpty()) {
-        if (!summary.isEmpty()) {
-            widgetBody.append("<p><b>");
-            widgetBody.append(summary);
-            widgetBody.append("</b></p>");
-        }
-
-        if (!body.isEmpty()) {
-            widgetBody.append("<p>");
-            widgetBody.append(body);
-            widgetBody.append("</p>");
-        }
-    }
-
     NotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::createEventTypeParameter(eventType));
     parameters.add(GenericNotificationParameterFactory::createCountParameter(count));
-    if (!widgetBody.isEmpty()) {
-        parameters.add(NotificationWidgetParameterFactory::createBodyParameter(widgetBody));
+    if (!summary.isEmpty()) {
+        parameters.add(NotificationWidgetParameterFactory::createSummaryParameter(summary));
+    }
+    if (!body.isEmpty()) {
+        parameters.add(NotificationWidgetParameterFactory::createBodyParameter(body));
     }
     if (!imageURI.isEmpty()) {
         parameters.add(NotificationWidgetParameterFactory::createImageIdParameter(imageURI));

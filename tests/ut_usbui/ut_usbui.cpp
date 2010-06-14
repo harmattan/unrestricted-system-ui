@@ -28,8 +28,6 @@
 #include "ut_usbui.h"
 #include "usbmode_stub.h"
 
-using namespace Maemo;
-
 bool MNotification::publish()
 {
     return true;
@@ -52,7 +50,9 @@ Ut_UsbUi::initTestCase ()
 {
     m_App = new MApplication (argc, argv);
     m_subject = new UsbUi;
-    m_subject->m_logic->setMode(QmUSBMode::Undefined);
+#ifdef HAVE_QMSYSTEM
+    m_subject->m_logic->setMode(Maemo::QmUSBMode::Undefined);
+#endif
 
     QTest::qWait (100);
 }
@@ -80,33 +80,34 @@ MSceneWindow::disappear ()
     dialog_visible = false;
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 Ut_UsbUi::show_hide_dialog ()
 {
     dialog_visible = false;
     // Set mode to ask
-    m_subject->m_logic->setDefaultMode(QmUSBMode::Ask);
+    m_subject->m_logic->setDefaultMode(Maemo::QmUSBMode::Ask);
 
     // Emit the ask signal...
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::Ask);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Ask);
     QTest::qWait (200);
 
     QCOMPARE (dialog_visible, true);
 
     // Emit the disconnect signal
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::Disconnected);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Disconnected);
     QTest::qWait (200);
 
     QCOMPARE (dialog_visible, false);
 
     // Emit the moderequest signal
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::ModeRequest);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::ModeRequest);
     QTest::qWait (200);
 
     QCOMPARE (dialog_visible, true);
 
     // Emit the disconnect signal
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::Disconnected);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Disconnected);
     QTest::qWait (200);
 
     QCOMPARE (dialog_visible, false);
@@ -116,11 +117,11 @@ void
 Ut_UsbUi::usbnotifications ()
 {
     // Init to some known state ...
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::Connected);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Connected);
     if (m_subject->m_notification)
         m_subject->m_notification->remove ();
 
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::OviSuite);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::OviSuite);
     QTest::qWait (200);
 
     QCOMPARE (m_subject->m_notification->isPublished (), true);
@@ -128,7 +129,7 @@ Ut_UsbUi::usbnotifications ()
     if (m_subject->m_notification)
         m_subject->m_notification->remove ();
 
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::MassStorage);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::MassStorage);
     QTest::qWait (200);
 
     QCOMPARE (m_subject->m_notification->isPublished (), true);
@@ -138,19 +139,20 @@ void
 Ut_UsbUi::testdialogbuttoncallbacks ()
 {
     // Go to connected state...
-    m_subject->m_logic->test_emitModeChanged(QmUSBMode::Connected);
+    m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Connected);
     QTest::qWait (100);
 
     // Call the Ovi Suite callback function...
     m_subject->OviSuiteSelected ();
 
-    QVERIFY (m_subject->m_logic->getMode () == QmUSBMode::OviSuite);
+    QVERIFY (m_subject->m_logic->getMode () == Maemo::QmUSBMode::OviSuite);
 
     // Call the Mass Storage callback function...
     m_subject->MassStorageSelected ();
 
-    QVERIFY (m_subject->m_logic->getMode () == QmUSBMode::MassStorage);
+    QVERIFY (m_subject->m_logic->getMode () == Maemo::QmUSBMode::MassStorage);
 }
+#endif
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)
 

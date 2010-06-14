@@ -16,8 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 
 #include <MLocale>
 #include <MTheme>
@@ -167,12 +165,9 @@ QString Sysuid::dbusPath ()
 }
 
 /*!
- * Please note that in the libdui 0.19.4 manipulating theh MLocale in this
+ * Please note that in the libmeegotouch 0.19.4 manipulating theh MLocale in this
  * function might cause an endless recursion. I added a protection for brake the
  * recursion.
- *
- * FIXME: Once MLocale is working as it should be this function could be
- * eliminated.
  */
 void Sysuid::retranslate ()
 {
@@ -189,7 +184,8 @@ void Sysuid::retranslate ()
 
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
-    // Install real translation
+    // Install real translations
+    locale.installTrCatalog ("energy");
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     MLocale::setDefault (locale);

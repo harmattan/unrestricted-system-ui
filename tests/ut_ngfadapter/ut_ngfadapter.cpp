@@ -22,6 +22,7 @@ static bool g_ngf_play_called = false;
 static bool g_ngf_create_client = false;
 static QString* g_ngf_event_id;
 
+#ifdef HAVE_LIBNGF
 uint32_t ngf_client_play_event (NgfClient *client,
                                 const char *event,
                                 NgfProplist *proplist)
@@ -52,9 +53,9 @@ void ngf_client_destroy (NgfClient *client)
         free(client);
     }
 }
+#endif
 
-void Ut_NGFAdapter::init()
-{
+void Ut_NGFAdapter::init() {
     g_ngf_play_called = false;
     g_ngf_create_client = true;
     adapter = new NGFAdapter;
@@ -79,8 +80,10 @@ void Ut_NGFAdapter::testPlay()
     const QString id("my-id");
     adapter->play(id);
 
+#ifdef HAVE_LIBNGF
     QVERIFY(g_ngf_play_called);
     QCOMPARE(id.toUtf8(), g_ngf_event_id->toUtf8());
+#endif
 }
 
 void Ut_NGFAdapter::testNgfClientCreationFails()
@@ -92,6 +95,7 @@ void Ut_NGFAdapter::testNgfClientCreationFails()
     g_ngf_create_client = false;
     adapter = new NGFAdapter;
 
+#ifdef HAVE_LIBNGF
     // Check that the adapter is not valid as the client creation
     // should have failed
     QVERIFY(!adapter->isValid());
@@ -101,6 +105,7 @@ void Ut_NGFAdapter::testNgfClientCreationFails()
 
     // The play should never happen as we do not have a valid client
     QVERIFY(!g_ngf_play_called);
+#endif
 }
 
 QTEST_APPLESS_MAIN(Ut_NGFAdapter)

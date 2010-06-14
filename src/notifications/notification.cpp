@@ -110,20 +110,11 @@ QDataStream &operator>>(QDataStream &datastream, Notification &notification)
 
 QDBusArgument &operator<<(QDBusArgument &argument, const Notification &notification)
 {
-    QString summary, body;
-    QString fullBody = notification.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
-
-    int e = fullBody.indexOf("</p>", 0);
-    if(e != -1) {
-        QRegExp tagRE("<[^>]*>");
-        summary = fullBody.left(e + 4).replace(tagRE, "");
-        body    = fullBody.mid(e + 4).replace(tagRE, "");
-    }
-
     argument.beginStructure();
     argument << notification.notificationId_;
     argument << notification.groupId_;
-    argument << summary << body;
+    argument << notification.parameters_.value(NotificationWidgetParameterFactory::summaryKey()).toString();
+    argument << notification.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
     argument << notification.parameters_.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
     argument << notification.parameters_.value(NotificationWidgetParameterFactory::actionKey()).toString();
     argument << notification.parameters_.value(GenericNotificationParameterFactory::countKey()).toUInt();

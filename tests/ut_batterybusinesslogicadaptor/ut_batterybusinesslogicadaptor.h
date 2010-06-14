@@ -19,53 +19,30 @@
 #ifndef _UT_BATTERYBUSINESSLOGICADAPTOR_H
 #define  _UT_BATTERYBUSINESSLOGICADAPTOR_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-#include <batterybusinesslogic.h>
-
-class SystemUIGConf;
+class BatteryBusinessLogic;
 class BatteryBusinessLogicAdaptor;
-
-class MyBatteryBusinessLogic : public BatteryBusinessLogic
-{
-    Q_OBJECT
-    
-    public:
-        MyBatteryBusinessLogic (SystemUIGConf *gconf, QObject *parent);
-        void setPSMThreshold (const QString &threshold);
-        void togglePSM (bool toggle);
-        void togglePSMAuto (bool toggle);
-        bool PSMValue ();
-        QString PSMThresholdValue ();
-
-    private:
-        bool    psmValue;
-        bool    psmAutoValue;
-        QString psmThresholdValue;
-
-    friend class Ut_BatteryBusinessLogicAdaptor;
-};
 
 class Ut_BatteryBusinessLogicAdaptor : public QObject
 {
     Q_OBJECT
 
-    private slots:
-        void initTestCase ();
-        void cleanupTestCase ();
+private slots:
+    void initTestCase ();
+    void cleanupTestCase ();
 
-        void setPSMValue ();
-        void setPSMAutoValue ();
-        void setPSMThresholdValue (); 
-        void remainingTimeValues ();
-        void PSMThresholdValues ();
-        void batteryChargingState ();
-        void batteryBarValue ();
+    void setPSMValue ();
+    void setPSMAutoValue ();
+    void setPSMThresholdValue ();
+    void remainingTimeValues ();
+    void PSMThresholdValues ();
+    void batteryChargingState ();
+    void batteryBarValue ();
 
-    private:
-        MyBatteryBusinessLogic      *m_logic;
-        BatteryBusinessLogicAdaptor *m_subject;
+private:
+    BatteryBusinessLogic *m_logic;
+    BatteryBusinessLogicAdaptor *m_subject;
 };
 
 #endif

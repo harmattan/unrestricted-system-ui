@@ -30,7 +30,10 @@
 #include <QTimer>
 #include <QSharedPointer>
 #include <QBuffer>
+
+#ifdef HAVE_MAEMOSEC
 #include <maemosec_storage.h>
+#endif
 
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
@@ -297,8 +300,10 @@ private:
     //! Flag to determine if the persistent data has been restored yet
     bool persistentDataRestored;
 
+#ifdef HAVE_MAEMOSEC
     //! Secure storage object for storing persistent data
     QSharedPointer<maemosec::storage> persistentStorage;
+#endif
 };
 
 #endif /* NOTIFICATIONMANAGER_H_ */
