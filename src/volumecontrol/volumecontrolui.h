@@ -31,8 +31,6 @@ class VolumeOverlay;
 #ifdef HAVE_QMSYSTEM
 // For Hw-volume key handling
 #include <qmkeys.h>
-
-using namespace Maemo;
 #endif
 
 class VolumeControlUI : public QObject
@@ -46,7 +44,7 @@ public:
 private slots:
     void overlayChanged (int val);
 #ifdef HAVE_QMSYSTEM
-    void hwKeyEvent (QmKeys::Key key, QmKeys::State state);
+    void hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state);
 #endif
     void hwKeyResourceAcquired ();
     void hwKeyResourceLost ();

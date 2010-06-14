@@ -77,7 +77,7 @@ VolumeControlUI::overlayChanged (int val)
 
 #ifdef HAVE_QMSYSTEM
 void
-VolumeControlUI::hwKeyEvent (QmKeys::Key key, QmKeys::State state)
+VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
 {
     int change_val = 0;
 
@@ -130,8 +130,8 @@ VolumeControlUI::hwKeyResourceAcquired ()
     // Disconnect from everything first
     m_hwkeys->disconnect ();
 
-    // TODO: use the fully qualified signal when it becomes available
-    connect(m_hwkeys, SIGNAL(keyEvent(QmKeys::Key, QmKeys::State)), this, SLOT(hwKeyEvent(QmKeys::Key, QmKeys::State)));
+    connect(m_hwkeys, SIGNAL (keyEvent (Maemo::QmKeys::Key, Maemo::QmKeys::State)),
+            this, SLOT (hwKeyEvent (Maemo::QmKeys::Key, Maemo::QmKeys::State)));
 #endif
 }
 
