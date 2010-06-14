@@ -1,3 +1,4 @@
+include(coverage.pri)
 include(../mconfig.pri)
 
 MOC_DIR = .moc

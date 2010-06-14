@@ -1,3 +1,4 @@
+include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_notificationparameter
 INCLUDEPATH += $$SRCDIR/notifications
