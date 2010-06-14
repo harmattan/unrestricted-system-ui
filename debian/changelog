@@ -4,6 +4,10 @@ system-ui (0.16.1~2) harmattan; urgency=low
   * Fixes: NB#172606 - Input method indicators are truncated in status bar
   * Implemented: SWP#DUI-3296 Notifications to touch screen lock testing and
     integration
+  * Implemented: SWP#DUI-3253 Make detailed notification data accessible on
+    notification manager
+  * Implemented: SWP#DUI-3257 systemui should work without closed-source
+    dependencies
 
  -- David Kedves <dkedves@blumsoft.eu>  Mon, 14 Jun 2010 15:56:19 +0200
 

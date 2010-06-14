@@ -6,10 +6,10 @@
 
 - Notification manager returns all properties of notifications instead of just their IDs when requested
 - Unlock screen notifications implemented
+- system-ui can be compiled without closed source dependencies
 
 \subsection Fixed
 
-- system-ui can not be compiled without closed source dependencies
 - System-ui should use system bus for libngf
 - Input method indicators are truncated in status bar
 - Use the proper translations domains
