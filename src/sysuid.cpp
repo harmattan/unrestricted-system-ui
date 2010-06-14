@@ -187,6 +187,8 @@ void Sysuid::retranslate ()
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
     // Install real translations
+    locale.installTrCatalog ("usb");
+    locale.installTrCatalog ("reset");
     locale.installTrCatalog ("energy");
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
