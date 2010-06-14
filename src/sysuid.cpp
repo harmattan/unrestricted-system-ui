@@ -167,12 +167,9 @@ QString Sysuid::dbusPath ()
 }
 
 /*!
- * Please note that in the libdui 0.19.4 manipulating theh MLocale in this
+ * Please note that in the libmeegotouch 0.19.4 manipulating theh MLocale in this
  * function might cause an endless recursion. I added a protection for brake the
  * recursion.
- *
- * FIXME: Once MLocale is working as it should be this function could be
- * eliminated.
  */
 void Sysuid::retranslate ()
 {
@@ -189,7 +186,8 @@ void Sysuid::retranslate ()
 
     // Install engineering english
     locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
-    // Install real translation
+    // Install real translations
+    locale.installTrCatalog ("energy");
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     MLocale::setDefault (locale);
