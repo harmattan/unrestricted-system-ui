@@ -50,6 +50,9 @@ private:
      * main vbox
      */
     QGraphicsLinearLayout       *m_vbox;
+    #ifdef UNIT_TEST
+    friend class Ut_UnlockNotifications;
+    #endif
 };
 
 

@@ -137,7 +137,6 @@ UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
         m_icon_layout->insertItem (0, m_last_subject);
         m_mostrecent_layout->removeItem (m_last_icon);
         m_icon_layout->insertItem (0, m_last_icon);
-
         /*
          * Re-size the other events area a bit bigger...
          */
