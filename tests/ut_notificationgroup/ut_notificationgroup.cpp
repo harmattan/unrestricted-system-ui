@@ -86,6 +86,7 @@ void Ut_NotificationGroup::testDBusSerialization()
     QDBusArgument arg;
 
     NotificationParameters parameters0;
+    parameters0.add("eventType", "type");
     parameters0.add("imageId", "icon");
     parameters0.add("summary", "summary");
     parameters0.add("body", "body");
@@ -99,11 +100,12 @@ void Ut_NotificationGroup::testDBusSerialization()
     QCOMPARE(qdbusUIntArgs.count(), 2);
     QCOMPARE(qdbusUIntArgs.at(0), uint(20));
     QCOMPARE(qdbusUIntArgs.at(1), uint(456));
-    QCOMPARE(qdbusStringArgs.count(), 4);
-    QCOMPARE(qdbusStringArgs.at(0), QString("summary"));
-    QCOMPARE(qdbusStringArgs.at(1), QString("body"));
-    QCOMPARE(qdbusStringArgs.at(2), QString("icon"));
-    QCOMPARE(qdbusStringArgs.at(3), QString("action"));
+    QCOMPARE(qdbusStringArgs.count(), 5);
+    QCOMPARE(qdbusStringArgs.at(0), QString("type"));
+    QCOMPARE(qdbusStringArgs.at(1), QString("summary"));
+    QCOMPARE(qdbusStringArgs.at(2), QString("body"));
+    QCOMPARE(qdbusStringArgs.at(3), QString("icon"));
+    QCOMPARE(qdbusStringArgs.at(4), QString("action"));
 }
 
 

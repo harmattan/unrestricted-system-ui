@@ -81,6 +81,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const NotificationGroup &grou
 {
     argument.beginStructure();
     argument << group.groupId_;
+    argument << group.parameters_.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
     argument << group.parameters_.value(NotificationWidgetParameterFactory::summaryKey()).toString();
     argument << group.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
     argument << group.parameters_.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
