@@ -9,8 +9,8 @@
  * before re-generating it.
  */
 
-#ifndef DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1276170740
-#define DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1276170740
+#ifndef DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1276593537
+#define DBUSINTERFACENOTIFICATIONSOURCEADAPTOR_H_1276593537
 
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
@@ -118,12 +118,12 @@ class DBusInterfaceNotificationSourceAdaptor: public QDBusAbstractAdaptor
 "    </method>\n"
 "    <method name=\"notificationList\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"notificationUserId\"/>\n"
-"      <arg direction=\"out\" type=\"a(uussssu)\" name=\"result\"/>\n"
+"      <arg direction=\"out\" type=\"a(uusssssu)\" name=\"result\"/>\n"
 "      <annotation value=\"QList &lt; Notification > \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
 "    </method>\n"
 "    <method name=\"notificationGroupList\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"notificationUserId\"/>\n"
-"      <arg direction=\"out\" type=\"a(ussssu)\" name=\"result\"/>\n"
+"      <arg direction=\"out\" type=\"a(usssssu)\" name=\"result\"/>\n"
 "      <annotation value=\"QList &lt; NotificationGroup > \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
 "    </method>\n"
 "  </interface>\n"
