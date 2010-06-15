@@ -32,7 +32,6 @@
 
 class MDialog;
 class MNotification;
-class QProcess;
 
 class UsbUi : public QObject
 {
@@ -63,7 +62,6 @@ private:
     MNotification       *m_notification;
     MDialog             *m_dialog;
     bool                 m_showdialog;
-    QProcess            *m_process;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

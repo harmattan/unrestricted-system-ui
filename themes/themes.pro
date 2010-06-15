@@ -2,9 +2,10 @@ include(../mconfig.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
-    images \
     style \
     svg
+
+# images not used anymore...
 
 INSTALLS += \
     conf

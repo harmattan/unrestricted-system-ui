@@ -95,18 +95,9 @@ PKGCONFIG += \
     dbus-1 \
     xcomposite
 
-# TODO: remove these very quickly when obexd is okay
-usb_scripts.files += pcsuite-enable.sh
-usb_scripts.path = $$(DEBIAN_DESTDIR)/usr/bin
-
-usb_sudoers.files += usb.sudoers
-usb_sudoers.path = $$(DEBIAN_DESTDIR)/etc/sudoers.d
-
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
 INSTALLS += target \
-            dbus_policy \
-            usb_scripts \
-            usb_sudoers
+            dbus_policy
 
