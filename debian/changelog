@@ -1,3 +1,9 @@
+system-ui (0.16.3~1) harmattan; urgency=low
+
+  * New version [UNRELEASED]
+
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Tue, 15 Jun 2010 10:35:19 +0300
+
 system-ui (0.16.2-1) harmattan; urgency=low
 
   * Relay the notification event type along with the list of notifications
