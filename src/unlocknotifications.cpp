@@ -221,9 +221,9 @@ UnlockNotifications::updateContents ()
             QString mostRecentText =
                 UnlockMissedEvents::getInstance ().getLastSubject (mostRecent);
 
-            if (eventCount > 0)
+            if (eventCount > 1)
             {
-                switch (actualType)
+                switch (mostRecent)
                 {
                     case UnlockMissedEvents::NotifyCall:
                         mostRecentText =
