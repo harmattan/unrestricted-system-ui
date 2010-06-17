@@ -1,0 +1,15 @@
+interface: NotificationEventTypeFileInterface
+type: file
+scope: Platform
+state: experimental
+libs-pkg: system-ui
+dev-pkg: system-ui
+
+interface: MStatusIndicatorMenuPluginInterface
+type: library
+scope: Platform
+state: experimental
+libs-pkg: system-ui
+dev-pkg: system-ui-dev
+
+
