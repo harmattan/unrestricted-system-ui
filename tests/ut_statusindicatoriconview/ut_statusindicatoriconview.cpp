@@ -95,11 +95,22 @@ void Ut_StatusIndicatorIconView::testUpdateData()
 
 void Ut_StatusIndicatorIconView::testApplyStyle()
 {
+    // An image list of 6 items and a model value of 0.5 should result in an animation frame = 3
+    m_subject->getModel()->setValue(0.5);
+    // A call to setImageList() simulates the StatusIndicatorAnimationView::setupImageList() that will be
+    // called during the applyStyle() call
+    m_subject->setImageList(QStringList() << "1" << "2" << "3" << "4" << "5" << "6");
+
+    // Verify that setupImageList() is called duringthe applyStyle() call
     QString imageList("1 2 3 4 5 6");
     m_subject->modifiableStyle()->setImageList(imageList);
     m_subject->executeStyleChanged();
     QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setupImageList"), 1);
     QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setupImageList").parameter<QString>(0), imageList);
+
+    // Verify that the correct animation frame is set during the applyStyle() call
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setAnimationFrame"), 1);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setAnimationFrame").parameter<int>(0), 3);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorIconView)
