@@ -48,11 +48,14 @@ static int DelayBetweenTests = 1000;
 void 
 Ft_LockScreenBusinessLogic::init()
 {
+    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
 }
 
 void 
 Ft_LockScreenBusinessLogic::cleanup()
 {
+    delete m_LockScreenBusinessLogic;
+    m_LockScreenBusinessLogic = 0;
 }
 
 int   argc = 1;
@@ -96,7 +99,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     Window LockScreenUIWindowID;
     Window EventEaterWindowID;
 
-    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
     /*
      * Once it is constructed the two UI elements must already be there.
      */
@@ -188,9 +190,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
                 XChecker::CheckIsInvisible));
     
     QTest::qWait (DelayBetweenTests);
-
-    delete m_LockScreenBusinessLogic;
-    m_LockScreenBusinessLogic = NULL;
 }
 
 void
@@ -212,7 +211,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     MWindowID = m_MainWindow->internalWinId ();
     SYS_DEBUG ("*** MainWindowID    = 0x%lx", MWindowID);
 
-    m_LockScreenBusinessLogic = new LockScreenBusinessLogic;
     /*
      * Once it is constructed the two UI elements must already be there.
      */
@@ -307,9 +305,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
 
     delete m_MainWindow;
     m_MainWindow = 0;
-
-    delete m_LockScreenBusinessLogic;
-    m_LockScreenBusinessLogic = NULL;
 }
 
 #ifdef HAVE_QMSYSTEM
