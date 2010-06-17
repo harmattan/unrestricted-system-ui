@@ -60,6 +60,11 @@ void StatusIndicatorIconView::applyStyle()
     StatusIndicatorAnimationView::applyStyle();
 
     setupImageList(style()->imageList());
+
+    // Update the animation frame after the image list changed
+    QList<const char *> modifications;
+    modifications << StatusIndicatorModel::Value;
+    updateData(modifications);
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorIconView, StatusIndicator)
