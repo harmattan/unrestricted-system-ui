@@ -22,7 +22,6 @@
 #include <QObject>
 
 #ifdef HAVE_QMSYSTEM
-#include <qmlocks.h>
 #ifndef UNIT_TEST
 #include <qmusbmode.h>
 #else
@@ -44,7 +43,6 @@ public:
     private slots:
 #ifdef HAVE_QMSYSTEM
     void currentModeChanged (Maemo::QmUSBMode::Mode mode);
-    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
     void OviSuiteSelected ();
     void MassStorageSelected ();
@@ -57,11 +55,9 @@ private:
 
 #ifdef HAVE_QMSYSTEM
     Maemo::QmUSBMode    *m_logic;
-    Maemo::QmLocks      *m_locks;
 #endif
     MNotification       *m_notification;
     MDialog             *m_dialog;
-    bool                 m_showdialog;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

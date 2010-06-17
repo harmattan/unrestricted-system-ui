@@ -72,6 +72,8 @@ void Ut_LockScreenBusinessLogic::initTestCase()
     static int argc = 1;
     static char *argv = (char *) "./ut_lockscreenbusinesslogic";
     m_App = new MApplication(argc, &argv);
+    /* XXX: input context caused a crash :-S */
+    m_App->setLoadMInputContext (false);
     m_App->setQuitOnLastWindowClosed (false);
 }
 
@@ -95,6 +97,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
     // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
     logic.toggleScreenLockUI(true);
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), true);
     QCOMPARE(logic.lockUI->isVisible(), true);
@@ -107,6 +110,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     // Then try with display on: the timer should be started
     qmDisplayState = Maemo::QmDisplayState::On;
     logic.toggleScreenLockUI(true);
+    QTest::qWait (10);
 #endif
 
     QCOMPARE(qTimerStart, 1000);
@@ -115,6 +119,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     spy.clear();
     logic.toggleScreenLockUI(false);
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.lockUI->isVisible(), false);
@@ -128,6 +133,7 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
 
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), true);
     QCOMPARE(logic.eaterUI->isVisible(), true);
@@ -135,6 +141,7 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
 
     spy.clear();
     logic.toggleEventEater(false);
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.eaterUI->isVisible(), false);
@@ -146,6 +153,7 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     logic.unlockScreen();
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.lockUI->isVisible(), false);
@@ -158,6 +166,7 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     logic.hideEventEater();
+    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.eaterUI->isVisible(), false);

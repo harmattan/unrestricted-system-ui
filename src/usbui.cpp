@@ -41,12 +41,10 @@
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_notification (0),
-    m_dialog (0),
-    m_showdialog (false)
+    m_dialog (0)
 {
 #ifdef HAVE_QMSYSTEM
     m_logic = new Maemo::QmUSBMode (this);
-    m_locks = new Maemo::QmLocks (this);
 #endif
 
     QTimer::singleShot (INIT_TIME, this, SLOT (initialize ()));
@@ -166,16 +164,9 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
     {
         case Maemo::QmUSBMode::Ask:
         case Maemo::QmUSBMode::ModeRequest:
-            if ((m_locks->getState (Maemo::QmLocks::Device) == Maemo::QmLocks::Locked) ||
-                (m_locks->getState (Maemo::QmLocks::TouchAndKeyboard) == Maemo::QmLocks::Locked))
-                // Show the dialog once the device is unlocked
-                m_showdialog = true;
-            else
-                ShowDialog ();
+            ShowDialog ();
             break;
         case Maemo::QmUSBMode::Disconnected:
-            m_showdialog = false;
-
             // remove the previous notification
             if (m_notification)
             {
@@ -191,8 +182,6 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             break;
         case Maemo::QmUSBMode::OviSuite:
         case Maemo::QmUSBMode::MassStorage:
-            m_showdialog = false;
-
             ShowNotification ((int) mode);
             break;
         case Maemo::QmUSBMode::ChargingOnly:
@@ -200,24 +189,9 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             // no-op
             break;
         default:
-            m_showdialog = false;
-
             SYS_DEBUG ("What about mode = %d?", mode);
             // doing nothing, no ui interaction specified here...
             break;
-    }
-}
-
-void
-UsbUi::locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
-{
-    Q_UNUSED (what);
-
-    if (how == Maemo::QmLocks::Unlocked)
-    {
-        m_showdialog = false;
-        // Show the mode selection dialog on idle...
-        QTimer::singleShot (10, this, SLOT (ShowDialog ()));
     }
 }
 #endif
