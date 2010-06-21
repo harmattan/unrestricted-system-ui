@@ -438,6 +438,12 @@ LockScreenUI::showHideNotifications (bool show)
     }
 }
 
+/*!
+ * This method is called when we have a windowID, so we can set some properties
+ * with the low level XLib API. Currently we set the following properties:
+ *   o Window name: it is used for debugging purposes.
+ *   o Stackinglayer: please check NB#175815 for further details.
+ */
 void 
 LockScreenUI::showEvent (
         QShowEvent *event)
@@ -448,24 +454,29 @@ LockScreenUI::showEvent (
     Display    *display;
     Atom        nameAtom;
     Atom        utf8StringAtom;
+    Atom        stackingLayerAtom;
     const char *windowName = "LockScreenUI";
+    long        layer = 2;
 
     display = QX11Info::display ();
     if (!display) {
         SYS_WARNING ("QX11Info::display() failed");
         return;
     }
+    
+    stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom == None) {
+        SYS_WARNING ("Atom '_MEEGO_STACKING_LAYER' does not exists");
+    }
 
     nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
     if (nameAtom == None) {
         SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
-        return;
     }
 
     utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
     if (utf8StringAtom == None) {
         SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
-        return;
     }
 
     windowID = internalWinId();
@@ -473,11 +484,23 @@ LockScreenUI::showEvent (
         SYS_WARNING ("internalWinId() failed");
         return;
     }
-
     SYS_DEBUG ("*** windowID = 0x%lx", windowID);
-    XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
-            8, PropModeReplace, 
-            (unsigned char *) windowName, strlen(windowName));
+
+    /*
+     * Setting the stacking layer.
+     */
+    if (stackingLayerAtom != None)
+        XChangeProperty (display, windowID, stackingLayerAtom, XA_CARDINAL, 
+                32, PropModeReplace, (unsigned char*)&layer, 1);
+
+    /*
+     * Setting the name.
+     */
+    if (nameAtom != None && utf8StringAtom != None)
+        XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
+                8, PropModeReplace, 
+                (unsigned char *) windowName, strlen(windowName));
+
 }
 
 /******************************************************************************
@@ -520,6 +543,12 @@ EventEaterUI::mouseReleaseEvent (
     emit OneInput ();
 }
 
+/*!
+ * This method is called when we have a windowID, so we can set some properties
+ * with the low level XLib API. Currently we set the following properties:
+ *   o Window name: it is used for debugging purposes.
+ *   o Stackinglayer: please check NB#175815 for further details.
+ */
 void 
 EventEaterUI::showEvent (
         QShowEvent *event)
@@ -530,34 +559,49 @@ EventEaterUI::showEvent (
     Display    *display;
     Atom        nameAtom;
     Atom        utf8StringAtom;
+    Atom        stackingLayerAtom;
     const char *windowName = "EventEaterUI";
+    long        layer = 1;
 
     display = QX11Info::display ();
     if (!display) {
         SYS_WARNING ("QX11Info::display() failed");
         return;
     }
+    
+    stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom == None) {
+        SYS_WARNING ("Atom '_MEEGO_STACKING_LAYER' does not exists");
+    }
 
     nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
     if (nameAtom == None) {
         SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
-        return;
     }
 
     utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
     if (utf8StringAtom == None) {
         SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
-        return;
     }
 
     windowID = internalWinId();
     if (windowID == None) {
         SYS_WARNING ("internalWinId() failed");
-        return;
     }
-
     SYS_DEBUG ("*** windowID = 0x%lx", windowID);
-    XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
-            8, PropModeReplace, 
-            (unsigned char *) windowName, strlen(windowName));
+
+    /*
+     * Setting the stacking layer.
+     */
+    if (stackingLayerAtom != None)
+        XChangeProperty (display, windowID, stackingLayerAtom, XA_CARDINAL, 
+                32, PropModeReplace, (unsigned char*)&layer, 1);
+
+    /*
+     * Setting the name.
+     */
+    if (nameAtom != None && utf8StringAtom != None)
+        XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
+                8, PropModeReplace, 
+                (unsigned char *) windowName, strlen(windowName));
 }
