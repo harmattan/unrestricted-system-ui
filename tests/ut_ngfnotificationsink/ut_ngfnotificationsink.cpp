@@ -34,6 +34,9 @@
 
 static NotificationManager *manager;
 
+static uint NGFAdaptor_play_id = 0;
+static int NGFAdaptor_stop_called = 0;
+
 NGFAdapter::NGFAdapter()
 {
 #ifdef HAVE_LIBNGF
@@ -44,18 +47,18 @@ NGFAdapter::NGFAdapter()
 
 NGFAdapter::~NGFAdapter()
 {
-
 }
 
 uint NGFAdapter::play(const QString &id)
 {
     Ut_NGFNotificationSink::played.append(id);
-    return 1;
+    return ++NGFAdaptor_play_id;
 }
 
 void NGFAdapter::stop(uint eventId)
 {
     Q_UNUSED(eventId);
+    NGFAdaptor_stop_called++;
 }
 
 bool NGFAdapter::isValid()
@@ -81,7 +84,10 @@ void Ut_NGFNotificationSink::cleanupTestCase()
 
 void Ut_NGFNotificationSink::init()
 {
+    NGFAdaptor_play_id = 0;
+    NGFAdaptor_stop_called = 0;
     played.clear();
+
     sink = new NGFNotificationSink();
     manager = new NotificationManager();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
@@ -95,16 +101,29 @@ void Ut_NGFNotificationSink::cleanup()
     delete manager;
 }
 
-void Ut_NGFNotificationSink::testAddNotification()
+void Ut_NGFNotificationSink::testAddAndRemoveNotification()
 {
     // Create a notification
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
-    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
+    Notification notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000);
+    emit addNotification(notification);
 
     // Check that NGFAdapter::play() was called for the feedback
     QCOMPARE(played.count(), 1);
     QCOMPARE(played[0], QString("feedback"));
+
+    emit removeNotification(notification.notificationId());
+
+    // Check that NGFAdapter::stop() was called for the notification
+    QCOMPARE(NGFAdaptor_stop_called, 1);
+
+    emit removeNotification(notification.notificationId());
+
+    // Check that NGFAdapter::stop() was not called for an already stopped
+    // notification
+    QCOMPARE(NGFAdaptor_stop_called, 1);
+
 }
 
 void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
@@ -112,20 +131,13 @@ void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
     // Create a notification
     NotificationParameters parameters;
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback"));
-    sink->setApplicationEventsEnabled(true);
-    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that NGFAdapter::play() was called for the feedback when application events enabled
-    QCOMPARE(played.count(), 1);
-
     sink->setApplicationEventsEnabled(false);
-    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-    // Check that NGFAdapter::play() was NOT called for the feedback when application events are NOT enabled
-    QCOMPARE(played.count(), 1);
-}
+    Notification notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000);
 
-void Ut_NGFNotificationSink::testRemoveNotification()
-{
-    emit removeNotification(1);
+    emit addNotification(notification);
+    // Check that NGFAdapter::play() was NOT called for the feedback when
+    // application events are NOT enabled
+    QCOMPARE(played.count(), 0);
 }
 
 void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()

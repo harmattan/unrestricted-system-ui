@@ -46,11 +46,9 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
-    // Test that feedback is played
-    void testAddNotification();
-    // Test that removing does nothing (at least for now)
-    void testRemoveNotification();
-
+    // Test that feedback is played and stopped
+    void testAddAndRemoveNotification();
+    // Test that feedback is not played if application events are disabled
     void testNotificationWhileApplicationEventsDisabled();
     void testWithoutEventTypeOrFeedbackId();
     void testWithEventTypeWithoutFeedbackId();

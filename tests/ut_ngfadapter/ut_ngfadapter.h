@@ -35,8 +35,8 @@ private slots:
     // Executed once after every test case
     void cleanup();
 
-    //! Test the feedback playing
-    void testPlay();
+    //! Test the feedback playing and stopping
+    void testPlayAndStop();
 
     //! Test that the adapter behaves correctly even if the client creation fails
     void testNgfClientCreationFails();
