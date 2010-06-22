@@ -83,7 +83,6 @@ private slots:
 private:
     SignalSink             m_SignalSink;
     XChecker               m_XChecker;
-    SystemUIGConf         *systemUIGConf;
     BatteryBusinessLogic  *m_Subject;
 };
 

@@ -14,8 +14,7 @@ HEADERS += \
     $$STUB_PREFIX/devicemodestub.h \
     $$STUB_PREFIX/displaystatestub.h \
     $$STUB_PREFIX/batterystub.h \
-    $$STUB_PREFIX/ledstub.h \
-    $$STUB_PREFIX/gconfstub.h
+    $$STUB_PREFIX/ledstub.h
 
 SOURCES += \
     ft_batterybusinesslogic.cpp \
@@ -25,7 +24,6 @@ SOURCES += \
     $$STUB_PREFIX/devicemodestub.cpp \
     $$STUB_PREFIX/displaystatestub.cpp \
     $$STUB_PREFIX/batterystub.cpp \
-    $$STUB_PREFIX/ledstub.cpp \
-    $$STUB_PREFIX/gconfstub.cpp
+    $$STUB_PREFIX/ledstub.cpp
 
 include(../common_bot.pri)

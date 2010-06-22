@@ -19,29 +19,22 @@
 #ifndef BATTERYBUSINESSLOGIC_H
 #define BATTERYBUSINESSLOGIC_H
 
-#include <QDebug>
+#include <QObject>
+#include <QTime>
 
 #ifdef UNIT_TEST
-#include "ledstub.h"
-#include "batterystub.h"
-#include "devicemodestub.h"
-#include "displaystatestub.h"
-#include "gconfstub.h"
-#define UT_VIRT virtual
+  #include "ledstub.h"
+  #include "batterystub.h"
+  #include "devicemodestub.h"
+  #include "displaystatestub.h"
 #else
-#ifdef HAVE_QMSYSTEM
-#include <qmled.h>
-#include <qmbattery.h>
-#include <qmdevicemode.h>
-#include <qmdisplaystate.h>
+  #ifdef HAVE_QMSYSTEM
+    #include <qmled.h>
+    #include <qmbattery.h>
+    #include <qmdevicemode.h>
+    #include <qmdisplaystate.h>
+  #endif
 #endif
-#include "systemuigconf.h"
-#define UT_VIRT
-#endif
-
-#include <QObject>
-#include <QStringList>
-#include <QTime>
 
 class QTimer;
 class MNotification;
@@ -94,19 +87,10 @@ class BatteryBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    BatteryBusinessLogic (SystemUIGConf *systemUIGConf, QObject* parent = 0);
+    BatteryBusinessLogic (QObject* parent = 0);
     virtual ~BatteryBusinessLogic ();
 
-    UT_VIRT void setPSMThreshold (const QString &threshold);
-    UT_VIRT void togglePSM (bool toggle);
-    UT_VIRT void togglePSMAuto (bool toggle);
-    int batteryBarValue (int percentage = -1);
-    UT_VIRT bool PSMValue ();
     void batteryStatus ();
-    QVariant GConfItemValue (SystemUIGConf::GConfKey key);
-    QStringList remainingTimeValues ();
-    QStringList PSMThresholdValues ();
-    UT_VIRT QString PSMThresholdValue ();
 
     typedef enum {
         NotificationCharging,
@@ -120,14 +104,6 @@ public:
     } NotificationID;
 
 signals:
-    void batteryCharging (int);
-    void batteryNotCharging ();
-    void batteryBarValueChanged (int);
-    void PSMValueChanged (bool);
-    void PSMAutoDisabled ();
-    void remainingTimeValuesChanged (QStringList);
-    void batteryFullyCharged ();
-
 #ifdef UNIT_TEST
     /*
      * To simplify the test case we use this signal that we can catch. See 
@@ -143,7 +119,6 @@ public slots:
     void lowBatteryAlert ();
 
 private slots:
-    void batteryEnergyLevelChanged (int energyLevel);
 #ifdef HAVE_QMSYSTEM
     void batteryStateChanged (Maemo::QmBattery::BatteryState state);
     void chargingStateChanged (Maemo::QmBattery::ChargingState state);
@@ -153,8 +128,6 @@ private slots:
     void utiliseLED (bool activate, const QString &pattern);
 
 private:
-    void setPSMState (bool on);
-    void initSystemUIGConfKeys ();
 #ifdef HAVE_QMSYSTEM
     int animationRate (Maemo::QmBattery::ChargerType type);
 #endif
@@ -165,15 +138,12 @@ private:
             const QString &feedback = QString(""),
 		    const QString &icon = QString(""));
 
-    SystemUIGConf             *m_SystemUIGConf;
 #ifdef HAVE_QMSYSTEM
     Maemo::QmBattery          *m_Battery;
     Maemo::QmDeviceMode       *m_DeviceMode;
     Maemo::QmLED              *m_Led;
 #endif
     LowBatteryNotifier        *m_LowBatteryNotifier;
-    QStringList                m_PSMThresholds;
-    QStringList                m_BarValues;
     MNotification             *m_notification;
 #ifdef HAVE_QMSYSTEM
     Maemo::QmBattery::ChargerType m_ChargerType;

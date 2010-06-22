@@ -32,8 +32,6 @@ HEADERS +=                              \
     lockscreenui.h                      \
     shutdownui.h                        \
     shutdownbusinesslogic.h             \
-    batterybusinesslogicadaptor.h       \
-    systemuigconf.h                     \
     lockscreenbusinesslogicadaptor.h    \
     usbui.h                             \
     contextframeworkcontext.h           \
@@ -54,8 +52,6 @@ SOURCES +=                              \
     lockscreenui.cpp                    \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \
-    batterybusinesslogicadaptor.cpp     \
-    systemuigconf.cpp                   \
     lockscreenbusinesslogicadaptor.cpp  \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \

@@ -15,10 +15,8 @@ SOURCES += \
     $$SRCDIR/lockscreenui.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
-    $$SRCDIR/batterybusinesslogicadaptor.cpp \
     $$SRCDIR/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreenbusinesslogicadaptor.cpp \
-    $$SRCDIR/systemuigconf.cpp \
     $$SRCDIR/sysuid.cpp \
     ut_sysuid.cpp \
 
@@ -41,10 +39,8 @@ HEADERS += \
     $$SRCDIR/lockscreenui.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
-    $$SRCDIR/batterybusinesslogicadaptor.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreenbusinesslogicadaptor.h \
-    $$SRCDIR/systemuigconf.h \
     $$SRCDIR/sysuidrequest.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \

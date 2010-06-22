@@ -136,13 +136,11 @@ void Ft_BatteryBusinessLogic::initTestCase()
 
     app = new MApplication(argc, &app_name);
     
-    systemUIGConf = new SystemUIGConf();
-   
     /*
      * Creating one batterybusinesslogic and connecting to its relevant signals.
      */
     SYS_DEBUG ("+++ Creating BatteryBusinessLogic");
-    m_Subject = new BatteryBusinessLogic (systemUIGConf);
+    m_Subject = new BatteryBusinessLogic;
 
     connectSuccess = connect (
             m_Subject, SIGNAL(notificationSent(QString, QString)),
@@ -156,9 +154,6 @@ Ft_BatteryBusinessLogic::cleanupTestCase()
     SYS_DEBUG ("+++ Cleaning up");
     delete m_Subject;
     m_Subject = NULL;
-
-    delete systemUIGConf;
-    systemUIGConf = NULL;
 
     delete app;
 }

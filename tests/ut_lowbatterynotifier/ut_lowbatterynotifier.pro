@@ -7,15 +7,13 @@ SOURCES += \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$STUBSDIR/displaystatestub.cpp \
-    $$STUBSDIR/batterystub.cpp \
-    $$STUBSDIR/gconfstub.cpp
+    $$STUBSDIR/batterystub.cpp
 
 HEADERS += \
     ut_lowbatterynotifier.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$STUBSDIR/displaystatestub.h \
-    $$STUBSDIR/batterystub.h \
-    $$STUBSDIR/gconfstub.h
+    $$STUBSDIR/batterystub.h
 
 include(../common_bot.pri)
