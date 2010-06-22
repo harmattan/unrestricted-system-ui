@@ -147,15 +147,13 @@ LowBatteryNotifier::displayStateChanged (
 BatteryBusinessLogic::BatteryBusinessLogic (
         QObject       *parent) :
     QObject (parent),
-#ifdef HAVE_QMSYSTEM
-    m_Battery (new Maemo::QmBattery),
-    m_DeviceMode (new Maemo::QmDeviceMode),
-    m_Led (new Maemo::QmLED),
-#endif
     m_LowBatteryNotifier (0),
     m_notification (0)
 #ifdef HAVE_QMSYSTEM
-    , m_ChargerType (Maemo::QmBattery::Unknown)
+   ,m_Battery (new Maemo::QmBattery),
+    m_DeviceMode (new Maemo::QmDeviceMode),
+    m_Led (new Maemo::QmLED),
+    m_ChargerType (Maemo::QmBattery::Unknown)
 #endif
 {
     SYS_DEBUG ("----------------- start ----------------------");
@@ -257,9 +255,6 @@ BatteryBusinessLogic::chargingStateChanged (
             SYS_DEBUG ("Charging not started");
             sendNotification (NotificationChargingNotStarted);
             break;
-
-        default:
-            SYS_WARNING ("Unhandled state: %d", state);
     }
 }
 
@@ -299,14 +294,10 @@ BatteryBusinessLogic::batteryStateChanged (
         break;
 
     case Maemo::QmBattery::StateError:
-        // TODO: Get information somewhere...
-        SYS_WARNING ("battery state : error ? what about this state?");
         break;
     }
 }
-#endif
 
-#ifdef HAVE_QMSYSTEM
 void
 BatteryBusinessLogic::batteryChargerEvent (
         Maemo::QmBattery::ChargerType type)
@@ -480,9 +471,14 @@ BatteryBusinessLogic::sendNotification (
    m_notification->setImage (icon);
    m_notification->publish ();
 
+#ifndef UNIT_TEST
+/* FIXME ^^^: MComponentData::feedbackPlayer() - 
+ *            MComponentData instance not yet created.
+ */
    if (!feedback.isEmpty()) {
        MFeedback player (feedback);
        player.play();
    }
+#endif
 }
 

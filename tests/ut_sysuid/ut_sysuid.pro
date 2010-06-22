@@ -23,9 +23,6 @@ SOURCES += \
 # service classes
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
-    $$STUBSDIR/ledstub.cpp \
-    $$STUBSDIR/batterystub.cpp \
-    $$STUBSDIR/devicemodestub.cpp \
     $$STUBSDIR/systemstatestub.cpp \
     $$STUBSDIR/displaystatestub.cpp \
     $$STUBSDIR/locksstub.cpp \
@@ -62,9 +59,6 @@ HEADERS += \
 # service classes
 HEADERS += \
     $$STUBSDIR/stubbase.h \
-    $$STUBSDIR/ledstub.h \
-    $$STUBSDIR/batterystub.h \
-    $$STUBSDIR/devicemodestub.h \
     $$STUBSDIR/systemstatestub.h \
     $$STUBSDIR/displaystatestub.h \
     $$STUBSDIR/locksstub.h \

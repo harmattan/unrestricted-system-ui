@@ -23,7 +23,8 @@
 #include <QObject>
 #include <QThread>
 
-class LowBatteryNotifier;
+#include "batterybusinesslogic.h"
+
 class QTime;
 
 class LowBatteryHelper : public QObject

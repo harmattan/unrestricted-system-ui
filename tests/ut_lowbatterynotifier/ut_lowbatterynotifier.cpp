@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 #include "ut_lowbatterynotifier.h"
-#include "batterybusinesslogic.h"
+#include "qmbattery_stub.h"
 #include "displaystatestub.h"
 
 #include <MApplication>

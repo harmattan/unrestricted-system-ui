@@ -23,10 +23,7 @@
 #include <QObject>
 
 #include "batterybusinesslogic.h"
-#include "batterystub.h"
-#include "devicemodestub.h"
 #include "displaystatestub.h"
-#include "ledstub.h"
 
 #include "../ft_lockscreenui/xchecker.h"
 

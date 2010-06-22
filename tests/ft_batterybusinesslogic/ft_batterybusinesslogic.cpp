@@ -16,8 +16,11 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "batterystub.h"
 #include "ft_batterybusinesslogic.h"
+
+#include "qmled_stub.h"
+#include "qmbattery_stub.h"
+#include "qmdevicemode_stub.h"
 
 #include <MApplication>
 #include <MTheme>
@@ -26,7 +29,7 @@
 #include <QVariant>
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 /*
  * This much we wait between the tests.
@@ -190,7 +193,9 @@ Ft_BatteryBusinessLogic::testChargingComplete ()
 {
     m_SignalSink.reset ();
 
+#if 0
     m_Subject->m_Battery->emitBatteryStateChanged (Maemo::QmBattery::StateFull);
+#endif
 
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_charcomp");
@@ -205,8 +210,10 @@ Ft_BatteryBusinessLogic::testCharging ()
 {
     m_SignalSink.reset ();
 
+#if 0
     m_Subject->m_Battery->emitChargerEvent (Maemo::QmBattery::Wall);
     m_Subject->m_Battery->emitChargingStateChanged (Maemo::QmBattery::StateCharging);
+#endif
     
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_charging");
@@ -222,9 +229,11 @@ Ft_BatteryBusinessLogic::testChargingFailed ()
 {
     m_SignalSink.reset ();
 
+#if 0
     m_Subject->m_Battery->emitChargerEvent(Maemo::QmBattery::Unknown);
     m_Subject->m_Battery->emitChargingStateChanged (
             Maemo::QmBattery::StateChargingFailed);
+#endif
 
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_repcharger");
@@ -245,10 +254,12 @@ Ft_BatteryBusinessLogic::testLowBattery ()
 {
     m_SignalSink.reset ();
 
+#if 0
     m_Subject->m_Battery->emitChargerEvent(
             // FIXME: Maemo::QmBattery::None
             (Maemo::QmBattery::ChargerType) 0);
     m_Subject->m_Battery->emitBatteryStateChanged (Maemo::QmBattery::StateLow);
+#endif
 
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_lowbatt");
@@ -270,6 +281,7 @@ Ft_BatteryBusinessLogic::testRemoveCharger ()
     /*
      * First we need a dedicated charger.
      */
+#if 0
     m_Subject->m_Battery->emitChargerEvent (Maemo::QmBattery::Wall);
     QTest::qWait (DelayBetweenTests);
 
@@ -277,6 +289,7 @@ Ft_BatteryBusinessLogic::testRemoveCharger ()
     m_Subject->m_Battery->emitChargerEvent (
             // FIXME: Maemo::QmBattery::None
             (Maemo::QmBattery::ChargerType) 0);
+#endif
 
     QVERIFY (m_SignalSink.m_NotificationCame);
     QVERIFY (m_SignalSink.m_NotificationText == "qtn_ener_remcha");

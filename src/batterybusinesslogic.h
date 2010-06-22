@@ -22,18 +22,11 @@
 #include <QObject>
 #include <QTime>
 
-#ifdef UNIT_TEST
-  #include "ledstub.h"
-  #include "batterystub.h"
-  #include "devicemodestub.h"
-  #include "displaystatestub.h"
-#else
-  #ifdef HAVE_QMSYSTEM
-    #include <qmled.h>
-    #include <qmbattery.h>
-    #include <qmdevicemode.h>
-    #include <qmdisplaystate.h>
-  #endif
+#ifdef HAVE_QMSYSTEM
+  #include <qmled.h>
+  #include <qmbattery.h>
+  #include <qmdevicemode.h>
+  #include <qmdisplaystate.h>
 #endif
 
 class QTimer;
@@ -90,8 +83,6 @@ public:
     BatteryBusinessLogic (QObject* parent = 0);
     virtual ~BatteryBusinessLogic ();
 
-    void batteryStatus ();
-
     typedef enum {
         NotificationCharging,
 	    NotificationChargingComplete,
@@ -128,32 +119,25 @@ private slots:
     void utiliseLED (bool activate, const QString &pattern);
 
 private:
-#ifdef HAVE_QMSYSTEM
-    int animationRate (Maemo::QmBattery::ChargerType type);
-#endif
-    
     void sendNotification (BatteryBusinessLogic::NotificationID id); 
     void sendNotification (
 		    const QString &text,
             const QString &feedback = QString(""),
 		    const QString &icon = QString(""));
 
+    LowBatteryNotifier              *m_LowBatteryNotifier;
+    MNotification                   *m_notification;
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmBattery          *m_Battery;
-    Maemo::QmDeviceMode       *m_DeviceMode;
-    Maemo::QmLED              *m_Led;
-#endif
-    LowBatteryNotifier        *m_LowBatteryNotifier;
-    MNotification             *m_notification;
-#ifdef HAVE_QMSYSTEM
-    Maemo::QmBattery::ChargerType m_ChargerType;
+    Maemo::QmBattery                *m_Battery;
+    Maemo::QmDeviceMode             *m_DeviceMode;
+    Maemo::QmLED                    *m_Led;
+    Maemo::QmBattery::ChargerType    m_ChargerType;
 #endif
 
 #ifdef UNIT_TEST
     friend class Ut_BatteryBusinessLogic;
     friend class Ft_BatteryBusinessLogic;
 #endif
-
 };
 
 
