@@ -133,6 +133,16 @@ QVariant ContextFrameworkItem::value() const
 {
     return property.value();
 }
+
+void ContextFrameworkItem::subscribe() const
+{
+    property.subscribe();
+}
+
+void ContextFrameworkItem::unsubscribe() const
+{
+    property.unsubscribe();
+}
 #else
 ContextFrameworkItem::ContextFrameworkItem(const QString &)
 {
@@ -141,6 +151,14 @@ ContextFrameworkItem::ContextFrameworkItem(const QString &)
 QVariant ContextFrameworkItem::value() const
 {
     return QVariant();
+}
+
+void ContextFrameworkItem::subscribe() const
+{
+}
+
+void ContextFrameworkItem::unsubscribe() const
+{
 }
 #endif
 

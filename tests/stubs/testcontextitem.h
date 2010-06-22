@@ -33,6 +33,14 @@ public:
 
     virtual QVariant value() const;
 
+    virtual void subscribe() const;
+    virtual void unsubscribe() const;
+
+    static int constructor_called;
+    static int destructor_called;
+    static int subscribe_called;
+    static int unsubscribe_called;
+
 private:
     QVariant value_;
 };

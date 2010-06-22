@@ -101,13 +101,55 @@ void Ut_StatusIndicator::testModelUpdates()
     // When the application is not visible the model should not be updated
     qApp->sendEvent(statusIndicator, &exitDisplayEvent);
     statusIndicator->setValue(QVariant(false));
-    QCOMPARE(statusIndicator->model()->value(), QVariant(1));
-
+    QCOMPARE(statusIndicator->model()->value(), QVariant(1)); 
     // When the application becomes visible the model should be updated
     qApp->sendEvent(statusIndicator, &enterDisplayEvent);
     QCOMPARE(statusIndicator->model()->value(), QVariant(0));
 
     delete statusIndicator;
+}
+
+void Ut_StatusIndicator::testContextItemSubscribe()
+{
+    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
+    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
+
+    PhoneNetworkTypeStatusIndicator *indicator =
+        new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
+
+    TestContextItem::subscribe_called = 0;
+    TestContextItem::unsubscribe_called = 0;
+
+    // When the application becomes not visible, the context item updates
+    // should be unsubscribed from
+    qApp->sendEvent(indicator, &exitDisplayEvent);
+    QCOMPARE(TestContextItem::unsubscribe_called, 2);
+
+    // When the application becomes not visible, the context item updates
+    // should be subscribed to
+    qApp->sendEvent(indicator, &enterDisplayEvent);
+    QCOMPARE(TestContextItem::subscribe_called, 2);
+
+    delete indicator;
+}
+
+void Ut_StatusIndicator::testContextItemDeletion()
+{
+    TestContextItem::constructor_called = 0;
+    TestContextItem::destructor_called = 0;
+
+    PhoneNetworkTypeStatusIndicator *indicator =
+        new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
+
+    // There should be a total of two items constructed using the
+    // StatusIndicator::createContextItem() call
+    QCOMPARE(TestContextItem::constructor_called, 2);
+
+    delete indicator;
+
+    // There should be a total of two items deleted by the
+    // StatusIndicator destructor
+    QCOMPARE(TestContextItem::destructor_called, 2);
 }
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()

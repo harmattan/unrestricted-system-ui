@@ -71,6 +71,8 @@ private slots:
     void cleanupTestCase();
 
     void testModelUpdates();
+    void testContextItemSubscribe();
+    void testContextItemDeletion();
     void testPhoneNetworkSignalStrength();
     void testPhoneNetworkType();
     void testBattery();

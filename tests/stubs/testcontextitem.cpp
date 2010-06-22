@@ -18,14 +18,19 @@
 ****************************************************************************/
 #include "testcontextitem.h"
 
+int TestContextItem::constructor_called = 0;
+int TestContextItem::destructor_called = 0;
+int TestContextItem::subscribe_called = 0;
+int TestContextItem::unsubscribe_called = 0;
+
 TestContextItem::TestContextItem()
 {
-
+    constructor_called++;
 }
 
 TestContextItem::~TestContextItem()
 {
-
+    destructor_called++;
 }
 
 void TestContextItem::setValue(const QVariant &val)
@@ -38,3 +43,14 @@ QVariant TestContextItem::value() const
 {
     return value_;
 }
+
+void TestContextItem::subscribe() const
+{
+    subscribe_called++;
+}
+
+void TestContextItem::unsubscribe() const
+{
+    unsubscribe_called++;
+}
+

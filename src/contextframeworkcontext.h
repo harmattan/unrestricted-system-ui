@@ -60,6 +60,16 @@ public:
      */
     QVariant value() const;
 
+    /*!
+     * \copydoc ContextItem::subscribe()
+     */
+    void subscribe() const;
+
+    /*!
+     * \copydoc ContextItem::unsubscribe()
+     */
+    void unsubscribe() const;
+
 private:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     //! The context property being tracked by this item

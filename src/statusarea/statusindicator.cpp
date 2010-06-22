@@ -37,6 +37,9 @@ StatusIndicator::StatusIndicator(MWidget *parent) :
 
 StatusIndicator::~StatusIndicator()
 {
+    foreach(ContextItem* item, contextItems) {
+        delete item;
+    }
 }
 
 void StatusIndicator::updateGeometry()
@@ -61,11 +64,17 @@ QVariant StatusIndicator::value() const
 void StatusIndicator::enterDisplayEvent()
 {
     setModelUpdatesEnabled(true);
+    foreach(ContextItem* item, contextItems) {
+        item->subscribe();
+    }
 }
 
 void StatusIndicator::exitDisplayEvent()
 {
     setModelUpdatesEnabled(false);
+    foreach(ContextItem* item, contextItems) {
+        item->unsubscribe();
+    }
 }
 
 void StatusIndicator::setModelUpdatesEnabled(bool modelUpdatesEnabled)
@@ -88,12 +97,19 @@ void StatusIndicator::updateAnimationStatus()
     }
 }
 
+ContextItem *StatusIndicator::createContextItem(ApplicationContext& context, const QString& key)
+{
+    ContextItem *item = context.createContextItem(key);
+    contextItems.append(item);
+    return item;
+}
+
 PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
 
-    signalStrength = context.createContextItem("Cellular.SignalStrength");
+    signalStrength = createContextItem(context, "Cellular.SignalStrength");
     connect(signalStrength, SIGNAL(contentsChanged()), this, SLOT(signalStrengthChanged()));
 
     setValue(0.0);
@@ -102,7 +118,6 @@ PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndic
 
 PhoneNetworkSignalStrengthStatusIndicator::~PhoneNetworkSignalStrengthStatusIndicator()
 {
-    delete signalStrength;
 }
 
 void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
@@ -123,10 +138,10 @@ void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
 PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent) :
         StatusIndicator(parent), networkAvailable(false)
 {
-    cellularDataTechnology = context.createContextItem("Cellular.DataTechnology");
+    cellularDataTechnology = createContextItem(context, "Cellular.DataTechnology");
     connect(cellularDataTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
-    cellularRegistrationStatus = context.createContextItem("Cellular.RegistrationStatus");
+    cellularRegistrationStatus = createContextItem(context, "Cellular.RegistrationStatus");
     connect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
     setNetworkType();
@@ -134,8 +149,6 @@ PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationCont
 
 PhoneNetworkTypeStatusIndicator::~PhoneNetworkTypeStatusIndicator()
 {
-    delete cellularDataTechnology;
-    delete cellularRegistrationStatus;
 }
 
 void PhoneNetworkTypeStatusIndicator::setNetworkType()
@@ -177,10 +190,10 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
 {
     setObjectName(QString(metaObject()->className()) + "Level");
 
-    batteryLevel = context.createContextItem("Battery.ChargePercentage");
+    batteryLevel = createContextItem(context, "Battery.ChargePercentage");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
 
-    batteryCharging = context.createContextItem("Battery.IsCharging");
+    batteryCharging = createContextItem(context, "Battery.IsCharging");
     connect(batteryCharging, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
 
     batteryLevelChanged ();
@@ -188,8 +201,6 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
 
 BatteryStatusIndicator::~BatteryStatusIndicator()
 {
-    delete batteryLevel;
-    delete batteryCharging;
 }
 
 void BatteryStatusIndicator::batteryLevelChanged()
@@ -219,14 +230,13 @@ AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget 
 {
     setObjectName(metaObject()->className());
 
-    alarm = context.createContextItem("UserAlarm.Present");
+    alarm = createContextItem(context, "UserAlarm.Present");
     connect(alarm, SIGNAL(contentsChanged()), this, SLOT(alarmChanged()));
     alarmChanged();
 }
 
 AlarmStatusIndicator::~AlarmStatusIndicator()
 {
-    delete alarm;
 }
 
 void AlarmStatusIndicator::alarmChanged()
@@ -247,16 +257,14 @@ BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, 
 {
     setObjectName(metaObject()->className());
 
-    bluetoothEnabled = context.createContextItem("Bluetooth.Enabled");
+    bluetoothEnabled = createContextItem(context, "Bluetooth.Enabled");
     connect(bluetoothEnabled, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
-    bluetoothConnected = context.createContextItem("Bluetooth.Connected");
+    bluetoothConnected = createContextItem(context, "Bluetooth.Connected");
     connect(bluetoothConnected, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
 }
 
 BluetoothStatusIndicator::~BluetoothStatusIndicator()
 {
-    delete bluetoothEnabled;
-    delete bluetoothConnected;
 }
 
 void BluetoothStatusIndicator::bluetoothChanged()
@@ -280,14 +288,13 @@ PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, MW
 {
     setObjectName(metaObject()->className());
 
-    presence = context.createContextItem("Presence.State");
+    presence = createContextItem(context, "Presence.State");
     connect(presence, SIGNAL(contentsChanged()), this, SLOT(presenceChanged()));
     presenceChanged();
 }
 
 PresenceStatusIndicator::~PresenceStatusIndicator()
 {
-    delete presence;
 }
 
 void PresenceStatusIndicator::presenceChanged()
@@ -308,16 +315,16 @@ void PresenceStatusIndicator::presenceChanged()
 InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
-    connectionType = context.createContextItem("Internet.NetworkType");
+    connectionType = createContextItem(context, "Internet.NetworkType");
     connect(connectionType, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    connectionState = context.createContextItem("Internet.NetworkState");
+    connectionState = createContextItem(context, "Internet.NetworkState");
     connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    trafficIn  = context.createContextItem("Internet.TrafficIn");
+    trafficIn  = createContextItem(context, "Internet.TrafficIn");
     connect(trafficIn, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    trafficOut = context.createContextItem("Internet.TrafficOut");
+    trafficOut = createContextItem(context, "Internet.TrafficOut");
     connect(trafficOut, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
     updateStatus();
@@ -325,10 +332,6 @@ InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(Application
 
 InternetConnectionStatusIndicator::~InternetConnectionStatusIndicator()
 {
-    delete trafficOut;
-    delete trafficIn;
-    delete connectionState;
-    delete connectionType;
 }
 
 void InternetConnectionStatusIndicator::updateStatus()
@@ -372,8 +375,8 @@ PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &con
 {
     setObjectName(metaObject()->className());
 
-    networkName = QSharedPointer<ContextItem>(context.createContextItem("Cellular.NetworkName"));
-    connect(networkName.data(), SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+    networkName = createContextItem(context, "Cellular.NetworkName");
+    connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
     phoneNetworkChanged();
 }
 
@@ -383,7 +386,7 @@ PhoneNetworkStatusIndicator::~PhoneNetworkStatusIndicator()
 
 void PhoneNetworkStatusIndicator::phoneNetworkChanged()
 {
-    setValue(networkName.data()->value().toString().left(13));
+    setValue(networkName->value().toString().left(13));
 }
 
 InputMethodStatusIndicator::InputMethodStatusIndicator(MWidget *parent) :
@@ -407,17 +410,15 @@ CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, MWidget *p
 {
     setObjectName(metaObject()->className());
 
-    call = context.createContextItem("Phone.Call");
+    call = createContextItem(context, "Phone.Call");
     connect(call, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
 
-    muted = context.createContextItem("Phone.Muted");
+    muted = createContextItem(context, "Phone.Muted");
     connect(muted, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
 }
 
-CallStatusIndicator::~CallStatusIndicator()
+CallStatusIndicator::~CallStatusIndicator() 
 {
-    delete call;
-    delete muted;
 }
 
 void CallStatusIndicator::callOrMutedChanged()
@@ -445,13 +446,12 @@ ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, MWid
 {
     setObjectName(metaObject()->className());
 
-    profile = context.createContextItem("Profile.Name");
+    profile = createContextItem(context, "Profile.Name");
     connect(profile, SIGNAL(contentsChanged()), this, SLOT(profileChanged()));
 }
 
 ProfileStatusIndicator::~ProfileStatusIndicator()
 {
-    delete profile;
 }
 
 void ProfileStatusIndicator::profileChanged()
@@ -468,8 +468,8 @@ GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, MWidget *par
 {
     setObjectName(metaObject()->className());
 
-    gpsState = QSharedPointer<ContextItem>(context.createContextItem("Location.SatPositioningState"));
-    connect(gpsState.data(), SIGNAL(contentsChanged()), this, SLOT(gpsStateChanged()));
+    gpsState = createContextItem(context, "Location.SatPositioningState");
+    connect(gpsState, SIGNAL(contentsChanged()), this, SLOT(gpsStateChanged()));
 }
 
 GPSStatusIndicator::~GPSStatusIndicator()
@@ -478,11 +478,11 @@ GPSStatusIndicator::~GPSStatusIndicator()
 
 void GPSStatusIndicator::gpsStateChanged()
 {
-    if (gpsState.data()->value().toString() == "on") {
+    if (gpsState->value().toString() == "on") {
         setObjectName(QString(metaObject()->className()) + "On");
         animateIfPossible = false;
     }
-    else if (gpsState.data()->value().toString() == "search") {
+    else if (gpsState->value().toString() == "search") {
         setObjectName(QString(metaObject()->className()) + "Search");
         animateIfPossible = true;
     }

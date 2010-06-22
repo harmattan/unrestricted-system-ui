@@ -60,6 +60,16 @@ public:
      */
     virtual QVariant value() const = 0;
 
+    /*!
+     * Subscribe to change notification of this context item.
+     */
+    virtual void subscribe() const = 0;
+
+    /*!
+     * Unsubscribe to change notification of this context item.
+     */
+    virtual void unsubscribe() const = 0;
+
 signals:
     /*!
      * Signal to indicate that the value of the context item has changed.

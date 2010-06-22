@@ -21,7 +21,6 @@
 #define STATUSINDICATOR_H
 
 #include <MWidgetController>
-#include <QSharedPointer>
 #include "statusindicatormodel.h"
 
 class ApplicationContext;
@@ -78,6 +77,20 @@ protected:
     //! Whether or not the view should animate if possible
     bool animateIfPossible;
 
+    /*!
+     * Returns a context item with the specified key newly allocated
+     * from the specified application context.
+     *
+     * \param context Context framework application context for the context
+     * item to be allocated from.
+     * \param key Unique intifier of the context item in the application
+     * context that is to be monitored.
+     * \return New ContextItem object tracking the particular context item
+     * in the system. The created ContextItem is owned by the StatusIdicator
+     * class and shall not be deleted by the caller.
+     */
+    ContextItem *createContextItem(ApplicationContext& context, const QString& key);
+
 private:
     //! \reimp
     virtual void enterDisplayEvent();
@@ -96,6 +109,9 @@ private:
 
     //! The current value of the status indicator
     QVariant currentValue;
+
+    //! A list of context items the indicator is tracking
+    QList<ContextItem*> contextItems;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicator;
@@ -328,7 +344,7 @@ private slots:
     void phoneNetworkChanged();
 
 private:
-    QSharedPointer<ContextItem> networkName;
+    ContextItem *networkName;
 };
 
 /*!
@@ -420,7 +436,7 @@ private slots:
     void gpsStateChanged();
 
 private:
-    QSharedPointer<ContextItem> gpsState;
+    ContextItem *gpsState;
 };
 
 #endif // STATUSINDICATOR_H
