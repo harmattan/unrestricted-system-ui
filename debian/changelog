@@ -1,6 +1,5 @@
-system-ui (0.16.3~1) harmattan; urgency=low
+system-ui (0.16.3-1) harmattan; urgency=low
 
-  * New version [UNRELEASED]
   * Fixes: NB#172555 - batteryindicator: changes to empty when language is
     changed
   * Fixes: NB#175815 - touch screen lock window should use Meego stacking layer
