@@ -1,3 +1,9 @@
+system-ui (0.16.4~1) harmattan; urgency=low
+
+  * New version [UNRELEASED]
+
+ -- Gabriel Schulhof <gabriel.schulhof@nokia.com>  Tue, 22 Jun 2010 11:51:51 +0300
+
 system-ui (0.16.3-1) harmattan; urgency=low
 
   * Fixes: NB#172555 - batteryindicator: changes to empty when language is
