@@ -186,8 +186,8 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
         QSizeF size = m_DnDoverlay.preferredSize ();
         QPointF pos (event->pos ());
 
-        pos.rx () -= (size.width  () / 2);
-        pos.ry () -= (size.height () / 2);
+        pos.rx () -= (size.width  () / 1.4);
+        pos.ry () -= (size.height () / 1.4);
         m_DnDoverlay.setPos (pos);
 
         updateDnDicon ();
@@ -211,8 +211,8 @@ LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     QSizeF size = m_DnDoverlay.preferredSize ();
     QPointF pos (event->pos ());
 
-    pos.rx () -= (size.width  () / 2);
-    pos.ry () -= (size.height () / 2);
+    pos.rx () -= (size.width  () / 1.4);
+    pos.ry () -= (size.height () / 1.4);
     m_DnDoverlay.setPos (pos);
 
     // And then check which icon we need to show:
