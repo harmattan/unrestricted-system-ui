@@ -21,9 +21,9 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <QThread>
 
-class LowBatteryNotifier;
+#include "batterybusinesslogic.h"
+
 class QTime;
 
 class LowBatteryHelper : public QObject
@@ -62,9 +62,13 @@ private slots:
     void testShowNotificationInInactiveUse();
 #endif
 
-private: //attributes
-    LowBatteryNotifier *m_subject;
-    LowBatteryHelper *m_helper;
+private:
+#ifdef HAVE_QMSYSTEM
+    void turnDisplay (bool On);
+#endif
+
+    LowBatteryNotifier  *m_subject;
+    LowBatteryHelper    *m_helper;
     QTime time;
     int shown;
 };

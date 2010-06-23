@@ -26,7 +26,6 @@
 #include "applicationcontext.h"
 
 class UsbUi;
-class SystemUIGConf;
 class BatteryBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaRenderer;
@@ -84,7 +83,6 @@ private slots:
     void applyUseMode ();
 
 private:
-    SystemUIGConf           *m_SystemUIGConf;
     BatteryBusinessLogic    *m_BatteryLogic;
     ShutdownBusinessLogic   *m_ShutdownLogic;
     UsbUi                   *m_UsbUi;

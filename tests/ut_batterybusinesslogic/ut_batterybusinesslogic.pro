@@ -10,21 +10,16 @@ INCLUDEPATH += $$SRC_PREFIX \
 HEADERS += \
     ut_batterybusinesslogic.h \
     $$SRC_PREFIX/debug.h \
-    $$SRC_PREFIX/batterybusinesslogic.h \    
-    $$STUB_PREFIX/devicemodestub.h \
-    $$STUB_PREFIX/displaystatestub.h \
-    $$STUB_PREFIX/batterystub.h \
-    $$STUB_PREFIX/ledstub.h \
-    $$STUB_PREFIX/gconfstub.h
+    $$SRC_PREFIX/batterybusinesslogic.h \
+    $$STUB_PREFIX/qmled_stub.h \
+    $$STUB_PREFIX/qmbattery_stub.h \
+    $$STUB_PREFIX/qmdevicemode_stub.h \
+    $$STUB_PREFIX/stubbase.h
 
 SOURCES += \
     ut_batterybusinesslogic.cpp \
     $$SRC_PREFIX/debug.cpp \
-    $$SRC_PREFIX/batterybusinesslogic.cpp \    
-    $$STUB_PREFIX/devicemodestub.cpp \
-    $$STUB_PREFIX/displaystatestub.cpp \
-    $$STUB_PREFIX/batterystub.cpp \
-    $$STUB_PREFIX/ledstub.cpp \
-    $$STUB_PREFIX/gconfstub.cpp
+    $$SRC_PREFIX/batterybusinesslogic.cpp \
+    $$STUB_PREFIX/stubbase.cpp
 
 include(../common_bot.pri)

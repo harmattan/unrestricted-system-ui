@@ -18,9 +18,12 @@
 ****************************************************************************/
 #include "ut_ngfadapter.h"
 
+static uint32_t g_ngf_play_id = 0;
 static bool g_ngf_play_called = false;
+static bool g_ngf_stop_called = false;
 static bool g_ngf_create_client = false;
 static QString* g_ngf_event_id;
+static uint32_t g_ngf_stop_id;
 
 #ifdef HAVE_LIBNGF
 uint32_t ngf_client_play_event (NgfClient *client,
@@ -32,8 +35,17 @@ uint32_t ngf_client_play_event (NgfClient *client,
 
     g_ngf_play_called = true;
     g_ngf_event_id = new QString(event);
-    return 0;
+    return ++g_ngf_play_id;
 }
+
+void ngf_client_stop_event (NgfClient *client,
+                            uint32_t id)
+{
+    Q_UNUSED(client)
+    g_ngf_stop_called = true;
+    g_ngf_stop_id = id;
+}
+
 
 NgfClient* ngf_client_create (NgfTransport transport, ...)
 {
@@ -56,7 +68,9 @@ void ngf_client_destroy (NgfClient *client)
 #endif
 
 void Ut_NGFAdapter::init() {
+    g_ngf_play_id = 0;
     g_ngf_play_called = false;
+    g_ngf_stop_called = false;
     g_ngf_create_client = true;
     adapter = new NGFAdapter;
     QVERIFY(adapter->isValid());
@@ -72,17 +86,28 @@ void Ut_NGFAdapter::cleanup()
     }
 }
 
-void Ut_NGFAdapter::testPlay()
+void Ut_NGFAdapter::testPlayAndStop()
 {
     QVERIFY(!g_ngf_play_called);
     QVERIFY(!g_ngf_event_id);
 
-    const QString id("my-id");
-    adapter->play(id);
+    const QString event_id("my-id");
+    uint32_t id = adapter->play(event_id);
 
 #ifdef HAVE_LIBNGF
+    // Check that the event was played using the NGF framework and that
+    // the event identifier was the same ar that passed to adapter->play()
     QVERIFY(g_ngf_play_called);
-    QCOMPARE(id.toUtf8(), g_ngf_event_id->toUtf8());
+    QCOMPARE(event_id.toUtf8(), g_ngf_event_id->toUtf8());
+#endif
+
+    adapter->stop(id);
+
+#ifdef HAVE_LIBNGF
+    // Check that the event was stopped using the NGF framework and that
+    // the id was that same one that ngf_client_play_event() returned
+    QVERIFY(g_ngf_stop_called);
+    QCOMPARE(id, g_ngf_stop_id);
 #endif
 }
 
@@ -100,11 +125,16 @@ void Ut_NGFAdapter::testNgfClientCreationFails()
     // should have failed
     QVERIFY(!adapter->isValid());
 
-    const QString id("id");
-    adapter->play(id);
+    const QString event_id("id");
+    uint32_t id = adapter->play(event_id);
 
     // The play should never happen as we do not have a valid client
     QVERIFY(!g_ngf_play_called);
+
+    adapter->stop(id);
+
+    // The play should never happen as we do not have a valid client
+    QVERIFY(!g_ngf_stop_called);
 #endif
 }
 

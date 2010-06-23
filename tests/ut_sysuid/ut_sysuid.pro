@@ -15,21 +15,15 @@ SOURCES += \
     $$SRCDIR/lockscreenui.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
-    $$SRCDIR/batterybusinesslogicadaptor.cpp \
     $$SRCDIR/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreenbusinesslogicadaptor.cpp \
-    $$SRCDIR/systemuigconf.cpp \
     $$SRCDIR/sysuid.cpp \
     ut_sysuid.cpp \
 
 # service classes
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
-    $$STUBSDIR/ledstub.cpp \
-    $$STUBSDIR/batterystub.cpp \
-    $$STUBSDIR/devicemodestub.cpp \
     $$STUBSDIR/systemstatestub.cpp \
-    $$STUBSDIR/displaystatestub.cpp \
     $$STUBSDIR/locksstub.cpp \
     $$STUBSDIR/testcontextitem.cpp \
 
@@ -41,10 +35,8 @@ HEADERS += \
     $$SRCDIR/lockscreenui.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
-    $$SRCDIR/batterybusinesslogicadaptor.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreenbusinesslogicadaptor.h \
-    $$SRCDIR/systemuigconf.h \
     $$SRCDIR/sysuidrequest.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \
@@ -66,11 +58,7 @@ HEADERS += \
 # service classes
 HEADERS += \
     $$STUBSDIR/stubbase.h \
-    $$STUBSDIR/ledstub.h \
-    $$STUBSDIR/batterystub.h \
-    $$STUBSDIR/devicemodestub.h \
     $$STUBSDIR/systemstatestub.h \
-    $$STUBSDIR/displaystatestub.h \
     $$STUBSDIR/locksstub.h \
     $$STUBSDIR/testcontextitem.h \
     $$STUBSDIR/widgetnotificationsink_stub.h \

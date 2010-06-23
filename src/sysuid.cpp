@@ -27,9 +27,7 @@
 #include "usbui.h"
 #include "sysuid.h"
 #include "sysuidrequest.h"
-#include "systemuigconf.h"
 #include "batterybusinesslogic.h"
-#include "batterybusinesslogicadaptor.h"
 #include "lockscreenbusinesslogic.h"
 #include "shutdownbusinesslogic.h"
 #include "statusarearenderer.h"
@@ -60,9 +58,8 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
     // Load translation of System-UI
     retranslate ();
 
-    m_SystemUIGConf   = new SystemUIGConf (this);
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
-    m_BatteryLogic    = new BatteryBusinessLogic (m_SystemUIGConf, this);
+    m_BatteryLogic    = new BatteryBusinessLogic (this);
     m_UsbUi           = new UsbUi (this);
 
     m_notificationManager        = new NotificationManager (3000);
@@ -72,7 +69,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
 
     // D-Bus registration and stuff
     new ShutdownBusinessLogicAdaptor (this, m_ShutdownLogic);
-    new BatteryBusinessLogicAdaptor (this, m_BatteryLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus ();
     if (!bus.registerService (dbusService ())) {

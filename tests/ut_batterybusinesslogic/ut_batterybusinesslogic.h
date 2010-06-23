@@ -23,55 +23,27 @@
 #include <QObject>
 
 #include "batterybusinesslogic.h"
-#include "batterystub.h"
-#include "devicemodestub.h"
-#include "displaystatestub.h"
-#include "ledstub.h"
-
-class SignalSink : public QObject
-{
-    Q_OBJECT
-public:
-    SignalSink ();
-    void reset ();
-    void print ();
-
-public slots:
-    void batteryCharging (int animationLevel);
-    void batteryNotCharging ();
-    void batteryBarValueChanged (int barValue);
-    
-public:
-    bool    m_BatteryChargingCame;
-    bool    m_BatteryNotChargingCame;
-    bool    m_BatteryBarValueCame;
-
-    int     m_AnimationRate;
-    int     m_BarValue;
-};
 
 class Ut_BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
+    void init ();
+    void cleanup ();
+    void initTestCase ();
+    void cleanupTestCase ();
 
-    void testBatteryChargingSignal ();
-    void testBatteryBarValueChangedSignal ();
-#ifdef HAVE_QMSYSTEM
-    void testSetPSMThreshold();
-    void testTogglePSMAuto();
-#endif
-    void testBatteryBarValue();
+    void testInitBattery ();
+    void testLowBatteryAlert ();
+    void testBatteryStateChanged ();
+    void testChargingStateChanged ();
+    void testBatteryChargerEvent ();
+    void testPSMStateChanged ();
+    void testLowBatteryNotifierConnection ();
 
 private:
-    SignalSink             m_SignalSink;
-    SystemUIGConf         *systemUIGConf;
-    BatteryBusinessLogic*  m_subject;
+    BatteryBusinessLogic*   m_logic;
 };
 
 #endif

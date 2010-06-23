@@ -63,8 +63,17 @@ public:
      * NOTE: The \c id will be converted to a \c const char* via QString::toUtf8().constData()
      *
      * \param id The id to play
+     * \return eventId indicating the identifier of play request
      */
-    void play(const QString &id);
+    uint play(const QString &id);
+
+    /*!
+     * Requests a stop from the non-graphical feedback daemon. If the play has already finished
+     * this may not do anything.
+     *
+     * \param eventId identifier given by play
+     */
+    void stop(uint eventId);
 
     /*!
      * This method can be used to check if the adapter has managed to get to

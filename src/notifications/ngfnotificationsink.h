@@ -67,6 +67,11 @@ private slots:
     virtual void addNotification(const Notification &notification);
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
+
+private:
+    //! A mapping between notification IDs and NGF play IDs.
+    QHash<uint, uint> idToEventId;
+
 };
 
 #endif /* NGFNOTIFICATIONSINK_H_ */

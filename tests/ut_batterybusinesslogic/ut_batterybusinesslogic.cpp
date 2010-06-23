@@ -18,301 +18,322 @@
 ****************************************************************************/
 #include "ut_batterybusinesslogic.h"
 
-#include <MApplication>
-#include <MTheme>
-#include <MLocale>
+#ifdef HAVE_QMSYSTEM
+#include "qmled_stub.h"
+#include "qmbattery_stub.h"
+#include "qmdevicemode_stub.h"
+#endif
 
-#include <QVariant>
+#include <MNotification>
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
-/******************************************************************************
- * SignalSink implementation.
+/*
+ * TODO:
+ *  - test the feedback playing also
+ *  [XXX: we need to know first, how to play those correctly...]
  */
-SignalSink::SignalSink()
+
+bool
+MNotification::publish ()
 {
-    reset ();
-}
-
-void
-SignalSink::reset()
-{
-    m_BatteryChargingCame = false;
-    m_BatteryNotChargingCame = false;
-    m_AnimationRate = -1;
-
-    m_BatteryBarValueCame = false;
-    m_BarValue = -1;
-}
-
-void
-SignalSink::print()
-{
-    SYS_DEBUG ("*** m_BatteryChargingCame    = %s",
-            SYS_BOOL(m_BatteryChargingCame));
-    SYS_DEBUG ("*** m_BatteryNotChargingCame = %s",
-            SYS_BOOL(m_BatteryNotChargingCame));
-    SYS_DEBUG ("*** m_AnimationRate          = %d",
-            m_AnimationRate);
-
-    SYS_DEBUG ("*** m_BatteryBarValueCame    = %s",
-            SYS_BOOL(m_BatteryBarValueCame));
-    SYS_DEBUG ("*** m_BarValue               = %d",
-            m_BarValue);
-}
-
-void
-SignalSink::batteryCharging (
-        int animationLevel)
-{
-    SYS_DEBUG ("*** animationLevel = %d", animationLevel);
-    m_BatteryChargingCame = true;
-    m_AnimationRate = animationLevel;
-}
-
-void
-SignalSink::batteryNotCharging ()
-{
-    SYS_DEBUG ("");
-    m_BatteryNotChargingCame = true;
-}
-
-void
-SignalSink::batteryBarValueChanged (
-        int barValue)
-{
-    m_BatteryBarValueCame = true;
-    m_BarValue = barValue;
-}
-
-/******************************************************************************
- * Ut_BatteryBusinessLogic implementation.
+/*
+ * XXX: We don't want to show real notifications
+ * in unit-test:
  */
-void Ut_BatteryBusinessLogic::init()
-{
-    systemUIGConf = new SystemUIGConf();
-    m_subject = new BatteryBusinessLogic(systemUIGConf);
+    return false;
 }
 
-void Ut_BatteryBusinessLogic::cleanup()
+bool
+MNotification::remove ()
 {
-    delete m_subject;
-    m_subject = NULL;
-    delete systemUIGConf;
-    systemUIGConf = NULL;
+    return false;
 }
 
-MApplication *app;
-void Ut_BatteryBusinessLogic::initTestCase()
+
+void
+Ut_BatteryBusinessLogic::initTestCase ()
 {
-    static int argc = 1;
-    static char* app_name = (char*) "./ut_batterybusinesslogic";
-    app = new MApplication(argc, &app_name);
+    /* Add testsuite initialization here */
 }
 
 void
-Ut_BatteryBusinessLogic::cleanupTestCase()
+Ut_BatteryBusinessLogic::cleanupTestCase ()
 {
-    delete app;
+    /* Add testsuite deinitialization here */
 }
 
-/*!
- * Asks the battery applet for the battery status, checks one of the
- * batteryCharging(int) and batteryNotCharging() signals arrive.
- */
+
 void
-Ut_BatteryBusinessLogic::testBatteryChargingSignal ()
+Ut_BatteryBusinessLogic::init ()
 {
-    bool connectSuccess;
+    /* Testcase initialization... */
+    m_logic = new BatteryBusinessLogic;
+}
 
-    /*
-     * We connect to the relevant signals and check if the signals are there.
-     */
-    connectSuccess = connect (
-            m_subject, SIGNAL(batteryCharging(int)),
-            &m_SignalSink, SLOT(batteryCharging(int)));
-    QVERIFY (connectSuccess);
+void
+Ut_BatteryBusinessLogic::cleanup ()
+{
+    /* Testcase deinitialization... */
+    delete m_logic;
+    m_logic = NULL;
+}
 
-    connectSuccess = connect (
-            m_subject, SIGNAL(batteryNotCharging()),
-            &m_SignalSink, SLOT(batteryNotCharging()));
-    QVERIFY (connectSuccess);
-
-    SYS_DEBUG ("*************************************************");
-    SYS_DEBUG ("*** calling batteryStatus() *********************");
-    SYS_DEBUG ("*************************************************");
-    m_SignalSink.reset();
-    m_subject->batteryStatus ();
-    m_SignalSink.print();
-
+void
+Ut_BatteryBusinessLogic::testInitBattery ()
+{
 #ifdef HAVE_QMSYSTEM
-    // Battery can not be charging and not charging in the same time.
-    QVERIFY (!(m_SignalSink.m_BatteryChargingCame &&
-                m_SignalSink.m_BatteryNotChargingCame));
-    // But it has to do somethhing!
-    QVERIFY (!(!m_SignalSink.m_BatteryChargingCame &&
-                !m_SignalSink.m_BatteryNotChargingCame));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    /* Set some ret. values for stubs */
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
+        "getChargingState", Maemo::QmBattery::StateNotCharging);
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::BatteryState> (
+        "getBatteryState", Maemo::QmBattery::StateOK);
+
+    /* no notification should be shown,
+     * and battery-charging pattern should be deactivated:
+     */
+    m_logic->initBattery ();
+    /* wait for signals... if any... */
+    QTest::qWait (10); 
+
+    QCOMPARE (spy.count (), 0);
+    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0) 
+             == QString ("PatternBatteryCharging"));
 #endif
 }
 
 void
-Ut_BatteryBusinessLogic::testBatteryBarValueChangedSignal ()
+Ut_BatteryBusinessLogic::testLowBatteryAlert ()
 {
-    bool connectSuccess;
-
-    /*
-     * We connect to the relevant signals and check if the signals are there.
-     */
-    connectSuccess = connect (
-            m_subject, SIGNAL(batteryBarValueChanged(int)),
-            &m_SignalSink, SLOT(batteryBarValueChanged(int)));
-    QVERIFY (connectSuccess);
-
-    /*
-     * Let's try on 3%...
-     */
-    m_SignalSink.reset();
-    m_subject->batteryEnergyLevelChanged (3);
-    m_SignalSink.print();
-
-    QVERIFY (m_SignalSink.m_BatteryBarValueCame);
-    QVERIFY (m_SignalSink.m_BarValue == 1);
-
-    /*
-     * And then on 97%
-     */
-    m_SignalSink.reset();
-    m_subject->batteryEnergyLevelChanged (97);
-    m_SignalSink.print();
-
-    QVERIFY (m_SignalSink.m_BatteryBarValueCame);
-    QVERIFY (m_SignalSink.m_BarValue == 9);
-}
-
 #ifdef HAVE_QMSYSTEM
-void
-Ut_BatteryBusinessLogic::testSetPSMThreshold()
-{
-    // set the battery level to 15%
-    m_subject->m_Battery->setBatteryEnergyLevel (14);
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
-    // set the threshold level to 20%
-    const QString test = "20";
-    m_subject->setPSMThreshold(test);
+    m_logic->lowBatteryAlert ();
 
-    // check that the value is set
-    QCOMPARE(m_subject->PSMThresholdValue(), test);
+    QTest::qWait (10);
 
-    // set the PSM state to Off (just to make sure)
-    m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOff);
+    QCOMPARE (spy.count (), 1);
 
-    // set the PSM auto on
-    systemUIGConf->setValue (SystemUIGConf::BatteryPSMAutoKey, true);
+    QList<QVariant> arguments = spy.takeFirst ();
 
-    // set the threshold level to 30%
-    const QString test2 = "30";
-    m_subject->setPSMThreshold(test2);
-
-    // check that the value is set
-    QCOMPARE(m_subject->PSMThresholdValue(), test2);
-
-    // check that the PSM is toggled on
-    // Well, we are not doing in the sysuid any more.
-    // See NB#169777 - Power save mode logic problems
-    #if 0
-    QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(),
-            Maemo::QmDeviceMode::PSMStateOn);
-    #endif
-
-    // set the threshold level to 10%
-    const QString test3 = "10";
-    m_subject->setPSMThreshold(test3);
-
-    // check that the value is set
-    QCOMPARE(m_subject->PSMThresholdValue(), test3);
-
-    // check that the PSM is toggled off
-    // Well, we are not doing in the sysuid any more.
-    // See NB#169777 - Power save mode logic problems
-    #if 0
-    QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(),
-            Maemo::QmDeviceMode::PSMStateOn);
-    #endif
-    QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(),
-            Maemo::QmDeviceMode::PSMStateOff);
-}
-
-void Ut_BatteryBusinessLogic::testTogglePSMAuto()
-{
-    // set the PSM auto on
-    systemUIGConf->setValue(SystemUIGConf::BatteryPSMAutoKey, QVariant(true));
-
-    // set the PSM on
-    m_subject->m_DeviceMode->setPSMState(Maemo::QmDeviceMode::PSMStateOn);
-    // toggle the PSM auto off
-    m_subject->togglePSMAuto(false);
-
-    // check that the PSM is toggled off
-    QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(),
-            Maemo::QmDeviceMode::PSMStateOn);
-
-    // Check that the psm auto is off.
-    QCOMPARE(
-            systemUIGConf->value(SystemUIGConf::BatteryPSMAutoKey).toBool(),
-            false);
-
-    // set the battery level to 5%
-    m_subject->m_Battery->setBatteryEnergyLevel(5);
-
-    // set the threshold level to 10%
-    m_subject->setPSMThreshold ("10");
-
-    // toggle the PSM auto on
-    m_subject->togglePSMAuto(true);
-
-    // check that the PSM is toggled on
-    // Well, we are not doing in the sysuid any more.
-    // See NB#169777 - Power save mode logic problems
-    #if 0
-    QCOMPARE(
-            m_subject->m_DeviceMode->getPSMState(),
-            Maemo::QmDeviceMode::PSMStateOn);
-    #endif
-}
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
 #endif
-
-void
-Ut_BatteryBusinessLogic::testBatteryBarValue()
-{
-    // Test invalid values:
-    QVERIFY (m_subject->batteryBarValue (111) == 2);
-
-    // Test percentage values in valid range
-    // >= 84
-    QVERIFY (m_subject->batteryBarValue (99) == 9);
-    // 73 <= value < 84
-    QVERIFY (m_subject->batteryBarValue (77) == 8);
-    // 62 <= value < 73
-    QVERIFY (m_subject->batteryBarValue (66) == 7);
-    // 51 <= value < 62
-    QVERIFY (m_subject->batteryBarValue (55) == 6);
-    // 39 <= value < 51
-    QVERIFY (m_subject->batteryBarValue (44) == 5);
-    // 28 <= value < 39
-    QVERIFY (m_subject->batteryBarValue (33) == 4);
-    // 17 <= value < 28
-    QVERIFY (m_subject->batteryBarValue (22) == 3);
-    //  5 <= value < 17
-    QVERIFY (m_subject->batteryBarValue (11) == 2);
-    //  0 <  value < 5
-    QVERIFY (m_subject->batteryBarValue (3)  == 1);
-    //  0
-    QVERIFY (m_subject->batteryBarValue (0)  == 0);
 }
 
-QTEST_APPLESS_MAIN(Ut_BatteryBusinessLogic)
+void
+Ut_BatteryBusinessLogic::testBatteryStateChanged ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    gQmBatteryStub->stubReset ();
+    gQmLEDStub->stubReset ();
+
+    /* StateFull */
+    spy.clear ();
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateFull);
+
+    QTest::qWait (10);
+
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charcomp"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-charging-complete");
+    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0) 
+             == QString ("PatternBatteryFull"));
+
+    /* StateOK */
+    spy.clear ();
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateOK);
+
+    QTest::qWait (10);
+    /* no signals/notifications should come, just silently no-op */
+    QCOMPARE (spy.count (), 0);
+
+    /* StateEmpty */
+    spy.clear ();
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateEmpty);
+    
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_rebatt"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-recharge");
+
+    /* StateError */
+    spy.clear ();
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateError);
+
+    QTest::qWait (10);
+    /* no signals/notifications should come, just silently no-op */
+    QCOMPARE (spy.count (), 0);
+
+    /* StateLow and charging */
+    spy.clear ();
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
+        "getChargingState", Maemo::QmBattery::StateCharging);
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+
+    QTest::qWait (10);
+    /* no signals/notifications should come, because battery is charging... */
+    QCOMPARE (spy.count (), 0);
+
+    /* StateLow and not charging */
+    spy.clear ();
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
+        "getChargingState", Maemo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+
+    QTest::qWait (10);
+
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+#endif
+}
+
+void
+Ut_BatteryBusinessLogic::testChargingStateChanged ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    gQmBatteryStub->stubReset ();
+    gQmLEDStub->stubReset ();
+
+    /* StateCharging */
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charging"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-charging");
+    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0) 
+             == QString ("PatternBatteryCharging"));
+    spy.clear ();
+
+    /* StateNotCharging */
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateNotCharging);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 0);
+    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0) 
+             == QString ("PatternBatteryCharging"));
+    spy.clear ();
+
+    /* StateChargingFailed */
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateChargingFailed);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_repcharger"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-replace-charger");
+#endif
+}
+
+void
+Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    /* Wall charger */
+    m_logic->batteryChargerEvent (Maemo::QmBattery::Wall);
+    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::Wall);
+
+    /* Plug out : charger type = none */
+    m_logic->batteryChargerEvent (Maemo::QmBattery::None);
+    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::None);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    /* Look for the notification: "Disconnect the charger from..." */
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_remcha"));
+    spy.clear ();
+
+    /* USB 500mA */
+    m_logic->batteryChargerEvent (Maemo::QmBattery::USB_500mA);
+    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_500mA);
+
+    /* USB 100mA */
+    m_logic->batteryChargerEvent (Maemo::QmBattery::USB_100mA);
+    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_100mA);
+
+    /* Unknown */
+    m_logic->batteryChargerEvent (Maemo::QmBattery::Unknown);
+    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::Unknown);
+#endif
+}
+
+void
+Ut_BatteryBusinessLogic::testPSMStateChanged ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    /* Entering to power-save mode */
+    m_logic->devicePSMStateChanged (Maemo::QmDeviceMode::PSMStateOn);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_ent_psnote"));
+
+    spy.clear ();
+
+    /* Exiting from power-save mode */
+    m_logic->devicePSMStateChanged (Maemo::QmDeviceMode::PSMStateOff);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_exit_psnote"));
+#endif
+}
+
+void
+Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    /* LowBatteryNotifier shouldn't be instantiated at first */
+    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+
+    /* Simulate battery-state-low change */
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
+        "getChargingState", Maemo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+
+    /* LowBatteryNotifier should be exists now... */
+    QVERIFY (m_logic->m_LowBatteryNotifier != 0);
+    QTest::qWait (10);
+
+    /* And should send a low-battery notification */
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+
+    /* Simulate now a charging event */
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+
+    /* After this call LowBatteryNotifier should be destroyed */
+    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+#endif
+}
+
+QTEST_MAIN(Ut_BatteryBusinessLogic)

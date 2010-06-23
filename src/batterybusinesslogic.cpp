@@ -17,27 +17,19 @@
 **
 ****************************************************************************/
 #include "batterybusinesslogic.h"
-#include "systemuigconf.h"
 
 #include <MLocale>
 #include <QTimer>
-#include <QTime>
 
 #include <MNotification>
 #include <MFeedback>
-#include <MGConfItem>
 
-/* TODO List
-
-   1) What are correct animation rates when charging with USB / Wall?
-   2) If USB 100 mA is used, do we show animation at all? In Fremantle not.
-   3) Connect sounds with notifications
-
-*/
+/*
+ * TODO List
+ * -) Connect sounds with notifications
+ */
 
 namespace {
-    //% "Charging"
-    const char *ChargingText = QT_TRID_NOOP ("qtn_ener_charging");
     const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
     const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
     const int   ChargingAnimationRateUSB = 800; // 800 ms
@@ -54,22 +46,18 @@ namespace {
 LowBatteryNotifier::LowBatteryNotifier (
         QObject *parent) :
         QObject (parent),
-#ifdef HAVE_QMSYSTEM
-        m_Display (new Maemo::QmDisplayState ()),
-#endif
         m_Timer (new QTimer (this)),
         m_Sleep (false)
 {
     SYS_DEBUG ("----------------------------------------------");
 
-#ifdef HAVE_QMSYSTEM
-    m_Sleep = m_Display->get () == Maemo::QmDisplayState::Off;
-#endif
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
 
 #ifdef HAVE_QMSYSTEM
+    m_Display = new Maemo::QmDisplayState;
+    m_Sleep = m_Display->get () == Maemo::QmDisplayState::Off;
     connect (m_Display,
             SIGNAL (displayStateChanged (Maemo::QmDisplayState::DisplayState)),
             this,
@@ -153,55 +141,18 @@ LowBatteryNotifier::displayStateChanged (
  * Methods for the BatteryBusinessLogic class.
  */
 BatteryBusinessLogic::BatteryBusinessLogic (
-        SystemUIGConf *systemUIGConf,
         QObject       *parent) :
     QObject (parent),
-    m_SystemUIGConf (systemUIGConf),
-#ifdef HAVE_QMSYSTEM
-    m_Battery (new Maemo::QmBattery),
-    m_DeviceMode (new Maemo::QmDeviceMode),
-    m_Led (new Maemo::QmLED),
-#endif
     m_LowBatteryNotifier (0),
     m_notification (0)
 #ifdef HAVE_QMSYSTEM
-    , m_ChargerType (Maemo::QmBattery::Unknown)
+   ,m_Battery (new Maemo::QmBattery),
+    m_DeviceMode (new Maemo::QmDeviceMode),
+    m_Led (new Maemo::QmLED),
+    m_ChargerType (Maemo::QmBattery::Unknown)
 #endif
 {
     SYS_DEBUG ("----------------- start ----------------------");
-
-    /*
-     * Initializing the automatic power save mode possible values list. 
-     */
-    m_PSMThresholds = m_SystemUIGConf->value (
-            SystemUIGConf::BatteryPSMThresholdsKey).toStringList();
-
-    if (m_PSMThresholds.isEmpty()) {
-        SYS_DEBUG ("m_PSMThresholds is empty: Setting the wired in values!!");
-
-        m_PSMThresholds << "10" << "20" << "30" << "40" << "50";
-        m_SystemUIGConf->setValue (
-                SystemUIGConf::BatteryPSMThresholdsKey,
-                QVariant(m_PSMThresholds));
-    }
-
-    /*
-     * Initializing a list for the battery icons/bars.
-     */
-    m_BarValues <<
-	    QString ("5") <<
-	    QString ("10") <<
-	    QString ("15") <<
-	    QString ("25") <<
-	    QString ("35") <<
-	    QString ("50") <<
-	    QString ("60") <<
-	    QString ("75") <<
-	    QString ("85") <<
-	    QString ("100");
-
-    /* check if gconfvalues need to initialized */
-    initSystemUIGConfKeys ();
 
 #ifdef HAVE_QMSYSTEM
     /* connect to QmSystem signals */
@@ -214,10 +165,6 @@ BatteryBusinessLogic::BatteryBusinessLogic (
              SIGNAL (chargingStateChanged (Maemo::QmBattery::ChargingState)),
              this,
              SLOT (chargingStateChanged (Maemo::QmBattery::ChargingState)));
-    connect (m_Battery,
-             SIGNAL (batteryEnergyLevelChanged (int)),
-             this,
-             SLOT (batteryEnergyLevelChanged (int)));
     connect (m_Battery,
              SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
              this,
@@ -250,24 +197,6 @@ BatteryBusinessLogic::~BatteryBusinessLogic ()
 #endif
 }
 
-void
-BatteryBusinessLogic::initSystemUIGConfKeys ()
-{
-    // What?! This is not robust!
-    if (m_SystemUIGConf->keyCount (SystemUIGConf::Battery) < 2) {
-        /*
-         * GConf keys have not yet been set.
-         */
-        m_SystemUIGConf->setValue (
-                SystemUIGConf::BatteryPSMAutoKey,
-                QVariant (true));
-        m_SystemUIGConf->setValue (
-                SystemUIGConf::BatteryPSMThresholdKey,
-                QVariant (1));
-    }
-}
-
-
 // This method should be called also when the device is returned from sleep
 // mode
 void
@@ -291,59 +220,6 @@ BatteryBusinessLogic::lowBatteryAlert ()
     sendNotification (NotificationLowBattery);
 }
 
-/*!
- * \param percentage The energy level percentage or -1 to ask the backend.
- *
- * Returns the bar value (the value that used as an icon index representing for
- * the battery energy level) for the given percentage level. If the argument is
- * -1 this method will ask the QmBattery for the current energy level.
- *
- */
-int
-BatteryBusinessLogic::batteryBarValue (
-        int percentage)
-{
-    SYS_DEBUG ("percentage = %d", percentage);
-
-#ifdef HAVE_QMSYSTEM
-    if (percentage == -1) {
-        percentage = m_Battery->getBatteryEnergyLevel ();
-        SYS_DEBUG ("getBatteryEnergyLevel returned %d", percentage);
-    }
-#endif
-
-    // in case of overflow (eg. in sbox) when we get value that greater than 100
-    // percent we use 10 percent intentionaly
-    if (percentage < 0)
-        percentage = 0;
-    else if (percentage > 100)
-        percentage = 10;
-
-    int index = 0;
-    if (percentage >= 84)
-        index = m_BarValues.indexOf ("100");
-    else if (percentage < 84 && percentage >= 73)
-        index = m_BarValues.indexOf ("85");
-    else if (percentage < 73 && percentage >= 62)
-        index = m_BarValues.indexOf ("75");
-    else if (percentage < 62 && percentage >= 51)
-        index = m_BarValues.indexOf ("60");
-    else if (percentage < 51 && percentage >= 39)
-        index = m_BarValues.indexOf ("50");
-    else if (percentage < 39 && percentage >= 28)
-        index = m_BarValues.indexOf ("35");
-    else if (percentage < 28 && percentage >= 17)
-        index = m_BarValues.indexOf ("25");
-    else if (percentage < 17 && percentage >= 5)
-        index = m_BarValues.indexOf ("15");
-    else if (percentage < 5 && percentage > 1)
-        index = m_BarValues.indexOf ("10");
-    else // if (percentage == 0)
-        index = m_BarValues.indexOf ("5");
-
-    return index;
-}
-
 #ifdef HAVE_QMSYSTEM
 void
 BatteryBusinessLogic::chargingStateChanged (
@@ -354,8 +230,6 @@ BatteryBusinessLogic::chargingStateChanged (
     switch (state) {
         case Maemo::QmBattery::StateCharging:
             SYS_DEBUG ("Charging");
-            emit batteryCharging (animationRate (m_Battery->getChargerType ()));
-
             /*
              * The low battery notifications should not be sent when the battery
              * is actually charging.
@@ -370,21 +244,14 @@ BatteryBusinessLogic::chargingStateChanged (
 
         case Maemo::QmBattery::StateNotCharging:
             SYS_DEBUG ("Not charging");
-            emit batteryNotCharging ();
             utiliseLED (false, QString ("PatternBatteryCharging"));
             break;
 
         case Maemo::QmBattery::StateChargingFailed:
             SYS_DEBUG ("Charging not started");
-            emit batteryNotCharging ();
             sendNotification (NotificationChargingNotStarted);
             break;
-
-        default:
-            SYS_WARNING ("Unhandled state: %d", state);
     }
-
-    emit remainingTimeValuesChanged (remainingTimeValues ());
 }
 
 void
@@ -423,24 +290,10 @@ BatteryBusinessLogic::batteryStateChanged (
         break;
 
     case Maemo::QmBattery::StateError:
-        // TODO: Get information somewhere...
-        SYS_WARNING ("battery state : error ? what about this state?");
         break;
     }
 }
-#endif
 
-void
-BatteryBusinessLogic::batteryEnergyLevelChanged (
-        int percentage)
-{
-    SYS_DEBUG ("*** percentage = %d", percentage);
-
-    emit batteryBarValueChanged (batteryBarValue (percentage));
-    emit remainingTimeValuesChanged (remainingTimeValues ());
-}
-
-#ifdef HAVE_QMSYSTEM
 void
 BatteryBusinessLogic::batteryChargerEvent (
         Maemo::QmBattery::ChargerType type)
@@ -464,19 +317,16 @@ BatteryBusinessLogic::batteryChargerEvent (
         case Maemo::QmBattery::Wall:
             // Wall charger
             SYS_DEBUG ("QmBattery::Wall");
-            emit batteryCharging (animationRate (type));
             break;
 
         case Maemo::QmBattery::USB_500mA:
             // USB with 500mA output
             SYS_DEBUG ("QmBattery::USB_500mA");
-            emit batteryCharging (animationRate (type));
             break;
 
         case Maemo::QmBattery::USB_100mA:
             // USB with 100mA output
             SYS_DEBUG ("QmBattery::USB_100mA");
-            emit batteryCharging (animationRate (type));
             break;
 
         default: 
@@ -492,87 +342,16 @@ void
 BatteryBusinessLogic::devicePSMStateChanged (
         Maemo::QmDeviceMode::PSMState PSMState)
 {
-    if (PSMState == Maemo::QmDeviceMode::PSMStateOff) {
-        SYS_DEBUG ("Emitting DBus signal on PSM off");
-        emit PSMValueChanged (false);
+    if (PSMState == Maemo::QmDeviceMode::PSMStateOff)
+    {
         sendNotification (NotificationExitingPSM);
-    } else if (PSMState == Maemo::QmDeviceMode::PSMStateOn) {
-        SYS_DEBUG ("Emitting DBus signal on PSM on");
-        emit PSMValueChanged (true);
+    }
+    else if (PSMState == Maemo::QmDeviceMode::PSMStateOn)
+    {
         sendNotification (NotificationEnteringPSM);
     }
-
-    emit remainingTimeValuesChanged (remainingTimeValues ());
 }
 #endif
-
-bool
-BatteryBusinessLogic::PSMValue ()
-{
-    SYS_DEBUG ("");
-#ifdef HAVE_QMSYSTEM
-    return m_DeviceMode->getPSMState () == Maemo::QmDeviceMode::PSMStateOn;
-#else
-    return false;
-#endif
-}
-
-/*!
- * \param toggle true to go to power save mode, false to leave it
- *
- * Enters or leaves the power saving mode. This function will also disable the
- * auto power save mode.
- */
-void
-BatteryBusinessLogic::togglePSM (
-        bool toggle)
-{
-    SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
-
-    setPSMState (toggle);
-}
-
-void
-BatteryBusinessLogic::togglePSMAuto (
-        bool toggle)
-{
-    SYS_DEBUG ("*** toggle = %s", SYS_BOOL (toggle));
-
-    m_SystemUIGConf->setValue (
-            SystemUIGConf::BatteryPSMAutoKey,
-            QVariant (toggle));
-}
-
-QStringList
-BatteryBusinessLogic::remainingTimeValues ()
-{
-    QStringList values;
-
-#ifdef HAVE_QMSYSTEM
-    if (m_Battery->getChargingState () == Maemo::QmBattery::StateCharging)
-        values << qtTrId (ChargingText) << qtTrId (ChargingText);
-    else {
-        Maemo::QmDeviceMode::PSMState state = m_DeviceMode->getPSMState ();
-        Maemo::QmBattery::RemainingTimeMode mode;
-        switch (state) {
-            case Maemo::QmDeviceMode::PSMStateOn:
-                mode = Maemo::QmBattery::PowersaveMode;
-                break;
-
-            case Maemo::QmDeviceMode::PSMStateOff:
-            default:
-                mode = Maemo::QmBattery::NormalMode;
-                break;
-                // This was the default...
-                //return QStringList () << "N/A" << "N/A";
-        }
-        values << QString ("%1").arg (m_Battery->getRemainingTalkTime (mode) / 60)
-            << QString ("%1").arg (m_Battery->getRemainingIdleTime (mode) / 60);
-    }
-#endif
-
-    return values;
-}
 
 void
 BatteryBusinessLogic::utiliseLED (
@@ -586,108 +365,6 @@ BatteryBusinessLogic::utiliseLED (
         m_Led->deactivate (pattern);
 #endif
 }
-
-void
-BatteryBusinessLogic::setPSMThreshold (
-        const QString &threshold)
-{
-    SYS_DEBUG ("*** threshold = '%s'", SYS_STR (threshold));
-    m_SystemUIGConf->setValue (
-            SystemUIGConf::BatteryPSMThresholdKey,
-            QVariant (m_PSMThresholds.indexOf (threshold)));
-}
-
-QVariant
-BatteryBusinessLogic::GConfItemValue (
-        SystemUIGConf::GConfKey key)
-{
-    return m_SystemUIGConf->value (key);
-}
-
-/*
- * Returns a 5 elements long list of possible PSM threshold value list. 
- */
-QStringList
-BatteryBusinessLogic::PSMThresholdValues ()
-{
-    return m_PSMThresholds;
-}
-
-/*
- * Returns the string value of the threshold stored in the GConf database. The 
- * threshold value is saved as an index for the possible threshold values that
- * is a list of strings.
- */
-QString
-BatteryBusinessLogic::PSMThresholdValue ()
-{
-    int index;
-
-    index = m_SystemUIGConf->value (
-            SystemUIGConf::BatteryPSMThresholdKey).toInt ();
-
-    if (index < 0 || index >= m_PSMThresholds.size())
-        index = 0;
-    if (m_PSMThresholds.size() == 0)
-        return "";
-    
-    return m_PSMThresholds[index];
-}
-
-void
-BatteryBusinessLogic::batteryStatus ()
-{
-#ifdef HAVE_QMSYSTEM
-    Maemo::QmBattery::ChargingState state;
-
-    SYS_DEBUG ("What is the state now?");
-
-    state = m_Battery->getChargingState ();
-    SYS_DEBUG ("*** state = %d", (int) state);
-
-    switch (state) {
-        case Maemo::QmBattery::StateCharging:
-            emit batteryCharging (animationRate (m_Battery->getChargerType ()));
-            break;
-
-        case Maemo::QmBattery::StateNotCharging:
-        case Maemo::QmBattery::StateChargingFailed:
-        default:
-            /*
-             * default:
-             * When state isn't StateCharging i'm clearly sure
-             * battery is not really charging...
-             */
-            emit batteryNotCharging ();
-            break;
-    }
-#endif
-}
-
-#ifdef HAVE_QMSYSTEM
-int
-BatteryBusinessLogic::animationRate (
-        Maemo::QmBattery::ChargerType type)
-{
-    int rate = -1;
-    SYS_DEBUG ("");
-
-    switch (type) {
-        case Maemo::QmBattery::USB_500mA:
-            rate = ChargingAnimationRateUSB;
-            break;
-
-        case Maemo::QmBattery::Wall:
-            rate = ChargingAnimationRateWall;
-            break;
-
-        default: // QmBattery::USB_100mA etc.
-            break;
-    }
-
-    return rate;
-}
-#endif
 
 void 
 BatteryBusinessLogic::sendNotification (
@@ -790,29 +467,14 @@ BatteryBusinessLogic::sendNotification (
    m_notification->setImage (icon);
    m_notification->publish ();
 
+#ifndef UNIT_TEST
+/* FIXME ^^^: MComponentData::feedbackPlayer() - 
+ *            MComponentData instance not yet created.
+ */
    if (!feedback.isEmpty()) {
        MFeedback player (feedback);
        player.play();
    }
-}
-
-/*!
- * \param on true for entering PSM mode, false to leave it
- */
-void
-BatteryBusinessLogic::setPSMState (
-        bool     on)
-{
-#ifdef HAVE_QMSYSTEM
-    if (on) {
-        if (!m_DeviceMode->setPSMState (Maemo::QmDeviceMode::PSMStateOn)) {
-            SYS_WARNING ("Entering power save mode failed.");
-        }
-    } else {
-        if (!m_DeviceMode->setPSMState (Maemo::QmDeviceMode::PSMStateOff)) {
-            SYS_WARNING ("Leaving power save mode failed.");
-        }
-    }
 #endif
 }
 
