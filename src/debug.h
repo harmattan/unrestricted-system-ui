@@ -86,9 +86,9 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#ifdef UNIT_TEST
-#  define DEBUG_SUPPRESS_COLOR
-#endif
+//#ifdef UNIT_TEST
+//#  define DEBUG_SUPPRESS_COLOR
+//#endif
 
 #ifdef DEBUG_SUPPRESS_COLOR
 #  define TERM_RED     ""

@@ -171,10 +171,8 @@ LockScreenWindow::paint (
 void
 LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
-#ifdef UNIT_TEST
     if (m_LockLiftArea == 0)
         return;
-#endif
 
     // We should go to STATE_MOVING state if user tappend on
     // the top-right corner of the window...
@@ -205,10 +203,8 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 void
 LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
 {
-#ifdef UNIT_TEST
     if (m_LockLandArea == 0)
         return;
-#endif
 
     if (m_DnDstate == STATE_NONE)
         return;
@@ -255,11 +251,9 @@ LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
     if (m_DnDstate == STATE_NONE)
         return;
 
-#ifndef UNIT_TEST
     // Restore the default state ...
     static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
     static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
-#endif
 
     if (m_DnDstate == STATE_MOVING_ACTIVE)
     {
