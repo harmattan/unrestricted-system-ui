@@ -23,6 +23,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include <QGraphicsSceneEvent>
 #include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
@@ -39,9 +40,11 @@ public:
 
 public slots:
     void OneInput ();
+    void unlocked ();
 
 public:
     bool      m_OneInputCame;
+    bool      m_UnlockedCame;
 };
 
 class Ut_LockScreenUI : public QObject
@@ -55,10 +58,10 @@ private slots:
     void cleanupTestCase();
 
     void testLockScreenWindow ();
-    //void testLockScreenUI ();
-    //void testLockScreenUIWindowName ();
-    //void testEventEaterUI ();
-    //void testEventEaterUIWindowName ();
+    void testLockScreenUI ();
+    void testLockScreenUIWindowName ();
+    void testEventEaterUI ();
+    void testEventEaterUIWindowName ();
 
 private:
     XChecker               m_XChecker;

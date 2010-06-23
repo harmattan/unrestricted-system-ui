@@ -176,11 +176,9 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 
     // We should go to STATE_MOVING state if user tappend on
     // the top-right corner of the window...
-    if (((m_LockLiftArea->pos ().y () +
-          m_LockLiftArea->preferredHeight ()) >
+    if (((m_LockLiftArea->pos ().y () + m_LockLiftArea->preferredHeight ()) >
           event->pos ().y ()) &&
-        (event->pos ().x () >
-         m_LockLiftArea->preferredWidth () - 160))
+        (event->pos ().x () > m_LockLiftArea->preferredWidth () - 160))
     {
         m_DnDstate = STATE_MOVING;
 

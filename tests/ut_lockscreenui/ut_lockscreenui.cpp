@@ -25,9 +25,11 @@
 #include "unlockmissedevents_stub.h"
 #include "sysuid_stub.h"
 
+#include <QEvent>
 #include <QShowEvent>
 #include <QVariant>
 #include <QPixmap>
+
 #include <MApplication>
 #include <MWindow>
 #include <MGConfItem>
@@ -82,7 +84,8 @@ QPixmap::load (
  * The helper class to watch the signals.
  */
 LockScreenUIEventSink::LockScreenUIEventSink() :
-    m_OneInputCame (false)
+    m_OneInputCame (false),
+    m_UnlockedCame (false)
 {
 }
 
@@ -90,6 +93,12 @@ void
 LockScreenUIEventSink::OneInput ()
 {
     m_OneInputCame = true;
+}
+
+void
+LockScreenUIEventSink::unlocked ()
+{
+    m_UnlockedCame = true;
 }
 
 /*********************************************************************************
@@ -146,6 +155,7 @@ Ut_LockScreenUI::testLockScreenWindow ()
     UnlockHeader     *lockLiftArea;
     UnlockArea       *lockLandArea;
     LockScreenWindow *window;
+    bool              connectSuccess;
 
     /*
      * Creating the window and doing some basic checks.
@@ -153,7 +163,13 @@ Ut_LockScreenUI::testLockScreenWindow ()
     parentWindow = new MWindow;
     lockLiftArea = new UnlockHeader ();
     lockLandArea = new UnlockArea ();
-    window = new LockScreenWindow (parentWindow, lockLiftArea, lockLiftArea);
+    
+    window = new LockScreenWindow (parentWindow, lockLiftArea, lockLandArea);
+    connectSuccess = connect (window, SIGNAL(unlocked()),
+            &m_EventSink, SLOT(unlocked()));
+
+    m_EventSink.m_UnlockedCame = false;
+    QVERIFY(connectSuccess);
     QVERIFY (window->m_Window);
     /*
      * Checking if the window is watching the right gconf keys.
@@ -182,9 +198,51 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QVERIFY (window->m_bgPortrait.width() == 480);
     QVERIFY (window->m_bgPortrait.height() == 864);
 
+    /*
+     *
+     */
+    QGraphicsSceneMouseEvent *pressEvent;
+    QGraphicsSceneMouseEvent *moveEvent;
+    QGraphicsSceneMouseEvent *releaseEvent;
+    QPointF                   pressAt (850, 400);
+    QPointF                   moveTo (400, 240);
+    
+    /*
+     * Now we send three mouse events that ultimately will send the unlocked()
+     * signal from the window.
+     */
+    pressEvent = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMousePress);
+    pressEvent->setPos (pressAt);
+    
+    moveEvent = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMouseMove);
+    moveEvent->setPos (moveTo);
+
+    releaseEvent = new QGraphicsSceneMouseEvent (
+            QEvent::GraphicsSceneMouseRelease);
+
+    // Sending a press event the place where it should activate the draggable
+    // icon.
+    window->mousePressEvent (pressEvent);
+    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+
+    //
+    // Then we move the mouse right into th emiddle of the screen
+    window->mouseMoveEvent (moveEvent);
+
+    //
+    // And then the mouse is released. And this concludes the interaction, the
+    // unlocked() signal should be sent.
+    //
+    window->mouseReleaseEvent (releaseEvent);
+
+    QVERIFY (m_EventSink.m_UnlockedCame);
+
     delete window;
+    delete parentWindow;
+    delete lockLiftArea;
+    delete lockLandArea;
 }
-#if 0
+
 void
 Ut_LockScreenUI::testLockScreenUI ()
 {
@@ -197,7 +255,7 @@ Ut_LockScreenUI::testLockScreenUI ()
      * shown, so the widget will be shown fast even at the first time.
      */
     m_LockScreenUI = new LockScreenUI;
-    QTest::qWait (normalDelay);
+    QTest::qWait (30);
 
     QVERIFY (m_LockScreenUI->m_Realized);
     QVERIFY (m_LockScreenUI->m_policy != NULL);
@@ -283,5 +341,5 @@ Ut_LockScreenUI::testEventEaterUIWindowName ()
     delete m_EventEaterUI;
     m_EventEaterUI = 0;
 }
-#endif
+
 QTEST_APPLESS_MAIN(Ut_LockScreenUI)
