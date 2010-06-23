@@ -1,3 +1,9 @@
+system-ui (0.16.5~1) harmattan; urgency=low
+
+  * New version [UNRELEASED]
+
+ -- Gabriel Schulhof <gabriel.schulhof@nokia.com>  Wed, 23 Jun 2010 15:46:14 +0300
+
 system-ui (0.16.4-1) harmattan; urgency=low
 
   * Fixes: NB#172600 - System-ui does not stop NGF events.
