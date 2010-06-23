@@ -17,17 +17,13 @@
 **
 ****************************************************************************/
 #include "ut_lowbatterynotifier.h"
-#include "qmbattery_stub.h"
-#include "displaystatestub.h"
 
-#include <MApplication>
-#include <MTheme>
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+#endif
 
 #include <QTime>
-#include <QThread>
-#include <MLocale>
-
-#define TRANSLATION_CATALOG "systemui"
+#include <QDebug>
 
 namespace
 {
@@ -39,68 +35,88 @@ namespace
     const int aDelay = 1000;
 }
 
-void LowBatteryHelper::start ()
+void
+LowBatteryHelper::start ()
 {
     times.clear ();
     time.start ();
 }
 
-QList<int> LowBatteryHelper::notificationTimes ()
+QList<int>
+LowBatteryHelper::notificationTimes ()
 {
     return times;
 }
 
-void LowBatteryHelper::notificationShown ()
+void
+LowBatteryHelper::notificationShown ()
 {
     times << time.restart ();
 }
 
-void Ut_LowBatteryNotifier::init ()
+void
+Ut_LowBatteryNotifier::init ()
 {
     bool connectSuccess;
 
-    m_subject = new LowBatteryNotifier ();
-    m_helper = new LowBatteryHelper ();
+    m_subject = new LowBatteryNotifier;
+    m_helper  = new LowBatteryHelper;
 
     connectSuccess = connect (m_subject, SIGNAL (lowBatteryAlert ()),
-             m_helper, SLOT (notificationShown ()));
+                              m_helper, SLOT (notificationShown ()));
     QVERIFY (connectSuccess);
 
     m_subject->m_ActiveInterval = Act;
     m_subject->m_InactiveInterval = Inact;
 }
 
-void Ut_LowBatteryNotifier::cleanup ()
+void
+Ut_LowBatteryNotifier::cleanup ()
 {
     delete m_subject;
-    m_subject = NULL;
+    m_subject = 0;
     delete m_helper;
-    m_helper = NULL;
+    m_helper = 0;
 }
 
-MApplication *app;
-void Ut_LowBatteryNotifier::initTestCase ()
+void
+Ut_LowBatteryNotifier::initTestCase ()
 {
-    static int argc = 1;
-    static char* app_name = (char*) "./ut_lowbatterynotifier";
-    app = new MApplication(argc, &app_name);
-
-    MLocale        locale;
-    // Install engineering english
-    locale.installTrCatalog (TRANSLATION_CATALOG ".qm");
-    // Install real translation
-    locale.installTrCatalog (TRANSLATION_CATALOG);
-
-    MLocale::setDefault (locale);
 }
 
-void Ut_LowBatteryNotifier::cleanupTestCase ()
+void
+Ut_LowBatteryNotifier::cleanupTestCase ()
 {
-    delete app;
 }
 
 #ifdef HAVE_QMSYSTEM
-void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
+/*
+ * QmDisplayState stub
+ */
+static Maemo::QmDisplayState::DisplayState value;
+
+namespace Maemo
+{
+
+QmDisplayState::DisplayState
+QmDisplayState::get() const
+{
+    return value;
+}
+
+} /* namespace Maemo */
+
+
+void
+Ut_LowBatteryNotifier::turnDisplay (bool On)
+{
+    value = On ? Maemo::QmDisplayState::On : Maemo::QmDisplayState::Off;
+
+    m_subject->displayStateChanged (value);
+}
+
+void
+Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
 {
     /*
         1) Display is on
@@ -109,9 +125,10 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
             - First was sent right away
             - Second and third were sent at [Active timeout (+0,1 secs)]
     */
-    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    turnDisplay (true);
     m_helper->start ();
     m_subject->showLowBatteryNotification ();
+
     QTest::qWait (Act * 2 + 50);
 
     // This somehow fails
@@ -120,6 +137,7 @@ void Ut_LowBatteryNotifier::testShowNotificationInActiveUse ()
         " should be 3";
 
     //QCOMPARE(m_helper->notificationTimes ().count (), 3);
+
     for (int i = 0; i < m_helper->notificationTimes().count (); ++i)
     {
         qDebug () <<
@@ -157,17 +175,15 @@ Ut_LowBatteryNotifier::testShowNotificationInDiverseUse ()
             - First was sent right away
             - Second was sent at [Active timeout * 1.25 (+0,1 secs)]
     */
-    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    turnDisplay (true);
     m_helper->start ();
     m_subject->showLowBatteryNotification ();
     QTest::qWait (Act / 2);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    turnDisplay (true);
     QTest::qWait (Act / 4);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    turnDisplay (false);
     QTest::qWait (Act / 2);
-    m_subject->m_Display->set (Maemo::QmDisplayState::On);
+    turnDisplay (true);
 
     QCOMPARE(m_helper->notificationTimes ().count (), 2);
 
@@ -207,13 +223,12 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
             - First was sent right away
             - Second and third were sent at [Inactive timeout]
     */
-    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    turnDisplay (false);
     m_helper->start ();
     m_subject->showLowBatteryNotification ();
     QTest::qWait (Inact + Act / 2);
-    m_subject->m_Display->set (Maemo::QmDisplayState::On);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Dimmed);
-    m_subject->m_Display->set (Maemo::QmDisplayState::Off);
+    turnDisplay (true);
+    turnDisplay (false);
     QTest::qWait (Inact - Act / 2 + 50);
 
     QCOMPARE(m_helper->notificationTimes ().count (), 3);
@@ -234,4 +249,4 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
 }
 #endif
 
-QTEST_APPLESS_MAIN(Ut_LowBatteryNotifier)
+QTEST_MAIN(Ut_LowBatteryNotifier)

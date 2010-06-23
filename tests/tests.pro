@@ -12,8 +12,8 @@ contains(BUILD_FEATURES,coverage) {
     # Sometimes if is faster like this, when you are working on a single unit
     # test for a while.
     #
-    SUBDIRS = $$system(ls -1d ut_batterybusinesslogic)
-    #SUBDIRS = $$system(ls -1d ut_*/ | grep -v ut_template)
+    #SUBDIRS = $$system(ls -1d ut_batterybusinesslogic)
+    SUBDIRS = $$system(ls -1d ut_*/ | grep -v ut_template)
 } else {
     SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
 }

@@ -24,7 +24,6 @@ SOURCES += \
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
     $$STUBSDIR/systemstatestub.cpp \
-    $$STUBSDIR/displaystatestub.cpp \
     $$STUBSDIR/locksstub.cpp \
     $$STUBSDIR/testcontextitem.cpp \
 
@@ -60,7 +59,6 @@ HEADERS += \
 HEADERS += \
     $$STUBSDIR/stubbase.h \
     $$STUBSDIR/systemstatestub.h \
-    $$STUBSDIR/displaystatestub.h \
     $$STUBSDIR/locksstub.h \
     $$STUBSDIR/testcontextitem.h \
     $$STUBSDIR/widgetnotificationsink_stub.h \

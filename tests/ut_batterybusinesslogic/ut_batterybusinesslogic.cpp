@@ -18,9 +18,11 @@
 ****************************************************************************/
 #include "ut_batterybusinesslogic.h"
 
+#ifdef HAVE_QMSYSTEM
 #include "qmled_stub.h"
 #include "qmbattery_stub.h"
 #include "qmdevicemode_stub.h"
+#endif
 
 #include <MNotification>
 
@@ -81,6 +83,7 @@ Ut_BatteryBusinessLogic::cleanup ()
 void
 Ut_BatteryBusinessLogic::testInitBattery ()
 {
+#ifdef HAVE_QMSYSTEM
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
     /* Set some ret. values for stubs */
@@ -99,11 +102,13 @@ Ut_BatteryBusinessLogic::testInitBattery ()
     QCOMPARE (spy.count (), 0);
     QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0) 
              == QString ("PatternBatteryCharging"));
+#endif
 }
 
 void
 Ut_BatteryBusinessLogic::testLowBatteryAlert ()
 {
+#ifdef HAVE_QMSYSTEM
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
     m_logic->lowBatteryAlert ();
@@ -116,11 +121,13 @@ Ut_BatteryBusinessLogic::testLowBatteryAlert ()
 
     QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
     QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+#endif
 }
 
 void
 Ut_BatteryBusinessLogic::testBatteryStateChanged ()
 {
+#ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
@@ -188,11 +195,13 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
     QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+#endif
 }
 
 void
 Ut_BatteryBusinessLogic::testChargingStateChanged ()
 {
+#ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
@@ -228,11 +237,13 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_repcharger"));
     QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-replace-charger");
+#endif
 }
 
 void
 Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
 {
+#ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
@@ -262,11 +273,13 @@ Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
     /* Unknown */
     m_logic->batteryChargerEvent (Maemo::QmBattery::Unknown);
     QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::Unknown);
+#endif
 }
 
 void
 Ut_BatteryBusinessLogic::testPSMStateChanged ()
 {
+#ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
 
@@ -287,6 +300,40 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_exit_psnote"));
+#endif
+}
+
+void
+Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
+{
+#ifdef HAVE_QMSYSTEM
+    QList<QVariant> arguments;
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+
+    /* LowBatteryNotifier shouldn't be instantiated at first */
+    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+
+    /* Simulate battery-state-low change */
+    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
+        "getChargingState", Maemo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+
+    /* LowBatteryNotifier should be exists now... */
+    QVERIFY (m_logic->m_LowBatteryNotifier != 0);
+    QTest::qWait (10);
+
+    /* And should send a low-battery notification */
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+
+    /* Simulate now a charging event */
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+
+    /* After this call LowBatteryNotifier should be destroyed */
+    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+#endif
 }
 
 QTEST_MAIN(Ut_BatteryBusinessLogic)

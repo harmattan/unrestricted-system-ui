@@ -46,22 +46,18 @@ namespace {
 LowBatteryNotifier::LowBatteryNotifier (
         QObject *parent) :
         QObject (parent),
-#ifdef HAVE_QMSYSTEM
-        m_Display (new Maemo::QmDisplayState ()),
-#endif
         m_Timer (new QTimer (this)),
         m_Sleep (false)
 {
     SYS_DEBUG ("----------------------------------------------");
 
-#ifdef HAVE_QMSYSTEM
-    m_Sleep = m_Display->get () == Maemo::QmDisplayState::Off;
-#endif
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
 
 #ifdef HAVE_QMSYSTEM
+    m_Display = new Maemo::QmDisplayState;
+    m_Sleep = m_Display->get () == Maemo::QmDisplayState::Off;
     connect (m_Display,
             SIGNAL (displayStateChanged (Maemo::QmDisplayState::DisplayState)),
             this,

@@ -40,6 +40,7 @@ private slots:
     void testChargingStateChanged ();
     void testBatteryChargerEvent ();
     void testPSMStateChanged ();
+    void testLowBatteryNotifierConnection ();
 
 private:
     BatteryBusinessLogic*   m_logic;
