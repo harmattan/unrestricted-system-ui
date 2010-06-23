@@ -54,8 +54,9 @@ class Ut_StatusIndicator : public QObject
     Q_OBJECT
 
 private:
-    MApplication  *app;
-    TestContext     *testContext;
+    MApplication *app;
+    TestContext *testContext;
+    StatusIndicator *m_subject;
 
 private slots:
     // Executed once before every test case
