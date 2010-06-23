@@ -128,6 +128,17 @@ UsbUi::ShowDialog ()
     // so no need to worry about registering to a specific scene manager here
     m_dialog->appear (MSceneWindow::KeepWhenDone);
     m_dialog->setFocus ();
+
+    // We should not hold this dialog for forever...
+    connect (m_dialog, SIGNAL (disappeared ()),
+             this, SLOT (DestroyDialog ()));
+}
+
+void
+UsbUi::DestroyDialog ()
+{
+    delete m_dialog;
+    m_dialog = 0;
 }
 
 void

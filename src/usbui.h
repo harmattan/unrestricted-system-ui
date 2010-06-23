@@ -40,13 +40,14 @@ public:
     UsbUi (QObject *parent = 0);
     ~UsbUi ();
 
-    private slots:
+private slots:
 #ifdef HAVE_QMSYSTEM
     void currentModeChanged (Maemo::QmUSBMode::Mode mode);
 #endif
     void OviSuiteSelected ();
     void MassStorageSelected ();
     void ShowDialog ();
+    void DestroyDialog ();
 
     void initialize ();
 
