@@ -18,19 +18,37 @@
 ****************************************************************************/
 #include "testcontextitem.h"
 
-int TestContextItem::constructor_called = 0;
-int TestContextItem::destructor_called = 0;
-int TestContextItem::subscribe_called = 0;
-int TestContextItem::unsubscribe_called = 0;
+void ContextItemStub::ContextItemConstructor()
+{
+    stubMethodEntered("ContextItemConstructor");
+}
+
+void ContextItemStub::ContextItemDestructor()
+{
+    stubMethodEntered("ContextItemDestructor");
+}
+
+void ContextItemStub::subscribe()
+{
+    stubMethodEntered("subscribe");
+}
+
+void ContextItemStub::unsubscribe()
+{
+    stubMethodEntered("unsubscribe");
+}
+
+ContextItemStub gDefaultContextItemStub;
+ContextItemStub *gContextItemStub = &gDefaultContextItemStub;
 
 TestContextItem::TestContextItem()
 {
-    constructor_called++;
+    gContextItemStub->ContextItemConstructor();
 }
 
 TestContextItem::~TestContextItem()
 {
-    destructor_called++;
+    gContextItemStub->ContextItemDestructor();
 }
 
 void TestContextItem::setValue(const QVariant &val)
@@ -46,11 +64,11 @@ QVariant TestContextItem::value() const
 
 void TestContextItem::subscribe() const
 {
-    subscribe_called++;
+    gContextItemStub->subscribe();
 }
 
 void TestContextItem::unsubscribe() const
 {
-    unsubscribe_called++;
+    gContextItemStub->unsubscribe();
 }
 

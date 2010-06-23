@@ -21,6 +21,18 @@
 
 #include "applicationcontext.h"
 #include <QVariant>
+#include <stubbase.h>
+
+class ContextItemStub : public StubBase
+{
+public:
+    virtual void ContextItemConstructor();
+    virtual void ContextItemDestructor();
+    virtual void subscribe();
+    virtual void unsubscribe();
+};
+
+extern ContextItemStub *gContextItemStub;
 
 class TestContextItem : public ContextItem
 {
@@ -35,11 +47,6 @@ public:
 
     virtual void subscribe() const;
     virtual void unsubscribe() const;
-
-    static int constructor_called;
-    static int destructor_called;
-    static int subscribe_called;
-    static int unsubscribe_called;
 
 private:
     QVariant value_;

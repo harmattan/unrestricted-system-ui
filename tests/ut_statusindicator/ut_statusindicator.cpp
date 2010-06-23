@@ -116,39 +116,35 @@ void Ut_StatusIndicator::testContextItemSubscribe()
     MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
     MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
 
+    gContextItemStub->stubReset();
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
-
-    TestContextItem::subscribe_called = 0;
-    TestContextItem::unsubscribe_called = 0;
 
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
     qApp->sendEvent(m_subject, &exitDisplayEvent);
-    QCOMPARE(TestContextItem::unsubscribe_called, 2);
+    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 2);
 
     // When the application becomes not visible, the context item updates
     // should be subscribed to
     qApp->sendEvent(m_subject, &enterDisplayEvent);
-    QCOMPARE(TestContextItem::subscribe_called, 2);
+    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 2);
 }
 
 void Ut_StatusIndicator::testContextItemDeletion()
 {
-    TestContextItem::constructor_called = 0;
-    TestContextItem::destructor_called = 0;
-
+    gContextItemStub->stubReset();
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
 
     // There should be a total of two items constructed using the
     // StatusIndicator::createContextItem() call
-    QCOMPARE(TestContextItem::constructor_called, 2);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 2);
 
     delete m_subject;
     m_subject = NULL;
 
     // There should be a total of two items deleted by the
     // StatusIndicator destructor
-    QCOMPARE(TestContextItem::destructor_called, 2);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 2);
 }
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
