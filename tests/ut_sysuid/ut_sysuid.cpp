@@ -24,8 +24,8 @@
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
-#include "contextframeworkcontext.h"
 #include "sysuid.h"
+#include "contextframeworkitem_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
@@ -114,53 +114,13 @@ bool QDBusConnection::registerObject(QString const &, QObject *, QFlags<QDBusCon
     return true;
 }
 
-// ContextItem & ContextFrameworkItem stubs
+// ContextFrameworkContext stub
 TestContextItem *testContextItem;
 ContextItem *ContextFrameworkContext::createContextItem(const QString&)
 {
     testContextItem = new TestContextItem;
     return testContextItem;
 }
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
-ContextFrameworkItem::ContextFrameworkItem(const QString &key)
-    : property(key)
-{
-    connect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
-}
-
-QVariant ContextFrameworkItem::value() const
-{
-    return property.value();
-}
-
-void ContextFrameworkItem::subscribe() const
-{
-    property.subscribe();
-}
-
-void ContextFrameworkItem::unsubscribe() const
-{
-    property.unsubscribe();
-}
-#else
-ContextFrameworkItem::ContextFrameworkItem(const QString &)
-{
-}
-
-QVariant ContextFrameworkItem::value() const
-{
-    return QVariant();
-}
-
-void ContextFrameworkItem::subscribe() const
-{
-}
-
-void ContextFrameworkItem::unsubscribe() const
-{
-}
-#endif
 
 void Ut_Sysuid::initTestCase()
 {
