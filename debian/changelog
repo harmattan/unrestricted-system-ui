@@ -1,6 +1,7 @@
 system-ui (0.16.5~1) harmattan; urgency=low
 
   * New version [UNRELEASED]
+  * Fixes: NB#175073 - Status indicators do not unsubscribe from context properties in idle mode
 
  -- Gabriel Schulhof <gabriel.schulhof@nokia.com>  Wed, 23 Jun 2010 15:46:14 +0300
 
