@@ -59,9 +59,21 @@ MGConfItem::value () const
     return QVariant(QString(""));
 }
 
+#if 0
+bool considerLockScreenUIVisible = false;
+
+bool 
+MWindow::isVisible ()
+{
+    return considerLockScreenUIVisible;
+}
+#endif
+
 /*********************************************************************************
  * Stub for the QPixmap
  */
+bool failImageLoads = false;
+
 bool
 QPixmap::load (
         const QString  &fileName, 
@@ -72,6 +84,9 @@ QPixmap::load (
     Q_UNUSED (flags);
     SYS_DEBUG ("*** fileName = %s", SYS_STR(fileName));
 
+    if (failImageLoads)
+        return false;
+    
     if (fileName == BG_FILENAME_PORTRAIT)
         *this = QPixmap (480, 864);
     else if (fileName == BG_FILENAME_LANDSCAPE)
@@ -165,7 +180,8 @@ Ut_LockScreenUI::testLockScreenWindow ()
     lockLandArea = new UnlockArea ();
     
     window = new LockScreenWindow (parentWindow, lockLiftArea, lockLandArea);
-    connectSuccess = connect (window, SIGNAL(unlocked()),
+    connectSuccess = connect (
+            window, SIGNAL(unlocked()),
             &m_EventSink, SLOT(unlocked()));
 
     m_EventSink.m_UnlockedCame = false;
@@ -178,6 +194,15 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QVERIFY (window->m_confBgPortrait != NULL);
     QVERIFY (window->m_confBgLandscape->key() == GCONF_BG_LANDSCAPE);
     QVERIFY (window->m_confBgPortrait->key() == GCONF_BG_PORTRAIT);
+
+    /*
+     * Checking what happens when the image loads failed.
+     */
+    failImageLoads = true;
+    window->reloadLandscapeBackground ();
+    window->reloadPortraitBackground ();
+    failImageLoads = false;
+    // Should check something...
 
     /*
      * Checking if the background images are loaded with the right size. The
@@ -199,7 +224,7 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QVERIFY (window->m_bgPortrait.height() == 864);
 
     /*
-     *
+     * Creating some mouse events that will be sent to the window.
      */
     QGraphicsSceneMouseEvent *pressEvent;
     QGraphicsSceneMouseEvent *moveEvent;
@@ -264,8 +289,60 @@ Ut_LockScreenUI::testLockScreenUI ()
     QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
 
     delete m_LockScreenUI;
-    m_LockScreenUI = 0;
+
+    /*
+     * Now let's do it with the early manual realization. The createContent()
+     * hopefully will be called when the window shown...
+     */
+    m_LockScreenUI = new LockScreenUI;
+    m_LockScreenUI->createContent();
+    QVERIFY (m_LockScreenUI->m_Realized);
+    QVERIFY (m_LockScreenUI->m_policy != NULL);
+    QVERIFY (m_LockScreenUI->m_LockLiftArea != NULL);
+    QVERIFY (m_LockScreenUI->m_LockLandArea != NULL);
+    QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+
+    // FIXME: I will enhance this part... 
+    //m_LockScreenUI->showEvent (NULL);
+    //considerLockScreenUIVisible = true;
+    m_LockScreenUI->showHideNotifications (true);
+    //QVERIFY (m_LockScreenUI->m_notificationArea->isVisible());
+
+    m_LockScreenUI->showHideNotifications (false);
+    //QVERIFY (!m_LockScreenUI->m_notificationArea->isVisible());
+    delete m_LockScreenUI;
+    
+    /*
+     * Test the extreme case of the early destruction of the object. We had a
+     * creash in this case, this is what checked here.
+     */
+    m_LockScreenUI = new LockScreenUI;
+    delete m_LockScreenUI;
 }
+
+/*
+ * This test will check if the lockscreenui will send the signal when the
+ * lockscreenwindow emits the unlocked() signal.
+ */
+void
+Ut_LockScreenUI::testLockScreenUISignals ()
+{
+    bool              connectSuccess;
+
+    m_LockScreenUI = new LockScreenUI;
+    m_LockScreenUI->createContent();
+    connectSuccess = connect (m_LockScreenUI, SIGNAL(unlocked()),
+            &m_EventSink, SLOT(unlocked()));
+    QVERIFY(connectSuccess);
+    m_EventSink.m_UnlockedCame = false;
+
+    
+    emit m_LockScreenUI->m_SceneWindow->unlocked();
+    QVERIFY (m_EventSink.m_UnlockedCame);
+
+    delete m_LockScreenUI;
+}
+
 
 void
 Ut_LockScreenUI::testLockScreenUIWindowName ()
@@ -283,7 +360,6 @@ Ut_LockScreenUI::testLockScreenUIWindowName ()
     m_LockScreenUI->showEvent(&event);
 
     delete m_LockScreenUI;
-    m_LockScreenUI = 0;
 }
 
 void

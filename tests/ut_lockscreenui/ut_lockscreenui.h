@@ -24,6 +24,8 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #include <QGraphicsSceneEvent>
+#include <QPointer>
+#include "lockscreenui.h"
 #include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
@@ -59,6 +61,7 @@ private slots:
 
     void testLockScreenWindow ();
     void testLockScreenUI ();
+    void testLockScreenUISignals ();
     void testLockScreenUIWindowName ();
     void testEventEaterUI ();
     void testEventEaterUIWindowName ();
@@ -67,7 +70,7 @@ private:
     XChecker               m_XChecker;
     LockScreenUIEventSink  m_EventSink;
     MApplicationWindow    *m_MainWindow;
-    LockScreenUI          *m_LockScreenUI;
+    QPointer <LockScreenUI>  m_LockScreenUI;
     EventEaterUI          *m_EventEaterUI;
     MApplication          *m_App;
 };
