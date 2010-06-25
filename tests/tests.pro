@@ -13,7 +13,7 @@ contains(BUILD_FEATURES,coverage) {
     # test for a while.
     #
     #SUBDIRS = ut_lockscreenui
-    SUBDIRS = $$system(ls -1d ut_*/ | grep -v ut_template)
+    SUBDIRS = $$system(./unit_tests.sh)
 } else {
     SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
 }
