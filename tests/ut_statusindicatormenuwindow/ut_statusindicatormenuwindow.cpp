@@ -80,7 +80,7 @@ bool MApplicationExtensionArea::init()
 
 // QWidget stubs
 QPair<void*, bool> gSetVisible(0, false);
-void QWidget::setVisible(bool visible)
+void MWindow::setVisible(bool visible)
 {
     gSetVisible.first = this;
     gSetVisible.second = visible;
