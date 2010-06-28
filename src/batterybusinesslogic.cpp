@@ -463,7 +463,7 @@ BatteryBusinessLogic::sendNotification (
     */
    emit notificationSent (text, icon);
 #endif   
-   m_notification = new MNotification (MNotification::DeviceEvent, text); 
+   m_notification = new MNotification ("x-nokia.battery", text); 
    m_notification->setImage (icon);
    m_notification->publish ();
 
