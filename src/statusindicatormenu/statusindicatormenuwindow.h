@@ -168,16 +168,16 @@ private:
     const static QString CONTROL_PANEL_SERVICE_NAME;
 
     //! The main scene window
-    QSharedPointer<MSceneWindow> sceneWindow;
+    MSceneWindow *sceneWindow;
 
     //! Status Bar
-    QSharedPointer<MStatusBar> statusBar;
+    MStatusBar *statusBar;
 
     //! The pannable area viewport
     MPannableViewport *pannableViewport;
 
     //! An overlay for the close button
-    QSharedPointer<MOverlay> closeButtonOverlay;
+    MOverlay *closeButtonOverlay;
 
     //! Creates windows top row containing extension area and settings button
     QGraphicsWidget *createTopRow();

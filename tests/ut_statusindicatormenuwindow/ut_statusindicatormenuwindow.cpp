@@ -19,9 +19,9 @@
 
 #include "ut_statusindicatormenuwindow.h"
 #include "statusindicatormenuwindow.h"
-#include "pluginlist_stub.h"
 #include <MApplication>
 #include <MApplicationIfProxy>
+#include <MApplicationExtensionArea>
 #include <MSceneManager>
 #include <QtTest/QtTest>
 #include <MOverlay>
@@ -40,6 +40,45 @@ QDBusPendingReply<> MApplicationIfProxy::launch()
     return QDBusPendingReply<>();
 }
 
+// MApplicationExtensionArea stubs
+QString mApplicationExtensionAreaInterface;
+MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, QGraphicsItem *)
+{
+    mApplicationExtensionAreaInterface = interface;
+}
+
+MApplicationExtensionArea::~MApplicationExtensionArea() { }
+
+QRegExp mApplicationExtensionAreaInProcessFilter;
+void MApplicationExtensionArea::setInProcessFilter(const QRegExp &inProcessFilter)
+{
+    mApplicationExtensionAreaInProcessFilter = inProcessFilter;
+}
+
+QRegExp mApplicationExtensionAreaOutOfProcessFilter;
+void MApplicationExtensionArea::setOutOfProcessFilter(const QRegExp &outOfProcessFilter)
+{
+    mApplicationExtensionAreaOutOfProcessFilter = outOfProcessFilter;
+}
+
+QStringList mApplicationExtensionAreaOrder;
+void MApplicationExtensionArea::setOrder(const QStringList &order)
+{
+    mApplicationExtensionAreaOrder = order;
+}
+
+QRegExp mApplicationExtensionAreaInProcessFilterDuringInit;
+QRegExp mApplicationExtensionAreaOutOfProcessFilterDuringInit;
+QStringList mApplicationExtensionAreaOrderDuringInit;
+bool MApplicationExtensionArea::init()
+{
+    mApplicationExtensionAreaInProcessFilterDuringInit = mApplicationExtensionAreaInProcessFilter;
+    mApplicationExtensionAreaOutOfProcessFilterDuringInit = mApplicationExtensionAreaOutOfProcessFilter;
+    mApplicationExtensionAreaOrderDuringInit = mApplicationExtensionAreaOrder;
+    return true;
+}
+
+// QWidget stubs
 QPair<void*, bool> gSetVisible(0, false);
 void QWidget::setVisible(bool visible)
 {
@@ -180,9 +219,17 @@ void Ut_StatusIndicatorMenuWindow::testPannableAreaBackgroundWidget()
     // When the pannable viewport has been panned the background height should reach the bottom of the screen
     statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 10);
     emit positionOrSizeChanged();
-    qreal expectedHeight = statusIndicatorMenuWindow->sceneManager()->visibleSceneSize().height() - statusIndicatorMenuWindow->pannableViewport->mapToItem(statusIndicatorMenuWindow->sceneWindow.data(), QPointF()).y();
+    qreal expectedHeight = statusIndicatorMenuWindow->sceneManager()->visibleSceneSize().height() - statusIndicatorMenuWindow->pannableViewport->mapToItem(statusIndicatorMenuWindow->sceneWindow, QPointF()).y();
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), expectedHeight);
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), expectedHeight);
+}
+
+void Ut_StatusIndicatorMenuWindow::testTopRowInitialization()
+{
+    QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
+    QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit, QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
+    QCOMPARE(mApplicationExtensionAreaOutOfProcessFilterDuringInit, QRegExp("$^"));
+    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

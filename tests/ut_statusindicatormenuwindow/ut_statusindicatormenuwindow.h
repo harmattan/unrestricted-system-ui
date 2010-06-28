@@ -59,6 +59,7 @@ private slots:
     void testSetPannability();
     void testWindowType();
     void testPannableAreaBackgroundWidget();
+    void testTopRowInitialization();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

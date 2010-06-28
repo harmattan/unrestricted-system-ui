@@ -26,7 +26,6 @@
 #include <MApplicationIfProxy>
 #include <MPannableViewport>
 #include <QGraphicsLinearLayout>
-#include "pluginlist.h"
 #include "notificationarea.h"
 #include "statusindicatormenuwindow.h"
 #include <MWidgetView>
@@ -86,10 +85,10 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 
     // Show status bar
-    sceneManager()->appearSceneWindowNow(statusBar.data());
+    sceneManager()->appearSceneWindowNow(statusBar);
 
     // Create close button overlay
-    closeButtonOverlay = QSharedPointer<MOverlay>(createCloseButtonOverlay());
+    closeButtonOverlay = createCloseButtonOverlay();
 
     // Create the pannable area background widget
     backgroundWidget->setView(new MWidgetView(backgroundWidget));
@@ -111,7 +110,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     sceneWindow->setLayout(layout);
 
     sceneWindow->setObjectName("StatusIndicatorMenuWindow");
-    sceneManager()->appearSceneWindowNow(sceneWindow.data());
+    sceneManager()->appearSceneWindowNow(sceneWindow);
 
     // Set the X window type, so that the window does not appear in the switcher and
     // home screen can provide the correct UI flow
@@ -120,14 +119,20 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
+    delete sceneWindow;
+    delete statusBar;
+    delete closeButtonOverlay;
 }
 
 QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
 {
     // Create an extension area for the top row plugins
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
-    extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+    extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
+    extensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
+    extensionArea->setOutOfProcessFilter(QRegExp("$^"));
+    extensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
     extensionArea->init();
 
     // Create a button for accessing the full settings
@@ -166,7 +171,6 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     contentLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setSpacing(0);
     contentLayout->addItem(notificationArea);
-    contentLayout->addItem(new PluginList(this, sceneWindow.data()));
 
     MWidgetController *contentWidget = new MWidgetController;
     contentWidget->setView(new MWidgetView(contentWidget));
@@ -263,18 +267,18 @@ void StatusIndicatorMenuWindow::setPannabilityAndLayout()
     // Appear or disappear the close button overlay based on close area position
     const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(pannableViewport->widget())->bottommostWidget();
     qreal screenHeight = sceneManager()->visibleSceneSize().height();
-    qreal yPos = closeButtonRow->mapToItem(sceneWindow.data(), QPointF(0, closeButtonRow->geometry().height())).y();
+    qreal yPos = closeButtonRow->mapToItem(sceneWindow, QPointF(0, closeButtonRow->geometry().height())).y();
 
     if (yPos <= screenHeight) {
-        sceneManager()->disappearSceneWindowNow(closeButtonOverlay.data());
+        sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
     } else {
-        sceneManager()->appearSceneWindowNow(closeButtonOverlay.data());
+        sceneManager()->appearSceneWindowNow(closeButtonOverlay);
     }
 
     // Make pannable area background window to appear when pannable widget is panned
-    qreal widgetCurrentYPos = pannableWidget->mapToItem(sceneWindow.data(), pannableWidget->geometry().topLeft()).y();
-    qreal widgetOriginalYPos = pannableWidget->mapToItem(sceneWindow.data(), QPointF()).y();
-    qreal viewPortYPos = pannableViewport->mapToItem(sceneWindow.data(), QPointF()).y();
+    qreal widgetCurrentYPos = pannableWidget->mapToItem(sceneWindow, pannableWidget->geometry().topLeft()).y();
+    qreal widgetOriginalYPos = pannableWidget->mapToItem(sceneWindow, QPointF()).y();
+    qreal viewPortYPos = pannableViewport->mapToItem(sceneWindow, QPointF()).y();
 
     if (widgetCurrentYPos > widgetOriginalYPos) {
         // Force the size of the background window
