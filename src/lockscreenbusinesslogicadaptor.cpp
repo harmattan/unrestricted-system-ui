@@ -225,22 +225,32 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
         } tklock_status;
      * Where TKLOCK_UNLOCK == TkLockReplyOk so I just leave it now.
      */
+    #if 0
+    /*
+     * We can turn on some extra debug messages here, if we need to.
+     */
     SYS_DEBUG ("Sending answer:");
     SYS_DEBUG ("*** service    = %s", SYS_STR(m_MCECallbackService));
     SYS_DEBUG ("*** path       = %s", SYS_STR(m_MCECallbackPath));
     SYS_DEBUG ("*** interface  = %s", SYS_STR(m_MCECallbackInterface));
     SYS_DEBUG ("*** callback   = %s", SYS_STR(m_MCECallbackMethod));
     SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
-   	QDBusMessage message;
-
+    #endif
+   	
+    QDBusMessage message;
     message = m_CallbackDbusIf->call (QDBus::NoBlock,
             m_MCECallbackMethod, //QString ("tklock_callback"),
             (int) TkLockReplyOk);
-    SYS_DEBUG ("Answer sent...");
 
+    #if 0
+    /*
+     * We used to check things here...
+     */
+    SYS_DEBUG ("Answer sent...");
     QString errorString = message.errorMessage();
     QString errorName = message.errorName ();
     SYS_DEBUG ("*** errorMessage = %s", SYS_STR(errorString));
     SYS_DEBUG ("*** errorName    = %s", SYS_STR(errorName));
+    #endif
 }
 
