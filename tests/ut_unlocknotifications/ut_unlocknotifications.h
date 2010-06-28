@@ -30,6 +30,21 @@
 
 class MApplication;
 
+class SignalSink : public QObject
+{
+    Q_OBJECT
+
+public:
+    SignalSink ();
+
+public slots:
+    void needToShow (bool visible);
+
+public:
+    bool m_NeedToShow;
+    bool m_NeedToShowCame;
+};
+
 class Ut_UnlockNotifications : public QObject
 {
     Q_OBJECT
@@ -42,12 +57,23 @@ private slots:
 
     void testDefaultValues ();
     void testOrientationChanged ();
-    void testUpdateContents ();
+    void testUpdateContentsWithNothing ();
+    void testUpdateContentsWithOneSMS ();
+    void testUpdateContentsWithManySMS ();
+    void testUpdateContentsWithOneCall ();
+    void testUpdateContentsWithManyCall ();
+    void testUpdateContentsWithManyEmail ();
+    void testUpdateContentsWithManyMessages ();
 
 private:
+    QString notificationLabelText (int nth);
+    QString notificationIconName (int nth);
+    QString notificationLastSubject ();
+
     MTester                 m_Tester;
     MApplication           *app;
     UnlockNotifications    *m_Subject;
+    SignalSink              m_SignalSink;
 };
 
 #endif

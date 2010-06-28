@@ -29,9 +29,9 @@ class UnlockMissedEventsStub : public StubBase {
   virtual void UnlockMissedEventsConstructor();
   virtual void UnlockMissedEventsDestructor();
   virtual void getInstance();
-  virtual void getLastType();
-  virtual void getLastSubject(int type);
-  virtual void getCount(int type);
+  virtual UnlockMissedEvents::Types getLastType();
+  virtual QString getLastSubject(int type);
+  virtual int getCount(int type);
   virtual void addNotification(int type, QString subject);
   virtual void clearAll();
 }; 
@@ -46,18 +46,28 @@ void UnlockMissedEventsStub::UnlockMissedEventsDestructor() {
 void UnlockMissedEventsStub::getInstance() {
   stubMethodEntered("getInstance");
 }
-void UnlockMissedEventsStub::getLastType() {
+
+UnlockMissedEvents::Types
+UnlockMissedEventsStub::getLastType() {
   stubMethodEntered("getLastType");
+  return stubReturnValue<UnlockMissedEvents::Types > ("getLastType");
 }
-void UnlockMissedEventsStub::getLastSubject(int type) {
+
+QString
+UnlockMissedEventsStub::getLastSubject(int type) 
+{
   QList<ParameterBase*> params;
   params.append (new Parameter<int>(type));
-  stubMethodEntered("getLastSubject",params);
+  stubMethodEntered("getLastSubject", params);
+  return stubReturnValue<QString> ("getLastSubject");
 }
-void UnlockMissedEventsStub::getCount(int type) {
+
+int UnlockMissedEventsStub::getCount(int type) {
   QList<ParameterBase*> params;
   params.append (new Parameter<int>(type));
   stubMethodEntered("getCount",params);
+  
+  return stubReturnValue<int> ("getCount");
 }
 void UnlockMissedEventsStub::addNotification(int type, QString subject) {
   QList<ParameterBase*> params;
@@ -92,19 +102,17 @@ UnlockMissedEvents& UnlockMissedEvents::getInstance()
   return m_instance;
 }
 
-UnlockMissedEvents::Types UnlockMissedEvents::getLastType() {
-  gUnlockMissedEventsStub->getLastType();
-  return lastType;
+UnlockMissedEvents::Types 
+UnlockMissedEvents::getLastType() {
+  return gUnlockMissedEventsStub->getLastType();
 }
 
 QString UnlockMissedEvents::getLastSubject(Types atype) {
-  gUnlockMissedEventsStub->getLastSubject((int) atype);
-  return QString ("");
+  return gUnlockMissedEventsStub->getLastSubject((int) atype);
 }
 
 int UnlockMissedEvents::getCount(Types atype) {
-  gUnlockMissedEventsStub->getCount ((int) atype);
-  return 1;
+  return gUnlockMissedEventsStub->getCount ((int) atype);
 }
 
 void UnlockMissedEvents::addNotification(Types type, QString subject) {

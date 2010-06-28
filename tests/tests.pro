@@ -12,8 +12,8 @@ contains(BUILD_FEATURES,coverage) {
     # Sometimes if is faster like this, when you are working on a single unit
     # test for a while.
     #
-    #SUBDIRS = ut_lockscreenbusinesslogicadaptor
-    SUBDIRS = $$system(./unit_tests.sh)
+    SUBDIRS = ut_unlocknotifications
+    #SUBDIRS = $$system(./unit_tests.sh)
 } else {
     SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
 }
