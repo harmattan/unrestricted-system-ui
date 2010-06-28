@@ -245,7 +245,7 @@ ShutdownUI::turnOffScreen ()
     /*
      * No way dimming or turning off the screen inside scratchbox.
      */
-    #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
+    #if defined(HAVE_QMSYSTEM)
     Maemo::QmDisplayState  display;
 
     // Try to dim

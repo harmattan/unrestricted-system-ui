@@ -81,7 +81,7 @@ MFeedback::play () const
 }
 
 /*******************************************************************************
- * The Ut_LockScreenUI implements the unit tests.
+ * The Ut_ShutdownBusinessLogic implements the unit tests.
  */
 void Ut_ShutdownBusinessLogic::init()
 {
