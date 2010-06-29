@@ -4,9 +4,9 @@ This page documents various aspects about the Status Indicator Menu.
 
 The status indicator menu loads a predefined set of plugins implemented using
 application extensions. The set is defined in Direct UI – Status Indicator
-System UI Specification (H00405111-EN). The plugins are displayed on one row
-next to of each other and loaded from the following application extension
-.desktop files:
+System UI Specification (H00405111-EN). The permanent plugins are displayed on one row
+next to each other. The plugins will be loaded in the below specified order from left to right
+and loaded from the following application extension .desktop files:
 
 <table>
 <tr>
@@ -33,6 +33,27 @@ next to of each other and loaded from the following application extension
 <td>4</td>
 <td>Profile</td>
 <td>statusindicatormenu-profile.desktop</td>
+</tr>
+</table>
+
+Temporary plug-ins (whole screen wide items) are placed under the top row vertically, in the below specified order and
+loaded from the following application extension .desktop files:
+
+<table>
+<tr>
+<th>Order</th>
+<th>Plugin</th>
+<th>Application extension .desktop file name</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Ongoing/incoming call</td>
+<td>statusindicatormenu-call.desktop</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Transfers</td>
+<td>statusindicatormenu-transfer.desktop</td>
 </tr>
 </table>
 

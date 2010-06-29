@@ -50,9 +50,14 @@ MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, Q
 MApplicationExtensionArea::~MApplicationExtensionArea() { }
 
 QRegExp mApplicationExtensionAreaInProcessFilter;
+QRegExp mApplicationExtensionAreaVerticalFilter;
 void MApplicationExtensionArea::setInProcessFilter(const QRegExp &inProcessFilter)
 {
-    mApplicationExtensionAreaInProcessFilter = inProcessFilter;
+    if (inProcessFilter == QRegExp("/statusindicatormenu-(call|transfer).desktop$")) {
+        mApplicationExtensionAreaVerticalFilter = inProcessFilter;
+    } else {
+        mApplicationExtensionAreaInProcessFilter = inProcessFilter;
+    }
 }
 
 QRegExp mApplicationExtensionAreaOutOfProcessFilter;
@@ -62,19 +67,28 @@ void MApplicationExtensionArea::setOutOfProcessFilter(const QRegExp &outOfProces
 }
 
 QStringList mApplicationExtensionAreaOrder;
+QStringList mApplicationExtensionAreaVerticalOrder;
 void MApplicationExtensionArea::setOrder(const QStringList &order)
 {
-    mApplicationExtensionAreaOrder = order;
+    if (order.contains("statusindicatormenu-call.desktop") || order.contains("statusindicatormenu-transfer.desktop")) {
+        mApplicationExtensionAreaVerticalOrder = order;
+    } else {
+        mApplicationExtensionAreaOrder = order;
+    }
 }
 
 QRegExp mApplicationExtensionAreaInProcessFilterDuringInit;
+QRegExp mApplicationExtensionAreaVerticalFilterDuringInit;
 QRegExp mApplicationExtensionAreaOutOfProcessFilterDuringInit;
 QStringList mApplicationExtensionAreaOrderDuringInit;
+QStringList mApplicationExtensionAreaVerticalOrderDuringInit;
 bool MApplicationExtensionArea::init()
 {
     mApplicationExtensionAreaInProcessFilterDuringInit = mApplicationExtensionAreaInProcessFilter;
+    mApplicationExtensionAreaVerticalFilterDuringInit = mApplicationExtensionAreaVerticalFilter;
     mApplicationExtensionAreaOutOfProcessFilterDuringInit = mApplicationExtensionAreaOutOfProcessFilter;
     mApplicationExtensionAreaOrderDuringInit = mApplicationExtensionAreaOrder;
+    mApplicationExtensionAreaVerticalOrderDuringInit = mApplicationExtensionAreaVerticalOrder;
     return true;
 }
 
@@ -230,6 +244,13 @@ void Ut_StatusIndicatorMenuWindow::testTopRowInitialization()
     QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit, QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
     QCOMPARE(mApplicationExtensionAreaOutOfProcessFilterDuringInit, QRegExp("$^"));
     QCOMPARE(mApplicationExtensionAreaOrderDuringInit, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
+}
+
+void Ut_StatusIndicatorMenuWindow::testVerticalExtensionArea()
+{
+    QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
+    QCOMPARE(mApplicationExtensionAreaVerticalFilterDuringInit, QRegExp("/statusindicatormenu-(call|transfer).desktop$"));
+    QCOMPARE(mApplicationExtensionAreaVerticalOrderDuringInit, ((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop")));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

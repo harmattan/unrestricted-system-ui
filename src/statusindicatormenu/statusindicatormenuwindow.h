@@ -33,6 +33,7 @@ class MPannableViewport;
 class NotificationArea;
 class StatusIndicatorMenuWindow;
 class MPannableViewport;
+class MApplicationExtensionArea;
 
 /*!
   * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
@@ -172,6 +173,9 @@ private:
 
     //! Status Bar
     MStatusBar *statusBar;
+
+    //! Extension area for call ui and transfer ui plugins
+    MApplicationExtensionArea* createVerticalExtensionArea();
 
     //! The pannable area viewport
     MPannableViewport *pannableViewport;

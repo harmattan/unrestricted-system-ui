@@ -161,15 +161,30 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
     return topRowWidget;
 }
 
+MApplicationExtensionArea* StatusIndicatorMenuWindow::createVerticalExtensionArea()
+{
+    // Create an extension area for the call ui and transfer ui plugins
+    MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
+    extensionArea->setObjectName("StatusIndicatorMenuVerticalExtensionArea");
+    extensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(call|transfer).desktop$"));
+    extensionArea->setOutOfProcessFilter(QRegExp("$^"));
+    extensionArea->setOrder((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop"));
+    connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+    extensionArea->init();
+    return extensionArea;
+}
+
 MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
 {
     // Create pannable area contents
+    MApplicationExtensionArea *extensionArea = createVerticalExtensionArea();
     NotificationArea *notificationArea = new NotificationArea;
     connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
     QGraphicsLinearLayout *contentLayout = new QGraphicsLinearLayout(Qt::Vertical);
     contentLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setSpacing(0);
+    contentLayout->addItem(extensionArea);
     contentLayout->addItem(notificationArea);
 
     MWidgetController *contentWidget = new MWidgetController;
