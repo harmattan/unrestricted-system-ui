@@ -124,7 +124,7 @@ LockScreenBusinessLogic::displayStateChanged (
      * off we need to start it.
      */
     if (state == Maemo::QmDisplayState::On &&
-            eaterUI != NULL && eaterUI->isVisible() &&
+            lockUI != NULL && lockUI->isVisible() &&
             !timer.isActive())
         mayStartTimer ();
 }
