@@ -1,14 +1,6 @@
 System User Interface
 =======================
-(old) authors:
-   Ossi Jormakka
-   Matti Katila
-   Carita Kautto
-   Miikka Kulmala
-   Jan Lapinkataja
-   Telle-Tiia Pitkanen
-
-current authors (/maintainers):
+Current authors (/maintainers):
    Laszlo Pere
    David Kedves
    Vesa Halttunen
@@ -23,6 +15,14 @@ current authors (/maintainers):
    Eetu Lehmusvuo
    Jarkko Markkanen
    Matti Vuorela
+
+Original authors:
+   Ossi Jormakka
+   Matti Katila
+   Carita Kautto
+   Miikka Kulmala
+   Jan Lapinkataja
+   Telle-Tiia Pitkanen
 
 Release
 -------
