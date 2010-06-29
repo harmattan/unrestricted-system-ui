@@ -144,6 +144,11 @@ LockScreenBusinessLogic::toggleScreenLockUI (
     SYS_DEBUG ("*** toggle = %s", SYS_BOOL(toggle));
 
     if (toggle) {
+        /*
+         * Whenever we're showing the lock-screen-ui
+         * we need to reset its state.
+         */
+        lockUI->reset();
         lockUI->show();
         mayStartTimer ();
     } else {

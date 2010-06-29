@@ -36,6 +36,7 @@ class LockScreenWindowStub : public StubBase {
   virtual void reloadLandscapeBackground();
   virtual void reloadPortraitBackground();
   virtual void updateDnDicon();
+  virtual void resetState();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -86,7 +87,9 @@ void LockScreenWindowStub::updateDnDicon() {
   stubMethodEntered("updateDnDicon");
 }
 
-
+void LockScreenWindowStub::resetState() {
+  stubMethodEntered("resetState");
+}
 
 // 3. CREATE A STUB INSTANCE
 LockScreenWindowStub gDefaultLockScreenWindowStub;
@@ -130,5 +133,8 @@ void LockScreenWindow::updateDnDicon() {
   gLockScreenWindowStub->updateDnDicon();
 }
 
+void LockScreenWindow::resetState() {
+  gLockScreenWindowStub->resetState();
+}
 
 #endif

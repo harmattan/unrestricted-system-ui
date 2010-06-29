@@ -249,14 +249,24 @@ LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
     if (m_DnDstate == STATE_NONE)
         return;
 
-    // Restore the default state ...
-    static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
-    static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
-
     if (m_DnDstate == STATE_MOVING_ACTIVE)
     {
         emit unlocked ();
     }
+
+    // And finally reset the state to defaults...
+    resetState ();
+}
+
+void
+LockScreenWindow::resetState ()
+{
+    // Restore the default state ...
+    if (m_LockLiftArea != 0)
+        static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (true);
+    if (m_LockLandArea != 0)
+        static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (false);
+
     m_DnDstate = STATE_NONE;
     updateDnDicon ();
 }
@@ -403,6 +413,15 @@ LockScreenUI::updateDateTime ()
         return;
 
     static_cast<UnlockHeader *> (m_LockLiftArea)->updateDateTime ();
+}
+
+// Reset the unlock-screen state to default
+// [to avoid half dragged lock icon visible on the screen]
+void
+LockScreenUI::reset ()
+{
+    if (m_SceneWindow != 0)
+        m_SceneWindow->resetState ();
 }
 
 void

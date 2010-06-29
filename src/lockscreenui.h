@@ -43,6 +43,8 @@ public:
     LockScreenWindow (MWindow *window, MWidget *locklift, MWidget *lockland);
     ~LockScreenWindow ();
 
+    void resetState ();
+
     enum dnd_state {
         STATE_NONE = 0,
         STATE_MOVING,
@@ -104,6 +106,7 @@ signals:
 
 public slots:
     void updateDateTime ();
+    void reset ();
 
 protected:
     void createContent ();

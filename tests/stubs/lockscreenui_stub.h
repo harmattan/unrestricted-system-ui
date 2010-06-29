@@ -34,6 +34,7 @@ class LockScreenUIStub : public StubBase {
   virtual void createContent();
   virtual void showEvent(QShowEvent *event);
   virtual void realize();
+  virtual void reset();
   virtual void sliderUnlocked();
 }; 
 
@@ -71,7 +72,9 @@ void LockScreenUIStub::sliderUnlocked() {
   stubMethodEntered("sliderUnlocked");
 }
 
-
+void LockScreenUIStub::reset() {
+  stubMethodEntered("reset");
+}
 
 // 3. CREATE A STUB INSTANCE
 LockScreenUIStub gDefaultLockScreenUIStub;
@@ -111,5 +114,8 @@ void LockScreenUI::sliderUnlocked() {
   gLockScreenUIStub->sliderUnlocked();
 }
 
+void LockScreenUI::reset() {
+  gLockScreenUIStub->reset();
+}
 
 #endif

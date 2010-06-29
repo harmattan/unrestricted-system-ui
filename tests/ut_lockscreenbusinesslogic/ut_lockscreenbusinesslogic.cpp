@@ -91,6 +91,9 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(spy.at(0).at(0).toBool(), true);
     QCOMPARE(logic.lockUI->isVisible(), true);
 
+    // Check whether the lock-screen-ui state has be reset to defaults
+    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 1);
+
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
     // The timer should not be started if the display is off
     QCOMPARE (logic.timer.isActive (), false);
