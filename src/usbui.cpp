@@ -126,7 +126,7 @@ UsbUi::OviSuiteSelected ()
     if (m_dialog)
     {
         m_dialog->accept ();
-        m_dialog->hide ();
+        m_dialog->disappear ();
     }
 
 #ifdef HAVE_QMSYSTEM
@@ -141,7 +141,7 @@ UsbUi::MassStorageSelected ()
     if (m_dialog)
     {
         m_dialog->accept ();
-        m_dialog->hide ();
+        m_dialog->disappear ();
     }
 
 #ifdef HAVE_QMSYSTEM
@@ -172,7 +172,7 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             if (m_dialog && m_dialog->isVisible ())
             {
                 m_dialog->reject ();
-                m_dialog->hide ();
+                m_dialog->disappear ();
             }
 
             break;
