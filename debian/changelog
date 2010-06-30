@@ -2,6 +2,7 @@ system-ui (0.16.5~1) harmattan; urgency=low
 
   [ Gabriel Schulhof ]
   * Fixes: NB#175073 - Status indicators do not unsubscribe from context properties in idle mode
+  * Fixes: NB#176536 - Internet connected icon for GPRS connection is displayed as red box in the status bar instead of a icon
 
   [ David Kedves ]
   * Fixes: Touch screen lock movable icon is not supposed to get stuck

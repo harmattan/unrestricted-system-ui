@@ -99,9 +99,9 @@ MLabelStyle#ClockLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 30;
-    minimum-size: -1 30;
-    maximum-size: -1 30;
+    preferred-size: -0.1mm 3.0mm;
+    minimum-size: -0.1mm 3.0mm;
+    maximum-size: -0.1mm 3.0mm;
 }
 
 
@@ -136,9 +136,9 @@ StatusIndicatorAnimationStyle:icon {
     maximum-size: 1.4mm 1.8mm;
 }
 StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
-    preferred-size: 24 18;                           
-    minimum-size: 24 18;
-    maximum-size: 24 18;
+    preferred-size: 2.4mm 1.8mm;                           
+    minimum-size: 2.4mm 1.8mm;
+    maximum-size: 2.4mm 1.8mm;
 }
 
 StatusIndicatorLabelStyle {
@@ -307,7 +307,7 @@ StatusIndicatorIconStyle#InternetConnectionStatusIndicatorWLAN {
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketData {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-packagedata";
+    image-list: "icon-s-status-packetdata";
     preferred-size: 2.0mm 1.8mm;
     minimum-size: 2.0mm 1.8mm;
     maximum-size: 2.0mm 1.8mm;
