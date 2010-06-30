@@ -5,8 +5,9 @@ system-ui (0.16.5~1) harmattan; urgency=low
 
   [ David Kedves ]
   * Fixes: Touch screen lock movable icon is not supposed to get stuck
+  * Fixes: NB#177274 - Volume applet does not work after PulseAudio restart
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 29 Jun 2010 13:18:29 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 30 Jun 2010 13:50:39 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 

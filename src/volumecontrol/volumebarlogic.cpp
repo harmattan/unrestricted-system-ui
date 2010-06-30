@@ -37,6 +37,29 @@ VolumeBarLogic::VolumeBarLogic () :
     m_currentvolume (0),
     m_currentmax (0)
 {
+    openConnection (true);
+}
+
+VolumeBarLogic::~VolumeBarLogic ()
+{
+    if (m_dbus_conn)
+    {
+        dbus_connection_unref (m_dbus_conn);
+        m_dbus_conn = 0;
+    }
+}
+
+void
+VolumeBarLogic::openConnection (bool init)
+{
+    /*
+     * Check the connection first, maybe this function
+     * only called because of lost connection
+     */
+    if ((m_dbus_conn != NULL) &&
+        (dbus_connection_get_is_connected (m_dbus_conn)))
+        return;
+
     DBusError dbus_err;
     char *pa_bus_address = getenv ("PULSE_DBUS_SERVER");
 
@@ -58,16 +81,8 @@ VolumeBarLogic::VolumeBarLogic () :
             (DBusHandleMessageFunction) stepsUpdatedSignal,
             (void *) this, NULL);
 
-        QTimer::singleShot (100, this, SLOT (initValues ()));
-    }
-}
-
-VolumeBarLogic::~VolumeBarLogic ()
-{
-    if (m_dbus_conn)
-    {
-        dbus_connection_unref (m_dbus_conn);
-        m_dbus_conn = 0;
+        if (init == true)
+            initValues ();
     }
 }
 
@@ -231,6 +246,9 @@ void
 VolumeBarLogic::setVolume (quint32 value)
 {
     m_currentvolume = value;
+
+    // Check the connection, maybe PulseAudio restarted meanwhile
+    openConnection ();
 
     // Don't try to set the volume via d-bus when it isn't available
     if (m_dbus_conn == NULL)
