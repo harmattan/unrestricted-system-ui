@@ -97,10 +97,10 @@ Ut_BatteryBusinessLogic::testInitBattery ()
      */
     m_logic->initBattery ();
     /* wait for signals... if any... */
-    QTest::qWait (10); 
+    QTest::qWait (10);
 
     QCOMPARE (spy.count (), 0);
-    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0) 
+    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0)
              == QString ("PatternBatteryCharging"));
 #endif
 }
@@ -143,8 +143,8 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charcomp"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-charging-complete");
-    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0) 
+    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-remove-charger");
+    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
              == QString ("PatternBatteryFull"));
 
     /* StateOK */
@@ -158,7 +158,7 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
     /* StateEmpty */
     spy.clear ();
     m_logic->batteryStateChanged (Maemo::QmBattery::StateEmpty);
-    
+
     QTest::qWait (10);
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
@@ -208,24 +208,28 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     gQmBatteryStub->stubReset ();
     gQmLEDStub->stubReset ();
 
-    /* StateCharging */
-    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+    for (int i = 0; i <= 100; i += 5)
+    {
+      /* StateCharging */
+      gQmBatteryStub->stubSetReturnValue<int> ("getRemainingCapacityPct", i);
+      m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charging"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-charging");
-    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0) 
-             == QString ("PatternBatteryCharging"));
-    spy.clear ();
+      QTest::qWait (1);
+      QCOMPARE (spy.count (), 1);
+      arguments = spy.takeFirst ();
+      QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charging"));
+      QVERIFY (arguments.at (1).toString () == m_logic->chargingImageId ());
+      QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
+               == QString ("PatternBatteryCharging"));
+      spy.clear ();
+    }
 
     /* StateNotCharging */
     m_logic->chargingStateChanged (Maemo::QmBattery::StateNotCharging);
 
     QTest::qWait (10);
     QCOMPARE (spy.count (), 0);
-    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0) 
+    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0)
              == QString ("PatternBatteryCharging"));
     spy.clear ();
 

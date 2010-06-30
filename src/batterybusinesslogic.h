@@ -124,6 +124,7 @@ private:
 		    const QString &text,
             const QString &feedback = QString(""),
 		    const QString &icon = QString(""));
+    QString chargingImageId ();
 
     LowBatteryNotifier              *m_LowBatteryNotifier;
     MNotification                   *m_notification;

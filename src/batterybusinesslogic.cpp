@@ -378,7 +378,7 @@ BatteryBusinessLogic::sendNotification (
                     //% "Charging"
                     qtTrId ("qtn_ener_charging"),
                     "",
-                    "icon-m-energy-management-charging");
+                    chargingImageId ());
             break;
 
         case NotificationChargingComplete:
@@ -388,7 +388,7 @@ BatteryBusinessLogic::sendNotification (
                     //% "Charging complete"
                     qtTrId ("qtn_ener_charcomp"),
                     "",
-                    "icon-m-energy-management-charging-complete");
+                    "icon-m-energy-management-remove-charger");
             break;
 
         case NotificationRemoveCharger:
@@ -476,5 +476,31 @@ BatteryBusinessLogic::sendNotification (
        player.play();
    }
 #endif
+}
+
+QString
+BatteryBusinessLogic::chargingImageId ()
+{
+#ifdef HAVE_QMSYSTEM
+    int percentage = m_Battery->getRemainingCapacityPct ();
+
+    if (percentage >= 84)
+        return QString ("icon-m-energy-management-charging8");
+    else if (percentage >= 73)
+        return QString ("icon-m-energy-management-charging7");
+    else if (percentage >= 62)
+        return QString ("icon-m-energy-management-charging6");
+    else if (percentage >= 51)
+        return QString ("icon-m-energy-management-charging5");
+    else if (percentage >= 39)
+        return QString ("icon-m-energy-management-charging4");
+    else if (percentage >= 28)
+        return QString ("icon-m-energy-management-charging3");
+    else if (percentage >= 17)
+        return QString ("icon-m-energy-management-charging2");
+    else if (percentage >= 5)
+        return QString ("icon-m-energy-management-charging1");
+#endif
+    return QString ("icon-m-energy-management-charging-low");
 }
 

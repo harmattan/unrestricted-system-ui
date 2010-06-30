@@ -20,6 +20,8 @@
 #define USBUI_H
 
 #include <QObject>
+#include <QPointer>
+#include <MDialog>
 
 #ifdef HAVE_QMSYSTEM
 #ifndef UNIT_TEST
@@ -29,7 +31,6 @@
 #endif
 #endif
 
-class MDialog;
 class MNotification;
 
 class UsbUi : public QObject
@@ -47,7 +48,6 @@ private slots:
     void OviSuiteSelected ();
     void MassStorageSelected ();
     void ShowDialog ();
-    void DestroyDialog ();
 
     void initialize ();
 
@@ -58,7 +58,7 @@ private:
     Maemo::QmUSBMode    *m_logic;
 #endif
     MNotification       *m_notification;
-    MDialog             *m_dialog;
+    QPointer<MDialog>    m_dialog;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

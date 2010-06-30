@@ -7,8 +7,11 @@ system-ui (0.16.5~1) harmattan; urgency=low
   [ David Kedves ]
   * Fixes: Touch screen lock movable icon is not supposed to get stuck
   * Fixes: NB#177274 - Volume applet does not work after PulseAudio restart
+  * Fixes: NB#175290 - Charging notifications are referring to invalid icons.
+  * Fixes a crash related to usb-dialog
+  * Use the correct icon-id also for usb notifications
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 30 Jun 2010 13:50:39 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 30 Jun 2010 16:20:56 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 

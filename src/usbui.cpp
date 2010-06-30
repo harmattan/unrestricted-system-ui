@@ -25,7 +25,6 @@
 #include <MWidget>
 #include <MContentItem>
 #include <MLabel>
-#include <MDialog>
 #include <MLocale>
 #include <QTimer>
 
@@ -52,11 +51,6 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
 
 UsbUi::~UsbUi ()
 {
-    if (m_dialog)
-    {
-        delete m_dialog;
-        m_dialog = 0;
-    }
 }
 
 void
@@ -80,11 +74,7 @@ UsbUi::ShowDialog ()
     MLabel        *label;
 
     if (m_dialog)
-    {
-        m_dialog->appear (MSceneWindow::KeepWhenDone);
-        m_dialog->setFocus ();
         return;
-    }
 
     m_dialog = new MDialog;
 
@@ -126,45 +116,37 @@ UsbUi::ShowDialog ()
 
     // Modal dialogs always create a new top level window and a scene manager
     // so no need to worry about registering to a specific scene manager here
-    m_dialog->appear (MSceneWindow::KeepWhenDone);
-    m_dialog->setFocus ();
-
-    // We should not hold this dialog for forever...
-    connect (m_dialog, SIGNAL (disappeared ()),
-             this, SLOT (DestroyDialog ()));
-}
-
-void
-UsbUi::DestroyDialog ()
-{
-    delete m_dialog;
-    m_dialog = 0;
+    m_dialog->appear (MSceneWindow::DestroyWhenDone);
 }
 
 void
 UsbUi::OviSuiteSelected ()
 {
     SYS_DEBUG ("");
+    if (m_dialog)
+    {
+        m_dialog->accept ();
+        m_dialog->hide ();
+    }
 
 #ifdef HAVE_QMSYSTEM
     m_logic->setMode (Maemo::QmUSBMode::OviSuite);
 #endif
-
-    if (m_dialog)
-        m_dialog->disappear ();
 }
 
 void
 UsbUi::MassStorageSelected ()
 {
     SYS_DEBUG ("");
+    if (m_dialog)
+    {
+        m_dialog->accept ();
+        m_dialog->hide ();
+    }
 
 #ifdef HAVE_QMSYSTEM
     m_logic->setMode (Maemo::QmUSBMode::MassStorage);
 #endif
-
-    if (m_dialog)
-        m_dialog->disappear ();
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -188,7 +170,10 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
 
             // Hide the mode-selection dialog
             if (m_dialog && m_dialog->isVisible ())
-                m_dialog->disappear ();
+            {
+                m_dialog->reject ();
+                m_dialog->hide ();
+            }
 
             break;
         case Maemo::QmUSBMode::OviSuite:
@@ -240,10 +225,11 @@ UsbUi::ShowNotification (int id)
             break;
     }
 
-    m_notification = new MNotification (MNotification::DeviceAddedEvent,
-                                        "",
-                                        //% "USB connected.<br />%1"
-                                        qtTrId ("qtn_usb_info_connected").arg (*mode_text));
+    //% "USB connected.<br />%1"
+    m_notification =
+        new MNotification (MNotification::DeviceAddedEvent, "",
+                           qtTrId ("qtn_usb_info_connected").arg (*mode_text));
+    m_notification->setImage ("icon-m-common-usb");
     m_notification->publish ();
 }
 
