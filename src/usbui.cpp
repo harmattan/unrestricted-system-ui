@@ -74,7 +74,10 @@ UsbUi::ShowDialog ()
     MLabel        *label;
 
     if (m_dialog)
+    {
+        m_dialog->appear (MSceneWindow::DestroyWhenDone);
         return;
+    }
 
     m_dialog = new MDialog;
 

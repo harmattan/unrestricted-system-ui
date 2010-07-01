@@ -90,25 +90,25 @@ Ut_UsbUi::show_hide_dialog ()
 
     // Emit the ask signal...
     m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Ask);
-    QTest::qWait (200);
+    QTest::qWait (10);
 
     QCOMPARE (dialog_visible, true);
 
     // Emit the disconnect signal
     m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Disconnected);
-    QTest::qWait (200);
+    QTest::qWait (10);
 
     QCOMPARE (dialog_visible, false);
 
     // Emit the moderequest signal
     m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::ModeRequest);
-    QTest::qWait (200);
+    QTest::qWait (10);
 
     QCOMPARE (dialog_visible, true);
 
     // Emit the disconnect signal
     m_subject->m_logic->test_emitModeChanged(Maemo::QmUSBMode::Disconnected);
-    QTest::qWait (200);
+    QTest::qWait (10);
 
     QCOMPARE (dialog_visible, false);
 }
