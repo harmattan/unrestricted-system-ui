@@ -13,7 +13,8 @@ SOURCES += statusarea/statusarea.cpp \
     statusarea/statusindicatoranimationview.cpp \
     statusarea/statusindicatoriconview.cpp \
     statusarea/statusindicator.cpp \
-    statusarea/inputmethodstatusindicatoradaptor.cpp
+    statusarea/inputmethodstatusindicatoradaptor.cpp \
+    statusarea/statusarearendereradaptor.cpp
 
 HEADERS += statusarea/statusarea.h \
     statusarea/statusareaview.h \
@@ -33,7 +34,8 @@ HEADERS += statusarea/statusarea.h \
     statusarea/statusindicatoriconview.h \
     statusarea/statusindicatoriconstyle.h \
     statusarea/statusindicator.h \
-    statusarea/inputmethodstatusindicatoradaptor.h
+    statusarea/inputmethodstatusindicatoradaptor.h \
+    statusarea/statusarearendereradaptor.h
 
 MODEL_HEADERS +=     statusarea/statusareamodel.h \
     statusarea/clockmodel.h \

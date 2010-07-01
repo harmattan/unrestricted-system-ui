@@ -88,8 +88,8 @@ private:
     UsbUi                   *m_UsbUi;
     static Sysuid           *m_Sysuid;
 
-    //! Status area window
-    StatusAreaRenderer      *m_statusAreaWindow;
+    //! Status area
+    StatusAreaRenderer      *m_statusArea;
 
     //! Notification manager
     NotificationManager     *m_notificationManager;

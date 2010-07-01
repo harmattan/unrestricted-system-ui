@@ -63,6 +63,8 @@ private slots:
     void testSceneRenderControlDisplayStateDimmed();
     // Test MOnDisplayChangeEvent dispatching
     void testMOnDisplayChangeEvent();
+    // Test shared pixmap handle
+    void testSharedPixmapHandle();
 #endif
 };
 

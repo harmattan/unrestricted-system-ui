@@ -23,6 +23,7 @@
 #include "statusarea_stub.h"
 #include "pannedwidgetcontroller_stub.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusarearendereradaptor_stub.h"
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
@@ -215,5 +216,11 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
 }
 #endif
+
+void Ut_StatusAreaRenderer::testSharedPixmapHandle()
+{
+    uint handle = static_cast<quint32> (statusAreaWindow->statusAreaPixmap->handle());
+    QCOMPARE(handle, statusAreaWindow->sharedPixmapHandle());
+}
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaRenderer)

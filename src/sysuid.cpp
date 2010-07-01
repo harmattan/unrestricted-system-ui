@@ -79,10 +79,14 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
         qCritical () << Q_FUNC_INFO << "failed to register dbus object";
         abort();
     }
-    // Show status area window when sysui daemon starts
-    m_statusAreaWindow = new StatusAreaRenderer(this);
+    // Show status area when sysui daemon starts
+    m_statusArea = new StatusAreaRenderer(this);
 
-    connect (m_statusAreaWindow, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
+    // Connect to D-Bus and register the DBus source as an object
+    bus.registerService("com.meego.core.MStatusBar");
+    bus.registerObject("/statusbar", m_statusArea);
+
+    connect (m_statusArea, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
              m_compositorNotificationSink, SLOT (setDisabled (bool)));
     // Connect the notification signals for the compositor notification sink
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),

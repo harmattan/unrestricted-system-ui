@@ -195,8 +195,7 @@ void Ut_StatusIndicatorMenuWindow::testCloseButtonPosition()
     statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), false);
 
-    // When the pannable viewport has not been panned outside the screen the close button overlay should be visible
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, statusIndicatorMenuWindow->geometry().height());
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, statusIndicatorMenuWindow->sceneManager()->visibleSceneSize().height());
     QCOMPARE(statusIndicatorMenuWindow->closeButtonOverlay->isVisible(), true);
 }
 

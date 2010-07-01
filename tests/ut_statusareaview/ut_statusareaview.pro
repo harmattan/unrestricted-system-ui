@@ -36,7 +36,6 @@ HEADERS += \
 
 # service classes
 HEADERS += \
-    $$STUBSDIR/stubbase.cpp \
     $$STUBSDIR/statusindicatormenuadaptor_stub.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h
 

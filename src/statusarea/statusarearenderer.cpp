@@ -24,7 +24,7 @@
 #include "statusarea.h"
 #include <MStyle>
 #include "statusareastyle.h"
-
+#include "statusarearendereradaptor.h"
 #include <QFile>
 #include <QDir>
 #include <QApplication>
@@ -44,6 +44,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     scene->setObjectName("statusareascene");
     scene->addItem(statusArea_);
     statusArea_->setObjectName("statusarea");
+
+    new StatusAreaRendererAdaptor(this);
 
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
@@ -72,6 +74,10 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
     // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
     statusAreaPixmap = new QPixmap(statusAreaWidth, 2*statusAreaHeight);
     QApplication::syncX();
+
+    /*!
+     * \deprecated Sharing the pixmap handle using temp file is deprecated. Use dbus interface com.meego.core.MStatusBar for getting the handle.
+     */
     QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
     if (!handleTempFile.open(QIODevice::WriteOnly)) {
         return false;
@@ -79,6 +85,11 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
     QDataStream dataStream(&handleTempFile);
     dataStream << static_cast<quint32> (statusAreaPixmap->handle());
     return true;
+}
+
+uint StatusAreaRenderer::sharedPixmapHandle()
+{
+    return static_cast<quint32> (statusAreaPixmap->handle());
 }
 
 StatusAreaRenderer::~StatusAreaRenderer()
@@ -101,7 +112,7 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
             changeRect = changeRect.united(r);
         }
 
-	// Don't draw areas that are outside the pixmap
+        // Don't draw areas that are outside the pixmap
         if(changeRect.intersects(statusAreaPixmap->rect())) {
             QRectF sourceRect = changeRect.intersected(statusAreaPixmap->rect());
             if (painter.isActive()) {

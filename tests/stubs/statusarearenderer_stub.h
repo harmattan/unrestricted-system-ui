@@ -15,9 +15,10 @@ class StatusAreaRendererStub : public StubBase {
 #ifdef HAVE_QMSYSTEM
   virtual void setSceneRender(Maemo::QmDisplayState::DisplayState state);
 #endif
+  virtual uint sharedPixmapHandle();
   virtual bool createSharedPixmapHandle();
   virtual void setSizeFromStyle();
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void StatusAreaRendererStub::StatusAreaRendererConstructor(QObject *parent) {
@@ -40,6 +41,11 @@ void StatusAreaRendererStub::setSceneRender(Maemo::QmDisplayState::DisplayState 
   stubMethodEntered("setSceneRender",params);
 }
 #endif
+
+uint StatusAreaRendererStub::sharedPixmapHandle() {
+    stubMethodEntered("sharedPixmapHandle");
+    return stubReturnValue<uint>("sharedPixmapHandle");
+}
 
 bool StatusAreaRendererStub::createSharedPixmapHandle() {
   stubMethodEntered("createSharedPixmapHandle");
@@ -75,6 +81,11 @@ void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState stat
   gStatusAreaRendererStub->setSceneRender(state);
 }
 #endif
+
+uint StatusAreaRenderer::sharedPixmapHandle() {
+  return gStatusAreaRendererStub->sharedPixmapHandle();
+}
+
 
 bool StatusAreaRenderer::createSharedPixmapHandle() {
   return gStatusAreaRendererStub->createSharedPixmapHandle();

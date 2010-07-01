@@ -40,7 +40,6 @@ public:
     /*!
      * Creates a new status area renderer
      *
-     * \param statusArea the status area to be displayed in this window
      * \param parent the parent widget
      */
     StatusAreaRenderer(QObject *parent = NULL);
@@ -49,6 +48,12 @@ public:
      * Destroys the status area renderer
      */
     virtual ~StatusAreaRenderer();
+
+    /*!
+     * Returns the handle to the status area shared pixmap
+     * \return handle to shared pixmap
+     */
+    uint sharedPixmapHandle();
 
 private slots:
    /*!
@@ -80,7 +85,7 @@ private:
     //! Shared Pixmap between libmeegotouch and systemui for the status area.
     QPixmap* statusAreaPixmap;
 
-    //! creates a pixmap and writes the handle to a temp file
+    //! Creates a shared pixmap for status area
     bool createSharedPixmapHandle();
 
     //! set the status bar size with information from style
@@ -89,7 +94,7 @@ private:
     //! Status Area dimensions.
     uint statusAreaHeight;
     uint statusAreaWidth;
- 
+
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
     Maemo::QmDisplayState* displayState;
