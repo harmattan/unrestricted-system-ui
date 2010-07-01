@@ -5,12 +5,14 @@ INCLUDEPATH += statusindicatormenu
 SOURCES += \
     statusindicatormenu/statusindicatormenuwindow.cpp \
     statusindicatormenu/statusindicatormenuadaptor.cpp \
+    statusindicatormenu/pluginlist.cpp \
     statusindicatormenu/notificationarea.cpp \
     statusindicatormenu/notificationareaview.cpp
 
 HEADERS += \
     statusindicatormenu/statusindicatormenuwindow.h \
     statusindicatormenu/statusindicatormenuadaptor.h \
+    statusindicatormenu/pluginlist.h \
     statusindicatormenu/notificationarea.h \
     statusindicatormenu/notificationareamodel.h \
     statusindicatormenu/notificationareaview.h \

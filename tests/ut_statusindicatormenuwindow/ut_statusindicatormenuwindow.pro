@@ -16,6 +16,7 @@ SOURCES += \
 HEADERS += \
     ut_statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
 
 include(../common_bot.pri)

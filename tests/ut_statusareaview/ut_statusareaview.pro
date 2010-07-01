@@ -13,7 +13,8 @@ SOURCES += \
     ut_statusareaview.cpp \
     $$SRCDIR/statusarea/statusareaview.cpp \
     $$SRCDIR/statusarea/statusarea.cpp \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
+    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp \
+    $$SRCDIR/statusindicatormenu/pluginlist.cpp
 
 # service classes
 SOURCES += ../stubs/stubbase.cpp
@@ -30,7 +31,8 @@ HEADERS += \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h
+    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
+    $$SRCDIR/statusindicatormenu/pluginlist.h
 
 # service classes
 HEADERS += \
