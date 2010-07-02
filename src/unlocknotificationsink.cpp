@@ -23,11 +23,25 @@
 #include "notifications/genericnotificationparameterfactory.h"
 #include "notifications/notificationwidgetparameterfactory.h"
 
-// Used event-types:
+/*
+ * Used event-types:
+ * Please check the /usr/share/meegotouch/notifications/eventtypes directory for
+ * filenames, they can be changed. Oh, they can be!...
+ */
 #define EVENT_EMAIL "email.arrived"
-#define EVENT_MSG   "x-nokia.message.arrived"
+
+// This one might be obsolete
+#define EVENT_MSG "x-nokia.message.arrived"
+#define EVENT_SMS "x-nokia.messaging.sms"
+#define EVENT_MMS "x-nokia.messaging.mms"
+
+// This one might be obsolete
 #define EVENT_CALL  "x-nokia.call"
-#define EVENT_IM    "im.received"
+#define CALL_MISSED "x-nokia.call.missed"
+
+// This one might be obsolete...
+#define IM_RECEIVED    "im.received"
+#define MESSAGING_IM   "x-nokia.messaging.im"
 
 #define DEBUG
 #include "debug.h"
@@ -99,11 +113,15 @@ UnlockNotificationSink::addNotification (const Notification &notification)
 
     if (event_type == EVENT_EMAIL)
         type = UnlockMissedEvents::NotifyEmail;
-    else if (event_type == EVENT_MSG)
+    else if (event_type == EVENT_MSG ||
+            event_type == EVENT_SMS || 
+            event_type == EVENT_MMS)
         type = UnlockMissedEvents::NotifySms;
-    else if (event_type == EVENT_CALL)
+    else if (event_type == EVENT_CALL ||
+            event_type == CALL_MISSED)
         type = UnlockMissedEvents::NotifyCall;
-    else if (event_type == EVENT_IM)
+    else if (event_type == IM_RECEIVED ||
+            event_type == MESSAGING_IM)
         type = UnlockMissedEvents::NotifyMessage;
 
     if (! notification.parameters ().value
