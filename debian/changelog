@@ -10,8 +10,10 @@ system-ui (0.16.5~1) harmattan; urgency=low
   * Fixes: NB#175290 - Charging notifications are referring to invalid icons.
   * Fixes a crash related to usb-dialog
   * Use the correct icon-id also for usb notifications
+  * Fixes: NB#177506 - Clock on the Lock screen is not getting updated with the
+    current device time
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 30 Jun 2010 16:20:56 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 02 Jul 2010 10:52:25 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 
