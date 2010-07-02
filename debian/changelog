@@ -13,6 +13,10 @@ system-ui (0.16.5~1) harmattan; urgency=low
   * Fixes: NB#177506 - Clock on the Lock screen is not getting updated with the
     current device time
 
+  [Laszlo Pere]
+  * Fixes: NB#177703 - screen lock window uses _NET_WM_STATE_ABOVE, putting it 
+    on too high level
+
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 02 Jul 2010 10:52:25 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low

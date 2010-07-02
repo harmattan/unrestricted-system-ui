@@ -190,7 +190,6 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
-    flags |= Qt::WindowStaysOnTopHint;
     m_MainWindow->setWindowOpacity (0.0);
     m_MainWindow->setWindowFlags (flags);
     MWindowID = m_MainWindow->internalWinId ();
@@ -256,7 +255,6 @@ Ft_LockScreenUI::testEventEaterUIShowHideWithMainWindow ()
     Qt::WindowFlags flags = 0;
     flags |= Qt::FramelessWindowHint;
     flags |= Qt::CustomizeWindowHint;
-    flags |= Qt::WindowStaysOnTopHint;
     m_MainWindow->setWindowOpacity (0.0);
     m_MainWindow->setWindowFlags (flags);
     MWindowID = m_MainWindow->internalWinId ();

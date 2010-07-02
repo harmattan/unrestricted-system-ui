@@ -79,10 +79,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
 
     Q_ASSERT (connectSuccess);
 
-    lockUI->setWindowFlags (Qt::FramelessWindowHint |
-                            Qt::WindowStaysOnTopHint);
-    eaterUI->setWindowFlags (Qt::FramelessWindowHint |
-                             Qt::WindowStaysOnTopHint);
+    lockUI->setWindowFlags (Qt::FramelessWindowHint);
+    eaterUI->setWindowFlags (Qt::FramelessWindowHint);
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
