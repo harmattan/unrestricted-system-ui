@@ -12,6 +12,9 @@
 #include <QGraphicsLinearLayout>
 #include <MSlider>
 
+#include <QApplication>
+#include <MOnDisplayChangeEvent>
+
 #undef DEBUG
 #include "../debug.h"
 
@@ -107,6 +110,10 @@ VolumeOverlay::UpdateVolume (int val, int max)
         m_window->sceneManager ()->appearSceneWindow (this);
 
     }
+    //TODO: Remove sending fake displaychange events when setTranslucentBackground bug is solved
+    MOnDisplayChangeEvent* event =
+        new MOnDisplayChangeEvent (true, QRectF (0,0,1,1));
+    QApplication::sendEvent (m_window, event);
 
     m_timer->start ();
 }

@@ -20,6 +20,9 @@
 #include "volumeoverlay.h"
 #include "volumebarlogic.h"
 
+#undef DEBUG
+#include "../debug.h"
+
 VolumeControlUI::VolumeControlUI (QObject *parent) :
     QObject (parent),
     m_logic (new VolumeBarLogic),
@@ -87,9 +90,11 @@ VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
     switch (key)
     {
         case Maemo::QmKeys::VolumeUp:
+            SYS_DEBUG ("volume-up");
             change_val++;
             break;
         case Maemo::QmKeys::VolumeDown:
+            SYS_DEBUG ("volume-down");
             change_val--;
             break;
         default:
@@ -97,6 +102,12 @@ VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
             return;
             break;
     }
+
+    /*
+     * Re-query the actual values when connection lost
+     * to PulseAudio daemon....
+     */
+    m_logic->ping ();
 
     int current_volume = (int) m_logic->getVolume ();
     int max_volume = (int) m_logic->getMaxVolume ();
@@ -126,6 +137,7 @@ VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
 void
 VolumeControlUI::hwKeyResourceAcquired ()
 {
+    SYS_DEBUG ("");
 #ifdef HAVE_QMSYSTEM
     // Disconnect from everything first
     m_hwkeys->disconnect ();
@@ -138,6 +150,7 @@ VolumeControlUI::hwKeyResourceAcquired ()
 void
 VolumeControlUI::hwKeyResourceLost ()
 {
+    SYS_DEBUG ("");
 #ifdef HAVE_QMSYSTEM
     m_hwkeys->disconnect ();
 #endif

@@ -17,6 +17,8 @@ class VolumeBarLogic : public QObject
         quint32 getVolume ();
         quint32 getMaxVolume ();
 
+        void ping ();
+
     public slots:
         void setVolume (quint32 value);
         void stepsUpdated (quint32 value, quint32 maxvalue);

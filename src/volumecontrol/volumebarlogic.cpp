@@ -310,3 +310,26 @@ VolumeBarLogic::getMaxVolume ()
     return m_currentmax;
 }
 
+/*
+ * This function should be called before we're showing the
+ * current volume on the screen...
+ *
+ * Because sometimes we can lost the connection to PulseAudio,
+ * and meanwhile PulseAudio volume-values changed, and we
+ * didn't get any info about those...
+ */
+void
+VolumeBarLogic::ping ()
+{
+    if ((m_dbus_conn != NULL) &&
+        (dbus_connection_get_is_connected (m_dbus_conn)))
+        return;
+
+    /*
+     * Connection lost, re-query the values
+     */
+    openConnection (true);
+
+    stepsUpdated (m_currentvolume, m_currentmax);
+}
+
