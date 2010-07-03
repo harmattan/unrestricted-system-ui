@@ -18,6 +18,8 @@ system-ui (0.16.5~1) harmattan; urgency=low
   * Fixes: NB#177703 - screen lock window uses _NET_WM_STATE_ABOVE, putting it 
     on too high level
   * Fixes: NB#177842 - Wrong event icon in the unlock screen
+  [Sachin Kundu]
+  * Fixes: NB#177850 - Status menu opens with wrong position
 
  -- David Kedves <dkedves@blumsoft.eu>  Sat, 03 Jul 2010 15:01:20 +0200
 

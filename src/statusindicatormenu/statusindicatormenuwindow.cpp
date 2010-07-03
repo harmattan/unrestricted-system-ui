@@ -314,6 +314,7 @@ void StatusIndicatorMenuWindow::displayActive()
 
 void StatusIndicatorMenuWindow::displayInActive()
 {
+    pannableViewport->updatePosition(QPointF(0,0));
     emit visibilityChanged(false);
 }
 
