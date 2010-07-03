@@ -30,6 +30,7 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
     connect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
     window->setTranslucentBackground(true);
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
+    window->setObjectName("MCompositorNotificationSinkWindow");
 }
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
@@ -142,5 +143,8 @@ void MCompositorNotificationSink::addInfoBannerToWindow()
     MInfoBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
     if (infoBanner != NULL) {
         window->sceneManager()->appearSceneWindow(infoBanner, MSceneWindow::DestroyWhenDone);
+    } else {
+        // infoBanner is NULL, we must hide the window
+        window->hide();
     }
 }

@@ -71,6 +71,7 @@ VolumeOverlay::constructUi ()
     m_window = new MWindow (new MSceneManager);
     m_window->setTranslucentBackground (true);
     m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification);
+    m_window->setObjectName ("VolumeOverlayWindow");
 
     connect (m_window,
              SIGNAL (orientationChanged (M::Orientation)),

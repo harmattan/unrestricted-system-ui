@@ -49,6 +49,7 @@ ShutdownUI::ShutdownUI () :
         m_Image (0),
         m_Feedback (0)
 {
+    setObjectName ("ShutdownUIWindow");
     /*
      * We have to pre-created/load the shutdown ui content because when it
      * should show, the in should show quickly
