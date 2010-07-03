@@ -72,10 +72,6 @@ VolumeOverlay::constructUi ()
     m_window->setTranslucentBackground (true);
     m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification);
 
-    // maybe this call helps:
-    m_window->sceneManager ()->appearSceneWindowNow (this);
-    m_window->sceneManager ()->disappearSceneWindowNow (this);
-
     connect (m_window,
              SIGNAL (orientationChanged (M::Orientation)),
              this,

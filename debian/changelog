@@ -18,7 +18,7 @@ system-ui (0.16.5~1) harmattan; urgency=low
     on too high level
   * Fixes: NB#177842 - Wrong event icon in the unlock screen
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 02 Jul 2010 10:52:25 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Sat, 03 Jul 2010 13:28:34 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 

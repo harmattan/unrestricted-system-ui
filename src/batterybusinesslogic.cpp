@@ -177,7 +177,7 @@ BatteryBusinessLogic::BatteryBusinessLogic (
 #endif
 
     // Init battery values delayed...
-    QTimer::singleShot (3000, this, SLOT (initBattery ()));
+    initBattery ();
 
     SYS_DEBUG ("------------------ end -----------------------");
 }

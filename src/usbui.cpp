@@ -46,7 +46,7 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_logic = new Maemo::QmUSBMode (this);
 #endif
 
-    QTimer::singleShot (INIT_TIME, this, SLOT (initialize ()));
+    initialize ();
 }
 
 UsbUi::~UsbUi ()
