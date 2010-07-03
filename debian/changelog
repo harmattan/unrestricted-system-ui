@@ -21,7 +21,7 @@ system-ui (0.16.5~1) harmattan; urgency=low
   [Sachin Kundu]
   * Fixes: NB#177850 - Status menu opens with wrong position
 
- -- David Kedves <dkedves@blumsoft.eu>  Sat, 03 Jul 2010 15:01:20 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Sat, 03 Jul 2010 17:13:09 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 
