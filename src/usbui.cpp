@@ -32,12 +32,6 @@
 #define WARNING
 #include "debug.h"
 
-#ifdef UNIT_TEST
-#define INIT_TIME 0
-#else
-#define INIT_TIME 5000
-#endif
-
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_notification (0),
     m_dialog (0)
