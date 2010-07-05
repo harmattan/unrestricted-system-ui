@@ -216,3 +216,4 @@ LockScreenBusinessLogic::displayIsOn ()
     SYS_DEBUG ("returning %s", SYS_BOOL(retval));
     return retval;
 }
+

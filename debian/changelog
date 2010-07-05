@@ -12,7 +12,6 @@ system-ui (0.16.5~1) harmattan; urgency=low
   * Use the correct icon-id also for usb notifications
   * Fixes: NB#177506 - Clock on the Lock screen is not getting updated with the
     current device time
-  * Fixes: NB#169865 - Sysuid must implement -prestart parameter
   * Fixes: NB#178167 - Padlock icon viewed in bad area when unlocking the
     screen
 
@@ -24,7 +23,7 @@ system-ui (0.16.5~1) harmattan; urgency=low
   [Sachin Kundu]
   * Fixes: NB#177850 - Status menu opens with wrong position
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 05 Jul 2010 13:10:40 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 05 Jul 2010 14:20:40 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 
@@ -71,7 +70,6 @@ system-ui (0.16.0-1) harmattan; urgency=low
   * Fixed NB#169777 - Power save mode logic problems
   * Fixes: NB#169517 - /system/osso/dsm/energymanagement/force_power_saving
     turns to true at some point
-  * Fixes: NB#169865 - Sysuid must implement -prestart parameter
   * Fixes: NB#171814 - No 'Disconnect charger...' banner after disconnecting 
     the dedicated charger
   * Fixes: NB#168926 - Clock in status area showing Arabic number.
