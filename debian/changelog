@@ -13,15 +13,18 @@ system-ui (0.16.5~1) harmattan; urgency=low
   * Fixes: NB#177506 - Clock on the Lock screen is not getting updated with the
     current device time
   * Fixes: NB#169865 - Sysuid must implement -prestart parameter
+  * Fixes: NB#178167 - Padlock icon viewed in bad area when unlocking the
+    screen
 
   [Laszlo Pere]
   * Fixes: NB#177703 - screen lock window uses _NET_WM_STATE_ABOVE, putting it 
     on too high level
   * Fixes: NB#177842 - Wrong event icon in the unlock screen
+
   [Sachin Kundu]
   * Fixes: NB#177850 - Status menu opens with wrong position
 
- -- David Kedves <dkedves@blumsoft.eu>  Sat, 03 Jul 2010 17:13:09 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 05 Jul 2010 13:10:40 +0200
 
 system-ui (0.16.4-1) harmattan; urgency=low
 
