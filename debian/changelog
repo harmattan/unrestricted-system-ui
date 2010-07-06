@@ -1,4 +1,4 @@
-system-ui (0.16.5~1) harmattan; urgency=low
+system-ui (0.16.5-1) harmattan; urgency=low
 
   [ Gabriel Schulhof ]
   * Fixes: NB#175073 - Status indicators do not unsubscribe from context properties in idle mode
