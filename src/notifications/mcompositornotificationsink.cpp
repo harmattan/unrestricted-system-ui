@@ -27,7 +27,6 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
         sinkDisabled(false),
         window(new MWindow())
 {
-    connect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
     window->setTranslucentBackground(true);
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
     window->setObjectName("MCompositorNotificationSinkWindow");
@@ -44,8 +43,11 @@ MCompositorNotificationSink::~MCompositorNotificationSink()
 
 void MCompositorNotificationSink::addNotification(const Notification &notification)
 {
-    if (!canAddNotification(notification)) return;
-    if(sinkDisabled) {
+    if (!canAddNotification(notification)) {
+        return;
+    }
+
+    if (sinkDisabled) {
         emit notificationAdded(notification);
         return;
     }
@@ -56,15 +58,17 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
     } else {
         window->show();
         currentNotification = notification;
-        // Create info banner widget
-        MInfoBanner *infoBanner = createInfoBanner(currentNotification);
 
+        // Create and set up info banner widget
+        MInfoBanner *infoBanner = createInfoBanner(currentNotification);
         setupWindowTimer(infoBanner);
 
         // Keep track of the mapping between IDs and private notification information classes
         idToBanner.insert(currentNotification.notificationId(), infoBanner);
         emit notificationAdded(currentNotification);
+
         //TODO: Remove sending fake displaychange events when setTranslucentBackground bug is solved
+        connect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
         MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
         QApplication::sendEvent(window,event);
     }
@@ -74,8 +78,8 @@ void MCompositorNotificationSink::setupWindowTimer(MInfoBanner *infoBanner)
 {
     // Create a timer for the info banner; make it a child of the infobanner so it is destroyed automatically
     QTimer *timer = new QTimer(infoBanner);
-    timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    timer->setSingleShot(true);
     timer->setProperty("notificationId", currentNotification.notificationId());
     timer->start(currentNotification.timeout());
 }
@@ -143,8 +147,9 @@ void MCompositorNotificationSink::addInfoBannerToWindow()
     MInfoBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
     if (infoBanner != NULL) {
         window->sceneManager()->appearSceneWindow(infoBanner, MSceneWindow::DestroyWhenDone);
+        disconnect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
     } else {
-        // infoBanner is NULL, we must hide the window
+        // If the window timer has timed out before displayEntered() was sent there is no banner anymore and the window should just be hidden
         window->hide();
     }
 }
