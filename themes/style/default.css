@@ -129,14 +129,14 @@ StatusIndicatorAnimationStyle {
 
 StatusIndicatorAnimationStyle:icon {
     /* This style is used when there is an icon ID defined (width is 14) */
-    margin-left: 0.6mm;
-    margin-right: 0.6mm;
+    margin-left: 0.35mm;
+    margin-right: 0.35mm;
     preferred-size: 1.4mm 1.8mm;
     minimum-size: 1.4mm 1.8mm;
     maximum-size: 1.4mm 1.8mm;
 }
 StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
-    preferred-size: 2.4mm 1.8mm;                           
+    preferred-size: 2.4mm 1.8mm;
     minimum-size: 2.4mm 1.8mm;
     maximum-size: 2.4mm 1.8mm;
 }
