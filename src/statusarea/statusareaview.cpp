@@ -20,9 +20,9 @@
 #include "statusareaview.h"
 #include "statusarea.h"
 #include "statusindicator.h"
-#include "notifier.h"
 #include "clock.h"
 #include "contextframeworkcontext.h"
+#include "notificationstatusindicator.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
 #include <QDBusConnection>
@@ -57,8 +57,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
-    landscapeNotifier(new Notifier(controller)),
-    portraitNotifier(new Notifier(controller)),
+    landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
+    portraitNotificationIndicator(new NotificationStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
     portraitClock(new Clock(controller))
 {
@@ -69,6 +69,9 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Set the clock to short time display when alarm is present
     connect(portraitAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), portraitClock, SLOT(setShortDisplay(bool)));
     connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
+
+    connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
+    connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());
@@ -94,8 +97,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
 
 void StatusAreaView::setupTestabilityObjectNames()
 {
-    landscapeNotifier->setObjectName("landscapenotifier");
-    portraitNotifier->setObjectName("portraitnotifier");
+    landscapeNotificationIndicator->setObjectName("landscapenotifier");
+    portraitNotificationIndicator->setObjectName("portraitnotifier");
     landscapeClock->setObjectName("landscapeclock");
     portraitClock->setObjectName("portraitclock");
 }
@@ -124,8 +127,8 @@ void StatusAreaView::setupTestabilityParents()
     landscapeInputMethodIndicator->setParent(landscapeWidget);
     landscapeCallIndicator->setParent(landscapeWidget);;
     portraitCallIndicator->setParent(portraitWidget);;
-    landscapeNotifier->setParent(landscapeWidget);
-    portraitNotifier->setParent(portraitWidget);
+    landscapeNotificationIndicator->setParent(landscapeWidget);
+    portraitNotificationIndicator->setParent(portraitWidget);
     landscapeClock->setParent(landscapeWidget);;
     portraitClock->setParent(portraitWidget);;
 }
@@ -163,7 +166,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapePhoneNetworkTypeIndicator);
     layout->addItem(landscapePhoneNetworkIndicator);
     layout->addStretch();
-    layout->addItem(landscapeNotifier);
+    layout->addItem(landscapeNotificationIndicator);
     layout->addStretch();
     layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeBluetoothIndicator);
@@ -190,7 +193,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPhoneNetworkTypeIndicator);
     layout->addItem(portraitPhoneNetworkIndicator);
     layout->addStretch();
-    layout->addItem(portraitNotifier);
+    layout->addItem(portraitNotificationIndicator);
     layout->addStretch();
     layout->addItem(portraitInternetConnectionIndicator);
     layout->addItem(portraitBluetoothIndicator);

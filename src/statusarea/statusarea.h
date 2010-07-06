@@ -50,6 +50,10 @@ public:
      */
     virtual ~StatusArea();
 
+signals:
+    //! Signal for status indicator menu visibility changes
+    void statusIndicatorMenuVisibilityChanged(bool);
+
 private:
     //! The name of the status indicator menu service
     static const QString STATUS_INDICATOR_MENU_SERVICE_NAME;

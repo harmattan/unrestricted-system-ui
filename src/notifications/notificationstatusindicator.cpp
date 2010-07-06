@@ -16,40 +16,49 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "notifier.h"
-#include "notifiernotificationsink.h"
+
+#include "notificationstatusindicator.h"
+#include "statusindicator.h"
+#include "statusindicatormodel.h"
+#include "inputmethodstatusindicatoradaptor.h"
+#include "applicationcontext.h"
 #include "sysuid.h"
+#include "notificationmanager.h"
+#include "notifiernotificationsink.h"
 #include "mcompositornotificationsink.h"
 
-Notifier::Notifier(MWidget *parent) : MLabel("0", parent),
- notifierSink(new NotifierNotificationSink)
+NotificationStatusIndicator::NotificationStatusIndicator(MWidget *parent) :
+        StatusIndicator(parent), notifierSink(new NotifierNotificationSink)
 {
+    setObjectName(QString(metaObject()->className()));
+
     NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
 
     // Connect notification signals
     connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierSink, SLOT(removeNotification(uint)));
-    connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notifierSink, SLOT(addGroup(uint, const NotificationParameters &)));
-    connect(notificationManager, SIGNAL(groupRemoved(uint)), notifierSink, SLOT(removeGroup(uint)));
-    connect(notifierSink, SIGNAL(notificationCountChanged(uint)), this, SLOT(notificationCountChanged(uint)));
-
-    // Set the text of the label in centrally aligned mode
-    setAlignment(Qt::AlignCenter);
-    hide();
+    connect(notifierSink, SIGNAL(notifierSinkActive(bool)), this, SLOT(setActive(bool)));
 }
 
-
-Notifier::~Notifier()
+NotificationStatusIndicator::~NotificationStatusIndicator()
 {
 }
 
-void Notifier::notificationCountChanged(uint count)
+void NotificationStatusIndicator::statusIndicatorMenuVisibilityChange(bool visible)
 {
-    if (count > 0) {
-        setText(QString().sprintf("%u", count));
-        show();
+    // When status menu is opened remove all notifications from the sink
+    if (visible) {
+        notifierSink->clearSink();
+    }
+    // We need to enable/disable notifications from being added to notifier sink when status menu is unvisible/visible
+    notifierSink->disableNotificationAdditions(visible);
+}
+
+void NotificationStatusIndicator::setActive(bool active)
+{
+    if (active) {
+        setObjectName(QString(metaObject()->className()) + "On");
     } else {
-        hide();
-        setText(QString().sprintf("%u", count));
+        setObjectName(QString(metaObject()->className()));
     }
 }

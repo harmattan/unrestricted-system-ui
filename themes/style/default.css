@@ -63,15 +63,6 @@ StatusAreaStyle {
     padding-bottom: 0;
 }
 
-MLabelStyle#Notifier {
-    background-image: icon-s-status-notifier 9px 9px 9px 9px;
-    font: $FONT_XSMALL;
-    color: #FFFFFF;
-    preferred-size: 3.6mm 1.8mm;
-    minimum-size: 3.6mm 1.8mm;
-    maximum-size: 3.6mm 1.8mm;
-}
-
 ClockStyle {
     margin-left: 0.6mm;
     margin-right: 0.6mm;
@@ -444,6 +435,20 @@ StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
     maximum-size: 2.4mm 1.8mm;
 }
 
+StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
+    image-list: "icon-s-status-notifier";
+    preferred-size: 4mm 0.8mm;
+    minimum-size: 4mm 0.8mm;
+    maximum-size: 4mm 0.8mm;
+}
+
+StatusIndicatorIconStyle#NotificationStatusIndicator {
+    image-list: "";
+    preferred-size: 4mm 0.8mm;
+    minimum-size: 4mm 0.8mm;
+    maximum-size: 4mm 0.8mm;
+}
+
 MButtonStyle#StatusIndicatorMenuCloseButton {
     icon-size: $SIZE_ICON_LARGE $SIZE_ICON_LARGE;
     preferred-size: 6.4mm 6.4mm;
@@ -470,4 +475,3 @@ MApplicationExtensionAreaStyle#StatusIndicatorMenuTopRowExtensionArea {
 MContainerStyle#MExtensionAreaInvisibleContainer {
     background-image: ;
 }
-

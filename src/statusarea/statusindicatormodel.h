@@ -92,4 +92,9 @@ class ProfileStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(ProfileStatusIndicatorModel)
 };
 
+class NotificationStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(NotificationStatusIndicatorModel)
+};
+
 #endif /* STATUSINDICATORMODEL_H_ */

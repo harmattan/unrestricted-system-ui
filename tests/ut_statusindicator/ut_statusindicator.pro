@@ -16,7 +16,6 @@ SOURCES += ut_statusindicator.cpp \
     $$SRCDIR/statusarea/statusindicatoranimationview.cpp \
     $$SRCDIR/statusarea/statusindicatorlabelview.cpp \
     $$SRCDIR/statusarea/statusindicatoriconview.cpp
-
 # helper classes
 SOURCES +=  \
     $$STUBSDIR/testcontextitem.cpp \
@@ -30,7 +29,7 @@ HEADERS += ut_statusindicator.h \
     $$SRCDIR/statusarea/statusindicatoranimationstyle.h \
     $$SRCDIR/statusarea/statusindicatorlabelstyle.h \
     $$SRCDIR/statusarea/statusindicatoriconstyle.h \
-    $$SRCDIR/statusarea/statusindicatormodel.h \
+    $$SRCDIR/statusarea/statusindicatormodel.h
 
 # helper classes
 HEADERS +=  \

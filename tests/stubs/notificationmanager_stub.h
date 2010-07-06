@@ -63,7 +63,7 @@ class NotificationManagerStub : public StubBase {
   virtual bool ensurePersistentDataPath();
   virtual void saveStateData();
   virtual void savePersistentNotifications();
-}; 
+  };
 
 // 2. IMPLEMENT STUB
 void NotificationManagerStub::NotificationManagerConstructor(int relayInterval, uint maxWaitQueueSize) {
@@ -254,8 +254,6 @@ void NotificationManagerStub::savePersistentNotifications() {
   stubMethodEntered("savePersistentNotifications");
 }
 
-
-
 // 3. CREATE A STUB INSTANCE
 NotificationManagerStub gDefaultNotificationManagerStub;
 NotificationManagerStub* gNotificationManagerStub = &gDefaultNotificationManagerStub;
@@ -382,10 +380,5 @@ bool NotificationManager::ensurePersistentDataPath() {
 void NotificationManager::saveStateData() {
   gNotificationManagerStub->saveStateData();
 }
-
-void NotificationManager::savePersistentNotifications() {
-  gNotificationManagerStub->savePersistentNotifications();
-}
-
 
 #endif

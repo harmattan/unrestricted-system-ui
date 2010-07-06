@@ -23,6 +23,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "statusindicatormenuwindow.h"
 #include "statusindicatormenuadaptor.h"
+#include "notificationstatusindicator.h"
 
 const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.mstatusindicatormenu";
 
@@ -33,6 +34,7 @@ StatusArea::StatusArea(MWidget *parent, StatusAreaRenderer *statusAreaWindow) :
     if (statusAreaWindow != NULL) {
         connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
     }
+    connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
 
     // Register status indicator menu object on DBus
     new StatusIndicatorMenuAdaptor(statusIndicatorMenuWindow.data());

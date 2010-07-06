@@ -92,8 +92,6 @@ int NotificationStub::timeout() const {
     return stubReturnValue<int>("timeout");
 }
 
-
-
 // 3. CREATE A STUB INSTANCE
 NotificationStub gDefaultNotificationStub;
 NotificationStub* gNotificationStub = &gDefaultNotificationStub;

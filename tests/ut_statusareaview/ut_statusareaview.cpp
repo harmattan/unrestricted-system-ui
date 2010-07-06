@@ -20,7 +20,6 @@
 #include "statusareaview.h"
 #include "statusarea.h"
 #include "clock_stub.h"
-#include "notifier_stub.h"
 #include "contextframeworkcontext_stub.h"
 #include "alarmstatusindicator_stub.h"
 #include "batterystatusindicator_stub.h"
@@ -36,6 +35,7 @@
 #include "callstatusindicator_stub.h"
 #include "profilestatusindicator_stub.h"
 #include "notificationarea_stub.h"
+#include "notificationstatusindicator_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>

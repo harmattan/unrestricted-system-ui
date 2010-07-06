@@ -2,7 +2,7 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusindicatoranimationview
 
-INCLUDEPATH += $$SRCDIR/statusarea
+INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/notifications $$SRCDIR
 
 STYLE_HEADERS += $$SRCDIR/statusarea/statusindicatoranimationstyle.h
 MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h

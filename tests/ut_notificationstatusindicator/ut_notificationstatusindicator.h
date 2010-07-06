@@ -16,41 +16,44 @@
 ** of this file.
 **
 ****************************************************************************/
+#ifndef _UT_NOTIFICATIONSTATUSINDICATOR_
+#define _UT_NOTIFICATIONSTATUSINDICATOR_
 
-#ifndef UT_NOTIFIER_H
-#define UT_NOTIFIER_H
-
+#include <QtGui>
 #include <QtTest/QtTest>
 #include <QObject>
+#include "notificationstatusindicator.h"
 
 class MApplication;
-class Notifier;
 
-class Ut_Notifier : public QObject
+class Ut_NotificationStatusIndicator : public QObject
 {
     Q_OBJECT
 
-private slots:
-    // Called before the first testfunction is executed
-    void initTestCase();
-    // Called after the last testfunction was executed
-    void cleanupTestCase();
-    // Called before each testfunction is executed
-    void init();
-    // Called after every testfunction
-    void cleanup();
-
-    // Test cases
-    void testNotificationCountChanged();
+private:
+    MApplication  *app;
+    NotificationStatusIndicator *m_subject;
 
 signals:
-    void notificationCountChanged(uint count);
+    void notifierSinkActive(bool);
 
-private:
-    // MApplication
-    MApplication *app;
-    // The object being tested
-    Notifier *m_subject;
+private slots:
+    // Executed once before every test case
+    void init();
+
+    // Executed once after every test case
+    void cleanup();
+
+    // Executed once before first test case
+    void initTestCase();
+
+    // Executed once after last test case
+    void cleanupTestCase();
+
+    // Tests active state of status indicator
+    void testSetActive();
+    // Tests notification status indicator when status indicator menu visibility changes
+    void testMenuVisibilityChange();
 };
 
-#endif
+#endif //_UT_NOTIFICATIONSTATUSINDICATOR_

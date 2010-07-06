@@ -95,8 +95,6 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
              m_compositorNotificationSink, SLOT (removeNotification (uint)));
     connect (m_compositorNotificationSink, SIGNAL (notificationRemovalRequested (uint)),
              m_notificationManager, SLOT (removeNotification (uint)));
-    connect (m_notificationManager, SIGNAL (notificationRestored (const Notification &)),
-             m_compositorNotificationSink, SIGNAL (notificationAdded (Notification)));
 
     // Connect the notification signals for the feedback notification sink
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),

@@ -118,9 +118,9 @@ private:
     StatusIndicator *landscapeCallIndicator;
     StatusIndicator *portraitCallIndicator;
 
-    //! Notifier
-    Notifier *landscapeNotifier;
-    Notifier *portraitNotifier;
+    //! Notification indicator
+    StatusIndicator *landscapeNotificationIndicator;
+    StatusIndicator *portraitNotificationIndicator;
 
     //! Clock
     Clock *landscapeClock;

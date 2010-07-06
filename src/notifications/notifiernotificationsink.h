@@ -23,7 +23,7 @@
 #include "notificationsink.h"
 
 /*!
- * A notification sink for the Notifier.
+ * A notification sink for the Notifier. Just maintains a count of unseen notifications
  */
 class NotifierNotificationSink : public NotificationSink
 {
@@ -40,37 +40,44 @@ public:
      */
     virtual ~NotifierNotificationSink();
 
+public slots:
+    /*!
+     * Clears all notifications from the sink.
+     */
+    void clearSink();
+
+    /*!
+     * Sets whether to disable/enable notifications from being added to sink
+     *
+     * \param disable Whether notification additions should be disable or enabled
+     */
+    void disableNotificationAdditions(bool disable);
+
 signals:
     /*!
-     * Signals information about notification count changes.
+     * Signal which specifies the current state of notifiernotification sink
      *
-     * \param count the number of notifications
+     * \param active \c true when sink is to active(has notifications) \c false otherwise
      */
-    void notificationCountChanged(uint count);
+    void notifierSinkActive(bool active);
 
 private slots:
     //! \reimp
-    virtual void addGroup(uint groupId, const NotificationParameters &parameters);
-    virtual void removeGroup(uint groupId);
     virtual void addNotification(const Notification &notification);
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
 
 private:
-    //! The group for each notification
-    QHash<uint, uint> groupForNotification;
-
-    //! The notification count of each notification
-    QHash<uint, uint> notificationCountForNotification;
-
-    //! The notification count of each group
-    QHash<uint, uint> notificationCountForGroup;
 
     //! Current notification count
     uint notificationCount;
 
-    //! Updates the notification count and signals notificationCountChanged() if it changed
-    void updateNotificationCount();
+    //! Whether adding of notifications is disabled
+    bool additionsDisabled;
+
+#ifdef UNIT_TEST
+    friend class Ut_NotifierNotificationSink;
+#endif
 };
 
 #endif /* NOTIFIERNOTIFICATIONSINK_H_ */

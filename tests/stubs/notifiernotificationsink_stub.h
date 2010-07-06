@@ -37,7 +37,8 @@ class NotifierNotificationSinkStub : public StubBase {
    QHash<uint, uint> notificationCountForNotification ;
    QHash<uint, uint> notificationCountForGroup ;
    uint notificationCount ;
-  virtual void updateNotificationCount();
+  void clearSink();
+  void disableNotificationAdditions(bool disable);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -73,11 +74,16 @@ void NotifierNotificationSinkStub::removeNotification(uint notificationId) {
   stubMethodEntered("removeNotification",params);
 }
 
-void NotifierNotificationSinkStub::updateNotificationCount() {
-  stubMethodEntered("updateNotificationCount");
+void NotifierNotificationSinkStub::clearSink() {
+  stubMethodEntered("clearSink");
 }
 
-
+void NotifierNotificationSinkStub::disableNotificationAdditions(bool disable)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(disable));
+  stubMethodEntered("disableNotificationAdditions", params);
+}
 
 // 3. CREATE A STUB INSTANCE
 NotifierNotificationSinkStub gDefaultNotifierNotificationSinkStub;
@@ -93,14 +99,6 @@ NotifierNotificationSink::~NotifierNotificationSink() {
   gNotifierNotificationSinkStub->NotifierNotificationSinkDestructor();
 }
 
-void NotifierNotificationSink::addGroup(uint groupId, const NotificationParameters &parameters) {
-  gNotifierNotificationSinkStub->addGroup(groupId, parameters);
-}
-
-void NotifierNotificationSink::removeGroup(uint groupId) {
-  gNotifierNotificationSinkStub->removeGroup(groupId);
-}
-
 void NotifierNotificationSink::addNotification(const Notification &notification) {
   gNotifierNotificationSinkStub->addNotification(notification);
 }
@@ -109,9 +107,13 @@ void NotifierNotificationSink::removeNotification(uint notificationId) {
   gNotifierNotificationSinkStub->removeNotification(notificationId);
 }
 
-void NotifierNotificationSink::updateNotificationCount() {
-  gNotifierNotificationSinkStub->updateNotificationCount();
+void NotifierNotificationSink::clearSink() {
+  gNotifierNotificationSinkStub->clearSink();
 }
 
+void NotifierNotificationSink::disableNotificationAdditions(bool disable)
+{
+  gNotifierNotificationSinkStub->disableNotificationAdditions(disable);
+}
 
 #endif
