@@ -127,14 +127,16 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
     m_sysuidRequest = new SysUidRequest;
 
     // Connect the unlock-screen notification sink to LockScreenBusinessLogic
-    if (m_sysuidRequest->getLockScreenLogic () == 0)
-        SYS_WARNING ("Lock Screen Logic isn't created! [unit test ?]");
-    else
+    if (m_sysuidRequest->getLockScreenLogic () != 0)
     {
         connect (m_sysuidRequest->getLockScreenLogic (),
                  SIGNAL (screenIsLocked (bool)),
                  m_unlockNotificationSink,
                  SLOT (setLockedState (bool)));
+        connect (m_sysuidRequest->getLockScreenLogic (),
+                 SIGNAL (screenIsLocked (bool)),
+                 m_compositorNotificationSink,
+                 SLOT (setDisabled (bool)));
     }
 
     /*
