@@ -50,7 +50,7 @@ void EventTypeStore::updateEventTypeFileList()
         QSet<QString> removedFiles = eventTypeFiles - files;
 
         foreach(const QString &removedEventType, removedFiles) {
-            QString eventType = QFileInfo(removedEventType).baseName();
+            QString eventType = QFileInfo(removedEventType).completeBaseName();
             QString eventFilePath = eventTypesPath + removedEventType;
             eventTypePathWatcher.removePath(eventFilePath);
             eventTypesMap.remove(eventType);
@@ -73,7 +73,7 @@ void EventTypeStore::updateEventTypeFile(const QString &path)
 {
     QFileInfo fileInfo(path);
     if (fileInfo.exists()) {
-       QString eventType = fileInfo.baseName();
+       QString eventType = fileInfo.completeBaseName();
        loadSettings(eventType);
        emit eventTypeModified(eventType);
     }
