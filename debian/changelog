@@ -1,6 +1,7 @@
 system-ui (0.16.6~1) harmattan; urgency=low
 
   * Disable MCompositorNotificationSink when screen is locked
+  * Fixes: NB#178283 - Notifications translucent window doesn't hide itself sometimes
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 06 Jul 2010 13:41:47 +0200
 
