@@ -130,6 +130,7 @@ LockScreenBusinessLogic::displayStateChanged (
          * Also we should reset the lock-screen-ui dnd icon state:
          */
         lockUI->reset();
+        lockUI->setFocus ();
     }
 }
 #endif
