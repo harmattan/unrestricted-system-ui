@@ -40,7 +40,7 @@ class XChecker : public QObject
 
 public:
     XChecker ();
-    
+
     typedef enum {
         CheckIsVisible,
         CheckIsInvisible,
@@ -52,7 +52,7 @@ public:
 
     void debug_dump_windows(Window highlighted = None);
     void debugDumpNotifications ();
-    
+
     bool turnOffDisplay ();
     bool turnOnDisplay ();
 
@@ -60,11 +60,11 @@ private:
     Display *display();
 
     bool check_window_rec (
-            Display               *dpy, 
-            Window                 WindowID, 
+            Display               *dpy,
+            Window                 WindowID,
             const QString         &WMClass,
             XChecker::RequestCode  opCode);
- 
+
     char *get_atom_prop (Display *dpy, Window w, Atom atom);
     Window get_win_prop(Display *dpy, Window w, Atom atom);
     unsigned long get_card_prop(Display *dpy, Window w, Atom atom);
@@ -73,11 +73,11 @@ private:
     char * get_utf8_prop ( Display *dpy, Window w, Atom atom);
     const char * get_map_state ( int state);
     void pr (
-            Window   highlighted,
-            Display *dpy, 
-            Window   WindowID, 
-            int      level, 
-            int      nthWindow);
+            Window          highlighted,
+            Display        *dpy,
+            Window          WindowID,
+            unsigned int    level,
+            unsigned int    nthWindow);
 
     int pidof (const char *program);
     bool checkPIDs ();
@@ -85,7 +85,7 @@ private:
 private:
     Atom class_atom, name_atom, name_atom2,
     utf8_string_atom;
-    
+
     int                  m_CompositorPID;
     int                  m_SysuidPID;
 };

@@ -90,7 +90,6 @@ void
 Ft_ShutdownBusinessLogic::testThermalState ()
 {
     ShutdownBusinessLogic *logic;
-    Window                 WindowID;
     logic = new ShutdownBusinessLogic;
 
     SYS_DEBUG ("*********************************************");
@@ -117,7 +116,6 @@ void
 Ft_ShutdownBusinessLogic::testShutDownDenied ()
 {
     ShutdownBusinessLogic *logic;
-    Window                 WindowID;
     logic = new ShutdownBusinessLogic;
 
     SYS_DEBUG ("*********************************************");
@@ -144,7 +142,6 @@ void
 Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
 {
     ShutdownBusinessLogic *logic;
-    Window                 WindowID;
     logic = new ShutdownBusinessLogic;
 
     SYS_DEBUG ("*********************************************");

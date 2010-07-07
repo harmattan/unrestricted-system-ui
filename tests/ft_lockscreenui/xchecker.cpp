@@ -31,8 +31,8 @@
 
 XChecker::XChecker()
 {
-	Display *dpy = display();
-    
+    Display *dpy = display();
+
     class_atom = XInternAtom(dpy, "WM_CLASS", False);
     name_atom = XInternAtom(dpy, "_NET_WM_NAME", False);
     name_atom2 = XInternAtom(dpy, "WM_NAME", False);
@@ -45,7 +45,7 @@ XChecker::XChecker()
 
     m_CompositorPID = pidof ("mcompositor");
     SYS_DEBUG ("pidof mcompositor = %d", m_CompositorPID);
-    
+
     m_SysuidPID = pidof ("sysuid");
     SYS_DEBUG ("pidof sysuid      = %d", m_SysuidPID);
 }
@@ -57,24 +57,24 @@ XChecker::display()
 
     // Could be XOpenDisplay(NULL), but we already have a display.
     dpy = XOpenDisplay(NULL);
-	//dpy = QX11Info::display (); 
+    //dpy = QX11Info::display ();
     Q_ASSERT (dpy != NULL);
-    
+
     return dpy;
 }
 
 char *
 XChecker::get_atom_prop (
-        Display     *dpy, 
-        Window       w, 
+        Display     *dpy,
+        Window       w,
         Atom         atom)
-{ 
+{
     Atom type;
     int format, rc;
     unsigned long items;
     unsigned long left;
     Atom *value;
-	char *copy;
+    char *copy;
 
     rc = XGetWindowProperty (
             dpy, w, atom, 0, 1, False, XA_ATOM, &type, &format,
@@ -84,26 +84,26 @@ XChecker::get_atom_prop (
         copy = strdup("");
     } else {
         char *s = XGetAtomName(dpy, *value);
-	    copy = strdup(s);
-	    XFree(s);
+        copy = strdup(s);
+        XFree(s);
     }
-    
+
     return copy;
 }
 
 Window
 XChecker::get_win_prop (
-        Display *dpy, 
-        Window   w, 
+        Display *dpy,
+        Window   w,
         Atom     atom)
-{ 
+{
     Atom type;
     int format, rc;
     unsigned long items;
     unsigned long left;
     Window *value;
 
-    rc = XGetWindowProperty (dpy, w, atom, 0, 1, False, XA_WINDOW, &type, 
+    rc = XGetWindowProperty (dpy, w, atom, 0, 1, False, XA_WINDOW, &type,
             &format, &items, &left, (unsigned char**)&value);
 
     if (type == None || rc != Success)
@@ -112,12 +112,12 @@ XChecker::get_win_prop (
     return *value;
 }
 
-unsigned long 
+unsigned long
 XChecker::get_card_prop (
-        Display *dpy, 
-        Window w, 
+        Display *dpy,
+        Window w,
         Atom atom)
-{ 
+{
     Atom type;
     int format, rc;
     unsigned long items;
@@ -128,19 +128,19 @@ XChecker::get_card_prop (
             dpy, w, atom, 0, 1, False,
             XA_CARDINAL, &type, &format,
             &items, &left, (unsigned char**)&value);
-    
+
     if (type == None || rc != Success)
         return 0;
 
     return *value;
 }
 
-long 
+long
 XChecker::get_int_prop (
-        Display *dpy, 
-        Window w, 
+        Display *dpy,
+        Window w,
         Atom atom)
-{ 
+{
           Atom type;
           int format, rc;
           unsigned long items;
@@ -161,10 +161,10 @@ XChecker::get_int_prop (
 
 char *
 XChecker::get_str_prop(
-        Display  *dpy, 
-        Window    w, 
+        Display  *dpy,
+        Window    w,
         Atom      atom)
-{ 
+{
     Atom type;
     int format, rc;
     unsigned long items;
@@ -174,7 +174,7 @@ XChecker::get_str_prop(
     rc = XGetWindowProperty (
             dpy, w, atom, 0, 200, False, XA_STRING, &type, &format,
             &items, &left, (unsigned char**)&value);
-    
+
     if (type == None || rc != Success) {
         return NULL;
     } else {
@@ -186,10 +186,10 @@ XChecker::get_str_prop(
 
 char *
 XChecker::get_utf8_prop (
-        Display *dpy, 
-        Window w, 
+        Display *dpy,
+        Window w,
         Atom atom)
-{ 
+{
           Atom type;
           int format, rc;
           unsigned long items;
@@ -197,14 +197,14 @@ XChecker::get_utf8_prop (
           char *value;
 
           rc = XGetWindowProperty (dpy, w, atom, 0, 200, False,
-				   utf8_string_atom, &type, &format,
-				   &items, &left, (unsigned char**)&value);
+                   utf8_string_atom, &type, &format,
+                   &items, &left, (unsigned char**)&value);
           if (type == None || rc != Success)
             return NULL;
           else
           {
             char *s = strdup((const char*)value);
-	    XFree(value);
+            XFree(value);
             return s;
           }
 }
@@ -213,35 +213,35 @@ const char *
 XChecker::get_map_state (
         int state)
 {
-	switch (state) {
-		case IsUnmapped:
-			return "IsUnmapped";
-		case IsUnviewable:
-			return "IsUnviewable";
-		case IsViewable:
-			return "IsViewable";
-		default:
-			return "";
-	}
+    switch (state) {
+        case IsUnmapped:
+            return "IsUnmapped";
+        case IsUnviewable:
+            return "IsUnviewable";
+        case IsViewable:
+            return "IsViewable";
+        default:
+            return "";
+    }
 }
 
-void 
+void
 XChecker::pr (
         Window   highlighted,
-        Display *dpy, 
-        Window   WindowID, 
-        int      level,
-        int      nthWindow)
+        Display *dpy,
+        Window   WindowID,
+        unsigned int level,
+        unsigned int nthWindow)
 {
     QString indent, indent1;
 
-	unsigned int n_children = 0;
-	Window *child_l = NULL;
-	Window root_ret, parent_ret;
-	unsigned int i;
-	char               *wmclass;
+    unsigned int n_children = 0;
+    Window *child_l = NULL;
+    Window root_ret, parent_ret;
+    unsigned int        i;
+    char               *wmclass;
     char               *wmname, *wmname2;
-	XWindowAttributes attrs;
+    XWindowAttributes attrs;
     attrs.map_state = IsUnmapped;
 
     int x_return, y_return;
@@ -249,21 +249,22 @@ XChecker::pr (
     unsigned int border_width_return, depth_return;
     QString      windowName;
 
-	XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
+    XQueryTree(dpy, WindowID, &root_ret, &parent_ret, &child_l, &n_children);
     XGetGeometry (dpy, WindowID, &root_ret,
               &x_return, &y_return, &width_return,
               &height_return, &border_width_return,
               &depth_return);
 
-	for (i = 0; i < (unsigned int) level; ++i)
-		indent += "  ";
-    for (i = 3; i >= (unsigned int) level; --i)
+    for (i = 0; i < level; ++i)
+        indent += "  ";
+
+    for (i = 4; i > level; --i)
         indent1 += "  ";
 
-	wmclass = get_str_prop(dpy, WindowID, class_atom);
-	wmname = get_utf8_prop(dpy, WindowID, name_atom);
-	wmname2 = get_str_prop(dpy, WindowID, name_atom2);
-	XGetWindowAttributes(dpy, WindowID, &attrs);
+    wmclass = get_str_prop(dpy, WindowID, class_atom);
+    wmname = get_utf8_prop(dpy, WindowID, name_atom);
+    wmname2 = get_str_prop(dpy, WindowID, name_atom2);
+    XGetWindowAttributes(dpy, WindowID, &attrs);
 
     if (wmname && !wmname2)
         windowName = wmname;
@@ -271,34 +272,34 @@ XChecker::pr (
         windowName = wmname2;
     else if (wmname && wmname2)
         windowName = QString(wmname) + "/" + wmname2;
-    else 
+    else
         windowName = "(none)";
 
     bool        Highlight = highlighted != None && highlighted == WindowID;
     const char *HighlightStart = Highlight ? TERM_RED : "";
     const char *HighlightEnd = Highlight ? TERM_NORMAL : "";
 
-    SYS_DEBUG ("%03d %s%s0x%06lx%s%s %-12s  %3dx%-3d  %-16s %s", 
+    SYS_DEBUG ("%03d %s%s0x%06lx%s%s %-12s  %3dx%-3d  %-16s %s",
                 nthWindow,
-                SYS_STR(indent), 
+                SYS_STR(indent),
                 HighlightStart, WindowID, HighlightEnd,
                 SYS_STR(indent1),
                 get_map_state(attrs.map_state),
                 width_return, height_return,
-			    wmclass ? wmclass : "",
+                wmclass ? wmclass : "",
                 SYS_STR(windowName));
     if (n_children == 0) {
         // Nothing
-	} else {
+    } else {
         for (i = 0; i < n_children; ++i) {
             ++nthWindow;
-			pr (highlighted, dpy, child_l[i], level + 1, nthWindow);
-		}
-		XFree(child_l);
-	}
+            pr (highlighted, dpy, child_l[i], level + 1, nthWindow);
+        }
+        XFree(child_l);
+    }
 
-	free(wmclass);
-	free(wmname);
+    free(wmclass);
+    free(wmname);
 }
 
 /*!
@@ -307,8 +308,8 @@ XChecker::pr (
  */
 bool
 XChecker::check_window_rec (
-        Display               *dpy, 
-        Window                 WindowID, 
+        Display               *dpy,
+        Window                 WindowID,
         const QString         &WMName,
         XChecker::RequestCode  opCode)
 {
@@ -317,12 +318,12 @@ XChecker::check_window_rec (
     unsigned int      n_children = 0;
     Window           *child_l = NULL;
     char             *wmname;
-	XWindowAttributes attrs;
+    XWindowAttributes attrs;
     attrs.map_state = IsUnmapped;
 
     wmname = get_utf8_prop (dpy, WindowID, name_atom);
     XGetWindowAttributes(dpy, WindowID, &attrs);
-   
+
     /*
      * With this opcode we check if the window stack has at least one window
      * with the given wmname that is trully visible. It is not a perfect test
@@ -343,9 +344,9 @@ XChecker::check_window_rec (
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
         for (unsigned int i = 0; i < n_children; ++i) {
-			if (check_window_rec (dpy, child_l[i], WMName, opCode))
+            if (check_window_rec (dpy, child_l[i], WMName, opCode))
                 return true;
-		}
+        }
     } else if (opCode == CheckIsInvisible) {
         /*
          * This case we check all the window with the given wmname, none of
@@ -363,9 +364,9 @@ XChecker::check_window_rec (
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
         for (unsigned int i = 0; i < n_children; ++i) {
-			if (!check_window_rec (dpy, child_l[i], WMName, opCode))
+            if (!check_window_rec (dpy, child_l[i], WMName, opCode))
                 return false;
-		}
+        }
 
         /*
          * If none of the windows are visible only then we return true;
@@ -404,7 +405,7 @@ XChecker::checkWindow (
                 "visible.", SYS_STR(WMName));
     }
 
-    if (!retval) 
+    if (!retval)
         debug_dump_windows ();
 
     return retval;
@@ -454,7 +455,7 @@ XChecker::checkWindow (
         goto finalize;
     }
 
-	if (!XGetWindowAttributes (Display, WindowID, &attrs)) {
+    if (!XGetWindowAttributes (Display, WindowID, &attrs)) {
         switch (OpCode) {
             case CheckIsFullscreen:
             case CheckIsVisible:
@@ -525,29 +526,29 @@ XChecker::checkWindow (
     }
 
 finalize:
-    if (!retval) 
+    if (!retval)
         debug_dump_windows (WindowID);
     return retval;
 }
 
-void 
+void
 XChecker::debug_dump_windows(
         Window highlighted)
 {
-	Display *dpy = display();
-	Window root;
+    Display *dpy = display();
+    Window root;
 
     SYS_DEBUG (
 " #  Window           MapState      Size     WMclass          Window name");
     SYS_DEBUG (
 "-----------------------------------------------------------------------------");
-	
+
     root = XDefaultRootWindow(dpy);
-	pr (highlighted, dpy, root, 0, 0);
+    pr (highlighted, dpy, root, 0, 0);
 }
 
 
-void 
+void
 XChecker::debugDumpNotifications ()
 {
     QList<MNotification *> notifications;
@@ -566,7 +567,7 @@ XChecker::debugDumpNotifications ()
         SYS_DEBUG ("*** summary     = %s", SYS_STR(summary));
         SYS_DEBUG ("*** body        = %s", SYS_STR(body));
         SYS_DEBUG ("*** image       = %s", SYS_STR(image));
-        SYS_DEBUG ("*** isPublished = %s", 
+        SYS_DEBUG ("*** isPublished = %s",
                 SYS_BOOL(notification->isPublished()));
 
         ++n;
@@ -612,7 +613,7 @@ XChecker::checkPIDs ()
 {
     bool     retval = true;
     int      pid;
-    
+
     pid = pidof ("mcompositor");
     if (pid != m_CompositorPID) {
         SYS_WARNING (
@@ -627,7 +628,7 @@ XChecker::checkPIDs ()
 " a window (e.g. the lockscreenUI or the EventEater) it is most probably\n"
 " because of the mcompositor crash.\n"
 "----------------------------------------------------------------------------\n"
-" \n", 
+" \n",
         m_CompositorPID, pid);
         m_CompositorPID = pid;
         retval = false;
@@ -670,14 +671,14 @@ XChecker::turnOffDisplay ()
     if (! success) {
         SYS_WARNING ("Turning off the display failed!");
     }
-    
+
     return success;
-    #else 
+    #else
     return true;
-    #endif    
+    #endif
 }
 
-bool 
+bool
 XChecker::turnOnDisplay ()
 {
     #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
@@ -693,9 +694,9 @@ XChecker::turnOnDisplay ()
     }
 
     return success;
-    #else 
+    #else
     return true;
-    #endif    
+    #endif
 }
 
 
