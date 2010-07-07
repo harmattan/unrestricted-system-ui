@@ -26,7 +26,6 @@
 #include <MApplicationIfProxy>
 #include <MPannableViewport>
 #include <QGraphicsLinearLayout>
-#include "pluginlist.h"
 #include "notificationarea.h"
 #include "statusindicatormenuwindow.h"
 #include <MWidgetView>
@@ -187,7 +186,6 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
     contentLayout->setSpacing(0);
     contentLayout->addItem(extensionArea);
     contentLayout->addItem(notificationArea);
-    contentLayout->addItem(new PluginList(this, sceneWindow));
 
     MWidgetController *contentWidget = new MWidgetController;
     contentWidget->setView(new MWidgetView(contentWidget));

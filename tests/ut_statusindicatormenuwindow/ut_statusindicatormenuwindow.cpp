@@ -27,7 +27,6 @@
 #include <MOverlay>
 #include <MButton>
 #include <QGraphicsLinearLayout>
-#include "pluginlist_stub.h"
 #include "notificationarea_stub.h"
 #include <MPannableViewport>
 #include "x11wrapper_stub.h"
