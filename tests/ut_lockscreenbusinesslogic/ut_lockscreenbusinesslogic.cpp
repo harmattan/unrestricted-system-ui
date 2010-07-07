@@ -171,13 +171,20 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 {
     LockScreenBusinessLogic logic;
     logic.toggleScreenLockUI(true);
+
+    // When lock-screen-ui is shown reset should be called on it
+    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 1);
+
     logic.displayStateChanged(Maemo::QmDisplayState::Off);
     QCOMPARE (logic.timer.isActive (), false);
 
-    logic.toggleEventEater(true);
     logic.displayStateChanged(Maemo::QmDisplayState::On);
     QCOMPARE (logic.timer.isActive (), true);
     QCOMPARE (logic.timer.interval (), 1000);
+
+    // Also check whether the reset called on the
+    // lock-screen-ui (after display turn on)
+    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 2);
 }
 #endif
 

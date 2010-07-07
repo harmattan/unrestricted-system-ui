@@ -122,9 +122,15 @@ LockScreenBusinessLogic::displayStateChanged (
      * off we need to start it.
      */
     if (state == Maemo::QmDisplayState::On &&
-            lockUI != NULL && lockUI->isVisible() &&
-            !timer.isActive())
-        mayStartTimer ();
+            lockUI != NULL && lockUI->isVisible ())
+    {
+        if (timer.isActive () == false)
+            mayStartTimer ();
+        /*
+         * Also we should reset the lock-screen-ui dnd icon state:
+         */
+        lockUI->reset();
+    }
 }
 #endif
 

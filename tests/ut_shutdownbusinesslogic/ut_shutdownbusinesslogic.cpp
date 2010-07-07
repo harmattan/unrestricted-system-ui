@@ -66,6 +66,8 @@ MNotification::publish ()
 {
     SYS_DEBUG ("*** body = %s", SYS_STR(body()));
     bodyOfLastNotification = body();
+
+    return true;
 }
 
 /******************************************************************************
