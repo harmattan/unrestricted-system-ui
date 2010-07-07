@@ -1,4 +1,17 @@
-system-ui (0.16.5~1) harmattan; urgency=low
+system-ui (0.16.7~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue,  6 Jul 2010 14:51:36 +0300
+
+system-ui (0.16.6-1) harmattan; urgency=low
+
+  * Disable MCompositorNotificationSink when screen is locked
+  * Fixes: NB#178283 - Notifications translucent window doesn't hide itself sometimes
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 06 Jul 2010 13:41:47 +0200
+
+system-ui (0.16.5-1) harmattan; urgency=low
 
   [ Gabriel Schulhof ]
   * Fixes: NB#175073 - Status indicators do not unsubscribe from context properties in idle mode
