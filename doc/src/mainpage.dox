@@ -3,8 +3,8 @@
 <table class="mainIndex">
   <tr>
     <th>Getting Started</th>
-    <th>General</th>
-    <th>Developer Resources</th>
+    <th>Core Features</th>
+    <th>API Reference</th>
   </tr>
   <tr>
     <td>
@@ -14,32 +14,30 @@
     </td>
     <td>
       <ul>
-      <li><a href="statusindicatormenu.html">About DirectUI Status Indicator Menu</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="statusindicatormenu.html">Status Indicator Menu</a></li>
       </ul>
     </td>
     <td>
       <ul>
-      <li><a href="https://cwiki.nokia.com/DirectUIFramework">DirectUI Wiki</a></li>
-      <li><a href="bugreporting.html">How to Report a Bug</a></li>
+      <li><a href="classes.html">All Classes</a></li>
+      <li><a href="annotated.html">Annotated Classes</a></li>
+      <li><a href="namespaces.html">All Namespaces</a></li>
+      <li><a href="hierarchy.html">Inheritance Hierarchy</a></li>
+      <li><a href="inherits.html">Class Chart</a></li>
       </ul>
     </td>
   </tr>
 
   <tr>
-    <th>API Reference</th>
-    <th>Core Features</th>
+    <th>Developer Resources</th>
     <th>Licenses & Credits</th>
+    <th></th>
   </tr>
   <tr>
     <td>
       <ul>
-      <li><a href="classes.html">All Classes</a></li>
-      <li><a href="annotated.html">Annotated Classes</a></li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="bugreporting.html">How to Report a Bug</a></li>
       </ul>
     </td>
     <td>
@@ -47,8 +45,8 @@
       <li><a href="license.html">License</a></li>
       </ul>
     </td>
+    <td></td>
   </tr>
-
 
 </table>
 
