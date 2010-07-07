@@ -238,11 +238,11 @@ XChecker::pr (
 	unsigned int n_children = 0;
 	Window *child_l = NULL;
 	Window root_ret, parent_ret;
-	int i;
+	unsigned int i;
 	char               *wmclass;
     char               *wmname, *wmname2;
-	XWindowAttributes attrs = { 0 };
-	long hildon_stack;
+	XWindowAttributes attrs;
+    attrs.map_state = IsUnmapped;
 
     int x_return, y_return;
     unsigned int width_return, height_return;
@@ -255,9 +255,9 @@ XChecker::pr (
               &height_return, &border_width_return,
               &depth_return);
 
-	for (i = 0; i < level; ++i)
+	for (i = 0; i < (unsigned int) level; ++i)
 		indent += "  ";
-    for (i = 3; i >= level; --i)
+    for (i = 3; i >= (unsigned int) level; --i)
         indent1 += "  ";
 
 	wmclass = get_str_prop(dpy, WindowID, class_atom);
@@ -317,7 +317,8 @@ XChecker::check_window_rec (
     unsigned int      n_children = 0;
     Window           *child_l = NULL;
     char             *wmname;
-	XWindowAttributes attrs = { 0 };
+	XWindowAttributes attrs;
+    attrs.map_state = IsUnmapped;
 
     wmname = get_utf8_prop (dpy, WindowID, name_atom);
     XGetWindowAttributes(dpy, WindowID, &attrs);
@@ -341,7 +342,7 @@ XChecker::check_window_rec (
          * If not we check all the child windows...
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
-        for (int i = 0; i < n_children; ++i) {
+        for (unsigned int i = 0; i < n_children; ++i) {
 			if (check_window_rec (dpy, child_l[i], WMName, opCode))
                 return true;
 		}
@@ -361,7 +362,7 @@ XChecker::check_window_rec (
          * Then all the child windows.
          */
         XQueryTree (dpy, WindowID, &rootR, &parentR, &child_l, &n_children);
-        for (int i = 0; i < n_children; ++i) {
+        for (unsigned int i = 0; i < n_children; ++i) {
 			if (!check_window_rec (dpy, child_l[i], WMName, opCode))
                 return false;
 		}
@@ -417,11 +418,13 @@ XChecker::checkWindow (
 {
     Display          *Display = QX11Info::display ();
     bool              retval = false;
-    XWindowAttributes attrs = { 0 };
+    XWindowAttributes attrs;
     int               x_return, y_return;
     unsigned int      width_return, height_return;
     unsigned int      border_width_return, depth_return;
     Window            root_ret;
+
+    attrs.map_state = IsUnmapped;
 
     /*
      * Here are some stuff that we want to check always.

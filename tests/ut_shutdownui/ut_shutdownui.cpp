@@ -44,6 +44,8 @@ bool
 QmDisplayState::set(
         DisplayState state)
 {
+    Q_UNUSED (state);
+
     SYS_DEBUG ("*************");
     //m_State = state;
     return dimmingShouldSucceed;

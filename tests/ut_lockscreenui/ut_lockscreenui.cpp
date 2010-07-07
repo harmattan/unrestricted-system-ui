@@ -398,8 +398,6 @@ Ut_LockScreenUI::testEventEaterUI ()
 void
 Ut_LockScreenUI::testEventEaterUIWindowName ()
 {
-    bool connectSuccess;
-
     /*
      * We need a new event eater widget.
      */

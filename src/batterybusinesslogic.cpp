@@ -467,15 +467,16 @@ BatteryBusinessLogic::sendNotification (
    m_notification->setImage (icon);
    m_notification->publish ();
 
-#ifndef UNIT_TEST
-/* FIXME ^^^: MComponentData::feedbackPlayer() - 
- *            MComponentData instance not yet created.
+   if (!feedback.isEmpty())
+   {
+/* FIXME: MComponentData::feedbackPlayer() - 
+ *        MComponentData instance not yet created.
  */
-   if (!feedback.isEmpty()) {
+#ifndef UNIT_TEST
        MFeedback player (feedback);
        player.play();
-   }
 #endif
+   }
 }
 
 QString

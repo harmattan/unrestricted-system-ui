@@ -50,6 +50,16 @@ QDBusAbstractInterface::call (
 		const QVariant & arg7,
 		const QVariant & arg8)
 {
+    Q_UNUSED (mode);
+    Q_UNUSED (arg1);
+    Q_UNUSED (arg2);
+    Q_UNUSED (arg3);
+    Q_UNUSED (arg4);
+    Q_UNUSED (arg5);
+    Q_UNUSED (arg6);
+    Q_UNUSED (arg7);
+    Q_UNUSED (arg8);
+
     QDBusMessage message;
     SYS_DEBUG (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     SYS_DEBUG ("*** method    = %s", SYS_STR(method));
