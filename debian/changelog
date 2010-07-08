@@ -2,6 +2,10 @@ system-ui (0.16.8~1) harmattan; urgency=low
 
   * Reset the lock-screen-ui state also on display-state changes (off->on)
 
+  [ Laszlo Pere ]
+  * Fixes: NB#177843 - Battery notification should not be displayed in the 
+    unlock screen event area
+
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 07 Jul 2010 13:40:50 +0200
 
 system-ui (0.16.6-1) harmattan; urgency=low

@@ -43,6 +43,9 @@
 #define IM_RECEIVED    "im.received"
 #define MESSAGING_IM   "x-nokia.messaging.im"
 
+// These notifications will be filtered out.
+#define EVENT_BATTERY  "x-nokia.battery"
+
 #define DEBUG
 #include "debug.h"
 
@@ -66,8 +69,13 @@ UnlockNotificationSink::setLockedState (bool islocked)
     UnlockMissedEvents::getInstance ().clearAll ();
 }
 
+/*!
+ * \returns true for the notification that are going to be shown in the
+ *   lockscreen.
+ */
 bool
-UnlockNotificationSink::canAddNotification (const Notification &notification)
+UnlockNotificationSink::canAddNotification (
+        const Notification &notification)
 {
     Q_UNUSED (notification);
 
@@ -75,24 +83,19 @@ UnlockNotificationSink::canAddNotification (const Notification &notification)
     if (m_enabled == false)
         return false;
 
-    return true;
-
-#if 0
-    // Filtering by notification event-type, not used for now...
-    bool retval = false;
-
+    /*
+     * Filtering by notification event-type. Add all the event types that will
+     * not be shown in the lockscreen here.
+     */
+    bool retval = true;
     QString event_type =
         notification.parameters ().value (
             GenericNotificationParameterFactory::eventTypeKey ()).toString ();
 
-    if ((event_type == EVENT_EMAIL) ||
-        (event_type == EVENT_MSG)   ||
-        (event_type == EVENT_CALL)  ||
-        (event_type == EVENT_IM))
-        retval = true;
+    if (event_type == EVENT_BATTERY)
+        retval = false;
 
     return retval;
-#endif
 }
 
 void
