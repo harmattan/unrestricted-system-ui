@@ -4,10 +4,10 @@ MSceneWindowStyle#LockScreenWindow {
 }
 
 MSceneWindowStyle#LockMostRecentArea {
-    background-image: "lockscreen-recent-event-area-background" 0 0 0 0;
+    background-image: "lockscreen-recent-event-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
-    padding-top: 0.8mm;
+    padding-top: 1.0mm;
     minimum-size: 100% 7.9mm;
     preferred-size: 100% 7.9mm;
     maximum-size: 100% 7.9mm;
@@ -18,12 +18,11 @@ MLabelStyle#LockMostRecentLabel {
     font: "Nokia Standard Bold" 28;
     /* or "Nokia Standard Light" ??? */
     margin-top: 1.4mm;
-    margin-left: 2.9mm;
     margin-right: $MARGIN_XLARGE;
 }
 
 MImageWidgetStyle#LockMostRecentIcon {
-    margin-top: 1.4mm;
+    margin-top: 1.2mm;
     margin-left: 2.9 mm;
     margin-right: $MARGIN_DOUBLE;
 
@@ -33,9 +32,10 @@ MImageWidgetStyle#LockMostRecentIcon {
 }
 
 MSceneWindowStyle#LockOtherEventsArea {
-    background-image: "lockscreen-notification-area-background" 0 0 0 0;
+    background-image: "lockscreen-notification-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
+    padding-top: 0.5mm;
     minimum-size: 100% 4.9mm;
     maximum-size: 100% 7mm;
 }
@@ -101,15 +101,13 @@ MSceneWindowStyle#LockLandArea {
 }
 
 MSceneWindowStyle#LockLandAreaDragged {
-    background-image: "lockscreen-lock-land-area-background-dragged" 20 20 20 20;
-/*    background-opacity: 0.9; */
+    background-image: "lockscreen-lock-land-area-background-dragged" 25 25 25 25;
 
     minimum-size: 100% 100;
 }
 
 MSceneWindowStyle#LockLandAreaActive {
-    background-image: "lockscreen-lock-land-area-background-active" 20 20 20 20;
-/*    background-opacity: 0.9; */
+    background-image: "lockscreen-lock-land-area-background-active" 25 25 25 25;
 
     minimum-size: 100% 100;
 }
@@ -134,12 +132,10 @@ MSceneWindowStyle#LockLandAreaActive {
 
 MImageWidgetStyle#LockScreenUnlockIcon {
     background-image: "lockscreen-lock-land-area-center-background";
-    background-opacity: 0.0;
+    background-opacity: 1.0;
 
-/*
     preferred-size: 10mm 10mm;
     minimum-size:   10mm 10mm;
     maximum-size:   10mm 10mm;
- */
 }
 

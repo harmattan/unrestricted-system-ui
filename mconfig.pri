@@ -2,6 +2,7 @@
 load(meegotouch_defines)
 # Silence the compiler
 CONFIG += silent
+DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
 # Directories
 unix {
     STATUSINDICATORMENU_PLUGIN_DIR = /usr/lib/meegotouch/statusindicatormenuplugins

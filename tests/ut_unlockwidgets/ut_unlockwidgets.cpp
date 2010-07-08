@@ -74,7 +74,7 @@ void ut_unlockwidgets::test_unlock_area ()
 {
     UnlockArea  *area = new UnlockArea;
 
-    MImageWidget *icon = area->m_unlock_icon;
+    MWidget *icon = area->m_unlock_icon;
 
     QVERIFY (icon != 0);
 

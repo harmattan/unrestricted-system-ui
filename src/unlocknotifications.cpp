@@ -22,6 +22,7 @@
 #include "unlockmissedevents.h"
 
 #include <QGraphicsLinearLayout>
+#include <MTheme>
 #include <MLabel>
 #include <QPixmap>
 #include <MImageWidget>
@@ -31,8 +32,21 @@
 #define DEBUG
 #include "debug.h"
 
-UnlockNotifications::UnlockNotifications ()
+UnlockNotifications::UnlockNotifications () :
+    m_vbox (0)
 {
+#if 0
+    // XXX: Not working:
+    QString customCSS;
+    customCSS = QString (
+        "%1/%2/meegotouch/libmeegotouchviews/style/unlockscreen.css"
+                        ).arg (THEMEDIR).arg (MTheme::currentTheme ());
+
+    SYS_DEBUG ("Loading custom-css: %s", SYS_STR (customCSS));
+
+    MTheme::loadCSS (customCSS);
+#endif
+
     m_icon_ids[UnlockMissedEvents::NotifyEmail] =
         QString ("icon-m-content-email");
     m_icon_ids[UnlockMissedEvents::NotifySms] =
@@ -64,6 +78,7 @@ UnlockNotifications::UnlockNotifications ()
     m_mostrecent_layout->setContentsMargins (0., 0., 0., 0.);
 
     m_last_icon = new MImageWidget;
+    m_last_icon->setZoomFactor (1.0);
     m_last_icon->setObjectName ("LockMostRecentIcon");
 
     m_last_subject = new MLabel;
@@ -113,6 +128,8 @@ QSizeF
 UnlockNotifications::sizeHint (Qt::SizeHint which,
                                const QSizeF& constraint) const
 {
+    if (m_vbox == 0)
+        return QSizeF (0., 0.);
     /*
      * forward sizeHint queries to main vbox
      */
@@ -216,7 +233,7 @@ UnlockNotifications::updateContents ()
             (mostRecent == UnlockMissedEvents::NotifySms) ||
             (mostRecent == UnlockMissedEvents::NotifyCall))
         {
-            m_last_icon->setImage (m_icon_ids[mostRecent]);
+            m_last_icon->setImage (m_icon_ids[mostRecent], QSize (32, 32));
 
             QString mostRecentText =
                 UnlockMissedEvents::getInstance ().getLastSubject (mostRecent);
@@ -268,7 +285,9 @@ UnlockNotifications::updateContents ()
              */
             m_labels[mostRecent] = new MLabel;
             m_labels[mostRecent]->setObjectName ("LockNotifierLabel");
-            m_icons[mostRecent] = new MImageWidget (m_icon_ids[mostRecent]);
+            m_icons[mostRecent] = new MImageWidget;
+            m_icons[mostRecent]->setImage (m_icon_ids[mostRecent], QSize (32,32));
+            m_icons[mostRecent]->setZoomFactor (1.0);
             m_icons[mostRecent]->setObjectName ("LockNotifierIcon");
         }
 

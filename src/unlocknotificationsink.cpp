@@ -23,6 +23,9 @@
 #include "notifications/genericnotificationparameterfactory.h"
 #include "notifications/notificationwidgetparameterfactory.h"
 
+#undef DEBUG
+#include "debug.h"
+
 /*
  * Used event-types:
  * Please check the /usr/share/meegotouch/notifications/eventtypes directory for
@@ -45,9 +48,6 @@
 
 // These notifications will be filtered out.
 #define EVENT_BATTERY  "x-nokia.battery"
-
-#define DEBUG
-#include "debug.h"
 
 UnlockNotificationSink::UnlockNotificationSink () :
     m_enabled (false)
