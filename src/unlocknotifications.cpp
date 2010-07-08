@@ -116,6 +116,9 @@ UnlockNotifications::UnlockNotifications () :
 
     connect (&UnlockMissedEvents::getInstance (), SIGNAL (updated ()),
              this, SLOT (updateContents ()));
+    
+    connect (this, SIGNAL (sceneWindowStateChanged(MSceneWindow::SceneWindowState, MSceneWindow::SceneWindowState)),
+             this, SLOT (appear()));
 }
 
 UnlockNotifications::~UnlockNotifications ()
@@ -137,10 +140,19 @@ UnlockNotifications::sizeHint (Qt::SizeHint which,
 }
 
 void
-UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
+UnlockNotifications::orientationChangeEvent (
+        MOrientationChangeEvent *event)
 {
-    if (event->orientation () == M::Landscape)
+    orientationChanged (event->orientation ());
+}
+
+void
+UnlockNotifications::orientationChanged (
+        M::Orientation orientation)
+{
+    if (orientation == M::Landscape)
     {
+        SYS_DEBUG ("M:Landscape");
         /*
          * Remove & hide the most recent area from top
          */
@@ -161,6 +173,7 @@ UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
     }
     else
     {
+        SYS_DEBUG ("M:Portrait");
         /*
          * Remove the most recent event widgets from other events layout
          */
@@ -185,6 +198,13 @@ UnlockNotifications::orientationChangeEvent (MOrientationChangeEvent *event)
      * to re-calculate the sizes...
      */
     m_vbox->invalidate ();
+}
+
+void 
+UnlockNotifications::appear ()
+{
+    if (sceneManager())
+        orientationChanged (sceneManager()->orientation());
 }
 
 void
@@ -307,6 +327,9 @@ UnlockNotifications::updateContents ()
         m_icon_layout->setAlignment (m_icons[mostRecent], Qt::AlignLeft);
 
         emit needToShow (true);
+        // It seems that we don't get the signal, forcing it manually to detect
+        // the orientation.
+        appear ();
     }
 }
 

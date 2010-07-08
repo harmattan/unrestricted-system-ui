@@ -8,6 +8,7 @@
 class MLabel;
 class MImageWidget;
 class QGraphicsLinearLayout;
+class QShowEvent;
 
 class UnlockNotifications : public MSceneWindow
 {
@@ -25,8 +26,12 @@ private slots:
 
 protected:  
     virtual void orientationChangeEvent (MOrientationChangeEvent *event);
+
     virtual QSizeF sizeHint (Qt::SizeHint which,
                              const QSizeF& constraint = QSizeF()) const;
+    
+    void appear ();
+    void orientationChanged (M::Orientation orientation);
 
 private:
     /*

@@ -70,7 +70,9 @@ UnlockMissedEvents::getCount (Types atype)
 void
 UnlockMissedEvents::addNotification (Types type, QString subject)
 {
-    SYS_DEBUG ("message = '%s'", SYS_STR (subject));
+    SYS_DEBUG ("*** message = %s", SYS_STR (subject));
+    SYS_DEBUG ("*** type    = %d", type);
+
     lastSubjects[type] = subject;
     notificationCounts[type]++;
     lastType = type;
