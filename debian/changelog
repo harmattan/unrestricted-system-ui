@@ -5,6 +5,7 @@ system-ui (0.16.8~1) harmattan; urgency=low
   [ Laszlo Pere ]
   * Fixes: NB#177843 - Battery notification should not be displayed in the 
     unlock screen event area
+  * Fixes: NB#174920 - Charging text shown on screen lock UI 
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 07 Jul 2010 13:40:50 +0200
 
