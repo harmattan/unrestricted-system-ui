@@ -102,9 +102,7 @@ void
 UnlockNotificationSink::addNotification (const Notification &notification)
 {
     // not locked state... skip
-    // XXX:
-    // Why i called with addNotification when canAddNotification returns false?
-    if (m_enabled == false)
+    if ((m_enabled == false) || (canAddNotification (notification) == false))
         return;
 
     QString lastSummary;
