@@ -21,11 +21,12 @@
 #ifndef _UNLOCKWIDGETS_H
 #define _UNLOCKWIDGETS_H
 
+class MLabel;
+class MWidget;
+class MImageWidget;
+
 #include <QObject>
 #include <MSceneWindow>
-
-class MLabel;
-class MImageWidget;
 
 #include "unlocknotifications.h"
 
@@ -64,7 +65,7 @@ public:
 private:
     void updateState ();
 
-    MImageWidget    *m_unlock_icon;
+    MWidget         *m_unlock_icon;
     bool             m_enabled;
     bool             m_active;
 

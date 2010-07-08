@@ -148,21 +148,29 @@ UnlockArea::UnlockArea () :
     m_active (false)
 {
     QGraphicsLinearLayout   *layout =
-        new QGraphicsLinearLayout;
+        new QGraphicsLinearLayout (Qt::Vertical);
 
     setObjectName ("LockLandArea");
 
-    m_unlock_icon = new MImageWidget;
-    m_unlock_icon->setImage ("icon-m-common-unlocked", QSize (32, 32));
-    m_unlock_icon->setZoomFactor (1.0);
-    m_unlock_icon->setObjectName ("LockScreenUnlockIcon");
+    // Create the unlock icon
+    MImageWidget    *unlock_icon;
 
-    layout->addStretch ();
+    unlock_icon = new MImageWidget;
+    unlock_icon->setImage ("icon-m-common-unlocked", QSize (32, 32));
+    unlock_icon->setZoomFactor (1.0);
+    unlock_icon->setObjectName ("LockScreenUnlockIcon");
+
+    m_unlock_icon = new MWidget;
+    QGraphicsLinearLayout   *icon_layout =
+        new QGraphicsLinearLayout (Qt::Horizontal);
+    icon_layout->addStretch ();
+    icon_layout->addItem (unlock_icon);
+    icon_layout->addStretch ();
+    m_unlock_icon->setLayout (icon_layout);
 
     // Add the unlock icon centered
+    layout->addStretch ();
     layout->addItem (m_unlock_icon);
-    layout->setAlignment (m_unlock_icon, Qt::AlignCenter);
-
     layout->addStretch ();
 
     setLayout (layout);

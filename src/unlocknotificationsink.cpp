@@ -23,6 +23,9 @@
 #include "notifications/genericnotificationparameterfactory.h"
 #include "notifications/notificationwidgetparameterfactory.h"
 
+#undef DEBUG
+#include "debug.h"
+
 /*
  * Used event-types:
  * Please check the /usr/share/meegotouch/notifications/eventtypes directory for
@@ -42,9 +45,6 @@
 // This one might be obsolete...
 #define IM_RECEIVED    "im.received"
 #define MESSAGING_IM   "x-nokia.messaging.im"
-
-#define DEBUG
-#include "debug.h"
 
 UnlockNotificationSink::UnlockNotificationSink () :
     m_enabled (false)
