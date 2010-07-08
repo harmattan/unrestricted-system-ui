@@ -41,7 +41,7 @@ MSceneWindowStyle#LockOtherEventsArea {
 }
 
 MImageWidgetStyle#LockNotifierIcon {
-    margin-top: 1.4mm;
+    margin-top: 1.2mm;
     margin-left: 2.9mm;
 
     minimum-size: 3.6mm 3.6mm;
@@ -49,8 +49,9 @@ MImageWidgetStyle#LockNotifierIcon {
     maximum-size: 3.6mm 3.6mm;
 }
 
-MImageWidgetStyle#LockNotifierLabel {
-    font: "Nokia Standard Light" 24;
+MLabelStyle#LockNotifierLabel {
+    color: $COLOR_INVERTED_FOREGROUND;
+    font: "Nokia Standard Light" 28;
 
     margin-top: 1.4mm;
     margin-left: $MARGIN_LARGE;

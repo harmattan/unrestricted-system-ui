@@ -32,6 +32,8 @@
 #define DEBUG
 #include "debug.h"
 
+#define ICON_SIZE 32
+
 UnlockNotifications::UnlockNotifications () :
     m_vbox (0)
 {
@@ -253,7 +255,8 @@ UnlockNotifications::updateContents ()
             (mostRecent == UnlockMissedEvents::NotifySms) ||
             (mostRecent == UnlockMissedEvents::NotifyCall))
         {
-            m_last_icon->setImage (m_icon_ids[mostRecent], QSize (32, 32));
+            m_last_icon->setImage (m_icon_ids[mostRecent],
+                                   QSize (ICON_SIZE, ICON_SIZE));
 
             QString mostRecentText =
                 UnlockMissedEvents::getInstance ().getLastSubject (mostRecent);
@@ -306,12 +309,13 @@ UnlockNotifications::updateContents ()
             m_labels[mostRecent] = new MLabel;
             m_labels[mostRecent]->setObjectName ("LockNotifierLabel");
             m_icons[mostRecent] = new MImageWidget;
-            m_icons[mostRecent]->setImage (m_icon_ids[mostRecent], QSize (32,32));
+            m_icons[mostRecent]->setImage (m_icon_ids[mostRecent],
+                                           QSize (ICON_SIZE, ICON_SIZE));
             m_icons[mostRecent]->setZoomFactor (1.0);
             m_icons[mostRecent]->setObjectName ("LockNotifierIcon");
         }
 
-        m_labels.value (mostRecent)->setText (QString ("%L1").arg (eventCount));
+        m_labels[mostRecent]->setText (QString ("%L1").arg (eventCount));
 
         /*
          * Most recent area only visible when orientation is portrait
