@@ -135,6 +135,10 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
                  SIGNAL (screenIsLocked (bool)),
                  m_compositorNotificationSink,
                  SLOT (setDisabled (bool)));
+        connect (m_sysuidRequest->getLockScreenLogic (),
+                 SIGNAL (screenIsLocked (bool)),
+                 m_UsbUi,
+                 SLOT (setDisabled (bool)));
     }
 
     /*

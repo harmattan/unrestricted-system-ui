@@ -58,6 +58,36 @@ UsbUi::initialize ()
 #endif
 }
 
+void
+UsbUi::setDisabled (bool disable)
+{
+    if (disable == true)
+    {
+        // Disconnect from logic
+        m_logic->disconnect ();
+
+        // remove the previous notification
+        if (m_notification)
+        {
+            m_notification->remove ();
+            delete m_notification;
+            m_notification = 0;
+        }
+
+        // Hide the mode-selection dialog
+        if (m_dialog && m_dialog->isVisible ())
+        {
+            m_dialog->reject ();
+            m_dialog->disappear ();
+        }
+    }
+    else // (enable == true)
+    {
+        // reinitialize, and connect to businesslogic
+        initialize ();
+    }
+}
+
 // Showing the mode selection dialog
 void
 UsbUi::ShowDialog ()

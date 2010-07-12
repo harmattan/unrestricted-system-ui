@@ -50,6 +50,7 @@ private slots:
     void ShowDialog ();
 
     void initialize ();
+    void setDisabled (bool disable);
 
 private:
     void ShowNotification (int id);

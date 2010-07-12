@@ -245,17 +245,19 @@ void
 LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED (event);
+    bool unlock = false;
 
     if (m_DnDstate == STATE_NONE)
         return;
 
     if (m_DnDstate == STATE_MOVING_ACTIVE)
-    {
-        emit unlocked ();
-    }
+        unlock = true;
 
-    // And finally reset the state to defaults...
+    // Reset the state to defaults...
     resetState ();
+
+    if (unlock == true)
+        emit unlocked ();
 }
 
 void

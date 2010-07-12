@@ -1,7 +1,5 @@
 system-ui (0.16.8~1) harmattan; urgency=low
 
-  * Reset the lock-screen-ui state also on display-state changes (off->on)
-
   [ Laszlo Pere ]
   * Fixes: NB#177843 - Battery notification should not be displayed in the 
     unlock screen event area
@@ -10,7 +8,15 @@ system-ui (0.16.8~1) harmattan; urgency=low
     lock ui is not proper in portrait orientation.
   * New notifier implementation in status bar
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 07 Jul 2010 13:40:50 +0200
+  [ David Kedves ]
+  * Reset the lock-screen-ui state also on display-state changes (off->on)
+  * Fixes: NB#176316 - Screen got unlocked, but after a sec again Lock UI
+    appeared on connecting USB.
+  * Fixes: NB#176315 - Screen doesn't unlock on connecting usb cable.
+  * Fixes: NB#176978 - No USB selection dialog when PC resumes from S4
+    hibernate
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 12 Jul 2010 15:37:58 +0200
 
 system-ui (0.16.6-1) harmattan; urgency=low
 
