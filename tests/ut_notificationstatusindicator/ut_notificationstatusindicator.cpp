@@ -25,21 +25,26 @@
 #include "notificationsink_stub.h"
 #include "notifiernotificationsink_stub.h"
 #include "mcompositornotificationsink_stub.h"
+#include "notificationmanager_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
-#include "notificationmanager_stub.h"
 #include "notificationgroup_stub.h"
 #include "eventtypestore_stub.h"
 
 void Ut_NotificationStatusIndicator::init()
 {
+    mgr = new NotificationManager;
+    compositorSink = new MCompositorNotificationSink;
+    gSysuidStub->stubSetReturnValue("compositorNotificationSink", compositorSink);
+    gSysuidStub->stubSetReturnValue("notificationManager", mgr);
     m_subject = new NotificationStatusIndicator;
 }
 
 void Ut_NotificationStatusIndicator::cleanup()
 {
     gNotifierNotificationSinkStub->stubReset();
-
+    delete mgr;
+    delete compositorSink;
     delete m_subject;
 }
 
@@ -81,6 +86,21 @@ void Ut_NotificationStatusIndicator::testMenuVisibilityChange()
     QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("clearSink"), 1);
     QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("disableNotificationAdditions"), 2);
     QCOMPARE(gNotifierNotificationSinkStub->stubLastCallTo("disableNotificationAdditions").parameter<bool>(0), true);
+}
+
+void Ut_NotificationStatusIndicator::testConnections()
+{
+    NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
+    bool result = m_subject->disconnect(notificationManager, SIGNAL(notificationRestored(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
+    QCOMPARE(result, true);
+    result = m_subject->disconnect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
+    QCOMPARE(result, true);
+    result = m_subject->disconnect(notificationManager, SIGNAL(notificationRemoved(uint)), m_subject->notifierSink, SLOT(removeNotification(uint)));
+    QCOMPARE(result, true);
+    result = m_subject->disconnect(m_subject->notifierSink, SIGNAL(notifierSinkActive(bool)), m_subject, SLOT(setActive(bool)));
+    QCOMPARE(result, true);
+    m_subject->disconnect(m_subject->notifierSink, SIGNAL(notifierSinkActive(bool)), notificationManager, SLOT(removeUnseenFlags(bool)));
+    QCOMPARE(result, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationStatusIndicator)

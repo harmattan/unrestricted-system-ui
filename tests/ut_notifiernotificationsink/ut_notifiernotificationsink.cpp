@@ -24,6 +24,7 @@
 #include "notificationmanager_stub.h"
 #include "eventtypestore_stub.h"
 #include "notificationgroup_stub.h"
+#include "genericnotificationparameterfactory.h"
 
 void Ut_NotifierNotificationSink::initTestCase()
 {
@@ -149,6 +150,18 @@ void Ut_NotifierNotificationSink::testDisablingNotificationAdditions()
     emit addNotification(notification2);
 
     QCOMPARE(spy.count(), 1);
+}
+
+void Ut_NotifierNotificationSink::testSeenNotificationAddedThenNotifierNotUpdated()
+{
+    QSignalSpy spy(m_subject, SIGNAL(notifierSinkActive(bool)));
+
+    // Adding a seen notification should not cause a notification count change
+    NotificationParameters params;
+    params.add(GenericNotificationParameterFactory::unseenKey(), false);
+    Notification notification1(1, 0, 2, params, Notification::ApplicationEvent, 0);
+    emit addNotification(notification1);
+    QCOMPARE(spy.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotifierNotificationSink)

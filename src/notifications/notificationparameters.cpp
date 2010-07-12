@@ -19,9 +19,11 @@
 
 #include "notificationparameters.h"
 #include "notificationparameter.h"
+#include "genericnotificationparameterfactory.h"
 
 NotificationParameters::NotificationParameters()
 {
+    parameterValues.insert(GenericNotificationParameterFactory::unseenKey(), QVariant(true));
 }
 
 NotificationParameters::~NotificationParameters()
@@ -42,7 +44,6 @@ QVariant NotificationParameters::value(const QString &parameter) const
 {
     return parameterValues.value(parameter);
 }
-
 
 QDataStream &operator<<(QDataStream &datastream, const NotificationParameters &parameters)
 {

@@ -22,6 +22,7 @@
 #include "ut_notificationparameters.h"
 #include "notificationparameters.h"
 #include "notificationparameter.h"
+#include "genericnotificationparameterfactory.h"
 
 class TestSink
 {
@@ -45,6 +46,7 @@ void Ut_NotificationParameters::cleanupTestCase()
 void Ut_NotificationParameters::init()
 {
     parameters = new NotificationParameters();
+    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
 }
 
 void Ut_NotificationParameters::cleanup()

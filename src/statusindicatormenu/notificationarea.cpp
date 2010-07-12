@@ -34,7 +34,7 @@ NotificationArea::NotificationArea(MWidget *parent) :
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
-    connect(notificationManager, SIGNAL(notificationRestored(Notification)), notificationAreaSink, SLOT(addNotification(Notification)));
+    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationAreaSink, SIGNAL(addNotification(MInfoBanner &)), this, SLOT(addNotification(MInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(removeNotification(MInfoBanner &)), this, SLOT(removeNotification(MInfoBanner &)));

@@ -47,6 +47,7 @@ private slots:
     void testRemoveNotification();
     void testClearSink();
     void testDisablingNotificationAdditions();
+    void testSeenNotificationAddedThenNotifierNotUpdated();
 
 signals:
     void addNotification(const Notification &notification);

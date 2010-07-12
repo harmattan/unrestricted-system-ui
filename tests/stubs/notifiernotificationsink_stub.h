@@ -33,10 +33,6 @@ class NotifierNotificationSinkStub : public StubBase {
   virtual void removeGroup(uint groupId);
   virtual void addNotification(const Notification &notification);
   virtual void removeNotification(uint notificationId);
-   QHash<uint, uint> groupForNotification ;
-   QHash<uint, uint> notificationCountForNotification ;
-   QHash<uint, uint> notificationCountForGroup ;
-   uint notificationCount ;
   void clearSink();
   void disableNotificationAdditions(bool disable);
 }; 

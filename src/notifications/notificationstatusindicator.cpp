@@ -38,6 +38,8 @@ NotificationStatusIndicator::NotificationStatusIndicator(MWidget *parent) :
     connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierSink, SLOT(removeNotification(uint)));
     connect(notifierSink, SIGNAL(notifierSinkActive(bool)), this, SLOT(setActive(bool)));
+    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
+    connect(notifierSink, SIGNAL(notifierSinkActive(bool)), notificationManager, SLOT(removeUnseenFlags(bool)));
 }
 
 NotificationStatusIndicator::~NotificationStatusIndicator()

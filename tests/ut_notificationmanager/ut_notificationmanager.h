@@ -38,6 +38,9 @@ public:
     static QList<int> timerTimeouts;
     static QHash<QString, QVariant> dataStore;
 
+signals:
+    void notifierSinkActive(bool ignore);
+
 private:
     TestNotificationManager *manager;
 
@@ -114,6 +117,8 @@ private slots:
     void testRemovingNotificationsWithEventType();
     // Test the removal of groups based on event type
     void testRemovingGroupsWithEventType();
+    // Test removal of unseen flags from notifications
+    void testRemovalOfUnseenFlags();
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H

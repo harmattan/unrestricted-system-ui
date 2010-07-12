@@ -555,3 +555,18 @@ uint NotificationManager::nextAvailableGroupID()
     }
     return i;
 }
+
+void NotificationManager::removeUnseenFlags(bool ignore)
+{
+    if(!ignore) {
+        QHash<uint, Notification>::iterator it = notifications.begin();
+        while(it != notifications.end() ) {
+            NotificationParameters newParameters = (*it).parameters();
+            newParameters.add(GenericNotificationParameterFactory::unseenKey(), QVariant(false));
+            (*it).setParameters(newParameters);
+            ++it;
+        }
+        // Change the states in the filestore
+        savePersistentNotifications();
+    }
+}

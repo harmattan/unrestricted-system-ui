@@ -63,6 +63,7 @@ class NotificationManagerStub : public StubBase {
   virtual bool ensurePersistentDataPath();
   virtual void saveStateData();
   virtual void savePersistentNotifications();
+  virtual void removeUnseenFlags(bool ignore);
   };
 
 // 2. IMPLEMENT STUB
@@ -254,6 +255,12 @@ void NotificationManagerStub::savePersistentNotifications() {
   stubMethodEntered("savePersistentNotifications");
 }
 
+void NotificationManagerStub::removeUnseenFlags(bool ignore)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<bool>(ignore));
+    return stubMethodEntered("removeUnseenFlags", params);
+}
 // 3. CREATE A STUB INSTANCE
 NotificationManagerStub gDefaultNotificationManagerStub;
 NotificationManagerStub* gNotificationManagerStub = &gDefaultNotificationManagerStub;
@@ -381,4 +388,8 @@ void NotificationManager::saveStateData() {
   gNotificationManagerStub->saveStateData();
 }
 
+void NotificationManager::removeUnseenFlags(bool ignore)
+{
+    gNotificationManagerStub->removeUnseenFlags(ignore);
+}
 #endif

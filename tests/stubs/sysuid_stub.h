@@ -65,12 +65,12 @@ QString SysuidStub::dbusPath() {
 
 NotificationManager & SysuidStub::notificationManager() {
   stubMethodEntered("notificationManager");
-  return stubReturnValue<NotificationManager &>("notificationManager");
+  return *stubReturnValue<NotificationManager *>("notificationManager");
 }
 
 MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
   stubMethodEntered("compositorNotificationSink");
-  return stubReturnValue<MCompositorNotificationSink &>("compositorNotificationSink");
+  return *stubReturnValue<MCompositorNotificationSink *>("compositorNotificationSink");
 }
 
 void SysuidStub::retranslate() {

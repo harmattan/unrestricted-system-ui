@@ -33,13 +33,15 @@ NotifierNotificationSink::~NotifierNotificationSink()
 
 void NotifierNotificationSink::addNotification(const Notification &notification)
 {
-    if (notification.type() == Notification::SystemEvent || additionsDisabled) {
+  if (notification.type() == Notification::SystemEvent || additionsDisabled) {
         // System notifications are not shown by the notifier sink
         return;
     }
-    notificationCount++;
-    if(notificationCount == 1) {
-        emit notifierSinkActive(true);
+    if(isUnseen(notification)) {
+        notificationCount++;
+        if(notificationCount == 1) {
+            emit notifierSinkActive(true);
+        }
     }
 }
 
@@ -62,4 +64,11 @@ void NotifierNotificationSink::clearSink()
 void NotifierNotificationSink::disableNotificationAdditions(bool disable)
 {
     additionsDisabled = disable;
+}
+
+bool NotifierNotificationSink::isUnseen(const Notification &notification)
+{
+    NotificationParameters parameters = notification.parameters();
+    QVariant unseenVariant = parameters.value(GenericNotificationParameterFactory::unseenKey());
+    return unseenVariant.toBool();
 }

@@ -1147,5 +1147,19 @@ void Ut_NotificationManager::testRemovingGroupsWithEventType()
     QCOMPARE(groupRemovedSpy.takeFirst()[0].toUInt(), id1);
 }
 
+void Ut_NotificationManager::testRemovalOfUnseenFlags()
+{
+    // Create notification
+    NotificationParameters param;
+    uint id = manager->addNotification(0, param);
+    // Notifications are created with unseen params
+    QCOMPARE(manager->notifications.value(id).parameters().value("unseen").toBool(), true);
+
+    connect(this, SIGNAL(notifierSinkActive(bool)), manager, SLOT(removeUnseenFlags(bool)));
+    emit notifierSinkActive(false);
+
+    QCOMPARE(manager->notifications.value(id).parameters().value("unseen").toBool(), false);
+}
+
 
 QTEST_MAIN(Ut_NotificationManager)

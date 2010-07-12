@@ -183,6 +183,11 @@ protected slots:
      * of this object and invoke any entity connected to this NotificationManager.
      */
     void relayNextNotification();
+    /*!
+      * Slot for setting unseen flags of all notifications to false.
+      * \param ignore  \c true if ignore the call \c false to remove the flags
+      */
+    void removeUnseenFlags(bool ignore);
 
 private:
     /*!
@@ -303,6 +308,10 @@ private:
 #ifdef HAVE_MAEMOSEC
     //! Secure storage object for storing persistent data
     QSharedPointer<maemosec::storage> persistentStorage;
+#endif
+
+#ifdef UNIT_TEST
+    friend class Ut_NotificationManager;
 #endif
 };
 

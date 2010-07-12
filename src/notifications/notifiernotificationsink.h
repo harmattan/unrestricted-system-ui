@@ -75,6 +75,8 @@ private:
     //! Whether adding of notifications is disabled
     bool additionsDisabled;
 
+    bool isUnseen(const Notification &notification);
+
 #ifdef UNIT_TEST
     friend class Ut_NotifierNotificationSink;
 #endif

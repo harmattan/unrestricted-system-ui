@@ -25,6 +25,8 @@
 #include "notificationstatusindicator.h"
 
 class MApplication;
+class NotificationManager;
+class MCompositorNotificationSink;
 
 class Ut_NotificationStatusIndicator : public QObject
 {
@@ -33,6 +35,8 @@ class Ut_NotificationStatusIndicator : public QObject
 private:
     MApplication  *app;
     NotificationStatusIndicator *m_subject;
+    NotificationManager *mgr;
+    MCompositorNotificationSink *compositorSink;
 
 signals:
     void notifierSinkActive(bool);
@@ -54,6 +58,8 @@ private slots:
     void testSetActive();
     // Tests notification status indicator when status indicator menu visibility changes
     void testMenuVisibilityChange();
+    // Test that notification manager is connected to notifier sink
+    void testConnections();
 };
 
 #endif //_UT_NOTIFICATIONSTATUSINDICATOR_

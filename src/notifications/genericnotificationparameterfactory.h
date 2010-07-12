@@ -57,6 +57,10 @@ public:
         return QString("class");
     }
 
+    static QString unseenKey() {
+        return QString("unseen");
+    }
+
     /*!
      * Creates a NotificationParameter with the given event type.
      *
