@@ -24,6 +24,10 @@
 
 #include <QTime>
 #include <QDebug>
+#include <MFeedback>
+
+#define DEBUG
+#include "../../src/debug.h"
 
 namespace
 {
@@ -34,6 +38,19 @@ namespace
     // milliseconds tolerance here.
     const int aDelay = 1000;
 }
+
+/******************************************************************************
+ * The stub for MFeedback class.
+ */
+static QString nameOfLastFeedback;
+
+void
+MFeedback::play () const 
+{
+    SYS_DEBUG ("*** name = %s", SYS_STR(name()));
+    nameOfLastFeedback = name();
+}
+
 
 void
 LowBatteryHelper::start ()

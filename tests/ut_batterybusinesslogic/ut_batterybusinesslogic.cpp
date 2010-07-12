@@ -25,9 +25,30 @@
 #endif
 
 #include <MNotification>
+#include <MFeedback>
 
 #define DEBUG
 #include "debug.h"
+
+/******************************************************************************
+ * The stub for MFeedback class.
+ */
+static QString nameOfLastFeedback;
+
+MFeedback::MFeedback (
+		const QString &name, 
+		QObject *parent) :
+	d_ptr (0)
+{
+    SYS_DEBUG ("*** name = %s", SYS_STR(name));
+    nameOfLastFeedback = name;
+}
+
+void
+MFeedback::play () const 
+{
+    SYS_DEBUG ("Playing...");
+}
 
 /*
  * TODO:

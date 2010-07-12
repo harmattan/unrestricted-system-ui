@@ -95,7 +95,6 @@ public:
     } NotificationID;
 
 signals:
-#ifdef UNIT_TEST
     /*
      * To simplify the test case we use this signal that we can catch. See 
      * NB#171466 for further details.
@@ -103,7 +102,6 @@ signals:
     void notificationSent (
             QString      text,
             QString      icon);
-#endif
 
 public slots:
     void initBattery ();

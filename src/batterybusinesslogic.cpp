@@ -456,13 +456,12 @@ BatteryBusinessLogic::sendNotification (
     }
 
    SYS_DEBUG ("+++ Sending MNotification");
-#ifdef UNIT_TEST
    /*
     * We send this signal before the actual notification so it will arrive as
     * soon as possible.
     */
    emit notificationSent (text, icon);
-#endif   
+
    m_notification = new MNotification ("x-nokia.battery", text); 
    m_notification->setImage (icon);
    m_notification->publish ();
@@ -472,10 +471,8 @@ BatteryBusinessLogic::sendNotification (
 /* FIXME: MComponentData::feedbackPlayer() - 
  *        MComponentData instance not yet created.
  */
-#ifndef UNIT_TEST
        MFeedback player (feedback);
        player.play();
-#endif
    }
 }
 
