@@ -33,6 +33,8 @@
 #include <MLabel>
 #include <MImageWidget>
 
+MApplication *exitPtr;
+
 #define DEBUG
 #include "../../src/debug.h"
 
