@@ -28,6 +28,7 @@
 #include <MNotification>
 #include <MFeedback>
 
+MApplication *exitPtr;
 
 #define DEBUG
 #include "../../src/debug.h"

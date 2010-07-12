@@ -39,6 +39,9 @@
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
 
+MApplication *exitPtr;
+
+
 Notification::~Notification()
 {
 }

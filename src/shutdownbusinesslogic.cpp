@@ -29,11 +29,7 @@
 #define DEBUG
 #include "debug.h"
 
-#ifndef UNIT_TEST
 extern MApplication *exitPtr;
-#else
-MApplication *exitPtr;
-#endif
 
 ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     QObject (parent),
