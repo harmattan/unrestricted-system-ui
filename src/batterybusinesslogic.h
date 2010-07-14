@@ -122,8 +122,8 @@ private slots:
 private:
     void sendNotification (BatteryBusinessLogic::NotificationID id); 
     void sendNotification (
-	            const QString &eventType,
-		    const QString &text,
+            const QString &eventType, 
+            const QString &text,
 		    const QString &icon = QString(""));
     QString chargingImageId ();
 

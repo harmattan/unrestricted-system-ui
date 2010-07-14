@@ -440,8 +440,8 @@ BatteryBusinessLogic::sendNotification (
 
 void 
 BatteryBusinessLogic::sendNotification (
-        const QString &text,
         const QString &eventType,
+        const QString &text,
         const QString &icon)
 {
     SYS_DEBUG ("*** text      = %s", SYS_STR(text));

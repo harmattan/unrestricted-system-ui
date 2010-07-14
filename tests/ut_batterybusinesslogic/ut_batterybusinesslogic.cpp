@@ -105,7 +105,7 @@ void
 Ut_BatteryBusinessLogic::testInitBattery ()
 {
 #ifdef HAVE_QMSYSTEM
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     /* Set some ret. values for stubs */
     gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
@@ -130,7 +130,7 @@ void
 Ut_BatteryBusinessLogic::testLowBatteryAlert ()
 {
 #ifdef HAVE_QMSYSTEM
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     m_logic->lowBatteryAlert ();
 
@@ -140,8 +140,9 @@ Ut_BatteryBusinessLogic::testLowBatteryAlert ()
 
     QList<QVariant> arguments = spy.takeFirst ();
 
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (2).toString () == "");
 #endif
 }
 
@@ -150,7 +151,7 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     gQmBatteryStub->stubReset ();
     gQmLEDStub->stubReset ();
@@ -163,8 +164,9 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
 
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charcomp"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-remove-charger");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.chargingcomplete");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_charcomp"));
+    QVERIFY (arguments.at (2).toString () == "");
     QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
              == QString ("PatternBatteryFull"));
 
@@ -183,8 +185,9 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
     QTest::qWait (10);
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_rebatt"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-recharge");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.recharge");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_rebatt"));
+    QVERIFY (arguments.at (2).toString () == "");
 
     /* StateError */
     spy.clear ();
@@ -214,8 +217,9 @@ Ut_BatteryBusinessLogic::testBatteryStateChanged ()
 
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (2).toString () == "");
 #endif
 }
 
@@ -224,7 +228,7 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     gQmBatteryStub->stubReset ();
     gQmLEDStub->stubReset ();
@@ -238,8 +242,9 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
       QTest::qWait (1);
       QCOMPARE (spy.count (), 1);
       arguments = spy.takeFirst ();
-      QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_charging"));
-      QVERIFY (arguments.at (1).toString () == m_logic->chargingImageId ());
+      QVERIFY (arguments.at (0).toString () == "x-nokia.battery");
+      QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_charging"));
+      QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId ());
       QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
                == QString ("PatternBatteryCharging"));
       spy.clear ();
@@ -260,8 +265,9 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     QTest::qWait (10);
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_repcharger"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-replace-charger");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.chargingnotstarted");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_repcharger"));
+    QVERIFY (arguments.at (2).toString () == "");
 #endif
 }
 
@@ -270,7 +276,7 @@ Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     /* Wall charger */
     m_logic->batteryChargerEvent (Maemo::QmBattery::Wall);
@@ -284,7 +290,9 @@ Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
     /* Look for the notification: "Disconnect the charger from..." */
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_remcha"));
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_remcha"));
+    QVERIFY (arguments.at (2).toString () == "");
     spy.clear ();
 
     /* USB 500mA */
@@ -306,7 +314,7 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     /* Entering to power-save mode */
     m_logic->devicePSMStateChanged (Maemo::QmDeviceMode::PSMStateOn);
@@ -314,7 +322,9 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
     QTest::qWait (10);
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_ent_psnote"));
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.enterpsm");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_ent_psnote"));
+    QVERIFY (arguments.at (2).toString () == "");
 
     spy.clear ();
 
@@ -324,7 +334,9 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
     QTest::qWait (10);
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_exit_psnote"));
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.exitpsm");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_exit_psnote"));
+    QVERIFY (arguments.at (2).toString () == "");
 #endif
 }
 
@@ -333,7 +345,7 @@ Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString)));
+    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
 
     /* LowBatteryNotifier shouldn't be instantiated at first */
     QVERIFY (m_logic->m_LowBatteryNotifier == 0);
@@ -350,8 +362,9 @@ Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
     /* And should send a low-battery notification */
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (1).toString () == "icon-m-energy-management-low-battery");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
+    QVERIFY (arguments.at (2).toString () == "");
 
     /* Simulate now a charging event */
     m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
