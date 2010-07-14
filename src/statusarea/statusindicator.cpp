@@ -230,7 +230,7 @@ AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget 
 {
     setObjectName(metaObject()->className());
 
-    alarm = createContextItem(context, "UserAlarm.Present");
+    alarm = createContextItem(context, "Alarm.Present");
     connect(alarm, SIGNAL(contentsChanged()), this, SLOT(alarmChanged()));
     alarmChanged();
 }

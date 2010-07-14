@@ -16,6 +16,9 @@ system-ui (0.16.8~1) harmattan; urgency=low
   * Fixes: NB#176978 - No USB selection dialog when PC resumes from S4
     hibernate
 
+  [ Vesa Halttunen ]
+  * Fixes: NB#178888 - Status indicator for set alarm clock is missing from status bar
+
  -- David Kedves <dkedves@blumsoft.eu>  Mon, 12 Jul 2010 15:37:58 +0200
 
 system-ui (0.16.6-1) harmattan; urgency=low
