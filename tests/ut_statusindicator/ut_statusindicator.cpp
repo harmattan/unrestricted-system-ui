@@ -213,10 +213,10 @@ void Ut_StatusIndicator::testAlarm()
 {
     m_subject = new AlarmStatusIndicator(*testContext);
 
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(false));
+    testContextItems["Alarm.Present"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Set") < 0);
 
-    testContextItems["UserAlarm.Present"]->setValue(QVariant(true));
+    testContextItems["Alarm.Present"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("Set") >= 0);
 }
 
