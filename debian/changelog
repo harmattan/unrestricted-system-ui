@@ -15,6 +15,7 @@ system-ui (0.16.8~1) harmattan; urgency=low
   * Fixes: NB#176315 - Screen doesn't unlock on connecting usb cable.
   * Fixes: NB#176978 - No USB selection dialog when PC resumes from S4
     hibernate
+  * Fixes: NB#172851 - No warning tone can be heard when battery is low.
 
   [ Vesa Halttunen ]
   * Fixes: NB#178888 - Status indicator for set alarm clock is missing from status bar
