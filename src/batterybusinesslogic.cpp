@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -375,9 +377,9 @@ BatteryBusinessLogic::sendNotification (
             SYS_DEBUG ("Notifying NotificationCharging");
             utiliseLED (true, QString ("PatternBatteryCharging"));
             sendNotification (
+                    "x-nokia.battery",
                     //% "Charging"
                     qtTrId ("qtn_ener_charging"),
-                    "",
                     chargingImageId ());
             break;
 
@@ -385,15 +387,15 @@ BatteryBusinessLogic::sendNotification (
             SYS_DEBUG ("Notifying NotificationChargingComplete");
             utiliseLED (true, QString ("PatternBatteryFull"));
             sendNotification (
+                    "x-nokia.battery.chargingcomplete",
                     //% "Charging complete"
-                    qtTrId ("qtn_ener_charcomp"),
-                    "",
-                    "icon-m-energy-management-remove-charger");
+                    qtTrId ("qtn_ener_charcomp"));
             break;
 
         case NotificationRemoveCharger:
             SYS_DEBUG ("Notifying NotificationRemoveCharger");
             sendNotification (
+                    "x-nokia.battery",
                     //% "Disconnect charger from power supply to save energy"
                     qtTrId ("qtn_ener_remcha"));
             break;
@@ -401,40 +403,37 @@ BatteryBusinessLogic::sendNotification (
         case NotificationChargingNotStarted:
             utiliseLED (false, QString ("PatternBatteryCharging"));
             sendNotification (
+                    "x-nokia.battery.chargingnotstarted",
                     //% "Charging not started. Replace charger."
-                    qtTrId ("qtn_ener_repcharger"),
-                    "IDF_WRONG_CHARGER",
-                    "icon-m-energy-management-replace-charger");
+                    qtTrId ("qtn_ener_repcharger"));
             break;
 
         case NotificationRechargeBattery:
             sendNotification (
+                    "x-nokia.battery.recharge",
                     //% "Recharge battery"
-                    qtTrId ("qtn_ener_rebatt"),
-                    "IDF_RECHARGE_BATTERY",
-                    "icon-m-energy-management-recharge");
+                    qtTrId ("qtn_ener_rebatt"));
             break;
         
         case NotificationEnteringPSM:
             sendNotification (
+                    "x-nokia.battery.enterpsm",
                     //% "Entering power save mode"
-                    qtTrId ("qtn_ener_ent_psnote"),
-                    "IDF_INFORMATION_STRONG");
+                    qtTrId ("qtn_ener_ent_psnote"));
             break;
         
         case NotificationExitingPSM:
             sendNotification (
+                    "x-nokia.battery.exitpsm",
                     //% "Exiting power save mode"
-                    qtTrId ("qtn_ener_exit_psnote"),
-                    "IDF_INFORMATION_SOUND");
+                    qtTrId ("qtn_ener_exit_psnote"));
             break;
         
         case NotificationLowBattery:
             sendNotification (
+                    "x-nokia.battery.lowbattery",
                     //% "Low battery"
-                    qtTrId ("qtn_ener_lowbatt"),
-                    "IDF_BATTERY_LOW",
-                    "icon-m-energy-management-low-battery");
+                    qtTrId ("qtn_ener_lowbatt"));
             break;
     }
 }
@@ -442,12 +441,12 @@ BatteryBusinessLogic::sendNotification (
 void 
 BatteryBusinessLogic::sendNotification (
         const QString &text,
-        const QString &feedback,
+        const QString &eventType,
         const QString &icon)
 {
-    SYS_DEBUG ("*** text     = %s", SYS_STR(text));
-    SYS_DEBUG ("*** feedback = %s", SYS_STR(feedback));
-    SYS_DEBUG ("*** icon     = %s", SYS_STR(icon));
+    SYS_DEBUG ("*** text      = %s", SYS_STR(text));
+    SYS_DEBUG ("*** eventType = %s", SYS_STR(eventType));
+    SYS_DEBUG ("*** icon      = %s", SYS_STR(icon));
 
     if (m_notification != 0) { 
         m_notification->remove (); 
@@ -455,25 +454,18 @@ BatteryBusinessLogic::sendNotification (
         m_notification = 0; 
     }
 
-   SYS_DEBUG ("+++ Sending MNotification");
-   /*
-    * We send this signal before the actual notification so it will arrive as
-    * soon as possible.
-    */
-   emit notificationSent (text, icon);
+    /*
+     * We send this signal before the actual notification so it will arrive as
+     * soon as possible.
+     */
+    SYS_DEBUG ("Emitting notificationSent (%s, %s, %s)",
+            SYS_STR(eventType), SYS_STR(text), SYS_STR(icon));
+    emit notificationSent (eventType, text, icon);
 
-   m_notification = new MNotification ("x-nokia.battery", text); 
-   m_notification->setImage (icon);
-   m_notification->publish ();
-
-   if (!feedback.isEmpty())
-   {
-/* FIXME: MComponentData::feedbackPlayer() - 
- *        MComponentData instance not yet created.
- */
-       MFeedback player (feedback);
-       player.play();
-   }
+    m_notification = new MNotification (eventType, text);
+    if (!icon.isEmpty())
+        m_notification->setImage (icon);
+    m_notification->publish ();
 }
 
 QString
