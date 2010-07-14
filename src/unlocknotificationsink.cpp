@@ -92,7 +92,7 @@ UnlockNotificationSink::canAddNotification (
         notification.parameters ().value (
             GenericNotificationParameterFactory::eventTypeKey ()).toString ();
 
-    if (event_type == EVENT_BATTERY)
+    if (event_type.startsWith (EVENT_BATTERY))
         retval = false;
 
     return retval;
