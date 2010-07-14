@@ -20,6 +20,9 @@ system-ui (0.16.8~1) harmattan; urgency=low
   [ Vesa Halttunen ]
   * Fixes: NB#178888 - Status indicator for set alarm clock is missing from status bar
 
+  [ Pankaj Saharan ]
+  * Fixes: NB#177849 - Status menu panning problem
+
  -- David Kedves <dkedves@blumsoft.eu>  Mon, 12 Jul 2010 15:37:58 +0200
 
 system-ui (0.16.6-1) harmattan; urgency=low

@@ -295,7 +295,7 @@ void StatusIndicatorMenuWindow::setPannabilityAndLayout()
     qreal widgetOriginalYPos = pannableWidget->mapToItem(sceneWindow, QPointF()).y();
     qreal viewPortYPos = pannableViewport->mapToItem(sceneWindow, QPointF()).y();
 
-    if (widgetCurrentYPos > widgetOriginalYPos) {
+    if (widgetCurrentYPos >= widgetOriginalYPos) {
         // Force the size of the background window
         backgroundWidget->setMinimumHeight(sceneManager()->visibleSceneSize().height() - viewPortYPos);
         backgroundWidget->setMaximumHeight(sceneManager()->visibleSceneSize().height() - viewPortYPos);

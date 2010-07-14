@@ -223,16 +223,22 @@ void Ut_StatusIndicatorMenuWindow::testWindowType()
 
 void Ut_StatusIndicatorMenuWindow::testPannableAreaBackgroundWidget()
 {
-    // When the pannable viewport has not been panned the background height should be 0
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
+    // When the pannable viewport has been panned above extension area, the background height should be 0
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, -10);
     emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), qreal(0));
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), qreal(0));
 
-    // When the pannable viewport has been panned the background height should reach the bottom of the screen
-    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 10);
+    // When the pannable viewport has not been panned the background widget is created and the background height should reach the bottom of the screen
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 0);
     emit positionOrSizeChanged();
     qreal expectedHeight = statusIndicatorMenuWindow->sceneManager()->visibleSceneSize().height() - statusIndicatorMenuWindow->pannableViewport->mapToItem(statusIndicatorMenuWindow->sceneWindow, QPointF()).y();
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), expectedHeight);
+    QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), expectedHeight);
+
+    // When the pannable viewport has been panned below the extension area the background widget should also be there
+    statusIndicatorMenuWindow->pannableViewport->widget()->setPos(0, 10);
+    emit positionOrSizeChanged();
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->minimumHeight(), expectedHeight);
     QCOMPARE(statusIndicatorMenuWindow->backgroundWidget->maximumHeight(), expectedHeight);
 }
