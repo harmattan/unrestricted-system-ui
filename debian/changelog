@@ -23,6 +23,9 @@ system-ui (0.16.8~1) harmattan; urgency=low
   [ Pankaj Saharan ]
   * Fixes: NB#177849 - Status menu panning problem
 
+  [ Sachin Kundu ]
+  * Fixes: NB#173761 - Indication of SMS notification is missing in 'Status area'
+
  -- David Kedves <dkedves@blumsoft.eu>  Mon, 12 Jul 2010 15:37:58 +0200
 
 system-ui (0.16.6-1) harmattan; urgency=low
