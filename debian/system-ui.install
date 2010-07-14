@@ -1,6 +1,5 @@
 usr/bin/sysuid
 usr/share/themes/base/meegotouch/sysuid/*.conf
 usr/share/themes/base/meegotouch/sysuid/style/*.css
-usr/share/themes/base/meegotouch/sysuid/svg/*.svg
 usr/share/meegotouch/notifications/eventtypes/*.conf
 etc/dbus-1/system.d/systemui.conf
