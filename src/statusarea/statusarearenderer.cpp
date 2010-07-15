@@ -75,11 +75,16 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
     statusAreaPixmap = new QPixmap(statusAreaWidth, 2*statusAreaHeight);
     QApplication::syncX();
 
-    if (!statusAreaPixmap->isNull()) {
-        return true;
-    } else {
+    /*!
+     * \deprecated Sharing the pixmap handle using temp file is deprecated. Use dbus interface com.meego.core.MStatusBar for getting the handle.
+     */
+    QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
+    if (!handleTempFile.open(QIODevice::WriteOnly)) {
         return false;
     }
+    QDataStream dataStream(&handleTempFile);
+    dataStream << static_cast<quint32> (statusAreaPixmap->handle());
+    return true;
 }
 
 uint StatusAreaRenderer::sharedPixmapHandle()
