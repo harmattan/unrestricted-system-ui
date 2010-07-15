@@ -13,8 +13,6 @@ system-ui (0.16.8~1) harmattan; urgency=low
   * Fixes: NB#176316 - Screen got unlocked, but after a sec again Lock UI
     appeared on connecting USB.
   * Fixes: NB#176315 - Screen doesn't unlock on connecting usb cable.
-  * Fixes: NB#176978 - No USB selection dialog when PC resumes from S4
-    hibernate
   * Fixes: NB#172851 - No warning tone can be heard when battery is low.
 
   [ Vesa Halttunen ]
@@ -26,7 +24,7 @@ system-ui (0.16.8~1) harmattan; urgency=low
   [ Sachin Kundu ]
   * Fixes: NB#173761 - Indication of SMS notification is missing in 'Status area'
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 12 Jul 2010 15:37:58 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 15 Jul 2010 14:42:51 +0300
 
 system-ui (0.16.6-1) harmattan; urgency=low
 

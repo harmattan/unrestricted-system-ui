@@ -618,3 +618,4 @@ EventEaterUI::showEvent (
                 8, PropModeReplace, 
                 (unsigned char *) windowName, strlen(windowName));
 }
+
