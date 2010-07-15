@@ -193,6 +193,7 @@ void Sysuid::retranslate ()
     locale.installTrCatalog ("shutdown");
     locale.installTrCatalog ("profiles");
     locale.installTrCatalog ("screenlock");
+    locale.installTrCatalog ("status");
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     MLocale::setDefault (locale);
