@@ -33,8 +33,7 @@ HEADERS += statusarea/statusarea.h \
     statusarea/statusindicatoriconstyle.h \
     statusarea/statusindicator.h \
     statusarea/inputmethodstatusindicatoradaptor.h \
-    statusarea/statusarearendereradaptor.h \
-    statusarea/inputmethodstatusindicatoradaptor.h \
+    statusarea/statusarearendereradaptor.h
 
 MODEL_HEADERS +=     statusarea/statusareamodel.h \
     statusarea/clockmodel.h \
