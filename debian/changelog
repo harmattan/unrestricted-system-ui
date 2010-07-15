@@ -17,6 +17,7 @@ system-ui (0.16.8~1) harmattan; urgency=low
 
   [ Vesa Halttunen ]
   * Fixes: NB#178888 - Status indicator for set alarm clock is missing from status bar
+  * Fixes: NB#177849 - Status menu panning problem
 
   [ Sachin Kundu ]
   * Fixes: NB#173761 - Indication of SMS notification is missing in 'Status area'

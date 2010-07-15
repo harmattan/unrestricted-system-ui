@@ -273,36 +273,28 @@ void StatusIndicatorMenuWindow::setPannabilityAndLayout()
     QGraphicsWidget *pannableWidget = pannableViewport->widget();
 
     // Enable pannability if there is too much content to fit on the screen
-    if (pannableViewport->geometry().height() > pannableWidget->effectiveSizeHint(Qt::PreferredSize).height()) {
-        pannableViewport->setEnabled(false);
-    } else {
-        pannableViewport->setEnabled(true);
-    }
+    bool viewportShouldBePannable = pannableWidget->effectiveSizeHint(Qt::PreferredSize).height() > pannableViewport->geometry().height();
+    pannableViewport->setEnabled(viewportShouldBePannable);
 
     // Appear or disappear the close button overlay based on close area position
     const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(pannableViewport->widget())->bottommostWidget();
     qreal screenHeight = sceneManager()->visibleSceneSize().height();
-    qreal yPos = closeButtonRow->mapToItem(sceneWindow, QPointF(0, closeButtonRow->geometry().height())).y();
+    qreal closeButtonRowBottomYPos = closeButtonRow->mapToItem(sceneWindow, QPointF(0, closeButtonRow->geometry().height())).y();
 
-    if (yPos <= screenHeight) {
+    if (closeButtonRowBottomYPos <= screenHeight) {
         sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
     } else {
         sceneManager()->appearSceneWindowNow(closeButtonOverlay);
     }
 
-    // Make pannable area background window to appear when pannable widget is panned
-    qreal widgetCurrentYPos = pannableWidget->mapToItem(sceneWindow, pannableWidget->geometry().topLeft()).y();
-    qreal widgetOriginalYPos = pannableWidget->mapToItem(sceneWindow, QPointF()).y();
+    // Make the pannable area background window extend from the top of the pannable viewport halfway to the bottom of the close button row
     qreal viewPortYPos = pannableViewport->mapToItem(sceneWindow, QPointF()).y();
-
-    if (widgetCurrentYPos > widgetOriginalYPos) {
-        // Force the size of the background window
-        backgroundWidget->setMinimumHeight(sceneManager()->visibleSceneSize().height() - viewPortYPos);
-        backgroundWidget->setMaximumHeight(sceneManager()->visibleSceneSize().height() - viewPortYPos);
-    } else {
-        backgroundWidget->setMinimumHeight(0);
-        backgroundWidget->setMaximumHeight(0);
+    qreal backgroundHeight = (closeButtonRowBottomYPos - viewPortYPos) / 2;
+    if (backgroundHeight < 0) {
+        backgroundHeight = 0;
     }
+    backgroundWidget->setMinimumHeight(backgroundHeight);
+    backgroundWidget->setMaximumHeight(backgroundHeight);
 }
 
 void StatusIndicatorMenuWindow::displayActive()
