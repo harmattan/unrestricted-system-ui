@@ -437,16 +437,16 @@ StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
 
 StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
     image-list: "icon-s-status-notifier";
-    preferred-size: 4mm 0.8mm;
-    minimum-size: 4mm 0.8mm;
-    maximum-size: 4mm 0.8mm;
+    preferred-size: 4.8mm 1.8mm;
+    minimum-size: 4.8mm 1.8mm;
+    maximum-size: 4.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#NotificationStatusIndicator {
     image-list: "";
-    preferred-size: 4mm 0.8mm;
-    minimum-size: 4mm 0.8mm;
-    maximum-size: 4mm 0.8mm;
+    preferred-size: 0mm 1.8mm;
+    minimum-size: 0mm 1.8mm;
+    maximum-size: 0mm 1.8mm;
 }
 
 MButtonStyle#StatusIndicatorMenuCloseButton {
