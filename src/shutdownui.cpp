@@ -83,11 +83,6 @@ ShutdownUI::realize ()
     if (m_Realized)
         return;
 
-    // FIXME: We need logo for both orientations...
-    // FIXME: It seems that this is not working.
-    setLandscapeOrientation ();
-    lockOrientation ();
-
     // Initilaize non-graphical feedback
     m_Feedback = new MFeedback (this);
 #ifdef FEEDBACK_SUPPLIED
@@ -193,6 +188,13 @@ ShutdownUI::showWindow (
      * It is as simple as this when we use MWindow.
      */
     show ();
+
+    /*
+     * Force the landscape mode
+     * FIXME: because we don't have portrait image...
+     */
+    lockOrientation ();
+    sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
 
 #ifdef HAVE_QMSYSTEM
     // Turn on the touchscreen
