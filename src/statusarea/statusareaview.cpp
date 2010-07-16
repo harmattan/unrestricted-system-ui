@@ -97,8 +97,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
 
 void StatusAreaView::setupTestabilityObjectNames()
 {
-    landscapeNotificationIndicator->setObjectName("landscapenotifier");
-    portraitNotificationIndicator->setObjectName("portraitnotifier");
     landscapeClock->setObjectName("landscapeclock");
     portraitClock->setObjectName("portraitclock");
 }
