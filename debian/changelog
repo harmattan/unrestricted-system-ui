@@ -1,3 +1,9 @@
+system-ui (0.16.9~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 16 Jul 2010 15:33:18 +0300
+
 system-ui (0.16.8-1) harmattan; urgency=low
 
   [ Laszlo Pere ]
