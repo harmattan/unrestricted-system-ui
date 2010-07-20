@@ -97,7 +97,10 @@ LockScreenWindowStub* gLockScreenWindowStub = &gDefaultLockScreenWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreenWindow::LockScreenWindow(MWindow *window, MWidget *locklift, MWidget *lockland) {
+LockScreenWindow::LockScreenWindow(MWindow *window, MWidget *locklift, MWidget *lockland) :
+    m_confBgLandscape (0), m_confBgPortrait (0), m_Window (window),
+    m_DnDicon (0), m_DnDstate (0), m_LockLiftArea (0), m_LockLandArea (0)
+{
   gLockScreenWindowStub->LockScreenWindowConstructor(window, locklift, lockland);
 }
 

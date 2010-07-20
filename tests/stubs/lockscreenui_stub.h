@@ -82,7 +82,11 @@ LockScreenUIStub* gLockScreenUIStub = &gDefaultLockScreenUIStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreenUI::LockScreenUI() {
+LockScreenUI::LockScreenUI() :
+    m_Realized (false), m_policy (0), m_SceneWindow (0),
+    m_notificationArea (0), m_LockLiftArea (0),
+    m_LockLandArea (0)
+{
   gLockScreenUIStub->LockScreenUIConstructor();
 }
 

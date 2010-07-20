@@ -80,6 +80,7 @@ QmLED::QmLED (QObject *parent)
     /*
      * Do nothing, we don't want to instantiate a real QmLED...
      */
+    priv_ptr = 0;
 }
 
 QmLED::~QmLED ()

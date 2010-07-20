@@ -90,6 +90,9 @@ UnlockMissedEvents UnlockMissedEvents::m_instance;
 UnlockMissedEvents::UnlockMissedEvents() {
   lastType = NotifyLast; 
   gUnlockMissedEventsStub->UnlockMissedEventsConstructor();
+
+  for (int i = 0; i < NotifyLast; i++)
+    notificationCounts[i] = 0;
 }
 
 UnlockMissedEvents::~UnlockMissedEvents() {

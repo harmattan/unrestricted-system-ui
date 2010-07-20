@@ -27,6 +27,8 @@ namespace Maemo
         QmUSBMode (QObject *parent = 0)
         {
             Q_UNUSED (parent);
+            testMode = Undefined;
+            testDefaultMode = Undefined;
         }
         ~QmUSBMode ()
         {

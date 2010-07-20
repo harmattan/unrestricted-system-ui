@@ -40,6 +40,8 @@ MFeedback::MFeedback (
 		QObject *parent) :
 	d_ptr (0)
 {
+    Q_UNUSED (parent);
+
     SYS_DEBUG ("*** name = %s", SYS_STR(name));
     nameOfLastFeedback = name;
 }

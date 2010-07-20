@@ -114,6 +114,7 @@ QmBattery::QmBattery (QObject *parent)
     /*
      * Do nothing, we don't want to instantiate a real QmBattery...
      */
+    priv = 0;
 }
 
 QmBattery::~QmBattery ()

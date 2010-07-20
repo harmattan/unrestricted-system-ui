@@ -90,7 +90,7 @@ QmDeviceMode::QmDeviceMode (QObject *parent)
 
 QmDeviceMode::~QmDeviceMode ()
 {
-
+    priv_ptr = 0;
 }
 
 QmDeviceMode::PSMState
