@@ -372,7 +372,8 @@ LockScreenUI::realize ()
     m_notificationArea->setVisible (false);
 
     connect (m_notificationArea, SIGNAL (needToShow (bool)),
-             this, SLOT (showHideNotifications (bool)));
+             this, SLOT (showHideNotifications (bool)),
+             Qt::DirectConnection);
 
     /*
      * The upper part of the lock-screen ui, this shows the

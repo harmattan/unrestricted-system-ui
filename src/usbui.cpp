@@ -61,6 +61,8 @@ UsbUi::initialize ()
 void
 UsbUi::setDisabled (bool disable)
 {
+    SYS_DEBUG ("disable = %s", SYS_BOOL (disable));
+
     if (disable == true)
     {
         // Disconnect from logic

@@ -38,6 +38,7 @@ MApplication *exitPtr;
  */
 ShutdownUI::ShutdownUI ()
 {
+    m_Delay = 0;
 }
 
 bool 

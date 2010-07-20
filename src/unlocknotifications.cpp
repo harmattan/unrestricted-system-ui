@@ -22,7 +22,6 @@
 #include "unlockmissedevents.h"
 
 #include <QGraphicsLinearLayout>
-#include <MTheme>
 #include <MLabel>
 #include <QPixmap>
 #include <MImageWidget>
@@ -37,18 +36,6 @@
 UnlockNotifications::UnlockNotifications () :
     m_vbox (0)
 {
-#if 0
-    // XXX: Not working:
-    QString customCSS;
-    customCSS = QString (
-        "%1/%2/meegotouch/libmeegotouchviews/style/unlockscreen.css"
-                        ).arg (THEMEDIR).arg (MTheme::currentTheme ());
-
-    SYS_DEBUG ("Loading custom-css: %s", SYS_STR (customCSS));
-
-    MTheme::loadCSS (customCSS);
-#endif
-
     m_icon_ids[UnlockMissedEvents::NotifyEmail] =
         QString ("icon-m-content-email");
     m_icon_ids[UnlockMissedEvents::NotifySms] =
@@ -237,6 +224,20 @@ UnlockNotifications::updateContents ()
     }
     else
     {
+        /* 
+         * If notification area is invisible, we should emit
+         * needToShow
+         */
+        if (isVisible () == false)
+        {
+            emit needToShow (true);
+            /*
+             * It seems that we don't get the signal, forcing it manually to detect
+             * the orientation.
+             */
+            appear ();
+        }
+
         /*
          * Check the actually shown most-recent notification
          * type... (yeah it is hacky a bit...)
@@ -321,6 +322,7 @@ UnlockNotifications::updateContents ()
          * Most recent area only visible when orientation is portrait
          */
         int newIndex = (m_mostrecent_area->isVisible () == false) ? 2 : 0;
+        SYS_DEBUG ("newIndex = %d", newIndex);
 
         /*
          * Put the new icons to the proper place...
@@ -329,11 +331,6 @@ UnlockNotifications::updateContents ()
         m_icon_layout->setAlignment (m_labels[mostRecent], Qt::AlignLeft);
         m_icon_layout->insertItem (newIndex, m_icons[mostRecent]);
         m_icon_layout->setAlignment (m_icons[mostRecent], Qt::AlignLeft);
-
-        emit needToShow (true);
-        // It seems that we don't get the signal, forcing it manually to detect
-        // the orientation.
-        appear ();
     }
 }
 

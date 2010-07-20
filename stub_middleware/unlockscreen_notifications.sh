@@ -20,7 +20,12 @@
 #***************************************************************************/
 
 source /tmp/session_bus_address.user
-sysuid -software &
+
+if pgrep sysuid > /dev/null; then
+	echo "sysuid running... already..."
+else
+	sysuid -software &
+fi
 
 SLEEPTIME=6
 
