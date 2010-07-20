@@ -34,6 +34,7 @@ class MCompositorNotificationSink;
 class NGFNotificationSink;
 class UnlockNotificationSink;
 class SysUidRequest;
+class VolumeControlUI;
 
 class Sysuid : public QObject
 {
@@ -105,6 +106,9 @@ private:
 
     //! The system-bus adaptor class for unlock-screen interface
     SysUidRequest           *m_sysuidRequest;
+
+    //! The volume-control ui
+    VolumeControlUI         *m_volumeBar;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

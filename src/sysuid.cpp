@@ -144,13 +144,14 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
     /*
      * Instantiate the volume-control UI
      */
-    new VolumeControlUI (this);
+    m_volumeBar = new VolumeControlUI;
 }
 
 Sysuid::~Sysuid ()
 {
-    m_Sysuid = NULL;
+    m_Sysuid = 0;
     delete m_sysuidRequest;
+    delete m_volumeBar;
 }
 
 Sysuid* Sysuid::sysuid ()
