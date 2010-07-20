@@ -192,6 +192,8 @@ UnlockNotifications::orientationChanged (
 void 
 UnlockNotifications::appear ()
 {
+    MSceneWindow::appear ();
+
     if (sceneManager())
         orientationChanged (sceneManager()->orientation());
 }
@@ -224,19 +226,12 @@ UnlockNotifications::updateContents ()
     }
     else
     {
-        /* 
-         * If notification area is invisible, we should emit
-         * needToShow
+        emit needToShow (true);
+        /*
+         * It seems that we don't get the signal, forcing it manually to detect
+         * the orientation.
          */
-        if (isVisible () == false)
-        {
-            emit needToShow (true);
-            /*
-             * It seems that we don't get the signal, forcing it manually to detect
-             * the orientation.
-             */
-            appear ();
-        }
+        appear ();
 
         /*
          * Check the actually shown most-recent notification

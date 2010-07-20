@@ -54,6 +54,7 @@ public:
         if (!param) {
             QString msg = QString("MethodCall::") + __func__ + ": failed dynamic_cast, check that parameter type matches parameter number";
             qFatal(qPrintable(msg));
+            return 0;
         }
         return param->data;
     }

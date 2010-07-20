@@ -88,7 +88,13 @@ SysuidStub* gSysuidStub = &gDefaultSysuidStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-Sysuid::Sysuid(QObject* parent) {
+Sysuid::Sysuid(QObject* parent) :
+    m_BatteryLogic (0), m_ShutdownLogic (0),
+    m_UsbUi (0), m_statusArea (0), m_notificationManager (0),
+    m_compositorNotificationSink (0), m_ngfNotificationSink (0),
+    m_unlockNotificationSink (0), m_sysuidRequest (0),
+    m_volumeBar (0)
+{
   gSysuidStub->SysuidConstructor(parent);
 }
 

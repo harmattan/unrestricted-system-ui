@@ -5,7 +5,7 @@
 
 UnlockNotificationSink::UnlockNotificationSink ()
 {
-
+    m_enabled = true;
 }
 
 void
