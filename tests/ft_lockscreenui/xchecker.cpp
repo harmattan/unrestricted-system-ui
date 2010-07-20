@@ -335,9 +335,16 @@ XChecker::check_window_rec (
          * First we check if this window has the wmname in question and it is
          * trully visible.
          */
-        if (WMName == wmname && attrs.map_state == IsViewable) {
+        if (WMName == wmname && attrs.map_state == IsViewable)
+        {
+            if (wmname != 0)
+                delete[] wmname;
+
             return true;
         }
+
+        if (wmname != 0)
+            delete[] wmname;
 
         /*
          * If not we check all the child windows...
@@ -357,7 +364,15 @@ XChecker::check_window_rec (
          * First the current window.
          */
         if (WMName == wmname && attrs.map_state == IsViewable)
+        {
+            if (wmname != 0)
+                delete[] wmname;
+
             return false;
+        }
+
+        if (wmname != 0)
+            delete[] wmname;
 
         /*
          * Then all the child windows.
@@ -375,6 +390,9 @@ XChecker::check_window_rec (
     } else {
         SYS_WARNING ("opCode %d not supported.", opCode);
     }
+
+    if (wmname != 0)
+        delete[] wmname;
 
     return false;
 }
