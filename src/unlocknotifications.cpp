@@ -317,6 +317,9 @@ UnlockNotifications::updateContents ()
          * Most recent area only visible when orientation is portrait
          */
         int newIndex = (m_mostrecent_area->isVisible () == false) ? 2 : 0;
+        /* Somehow isVisible sometimes lying at first call :-S */
+        if (m_icon_layout->count () == 0)
+            newIndex = 0;
         SYS_DEBUG ("newIndex = %d", newIndex);
 
         /*
