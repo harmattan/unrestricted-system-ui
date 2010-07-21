@@ -1,8 +1,11 @@
 system-ui (0.16.9~1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
+  * Fixes: NB#181248 - 2x OVI Suite usb notifications appear when screen is
+    unlocked
+  * Fixes: NB#181173 - "connected to ovi suite mode" -popup keeps on showing
+    repeatedly even when not appropriate
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 16 Jul 2010 15:33:18 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 21 Jul 2010 15:45:59 +0200
 
 system-ui (0.16.8-1) harmattan; urgency=low
 

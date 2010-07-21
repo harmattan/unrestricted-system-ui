@@ -60,6 +60,8 @@ private:
 #endif
     MNotification       *m_notification;
     QPointer<MDialog>    m_dialog;
+    bool                 m_disabled;
+    bool                 m_showdialog;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

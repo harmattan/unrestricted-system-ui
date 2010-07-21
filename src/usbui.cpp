@@ -34,7 +34,9 @@
 
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_notification (0),
-    m_dialog (0)
+    m_dialog (0),
+    m_disabled (false),
+    m_showdialog (false)
 {
 #ifdef HAVE_QMSYSTEM
     m_logic = new Maemo::QmUSBMode (this);
@@ -63,30 +65,30 @@ UsbUi::setDisabled (bool disable)
 {
     SYS_DEBUG ("disable = %s", SYS_BOOL (disable));
 
+#if 0
+    SYS_WARNING ("disable = %s, [showdialog = %s]",
+                 SYS_BOOL (disable), SYS_BOOL (m_showdialog));
+#endif
+
+    m_disabled = disable;
+
     if (disable == true)
     {
-        // Disconnect from logic
-        m_logic->disconnect ();
-
-        // remove the previous notification
-        if (m_notification)
-        {
-            m_notification->remove ();
-            delete m_notification;
-            m_notification = 0;
-        }
-
         // Hide the mode-selection dialog
         if (m_dialog && m_dialog->isVisible ())
         {
+            m_showdialog = true;
             m_dialog->reject ();
             m_dialog->disappear ();
         }
     }
     else // (enable == true)
     {
-        // reinitialize, and connect to businesslogic
-        initialize ();
+        if (m_showdialog == true)
+        {
+            m_showdialog = false;
+            ShowDialog ();
+        }
     }
 }
 
@@ -98,6 +100,13 @@ UsbUi::ShowDialog ()
     MWidget       *centralwidget;
     MContentItem  *button;
     MLabel        *label;
+
+    if (m_disabled == true)
+    {
+        // Do not show the dialog when it is disabled
+        m_showdialog = true;
+        return;
+    }
 
     if (m_dialog)
     {
@@ -182,6 +191,10 @@ UsbUi::MassStorageSelected ()
 void
 UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
 {
+#if 0
+    SYS_WARNING ("mode = %d", (int) mode);
+#endif
+
     switch (mode)
     {
         case Maemo::QmUSBMode::Ask:
@@ -189,6 +202,8 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             ShowDialog ();
             break;
         case Maemo::QmUSBMode::Disconnected:
+            m_showdialog = false;
+
             // remove the previous notification
             if (m_notification)
             {
@@ -227,6 +242,10 @@ UsbUi::ShowNotification (int id)
 {
     SYS_DEBUG ("");
     QString *mode_text;
+
+    // no-op when disabled
+    if (m_disabled)
+        return;
 
     // remove previous one
     if (m_notification)
