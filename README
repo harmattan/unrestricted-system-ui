@@ -31,8 +31,10 @@ Release
  git tag system-ui-VERSION
  git push --tags origin master
 
-Applets
+Applets/extensions
 -------
-Applets moved to:
-    git@dvcs.projects.maemo.org:af/systemui-applets
+applets moved to:
+    http://meego.gitorious.org/meegotouch/meegotouch-controlpanelapplets
+and extensions moved to:
+    http://meego.gitorious.org/meegotouch/meegotouch-systemuiextensions
 
