@@ -196,12 +196,6 @@ ShutdownUI::showWindow (
     lockOrientation ();
     sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
 
-#ifdef HAVE_QMSYSTEM
-    // Turn on the touchscreen
-    Maemo::QmDisplayState  display;
-    display.set (Maemo::QmDisplayState::On);
-#endif
-
     m_Feedback->play ();
 
     // Set the interval and start the timer to the next phase: hiding the labels
