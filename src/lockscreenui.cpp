@@ -171,14 +171,29 @@ LockScreenWindow::paint (
 void
 LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
+    bool startDnD = false;
+
     if (m_LockLiftArea == 0)
         return;
 
+    if ((m_LockLiftArea->pos ().y () + m_LockLiftArea->preferredHeight ()) >
+         event->pos ().y ())
+    {
+        if (m_LockLiftArea->layoutDirection () == Qt::RightToLeft)
+        {
+            // Icon position in RTL layout direction
+            startDnD = event->pos ().x () < 160;
+        }
+        else
+        {
+            // Icon position in LTR layout direction
+            startDnD = event->pos ().x () > m_LockLiftArea->preferredWidth () - 160;
+        }
+    }
+
     // We should go to STATE_MOVING state if user tappend on
     // the top-right corner of the window...
-    if (((m_LockLiftArea->pos ().y () + m_LockLiftArea->preferredHeight ()) >
-          event->pos ().y ()) &&
-        (event->pos ().x () > m_LockLiftArea->preferredWidth () - 160))
+    if (startDnD)
     {
         m_DnDstate = STATE_MOVING;
 
