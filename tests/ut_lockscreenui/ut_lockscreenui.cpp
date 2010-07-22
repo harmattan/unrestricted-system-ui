@@ -96,6 +96,21 @@ QPixmap::load (
 }
 
 /*********************************************************************************
+ * Stub for the QPainter
+ */
+QPixmap* qpainter_pixmap = 0;
+
+void
+QPainter::drawPixmap (const QRectF &targetRect, const QPixmap &pixmap, const QRectF &sourceRect)
+{
+    SYS_DEBUG ("");
+    Q_UNUSED (targetRect);
+    Q_UNUSED (sourceRect);
+
+    qpainter_pixmap = (QPixmap *) &pixmap;
+}
+
+/*********************************************************************************
  * The helper class to watch the signals.
  */
 LockScreenUIEventSink::LockScreenUIEventSink() :
@@ -229,13 +244,58 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QGraphicsSceneMouseEvent *pressEvent;
     QGraphicsSceneMouseEvent *moveEvent;
     QGraphicsSceneMouseEvent *releaseEvent;
+    QGraphicsSceneMouseEvent *moveEventNotActive;
     QPointF                   pressAt (850, 400);
+    QPointF                   moveToNotActive (400, 10);
     QPointF                   moveTo (400, 240);
     
     /*
      * Now we send three mouse events that ultimately will send the unlocked()
      * signal from the window.
      */
+    pressEvent = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMousePress);
+    pressEvent->setPos (pressAt);
+    
+    moveEvent = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMouseMove);
+    moveEvent->setPos (moveTo);
+
+    moveEventNotActive = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMouseMove);
+    moveEvent->setPos (moveToNotActive);
+
+    releaseEvent = new QGraphicsSceneMouseEvent (
+            QEvent::GraphicsSceneMouseRelease);
+
+    // Sending a press event the place where it should activate the draggable
+    // icon.
+    window->mousePressEvent (pressEvent);
+    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+
+    //
+    // Then we move the mouse right into th emiddle of the screen
+    window->mouseMoveEvent (moveEvent);
+    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+
+    // Move back to some non-active place
+    window->mouseMoveEvent (moveEventNotActive);
+    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+
+    // ... again move to active area:
+    window->mouseMoveEvent (moveEvent);
+    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+
+    //
+    // And then the mouse is released. And this concludes the interaction, the
+    // unlocked() signal should be sent.
+    //
+    window->mouseReleaseEvent (releaseEvent);
+
+    /*
+     * Test also the RTL layout direction
+     */
+    lockLiftArea->setLayoutDirection (Qt::RightToLeft);
+
+    pressAt = QPointF (30., 30.);
+
     pressEvent = new QGraphicsSceneMouseEvent (QEvent::GraphicsSceneMousePress);
     pressEvent->setPos (pressAt);
     
@@ -261,6 +321,37 @@ Ut_LockScreenUI::testLockScreenWindow ()
     window->mouseReleaseEvent (releaseEvent);
 
     QVERIFY (m_EventSink.m_UnlockedCame);
+
+    // Set the layout dir. back to LTR
+    lockLiftArea->setLayoutDirection (Qt::LeftToRight);
+
+
+#if 0
+    // FIXME: It seems geometry cannot be changes by some reason
+
+    // Check the packground painter:
+    QPainter painter;
+    window->m_bgLandscape = QPixmap (200, 100);
+    window->m_bgPortrait = QPixmap (100, 200);
+
+    // Landscape:
+    window->setGeometry (QRectF (0, 0, 200, 100));
+
+    window->paint (&painter, 0, 0);
+    QVERIFY (qpainter_pixmap != 0);
+    QCOMPARE (qpainter_pixmap->size ().width (), 200);
+
+    SYS_DEBUG ("size: %2f, %2f", window->geometry ().width (), window->geometry ().height ());
+
+    // Portrait:
+    window->setGeometry (QRectF (0, 0, 100, 200));
+
+    window->paint (&painter, 0, 0);
+    QVERIFY (qpainter_pixmap != 0);
+    QCOMPARE (qpainter_pixmap->size ().width (), 100);
+
+    SYS_DEBUG ("size: %2f, %2f", window->geometry ().width (), window->geometry ().height ());
+#endif
 
     delete window;
     delete parentWindow;
@@ -301,6 +392,19 @@ Ut_LockScreenUI::testLockScreenUI ()
     QVERIFY (m_LockScreenUI->m_LockLiftArea != NULL);
     QVERIFY (m_LockScreenUI->m_LockLandArea != NULL);
     QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
+
+    /*
+     * Check whether the reset-state of DnD works properly
+     */
+    // Set the DnDstate to icon-moving state...
+    m_LockScreenUI->m_SceneWindow->m_DnDstate =
+        LockScreenWindow::STATE_MOVING;
+
+    // Call reset function
+    m_LockScreenUI->reset ();
+
+    QVERIFY (m_LockScreenUI->m_SceneWindow->m_DnDstate ==
+             LockScreenWindow::STATE_NONE);
 
     // FIXME: I will enhance this part... 
     //m_LockScreenUI->showEvent (NULL);
