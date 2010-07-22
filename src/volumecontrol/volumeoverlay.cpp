@@ -26,6 +26,8 @@ VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
     m_slider (0),
     m_window (0)
 {
+    setFocusPolicy(Qt::NoFocus);
+
     m_timer = new QTimer;
     m_timer->setInterval (HIDE_TIMEOUT);
     connect (m_timer, SIGNAL (timeout ()),
