@@ -7,8 +7,10 @@ system-ui (0.16.9~1) harmattan; urgency=low
   * Fixes: NB#180104 - The lock icon is not mirrored
                        (handle RTL layout direction properly...)
   * Fixes: NB#179921 - volume indicator requires input focus
+  * Fixes: NB#174943 - The default background image paths are hardcoded into
+    System-UI
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Jul 2010 10:37:00 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Jul 2010 12:50:01 +0200
 
 system-ui (0.16.8-1) harmattan; urgency=low
 

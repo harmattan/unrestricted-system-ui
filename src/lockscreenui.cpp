@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QPointF>
 
+#include <MTheme>
 #include <MApplication>
 #include <MWindow>
 #include <MGConfItem>
@@ -48,11 +49,6 @@ M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
 // For WM_SET_NAME:
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-
-static const QString defaultLandscapeImageFile = 
-"/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png";
-static const QString defaultPortraitImageFile = 
-"/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperPortrait.png";
 
 #define GCONF_BG_LANDSCAPE \
     "/desktop/meego/background/landscape/picture_filename"
@@ -106,11 +102,8 @@ LockScreenWindow::reloadLandscapeBackground ()
     QString filename = m_confBgLandscape->value().toString();
     bool    success;
 
-    /*
-     * This is hard-coded into duihome, so we have to hardcode too.
-     */
     if (filename.isEmpty())
-        filename = defaultLandscapeImageFile;
+        return;
 
     SYS_DEBUG ("landscape value = %s", SYS_STR(filename));
     success = m_bgLandscape.load (filename);
@@ -125,11 +118,8 @@ LockScreenWindow::reloadPortraitBackground ()
     QString filename = m_confBgPortrait->value().toString();
     bool    success;
 
-    /*
-     * This is hard-coded into duihome, so we have to hardcode too.
-     */
     if (filename.isEmpty())
-        filename = defaultPortraitImageFile; 
+        return;
 
     SYS_DEBUG ("portrait  value = %s", SYS_STR(filename));
     success = m_bgPortrait.load (filename);
@@ -540,6 +530,7 @@ EventEaterUI::EventEaterUI ()
     SYS_DEBUG ("");
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_X11NetWmWindowTypeDialog);
+    setAttribute(Qt::WA_X11DoNotAcceptFocus);
     setObjectName ("EventEaterUI");
     setProperty ("NoMStyle", true);
 }

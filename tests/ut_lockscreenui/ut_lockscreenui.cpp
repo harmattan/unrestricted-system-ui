@@ -40,12 +40,6 @@
 #define GCONF_BG_PORTRAIT \
     "/desktop/meego/background/portrait/picture_filename"
 
-#define BG_FILENAME_PORTRAIT \
-    "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperPortrait.png"
-
-#define BG_FILENAME_LANDSCAPE \
-    "/usr/share/themes/base/meegotouch/duihome/images/HomeWallpaperLandscape.png"
-
 #define DEBUG
 #include "../../src/debug.h"
 
@@ -56,7 +50,7 @@ QVariant
 MGConfItem::value () const 
 {
     SYS_DEBUG ("*** key   = %s", SYS_STR(key()));
-    return QVariant(QString(""));
+    return QVariant(QString("/some/path/to/image.img"));
 }
 
 #if 0
@@ -87,10 +81,7 @@ QPixmap::load (
     if (failImageLoads)
         return false;
     
-    if (fileName == BG_FILENAME_PORTRAIT)
-        *this = QPixmap (480, 864);
-    else if (fileName == BG_FILENAME_LANDSCAPE)
-        *this = QPixmap (864, 480);
+    *this = QPixmap (100, 100);
 
     return true;
 }
@@ -224,19 +215,19 @@ Ut_LockScreenUI::testLockScreenWindow ()
      * QPixmap::load() method is stubbed and so is the MGConfItem, so we can do
      * this.
      */
-    #ifdef LOT_DEBUG
+//    #ifdef LOT_DEBUG
     SYS_DEBUG ("*** m_bgLandscape size = %dx%d", 
             window->m_bgLandscape.width(),
             window->m_bgLandscape.height());
     SYS_DEBUG ("*** m_bgPortrait  size = %dx%d", 
             window->m_bgPortrait.width(),
             window->m_bgPortrait.height());
-    #endif
-    QVERIFY (window->m_bgLandscape.width() == 864);
-    QVERIFY (window->m_bgLandscape.height() == 480);
+//    #endif
+    QCOMPARE (window->m_bgLandscape.width(), 100);
+    QCOMPARE (window->m_bgLandscape.height(), 100);
     
-    QVERIFY (window->m_bgPortrait.width() == 480);
-    QVERIFY (window->m_bgPortrait.height() == 864);
+    QCOMPARE (window->m_bgPortrait.width(), 100);
+    QCOMPARE (window->m_bgPortrait.height(), 100);
 
     /*
      * Creating some mouse events that will be sent to the window.
