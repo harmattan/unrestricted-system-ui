@@ -21,7 +21,7 @@ SOURCES += ut_notificationareasink.cpp \
 
 # helper classes
 SOURCES += \
-    $$STUBSDIR\stubbase.cpp
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit classes
 HEADERS += ut_notificationareasink.h \

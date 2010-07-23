@@ -16,7 +16,7 @@ SOURCES += \
 
 # helper classes
 SOURCES += \
-    $$STUBSDIR\stubbase.cpp
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \

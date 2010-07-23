@@ -26,12 +26,10 @@ HEADERS += \
     $$SRCDIR/statusarea/statusareamodel.h \
     $$SRCDIR/statusarea/statusareaview.h \
     $$SRCDIR/statusarea/statusarea.h \
-    $$SRCDIR/statusarea/notifier.h \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
-    $$SRCDIR/statusindicatormenu/pluginlist.h \
     $$SRCDIR/notifications/notificationstatusindicator.h
 
 # service classes
