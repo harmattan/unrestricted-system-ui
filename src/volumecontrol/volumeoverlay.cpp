@@ -26,8 +26,6 @@ VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
     m_slider (0),
     m_window (0)
 {
-    setFocusPolicy(Qt::NoFocus);
-
     m_timer = new QTimer;
     m_timer->setInterval (HIDE_TIMEOUT);
     connect (m_timer, SIGNAL (timeout ()),
@@ -72,7 +70,8 @@ VolumeOverlay::constructUi ()
     // create a new scene manager
     m_window = new MWindow (new MSceneManager);
     m_window->setTranslucentBackground (true);
-    m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification);
+    m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification, true);
+    m_window->setAttribute (Qt::WA_X11DoNotAcceptFocus, true);
     m_window->setObjectName ("VolumeOverlayWindow");
 
     connect (m_window,
