@@ -72,6 +72,7 @@ UnlockNotifications::UnlockNotifications () :
 
     m_last_subject = new MLabel;
     m_last_subject->setObjectName ("LockMostRecentLabel");
+    m_last_subject->setTextElide (true);
     m_last_subject->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     /* We have to add the last icon / subject to the other events area at first,
