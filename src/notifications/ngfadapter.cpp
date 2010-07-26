@@ -67,8 +67,15 @@ NGFAdapter::~NGFAdapter()
 {
 }
 
-void NGFAdapter::play(const QString &)
+uint NGFAdapter::play(const QString &id)
 {
+    Q_UNUSED (id);
+    return 0;
+}
+
+void NGFAdapter::stop(uint eventId)
+{
+    Q_UNUSED (eventId);
 }
 
 bool NGFAdapter::isValid()
