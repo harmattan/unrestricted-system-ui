@@ -127,6 +127,7 @@ Ut_ShutdownBusinessLogic::testShowUI ()
     QVERIFY (m_Api->m_Ui->m_Delay == 50);
 }
 
+#ifdef HAVE_QMSYSTEM
 void 
 Ut_ShutdownBusinessLogic::testSystemStateChanged ()
 {
@@ -147,6 +148,7 @@ Ut_ShutdownBusinessLogic::testSystemStateChanged ()
     QVERIFY (m_Api->m_Ui->m_Text2.isEmpty());
     QVERIFY (m_Api->m_Ui->m_Delay == 2000);
 }
+#endif
 
 QTEST_APPLESS_MAIN(Ut_ShutdownBusinessLogic)
 

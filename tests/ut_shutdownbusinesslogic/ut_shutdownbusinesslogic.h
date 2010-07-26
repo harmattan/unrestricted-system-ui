@@ -54,7 +54,9 @@ private slots:
     void cleanupTestCase();
     
     void testShowUI ();
+#ifdef HAVE_QMSYSTEM
     void testSystemStateChanged ();
+#endif
     
 private:
     XChecker               m_XChecker;
