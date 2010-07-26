@@ -24,7 +24,6 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #include <QPointer>
-#include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
 class MApplicationWindow;
@@ -59,7 +58,6 @@ private slots:
 #endif
     
 private:
-    XChecker               m_XChecker;
     MApplication          *m_App;
     QPointer <ShutdownBusinessLogic> m_Api;
 };
