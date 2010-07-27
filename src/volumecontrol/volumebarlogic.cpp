@@ -132,7 +132,7 @@ VolumeBarLogic::initValues ()
                 // Recurse into the dict_entry [ string, variant(int) ]
                 dbus_message_iter_recurse (&dict_entry, &in_dict);
                 {
-                  char *prop_name;
+                  char *prop_name = NULL;
                   // Get the string value, "property name"
                   dbus_message_iter_get_basic (&in_dict, &prop_name);
 

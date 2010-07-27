@@ -27,7 +27,7 @@
 class QCoreApplication;
 class VolumeBarLogic;
 
-class Ut_VolumeBarLogic : public QObject 
+class Ut_VolumeBarLogic : public QObject
 {
 Q_OBJECT
 
@@ -35,14 +35,26 @@ private slots:
     void init ();
     void cleanup ();
     void initTestCase ();
-    void cleanupTestCase ();
-
+    void testInitValues ();
     void testVolumeSetGet ();
     void testVolumeChangeByPa ();
     void testSignaling ();
+    void testPing ();
+    void cleanupTestCase ();
     
 private:
     VolumeBarLogic  *m_Api;
+    void resetStubs ();
+
+public:
+    static bool dbus_message_new_method_call;
+    static bool dbus_message_append_args;
+    static bool dbus_connection_send_with_reply_and_block;
+    static bool dbus_message_iter_recurse;
+    static bool dbus_message_iter_get_arg_type;
+    static bool dbus_message_iter_get_basic;
+    static bool dbus_message_iter_next;
+    static bool dbus_connection_get_is_connected;
 };
 
 #endif

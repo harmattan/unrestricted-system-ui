@@ -19,6 +19,110 @@
 #include "ut_volumebarlogic.h"
 #include <volumebarlogic.h>
 
+bool Ut_VolumeBarLogic::dbus_message_new_method_call = false;
+bool Ut_VolumeBarLogic::dbus_message_append_args = false;
+bool Ut_VolumeBarLogic::dbus_connection_send_with_reply_and_block = false;
+bool Ut_VolumeBarLogic::dbus_message_iter_recurse = false;
+bool Ut_VolumeBarLogic::dbus_message_iter_get_arg_type = false;
+bool Ut_VolumeBarLogic::dbus_message_iter_get_basic = false;
+bool Ut_VolumeBarLogic::dbus_message_iter_next = false;
+bool Ut_VolumeBarLogic::dbus_connection_get_is_connected = false;
+
+// Dbus Stubs
+extern "C" {
+
+    typedef double DBusMessageRealIter;
+
+    int counter = 0;
+
+    DBusMessage *
+    dbus_message_new_method_call(const char *bus_name,
+                                 const char *path,
+                                 const char *interface,
+                                 const char *method)
+    {
+        Q_UNUSED(bus_name);
+        Q_UNUSED(path);
+        Q_UNUSED(interface);
+        Q_UNUSED(method);
+        Ut_VolumeBarLogic::dbus_message_new_method_call = true;
+        return dbus_message_new (DBUS_MESSAGE_TYPE_METHOD_CALL);
+    }
+
+
+    dbus_bool_t
+    dbus_message_append_args(DBusMessage *message,
+                             int first_arg_type,
+                             ...)
+    {
+        Q_UNUSED(message);
+        Q_UNUSED(first_arg_type);
+        Ut_VolumeBarLogic::dbus_message_append_args = true;
+        return 1;
+    }
+
+    DBusMessage *
+    dbus_connection_send_with_reply_and_block (DBusConnection *connection,
+                                               DBusMessage    *message,
+                                               int             timeout_milliseconds,
+                                               DBusError      *error)
+    {
+        Q_UNUSED(connection);
+        Q_UNUSED(message);
+        Q_UNUSED(timeout_milliseconds);
+        Q_UNUSED(error);
+        Ut_VolumeBarLogic::dbus_connection_send_with_reply_and_block = true;
+        return dbus_message_new (DBUS_MESSAGE_TYPE_METHOD_RETURN);
+    }
+
+    void
+    dbus_message_iter_recurse (DBusMessageIter *iter,
+                               DBusMessageIter *sub)
+    {
+        Q_UNUSED(iter);
+        Q_UNUSED(sub);
+        Ut_VolumeBarLogic::dbus_message_iter_recurse = true;
+        return;
+    }
+
+    int dbus_message_iter_get_arg_type (DBusMessageIter *iter)
+    {
+        Q_UNUSED(iter);
+        Ut_VolumeBarLogic::dbus_message_iter_get_arg_type = true;
+        counter++;
+        if(counter < 3)
+            return DBUS_TYPE_INT32;
+        else
+            return DBUS_TYPE_INVALID;
+    }
+
+    void
+    dbus_message_iter_get_basic (DBusMessageIter *iter,
+                                 void            *value)
+    {
+        Q_UNUSED(iter);
+        Q_UNUSED(value);
+        Ut_VolumeBarLogic::dbus_message_iter_get_basic = true;
+        return;
+    }
+
+    dbus_bool_t
+    dbus_message_iter_next (DBusMessageIter *iter)
+    {
+        Q_UNUSED(iter);
+        Ut_VolumeBarLogic::dbus_message_iter_next = true;
+        return 1;
+    }
+
+    dbus_bool_t
+    dbus_connection_get_is_connected (DBusConnection *connection)
+    {
+        Q_UNUSED(connection);
+        Ut_VolumeBarLogic::dbus_connection_get_is_connected = true;
+        return 1;
+    }
+}
+
 void
 Ut_VolumeBarLogic::init ()
 {
@@ -37,10 +141,19 @@ Ut_VolumeBarLogic::initTestCase ()
 }
 
 void
-Ut_VolumeBarLogic::cleanupTestCase ()
+Ut_VolumeBarLogic::testInitValues()
 {
-    delete m_Api;
+    m_Api->initValues ();
+    QVERIFY(dbus_message_new_method_call &&
+            dbus_message_append_args &&
+            dbus_connection_send_with_reply_and_block &&
+            dbus_message_iter_recurse &&
+            dbus_message_iter_get_arg_type &&
+            dbus_message_iter_get_basic &&
+            dbus_message_iter_next);
+    resetStubs();
 }
+
 
 // Check if setting / getting works correctly
 void
@@ -66,7 +179,8 @@ Ut_VolumeBarLogic::testVolumeChangeByPa ()
     // Check the current ...
     QVERIFY (m_Api->getVolume () == currentstep);
     // .. and the maximal values
-    QVERIFY (m_Api->getMaxVolume () == stepcount);
+    QVERIFY (m_Api
+             ->getMaxVolume () == stepcount);
 }
 
 void
@@ -88,6 +202,37 @@ Ut_VolumeBarLogic::testSignaling ()
     // Verify the signal parameters
     QVERIFY (arguments.at (0).toUInt () == currentstep);
     QVERIFY (arguments.at (1).toUInt () == stepcount);
+}
+
+void
+Ut_VolumeBarLogic::testPing()
+{
+    QSignalSpy spy (m_Api, SIGNAL (volumeChanged (quint32, quint32, bool)));
+
+    m_Api->ping();
+
+    QList<QVariant> arguments = spy.takeFirst ();
+
+    QVERIFY (arguments.at (0).toUInt () == m_Api->getVolume ());
+    QVERIFY (arguments.at (1).toUInt () == m_Api->getMaxVolume ());
+}
+
+void
+Ut_VolumeBarLogic::cleanupTestCase ()
+{
+    delete m_Api;
+}
+
+void Ut_VolumeBarLogic::resetStubs()
+{
+    dbus_message_new_method_call = false;
+    dbus_message_append_args = false;
+    dbus_connection_send_with_reply_and_block = false;
+    dbus_message_iter_recurse = false;
+    dbus_message_iter_get_arg_type = false;
+    dbus_message_iter_get_basic = false;
+    dbus_message_iter_next = false;
+    dbus_connection_get_is_connected = false;
 }
 
 QTEST_MAIN(Ut_VolumeBarLogic)
