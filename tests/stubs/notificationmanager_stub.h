@@ -26,8 +26,8 @@ static const uint MAX_EVENT_TYPE_CONF_FILES = 100;
 #include "eventtypestore.h"
 #include <stubbase.h>
 
-#ifdef HAVE_MAEMOSEC
-maemosec::storage::~storage()
+#ifdef HAVE_AEGIS_CRYPTO
+aegis::storage::~storage()
 {
 }
 #endif

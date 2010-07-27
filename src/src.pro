@@ -19,9 +19,9 @@ SYSTEMUI_SOURCE_DIR = .
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 contains(cov, true) {
-	message("Coverage options enabled")
-	QMAKE_CXXFLAGS += --coverage
-	QMAKE_LFLAGS += --coverage
+    message("Coverage options enabled")
+    QMAKE_CXXFLAGS += --coverage
+    QMAKE_LFLAGS += --coverage
 }
 
 HEADERS +=                              \
@@ -69,23 +69,23 @@ include(volumecontrol/volumecontrol.pri)
 include(../localconfig.pri)
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
-	PKGCONFIG += contextsubscriber-1.0
+    PKGCONFIG += contextsubscriber-1.0
 }
 
 contains(DEFINES, HAVE_QMSYSTEM) {
-	PKGCONFIG += qmsystem
+    PKGCONFIG += qmsystem
 }
 
-contains(DEFINES, HAVE_MAEMOSEC) {
-	PKGCONFIG += maemosec
+contains(DEFINES, HAVE_AEGIS_CRYPTO) {
+    PKGCONFIG += aegis-crypto
 }
 
 contains(DEFINES, HAVE_LIBRESOURCEQT) {
-	PKGCONFIG += libresourceqt1
+    PKGCONFIG += libresourceqt1
 }
 
 contains(DEFINES, HAVE_LIBNGF) {
-	PKGCONFIG += libngf0
+    PKGCONFIG += libngf0
 }
 
 PKGCONFIG += \
