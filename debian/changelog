@@ -9,6 +9,7 @@ system-ui (0.16.9~1) harmattan; urgency=low
   * Fixes: NB#179921 - volume indicator requires input focus
   * Fixes: NB#174943 - The default background image paths are hardcoded into
     System-UI
+  * Fixes: Notifier was removed when a system notification arrived.
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Jul 2010 12:50:01 +0200
 

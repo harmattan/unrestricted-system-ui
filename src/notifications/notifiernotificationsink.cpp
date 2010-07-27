@@ -33,8 +33,12 @@ NotifierNotificationSink::~NotifierNotificationSink()
 
 void NotifierNotificationSink::addNotification(const Notification &notification)
 {
-  if (notification.type() == Notification::SystemEvent || additionsDisabled) {
+    if(additionsDisabled) {
+        return;
+    }
+    if (notification.type() == Notification::SystemEvent) {
         // System notifications are not shown by the notifier sink
+        systemNotificationIds.insert(notification.notificationId());
         return;
     }
     if(isUnseen(notification)) {
@@ -45,8 +49,12 @@ void NotifierNotificationSink::addNotification(const Notification &notification)
     }
 }
 
-void NotifierNotificationSink::removeNotification(uint /*notificationId*/)
+void NotifierNotificationSink::removeNotification(uint notificationId)
 {
+    if(systemNotificationIds.contains(notificationId)) {
+        systemNotificationIds.remove(notificationId);
+        return;
+    }
     if(notificationCount > 0) {
         notificationCount--;
         if(notificationCount == 0) {

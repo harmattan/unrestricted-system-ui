@@ -164,4 +164,24 @@ void Ut_NotifierNotificationSink::testSeenNotificationAddedThenNotifierNotUpdate
     QCOMPARE(spy.count(), 0);
 }
 
+void Ut_NotifierNotificationSink::addSystemNotification()
+{
+    NotificationParameters params;
+    Notification notification1(1, 0, 2, params, Notification::SystemEvent, 0);
+    emit addNotification(notification1);
+}
+
+void Ut_NotifierNotificationSink::testWhenAddSystemNotificationNotificationIdIsStored()
+{
+    addSystemNotification();
+    QCOMPARE(m_subject->systemNotificationIds.count(), 1);
+}
+
+void Ut_NotifierNotificationSink::testWhenRemoveSystemNotificationNotificationIdIsRemoved()
+{
+    addSystemNotification();
+    m_subject->removeNotification(1);
+    QCOMPARE(m_subject->systemNotificationIds.count(), 0);
+}
+
 QTEST_APPLESS_MAIN(Ut_NotifierNotificationSink)

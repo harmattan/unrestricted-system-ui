@@ -21,6 +21,7 @@
 #define NOTIFIERNOTIFICATIONSINK_H_
 
 #include "notificationsink.h"
+#include <QSet>
 
 /*!
  * A notification sink for the Notifier. Just maintains a count of unseen notifications
@@ -75,7 +76,11 @@ private:
     //! Whether adding of notifications is disabled
     bool additionsDisabled;
 
+    //! Checks if the notification is still unseen.
     bool isUnseen(const Notification &notification);
+
+    //! list of system notifications which have arrived here.
+    QSet<uint> systemNotificationIds;
 
 #ifdef UNIT_TEST
     friend class Ut_NotifierNotificationSink;
