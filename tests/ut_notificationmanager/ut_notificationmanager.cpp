@@ -362,7 +362,7 @@ void Ut_NotificationManager::testUpdateNotification()
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
-    // TODO this cannot be fully tested until MInfoBanner supports updates
+    // TODO this cannot be fully tested until MBanner supports updates
 }
 
 void Ut_NotificationManager::testRemoveNotification()

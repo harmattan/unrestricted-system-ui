@@ -26,7 +26,7 @@
 
 class MApplication;
 class NotificationArea;
-class MInfoBanner;
+class MBanner;
 class QGraphicsLayoutItem;
 
 class Ut_NotificationArea : public QObject
@@ -53,9 +53,9 @@ private slots:
     void testUpdatedNotificationComesFirst();
 
 signals:
-    void addNotification(MInfoBanner &notification);
-    void removeNotification(MInfoBanner &notification);
-    void notificationUpdated(MInfoBanner &notification);
+    void addNotification(MBanner &notification);
+    void removeNotification(MBanner &notification);
+    void notificationUpdated(MBanner &notification);
 
 public:
     static QGraphicsLayoutItem *addedItem;

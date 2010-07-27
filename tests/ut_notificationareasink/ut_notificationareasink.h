@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <MInfoBanner>
+#include <MBanner>
 #include "notificationareasink.h"
 
 class MApplication;
@@ -34,13 +34,12 @@ class Ut_NotificationAreaSink : public QObject
     Q_OBJECT
 
 public:
-    static QList<MInfoBanner::BannerType> types;
-    static QList<QString> icons;
-    static QList<QString> bodies;
+    static QList<QString> titles;
+    static QList<QString> subtitles;
     static QList<QString> buttonIcons;
     static QList<QString> contents;
-    static QList<MInfoBanner *> notifications;
-    static QList<MInfoBanner *> destroyedNotifications;
+    static QList<MBanner *> notifications;
+    static QList<MBanner *> destroyedNotifications;
 
 private:
     MApplication *app;
@@ -48,9 +47,9 @@ private:
 
 public slots:
     // For faking the addition of a notification to a layout
-    void addNotification(MInfoBanner &notification);
+    void addNotification(MBanner &notification);
     // For faking the removal of a notification from a layout
-    void removeNotification(MInfoBanner &notification);
+    void removeNotification(MBanner &notification);
 
 private slots:
     // Executed once before every test case

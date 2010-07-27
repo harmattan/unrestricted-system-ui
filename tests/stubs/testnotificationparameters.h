@@ -25,14 +25,11 @@
 class TestNotificationParameters : public NotificationParameters
 {
 public:
-    TestNotificationParameters(QString imageId = "", QString summary = "", QString body = "", QString iconId = "", QString action = "");
+    TestNotificationParameters(QString summary = "", QString body = "", QString iconId = "", QString action = "");
 };
 
-TestNotificationParameters::TestNotificationParameters(QString imageId, QString summary, QString body, QString iconId, QString action)
+TestNotificationParameters::TestNotificationParameters(QString summary, QString body, QString iconId, QString action)
 {
-    if (!imageId.isEmpty()) {
-        add(NotificationWidgetParameterFactory::createImageIdParameter(imageId));
-    }
     if (!summary.isEmpty()) {
         add(NotificationWidgetParameterFactory::createSummaryParameter(summary));
     }

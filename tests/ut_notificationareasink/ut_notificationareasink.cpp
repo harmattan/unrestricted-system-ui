@@ -21,7 +21,7 @@
 #include "notificationwidgetparameterfactory.h"
 
 #include <QtTest/QtTest>
-#include <MInfoBanner>
+#include <MBanner>
 #include <MRemoteAction>
 #include <MApplication>
 #include "../stubs/testnotificationparameters.h"
@@ -44,33 +44,33 @@ MRemoteAction::MRemoteAction(const QString &action, QObject *parent) : MAction(p
     Ut_NotificationAreaSink::contents.append(action);
 }
 
-// MInfoBanner stubs (used by NotificationAreaSink)
-MInfoBanner::~MInfoBanner()
+// MBanner stubs (used by NotificationAreaSink)
+MBanner::~MBanner()
 {
     Ut_NotificationAreaSink::destroyedNotifications.append(this);
 }
 
-void MInfoBanner::setImageID(const QString &imageId)
+void MBanner::setTitle(const QString &title)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
-        Ut_NotificationAreaSink::icons.replace(index, imageId);
+        Ut_NotificationAreaSink::titles.replace(index, title);
     } else {
-        Ut_NotificationAreaSink::icons.append(imageId);
+        Ut_NotificationAreaSink::titles.append(title);
     }
 }
 
-void MInfoBanner::setBodyText(const QString &body)
+void MBanner::setSubtitle(const QString &subtitle)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
-        Ut_NotificationAreaSink::bodies.replace(index, body);
+        Ut_NotificationAreaSink::subtitles.replace(index, subtitle);
     } else {
-        Ut_NotificationAreaSink::bodies.append(body);
+        Ut_NotificationAreaSink::subtitles.append(subtitle);
     }
 }
 
-void MInfoBanner::setIconID(const QString &iconId)
+void MBanner::setIconID(const QString &iconId)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(this);
     if (index >= 0) {
@@ -103,12 +103,12 @@ QStringList QDir::entryList(const QStringList &, Filters, SortFlags) const
     return QStringList();
 }
 
-QList<QString> Ut_NotificationAreaSink::icons;
-QList<QString> Ut_NotificationAreaSink::bodies;
+QList<QString> Ut_NotificationAreaSink::titles;
+QList<QString> Ut_NotificationAreaSink::subtitles;
 QList<QString> Ut_NotificationAreaSink::buttonIcons;
 QList<QString> Ut_NotificationAreaSink::contents;
-QList<MInfoBanner *> Ut_NotificationAreaSink::notifications;
-QList<MInfoBanner *> Ut_NotificationAreaSink::destroyedNotifications;
+QList<MBanner *> Ut_NotificationAreaSink::notifications;
+QList<MBanner *> Ut_NotificationAreaSink::destroyedNotifications;
 
 // Tests
 void Ut_NotificationAreaSink::initTestCase()
@@ -134,24 +134,24 @@ void Ut_NotificationAreaSink::init()
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(addGroup(uint, const NotificationParameters &)), sink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(this, SIGNAL(removeGroup(uint)), sink, SLOT(removeGroup(uint)));
-    connect(sink, SIGNAL(addNotification(MInfoBanner &)), this, SLOT(addNotification(MInfoBanner &)));
-    connect(sink, SIGNAL(removeNotification(MInfoBanner &)), this, SLOT(removeNotification(MInfoBanner &)));
+    connect(sink, SIGNAL(addNotification(MBanner &)), this, SLOT(addNotification(MBanner &)));
+    connect(sink, SIGNAL(removeNotification(MBanner &)), this, SLOT(removeNotification(MBanner &)));
 }
 
-void Ut_NotificationAreaSink::addNotification(MInfoBanner &notification)
+void Ut_NotificationAreaSink::addNotification(MBanner &notification)
 {
     Ut_NotificationAreaSink::notifications.append(&notification);
 
     notification.setParentItem(new MWidget());
 }
 
-void Ut_NotificationAreaSink::removeNotification(MInfoBanner &notification)
+void Ut_NotificationAreaSink::removeNotification(MBanner &notification)
 {
     int index = Ut_NotificationAreaSink::notifications.indexOf(&notification);
 
     if (index >= 0) {
-        Ut_NotificationAreaSink::icons.removeAt(index);
-        Ut_NotificationAreaSink::bodies.removeAt(index);
+        Ut_NotificationAreaSink::titles.removeAt(index);
+        Ut_NotificationAreaSink::subtitles.removeAt(index);
         Ut_NotificationAreaSink::buttonIcons.removeAt(index);
         Ut_NotificationAreaSink::notifications.removeAt(index);
 
@@ -162,8 +162,8 @@ void Ut_NotificationAreaSink::removeNotification(MInfoBanner &notification)
 void Ut_NotificationAreaSink::cleanup()
 {
     delete sink;
-    icons.clear();
-    bodies.clear();
+    titles.clear();
+    subtitles.clear();
     buttonIcons.clear();
     contents.clear();
     notifications.clear();
@@ -172,14 +172,14 @@ void Ut_NotificationAreaSink::cleanup()
 
 void Ut_NotificationAreaSink::testAddNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Create three notifications - two with a content link and one without
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
-    TestNotificationParameters parameters1("icon1", "summary1", "body1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(1, 0, 2, parameters1, Notification::SystemEvent, 1000));
-    TestNotificationParameters parameters2("icon2", "summary2", "body2", "buttonicon2", "");
+    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "");
     emit addNotification(Notification(2, 0, 2, parameters2, Notification::ApplicationEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink two times
@@ -189,13 +189,13 @@ void Ut_NotificationAreaSink::testAddNotification()
 
 void Ut_NotificationAreaSink::testUpdateNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Add two notifications with the same id; the second should update the existing one.
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
-    TestNotificationParameters parameters1("icon1", "summary1", "body1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(0, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
@@ -209,15 +209,15 @@ void Ut_NotificationAreaSink::testUpdateNotification()
 
 void Ut_NotificationAreaSink::testRemoveNotification()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
-    QSignalSpy removeSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
+    QSignalSpy removeSpy(sink, SIGNAL(removeNotification(MBanner &)));
 
     // Create three notifications
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::SystemEvent, 1000));
-    TestNotificationParameters parameters1("icon1", "summary1", "body1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(1, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
-    TestNotificationParameters parameters2("icon2", "summary2", "body2", "buttonicon2", "");
+    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "");
     emit addNotification(Notification(2, 0, 2, parameters2, Notification::ApplicationEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink two times
@@ -234,22 +234,22 @@ void Ut_NotificationAreaSink::testRemoveNotification()
 
     // Recreate the second notification and create an additional one
     emit addNotification(Notification(1, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
-    TestNotificationParameters parameters3("icon3", "summary3", "body3", "buttonicon3", "");
+    TestNotificationParameters parameters3("title3", "subtitle3", "buttonicon3", "");
     emit addNotification(Notification(3, 0, 2, parameters3, Notification::SystemEvent, 1000));
 
     // Check that the addNotification() signal was emitted by the sink three times in total
     QCOMPARE(addSpy.count(), 3);
-    QCOMPARE(icons.length(), 2);
-    QCOMPARE(icons[0], QString("icon2"));
-    QCOMPARE(icons[1], QString("icon1"));
+    QCOMPARE(buttonIcons.length(), 2);
+    QCOMPARE(buttonIcons[0], QString("buttonicon2"));
+    QCOMPARE(buttonIcons[1], QString("buttonicon1"));
 }
 
 void Ut_NotificationAreaSink::testAddGroup()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Creating a group should not send signals, just create the mnotification
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addGroup(1, parameters0);
     QCOMPARE(addSpy.count(), 0);
     QCOMPARE(notifications.count(), 0);
@@ -257,16 +257,16 @@ void Ut_NotificationAreaSink::testAddGroup()
 
 void Ut_NotificationAreaSink::testRemoveGroup()
 {
-    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
+    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MBanner &)));
 
     // A signal from removeGroup is not sent if no notification has been added to the group
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addGroup(1, parameters0);
     emit removeGroup(1);
     QCOMPARE(remSpy.count(), 0);
 
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("icon1", "summary1", "body1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     emit removeGroup(1);
     QCOMPARE(remSpy.count(), 1);
@@ -274,12 +274,12 @@ void Ut_NotificationAreaSink::testRemoveGroup()
 
 void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGroupBannerIsRemoved()
 {
-    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MInfoBanner &)));
+    QSignalSpy remSpy(sink, SIGNAL(removeNotification(MBanner &)));
 
-    TestNotificationParameters parameters0("image0", "summary0", "body0", "icon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0");
     emit addGroup(1, parameters0);
     // Add two notifications to this group
-    TestNotificationParameters parameters1("image1", "summary1", "body1", "icon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1");
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     emit addNotification(Notification(1, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     // Remove first notification
@@ -293,10 +293,10 @@ void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGro
 
 void Ut_NotificationAreaSink::testAddNotificationToGroup()
 {
-    QSignalSpy addSpy(sink, SIGNAL(addNotification(MInfoBanner &)));
-    TestNotificationParameters parameters0("image0", "summary0", "body0", "icon0", "content0");
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
+    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0");
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("image1", "summary1", "body1", "icon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1");
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
     QCOMPARE(addSpy.count(), 1);
@@ -305,10 +305,10 @@ void Ut_NotificationAreaSink::testAddNotificationToGroup()
 
 void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationArea()
 {
-    QSignalSpy updateSpy(sink, SIGNAL(notificationAddedToGroup(MInfoBanner &)));
-    TestNotificationParameters parameters0("image0", "summary0", "body0", "icon0", "content0");
+    QSignalSpy updateSpy(sink, SIGNAL(notificationAddedToGroup(MBanner &)));
+    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0");
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("image1", "summary1", "body1", "icon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1");
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(updateSpy.count(), 0);
     emit addNotification(Notification(1, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
@@ -317,15 +317,15 @@ void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationAr
 
 void Ut_NotificationAreaSink::testUpdateGroup()
 {
-    TestNotificationParameters parameters0("icon0", "summary0", "body0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("icon1", "summary1", "body1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
-    QCOMPARE(icons.length(), 1);
-    QCOMPARE(icons[0], QString("icon0"));
-    QCOMPARE(bodies.length(), 1);
-    QCOMPARE(bodies[0], QString("<p><b>summary0</b></p><p>body0</p>"));
+    QCOMPARE(titles.length(), 1);
+    QCOMPARE(titles[0], QString("title0"));
+    QCOMPARE(subtitles.length(), 1);
+    QCOMPARE(subtitles[0], QString("subtitle0"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon0"));
     QCOMPARE(contents.length(), 1);
@@ -333,10 +333,10 @@ void Ut_NotificationAreaSink::testUpdateGroup()
 
     emit addGroup(1, parameters1);
 
-    QCOMPARE(icons.length(), 1);
-    QCOMPARE(icons[0], QString("icon1"));
-    QCOMPARE(bodies.length(), 1);
-    QCOMPARE(bodies[0], QString("<p><b>summary1</b></p><p>body1</p>"));
+    QCOMPARE(titles.length(), 1);
+    QCOMPARE(titles[0], QString("title1"));
+    QCOMPARE(subtitles.length(), 1);
+    QCOMPARE(subtitles[0], QString("subtitle1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
     // TODO: even though contents.length is 2, there's only 1 action in the mnotification
