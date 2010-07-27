@@ -200,7 +200,7 @@ XChecker::get_utf8_prop (
                    utf8_string_atom, &type, &format,
                    &items, &left, (unsigned char**)&value);
           if (type == None || rc != Success)
-            return NULL;
+            return 0;
           else
           {
             char *s = strdup((const char*)value);
@@ -344,7 +344,10 @@ XChecker::check_window_rec (
         }
 
         if (wmname != 0)
+        {
             delete[] wmname;
+            wmname = 0;
+        }
 
         /*
          * If not we check all the child windows...
@@ -372,7 +375,10 @@ XChecker::check_window_rec (
         }
 
         if (wmname != 0)
+        {
             delete[] wmname;
+            wmname = 0;
+        }
 
         /*
          * Then all the child windows.
