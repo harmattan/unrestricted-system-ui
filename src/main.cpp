@@ -27,6 +27,7 @@
 #include "sysuid.h"
 
 #include <MApplication>
+#include <MApplicationService>
 #include <QObject>
 
 #undef DEBUG
@@ -109,7 +110,27 @@ termination_signal_handler (
 }
 #endif
 
-int main (int argc, char** argv)
+class SystemUIservice : public MApplicationService
+{
+
+public:
+    SystemUIservice (QObject *parent = 0) :
+        MApplicationService ("com.nokia.sysuid", parent)
+    {
+    }
+
+    void launch ()
+    {
+        SYS_DEBUG ("");
+        /*
+         * No operation, we must not let meegotouch to
+         * raise/activate some hidden sysuid window..
+         */
+    }
+};
+
+int
+main (int argc, char** argv)
 {
     SYS_DEBUG ("- System-UI start");
     #ifdef DEBUG
@@ -136,7 +157,7 @@ int main (int argc, char** argv)
     signal (SIGINT, sysuid_exit);
     #endif
     
-    MApplication app (argc, argv);
+    MApplication app (argc, argv, new SystemUIservice);
     exitPtr = &app;
 
     app.setQuitOnLastWindowClosed (false);
