@@ -22,7 +22,7 @@
 #include <MViewCreator>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
-#include <MInfoBanner>
+#include <MBanner>
 #include <MContainer>
 #include <QGraphicsLinearLayout>
 
@@ -51,7 +51,7 @@ void NotificationAreaView::updateData(const QList<const char *>& modifications)
             }
 
             // Add banners from the model to the layout
-            foreach(MInfoBanner * banner, model()->banners()) {
+            foreach(MBanner * banner, model()->banners()) {
                 layout->addItem(banner);
             }
         }

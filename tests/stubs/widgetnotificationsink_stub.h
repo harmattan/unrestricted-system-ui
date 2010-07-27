@@ -31,9 +31,9 @@ public:
     virtual void notificationRemovalRequested(uint notificationId);
     virtual void notificationGroupClearingRequested(uint groupId);
     virtual QString determineIconId(const NotificationParameters &parameters);
-    virtual MInfoBanner *createInfoBanner(const Notification &notification);
-    virtual MInfoBanner *createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters);
-    virtual void updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters);
+    virtual MBanner *createInfoBanner(const Notification &notification);
+    virtual MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
+    virtual void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
     virtual QString determineIconIdFromEventType(const QString &eventType);
     virtual void infoBannerClicked();
 };
@@ -61,28 +61,28 @@ QString WidgetNotificationSinkStub::determineIconId(const NotificationParameters
     return stubReturnValue<QString>("determineIconId");
 }
 
-MInfoBanner *WidgetNotificationSinkStub::createInfoBanner(const Notification &notification)
+MBanner *WidgetNotificationSinkStub::createInfoBanner(const Notification &notification)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const Notification & >(notification));
     stubMethodEntered("createInfoBanner", params);
-    return stubReturnValue<MInfoBanner *>("createInfoBanner");
+    return stubReturnValue<MBanner *>("createInfoBanner");
 }
 
-MInfoBanner *WidgetNotificationSinkStub::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
+MBanner *WidgetNotificationSinkStub::createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MInfoBanner::BannerType >(type));
+    params.append(new Parameter<Notification::NotificationType >(type));
     params.append(new Parameter<uint >(groupId));
     params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("createInfoBanner", params);
-    return stubReturnValue<MInfoBanner *>("createInfoBanner");
+    return stubReturnValue<MBanner *>("createInfoBanner");
 }
 
-void WidgetNotificationSinkStub::updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters)
+void WidgetNotificationSinkStub::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MInfoBanner * >(infoBanner));
+    params.append(new Parameter<MBanner * >(infoBanner));
     params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("updateActions", params);
 }
@@ -113,17 +113,17 @@ QString WidgetNotificationSink::determineIconId(const NotificationParameters &pa
     return gWidgetNotificationSinkStub->determineIconId(parameters);
 }
 
-MInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
+MBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
     return gWidgetNotificationSinkStub->createInfoBanner(notification);
 }
 
-MInfoBanner *WidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
+MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters)
 {
     return gWidgetNotificationSinkStub->createInfoBanner(type, groupId, parameters);
 }
 
-void WidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters)
+void WidgetNotificationSink::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     gWidgetNotificationSinkStub->updateActions(infoBanner, parameters);
 }

@@ -26,7 +26,7 @@
 
 class NotificationManager;
 class NotificationAreaSink;
-class MInfoBanner;
+class MBanner;
 class MFlowLayoutPolicy;
 
 /*!
@@ -54,24 +54,24 @@ private slots:
     /*!
      * Adds a notification to the notification area.
      *
-     * \param notification the MInfoBanner to be added
+     * \param notification the MBanner to be added
      */
-    void addNotification(MInfoBanner &notification);
+    void addNotification(MBanner &notification);
 
     /*!
      * Moves the banner to top. Called when relayouting is asked by notification area sink
      * when a notification/group is updated.
      *
-     * \param notification the MInfoBanner to be made top
+     * \param notification the MBanner to be made top
      */
-    void moveNotificationToTop(MInfoBanner &notification);
+    void moveNotificationToTop(MBanner &notification);
 
     /*!
      * Removes a notification from the notification area.
      *
-     * \param notification the MInfoBanner to be removed
+     * \param notification the MBanner to be removed
      */
-    void removeNotification(MInfoBanner &notification);
+    void removeNotification(MBanner &notification);
 
 signals:
     /*!

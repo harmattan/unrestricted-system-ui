@@ -21,13 +21,13 @@
 #define WIDGETNOTIFICATIONSINK_H
 
 #include "notificationsink.h"
-#include <MInfoBanner>
+#include <MBanner>
 
 /*!
  * WidgetNotificationSink is a common base class for all notification sinks that trigger
  * visual feedback using a graphics widget.
  *
- * WidgetNotificationSink creates MInfoBanner widgets for notifications. When MInfoBanner
+ * WidgetNotificationSink creates MBanner widgets for notifications. When MBanner
  * is clicked the action bound to the notification is triggered and notification is removed
  * from the notification system signalling notificationRemovalRequested().
  */
@@ -65,40 +65,47 @@ protected:
     static bool determineUserRemovability(const NotificationParameters &parameters);
 
     /*!
-     * Creates a MInfoBanner widget to represent a notification object.
+     * Creates a MBanner widget to represent a notification object.
      * Ownership of the constructed object is passed to the caller.
-     * \param notification The notification object to represent with the MInfoBanner.
-     * \return Constructed MInfoBanner that represents the notification.
+     * \param notification The notification object to represent with the MBanner.
+     * \return Constructed MBanner that represents the notification.
      */
-    MInfoBanner *createInfoBanner(const Notification &notification);
+    MBanner *createInfoBanner(const Notification &notification);
 
     /*!
-     * Creates a MInfoBanner widget from the given notification parameters.
+     * Creates a MBanner widget from the given notification parameters.
      * Ownership of the constructed object is passed to the caller.
-     * \param type Type of the info banner to be constructed.
+     * \param type Notification type on the basis of which info banner type is to be constructed.
      * \param groupId The group ID to be associated with the info banner.
-     * \param params NotificationParameters according to which configure the MInfoBanner.
+     * \param params NotificationParameters according to which configure the MBanner.
      */
-    MInfoBanner *createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters);
+    MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
 
     /*!
      * Removes old actions from the given info banner and adds the action
      * specified in the notification (if any)
      *
-     * \param infoBanner the MInfoBanner to update
+     * \param infoBanner the MBanner to update
      * \param parameters the NotificationParameters to get the action from
      */
-    void updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters);
+    void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
 
     /*!
-     * Creates a body text string from summary and body parameters, suitable for
-     * the body text of an MInfoBanner.
-     * \param parameters the NotificationParameters to get the body text from
-     * \return the body text
+     * Creates a title text string from notification parameters.
+     * \param parameters the NotificationParameters to get the title text from
+     * \return the title text
      */
-    QString infoBannerBodyText(const NotificationParameters &parameters);
+    QString infoBannerTitleText(const NotificationParameters &parameters);
 
-    //! MInfoBanner property to store the user removability into
+    /*!
+     * Creates a subtitle text string from notification parameters.
+     * \param parameters the NotificationParameters to get the subtitle text from
+     * \return the subtitle text
+     */
+    QString infoBannerSubtitleText(const NotificationParameters &parameters);
+
+
+    //! MBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 
 private:
@@ -117,9 +124,9 @@ private:
      */
     static bool determineUserRemovabilityFromEventType(const QString &eventType);
 
-    //! MInfoBanner property to store the notification ID into
+    //! MBanner property to store the notification ID into
     static const char *NOTIFICATION_ID_PROPERTY;
-    //! MInfoBanner property to store the group ID into
+    //! MBanner property to store the group ID into
     static const char *GROUP_ID_PROPERTY;
 
 private slots:
