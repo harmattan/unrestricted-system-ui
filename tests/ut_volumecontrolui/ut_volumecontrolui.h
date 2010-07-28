@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et sw=4 ts=4 sts=4: */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,54 +18,30 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef VOLUMECONTROLUI_H
-#define VOLUMECONTROLUI_H
+#ifndef UT_VOLUMECONTROLUI_H
+#define UT_VOLUMECONTROLUI_H
 
+#include <QtTest/QtTest>
 #include <QObject>
 
+class QCoreApplication;
+class VolumeControlUI;
 class VolumeBarLogic;
 class VolumeOverlay;
 
-#ifdef HAVE_LIBRESOURCEQT
-#include <policy/resource-set.h>
-#endif
-
-#ifdef HAVE_QMSYSTEM
-// For Hw-volume key handling
-#include <qmkeys.h>
-#endif
-
-class VolumeControlUI : public QObject
+class Ut_VolumeControlUI : public QObject
 {
-    Q_OBJECT
-
-public:
-    VolumeControlUI (QObject *parent = 0);
-    ~VolumeControlUI ();
+Q_OBJECT
 
 private slots:
-    void overlayChanged (int val);
-#ifdef HAVE_QMSYSTEM
-    void hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state);
-#endif
-    void hwKeyResourceAcquired ();
-    void hwKeyResourceLost ();
-
+    void initTestCase ();
+    void testOverlayChanged ();
+    void testHwKeyEvent ();
+    void cleanupTestCase ();
+    
 private:
-    VolumeBarLogic  *m_logic;
-    VolumeOverlay   *m_overlay;
+    VolumeControlUI  *m_Api;
 
-#ifdef HAVE_QMSYSTEM
-    Maemo::QmKeys   *m_hwkeys;
-#endif
-
-#ifdef HAVE_LIBRESOURCEQT
-    ResourcePolicy::ResourceSet *m_hwkeyResource;
-#endif
-
-#ifdef UNIT_TEST
-    friend class Ut_VolumeControlUI;
-#endif
 };
 
 #endif
