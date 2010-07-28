@@ -12,8 +12,9 @@ system-ui (0.16.9~1) harmattan; urgency=low
     System-UI
   * Fixes: Notifier was removed when a system notification arrived.
   * Fixes: NB#178041 - Whole message text is displayed in notification 'bubble'
+  * Fixes: NB#181643 - system-ui fails to build with cs2009q3 compiler
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 23 Jul 2010 12:50:01 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 28 Jul 2010 14:22:22 +0200
 
 system-ui (0.16.8-1) harmattan; urgency=low
 

@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <stdint.h>
 #include "ut_ngfadapter.h"
 
 static uint32_t g_ngf_play_id = 0;
