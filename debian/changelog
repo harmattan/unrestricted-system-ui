@@ -1,5 +1,6 @@
 system-ui (0.16.9~1) harmattan; urgency=low
 
+  * Implemented: SWP#3031 - Maintaing LED - effect until an unseen notification is seen.
   * Fixes: NB#181248 - 2x OVI Suite usb notifications appear when screen is
     unlocked
   * Fixes: NB#181173 - "connected to ovi suite mode" -popup keeps on showing

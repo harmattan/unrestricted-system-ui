@@ -25,6 +25,7 @@
 #include "eventtypestore_stub.h"
 #include "notificationgroup_stub.h"
 #include "genericnotificationparameterfactory.h"
+#include "ngfadapter_stub.h"
 
 void Ut_NotifierNotificationSink::initTestCase()
 {
@@ -42,6 +43,7 @@ void Ut_NotifierNotificationSink::init()
     connect(this, SIGNAL(removeGroup(uint)), m_subject, SLOT(removeGroup(uint)));
 
     gNotificationManagerStub->stubReset();
+    gNGFAdapterStub->stubReset();
 }
 
 void Ut_NotifierNotificationSink::cleanup()
@@ -182,6 +184,20 @@ void Ut_NotifierNotificationSink::testWhenRemoveSystemNotificationNotificationId
     addSystemNotification();
     m_subject->removeNotification(1);
     QCOMPARE(m_subject->systemNotificationIds.count(), 0);
+}
+
+void Ut_NotifierNotificationSink::testNGFEvents()
+{
+    // Test that NGF start is called when notification is added
+    NotificationParameters notificationParameters;
+    notificationParameters.add("count", QVariant((uint)1));
+    Notification notification(1, 0, 2, notificationParameters, Notification::ApplicationEvent, 0);
+    emit addNotification(notification);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+
+    // Test that NGF stop is called when last notification is removed
+    emit removeNotification(1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotifierNotificationSink)

@@ -20,11 +20,17 @@
 #include "notifiernotificationsink.h"
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
+#include "ngfadapter.h"
+
+const QString NotifierNotificationSink::NOTIFIER_NGF_ID = "notifier";
 
 NotifierNotificationSink::NotifierNotificationSink() :
+    ngfAdapter(new NGFAdapter),
     notificationCount(0),
-    additionsDisabled(false)
+    additionsDisabled(false),
+    ngfEventId(0)
 {
+    connect(this, SIGNAL(notifierSinkActive(bool)), this, SLOT(playNotifierNGF(bool)));
 }
 
 NotifierNotificationSink::~NotifierNotificationSink()
@@ -79,4 +85,13 @@ bool NotifierNotificationSink::isUnseen(const Notification &notification)
     NotificationParameters parameters = notification.parameters();
     QVariant unseenVariant = parameters.value(GenericNotificationParameterFactory::unseenKey());
     return unseenVariant.toBool();
+}
+
+void NotifierNotificationSink::playNotifierNGF(bool play)
+{
+    if (play) {
+        ngfEventId = ngfAdapter->play(NOTIFIER_NGF_ID);
+    } else {
+        ngfAdapter->stop(ngfEventId);
+    }
 }

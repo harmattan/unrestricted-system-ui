@@ -23,6 +23,8 @@
 #include "notificationsink.h"
 #include <QSet>
 
+class NGFAdapter;
+
 /*!
  * A notification sink for the Notifier. Just maintains a count of unseen notifications
  */
@@ -68,7 +70,20 @@ private slots:
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
 
+    /*!
+     * Play or stop the notier NGF play.
+     * \param play Whether NGF should be played or stopped.
+     */
+    void playNotifierNGF(bool play);
+
 private:
+    //! The id for notifier NGF
+    static const QString NOTIFIER_NGF_ID;
+
+    /*!
+     * The NGF Adapter
+     */
+    NGFAdapter* ngfAdapter;
 
     //! Current notification count
     uint notificationCount;
@@ -81,6 +96,9 @@ private:
 
     //! list of system notifications which have arrived here.
     QSet<uint> systemNotificationIds;
+
+    //! The event id of the currently playing NGF feedback
+    uint ngfEventId;
 
 #ifdef UNIT_TEST
     friend class Ut_NotifierNotificationSink;

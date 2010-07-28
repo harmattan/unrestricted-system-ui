@@ -50,6 +50,7 @@ private slots:
     void testSeenNotificationAddedThenNotifierNotUpdated();
     void testWhenAddSystemNotificationNotificationIdIsStored();
     void testWhenRemoveSystemNotificationNotificationIdIsRemoved();
+    void testNGFEvents();
 
 signals:
     void addNotification(const Notification &notification);

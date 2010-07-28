@@ -35,6 +35,7 @@ class NotifierNotificationSinkStub : public StubBase {
   virtual void removeNotification(uint notificationId);
   void clearSink();
   void disableNotificationAdditions(bool disable);
+  void playNotifierNGF(bool play);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -81,6 +82,13 @@ void NotifierNotificationSinkStub::disableNotificationAdditions(bool disable)
   stubMethodEntered("disableNotificationAdditions", params);
 }
 
+void NotifierNotificationSinkStub::playNotifierNGF(bool play)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(play));
+  stubMethodEntered("playNotifierNGF", params);
+}
+
 // 3. CREATE A STUB INSTANCE
 NotifierNotificationSinkStub gDefaultNotifierNotificationSinkStub;
 NotifierNotificationSinkStub* gNotifierNotificationSinkStub = &gDefaultNotifierNotificationSinkStub;
@@ -110,6 +118,11 @@ void NotifierNotificationSink::clearSink() {
 void NotifierNotificationSink::disableNotificationAdditions(bool disable)
 {
   gNotifierNotificationSinkStub->disableNotificationAdditions(disable);
+}
+
+void NotifierNotificationSink::playNotifierNGF(bool play)
+{
+    gNotifierNotificationSinkStub->playNotifierNGF(play);
 }
 
 #endif
