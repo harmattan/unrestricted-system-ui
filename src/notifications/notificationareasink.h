@@ -22,7 +22,7 @@
 
 #include "widgetnotificationsink.h"
 
-class MBanner;
+class MInfoBanner;
 
 /*!
  * A notification sink for the NotificationArea.
@@ -54,16 +54,16 @@ signals:
     /*!
      * Adds a notification to a notification area.
      *
-     * \param notification the MBanner to be added
+     * \param notification the MInfoBanner to be added
      */
-    void addNotification(MBanner &notification);
+    void addNotification(MInfoBanner &notification);
 
     /*!
      * Removes a notification from a notification area.
      *
-     * \param notification the MBanner to be removed
+     * \param notification the MInfoBanner to be removed
      */
-    void removeNotification(MBanner &notification);
+    void removeNotification(MInfoBanner &notification);
 
     /*!
      * Signal that notification was clicked .
@@ -75,19 +75,19 @@ signals:
      *
      * \param banner The group banner to which a notification has been added
      */
-    void notificationAddedToGroup(MBanner &banner);
+    void notificationAddedToGroup(MInfoBanner &banner);
 
 private:
     //! Sets up the info banner can connects its signals
-    void setupInfoBanner(MBanner *infoBanner);
+    void setupInfoBanner(MInfoBanner *infoBanner);
     //! Updates a notification widget
-    MBanner *updateNotification(MBanner *dn, const NotificationParameters &parameters);
+    MInfoBanner *updateNotification(MInfoBanner *dn, const NotificationParameters &parameters);
 
-    //! A mapping between notification IDs and MBanner widgets
-    QHash<uint, MBanner *> notificationIdToMBanner;
+    //! A mapping between notification IDs and MInfoBanner widgets
+    QHash<uint, MInfoBanner *> notificationIdToMInfoBanner;
 
-    //! A mapping between group IDs and MBanner widgets
-    QHash<uint, MBanner *> groupIdToMBanner;
+    //! A mapping between group IDs and MInfoBanner widgets
+    QHash<uint, MInfoBanner *> groupIdToMInfoBanner;
 
     //! A mapping between group and count of notifications belonging to this group
     QHash<uint, uint> notificationCountOfGroup;
@@ -101,7 +101,7 @@ private:
     //! Increases notification count for the group to which this notification belongs by 1
     void increaseNotificationCountOfGroup(const Notification &notification);
     //! Recreates the banner for group which was clicked and hence lost the banner
-    MBanner* reviveGroupBanner(const Notification &notification);
+    MInfoBanner* reviveGroupBanner(const Notification &notification);
     //! Adds a notifications to a group specified by the notification's group id
     void addNotificationToGroup(const Notification &notification);
     //! Adds a notification which has no group id or 0 group id

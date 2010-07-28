@@ -21,16 +21,16 @@
 
 #include <stubbase.h>
 #include <notificationarea.h>
-#include <MBanner>
+#include <MInfoBanner>
 
 class NotificationAreaStub : public StubBase
 {
 public:
     virtual void notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent);
     virtual void notificationAreaDestructor();
-    virtual void addNotification(MBanner &notification);
-    virtual void moveNotificationToTop(MBanner &notification);
-    virtual void removeNotification(MBanner &notification);
+    virtual void addNotification(MInfoBanner &notification);
+    virtual void moveNotificationToTop(MInfoBanner &notification);
+    virtual void removeNotification(MInfoBanner &notification);
 };
 
 void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent)
@@ -46,24 +46,24 @@ void NotificationAreaStub::notificationAreaDestructor()
     stubMethodEntered("notificationAreaDestructor");
 }
 
-void NotificationAreaStub::addNotification(MBanner &notification)
+void NotificationAreaStub::addNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("addNotification", params);
 }
 
-void NotificationAreaStub::moveNotificationToTop(MBanner &notification)
+void NotificationAreaStub::moveNotificationToTop(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("moveNotificationToTop",params);
 }
 
-void NotificationAreaStub::removeNotification(MBanner &notification)
+void NotificationAreaStub::removeNotification(MInfoBanner &notification)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MBanner &>(notification));
+    params.append(new Parameter<MInfoBanner &>(notification));
     stubMethodEntered("removeNotification", params);
 }
 
@@ -80,17 +80,17 @@ NotificationArea::~NotificationArea()
     gNotificationAreaStub->notificationAreaDestructor();
 }
 
-void NotificationArea::addNotification(MBanner &notification)
+void NotificationArea::addNotification(MInfoBanner &notification)
 {
     gNotificationAreaStub->addNotification(notification);
 }
 
-void NotificationArea::moveNotificationToTop(MBanner &notification)
+void NotificationArea::moveNotificationToTop(MInfoBanner &notification)
 {
     gNotificationAreaStub->moveNotificationToTop(notification);
 }
 
-void NotificationArea::removeNotification(MBanner &notification)
+void NotificationArea::removeNotification(MInfoBanner &notification)
 {
     gNotificationAreaStub->removeNotification(notification);
 }

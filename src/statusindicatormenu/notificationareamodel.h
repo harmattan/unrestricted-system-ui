@@ -22,16 +22,16 @@
 
 #include <MWidgetModel>
 
-class MBanner;
+class MInfoBanner;
 
-typedef QList<MBanner *> BannerList;
+typedef QList<MInfoBanner *> BannerList;
 
 class NotificationAreaModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL(NotificationAreaModel)
-    //! Notification MBanner's in statusarea
-    M_MODEL_PROPERTY(BannerList, banners, Banners, true, QList<MBanner *>())
+    //! Notification MInfoBanner's in statusarea
+    M_MODEL_PROPERTY(BannerList, banners, Banners, true, QList<MInfoBanner *>())
 };
 
 #endif /* NOTIFICATIONAREAMODEL_H_ */

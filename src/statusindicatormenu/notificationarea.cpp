@@ -21,7 +21,7 @@
 #include "notificationarea.h"
 #include "notificationareasink.h"
 #include "mcompositornotificationsink.h"
-#include <MBanner>
+#include <MInfoBanner>
 #include <QTimer>
 
 NotificationArea::NotificationArea(MWidget *parent) :
@@ -36,11 +36,11 @@ NotificationArea::NotificationArea(MWidget *parent) :
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
-    connect(notificationAreaSink, SIGNAL(addNotification(MBanner &)), this, SLOT(addNotification(MBanner &)));
-    connect(notificationAreaSink, SIGNAL(removeNotification(MBanner &)), this, SLOT(removeNotification(MBanner &)));
+    connect(notificationAreaSink, SIGNAL(addNotification(MInfoBanner &)), this, SLOT(addNotification(MInfoBanner &)));
+    connect(notificationAreaSink, SIGNAL(removeNotification(MInfoBanner &)), this, SLOT(removeNotification(MInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
-    connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(MBanner &)), this, SLOT(moveNotificationToTop(MBanner &)));
+    connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(MInfoBanner &)), this, SLOT(moveNotificationToTop(MInfoBanner &)));
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
 }
 
@@ -49,28 +49,28 @@ NotificationArea::~NotificationArea()
     delete notificationAreaSink;
 }
 
-void NotificationArea::moveNotificationToTop(MBanner &notification)
+void NotificationArea::moveNotificationToTop(MInfoBanner &notification)
 {
-    QList<MBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     if(banners.count() != 0) {
         banners.move(banners.indexOf(&notification), 0);
         model()->setBanners(banners);
     }
 }
 
-void NotificationArea::addNotification(MBanner &notification)
+void NotificationArea::addNotification(MInfoBanner &notification)
 {
     // Put the notification into the model of the notification area
     notification.setParentItem(this);
-    QList<MBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     banners.push_front(&notification);
     model()->setBanners(banners);
 }
 
-void NotificationArea::removeNotification(MBanner &notification)
+void NotificationArea::removeNotification(MInfoBanner &notification)
 {
     // Remove the notification from the model of the notification area
-    QList<MBanner *> banners(model()->banners());
+    QList<MInfoBanner *> banners(model()->banners());
     banners.removeOne(&notification);
     model()->setBanners(banners);
     notification.setParentItem(NULL);

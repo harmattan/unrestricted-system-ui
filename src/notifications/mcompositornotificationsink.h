@@ -24,7 +24,7 @@
 #include "widgetnotificationsink.h"
 
 class QTimer;
-class MBanner;
+class MInfoBanner;
 
 /*!
  * MCompositorNotificationSink implements the NotificationSink interface for
@@ -100,12 +100,12 @@ private:
 
     /*!
      * sets up a timer for the window disappearing
-     * \param banner MBanner whose disappearance it handles. Timer would be parented to this banner.
+     * \param banner MInfoBanner whose disappearance it handles. Timer would be parented to this banner.
      */
-    void setupWindowTimer(MBanner *banner);
+    void setupWindowTimer(MInfoBanner *banner);
 
     //! A mapping between notification IDs and info banners
-    QHash<uint, MBanner *> idToBanner;
+    QHash<uint, MInfoBanner *> idToBanner;
 
     //! Whether the sink is currently showing notifications or just transferring them
     bool sinkDisabled;
