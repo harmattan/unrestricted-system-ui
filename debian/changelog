@@ -6,6 +6,7 @@ system-ui (0.16.10~1) harmattan; urgency=low
   * Fixes: NB#180296 - system-ui depends on depreciated maemo-security-certman
   * Implemented: SWP#DUI-3359, Cumulative battery charging animation in status
     area.
+  * Fixes: NB#179330 - Text input inactive during notification banner
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 09:22:10 +0300
 

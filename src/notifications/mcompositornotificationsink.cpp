@@ -28,6 +28,7 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
         window(new MWindow())
 {
     window->setTranslucentBackground(true);
+    window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
     window->setObjectName("MCompositorNotificationSinkWindow");
 }
