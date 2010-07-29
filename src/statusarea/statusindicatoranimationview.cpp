@@ -32,6 +32,7 @@ StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *cont
     MWidgetView(controller),
     controller(controller),
     animationFrame(0),
+    firstAnimationFrame(0),
     animationTimeline(new QTimeLine(0, this))
 {
     animationTimeline->setCurveShape(QTimeLine::LinearCurve);
@@ -62,7 +63,7 @@ void StatusIndicatorAnimationView::updateData(const QList<const char *>& modific
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
             if (model()->value().type() == QVariant::String) {
-                setAnimationFrame(0);
+                setAnimationFrame(firstAnimationFrame);
                 setupImageList(model()->value().toString());
            }
         } else if (member == BatteryStatusIndicatorModel::Animate) {
@@ -86,8 +87,14 @@ void StatusIndicatorAnimationView::applyStyle()
 void StatusIndicatorAnimationView::setupAnimationTimeline()
 {
     animationTimeline->setDuration(style()->animationDuration());
-    animationTimeline->setFrameRange(0, images.size());
-    animationTimeline->setUpdateInterval(style()->animationDuration() / (images.size() > 0 ? images.size() : 1));
+    animationTimeline->setFrameRange(firstAnimationFrame, images.size());
+    animationTimeline->setUpdateInterval(style()->animationDuration() / (images.size() > 0 ? (images.size() - firstAnimationFrame) : 1));
+}
+
+void StatusIndicatorAnimationView::setFirstAnimationFrame(int frame)
+{
+    firstAnimationFrame = qBound(0, frame, images.size() - 1);
+    setupAnimationTimeline();
 }
 
 void StatusIndicatorAnimationView::setAnimationFrame(int frame)

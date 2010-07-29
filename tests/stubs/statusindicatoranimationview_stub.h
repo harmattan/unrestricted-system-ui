@@ -15,6 +15,7 @@ class StatusIndicatorAnimationViewStub : public StubBase {
   virtual void startAnimation();
   virtual void stopAnimation();
   virtual void setAnimationFrame(int frame);
+  virtual void setFirstAnimationFrame(int frame);
   virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
   virtual void setupModel();
   virtual void applyStyle();
@@ -49,6 +50,12 @@ void StatusIndicatorAnimationViewStub::setAnimationFrame(int frame) {
   QList<ParameterBase*> params;
   params.append( new Parameter<int >(frame));
   stubMethodEntered("setAnimationFrame",params);
+}
+
+void StatusIndicatorAnimationViewStub::setFirstAnimationFrame(int frame) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<int >(frame));
+  stubMethodEntered("setFirstAnimationFrame",params);
 }
 
 void StatusIndicatorAnimationViewStub::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const {
@@ -110,6 +117,10 @@ void StatusIndicatorAnimationView::stopAnimation() {
 
 void StatusIndicatorAnimationView::setAnimationFrame(int frame) {
   gStatusIndicatorAnimationViewStub->setAnimationFrame(frame);
+}
+
+void StatusIndicatorAnimationView::setFirstAnimationFrame(int frame) {
+  gStatusIndicatorAnimationViewStub->setFirstAnimationFrame(frame);
 }
 
 void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const {

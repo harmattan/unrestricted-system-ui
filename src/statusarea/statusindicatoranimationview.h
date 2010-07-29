@@ -70,7 +70,7 @@ protected slots:
      *
      * \param frame the animation frame to show
      */
-    virtual void setAnimationFrame(int frame);
+    void setAnimationFrame(int frame);
 
 protected:
     //! \reimp
@@ -83,6 +83,12 @@ protected:
      * Sets up the animation timeline
      */
     void setupAnimationTimeline();
+
+    /*!
+     * Sets the first frame for the animation
+     * \param frame the animation frame from which the animation starts
+     */
+    void setFirstAnimationFrame(int frame);
 
     /*!
      * Clears the images list
@@ -107,6 +113,9 @@ protected:
 
     //! The current animation frame
     int animationFrame;
+
+    //! The animation frame from which the animation starts
+    int firstAnimationFrame;
 
     //! Timeline for the animation
     QTimeLine *animationTimeline;

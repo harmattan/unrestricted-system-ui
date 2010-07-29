@@ -91,6 +91,8 @@ void Ut_StatusIndicatorIconView::testUpdateData()
     emit updateData(modifications);
     QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setAnimationFrame"), 1);
     QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setAnimationFrame").parameter<int>(0), 3);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubCallCount("setFirstAnimationFrame"), 1);
+    QCOMPARE(gStatusIndicatorAnimationViewStub->stubLastCallTo("setFirstAnimationFrame").parameter<int>(0), 3);
 }
 
 void Ut_StatusIndicatorIconView::testApplyStyle()
