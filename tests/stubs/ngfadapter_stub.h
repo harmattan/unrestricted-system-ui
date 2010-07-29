@@ -14,9 +14,7 @@ class NGFAdapterStub : public StubBase {
   virtual uint play(const QString &id);
   virtual void stop(uint eventId);
   virtual bool isValid();
-   NgfClient *client ;
-   DBusConnection *connection ;
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void NGFAdapterStub::NGFAdapterConstructor() {
