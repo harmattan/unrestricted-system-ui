@@ -60,6 +60,11 @@ void PannedWidgetController::setGeometry(const QRectF &rect)
 
 void PannedWidgetController::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    event->accept();
+}
+
+void PannedWidgetController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
     if (bottommostWidget_) {
         // Test that the y position of the event is bigger than the bottom edge of the bottommost widget.
         // The calculations are done in this widget's coordinate space.

@@ -82,6 +82,7 @@ public:
     //! \reimp
     virtual void setGeometry(const QRectF &rect);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
 
 signals:
