@@ -51,8 +51,8 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
     persistentDataRestored(false)
-#ifdef HAVE_MAEMOSEC
-    , persistentStorage(new maemosec::storage("com.meego.core.MNotificationManager", maemosec::storage::vis_private, maemosec::storage::prot_encrypted))
+#ifdef HAVE_AEGIS_CRYPTO
+    , persistentStorage(new aegis::storage("com.meego.core.MNotificationManager", aegis::storage::vis_private, aegis::storage::prot_encrypted))
 #endif
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
@@ -91,7 +91,7 @@ bool NotificationManager::ensurePersistentDataPath()
 
 void NotificationManager::saveStateData()
 {
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     if (ensurePersistentDataPath()) {
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
@@ -116,7 +116,7 @@ void NotificationManager::saveStateData()
 
 void NotificationManager::savePersistentNotifications()
 {
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     if (ensurePersistentDataPath()) {
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
@@ -143,10 +143,10 @@ void NotificationManager::savePersistentNotifications()
 
 void NotificationManager::restorePersistentData()
 {
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     if (!persistentDataRestored && ensurePersistentDataPath()) {
-        unsigned char *data;
-        ssize_t dataLength;
+        RAWDATA_PTR data;
+        size_t dataLength;
 
         // The persistent storage automatically verifies the data.
         // If the data is corrupted or tampered with, the previous state

@@ -20,7 +20,7 @@
 #include "notificationareasink.h"
 #include "notificationwidgetparameterfactory.h"
 
-#include <MInfoBanner>
+#include <MBanner>
 #include <MRemoteAction>
 
 NotificationAreaSink::NotificationAreaSink()
@@ -30,17 +30,17 @@ NotificationAreaSink::NotificationAreaSink()
 NotificationAreaSink::~NotificationAreaSink()
 {
     // Destroy the remaining notifications
-    foreach(MInfoBanner * n, notificationIdToMInfoBanner) {
+    foreach(MBanner * n, notificationIdToMBanner) {
         delete n;
     }
 
     // Destroy the remaining groups
-    foreach(MInfoBanner * n, groupIdToMInfoBanner) {
+    foreach(MBanner * n, groupIdToMBanner) {
         delete n;
     }
 }
 
-void NotificationAreaSink::setupInfoBanner(MInfoBanner *infoBanner)
+void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
 {
     // Don't allow the scene manager to destroy the banner
     infoBanner->setManagedManually(true);
@@ -49,11 +49,11 @@ void NotificationAreaSink::setupInfoBanner(MInfoBanner *infoBanner)
     connect(infoBanner, SIGNAL(clicked()), this, SIGNAL(bannerClicked()), Qt::QueuedConnection);
 }
 
-MInfoBanner *NotificationAreaSink::updateNotification(MInfoBanner *infoBanner, const NotificationParameters &parameters)
+MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     // Update the info banner widget
-    infoBanner->setImageID(parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString());
-    infoBanner->setBodyText(infoBannerBodyText(parameters));
+    infoBanner->setTitle(infoBannerTitleText(parameters));
+    infoBanner->setSubtitle(infoBannerSubtitleText(parameters));
     infoBanner->setIconID(determineIconId(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
 
@@ -64,22 +64,22 @@ MInfoBanner *NotificationAreaSink::updateNotification(MInfoBanner *infoBanner, c
 
 void NotificationAreaSink::addGroup(uint groupId, const NotificationParameters &parameters)
 {
-    MInfoBanner *infoBanner = groupIdToMInfoBanner.value(groupId);
+    MBanner *infoBanner = groupIdToMBanner.value(groupId);
     if (infoBanner != NULL) {
         // If the info banner is already in the map, only update it
         updateNotification(infoBanner, parameters);
     } else {
         // Keep track of the mapping between IDs and info banners
-        MInfoBanner *infoBanner = createInfoBanner(MInfoBanner::Event, groupId, parameters);
+        MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, groupId, parameters);
         setupInfoBanner(infoBanner);
-        groupIdToMInfoBanner.insert(groupId, infoBanner);
+        groupIdToMBanner.insert(groupId, infoBanner);
     }
 }
 
 void NotificationAreaSink::removeGroup(uint groupId)
 {
-    if (groupIdToMInfoBanner.contains(groupId)) {
-        MInfoBanner *infoBanner = groupIdToMInfoBanner.take(groupId);
+    if (groupIdToMBanner.contains(groupId)) {
+        MBanner *infoBanner = groupIdToMBanner.take(groupId);
 
         // If the group is already visible, send signal to remove it
         if (infoBanner && infoBanner->parentItem()) {
@@ -95,14 +95,14 @@ void NotificationAreaSink::removeGroup(uint groupId)
 
 void NotificationAreaSink::removeGroupBanner(uint groupId)
 {
-    if (groupIdToMInfoBanner.contains(groupId)) {
-        MInfoBanner *infoBanner = groupIdToMInfoBanner.value(groupId);
+    if (groupIdToMBanner.contains(groupId)) {
+        MBanner *infoBanner = groupIdToMBanner.value(groupId);
 
         // If the group is already visible, send signal to remove it
         if (infoBanner && infoBanner->parentItem()) {
             // Remove from the notification area
             emit removeNotification(*infoBanner);
-            groupIdToMInfoBanner.insert(groupId,NULL);
+            groupIdToMBanner.insert(groupId,NULL);
             // Destroy
             delete infoBanner;
             deleteGroupFromNotificationCountOfGroup(groupId);
@@ -128,22 +128,22 @@ void NotificationAreaSink::increaseNotificationCountOfGroup(const Notification &
     notificationIdToGroupId.insert(notification.notificationId(), notification.groupId());
 }
 
-MInfoBanner* NotificationAreaSink::reviveGroupBanner(const Notification &notification)
+MBanner* NotificationAreaSink::reviveGroupBanner(const Notification &notification)
 {
-    MInfoBanner *infoBanner = createInfoBanner(MInfoBanner::Event, notification.groupId(), notification.parameters());
+    MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, notification.groupId(), notification.parameters());
     setupInfoBanner(infoBanner);
     infoBanner->setParentItem(NULL);
-    groupIdToMInfoBanner.insert(notification.groupId(), infoBanner);
+    groupIdToMBanner.insert(notification.groupId(), infoBanner);
     return infoBanner;
 }
 
 void NotificationAreaSink::addNotificationToGroup(const Notification &notification)
 {
     // Does the group id exist ?
-    if(groupIdToMInfoBanner.contains(notification.groupId())) {
+    if(groupIdToMBanner.contains(notification.groupId())) {
         increaseNotificationCountOfGroup(notification);
         // Yes it does, so get the banner associated with this.
-        MInfoBanner *infoBanner = groupIdToMInfoBanner.value(notification.groupId());
+        MBanner *infoBanner = groupIdToMBanner.value(notification.groupId());
 
         if(infoBanner == NULL) {
             // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Revive the banner.
@@ -162,14 +162,14 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
 void NotificationAreaSink::addStandAloneNotification(const Notification &notification)
 {
     // The notification is not in a group, add it as such to notification area
-    MInfoBanner *infoBanner = notificationIdToMInfoBanner.value(notification.notificationId());
+    MBanner *infoBanner = notificationIdToMBanner.value(notification.notificationId());
     if (infoBanner != NULL) {
         // If the notification is already in the map, only update it
         updateNotification(infoBanner, notification.parameters());
     } else {
         infoBanner = createInfoBanner(notification);
         setupInfoBanner(infoBanner);
-        notificationIdToMInfoBanner.insert(notification.notificationId(), infoBanner);
+        notificationIdToMBanner.insert(notification.notificationId(), infoBanner);
         // Add to the notification area
         emit addNotification(*infoBanner);
     }
@@ -189,14 +189,14 @@ void NotificationAreaSink::addNotification(const Notification &notification)
 
 void NotificationAreaSink::removeNotification(uint notificationId)
 {
-    if (notificationIdToMInfoBanner.contains(notificationId)) {
-        MInfoBanner *infoBanner = notificationIdToMInfoBanner.take(notificationId);
+    if (notificationIdToMBanner.contains(notificationId)) {
+        MBanner *infoBanner = notificationIdToMBanner.take(notificationId);
 
         if (infoBanner != NULL) {
-            if (!notificationIdToMInfoBanner.keys(infoBanner).isEmpty()) {
+            if (!notificationIdToMBanner.keys(infoBanner).isEmpty()) {
                 // The info banner represents a single notification: Remove the notification ID mapping
-                foreach(uint key, notificationIdToMInfoBanner.keys(infoBanner)) {
-                    notificationIdToMInfoBanner.remove(key);
+                foreach(uint key, notificationIdToMBanner.keys(infoBanner)) {
+                    notificationIdToMBanner.remove(key);
                 }
             }
             // Remove from the notification area

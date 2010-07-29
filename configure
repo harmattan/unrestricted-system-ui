@@ -17,9 +17,9 @@ if [ $? -eq 0 ]; then
         echo DEFINES += HAVE_QMSYSTEM >> ${FILENAME}
     fi
 
-    pkg-config --exists maemosec
+    pkg-config --exists aegis-crypto
     if [ $? -eq 0 ]; then
-        echo DEFINES += HAVE_MAEMOSEC >> ${FILENAME}
+        echo DEFINES += HAVE_AEGIS_CRYPTO >> ${FILENAME}
     fi
 
     pkg-config --exists libresourceqt1

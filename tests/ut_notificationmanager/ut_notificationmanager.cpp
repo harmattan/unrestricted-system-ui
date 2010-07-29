@@ -65,22 +65,22 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
 {
 }
 
-#ifdef HAVE_MAEMOSEC
-// maemosec stubs
-int maemosec::storage::get_file(const char *pathname, unsigned char **to_buf, ssize_t *bytes)
+#ifdef HAVE_AEGIS_CRYPTO
+// aegis crypto stubs
+int aegis::storage::get_file(const char* pathname, RAWDATA_RPTR to_buf, size_t* bytes)
 {
     if (QString(pathname).contains("state.data")) {
-        *to_buf = (unsigned char *)gStateBuffer.buffer().data();
+        *to_buf = (RAWDATA_PTR)gStateBuffer.buffer().data();
         *bytes = gStateBuffer.buffer().size();
     } else if (QString(pathname).contains("notifications.data")) {
-        *to_buf = (unsigned char *)gNotificationBuffer.buffer().data();
+        *to_buf = (RAWDATA_PTR)gNotificationBuffer.buffer().data();
         *bytes = gNotificationBuffer.buffer().size();
     }
 
     return 0;
 }
 
-int maemosec::storage::put_file(const char *pathname, unsigned char *data, ssize_t bytes)
+int aegis::storage::put_file(const char* pathname, RAWDATA_PTR data, size_t bytes)
 {
     if (QString(pathname).contains("state.data")) {
         gStateBuffer.close();
@@ -93,37 +93,37 @@ int maemosec::storage::put_file(const char *pathname, unsigned char *data, ssize
     return 0;
 }
 
-void maemosec::storage::release_buffer(unsigned char *data)
+void aegis::storage::release_buffer(RAWDATA_PTR data)
 {
     Q_UNUSED(data);
     gNotificationBuffer.close();
     gStateBuffer.close();
 }
 
-bool maemosec::storage::contains_file(const char *pathname)
+bool aegis::storage::contains_file(const char *pathname)
 {
     Q_UNUSED(pathname);
 
     return true;
 }
 
-void maemosec::storage::remove_file(const char *pathname)
+void aegis::storage::remove_file(const char *pathname)
 {
     Q_UNUSED(pathname);
 }
 
-void maemosec::storage::commit()
+void aegis::storage::commit()
 {
 }
 
-maemosec::storage::storage(const char *name, maemosec::storage::visibility_t visibility, maemosec::storage::protection_t protection)
+aegis::storage::storage(const char *name, aegis::storage::visibility_t visibility, aegis::storage::protection_t protection)
 {
     Q_UNUSED(name);
     Q_UNUSED(visibility);
     Q_UNUSED(protection);
 }
 
-maemosec::storage::~storage()
+aegis::storage::~storage()
 {
 }
 #endif
@@ -257,7 +257,7 @@ void Ut_NotificationManager::testNotificationUserId()
 
     delete manager;
 
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     gTestingPersistent = true;
     manager = new TestNotificationManager(0);
 
@@ -362,7 +362,7 @@ void Ut_NotificationManager::testUpdateNotification()
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
-    // TODO this cannot be fully tested until MInfoBanner supports updates
+    // TODO this cannot be fully tested until MBanner supports updates
 }
 
 void Ut_NotificationManager::testRemoveNotification()
@@ -935,7 +935,7 @@ void Ut_NotificationManager::testNotificationGroupList()
     QCOMPARE(list.size(), 0);
 }
 
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
 void Ut_NotificationManager::testGroupInfoPersistentStorage()
 {
     gTestingPersistent = true;

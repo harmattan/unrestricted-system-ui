@@ -65,17 +65,7 @@ private slots:
     void testInfoBannerCreationWithRemoteAction();
     void testInfoBannerCreationWithoutRemoteAction();
     void testInfoBannerCreationWithNotificationParameters();
-
-    void testLoadIconDefaultSize();
-    void testLoadIconSmallerThanDefault();
-    void testLoadIconScaleDownToFit();
-    void testLoadIconScaleToFitBigHeight();
-    void testLoadIconScaleToFitBigWidth();
-    void testLoadIconTooBig();
-    void testLoadIconWidthTooBig();
-    void testLoadIconHeightTooBig();
-    void testLoadIconBrokenImage();
-    void testLoadIconCannotReadImage();
+    void testInfoBannerCreationWithSystemEvent();
 
 private:
     // Helper for the "test clicking when not user removable" cases

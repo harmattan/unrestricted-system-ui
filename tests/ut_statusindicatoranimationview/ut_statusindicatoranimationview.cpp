@@ -238,6 +238,9 @@ void Ut_StatusIndicatorAnimationView::testSetAnimationDuration()
     QCOMPARE(qTimeLineDuration, 33);
     QCOMPARE(qTimeLineFrameRange, qMakePair(0, 3));
     QCOMPARE(qTimeLineUpdateInterval, 11);
+    m_subject->setFirstAnimationFrame(1);
+    QCOMPARE(qTimeLineFrameRange, qMakePair(1, 3));
+    QCOMPARE(qTimeLineUpdateInterval, 16);
 }
 
 void Ut_StatusIndicatorAnimationView::testChangingAnimate()

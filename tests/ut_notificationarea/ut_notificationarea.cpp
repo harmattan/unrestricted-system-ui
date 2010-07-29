@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include <MApplication>
-#include <MInfoBanner>
+#include <MBanner>
 #include "ut_notificationarea.h"
 #include "notificationarea.h"
 #include "notificationareaview.h"
@@ -49,9 +49,9 @@ void Ut_NotificationArea::init()
     m_subject = new NotificationArea();
     m_subject->setView(new NotificationAreaView(m_subject));
 
-    connect(this, SIGNAL(addNotification(MInfoBanner &)), m_subject, SLOT(addNotification(MInfoBanner &)));
-    connect(this, SIGNAL(removeNotification(MInfoBanner &)), m_subject, SLOT(removeNotification(MInfoBanner &)));
-    connect(this, SIGNAL(notificationUpdated(MInfoBanner &)), m_subject, SLOT(moveNotificationToTop(MInfoBanner &)));
+    connect(this, SIGNAL(addNotification(MBanner &)), m_subject, SLOT(addNotification(MBanner &)));
+    connect(this, SIGNAL(removeNotification(MBanner &)), m_subject, SLOT(removeNotification(MBanner &)));
+    connect(this, SIGNAL(notificationUpdated(MBanner &)), m_subject, SLOT(moveNotificationToTop(MBanner &)));
 }
 
 void Ut_NotificationArea::cleanup()
@@ -61,7 +61,7 @@ void Ut_NotificationArea::cleanup()
 
 void Ut_NotificationArea::testAddNotification()
 {
-    MInfoBanner notification(MInfoBanner::Information);
+    MBanner notification;
     emit addNotification(notification);
     QVERIFY(notification.parentItem() != NULL);
     QVERIFY(m_subject->model()->banners().contains(&notification));
@@ -69,7 +69,7 @@ void Ut_NotificationArea::testAddNotification()
 
 void Ut_NotificationArea::testRemoveNotification()
 {
-    MInfoBanner notification(MInfoBanner::Information);
+    MBanner notification;
     emit removeNotification(notification);
     QVERIFY(notification.parentItem() == NULL);
     QVERIFY(! m_subject->model()->banners().contains(&notification));
@@ -77,9 +77,9 @@ void Ut_NotificationArea::testRemoveNotification()
 
 void Ut_NotificationArea::testAddNotificationLatestComesFirst()
 {
-    MInfoBanner notification1(MInfoBanner::Information);
+    MBanner notification1;
     emit addNotification(notification1);
-    MInfoBanner notification2(MInfoBanner::Information);
+    MBanner notification2;
     emit addNotification(notification2);
     QCOMPARE(m_subject->model()->banners().at(0), &notification2);
     QCOMPARE(m_subject->model()->banners().at(1), &notification1);
@@ -88,11 +88,11 @@ void Ut_NotificationArea::testAddNotificationLatestComesFirst()
 void Ut_NotificationArea::testUpdatedNotificationComesFirst()
 {
     // Add three notifications
-    MInfoBanner notification1(MInfoBanner::Information);
+    MBanner notification1;
     emit addNotification(notification1);
-    MInfoBanner notification2(MInfoBanner::Information);
+    MBanner notification2;
     emit addNotification(notification2);
-    MInfoBanner notification3(MInfoBanner::Information);
+    MBanner notification3;
     emit addNotification(notification3);
     emit notificationUpdated(notification2);
     QCOMPARE(m_subject->model()->banners().at(0), &notification2);

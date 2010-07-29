@@ -67,7 +67,10 @@ uint NotificationGroupStub::groupId() const {
 
 const NotificationParameters & NotificationGroupStub::parameters() const {
     stubMethodEntered("parameters");
+#if 0
     return stubReturnValue<const NotificationParameters &>("parameters");
+#endif
+    return NotificationParameters ();
 }
 
 void NotificationGroupStub::setParameters(const NotificationParameters &parameters) {

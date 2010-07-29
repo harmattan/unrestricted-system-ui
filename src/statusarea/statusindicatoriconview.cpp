@@ -50,6 +50,7 @@ void StatusIndicatorIconView::updateData(const QList<const char *>& modification
 			    model()->value().toDouble());
 	    SYS_DEBUG ("*** calling setAnimationFrame (%d)", 
 			    frameNumber);
+            setFirstAnimationFrame(frameNumber);
             setAnimationFrame(frameNumber);
         }
     }

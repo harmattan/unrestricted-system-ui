@@ -31,8 +31,8 @@
 #include <QSharedPointer>
 #include <QBuffer>
 
-#ifdef HAVE_MAEMOSEC
-#include <maemosec_storage.h>
+#ifdef HAVE_AEGIS_CRYPTO
+#include <aegis_storage.h>
 #endif
 
 class ApplicationContext;
@@ -305,9 +305,9 @@ private:
     //! Flag to determine if the persistent data has been restored yet
     bool persistentDataRestored;
 
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     //! Secure storage object for storing persistent data
-    QSharedPointer<maemosec::storage> persistentStorage;
+    QSharedPointer<aegis::storage> persistentStorage;
 #endif
 
 #ifdef UNIT_TEST

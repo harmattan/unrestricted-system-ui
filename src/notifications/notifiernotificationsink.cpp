@@ -20,11 +20,17 @@
 #include "notifiernotificationsink.h"
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
+#include "ngfadapter.h"
+
+const QString NotifierNotificationSink::NOTIFIER_NGF_ID = "notifier";
 
 NotifierNotificationSink::NotifierNotificationSink() :
+    ngfAdapter(new NGFAdapter),
     notificationCount(0),
-    additionsDisabled(false)
+    additionsDisabled(false),
+    ngfEventId(0)
 {
+    connect(this, SIGNAL(notifierSinkActive(bool)), this, SLOT(playNotifierNGF(bool)));
 }
 
 NotifierNotificationSink::~NotifierNotificationSink()
@@ -33,8 +39,12 @@ NotifierNotificationSink::~NotifierNotificationSink()
 
 void NotifierNotificationSink::addNotification(const Notification &notification)
 {
-  if (notification.type() == Notification::SystemEvent || additionsDisabled) {
+    if(additionsDisabled) {
+        return;
+    }
+    if (notification.type() == Notification::SystemEvent) {
         // System notifications are not shown by the notifier sink
+        systemNotificationIds.insert(notification.notificationId());
         return;
     }
     if(isUnseen(notification)) {
@@ -45,8 +55,12 @@ void NotifierNotificationSink::addNotification(const Notification &notification)
     }
 }
 
-void NotifierNotificationSink::removeNotification(uint /*notificationId*/)
+void NotifierNotificationSink::removeNotification(uint notificationId)
 {
+    if(systemNotificationIds.contains(notificationId)) {
+        systemNotificationIds.remove(notificationId);
+        return;
+    }
     if(notificationCount > 0) {
         notificationCount--;
         if(notificationCount == 0) {
@@ -71,4 +85,13 @@ bool NotifierNotificationSink::isUnseen(const Notification &notification)
     NotificationParameters parameters = notification.parameters();
     QVariant unseenVariant = parameters.value(GenericNotificationParameterFactory::unseenKey());
     return unseenVariant.toBool();
+}
+
+void NotifierNotificationSink::playNotifierNGF(bool play)
+{
+    if (play) {
+        ngfEventId = ngfAdapter->play(NOTIFIER_NGF_ID);
+    } else {
+        ngfAdapter->stop(ngfEventId);
+    }
 }

@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <MInfoBanner>
+#include <MBanner>
 #include "notification.h"
 #include "notificationgroup.h"
 #include "notificationmanagerinterface.h"

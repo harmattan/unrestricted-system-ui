@@ -10,13 +10,11 @@ INCLUDEPATH += \
     $$STUB_PREFIX
 
 SOURCES += \
-    ../ft_lockscreenui/xchecker.cpp \
     ut_shutdownbusinesslogic.cpp \
     $$SRC_PREFIX/debug.cpp \
     $$SRC_PREFIX/shutdownbusinesslogic.cpp
 
 HEADERS += \
-    ../ft_lockscreenui/xchecker.h \
     ut_shutdownbusinesslogic.h \
     $$SRC_PREFIX/debug.h \
     $$SRC_PREFIX/shutdownbusinesslogic.h

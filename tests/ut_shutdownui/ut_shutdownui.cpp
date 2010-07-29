@@ -117,7 +117,9 @@ void Ut_ShutdownUI::initTestCase()
     m_Api->turnOffScreen ();
     
     
+#ifdef HAVE_QMSYSTEM
     dimmingShouldSucceed = false;
+#endif
     m_Api->turnOffScreen ();
 }
 

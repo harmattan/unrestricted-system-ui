@@ -25,69 +25,37 @@
 #include "eventtypestore.h"
 #include <QSettings>
 #include <QImageReader>
-#include <QPixmap>
 #include <QFileInfo>
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
-static const int PIXMAP_WIDTH_MAX = 100;
-static const int PIXMAP_HEIGHT_MAX = 100;
-static const int IMAGE_DEFAULT_SIZE = 64;
-
-
-/*
-    Creates QPixmap from absolute path. Images smaller than maximum size 100x100
-    are scaled to default size 64x64.
-    Takes path to image as an argument, imagePath.
-    Returns QPixmap object constructed from the given path.
-    In case of error null QPixmap is returned.
-*/
-QPixmap loadAndScalePixmap(const QString &imagePath)
-{
-    QImageReader imageReader(imagePath);
-    QPixmap pixmap = QPixmap();
-
-    if (imageReader.canRead()) {
-        QSize size = imageReader.size();
-        if (size.height() <= PIXMAP_HEIGHT_MAX && size.width() <= PIXMAP_WIDTH_MAX) {
-            size.scale(IMAGE_DEFAULT_SIZE, IMAGE_DEFAULT_SIZE, Qt::KeepAspectRatio);
-            imageReader.setScaledSize(size);
-
-            QImage image = imageReader.read();
-            if (!image.isNull()) {
-                pixmap = QPixmap::fromImage(image);
-            }
-        }
-    }
-    return pixmap;
-}
 
 QString WidgetNotificationSink::determineIconIdFromEventType(const QString &eventType)
 {
-    QString iconId;
+    QString iconID;
     if (!eventType.isEmpty()) {
         NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
         const EventTypeStore &store = notificationManager.eventTypeStore();
         const QSettings *settings = store.settingsForEventType(eventType);
         if (settings != NULL) {
-            iconId = settings->value(NotificationWidgetParameterFactory::iconIdKey()).toString();
+            iconID = settings->value(NotificationWidgetParameterFactory::iconIdKey()).toString();
         }
     }
-    return iconId;
+    return iconID;
 }
 
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
-    QString iconId = parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
-    if (iconId.isEmpty()) {
+    QString iconID = parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
+    if (iconID.isEmpty()) {
         QString eventType = parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
-        iconId = determineIconIdFromEventType(eventType);
-        if (iconId.isEmpty()) {
-            iconId = "default";
+        iconID = determineIconIdFromEventType(eventType);
+        if (iconID.isEmpty()) {
+            iconID = "default";
         }
     }
-    return iconId;
+    return iconID;
 }
 
 bool WidgetNotificationSink::determineUserRemovabilityFromEventType(const QString &eventType)
@@ -117,30 +85,30 @@ bool WidgetNotificationSink::determineUserRemovability(const NotificationParamet
     }
 }
 
-MInfoBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
+MBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
-    MInfoBanner *infoBanner = createInfoBanner(notification.type() == Notification::ApplicationEvent ? MInfoBanner::Event : MInfoBanner::Information,
-                                notification.groupId(), notification.parameters());
+    MBanner *infoBanner = createInfoBanner(notification.type(), notification.groupId(), notification.parameters());
     infoBanner->setProperty(NOTIFICATION_ID_PROPERTY, notification.notificationId());
 
     return infoBanner;
 }
 
-MInfoBanner *WidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType type, uint groupId, const NotificationParameters &parameters)
+MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters)
 {
-    QString imageId = parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
-    QString body    = infoBannerBodyText(parameters);
-    QString iconId  = determineIconId(parameters);
-    MInfoBanner *infoBanner = new MInfoBanner(type);
+    QString title    = infoBannerTitleText(parameters);
+    QString subtitle = infoBannerSubtitleText(parameters);
+    QString iconID  = determineIconId(parameters);
+    MBanner *infoBanner = new MBanner();
 
-    if (QFileInfo(imageId).isAbsolute()) {
-        infoBanner->setPixmap(loadAndScalePixmap(imageId));
-    } else {
-        infoBanner->setImageID(imageId);
+    // Create a banner on the basis of notification type
+    if (type == Notification::ApplicationEvent)
+    {
+        infoBanner->setTitle(title);
     }
+    // Add subtitle and iconid for both event and system notifications
+    infoBanner->setSubtitle(subtitle);
+    infoBanner->setIconID(iconID);
 
-    infoBanner->setBodyText(body);
-    infoBanner->setIconID(iconId);
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
 
@@ -152,7 +120,7 @@ MInfoBanner *WidgetNotificationSink::createInfoBanner(MInfoBanner::BannerType ty
     return infoBanner;
 }
 
-void WidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const NotificationParameters &parameters)
+void WidgetNotificationSink::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     // Remove the old actions
     foreach(QAction * qAction, infoBanner->actions()) {
@@ -169,31 +137,19 @@ void WidgetNotificationSink::updateActions(MInfoBanner *infoBanner, const Notifi
     }
 }
 
-QString WidgetNotificationSink::infoBannerBodyText(const NotificationParameters &parameters)
+QString WidgetNotificationSink::infoBannerTitleText(const NotificationParameters &parameters)
 {
-    QString summary = parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString();
-    QString body    = parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
+    return parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString();
+}
 
-    QString text;
-
-    if (!summary.isEmpty()) {
-        text.append("<p><b>");
-        text.append(summary);
-        text.append("</b></p>");
-    }
-
-    if (!body.isEmpty()) {
-        text.append("<p>");
-        text.append(body);
-        text.append("</p>");
-    }
-
-    return text;
+QString WidgetNotificationSink::infoBannerSubtitleText(const NotificationParameters &parameters)
+{
+    return parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
 }
 
 void WidgetNotificationSink::infoBannerClicked()
 {
-    MInfoBanner *infoBanner = qobject_cast<MInfoBanner *>(sender());
+    MBanner *infoBanner = qobject_cast<MBanner *>(sender());
 
     if (infoBanner != NULL) {
         // Trigger each remote action associated with the clicked info banner

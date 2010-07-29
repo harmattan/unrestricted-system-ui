@@ -32,7 +32,8 @@ HEADERS += \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/notifications/notificationmanager.h \
     $$SRCDIR/notifications/notificationgroup.h \
-    $$SRCDIR/notifications/eventtypestore.h
+    $$SRCDIR/notifications/eventtypestore.h \
+    $$SRCDIR/notifications/ngfadapter.h
 
 # service classes
 HEADERS += $$STUBSDIR/stubbase.h

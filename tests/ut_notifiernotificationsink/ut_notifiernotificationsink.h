@@ -48,6 +48,9 @@ private slots:
     void testClearSink();
     void testDisablingNotificationAdditions();
     void testSeenNotificationAddedThenNotifierNotUpdated();
+    void testWhenAddSystemNotificationNotificationIdIsStored();
+    void testWhenRemoveSystemNotificationNotificationIdIsRemoved();
+    void testNGFEvents();
 
 signals:
     void addNotification(const Notification &notification);
@@ -58,6 +61,7 @@ signals:
 private:
     // The object being tested
     NotifierNotificationSink *m_subject;
+    void addSystemNotification();
 };
 
 #endif

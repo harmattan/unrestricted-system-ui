@@ -8,7 +8,8 @@ DEPENDPATH = $$INCLUDEPATH
 CONFIG += meegotouch link_pkgconfig qmsystem
 QT += testlib network gui dbus xml
 TEMPLATE = app
-DEFINES += UNIT_TEST
+DEFINES += UNIT_TEST \
+           NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 LIBS += -L../../lib
 
 contains(DEFINES, HAVE_LIBNGF) {

@@ -105,7 +105,7 @@ private slots:
     void testNotificationList();
     // Test querying the notification group data
     void testNotificationGroupList();
-#ifdef HAVE_MAEMOSEC
+#ifdef HAVE_AEGIS_CRYPTO
     // Test that the group info is saved to the persistent storage
     void testGroupInfoPersistentStorage();
     // Test that the persistent notifications are saved to the persistent storage

@@ -60,7 +60,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         currentNotification = notification;
 
         // Create and set up info banner widget
-        MInfoBanner *infoBanner = createInfoBanner(currentNotification);
+        MBanner *infoBanner = createInfoBanner(currentNotification);
         setupWindowTimer(infoBanner);
 
         // Keep track of the mapping between IDs and private notification information classes
@@ -74,7 +74,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
     }
 }
 
-void MCompositorNotificationSink::setupWindowTimer(MInfoBanner *infoBanner)
+void MCompositorNotificationSink::setupWindowTimer(MBanner *infoBanner)
 {
     // Create a timer for the info banner; make it a child of the infobanner so it is destroyed automatically
     QTimer *timer = new QTimer(infoBanner);
@@ -86,12 +86,12 @@ void MCompositorNotificationSink::setupWindowTimer(MInfoBanner *infoBanner)
 
 void MCompositorNotificationSink::updateNotification(const Notification &notification)
 {
-    MInfoBanner *infoBanner = idToBanner.value(notification.notificationId());
+    MBanner *infoBanner = idToBanner.value(notification.notificationId());
 
     if (infoBanner) {
         // Update the info banner widget
-        infoBanner->setImageID(notification.parameters().value(NotificationWidgetParameterFactory::imageIdKey()).toString());
-        infoBanner->setBodyText(infoBannerBodyText(notification.parameters()));
+        infoBanner->setTitle(infoBannerTitleText(notification.parameters()));
+        infoBanner->setSubtitle(infoBannerSubtitleText(notification.parameters()));
         infoBanner->setIconID(determineIconId(notification.parameters()));
 
         // Update the info banner's actions
@@ -106,7 +106,7 @@ void MCompositorNotificationSink::removeNotification(uint notificationId)
 
 void MCompositorNotificationSink::notificationDone(uint notificationId, bool notificationIdInUse)
 {
-    MInfoBanner *infoBanner = idToBanner.take(notificationId);
+    MBanner *infoBanner = idToBanner.take(notificationId);
     if (infoBanner != NULL) {
         window->sceneManager()->disappearSceneWindow(infoBanner);
         connect(infoBanner, SIGNAL(disappeared()), this, SLOT(hideWindow()));
@@ -144,7 +144,7 @@ void MCompositorNotificationSink::setDisabled(bool disabled)
 
 void MCompositorNotificationSink::addInfoBannerToWindow()
 {
-    MInfoBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
+    MBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
     if (infoBanner != NULL) {
         window->sceneManager()->appearSceneWindow(infoBanner, MSceneWindow::DestroyWhenDone);
         disconnect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
