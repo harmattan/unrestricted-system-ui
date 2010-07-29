@@ -1,3 +1,4 @@
+
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -183,8 +184,13 @@ void Ut_StatusIndicatorMenuWindow::testWhenPressedBelowMenuContentsThenWindowSho
     QGraphicsSceneMouseEvent event;
     // Set the event position close to the bottom edge, just inside the widget
     event.setPos(QPointF(0, pannedWidget->geometry().height() - 1));
-    pannedWidget->mousePressEvent(&event);
 
+    // Check that if the mouse is pressed but not released, then window is not closed
+    pannedWidget->mousePressEvent(&event);
+    QVERIFY(gSetVisible.first != statusIndicatorMenuWindow && !gSetVisible.second);
+
+    // Check that window is closed when mouse is released
+    pannedWidget->mouseReleaseEvent(&event);
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
 
