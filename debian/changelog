@@ -1,4 +1,10 @@
-system-ui (0.16.9~1) harmattan; urgency=low
+system-ui (0.16.10~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 09:22:10 +0300
+
+system-ui (0.16.9-1) harmattan; urgency=low
 
   * Implemented: SWP#3031 - Maintaing LED - effect until an unseen notification is seen.
   * Fixes: NB#181248 - 2x OVI Suite usb notifications appear when screen is
