@@ -25,7 +25,7 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#define DEBUG
+#undef DEBUG
 #define WARNING
 #include "debug.h"
 
