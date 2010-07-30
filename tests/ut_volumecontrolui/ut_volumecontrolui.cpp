@@ -27,13 +27,6 @@
 
 #ifdef HAVE_LIBRESOURCEQT
 #include <policy/resource-set.h>
-#endif
-
-#ifdef HAVE_QMSYSTEM
-// For Hw-volume key handling
-#include <qmkeys.h>
-#endif
-
 /*********************************************************************************
  * Stub for ResourcePolicy
  */
@@ -74,8 +67,12 @@ namespace ResourcePolicy
         return;
     }
 }
+#endif // HAVE_LIBRESOURCEQT
 
 
+#ifdef HAVE_QMSYSTEM
+// For Hw-volume key handling
+#include <qmkeys.h>
 /*********************************************************************************
  * Stub for Maemo::QmKeys
  */
@@ -92,6 +89,7 @@ namespace Maemo
         QTest::qWarn("Maemo::~QmKeys");
     }
 }
+#endif
 
 /*********************************************************************************
  * Stub for VolumeOverlay
@@ -192,7 +190,9 @@ Ut_VolumeControlUI::initTestCase ()
 {
     m_Api = new VolumeControlUI;
     QVERIFY(m_Api->m_logic != NULL);
+#ifdef HAVE_QMSYSTEM
     QVERIFY(m_Api->m_hwkeys != NULL);
+#endif
 }
 
 void
@@ -202,6 +202,7 @@ Ut_VolumeControlUI::testOverlayChanged()
     QVERIFY(m_Api->m_logic->getVolume() == 32);
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 Ut_VolumeControlUI::testHwKeyEvent()
 {
@@ -229,6 +230,7 @@ Ut_VolumeControlUI::testHwKeyEvent()
     m_Api->hwKeyEvent(Maemo::QmKeys::Camera, Maemo::QmKeys::KeyDown);
     QVERIFY(m_Api->m_logic->getVolume() == 20);
 }
+#endif
 
 void
 Ut_VolumeControlUI::cleanupTestCase ()
