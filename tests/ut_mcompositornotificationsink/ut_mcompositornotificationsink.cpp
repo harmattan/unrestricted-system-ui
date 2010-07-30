@@ -213,6 +213,9 @@ void Ut_MCompositorNotificationSink::testAddNotification()
     // Check that a MWindow was created and shown(window->show() called)
     QCOMPARE(Ut_WindowShown, true);
 
+    // Check that the window doesn't request focus
+    QCOMPARE(notificationWindow->testAttribute(Qt::WA_X11DoNotAcceptFocus), true);
+
     MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
     QApplication::sendEvent(notificationWindow,event);
 
