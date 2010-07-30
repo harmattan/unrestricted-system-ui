@@ -25,7 +25,8 @@
 #include "lockscreenui.h"
 #include "lockscreenbusinesslogic.h"
 
-#undef DEBUG
+#define DEBUG
+#define WARNING
 #include "debug.h"
 
 #include <X11/Xlib.h>
@@ -64,15 +65,22 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
      * screen updates and wakeups.
      */
     connectSuccess = connect (
-        &m_QmDisplay, 
+        &m_QmDisplay,
         SIGNAL(displayStateChanged (Maemo::QmDisplayState::DisplayState)),
-        this, 
+        this,
         SLOT(displayStateChanged (Maemo::QmDisplayState::DisplayState)));
     Q_ASSERT (connectSuccess);
+
+    connectSuccess = connect (
+        &m_QmLocks,
+        SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
+        this,
+        SLOT(locksChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    Q_ASSERT (connectSuccess);
 #endif
-    
+
     /*
-     * Connecting to timer that refreshes the 
+     * Connecting to timer that refreshes the date-time label
      */
     connectSuccess = connect (&timer, SIGNAL (timeout ()),
              lockUI, SLOT (updateDateTime ()));
@@ -160,8 +168,8 @@ LockScreenBusinessLogic::toggleScreenLockUI (
         lockUI->hide();
         mayStopTimer ();
     }
-    
-    emit screenIsLocked (toggle);
+
+//    emit screenIsLocked (toggle);
 }
 
 void
@@ -174,9 +182,9 @@ LockScreenBusinessLogic::toggleEventEater (
     } else {
         eaterUI->hide ();
     }
-    
+
     // Enable the unlock notification sink also for dimmed state:
-    emit screenIsLocked (toggle);
+//    emit screenIsLocked (toggle);
 }
 
 void
@@ -223,4 +231,27 @@ LockScreenBusinessLogic::displayIsOn ()
     SYS_DEBUG ("returning %s", SYS_BOOL(retval));
     return retval;
 }
+
+#if HAVE_QMSYSTEM
+void
+LockScreenBusinessLogic::locksChanged (
+    Maemo::QmLocks::Lock what,
+    Maemo::QmLocks::State how)
+{
+    if (what == Maemo::QmLocks::TouchAndKeyboard)
+    {
+        switch (how)
+        {
+            case Maemo::QmLocks::Locked:
+                SYS_DEBUG ("Locked");
+                emit screenIsLocked (true);
+                break;
+            default:
+                SYS_DEBUG ("Unlocked");
+                emit screenIsLocked (false);
+                break;
+        }
+    }
+}
+#endif
 

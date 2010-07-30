@@ -23,6 +23,7 @@
 #include <QTimer>
 
 #ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
 #include <qmdisplaystate.h>
 #endif
 
@@ -46,6 +47,7 @@ private slots:
     void hideEventEater();
 #ifdef HAVE_QMSYSTEM
     void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
+    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
 
 signals:
@@ -63,6 +65,7 @@ private:
     EventEaterUI     *eaterUI;
 #ifdef HAVE_QMSYSTEM
     Maemo::QmDisplayState    m_QmDisplay;
+    Maemo::QmLocks           m_QmLocks;
 #endif
     QTimer            timer;
 #ifdef UNIT_TEST

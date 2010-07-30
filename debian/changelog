@@ -7,8 +7,10 @@ system-ui (0.16.10~1) harmattan; urgency=low
   * Implemented: SWP#DUI-3359, Cumulative battery charging animation in status
     area.
   * Fixes: NB#179330 - Text input inactive during notification banner
+  * Fixes: NB#179326 - End state after call is incorrect
+                       (events cleared from the event area)
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 09:22:10 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 11:27:13 +0200
 
 system-ui (0.16.9-1) harmattan; urgency=low
 

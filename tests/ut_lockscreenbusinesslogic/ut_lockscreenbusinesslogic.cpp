@@ -82,13 +82,18 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 #ifdef HAVE_QMSYSTEM
     // First try with display off
     qmDisplayState = Maemo::QmDisplayState::Off;
+    logic.locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
 #endif
 
     // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
     logic.toggleScreenLockUI(true);
     QTest::qWait (10);
+#ifdef HAVE_QMSYSTEM
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), true);
+#else
+    spy.clear ();
+#endif
     QCOMPARE(logic.lockUI->isVisible(), true);
 
     // Check whether the lock-screen-ui state has be reset to defaults
@@ -110,11 +115,8 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(gLockScreenUIStub->stubCallCount("updateDateTime"), 1);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
-    spy.clear();
     logic.toggleScreenLockUI(false);
     QTest::qWait (10);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.lockUI->isVisible(), false);
     QCOMPARE (logic.timer.isActive (), false);
 }
@@ -122,22 +124,16 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 void Ut_LockScreenBusinessLogic::testToggleEventEater()
 {
     LockScreenBusinessLogic logic;
-    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
     QTest::qWait (10);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), true);
     QCOMPARE(logic.eaterUI->isVisible(), true);
     // XXX: Stub not really allows us to test this:
     // QCOMPARE(logic.eaterUI->isFullScreen(), true);
 
-    spy.clear();
     logic.toggleEventEater(false);
     QTest::qWait (10);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.eaterUI->isVisible(), false);
 }
 
@@ -147,9 +143,14 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     logic.unlockScreen();
+#ifdef HAVE_QMSYSTEM
+    logic.locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
     QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
+#else
+    spy.clear ();
+#endif
     QCOMPARE(logic.lockUI->isVisible(), false);
     QCOMPARE (logic.timer.isActive (), false);
 }
@@ -157,12 +158,9 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
 void Ut_LockScreenBusinessLogic::testHideEventEater()
 {
     LockScreenBusinessLogic logic;
-    QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     logic.hideEventEater();
     QTest::qWait (10);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), false);
     QCOMPARE(logic.eaterUI->isVisible(), false);
 }
 
