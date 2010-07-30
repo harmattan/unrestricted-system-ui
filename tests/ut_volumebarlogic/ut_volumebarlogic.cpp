@@ -18,6 +18,13 @@
 ****************************************************************************/
 #include "ut_volumebarlogic.h"
 #include <volumebarlogic.h>
+extern "C"
+{
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib-lowlevel.h>
+}
+
+
 
 bool Ut_VolumeBarLogic::dbus_message_new_method_call = false;
 bool Ut_VolumeBarLogic::dbus_message_append_args = false;
@@ -30,7 +37,6 @@ bool Ut_VolumeBarLogic::dbus_connection_get_is_connected = false;
 
 // Dbus Stubs
 extern "C" {
-
     typedef double DBusMessageRealIter;
 
     int counter = 0;
@@ -46,9 +52,54 @@ extern "C" {
         Q_UNUSED(interface);
         Q_UNUSED(method);
         Ut_VolumeBarLogic::dbus_message_new_method_call = true;
-        return dbus_message_new (DBUS_MESSAGE_TYPE_METHOD_CALL);
+        DBusMessage *dbm = dbus_message_new (DBUS_MESSAGE_TYPE_METHOD_CALL);
+        if(dbm == 0)
+            QTest::qWarn("DBusMessage == NULL");
+        return dbm;
     }
 
+
+    DBusConnection *
+    dbus_connection_open (const char *address,
+                          DBusError  *error)
+    {
+        Q_UNUSED(address);
+        Q_UNUSED(error);
+        QString addr;
+        dbus_error_init(error);
+        /**
+          * we need to find out if we are in the scratchbox or on the tablet
+          * because the dbus-socket's location is different
+          * and we need a dbus connection what is not null
+          */
+        FILE *lsofFile_p = popen("set | grep SBOX | wc -l", "r");
+
+        if (!lsofFile_p) { return NULL; }
+
+        char buffer[1024];
+        char *line_p = fgets(buffer, sizeof(buffer), lsofFile_p);
+        pclose(lsofFile_p);
+        if(atoi(line_p) > 0)
+        {
+            // in scratchbox
+            addr = "unix:path=/var/run/dbus/system_bus_socket";
+        }
+        else
+        {
+            // on tablet
+            addr = "unix:path=/var/run/pulse/dbus-socket";
+        }
+        DBusConnection *dbc = dbus_connection_open_private(addr.toAscii(), NULL);;
+        return dbc;
+    }
+
+    dbus_bool_t
+    dbus_message_has_member(DBusMessage  *message, const char *member)
+    {
+        Q_UNUSED(message);
+        Q_UNUSED(member);
+        return 1;
+    }
 
     dbus_bool_t
     dbus_message_append_args(DBusMessage *message,
@@ -119,7 +170,7 @@ extern "C" {
     {
         Q_UNUSED(connection);
         Ut_VolumeBarLogic::dbus_connection_get_is_connected = true;
-        return 1;
+        return 0;
     }
 }
 
@@ -144,8 +195,7 @@ void
 Ut_VolumeBarLogic::testInitValues()
 {
     m_Api->initValues ();
-    QVERIFY(dbus_message_new_method_call &&
-            dbus_message_append_args &&
+    QVERIFY(dbus_message_append_args &&
             dbus_connection_send_with_reply_and_block &&
             dbus_message_iter_recurse &&
             dbus_message_iter_get_arg_type &&

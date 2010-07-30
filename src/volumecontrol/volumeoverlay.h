@@ -32,6 +32,10 @@ class VolumeOverlay : public MOverlay
     MWindow       *m_window;
 
     void constructUi ();
+
+#ifdef UNIT_TEST
+    friend class Ut_VolumeOverlay;
+#endif
 };
 
 #endif
