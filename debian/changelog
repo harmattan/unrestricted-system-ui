@@ -1,6 +1,16 @@
-system-ui (0.16.9~1) harmattan; urgency=low
+system-ui (0.16.10~1) harmattan; urgency=low
 
+  * [ UNRELEASED ]
   * Implemented: SWP#3031 - Maintaing LED - effect until an unseen notification is seen.
+  * Fixes: NB#181643 - system-ui fails to build with cs2009q3 compiler
+  * Fixes: NB#180296 - system-ui depends on depreciated maemo-security-certman
+  * Implemented: SWP#DUI-3359, Cumulative battery charging animation in status
+    area.
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 09:22:10 +0300
+
+system-ui (0.16.9-1) harmattan; urgency=low
+
   * Fixes: NB#181248 - 2x OVI Suite usb notifications appear when screen is
     unlocked
   * Fixes: NB#181173 - "connected to ovi suite mode" -popup keeps on showing
@@ -12,10 +22,6 @@ system-ui (0.16.9~1) harmattan; urgency=low
     System-UI
   * Fixes: Notifier was removed when a system notification arrived.
   * Fixes: NB#178041 - Whole message text is displayed in notification 'bubble'
-  * Fixes: NB#181643 - system-ui fails to build with cs2009q3 compiler
-  * Fixes: NB#180296 - system-ui depends on depreciated maemo-security-certman
-  * Implemented: SWP#DUI-3359, Cumulative battery charging animation in status
-    area.
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 28 Jul 2010 14:22:22 +0200
 
