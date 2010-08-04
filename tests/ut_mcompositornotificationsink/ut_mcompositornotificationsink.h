@@ -69,6 +69,7 @@ private:
     MApplication *app;
     MCompositorNotificationSink *sink;
     MockNotificationManager *notificationManager;
+    NotificationParameters& setupSinkDisabledTests(bool isSystemEvent = false);
 
 signals:
     void statusIndictorMenuVisibilityChanged(bool);
@@ -95,6 +96,9 @@ private slots:
     void testNotificationWhileApplicationEventsDisabled();
     // Test when sink is set to disabled, no notifications are generated
     void testWhenSinkDisableTrueNoBannerCreated();
+    // Test when sink is set to disabled, but system notifications are generated
+    void testWhenSinkIsSetToDisabledSystemNotificationsAreStillGenerated();
+
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

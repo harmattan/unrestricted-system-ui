@@ -48,7 +48,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if (sinkDisabled) {
+    if (sinkDisabled && notification.type() != Notification::SystemEvent) {
         emit notificationAdded(notification);
         return;
     }
