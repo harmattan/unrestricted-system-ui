@@ -47,7 +47,12 @@ MockNotificationManager::MockNotificationManager() :
 uint MockNotificationManager::addNotification(uint, const NotificationParameters &parameters, uint groupId, int timeout)
 {
     uint notificationId = nextAvailableNotificationID++;
-    Notification notification = Notification(notificationId, groupId, 0, parameters, Notification::ApplicationEvent, timeout);
+    Notification notification;
+    if (parameters.value("class") == QString("system")) {
+        notification = Notification(notificationId, groupId, 0, parameters, Notification::SystemEvent, timeout);
+    } else {
+        notification = Notification(notificationId, groupId, 0, parameters, Notification::ApplicationEvent, timeout);
+    }
     notifications.append(notification);
     emit notificationUpdated(notification);
     return notificationId;
@@ -202,6 +207,19 @@ void Ut_MCompositorNotificationSink::cleanup()
     delete notificationManager;
 }
 
+NotificationParameters& Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
+{
+    connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
+    emit statusIndictorMenuVisibilityChanged(true);
+    // Create notification
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    if (isSystemEvent) {
+        parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    }
+    notificationManager->addNotification(0, parameters);
+    return parameters;
+}
+
 void Ut_MCompositorNotificationSink::testAddNotification()
 {
     QSignalSpy spy(sink, SIGNAL(notificationAdded(const Notification&)));
@@ -322,11 +340,7 @@ void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisab
 
 void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
 {
-    connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
-    emit statusIndictorMenuVisibilityChanged(true);
-    // Create notification
-    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
-    notificationManager->addNotification(0, parameters);
+    NotificationParameters parameters = setupSinkDisabledTests();
     QCOMPARE(Ut_WindowShown, false);
     emit statusIndictorMenuVisibilityChanged(false);
     notificationManager->addNotification(0, parameters);
@@ -334,5 +348,13 @@ void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
     QApplication::sendEvent(notificationWindow,event);
     QCOMPARE(Ut_WindowShown, true);
 }
+
+void Ut_MCompositorNotificationSink::testWhenSinkIsSetToDisabledSystemNotificationsAreStillGenerated()
+{
+    setupSinkDisabledTests(true);
+    // Check that notification is shown
+    QCOMPARE(Ut_WindowShown, true);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)
