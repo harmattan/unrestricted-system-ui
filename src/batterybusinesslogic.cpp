@@ -38,7 +38,7 @@ namespace {
     const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#undef DEBUG
+//#define DEBUG
 #include "debug.h"
 
 
@@ -462,7 +462,7 @@ BatteryBusinessLogic::sendNotification (
             SYS_STR(eventType), SYS_STR(text), SYS_STR(icon));
     emit notificationSent (eventType, text, icon);
 
-    m_notification = new MNotification (eventType, text);
+    m_notification = new MNotification (eventType, "", text);
     if (!icon.isEmpty())
         m_notification->setImage (icon);
     m_notification->publish ();
