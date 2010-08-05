@@ -195,12 +195,12 @@ void
 Ut_VolumeBarLogic::testInitValues()
 {
     m_Api->initValues ();
-    QVERIFY(dbus_message_append_args &&
-            dbus_connection_send_with_reply_and_block &&
-            dbus_message_iter_recurse &&
-            dbus_message_iter_get_arg_type &&
-            dbus_message_iter_get_basic &&
-            dbus_message_iter_next);
+    QVERIFY(dbus_message_append_args);
+    QVERIFY(dbus_connection_send_with_reply_and_block);
+    QVERIFY(dbus_message_iter_recurse);
+    QVERIFY(dbus_message_iter_get_arg_type);
+    QVERIFY(dbus_message_iter_get_basic);
+    QVERIFY(dbus_message_iter_next);
     resetStubs();
 }
 
