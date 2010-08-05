@@ -24,8 +24,6 @@ extern "C"
 #include <dbus/dbus-glib-lowlevel.h>
 }
 
-
-
 bool Ut_VolumeBarLogic::dbus_message_new_method_call = false;
 bool Ut_VolumeBarLogic::dbus_message_append_args = false;
 bool Ut_VolumeBarLogic::dbus_connection_send_with_reply_and_block = false;
@@ -140,11 +138,15 @@ extern "C" {
     {
         Q_UNUSED(iter);
         Ut_VolumeBarLogic::dbus_message_iter_get_arg_type = true;
-        counter++;
-        if(counter < 3)
+        if(counter < 2)
+        {
+            counter++;
             return DBUS_TYPE_INT32;
+        }
         else
+        {
             return DBUS_TYPE_INVALID;
+        }
     }
 
     void
@@ -153,6 +155,7 @@ extern "C" {
     {
         Q_UNUSED(iter);
         Q_UNUSED(value);
+        QTest::qWarn("dbus_message_iter_get_basic");
         Ut_VolumeBarLogic::dbus_message_iter_get_basic = true;
         return;
     }
@@ -189,6 +192,7 @@ Ut_VolumeBarLogic::initTestCase ()
 {
     m_Api = new VolumeBarLogic;
     m_Api->stepsUpdated (30, 100);
+    resetStubs();
 }
 
 void
@@ -275,6 +279,7 @@ Ut_VolumeBarLogic::cleanupTestCase ()
 
 void Ut_VolumeBarLogic::resetStubs()
 {
+    counter = 0;
     dbus_message_new_method_call = false;
     dbus_message_append_args = false;
     dbus_connection_send_with_reply_and_block = false;
