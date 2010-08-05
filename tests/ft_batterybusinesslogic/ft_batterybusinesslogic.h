@@ -28,6 +28,12 @@
 
 class MApplication;
 
+/*!
+ * This functional test was created to check the NB #183500. 
+ *
+ * FIXME: The tests should be enhanced to check if the notifications are really
+ * sent.
+ */
 class Ft_BatteryBusinessLogic : public QObject
 {
     Q_OBJECT
@@ -41,7 +47,7 @@ private slots:
     void testInitBattery ();
     void testLowBatteryAlert ();
     void testBatteryStateChanged ();
-    void testChargingStateChanged ();
+    //void testChargingStateChanged ();
     void testBatteryChargerEvent ();
     void testPSMStateChanged ();
     void testLowBatteryNotifierConnection ();

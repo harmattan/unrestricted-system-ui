@@ -9,6 +9,8 @@ system-ui (0.16.10~1) harmattan; urgency=low
   * Fixes: NB#179330 - Text input inactive during notification banner
   * Fixes: NB#179326 - End state after call is incorrect
                        (events cleared from the event area)
+  * Fixes: NB#183500 - On activating and deactivating power saver mode banners 
+    are shown but no text present on it.
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 11:27:13 +0200
 

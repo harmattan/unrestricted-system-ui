@@ -55,29 +55,6 @@ MFeedback::play () const
     SYS_DEBUG ("Playing...");
 }
 
-#if 0
-/*
- * TODO:
- *  - test the feedback playing also
- *  [XXX: we need to know first, how to play those correctly...]
- */
-bool
-MNotification::publish ()
-{
-/*
- * XXX: We don't want to show real notifications
- * in unit-test:
- */
-    return false;
-}
-
-bool
-MNotification::remove ()
-{
-    return false;
-}
-#endif
-
 int   argc = 1;
 char *argv[] = {
     (char *) "./ft_batterybusinesslogic",
@@ -234,6 +211,7 @@ Ft_BatteryBusinessLogic::testBatteryStateChanged ()
 #endif
 }
 
+#if 0
 void
 Ft_BatteryBusinessLogic::testChargingStateChanged ()
 {
@@ -281,6 +259,7 @@ Ft_BatteryBusinessLogic::testChargingStateChanged ()
     QVERIFY (arguments.at (2).toString () == "");
 #endif
 }
+#endif
 
 void
 Ft_BatteryBusinessLogic::testBatteryChargerEvent ()
