@@ -35,6 +35,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
 
+#define FEEDBACK_SUPPLIED
 
 #define DEBUG
 #define WARNING
@@ -86,7 +87,11 @@ ShutdownUI::realize ()
     // Initilaize non-graphical feedback
     m_Feedback = new MFeedback (this);
 #ifdef FEEDBACK_SUPPLIED
-    m_Feedback->setName ("DF_POWER_OFF");
+    /*
+     * I got some vibra files, adding the name here. (L.P.)
+     */
+    m_Feedback->setName ("power-off");
+    //m_Feedback->setName ("DF_POWER_OFF");
 #else
     m_Feedback->setName ("press");
 #endif

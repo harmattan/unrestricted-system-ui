@@ -38,6 +38,7 @@
 #include <MLayout>
 #include <MSceneManager>
 #include <MLinearLayoutPolicy>
+#include <MFeedback>
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(LockScreenUI)
@@ -198,6 +199,12 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
         updateDnDicon ();
         static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (false);
         static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (true);
+        
+        /*
+         * Playing the appropriate feedback.
+         */
+        MFeedback feedback ("start-dragndrop");
+        feedback.play ();
     }
     else
         m_DnDstate = STATE_NONE;
@@ -230,14 +237,25 @@ LockScreenWindow::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     // To avoid unnecessary screen updates...
     if (newState != m_DnDstate)
     {
+        MFeedback feedback;
         m_DnDstate = newState;
         switch (newState)
         {
             case STATE_MOVING_ACTIVE:
+                /*
+                 * Entered the active area.
+                 */
+                feedback.setName ("enter-dragndrop-dropzone");
+                feedback.play ();
                 static_cast<UnlockArea*>(m_LockLandArea)->setActive (true);
                 break;
             case STATE_MOVING:
             default:
+                /*
+                 * Exited the active area.
+                 */
+                feedback.setName ("exit-dragndrop-dropzone");
+                feedback.play ();
                 static_cast<UnlockArea*>(m_LockLandArea)->setActive (false);
                 break;
         }
@@ -251,12 +269,24 @@ LockScreenWindow::mouseReleaseEvent (QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED (event);
     bool unlock = false;
+    MFeedback feedback;
 
-    if (m_DnDstate == STATE_NONE)
+    if (m_DnDstate == STATE_NONE) {
         return;
+    }
 
     if (m_DnDstate == STATE_MOVING_ACTIVE)
         unlock = true;
+
+    /*
+     * Playing the appropriate feedback.
+     */
+    if (unlock) {
+        feedback.setName ("release-inside-dragndrop-dropzone");
+    } else {
+        feedback.setName ("release-outside-dragndrop-dropzone");
+    }
+    feedback.play ();
 
     // Reset the state to defaults...
     resetState ();
