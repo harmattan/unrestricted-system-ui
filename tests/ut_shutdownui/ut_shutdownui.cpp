@@ -26,7 +26,6 @@
 #include <MApplication>
 #include <MWindow>
 #include <MNotification>
-#include <MFeedback>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -51,9 +50,12 @@ QmDisplayState::set(
     return dimmingShouldSucceed;
 }
 #endif
+
 /******************************************************************************
  * The stub for MFeedback class.
  */
+#include <MFeedback>
+
 static QString nameOfLastFeedback;
 
 void
@@ -145,6 +147,7 @@ Ut_ShutdownUI::testShowWindow ()
     QVERIFY (m_Api->m_Label2);
     QVERIFY (m_Api->m_Image);
     QVERIFY (m_Api->m_SceneWindow);
+    QVERIFY (nameOfLastFeedback == "power-off");
 }
 
 QTEST_APPLESS_MAIN(Ut_ShutdownUI)

@@ -43,7 +43,29 @@
 #define DEBUG
 #include "../../src/debug.h"
 
-/*********************************************************************************
+/******************************************************************************
+ * The stub for MFeedback class.
+ */
+#include <MFeedback>
+
+static QString nameOfLastFeedback;
+
+void
+MFeedback::play () const 
+{
+    /*
+     * Seems that the MWindow sends empty name feedbacks sometimes, we filter
+     * those out. I hope these will not cause problems in the future... but we
+     * can filter them by name too...
+     */
+    if (name().isEmpty())
+        return;
+
+    SYS_DEBUG ("*** name = %s", SYS_STR(name()));
+    nameOfLastFeedback = name();
+}
+
+/******************************************************************************
  * Stub for the MGConfItem
  */
 QVariant
@@ -63,7 +85,7 @@ MWindow::isVisible ()
 }
 #endif
 
-/*********************************************************************************
+/******************************************************************************
  * Stub for the QPixmap
  */
 bool failImageLoads = false;
@@ -86,7 +108,7 @@ QPixmap::load (
     return true;
 }
 
-/*********************************************************************************
+/******************************************************************************
  * Stub for the QPainter
  */
 QPixmap* qpainter_pixmap = 0;
@@ -101,7 +123,7 @@ QPainter::drawPixmap (const QRectF &targetRect, const QPixmap &pixmap, const QRe
     qpainter_pixmap = (QPixmap *) &pixmap;
 }
 
-/*********************************************************************************
+/******************************************************************************
  * The helper class to watch the signals.
  */
 LockScreenUIEventSink::LockScreenUIEventSink() :
@@ -122,7 +144,7 @@ LockScreenUIEventSink::unlocked ()
     m_UnlockedCame = true;
 }
 
-/*********************************************************************************
+/******************************************************************************
  * The Ut_LockScreenUI implements the unit tests.
  */
 void Ut_LockScreenUI::init()
@@ -260,25 +282,31 @@ Ut_LockScreenUI::testLockScreenWindow ()
     // icon.
     window->mousePressEvent (pressEvent);
     QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+    QVERIFY (nameOfLastFeedback == "start-dragndrop");
 
     //
-    // Then we move the mouse right into th emiddle of the screen
+    // Then we move the mouse right into the middle of the screen
     window->mouseMoveEvent (moveEvent);
     QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+    QVERIFY (nameOfLastFeedback == "enter-dragndrop-dropzone");
 
     // Move back to some non-active place
     window->mouseMoveEvent (moveEventNotActive);
     QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+    QVERIFY (nameOfLastFeedback == "exit-dragndrop-dropzone");
 
     // ... again move to active area:
     window->mouseMoveEvent (moveEvent);
     QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+    QVERIFY (nameOfLastFeedback == "enter-dragndrop-dropzone");
 
     //
     // And then the mouse is released. And this concludes the interaction, the
     // unlocked() signal should be sent.
     //
     window->mouseReleaseEvent (releaseEvent);
+    QVERIFY (m_EventSink.m_UnlockedCame);
+    QVERIFY (nameOfLastFeedback == "release-inside-dragndrop-dropzone");
 
     /*
      * Test also the RTL layout direction
@@ -300,16 +328,19 @@ Ut_LockScreenUI::testLockScreenWindow ()
     // icon.
     window->mousePressEvent (pressEvent);
     QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+    QVERIFY (nameOfLastFeedback == "start-dragndrop");
 
     //
     // Then we move the mouse right into th emiddle of the screen
     window->mouseMoveEvent (moveEvent);
+    QVERIFY (nameOfLastFeedback == "enter-dragndrop-dropzone");
 
     //
     // And then the mouse is released. And this concludes the interaction, the
     // unlocked() signal should be sent.
     //
     window->mouseReleaseEvent (releaseEvent);
+    QVERIFY (nameOfLastFeedback == "release-inside-dragndrop-dropzone");
 
     QVERIFY (m_EventSink.m_UnlockedCame);
 
