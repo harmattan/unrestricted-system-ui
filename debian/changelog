@@ -11,6 +11,8 @@ system-ui (0.16.10~1) harmattan; urgency=low
                        (events cleared from the event area)
   * Fixes: NB#183500 - On activating and deactivating power saver mode banners 
     are shown but no text present on it.
+  * Added vibra feedback for shutdown and lockscreen, will be available when
+    theme files are added.
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 30 Jul 2010 11:27:13 +0200
 
