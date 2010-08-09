@@ -242,22 +242,23 @@ void NotificationManager::updateNotificationsWithEventType(const QString &eventT
 
 uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId)
 {
-    bool persistent = determinePersistence(parameters);
     restorePersistentData();
 
     if (groupId == 0 || groups.contains(groupId)) {
+        bool persistent = determinePersistence(parameters);
         uint notificationId = nextAvailableNotificationID();
 
-        // Mark the notification used
         Notification notification(notificationId, groupId, notificationUserId, parameters, determineType(parameters), relayInterval);
+        // Mark the notification used
         notifications.insert(notificationId, notification);
-        submitNotification(notification);
 
         // If a group is persistent, all the notifications in the group are persistent too
         if (persistent || persistentGroups.contains(groupId)) {
             persistentNotifications.insert(notificationId);
             savePersistentNotifications();
         }
+
+        submitNotification(notification);
 
         return notificationId;
     }
@@ -276,18 +277,18 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
     if (ni != notifications.end()) {
         (*ni).setParameters(parameters);
 
+        // Also checks if the notification's group is persistent
+        if (persistentNotifications.contains(notificationId) ||
+                persistentGroups.contains((*ni).groupId())) {
+            savePersistentNotifications();
+        }
+
         int waitQueueIndex = findNotificationFromWaitQueue(notificationId);
         if (waitQueueIndex >= 0) {
             waitQueue[waitQueueIndex].setParameters(parameters);
         } else {
             // Inform the sinks about the update
             emit notificationUpdated(notifications.value(notificationId));
-        }
-
-        // Also checks if the notification's group is persistent
-        if (persistentNotifications.contains(notificationId) ||
-                persistentGroups.contains((*ni).groupId())) {
-            savePersistentNotifications();
         }
 
         return true;
@@ -308,20 +309,20 @@ bool NotificationManager::removeNotification(uint notificationId)
     restorePersistentData();
 
     if (notifications.contains(notificationId)) {
-        int waitQueueIndex = findNotificationFromWaitQueue(notificationId);
-        if (waitQueueIndex >= 0) {
-            waitQueue.removeAt(waitQueueIndex);
-        } else {
-            // Inform the sinks about the removal
-            emit notificationRemoved(notificationId);
-        }
-
         // Mark the notification unused
         notifications.take(notificationId);
 
         if (persistentNotifications.contains(notificationId)) {
             persistentNotifications.remove(notificationId);
             savePersistentNotifications();
+        }
+
+        int waitQueueIndex = findNotificationFromWaitQueue(notificationId);
+        if (waitQueueIndex >= 0) {
+            waitQueue.removeAt(waitQueueIndex);
+        } else {
+            // Inform the sinks about the removal
+            emit notificationRemoved(notificationId);
         }
 
         return true;
@@ -355,13 +356,14 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
     uint groupID = nextAvailableGroupID();
     NotificationGroup group(groupID, notificationUserId, parameters);
     groups.insert(groupID, group);
-    emit groupUpdated(groupID, parameters);
 
     if (persistent) {
         persistentGroups.insert(groupID);
     }
 
     saveStateData();
+
+    emit groupUpdated(groupID, parameters);
 
     return groupID;
 }
@@ -376,9 +378,10 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
 
     if (gi != groups.end()) {
         (*gi).setParameters(parameters);
-        emit groupUpdated(groupId, parameters);
 
         saveStateData();
+
+        emit groupUpdated(groupId, parameters);
 
         return true;
     } else {
@@ -397,13 +400,13 @@ bool NotificationManager::removeGroup(uint notificationUserId, uint groupId)
             }
         }
 
-        emit groupRemoved(groupId);
-
         if (persistentGroups.contains(groupId)) {
             persistentGroups.remove(groupId);
         }
 
         saveStateData();
+
+        emit groupRemoved(groupId);
 
         return true;
     } else {
@@ -489,7 +492,6 @@ bool NotificationManager::determinePersistence(const NotificationParameters &par
     return persistentVariant.toBool();
 }
 
-
 Notification::NotificationType NotificationManager::determineType(const NotificationParameters &parameters)
 {
     QVariant classVariant = parameters.value(GenericNotificationParameterFactory::classKey());
@@ -558,9 +560,9 @@ uint NotificationManager::nextAvailableGroupID()
 
 void NotificationManager::removeUnseenFlags(bool ignore)
 {
-    if(!ignore) {
+    if (!ignore) {
         QHash<uint, Notification>::iterator it = notifications.begin();
-        while(it != notifications.end() ) {
+        while (it != notifications.end()) {
             NotificationParameters newParameters = (*it).parameters();
             newParameters.add(GenericNotificationParameterFactory::unseenKey(), QVariant(false));
             (*it).setParameters(newParameters);
