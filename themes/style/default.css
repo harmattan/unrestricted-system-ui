@@ -36,6 +36,7 @@ NotificationAreaStyle {
 
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
     font: $FONT_XSMALL;
+    text-color: $COLOR_FOREGROUND;
     minimum-size: 8.8mm 7.3mm;
     preferred-size: 8.8mm 7.3mm;
     maximum-size: 8.8mm 7.3mm;
