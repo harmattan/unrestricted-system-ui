@@ -1,6 +1,5 @@
-system-ui (0.16.10~1) harmattan; urgency=low
+system-ui (0.16.10-1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
   * Implemented: SWP#3031 - Maintaing LED - effect until an unseen notification is seen.
   * Fixes: NB#181643 - system-ui fails to build with cs2009q3 compiler
   * Fixes: NB#180296 - system-ui depends on depreciated maemo-security-certman
