@@ -108,13 +108,17 @@ QmBatteryStub *gQmBatteryStub = &gDefaultQmBatteryStub;
 namespace Maemo
 {
 
+class QmBatteryPrivate
+{
+    /* Dummy class... */
+};
+
 QmBattery::QmBattery (QObject *parent)
 {
     Q_UNUSED (parent);
     /*
      * Do nothing, we don't want to instantiate a real QmBattery...
      */
-    priv = 0;
 }
 
 QmBattery::~QmBattery ()
