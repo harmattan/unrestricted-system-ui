@@ -1,3 +1,9 @@
+system-ui (0.16.10-2) harmattan; urgency=low
+
+  * Trying to fix compilation issues
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 11 Aug 2010 14:16:00 +0300
+
 system-ui (0.16.10-1) harmattan; urgency=low
 
   * Implemented: SWP#3031 - Maintaing LED - effect until an unseen notification is seen.
