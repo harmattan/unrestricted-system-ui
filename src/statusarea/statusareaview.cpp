@@ -81,6 +81,14 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);
     compositeLayout->setSpacing(0);
+
+    // Add notification indicator and anchor it to middle of landscape and portrait widgets
+    compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorVerticalCenter, landscapeWidget, Qt::AnchorVerticalCenter);
+    compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorHorizontalCenter, landscapeWidget, Qt::AnchorHorizontalCenter);
+
+    compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorVerticalCenter, portraitWidget, Qt::AnchorVerticalCenter);
+    compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorHorizontalCenter, portraitWidget, Qt::AnchorHorizontalCenter);
+
     compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopLeftCorner, compositeLayout, Qt::TopLeftCorner);
     compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopRightCorner, compositeLayout, Qt::TopRightCorner);
     compositeLayout->addCornerAnchors(portraitWidget, Qt::TopLeftCorner, landscapeWidget, Qt::BottomLeftCorner);
@@ -164,8 +172,6 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapePhoneNetworkTypeIndicator);
     layout->addItem(landscapePhoneNetworkIndicator);
     layout->addStretch();
-    layout->addItem(landscapeNotificationIndicator);
-    layout->addStretch();
     layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeBluetoothIndicator);
     layout->addItem(landscapeGPSIndicator);
@@ -190,8 +196,6 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPhoneSignalStrengthIndicator);
     layout->addItem(portraitPhoneNetworkTypeIndicator);
     layout->addItem(portraitPhoneNetworkIndicator);
-    layout->addStretch();
-    layout->addItem(portraitNotificationIndicator);
     layout->addStretch();
     layout->addItem(portraitInternetConnectionIndicator);
     layout->addItem(portraitBluetoothIndicator);
