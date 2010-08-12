@@ -63,6 +63,13 @@ private slots:
     void testTopRowInitialization();
     void testVerticalExtensionArea();
     void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
+#ifdef HAVE_QMSYSTEM
+    void testQmLocksSignalConnectionWhenDeviceLocked();
+    void testWhenDeviceLockedMenuIsNotVisible();
+    void testWhenDeviceUnlockedMenuIsVisible();
+    void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
+    void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
+#endif
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

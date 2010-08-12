@@ -32,6 +32,7 @@
 #include <MPannableViewport>
 #include "x11wrapper_stub.h"
 
+
 // MApplicationIfProxy stubs (used by StatusIndicatorMenuWindow)
 bool mApplicationIfProxyLaunchCalled = false;
 QDBusPendingReply<> MApplicationIfProxy::launch()
@@ -273,5 +274,55 @@ void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuI
     emit displayExited();
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
 }
+
+#ifdef HAVE_QMSYSTEM
+void Ut_StatusIndicatorMenuWindow::testQmLocksSignalConnectionWhenDeviceLocked()
+{
+    bool connectionExisted = disconnect(&statusIndicatorMenuWindow->qmLocks, SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)), statusIndicatorMenuWindow,
+                                        SLOT(setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    QCOMPARE(connectionExisted, true);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockedMenuIsNotVisible()
+{
+    // test when device lock state is locked
+    statusIndicatorMenuWindow->hide();
+    statusIndicatorMenuWindow->deviceLocked = true;
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    statusIndicatorMenuWindow->makeVisible();
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceUnlockedMenuIsVisible()
+{
+    // test when device lock state is unlocked
+    statusIndicatorMenuWindow->hide();
+    statusIndicatorMenuWindow->deviceLocked = false;
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    statusIndicatorMenuWindow->makeVisible();
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && gSetVisible.second);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates()
+{
+    // change status from locked to unlocked
+    statusIndicatorMenuWindow->deviceLocked = true;
+    statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
+            Maemo::QmLocks::Device, Maemo::QmLocks::Unlocked);
+    QCOMPARE(statusIndicatorMenuWindow->deviceLocked, false);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates()
+{
+    // change status from unlocked to locked and test if menu closes
+    statusIndicatorMenuWindow->sceneWindow->appear();
+    statusIndicatorMenuWindow->deviceLocked = false;
+    statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
+            Maemo::QmLocks::Device, Maemo::QmLocks::Locked);
+    QCOMPARE(statusIndicatorMenuWindow->deviceLocked, true);
+    QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
+}
+
+#endif
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

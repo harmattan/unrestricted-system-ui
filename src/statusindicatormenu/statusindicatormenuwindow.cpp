@@ -89,6 +89,15 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 
+#ifdef HAVE_QMSYSTEM
+    /*
+     * We need to receive updates when device lock state changes
+     * to prevent status indicator menu opening when device lock is on
+     */
+    connect (&qmLocks, SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)), this,
+                                   SLOT(setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+#endif
+
     // Show status bar
     sceneManager()->appearSceneWindowNow(statusBar);
 
@@ -326,6 +335,11 @@ void StatusIndicatorMenuWindow::setStatusIndicatorMenuInterface(MApplicationExte
 
 void StatusIndicatorMenuWindow::makeVisible()
 {
+#ifdef HAVE_QMSYSTEM
+    if (deviceLocked) {
+        return;
+    }
+#endif
     if (!isVisible()) {
         // If status indicator window is not visible, then show it
         show();
@@ -338,6 +352,11 @@ void StatusIndicatorMenuWindow::makeVisible()
 
 void StatusIndicatorMenuWindow::showStatusIndicatorMenu()
 {
+#ifdef HAVE_QMSYSTEM
+    if (deviceLocked) {
+        return;
+    }
+#endif
     sceneWindow->appear();
 }
 
@@ -358,3 +377,20 @@ void StatusIndicatorMenuWindow::launchControlPanelAndHide()
 
     hideStatusIndicatorMenu();
 }
+
+#ifdef HAVE_QMSYSTEM
+void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+{
+    if (what == Maemo::QmLocks::Device) {
+        if (how == Maemo::QmLocks::Unlocked) {
+            deviceLocked = false;
+        } else {
+            deviceLocked = true;
+            if (isVisible()) {
+                hideStatusIndicatorMenu();
+            }
+        }
+    }
+}
+
+#endif

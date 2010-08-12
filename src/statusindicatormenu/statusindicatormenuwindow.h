@@ -27,6 +27,10 @@
 #include "mstatusindicatormenuextensioninterface.h"
 #include "mstatusbar.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
+#endif
+
 class QGraphicsSceneMouseEvent;
 class QGraphicsLinearLayout;
 class MPannableViewport;
@@ -164,7 +168,16 @@ private slots:
     //! Set the pannability and layout based on the size and position of the pannable area
     void setPannabilityAndLayout();
 
-private:
+#ifdef HAVE_QMSYSTEM
+    /*!
+     * \brief Slot for receiving device lock status changes
+     * \param what tells which lockstate has been changed, either Device or TouchScreen/Keyboard
+     * \param how tells to which state lock has been changed, one of Locked, Unlocked or Unknown
+     */
+    void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+#endif
+
+private: // methods
 
     //! The name of the control panel service
     const static QString CONTROL_PANEL_SERVICE_NAME;
@@ -198,6 +211,17 @@ private:
 
     //! Pannable area background widget
     MWidgetController *backgroundWidget;
+
+
+private: // data
+
+#ifdef HAVE_QMSYSTEM
+    //! QmSystem watcher for device lock
+    Maemo::QmLocks qmLocks;
+
+    //! Device lock status
+    bool deviceLocked;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuWindow;
