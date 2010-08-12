@@ -611,7 +611,7 @@ EventEaterUI::showEvent (
     Atom        utf8StringAtom;
     Atom        stackingLayerAtom;
     const char *windowName = "EventEaterUI";
-    long        layer = 1;
+    long        layer = 6;
 
     display = QX11Info::display ();
     if (!display) {
