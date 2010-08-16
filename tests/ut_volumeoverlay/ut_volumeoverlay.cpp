@@ -129,6 +129,8 @@ MWindow::visibleSceneSize(M::Orientation orientation) const
 {
     mw_orientation = orientation;
     QTest::qWarn("MWindow::visibleSceneSize");
+
+    return QSize (100, 100);
 }
 
 /*********************************************************************************
