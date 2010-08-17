@@ -17,5 +17,5 @@ HEADERS += \
     ut_statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
-
+    $$STUBSDIR/qmlocks_stub.h
 include(../common_bot.pri)

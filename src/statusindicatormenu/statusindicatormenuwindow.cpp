@@ -96,6 +96,11 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
      */
     connect (&qmLocks, SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)), this,
                                    SLOT(setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    if (qmLocks.getState(Maemo::QmLocks::Device) == Maemo::QmLocks::Unlocked) {
+        deviceLocked = false;
+    } else {
+        deviceLocked = true;
+    }
 #endif
 
     // Show status bar

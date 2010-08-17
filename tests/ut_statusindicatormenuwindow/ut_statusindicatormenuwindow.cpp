@@ -19,6 +19,7 @@
 ****************************************************************************/
 
 #include "ut_statusindicatormenuwindow.h"
+#include "qmlocks_stub.h"
 #include "statusindicatormenuwindow.h"
 #include <MApplication>
 #include <MApplicationIfProxy>
@@ -135,6 +136,14 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible()
     statusIndicatorMenuWindow->hide();
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
+
+#ifdef HAVE_QMSYSTEM
+    if (statusIndicatorMenuWindow->deviceLocked) {
+        QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+        return;
+    }
+#endif
+
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && gSetVisible.second);
 }
 
