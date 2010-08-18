@@ -228,6 +228,8 @@ void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
     QSettings *settings = new QSettings;
     settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
     gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", settings);
+    EventTypeStore eventTypeStore("", 0);
+    gNotificationManagerStub->stubSetReturnValue<const EventTypeStore&>("eventTypeStore", eventTypeStore);
 
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");

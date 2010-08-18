@@ -69,7 +69,7 @@ private:
     MApplication *app;
     MCompositorNotificationSink *sink;
     MockNotificationManager *notificationManager;
-    NotificationParameters& setupSinkDisabledTests(bool isSystemEvent = false);
+    NotificationParameters setupSinkDisabledTests(bool isSystemEvent = false);
 
 signals:
     void statusIndictorMenuVisibilityChanged(bool);

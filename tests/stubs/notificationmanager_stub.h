@@ -19,11 +19,7 @@
 #ifndef NOTIFICATIONMANAGER_STUB
 #define NOTIFICATIONMANAGER_STUB
 
-//! The number configuration files to load into the event type store.
-static const uint MAX_EVENT_TYPE_CONF_FILES = 100;
-
 #include "notificationmanager.h"
-#include "eventtypestore.h"
 #include <stubbase.h>
 
 #ifdef HAVE_AEGIS_CRYPTO
@@ -182,10 +178,7 @@ bool NotificationManagerStub::removeNotificationsInGroup(uint groupId) {
 
 const EventTypeStore & NotificationManagerStub::eventTypeStore() const {
   stubMethodEntered("eventTypeStore");
-#if 0
-  return stubReturnValue<const EventTypeStore &>("eventTypeStore");
-#endif
-  return EventTypeStore (NOTIFICATIONS_EVENT_TYPES, MAX_EVENT_TYPE_CONF_FILES);
+  return stubReturnValueNoDefault<const EventTypeStore&>("eventTypeStore");
 }
 
 void NotificationManagerStub::removeNotificationsAndGroupsWithEventType(const QString &eventType) {

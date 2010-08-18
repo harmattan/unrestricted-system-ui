@@ -65,7 +65,7 @@ bool NGFAdapter::isValid()
 {
     return true;
 }
-    
+
 QList<QString> Ut_NGFNotificationSink::played;
 
 void Ut_NGFNotificationSink::initTestCase()
@@ -168,6 +168,9 @@ void Ut_NGFNotificationSink::testWithEventTypeWithoutFeedbackId()
 
 void Ut_NGFNotificationSink::testWithoutEventTypeOrFeedbackId()
 {
+    EventTypeStore eventTypeStore("", 0);
+    gNotificationManagerStub->stubSetReturnValue<const EventTypeStore&>("eventTypeStore", eventTypeStore);
+
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));

@@ -50,9 +50,13 @@ public:
     template <typename T>
     void stubSetReturnValue(const QString &methodName, T value) const;
 
-    // Return the return value set for methodName
+    // Return the return value set for methodName or the default constructed value if no value has been set
     template <typename T>
     T &stubReturnValue(const QString &methodName) const;
+
+    // Return the return value set for methodName
+    template <typename T>
+    T &stubReturnValueNoDefault(const QString &methodName) const;
 
 
 
@@ -80,8 +84,26 @@ void StubBase::stubSetReturnValue(const QString &methodName, T value) const
 template <typename T>
 T &StubBase::stubReturnValue(const QString &methodName) const
 {
-    if (! _stubReturnValues.contains(methodName)) {
+    if (!_stubReturnValues.contains(methodName)) {
         stubSetReturnValue<T>(methodName, T());
+    }
+
+    ParameterBase *base = _stubReturnValues[methodName];
+    Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
+    if (!param) {
+        QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
+        qFatal(qPrintable(msg));
+    }
+    return param->data;
+
+}
+
+template <typename T>
+T &StubBase::stubReturnValueNoDefault(const QString &methodName) const
+{
+    if (!_stubReturnValues.contains(methodName)) {
+        QString msg = QString("StubBase::") + __func__ + ": return value for method not found; check that you have used stubSetReturnValue(" + methodName + ")";
+        qFatal(qPrintable(msg));
     }
 
     ParameterBase *base = _stubReturnValues[methodName];

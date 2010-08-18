@@ -207,7 +207,7 @@ void Ut_MCompositorNotificationSink::cleanup()
     delete notificationManager;
 }
 
-NotificationParameters& Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
+NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
 {
     connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
     emit statusIndictorMenuVisibilityChanged(true);
