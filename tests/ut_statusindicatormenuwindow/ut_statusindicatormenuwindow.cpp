@@ -109,6 +109,7 @@ void Ut_StatusIndicatorMenuWindow::init()
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
+    gQmLocksStub->stubSetReturnValue("getState", Maemo::QmLocks::Unlocked);
     mApplicationIfProxyLaunchCalled = false;
     connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(launchControlPanelAndHide()));
     connect(this, SIGNAL(positionOrSizeChanged()), statusIndicatorMenuWindow, SLOT(setPannabilityAndLayout()));

@@ -29,7 +29,6 @@ Maemo::QmLocks::State QmLocksStub::getState(Maemo::QmLocks::Lock what) const {
     QList<ParameterBase*> params;
     params.append(new Parameter<Maemo::QmLocks::Lock>(what));
     stubMethodEntered("getState", params);
-    stubSetReturnValue<Maemo::QmLocks::State>("getState", Maemo::QmLocks::Unlocked);
     return stubReturnValue<Maemo::QmLocks::State>("getState");
 }
 
@@ -38,7 +37,6 @@ bool QmLocksStub::setState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
     params.append(new Parameter<Maemo::QmLocks::Lock>(what));
     params.append(new Parameter<Maemo::QmLocks::State>(how));
     stubMethodEntered("setState", params);
-    stubSetReturnValue<bool>("setState", true);
     return stubReturnValue<bool>("setState");
 }
 
@@ -46,13 +44,11 @@ bool QmLocksStub::setDeviceAutolockTime(int seconds) {
     QList<ParameterBase*> params;
     params.append(new Parameter<int>(seconds));
     stubMethodEntered("setDeviceAutolockTime", params);
-    stubSetReturnValue<bool>("setDeviceAutolockTime", false);
     return stubReturnValue<bool>("setDeviceAutolockTime");
 }
 
 int QmLocksStub::getDeviceAutolockTime() {
     stubMethodEntered("getDeviceAutolockTime");
-    stubSetReturnValue<bool>("getDeviceAutolockTime", -1);
     return stubReturnValue<int>("getDeviceAutolockTime");
 }
 
