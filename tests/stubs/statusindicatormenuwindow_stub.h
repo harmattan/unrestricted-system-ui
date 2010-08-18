@@ -23,7 +23,9 @@
 #include "statusindicatormenuwindow.h"
 #include <stubbase.h>
 
+#ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
+#endif
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
@@ -39,7 +41,9 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
   virtual void launchControlPanelAndHide();
   virtual void setPannabilityAndLayout();
+#ifdef HAVE_QMSYSTEM
   virtual void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+#endif
 };
 
 // 2. IMPLEMENT STUB
@@ -84,12 +88,14 @@ void StatusIndicatorMenuWindowStub::setPannabilityAndLayout() {
   stubMethodEntered("setPannabilityAndLayout");
 }
 
+#ifdef HAVE_QMSYSTEM
 void StatusIndicatorMenuWindowStub::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how) {
   QList<ParameterBase*> params;
   params.append( new Parameter<Maemo::QmLocks::Lock>(what));
   params.append( new Parameter<Maemo::QmLocks::State>(how));
   stubMethodEntered("setWindowStateAccordingToDeviceLockState",params);
 }
+#endif
 
 
 // 3. CREATE A STUB INSTANCE
@@ -138,8 +144,10 @@ void StatusIndicatorMenuWindow::setPannabilityAndLayout() {
   gStatusIndicatorMenuWindowStub->setPannabilityAndLayout();
 }
 
+#ifdef HAVE_QMSYSTEM
 void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how) {
   gStatusIndicatorMenuWindowStub->setWindowStateAccordingToDeviceLockState(what, how);
 }
+#endif
 
 #endif
