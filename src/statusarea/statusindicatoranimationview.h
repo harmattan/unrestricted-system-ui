@@ -50,6 +50,10 @@ public:
      */
     virtual ~StatusIndicatorAnimationView();
 
+    //! \reimp
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint) const;
+    //! \reimp_end
+
 protected slots:
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
@@ -102,6 +106,7 @@ protected:
      */
     void setupImageList(const QString &iconIDs);
 
+
     //! The controller for this view
     StatusIndicator *controller;
 
@@ -119,6 +124,13 @@ protected:
 
     //! Timeline for the animation
     QTimeLine *animationTimeline;
+
+private:
+
+    //! Loads the current animation frame if not already loaded
+    void loadCurrentFrame();
+    //! Resizes this view according to the current pixmap shown if needed.
+    void resizeToCurrentFrameIfNeeded();
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorAnimationView;

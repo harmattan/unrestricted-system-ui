@@ -117,6 +117,7 @@ StatusIndicatorAnimationStyle {
     maximum-size: 0 1.8mm;
     /* The number of milliseconds in which the images in imageList are animated */
     animation-duration: 3000;
+    use-icon-size: false;
 }
 
 StatusIndicatorAnimationStyle:icon {
@@ -127,10 +128,9 @@ StatusIndicatorAnimationStyle:icon {
     minimum-size: 1.4mm 1.8mm;
     maximum-size: 1.4mm 1.8mm;
 }
+
 StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    use-icon-size: true;
 }
 
 StatusIndicatorLabelStyle {

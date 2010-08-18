@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <QtTest/QtTest>
 #include <MApplication>
 #include "ut_statusindicatoranimationview.h"
@@ -52,23 +51,32 @@ StatusIndicatorAnimationStyle *TestStatusIndicatorAnimationView::modifiableStyle
     return s;
 }
 
+void TestStatusIndicatorAnimationView::setModeIcon()
+{
+    StatusIndicatorAnimationStyleContainer &sc = style();
+    sc.setModeIcon();
+}
+
 // MTheme stubs
 QHash<QPixmap *, QString> mThemePixmapPixmaps;
+QHash<QString, QSize> mThemePixmapSizes;
+
 QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &)
 {
-    QPixmap *p = new QPixmap;
+    QPixmap *p = new QPixmap(mThemePixmapSizes[id]);
     mThemePixmapPixmaps[p] = id;
-
     return p;
 }
 
 // QPainter stubs
-QList<QPointF> qPainterDrawPixmapPoints;
+QList<QRectF> qPainterDrawPixmapRects;
 QList<const QPixmap *> qPainterDrawPixmapPixmaps;
-void QPainter::drawPixmap(const QPointF &point, const QPixmap &pixmap)
+
+void QPainter::drawPixmap ( const QRectF & target, const QPixmap & pixmap, const QRectF & source )
 {
-    qPainterDrawPixmapPoints.append(point);
+    Q_UNUSED(source)
     qPainterDrawPixmapPixmaps.append(&pixmap);
+    qPainterDrawPixmapRects.append(target);
 }
 
 // QTimeLine stubs
@@ -121,7 +129,8 @@ void Ut_StatusIndicatorAnimationView::cleanupTestCase()
 void Ut_StatusIndicatorAnimationView::init()
 {
     mThemePixmapPixmaps.clear();
-    qPainterDrawPixmapPoints.clear();
+    mThemePixmapSizes.clear();
+    qPainterDrawPixmapRects.clear();
     qPainterDrawPixmapPixmaps.clear();
     qTimeLineDuration = -1;
     qTimeLineFrameRange = qMakePair(-1, -1);
@@ -151,7 +160,7 @@ void Ut_StatusIndicatorAnimationView::testImageListInitialized()
 {
     m_subject->getModel()->setValue("1 2");
     // Check that images are not loaded until they are used
-    QCOMPARE(mThemePixmapPixmaps.size(), 0);
+    QCOMPARE(mThemePixmapPixmaps.size(), 1);
 }
 
 void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
@@ -159,12 +168,18 @@ void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
     // Test that the latest image list is used
     controller->setGeometry(QRectF(0, 0, 50, 50));
     m_subject->getModel()->setValue("3 4");
+
+    // Since the setValue call will delete the images created
+    // by this test we must make sure that our internal QHash
+    // stays in sync as well
+    mThemePixmapPixmaps.clear();
     m_subject->getModel()->setValue("1 2");
+
     QPainter painter;
 
     // Check that correct images get loaded from the theme and drawn
-    m_subject->setAnimationFrame(0);
     m_subject->callableDrawContents(&painter, NULL);
+
     QCOMPARE(mThemePixmapPixmaps.size(), 1);
     QVERIFY(mThemePixmapPixmaps.key("1") != NULL);
     QCOMPARE(qPainterDrawPixmapPixmaps.size(), 1);
@@ -173,6 +188,8 @@ void Ut_StatusIndicatorAnimationView::testSetAnimationFrame()
     qPainterDrawPixmapPixmaps.clear();
     m_subject->setAnimationFrame(1);
     m_subject->callableDrawContents(&painter, NULL);
+
+    // Now there are two images loaded since we advanced the frame
     QCOMPARE(mThemePixmapPixmaps.size(), 2);
     QVERIFY(mThemePixmapPixmaps.key("2") != NULL);
     QCOMPARE(qPainterDrawPixmapPixmaps.size(), 1);
@@ -274,11 +291,48 @@ void Ut_StatusIndicatorAnimationView::testPaintingWhenSizeIsZero()
     m_subject->getModel()->setValue("1 2");
     QPainter painter;
 
-    // Nothing should be loaded or drawn
+    // Setting the animation frame causes the current frame to be loaded
+    // -> first image loaded, but nothing drawn
     m_subject->setAnimationFrame(0);
     m_subject->callableDrawContents(&painter, NULL);
-    QCOMPARE(mThemePixmapPixmaps.size(), 0);
+    QCOMPARE(mThemePixmapPixmaps.size(), 1);
     QCOMPARE(qPainterDrawPixmapPixmaps.size(), 0);
+}
+
+void Ut_StatusIndicatorAnimationView::testSizeHintWhenUsingIconSizes()
+{
+    // Set up the theme part...
+    m_subject->setModeIcon();
+    m_subject->modifiableStyle()->setUseIconSize(true);
+
+    int size = 10;
+    QString imageKey("my-icon");
+    QSizeF imageSize(size, size);
+    QRectF imageRect(QPointF(0, 0), imageSize);
+
+
+    mThemePixmapSizes[imageKey] = imageSize.toSize();
+    QVERIFY(m_subject->modifiableStyle()->useIconSize());
+    m_subject->getModel()->setValue(imageKey);
+
+    m_subject->sizeHint(Qt::PreferredSize, QSizeF());
+
+    // Test the widgets size
+    QCOMPARE(m_subject->sizeHint(Qt::PreferredSize, QSizeF()), imageSize);
+
+    QCOMPARE(mThemePixmapPixmaps.size(), 1);
+    QVERIFY(mThemePixmapPixmaps.key(imageKey) != NULL);
+
+    QCOMPARE(mThemePixmapPixmaps.key(imageKey)->size().width(), size);
+    QCOMPARE(mThemePixmapPixmaps.key(imageKey)->size().height(), size);
+
+    // Test that the painting happens correctly
+    controller->setGeometry(imageRect);
+
+    QPainter painter;
+    m_subject->callableDrawContents(&painter, NULL);
+
+    QCOMPARE(qPainterDrawPixmapRects[0], imageRect);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorAnimationView)

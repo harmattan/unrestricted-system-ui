@@ -4,6 +4,7 @@ system-ui (0.16.11~1) harmattan; urgency=low
     and not allow the events through
   * New: Disable opening of status indicator menu when device lock is on
   * Fixes: NB#176019 -  Include feedbacks in packaging
+  * Fixes: NB#184145 - A.M./P.M. and Abc indicators are truncated in the status bar (Italian Language Variant)
 
  -- David Kedves <dkedves@blumsoft.eu>  Thu, 19 Aug 2010 10:53:32 +0200
 

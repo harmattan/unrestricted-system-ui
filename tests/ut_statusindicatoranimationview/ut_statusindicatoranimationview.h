@@ -42,6 +42,7 @@ public:
 
     StatusIndicatorAnimationStyle *modifiableStyle();
 
+    void setModeIcon();
 };
 
 class TestStyleContainer : public MStyleContainer
@@ -73,7 +74,7 @@ private slots:
     void testSetAnimationDuration();
     void testChangingAnimate();
     void testPaintingWhenSizeIsZero();
-
+    void testSizeHintWhenUsingIconSizes();
 private:
     // MApplication
     MApplication *app;

@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "statusindicatoranimationview.h"
 #include "statusindicator.h"
 #include <MViewCreator>
@@ -58,15 +57,15 @@ void StatusIndicatorAnimationView::setupModel()
 void StatusIndicatorAnimationView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
-
     const char *member;
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
             if (model()->value().type() == QVariant::String) {
-                setAnimationFrame(firstAnimationFrame);
                 setupImageList(model()->value().toString());
-           }
-        } else if (member == BatteryStatusIndicatorModel::Animate) {
+                setAnimationFrame(firstAnimationFrame);
+                setupAnimationTimeline();
+            }
+        } else if (member == StatusIndicatorModel::Animate) {
             if (model()->animate()) {
                 startAnimation();
             } else {
@@ -101,10 +100,10 @@ void StatusIndicatorAnimationView::setAnimationFrame(int frame)
 {
     frame = qBound(0, frame, images.size() - 1);
 
-    if (animationFrame != frame) {
-        animationFrame = frame;
-        controller->update();
-    }
+    animationFrame = frame;
+    loadCurrentFrame();
+    resizeToCurrentFrameIfNeeded();
+    controller->update();
 }
 
 void StatusIndicatorAnimationView::startAnimation()
@@ -124,14 +123,10 @@ void StatusIndicatorAnimationView::stopAnimation()
 void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
 {
     if (animationFrame < images.size() && size().width() > 0 && size().height() > 0) {
-        if (images[animationFrame] == NULL) {
-            // Load the image if it has not been loaded yet
-            images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame));
-        }
-
         if (images[animationFrame] != NULL) {
             // Paint the image
-            painter->drawPixmap(QPointF(0, 0), *images[animationFrame]);
+            QRect target(QRect(QPoint(0, 0), size().toSize()));
+            painter->drawPixmap(target, *images[animationFrame]);
         }
     }
 }
@@ -159,8 +154,6 @@ void StatusIndicatorAnimationView::setupImageList(const QString &iconIDs)
         // Create an icon list
         imageList = iconIDs.trimmed().split(QChar(' '));
         images = QVector<const QPixmap *>(imageList.length(), NULL);
-
-        setupAnimationTimeline();
     } else {
         // Use the "no icon" (default) style
         style().setModeDefault();
@@ -169,6 +162,32 @@ void StatusIndicatorAnimationView::setupImageList(const QString &iconIDs)
     // Redraw
     controller->updateGeometry();
     controller->update();
+}
+
+void StatusIndicatorAnimationView::loadCurrentFrame()
+{
+    if (animationFrame < images.size() && images[animationFrame] == NULL) {
+        // Load the image if it has not been loaded yet
+        images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame));
+    }
+}
+
+void StatusIndicatorAnimationView::resizeToCurrentFrameIfNeeded()
+{
+    if (style()->useIconSize() ) {
+        controller->updateGeometry();
+    }
+}
+
+QSizeF StatusIndicatorAnimationView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    QSizeF size;
+    if (style()->useIconSize() && animationFrame < images.size() && images[animationFrame] != NULL) {
+        size = images[animationFrame]->size();
+    } else {
+        size = MWidgetView::sizeHint(which, constraint);
+    }
+    return size;
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorAnimationView, StatusIndicator)

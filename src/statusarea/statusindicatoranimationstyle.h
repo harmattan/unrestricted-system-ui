@@ -29,6 +29,8 @@ class StatusIndicatorAnimationStyle : public MWidgetStyle
 
     //! The number of milliseconds in which the given images are animated
     M_STYLE_ATTRIBUTE(int, animationDuration, AnimationDuration)
+    //! If the indicator should size itself according to the icons size. This will override the sizes defined in the style
+    M_STYLE_ATTRIBUTE(bool, useIconSize, UseIconSize)
 };
 
 class StatusIndicatorAnimationStyleContainer : public MWidgetStyleContainer

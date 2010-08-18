@@ -14,6 +14,7 @@ class StatusIndicatorAnimationViewStub : public StubBase {
   virtual void updateData(const QList<const char *> &modifications);
   virtual void startAnimation();
   virtual void stopAnimation();
+  virtual QSizeF sizeHint (Qt::SizeHint which, const QSizeF & constraint = QSizeF() ) const;
   virtual void setAnimationFrame(int frame);
   virtual void setFirstAnimationFrame(int frame);
   virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
@@ -44,6 +45,15 @@ void StatusIndicatorAnimationViewStub::startAnimation() {
 
 void StatusIndicatorAnimationViewStub::stopAnimation() {
   stubMethodEntered("stopAnimation");
+}
+
+QSizeF StatusIndicatorAnimationViewStub::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<Qt::SizeHint>(which));
+  params.append( new Parameter<const QSizeF& > (constraint));
+  stubMethodEntered("sizeHint");
+  return stubReturnValue<QSizeF>("sizeHint");
 }
 
 void StatusIndicatorAnimationViewStub::setAnimationFrame(int frame) {
@@ -113,6 +123,11 @@ void StatusIndicatorAnimationView::startAnimation() {
 
 void StatusIndicatorAnimationView::stopAnimation() {
   gStatusIndicatorAnimationViewStub->stopAnimation();
+}
+
+QSizeF StatusIndicatorAnimationView::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
+{
+    return gStatusIndicatorAnimationViewStub->sizeHint(which, constraint);
 }
 
 void StatusIndicatorAnimationView::setAnimationFrame(int frame) {
