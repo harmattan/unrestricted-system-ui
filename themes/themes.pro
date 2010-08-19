@@ -2,6 +2,7 @@ include(../mconfig.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
+    feedbacks \
     style \
     svg
 

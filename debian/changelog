@@ -1,12 +1,11 @@
 system-ui (0.16.11~1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
-  * [ Laszlo Pere ]
   * Fixes: NB#184841 -  Tapping on blank screen should only wake up the display
     and not allow the events through
   * New: Disable opening of status indicator menu when device lock is on
+  * Fixes: NB#176019 -  Include feedbacks in packaging
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 10 Aug 2010 12:40:00 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 19 Aug 2010 10:53:32 +0200
 
 system-ui (0.16.10-2) harmattan; urgency=low
 
