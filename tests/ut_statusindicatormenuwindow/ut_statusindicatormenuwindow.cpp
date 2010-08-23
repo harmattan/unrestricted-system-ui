@@ -19,7 +19,6 @@
 ****************************************************************************/
 
 #include "ut_statusindicatormenuwindow.h"
-#include "qmlocks_stub.h"
 #include "statusindicatormenuwindow.h"
 #include <MApplication>
 #include <MApplicationIfProxy>
@@ -33,6 +32,9 @@
 #include <MPannableViewport>
 #include "x11wrapper_stub.h"
 
+#ifdef HAVE_QMSYSTEM
+#include "qmlocks_stub.h"
+#endif
 
 // MApplicationIfProxy stubs (used by StatusIndicatorMenuWindow)
 bool mApplicationIfProxyLaunchCalled = false;
@@ -109,7 +111,9 @@ void Ut_StatusIndicatorMenuWindow::init()
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
+#ifdef HAVE_QMSYSTEM
     gQmLocksStub->stubSetReturnValue("getState", Maemo::QmLocks::Unlocked);
+#endif
     mApplicationIfProxyLaunchCalled = false;
     connect(this, SIGNAL(settingsButtonClicked()), statusIndicatorMenuWindow, SLOT(launchControlPanelAndHide()));
     connect(this, SIGNAL(positionOrSizeChanged()), statusIndicatorMenuWindow, SLOT(setPannabilityAndLayout()));
