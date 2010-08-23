@@ -87,13 +87,14 @@ public:
 
     typedef enum {
         NotificationCharging,
-	    NotificationChargingComplete,
-    	NotificationRemoveCharger,
-	    NotificationChargingNotStarted,
-    	NotificationRechargeBattery,
-	    NotificationEnteringPSM,
-    	NotificationExitingPSM,
-	    NotificationLowBattery,
+        NotificationChargingComplete,
+        NotificationRemoveCharger,
+        NotificationChargingNotStarted,
+        NotificationRechargeBattery,
+        NotificationEnteringPSM,
+        NotificationExitingPSM,
+        NotificationLowBattery,
+        NotificationNoEnoughPower,
     } NotificationID;
 
 signals:
@@ -102,7 +103,7 @@ signals:
      * NB#171466 for further details.
      */
     void notificationSent (
-	    QString      eventType,
+            QString      eventType,
             QString      text,
             QString      icon);
 
@@ -124,7 +125,7 @@ private:
     void sendNotification (
             const QString &eventType, 
             const QString &text,
-		    const QString &icon = QString(""));
+            const QString &icon = QString(""));
     QString chargingImageId ();
 
     LowBatteryNotifier              *m_LowBatteryNotifier;

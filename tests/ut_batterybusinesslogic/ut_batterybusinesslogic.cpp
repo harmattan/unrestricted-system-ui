@@ -235,6 +235,9 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     gQmBatteryStub->stubReset ();
     gQmLEDStub->stubReset ();
 
+    gQmBatteryStub->stubSetReturnValue (
+        "getChargerType", Maemo::QmBattery::Wall);
+
     for (int i = 0; i <= 100; i += 5)
     {
       /* StateCharging */
@@ -270,6 +273,20 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     QVERIFY (arguments.at (0).toString () == "x-nokia.battery.chargingnotstarted");
     QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_repcharger"));
     QVERIFY (arguments.at (2).toString () == "");
+    spy.clear ();
+
+    /* Test "not enough power to charge" situation... */
+    gQmBatteryStub->stubSetReturnValue (
+        "getChargerType", Maemo::QmBattery::USB_100mA);
+    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.notenoughpower");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_nopowcharge"));
+    QVERIFY (arguments.at (2).toString () == "icon-m-energy-management-insufficient-power");
+    spy.clear ();
 #endif
 }
 
@@ -348,6 +365,9 @@ Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
     QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+
+    gQmBatteryStub->stubSetReturnValue (
+        "getChargerType", Maemo::QmBattery::USB_500mA);
 
     /* LowBatteryNotifier shouldn't be instantiated at first */
     QVERIFY (m_logic->m_LowBatteryNotifier == 0);

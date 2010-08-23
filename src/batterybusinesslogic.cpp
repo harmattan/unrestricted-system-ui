@@ -232,16 +232,25 @@ BatteryBusinessLogic::chargingStateChanged (
     switch (state) {
         case Maemo::QmBattery::StateCharging:
             SYS_DEBUG ("Charging");
-            /*
-             * The low battery notifications should not be sent when the battery
-             * is actually charging.
-             */
-            if (m_LowBatteryNotifier != 0) {
-                delete m_LowBatteryNotifier;
-                m_LowBatteryNotifier = 0;
-            }
 
-            sendNotification (NotificationCharging);
+            if (m_Battery->getChargerType () == Maemo::QmBattery::USB_100mA)
+            {
+                sendNotification (NotificationNoEnoughPower);
+            }
+            else
+            {
+                /*
+                 * The low battery notifications should not be sent
+                 * when the battery is actually charging.
+                 */
+                if (m_LowBatteryNotifier != 0)
+                {
+                    delete m_LowBatteryNotifier;
+                    m_LowBatteryNotifier = 0;
+                }
+
+                sendNotification (NotificationCharging);
+            }
             break;
 
         case Maemo::QmBattery::StateNotCharging:
@@ -414,26 +423,34 @@ BatteryBusinessLogic::sendNotification (
                     //% "Recharge battery"
                     qtTrId ("qtn_ener_rebatt"));
             break;
-        
+
         case NotificationEnteringPSM:
             sendNotification (
                     "x-nokia.battery.enterpsm",
                     //% "Entering power save mode"
                     qtTrId ("qtn_ener_ent_psnote"));
             break;
-        
+
         case NotificationExitingPSM:
             sendNotification (
                     "x-nokia.battery.exitpsm",
                     //% "Exiting power save mode"
                     qtTrId ("qtn_ener_exit_psnote"));
             break;
-        
+
         case NotificationLowBattery:
             sendNotification (
                     "x-nokia.battery.lowbattery",
                     //% "Low battery"
                     qtTrId ("qtn_ener_lowbatt"));
+            break;
+
+        case NotificationNoEnoughPower:
+            sendNotification (
+                    "x-nokia.battery.notenoughpower",
+                    //% "Not enough power to charge"
+                    qtTrId ("qtn_ener_nopowcharge"),
+                    "icon-m-energy-management-insufficient-power");
             break;
     }
 }
