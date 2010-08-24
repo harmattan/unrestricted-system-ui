@@ -154,7 +154,7 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     statusIndicator->setView(new TestStatusIndicatorIconView(statusIndicator));
     m_subject = statusIndicator;
 
-    testContextItems["Cellular.SignalStrength"]->setValue(QVariant(100));
+    testContextItems["Cellular.SignalBars"]->setValue(QVariant(5));
 
     QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
     QCOMPARE(qRound(statusIndicator->model()->value().toDouble() * 100), 100);

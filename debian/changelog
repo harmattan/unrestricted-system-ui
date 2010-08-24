@@ -6,6 +6,7 @@ system-ui (0.16.11~1) harmattan; urgency=low
   * Fixes: NB#176019 -  Include feedbacks in packaging
   * Fixes: NB#184145 - A.M./P.M. and Abc indicators are truncated in the status bar (Italian Language Variant)
   * Fixes: NB#184092 - Handle properly the "not enough power to charge" case
+  * Implemented: SWP#DUI-3761 Modify signal strength indicator to follow AT&T definition
 
  -- David Kedves <dkedves@blumsoft.eu>  Mon, 23 Aug 2010 10:26:17 +0200
 

@@ -109,10 +109,10 @@ PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndic
 {
     setObjectName(metaObject()->className());
 
-    signalStrength = createContextItem(context, "Cellular.SignalStrength");
+    signalStrength = createContextItem(context, "Cellular.SignalBars");
     connect(signalStrength, SIGNAL(contentsChanged()), this, SLOT(signalStrengthChanged()));
 
-    setValue(0.0);
+    setValue(0);
     setDisplay(false);
 }
 
@@ -122,7 +122,7 @@ PhoneNetworkSignalStrengthStatusIndicator::~PhoneNetworkSignalStrengthStatusIndi
 
 void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
 {
-    setValue(signalStrength->value().toDouble() * 0.01f);
+    setValue(signalStrength->value().toDouble() * 0.2f );
 }
 
 void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
