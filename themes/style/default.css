@@ -28,10 +28,28 @@ MWidgetStyle#StatusIndicatorMenuWindowBackground {
 
 NotificationAreaStyle {
     minimum-size: 100% 0;
+    maximum-size: 100% -1;
     margin-left:   0;
     margin-top:    0;
     margin-right:  0;
     margin-bottom: 0;
+}
+
+MButtonStyle#NotificationAreaClearButton {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    maximum-size: $SIZE_BUTTON 0;
+}
+
+MButtonStyle#NotificationAreaClearButtonVisible {
+    margin-left: $MARGIN_MEDIUM;
+    margin-right: $MARGIN_MEDIUM;
+    margin-top: $MARGIN_MEDIUM;
+    margin-bottom: $MARGIN_MEDIUM;
+    minimum-size: 46mm $SIZE_BUTTON;
+    maximum-size: 46mm $SIZE_BUTTON;
 }
 
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {

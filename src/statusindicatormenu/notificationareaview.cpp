@@ -19,41 +19,96 @@
 
 #include "notificationareaview.h"
 #include "notificationarea.h"
+#include "widgetnotificationsink.h"
 #include <MViewCreator>
-#include <MLayout>
-#include <MLinearLayoutPolicy>
 #include <MBanner>
-#include <MContainer>
+#include <MButton>
 #include <QGraphicsLinearLayout>
 
 NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
-    MWidgetView(controller)
+    MWidgetView(controller),
+    bannerLayout(new QGraphicsLinearLayout(Qt::Vertical)),
+    clearButtonLayout(new QGraphicsLinearLayout(Qt::Horizontal)),
+    clearButton(NULL)
 {
-    // Set layout
-    layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-    controller->setLayout(layout);
+    // Set up the main layout
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+    mainLayout->addItem(bannerLayout);
+    mainLayout->addItem(clearButtonLayout);
+    controller->setLayout(mainLayout);
+
+    // Set up the banner layout
+    bannerLayout->setContentsMargins(0, 0, 0, 0);
+    bannerLayout->setSpacing(0);
+
+    // Put a clear button into the clear button layout
+    clearButtonLayout->setContentsMargins(0, 0, 0, 0);
+    clearButtonLayout->setSpacing(0);
+
+    //% "Clear"
+    clearButton = new MButton(qtTrId("qtn_noti_clear"));
+    clearButton->setObjectName("NotificationAreaClearButton");
+    connect(clearButton, SIGNAL(clicked()), this, SLOT(clickAllRemovableBanners()));
+    clearButtonLayout->addStretch();
+    clearButtonLayout->addItem(clearButton);
+    clearButtonLayout->addStretch();
 }
 
 NotificationAreaView::~NotificationAreaView()
 {
+    // Clear the banner layout
+    while (bannerLayout->count() > 0) {
+        bannerLayout->removeAt(0);
+    }
 }
 
 void NotificationAreaView::updateData(const QList<const char *>& modifications)
 {
+    MWidgetView::updateData(modifications);
+
     const char *member;
     foreach(member, modifications) {
         if (member == NotificationAreaModel::Banners) {
-            // Remove all banners from the layoutpolicy (do not destroy them)
-            while (layout->count() > 0) {
-                layout->removeAt(0);
+            // Remove all banners from the banner layout (do not destroy them)
+            while (bannerLayout->count() > 0) {
+                bannerLayout->removeAt(0);
             }
 
             // Add banners from the model to the layout
-            foreach(MBanner * banner, model()->banners()) {
-                layout->addItem(banner);
+            bool removableBannersExist = false;
+            foreach(MBanner *banner, model()->banners()) {
+                removableBannersExist |= banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool();
+                bannerLayout->addItem(banner);
             }
+
+            // If removable banners exist make the clear button visible
+            clearButton->setObjectName(removableBannersExist ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");
+        }
+    }
+}
+
+void NotificationAreaView::applyStyle()
+{
+    MWidgetView::applyStyle();
+
+    // TODO: Without this the banner layout size did not reflect the new banner sizes. Go figure.
+    bannerLayout->invalidate();
+}
+
+void NotificationAreaView::clickAllRemovableBanners()
+{
+    foreach(MBanner *banner, model()->banners()) {
+        // Remove all user removable banners
+        if (banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool()) {
+            // Remove all actions from the banner so that they won't get executed
+            foreach (QAction *action, banner->actions()) {
+                banner->removeAction(action);
+            }
+
+            // Click the banner
+            banner->click();
         }
     }
 }

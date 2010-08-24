@@ -35,6 +35,10 @@ class WidgetNotificationSink : public NotificationSink
 {
     Q_OBJECT
 
+public:
+    //! MBanner property to store the user removability into
+    static const char *USER_REMOVABLE_PROPERTY;
+
 signals:
     /*!
      * Requests removal of a notification from the notification system.
@@ -103,10 +107,6 @@ protected:
      * \return the subtitle text
      */
     QString infoBannerSubtitleText(const NotificationParameters &parameters);
-
-
-    //! MBanner property to store the user removability into
-    static const char *USER_REMOVABLE_PROPERTY;
 
 private:
     /*!

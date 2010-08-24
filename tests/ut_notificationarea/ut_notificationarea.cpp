@@ -47,7 +47,6 @@ void Ut_NotificationArea::cleanupTestCase()
 void Ut_NotificationArea::init()
 {
     m_subject = new NotificationArea();
-    m_subject->setView(new NotificationAreaView(m_subject));
 
     connect(this, SIGNAL(addNotification(MBanner &)), m_subject, SLOT(addNotification(MBanner &)));
     connect(this, SIGNAL(removeNotification(MBanner &)), m_subject, SLOT(removeNotification(MBanner &)));

@@ -27,6 +27,7 @@
 
 class NotificationArea;
 class QGraphicsLinearLayout;
+class MButton;
 
 class NotificationAreaView : public MWidgetView
 {
@@ -49,11 +50,26 @@ public:
 protected:
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
+    virtual void applyStyle();
     //! \reimp_end
 
+private slots:
+    //! Clicks all removable banners in the model
+    void clickAllRemovableBanners();
+
 private:
-    //! The layout of the notification area
-    QGraphicsLinearLayout *layout;
+    //! The layout for the banners
+    QGraphicsLinearLayout *bannerLayout;
+
+    //! A layout for the clear button
+    QGraphicsLinearLayout *clearButtonLayout;
+
+    //! The clear button
+    MButton *clearButton;
+
+#ifdef UNIT_TEST
+    friend class Ut_NotificationAreaView;
+#endif
 };
 
 #endif /* NOTIFICATIONAREAVIEW_H_ */
