@@ -30,7 +30,7 @@
 class QPointF;
 class QPixmap;
 class MWidget;
-class MLinearLayoutPolicy;
+class QGraphicsLinearLayout;
 class QGraphicsSceneMouseEvent;
 class MGConfItem;
 class QShowEvent;
@@ -118,9 +118,9 @@ private slots:
     void showHideNotifications (bool show);
 
 private:
-    bool                 m_Realized;
-    MLinearLayoutPolicy *m_policy;
-    LockScreenWindow    *m_SceneWindow;
+    bool                   m_Realized;
+    QGraphicsLinearLayout *m_policy;
+    LockScreenWindow      *m_SceneWindow;
 
     MWidget         *m_notificationArea;
     MWidget         *m_LockLiftArea;

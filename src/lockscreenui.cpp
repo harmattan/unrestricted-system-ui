@@ -383,7 +383,6 @@ LockScreenUI::createContent ()
 void
 LockScreenUI::realize ()
 {
-    MLayout               *layout;
     SYS_DEBUG ("");
 
     if (m_Realized)
@@ -394,8 +393,7 @@ LockScreenUI::realize ()
     /*
      * The main layout and its policy
      */
-    layout = new MLayout;
-    m_policy = new MLinearLayoutPolicy (layout, Qt::Vertical);
+    m_policy = new QGraphicsLinearLayout (Qt::Vertical);
     m_policy->setContentsMargins (0., 0., 0., 0.);
     m_policy->setSpacing (0.);
 
@@ -425,7 +423,7 @@ LockScreenUI::realize ()
     // Set the main layout
     m_SceneWindow =
         new LockScreenWindow (this, m_LockLiftArea, m_LockLandArea);
-    m_SceneWindow->setLayout (layout);
+    m_SceneWindow->setLayout (m_policy);
     m_SceneWindow->appear (this);
 
     connect (m_SceneWindow, SIGNAL (unlocked ()),
