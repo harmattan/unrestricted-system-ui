@@ -1,4 +1,14 @@
-system-ui (0.16.11~1) harmattan; urgency=low
+system-ui (0.16.12~1) harmattan; urgency=low
+
+  * [UNRELEASED]
+  * Implemented: SWP#DUI-3761 Modify signal strength indicator to follow AT&T definition
+  * Fixes: NB#187413 - Improper location of unlock UI when missed events are shown
+  * Fixes: NB#179812 - Statusbar does not show "ringing" icon when someone is
+    trying to call to device.
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 25 Aug 2010 11:50:00 +0200
+
+system-ui (0.16.11-1) harmattan; urgency=low
 
   * Fixes: NB#184841 -  Tapping on blank screen should only wake up the display
     and not allow the events through
@@ -6,10 +16,6 @@ system-ui (0.16.11~1) harmattan; urgency=low
   * Fixes: NB#176019 -  Include feedbacks in packaging
   * Fixes: NB#184145 - A.M./P.M. and Abc indicators are truncated in the status bar (Italian Language Variant)
   * Fixes: NB#184092 - Handle properly the "not enough power to charge" case
-  * Implemented: SWP#DUI-3761 Modify signal strength indicator to follow AT&T definition
-  * Fixes: NB#187413 - Improper location of unlock UI when missed events are shown
-  * Fixes: NB#179812 - Statusbar does not show "ringing" icon when someone is
-    trying to call to device.
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 24 Aug 2010 16:35:16 +0200
 
