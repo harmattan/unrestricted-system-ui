@@ -22,6 +22,9 @@
 #include "statusindicator_stub.h"
 #include <stubbase.h>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdevicemode.h>
+#endif
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
@@ -32,6 +35,9 @@ public:
     virtual void BatteryStatusIndicatorDestructor();
     virtual void batteryLevelChanged();
     virtual void batteryChargingChanged();
+#ifdef HAVE_QMSYSTEM
+    virtual void batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state);
+#endif
 };
 
 // 2. IMPLEMENT STUB
@@ -55,7 +61,14 @@ void BatteryStatusIndicatorStub::batteryChargingChanged()
     stubMethodEntered("batteryChargingChanged");
 }
 
-
+#ifdef HAVE_QMSYSTEM
+void BatteryStatusIndicatorStub::batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<Maemo::QmDeviceMode::PSMState>(state));
+    stubMethodEntered("batterySaveModeChanged",params);
+}
+#endif
 
 // 3. CREATE A STUB INSTANCE
 BatteryStatusIndicatorStub gDefaultBatteryStatusIndicatorStub;
@@ -83,5 +96,11 @@ void BatteryStatusIndicator::batteryChargingChanged()
     gBatteryStatusIndicatorStub->batteryChargingChanged();
 }
 
-
+#ifdef HAVE_QMSYSTEM
+void BatteryStatusIndicator::batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state)
+{
+    gBatteryStatusIndicatorStub->batterySaveModeChanged(state);
+}
 #endif
+
+#endif // BATTERYSTATUSINDICATOR_STUB
