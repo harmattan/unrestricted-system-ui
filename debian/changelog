@@ -5,6 +5,7 @@ system-ui (0.16.12~1) harmattan; urgency=low
   * Fixes: NB#187413 - Improper location of unlock UI when missed events are shown
   * Fixes: NB#179812 - Statusbar does not show "ringing" icon when someone is
     trying to call to device.
+  * Fixes: NB#181841 - Status Indicator Menu is first Iconic and then raised
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 25 Aug 2010 11:50:00 +0200
 
