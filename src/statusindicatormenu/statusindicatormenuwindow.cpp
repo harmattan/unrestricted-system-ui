@@ -325,6 +325,11 @@ void StatusIndicatorMenuWindow::displayInActive()
 {
     pannableViewport->updatePosition(QPointF(0,0));
     emit visibilityChanged(false);
+    // Hide the window when the it is obscured by another view
+    // Note: Dialogs and notifications won't close it anyways,
+    // as they are not supposed to be full screen and don't completely
+    // obstruct the status menu window fully.
+    hide();
 }
 
 void StatusIndicatorMenuWindow::setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension)

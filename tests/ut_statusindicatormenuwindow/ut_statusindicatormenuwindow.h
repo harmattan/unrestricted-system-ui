@@ -35,6 +35,7 @@ signals:
     void settingsButtonClicked();
     void clicked(QPointF point);
     void positionOrSizeChanged();
+    void displayExited();
 
 private:
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
@@ -61,6 +62,7 @@ private slots:
     void testPannableAreaBackgroundWidget();
     void testTopRowInitialization();
     void testVerticalExtensionArea();
+    void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
 #ifdef HAVE_QMSYSTEM
     void testQmLocksSignalConnectionWhenDeviceLocked();
     void testWhenDeviceLockedMenuIsNotVisible();

@@ -282,6 +282,13 @@ void Ut_StatusIndicatorMenuWindow::testVerticalExtensionArea()
     QCOMPARE(mApplicationExtensionAreaVerticalOrderDuringInit, ((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop")));
 }
 
+void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuIsClosed()
+{
+    connect(this, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive()));
+    emit displayExited();
+    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+}
+
 #ifdef HAVE_QMSYSTEM
 void Ut_StatusIndicatorMenuWindow::testQmLocksSignalConnectionWhenDeviceLocked()
 {
