@@ -1,4 +1,4 @@
-system-ui (0.16.11~1) harmattan; urgency=low
+system-ui (0.16.11-1) harmattan; urgency=low
 
   * Fixes: NB#184841 -  Tapping on blank screen should only wake up the display
     and not allow the events through
