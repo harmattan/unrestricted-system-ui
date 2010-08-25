@@ -8,6 +8,8 @@ system-ui (0.16.11~1) harmattan; urgency=low
   * Fixes: NB#184092 - Handle properly the "not enough power to charge" case
   * Implemented: SWP#DUI-3761 Modify signal strength indicator to follow AT&T definition
   * Fixes: NB#187413 - Improper location of unlock UI when missed events are shown
+  * Fixes: NB#179812 - Statusbar does not show "ringing" icon when someone is
+    trying to call to device.
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 24 Aug 2010 16:35:16 +0200
 

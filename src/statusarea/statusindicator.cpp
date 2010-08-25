@@ -27,6 +27,11 @@
 #define WARNING
 #include "debug.h"
 
+// keep these in sync with the context framework!
+static const QString CONTEXT_CALLSTATE_ALERTING = "alerting";
+static const QString CONTEXT_CALLSTATE_KNOCKING = "knocking";
+static const QString CONTEXT_CALLSTATE_ACTIVE = "active";
+
 StatusIndicator::StatusIndicator(MWidget *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
@@ -417,18 +422,19 @@ CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, MWidget *p
     connect(muted, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
 }
 
-CallStatusIndicator::~CallStatusIndicator() 
+CallStatusIndicator::~CallStatusIndicator()
 {
 }
 
 void CallStatusIndicator::callOrMutedChanged()
 {
-    QString callType = call->value().toString();
-    if (callType == "ringing" || callType == "knocking") {
+    QString callState = call->value().toString();
+    if (callState == CONTEXT_CALLSTATE_ALERTING
+        || callState == CONTEXT_CALLSTATE_KNOCKING) {
         setObjectName(QString(metaObject()->className()) + "Ringing");
         setValue(0);
         animateIfPossible = true;
-    } else if (callType == "active") {
+    } else if (callState == CONTEXT_CALLSTATE_ACTIVE) {
         setObjectName(QString(metaObject()->className()) + "Ongoing");
         setValue(muted->value().toBool() ? 1 : 0);
         animateIfPossible = false;

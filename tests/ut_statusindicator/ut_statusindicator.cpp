@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <MOnDisplayChangeEvent>
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
@@ -71,8 +72,7 @@ void Ut_StatusIndicator::init()
 
 void Ut_StatusIndicator::cleanup()
 {
-    if (m_subject)
-        delete m_subject;
+    delete m_subject;
     delete testContext;
 }
 
@@ -104,7 +104,7 @@ void Ut_StatusIndicator::testModelUpdates()
     // When the application is not visible the model should not be updated
     qApp->sendEvent(m_subject, &exitDisplayEvent);
     m_subject->setValue(QVariant(false));
-    QCOMPARE(m_subject->model()->value(), QVariant(1)); 
+    QCOMPARE(m_subject->model()->value(), QVariant(1));
 
     // When the application becomes visible the model should be updated
     qApp->sendEvent(m_subject, &enterDisplayEvent);
@@ -352,45 +352,75 @@ void Ut_StatusIndicator::testInputMethod()
     QCOMPARE(statusIndicator->model()->value(), QVariant("test"));
 }
 
+// keep these in sync with the context framework!
+static const QString CONTEXT_CALLSTATE_ALERTING = "alerting";
+static const QString CONTEXT_CALLSTATE_KNOCKING = "knocking";
+static const QString CONTEXT_CALLSTATE_ACTIVE = "active";
+static const QString CONTEXT_CALLSTATE_INACTIVE = "inactive";
+
+void Ut_StatusIndicator::testCall_data()
+{
+    QTest::addColumn<QVariant>("stateToSet");
+    QTest::addColumn<QVariant>("modelValue");
+    QTest::addColumn<bool>("ringingStyleEnabled");
+    QTest::addColumn<bool>("ongoingStyleEnabled");
+    QTest::addColumn<QVariant>("muted");
+
+    QTest::newRow("inactive") << QVariant(CONTEXT_CALLSTATE_INACTIVE)
+                              << QVariant(0)
+                              << false << false << QVariant(false);
+
+    QTest::newRow("alerting") << QVariant(CONTEXT_CALLSTATE_ALERTING)
+                              << QVariant(0)
+                              << true << false << QVariant(false);
+
+    QTest::newRow("active") << QVariant(CONTEXT_CALLSTATE_ACTIVE)
+                            << QVariant(0)
+                            << false << true << QVariant(false);
+
+    QTest::newRow("knocking") << QVariant(CONTEXT_CALLSTATE_KNOCKING)
+                              << QVariant(0)
+                              << true << false << QVariant(false);
+
+    QTest::newRow("inactive_muted") << QVariant(CONTEXT_CALLSTATE_INACTIVE)
+                                    << QVariant(0)
+                                    << false << false << QVariant(true);
+
+    QTest::newRow("alerting_muted") << QVariant(CONTEXT_CALLSTATE_ALERTING)
+                                    << QVariant(0)
+                                    << true << false << QVariant(true);
+
+    QTest::newRow("active_muted") << QVariant(CONTEXT_CALLSTATE_ACTIVE)
+                                  << QVariant(1)
+                                  << false << true << QVariant(true);
+
+    QTest::newRow("knocking_muted") << QVariant(CONTEXT_CALLSTATE_KNOCKING)
+                                    << QVariant(0)
+                                    << true << false << QVariant(true);
+}
+
 void Ut_StatusIndicator::testCall()
 {
     m_subject = new CallStatusIndicator(*testContext);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("inactive"));
-    QVERIFY(m_subject->model()->value().type() == QVariant::Int);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Ongoing") < 0);
+    QFETCH(QVariant, stateToSet);
+    testContextItems["Phone.Call"]->setValue(stateToSet);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("ringing"));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
+    QFETCH(QVariant, muted);
+    testContextItems["Phone.Muted"]->setValue(muted);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("active"));
-    QVERIFY(m_subject->objectName().indexOf("Ongoing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
+    QCOMPARE(m_subject->model()->value().type(), QVariant::Int);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("knocking"));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
+    QFETCH(QVariant, modelValue);
+    QCOMPARE(m_subject->model()->value(), modelValue);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("inactive"));
-    testContextItems["Phone.Muted"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Ongoing") < 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
+    QFETCH(bool, ringingStyleEnabled);
+    QCOMPARE((bool)m_subject->objectName().contains("Ringing"),
+             ringingStyleEnabled);
 
-    testContextItems["Phone.Call"]->setValue(QVariant("ringing"));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
-
-    testContextItems["Phone.Call"]->setValue(QVariant("active"));
-    QVERIFY(m_subject->objectName().indexOf("Ongoing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(1));
-
-    testContextItems["Phone.Call"]->setValue(QVariant("knocking"));
-    QVERIFY(m_subject->objectName().indexOf("Ringing") >= 0);
-    QCOMPARE(m_subject->model()->value(), QVariant(0));
+    QFETCH(bool, ongoingStyleEnabled);
+    QCOMPARE((bool)m_subject->objectName().contains("Ongoing"),
+             ongoingStyleEnabled);
 }
 
 void Ut_StatusIndicator::testProfile()

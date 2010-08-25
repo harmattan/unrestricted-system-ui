@@ -84,6 +84,7 @@ private slots:
     void testAnimation();
     void testPhoneNetwork();
     void testInputMethod();
+    void testCall_data();
     void testCall();
     void testProfile();
     void testGPS();
