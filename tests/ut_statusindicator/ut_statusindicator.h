@@ -77,6 +77,9 @@ private slots:
     void testPhoneNetworkSignalStrength();
     void testPhoneNetworkType();
     void testBattery();
+#ifdef HAVE_QMSYSTEM
+    void testBatteryWhenQmSystemAvailable();
+#endif
     void testAlarm();
     void testBluetooth();
     void testPresence();

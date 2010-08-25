@@ -256,6 +256,23 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     animation-duration: 10000;
 }
 
+StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSave {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
+    preferred-size: 2.9mm 1.8mm;
+    minimum-size: 2.9mm 1.8mm;
+    maximum-size: 2.9mm 1.8mm;
+}
+
+StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSaveCharging {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
+    preferred-size: 2.9mm 1.8mm;
+    minimum-size: 2.9mm 1.8mm;
+    maximum-size: 2.9mm 1.8mm;
+    animation-duration: 10000;
+}
+
 StatusIndicatorIconStyle#AlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";

@@ -32,6 +32,11 @@ static const QString CONTEXT_CALLSTATE_ALERTING = "alerting";
 static const QString CONTEXT_CALLSTATE_KNOCKING = "knocking";
 static const QString CONTEXT_CALLSTATE_ACTIVE = "active";
 
+static const QString BATTERY_MODE_NORMAL = "Level";
+static const QString BATTERY_MODE_CHARGING = "Charging";
+static const QString BATTERY_MODE_POWERSAVE = "PowerSave";
+static const QString BATTERY_MODE_POWERSAVE_AND_CHARGING = "PowerSaveCharging";
+
 StatusIndicator::StatusIndicator(MWidget *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
@@ -193,13 +198,26 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
 BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(QString(metaObject()->className()) + "Level");
+    setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
+
+    batterySaveModeEnabled = false;
+#ifdef HAVE_QMSYSTEM
+    if (qmDeviceMode.getPSMState() == Maemo::QmDeviceMode::PSMStateOn) {
+        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+        batterySaveModeEnabled = true;
+    }
+#endif
 
     batteryLevel = createContextItem(context, "Battery.ChargePercentage");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
 
     batteryCharging = createContextItem(context, "Battery.IsCharging");
     connect(batteryCharging, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
+
+#ifdef HAVE_QMSYSTEM
+    connect(&qmDeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
+            this, SLOT(batterySaveModeChanged(Maemo::QmDeviceMode::PSMState)));
+#endif
 
     batteryLevelChanged ();
 }
@@ -218,10 +236,18 @@ void BatteryStatusIndicator::batteryLevelChanged()
 void BatteryStatusIndicator::batteryChargingChanged()
 {
     if (batteryCharging->value().toBool()) {
-        setObjectName(QString(metaObject()->className()) + "Charging");
+        if (batterySaveModeEnabled) {
+            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE_AND_CHARGING);
+        } else {
+            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_CHARGING);
+        }
         animateIfPossible = true;
     } else {
-        setObjectName(QString(metaObject()->className()) + "Level");
+        if (batterySaveModeEnabled) {
+            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+        } else {
+            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
+        }
         animateIfPossible = false;
     }
 
@@ -229,6 +255,18 @@ void BatteryStatusIndicator::batteryChargingChanged()
     //SYS_DEBUG ("extra batteryLevelChanged() call");
     batteryLevelChanged ();
 }
+
+#ifdef HAVE_QMSYSTEM
+void BatteryStatusIndicator::batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state)
+{
+    if (state == Maemo::QmDeviceMode::PSMStateOn) {
+        batterySaveModeEnabled = true;
+    } else {
+        batterySaveModeEnabled = false;
+    }
+    batteryChargingChanged();
+}
+#endif
 
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)

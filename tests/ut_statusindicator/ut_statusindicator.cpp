@@ -25,6 +25,10 @@
 #include "testcontextitem.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdevicemode_stub.h>
+#endif
+
 QHash<QString, TestContextItem *> testContextItems;
 
 // Test context
@@ -208,6 +212,37 @@ void Ut_StatusIndicator::testBattery()
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
 }
+
+#ifdef HAVE_QMSYSTEM
+void Ut_StatusIndicator::testBatteryWhenQmSystemAvailable()
+{
+    // tests all possible four combinations of states for testContext
+    m_subject = new BatteryStatusIndicator(*testContext);
+
+    // battery not charging and power save off
+    testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
+    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOff);
+    QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
+
+    // battery not charging, but power save on
+    testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
+    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOn);
+    QVERIFY(m_subject->objectName().indexOf("PowerSave") >= 0);
+    QVERIFY(m_subject->objectName().indexOf("Charging") < 0);
+
+    // battery charging, but power save off
+    testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
+    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOff);
+    QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
+    QVERIFY(m_subject->objectName().indexOf("PowerSave") < 0);
+
+    // battery charging and power save on
+    testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
+    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOn);
+    QVERIFY(m_subject->objectName().indexOf("PowerSaveCharging") >= 0);
+}
+#endif
+
 
 void Ut_StatusIndicator::testAlarm()
 {

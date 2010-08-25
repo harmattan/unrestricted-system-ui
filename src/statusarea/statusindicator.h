@@ -23,6 +23,10 @@
 #include <MWidgetController>
 #include "statusindicatormodel.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdevicemode.h>
+#endif
+
 class ApplicationContext;
 class ContextItem;
 
@@ -204,9 +208,21 @@ private slots:
     void batteryLevelChanged();
     void batteryChargingChanged();
 
+#ifdef HAVE_QMSYSTEM
+    void batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state);
+#endif
+
 private:
     ContextItem *batteryLevel;
     ContextItem *batteryCharging;
+#ifdef HAVE_QMSYSTEM
+    Maemo::QmDeviceMode qmDeviceMode;
+#endif
+    bool batterySaveModeEnabled;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
 };
 
 /*!
