@@ -159,7 +159,7 @@ QGraphicsWidget* StatusIndicatorMenuWindow::createTopRow()
     MButton *settingsButton = new MButton(qtTrId("qtn_stat_menu_settings"));
     settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
     settingsButton->setViewType(MButton::iconType);
-    settingsButton->setIconID("icon-m-common-settings");
+    settingsButton->setIconID("icon-m-status-menu-settings");
     connect(settingsButton, SIGNAL(clicked()), this, SLOT(launchControlPanelAndHide()));
 
     // Put the extension area and the settings button to a horizontal layout
