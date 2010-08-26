@@ -26,11 +26,11 @@ class MWidget;
 class MImageWidget;
 
 #include <QObject>
-#include <MSceneWindow>
+#include <MStylableWidget>
 
 #include "unlocknotifications.h"
 
-class UnlockHeader : public MSceneWindow
+class UnlockHeader : public MStylableWidget
 {
     Q_OBJECT
 
@@ -51,7 +51,7 @@ private:
 #endif
 };
 
-class UnlockArea : public MSceneWindow
+class UnlockArea : public MStylableWidget
 {
     Q_OBJECT
 

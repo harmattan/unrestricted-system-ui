@@ -503,7 +503,7 @@ LockScreenUI::showEvent (
     Atom        utf8StringAtom;
     Atom        stackingLayerAtom;
     const char *windowName = "LockScreenUI";
-    long        layer = 2;
+    long        layer = 6; // ?
 
     display = QX11Info::display ();
     if (!display) {
