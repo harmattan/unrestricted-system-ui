@@ -7,7 +7,7 @@ system-ui (0.16.12~1) harmattan; urgency=low
     trying to call to device.
   * Fixes: NB#181841 - Status Indicator Menu is first Iconic and then raised
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 26 Aug 2010 13:32:37 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 26 Aug 2010 13:38:51 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 
@@ -16,7 +16,7 @@ system-ui (0.16.11-1) harmattan; urgency=low
   * New: Disable opening of status indicator menu when device lock is on
   * Fixes: NB#176019 -  Include feedbacks in packaging
   * Fixes: NB#184145 - A.M./P.M. and Abc indicators are truncated in the status bar (Italian Language Variant)
-  * Fixes: NB#184092 - Handle properly the "not enough power to charge" case
+  * Fixes: NB#184092 - Handle properly the not enough power to charge case
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 24 Aug 2010 16:35:16 +0200
 
