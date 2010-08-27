@@ -50,6 +50,19 @@ public:
      */
     virtual ~NotificationArea();
 
+signals:
+    /*!
+     * Requests removal of a notification from the notification system.
+     * \param notificationId Id of the notification to be removed from the system.
+     */
+    void notificationRemovalRequested(uint notificationId);
+
+    /*!
+     * Requests removal of notifications in a group.
+     * \param groupId Id of the group to be cleared.
+     */
+    void notificationGroupClearingRequested(uint groupId);
+
 private slots:
     /*!
      * Adds a notification to the notification area.
@@ -73,6 +86,9 @@ private slots:
      */
     void removeNotification(MBanner &notification);
 
+    //! Requests the sink to remove all notifications that have removable banners in the model
+    void removeAllRemovableBanners();
+
 signals:
     /*!
      * \brief A signal that is emitted whenever an event banner on the notification area is clicked
@@ -82,6 +98,10 @@ signals:
 private:
     //! Notification sink for visualizing the notification on the notification area
     NotificationAreaSink *notificationAreaSink;
+
+#ifdef UNIT_TEST
+    friend class Ut_NotificationArea;
+#endif
 };
 
 #endif /* NOTIFICATIONAREA_H_ */

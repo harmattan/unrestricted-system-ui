@@ -45,7 +45,7 @@ private slots:
     void testAddClearButton_data();
     void testAddClearButton();
     void testRemoveClearButton();
-    void testClickClearButton();
+
 private:
     // Application instance
     MApplication *app;

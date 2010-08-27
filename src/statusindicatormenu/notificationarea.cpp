@@ -42,6 +42,8 @@ NotificationArea::NotificationArea(MWidget *parent) :
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
     connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(MBanner &)), this, SLOT(moveNotificationToTop(MBanner &)));
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
+    connect(this, SIGNAL(notificationRemovalRequested(uint)), notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)));
+    connect(this, SIGNAL(notificationGroupClearingRequested(uint)), notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)));
 }
 
 NotificationArea::~NotificationArea()
@@ -74,4 +76,26 @@ void NotificationArea::removeNotification(MBanner &notification)
     banners.removeOne(&notification);
     model()->setBanners(banners);
     notification.setParentItem(NULL);
+}
+
+void NotificationArea::removeAllRemovableBanners()
+{
+    foreach(MBanner *banner, model()->banners()) {
+        // Remove all user removable banners
+        if (banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool()) {
+            // Get the notification ID from the info banner
+            bool ok = false;
+            uint notificationId = banner->property(WidgetNotificationSink::NOTIFICATION_ID_PROPERTY).toUInt(&ok);
+            if (ok) {
+                // Request notification removal
+                emit notificationRemovalRequested(notificationId);
+            } else {
+                uint groupId = banner->property(WidgetNotificationSink::GROUP_ID_PROPERTY).toUInt(&ok);
+                if (ok) {
+                    // Request notification group clearing
+                    emit notificationGroupClearingRequested(groupId);
+                }
+            }
+        }
+    }
 }

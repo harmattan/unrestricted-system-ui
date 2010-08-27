@@ -19,6 +19,7 @@
 
 #include <MApplication>
 #include <MBanner>
+#include <QSignalSpy>
 #include "ut_notificationarea.h"
 #include "notificationarea.h"
 #include "notificationareaview.h"
@@ -95,6 +96,31 @@ void Ut_NotificationArea::testUpdatedNotificationComesFirst()
     emit addNotification(notification3);
     emit notificationUpdated(notification2);
     QCOMPARE(m_subject->model()->banners().at(0), &notification2);
+}
+
+void Ut_NotificationArea::testRemoveAllRemovableBanners()
+{
+    QSignalSpy notificationSpy(m_subject, SIGNAL(notificationRemovalRequested(uint)));
+    QSignalSpy notificationGroupSpy(m_subject, SIGNAL(notificationGroupClearingRequested(uint)));
+    MBanner removableNotification;
+    MBanner removableGroupNotification;
+    MBanner nonRemovableNotification;
+    MBanner nonRemovableGroupNotification;
+    removableNotification.setProperty(WidgetNotificationSink::USER_REMOVABLE_PROPERTY, true);
+    removableGroupNotification.setProperty(WidgetNotificationSink::USER_REMOVABLE_PROPERTY, true);
+    removableNotification.setProperty(WidgetNotificationSink::NOTIFICATION_ID_PROPERTY, 1);
+    removableGroupNotification.setProperty(WidgetNotificationSink::GROUP_ID_PROPERTY, 2);
+    nonRemovableNotification.setProperty(WidgetNotificationSink::NOTIFICATION_ID_PROPERTY, 3);
+    nonRemovableGroupNotification.setProperty(WidgetNotificationSink::GROUP_ID_PROPERTY, 4);
+    emit addNotification(removableNotification);
+    emit addNotification(removableGroupNotification);
+    emit addNotification(nonRemovableNotification);
+    emit addNotification(nonRemovableGroupNotification);
+    m_subject->removeAllRemovableBanners();
+    QCOMPARE(notificationSpy.count(), 1);
+    QCOMPARE(notificationGroupSpy.count(), 1);
+    QCOMPARE(notificationSpy.at(0).at(0).toInt(), 1);
+    QCOMPARE(notificationGroupSpy.at(0).at(0).toInt(), 2);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationArea)

@@ -36,6 +36,10 @@ class WidgetNotificationSink : public NotificationSink
     Q_OBJECT
 
 public:
+    //! MBanner property to store the notification ID into
+    static const char *NOTIFICATION_ID_PROPERTY;
+    //! MBanner property to store the group ID into
+    static const char *GROUP_ID_PROPERTY;
     //! MBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 
@@ -123,11 +127,6 @@ private:
      * \return \c true if the notification should be user removable, \c false otherwise
      */
     static bool determineUserRemovabilityFromEventType(const QString &eventType);
-
-    //! MBanner property to store the notification ID into
-    static const char *NOTIFICATION_ID_PROPERTY;
-    //! MBanner property to store the group ID into
-    static const char *GROUP_ID_PROPERTY;
 
 private slots:
     /*!
