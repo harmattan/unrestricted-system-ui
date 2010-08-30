@@ -134,29 +134,18 @@ ShutdownBusinessLogic::thermalShutdown ()
 void
 ShutdownBusinessLogic::batteryShutdown ()
 {
-    SYS_DEBUG ("Creating a notification & feedback");
+    SYS_DEBUG ("Creating a notification");
     
-    /*
-     * Creating the feedback.
-     */
-    MFeedback feedback("IDF_RECHARGE_BATTERY");
-
     /*
      * Creating a notification.
      */
     MNotification notification (
-		   MNotification::DeviceEvent, 
-           //% "Battery empty."
-           qtTrId ("qtn_shut_batt_empty"), 
-           //% "Device will be shut down."
-           qtTrId ("qtn_shut_will_shut_down"));
-    notification.setImage ("icon-m-energy-management-battery-verylow");
+		   "x-nokia.battery.shutdown",
+           "",
+           //% "Battery empty. Device shutting down."
+           qtTrId ("qtn_shut_batt_empty"));
 
-    /*
-     * Playing/publishing them.
-     */
     notification.publish ();
-    feedback.play();
 }
 
 void 
