@@ -38,6 +38,7 @@ private slots:
     void testOverlayChanged ();
 #ifdef HAVE_QMSYSTEM
     void testHwKeyEvent ();
+    void testLocking ();
 #endif
     void cleanupTestCase ();
     

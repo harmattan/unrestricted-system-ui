@@ -20,19 +20,25 @@
 #include "volumeoverlay.h"
 #include "volumebarlogic.h"
 
-#undef DEBUG
+#define DEBUG
 #include "../debug.h"
 
 VolumeControlUI::VolumeControlUI (QObject *parent) :
     QObject (parent),
     m_logic (new VolumeBarLogic),
-    m_overlay (0)
+    m_overlay (0),
 #ifdef HAVE_QMSYSTEM
-    , m_hwkeys (0)
+    m_hwkeys (0),
 #endif
+    m_locked (false)
 {
 #ifdef HAVE_QMSYSTEM
     m_hwkeys = new Maemo::QmKeys (this);
+
+    m_locks = new Maemo::QmLocks (this);
+
+    connect (m_locks, SIGNAL (stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
+             this, SLOT (locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
 #endif
 
 #ifdef HAVE_LIBRESOURCEQT
@@ -62,6 +68,9 @@ VolumeControlUI::~VolumeControlUI ()
 #ifdef HAVE_QMSYSTEM
     delete m_hwkeys;
     m_hwkeys = 0;
+
+    delete m_locks;
+    m_locks = 0;
 #endif
 
     delete m_logic;
@@ -122,6 +131,13 @@ VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
     // This sets the volume and update the slider ...
     overlayChanged (current_volume);
 
+    /*
+     * When screen/device is locked, do not show the overlay:
+     */
+    SYS_DEBUG ("Locked: %s", SYS_BOOL (m_locked));
+    if (m_locked == true)
+        return;
+
     if (m_overlay == 0)
     {
         m_overlay = new VolumeOverlay;
@@ -131,6 +147,35 @@ VolumeControlUI::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
     }
     // ... and show the overlay
     m_overlay->UpdateVolume (current_volume, max_volume);
+}
+
+void
+VolumeControlUI::locksChanged (
+    Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+{
+    if (how == Maemo::QmLocks::Locked)
+    {
+        m_locked = true;
+        if (m_overlay)
+            m_overlay->hide ();
+    }
+    else if (how == Maemo::QmLocks::Unlocked)
+    {
+        /*
+         * Check wether all the locks went away...
+         */
+        if ((what == Maemo::QmLocks::Device) &&
+            (m_locks->getState (Maemo::QmLocks::TouchAndKeyboard) ==
+             Maemo::QmLocks::Unlocked))
+        {
+            m_locked = false;
+        }
+        else if (m_locks->getState (Maemo::QmLocks::Device) ==
+                 Maemo::QmLocks::Unlocked)
+        {
+            m_locked = false;
+        }
+    }
 }
 #endif
 

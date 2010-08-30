@@ -6,8 +6,10 @@ system-ui (0.16.12~1) harmattan; urgency=low
   * Fixes: NB#179812 - Statusbar does not show ringing icon when someone is
     trying to call to device.
   * Fixes: NB#181841 - Status Indicator Menu is first Iconic and then raised
+  * Volume-control: Do not show the volume-slider-overlay window when the
+    device or the touch-screen is locked
 
- -- David Kedves <dkedves@blumsoft.eu>  Thu, 26 Aug 2010 13:38:51 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 30 Aug 2010 13:03:17 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 

@@ -258,10 +258,11 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QGraphicsSceneMouseEvent *moveEvent;
     QGraphicsSceneMouseEvent *releaseEvent;
     QGraphicsSceneMouseEvent *moveEventNotActive;
-    QPointF                   pressAt (850, 10);
+    QPointF                   pressAt (window->m_LockLiftArea->preferredWidth (), 
+                                       window->m_LockLiftArea->pos ().y ());
     QPointF                   moveToNotActive (400, 10);
     QPointF                   moveTo (400, 240);
-    
+
     /*
      * Now we send three mouse events that ultimately will send the unlocked()
      * signal from the window.
