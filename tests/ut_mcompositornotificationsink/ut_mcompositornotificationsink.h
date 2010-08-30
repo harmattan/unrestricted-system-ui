@@ -98,7 +98,12 @@ private slots:
     void testWhenSinkDisableTrueNoBannerCreated();
     // Test when sink is set to disabled, but system notifications are generated
     void testWhenSinkIsSetToDisabledSystemNotificationsAreStillGenerated();
-
+    // Test when all notifications are disabled, that no notifications are generated, not even system notifications
+    void testWhenAllNotificationsAreDisabledNotEvenSystemNotificationsAreGenerated();
+    // Test when notification gconf item has no value, all notifications are generated
+    void testWhenPreviewEnableGConfKeyHasNoValueSetAllNotificationsAreGenerated();
+    // Test when notification gconf item has invalid value, all notifications are generated
+    void testWhenPreviewEnableGConfKeyHasInvalidValueSetAllNotificationsAreGenerated();
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

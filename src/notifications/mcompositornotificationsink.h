@@ -25,6 +25,7 @@
 
 class QTimer;
 class MBanner;
+class MGConfItem;
 
 /*!
  * MCompositorNotificationSink implements the NotificationSink interface for
@@ -82,6 +83,11 @@ private slots:
       */
     void hideWindow();
 
+    /*!
+      * Enables or disables Notification Previews according to provided GConf key
+      */
+    void changeNotificationPreviewMode();
+
 private:
     /*!
      * Updates an existing info banner with the given notification parameters.
@@ -110,11 +116,21 @@ private:
     //! Whether the sink is currently showing notifications or just transferring them
     bool sinkDisabled;
 
+    //! Similar than sinkDisabled, but also system notifications are disabled
+    bool allPreviewsDisabled;
+
     //! Full screen window for the notification
     MWindow* window;
 
     //! Current notification which is being shown
     Notification currentNotification;
+
+    //! GConf item which tracks if notification previews are enabled
+    MGConfItem* notificationPreviewMode;
+
+#ifdef UNIT_TEST
+    friend class Ut_MCompositorNotificationSink;
+#endif
 };
 
 #endif /* MCOMPOSITORNOTIFICATIONSINK_H_ */

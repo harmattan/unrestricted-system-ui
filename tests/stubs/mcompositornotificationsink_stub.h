@@ -39,6 +39,7 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void notificationDone(uint notificationId, bool notificationIdInUse);
   virtual void addInfoBannerToWindow();
   virtual void removeWindow();
+  virtual void changeNotificationPreviewMode();
    bool sinkDisabled ;
    MWindow *window ;
    Notification newNotification ;
@@ -84,6 +85,10 @@ void MCompositorNotificationSinkStub::addInfoBannerToWindow() {
 
 void MCompositorNotificationSinkStub::removeWindow() {
     stubMethodEntered("removeWindow");
+}
+
+void MCompositorNotificationSinkStub::changeNotificationPreviewMode() {
+    stubMethodEntered("changeNotificationPreviewMode");
 }
 
 void MCompositorNotificationSinkStub::updateNotification(const Notification &notification) {
@@ -147,5 +152,8 @@ void MCompositorNotificationSink::hideWindow() {
     gMCompositorNotificationSinkStub->removeWindow();
 }
 
+void MCompositorNotificationSink::changeNotificationPreviewMode() {
+    gMCompositorNotificationSinkStub->changeNotificationPreviewMode();
+}
 
 #endif

@@ -29,6 +29,7 @@ HEADERS += \
     $$SRCDIR/notifications/notificationparameters.h \
     $$SRCDIR/notifications/eventtypestore.h \
     $$SRCDIR/sysuid.h \
-    ../stubs/stubbase.h
+    ../stubs/stubbase.h \
+    ../stubs/mgconfitem_stub.h
 
 include(../common_bot.pri)

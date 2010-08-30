@@ -32,11 +32,15 @@
 #include "notificationmanager_stub.h"
 #include <QSettings>
 #include "sysuid_stub.h"
+#include "mgconfitem_stub.h"
 #include "notificationmanager.h"
 #include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
 #include <QSettings>
 #include <MOnDisplayChangeEvent>
+#include <MGConfItem>
+
+static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
 // Mock notification manager (used by MCompositorNotificationSink)
 MockNotificationManager::MockNotificationManager() :
@@ -356,5 +360,81 @@ void Ut_MCompositorNotificationSink::testWhenSinkIsSetToDisabledSystemNotificati
     QCOMPARE(Ut_WindowShown, true);
 }
 
+void Ut_MCompositorNotificationSink::testWhenAllNotificationsAreDisabledNotEvenSystemNotificationsAreGenerated()
+{
+    // reset previews as not disabled
+    sink->allPreviewsDisabled = false;
+
+    // Check that window is following right gconf key
+    QVERIFY (sink->notificationPreviewMode->key() == NOTIFICATION_PREVIEW_ENABLED);
+
+    // Disable all previews
+    gMGConfItemStub->stubSetReturnValue("value", QVariant(false));
+    sink->changeNotificationPreviewMode();
+
+    // Create normal notification
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+
+    // Check that notification is not shown
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(Ut_WindowShown, false);
+
+    // Create system notification
+    parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters);
+
+    // Check that notification is not shown
+    QCOMPARE(Ut_WindowShown, false);
+}
+
+void Ut_MCompositorNotificationSink::testWhenPreviewEnableGConfKeyHasNoValueSetAllNotificationsAreGenerated()
+{
+    // reset previews as not disabled
+    sink->allPreviewsDisabled = false;
+
+    // Set no value to previews_enabled key
+    QVariant variant;
+    gMGConfItemStub->stubSetReturnValue("value", variant);
+    sink->changeNotificationPreviewMode();
+
+    // Create normal notification
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+
+    // Check that notification is shown
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(Ut_WindowShown, true);
+
+    // Create system notification
+    parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters);
+
+    // Check that notification is shown
+    QCOMPARE(Ut_WindowShown, true);
+}
+
+void Ut_MCompositorNotificationSink::testWhenPreviewEnableGConfKeyHasInvalidValueSetAllNotificationsAreGenerated()
+{
+    // reset previews as not disabled
+    sink->allPreviewsDisabled = false;
+
+    // Set invalid value to previews_enabled key
+    QVariant variant(QString("garbage"));
+    gMGConfItemStub->stubSetReturnValue("value", variant);
+    sink->changeNotificationPreviewMode();
+
+    // Create normal notification
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+
+    // Check that notification is shown
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(Ut_WindowShown, true);
+
+    // Create system notification
+    parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters);
+
+    // Check that notification is shown
+    QCOMPARE(Ut_WindowShown, true);
+}
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

@@ -22,15 +22,22 @@
 #include <MSceneManager>
 #include <MOnDisplayChangeEvent>
 #include <QApplication>
+#include <MGConfItem>
+
+static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
 MCompositorNotificationSink::MCompositorNotificationSink() :
-        sinkDisabled(false),
+        sinkDisabled(false), allPreviewsDisabled(false),
         window(new MWindow())
 {
     window->setTranslucentBackground(true);
     window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
     window->setObjectName("MCompositorNotificationSinkWindow");
+
+    notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
+    changeNotificationPreviewMode();
+    connect(notificationPreviewMode, SIGNAL(valueChanged()), this, SLOT(changeNotificationPreviewMode()));
 }
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
@@ -48,7 +55,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if (sinkDisabled && notification.type() != Notification::SystemEvent) {
+    if ((sinkDisabled && notification.type() != Notification::SystemEvent) || allPreviewsDisabled ) {
         emit notificationAdded(notification);
         return;
     }
@@ -152,5 +159,13 @@ void MCompositorNotificationSink::addInfoBannerToWindow()
     } else {
         // If the window timer has timed out before displayEntered() was sent there is no banner anymore and the window should just be hidden
         window->hide();
+    }
+}
+
+void MCompositorNotificationSink::changeNotificationPreviewMode()
+{
+    QVariant gconfValue = notificationPreviewMode->value();
+    if (gconfValue.isValid() && (gconfValue.type() == QVariant::Bool)) {
+        allPreviewsDisabled = !gconfValue.toBool();
     }
 }
