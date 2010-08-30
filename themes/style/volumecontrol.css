@@ -11,3 +11,19 @@
     background-image : "meegotouch-notification-event-background" 10px 10px 10px 10px;
 }
 
+#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#In {
+    origin: "left";
+}
+
+#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#Out {
+    origin: "left";
+}
+
+#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#In {
+    origin: "right";
+}
+
+#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#Out {
+    origin: "right";
+}
+

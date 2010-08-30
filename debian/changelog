@@ -10,7 +10,7 @@ system-ui (0.16.12~1) harmattan; urgency=low
     device or the touch-screen is locked
   * Fixes: NB#180193 - Use only valid logical IDs.
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 30 Aug 2010 14:48:09 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 30 Aug 2010 17:41:22 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 

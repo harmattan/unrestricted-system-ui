@@ -184,13 +184,6 @@ Ut_VolumeOverlay::testHideMe()
 }
 
 void
-Ut_VolumeOverlay::testOrientationChanged()
-{
-    m_Api->orientationChanged(M::Landscape);
-    QVERIFY(mw_orientation == M::Landscape);
-}
-
-void
 Ut_VolumeOverlay::cleanupTestCase ()
 {
     delete m_Api;

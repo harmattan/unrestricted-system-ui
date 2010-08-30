@@ -134,13 +134,19 @@ VolumeOverlay::UpdateVolume (int val, int max)
 }
 
 void
-VolumeOverlay::orientationChanged (M::Orientation orientation)
+VolumeOverlay::hideMe ()
 {
-    Q_UNUSED(orientation);
+
 }
 
 void
-VolumeOverlay::hideMe ()
+VolumeOverlay::updateMask ()
+{
+
+}
+
+void
+VolumeOverlay::removeMask ()
 {
 
 }
