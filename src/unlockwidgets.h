@@ -26,7 +26,12 @@ class MWidget;
 class MImageWidget;
 
 #include <QObject>
+#include <MLocale>
 #include <MStylableWidget>
+
+#ifdef HAVE_QMSYSTEM
+#include <qmtime.h>
+#endif
 
 #include "unlocknotifications.h"
 
@@ -45,6 +50,14 @@ private:
     MImageWidget    *m_icon;
     MLabel          *m_TimeLabel;
     MLabel          *m_DateLabel;
+    MLocale          m_locale;
+
+#ifdef HAVE_QMSYSTEM
+    Maemo::QmTime  *m_time;
+
+private slots:
+    void timeSettingsChanged (Maemo::QmTimeWhatChanged what);
+#endif
 
 #ifdef UNIT_TEST
     friend class ut_unlockwidgets;
