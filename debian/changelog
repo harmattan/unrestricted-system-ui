@@ -9,8 +9,9 @@ system-ui (0.16.12~1) harmattan; urgency=low
   * Volume-control: Do not show the volume-slider-overlay window when the
     device or the touch-screen is locked
   * Fixes: NB#180193 - Use only valid logical IDs.
+  * Fixes: NB#188713 - Volume control/bar blocks touch input
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 30 Aug 2010 17:41:22 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 31 Aug 2010 11:03:03 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 
