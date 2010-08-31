@@ -309,7 +309,7 @@ Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
     QCOMPARE (spy.count (), 1);
     arguments = spy.takeFirst ();
     /* Look for the notification: "Disconnect the charger from..." */
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery");
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.removecharger");
     QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_remcha"));
     QVERIFY (arguments.at (2).toString () == "");
     spy.clear ();

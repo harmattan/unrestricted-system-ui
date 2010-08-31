@@ -277,7 +277,6 @@ UsbUi::ShowNotification (int id)
     m_notification =
         new MNotification (MNotification::DeviceAddedEvent, "",
                            qtTrId ("qtn_usb_info_connected").arg (*mode_text));
-    m_notification->setImage ("icon-m-common-usb");
     m_notification->publish ();
 }
 

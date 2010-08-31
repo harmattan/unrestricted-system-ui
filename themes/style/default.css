@@ -1,5 +1,6 @@
 @import "unlockscreen.css";
 @import "volumecontrol.css";
+@import "shutdownscreen.css";
 
 MSceneWindowStyle#StatusIndicatorMenuWindow {
     /* Add top padding so that the status indicator menu window does not go under the status area */
@@ -437,14 +438,6 @@ StatusIndicatorIconStyle#PresenceStatusIndicatorAway {
     maximum-size: 1.8mm 1.8mm;
 }
 
-#shutdownTextBig {
-    font: $FONT_XLARGE;
-}
-
-#shutdownTextSmaller {
-    font: $FONT_LARGE;
-}
-
 StatusIndicatorIconStyle#GPSStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";
@@ -509,3 +502,4 @@ MApplicationExtensionAreaStyle#StatusIndicatorMenuTopRowExtensionArea {
 MContainerStyle#MExtensionAreaInvisibleContainer {
     background-image: ;
 }
+

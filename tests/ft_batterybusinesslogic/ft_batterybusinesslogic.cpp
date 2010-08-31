@@ -251,7 +251,7 @@ Ft_BatteryBusinessLogic::testBatteryChargerEvent ()
     QTest::qWait (10);
     /* Look for the notification: "Disconnect the charger from..." */
     QVERIFY (hasPublishedNotification(
-                "x-nokia.battery",
+                "x-nokia.battery.removecharger",
                 qtTrId ("qtn_ener_remcha"))
             );
     

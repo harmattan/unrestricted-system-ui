@@ -110,25 +110,18 @@ ShutdownBusinessLogic::thermalShutdown ()
     SYS_DEBUG ("Creating a notification & feedback");
     
     /*
-     * Creating the feedback.
-     */
-    MFeedback feedback("IDF_INFORMATION_STRONG");
-    
-    /*
      * Creating a notification.
      */
     MNotification notification (
-		   MNotification::DeviceEvent, 
+           "x-nokia.battery.temperature",
            "", 
            //% "Temperature too high. Device shutting down."
            qtTrId ("qtn_shut_high_temp"));
-    notification.setImage ("icon-m-notification-temperature");
 
     /*
      * Playing/publishing them.
      */
     notification.publish ();
-    feedback.play();
 }
 
 void
@@ -162,11 +155,11 @@ ShutdownBusinessLogic::shutdownDeniedUSB ()
      * Creating a notification.
      */
     MNotification notification (
-		   MNotification::DeviceEvent, 
+           /* this has the usb-icon: */
+		   MNotification::DeviceAddedEvent,
            "", 
            //% "USB cable plugged in. Unplug the USB cable to shutdown."
            qtTrId ("qtn_shut_unplug_usb"));
-    notification.setImage ("icon-m-common-usb");
 
     /*
      * Playing/publishing them.

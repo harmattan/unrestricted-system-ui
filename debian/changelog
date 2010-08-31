@@ -10,8 +10,9 @@ system-ui (0.16.12~1) harmattan; urgency=low
     device or the touch-screen is locked
   * Fixes: NB#180193 - Use only valid logical IDs.
   * Fixes: NB#188713 - Volume control/bar blocks touch input
+  * Fixes: NB#188566 - Shrinked nokia logo while shutdown in protrait mode
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 31 Aug 2010 11:03:03 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 31 Aug 2010 12:36:43 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 

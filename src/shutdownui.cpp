@@ -25,7 +25,7 @@
 #include <QTimer>
 #include <QGraphicsLinearLayout>
 #include <MSceneManager>
-#include <MImageWidget>
+#include <MStylableWidget>
 #include <MLocale>
 
 #ifdef HAVE_QMSYSTEM
@@ -34,8 +34,6 @@
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
-
-#define FEEDBACK_SUPPLIED
 
 #define DEBUG
 #define WARNING
@@ -47,7 +45,8 @@ ShutdownUI::ShutdownUI () :
         m_Timer (new QTimer),
         m_Label1 (0),
         m_Label2 (0),
-        m_Image (0),
+        m_logo (0),
+        m_layout (0),
         m_Feedback (0)
 {
     setObjectName ("ShutdownUIWindow");
@@ -86,50 +85,40 @@ ShutdownUI::realize ()
 
     // Initilaize non-graphical feedback
     m_Feedback = new MFeedback (this);
-#ifdef FEEDBACK_SUPPLIED
-    /*
-     * I got some vibra files, adding the name here. (L.P.)
-     */
     m_Feedback->setName ("power-off");
-    //m_Feedback->setName ("DF_POWER_OFF");
-#else
-    m_Feedback->setName ("press");
-#endif
 
     //% "Shutting down"
     m_Label1 = new MLabel (qtTrId ("qtn_shut_down"));
-    m_Label1->setObjectName ("shutdownTextBig");
     m_Label1->setAlignment (Qt::AlignCenter);
+    m_Label1->setObjectName ("shutdownTextFirst");
 
     //% "Good bye!"
     m_Label2 = new MLabel (qtTrId ("qtn_shut_greeting"));
-    m_Label2->setObjectName ("shutdownTextSmaller");
     m_Label2->setAlignment (Qt::AlignCenter);
+    m_Label2->setObjectName ("shutdownTextSecond");
 
     /*
      * A full screen logo that we show when the labels are already gone.
      */
-    m_Image = new MImageWidget ("icon-l-startup-nokia-logo");
-    m_Image->hide ();
+    m_logo = new MStylableWidget;
+    m_logo->setObjectName ("shutdownLogo");
 
-    QGraphicsLinearLayout *layout
-        = new QGraphicsLinearLayout (Qt::Vertical);
+    m_layout = new QGraphicsLinearLayout (Qt::Vertical);
+    m_layout->setContentsMargins (0., 0., 0., 0.);
+    m_layout->setSpacing (0.);
 
-    layout->addStretch ();
-    layout->addItem (m_Label1);
-    layout->addStretch ();
-    layout->addItem (m_Image);
-    layout->addStretch ();
-    layout->addItem (m_Label2);
-    layout->addStretch ();
+    m_layout->addItem (m_Label1);
+    m_layout->addItem (m_Label2);
 
     /*
      * Creating a scene window and putting everything into it.
      */
     m_SceneWindow = new MSceneWindow;
-    m_SceneWindow->setLayout (layout);
+    m_SceneWindow->setObjectName ("shutdownWindow");
+    m_SceneWindow->setContentsMargins (0., 0., 0., 0.);
+    m_SceneWindow->setLayout (m_layout);
     m_SceneWindow->appear (this);
-    
+
     m_Realized = true;
 }
 
@@ -194,13 +183,6 @@ ShutdownUI::showWindow (
      */
     show ();
 
-    /*
-     * Force the landscape mode
-     * FIXME: because we don't have portrait image...
-     */
-    lockOrientation ();
-    sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
-
     m_Feedback->play ();
 
     // Set the interval and start the timer to the next phase: hiding the labels
@@ -222,10 +204,17 @@ ShutdownUI::showLogo ()
     /*
      * We hide the labels and show the image.
      */
-    m_Label1->hide ();
-    m_Label2->hide ();
-    m_Image->show ();
-    m_Image->setGeometry (QRectF (0., 0., 864., 480.));
+    for (int i = m_layout->count (); i > 0; i--)
+        m_layout->removeAt (0);
+
+    /* Logo available only for portait ATM */
+    sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
+    lockOrientation ();
+
+    m_layout->addItem (m_logo);
+
+    delete m_Label1;
+    delete m_Label2;
 
     QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
 }
@@ -270,7 +259,7 @@ ShutdownUI::turnOffScreen ()
         setPalette(Palette);
 
         setBackgroundRole (QPalette::Background);
-        m_Image->hide ();
+        m_logo->hide ();
     }
 }
 
