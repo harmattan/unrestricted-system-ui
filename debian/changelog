@@ -13,8 +13,9 @@ system-ui (0.16.12~1) harmattan; urgency=low
   * Fixes: NB#188566 - Shrinked nokia logo while shutdown in protrait mode
   * Fixes: NB#187054 - 12 hour clock setting results wrong time in unlock
     screen
+  * Fixes: NB#188860 - volume control background theming issue
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 31 Aug 2010 15:05:56 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 31 Aug 2010 17:54:57 +0200
 
 system-ui (0.16.11-1) harmattan; urgency=low
 

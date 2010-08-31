@@ -49,11 +49,12 @@ VolumeOverlay::constructUi ()
     m_layout = new QGraphicsLinearLayout;
 
     m_slider = new MSlider;
+    m_slider->setObjectName ("CommonSlider");
 
     m_slider->setOrientation (Qt::Vertical);
-    m_slider->setMaxLabelIconID (QString ("icon-m-common-volume"));
+    m_slider->setMaxLabelIconID ("icon-m-common-volume");
     m_slider->setMaxLabelVisible (true);
-    m_slider->setMinLabelIconID (QString ("icon-m-common-volume-off"));
+    m_slider->setMinLabelIconID ("icon-m-common-volume-off");
     m_slider->setMinLabelVisible (true);
 
     connect (m_slider, SIGNAL (valueChanged (int)),
@@ -79,6 +80,7 @@ VolumeOverlay::constructUi ()
              this, SLOT (updateMask ()));
 
     m_layout->addItem (m_slider);
+    m_layout->addStretch ();
 
     setLayout (m_layout);
 }
@@ -130,8 +132,8 @@ VolumeOverlay::updateMask ()
     M::Orientation orientation =
         m_window->sceneManager ()->orientation ();
 
-    m_slider->setPreferredHeight (orientation == M::Landscape ?
-                                  m_window->height () : m_window->width ());
+    setPreferredHeight (orientation == M::Landscape ?
+                        m_window->height () : m_window->width ());
     m_layout->invalidate ();
 
     QSize  size = preferredSize().toSize();
