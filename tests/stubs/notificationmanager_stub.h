@@ -35,7 +35,6 @@ class NotificationManagerStub : public StubBase {
   virtual void NotificationManagerConstructor(int relayInterval, uint maxWaitQueueSize);
   virtual void NotificationManagerDestructor();
   virtual void restorePersistentData();
-  virtual void loadSystemNotificationSource();
   virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId);
   virtual bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
   virtual bool removeNotification(uint notificationUserId, uint notificationId);
@@ -77,10 +76,6 @@ void NotificationManagerStub::NotificationManagerDestructor() {
 }
 void NotificationManagerStub::restorePersistentData() {
   stubMethodEntered("restorePersistentData");
-}
-
-void NotificationManagerStub::loadSystemNotificationSource() {
-  stubMethodEntered("loadSystemNotificationSource");
 }
 
 uint NotificationManagerStub::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
@@ -277,10 +272,6 @@ NotificationManager::~NotificationManager() {
 
 void NotificationManager::restorePersistentData() {
   gNotificationManagerStub->restorePersistentData();
-}
-
-void NotificationManager::loadSystemNotificationSource() {
-  gNotificationManagerStub->loadSystemNotificationSource();
 }
 
 uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
