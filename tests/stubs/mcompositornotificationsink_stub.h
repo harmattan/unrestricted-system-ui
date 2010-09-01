@@ -34,15 +34,12 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void removeNotification(uint notificationId);
   virtual void timeout();
   virtual void setDisabled(bool disabled);
-  virtual void makeNotificationWindow();
   virtual void updateNotification(const Notification &notification);
   virtual void notificationDone(uint notificationId, bool notificationIdInUse);
-  virtual void addInfoBannerToWindow();
-  virtual void removeWindow();
+  virtual void showOrHideWindow();
+  virtual void addLatestBannerToWindow();
+  virtual void removeBannerFromCurrentBanners();
   virtual void changeNotificationPreviewMode();
-   bool sinkDisabled ;
-   MWindow *window ;
-   Notification newNotification ;
 }; 
 
 // 2. IMPLEMENT STUB
@@ -75,16 +72,16 @@ void MCompositorNotificationSinkStub::setDisabled(bool disabled) {
   stubMethodEntered("setDisabled",params);
 }
 
-void MCompositorNotificationSinkStub::makeNotificationWindow() {
-  stubMethodEntered("makeNotificationWindow");
+void MCompositorNotificationSinkStub::showOrHideWindow() {
+    stubMethodEntered("showOrHideWindow");
 }
 
-void MCompositorNotificationSinkStub::addInfoBannerToWindow() {
-    stubMethodEntered("addInfoBannerToWindow");
+void MCompositorNotificationSinkStub::addLatestBannerToWindow() {
+    stubMethodEntered("addLatestBannerToWindow");
 }
 
-void MCompositorNotificationSinkStub::removeWindow() {
-    stubMethodEntered("removeWindow");
+void MCompositorNotificationSinkStub::removeBannerFromCurrentBanners() {
+    stubMethodEntered("removeBannerFromCurrentBanners");
 }
 
 void MCompositorNotificationSinkStub::changeNotificationPreviewMode() {
@@ -144,12 +141,16 @@ void MCompositorNotificationSink::notificationDone(uint notificationId, bool not
   gMCompositorNotificationSinkStub->notificationDone(notificationId, notificationIdInUse);
 }
 
-void MCompositorNotificationSink::addInfoBannerToWindow() {
-    gMCompositorNotificationSinkStub->addInfoBannerToWindow();
+void MCompositorNotificationSink::showOrHideWindow() {
+    gMCompositorNotificationSinkStub->showOrHideWindow();
 }
 
-void MCompositorNotificationSink::hideWindow() {
-    gMCompositorNotificationSinkStub->removeWindow();
+void MCompositorNotificationSink::addLatestBannerToWindow() {
+    gMCompositorNotificationSinkStub->addLatestBannerToWindow();
+}
+
+void MCompositorNotificationSink::removeBannerFromCurrentBanners() {
+    gMCompositorNotificationSinkStub->removeBannerFromCurrentBanners();
 }
 
 void MCompositorNotificationSink::changeNotificationPreviewMode() {

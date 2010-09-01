@@ -23,7 +23,6 @@
 #include <QHash>
 #include "widgetnotificationsink.h"
 
-class QTimer;
 class MBanner;
 class MGConfItem;
 
@@ -74,14 +73,19 @@ private slots:
     void setDisabled(bool disabled);
 
     /*!
-      * Adds an infobanner to a fullscreen window which was created earlier.
-      */
-    void addInfoBannerToWindow();
+     * Shows or hides the fullscreen window based on whether there are banners to be shown in it.
+     */
+    void showOrHideWindow();
 
     /*!
-      * Hides window when the infobanner disappears off the screen after timeout.
+      * Adds the latest banner to a fullscreen window which was created earlier.
       */
-    void hideWindow();
+    void addLatestBannerToWindow();
+
+    /*!
+      * Removes a banner from the current banners when it disappears off the screen after timeout.
+      */
+    void removeBannerFromCurrentBanners();
 
     /*!
       * Enables or disables Notification Previews according to provided GConf key
@@ -115,10 +119,12 @@ private:
     void notificationDone(uint notificationId, bool notificationIdInUse);
 
     /*!
-     * sets up a timer for the window disappearing
+     * Sets up a timer for the banner disappearing
+     *
      * \param banner MBanner whose disappearance it handles. Timer would be parented to this banner.
+     * \param notification the notification associated with the banner
      */
-    void setupWindowTimer(MBanner *banner);
+    void setupWindowTimer(MBanner *banner, const Notification &notification);
 
     //! A mapping between notification IDs and info banners
     QHash<uint, MBanner *> idToBanner;
@@ -132,11 +138,11 @@ private:
     //! Full screen window for the notification
     MWindow* window;
 
-    //! Current notification which is being shown
-    Notification currentNotification;
-
     //! GConf item which tracks if notification previews are enabled
     MGConfItem* notificationPreviewMode;
+
+    //! The banners currently being displayed, oldest first
+    QList<MBanner *> currentBanners;
 
 #ifdef UNIT_TEST
     friend class Ut_MCompositorNotificationSink;

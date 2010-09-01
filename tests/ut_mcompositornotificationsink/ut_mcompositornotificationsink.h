@@ -60,6 +60,14 @@ signals:
     void notificationUpdated(const Notification &notification);
 };
 
+class WindowEventFilter : public QObject
+{
+    Q_OBJECT
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+};
+
 class Ut_MCompositorNotificationSink : public QTimer
 {
     Q_OBJECT
@@ -74,6 +82,10 @@ private:
 signals:
     void statusIndictorMenuVisibilityChanged(bool);
 
+private:
+    // Helper for sending the display change event
+    void sendOnDisplayChangeEvent();
+
 private slots:
     // Executed once before every test case
     void init();
@@ -84,8 +96,11 @@ private slots:
     // Executed once after last test case
     void cleanupTestCase();
 
-    // Test that notifications can be added and no notifications are displayed when desktop is on top
-    void testAddNotification();
+    // Test window properties
+    void testNotificationWindowProperties();
+    // Test that notifications can be added
+    void testAddNotificationWhenWindowNotOpen();
+    void testAddNotificationWhenWindowAlreadyOpen();
     // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
     // Test that canceling with an ID cancels the correct notification

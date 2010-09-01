@@ -18,6 +18,7 @@ system-ui (0.16.12~1) harmattan; urgency=low
   * Fixes: NB#184665 - Incoming event banner blocks interaction from other parts of UI
   * Fixes: NB#182995 - shutdown sequence is skipped with device power down
     and alarm
+  * Fixes: NB#188425 - Notifications overlaps each others.
 
  -- David Kedves <dkedves@blumsoft.eu>  Thu, 02 Sep 2010 10:11:09 +0200
 
