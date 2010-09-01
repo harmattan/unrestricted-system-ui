@@ -15,6 +15,7 @@ system-ui (0.16.12~1) harmattan; urgency=low
     screen
   * Fixes: NB#188860 - volume control background theming issue
   * Fixes: NB#188724 - request for usb-moded credentials
+  * Fixes: NB#184665 - Incoming event banner blocks interaction from other parts of UI
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 01 Sep 2010 11:12:26 +0200
 

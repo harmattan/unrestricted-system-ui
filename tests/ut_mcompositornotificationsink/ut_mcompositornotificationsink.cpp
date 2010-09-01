@@ -204,6 +204,12 @@ void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
     disappearingWindow = sceneWindow;
 }
 
+M::OrientationAngle gCurrentOrientationAngle;
+M::OrientationAngle MSceneManager::orientationAngle() const
+{
+    return gCurrentOrientationAngle;
+}
+
 // QTimer stubs (used by MCompositorNotificationSink)
 bool Ut_TimerStarted = false;
 void QTimer::start(int msec)
@@ -233,6 +239,7 @@ void Ut_MCompositorNotificationSink::cleanupTestCase()
 
 void Ut_MCompositorNotificationSink::init()
 {
+    gconfValue = QVariant();
     notificationManager = new MockNotificationManager();
     sink = new MCompositorNotificationSink();
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), sink, SLOT(removeNotification(uint)));
@@ -244,6 +251,7 @@ void Ut_MCompositorNotificationSink::init()
     Ut_TimerStarted = false;
     Ut_DisappearSceneWindow = false;
     disappearingWindow = NULL;
+    gCurrentOrientationAngle = M::Angle0;
 }
 
 void Ut_MCompositorNotificationSink::cleanup()
@@ -441,6 +449,37 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
 
     // Check that notification is not shown
     QCOMPARE(Ut_WindowShown, windowshown);
+}
+
+void Ut_MCompositorNotificationSink::testWindowMasking_data()
+{
+    QTest::addColumn<M::OrientationAngle>("angle");
+    QTest::newRow("0")   << M::Angle0;
+    QTest::newRow("90")  << M::Angle90;
+    QTest::newRow("180") << M::Angle180;
+    QTest::newRow("270") << M::Angle270;
+}
+
+void Ut_MCompositorNotificationSink::testWindowMasking()
+{
+    QFETCH(M::OrientationAngle, angle);
+    gCurrentOrientationAngle = angle;
+
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0, 0);
+
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0,0,1,1));
+    QApplication::sendEvent(notificationWindow, event);
+
+    QRect maskRect;
+    switch(angle) {
+    case M::Angle0:   maskRect = QRect(0, 0, infoBanner->preferredWidth(), infoBanner->preferredHeight()); break;
+    case M::Angle90:  maskRect = QRect(notificationWindow->width() - infoBanner->preferredHeight(), 0, infoBanner->preferredHeight(), infoBanner->preferredWidth()); break;
+    case M::Angle180: maskRect = QRect(0, notificationWindow->height() - infoBanner->preferredHeight(), infoBanner->preferredWidth(), infoBanner->preferredHeight()); break;
+    case M::Angle270: maskRect = QRect(0, 0, infoBanner->preferredHeight(), infoBanner->preferredWidth()); break;
+    }
+
+    QCOMPARE(notificationWindow->mask().boundingRect(), maskRect);
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)
