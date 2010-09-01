@@ -553,7 +553,7 @@ system-ui (0.10.0-0) harmattan; urgency=low
   * Updated against libdui 0.15.0-1 DuiApplicationWindow and related API changes
   * NOTE: this version requires libdui version 0.15.0- or later!
 
- --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Mon, 23 Nov 2009 16:08:50 +0200
+ --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Mon, 23 Nov 2009 16:08:50 +0200
 
 system-ui (0.9.1-0) harmattan; urgency=low
 
@@ -562,7 +562,7 @@ system-ui (0.9.1-0) harmattan; urgency=low
   * Fixes: NB#141656 - Pin UI displays blank boxes instead of content
   * Fixes: NB#145442 - Settings plug-ins cannot be shown on device
 
- --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 19 Nov 2009 09:02:27 +0200
+ --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Thu, 19 Nov 2009 09:02:27 +0200
 
 system-ui (0.9.0-0) harmattan; urgency=low
 
@@ -586,7 +586,7 @@ system-ui (0.9.0-0) harmattan; urgency=low
   * Fixes: NB#145403 - Manual power save mode switching does not work if automatic power save mode is set ON.
   * Fixes: NB#145463 - Sysuid crashes when SIM status is changed after launch PIN query is sent 
 
- --  Telle-Tiia Pitkänen <telle-tiia.pitianen@ixonos.com>  Thu, 12 Nov 2009 12:10:09 +0200
+ --  Telle-Tiia Pitkanen <telle-tiia.pitianen@ixonos.com>  Thu, 12 Nov 2009 12:10:09 +0200
 
 system-ui (0.8.1-1) harmattan; urgency=low
 
@@ -600,7 +600,7 @@ system-ui (0.8.1-0) harmattan; urgency=low
   * Fixes: NB#143865 - Number "0" disappears from key pad in PIN code query view when screen is rotated
   * Fixes: NB#143869 - Sysuid crashes when correct operator SIM lock code is entered
 
- --  Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Wed, 04 Nov 2009 16:07:17 +0200
+ --  Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Wed, 04 Nov 2009 16:07:17 +0200
 
 system-ui (0.8.0-0) harmattan; urgency=low
 
@@ -621,7 +621,7 @@ system-ui (0.6.4-0) harmattan; urgency=low
   * Fixes: NB#141157 - Battery low notification is not displayed
   * Fixes: NB#135824 - The upper bar of the window that contains the X should be removed 
 
- -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 22 Oct 2009 09:46:50 +0300
+ -- Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Thu, 22 Oct 2009 09:46:50 +0300
 
 system-ui (0.6.3-0) harmattan; urgency=low
 
@@ -641,7 +641,7 @@ system-ui (0.6.2-0) harmattan; urgency=low
   * Fixes: NB#134122 - Correct PUK does not do anything
   * Fixes: NB#135824 - The upper bar of the window that contains the X..
 
- -- Telle-Tiia Pitkänen <telle-tiia.pitkanen@ixonos.com>  Thu, 01 Oct 2009 13:06:48 +0300
+ -- Telle-Tiia Pitkanen <telle-tiia.pitkanen@ixonos.com>  Thu, 01 Oct 2009 13:06:48 +0300
 
 system-ui (0.6.0-1) harmattan; urgency=low
 
