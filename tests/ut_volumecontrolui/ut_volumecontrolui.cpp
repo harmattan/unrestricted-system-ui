@@ -74,7 +74,7 @@ namespace ResourcePolicy
 // For Hw-volume key handling
 #include <qmkeys.h>
 /*********************************************************************************
- * Stub for Maemo::QmKeys
+ * Stub for Maemo::QmKeys && Maemo::QmLocks
  */
 namespace Maemo
 {
@@ -87,6 +87,28 @@ namespace Maemo
     QmKeys::~QmKeys()
     {
         QTest::qWarn("Maemo::~QmKeys");
+    }
+
+    QmLocks::State qmlocksStubRetval;
+
+    QmLocks::QmLocks(QObject *parent)
+    {
+        Q_UNUSED(parent);
+        QTest::qWarn("Maemo::QmLocks");
+
+        qmlocksStubRetval = Maemo::QmLocks::Unlocked;
+    }
+
+    QmLocks::~QmLocks()
+    {
+        QTest::qWarn("Maemo::~QmLocks");
+    }
+
+    QmLocks::State
+    QmLocks::getState(QmLocks::Lock what) const
+    {
+        Q_UNUSED(what);
+        return qmlocksStubRetval;
     }
 }
 #endif
@@ -112,13 +134,19 @@ VolumeOverlay::UpdateVolume (int val, int max)
 }
 
 void
-VolumeOverlay::orientationChanged (M::Orientation orientation)
+VolumeOverlay::hideMe ()
 {
-    Q_UNUSED(orientation);
+
 }
 
 void
-VolumeOverlay::hideMe ()
+VolumeOverlay::updateMask ()
+{
+
+}
+
+void
+VolumeOverlay::removeMask ()
 {
 
 }
@@ -189,9 +217,10 @@ void
 Ut_VolumeControlUI::initTestCase ()
 {
     m_Api = new VolumeControlUI;
-    QVERIFY(m_Api->m_logic != NULL);
+    QVERIFY(m_Api->m_logic != 0);
 #ifdef HAVE_QMSYSTEM
-    QVERIFY(m_Api->m_hwkeys != NULL);
+    QVERIFY(m_Api->m_hwkeys != 0);
+    QVERIFY(m_Api->m_locks != 0);
 #endif
 }
 
@@ -209,26 +238,81 @@ Ut_VolumeControlUI::testHwKeyEvent()
     // when current_volume >= max_volume
     m_Api->overlayChanged(120);
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
-    QVERIFY(m_Api->m_logic->getVolume() == 99);
+    QCOMPARE(m_Api->m_logic->getVolume(), 99u);
 
     // Turn up the volume
     m_Api->overlayChanged(20);
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
-    QVERIFY(m_Api->m_logic->getVolume() == 21);
+    QCOMPARE(m_Api->m_logic->getVolume(), 21u);
 
     // Turn down the volume
     m_Api->overlayChanged(20);
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeDown, Maemo::QmKeys::KeyDown);
-    QVERIFY(m_Api->m_logic->getVolume() == 19);
+    QCOMPARE(m_Api->m_logic->getVolume(), 19u);
 
     m_Api->overlayChanged(20);
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyUp);
-    QVERIFY(m_Api->m_logic->getVolume() == 20);
+    QCOMPARE(m_Api->m_logic->getVolume(), 20u);
 
     // push some other hw key
     m_Api->overlayChanged(20);
     m_Api->hwKeyEvent(Maemo::QmKeys::Camera, Maemo::QmKeys::KeyDown);
-    QVERIFY(m_Api->m_logic->getVolume() == 20);
+    QCOMPARE(m_Api->m_logic->getVolume(), 20u);
+}
+
+void
+Ut_VolumeControlUI::testLocking()
+{
+    // Device locked
+    m_Api->locksChanged (Maemo::QmLocks::Device, Maemo::QmLocks::Locked);
+    QCOMPARE (m_Api->m_locked, true);
+
+    /*
+     * Volume controlling should work,
+     * but overlay should not be shown:
+     */
+    if (m_Api->m_overlay != 0)
+    {
+        delete m_Api->m_overlay;
+        m_Api->m_overlay = 0;
+    }
+
+    // Turn up the volume
+    m_Api->overlayChanged(20);
+    m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    QCOMPARE(m_Api->m_logic->getVolume(), 21u);
+
+    // Check m_overlay, should not be instantiated
+    QVERIFY(m_Api->m_overlay == 0);
+
+    // Turn down the volume
+    m_Api->overlayChanged(20);
+    m_Api->hwKeyEvent(Maemo::QmKeys::VolumeDown, Maemo::QmKeys::KeyDown);
+    QCOMPARE(m_Api->m_logic->getVolume(), 19u);
+
+    // Check m_overlay, should not be instantiated
+    QVERIFY(m_Api->m_overlay == 0);
+
+    // Lock also the touchscreen & keyboard
+    m_Api->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
+    QCOMPARE (m_Api->m_locked, true);
+
+    // Unlock only the device
+    /* TouchscreenAndKeyboard is still locked: */
+    Maemo::qmlocksStubRetval = Maemo::QmLocks::Locked;
+    m_Api->locksChanged (Maemo::QmLocks::Device, Maemo::QmLocks::Unlocked);
+    QCOMPARE (m_Api->m_locked, true);
+
+    // And now unlock the touch-screen also:
+    /* Device is unlocked already:: */
+    Maemo::qmlocksStubRetval = Maemo::QmLocks::Unlocked;
+    m_Api->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
+    QCOMPARE (m_Api->m_locked, false);
+
+    /* Press a volume down key */
+    m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    /* Overlay should be instantiated: */
+    QVERIFY (m_Api->m_overlay != 0);
 }
 #endif
 

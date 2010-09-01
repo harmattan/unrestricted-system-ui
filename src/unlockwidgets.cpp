@@ -25,7 +25,6 @@
 
 #include <QGraphicsLinearLayout>
 
-#include <MLocale>
 #include <MLabel>
 #include <MImageWidget>
 
@@ -88,6 +87,15 @@ UnlockHeader::UnlockHeader () :
      */
     setLayout (lockliftBox);
 
+#ifdef HAVE_QMSYSTEM
+    m_time = new Maemo::QmTime;
+
+    connect (m_time, SIGNAL (timeOrSettingsChanged (Maemo::QmTimeWhatChanged)),
+             this, SLOT (timeSettingsChanged (Maemo::QmTimeWhatChanged)));
+
+    timeSettingsChanged (Maemo::QmTimeOnlySettingsChanged);
+#endif
+
     /*
      * And initialize the widgets contents
      */
@@ -116,7 +124,6 @@ UnlockHeader::updateDateTime ()
     if ((m_TimeLabel == 0) || (m_DateLabel == 0))
         return;
 
-    MLocale locale;
     QDateTime now (QDateTime::currentDateTime ());
 
     /*
@@ -127,13 +134,13 @@ UnlockHeader::updateDateTime ()
      * Please note, that this not prevents the updates to happen when the touch
      * screen is off, but it lower the updates by the ratio of 1/60.
      */
-    text = locale.formatDateTime (now, MLocale::DateNone, MLocale::TimeShort);
+    text = m_locale.formatDateTime (now, MLocale::DateNone, MLocale::TimeShort);
     if (text != m_TimeLabel->text()) {
         m_TimeLabel->setText (text);
         needUpdate = true;
     }
 
-    text = locale.formatDateTime (now, MLocale::DateFull, MLocale::TimeNone);
+    text = m_locale.formatDateTime (now, MLocale::DateFull, MLocale::TimeNone);
     if (text != m_DateLabel->text()) {
         m_DateLabel->setText (text);
         needUpdate = true;
@@ -142,6 +149,22 @@ UnlockHeader::updateDateTime ()
     if (needUpdate)
         update ();
 }
+
+#ifdef HAVE_QMSYSTEM
+void
+UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what)
+{
+    Q_UNUSED (what);
+    bool format24h = m_time->getTimeFormat () == Maemo::QmTime::format24h;
+
+    m_locale.setTimeFormat24h (
+        format24h ?
+        MLocale::TwentyFourHourTimeFormat24h :
+        MLocale::TwelveHourTimeFormat24h);
+
+    updateDateTime ();
+}
+#endif
 
 UnlockArea::UnlockArea () :
     m_enabled (false),

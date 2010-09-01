@@ -37,7 +37,6 @@
 
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
-class SystemNotificationSource;
 class MFileDataStore;
 class EventTypeStore;
 
@@ -75,13 +74,6 @@ public:
      * Restores the saved groups and persistent notifications and sends the respective notificationUpdated and groupUpdated signals.
      */
     void restorePersistentData();
-
-    /*!
-     * Loads systemNotificationSource.
-     *
-     * This must be done after notification manager signals have been connected to sinks.
-     */
-    void loadSystemNotificationSource();
 
 public slots:
     //! \reimp

@@ -70,7 +70,7 @@ MBanner *createBanner(bool removable)
 
 void Ut_NotificationAreaView::testClearButtonSignals()
 {
-    QVERIFY(disconnect(m_subject->clearButton, SIGNAL(clicked()), m_subject, SLOT(clickAllRemovableBanners())));
+    QVERIFY(disconnect(m_subject->clearButton, SIGNAL(clicked()), notificationArea, SLOT(removeAllRemovableBanners())));
 }
 
 void Ut_NotificationAreaView::testAddClearButton_data()
@@ -113,22 +113,6 @@ void Ut_NotificationAreaView::testRemoveClearButton()
     banners.clear();
     notificationArea->model()->setBanners(banners);
     QCOMPARE(m_subject->clearButton->objectName(), QString("NotificationAreaClearButton"));
-}
-
-void Ut_NotificationAreaView::testClickClearButton()
-{
-    QAction action1("test", NULL);
-    QAction action2("test", NULL);
-    QSharedPointer<MBanner> removableBanner(createBanner(true));
-    QSharedPointer<MBanner> nonRemovableBanner(createBanner(false));
-    removableBanner->addAction(&action1);
-    nonRemovableBanner->addAction(&action2);
-    notificationArea->model()->setBanners(BannerList() << removableBanner.data() << nonRemovableBanner.data());
-    m_subject->clickAllRemovableBanners();
-    QCOMPARE(bannersClicked.count(), 1);
-    QCOMPARE(bannersClicked.at(0), removableBanner.data());
-    QCOMPARE(removableBanner->actions().count(), 0);
-    QCOMPARE(nonRemovableBanner->actions().count(), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaView)

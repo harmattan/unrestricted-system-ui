@@ -31,6 +31,7 @@ class VolumeOverlay;
 #ifdef HAVE_QMSYSTEM
 // For Hw-volume key handling
 #include <qmkeys.h>
+#include <qmlocks.h>
 #endif
 
 class VolumeControlUI : public QObject
@@ -45,6 +46,7 @@ private slots:
     void overlayChanged (int val);
 #ifdef HAVE_QMSYSTEM
     void hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state);
+    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
     void hwKeyResourceAcquired ();
     void hwKeyResourceLost ();
@@ -52,10 +54,11 @@ private slots:
 private:
     VolumeBarLogic  *m_logic;
     VolumeOverlay   *m_overlay;
-
 #ifdef HAVE_QMSYSTEM
     Maemo::QmKeys   *m_hwkeys;
+    Maemo::QmLocks  *m_locks;
 #endif
+    bool             m_locked;
 
 #ifdef HAVE_LIBRESOURCEQT
     ResourcePolicy::ResourceSet *m_hwkeyResource;

@@ -108,7 +108,10 @@ WidgetNotificationSinkStub *gWidgetNotificationSinkStub = &gDefaultWidgetNotific
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
+const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
+const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
+
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
     return gWidgetNotificationSinkStub->determineIconId(parameters);

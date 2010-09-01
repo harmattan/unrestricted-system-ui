@@ -50,7 +50,7 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     //% "Clear"
     clearButton = new MButton(qtTrId("qtn_noti_clear"));
     clearButton->setObjectName("NotificationAreaClearButton");
-    connect(clearButton, SIGNAL(clicked()), this, SLOT(clickAllRemovableBanners()));
+    connect(clearButton, SIGNAL(clicked()), controller, SLOT(removeAllRemovableBanners()));
     clearButtonLayout->addStretch();
     clearButtonLayout->addItem(clearButton);
     clearButtonLayout->addStretch();
@@ -95,22 +95,6 @@ void NotificationAreaView::applyStyle()
 
     // TODO: Without this the banner layout size did not reflect the new banner sizes. Go figure.
     bannerLayout->invalidate();
-}
-
-void NotificationAreaView::clickAllRemovableBanners()
-{
-    foreach(MBanner *banner, model()->banners()) {
-        // Remove all user removable banners
-        if (banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool()) {
-            // Remove all actions from the banner so that they won't get executed
-            foreach (QAction *action, banner->actions()) {
-                banner->removeAction(action);
-            }
-
-            // Click the banner
-            banner->click();
-        }
-    }
 }
 
 M_REGISTER_VIEW_NEW(NotificationAreaView, NotificationArea)

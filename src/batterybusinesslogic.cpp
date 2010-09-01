@@ -404,7 +404,7 @@ BatteryBusinessLogic::sendNotification (
         case NotificationRemoveCharger:
             SYS_DEBUG ("Notifying NotificationRemoveCharger");
             sendNotification (
-                    "x-nokia.battery",
+                    "x-nokia.battery.removecharger",
                     //% "Disconnect charger from power supply to save energy"
                     qtTrId ("qtn_ener_remcha"));
             break;

@@ -8,6 +8,23 @@
     preferred-size: -1 -1;
     maximum-size: 100% 100%;
 
-    background-image : "meegotouch-notification-event-background" 10px 10px 10px 10px;
+    background-color: black;
+    background-opacity: 0.8;
+}
+
+#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#In {
+    origin: "left";
+}
+
+#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#Out {
+    origin: "left";
+}
+
+#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#In {
+    origin: "right";
+}
+
+#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#Out {
+    origin: "right";
 }
 

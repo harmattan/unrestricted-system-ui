@@ -51,6 +51,8 @@ private slots:
     void testAddNotificationLatestComesFirst();
     // Test when a notification is updated then that banner comes first
     void testUpdatedNotificationComesFirst();
+    // Test removing all removable banners
+    void testRemoveAllRemovableBanners();
 
 signals:
     void addNotification(MBanner &notification);

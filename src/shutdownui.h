@@ -24,7 +24,8 @@
 class QTimer;
 class MLabel;
 class MFeedback;
-class MImageWidget;
+class MStylableWidget;
+class QGraphicsLinearLayout;
 
 /*!
  * A full screen window that is shown when the device is shutting down. The
@@ -52,13 +53,15 @@ private slots:
     void realize ();
 
 private:
-    bool             m_Realized;
-    MSceneWindow    *m_SceneWindow;
-    QTimer          *m_Timer;
-    MLabel          *m_Label1;
-    MLabel          *m_Label2;
-    MImageWidget    *m_Image;
-    MFeedback       *m_Feedback;
+    bool                    m_Realized;
+    MSceneWindow           *m_SceneWindow;
+    QTimer                 *m_Timer;
+    MLabel                 *m_Label1;
+    MLabel                 *m_Label2;
+    MStylableWidget        *m_logo;
+    QGraphicsLinearLayout  *m_layout;
+    MFeedback              *m_Feedback;
+
 #ifdef UNIT_TEST
     friend class Ft_ShutdownUI;
     friend class Ut_ShutdownUI;

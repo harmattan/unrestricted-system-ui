@@ -258,10 +258,11 @@ Ut_LockScreenUI::testLockScreenWindow ()
     QGraphicsSceneMouseEvent *moveEvent;
     QGraphicsSceneMouseEvent *releaseEvent;
     QGraphicsSceneMouseEvent *moveEventNotActive;
-    QPointF                   pressAt (850, 400);
+    QPointF                   pressAt (window->m_LockLiftArea->preferredWidth (), 
+                                       window->m_LockLiftArea->pos ().y ());
     QPointF                   moveToNotActive (400, 10);
     QPointF                   moveTo (400, 240);
-    
+
     /*
      * Now we send three mouse events that ultimately will send the unlocked()
      * signal from the window.
@@ -281,23 +282,23 @@ Ut_LockScreenUI::testLockScreenWindow ()
     // Sending a press event the place where it should activate the draggable
     // icon.
     window->mousePressEvent (pressEvent);
-    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+    QCOMPARE (window->m_DnDstate, (int) LockScreenWindow::STATE_MOVING);
     QVERIFY (nameOfLastFeedback == "start-dragndrop");
 
     //
     // Then we move the mouse right into the middle of the screen
     window->mouseMoveEvent (moveEvent);
-    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+    QCOMPARE (window->m_DnDstate, (int) LockScreenWindow::STATE_MOVING_ACTIVE);
     QVERIFY (nameOfLastFeedback == "enter-dragndrop-dropzone");
 
     // Move back to some non-active place
     window->mouseMoveEvent (moveEventNotActive);
-    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING);
+    QCOMPARE (window->m_DnDstate, (int) LockScreenWindow::STATE_MOVING);
     QVERIFY (nameOfLastFeedback == "exit-dragndrop-dropzone");
 
     // ... again move to active area:
     window->mouseMoveEvent (moveEvent);
-    QVERIFY (window->m_DnDstate == LockScreenWindow::STATE_MOVING_ACTIVE);
+    QCOMPARE (window->m_DnDstate, (int) LockScreenWindow::STATE_MOVING_ACTIVE);
     QVERIFY (nameOfLastFeedback == "enter-dragndrop-dropzone");
 
     //

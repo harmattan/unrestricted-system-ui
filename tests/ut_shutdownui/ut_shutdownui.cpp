@@ -107,7 +107,7 @@ void Ut_ShutdownUI::initTestCase()
     QVERIFY (m_Api->m_Feedback);
     QVERIFY (m_Api->m_Label1);
     QVERIFY (m_Api->m_Label2);
-    QVERIFY (m_Api->m_Image);
+    QVERIFY (m_Api->m_logo);
     QVERIFY (m_Api->m_SceneWindow);
 
     /*
@@ -145,7 +145,7 @@ Ut_ShutdownUI::testShowWindow ()
     QVERIFY (m_Api->m_Feedback);
     QVERIFY (m_Api->m_Label1);
     QVERIFY (m_Api->m_Label2);
-    QVERIFY (m_Api->m_Image);
+    QVERIFY (m_Api->m_logo);
     QVERIFY (m_Api->m_SceneWindow);
     QVERIFY (nameOfLastFeedback == "power-off");
 }

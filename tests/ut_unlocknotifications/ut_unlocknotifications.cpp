@@ -31,6 +31,7 @@
 #include <MOrientationChangeEvent>
 
 #include <QGraphicsLinearLayout>
+#include <MStylableWidget>
 #include <MImageWidget>
 #include <MLabel>
 

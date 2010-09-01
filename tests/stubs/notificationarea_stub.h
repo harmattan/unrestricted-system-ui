@@ -31,6 +31,7 @@ public:
     virtual void addNotification(MBanner &notification);
     virtual void moveNotificationToTop(MBanner &notification);
     virtual void removeNotification(MBanner &notification);
+    virtual void removeAllRemovableBanners();
 };
 
 void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent)
@@ -67,6 +68,11 @@ void NotificationAreaStub::removeNotification(MBanner &notification)
     stubMethodEntered("removeNotification", params);
 }
 
+void NotificationAreaStub::removeAllRemovableBanners()
+{
+    stubMethodEntered("removeAllRemovableBanners");
+}
+
 NotificationAreaStub gDefaultNotificationAreaStub;
 NotificationAreaStub *gNotificationAreaStub = &gDefaultNotificationAreaStub;
 
@@ -93,6 +99,11 @@ void NotificationArea::moveNotificationToTop(MBanner &notification)
 void NotificationArea::removeNotification(MBanner &notification)
 {
     gNotificationAreaStub->removeNotification(notification);
+}
+
+void NotificationArea::removeAllRemovableBanners()
+{
+    gNotificationAreaStub->removeAllRemovableBanners();
 }
 
 #endif

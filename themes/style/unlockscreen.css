@@ -3,7 +3,7 @@ MSceneWindowStyle#LockScreenWindow {
     horizontal-align: left;
 }
 
-MSceneWindowStyle#LockMostRecentArea {
+MWidgetStyle#LockMostRecentArea {
     background-image: "lockscreen-recent-event-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
@@ -13,7 +13,7 @@ MSceneWindowStyle#LockMostRecentArea {
     maximum-size: 100% 7.9mm;
 }
 
-MLabelStyle#LockMostRecentLabel {
+MWidgetStyle#LockMostRecentLabel {
     color: $COLOR_INVERTED_FOREGROUND;
     font: "Nokia Standard Bold" 28;
     /* or "Nokia Standard Light" ??? */
@@ -31,7 +31,7 @@ MImageWidgetStyle#LockMostRecentIcon {
     maximum-size: 3.6mm 3.6mm;
 }
 
-MSceneWindowStyle#LockOtherEventsArea {
+MWidgetStyle#LockOtherEventsArea {
     background-image: "lockscreen-notification-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
@@ -59,7 +59,7 @@ MLabelStyle#LockNotifierLabel {
 }
 
 
-MSceneWindowStyle#LockLiftArea {
+MWidgetStyle#LockLiftArea {
     background-image: "lockscreen-lock-lift-area-background" 0 380 0 0;
     background-opacity: 0.9;
 
@@ -95,19 +95,19 @@ MImageWidgetStyle#lockscreenIconLocked {
     maximum-size:   10mm 10mm;
 }
 
-MSceneWindowStyle#LockLandArea {
+MWidgetStyle#LockLandArea {
     background-image: none;
 
     minimum-size: 100% 100;
 }
 
-MSceneWindowStyle#LockLandAreaDragged {
+MWidgetStyle#LockLandAreaDragged {
     background-image: "lockscreen-lock-land-area-background-dragged" 25 25 25 25;
 
     minimum-size: 100% 100;
 }
 
-MSceneWindowStyle#LockLandAreaActive {
+MWidgetStyle#LockLandAreaActive {
     background-image: "lockscreen-lock-land-area-background-active" 25 25 25 25;
 
     minimum-size: 100% 100;

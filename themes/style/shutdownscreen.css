@@ -1,0 +1,31 @@
+MSceneWindowStyle#shutdownWindow {
+    /*
+     * The shutdown-screen window
+     * can be customized here
+     */
+}
+
+MLabelStyle#shutdownTextFirst {
+    font: $FONT_XLARGE;
+
+    preferred-size: 100% 50%;
+}
+
+MLabelStyle#shutdownTextSecond {
+    font: $FONT_LARGE;
+
+    preferred-size: 100% 50%;
+}
+
+MWidgetStyle#shutdownLogo {
+    background-image: "icon-l-startup-nokia-logo";
+    background-opacity: 1.0;
+
+    vertical-align: top;
+    horizontal-align: left;
+
+    minimum-size: 100% 100%;
+    preferred-size: 100% 100%;
+    maximum-size: 100% 100%;
+}
+

@@ -26,6 +26,7 @@
 #include <QPixmap>
 #include <MImageWidget>
 #include <MSceneManager>
+#include <MStylableWidget>
 #include <MOrientationChangeEvent>
 
 #define DEBUG
@@ -50,7 +51,7 @@ UnlockNotifications::UnlockNotifications () :
  /*
   * Create the "other events area"
   */
-    m_otherevents_area = new MSceneWindow;
+    m_otherevents_area = new MStylableWidget;
     m_otherevents_area->setObjectName ("LockOtherEventsArea");
     m_otherevents_area->setContentsMargins (0., 0., 0., 0.);
 
@@ -83,7 +84,7 @@ UnlockNotifications::UnlockNotifications () :
  /*
   * Create the "most recent area"
   */
-    m_mostrecent_area = new MSceneWindow;
+    m_mostrecent_area = new MStylableWidget;
     m_mostrecent_area->setObjectName ("LockMostRecentArea");
     m_mostrecent_area->setContentsMargins (0., 0., 0., 0.);
 
@@ -106,9 +107,6 @@ UnlockNotifications::UnlockNotifications () :
 
     connect (&UnlockMissedEvents::getInstance (), SIGNAL (updated ()),
              this, SLOT (updateContents ()));
-    
-    connect (this, SIGNAL (sceneWindowStateChanged(MSceneWindow::SceneWindowState, MSceneWindow::SceneWindowState)),
-             this, SLOT (appear()));
 }
 
 UnlockNotifications::~UnlockNotifications ()
@@ -190,15 +188,6 @@ UnlockNotifications::orientationChanged (
     m_vbox->invalidate ();
 }
 
-void 
-UnlockNotifications::appear ()
-{
-    MSceneWindow::appear ();
-
-    if (sceneManager())
-        orientationChanged (sceneManager()->orientation());
-}
-
 void
 UnlockNotifications::updateContents ()
 {
@@ -232,7 +221,8 @@ UnlockNotifications::updateContents ()
          * It seems that we don't get the signal, forcing it manually to detect
          * the orientation.
          */
-        appear ();
+        if (sceneManager())
+            orientationChanged (sceneManager()->orientation());
 
         /*
          * Check the actually shown most-recent notification

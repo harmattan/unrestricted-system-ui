@@ -132,8 +132,7 @@ void
 Ut_ShutdownBusinessLogic::testSystemStateChanged ()
 {
     m_Api->systemStateChanged (Maemo::QmSystemState::BatteryStateEmpty);
-    QVERIFY (bodyOfLastNotification == "qtn_shut_will_shut_down");
-    QVERIFY (nameOfLastFeedback == "IDF_RECHARGE_BATTERY");
+    QVERIFY (bodyOfLastNotification == "qtn_shut_batt_empty");
     
     m_Api->systemStateChanged (Maemo::QmSystemState::ShutdownDeniedUSB);
     QVERIFY (bodyOfLastNotification == "qtn_shut_unplug_usb");
@@ -141,7 +140,6 @@ Ut_ShutdownBusinessLogic::testSystemStateChanged ()
     
     m_Api->systemStateChanged (Maemo::QmSystemState::ThermalStateFatal);
     QVERIFY (bodyOfLastNotification == "qtn_shut_high_temp");
-    QVERIFY (nameOfLastFeedback == "IDF_INFORMATION_STRONG");
     
     m_Api->systemStateChanged (Maemo::QmSystemState::Shutdown);
     QVERIFY (m_Api->m_Ui->m_Text1.isEmpty());

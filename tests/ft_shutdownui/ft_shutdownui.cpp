@@ -28,7 +28,7 @@
 #include <MSceneManager>
 #include <MTheme>
 #include <MLabel>
-#include <MImageWidget>
+#include <MStylableWidget>
 
 #define DEBUG
 #include "../../src/debug.h"
@@ -117,7 +117,7 @@ Ft_ShutdownUI::testShutdownUIRealizing ()
     QVERIFY (m_ShutDownUI->m_Timer != 0);
     QVERIFY (m_ShutDownUI->m_Label1 != 0);
     QVERIFY (m_ShutDownUI->m_Label2 != 0);
-    QVERIFY (m_ShutDownUI->m_Image != 0);
+    QVERIFY (m_ShutDownUI->m_logo != 0);
     QVERIFY (m_ShutDownUI->m_Feedback != 0);
 
 
@@ -164,8 +164,8 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
      * disappear and the image is shown.
      */
     QTest::qWait (2500);
-    QVERIFY (m_ShutDownUI->m_Image != 0 && 
-            m_ShutDownUI->m_Image->isVisible());
+    QVERIFY (m_ShutDownUI->m_logo != 0 && 
+            m_ShutDownUI->m_logo->isVisible());
 
     /*
      * A bit more to see the screen dimming.

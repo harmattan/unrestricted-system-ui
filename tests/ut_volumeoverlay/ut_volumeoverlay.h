@@ -36,7 +36,6 @@ private slots:
     void initTestCase ();
     void testUpdateVolume ();
     void testHideMe ();
-    void testOrientationChanged ();
     void cleanupTestCase ();
     
 private:

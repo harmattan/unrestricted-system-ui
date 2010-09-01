@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <MStylableWidget>
 #include <MSceneWindow>
 
 class MLabel;
@@ -10,7 +11,7 @@ class MImageWidget;
 class QGraphicsLinearLayout;
 class QShowEvent;
 
-class UnlockNotifications : public MSceneWindow
+class UnlockNotifications : public MStylableWidget
 {
     Q_OBJECT
 
@@ -30,7 +31,6 @@ protected:
     virtual QSizeF sizeHint (Qt::SizeHint which,
                              const QSizeF& constraint = QSizeF()) const;
     
-    void appear ();
     void orientationChanged (M::Orientation orientation);
 
 private:
@@ -42,7 +42,7 @@ private:
     QHash<int, QString>          m_icon_ids;
     QGraphicsLinearLayout       *m_icon_layout;
 
-    MSceneWindow                *m_otherevents_area;
+    MStylableWidget             *m_otherevents_area;
     /*
      * for most recent event area:
      */
@@ -50,7 +50,7 @@ private:
     MImageWidget                *m_last_icon;
     QGraphicsLinearLayout       *m_mostrecent_layout;
 
-    MSceneWindow                *m_mostrecent_area;
+    MStylableWidget             *m_mostrecent_area;
     /*
      * main vbox
      */
@@ -59,7 +59,5 @@ private:
     friend class Ut_UnlockNotifications;
     #endif
 };
-
-
 
 #endif

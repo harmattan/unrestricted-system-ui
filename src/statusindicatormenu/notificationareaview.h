@@ -53,10 +53,6 @@ protected:
     virtual void applyStyle();
     //! \reimp_end
 
-private slots:
-    //! Clicks all removable banners in the model
-    void clickAllRemovableBanners();
-
 private:
     //! The layout for the banners
     QGraphicsLinearLayout *bannerLayout;
