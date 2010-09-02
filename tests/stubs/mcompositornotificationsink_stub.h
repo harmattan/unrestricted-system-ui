@@ -156,4 +156,10 @@ void MCompositorNotificationSink::changeNotificationPreviewMode() {
     gMCompositorNotificationSinkStub->changeNotificationPreviewMode();
 }
 
+void MCompositorNotificationSink::updateWindowMask() {
+}
+
+void MCompositorNotificationSink::clearWindowMask() {
+}
+
 #endif

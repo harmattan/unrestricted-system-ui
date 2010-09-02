@@ -88,6 +88,16 @@ private slots:
       */
     void changeNotificationPreviewMode();
 
+    /*!
+     * Updates the window mask to contain the current notification
+     */
+    void updateWindowMask();
+
+    /*!
+     * Clears the window mask
+     */
+    void clearWindowMask();
+
 private:
     /*!
      * Updates an existing info banner with the given notification parameters.

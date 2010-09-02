@@ -98,9 +98,14 @@ private slots:
     void testWhenSinkDisableTrueNoBannerCreated();
     // Test when sink is set to disabled, but system notifications are generated
     void testWhenSinkIsSetToDisabledSystemNotificationsAreStillGenerated();
+
     // Tests notification preview disabling with several possible values
     void testNotificationPreviewsDisabled_data();
     void testNotificationPreviewsDisabled();
+
+    // Test that the window mask is set correctly in all orientations
+    void testWindowMasking_data();
+    void testWindowMasking();
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

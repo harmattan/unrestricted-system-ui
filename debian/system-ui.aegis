@@ -1,0 +1,7 @@
+<aegis>
+  <request>
+    <credential name="USBControl" />
+	  <for path="/usr/bin/sysuid" />
+  </request>
+</aegis>
+

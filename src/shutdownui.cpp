@@ -39,6 +39,10 @@ M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
 #define WARNING
 #include "debug.h"
 
+// For WM_SET_NAME:
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 ShutdownUI::ShutdownUI () :
         m_Realized (false),
         m_SceneWindow (0),
@@ -58,6 +62,12 @@ ShutdownUI::ShutdownUI () :
 
     connect (m_Timer, SIGNAL (timeout ()),
              this, SLOT (showLogo ()));
+
+    /*
+     * Set always-on-top hint, shutdown-screen
+     * always should shown on top
+     */
+    setWindowFlags (windowFlags () & Qt::WindowStaysOnTopHint);
 }
 
 ShutdownUI::~ShutdownUI ()
@@ -261,5 +271,67 @@ ShutdownUI::turnOffScreen ()
         setBackgroundRole (QPalette::Background);
         m_logo->hide ();
     }
+}
+
+/*
+ * Set the highest stacking layer here 
+ * and the window-name for debugging purposes
+ */
+void 
+ShutdownUI::showEvent (
+        QShowEvent *event)
+{
+    Q_UNUSED (event);
+
+    Window      windowID;
+    Display    *display;
+    Atom        nameAtom;
+    Atom        utf8StringAtom;
+    Atom        stackingLayerAtom;
+    const char *windowName = "ShutdownUI";
+    long        layer = 1;
+
+    display = QX11Info::display ();
+    if (!display) {
+        SYS_WARNING ("QX11Info::display() failed");
+        return;
+    }
+    
+    stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom == None) {
+        SYS_WARNING ("Atom '_MEEGO_STACKING_LAYER' does not exists");
+    }
+
+    nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
+    if (nameAtom == None) {
+        SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
+    }
+
+    utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
+    if (utf8StringAtom == None) {
+        SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
+    }
+
+    windowID = internalWinId();
+    if (windowID == None) {
+        SYS_WARNING ("internalWinId() failed");
+        return;
+    }
+    SYS_DEBUG ("*** windowID = 0x%lx", windowID);
+
+    /*
+     * Setting the stacking layer.
+     */
+    if (stackingLayerAtom != None)
+        XChangeProperty (display, windowID, stackingLayerAtom, XA_CARDINAL, 
+                32, PropModeReplace, (unsigned char*)&layer, 1);
+
+    /*
+     * Setting the name.
+     */
+    if (nameAtom != None && utf8StringAtom != None)
+        XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
+                8, PropModeReplace, 
+                (unsigned char *) windowName, strlen(windowName));
 }
 

@@ -100,6 +100,8 @@ binary-arch: build install
 	dh_md5sums
 	dh_builddeb --destdir=$(DEBDIR)
 
+	aegis-deb-add -control debian/system-ui/DEBIAN/control .. debian/system-ui.aegis=_aegis
+
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
 

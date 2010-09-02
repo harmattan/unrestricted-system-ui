@@ -38,6 +38,10 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();
     connect(notificationPreviewMode, SIGNAL(valueChanged()), this, SLOT(changeNotificationPreviewMode()));
+
+    // Clear the mask for the duration of orientation change, because the mask is not rotated along with the notification
+    connect(window->sceneManager(), SIGNAL(orientationAboutToChange(M::Orientation)), this, SLOT(clearWindowMask()));
+    connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateWindowMask()));
 }
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
@@ -150,11 +154,49 @@ void MCompositorNotificationSink::setDisabled(bool disabled)
     sinkDisabled = disabled;
 }
 
+void MCompositorNotificationSink::updateWindowMask()
+{
+    // Set up window mask so that mouse events are passed on to lower widgets.
+    MBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
+    if(infoBanner != NULL) {
+        QSize  size = infoBanner->preferredSize().toSize();
+        QPoint origin;
+
+        switch(window->sceneManager()->orientationAngle()) {
+        case M::Angle90:
+            size.transpose();
+            origin.setX(window->width() - size.width() - infoBanner->pos().y());
+            origin.setY(infoBanner->pos().x());
+            break;
+        case M::Angle270:
+            size.transpose();
+            origin.setX(infoBanner->pos().y());
+            origin.setY(-infoBanner->pos().x());
+            break;
+        case M::Angle180:
+            origin.setY(window->height() - size.height() - infoBanner->pos().y());
+            origin.setX(-infoBanner->pos().x());
+            break;
+        default:
+            origin = infoBanner->pos().toPoint();
+            break;
+        }
+        window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
+    }
+}
+
+void MCompositorNotificationSink::clearWindowMask()
+{
+    window->clearMask();
+}
+
 void MCompositorNotificationSink::addInfoBannerToWindow()
 {
     MBanner *infoBanner = idToBanner.value(currentNotification.notificationId());
     if (infoBanner != NULL) {
         window->sceneManager()->appearSceneWindow(infoBanner, MSceneWindow::DestroyWhenDone);
+        updateWindowMask();
+
         disconnect(window, SIGNAL(displayEntered()), this, SLOT(addInfoBannerToWindow()));
     } else {
         // If the window timer has timed out before displayEntered() was sent there is no banner anymore and the window should just be hidden

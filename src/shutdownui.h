@@ -47,6 +47,9 @@ public:
 		    const QString  &text2, 
 		    int             timeout);
 
+protected:
+   void showEvent (QShowEvent *event); 
+
 private slots:
     void showLogo ();
     void turnOffScreen ();
