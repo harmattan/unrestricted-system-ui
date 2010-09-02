@@ -62,12 +62,6 @@ ShutdownUI::ShutdownUI () :
 
     connect (m_Timer, SIGNAL (timeout ()),
              this, SLOT (showLogo ()));
-
-    /*
-     * Set always-on-top hint, shutdown-screen
-     * always should shown on top
-     */
-    setWindowFlags (windowFlags () & Qt::WindowStaysOnTopHint);
 }
 
 ShutdownUI::~ShutdownUI ()
