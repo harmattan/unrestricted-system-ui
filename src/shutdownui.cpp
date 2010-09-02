@@ -67,7 +67,7 @@ ShutdownUI::ShutdownUI () :
      * Set always-on-top hint, shutdown-screen
      * always should shown on top
      */
-    setWindowFlags (Qt::WindowStaysOnTopHint);
+    setWindowFlags (windowFlags () & Qt::WindowStaysOnTopHint);
 }
 
 ShutdownUI::~ShutdownUI ()
