@@ -145,19 +145,7 @@ void QWidget::setVisible(bool visible)
 }
 
 // MGConfItem stub
-QString gconfKey = "";
 QVariant gconfValue = QVariant();
-MGConfItem::MGConfItem(const QString &key, QObject *parent) {
-    Q_UNUSED(parent);
-    gconfKey = key;
-}
-
-MGConfItem::~MGConfItem() {
-}
-
-QString MGConfItem::key() const {
-    return gconfKey;
-}
 
 QVariant MGConfItem::value() const {
     return gconfValue;
@@ -176,14 +164,6 @@ void MGConfItem::set(const QVariant &val) {
 
 void MGConfItem::unset() {
     gconfValue = QVariant();
-}
-
-QList<QString> MGConfItem::listDirs() const {
-    return QList<QString>();
-}
-
-QList<QString> MGConfItem::listEntries() const {
-    return QList<QString>();
 }
 
 MSceneWindow *infoBanner = NULL;
