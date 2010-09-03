@@ -1,3 +1,9 @@
+system-ui (0.16.13~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 03 Sep 2010 09:24:43 +0300
+
 system-ui (0.16.12-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-3086 Clear all button for notifications
