@@ -9,6 +9,7 @@ system-ui (0.16.13~1) harmattan; urgency=low
     and alarm
   * Fixes: NB#188425 - Notifications overlaps each others.
   * Fixes: NB#173514 - Following SMS notifications are not displayed
+  * Fixes: NB#185101 - Device stops responding to user input after unblanking the screen with tap
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 03 Sep 2010 09:24:43 +0300
 
