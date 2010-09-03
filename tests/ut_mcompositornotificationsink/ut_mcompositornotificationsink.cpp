@@ -173,6 +173,10 @@ void QWidget::setMask(const QRegion &region)
 QVariant gconfValue = QVariant();
 
 QVariant MGConfItem::value() const {
+
+    if (key() == "/meegotouch/target/name")
+        return QVariant ("Default");
+
     return gconfValue;
 }
 
