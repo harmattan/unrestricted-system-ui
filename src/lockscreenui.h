@@ -67,6 +67,9 @@ private slots:
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
 
+    void redraw ();
+    void redrawIdle ();
+
 private:
     void updateDnDicon ();
 
@@ -86,6 +89,9 @@ private:
     // Needed to determine the current DnD states:
     MWidget         *m_LockLiftArea;
     MWidget         *m_LockLandArea;
+    // for frame-dropping
+    bool             m_pendingDraw;
+    QPointF          m_DnDposition;
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenUI;

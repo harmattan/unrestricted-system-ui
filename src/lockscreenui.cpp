@@ -66,7 +66,8 @@ LockScreenWindow::LockScreenWindow (MWindow *window, MWidget *locklift, MWidget 
     m_DnDicon (0),
     m_DnDstate (STATE_NONE),
     m_LockLiftArea (locklift),
-    m_LockLandArea (lockland)
+    m_LockLandArea (lockland),
+    m_pendingDraw (false)
 {
     /*
      * Creating the GConf keys to sense the wallpaper changes.
@@ -190,13 +191,12 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
 
         // Move the icon to the start position:
         QSizeF size = m_DnDoverlay.preferredSize ();
-        QPointF pos (event->pos ());
 
-        pos.rx () -= (size.width  () / 1.4);
-        pos.ry () -= (size.height () / 1.4);
-        m_DnDoverlay.setPos (pos);
+        m_DnDposition.setX (event->pos ().rx () - (size.width () / 1.4));
+        m_DnDposition.setY (event->pos ().ry () - (size.height () / 1.4));
 
-        updateDnDicon ();
+        redraw ();
+
         static_cast<UnlockHeader*>(m_LockLiftArea)->setActive (false);
         static_cast<UnlockArea*> (m_LockLandArea)->setEnabled (true);
         
@@ -208,6 +208,25 @@ LockScreenWindow::mousePressEvent (QGraphicsSceneMouseEvent *event)
     }
     else
         m_DnDstate = STATE_NONE;
+}
+
+void
+LockScreenWindow::redraw ()
+{
+    if (m_pendingDraw == true)
+        return;
+
+    m_pendingDraw = true;
+    QTimer::singleShot (50, this, SLOT (redrawIdle ()));
+}
+
+void
+LockScreenWindow::redrawIdle ()
+{
+    m_pendingDraw = false;
+
+    m_DnDoverlay.setPos (m_DnDposition);
+    updateDnDicon ();
 }
 
 void

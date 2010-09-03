@@ -140,4 +140,12 @@ void LockScreenWindow::resetState() {
   gLockScreenWindowStub->resetState();
 }
 
+void LockScreenWindow::redraw() {
+
+}
+
+void LockScreenWindow::redrawIdle() {
+
+}
+
 #endif
