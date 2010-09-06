@@ -55,8 +55,8 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
 
     m_Sysuid = this;
 
-    // Load translation of System-UI
-    retranslate ();
+    // Load translations of System-UI
+    loadTranslations ();
 
     m_ShutdownLogic   = new ShutdownBusinessLogic (this);
     m_BatteryLogic    = new BatteryBusinessLogic (this);
@@ -169,23 +169,9 @@ QString Sysuid::dbusPath ()
     return QString ("/");
 }
 
-/*!
- * Please note that in the libmeegotouch 0.19.4 manipulating theh MLocale in this
- * function might cause an endless recursion. I added a protection for brake the
- * recursion.
- */
-void Sysuid::retranslate ()
+void Sysuid::loadTranslations ()
 {
-    static bool      running = false;
-
-    SYS_DEBUG ("*** running = %s", running ? "true" : "false");
-    if (running)
-        return;
-    running = true;
-
     MLocale        locale;
-
-    SYS_DEBUG (" lang = %s", SYS_STR (locale.language ()));
 
     // Install real translations
     locale.installTrCatalog ("usb");
@@ -195,11 +181,10 @@ void Sysuid::retranslate ()
     locale.installTrCatalog ("profiles");
     locale.installTrCatalog ("screenlock");
     locale.installTrCatalog ("status");
+    // and the engineering english ones
     locale.installTrCatalog (TRANSLATION_CATALOG);
 
     MLocale::setDefault (locale);
-
-    running = false;
 }
 
 NotificationManager &Sysuid::notificationManager ()

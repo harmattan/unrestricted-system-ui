@@ -168,12 +168,6 @@ main (int argc, char** argv)
 
     SYS_DEBUG ("- System-UI daemon initialized");
 
-    // re-install the translations on locale settings changed signal
-    QObject::connect (&app, SIGNAL (localeSettingsChanged ()),
-                      &daemon, SLOT (retranslate ()));
-
-    int ret = app.exec ();
-
-    return ret;
+    return app.exec ();
 }
 

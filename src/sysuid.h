@@ -74,14 +74,14 @@ signals:
       */
     void orientationChangeFinished (const M::Orientation &);
 
-public slots:
-    void retranslate ();
-
 private slots:
     /*!
      * Enables or disables various sinks according to current use mode
      */
     void applyUseMode ();
+
+private:
+    void loadTranslations ();
 
 private:
     BatteryBusinessLogic    *m_BatteryLogic;

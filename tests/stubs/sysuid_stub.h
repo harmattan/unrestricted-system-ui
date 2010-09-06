@@ -34,7 +34,7 @@ class SysuidStub : public StubBase {
   virtual QString dbusPath();
   virtual NotificationManager & notificationManager();
   virtual MCompositorNotificationSink & compositorNotificationSink();
-  virtual void retranslate();
+  virtual void loadTranslations();
   virtual void applyUseMode();
 }; 
 
@@ -73,8 +73,8 @@ MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
   return *stubReturnValue<MCompositorNotificationSink *>("compositorNotificationSink");
 }
 
-void SysuidStub::retranslate() {
-  stubMethodEntered("retranslate");
+void SysuidStub::loadTranslations() {
+  stubMethodEntered("loadTranslations");
 }
 
 void SysuidStub::applyUseMode() {
@@ -122,8 +122,8 @@ MCompositorNotificationSink & Sysuid::compositorNotificationSink() {
   return gSysuidStub->compositorNotificationSink();
 }
 
-void Sysuid::retranslate() {
-  gSysuidStub->retranslate();
+void Sysuid::loadTranslations() {
+  gSysuidStub->loadTranslations();
 }
 
 void Sysuid::applyUseMode() {
