@@ -11,8 +11,9 @@ system-ui (0.16.13~1) harmattan; urgency=low
   * Fixes: NB#173514 - Following SMS notifications are not displayed
   * Fixes: NB#185101 - Device stops responding to user input after unblanking the screen with tap
   * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
+  * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
 
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 06 Sep 2010 12:05:56 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 07 Sep 2010 12:49:29 +0200
 
 system-ui (0.16.12-1) harmattan; urgency=low
 

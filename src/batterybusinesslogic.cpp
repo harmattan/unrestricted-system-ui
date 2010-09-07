@@ -38,7 +38,7 @@ namespace {
     const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#undef DEBUG
+#define DEBUG
 #include "debug.h"
 
 

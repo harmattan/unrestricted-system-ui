@@ -99,6 +99,7 @@ UnlockHeader::UnlockHeader () :
     /*
      * And initialize the widgets contents
      */
+    m_locale.connectSettings ();
     updateDateTime ();
 }
 
