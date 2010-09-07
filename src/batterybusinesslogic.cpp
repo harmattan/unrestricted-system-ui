@@ -38,7 +38,7 @@ namespace {
     const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#define DEBUG
+#undef DEBUG
 #include "debug.h"
 
 
@@ -233,24 +233,17 @@ BatteryBusinessLogic::chargingStateChanged (
         case Maemo::QmBattery::StateCharging:
             SYS_DEBUG ("Charging");
 
-            if (m_Battery->getChargerType () == Maemo::QmBattery::USB_100mA)
+           /*
+            * The low battery notifications should not be sent
+            * when the battery is actually charging.
+            */
+            if (m_LowBatteryNotifier != 0)
             {
-                sendNotification (NotificationNoEnoughPower);
+                delete m_LowBatteryNotifier;
+                m_LowBatteryNotifier = 0;
             }
-            else
-            {
-                /*
-                 * The low battery notifications should not be sent
-                 * when the battery is actually charging.
-                 */
-                if (m_LowBatteryNotifier != 0)
-                {
-                    delete m_LowBatteryNotifier;
-                    m_LowBatteryNotifier = 0;
-                }
 
-                sendNotification (NotificationCharging);
-            }
+            sendNotification (NotificationCharging);
             break;
 
         case Maemo::QmBattery::StateNotCharging:
@@ -338,6 +331,8 @@ BatteryBusinessLogic::batteryChargerEvent (
         case Maemo::QmBattery::USB_100mA:
             // USB with 100mA output
             SYS_DEBUG ("QmBattery::USB_100mA");
+
+            sendNotification (NotificationNoEnoughPower);
             break;
 
         default: 

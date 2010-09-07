@@ -275,18 +275,6 @@ Ut_BatteryBusinessLogic::testChargingStateChanged ()
     QVERIFY (arguments.at (2).toString () == "");
     spy.clear ();
 
-    /* Test "not enough power to charge" situation... */
-    gQmBatteryStub->stubSetReturnValue (
-        "getChargerType", Maemo::QmBattery::USB_100mA);
-    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
-
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.notenoughpower");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_nopowcharge"));
-    QVERIFY (arguments.at (2).toString () == "icon-m-energy-management-insufficient-power");
-    spy.clear ();
 #endif
 }
 
@@ -318,9 +306,19 @@ Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
     m_logic->batteryChargerEvent (Maemo::QmBattery::USB_500mA);
     QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_500mA);
 
+    spy.clear ();
+
     /* USB 100mA */
     m_logic->batteryChargerEvent (Maemo::QmBattery::USB_100mA);
     QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_100mA);
+
+    QTest::qWait (10);
+    QCOMPARE (spy.count (), 1);
+    arguments = spy.takeFirst ();
+    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.notenoughpower");
+    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_nopowcharge"));
+    QVERIFY (arguments.at (2).toString () == "icon-m-energy-management-insufficient-power");
+    spy.clear ();
 
     /* Unknown */
     m_logic->batteryChargerEvent (Maemo::QmBattery::Unknown);
