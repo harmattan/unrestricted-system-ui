@@ -1,6 +1,6 @@
 /*! \page bugreporting How to Report a Bug
 
-Bugs can be entered in the <a href="https://projects.maemo.org/bugzilla/enter_bug.cgi?product=H-SystemUI">Maemo Bugzilla</a>, Harmattan program, System UI product.
+Bugs can be entered in the <a href="http://bugs.meego.com/enter_bug.cgi?product=Handset%20User%20Experience&component=System%20UI">MeeGo Bugzilla</a>, Handset User Experience, System UI Component.
 
 Please check Bugzilla for existing bugs that might cover your problem before filing a new one.
 
