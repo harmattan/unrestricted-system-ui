@@ -1,3 +1,9 @@
+system-ui (0.16.14~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 08 Sep 2010 11:42:27 +0300
+
 system-ui (0.16.13-1) harmattan; urgency=low
 
   * Fixes: NB#187054 - 12 hour clock setting results wrong time in unlock
