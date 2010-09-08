@@ -1,4 +1,4 @@
-system-ui (0.16.13~1) harmattan; urgency=low
+system-ui (0.16.13-1) harmattan; urgency=low
 
   * Fixes: NB#187054 - 12 hour clock setting results wrong time in unlock
     screen
