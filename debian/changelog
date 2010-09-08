@@ -1,4 +1,12 @@
-system-ui (0.16.13~1) harmattan; urgency=low
+system-ui (0.16.14~1) harmattan; urgency=low
+
+  * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
+  * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
+  * Fixes: NB#188318 - Low-power notification always shown on usb-connection
+
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 08 Sep 2010 11:42:27 +0300
+
+system-ui (0.16.13-1) harmattan; urgency=low
 
   * Fixes: NB#187054 - 12 hour clock setting results wrong time in unlock
     screen
@@ -10,9 +18,6 @@ system-ui (0.16.13~1) harmattan; urgency=low
   * Fixes: NB#188425 - Notifications overlaps each others.
   * Fixes: NB#173514 - Following SMS notifications are not displayed
   * Fixes: NB#185101 - Device stops responding to user input after unblanking the screen with tap
-  * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
-  * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
-  * Fixes: NB#188318 - Low-power notification always shown on usb-connection
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 07 Sep 2010 13:42:03 +0200
 
