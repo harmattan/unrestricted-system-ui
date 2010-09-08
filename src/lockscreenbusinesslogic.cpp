@@ -16,8 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <MSceneManager>
-
 #include <QDBusInterface>
 #include <QTime>
 #include <QX11Info>
@@ -86,9 +84,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
              lockUI, SLOT (updateDateTime ()));
 
     Q_ASSERT (connectSuccess);
-
-    lockUI->setWindowFlags (Qt::FramelessWindowHint);
-    eaterUI->setWindowFlags (Qt::FramelessWindowHint);
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
