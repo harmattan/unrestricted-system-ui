@@ -31,10 +31,12 @@ UnlockHeader::updateDateTime() {
 
 }
 
+#ifdef HAVE_QMSYSTEM
 void
 UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what) {
     Q_UNUSED (what);
 }
+#endif
 
 void
 UnlockHeader::setActive (bool active)
