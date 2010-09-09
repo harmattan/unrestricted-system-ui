@@ -1,2 +1,2 @@
 usr/include/system-ui/*
-usr/share/qt4/mkspecs/features/systemui.prf
+usr/share/qt4/mkspecs/features/system-ui.prf
