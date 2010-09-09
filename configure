@@ -33,6 +33,9 @@ if [ $? -eq 0 ]; then
     fi
 fi
 
+VERSION=`head -n 1 debian/changelog | sed -e "s/.*(\(.*\)[-~].*).*/\1/"`
+echo VERSION = ${VERSION} >> ${FILENAME}
+
 echo Configured system-ui as follows:
 echo ================================
 cat ${FILENAME}
