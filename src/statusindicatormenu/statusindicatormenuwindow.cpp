@@ -30,6 +30,7 @@
 #include "statusindicatormenuwindow.h"
 #include <MWidgetView>
 #include <QGraphicsAnchorLayout>
+#include "statusindicatormenuwindowstyle.h"
 
 void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -197,14 +198,18 @@ MPannableViewport* StatusIndicatorMenuWindow::createPannableArea()
 {
     // Create pannable area contents
     MApplicationExtensionArea *extensionArea = createVerticalExtensionArea();
-    NotificationArea *notificationArea = new NotificationArea;
-    connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
 
     QGraphicsLinearLayout *contentLayout = new QGraphicsLinearLayout(Qt::Vertical);
     contentLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setSpacing(0);
     contentLayout->addItem(extensionArea);
-    contentLayout->addItem(notificationArea);
+
+    const StatusIndicatorMenuWindowStyle *style = static_cast<const StatusIndicatorMenuWindowStyle *> (MTheme::style("StatusIndicatorMenuWindowStyle", ""));
+    if(style && style->notificationArea()) {
+        NotificationArea *notificationArea = new NotificationArea;
+        connect(notificationArea, SIGNAL(bannerClicked()), this, SLOT(hideStatusIndicatorMenu()));
+        contentLayout->addItem(notificationArea);
+    }
 
     MWidgetController *contentWidget = new MWidgetController;
     contentWidget->setView(new MWidgetView(contentWidget));
