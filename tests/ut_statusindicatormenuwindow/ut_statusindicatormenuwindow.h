@@ -70,8 +70,6 @@ private slots:
     void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
     void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
 #endif
-    void testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated();
-    void testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

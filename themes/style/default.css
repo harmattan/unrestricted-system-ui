@@ -9,9 +9,6 @@ MSceneWindowStyle#StatusIndicatorMenuWindow {
     background-opacity: 0.4;
 }
 
-StatusIndicatorMenuWindowStyle {
-    notification-area: true;
-}
 MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
     background-image: "meegotouch-applicationpage-background";
 }

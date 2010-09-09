@@ -41,7 +41,6 @@
 #include <QGraphicsLayout>
 #include <MWidget>
 #include "x11wrapper_stub.h"
-#include "statusindicatormenuwindowstyle.h"
 
 int Ut_StatusAreaView::windowExecutionCount;
 int Ut_StatusAreaView::windowRejectionCount;
@@ -57,10 +56,6 @@ void MSceneWindow::disappear()
     Ut_StatusAreaView::windowRejectionCount++;
 }
 
-const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
-{
-    return true;
-}
 // Called before the first testfunction is executed
 void Ut_StatusAreaView::initTestCase()
 {

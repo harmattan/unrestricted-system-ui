@@ -14,12 +14,10 @@ HEADERS += \
     statusindicatormenu/notificationarea.h \
     statusindicatormenu/notificationareamodel.h \
     statusindicatormenu/notificationareaview.h \
-    statusindicatormenu/notificationareastyle.h \
-    statusindicatormenu/statusindicatormenuwindowstyle.h
+    statusindicatormenu/notificationareastyle.h
 
 MODEL_HEADERS += statusindicatormenu/notificationareamodel.h
-STYLE_HEADERS += statusindicatormenu/notificationareastyle.h \
-                 statusindicatormenu/statusindicatormenuwindowstyle.h
+STYLE_HEADERS += statusindicatormenu/notificationareastyle.h
 
 DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
 
