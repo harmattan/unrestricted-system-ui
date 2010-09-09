@@ -3,6 +3,11 @@ load(meegotouch_defines)
 # Silence the compiler
 CONFIG += silent
 DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
+
+# For profiling with gprof:
+#QMAKE_CXXFLAGS += -pg
+#QMAKE_LFLAGS += -pg
+
 # Directories
 unix {
     STATUSINDICATORMENU_PLUGIN_DIR = /usr/lib/meegotouch/statusindicatormenuplugins
