@@ -83,7 +83,6 @@ private:
     QHash<QString, QVariant> parameterValues;
 };
 
-
 /*!
  * Serializes the given NotificationParameters to a QDataStream
  *
@@ -100,5 +99,6 @@ QDataStream &operator<<(QDataStream &datastream, const NotificationParameters &p
  */
 QDataStream &operator>>(QDataStream &datastream, NotificationParameters &parameters);
 
+Q_DECLARE_METATYPE(NotificationParameters)
 
 #endif

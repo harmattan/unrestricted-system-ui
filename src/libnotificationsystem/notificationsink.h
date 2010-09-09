@@ -51,7 +51,7 @@ protected:
      */
     bool canAddNotification(const Notification &notification);
 
-protected slots:
+public slots:
     /*!
      * Adds a notification to be presented.
      * \param notification the data of the notification

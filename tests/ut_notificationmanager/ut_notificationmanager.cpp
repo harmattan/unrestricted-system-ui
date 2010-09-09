@@ -27,10 +27,11 @@
 #include "notification.h"
 #include "notificationgroup.h"
 #include "dbusinterfacenotificationsource.h"
+#include "dbusinterfacenotificationsink.h"
+#include "dbusinterfacenotificationsinkproxy.h"
 #include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
-
-Q_DECLARE_METATYPE(NotificationParameters)
+#include "notificationsink_stub.h"
 
 bool Ut_NotificationManager::catchTimerTimeouts;
 QList<int> Ut_NotificationManager::timerTimeouts;
@@ -61,9 +62,36 @@ void TestNotificationManager::relayNextNotification()
     NotificationManager::relayNextNotification();
 }
 
+// DBusInterfaceNotificationSource stubs
 DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationManagerInterface &manager) : NotificationSource(manager)
 {
 }
+
+// DBusInterfaceNotificationSink stubs
+DBusInterfaceNotificationSink::DBusInterfaceNotificationSink()
+{
+}
+
+DBusInterfaceNotificationSink::~DBusInterfaceNotificationSink()
+{
+}
+
+void DBusInterfaceNotificationSink::addNotification(const Notification &)
+{
+}
+
+void DBusInterfaceNotificationSink::removeNotification(uint)
+{
+}
+
+void DBusInterfaceNotificationSink::addGroup(uint, const NotificationParameters &)
+{
+}
+
+void DBusInterfaceNotificationSink::removeGroup(uint)
+{
+}
+
 
 #ifdef HAVE_AEGIS_CRYPTO
 // aegis crypto stubs
@@ -1208,5 +1236,13 @@ void Ut_NotificationManager::testRemovalOfUnseenFlags()
     QCOMPARE(manager->notifications.value(id).parameters().value("unseen").toBool(), false);
 }
 
+void Ut_NotificationManager::testDBusNotificationSinkConnections()
+{
+    QVERIFY(disconnect(manager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), manager->dBusSink, SLOT(addGroup(uint, const NotificationParameters &))));
+    QVERIFY(disconnect(manager, SIGNAL(groupRemoved(uint)), manager->dBusSink, SLOT(removeGroup(uint))));
+    QVERIFY(disconnect(manager, SIGNAL(notificationRemoved(uint)), manager->dBusSink, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(manager, SIGNAL(notificationRestored(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(manager, SIGNAL(notificationUpdated(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
+}
 
 QTEST_MAIN(Ut_NotificationManager)

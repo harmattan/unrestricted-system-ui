@@ -37,6 +37,7 @@
 
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
+class DBusInterfaceNotificationSink;
 class MFileDataStore;
 class EventTypeStore;
 
@@ -297,6 +298,9 @@ private:
 
     //! DBus interface notification source
     DBusInterfaceNotificationSource *dBusSource;
+
+    //! DBus interface notification sink
+    DBusInterfaceNotificationSink *dBusSink;
 
     //! EventTypeStore for notification event types
     QSharedPointer<EventTypeStore> notificationEventTypeStore;

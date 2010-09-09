@@ -8,26 +8,32 @@ LIBS += -L../../lib
 # unit test and unit classes
 SOURCES += \
     ut_notificationmanager.cpp \
-   $$NOTIFICATIONSRCDIR/notificationmanager.cpp \
-   $$SRCDIR/contextframeworkcontext.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notification.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp
+    $$NOTIFICATIONSRCDIR/notificationmanager.cpp \
+    $$SRCDIR/contextframeworkcontext.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp
+
+# service classes
+SOURCES += \
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit classes
 HEADERS += \
     ut_notificationmanager.h \
-   $$NOTIFICATIONSRCDIR/notificationmanager.h \
-   $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
-   $$SRCDIR/applicationcontext.h \
-   $$SRCDIR/contextframeworkcontext.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationsource.h \
-   $$LIBNOTIFICATIONSRCDIR/notification.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
-   $$NOTIFICATIONSRCDIR/eventtypestore.h
+    $$NOTIFICATIONSRCDIR/notificationmanager.h \
+    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
+    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsink.h \
+    $$SRCDIR/applicationcontext.h \
+    $$SRCDIR/contextframeworkcontext.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsource.h \
+    $$LIBNOTIFICATIONSRCDIR/notification.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+    $$NOTIFICATIONSRCDIR/eventtypestore.h
 
 include(../common_bot.pri)

@@ -7,7 +7,7 @@ TEMPLATE = lib
 TARGET = notificationsystem
 CONFIG += meegotouch \
     no_check_exist
-INCLUDEPATH +=  . \
+INCLUDEPATH +=  . ../systemui/notifications
 DEPENDPATH += .
 
 include(../../localconfig.pri)
@@ -22,17 +22,20 @@ contains(COV_OPTION, on) {
 HEADERS += \
     notificationsource.h \
     notificationsink.h \
+    notificationsinkadaptor.h \
     notificationparameters.h \
     notificationparameter.h \
     notificationgroup.h \
     notification.h \
     genericnotificationparameterfactory.h \
     notificationwidgetparameterfactory.h \
-    notificationmanagerinterface.h
+    notificationmanagerinterface.h \
+    ../systemui/notifications/metatypedeclarations.h
 
 SOURCES += \
     notificationsource.cpp \
     notificationsink.cpp \
+    notificationsinkadaptor.cpp \
     notificationparameters.cpp \
     notificationparameter.cpp \
     notificationgroup.cpp \

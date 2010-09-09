@@ -124,6 +124,9 @@ private slots:
     void testRemovingGroupsWithEventType();
     // Test removal of unseen flags from notifications
     void testRemovalOfUnseenFlags();
+
+    // Test that relevant signals are connected to the DBus sink
+    void testDBusNotificationSinkConnections();
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H

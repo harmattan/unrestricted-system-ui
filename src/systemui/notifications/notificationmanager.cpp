@@ -22,6 +22,7 @@
 #include "notificationmanager.h"
 #include "notification.h"
 #include "dbusinterfacenotificationsource.h"
+#include "dbusinterfacenotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "genericnotificationparameterfactory.h"
 #include <QDBusConnection>
@@ -56,6 +57,13 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
 #endif
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
+    dBusSink = new DBusInterfaceNotificationSink;
+
+    connect(this, SIGNAL(groupUpdated(uint, const NotificationParameters &)), dBusSink, SLOT(addGroup(uint, const NotificationParameters &)));
+    connect(this, SIGNAL(groupRemoved(uint)), dBusSink, SLOT(removeGroup(uint)));
+    connect(this, SIGNAL(notificationRemoved(uint)), dBusSink, SLOT(removeNotification(uint)));
+    connect(this, SIGNAL(notificationRestored(const Notification &)), dBusSink, SLOT(addNotification(const Notification &)));
+    connect(this, SIGNAL(notificationUpdated(const Notification &)), dBusSink, SLOT(addNotification(const Notification &)));
 
     waitQueueTimer.setSingleShot(true);
     connect(&waitQueueTimer, SIGNAL(timeout()), this, SLOT(relayNextNotification()));
@@ -71,11 +79,13 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     // Connect to D-Bus and register the DBus source as an object
     QDBusConnection::sessionBus().registerService("com.meego.core.MNotificationManager");
     QDBusConnection::sessionBus().registerObject("/notificationmanager", dBusSource);
+    QDBusConnection::sessionBus().registerObject("/notificationsinkmanager", dBusSink);
 }
 
 NotificationManager::~NotificationManager()
 {
     delete dBusSource;
+    delete dBusSink;
     delete context;
 }
 
