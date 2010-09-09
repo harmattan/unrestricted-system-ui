@@ -163,6 +163,7 @@ LockScreenBusinessLogicAdaptor::enableVisual ()
 {
     SYS_DEBUG ("");
     m_LockScreenBusinessLogic->toggleScreenLockUI (true);
+    m_LockScreenBusinessLogic->toggleEventEater (false);
 }
 
 void
