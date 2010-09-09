@@ -60,11 +60,13 @@ void TestStatusIndicatorAnimationView::setModeIcon()
 // MTheme stubs
 QHash<QPixmap *, QString> mThemePixmapPixmaps;
 QHash<QString, QSize> mThemePixmapSizes;
+QList<QSize> mRequestedThemePixmapSizes;
 
-QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &)
+QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &requestedSize)
 {
     QPixmap *p = new QPixmap(mThemePixmapSizes[id]);
     mThemePixmapPixmaps[p] = id;
+    mRequestedThemePixmapSizes.append(requestedSize);
     return p;
 }
 
@@ -130,6 +132,7 @@ void Ut_StatusIndicatorAnimationView::init()
 {
     mThemePixmapPixmaps.clear();
     mThemePixmapSizes.clear();
+    mRequestedThemePixmapSizes.clear();
     qPainterDrawPixmapRects.clear();
     qPainterDrawPixmapPixmaps.clear();
     qTimeLineDuration = -1;
@@ -333,6 +336,31 @@ void Ut_StatusIndicatorAnimationView::testSizeHintWhenUsingIconSizes()
     m_subject->callableDrawContents(&painter, NULL);
 
     QCOMPARE(qPainterDrawPixmapRects[0], imageRect);
+}
+
+static const QSize SIZE_FOR_PIXMAP_REQUEST =
+    QSize(10, 10);
+void Ut_StatusIndicatorAnimationView::testFramePixmapRequestWhenUsingIconSizes_data()
+{
+    QTest::addColumn<bool>("useIconSize");
+    QTest::addColumn<QSize>("expectedRequestedSize");
+    QTest::newRow("IconSizeUsed") << true << QSize(0, 0);
+    QTest::newRow("IconSizeNotUsed") << false << SIZE_FOR_PIXMAP_REQUEST;
+}
+
+void Ut_StatusIndicatorAnimationView::testFramePixmapRequestWhenUsingIconSizes()
+{
+    m_subject->controller->setGeometry(QRectF(QPointF(0, 0),
+                                              SIZE_FOR_PIXMAP_REQUEST));
+    m_subject->setModeIcon();
+    QFETCH(bool, useIconSize);
+    m_subject->modifiableStyle()->setUseIconSize(useIconSize);
+    m_subject->getModel()->setValue("1");
+    m_subject->setAnimationFrame(0);
+    // verify that MTheme::pixmapCopy was called once
+    QCOMPARE(mRequestedThemePixmapSizes.size(), 1);
+    QFETCH(QSize, expectedRequestedSize);
+    QCOMPARE(mRequestedThemePixmapSizes.first(), expectedRequestedSize);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorAnimationView)
