@@ -1,2 +1,2 @@
 INCLUDEPATH += /usr/include/notificationsystem
-LIBS += notificationsystem
+LIBS += -lnotificationsystem
