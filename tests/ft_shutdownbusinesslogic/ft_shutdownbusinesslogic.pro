@@ -1,26 +1,26 @@
 include(../common_top.pri)
 TARGET = ft_shutdownbusinesslogic
 
-SRC_PREFIX = ../../src
-STUB_PREFIX = ../stubs
+ 
+ 
 
 INCLUDEPATH += \
-    $$SRC_PREFIX \
-    $$STUB_PREFIX
+    $$SRCDIR \
+    $$STUBSDIR
 
 SOURCES += ft_shutdownbusinesslogic.cpp \
     ../ft_lockscreenui/xchecker.cpp \
-    $$STUB_PREFIX/stubbase.cpp \
-    $$SRC_PREFIX/debug.cpp \
-    $$SRC_PREFIX/shutdownbusinesslogic.cpp \
-    $$SRC_PREFIX/shutdownui.cpp 
+    $$STUBSDIR/stubbase.cpp \
+    $$SRCDIR/debug.cpp \
+    $$SRCDIR/shutdownbusinesslogic.cpp \
+    $$SRCDIR/shutdownui.cpp 
 
 HEADERS += ft_shutdownbusinesslogic.h \
     ../ft_lockscreenui/xchecker.h \
-    $$SRC_PREFIX/debug.h \
-    $$SRC_PREFIX/sysuid.h \
-    $$SRC_PREFIX/shutdownbusinesslogic.h \
-    $$SRC_PREFIX/shutdownui.h 
+    $$SRCDIR/debug.h \
+    $$SRCDIR/sysuid.h \
+    $$SRCDIR/shutdownbusinesslogic.h \
+    $$SRCDIR/shutdownui.h 
 
 include(../common_bot.pri)
 

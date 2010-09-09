@@ -2,23 +2,21 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_volumeoverlay
 
-SRC_PREFIX = ../../src
-INCLUDEPATH += $$SRC_PREFIX \
-               $$SRC_PREFIX/volumecontrol \
+INCLUDEPATH += \
+               $$SRCDIR/volumecontrol \
                /usr/include/resource/qt4
 
 CONFIG += link_pkgconfig
 
-
 HEADERS += \
-    $$SRC_PREFIX/debug.h \
+    $$SRCDIR/debug.h \
     ut_volumeoverlay.h \
-    $$SRC_PREFIX/volumecontrol/volumeoverlay.h
+    $$SRCDIR/volumecontrol/volumeoverlay.h
 
 
 SOURCES += \
-    $$SRC_PREFIX/debug.cpp \
+    $$SRCDIR/debug.cpp \
     ut_volumeoverlay.cpp \
-    $$SRC_PREFIX/volumecontrol/volumeoverlay.cpp
+    $$SRCDIR/volumecontrol/volumeoverlay.cpp
 
 include(../common_bot.pri)

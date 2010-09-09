@@ -2,7 +2,7 @@
 #define UNLOCK_NOTIFICATIONS_H
 
 #include <QObject>
-#include "notifications/notificationsink.h"
+#include "notificationsink.h"
 
 class UnlockNotificationSink : public NotificationSink
 {

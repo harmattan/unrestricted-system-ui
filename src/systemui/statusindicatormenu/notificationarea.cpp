@@ -21,6 +21,7 @@
 #include "notificationarea.h"
 #include "notificationareasink.h"
 #include "mcompositornotificationsink.h"
+#include "notificationmanager.h"
 #include <MBanner>
 #include <QTimer>
 

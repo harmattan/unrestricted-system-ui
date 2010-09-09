@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusareaview
-INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
+INCLUDEPATH += $$SRCDIR/statusarea $$SRCDIR/statusindicatormenu $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 INCLUDEPATH += /usr/include/contextsubscriber
 
 STYLE_HEADERS += $$SRCDIR/statusarea/statusareastyle.h
@@ -30,7 +30,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
-    $$SRCDIR/notifications/notificationstatusindicator.h
+   $$NOTIFICATIONSRCDIR/notificationstatusindicator.h
 
 # service classes
 HEADERS += \

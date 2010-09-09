@@ -27,7 +27,7 @@
 
 #define SHORT_DEBUG
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 XChecker::XChecker()
 {

@@ -1,18 +1,18 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_widgetnotificationsink
-INCLUDEPATH += $$SRCDIR/notifications
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 # unit test and unit
 SOURCES += \
     ut_widgetnotificationsink.cpp \
-    $$SRCDIR/notifications/widgetnotificationsink.cpp \
-    $$SRCDIR/notifications/notificationsink.cpp \
-    $$SRCDIR/notifications/notificationparameters.cpp \
-    $$SRCDIR/notifications/notificationparameter.cpp \
-    $$SRCDIR/notifications/notification.cpp \
-    $$SRCDIR/notifications/notificationgroup.cpp
+   $$NOTIFICATIONSRCDIR/widgetnotificationsink.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp
 
 # helper classes
 SOURCES += \
@@ -21,14 +21,14 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_widgetnotificationsink.h \
-    $$SRCDIR/notifications/widgetnotificationsink.h \
-    $$SRCDIR/notifications/notificationsink.h \
-    $$SRCDIR/notifications/notification.h \
-    $$SRCDIR/notifications/notificationgroup.h \
-    $$SRCDIR/notifications/notificationparameters.h \
-    $$SRCDIR/notifications/notificationparameter.h \
-    $$SRCDIR/notifications/notificationmanager.h \
-    $$SRCDIR/notifications/eventtypestore.h \
-    $$SRCDIR/sysuid.h
+   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+   $$LIBNOTIFICATIONSRCDIR/notification.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+   $$NOTIFICATIONSRCDIR/notificationmanager.h \
+   $$NOTIFICATIONSRCDIR/eventtypestore.h \
+   $$SRCDIR/sysuid.h
 
 include(../common_bot.pri)

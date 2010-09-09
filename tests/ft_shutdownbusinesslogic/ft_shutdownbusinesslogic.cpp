@@ -36,7 +36,7 @@
 MApplication *exitPtr;
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 /*
  * We wait this much until we check if the window is actually appeared

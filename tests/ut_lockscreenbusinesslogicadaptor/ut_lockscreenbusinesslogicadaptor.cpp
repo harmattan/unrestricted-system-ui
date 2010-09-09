@@ -30,7 +30,7 @@
 #define TEST_METHOD    QString ("testmethod")
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 QString lastCalledMethod;
 QString lastCalledPath;

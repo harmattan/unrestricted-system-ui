@@ -38,6 +38,7 @@
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
+#include "volumecontrolui_stub.h"
 
 MApplication *exitPtr;
 

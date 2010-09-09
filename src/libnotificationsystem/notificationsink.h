@@ -21,7 +21,7 @@
 #define NOTIFICATIONSINK_H
 
 #include <QObject>
-#include "notificationmanager.h"
+#include "notification.h"
 
 /*!
  * Notification sink is an abstract interface for classes that can present notifications.

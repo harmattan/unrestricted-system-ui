@@ -25,6 +25,7 @@
 #include "genericnotificationparameterfactory.h"
 #include "sysuid.h"
 #include "ngfadapter.h"
+#include "notificationmanager.h"
 
 NGFNotificationSink::NGFNotificationSink()
 {

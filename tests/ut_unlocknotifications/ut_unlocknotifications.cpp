@@ -41,7 +41,7 @@
 
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 static int argc = 1;
 static char *app_name = (char *) "./ut_unlocknotificationsink";

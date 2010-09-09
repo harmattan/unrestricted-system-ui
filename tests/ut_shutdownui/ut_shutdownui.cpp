@@ -33,7 +33,7 @@ using namespace Maemo;
 #endif
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 
 #ifdef HAVE_QMSYSTEM

@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 #include "ut_volumecontrolui.h"
-#include "../../src/volumecontrol/volumecontrolui.h"
+#include "volumecontrolui.h"
 #include <volumebarlogic.h>
 #include <volumeoverlay.h>
 #include <QGraphicsItem>
@@ -73,6 +73,7 @@ namespace ResourcePolicy
 #ifdef HAVE_QMSYSTEM
 // For Hw-volume key handling
 #include <qmkeys.h>
+#include <qmlocks.h>
 /*********************************************************************************
  * Stub for Maemo::QmKeys && Maemo::QmLocks
  */

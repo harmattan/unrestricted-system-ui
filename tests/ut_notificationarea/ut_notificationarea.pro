@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_notificationarea
-INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusindicatormenu
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$SRCDIR/statusindicatormenu $$LIBNOTIFICATIONSRCDIR
 
 MODEL_HEADERS += $$SRCDIR/statusindicatormenu/notificationareamodel.h
 
@@ -29,9 +29,9 @@ HEADERS += \
 
 # service classes
 HEADERS += \
-    $$SRCDIR/notifications/notificationsink.h \
-    $$SRCDIR/notifications/widgetnotificationsink.h \
-    $$SRCDIR/notifications/notificationareasink.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+   $$NOTIFICATIONSRCDIR/notificationareasink.h \
     $$SRCDIR/sysuid.h
 
 include(../common_bot.pri)

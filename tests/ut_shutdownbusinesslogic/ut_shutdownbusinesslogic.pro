@@ -2,22 +2,22 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_shutdownbusinesslogic
 
-SRC_PREFIX = ../../src
-STUB_PREFIX = ../stubs
+ 
+ 
 
 INCLUDEPATH += \
-    $$SRC_PREFIX \
-    $$STUB_PREFIX
+    $$SRCDIR \
+    $$STUBSDIR
 
 SOURCES += \
     ut_shutdownbusinesslogic.cpp \
-    $$SRC_PREFIX/debug.cpp \
-    $$SRC_PREFIX/shutdownbusinesslogic.cpp
+    $$SRCDIR/debug.cpp \
+    $$SRCDIR/shutdownbusinesslogic.cpp
 
 HEADERS += \
     ut_shutdownbusinesslogic.h \
-    $$SRC_PREFIX/debug.h \
-    $$SRC_PREFIX/shutdownbusinesslogic.h
+    $$SRCDIR/debug.h \
+    $$SRCDIR/shutdownbusinesslogic.h
 
 include(../common_bot.pri)
 
