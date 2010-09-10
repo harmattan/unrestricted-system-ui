@@ -27,7 +27,6 @@
 class NotificationManager;
 class NotificationAreaSink;
 class MBanner;
-class MFlowLayoutPolicy;
 
 /*!
  * The NotificationArea is a widget that shows notifications.
