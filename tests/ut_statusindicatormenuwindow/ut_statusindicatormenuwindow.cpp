@@ -31,6 +31,7 @@
 #include "notificationarea_stub.h"
 #include <MPannableViewport>
 #include "x11wrapper_stub.h"
+#include "statusindicatormenuwindowstyle.h"
 
 #ifdef HAVE_QMSYSTEM
 #include "qmlocks_stub.h"
@@ -105,6 +106,23 @@ void MWindow::setVisible(bool visible)
     gSetVisible.second = visible;
 }
 
+class MyStyle : public MStyle
+{};
+
+const MStyle *MTheme::style(const char *styleClassName,
+                                const QString &objectName)
+{
+    Q_UNUSED(styleClassName);
+    Q_UNUSED(objectName);
+    return new MyStyle();
+}
+
+bool showNotificationArea = true;
+const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
+{
+    return showNotificationArea;
+}
+
 void Ut_StatusIndicatorMenuWindow::init()
 {
     gX11WrapperStub->stubReset();
@@ -122,6 +140,7 @@ void Ut_StatusIndicatorMenuWindow::init()
 void Ut_StatusIndicatorMenuWindow::cleanup()
 {
     delete statusIndicatorMenuWindow;
+    showNotificationArea = true;
 }
 
 void Ut_StatusIndicatorMenuWindow::initTestCase()
@@ -338,5 +357,25 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromUnlockedToL
 }
 
 #endif
+
+void Ut_StatusIndicatorMenuWindow::testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated()
+{
+    cleanup();
+    showNotificationArea = false;
+    init();
+    MWidgetController * contentWidget = dynamic_cast<MWidgetController *>(statusIndicatorMenuWindow->pannableViewport->widget()->layout()->itemAt(0));
+    QCOMPARE(contentWidget->layout()->count(), 1);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated()
+{
+    cleanup();
+    showNotificationArea = true;
+    init();
+    MWidgetController * contentWidget = dynamic_cast<MWidgetController *>(statusIndicatorMenuWindow->pannableViewport->widget()->layout()->itemAt(0));
+    QCOMPARE(contentWidget->layout()->count(), 2);
+    NotificationArea* notificationArea = dynamic_cast<NotificationArea*>(contentWidget->layout()->itemAt(1));
+    QVERIFY(notificationArea);
+}
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)
