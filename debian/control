@@ -57,13 +57,13 @@ Package: libnotificationsystem0
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
-Description: System UI Notifcation System Library
+Description: Notification System Library
 
 Package: libnotificationsystem-dev
 Architecture: any
 Section: libdevel
 Depends: libnotificationsystem0 (= ${binary:Version})
-Description: System UI Notifcation System Library development files
+Description: Notification System Library development files
 
 Package: system-ui-doc
 Conflicts: duistatusindicatormenu-doc
