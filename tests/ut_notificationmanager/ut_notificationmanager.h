@@ -58,6 +58,8 @@ private slots:
     void testNotificationUserId();
     // Test that correct kinds of notification widgets are displayed that their IDs are unique
     void testAddNotification();
+
+    void testWhenNotificationIsAddedThenTheNotificationIsFilledWithEventTypeData();
     // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
     // Test that canceling with an ID cancels the correct notification

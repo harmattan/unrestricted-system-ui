@@ -248,7 +248,15 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         bool persistent = determinePersistence(parameters);
         uint notificationId = nextAvailableNotificationID();
 
-        Notification notification(notificationId, groupId, notificationUserId, parameters, determineType(parameters), relayInterval);
+        NotificationParameters fullParameters(parameters);
+
+        QString eventType = parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
+        foreach (const QString &key, notificationEventTypeStore->allKeys(eventType)) {
+            fullParameters.add(key, notificationEventTypeStore->value(eventType, key));
+        }
+
+        Notification notification(notificationId, groupId, notificationUserId, fullParameters, determineType(fullParameters), relayInterval);
+
         // Mark the notification used
         notifications.insert(notificationId, notification);
 
