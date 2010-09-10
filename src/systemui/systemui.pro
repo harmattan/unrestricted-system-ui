@@ -16,6 +16,7 @@ CONFIG += meegotouch \
 QT += dbus gui
 
 INCLUDEPATH += ../libnotificationsystem
+QMAKE_LIBDIR += ../../lib
 LIBS += -lnotificationsystem
 
 SYSTEMUI_SOURCE_DIR = .
