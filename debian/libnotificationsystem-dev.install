@@ -1,0 +1,3 @@
+usr/lib/libnotificationsystem.so
+usr/include/notificationsystem/*
+usr/share/qt4/mkspecs/features/notificationsystem.prf

@@ -1,9 +1,10 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_sysuid
-INCLUDEPATH += $$SRCDIR $$SRCDIR/notifications $$SRCDIR/statusarea
+INCLUDEPATH += $$SRCDIR $$NOTIFICATIONSRCDIR $$SRCDIR/statusarea $$LIBNOTIFICATIONSRCDIR
+INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/volumecontrol
 INCLUDEPATH += /usr/include/contextsubscriber
-INCLUDEPATH += $$SRCDIR/statusindicatormenu
+INCLUDEPATH += /usr/include/resource/qt4
 
 PKGCONFIG += dbus-1
 
@@ -30,6 +31,8 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     $$SRCDIR/debug.h \
+    $$STUBSDIR/volumecontrolui_stub.h \
+    $$SRCDIR/volumecontrol/volumecontrolui.h \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreenui.h \
@@ -41,12 +44,12 @@ HEADERS += \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \
     ut_sysuid.h \
-    $$SRCDIR/notifications/eventtypestore.h \
-    $$SRCDIR/notifications/notificationsink.h \
-    $$SRCDIR/notifications/widgetnotificationsink.h \
-    $$SRCDIR/notifications/mcompositornotificationsink.h \
-    $$SRCDIR/notifications/ngfnotificationsink.h \
-    $$SRCDIR/notifications/notificationmanager.h \
+   $$NOTIFICATIONSRCDIR/eventtypestore.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+   $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
+   $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
+   $$NOTIFICATIONSRCDIR/notificationmanager.h \
     $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/unlocknotifications.h \
     $$SRCDIR/unlocknotificationsink.h \

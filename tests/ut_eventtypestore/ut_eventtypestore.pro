@@ -1,16 +1,16 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_eventtypestore
-INCLUDEPATH += $$SRCDIR/notifications
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR
 
 # unit test and unit
 SOURCES += \
     ut_eventtypestore.cpp \
-    $$SRCDIR/notifications/eventtypestore.cpp
+   $$NOTIFICATIONSRCDIR/eventtypestore.cpp
 
 # unit test and unit
 HEADERS += \
     ut_eventtypestore.h \
-    $$SRCDIR/notifications/eventtypestore.h \
+   $$NOTIFICATIONSRCDIR/eventtypestore.h \
 
 include(../common_bot.pri)

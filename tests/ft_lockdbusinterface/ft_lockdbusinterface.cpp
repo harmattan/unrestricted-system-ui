@@ -28,7 +28,7 @@
 
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 /*
  * The same should be used in the sysuid, in the mce and in the tests.

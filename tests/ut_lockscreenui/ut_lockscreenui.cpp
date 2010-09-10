@@ -41,7 +41,7 @@
     "/desktop/meego/background/portrait/picture_filename"
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 /******************************************************************************
  * The stub for MFeedback class.

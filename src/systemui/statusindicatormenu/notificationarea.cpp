@@ -20,9 +20,8 @@
 #include "sysuid.h"
 #include "notificationarea.h"
 #include "notificationareasink.h"
-#include "mcompositornotificationsink.h"
+#include "notificationmanager.h"
 #include <MBanner>
-#include <QTimer>
 
 NotificationArea::NotificationArea(MWidget *parent) :
     MWidgetController(new NotificationAreaModel, parent),

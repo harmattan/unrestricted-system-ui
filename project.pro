@@ -3,9 +3,10 @@ system(./configure)
 TEMPLATE = subdirs
 
 SUBDIRS = src \
-	  translations \
+          mkspecs \
+          translations \
           themes \
-	  demos \
+          demos \
           tests
 
 QMAKE_CLEAN += configure-stamp build-stamp localconfig.pri

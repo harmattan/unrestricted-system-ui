@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_notificationareaview
-INCLUDEPATH += $$SRCDIR/notifications $$SRCDIR/statusindicatormenu
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$SRCDIR/statusindicatormenu $$LIBNOTIFICATIONSRCDIR
 
 STYLE_HEADERS += $$SRCDIR/statusindicatormenu/notificationareastyle.h
 MODEL_HEADERS += $$SRCDIR/statusindicatormenu/notificationareamodel.h

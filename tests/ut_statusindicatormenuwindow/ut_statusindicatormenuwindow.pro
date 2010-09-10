@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusindicatormenuwindow
-INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/notifications
+INCLUDEPATH += $$SRCDIR/statusindicatormenu $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 
 # unit test and unit classes
 SOURCES += \

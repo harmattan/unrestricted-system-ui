@@ -1,39 +1,39 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_notifiernotificationsink
-INCLUDEPATH += $$SRCDIR/notifications
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 
 # unit test and unit
 SOURCES += \
-    ut_notifiernotificationsink.cpp \
-    $$SRCDIR/notifications/notifiernotificationsink.cpp
+   ut_notifiernotificationsink.cpp \
+   $$NOTIFICATIONSRCDIR/notifiernotificationsink.cpp
 
 # base classes
 SOURCES += \
-    $$SRCDIR/notifications/notificationsink.cpp \
-    $$SRCDIR/notifications/notification.cpp \
-    $$SRCDIR/notifications/notificationparameter.cpp \
-    $$SRCDIR/notifications/notificationparameters.cpp
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp
 
 # service classes
 SOURCES += $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
-    ut_notifiernotificationsink.h \
-    $$SRCDIR/notifications/notifiernotificationsink.h
+   ut_notifiernotificationsink.h \
+   $$NOTIFICATIONSRCDIR/notifiernotificationsink.h
 
 # base classes
 HEADERS += \
-    $$SRCDIR/notifications/notificationsink.h \
-    $$SRCDIR/notifications/notification.h \
-    $$SRCDIR/notifications/notificationparameter.h \
-    $$SRCDIR/notifications/notificationparameters.h \
-    $$SRCDIR/sysuid.h \
-    $$SRCDIR/notifications/notificationmanager.h \
-    $$SRCDIR/notifications/notificationgroup.h \
-    $$SRCDIR/notifications/eventtypestore.h \
-    $$SRCDIR/notifications/ngfadapter.h
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+   $$LIBNOTIFICATIONSRCDIR/notification.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+   $$SRCDIR/sysuid.h \
+   $$NOTIFICATIONSRCDIR/notificationmanager.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
+   $$NOTIFICATIONSRCDIR/eventtypestore.h \
+   $$NOTIFICATIONSRCDIR/ngfadapter.h
 
 # service classes
 HEADERS += $$STUBSDIR/stubbase.h

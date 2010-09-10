@@ -1,42 +1,42 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_ngfnotificationsink
-INCLUDEPATH += $$SRCDIR/notifications
+INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 # unit test and unit
 SOURCES += \
     ut_ngfnotificationsink.cpp \
-    $$SRCDIR/notifications/ngfnotificationsink.cpp \
-    $$SRCDIR/notifications/notification.cpp \
-    $$SRCDIR/notifications/notificationgroup.cpp \
-    $$SRCDIR/notifications/notificationparameters.cpp \
-    $$SRCDIR/notifications/notificationparameter.cpp
+   $$NOTIFICATIONSRCDIR/ngfnotificationsink.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 
 # base classes
 SOURCES += \
-    $$SRCDIR/notifications/notificationsink.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
     ../stubs/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
     ut_ngfnotificationsink.h \
-    $$SRCDIR/notifications/ngfnotificationsink.h \
+   $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
 
 # base classes
 HEADERS += \
-    $$SRCDIR/notifications/notificationsink.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
 
 # service classes
 HEADERS += \
-    $$SRCDIR/notifications/notification.h \
-    $$SRCDIR/notifications/notificationparameters.h \
-    $$SRCDIR/notifications/notificationparameter.h \
-    $$SRCDIR/notifications/notification.h \
-    $$SRCDIR/notifications/ngfadapter.h \
-    $$SRCDIR/notifications/notificationgroup.h \
-    $$SRCDIR/notifications/notificationmanager.h \
-    $$SRCDIR/notifications/eventtypestore.h \
+   $$LIBNOTIFICATIONSRCDIR/notification.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+   $$LIBNOTIFICATIONSRCDIR/notification.h \
+   $$NOTIFICATIONSRCDIR/ngfadapter.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
+   $$NOTIFICATIONSRCDIR/notificationmanager.h \
+   $$NOTIFICATIONSRCDIR/eventtypestore.h \
     $$SRCDIR/sysuid.h
 
 include(../common_bot.pri)

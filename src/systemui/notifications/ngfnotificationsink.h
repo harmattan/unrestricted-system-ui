@@ -22,8 +22,8 @@
 
 #include "notificationsink.h"
 
-
 class NGFAdapter;
+class NotificationManager;
 
 /*!
  * NGFNotificationSink implements the NotificationSink interface for

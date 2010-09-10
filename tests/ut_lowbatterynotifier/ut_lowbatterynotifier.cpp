@@ -27,7 +27,7 @@
 #include <MFeedback>
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 namespace
 {

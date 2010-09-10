@@ -23,6 +23,7 @@
 #include <MOnDisplayChangeEvent>
 #include <QApplication>
 #include <MGConfItem>
+#include <QTimer>
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 

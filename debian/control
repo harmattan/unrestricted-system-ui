@@ -53,6 +53,18 @@ Depends: system-ui (= ${binary:Version})
 Description: System UI dev package
  System UI development package
 
+Package: libnotificationsystem0
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Description: Notification System Library
+
+Package: libnotificationsystem-dev
+Architecture: any
+Section: libdevel
+Depends: libnotificationsystem0 (= ${binary:Version})
+Description: Notification System Library development files
+
 Package: system-ui-doc
 Conflicts: duistatusindicatormenu-doc
 Replaces: duistatusindicatormenu-doc

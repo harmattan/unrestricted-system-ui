@@ -20,6 +20,7 @@
 #include "widgetnotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
+#include "notificationmanager.h"
 #include <MRemoteAction>
 #include "sysuid.h"
 #include "eventtypestore.h"

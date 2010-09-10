@@ -1,13 +1,13 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_notificationparameters
-INCLUDEPATH += $$SRCDIR/notifications
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR
 
 # unit test and unit
 SOURCES += \
-    ut_notificationparameters.cpp \
-    $$SRCDIR/notifications/notificationparameters.cpp \
-    $$SRCDIR/notifications/notificationparameter.cpp
+   ut_notificationparameters.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 
 # base classes
 SOURCES += \
@@ -15,9 +15,9 @@ SOURCES += \
 
 # unit test and unit
 HEADERS += \
-    ut_notificationparameters.h \
-    $$SRCDIR/notifications/notificationparameters.h \
-    $$SRCDIR/notifications/notificationparameter.h
+   ut_notificationparameters.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h
 
 # base classes
 HEADERS += \

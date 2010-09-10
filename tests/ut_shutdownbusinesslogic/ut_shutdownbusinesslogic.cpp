@@ -31,7 +31,7 @@
 MApplication *exitPtr;
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 /******************************************************************************
  * Stubbed version of th ShutdownUI class.

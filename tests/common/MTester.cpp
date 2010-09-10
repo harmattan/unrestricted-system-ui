@@ -26,7 +26,7 @@
 #include <QString>
 
 #define DEBUG
-#include "../../src/debug.h"
+#include "debug.h"
 
 bool 
 MTester::isLayoutContains (

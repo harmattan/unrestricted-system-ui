@@ -1,9 +1,12 @@
 include(../check.pri)
 include(../../mconfig.pri)
 include(../../localconfig.pri)
-SRCDIR = ../../src
+ROOTSRCDIR = ../../src
+LIBNOTIFICATIONSRCDIR = $$ROOTSRCDIR/libnotificationsystem
+SRCDIR = $$ROOTSRCDIR/systemui
+NOTIFICATIONSRCDIR = $$SRCDIR/notifications
 STUBSDIR = ../stubs
-INCLUDEPATH += $$M_INSTALL_HEADERS $$SRCDIR $$STUBSDIR ../../include
+INCLUDEPATH += $$M_INSTALL_HEADERS $$SRCDIR $$STUBSDIR
 DEPENDPATH = $$INCLUDEPATH
 CONFIG += meegotouch link_pkgconfig qmsystem
 QT += testlib network gui dbus xml

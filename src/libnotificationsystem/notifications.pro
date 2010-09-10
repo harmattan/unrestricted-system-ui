@@ -1,5 +1,8 @@
-# Input
-include(eventtypes/eventtypes.pri)
+
+
+TEMPLATE = lib
+TARGET = notificationsystem
+CONFIG += meegotouch
 SYSTEMUI_NOTIFICATIONS_SRC_DIR = $$SYSTEMUI_SOURCE_DIR/notifications
 INCLUDEPATH += $$SYSTEMUI_SOURCE_DIR/notifications
 HEADERS += $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanagerinterface.h \
@@ -38,3 +41,12 @@ SOURCES += $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notifiernotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicator.cpp
+
+DEPENDPATH += .
+
+# For setting the coverage flag ON
+contains(COV_OPTION, on) {
+    LIBS += -lgcov
+    QMAKE_CXXFLAGS += -ftest-coverage \
+        -fprofile-arcs
+}
