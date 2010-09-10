@@ -7,7 +7,7 @@ include(../../../mconfig.pri)
 TEMPLATE      = lib
 CONFIG       += plugin gui meegotouch system-ui silent
 INCLUDEPATH  += \
-    ../../../src/statusindicatormenu
+    ../../../src/systemui/statusindicatormenu
 
 HEADERS = \
     profileplugin.h \

@@ -1,6 +1,7 @@
 MOC_DIR = .moc
 M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
+DESTDIR = ../../lib
 
 TEMPLATE = lib
 TARGET = notificationsystem
