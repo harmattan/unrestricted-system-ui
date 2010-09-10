@@ -38,8 +38,6 @@ void
 LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
 {
     lockUIvisible = toggle;
-    if (! toggle)
-        eaterUIvisible = false;
 }
 
 
@@ -53,8 +51,6 @@ void
 LockScreenBusinessLogic::toggleEventEater(bool toggle)
 {
     eaterUIvisible = toggle;
-    if (! toggle)
-        lockUIvisible = false;
 }
 
 

@@ -16,51 +16,24 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <unlockwidgets.h>
 
-UnlockHeader::UnlockHeader() {
+#ifndef STATUSINDICATORMENUWINDOWSTYLE_H
+#define STATUSINDICATORMENUWINDOWSTYLE_H
 
-}
+#include <mscenewindowstyle.h>
 
-UnlockHeader::~UnlockHeader() {
+class StatusIndicatorMenuWindowStyle : public MSceneWindowStyle
+{
+    Q_OBJECT
+    M_STYLE(StatusIndicatorMenuWindowStyle)
 
-}
+    //! controls whether to show a notification area in status indicator menu window
+    M_STYLE_ATTRIBUTE(bool, notificationArea, NotificationArea);
+};
 
-void
-UnlockHeader::updateDateTime() {
+class StatusIndicatorMenuWindowStyleContainer : public MSceneWindowStyleContainer
+{
+    M_STYLE_CONTAINER(StatusIndicatorMenuWindowStyle)
+};
 
-}
-
-#ifdef HAVE_QMSYSTEM
-void
-UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what) {
-    Q_UNUSED (what);
-}
 #endif
-
-void
-UnlockHeader::setActive (bool active)
-{
-    Q_UNUSED(active);
-}
-
-UnlockArea::UnlockArea() {
-
-}
-
-UnlockArea::~UnlockArea() {
-
-}
-
-void
-UnlockArea::setEnabled (bool enabled)
-{
-    Q_UNUSED(enabled);
-}
-
-void
-UnlockArea::setActive (bool active)
-{
-    Q_UNUSED(active);
-}
-
