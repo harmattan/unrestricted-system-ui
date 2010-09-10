@@ -478,34 +478,42 @@ void NotificationManager::relayNextNotification()
 
 bool NotificationManager::determinePersistence(const NotificationParameters &parameters)
 {
+    bool isPersistent = false;
+
     QVariant persistentVariant = parameters.value(GenericNotificationParameterFactory::persistentKey());
-    if (!persistentVariant.isValid()) {
+    if (persistentVariant.isValid()) {
+        isPersistent = persistentVariant.toBool();
+    } else {
         QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
         if (eventTypeVariant.isValid()) {
-            const QSettings *settings = notificationEventTypeStore->settingsForEventType(eventTypeVariant.toString());
-            if (settings != NULL) {
-                persistentVariant = settings->value(GenericNotificationParameterFactory::persistentKey());
+            QString eventType = eventTypeVariant.toString();
+            if (notificationEventTypeStore->contains(eventType, GenericNotificationParameterFactory::persistentKey())) {
+                isPersistent = QVariant(notificationEventTypeStore->value(eventType, GenericNotificationParameterFactory::persistentKey())).toBool();
             }
         }
     }
 
-    return persistentVariant.toBool();
+    return isPersistent;
 }
 
 Notification::NotificationType NotificationManager::determineType(const NotificationParameters &parameters)
 {
+    QString classStr;
+
     QVariant classVariant = parameters.value(GenericNotificationParameterFactory::classKey());
-    if (!classVariant.isValid()) {
+    if (classVariant.isValid()) {
+        classStr = classVariant.toString();
+    } else {
         QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
         if (eventTypeVariant.isValid()) {
-            const QSettings *settings = notificationEventTypeStore->settingsForEventType(eventTypeVariant.toString());
-            if (settings != NULL) {
-                classVariant = settings->value(GenericNotificationParameterFactory::classKey());
+            QString eventType = eventTypeVariant.toString();
+            if (notificationEventTypeStore->contains(eventType, GenericNotificationParameterFactory::classKey())) {
+                classStr = notificationEventTypeStore->value(eventType, GenericNotificationParameterFactory::classKey());
             }
         }
     }
 
-    return classVariant.toString() == "system" ? Notification::SystemEvent : Notification::ApplicationEvent;
+    return classStr == "system" ? Notification::SystemEvent : Notification::ApplicationEvent;
 }
 
 void NotificationManager::submitNotification(const Notification &notification)

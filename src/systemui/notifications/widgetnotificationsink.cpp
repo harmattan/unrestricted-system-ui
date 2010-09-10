@@ -38,10 +38,7 @@ QString WidgetNotificationSink::determineIconIdFromEventType(const QString &even
     if (!eventType.isEmpty()) {
         NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
         const EventTypeStore &store = notificationManager.eventTypeStore();
-        const QSettings *settings = store.settingsForEventType(eventType);
-        if (settings != NULL) {
-            iconID = settings->value(NotificationWidgetParameterFactory::iconIdKey()).toString();
-        }
+        iconID = store.value(eventType, NotificationWidgetParameterFactory::iconIdKey());
     }
     return iconID;
 }
@@ -66,11 +63,8 @@ bool WidgetNotificationSink::determineUserRemovabilityFromEventType(const QStrin
     if (!eventType.isEmpty()) {
         NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
         const EventTypeStore &store = notificationManager.eventTypeStore();
-        const QSettings *settings = store.settingsForEventType(eventType);
-        if (settings != NULL) {
-            if (settings->contains(NotificationWidgetParameterFactory::userRemovableKey())) {
-                userRemovable = settings->value(NotificationWidgetParameterFactory::userRemovableKey()).toBool();
-            }
+        if (store.contains(eventType, NotificationWidgetParameterFactory::userRemovableKey())) {
+            userRemovable = QVariant(store.value(eventType, NotificationWidgetParameterFactory::userRemovableKey())).toBool();
         }
     }
     return userRemovable;

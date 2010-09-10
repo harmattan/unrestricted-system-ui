@@ -201,6 +201,7 @@ void Ut_WidgetNotificationSink::init()
     contents.clear();
     actions.clear();
     actionTriggeredCount = 0;
+    gEventTypeStoreStub->stubReset();
 }
 
 void Ut_WidgetNotificationSink::cleanup()
@@ -225,9 +226,7 @@ void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
 
 void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
 {
-    QSettings *settings = new QSettings;
-    settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
-    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", settings);
+    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "Icon-messages");
     EventTypeStore eventTypeStore("", 0);
     gNotificationManagerStub->stubSetReturnValue<const EventTypeStore&>("eventTypeStore", eventTypeStore);
 
@@ -313,8 +312,6 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QCOMPARE(notificationRemovalRequested.count(), 1);
     QCOMPARE(notificationRemovalRequested.first().at(0).toUInt(), notificationID);
 
-
-
     // Create a group info banner
     uint groupID = 1;
     TestNotificationParameters groupParameters;
@@ -382,16 +379,14 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableInPara
 
 void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableByEventType()
 {
-    QSettings settings;
-    settings.setValue(NotificationWidgetParameterFactory::userRemovableKey(), false);
-    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", &settings);
+    gEventTypeStoreStub->stubSetReturnValue<bool>("contains", true);
+    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "false");
 
     TestNotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "voicemail");
 
     testInfoBannerClickingWhenNotUserRemovable(parameters);
 }
-
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {

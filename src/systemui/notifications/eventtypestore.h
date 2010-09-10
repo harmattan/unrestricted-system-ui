@@ -54,11 +54,42 @@ public:
     explicit EventTypeStore(const QString &eventTypesPath, uint maxStoredEventTypes = 100);
 
     /*!
-      * Returns the QSettings object for a given event type.
-      *
-      * \param eventType The event type whose QSettings object is desired.
-      */
-    const QSettings *settingsForEventType(const QString &eventType) const;
+     * Tests if the \a eventType exists in the system.
+     * \param eventType the event type to check.
+     * \return \c true if the event type exists, \c false otherwise.
+     */
+    bool eventTypeExists(const QString &eventType) const;
+
+    /*!
+     * Returns all parameter keys for a given event type. If the event type doesn't
+     * exist, an empty list is returned.
+     * \param eventType the event type.
+     * \sa eventTypeExists, contains, value
+     */
+    QList<QString> allKeys(const QString &eventType) const;
+
+    /*!
+     * Check if a given parameter \a key exists in the the configuration for \a eventType.
+     * If the \a key does exist in the \a eventType, this method returns \c true. If the
+     * \a key does not exist or the \a eventType does not exist at all, this method returns
+     * \c false.
+     * \param eventType the event type.
+     * \param key the parameter key.
+     * \return \c true if the key exists in the event type, \c false otherwise.
+     * \sa eventTypeExists, allKeys, value
+     */
+    bool contains(const QString &eventType, const QString &key) const;
+
+    /*!
+     * Returns the value for the given parameter \a key in the configuration for \a eventType.
+     * If the \a key does not exist in the \a eventType or the \a eventType does not exist at all,
+     * this method returns an empty string.
+     * \param eventType the event type.
+     * \param key the parameter key.
+     * \return the value for the key in the event type.
+     * \sa eventTypeExists, allKeys, contains
+     */
+    QString value(const QString &eventType, const QString &key) const;
 
 private slots:
     /*!
@@ -108,6 +139,9 @@ private:
 
     //! Load the data into our internal map
     void loadSettings(const QString &eventType);
+
+    //! Marks the event type to be used recently
+    void eventTypeAccessed(const QString &eventType);
 
     //! File system watcher to notice changes in installed event types
     QFileSystemWatcher eventTypePathWatcher;

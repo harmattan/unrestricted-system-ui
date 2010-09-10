@@ -79,27 +79,48 @@ void EventTypeStore::updateEventTypeFile(const QString &path)
     }
 }
 
-const QSettings *EventTypeStore::settingsForEventType(const QString &eventType) const
+bool EventTypeStore::eventTypeExists(const QString &eventType) const
 {
+    bool eventTypeFound = false;
+
     if (!eventTypesMap.contains(eventType)) {
         // If the event type has not been loaded yet load it
         const_cast<EventTypeStore *>(this)->loadSettings(eventType);
     }
 
-    const QSettings *eventTypeSettings = eventTypesMap.value(eventType).data();
-
-    if (eventTypeSettings != NULL) {
-        // If there are settings for the event type mark it as recently used by moving it to the beginning of the usage list
-        eventTypeUsage.removeAll(eventType);
-        eventTypeUsage.insert(0, eventType);
-
-        // If there are too many event types in memory get rid of the extra ones
-        while (eventTypeUsage.count() > (int)maxStoredEventTypes) {
-            eventTypesMap.remove(eventTypeUsage.takeLast());
-        }
+    if (eventTypesMap.contains(eventType)) {
+        const_cast<EventTypeStore*>(this)->eventTypeAccessed(eventType);
+        eventTypeFound = true;
     }
 
-    return eventTypeSettings;
+    return eventTypeFound;
+}
+
+QList<QString> EventTypeStore::allKeys(const QString &eventType) const
+{
+    if (eventTypeExists(eventType)) {
+        return eventTypesMap.value(eventType)->allKeys();
+    }
+
+    return QList<QString>();
+}
+
+bool EventTypeStore::contains(const QString &eventType, const QString &key) const
+{
+    if (eventTypeExists(eventType)) {
+        return eventTypesMap.value(eventType)->contains(key);
+    }
+
+    return false;
+}
+
+QString EventTypeStore::value(const QString &eventType, const QString &key) const
+{
+    if (contains(eventType, key)) {
+        return eventTypesMap.value(eventType)->value(key).toString();
+    }
+
+    return QString();
 }
 
 void EventTypeStore::loadSettings(const QString &eventType)
@@ -110,5 +131,17 @@ void EventTypeStore::loadSettings(const QString &eventType)
         if (eventTypeSettings->status() == QSettings::NoError) {
             eventTypesMap.insert(eventType, eventTypeSettings);
         }
+    }
+}
+
+void EventTypeStore::eventTypeAccessed(const QString &eventType)
+{
+    // Mark the event type as recently used by moving it to the beginning of the usage list
+    eventTypeUsage.removeAll(eventType);
+    eventTypeUsage.insert(0, eventType);
+
+    // If there are too many event types in memory get rid of the extra ones
+    while (eventTypeUsage.count() > (int)maxStoredEventTypes) {
+        eventTypesMap.remove(eventTypeUsage.takeLast());
     }
 }

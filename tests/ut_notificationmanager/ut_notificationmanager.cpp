@@ -128,27 +128,36 @@ aegis::storage::~storage()
 }
 #endif
 
-QSettings emptySettings;
-QSettings persistentSettings;
-
 // EventTypeStore stubs
 EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEventTypes) :
     eventTypesPath(eventTypesPath),
     maxStoredEventTypes(maxStoredEventTypes)
 {
-    persistentSettings.setValue(GenericNotificationParameterFactory::persistentKey(), true);
 }
 
-void EventTypeStore::updateEventTypeFileList()
+bool EventTypeStore::contains(const QString &eventType, const QString &key) const
 {
+    Q_UNUSED(eventType);
+    Q_UNUSED(key);
+    return true;
 }
 
-const QSettings *EventTypeStore::settingsForEventType(const QString &eventType) const
+QString EventTypeStore::value(const QString &eventType, const QString &key) const
 {
-    return eventType == "persistent" ? &persistentSettings : &emptySettings;
+    if (eventType == "persistent") {
+        if (key == GenericNotificationParameterFactory::persistentKey()) {
+            return "true";
+        }
+    }
+
+    return QString();
 }
 
 void EventTypeStore::loadSettings(const QString &)
+{
+}
+
+void EventTypeStore::updateEventTypeFileList()
 {
 }
 

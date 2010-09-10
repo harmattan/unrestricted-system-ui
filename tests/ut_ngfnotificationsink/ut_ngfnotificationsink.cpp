@@ -27,11 +27,6 @@
 #include "sysuid_stub.h"
 #include "ngfadapter.h"
 
-// xlib.h defines Status, undef it so we can use QSettings::Status
-#ifdef Status
-#undef Status
-#endif
-
 static NotificationManager *manager;
 
 static uint NGFAdaptor_play_id = 0;
@@ -73,8 +68,6 @@ void Ut_NGFNotificationSink::initTestCase()
     static int argc = 1;
     static char *app_name = (char *)"./ut_ngfnotificationsink";
     app = new MApplication(argc, &app_name);
-    eventTypeSettings = new QSettings;
-    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", eventTypeSettings);
 }
 
 void Ut_NGFNotificationSink::cleanupTestCase()
@@ -92,7 +85,7 @@ void Ut_NGFNotificationSink::init()
     manager = new NotificationManager();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
-    eventTypeSettings->clear();
+    gEventTypeStoreStub->stubReset();
 }
 
 void Ut_NGFNotificationSink::cleanup()
@@ -154,7 +147,7 @@ void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()
 
 void Ut_NGFNotificationSink::testWithEventTypeWithoutFeedbackId()
 {
-    eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
+    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "eventTypeStoreFeedback");
 
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
@@ -194,7 +187,7 @@ void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
 
 void Ut_NGFNotificationSink::testDetermineFeedBackId()
 {
-    eventTypeSettings->setValue(FeedbackParameterFactory::feedbackIdKey(), "eventTypeStoreFeedback");
+    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "eventTypeStoreFeedback");
 
     NotificationParameters parameters;
     parameters.add("eventType", "message-received");
