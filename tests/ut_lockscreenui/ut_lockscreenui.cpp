@@ -67,7 +67,7 @@ void Ut_LockScreenUI::cleanupTestCase()
 void Ut_LockScreenUI::testLockScreenUI ()
 {
     Q_ASSERT (m_LockScreenUI == 0);
-    
+
     /*
      * When the lockscreenUI is created it just delays its realize function. We
      * process the events to cause the realize to be called, then we check that
@@ -106,7 +106,7 @@ void Ut_LockScreenUI::testLockScreenUI ()
     m_LockScreenUI->showHideNotifications (false);
     //QVERIFY (!m_LockScreenUI->m_notificationArea->isVisible());
     delete m_LockScreenUI;
-    
+
     /*
      * Test the extreme case of the early destruction of the object. We had a
      * creash in this case, this is what checked here.
@@ -137,12 +137,12 @@ void Ut_LockScreenUI::testLockScreenUISignals ()
 void Ut_LockScreenUI::testLockScreenUIWindowName ()
 {
     Q_ASSERT (m_LockScreenUI == 0);
-    
+
     m_LockScreenUI = new LockScreenUI;
 
     /*
      * I'm not sure what could we test here except that the program will not
-     * crash if the event is invalid and the internal window ID is also 
+     * crash if the event is invalid and the internal window ID is also
      * invalid.
      */
     QShowEvent event;
