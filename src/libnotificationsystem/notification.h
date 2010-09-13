@@ -97,8 +97,17 @@ public:
      * Sets the parameters list for this notification.
      *
      * \param parameters parameters for this notification
+     * \sa updateParameters
      */
     void setParameters(const NotificationParameters &parameters);
+
+    /*!
+     * Updates the parameters of this notification. The existing parameters in the
+     * notification remain as they are. Only new values from the argument are appended/updated.
+     * \param parameters the parameters that will be updated
+     * \sa setParameters
+     */
+    void updateParameters(const NotificationParameters &parameters);
 
     /*!
      * Returns the type of this notification.

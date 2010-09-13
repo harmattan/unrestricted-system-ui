@@ -40,6 +40,13 @@ void NotificationParameters::add(const NotificationParameter &parameter)
     parameterValues.insert(parameter.name(), parameter.value());
 }
 
+void NotificationParameters::update(const NotificationParameters &parameters)
+{
+    foreach (const QString &key, parameters.parameterValues.keys()) {
+        parameterValues[key] = parameters.parameterValues[key];
+    }
+}
+
 QVariant NotificationParameters::value(const QString &parameter) const
 {
     return parameterValues.value(parameter);

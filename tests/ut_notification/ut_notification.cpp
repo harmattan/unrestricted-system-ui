@@ -61,6 +61,37 @@ void Ut_Notification::cleanup()
 {
 }
 
+void Ut_Notification::testWhenUpdatingNotificationParametersToNotificationThenTheParametersGetUpdated()
+{
+    NotificationParameters parameters;
+    parameters.add("parameter", "initialParameterValue");
+    Notification notification(1234, 20, 678, parameters, Notification::ApplicationEvent, 2345);
+
+    QCOMPARE(notification.parameters().value("parameter").toString(), QString("initialParameterValue"));
+
+    NotificationParameters updateParameters;
+    updateParameters.add("parameter", "updatedParameterValue");
+    notification.updateParameters(updateParameters);
+
+    QCOMPARE(notification.parameters().value("parameter").toString(), QString("updatedParameterValue"));
+}
+
+void Ut_Notification::testWhenUpdatingNotificationParametersToNotificationThenTheOldParametersRemain()
+{
+    NotificationParameters parameters;
+    parameters.add("initialParameter", "initialParameterValue");
+    Notification notification(1234, 20, 678, parameters, Notification::ApplicationEvent, 2345);
+
+    QCOMPARE(notification.parameters().value("initialParameter").toString(), QString("initialParameterValue"));
+
+    NotificationParameters updateParameters;
+    updateParameters.add("updateParameter", "updateParameterValue");
+    notification.updateParameters(updateParameters);
+
+    QCOMPARE(notification.parameters().value("initialParameter").toString(), QString("initialParameterValue"));
+    QCOMPARE(notification.parameters().value("updateParameter").toString(), QString("updateParameterValue"));
+}
+
 void Ut_Notification::testSerializationAndDeserialization()
 {
     NotificationParameters parameters0;

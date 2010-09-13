@@ -62,6 +62,7 @@ private slots:
     void testWhenNotificationIsAddedThenTheNotificationIsFilledWithEventTypeData();
     // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
+
     // Test that canceling with an ID cancels the correct notification
     void testRemoveNotification();
 

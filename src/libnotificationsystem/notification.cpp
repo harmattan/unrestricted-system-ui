@@ -71,6 +71,11 @@ void Notification::setParameters(const NotificationParameters &parameters)
     parameters_ = parameters;
 }
 
+void Notification::updateParameters(const NotificationParameters &parameters)
+{
+    parameters_.update(parameters);
+}
+
 Notification::NotificationType Notification::type() const
 {
     return type_;

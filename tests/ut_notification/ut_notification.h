@@ -38,6 +38,9 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
+    void testWhenUpdatingNotificationParametersToNotificationThenTheParametersGetUpdated();
+    void testWhenUpdatingNotificationParametersToNotificationThenTheOldParametersRemain();
+
     // Test serialization into QDataStream
     void testSerializationAndDeserialization();
 

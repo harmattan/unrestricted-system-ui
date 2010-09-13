@@ -44,6 +44,9 @@ private slots:
     // Test add(parameter) based API
     void testParameterAPI();
 
+    void testWhenUpdatingParametersThenTheParametersGetUpdated();
+    void testWhenUpdatingParametersThenTheExistingParametersRemain();
+
     // Test serialization into QDataStream
     void testSerialization();
 

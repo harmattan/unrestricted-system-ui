@@ -278,7 +278,7 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
     QHash<uint, Notification>::iterator ni = notifications.find(notificationId);
 
     if (ni != notifications.end()) {
-        (*ni).setParameters(parameters);
+        (*ni).updateParameters(parameters);
 
         // Also checks if the notification's group is persistent
         if (persistentNotifications.contains(notificationId) ||
@@ -288,7 +288,7 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
 
         int waitQueueIndex = findNotificationFromWaitQueue(notificationId);
         if (waitQueueIndex >= 0) {
-            waitQueue[waitQueueIndex].setParameters(parameters);
+            waitQueue[waitQueueIndex].updateParameters(parameters);
         } else {
             // Inform the sinks about the update
             emit notificationUpdated(notifications.value(notificationId));

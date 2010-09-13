@@ -76,6 +76,25 @@ void Ut_NotificationParameters::testParameterAPI()
     QCOMPARE(parameters->value("test3").isNull(), true);
 }
 
+void Ut_NotificationParameters::testWhenUpdatingParametersThenTheParametersGetUpdated()
+{
+    NotificationParameters updated;
+    updated.add(GenericNotificationParameterFactory::unseenKey(), "false");
+    parameters->update(updated);
+
+    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), false);
+}
+
+void Ut_NotificationParameters::testWhenUpdatingParametersThenTheExistingParametersRemain()
+{
+    NotificationParameters updated;
+    updated.add("updatedKey", "updatedValue");
+    parameters->update(updated);
+
+    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
+    QCOMPARE(parameters->value("updatedKey").toString(), QString("updatedValue"));
+}
+
 void Ut_NotificationParameters::testSerialization()
 {
     NotificationParameter p1 = TestSink::createTest1Parameter(5);

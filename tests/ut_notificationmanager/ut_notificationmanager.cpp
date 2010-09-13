@@ -384,12 +384,10 @@ void Ut_NotificationManager::testUpdateNotification()
     QList<QVariant> arguments = spy.takeFirst();
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id0);
-    QCOMPARE(n.parameters().value("imageId").isNull(), true);
+    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
     QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
-
-    // TODO this cannot be fully tested until MBanner supports updates
 }
 
 void Ut_NotificationManager::testRemoveNotification()
@@ -740,7 +738,7 @@ void Ut_NotificationManager::testUpdatingNotificationInQueue()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id1);
     QCOMPARE(n.parameters().value("imageId").isNull(), true);
-    QCOMPARE(n.parameters().value("body").isNull(), true);
+    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
     QCOMPARE(n.parameters().value("iconId").toString(), QString("newicon"));
     QCOMPARE(n.parameters().value("contentId").isNull(), true);
     QCOMPARE(n.type(), Notification::ApplicationEvent);

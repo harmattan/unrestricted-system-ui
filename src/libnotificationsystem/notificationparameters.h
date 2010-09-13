@@ -59,6 +59,14 @@ public:
     void add(const NotificationParameter &parameter);
 
     /*!
+     * Updates these parameters from another set of parameters. This updates the existing
+     * parameters and adds new ones found from the argument. The existing parameters that
+     * are not found in the argument are kept untouched.
+     * \param parameters the parameters to be updated.
+     */
+    void update(const NotificationParameters &parameters);
+
+    /*!
      * Returns the value of a parameter.
      *
      * \param parameter the name of the parameter
