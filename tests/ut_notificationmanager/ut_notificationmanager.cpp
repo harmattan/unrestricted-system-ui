@@ -128,33 +128,41 @@ aegis::storage::~storage()
 }
 #endif
 
-QSettings emptySettings;
-QSettings persistentSettings;
-
 // EventTypeStore stubs
+QHash<QString, QHash<QString, QString> > gEventTypeSettings;
 EventTypeStore::EventTypeStore(const QString &eventTypesPath, uint maxStoredEventTypes) :
     eventTypesPath(eventTypesPath),
     maxStoredEventTypes(maxStoredEventTypes)
 {
-    persistentSettings.setValue(GenericNotificationParameterFactory::persistentKey(), true);
+}
+
+QList<QString> EventTypeStore::allKeys(const QString &eventType) const
+{
+    return gEventTypeSettings.value(eventType).keys();
+}
+
+bool EventTypeStore::contains(const QString &eventType, const QString &key) const
+{
+    return gEventTypeSettings.contains(eventType) && gEventTypeSettings.value(eventType).contains(key);
+}
+
+QString EventTypeStore::value(const QString &eventType, const QString &key) const
+{
+    return gEventTypeSettings.value(eventType).value(key);
 }
 
 void EventTypeStore::updateEventTypeFileList()
 {
 }
 
-const QSettings *EventTypeStore::settingsForEventType(const QString &eventType) const
+void EventTypeStore::updateEventTypeFile(const QString &)
 {
-    return eventType == "persistent" ? &persistentSettings : &emptySettings;
 }
 
 void EventTypeStore::loadSettings(const QString &)
 {
 }
 
-void EventTypeStore::updateEventTypeFile(const QString &)
-{
-}
 // Helper function for loading the last given user id and group information from gStateBuffer
 // and repopulating gPersistentGroupSet and gGroupList accordingly
 void loadStateData()
@@ -240,6 +248,7 @@ void Ut_NotificationManager::init()
 
     gStateBuffer.open(QIODevice::ReadWrite);
     gNotificationBuffer.open(QIODevice::ReadWrite);
+    gEventTypeSettings.clear();
 }
 
 void Ut_NotificationManager::cleanup()
@@ -336,6 +345,24 @@ void Ut_NotificationManager::testAddNotification()
     QVERIFY(id0 != id1);
     QVERIFY(id0 != id2);
     QVERIFY(id1 != id2);
+}
+
+void Ut_NotificationManager::testWhenNotificationIsAddedThenTheNotificationIsFilledWithEventTypeData()
+{
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    gEventTypeSettings["testType"][GenericNotificationParameterFactory::persistentKey()] = "true";
+
+    NotificationParameters parameters;
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "testType");
+    manager->addNotification(0, parameters);
+
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification notification = qvariant_cast<Notification>(arguments.at(0));
+
+    QCOMPARE(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString(), QString("testType"));
+    QCOMPARE(notification.parameters().value(GenericNotificationParameterFactory::persistentKey()).toBool(), true);
 }
 
 void Ut_NotificationManager::testUpdateNotification()
@@ -943,6 +970,8 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     gNotificationBuffer.buffer().clear();
     gStateBuffer.buffer().clear();
 
+    gEventTypeSettings["persistent"][GenericNotificationParameterFactory::persistentKey()] = "true";
+
     delete manager;
     manager = new TestNotificationManager(3000);
 
@@ -993,6 +1022,8 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
 
 void Ut_NotificationManager::testPersistentNotificationStorage()
 {
+    gEventTypeSettings["persistent"][GenericNotificationParameterFactory::persistentKey()] = "true";
+
     delete manager;
     manager = new TestNotificationManager(3000);
 

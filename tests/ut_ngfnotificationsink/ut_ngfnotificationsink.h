@@ -27,7 +27,6 @@
 
 class MApplication;
 class NGFNotificationSink;
-class QSettings;
 
 class Ut_NGFNotificationSink : public QObject
 {
@@ -61,8 +60,6 @@ private:
     MApplication *app;
     // The object being tested
     NGFNotificationSink *sink;
-    // QSettings for the event type store
-    QSettings *eventTypeSettings;
 
 signals:
     void addNotification(Notification notification);

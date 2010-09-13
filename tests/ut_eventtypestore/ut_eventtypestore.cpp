@@ -111,35 +111,35 @@ void Ut_EventTypeStore::testEventTypeSettingsValues()
     m_subject = new EventTypeStore("/eventtypepath", 2);
 
     // Verify settings object is null for invalid key
-    QVERIFY(m_subject->settingsForEventType("idontexist") == NULL);
+    QCOMPARE(m_subject->eventTypeExists("idontexist"), false);
 
     // Verify that settings object for each event type contains the provided keys/values
-    QVERIFY(m_subject->settingsForEventType("smsEventType") != NULL);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->allKeys().count(), 2);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->contains("iconId"), true);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->value("iconId").toString(), QString("sms-icon"));
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->contains("feedbackId"), true);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->value("feedbackId").toString(), QString("sound-file"));
-    QVERIFY(m_subject->settingsForEventType("emailEventType") != NULL);
-    QCOMPARE(m_subject->settingsForEventType("emailEventType")->allKeys().count(), 2);
-    QCOMPARE(m_subject->settingsForEventType("emailEventType")->contains("iconId"), true);
-    QCOMPARE(m_subject->settingsForEventType("emailEventType")->value("iconId").toString(), QString("email-icon"));
-    QCOMPARE(m_subject->settingsForEventType("emailEventType")->contains("feedbackId"), true);
-    QCOMPARE(m_subject->settingsForEventType("emailEventType")->value("feedbackId").toString(), QString("sound-file-for-email"));
+    QCOMPARE(m_subject->eventTypeExists("smsEventType"), true);
+    QCOMPARE(m_subject->allKeys("smsEventType").count(), 2);
+    QCOMPARE(m_subject->contains("smsEventType", "iconId"), true);
+    QCOMPARE(m_subject->value("smsEventType", "iconId"), QString("sms-icon"));
+    QCOMPARE(m_subject->contains("smsEventType", "feedbackId"), true);
+    QCOMPARE(m_subject->value("smsEventType", "feedbackId"), QString("sound-file"));
+    QCOMPARE(m_subject->eventTypeExists("emailEventType"), true);
+    QCOMPARE(m_subject->allKeys("emailEventType").count(), 2);
+    QCOMPARE(m_subject->contains("emailEventType", "iconId"), true);
+    QCOMPARE(m_subject->value("emailEventType", "iconId"), QString("email-icon"));
+    QCOMPARE(m_subject->contains("emailEventType", "feedbackId"), true);
+    QCOMPARE(m_subject->value("emailEventType", "feedbackId"), QString("sound-file-for-email"));
 
     // Verify that event types work even if the maximum amount of types stored in memory is reached
-    QVERIFY(m_subject->settingsForEventType("chatEventType") != NULL);
-    QCOMPARE(m_subject->settingsForEventType("chatEventType")->allKeys().count(), 2);
-    QCOMPARE(m_subject->settingsForEventType("chatEventType")->contains("iconId"), true);
-    QCOMPARE(m_subject->settingsForEventType("chatEventType")->value("iconId").toString(), QString("chat-icon"));
-    QCOMPARE(m_subject->settingsForEventType("chatEventType")->contains("feedbackId"), true);
-    QCOMPARE(m_subject->settingsForEventType("chatEventType")->value("feedbackId").toString(), QString("sound-file-for-chat"));
-    QVERIFY(m_subject->settingsForEventType("smsEventType") != NULL);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->allKeys().count(), 2);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->contains("iconId"), true);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->value("iconId").toString(), QString("sms-icon"));
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->contains("feedbackId"), true);
-    QCOMPARE(m_subject->settingsForEventType("smsEventType")->value("feedbackId").toString(), QString("sound-file"));
+    QCOMPARE(m_subject->eventTypeExists("chatEventType"), true);
+    QCOMPARE(m_subject->allKeys("chatEventType").count(), 2);
+    QCOMPARE(m_subject->contains("chatEventType", "iconId"), true);
+    QCOMPARE(m_subject->value("chatEventType", "iconId"), QString("chat-icon"));
+    QCOMPARE(m_subject->contains("chatEventType", "feedbackId"), true);
+    QCOMPARE(m_subject->value("chatEventType", "feedbackId"), QString("sound-file-for-chat"));
+    QCOMPARE(m_subject->eventTypeExists("smsEventType"), true);
+    QCOMPARE(m_subject->allKeys("smsEventType").count(), 2);
+    QCOMPARE(m_subject->contains("smsEventType", "iconId"), true);
+    QCOMPARE(m_subject->value("smsEventType", "iconId"), QString("sms-icon"));
+    QCOMPARE(m_subject->contains("smsEventType", "feedbackId"), true);
+    QCOMPARE(m_subject->value("smsEventType", "feedbackId"), QString("sound-file"));
 }
 void Ut_EventTypeStore::testEventTypeStoreMaxFileSizeHandling()
 {
@@ -153,7 +153,7 @@ void Ut_EventTypeStore::testEventTypeStoreMaxFileSizeHandling()
 
     m_subject = new EventTypeStore("/eventtypepath", 2);
     // Verify that settings object is NULL
-    QVERIFY(m_subject->settingsForEventType("bigEventType") == NULL);
+    QCOMPARE(m_subject->eventTypeExists("bigEventType"), false);
 }
 
 void Ut_EventTypeStore::testEventTypeUninstalling()
@@ -169,19 +169,19 @@ void Ut_EventTypeStore::testEventTypeUninstalling()
     eventTypeFilesList.append("chatEventType.conf");
     emit directoryChanged("/eventtypepath");
     QCOMPARE(uninstallSpy.count(), 0);
-    QVERIFY(m_subject->settingsForEventType("chatEventType") != NULL);
+    QCOMPARE(m_subject->eventTypeExists("chatEventType"), true);
 
     // Remove the added event type file
     eventTypeFilesList.removeOne("chatEventType.conf");
     emit directoryChanged("/eventtypepath");
     QCOMPARE(uninstallSpy.count(), 1);
-    QVERIFY(m_subject->settingsForEventType("chatEventType") == NULL);
+    QCOMPARE(m_subject->eventTypeExists("chatEventType"), false);
 
     // Remove the existing event type file
     eventTypeFilesList.removeOne("smsEventType.conf");
     emit directoryChanged("/eventtypepath");
     QCOMPARE(uninstallSpy.count(), 2);
-    QVERIFY(m_subject->settingsForEventType("smsEventType") == NULL);
+    QCOMPARE(m_subject->eventTypeExists("smsEventType"), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_EventTypeStore)

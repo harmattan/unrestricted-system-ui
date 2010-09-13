@@ -42,10 +42,7 @@ QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &p
     QString feedbackId = parameters.value(FeedbackParameterFactory::feedbackIdKey()).toString();
     if (feedbackId.isEmpty()) {
         const EventTypeStore &store = notificationManager().eventTypeStore();
-        const QSettings *settings = store.settingsForEventType(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString());
-        if (settings) {
-            feedbackId = settings->value(FeedbackParameterFactory::feedbackIdKey()).toString();
-        }
+        feedbackId = store.value(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), FeedbackParameterFactory::feedbackIdKey());
     }
     return feedbackId;
 }
