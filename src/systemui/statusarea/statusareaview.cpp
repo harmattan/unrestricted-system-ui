@@ -31,9 +31,9 @@
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
     MWidgetView(controller),
-    controller(controller),
     landscapeWidget(new QGraphicsWidget),
     portraitWidget(new QGraphicsWidget),
+    controller(controller),
     landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     landscapeAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
@@ -57,8 +57,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
-    landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
-    portraitNotificationIndicator(new NotificationStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
     portraitClock(new Clock(controller))
 {
@@ -70,9 +68,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     connect(portraitAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), portraitClock, SLOT(setShortDisplay(bool)));
     connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
 
-    connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
-    connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
-
     // Set up landscape and portrait widgets and anchor them on top of each other
     landscapeWidget->setLayout(createLandscapeLayout());
     landscapeWidget->setParent(controller);
@@ -81,13 +76,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);
     compositeLayout->setSpacing(0);
-
-    // Add notification indicator and anchor it to middle of landscape and portrait widgets
-    compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorVerticalCenter, landscapeWidget, Qt::AnchorVerticalCenter);
-    compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorHorizontalCenter, landscapeWidget, Qt::AnchorHorizontalCenter);
-
-    compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorVerticalCenter, portraitWidget, Qt::AnchorVerticalCenter);
-    compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorHorizontalCenter, portraitWidget, Qt::AnchorHorizontalCenter);
 
     compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopLeftCorner, compositeLayout, Qt::TopLeftCorner);
     compositeLayout->addCornerAnchors(landscapeWidget, Qt::TopRightCorner, compositeLayout, Qt::TopRightCorner);
@@ -111,32 +99,30 @@ void StatusAreaView::setupTestabilityObjectNames()
 
 void StatusAreaView::setupTestabilityParents()
 {
-    portraitPhoneNetworkIndicator->setParent(portraitWidget);;
-    landscapeAlarmIndicator->setParent(landscapeWidget);;
-    portraitAlarmIndicator->setParent(portraitWidget);;
-    landscapeBatteryIndicator->setParent(landscapeWidget);;
-    portraitBatteryIndicator->setParent(portraitWidget);;
-    landscapePhoneSignalStrengthIndicator->setParent(landscapeWidget);;
-    portraitPhoneSignalStrengthIndicator->setParent(portraitWidget);;
-    landscapePhoneNetworkTypeIndicator->setParent(landscapeWidget);;
-    portraitPhoneNetworkTypeIndicator->setParent(portraitWidget);;
-    landscapeInternetConnectionIndicator->setParent(landscapeWidget);;
-    portraitInternetConnectionIndicator->setParent(portraitWidget);;
-    landscapeBluetoothIndicator->setParent(landscapeWidget);;
-    portraitBluetoothIndicator->setParent(portraitWidget);;
-    landscapeGPSIndicator->setParent(landscapeWidget);;
-    portraitGPSIndicator->setParent(portraitWidget);;
-    landscapePresenceIndicator->setParent(landscapeWidget);;
-    portraitPresenceIndicator->setParent(portraitWidget);;
-    landscapeProfileIndicator->setParent(landscapeWidget);;
-    portraitProfileIndicator->setParent(portraitWidget);;
+    portraitPhoneNetworkIndicator->setParent(portraitWidget);
+    landscapeAlarmIndicator->setParent(landscapeWidget);
+    portraitAlarmIndicator->setParent(portraitWidget);
+    landscapeBatteryIndicator->setParent(landscapeWidget);
+    portraitBatteryIndicator->setParent(portraitWidget);
+    landscapePhoneSignalStrengthIndicator->setParent(landscapeWidget);
+    portraitPhoneSignalStrengthIndicator->setParent(portraitWidget);
+    landscapePhoneNetworkTypeIndicator->setParent(landscapeWidget);
+    portraitPhoneNetworkTypeIndicator->setParent(portraitWidget);
+    landscapeInternetConnectionIndicator->setParent(landscapeWidget);
+    portraitInternetConnectionIndicator->setParent(portraitWidget);
+    landscapeBluetoothIndicator->setParent(landscapeWidget);
+    portraitBluetoothIndicator->setParent(portraitWidget);
+    landscapeGPSIndicator->setParent(landscapeWidget);
+    portraitGPSIndicator->setParent(portraitWidget);
+    landscapePresenceIndicator->setParent(landscapeWidget);
+    portraitPresenceIndicator->setParent(portraitWidget);
+    landscapeProfileIndicator->setParent(landscapeWidget);
+    portraitProfileIndicator->setParent(portraitWidget);
     landscapeInputMethodIndicator->setParent(landscapeWidget);
-    landscapeCallIndicator->setParent(landscapeWidget);;
-    portraitCallIndicator->setParent(portraitWidget);;
-    landscapeNotificationIndicator->setParent(landscapeWidget);
-    portraitNotificationIndicator->setParent(portraitWidget);
-    landscapeClock->setParent(landscapeWidget);;
-    portraitClock->setParent(portraitWidget);;
+    landscapeCallIndicator->setParent(landscapeWidget);
+    portraitCallIndicator->setParent(portraitWidget);
+    landscapeClock->setParent(landscapeWidget);
+    portraitClock->setParent(portraitWidget);
 }
 
 void StatusAreaView::setupTestability()

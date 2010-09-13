@@ -17,9 +17,12 @@
 **
 ****************************************************************************/
 
-#include "ut_statusareaview.h"
-#include "statusareaview.h"
+#include "ut_statusareawithnotifierview.h"
+#include "statusareawithnotifierview.h"
 #include "statusarea.h"
+#include "statusareaview.h"
+#include "statusareastyle.h"
+#include <MApplication>
 #include "clock_stub.h"
 #include "statusindicator_stub.h"
 #include "contextframeworkcontext_stub.h"
@@ -39,54 +42,77 @@
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
+#include "statusindicatormenuwindowstyle.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>
 #include <MWidget>
 #include "x11wrapper_stub.h"
-#include "statusindicatormenuwindowstyle.h"
 
-int Ut_StatusAreaView::windowExecutionCount;
-int Ut_StatusAreaView::windowRejectionCount;
+class MyStyle : public MStyle
+{};
+
+const MStyle *MTheme::style(const char *styleClassName,
+                                const QString &objectName)
+{
+    Q_UNUSED(styleClassName);
+    Q_UNUSED(objectName);
+    return new MyStyle();
+};
+
+bool isNotificationArea = true;
+const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
+{
+    return isNotificationArea;
+}
+
+int Ut_StatusAreaWithNotifierView::windowExecutionCount;
+int Ut_StatusAreaWithNotifierView::windowRejectionCount;
 
 // SceneWindow stubs
 void MSceneWindow::appear(MSceneWindow::DeletionPolicy)
 {
-    Ut_StatusAreaView::windowExecutionCount++;
+    Ut_StatusAreaWithNotifierView::windowExecutionCount++;
 }
 
 void MSceneWindow::disappear()
 {
-    Ut_StatusAreaView::windowRejectionCount++;
+    Ut_StatusAreaWithNotifierView::windowRejectionCount++;
 }
 
-const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
-{
-    return true;
-}
 // Called before the first testfunction is executed
-void Ut_StatusAreaView::initTestCase()
+void Ut_StatusAreaWithNotifierView::initTestCase()
 {
+    // Create a MAapplication
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_statusareawithnotifierview";
+    app = new MApplication(argc, &app_name);
 }
 
 // Called after the last testfunction was executed
-void Ut_StatusAreaView::cleanupTestCase()
+void Ut_StatusAreaWithNotifierView::cleanupTestCase()
 {
-
+    delete app;
 }
 
 // Called before each testfunction is executed
-void Ut_StatusAreaView::init()
+void Ut_StatusAreaWithNotifierView::init()
 {
     statusArea = new StatusArea;
-    m_subject = new StatusAreaView(statusArea);
+    m_subject = new StatusAreaWithNotifierView(statusArea);
     statusArea->setView(m_subject);
 }
 
 // Called after every testfunction
-void Ut_StatusAreaView::cleanup()
+void Ut_StatusAreaWithNotifierView::cleanup()
 {
     delete statusArea;
     statusArea = NULL;
 }
 
-QTEST_APPLESS_MAIN(Ut_StatusAreaView)
+void Ut_StatusAreaWithNotifierView::testNotifierAddedToLayout()
+{
+    QVERIFY(m_subject->landscapeNotificationIndicator->parentWidget() != NULL);
+    QVERIFY(m_subject->portraitNotificationIndicator->parentWidget() != NULL);
+}
+
+QTEST_APPLESS_MAIN(Ut_StatusAreaWithNotifierView)

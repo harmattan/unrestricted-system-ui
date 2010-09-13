@@ -27,7 +27,6 @@
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
 
-class Notifier;
 class Clock;
 class StatusArea;
 class StatusIndicator;
@@ -60,16 +59,17 @@ public:
     virtual void setGeometry(const QRectF &rect);
     //! \reimp_end
 
+protected:
+    //! Widgets for the landscape and portrait areas
+    QGraphicsWidget *landscapeWidget;
+    QGraphicsWidget *portraitWidget;
+
 private:
     //! Context framework application context for the indicators
     ContextFrameworkContext contextFrameworkContext;
 
     //! The controller instance
     StatusArea *controller;
-
-    //! Widgets for the landscape and portrait areas
-    QGraphicsWidget *landscapeWidget;
-    QGraphicsWidget *portraitWidget;
 
     //! Phone network indicator
     StatusIndicator *landscapePhoneNetworkIndicator;
@@ -117,10 +117,6 @@ private:
     //! Call indicator
     StatusIndicator *landscapeCallIndicator;
     StatusIndicator *portraitCallIndicator;
-
-    //! Notification indicator
-    StatusIndicator *landscapeNotificationIndicator;
-    StatusIndicator *portraitNotificationIndicator;
 
     //! Clock
     Clock *landscapeClock;

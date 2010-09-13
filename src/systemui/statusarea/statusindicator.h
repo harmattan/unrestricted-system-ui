@@ -183,7 +183,6 @@ private:
     bool networkAvailable;
 };
 
-
 /*!
  * A status indicator for showing the battery charge level or
  * battery charging animation.
