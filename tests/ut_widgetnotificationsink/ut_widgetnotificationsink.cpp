@@ -27,37 +27,6 @@
 // List of event type files
 QStringList eventTypeFilesList;
 
-bool qObjectUserRemovableProperty = false;
-uint qObjectNotificationIdProperty = 0;
-uint qObjectGroupIdProperty = 0;
-bool QObject::setProperty(const char *name, const QVariant &value)
-{
-    if(name == WidgetNotificationSink::USER_REMOVABLE_PROPERTY) {
-        qObjectUserRemovableProperty = value.toBool();
-    } else if(name  == WidgetNotificationSink::NOTIFICATION_ID_PROPERTY) {
-        qObjectNotificationIdProperty = value.toUInt();
-    } else if(name == WidgetNotificationSink::GROUP_ID_PROPERTY) {
-        qObjectGroupIdProperty = value.toUInt();
-    }
-    return true;
-}
-
-bool testingGroup = false;
-QVariant QObject::property(const char *name) const
-{
-    if(name == WidgetNotificationSink::USER_REMOVABLE_PROPERTY) {
-        return qObjectUserRemovableProperty;
-    } else if(name  == WidgetNotificationSink::NOTIFICATION_ID_PROPERTY) {
-        if(testingGroup) {
-            return "dummy";
-        } else {
-            return qObjectNotificationIdProperty;
-        }
-    }else if(name == WidgetNotificationSink::GROUP_ID_PROPERTY) {
-        return qObjectGroupIdProperty;
-    }
-}
-
 class TestWidgetNotificationSink : public WidgetNotificationSink
 {
 public:
@@ -183,10 +152,6 @@ void Ut_WidgetNotificationSink::cleanup()
 {
     delete m_subject;
     eventTypeFilesList.clear();
-    qObjectUserRemovableProperty = false;
-    qObjectNotificationIdProperty = 0;
-    qObjectGroupIdProperty = 0;
-    testingGroup = false;
 }
 
 void Ut_WidgetNotificationSink::testUpdateActions()
@@ -226,7 +191,6 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QApplication::processEvents();
     TestNotificationParameters parameters;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(true));
     MBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
@@ -252,7 +216,6 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
 
     // Create a group info banner
     uint groupID = 1;
-    testingGroup = true;
     TestNotificationParameters groupParameters;
     groupParameters.add(NotificationWidgetParameterFactory::createActionParameter("content1 1 1 1"));
     infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, groupID, groupParameters);
@@ -373,12 +336,12 @@ void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreate
     TestNotificationParameters parameters;
 
     parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(true));
-    m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
-    QCOMPARE(qObjectUserRemovableProperty, true);
+    MBanner* infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), true);
 
     parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(false));
-    m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
-    QCOMPARE(qObjectUserRemovableProperty, false);
+    infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_WidgetNotificationSink)
