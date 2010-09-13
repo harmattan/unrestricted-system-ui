@@ -7,7 +7,7 @@ TEMPLATE = lib
 TARGET = notificationsystem
 CONFIG += meegotouch \
     no_check_exist
-INCLUDEPATH +=  . ../systemui/notifications
+INCLUDEPATH +=  .
 DEPENDPATH += .
 
 include(../../localconfig.pri)
@@ -30,7 +30,7 @@ HEADERS += \
     genericnotificationparameterfactory.h \
     notificationwidgetparameterfactory.h \
     notificationmanagerinterface.h \
-    ../systemui/notifications/metatypedeclarations.h
+    metatypedeclarations.h
 
 SOURCES += \
     notificationsource.cpp \
