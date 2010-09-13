@@ -448,6 +448,24 @@ void Ut_NotificationManager::testAddGroup()
     QCOMPARE(outParameters2.value("body").toString(), QString("body2"));
 }
 
+void Ut_NotificationManager::testWhenNotificationGroupIsAddedThenTheNotificationGroupIsFilledWithEventTypeData()
+{
+    QSignalSpy addGroupSpy(manager, SIGNAL(groupUpdated(uint, NotificationParameters)));
+
+    gEventTypeSettings["testType"][GenericNotificationParameterFactory::persistentKey()] = "true";
+
+    NotificationParameters parameters;
+    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "testType");
+    manager->addGroup(0, parameters);
+
+    QCOMPARE(addGroupSpy.count(), 1);
+    QList<QVariant> arguments = addGroupSpy.takeFirst();
+    NotificationParameters notificationParameters = qvariant_cast<NotificationParameters>(arguments.at(1));
+
+    QCOMPARE(notificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), QString("testType"));
+    QCOMPARE(notificationParameters.value(GenericNotificationParameterFactory::persistentKey()).toBool(), true);
+}
+
 void Ut_NotificationManager::testUpdateGroup()
 {
     NotificationParameters inParameters1;

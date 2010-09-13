@@ -248,12 +248,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         bool persistent = determinePersistence(parameters);
         uint notificationId = nextAvailableNotificationID();
 
-        NotificationParameters fullParameters(parameters);
-
-        QString eventType = parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
-        foreach (const QString &key, notificationEventTypeStore->allKeys(eventType)) {
-            fullParameters.add(key, notificationEventTypeStore->value(eventType, key));
-        }
+        NotificationParameters fullParameters(appendEventTypeParameters(parameters));
 
         Notification notification(notificationId, groupId, notificationUserId, fullParameters, determineType(fullParameters), relayInterval);
 
@@ -361,8 +356,10 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
     bool persistent = determinePersistence(parameters);
     restorePersistentData();
 
+    NotificationParameters fullParameters(appendEventTypeParameters(parameters));
+
     uint groupID = nextAvailableGroupID();
-    NotificationGroup group(groupID, notificationUserId, parameters);
+    NotificationGroup group(groupID, notificationUserId, fullParameters);
     groups.insert(groupID, group);
 
     if (persistent) {
@@ -371,7 +368,7 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
 
     saveStateData();
 
-    emit groupUpdated(groupID, parameters);
+    emit groupUpdated(groupID, fullParameters);
 
     return groupID;
 }
@@ -420,6 +417,18 @@ bool NotificationManager::removeGroup(uint notificationUserId, uint groupId)
     } else {
         return false;
     }
+}
+
+NotificationParameters NotificationManager::appendEventTypeParameters(const NotificationParameters &parameters) const
+{
+    NotificationParameters fullParameters(parameters);
+
+    QString eventType = parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
+    foreach (const QString &key, notificationEventTypeStore->allKeys(eventType)) {
+        fullParameters.add(key, notificationEventTypeStore->value(eventType, key));
+    }
+
+    return fullParameters;
 }
 
 uint NotificationManager::notificationUserId()

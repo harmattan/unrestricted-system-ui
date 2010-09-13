@@ -206,6 +206,16 @@ private:
     void submitNotification(const Notification &notification);
 
     /*!
+     * Appends the notification parameters determined by the event type to the parameters
+     * and returns a new instance of the complete parameters. The returned parameters contain
+     * both the parameters supplied in the \a parameters argument as well as thos determined
+     * by the event type configuration.
+     * @param parameters the notification parameters.
+     * @return the parameters passed in as an argument appended with the event type specific parameters.
+     */
+    NotificationParameters appendEventTypeParameters(const NotificationParameters &parameters) const;
+
+    /*!
      * Returns the index of a notification in the wait queue matching the notification
      * id given as a parameter.
      * \param notificationId Notification ID to be searched from the wait queue.

@@ -67,6 +67,8 @@ private slots:
 
     // Tests adding a notification group
     void testAddGroup();
+
+    void testWhenNotificationGroupIsAddedThenTheNotificationGroupIsFilledWithEventTypeData();
     // Tests updating a notification group
     void testUpdateGroup();
     // Tests updating a notification group that doesn't exist
