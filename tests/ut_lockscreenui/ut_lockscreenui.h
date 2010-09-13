@@ -26,28 +26,8 @@
 #include <QGraphicsSceneEvent>
 #include <QPointer>
 #include "lockscreenui.h"
-#include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
-class MApplicationWindow;
-class LockScreenUI;
-class EventEaterUI;
-
-class LockScreenUIEventSink : public QObject 
-{
-    Q_OBJECT
-
-public:
-    LockScreenUIEventSink ();
-
-public slots:
-    void OneInput ();
-    void unlocked ();
-
-public:
-    bool      m_OneInputCame;
-    bool      m_UnlockedCame;
-};
 
 class Ut_LockScreenUI : public QObject
 {
@@ -59,19 +39,12 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreenWindow ();
     void testLockScreenUI ();
     void testLockScreenUISignals ();
     void testLockScreenUIWindowName ();
-    void testEventEaterUI ();
-    void testEventEaterUIWindowName ();
 
 private:
-    XChecker               m_XChecker;
-    LockScreenUIEventSink  m_EventSink;
-    MApplicationWindow    *m_MainWindow;
     QPointer <LockScreenUI>  m_LockScreenUI;
-    EventEaterUI          *m_EventEaterUI;
     MApplication          *m_App;
 };
 

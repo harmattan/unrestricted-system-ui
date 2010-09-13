@@ -5,7 +5,6 @@ TARGET = ut_lockscreenui
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR
 
 SOURCES += ut_lockscreenui.cpp \
-    ../ft_lockscreenui/xchecker.cpp \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/unlockwidgets.cpp \
     $$SRCDIR/lockscreenui.cpp  \
@@ -13,10 +12,10 @@ SOURCES += ut_lockscreenui.cpp \
     $$SRCDIR/unlocknotifications.cpp
 
 HEADERS += ut_lockscreenui.h \
-    ../ft_lockscreenui/xchecker.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreenwindow.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/unlockmissedevents.h \
     $$STUBSDIR/unlockmissedevents_stub.h \

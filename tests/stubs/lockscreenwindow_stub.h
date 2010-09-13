@@ -19,7 +19,7 @@
 #ifndef LOCKSCREENWINDOW_STUB
 #define LOCKSCREENWINDOW_STUB
 
-#include "lockscreenui.h"
+#include "lockscreenwindow.h"
 #include <stubbase.h>
 
 
