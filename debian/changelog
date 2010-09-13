@@ -2,7 +2,6 @@ system-ui (0.16.14~1) harmattan; urgency=low
 
   * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
   * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
-  * Fixes: NB#188318 - Low-power notification always shown on usb-connection
   * Fixes: BMC#6114 - Lock screen does not rotate with an animation
   * Fixes: NB#189498 -  inappropriate shut down sequence with N applications
 
