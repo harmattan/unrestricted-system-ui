@@ -79,9 +79,17 @@ public:
      * Sets the parameters list for this notification group.
      *
      * \param parameters parameters for this notification group
+     * \sa updateParameters
      */
     void setParameters(const NotificationParameters &parameters);
 
+    /*!
+     * Updates the parameters of this notification group. The existing parameters in the
+     * notification group remain as they are. Only new values from the argument are appended/updated.
+     * \param parameters the parameters that will be updated
+     * \sa setParameters
+     */
+    void updateParameters(const NotificationParameters &parameters);
 
     friend QDataStream &operator<<(QDataStream &, const NotificationGroup &);
     friend QDataStream &operator>>(QDataStream &, NotificationGroup &);

@@ -60,6 +60,11 @@ void NotificationGroup::setParameters(const NotificationParameters &parameters)
     parameters_ = parameters;
 }
 
+void NotificationGroup::updateParameters(const NotificationParameters &parameters)
+{
+    parameters_.update(parameters);
+}
+
 
 QDataStream &operator<<(QDataStream &datastream, const NotificationGroup &notificationGroup)
 {

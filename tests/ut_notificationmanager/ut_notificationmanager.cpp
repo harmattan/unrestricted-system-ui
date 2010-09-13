@@ -506,8 +506,9 @@ void Ut_NotificationManager::testUpdateGroup()
     QCOMPARE(updateGroupSpy.count(), 1);
     QList<QVariant> arguments = updateGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
-    NotificationParameters outParameters2 = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters2.value("body").toString(), QString("body2"));
+    NotificationParameters outParameters = arguments.at(1).value<NotificationParameters>();
+    QCOMPARE(outParameters.value("body").toString(), QString("body2"));
+    QCOMPARE(outParameters.value("imageId").toString(), QString("icon1"));
 }
 
 void Ut_NotificationManager::testUpdateNonexistingGroup()

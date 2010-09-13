@@ -60,6 +60,37 @@ void Ut_NotificationGroup::cleanup()
 {
 }
 
+void Ut_NotificationGroup::testWhenUpdatingNotificationParametersToNotificationGroupThenTheParametersGetUpdated()
+{
+    NotificationParameters parameters;
+    parameters.add("parameter", "initialParameterValue");
+    NotificationGroup notificationGroup(0, 0, parameters);
+
+    QCOMPARE(notificationGroup.parameters().value("parameter").toString(), QString("initialParameterValue"));
+
+    NotificationParameters updateParameters;
+    updateParameters.add("parameter", "updatedParameterValue");
+    notificationGroup.updateParameters(updateParameters);
+
+    QCOMPARE(notificationGroup.parameters().value("parameter").toString(), QString("updatedParameterValue"));
+}
+
+void Ut_NotificationGroup::testWhenUpdatingNotificationParametersToNotificationGroupThenTheOldParametersRemain()
+{
+    NotificationParameters parameters;
+    parameters.add("initialParameter", "initialParameterValue");
+    NotificationGroup notificationGroup(0, 0, parameters);
+
+    QCOMPARE(notificationGroup.parameters().value("initialParameter").toString(), QString("initialParameterValue"));
+
+    NotificationParameters updateParameters;
+    updateParameters.add("updateParameter", "updateParameterValue");
+    notificationGroup.updateParameters(updateParameters);
+
+    QCOMPARE(notificationGroup.parameters().value("initialParameter").toString(), QString("initialParameterValue"));
+    QCOMPARE(notificationGroup.parameters().value("updateParameter").toString(), QString("updateParameterValue"));
+}
+
 void Ut_NotificationGroup::testSerializationAndDeserialization()
 {
     NotificationParameters parameters0;

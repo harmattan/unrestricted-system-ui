@@ -392,11 +392,11 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
     QHash<uint, NotificationGroup>::iterator gi = groups.find(groupId);
 
     if (gi != groups.end()) {
-        (*gi).setParameters(parameters);
+        gi->updateParameters(parameters);
 
         saveStateData();
 
-        emit groupUpdated(groupId, parameters);
+        emit groupUpdated(groupId, gi->parameters());
 
         return true;
     } else {
