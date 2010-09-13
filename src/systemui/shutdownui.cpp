@@ -283,7 +283,7 @@ ShutdownUI::showEvent (
     Atom        utf8StringAtom;
     Atom        stackingLayerAtom;
     const char *windowName = "ShutdownUI";
-    long        layer = 1;
+    long        layer = 6;
 
     display = QX11Info::display ();
     if (!display) {

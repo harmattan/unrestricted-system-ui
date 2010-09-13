@@ -5,6 +5,7 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: NB#188318 - Low-power notification always shown on usb-connection
   * Fixes: BMC#6114 - Lock screen does not rotate with an animation
   * Fixes: NB#191228 - Hardware volume bar can not be seen when adjusting volume.
+  * Fixes: #NB186255 -  no shut down sequence when i poweroff from SUW
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 10 Sep 2010 15:04:20 +0200
 
