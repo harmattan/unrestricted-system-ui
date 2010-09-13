@@ -20,9 +20,8 @@
 #include <MRemoteAction>
 #include "ut_widgetnotificationsink.h"
 #include "widgetnotificationsink.h"
-#include "../stubs/testnotificationparameters.h"
+#include "testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
-#include <QImageReader>
 #include <MApplication>
 
 // List of event type files
@@ -152,53 +151,9 @@ static const int ICON_SMALL_SIZE = 40;
 static const int ICON_BIG_SIZE = 100;
 static const int ICON_TOO_BIG_SIZE = 101;
 
-// QImageReader stubs
-static bool imageReaderCanRead = false;
-
-QSize QImageReader::size() const
-{
-    return Ut_WidgetNotificationSink::testImage->size();
-}
-
-bool QImageReader::canRead() const
-{
-    return imageReaderCanRead;
-}
-
-void QImageReader::setScaledSize(const QSize &size)
-{
-    *Ut_WidgetNotificationSink::testImage = Ut_WidgetNotificationSink::testImage->scaled(size);
-}
-
-QImage QImageReader::read()
-{
-    return *Ut_WidgetNotificationSink::testImage;
-}
-
-// Test images as base64 strings
-// This is a black image size of 88x88
-static const QString imageStrBase64 = QString("iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAAAAABU/m/oAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAL"
-                                      "EwAACxMBAJqcGAAAAAd0SU1FB9oBEgogIWx7kmcAAAAIdEVYdENvbW1lbnQA9syWvwAAAB5JREFU"
-                                      "WMPtwTEBAAAAwqD1T20KP6AAAAAAAAAA4GcemAABAQpkmQAAAABJRU5ErkJggg==");
-
-// This is a broken black image size of 88x88
-static const QString badImageStrBase64 = QString("iiVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAAAAABU/m/oAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAL"
-        "EwAACxMBAJqcGAAAAAd0SU1FB9oBEgogIWx7kmcAAAAIdEVYdENvbW1lbnQA9syWvwAAAB5JREFU"
-        "WMPtwTEBAAAAwqD1T20KP6AAAAAAAAAA4GcemAABAQpkmQAAAABJRU5ErkJggg==");
-
-void initImage(const QString &imageStr, int iconWidth, int iconHeight)
-{
-    QByteArray imageBA = QByteArray::fromBase64(imageStr.toUtf8());
-    if (!Ut_WidgetNotificationSink::testImage->loadFromData(imageBA)) {
-        qWarning() << "Error creating image!";
-    }
-    *Ut_WidgetNotificationSink::testImage = Ut_WidgetNotificationSink::testImage->scaled(QSize(iconWidth, iconHeight));
-}
-
 QList<QString> Ut_WidgetNotificationSink::contents;
 QHash<const QGraphicsWidget *, QList<QAction *> > Ut_WidgetNotificationSink::actions;
 int Ut_WidgetNotificationSink::actionTriggeredCount;
-QImage *Ut_WidgetNotificationSink::testImage = NULL;
 
 void Ut_WidgetNotificationSink::initTestCase()
 {
@@ -206,12 +161,10 @@ void Ut_WidgetNotificationSink::initTestCase()
     static int argc = 1;
     static char *app_name = (char *)"./ut_widgetnotificationsink";
     app = new MApplication(argc, &app_name);
-    testImage = new QImage();
 }
 
 void Ut_WidgetNotificationSink::cleanupTestCase()
 {
-    delete testImage;
     // Destroy MApplication
     delete app;
 }
@@ -228,8 +181,6 @@ void Ut_WidgetNotificationSink::init()
 
 void Ut_WidgetNotificationSink::cleanup()
 {
-    imageReaderCanRead = false;
-    *testImage = QImage();
     delete m_subject;
     eventTypeFilesList.clear();
     qObjectUserRemovableProperty = false;
