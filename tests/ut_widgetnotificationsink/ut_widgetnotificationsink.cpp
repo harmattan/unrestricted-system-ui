@@ -22,19 +22,42 @@
 #include "widgetnotificationsink.h"
 #include "../stubs/testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
-#include "notificationmanager_stub.h"
-#include "eventtypestore_stub.h"
 #include <QImageReader>
 #include <MApplication>
-#include "sysuid_stub.h"
-
-// xlib.h defines Status, undef it so we can use QSettings::Status
-#ifdef Status
-#undef Status
-#endif
 
 // List of event type files
 QStringList eventTypeFilesList;
+
+bool qObjectUserRemovableProperty = false;
+uint qObjectNotificationIdProperty = 0;
+uint qObjectGroupIdProperty = 0;
+bool QObject::setProperty(const char *name, const QVariant &value)
+{
+    if(name == WidgetNotificationSink::USER_REMOVABLE_PROPERTY) {
+        qObjectUserRemovableProperty = value.toBool();
+    } else if(name  == WidgetNotificationSink::NOTIFICATION_ID_PROPERTY) {
+        qObjectNotificationIdProperty = value.toUInt();
+    } else if(name == WidgetNotificationSink::GROUP_ID_PROPERTY) {
+        qObjectGroupIdProperty = value.toUInt();
+    }
+    return true;
+}
+
+bool testingGroup = false;
+QVariant QObject::property(const char *name) const
+{
+    if(name == WidgetNotificationSink::USER_REMOVABLE_PROPERTY) {
+        return qObjectUserRemovableProperty;
+    } else if(name  == WidgetNotificationSink::NOTIFICATION_ID_PROPERTY) {
+        if(testingGroup) {
+            return "dummy";
+        } else {
+            return qObjectNotificationIdProperty;
+        }
+    }else if(name == WidgetNotificationSink::GROUP_ID_PROPERTY) {
+        return qObjectGroupIdProperty;
+    }
+}
 
 class TestWidgetNotificationSink : public WidgetNotificationSink
 {
@@ -201,7 +224,6 @@ void Ut_WidgetNotificationSink::init()
     contents.clear();
     actions.clear();
     actionTriggeredCount = 0;
-    gEventTypeStoreStub->stubReset();
 }
 
 void Ut_WidgetNotificationSink::cleanup()
@@ -210,46 +232,10 @@ void Ut_WidgetNotificationSink::cleanup()
     *testImage = QImage();
     delete m_subject;
     eventTypeFilesList.clear();
-}
-
-void Ut_WidgetNotificationSink::testWithEventTypeAndIconId()
-{
-    QSettings *settings = new QSettings;
-    settings->setValue(NotificationWidgetParameterFactory::iconIdKey(), "Icon-messages");
-    gEventTypeStoreStub->stubSetReturnValue("settingsForEventType", settings);
-
-    TestNotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
-    parameters.add(NotificationWidgetParameterFactory::createIconIdParameter("icon0"));
-    QCOMPARE(m_subject->determineIconId(parameters), QString("icon0"));
-}
-
-void Ut_WidgetNotificationSink::testWithEventTypeWithoutIconId()
-{
-    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "Icon-messages");
-    EventTypeStore eventTypeStore("", 0);
-    gNotificationManagerStub->stubSetReturnValue<const EventTypeStore&>("eventTypeStore", eventTypeStore);
-
-    TestNotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "message-received");
-    parameters.add(NotificationWidgetParameterFactory::createIconIdParameter(""));
-    QCOMPARE(m_subject->determineIconId(parameters), QString("Icon-messages"));
-}
-
-void Ut_WidgetNotificationSink::testWithoutEventTypeOrIconId()
-{
-    TestNotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "");
-    parameters.add(NotificationWidgetParameterFactory::createIconIdParameter(""));
-    QCOMPARE(m_subject->determineIconId(parameters), QString("default"));
-}
-
-void Ut_WidgetNotificationSink::testWithoutEventTypeWithIconId()
-{
-    TestNotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "");
-    parameters.add(NotificationWidgetParameterFactory::createIconIdParameter("icon0"));
-    QCOMPARE(m_subject->determineIconId(parameters), QString("icon0"));
+    qObjectUserRemovableProperty = false;
+    qObjectNotificationIdProperty = 0;
+    qObjectGroupIdProperty = 0;
+    testingGroup = false;
 }
 
 void Ut_WidgetNotificationSink::testUpdateActions()
@@ -289,6 +275,7 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QApplication::processEvents();
     TestNotificationParameters parameters;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
+    parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(true));
     MBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
 
     // Listen to triggered signals of info banner action
@@ -314,6 +301,7 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
 
     // Create a group info banner
     uint groupID = 1;
+    testingGroup = true;
     TestNotificationParameters groupParameters;
     groupParameters.add(NotificationWidgetParameterFactory::createActionParameter("content1 1 1 1"));
     infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, groupID, groupParameters);
@@ -377,17 +365,6 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableInPara
     testInfoBannerClickingWhenNotUserRemovable(parameters);
 }
 
-void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovableByEventType()
-{
-    gEventTypeStoreStub->stubSetReturnValue<bool>("contains", true);
-    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "false");
-
-    TestNotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "voicemail");
-
-    testInfoBannerClickingWhenNotUserRemovable(parameters);
-}
-
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
@@ -438,6 +415,19 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content1 2 3 4"));
     delete infoBanner;
+}
+
+void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreated()
+{
+    TestNotificationParameters parameters;
+
+    parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(true));
+    m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QCOMPARE(qObjectUserRemovableProperty, true);
+
+    parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(false));
+    m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QCOMPARE(qObjectUserRemovableProperty, false);
 }
 
 QTEST_APPLESS_MAIN(Ut_WidgetNotificationSink)

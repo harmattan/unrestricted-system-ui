@@ -26,9 +26,6 @@ HEADERS += \
    $$LIBNOTIFICATIONSRCDIR/notification.h \
    $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
-   $$NOTIFICATIONSRCDIR/notificationmanager.h \
-   $$NOTIFICATIONSRCDIR/eventtypestore.h \
-   $$SRCDIR/sysuid.h
+   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h
 
 include(../common_bot.pri)

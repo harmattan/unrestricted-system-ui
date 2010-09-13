@@ -34,7 +34,6 @@ public:
     virtual MBanner *createInfoBanner(const Notification &notification);
     virtual MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
     virtual void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
-    virtual QString determineIconIdFromEventType(const QString &eventType);
     virtual void infoBannerClicked();
 };
 
@@ -87,14 +86,6 @@ void WidgetNotificationSinkStub::updateActions(MBanner *infoBanner, const Notifi
     stubMethodEntered("updateActions", params);
 }
 
-QString WidgetNotificationSinkStub::determineIconIdFromEventType(const QString &eventType)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<const QString & >(eventType));
-    stubMethodEntered("determineIconIdFromEventType", params);
-    return stubReturnValue<QString>("determineIconIdFromEventType");
-}
-
 void WidgetNotificationSinkStub::infoBannerClicked()
 {
     stubMethodEntered("infoBannerClicked");
@@ -130,11 +121,6 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
 void WidgetNotificationSink::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     gWidgetNotificationSinkStub->updateActions(infoBanner, parameters);
-}
-
-QString WidgetNotificationSink::determineIconIdFromEventType(const QString &eventType)
-{
-    return gWidgetNotificationSinkStub->determineIconIdFromEventType(eventType);
 }
 
 void WidgetNotificationSink::infoBannerClicked()

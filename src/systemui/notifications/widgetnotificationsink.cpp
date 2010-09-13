@@ -20,64 +20,28 @@
 #include "widgetnotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
-#include "notificationmanager.h"
 #include <MRemoteAction>
-#include "sysuid.h"
-#include "eventtypestore.h"
-#include <QSettings>
-#include <QImageReader>
-#include <QFileInfo>
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
 
-QString WidgetNotificationSink::determineIconIdFromEventType(const QString &eventType)
-{
-    QString iconID;
-    if (!eventType.isEmpty()) {
-        NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
-        const EventTypeStore &store = notificationManager.eventTypeStore();
-        iconID = store.value(eventType, NotificationWidgetParameterFactory::iconIdKey());
-    }
-    return iconID;
-}
-
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
     QString iconID = parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
     if (iconID.isEmpty()) {
-        QString eventType = parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
-        iconID = determineIconIdFromEventType(eventType);
-        if (iconID.isEmpty()) {
-            iconID = "default";
-        }
+        iconID = "default";
     }
     return iconID;
-}
-
-bool WidgetNotificationSink::determineUserRemovabilityFromEventType(const QString &eventType)
-{
-    // Banners are user removable by default
-    bool userRemovable = true;
-    if (!eventType.isEmpty()) {
-        NotificationManager &notificationManager = Sysuid::sysuid()->notificationManager();
-        const EventTypeStore &store = notificationManager.eventTypeStore();
-        if (store.contains(eventType, NotificationWidgetParameterFactory::userRemovableKey())) {
-            userRemovable = QVariant(store.value(eventType, NotificationWidgetParameterFactory::userRemovableKey())).toBool();
-        }
-    }
-    return userRemovable;
 }
 
 bool WidgetNotificationSink::determineUserRemovability(const NotificationParameters &parameters)
 {
     QVariant value = parameters.value(NotificationWidgetParameterFactory::userRemovableKey());
-    if (value.isValid() && value.canConvert<bool>()) {
+    if(value.isValid()) {
         return value.toBool();
-    } else {
-        return determineUserRemovabilityFromEventType(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString());
     }
+    return true;
 }
 
 MBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)

@@ -112,22 +112,6 @@ protected:
      */
     QString infoBannerSubtitleText(const NotificationParameters &parameters);
 
-private:
-    /*!
-     * Determines icon id of a notification based on the given event type.
-     * \param eventType Notification event type.
-     * \return Logical icon id as a string or an empty string if icon has not been defined for the
-     *         given event type.
-     */
-    static QString determineIconIdFromEventType(const QString &eventType);
-
-    /*!
-     * Determines user removability of a notification based on the given event type.
-     * \param eventType Notification event type.
-     * \return \c true if the notification should be user removable, \c false otherwise
-     */
-    static bool determineUserRemovabilityFromEventType(const QString &eventType);
-
 private slots:
     /*!
      * A slot for catching info banner clicks

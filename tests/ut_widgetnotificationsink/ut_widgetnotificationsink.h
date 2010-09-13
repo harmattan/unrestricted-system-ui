@@ -54,18 +54,14 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
-    void testWithoutEventTypeOrIconId();
-    void testWithEventTypeWithoutIconId();
-    void testWithEventTypeAndIconId();
-    void testWithoutEventTypeWithIconId();
     void testUpdateActions();
     void testInfoBannerClicking();
     void testInfoBannerClickingWhenNotUserRemovableInParameters();
-    void testInfoBannerClickingWhenNotUserRemovableByEventType();
     void testInfoBannerCreationWithRemoteAction();
     void testInfoBannerCreationWithoutRemoteAction();
     void testInfoBannerCreationWithNotificationParameters();
     void testInfoBannerCreationWithSystemEvent();
+    void testUserRemovablePropertyIsSetWhenBannerIsCreated();
 
 private:
     // Helper for the "test clicking when not user removable" cases
