@@ -28,7 +28,7 @@
 class MApplication;
 class MApplicationWindow;
 class LockScreenUI;
-class EventEaterUI;
+class EventEater;
 
 class Ft_LockScreenUI : public QObject
 {
@@ -56,7 +56,7 @@ private:
     XChecker             m_XChecker;
     MApplicationWindow  *m_MainWindow;
     LockScreenUI        *m_LockScreenUI;
-    EventEaterUI        *m_EventEaterUI;
+    EventEater          *m_EventEaterUI;
     MApplication        *m_App;
 };
 

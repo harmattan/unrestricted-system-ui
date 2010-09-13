@@ -12,6 +12,8 @@ SOURCES += ft_lockscreenui.cpp \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/unlockwidgets.cpp \
     $$SRCDIR/lockscreenui.cpp  \
+    $$SRCDIR/lockscreenwindow.cpp  \
+    $$SRCDIR/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/unlockmissedevents.cpp \
     $$SRCDIR/unlocknotifications.cpp
@@ -21,6 +23,8 @@ HEADERS += ft_lockscreenui.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/unlockwidgets.h \
     $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreenwindow.h  \
+    $$SRCDIR/eventeater.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/unlockmissedevents.h \
     $$SRCDIR/unlocknotifications.h

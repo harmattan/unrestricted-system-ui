@@ -21,6 +21,7 @@
 
 #include "ft_lockscreenui.h"
 #include "lockscreenui.h"
+#include "eventeater.h"
 #include "sysuid_stub.h"
 #include "unlockmissedevents.h"
 #include <MApplication>
@@ -434,7 +435,7 @@ void
 Ft_LockScreenUI::createEventEaterUI ()
 {
     if (!m_EventEaterUI)
-        m_EventEaterUI = new EventEaterUI ();
+        m_EventEaterUI = new EventEater ();
 }
 
 QTEST_APPLESS_MAIN(Ft_LockScreenUI)
