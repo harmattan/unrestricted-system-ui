@@ -35,6 +35,8 @@ HEADERS +=                              \
     sysuid.h                            \
     lockscreenbusinesslogic.h           \
     lockscreenui.h                      \
+    lockscreenwindow.h                  \
+    eventeater.h                        \
     shutdownui.h                        \
     shutdownbusinesslogic.h             \
     lockscreenbusinesslogicadaptor.h    \
@@ -55,6 +57,8 @@ SOURCES +=                              \
     sysuid.cpp                          \
     lockscreenbusinesslogic.cpp         \
     lockscreenui.cpp                    \
+    lockscreenwindow.cpp                \
+    eventeater.cpp                      \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \
     lockscreenbusinesslogicadaptor.cpp  \

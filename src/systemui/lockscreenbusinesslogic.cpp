@@ -21,6 +21,7 @@
 #include <QX11Info>
 
 #include "lockscreenui.h"
+#include "eventeater.h"
 #include "lockscreenbusinesslogic.h"
 
 #undef DEBUG
@@ -34,7 +35,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
         QObject* parent) :
     QObject (parent),
     lockUI (new LockScreenUI),
-    eaterUI (new EventEaterUI)
+    eaterUI (new EventEater)
 {
     bool connectSuccess;
     SYS_DEBUG ("");
@@ -138,7 +139,7 @@ LockScreenBusinessLogic::displayStateChanged (
 }
 #endif
 
-void 
+void
 LockScreenBusinessLogic::hideEventEater()
 {
     SYS_DEBUG ("");
@@ -214,7 +215,7 @@ LockScreenBusinessLogic::mayStopTimer ()
     timer.stop ();
 }
 
-bool 
+bool
 LockScreenBusinessLogic::displayIsOn ()
 {
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
