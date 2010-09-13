@@ -168,11 +168,7 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
 {
     if (animationFrame < images.size() && images[animationFrame] == NULL) {
         // Load the image if it has not been loaded yet
-        images[animationFrame] =
-            MTheme::pixmapCopy(imageList.at(animationFrame),
-                                            style()->useIconSize() ?
-                                            QSize(0,0) :
-                                            size().toSize());
+        images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame));
     }
 }
 
