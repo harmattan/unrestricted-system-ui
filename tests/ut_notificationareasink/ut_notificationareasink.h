@@ -23,11 +23,13 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <MBanner>
-#include "notificationareasink.h"
+
+#include "notification.h"
 
 class MApplication;
 class NotificationParameters;
+class NotificationAreaSink;
+class MBanner;
 
 class Ut_NotificationAreaSink : public QObject
 {

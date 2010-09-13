@@ -18,18 +18,13 @@
 ****************************************************************************/
 
 #include "ut_notificationareasink.h"
-#include "notificationwidgetparameterfactory.h"
+#include "notificationareasink.h"
 
 #include <QtTest/QtTest>
-#include <MBanner>
 #include <MRemoteAction>
 #include <MApplication>
-#include "../stubs/testnotificationparameters.h"
-#include "notificationmanager_stub.h"
-#include "eventtypestore_stub.h"
-#include <QSettings>
-#include "applicationcontext.h"
-#include "sysuid_stub.h"
+#include "testnotificationparameters.h"
+#include "notification.h"
 
 static QSettings *settings;
 // QCoreApplication stubs to avoid crashing in processEvents()
