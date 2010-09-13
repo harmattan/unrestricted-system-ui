@@ -191,20 +191,20 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     QApplication::processEvents();
     TestNotificationParameters parameters;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000)));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
-    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
+    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner.data()].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
     QSignalSpy notificationRemovalRequested(m_subject, SIGNAL(notificationRemovalRequested(uint)));
 
     // Click the infoBanner
-    connect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    connect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     emit click();
-    disconnect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    disconnect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     QApplication::processEvents();
 
     // Verify that action was triggered
@@ -218,20 +218,20 @@ void Ut_WidgetNotificationSink::testInfoBannerClicking()
     uint groupID = 1;
     TestNotificationParameters groupParameters;
     groupParameters.add(NotificationWidgetParameterFactory::createActionParameter("content1 1 1 1"));
-    infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, groupID, groupParameters);
+    infoBanner.reset(m_subject->createInfoBanner(Notification::ApplicationEvent, groupID, groupParameters));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 2);
-    action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
+    action = dynamic_cast<MRemoteAction *>(actions[infoBanner.data()].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
     QSignalSpy notificationGroupClearingRequested(m_subject, SIGNAL(notificationGroupClearingRequested(uint)));
 
     // Click the infoBanner
-    connect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    connect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     emit click();
-    disconnect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    disconnect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     QApplication::processEvents();
 
     // Verify that action was triggered
@@ -248,20 +248,20 @@ void Ut_WidgetNotificationSink::testInfoBannerClickingWhenNotUserRemovable(TestN
     QApplication::processEvents();
     uint notificationID = 0;
     parameters.add(NotificationWidgetParameterFactory::createActionParameter("content0 0 0 0"));
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(notificationID, 0, 1, parameters, Notification::ApplicationEvent, 1000)));
 
     // Listen to triggered signals of info banner action
     QCOMPARE(actions.count(), 1);
-    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner].at(0));
+    MRemoteAction *action = dynamic_cast<MRemoteAction *>(actions[infoBanner.data()].at(0));
     QVERIFY(action != NULL);
 
     // Listen to notification removal requests of WidgetNotificationSink
     QSignalSpy notificationRemovalRequested(m_subject, SIGNAL(notificationRemovalRequested(uint)));
 
     // Click the infoBanner
-    connect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    connect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     emit click();
-    disconnect(this, SIGNAL(click()), infoBanner, SIGNAL(clicked()));
+    disconnect(this, SIGNAL(click()), infoBanner.data(), SIGNAL(clicked()));
     QApplication::processEvents();
 
     // Verify that action was triggered even though the info banner is not user removable
@@ -283,7 +283,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
 {
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
 
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
     QCOMPARE(infoBanner->title(), QString("title0"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle0"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon0"));
@@ -291,36 +291,33 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content0 0 0 0"));
-    delete infoBanner;
 }
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
     QCOMPARE(infoBanner->title(), QString("title1"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(infoBanner->actions().count(), 0);
-    delete infoBanner;
 }
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithSystemEvent()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020)));
     // Check that title is not set for system event
     QCOMPARE(infoBanner->title(), QString(""));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(infoBanner->actions().count(), 0);
-    delete infoBanner;
 }
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters()
 {
     TestNotificationParameters parameters("title3", "subtitle3", "buttonicon3", "content1 2 3 4");
-    MBanner *infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
     QCOMPARE(infoBanner->title(), QString("title3"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle3"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon3"));
@@ -328,7 +325,6 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content1 2 3 4"));
-    delete infoBanner;
 }
 
 void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreated()
@@ -336,11 +332,11 @@ void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreate
     TestNotificationParameters parameters;
 
     parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(true));
-    MBanner* infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
     QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), true);
 
     parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(false));
-    infoBanner = m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters);
+    infoBanner.reset(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
     QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), false);
 }
 
