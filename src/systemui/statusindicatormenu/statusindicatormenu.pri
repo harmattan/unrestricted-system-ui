@@ -21,8 +21,6 @@ MODEL_HEADERS += statusindicatormenu/notificationareamodel.h
 STYLE_HEADERS += statusindicatormenu/notificationareastyle.h \
                  statusindicatormenu/statusindicatormenuwindowstyle.h
 
-DEFINES += STATUSINDICATORMENU_PLUGIN_DIR=\'$$quote(\"$$STATUSINDICATORMENU_PLUGIN_DIR\")\'
-
 headers.path = /usr/include/system-ui
 headers.files = statusindicatormenu/mstatusindicatormenuplugininterface.h statusindicatormenu/MStatusIndicatorMenuPluginInterface \
                 statusindicatormenu/mstatusindicatormenuextensioninterface.h statusindicatormenu/MStatusIndicatorMenuExtensionInterface \

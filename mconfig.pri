@@ -10,7 +10,6 @@ DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
 
 # Directories
 unix {
-    STATUSINDICATORMENU_PLUGIN_DIR = /usr/lib/meegotouch/statusindicatormenuplugins
     SYSTEMUI_THEMES_DIR = /usr/share/themes/base/meegotouch/sysuid
 }
 mac {
