@@ -1244,6 +1244,8 @@ void Ut_NotificationManager::testDBusNotificationSinkConnections()
     QVERIFY(disconnect(manager, SIGNAL(notificationRemoved(uint)), manager->dBusSink, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(manager, SIGNAL(notificationRestored(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(manager, SIGNAL(notificationUpdated(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationRemovalRequested(uint)), manager, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationGroupClearingRequested(uint)), manager, SLOT(removeNotificationsInGroup(uint))));
 }
 
 QTEST_MAIN(Ut_NotificationManager)

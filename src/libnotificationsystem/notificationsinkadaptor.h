@@ -9,8 +9,8 @@
  * before re-generating it.
  */
 
-#ifndef NOTIFICATIONSINKADAPTOR_H_1284044908
-#define NOTIFICATIONSINKADAPTOR_H_1284044908
+#ifndef NOTIFICATIONSINKADAPTOR_H_1284454167
+#define NOTIFICATIONSINKADAPTOR_H_1284454167
 
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
@@ -47,8 +47,11 @@ class NotificationSinkAdaptor: public QDBusAbstractAdaptor
 "    <method name=\"removeGroup\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"groupId\"/>\n"
 "    </method>\n"
-"    <signal name=\"cancelNotification\">\n"
+"    <signal name=\"notificationRemovalRequested\">\n"
 "      <arg type=\"u\" name=\"notificationId\"/>\n"
+"    </signal>\n"
+"    <signal name=\"notificationGroupClearingRequested\">\n"
+"      <arg type=\"u\" name=\"groupId\"/>\n"
 "    </signal>\n"
 "  </interface>\n"
         "")
@@ -66,7 +69,8 @@ public Q_SLOTS: // METHODS
     void removeGroup(uint groupId);
     void removeNotification(uint notificationId);
 Q_SIGNALS: // SIGNALS
-    void cancelNotification(uint notificationId);
+    void notificationGroupClearingRequested(uint groupId);
+    void notificationRemovalRequested(uint notificationId);
 };
 
 #endif

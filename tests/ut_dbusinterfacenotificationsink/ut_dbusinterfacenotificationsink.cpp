@@ -85,6 +85,24 @@ QDBusPendingReply<> DBusInterfaceNotificationSinkProxy::removeGroup(uint /*group
     return QDBusPendingReply<>();
 }
 
+QList<QString> qDBusConnectionConnectService;
+QList<QString> qDBusConnectionConnectPath;
+QList<QString> qDBusConnectionConnectInterface;
+QList<QString> qDBusConnectionConnectName;
+QList<QObject *> qDBusConnectionConnectReceiver;
+QList<const char *> qDBusConnectionConnectSlot;
+bool QDBusConnection::connect(const QString &service, const QString &path, const QString &interface, const QString &name, QObject *receiver, const char *slot)
+{
+    qDBusConnectionConnectService.append(service);
+    qDBusConnectionConnectPath.append(path);
+    qDBusConnectionConnectInterface.append(interface);
+    qDBusConnectionConnectName.append(name);
+    qDBusConnectionConnectReceiver.append(receiver);
+    qDBusConnectionConnectSlot.append(slot);
+    return true;
+}
+
+
 void Ut_DBusInterfaceNotificationSink::initTestCase()
 {
 }
@@ -95,6 +113,13 @@ void Ut_DBusInterfaceNotificationSink::cleanupTestCase()
 
 void Ut_DBusInterfaceNotificationSink::init()
 {
+    qDBusConnectionConnectService.clear();
+    qDBusConnectionConnectPath.clear();
+    qDBusConnectionConnectInterface.clear();
+    qDBusConnectionConnectName.clear();
+    qDBusConnectionConnectReceiver.clear();
+    qDBusConnectionConnectSlot.clear();
+
     sink = new DBusInterfaceNotificationSink();
 
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
@@ -148,6 +173,25 @@ void Ut_DBusInterfaceNotificationSink::testProxyCalledWhenServiceRegistered()
     QCOMPARE(gRemoveNotificationProxies.at(0), gNewSinkProxies.at(0));
     QCOMPARE(gRemoveGroupProxies.count(), 1);
     QCOMPARE(gRemoveGroupProxies.at(0), gNewSinkProxies.at(0));
+}
+
+void Ut_DBusInterfaceNotificationSink::testSignalsConnectedWhenServiceRegistered()
+{
+    sink->registerSink("service1", "path");
+
+    QCOMPARE(qDBusConnectionConnectService.count(), 2);
+    QCOMPARE(qDBusConnectionConnectService.at(0), QString("service1"));
+    QCOMPARE(qDBusConnectionConnectPath.at(0), QString("path"));
+    QCOMPARE(qDBusConnectionConnectInterface.at(0), QString("com.meego.core.MNotificationSink"));
+    QCOMPARE(qDBusConnectionConnectName.at(0), QString("notificationRemovalRequested"));
+    QCOMPARE(qDBusConnectionConnectReceiver.at(0), sink);
+    QCOMPARE(qDBusConnectionConnectSlot.at(0), SIGNAL(notificationRemovalRequested(uint)));
+    QCOMPARE(qDBusConnectionConnectService.at(1), QString("service1"));
+    QCOMPARE(qDBusConnectionConnectPath.at(1), QString("path"));
+    QCOMPARE(qDBusConnectionConnectInterface.at(1), QString("com.meego.core.MNotificationSink"));
+    QCOMPARE(qDBusConnectionConnectName.at(1), QString("notificationGroupClearingRequested"));
+    QCOMPARE(qDBusConnectionConnectReceiver.at(1), sink);
+    QCOMPARE(qDBusConnectionConnectSlot.at(1), SIGNAL(notificationGroupClearingRequested(uint)));
 }
 
 void Ut_DBusInterfaceNotificationSink::testRegisteringSameServiceAndPathReplacesPrevious()

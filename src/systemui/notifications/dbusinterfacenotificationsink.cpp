@@ -34,6 +34,8 @@ void DBusInterfaceNotificationSink::registerSink(const QString &service, const Q
 {
     proxies.insert(QPair<QString, QString>(service, path),
                    QSharedPointer<DBusInterfaceNotificationSinkProxy>(new DBusInterfaceNotificationSinkProxy(service, path, QDBusConnection::sessionBus())));
+    QDBusConnection::sessionBus().connect(service, path, DBusInterfaceNotificationSinkProxy::staticInterfaceName(), "notificationRemovalRequested", this, SIGNAL(notificationRemovalRequested(uint)));
+    QDBusConnection::sessionBus().connect(service, path, DBusInterfaceNotificationSinkProxy::staticInterfaceName(), "notificationGroupClearingRequested", this, SIGNAL(notificationGroupClearingRequested(uint)));
 }
 
 void DBusInterfaceNotificationSink::unregisterSink(const QString &service, const QString &path)

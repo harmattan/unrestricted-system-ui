@@ -16,8 +16,11 @@
     <method name="removeGroup">
       <arg name="groupId" type="u" direction="in"/>
     </method>
-    <signal name="cancelNotification">
+    <signal name="notificationRemovalRequested">
       <arg name="notificationId" type="u"/>
+    </signal>
+    <signal name="notificationGroupClearingRequested">
+      <arg name="groupId" type="u"/>
     </signal>
   </interface>
 </node>

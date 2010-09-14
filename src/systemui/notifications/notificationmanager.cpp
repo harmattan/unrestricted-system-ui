@@ -64,6 +64,8 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     connect(this, SIGNAL(notificationRemoved(uint)), dBusSink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(notificationRestored(const Notification &)), dBusSink, SLOT(addNotification(const Notification &)));
     connect(this, SIGNAL(notificationUpdated(const Notification &)), dBusSink, SLOT(addNotification(const Notification &)));
+    connect(dBusSink, SIGNAL(notificationRemovalRequested(uint)), this, SLOT(removeNotification(uint)));
+    connect(dBusSink, SIGNAL(notificationGroupClearingRequested(uint)), this, SLOT(removeNotificationsInGroup(uint)));
 
     waitQueueTimer.setSingleShot(true);
     connect(&waitQueueTimer, SIGNAL(timeout()), this, SLOT(relayNextNotification()));

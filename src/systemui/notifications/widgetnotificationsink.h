@@ -43,20 +43,6 @@ public:
     //! MBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 
-signals:
-    /*!
-     * Requests removal of a notification from the notification system.
-     * This can be connected to the associated NotificationManagerInterface::removeNotification().
-     * \param notificationId Id of the notification to be removed from the system.
-     */
-    void notificationRemovalRequested(uint notificationId);
-
-    /*!
-     * Requests removal of notifications in a group.
-     * \param groupId Id of the group to be cleared.
-     */
-    void notificationGroupClearingRequested(uint groupId);
-
 protected:
     /*!
      * Determines icon id of a notification based on the given notification parameters.

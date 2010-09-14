@@ -61,6 +61,7 @@ private slots:
     // Test cases
     void testNothingCalledWhenNothingRegistered();
     void testProxyCalledWhenServiceRegistered();
+    void testSignalsConnectedWhenServiceRegistered();
     void testRegisteringSameServiceAndPathReplacesPrevious();
     void testRegisteringTwoDifferentServicesCallsBoth();
     void testUnregistering();

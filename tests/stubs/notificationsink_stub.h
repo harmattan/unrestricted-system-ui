@@ -36,8 +36,6 @@ public:
     void removeNotification(uint notificationId);
     virtual void addGroup(uint groupId, const NotificationParameters &parameters);
     virtual void removeGroup(uint groupId);
-    virtual void cancelNotification(uint notificationId);
-    bool appEventsEnabled ;
 };
 
 // 2. IMPLEMENT STUB
@@ -79,13 +77,6 @@ void NotificationSinkStub::removeGroup(uint groupId)
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(groupId));
     stubMethodEntered("removeGroup", params);
-}
-
-void NotificationSinkStub::cancelNotification(uint notificationId)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<uint >(notificationId));
-    stubMethodEntered("cancelNotification", params);
 }
 
 

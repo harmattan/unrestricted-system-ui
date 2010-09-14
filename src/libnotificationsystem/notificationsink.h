@@ -82,9 +82,17 @@ public slots:
 
 signals:
     /*!
-     * A signal for notifying that the notification has been canceled by the user.
+     * Requests removal of a notification from the notification system.
+     * This can be connected to the associated NotificationManagerInterface::removeNotification().
+     * \param notificationId Id of the notification to be removed from the system.
      */
-    void cancelNotification(uint notificationId);
+    void notificationRemovalRequested(uint notificationId);
+
+    /*!
+     * Requests removal of notifications in a group.
+     * \param groupId Id of the group to be cleared.
+     */
+    void notificationGroupClearingRequested(uint groupId);
 
 private:
     bool appEventsEnabled;
