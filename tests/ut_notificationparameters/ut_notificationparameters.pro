@@ -25,6 +25,7 @@ HEADERS += \
 
 # service classes
 HEADERS += \
+    ../stubs/qdbusargument_fake.h
 
 
 include(../common_bot.pri)

@@ -23,17 +23,15 @@
 #include "notificationparameters.h"
 #include "notificationparameter.h"
 #include "genericnotificationparameterfactory.h"
+#include "qdbusargument_fake.h"
 
-class TestSink
-{
-public:
-    static NotificationParameter createTest1Parameter(int value) {
-        return NotificationParameter("test1", QVariant(value));
-    }
-    static NotificationParameter createTest2Parameter(const QString &value) {
-        return NotificationParameter("test2", QVariant(value));
-    }
-};
+static NotificationParameter createParameter(QString key, int value) {
+    return NotificationParameter(key, QVariant(value));
+}
+
+static NotificationParameter createParameter(QString key, const QString &value) {
+    return NotificationParameter(key, QVariant(value));
+}
 
 void Ut_NotificationParameters::initTestCase()
 {
@@ -45,66 +43,67 @@ void Ut_NotificationParameters::cleanupTestCase()
 
 void Ut_NotificationParameters::init()
 {
-    parameters = new NotificationParameters();
-    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
 }
 
 void Ut_NotificationParameters::cleanup()
 {
-    delete parameters;
 }
 
 void Ut_NotificationParameters::testKeyValueAPI()
 {
+    NotificationParameters params;
+
+    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
+
     QVariant v1(5);
     QVariant v2("Test");
-    parameters->add("test1", v1);
-    parameters->add("test2", v2);
-    QCOMPARE(parameters->value("test1"), v1);
-    QCOMPARE(parameters->value("test2"), v2);
-    QCOMPARE(parameters->value("test3").isNull(), true);
+    params.add("test1", v1);
+    params.add("test2", v2);
+    QCOMPARE(params.value("test1"), v1);
+    QCOMPARE(params.value("test2"), v2);
+    QCOMPARE(params.value("test3").isNull(), true);
 }
 
 void Ut_NotificationParameters::testParameterAPI()
 {
-    NotificationParameter p1 = TestSink::createTest1Parameter(5);
-    NotificationParameter p2 = TestSink::createTest2Parameter("Test");
-    parameters->add(p1);
-    parameters->add(p2);
-    QCOMPARE(parameters->value("test1"), QVariant(5));
-    QCOMPARE(parameters->value("test2"), QVariant("Test"));
-    QCOMPARE(parameters->value("test3").isNull(), true);
+    NotificationParameters params;
+
+    params.add(createParameter("test1", 5));
+    params.add(createParameter("test2", "Test"));
+
+    QCOMPARE(params.value("test1"), QVariant(5));
+    QCOMPARE(params.value("test2"), QVariant("Test"));
+    QCOMPARE(params.value("test3").isNull(), true);
 }
 
 void Ut_NotificationParameters::testWhenUpdatingParametersThenTheParametersGetUpdated()
 {
+    NotificationParameters params;
     NotificationParameters updated;
     updated.add(GenericNotificationParameterFactory::unseenKey(), "false");
-    parameters->update(updated);
+    params.update(updated);
 
-    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), false);
+    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), false);
 }
 
 void Ut_NotificationParameters::testWhenUpdatingParametersThenTheExistingParametersRemain()
 {
+    NotificationParameters params;
     NotificationParameters updated;
     updated.add("updatedKey", "updatedValue");
-    parameters->update(updated);
+    params.update(updated);
 
-    QCOMPARE(parameters->value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
-    QCOMPARE(parameters->value("updatedKey").toString(), QString("updatedValue"));
+    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
+    QCOMPARE(params.value("updatedKey").toString(), QString("updatedValue"));
 }
 
 void Ut_NotificationParameters::testSerialization()
 {
-    NotificationParameter p1 = TestSink::createTest1Parameter(5);
-    NotificationParameter p2 = TestSink::createTest2Parameter("Test");
-
     NotificationParameters params1;
     NotificationParameters params2;
 
-    params1.add(p1);
-    params1.add(p2);
+    params1.add(createParameter("test1", 5));
+    params1.add(createParameter("test2", "Test"));
 
     // Transfer the parameters from params1 to params2
     // through a byte array
@@ -114,6 +113,27 @@ void Ut_NotificationParameters::testSerialization()
     stream.device()->seek(0);
     stream >> params2;
 
+    QCOMPARE(params2.count(), params1.count());
+    QCOMPARE(params2.value("test1"), QVariant(5));
+    QCOMPARE(params2.value("test2"), QVariant("Test"));
+    QCOMPARE(params2.value("test3").isNull(), true);
+}
+
+void Ut_NotificationParameters::testDBusSerialization()
+{
+    NotificationParameters params1;
+    NotificationParameters params2;
+
+    params1.add(createParameter("test1", 5));
+    params1.add(createParameter("test2", "Test"));
+
+    // Transfer the parameters from params1 to params2
+    // serializing to a QDBusArgument
+    QDBusArgument arg;
+    arg << params1;
+    arg >> params2;
+
+    QCOMPARE(params2.count(), params1.count());
     QCOMPARE(params2.value("test1"), QVariant(5));
     QCOMPARE(params2.value("test2"), QVariant("Test"));
     QCOMPARE(params2.value("test3").isNull(), true);

@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 
+#include <QDBusArgument>
+
 #include "notificationparameters.h"
 #include "notificationparameter.h"
 #include "genericnotificationparameterfactory.h"
@@ -52,6 +54,11 @@ QVariant NotificationParameters::value(const QString &parameter) const
     return parameterValues.value(parameter);
 }
 
+int NotificationParameters::count() const
+{
+    return parameterValues.count();
+}
+
 QDataStream &operator<<(QDataStream &datastream, const NotificationParameters &parameters)
 {
     return datastream << parameters.parameterValues;
@@ -60,4 +67,38 @@ QDataStream &operator<<(QDataStream &datastream, const NotificationParameters &p
 QDataStream &operator>>(QDataStream &datastream, NotificationParameters &parameters)
 {
     return datastream >> parameters.parameterValues;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const NotificationParameters &parameters)
+{
+    QHashIterator<QString, QVariant> i(parameters.parameterValues);
+    argument.beginMap(QMetaType::QString, qMetaTypeId<QDBusVariant>());
+    while (i.hasNext()) {
+        i.next();
+
+        argument.beginMapEntry();
+        argument << i.key();
+        argument << QDBusVariant(i.value());
+        argument.endMapEntry();
+    }
+    argument.endMap();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, NotificationParameters &parameters)
+{
+    argument.beginMap();
+    while (!argument.atEnd()) {
+        QString key;
+        QDBusVariant value;
+
+        argument.beginMapEntry ();
+        argument >> key;
+        argument >> value;
+        argument.endMapEntry ();
+
+        parameters.parameterValues[key] = value.variant();
+    }
+    argument.endMap();
+    return argument;
 }

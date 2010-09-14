@@ -49,10 +49,8 @@ private slots:
 
     // Test serialization into QDataStream
     void testSerialization();
-
-private:
-    // The object being tested
-    NotificationParameters *parameters;
+    // Test serialization into QDBusArgument
+    void testDBusSerialization();
 };
 
 #endif

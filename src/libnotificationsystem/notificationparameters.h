@@ -24,6 +24,7 @@
 #include <QVariant>
 
 class QDataStream;
+class QDBusArgument;
 class NotificationParameter;
 
 /*!
@@ -74,9 +75,18 @@ public:
      */
     QVariant value(const QString &parameter) const;
 
+    /*!
+     * Returns the number of parameters stored in this container.
+     *
+     * \return the number of parameters stored
+     */
+    int count() const;
 
     friend QDataStream &operator<<(QDataStream &, const NotificationParameters &);
     friend QDataStream &operator>>(QDataStream &, NotificationParameters &);
+
+    friend QDBusArgument &operator<<(QDBusArgument &, const NotificationParameters &);
+    friend const QDBusArgument &operator>>(const QDBusArgument &, NotificationParameters &);
 
 private:
     //! The mapping between the name of each parameter and its value
