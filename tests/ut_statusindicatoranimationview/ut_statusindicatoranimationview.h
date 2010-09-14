@@ -75,6 +75,8 @@ private slots:
     void testChangingAnimate();
     void testPaintingWhenSizeIsZero();
     void testSizeHintWhenUsingIconSizes();
+    void testFramePixmapRequestWhenUsingIconSizes_data();
+    void testFramePixmapRequestWhenUsingIconSizes();
 private:
     // MApplication
     MApplication *app;

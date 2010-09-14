@@ -168,7 +168,17 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
 {
     if (animationFrame < images.size() && images[animationFrame] == NULL) {
         // Load the image if it has not been loaded yet
-        images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame));
+        images[animationFrame] =
+            MTheme::pixmapCopy(imageList.at(animationFrame),
+                               style()->useIconSize() ?
+                               QSize(0,0) :
+                               style()->preferredSize());
+
+        if (not
+            (style()->preferredSize() == style()->minimumSize()
+             && style()->preferredSize() == style()->maximumSize())) {
+            SYS_DEBUG ("*** status indicators don't support cases where preferred size is not equal to minimum and maximum size!");
+        }
     }
 }
 
