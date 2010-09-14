@@ -47,7 +47,8 @@ HEADERS +=                              \
     unlocknotificationsink.h            \
     unlockmissedevents.h                \
     unlockwidgets.h                     \
-    x11wrapper.h
+    x11wrapper.h \
+    lockscreenview.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -68,7 +69,8 @@ SOURCES +=                              \
     unlocknotificationsink.cpp          \
     unlockmissedevents.cpp              \
     unlockwidgets.cpp                   \
-    x11wrapper.cpp
+    x11wrapper.cpp \
+    lockscreenview.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
@@ -105,4 +107,3 @@ dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
 INSTALLS += target \
             dbus_policy
-

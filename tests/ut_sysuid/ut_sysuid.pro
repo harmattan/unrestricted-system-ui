@@ -38,8 +38,8 @@ HEADERS += \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreenui.h \
-    $$SRCDIR/eventeater.h \
     $$SRCDIR/lockscreenwindow.h \
+    $$SRCDIR/eventeater.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/lockscreenbusinesslogic.h \

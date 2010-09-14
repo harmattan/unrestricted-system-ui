@@ -39,6 +39,8 @@
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
 #include "volumecontrolui_stub.h"
+#include "lockscreenwindow_stub.h"
+#include "eventeaterui_stub.h"
 
 MApplication *exitPtr;
 

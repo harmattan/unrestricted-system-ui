@@ -12,8 +12,8 @@ HEADERS += ut_lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreenwindow.h \
     $$SRCDIR/eventeater.h \
-    $$SRCDIR/lockscreenwindow.h
 
 include(../common_bot.pri)
 
