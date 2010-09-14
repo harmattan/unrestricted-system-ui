@@ -19,7 +19,6 @@
 
 #include "notifiernotificationsink.h"
 #include "genericnotificationparameterfactory.h"
-#include "sysuid.h"
 #include "ngfadapter.h"
 
 const QString NotifierNotificationSink::NOTIFIER_NGF_ID = "notifier";

@@ -32,9 +32,6 @@ class Ut_NGFNotificationSink : public QObject
 {
     Q_OBJECT
 
-public:
-    static QList<QString> played;
-
 private slots:
     // Called before the first testfunction is executed
     void initTestCase();
@@ -50,10 +47,8 @@ private slots:
     // Test that feedback is not played if application events are disabled
     void testNotificationWhileApplicationEventsDisabled();
     void testWithoutEventTypeOrFeedbackId();
-    void testWithEventTypeWithoutFeedbackId();
     void testWithEventTypeAndFeedbackId();
     void testWithoutEventTypeWithFeedbackId();
-    void testDetermineFeedBackId();
 
 private:
     // MApplication

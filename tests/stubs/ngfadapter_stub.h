@@ -25,7 +25,7 @@ void NGFAdapterStub::NGFAdapterDestructor() {
 }
 uint NGFAdapterStub::play(const QString &id) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(id));
+  params.append( new Parameter<QString>(id));
   stubMethodEntered("play",params);
   return stubReturnValue<uint>("play");
 }

@@ -22,46 +22,7 @@
 #include <MApplication>
 #include "ngfnotificationsink.h"
 #include "feedbackparameterfactory.h"
-#include "eventtypestore_stub.h"
-#include "notificationmanager_stub.h"
-#include "sysuid_stub.h"
-#include "ngfadapter.h"
-
-static NotificationManager *manager;
-
-static uint NGFAdaptor_play_id = 0;
-static int NGFAdaptor_stop_called = 0;
-
-NGFAdapter::NGFAdapter()
-{
-#ifdef HAVE_LIBNGF
-    client = NULL;
-    connection = NULL;
-#endif
-}
-
-NGFAdapter::~NGFAdapter()
-{
-}
-
-uint NGFAdapter::play(const QString &id)
-{
-    Ut_NGFNotificationSink::played.append(id);
-    return ++NGFAdaptor_play_id;
-}
-
-void NGFAdapter::stop(uint eventId)
-{
-    Q_UNUSED(eventId);
-    NGFAdaptor_stop_called++;
-}
-
-bool NGFAdapter::isValid()
-{
-    return true;
-}
-
-QList<QString> Ut_NGFNotificationSink::played;
+#include "ngfadapter_stub.h"
 
 void Ut_NGFNotificationSink::initTestCase()
 {
@@ -77,21 +38,18 @@ void Ut_NGFNotificationSink::cleanupTestCase()
 
 void Ut_NGFNotificationSink::init()
 {
-    NGFAdaptor_play_id = 0;
-    NGFAdaptor_stop_called = 0;
-    played.clear();
-
     sink = new NGFNotificationSink();
-    manager = new NotificationManager();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
-    gEventTypeStoreStub->stubReset();
+
+    gNGFAdapterStub->stubReset();
+    gNGFAdapterStub->stubSetReturnValue<bool>("isValid", true);
+    gNGFAdapterStub->stubSetReturnValue<uint>("play", 1);
 }
 
 void Ut_NGFNotificationSink::cleanup()
 {
     delete sink;
-    delete manager;
 }
 
 void Ut_NGFNotificationSink::testAddAndRemoveNotification()
@@ -103,20 +61,18 @@ void Ut_NGFNotificationSink::testAddAndRemoveNotification()
     emit addNotification(notification);
 
     // Check that NGFAdapter::play() was called for the feedback
-    QCOMPARE(played.count(), 1);
-    QCOMPARE(played[0], QString("feedback"));
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubLastCallTo("play").parameter<QString>(0), QString("feedback"));
 
     emit removeNotification(notification.notificationId());
 
     // Check that NGFAdapter::stop() was called for the notification
-    QCOMPARE(NGFAdaptor_stop_called, 1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 
     emit removeNotification(notification.notificationId());
 
-    // Check that NGFAdapter::stop() was not called for an already stopped
-    // notification
-    QCOMPARE(NGFAdaptor_stop_called, 1);
-
+    // Check that NGFAdapter::stop() was not called for an already stopped notification
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 }
 
 void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
@@ -130,7 +86,7 @@ void Ut_NGFNotificationSink::testNotificationWhileApplicationEventsDisabled()
     emit addNotification(notification);
     // Check that NGFAdapter::play() was NOT called for the feedback when
     // application events are NOT enabled
-    QCOMPARE(played.count(), 0);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 0);
 }
 
 void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()
@@ -141,36 +97,19 @@ void Ut_NGFNotificationSink::testWithEventTypeAndFeedbackId()
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that NGFAdapter::play() was called for the feedback
-    QCOMPARE(played.count(), 1);
-    QCOMPARE(played[0], QString("feedback"));
-}
-
-void Ut_NGFNotificationSink::testWithEventTypeWithoutFeedbackId()
-{
-    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "eventTypeStoreFeedback");
-
-    NotificationParameters parameters;
-    parameters.add("eventType", "message-received");
-    parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
-    emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
-
-    // Check that NGFAdapter::play() was called for the feedback
-    QCOMPARE(played.count(), 1);
-    QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubLastCallTo("play").parameter<QString>(0), QString("feedback"));
 }
 
 void Ut_NGFNotificationSink::testWithoutEventTypeOrFeedbackId()
 {
-    EventTypeStore eventTypeStore("", 0);
-    gNotificationManagerStub->stubSetReturnValue<const EventTypeStore&>("eventTypeStore", eventTypeStore);
-
     NotificationParameters parameters;
     parameters.add("eventType", "");
     parameters.add(FeedbackParameterFactory::createFeedbackIdParameter(""));
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that NGFAdapter::play() was not called for the feedback
-    QCOMPARE(played.count(), 0);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 0);
 }
 
 void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
@@ -181,21 +120,8 @@ void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
     emit addNotification(Notification(0, 0, 0, parameters, Notification::ApplicationEvent, 1000));
 
     // Check that NGFAdapter::play() was called for the feedback
-    QCOMPARE(played.count(), 1);
-    QCOMPARE(played[0], QString("feedback"));
-}
-
-void Ut_NGFNotificationSink::testDetermineFeedBackId()
-{
-    gEventTypeStoreStub->stubSetReturnValue<QString>("value", "eventTypeStoreFeedback");
-
-    NotificationParameters parameters;
-    parameters.add("eventType", "message-received");
-    emit addNotification(Notification(0, 0, 0,  parameters, Notification::ApplicationEvent, 1000));
-
-    // Check that NGFAdapter::play() was called for the feedback
-    QCOMPARE(played.count(), 1);
-    QCOMPARE(played[0], QString("eventTypeStoreFeedback"));
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubLastCallTo("play").parameter<QString>(0), QString("feedback"));
 }
 
 QTEST_APPLESS_MAIN(Ut_NGFNotificationSink)

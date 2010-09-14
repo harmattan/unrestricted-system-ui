@@ -47,7 +47,6 @@ class NotificationManagerStub : public StubBase {
   virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId);
   virtual bool removeNotification(uint notificationId);
   virtual bool removeNotificationsInGroup(uint groupId);
-  virtual const EventTypeStore & eventTypeStore() const;
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
   virtual void updateNotificationsWithEventType(const QString &eventType);
   virtual void relayNextNotification();
@@ -169,11 +168,6 @@ bool NotificationManagerStub::removeNotificationsInGroup(uint groupId) {
   params.append( new Parameter<uint >(groupId));
   stubMethodEntered("removeNotificationsInGroup",params);
   return stubReturnValue<bool>("removeNotificationsInGroup");
-}
-
-const EventTypeStore & NotificationManagerStub::eventTypeStore() const {
-  stubMethodEntered("eventTypeStore");
-  return stubReturnValueNoDefault<const EventTypeStore&>("eventTypeStore");
 }
 
 void NotificationManagerStub::removeNotificationsAndGroupsWithEventType(const QString &eventType) {
@@ -321,10 +315,6 @@ bool NotificationManager::removeNotification(uint notificationId) {
 
 bool NotificationManager::removeNotificationsInGroup(uint groupId) {
   return gNotificationManagerStub->removeNotificationsInGroup(groupId);
-}
-
-const EventTypeStore & NotificationManager::eventTypeStore() const {
-  return gNotificationManagerStub->eventTypeStore();
 }
 
 void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType) {

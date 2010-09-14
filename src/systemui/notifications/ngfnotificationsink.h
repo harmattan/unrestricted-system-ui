@@ -23,7 +23,6 @@
 #include "notificationsink.h"
 
 class NGFAdapter;
-class NotificationManager;
 
 /*!
  * NGFNotificationSink implements the NotificationSink interface for
@@ -50,12 +49,6 @@ private:
      * \return Logical feedback id as a string
      */
     QString determineFeedbackId(const NotificationParameters &parameters);
-
-    /*!
-     * Helper method to return the NotificationManager used.
-     */
-    NotificationManager &notificationManager();
-
 
     /*!
      * The NGF Adapter

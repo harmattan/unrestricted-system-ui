@@ -107,11 +107,6 @@ public slots:
     bool removeNotificationsInGroup(uint groupId);
 
     /*!
-     * Returns the EventTypeStore created by the NotificationManager.
-     */
-    const EventTypeStore &eventTypeStore() const;
-
-    /*!
      * Removes all notifications and groups with the specified event type
      * \param eventType the event type of the notifications and groups to remove
      */

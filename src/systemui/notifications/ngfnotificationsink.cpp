@@ -18,14 +18,8 @@
 ****************************************************************************/
 
 #include "ngfnotificationsink.h"
-#include <MApplication>
 #include "feedbackparameterfactory.h"
-#include "eventtypestore.h"
-#include <QSettings>
-#include "genericnotificationparameterfactory.h"
-#include "sysuid.h"
 #include "ngfadapter.h"
-#include "notificationmanager.h"
 
 NGFNotificationSink::NGFNotificationSink()
 {
@@ -40,10 +34,6 @@ NGFNotificationSink::~NGFNotificationSink()
 QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &parameters)
 {
     QString feedbackId = parameters.value(FeedbackParameterFactory::feedbackIdKey()).toString();
-    if (feedbackId.isEmpty()) {
-        const EventTypeStore &store = notificationManager().eventTypeStore();
-        feedbackId = store.value(parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), FeedbackParameterFactory::feedbackIdKey());
-    }
     return feedbackId;
 }
 
@@ -68,9 +58,4 @@ void NGFNotificationSink::removeNotification(uint notificationId)
             adapter->stop(eventId);
         }
     }
-}
-
-NotificationManager &NGFNotificationSink::notificationManager()
-{
-    return Sysuid::sysuid()->notificationManager();
 }

@@ -451,11 +451,6 @@ uint NotificationManager::notificationUserId()
     return lastUsedNotificationUserId;
 }
 
-const EventTypeStore &NotificationManager::eventTypeStore() const
-{
-    return *notificationEventTypeStore.data();
-}
-
 QList<uint> NotificationManager::notificationIdList(uint notificationUserId)
 {
     QList<uint> listOfNotificationIds;
