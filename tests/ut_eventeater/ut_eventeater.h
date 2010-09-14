@@ -18,35 +18,49 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef EVENTEATER_H
-#define EVENTEATER_H
+#ifndef Ut_EventEater_H
+#define Ut_EventEater_H
 
-#include <QWidget>
+#include <QtTest/QtTest>
+#include <QObject>
 
-class QMouseEvent;
-class QShowEvent;
+class MApplication;
+class EventEater;
 
-class EventEater : public QWidget
+class LockScreenUIEventSink : public QObject
 {
     Q_OBJECT
 
 public:
-    EventEater ();
-    virtual void mousePressEvent (QMouseEvent *event);
-    virtual void mouseReleaseEvent (QMouseEvent *event);
+    LockScreenUIEventSink ();
 
-protected:
-    virtual void showEvent(QShowEvent *event);
-
-signals:
+public slots:
     void OneInput ();
-#ifdef UNIT_TEST
-    friend class Ut_LockScreenUI;
-    friend class Ut_EventEater;
-    friend class Ft_LockScreenUI;
-    friend class Ut_LockScreenBusinessLogic;
-    friend class Ft_LockScreenBusinessLogic;
-#endif
+    void unlocked ();
+
+public:
+    bool      m_OneInputCame;
+    bool      m_UnlockedCame;
+};
+
+
+class Ut_EventEater : public QObject
+{
+    Q_OBJECT
+
+private slots:
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testEventEater();
+    void testEventEaterWindowName();
+
+private:
+    LockScreenUIEventSink  m_EventSink;
+    EventEater          *m_EventEater;
+    MApplication          *m_App;
 };
 
 #endif
