@@ -5,8 +5,9 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: BMC#6114 - Lock screen does not rotate with an animation
   * Fixes: NB#189498 -  inappropriate shut down sequence with N applications
   * Fixes: NB#182995 -  shutdown sequence is skipped with device power down and alarm
+  * Fixes: NB#188724 - USB mode selection not working with SecFW special image
 
- -- David Kedves <dkedves@blumsoft.eu>  Fri, 10 Sep 2010 15:04:20 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 14 Sep 2010 12:08:48 +0200
 
 system-ui (0.16.13-2) harmattan; urgency=low
 
