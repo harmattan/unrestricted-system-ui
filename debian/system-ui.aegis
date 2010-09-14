@@ -1,6 +1,6 @@
 <aegis>
   <request>
-    <credential name="USBControl" />
+    <credential name="usb-moded::USBControl" />
 	  <for path="/usr/bin/sysuid" />
   </request>
 </aegis>
