@@ -23,14 +23,10 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <MBanner>
-#include "notification.h"
-#include "notificationgroup.h"
 #include "notificationmanagerinterface.h"
 #include <QTimer>
 
 class MApplication;
-class Sysuid;
 class MCompositorNotificationSink;
 
 class MockNotificationManager : public QObject, public NotificationManagerInterface

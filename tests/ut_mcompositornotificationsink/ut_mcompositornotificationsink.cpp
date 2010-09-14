@@ -20,22 +20,11 @@
 #include "ut_mcompositornotificationsink.h"
 
 #include <QtTest/QtTest>
-#include <MRemoteAction>
-#include <MBanner>
 #include <MApplication>
-#include <MScene>
 #include <MSceneManager>
 #include "mcompositornotificationsink.h"
-#include "notificationwidgetparameterfactory.h"
 #include "testnotificationparameters.h"
-#include "eventtypestore_stub.h"
-#include "notificationmanager_stub.h"
-#include <QSettings>
-#include "sysuid_stub.h"
-#include "notificationmanager.h"
-#include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
-#include <QSettings>
 #include <MOnDisplayChangeEvent>
 #include <MGConfItem>
 
