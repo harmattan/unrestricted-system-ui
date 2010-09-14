@@ -31,6 +31,7 @@
 #include "dbusinterfacenotificationsinkproxy.h"
 #include "eventtypestore.h"
 #include "genericnotificationparameterfactory.h"
+#include "notificationwidgetparameterfactory.h"
 #include "notificationsink_stub.h"
 
 bool Ut_NotificationManager::catchTimerTimeouts;
@@ -43,6 +44,17 @@ QList<Notification> gNotificationList;
 quint32 gLastUserId;
 bool gTestingPersistent;
 
+#define EVENT_TYPE GenericNotificationParameterFactory::eventTypeKey()
+#define COUNT      GenericNotificationParameterFactory::countKey()
+#define CLASS      GenericNotificationParameterFactory::classKey()
+#define PERSISTENT GenericNotificationParameterFactory::persistentKey()
+#define UNSEEN     GenericNotificationParameterFactory::unseenKey()
+
+#define SUMMARY    NotificationWidgetParameterFactory::summaryKey()
+#define BODY       NotificationWidgetParameterFactory::bodyKey()
+#define IMAGE      NotificationWidgetParameterFactory::imageIdKey()
+#define ICON       NotificationWidgetParameterFactory::iconIdKey()
+#define ACTION     NotificationWidgetParameterFactory::actionKey()
 
 // Test Notification Manager
 class TestNotificationManager : public NotificationManager
@@ -324,14 +336,17 @@ void Ut_NotificationManager::testAddNotification()
 
     // Create three notifications - two with a content link and one without
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
+
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
-    parameters1.add(GenericNotificationParameterFactory::classKey(), "system");
+    parameters1.add(BODY, "body1");
+    parameters1.add(CLASS, "system");
+
     uint id1 = manager->addNotification(0, parameters1, 0);
     NotificationParameters parameters2;
-    parameters2.add("iconId", "buttonicon2");
+
+    parameters2.add(ICON, "buttonicon2");
     uint id2 = manager->addNotification(0, parameters2);
 
     // Verify that timer was not started
@@ -349,7 +364,7 @@ void Ut_NotificationManager::testAddNotification()
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), (uint)0);
-    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
@@ -357,7 +372,7 @@ void Ut_NotificationManager::testAddNotification()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id1);
     QCOMPARE(n.groupId(), (uint)0);
-    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::SystemEvent);
     QCOMPARE(n.timeout(), 0);
 
@@ -365,7 +380,7 @@ void Ut_NotificationManager::testAddNotification()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id2);
     QCOMPARE(n.groupId(), (uint)0);
-    QCOMPARE(n.parameters().value("iconId").toString(), QString("buttonicon2"));
+    QCOMPARE(n.parameters().value(ICON).toString(), QString("buttonicon2"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
@@ -379,32 +394,32 @@ void Ut_NotificationManager::testWhenNotificationIsAddedThenTheNotificationIsFil
 {
     QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
 
-    gEventTypeSettings["testType"][GenericNotificationParameterFactory::persistentKey()] = "true";
+    gEventTypeSettings["testType"][PERSISTENT] = "true";
 
     NotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "testType");
+    parameters.add(EVENT_TYPE, "testType");
     manager->addNotification(0, parameters);
 
     QCOMPARE(spy.count(), 1);
     QList<QVariant> arguments = spy.takeFirst();
     Notification notification = qvariant_cast<Notification>(arguments.at(0));
 
-    QCOMPARE(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString(), QString("testType"));
-    QCOMPARE(notification.parameters().value(GenericNotificationParameterFactory::persistentKey()).toBool(), true);
+    QCOMPARE(notification.parameters().value(EVENT_TYPE).toString(), QString("testType"));
+    QCOMPARE(notification.parameters().value(PERSISTENT).toBool(), true);
 }
 
 void Ut_NotificationManager::testUpdateNotification()
 {
     // Create one notification
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
 
     QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
 
     // Update the notification
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     manager->updateNotification(0, id0, parameters1);
 
     // Test that the relevant signals are sent
@@ -412,8 +427,8 @@ void Ut_NotificationManager::testUpdateNotification()
     QList<QVariant> arguments = spy.takeFirst();
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id0);
-    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
-    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 }
@@ -424,14 +439,16 @@ void Ut_NotificationManager::testRemoveNotification()
 
     // Create three notifications
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
-    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
+    parameters0.add(IMAGE, "icon0");
+    parameters0.add(CLASS, "system");
     manager->addNotification(0, parameters0, 0);
+
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1);
+
     NotificationParameters parameters2;
-    parameters2.add("iconId", "buttonicon2");
+    parameters2.add(ICON, "buttonicon2");
     manager->addNotification(0, parameters2);
 
     // Cancel the second one
@@ -448,10 +465,11 @@ void Ut_NotificationManager::testAddGroup()
     QSignalSpy addGroupSpy(manager, SIGNAL(groupUpdated(uint, const NotificationParameters &)));
 
     NotificationParameters inParameters1;
-    inParameters1.add("imageId", "icon1");
+    inParameters1.add(IMAGE, "icon1");
     uint id1 = manager->addGroup(0, inParameters1);
+
     NotificationParameters inParameters2;
-    inParameters2.add("body", "body2");
+    inParameters2.add(BODY, "body2");
     uint id2 = manager->addGroup(0, inParameters2);
 
     // Check that we didn't get invalid numbers
@@ -467,48 +485,49 @@ void Ut_NotificationManager::testAddGroup()
     QList<QVariant> arguments = addGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
     NotificationParameters outParameters1 = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters1.value("imageId").toString(), QString("icon1"));
+    QCOMPARE(outParameters1.value(IMAGE).toString(), QString("icon1"));
+
     arguments = addGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id2);
     NotificationParameters outParameters2 = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters2.value("body").toString(), QString("body2"));
+    QCOMPARE(outParameters2.value(BODY).toString(), QString("body2"));
 }
 
 void Ut_NotificationManager::testWhenNotificationGroupIsAddedThenTheNotificationGroupIsFilledWithEventTypeData()
 {
     QSignalSpy addGroupSpy(manager, SIGNAL(groupUpdated(uint, NotificationParameters)));
 
-    gEventTypeSettings["testType"][GenericNotificationParameterFactory::persistentKey()] = "true";
+    gEventTypeSettings["testType"][PERSISTENT] = "true";
 
     NotificationParameters parameters;
-    parameters.add(GenericNotificationParameterFactory::eventTypeKey(), "testType");
+    parameters.add(EVENT_TYPE, "testType");
     manager->addGroup(0, parameters);
 
     QCOMPARE(addGroupSpy.count(), 1);
     QList<QVariant> arguments = addGroupSpy.takeFirst();
     NotificationParameters notificationParameters = qvariant_cast<NotificationParameters>(arguments.at(1));
 
-    QCOMPARE(notificationParameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), QString("testType"));
-    QCOMPARE(notificationParameters.value(GenericNotificationParameterFactory::persistentKey()).toBool(), true);
+    QCOMPARE(notificationParameters.value(EVENT_TYPE).toString(), QString("testType"));
+    QCOMPARE(notificationParameters.value(PERSISTENT).toBool(), true);
 }
 
 void Ut_NotificationManager::testUpdateGroup()
 {
     NotificationParameters inParameters1;
-    inParameters1.add("imageId", "icon1");
+    inParameters1.add(IMAGE, "icon1");
     uint id1 = manager->addGroup(0, inParameters1);
 
     QSignalSpy updateGroupSpy(manager, SIGNAL(groupUpdated(uint, const NotificationParameters &)));
 
     NotificationParameters inParameters2;
-    inParameters2.add("body", "body2");
+    inParameters2.add(BODY, "body2");
     manager->updateGroup(0, id1, inParameters2);
     QCOMPARE(updateGroupSpy.count(), 1);
     QList<QVariant> arguments = updateGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
     NotificationParameters outParameters = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters.value("body").toString(), QString("body2"));
-    QCOMPARE(outParameters.value("imageId").toString(), QString("icon1"));
+    QCOMPARE(outParameters.value(BODY).toString(), QString("body2"));
+    QCOMPARE(outParameters.value(IMAGE).toString(), QString("icon1"));
 }
 
 void Ut_NotificationManager::testUpdateNonexistingGroup()
@@ -517,7 +536,7 @@ void Ut_NotificationManager::testUpdateNonexistingGroup()
 
     // Try to update a group that doesn't exist
     NotificationParameters parameters1;
-    parameters1.add("imageId", "icon1");
+    parameters1.add(IMAGE, "icon1");
     manager->updateGroup(0, 1, parameters1);
     QCOMPARE(updateGroupSpy.count(), 0);
 
@@ -527,7 +546,7 @@ void Ut_NotificationManager::testUpdateNonexistingGroup()
     updateGroupSpy.clear();
     // ...but try to update some other group
     NotificationParameters parameters2;
-    parameters2.add("body", "body2");
+    parameters2.add(BODY, "body2");
     manager->updateGroup(0, id1 + 1, parameters2);
     QCOMPARE(updateGroupSpy.count(), 0);
 }
@@ -536,7 +555,7 @@ void Ut_NotificationManager::testRemoveGroup()
 {
     QSignalSpy removeGroupSpy(manager, SIGNAL(groupRemoved(uint)));
     NotificationParameters parameters1;
-    parameters1.add("imageId", "icon1");
+    parameters1.add(IMAGE, "icon1");
     uint id1 = manager->addGroup(0, parameters1);
     manager->removeGroup(0, id1);
     QCOMPARE(removeGroupSpy.count(), 1);
@@ -547,16 +566,16 @@ void Ut_NotificationManager::testRemoveGroup()
 void Ut_NotificationManager::testRemoveGroupWithNotifications()
 {
     NotificationParameters gparameters1;
-    gparameters1.add("imageId", "gicon1");
+    gparameters1.add(IMAGE, "gicon1");
     uint groupId = manager->addGroup(0, gparameters1);
     QSignalSpy addSpy(manager, SIGNAL(notificationUpdated(Notification)));
     QSignalSpy removeGroupSpy(manager, SIGNAL(groupRemoved(uint)));
     QSignalSpy removeNotificationSpy(manager, SIGNAL(notificationRemoved(uint)));
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0, groupId);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1, groupId);
     QCOMPARE(addSpy.count(), 2);
 
@@ -572,12 +591,12 @@ void Ut_NotificationManager::testRemoveGroupWithNotifications()
 void Ut_NotificationManager::testRemovingAllNotificationsFromAGroup()
 {
     NotificationParameters gparameters1;
-    gparameters1.add("imageId", "gicon1");
+    gparameters1.add(IMAGE, "gicon1");
     uint groupId = manager->addGroup(0, gparameters1);
 
     QSignalSpy removeGroupSpy(manager, SIGNAL(groupRemoved(uint)));
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0, groupId);
     manager->removeNotification(0, id0);
 
@@ -598,7 +617,7 @@ void Ut_NotificationManager::testRemoveNonexistingGroup()
 
     // Add a group and then try to remove it twice
     NotificationParameters gparameters1;
-    gparameters1.add("imageId", "gicon1");
+    gparameters1.add(IMAGE, "gicon1");
     uint id1 = manager->addGroup(0, gparameters1);
     manager->removeGroup(0, id1);
     removeGroupSpy.clear();
@@ -609,11 +628,11 @@ void Ut_NotificationManager::testRemoveNonexistingGroup()
 void Ut_NotificationManager::testAddNotificationInGroup()
 {
     NotificationParameters gparameters1;
-    gparameters1.add("imageId", "gicon1");
+    gparameters1.add(IMAGE, "gicon1");
     uint groupId = manager->addGroup(0, gparameters1);
     QSignalSpy addSpy(manager, SIGNAL(notificationUpdated(Notification)));
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0, groupId);
 
     QCOMPARE(addSpy.count(), 1);
@@ -621,7 +640,7 @@ void Ut_NotificationManager::testAddNotificationInGroup()
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), groupId);
-    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
 }
 
 void Ut_NotificationManager::testAddNotificationInNonexistingGroup()
@@ -630,7 +649,7 @@ void Ut_NotificationManager::testAddNotificationInNonexistingGroup()
 
     // Add a notification to a group that doesn't exist
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     manager->addNotification(0, parameters0, 1);
     QCOMPARE(addSpy.count(), 0);
 }
@@ -646,10 +665,10 @@ void Ut_NotificationManager::testSecondSimultaneousNotificationIsLeftInQueue()
 
     // Create two notifications
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1);
 
     // Verify that timer was not started
@@ -661,7 +680,7 @@ void Ut_NotificationManager::testSecondSimultaneousNotificationIsLeftInQueue()
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), (uint)0);
-    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), -1);
 
@@ -673,13 +692,13 @@ void Ut_NotificationManager::testSecondSimultaneousNotificationIsLeftInQueue()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id1);
     QCOMPARE(n.groupId(), (uint)0);
-    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), -1);
 
     // Create third notification. This should be left in the queue since the second notification is being shown.
     NotificationParameters parameters2;
-    parameters0.add("iconId", "buttonicon2");
+    parameters0.add(ICON, "buttonicon2");
     manager->addNotification(0, parameters2);
     QCOMPARE(spy.count(), 0);
 }
@@ -696,13 +715,13 @@ void Ut_NotificationManager::testCancellingNotificationInQueue()
 
     // Create three notifications
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1);
     NotificationParameters parameters2;
-    parameters2.add("iconId", "buttonicon2");
+    parameters2.add(ICON, "buttonicon2");
     uint id2 = manager->addNotification(0, parameters2);
 
     // Check that notification sink was signaled with first notification.
@@ -738,10 +757,10 @@ void Ut_NotificationManager::testUpdatingNotificationInQueue()
 
     // Create two notifications
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1);
 
     // Check that notification sink was signaled with first notification.
@@ -752,7 +771,7 @@ void Ut_NotificationManager::testUpdatingNotificationInQueue()
 
     // Update the second notification
     NotificationParameters parameters2;
-    parameters2.add("iconId", "newicon");
+    parameters2.add(ICON, "newicon");
     manager->updateNotification(0, id1, parameters2);
 
     // Check that notification sink was not signaled with update.
@@ -766,9 +785,9 @@ void Ut_NotificationManager::testUpdatingNotificationInQueue()
     arguments = spy.takeFirst();
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), id1);
-    QCOMPARE(n.parameters().value("imageId").isNull(), true);
-    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
-    QCOMPARE(n.parameters().value("iconId").toString(), QString("newicon"));
+    QCOMPARE(n.parameters().value(IMAGE).isNull(), true);
+    QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
+    QCOMPARE(n.parameters().value(ICON).toString(), QString("newicon"));
     QCOMPARE(n.parameters().value("contentId").isNull(), true);
     QCOMPARE(n.type(), Notification::ApplicationEvent);
 }
@@ -783,7 +802,7 @@ void Ut_NotificationManager::testRelayInEmptyQueue()
     QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
 
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
 
     // Check that notification sink was signaled with first notification.
@@ -811,10 +830,10 @@ void Ut_NotificationManager::testDroppingNotificationsIfQueueIsFull()
     // Next five notifications will fill the wait queue.
     // Last notification will be dropped.
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
     NotificationParameters parameters15;
-    parameters15.add("body", "queuefillerbody");
+    parameters15.add(BODY, "queuefillerbody");
     for (int i = 0; i < 5; ++i) {
         manager->addNotification(0, parameters15);
     }
@@ -834,7 +853,7 @@ void Ut_NotificationManager::testDroppingNotificationsIfQueueIsFull()
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         n = qvariant_cast<Notification>(arguments.at(0));
-        QCOMPARE(n.parameters().value("body").toString(), QString("queuefillerbody"));
+        QCOMPARE(n.parameters().value(BODY).toString(), QString("queuefillerbody"));
     }
 
     // The queue should be empty. Try relaying.
@@ -857,10 +876,11 @@ void Ut_NotificationManager::testWaitQueueTimer()
     // First notification should pass through.
     // Second is left in wait queue
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0);
+
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     uint id1 = manager->addNotification(0, parameters1);
 
     // Check that notification sink was signaled with first notification.
@@ -901,13 +921,15 @@ void Ut_NotificationManager::testRemoveNotificationsInGroup()
     QSignalSpy removeSpy(manager, SIGNAL(notificationRemoved(uint)));
 
     NotificationParameters gparameters1;
-    gparameters1.add("imageId", "gicon1");
+    gparameters1.add(IMAGE, "gicon1");
     uint groupId = manager->addGroup(0, gparameters1);
+
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addNotification(0, parameters0, groupId);
+
     NotificationParameters parameters1;
-    parameters0.add("imageId", "icon1");
+    parameters0.add(IMAGE, "icon1");
     uint id1 = manager->addNotification(0, parameters0, groupId);
 
     manager->removeNotificationsInGroup(groupId);
@@ -1015,17 +1037,17 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     gNotificationBuffer.buffer().clear();
     gStateBuffer.buffer().clear();
 
-    gEventTypeSettings["persistent"][GenericNotificationParameterFactory::persistentKey()] = "true";
+    gEventTypeSettings["persistent"][PERSISTENT] = "true";
 
     delete manager;
     manager = new TestNotificationManager(3000);
 
     // Add two groups to the notification manager.
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addGroup(0, parameters0);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     parameters1.add("eventType", "persistent");
     uint id1 = manager->addGroup(0, parameters1);
 
@@ -1036,9 +1058,9 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     QCOMPARE((uint)gGroupList.count(), (uint)2);
 
     NotificationGroup   ng = gGroupList.at(0);
-    QCOMPARE(ng.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
     ng = gGroupList.at(1);
-    QCOMPARE(ng.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
 
     manager->removeGroup(0, id0);
@@ -1050,7 +1072,7 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     QCOMPARE((uint)gGroupList.count(), (uint)1);
 
     ng = gGroupList.at(0);
-    QCOMPARE(ng.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
 
     manager->updateGroup(0, id1, parameters0);
@@ -1062,12 +1084,12 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     QCOMPARE((uint)gGroupList.count(), (uint)1);
 
     ng = gGroupList.at(0);
-    QCOMPARE(ng.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
 }
 
 void Ut_NotificationManager::testPersistentNotificationStorage()
 {
-    gEventTypeSettings["persistent"][GenericNotificationParameterFactory::persistentKey()] = "true";
+    gEventTypeSettings["persistent"][PERSISTENT] = "true";
 
     delete manager;
     manager = new TestNotificationManager(3000);
@@ -1075,25 +1097,29 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
     // Add two groups to the notification manager,
     // the other one as persistent
     NotificationParameters gparameters0;
-    gparameters0.add("imageId", "icon0");
+    gparameters0.add(IMAGE, "icon0");
     uint gid0 = manager->addGroup(0, gparameters0);
+
     NotificationParameters gparameters1;
-    gparameters1.add("body", "body1");
-    gparameters1.add("eventType", "persistent");
+    gparameters1.add(BODY, "body1");
+    gparameters1.add(EVENT_TYPE, "persistent");
     uint gid1 = manager->addGroup(0, gparameters1);
 
     // Create three notifications - two persistent and one non-persistent
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
+
     // Non-persistent
     manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
-    parameters1.add("eventType", "persistent");
+    parameters1.add(BODY, "body1");
+    parameters1.add(EVENT_TYPE, "persistent");
+
     // Persistent in a non-persistent group
     uint id1 = manager->addNotification(0, parameters1, gid0);
     NotificationParameters parameters2;
-    parameters2.add("iconId", "buttonicon2");
+    parameters2.add(ICON, "buttonicon2");
+
     // Non-persistent in a persistent group
     uint id2 = manager->addNotification(0, parameters2, gid1);
 
@@ -1101,9 +1127,9 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
 
     QCOMPARE((uint)gNotificationList.count(), (uint)2);
     Notification notification = gNotificationList.at(0);
-    QCOMPARE(notification.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(notification.parameters().value(BODY).toString(), QString("body1"));
     notification = gNotificationList.at(1);
-    QCOMPARE(notification.parameters().value("iconId").toString(), QString("buttonicon2"));
+    QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
 
     manager->removeNotification(0, id1);
@@ -1112,7 +1138,7 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
 
     QCOMPARE((uint)gNotificationList.count(), (uint)1);
     notification = gNotificationList.at(0);
-    QCOMPARE(notification.parameters().value("iconId").toString(), QString("buttonicon2"));
+    QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
 
     manager->updateNotification(0, id2, parameters0);
@@ -1121,7 +1147,7 @@ void Ut_NotificationManager::testPersistentNotificationStorage()
 
     QCOMPARE((uint)gNotificationList.count(), (uint)1);
     notification = gNotificationList.at(0);
-    QCOMPARE(notification.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(notification.parameters().value(IMAGE).toString(), QString("icon0"));
 }
 
 void Ut_NotificationManager::testPersistentNotificationRestoration()
@@ -1136,15 +1162,15 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
 
     // Create three notifications
     NotificationParameters parameters0;
-    parameters0.add("imageId", "icon0");
+    parameters0.add(IMAGE, "icon0");
     stream << Notification(0, 3, 0, parameters0, Notification::ApplicationEvent, 0);
 
     NotificationParameters parameters1;
-    parameters1.add("body", "body1");
+    parameters1.add(BODY, "body1");
     stream << Notification(1, 4, 0, parameters1, Notification::SystemEvent, 1000);
 
     NotificationParameters parameters2;
-    parameters2.add("iconId", "buttonicon2");
+    parameters2.add(ICON, "buttonicon2");
     stream << Notification(2, 5, 0, parameters2, Notification::ApplicationEvent, 2000);
 
     gNotificationBuffer.close();
@@ -1163,7 +1189,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)0);
     QCOMPARE(n.groupId(), (uint)3);
-    QCOMPARE(n.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
@@ -1171,7 +1197,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)1);
     QCOMPARE(n.groupId(), (uint)4);
-    QCOMPARE(n.parameters().value("body").toString(), QString("body1"));
+    QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::SystemEvent);
     QCOMPARE(n.timeout(), 1000);
 
@@ -1179,7 +1205,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)2);
     QCOMPARE(n.groupId(), (uint)5);
-    QCOMPARE(n.parameters().value("iconId").toString(), QString("buttonicon2"));
+    QCOMPARE(n.parameters().value(ICON).toString(), QString("buttonicon2"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 2000);
 
@@ -1196,7 +1222,7 @@ void Ut_NotificationManager::testRemovingNotificationsWithEventType()
 
     // add a notification with sms event type
     NotificationParameters parameters0;
-    parameters0.add("eventType", "sms");
+    parameters0.add(EVENT_TYPE, "sms");
     uint id0 = manager->addNotification(0, parameters0);
 
     // remove notifications with sms eventtype
@@ -1214,7 +1240,7 @@ void Ut_NotificationManager::testRemovingGroupsWithEventType()
 
     // add a group with sms event type
     NotificationParameters parameters0;
-    parameters0.add("eventType", "sms");
+    parameters0.add(EVENT_TYPE, "sms");
     uint id1 = manager->addGroup(0, parameters0);
 
     // remove groups with sms eventtype
@@ -1229,12 +1255,12 @@ void Ut_NotificationManager::testRemovalOfUnseenFlags()
     NotificationParameters param;
     uint id = manager->addNotification(0, param);
     // Notifications are created with unseen params
-    QCOMPARE(manager->notifications.value(id).parameters().value("unseen").toBool(), true);
+    QCOMPARE(manager->notifications.value(id).parameters().value(UNSEEN).toBool(), true);
 
     connect(this, SIGNAL(notifierSinkActive(bool)), manager, SLOT(removeUnseenFlags(bool)));
     emit notifierSinkActive(false);
 
-    QCOMPARE(manager->notifications.value(id).parameters().value("unseen").toBool(), false);
+    QCOMPARE(manager->notifications.value(id).parameters().value(UNSEEN).toBool(), false);
 }
 
 void Ut_NotificationManager::testDBusNotificationSinkConnections()
