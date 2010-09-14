@@ -27,7 +27,7 @@
 #include "lockscreenwindow_stub.h"
 #include "eventeater.h"
 #include "sysuid_stub.h"
-#include "eventeaterui_stub.h"
+#include "eventeater_stub.h"
 #include <MApplication>
 #include <MApplicationWindow>
 
