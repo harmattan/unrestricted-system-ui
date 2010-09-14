@@ -32,6 +32,10 @@ private slots:
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
+    void testWhenLockScreenViewIsCreatedGConfKeysAreConnectedForBackgroudImage();
+    void testWhenLockScreenCreatedBackgroundImagesLoaded();
+    void testWhenPortraitPortraitImageIsDrawn();
+    void testWhenLandscapeLndscapeImageIsDrawn();
 
 private:
     LockScreenView* lockScreenView;

@@ -37,16 +37,20 @@ protected:
 private slots:
     void reloadLandscapeBackground ();
     void reloadPortraitBackground ();
-    void redraw ();
-    void redrawIdle ();
 
 private:
     // The background GConf keys:
+    MSceneWindow* controller;
     MGConfItem *gconfBgLandscape;
     MGConfItem *gconfBgPortrait;
-    MSceneWindow* controller;
+    QPixmap* landscapePixmap;
+    QPixmap* portraitPixmap;
 
     Q_DISABLE_COPY(LockScreenView)
+
+#ifdef UNIT_TEST
+            friend class Ut_LockScreenView;
+#endif
 };
 
 #endif // LOCKSCREENVIEW_H
