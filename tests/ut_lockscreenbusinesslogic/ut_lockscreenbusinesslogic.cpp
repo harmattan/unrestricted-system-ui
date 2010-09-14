@@ -25,7 +25,7 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenui_stub.h"
 #include "lockscreenwindow_stub.h"
-#include "eventeaterui_stub.h"
+#include "eventeater_stub.h"
 #include "sysuid_stub.h"
 #include <MApplication>
 #include <MApplicationWindow>
