@@ -8,6 +8,9 @@ DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
 #QMAKE_CXXFLAGS += -pg
 #QMAKE_LFLAGS += -pg
 
+QMAKE_CXXFLAGS += -g
+QMAKE_LFLAGS += -g
+
 # Directories
 unix {
     SYSTEMUI_THEMES_DIR = /usr/share/themes/base/meegotouch/sysuid

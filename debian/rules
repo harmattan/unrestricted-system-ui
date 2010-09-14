@@ -21,6 +21,11 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
     INSTALL_PROGRAM += -s
 endif
 
+QMAKE_PARAMS = $(empty)
+ifneq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+	QMAKE_PARAMS = BUILD_FEATURES=nocheck
+endif
+
 TMP_BUILD_OPTS = $(subst $(comma),$(space),$(DEB_BUILD_OPTIONS))
 
 ARCH = $(shell dpkg --print-architecture)
@@ -34,7 +39,7 @@ ifneq (,$(filter parallel=%,$(TMP_BUILD_OPTS)))
     PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-QMAKE_OPTIONS = COV_OPTION=off
+QMAKE_OPTIONS = COV_OPTION=off $(QMAKE_PARAMS)
 
 configure: configure-stamp
 configure-stamp:

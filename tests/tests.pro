@@ -18,6 +18,10 @@ contains(BUILD_FEATURES,coverage) {
     SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
 }
 
+contains(BUILD_FEATURES,nocheck) {
+    SUBDIRS = 
+}
+
 QMAKE_STRIP = echo
 
 check.target = check
@@ -42,4 +46,12 @@ support_files.files += $$OUT_PWD/tests.xml
 support_files.path = /usr/share/system-ui-tests
 support_files.CONFIG += no_check_exist
 
-INSTALLS += support_files
+dummy_file.commands += touch $$OUT_PWD/keep_this_dir
+dummy_file.target = dummy_file
+dummy_file.files += $$OUT_PWD/keep_this_dir
+dummy_file.path = /usr/lib/system-ui-tests
+
+INSTALLS += \
+    support_files \
+    dummy_file
+
