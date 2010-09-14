@@ -20,9 +20,6 @@
 #include "ut_notifiernotificationsink.h"
 #include "notifiernotificationsink.h"
 #include "notification.h"
-#include "sysuid_stub.h"
-#include "notificationmanager_stub.h"
-#include "eventtypestore_stub.h"
 #include "notificationgroup_stub.h"
 #include "genericnotificationparameterfactory.h"
 #include "ngfadapter_stub.h"
@@ -42,7 +39,6 @@ void Ut_NotifierNotificationSink::init()
     connect(this, SIGNAL(removeNotification(uint)), m_subject, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(removeGroup(uint)), m_subject, SLOT(removeGroup(uint)));
 
-    gNotificationManagerStub->stubReset();
     gNGFAdapterStub->stubReset();
 }
 
