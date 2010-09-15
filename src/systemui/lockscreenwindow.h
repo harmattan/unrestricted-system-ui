@@ -35,9 +35,11 @@ public:
 
 signals:
     void unlocked ();
+
 public slots:
-void updateDateTime();
-void reset();
+    void updateDateTime();
+    void reset();
+
 private:
     LockScreen* lockScreen;
 };

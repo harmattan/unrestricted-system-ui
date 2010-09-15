@@ -65,7 +65,7 @@ LockScreenStub* gLockScreenStub = &gDefaultLockScreenStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreen::LockScreen()
+LockScreen::LockScreen(MWindow*)
 {
   gLockScreenStub->LockScreenConstructor();
 }
