@@ -65,11 +65,6 @@ UsbUi::setDisabled (bool disable)
 {
     SYS_DEBUG ("disable = %s", SYS_BOOL (disable));
 
-#if 0
-    SYS_WARNING ("disable = %s, [showdialog = %s]",
-                 SYS_BOOL (disable), SYS_BOOL (m_showdialog));
-#endif
-
     m_disabled = disable;
 
     if (disable == true)
@@ -152,8 +147,10 @@ UsbUi::ShowDialog ()
     m_dialog->setButtonBoxVisible (false);
     m_dialog->setCentralWidget (centralwidget);
 
-    // Modal dialogs always create a new top level window and a scene manager
-    // so no need to worry about registering to a specific scene manager here
+    /*
+     * System dialogs always create a new top level window and a scene manager
+     * so no need to worry about registering to a specific scene manager here
+     */
     m_dialog->appear (MSceneWindow::DestroyWhenDone);
 }
 
