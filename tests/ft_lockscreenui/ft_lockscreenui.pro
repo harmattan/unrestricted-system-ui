@@ -11,7 +11,7 @@ SOURCES += ft_lockscreenui.cpp \
     xchecker.cpp \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/unlockwidgets.cpp \
-    $$SRCDIR/lockscreenui.cpp  \
+    $$SRCDIR/lockscreen.cpp  \
     $$SRCDIR/lockscreenwindow.cpp  \
     $$SRCDIR/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
@@ -22,7 +22,7 @@ HEADERS += ft_lockscreenui.h \
     xchecker.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreen.h \
     $$SRCDIR/lockscreenwindow.h  \
     $$SRCDIR/eventeater.h \
     $$SRCDIR/sysuid.h \
