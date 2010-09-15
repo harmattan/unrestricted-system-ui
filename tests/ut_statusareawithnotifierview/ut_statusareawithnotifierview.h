@@ -41,6 +41,10 @@ private slots:
     void init();
     void cleanup();
     void testNotifierAddedToLayout();
+    void testStatusIndicatorMenuVisibilityChangedSignal();
+
+signals:
+    void statusIndicatorMenuVisibilityChanged(bool);
 
 private:
     MApplication *app;

@@ -100,6 +100,7 @@ void Ut_StatusAreaWithNotifierView::init()
     statusArea = new StatusArea;
     m_subject = new StatusAreaWithNotifierView(statusArea);
     statusArea->setView(m_subject);
+    gNotificationStatusIndicatorStub->stubReset();
 }
 
 // Called after every testfunction
@@ -113,6 +114,19 @@ void Ut_StatusAreaWithNotifierView::testNotifierAddedToLayout()
 {
     QVERIFY(m_subject->landscapeNotificationIndicator->parentWidget() != NULL);
     QVERIFY(m_subject->portraitNotificationIndicator->parentWidget() != NULL);
+}
+
+void Ut_StatusAreaWithNotifierView::testStatusIndicatorMenuVisibilityChangedSignal()
+{
+    connect(this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
+    emit statusIndicatorMenuVisibilityChanged(false);
+
+    // Call count is 2 because of two indicators for landscape and portrait
+    QCOMPARE(gNotificationStatusIndicatorStub->stubCallCount("statusIndicatorMenuVisibilityChange"), 2);
+    QCOMPARE(gNotificationStatusIndicatorStub->stubLastCallTo("statusIndicatorMenuVisibilityChange").parameter<bool>(0), false);
+
+    QVERIFY(disconnect(statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), m_subject->landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool))));
+    QVERIFY(disconnect(statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), m_subject->portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool))));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaWithNotifierView)

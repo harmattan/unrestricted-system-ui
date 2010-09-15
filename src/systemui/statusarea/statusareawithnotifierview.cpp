@@ -32,6 +32,10 @@ StatusAreaWithNotifierView::StatusAreaWithNotifierView(StatusArea *controller) :
     if (QGraphicsAnchorLayout *compositeLayout =
         dynamic_cast<QGraphicsAnchorLayout *> (controller->layout()))
     {
+        // Connet controller's singal for notifying status menu window's visibility change
+        connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
+        connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
+
         // Add notification indicator and anchor it to middle of landscape and portrait widgets
         compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorVerticalCenter, landscapeWidget, Qt::AnchorVerticalCenter);
         compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorHorizontalCenter, landscapeWidget, Qt::AnchorHorizontalCenter);
