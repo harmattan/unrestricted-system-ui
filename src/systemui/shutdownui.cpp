@@ -211,9 +211,11 @@ ShutdownUI::showLogo ()
     for (int i = m_layout->count (); i > 0; i--)
         m_layout->removeAt (0);
 
+#if 0
     /* Logo available only for portait ATM */
     sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
     lockOrientation ();
+#endif
 
     m_layout->addItem (m_logo);
 

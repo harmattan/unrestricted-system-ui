@@ -8,8 +8,10 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: NB#188724 - USB mode selection not working with SecFW special image
   * Fixes: NB#174471 - status icons do not scale properly to device DPI
   * Fixes: NB#190331 - Lack of text in notifications from Status Indicator Menu
+  * Enabled portrait-mode shutdown logo (needs
+    "icon-l-startup-nokia-logo-portrait" from theme)
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 14 Sep 2010 12:08:48 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 15 Sep 2010 15:18:28 +0200
 
 system-ui (0.16.13-2) harmattan; urgency=low
 
