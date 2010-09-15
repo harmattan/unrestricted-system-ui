@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,37 +16,33 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "lockscreenwindow.h"
-#include "lockscreen.h"
+#ifndef LOCKSCREEN_H
+#define LOCKSCREEN_H
 
-LockScreenWindow::LockScreenWindow ():
-        lockScreen(new LockScreen(this))
-{
-    setObjectName ("LockScreenWindow");
-    connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
-}
+#include <MSceneWindow>
 
-LockScreenWindow::~LockScreenWindow ()
-{
-    delete lockScreen;
-}
+class MWindow;
 
-void LockScreenWindow::appear()
+class LockScreen : public MSceneWindow
 {
-    lockScreen->appear(this);
-}
+    Q_OBJECT
 
-void LockScreenWindow::disappear()
-{
-    lockScreen->disappear();
-}
+public:
+    LockScreen(MWindow* parent);
+    virtual ~LockScreen();
+    void updateDateTime ();
+    void reset ();
+    MWindow* parent();
 
-void LockScreenWindow::updateDateTime ()
-{
-    lockScreen->updateDateTime();
-}
+signals:
+    void unlocked ();
+    void dateTimeChanged();
 
-void LockScreenWindow::reset ()
-{
-    lockScreen->reset();
-}
+protected:
+    void createContent ();
+
+private slots:
+    void sliderUnlocked ();
+};
+
+#endif

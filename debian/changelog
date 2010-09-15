@@ -5,6 +5,8 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: BMC#6114 - Lock screen does not rotate with an animation
   * Fixes: NB#189498 -  inappropriate shut down sequence with N applications
 
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 10 Sep 2010 15:04:20 +0200
+
 system-ui (0.16.13-2) harmattan; urgency=low
 
   * Fixes: NB#191228 - Hardware volume bar can not be seen when adjusting volume.

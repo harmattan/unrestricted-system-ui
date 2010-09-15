@@ -13,7 +13,7 @@ SOURCES += \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/shutdownui.cpp \
     $$SRCDIR/usbui.cpp \
-    $$SRCDIR/lockscreenui.cpp \
+    $$SRCDIR/lockscreen.cpp \
     $$SRCDIR/eventeater.cpp \
     $$SRCDIR/lockscreenwindow.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
@@ -37,7 +37,7 @@ HEADERS += \
     $$SRCDIR/volumecontrol/volumecontrolui.h \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
-    $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreen.h \
     $$SRCDIR/lockscreenwindow.h \
     $$SRCDIR/eventeater.h \
     $$SRCDIR/shutdownbusinesslogic.h \

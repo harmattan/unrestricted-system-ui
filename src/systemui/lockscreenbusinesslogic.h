@@ -27,7 +27,7 @@
 #include <qmdisplaystate.h>
 #endif
 
-class LockScreenUI;
+class LockScreenWindow;
 class EventEater;
 
 class LockScreenBusinessLogic : public QObject
@@ -61,7 +61,7 @@ private: //methods
     bool displayIsOn ();
 
 private:
-    LockScreenUI     *lockUI;
+    LockScreenWindow    *lockScreenWindow;
     EventEater     *eaterUI;
 #ifdef HAVE_QMSYSTEM
     Maemo::QmDisplayState    m_QmDisplay;

@@ -33,15 +33,15 @@ Architecture: any
 Depends: system-ui (= ${binary:Version})
 Description: System UI - debug symbols
 
-Package: system-ui-tests
-Section: devel
-Priority: optional
-Architecture: any
-Depends: ${shlibs:Depends}, meegotestrunner, system-ui,
-         testrunner, meego-env-dimming
-XB-Maemo-CI-Packages: system-ui
-XB-Maemo-CI-Stage: fast, staging
-Description: Test package for system-ui
+#Package: system-ui-tests
+#Section: devel
+#Priority: optional
+#Architecture: any
+#Depends: ${shlibs:Depends}, meegotestrunner, system-ui,
+#         testrunner, meego-env-dimming
+#XB-Maemo-CI-Packages: system-ui
+#XB-Maemo-CI-Stage: fast, staging
+#Description: Test package for system-ui
 
 Package: system-ui-dev
 Provides: duistatusindicatormenu-dev

@@ -18,37 +18,29 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "lockscreenwindow.h"
 #include "lockscreen.h"
+#include <MWindow>
 
-LockScreenWindow::LockScreenWindow ():
-        lockScreen(new LockScreen(this))
+LockScreen::LockScreen(MWindow* parent)
 {
-    setObjectName ("LockScreenWindow");
-    connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
+    this->setParent(parent);
+    setObjectName ("LockScreen");
 }
 
-LockScreenWindow::~LockScreenWindow ()
+LockScreen::~LockScreen()
 {
-    delete lockScreen;
 }
 
-void LockScreenWindow::appear()
+void LockScreen::sliderUnlocked ()
 {
-    lockScreen->appear(this);
+    emit unlocked ();
 }
 
-void LockScreenWindow::disappear()
+void LockScreen::updateDateTime ()
 {
-    lockScreen->disappear();
+    emit dateTimeChanged();
 }
 
-void LockScreenWindow::updateDateTime ()
+void LockScreen::reset ()
 {
-    lockScreen->updateDateTime();
-}
-
-void LockScreenWindow::reset ()
-{
-    lockScreen->reset();
 }

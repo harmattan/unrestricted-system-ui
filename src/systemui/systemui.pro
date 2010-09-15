@@ -34,7 +34,6 @@ HEADERS +=                              \
     batterybusinesslogic.h              \
     sysuid.h                            \
     lockscreenbusinesslogic.h           \
-    lockscreenui.h                      \
     lockscreenwindow.h                  \
     eventeater.h                        \
     shutdownui.h                        \
@@ -48,7 +47,9 @@ HEADERS +=                              \
     unlockmissedevents.h                \
     unlockwidgets.h                     \
     x11wrapper.h \
-    lockscreenview.h
+    lockscreenview.h \
+    lockscreenviewwithpadlock.h \
+    lockscreen.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -57,7 +58,6 @@ SOURCES +=                              \
     batterybusinesslogic.cpp            \
     sysuid.cpp                          \
     lockscreenbusinesslogic.cpp         \
-    lockscreenui.cpp                    \
     lockscreenwindow.cpp                \
     eventeater.cpp                      \
     shutdownui.cpp                      \
@@ -70,7 +70,9 @@ SOURCES +=                              \
     unlockmissedevents.cpp              \
     unlockwidgets.cpp                   \
     x11wrapper.cpp \
-    lockscreenview.cpp
+    lockscreenview.cpp \
+    lockscreenviewwithpadlock.cpp \
+    lockscreen.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)

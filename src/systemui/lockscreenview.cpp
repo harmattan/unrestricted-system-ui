@@ -12,6 +12,8 @@
 ****************************************************************************/
 #include "lockscreenview.h"
 #include <MGConfItem>
+#include <MViewCreator>
+#include "lockscreen.h"
 
 const QString GCONF_BG_LANDSCAPE = "/desktop/meego/background/landscape/picture_filename";
 const QString GCONF_BG_PORTRAIT = "/desktop/meego/background/portrait/picture_filename";
@@ -71,3 +73,5 @@ void LockScreenView::reloadPortraitBackground ()
         portraitPixmap->load (filename);
     }
 }
+
+M_REGISTER_VIEW_NEW(LockScreenView, LockScreen)

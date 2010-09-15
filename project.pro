@@ -7,7 +7,7 @@ SUBDIRS = src \
           translations \
           themes \
           demos \
-          tests
+#          tests
 
 QMAKE_CLEAN += configure-stamp build-stamp localconfig.pri
 

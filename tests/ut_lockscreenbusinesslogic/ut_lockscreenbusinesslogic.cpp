@@ -23,7 +23,7 @@
 
 #include "ut_lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogic.h"
-#include "lockscreenui_stub.h"
+#include "lockscreen_stub.h"
 #include "lockscreenwindow_stub.h"
 #include "eventeater.h"
 #include "sysuid_stub.h"
@@ -45,7 +45,7 @@ Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
 
 void Ut_LockScreenBusinessLogic::init()
 {
-    gLockScreenUIStub->stubReset();
+    gLockScreenStub->stubReset();
 #ifdef HAVE_QMSYSTEM
     qmDisplayState = Maemo::QmDisplayState::On;
 #endif
@@ -95,10 +95,10 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 #else
     spy.clear ();
 #endif
-    QCOMPARE(logic.lockUI->isVisible(), true);
+    QCOMPARE(logic.lockScreen->isVisible(), true);
 
     // Check whether the lock-screen-ui state has be reset to defaults
-    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 1);
+    QCOMPARE(gLockScreenStub->stubCallCount ("reset"), 1);
 
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
     // The timer should not be started if the display is off
@@ -113,12 +113,12 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
     QCOMPARE (logic.timer.isActive (), true);
     QCOMPARE (logic.timer.interval (), 1000);
-    QCOMPARE(gLockScreenUIStub->stubCallCount("updateDateTime"), 1);
+    QCOMPARE(gLockScreenStub->stubCallCount("updateDateTime"), 1);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);
     QTest::qWait (10);
-    QCOMPARE(logic.lockUI->isVisible(), false);
+    QCOMPARE(logic.lockScreen->isVisible(), false);
     QCOMPARE (logic.timer.isActive (), false);
 }
 
@@ -152,7 +152,7 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
 #else
     spy.clear ();
 #endif
-    QCOMPARE(logic.lockUI->isVisible(), false);
+    QCOMPARE(logic.lockScreen->isVisible(), false);
     QCOMPARE (logic.timer.isActive (), false);
 }
 
@@ -172,7 +172,7 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
     logic.toggleScreenLockUI(true);
 
     // When lock-screen-ui is shown reset should be called on it
-    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 1);
+    QCOMPARE(gLockScreenStub->stubCallCount ("reset"), 1);
 
     logic.displayStateChanged(Maemo::QmDisplayState::Off);
     QCOMPARE (logic.timer.isActive (), false);
@@ -183,7 +183,7 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 
     // Also check whether the reset called on the
     // lock-screen-ui (after display turn on)
-    QCOMPARE(gLockScreenUIStub->stubCallCount ("reset"), 2);
+    QCOMPARE(gLockScreenStub->stubCallCount ("reset"), 2);
 }
 #endif
 

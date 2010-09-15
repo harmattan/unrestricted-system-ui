@@ -11,7 +11,7 @@ HEADERS += ut_lockscreenbusinesslogic.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/lockscreenui.h \
+    $$SRCDIR/lockscreen.h \
     $$SRCDIR/lockscreenwindow.h \
     $$SRCDIR/eventeater.h \
 

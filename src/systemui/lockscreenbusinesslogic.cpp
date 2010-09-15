@@ -19,8 +19,9 @@
 #include <QDBusInterface>
 #include <QTime>
 #include <QX11Info>
+#include <MApplication>
 
-#include "lockscreenui.h"
+#include "lockscreenwindow.h"
 #include "eventeater.h"
 #include "lockscreenbusinesslogic.h"
 
@@ -31,10 +32,10 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-LockScreenBusinessLogic::LockScreenBusinessLogic (
-        QObject* parent) :
+
+LockScreenBusinessLogic::LockScreenBusinessLogic (QObject* parent) :
     QObject (parent),
-    lockUI (new LockScreenUI),
+    lockScreenWindow (new LockScreenWindow),
     eaterUI (new EventEater)
 {
     bool connectSuccess;
@@ -43,12 +44,10 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     /*
      * Connecting the lockUI signals.
      */
-    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
-             this, SLOT (unlockScreen ()));
+    connectSuccess = connect (lockScreenWindow, SIGNAL (unlocked ()), this, SLOT (unlockScreen ()));
     Q_ASSERT (connectSuccess);
 
-    connectSuccess = connect (lockUI, SIGNAL (unlocked ()),
-             this, SIGNAL (unlockConfirmed ()));
+    connectSuccess = connect (lockScreenWindow, SIGNAL (unlocked ()), this, SIGNAL (unlockConfirmed ()));
     Q_ASSERT (connectSuccess);
 
     /*
@@ -78,18 +77,12 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (
     Q_ASSERT (connectSuccess);
 #endif
 
-    /*
-     * Connecting to timer that refreshes the date-time label
-     */
-    connectSuccess = connect (&timer, SIGNAL (timeout ()),
-             lockUI, SLOT (updateDateTime ()));
-
-    Q_ASSERT (connectSuccess);
+    connect (&timer, SIGNAL (timeout ()), lockScreenWindow, SLOT (updateDateTime ()));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
-    delete lockUI;
+    delete lockScreenWindow;
 }
 
 /*!
@@ -126,15 +119,15 @@ LockScreenBusinessLogic::displayStateChanged (
      * off we need to start it.
      */
     if (state == Maemo::QmDisplayState::On &&
-            lockUI != NULL && lockUI->isVisible ())
+            lockScreenWindow != NULL && lockScreenWindow->isVisible ())
     {
         if (timer.isActive () == false)
             mayStartTimer ();
         /*
          * Also we should reset the lock-screen-ui dnd icon state:
          */
-        lockUI->reset();
-        lockUI->setFocus ();
+        lockScreenWindow->reset();
+        lockScreenWindow->setFocus ();
     }
 }
 #endif
@@ -157,11 +150,13 @@ LockScreenBusinessLogic::toggleScreenLockUI (
          * Whenever we're showing the lock-screen-ui
          * we need to reset its state.
          */
-        lockUI->reset();
-        lockUI->show();
+        lockScreenWindow->reset();
+        lockScreenWindow->appear();
+        lockScreenWindow->show();
         mayStartTimer ();
     } else {
-        lockUI->hide();
+        lockScreenWindow->disappear();
+        lockScreenWindow->hide();
         mayStopTimer ();
     }
 
@@ -196,7 +191,7 @@ LockScreenBusinessLogic::mayStartTimer ()
 
     SYS_DEBUG ("Starting timer");
     // It's better to update the time straight away.
-    lockUI->updateDateTime ();
+   lockScreenWindow->updateDateTime ();
 
     // TODO: some adjustments of time may be done
     timer.start (1000);
