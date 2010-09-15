@@ -9,8 +9,8 @@ SOURCES += ft_lockscreenbusinesslogic.cpp \
     $$SRCDIR/unlockmissedevents.cpp \
     $$SRCDIR/lockscreenbusinesslogic.cpp \
     $$SRCDIR/unlockwidgets.cpp \
-    $$SRCDIR/lockscreenui.cpp  \
-    $$SRCDIR/lockscreenwindow.cpp  \
+    $$SRCDIR/lockscreenwindow.cpp \
+    $$SRCDIR/lockscreen.cpp \
     $$SRCDIR/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/unlocknotifications.cpp
@@ -21,8 +21,8 @@ HEADERS += ft_lockscreenbusinesslogic.h \
     $$SRCDIR/unlockmissedevents.h \
     $$SRCDIR/lockscreenbusinesslogic.h \
     $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/lockscreenui.h \
-    $$SRCDIR/lockscreenwindow.h  \
+    $$SRCDIR/lockscreenwindow.h \
+    $$SRCDIR/lockscreen.h \
     $$SRCDIR/eventeater.h  \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/unlocknotifications.h
