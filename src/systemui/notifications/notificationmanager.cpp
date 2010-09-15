@@ -21,10 +21,12 @@
 #include "metatypedeclarations.h"
 #include "notificationmanager.h"
 #include "notification.h"
+#include "mnotificationproxy.h"
 #include "dbusinterfacenotificationsource.h"
 #include "dbusinterfacenotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "genericnotificationparameterfactory.h"
+#include "notificationwidgetparameterfactory.h"
 #include <QDBusConnection>
 #include <QDir>
 #include <mfiledatastore.h>
@@ -466,26 +468,29 @@ QList<uint> NotificationManager::notificationIdList(uint notificationUserId)
     return listOfNotificationIds;
 }
 
-QList<Notification> NotificationManager::notificationList(uint notificationUserId)
+
+QList<MNotificationProxy> NotificationManager::notificationList(uint notificationUserId)
 {
-    QList<Notification> userNotifications;
+    QList<MNotificationProxy> userNotifications;
 
     foreach(const Notification & notification, notifications) {
         if (notification.userId() == notificationUserId) {
-            userNotifications.append(notification);
+            MNotificationProxy mnotification(notification);
+            userNotifications.append(mnotification);
         }
     }
 
     return userNotifications;
 }
 
-QList<NotificationGroup> NotificationManager::notificationGroupList(uint notificationUserId)
+QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint notificationUserId)
 {
-    QList<NotificationGroup> userGroups;
+    QList<MNotificationGroupProxy> userGroups;
 
     foreach(const NotificationGroup & group, groups) {
         if (group.userId() == notificationUserId) {
-            userGroups.append(group);
+            MNotificationGroupProxy mnotificationgroup(group);
+            userGroups.append(mnotificationgroup);
         }
     }
 

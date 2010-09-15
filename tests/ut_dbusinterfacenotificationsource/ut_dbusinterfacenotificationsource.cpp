@@ -107,22 +107,22 @@ QList< uint > MockNotificationManager::notificationIdList(uint notificationUserI
     return tmp;
 }
 
-QList<Notification> MockNotificationManager::notificationList(uint notificationUserId)
+QList<MNotificationProxy> MockNotificationManager::notificationList(uint notificationUserId)
 {
     queryNotificationUserId = notificationUserId;
 
-    QList<Notification> notificationList;
+    QList<MNotificationProxy> notificationList;
 
     notificationListCalled = true;
 
     return notificationList;
 }
 
-QList<NotificationGroup> MockNotificationManager::notificationGroupList(uint notificationUserId)
+QList<MNotificationGroupProxy> MockNotificationManager::notificationGroupList(uint notificationUserId)
 {
     queryNotificationUserId = notificationUserId;
 
-    QList<NotificationGroup> groupList;
+    QList<MNotificationGroupProxy> groupList;
 
     notificationGroupListCalled = true;
 
@@ -200,15 +200,15 @@ QList<uint> DBusInterfaceNotificationSourceAdaptor::notificationIdList(uint noti
     return tmp;
 }
 
-QList < Notification >  DBusInterfaceNotificationSourceAdaptor::notificationList(uint)
+QList < MNotificationProxy >  DBusInterfaceNotificationSourceAdaptor::notificationList(uint)
 {
-    QList<Notification> l;
+    QList<MNotificationProxy> l;
     return l;
 }
 
-QList<NotificationGroup> DBusInterfaceNotificationSourceAdaptor::notificationGroupList(uint)
+QList<MNotificationGroupProxy> DBusInterfaceNotificationSourceAdaptor::notificationGroupList(uint)
 {
-    QList<NotificationGroup> l;
+    QList<MNotificationGroupProxy> l;
     return l;
 }
 

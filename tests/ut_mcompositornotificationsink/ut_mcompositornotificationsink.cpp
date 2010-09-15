@@ -23,6 +23,7 @@
 #include <MApplication>
 #include <MSceneManager>
 #include "mcompositornotificationsink.h"
+#include "mnotificationproxy.h"
 #include "testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
 #include <MOnDisplayChangeEvent>
@@ -113,14 +114,14 @@ QList< uint > MockNotificationManager::notificationIdList(uint /*notificationUse
     return tmp;
 }
 
-QList<Notification> MockNotificationManager::notificationList(uint)
+QList<MNotificationProxy> MockNotificationManager::notificationList(uint)
 {
-    return QList<Notification>();
+    return QList<MNotificationProxy>();
 }
 
-QList<NotificationGroup> MockNotificationManager::notificationGroupList(uint)
+QList<MNotificationGroupProxy> MockNotificationManager::notificationGroupList(uint)
 {
-    return QList<NotificationGroup>();
+    return QList<MNotificationGroupProxy>();
 }
 
 bool windowEventFilterCalled = false;

@@ -7,6 +7,7 @@ INCLUDEPATH += $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 SOURCES += \
     ut_dbusinterfacenotificationsource.cpp \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.cpp \
+   $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     ut_dbusinterfacenotificationsource.h \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
+   $$NOTIFICATIONSRCDIR/mnotificationproxy.h \ \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsourceadaptor.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h

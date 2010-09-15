@@ -25,6 +25,9 @@
 #include "notification.h"
 #include "notificationgroup.h"
 
+class MNotificationProxy;
+class MNotificationGroupProxy;
+
 /*!
  * Abstract notification manager interface. Declares interface for adding,
  * updating, removing individual notifications as well as adding a
@@ -113,7 +116,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications that belong to notificationUserId
      */
-    virtual QList<Notification> notificationList(uint notificationUserId) = 0;
+    virtual QList<MNotificationProxy> notificationList(uint notificationUserId) = 0;
 
     /*!
      * Returns list of notification groups by user id
@@ -121,7 +124,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
      */
-    virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId) = 0;
+    virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId) = 0;
 
 public slots:
     /*!

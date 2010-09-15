@@ -23,6 +23,7 @@
 #include <QObject>
 #include "notification.h"
 #include "notificationgroup.h"
+#include "mnotificationproxy.h"
 #include "notificationsource.h"
 #include "notificationmanagerinterface.h"
 
@@ -188,7 +189,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications that belong to notificationUserId
      */
-    QList<Notification> notificationList(uint notificationUserId);
+    QList<MNotificationProxy> notificationList(uint notificationUserId);
 
     /*!
      * Returns list of notification groups by user id
@@ -196,7 +197,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
      */
-    QList<NotificationGroup> notificationGroupList(uint notificationUserId);
+    QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
 };
 
 #endif // DBUSINTERFACENOTIFICATIONSOURCE_H

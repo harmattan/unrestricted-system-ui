@@ -14,6 +14,7 @@ HEADERS +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicator.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.h \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mnotificationproxy.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsinkadaptor.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsinkproxy.h
@@ -30,6 +31,7 @@ SOURCES +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicator.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.cpp \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mnotificationproxy.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsinkadaptor.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/dbusinterfacenotificationsinkproxy.cpp

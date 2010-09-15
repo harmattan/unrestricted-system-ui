@@ -9,6 +9,7 @@ LIBS += -L../../lib
 SOURCES += \
     ut_notificationmanager.cpp \
     $$NOTIFICATIONSRCDIR/notificationmanager.cpp \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
     $$SRCDIR/contextframeworkcontext.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
     $$LIBNOTIFICATIONSRCDIR/notification.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     $$NOTIFICATIONSRCDIR/notificationmanager.h \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsink.h \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/contextframeworkcontext.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsource.h \

@@ -988,21 +988,52 @@ void Ut_NotificationManager::testNotificationIdListNotificationListEmpty()
 
 void Ut_NotificationManager::testNotificationList()
 {
-    NotificationParameters parameters;
-    manager->addNotification(1, parameters);
-    manager->addNotification(1, parameters);
-    manager->addNotification(1, parameters);
-    manager->addNotification(3, parameters);
-    manager->addNotification(2, parameters);
-    manager->addNotification(1, parameters);
+    // normal notification
+    NotificationParameters parameters0;
+    parameters0.add(EVENT_TYPE, "type0");
+    parameters0.add(SUMMARY, "summary0");
+    parameters0.add(BODY, "body0");
+    parameters0.add(IMAGE, "image0");
+    parameters0.add(ACTION, "action0");
+    parameters0.add(COUNT, 0);
+    manager->addNotification(1, parameters0);
 
-    QList<Notification> list = manager->notificationList(1);
-    QCOMPARE(list.size(), 4);
+    // another notification, in a group
+    NotificationParameters parameters1;
+    NotificationParameters gparameters;
+    parameters1.add(EVENT_TYPE, "type1");
+    parameters1.add(SUMMARY, "summary1");
+    parameters1.add(BODY, "body1");
+    parameters1.add(IMAGE, "image1");
+    parameters1.add(ACTION, "action1");
+    parameters1.add(COUNT, 1);
+    uint gid = manager->addGroup(1, gparameters);
+    manager->addNotification(1, parameters1, gid);
 
-    QCOMPARE(list.at(0).notificationId(), (uint)1);
-    QCOMPARE(list.at(1).notificationId(), (uint)2);
-    QCOMPARE(list.at(2).notificationId(), (uint)3);
-    QCOMPARE(list.at(3).notificationId(), (uint)6);
+    // third notification, a different user
+    NotificationParameters parameters2;
+    parameters2.add(EVENT_TYPE, "type2");
+    parameters2.add(SUMMARY, "summary2");
+    parameters2.add(BODY, "body2");
+    parameters2.add(IMAGE, "image2");
+    parameters2.add(ACTION, "action2");
+    parameters2.add(COUNT, 2);
+    manager->addNotification(2, parameters2);
+
+    QList<MNotificationProxy> list = manager->notificationList(1);
+    QCOMPARE(list.size(), 2);
+
+    QCOMPARE(list.at(0).eventType, parameters0.value(EVENT_TYPE).toString());
+    QCOMPARE(list.at(0).summary, parameters0.value(SUMMARY).toString());
+    QCOMPARE(list.at(0).body, parameters0.value(BODY).toString());
+    QCOMPARE(list.at(0).imageId, parameters0.value(IMAGE).toString());
+    QCOMPARE(list.at(0).count, parameters0.value(COUNT).toUInt());
+
+    QCOMPARE(list.at(1).eventType, parameters1.value(EVENT_TYPE).toString());
+    QCOMPARE(list.at(1).summary, parameters1.value(SUMMARY).toString());
+    QCOMPARE(list.at(1).body, parameters1.value(BODY).toString());
+    QCOMPARE(list.at(1).imageId, parameters1.value(IMAGE).toString());
+    QCOMPARE(list.at(1).count, parameters1.value(COUNT).toUInt());
 
     list = manager->notificationList(0);
     QCOMPARE(list.size(), 0);
@@ -1010,20 +1041,50 @@ void Ut_NotificationManager::testNotificationList()
 
 void Ut_NotificationManager::testNotificationGroupList()
 {
-    NotificationParameters parameters;
-    manager->addGroup(1, parameters);
-    manager->addGroup(1, parameters);
-    manager->addGroup(1, parameters);
-    manager->addGroup(3, parameters);
-    manager->addGroup(2, parameters);
-    manager->addGroup(1, parameters);
+    // normal group
+    NotificationParameters parameters0;
+    parameters0.add(EVENT_TYPE, "type0");
+    parameters0.add(SUMMARY, "summary0");
+    parameters0.add(BODY, "body0");
+    parameters0.add(IMAGE, "image0");
+    parameters0.add(ACTION, "action0");
+    parameters0.add(COUNT, 0);
+    manager->addGroup(1, parameters0);
 
-    QList<NotificationGroup> list = manager->notificationGroupList(1);
-    QCOMPARE(list.size(), 4);
-    QCOMPARE(list.at(0).groupId(), (uint)1);
-    QCOMPARE(list.at(1).groupId(), (uint)2);
-    QCOMPARE(list.at(2).groupId(), (uint)3);
-    QCOMPARE(list.at(3).groupId(), (uint)6);
+    // another group
+    NotificationParameters parameters1;
+    parameters1.add(EVENT_TYPE, "type1");
+    parameters1.add(SUMMARY, "summary1");
+    parameters1.add(BODY, "body1");
+    parameters1.add(IMAGE, "image1");
+    parameters1.add(ACTION, "action1");
+    parameters1.add(COUNT, 1);
+    manager->addGroup(1, parameters1);
+
+    // third group, a different user
+    NotificationParameters parameters2;
+    parameters2.add(EVENT_TYPE, "type2");
+    parameters2.add(SUMMARY, "summary2");
+    parameters2.add(BODY, "body2");
+    parameters2.add(IMAGE, "image2");
+    parameters2.add(ACTION, "action2");
+    parameters2.add(COUNT, 2);
+    manager->addGroup(2, parameters2);
+
+    QList<MNotificationGroupProxy> list = manager->notificationGroupList(1);
+    QCOMPARE(list.size(), 2);
+
+    QCOMPARE(list.at(0).eventType, parameters0.value(EVENT_TYPE).toString());
+    QCOMPARE(list.at(0).summary, parameters0.value(SUMMARY).toString());
+    QCOMPARE(list.at(0).body, parameters0.value(BODY).toString());
+    QCOMPARE(list.at(0).imageId, parameters0.value(IMAGE).toString());
+    QCOMPARE(list.at(0).count, parameters0.value(COUNT).toUInt());
+
+    QCOMPARE(list.at(1).eventType, parameters1.value(EVENT_TYPE).toString());
+    QCOMPARE(list.at(1).summary, parameters1.value(SUMMARY).toString());
+    QCOMPARE(list.at(1).body, parameters1.value(BODY).toString());
+    QCOMPARE(list.at(1).imageId, parameters1.value(IMAGE).toString());
+    QCOMPARE(list.at(1).count, parameters1.value(COUNT).toUInt());
 
     list = manager->notificationGroupList(0);
     QCOMPARE(list.size(), 0);

@@ -9,8 +9,10 @@ SOURCES += \
     ut_mcompositornotificationsink.cpp \
     $$NOTIFICATIONSRCDIR/mcompositornotificationsink.cpp \
     $$NOTIFICATIONSRCDIR/widgetnotificationsink.cpp \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
     $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
     $$STUBSDIR/stubbase.cpp
@@ -20,8 +22,10 @@ HEADERS += \
     ut_mcompositornotificationsink.h \
     $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
     $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$LIBNOTIFICATIONSRCDIR/notification.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
     $$STUBSDIR/stubbase.h

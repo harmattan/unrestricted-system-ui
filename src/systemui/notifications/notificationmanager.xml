@@ -88,12 +88,12 @@
     <method name="notificationList">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(uusssssu)" direction="out"/>
-       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; Notification &gt; "/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationProxy &gt; "/>
     </method>
     <method name="notificationGroupList">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(usssssu)" direction="out"/>
-       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; NotificationGroup &gt; "/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupProxy &gt; "/>
     </method>
   </interface>
 </node>

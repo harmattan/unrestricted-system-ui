@@ -114,17 +114,17 @@ class DBusInterfaceNotificationSourceAdaptor: public QDBusAbstractAdaptor
 "    <method name=\"notificationIdList\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"notificationUserId\"/>\n"
 "      <arg direction=\"out\" type=\"au\" name=\"result\"/>\n"
-"      <annotation value=\"QList &lt; uint > \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
+"      <annotation value=\"QList &lt; uint &gt; \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
 "    </method>\n"
 "    <method name=\"notificationList\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"notificationUserId\"/>\n"
 "      <arg direction=\"out\" type=\"a(uusssssu)\" name=\"result\"/>\n"
-"      <annotation value=\"QList &lt; Notification > \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
+"      <annotation value=\"QList &lt; MNotificationProxy &gt; \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
 "    </method>\n"
 "    <method name=\"notificationGroupList\">\n"
 "      <arg direction=\"in\" type=\"u\" name=\"notificationUserId\"/>\n"
 "      <arg direction=\"out\" type=\"a(usssssu)\" name=\"result\"/>\n"
-"      <annotation value=\"QList &lt; NotificationGroup > \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
+"      <annotation value=\"QList &lt; MNotificationGroupProxy &gt; \" name=\"com.trolltech.QtDBus.QtTypeName.Out0\"/>\n"
 "    </method>\n"
 "  </interface>\n"
         "")
@@ -141,9 +141,9 @@ public Q_SLOTS: // METHODS
     uint addGroup(uint notificationUserId, const QString &eventType);
     uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
     uint addNotification(uint notificationUserId, uint groupId, const QString &eventType);
-    QList < NotificationGroup >  notificationGroupList(uint notificationUserId);
+    QList < MNotificationGroupProxy >  notificationGroupList(uint notificationUserId);
     QList < uint >  notificationIdList(uint notificationUserId);
-    QList < Notification >  notificationList(uint notificationUserId);
+    QList < MNotificationProxy >  notificationList(uint notificationUserId);
     uint notificationUserId();
     bool removeGroup(uint notificationUserId, uint groupId);
     bool removeNotification(uint notificationUserId, uint notificationId);

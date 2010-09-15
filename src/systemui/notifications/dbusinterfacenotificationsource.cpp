@@ -19,6 +19,12 @@
 
 #include "dbusinterfacenotificationsource.h"
 #include "dbusinterfacenotificationsourceadaptor.h"
+#include "mnotificationproxy.h"
+
+Q_DECLARE_METATYPE(MNotificationProxy)
+Q_DECLARE_METATYPE(MNotificationGroupProxy)
+Q_DECLARE_METATYPE(QList<MNotificationProxy>)
+Q_DECLARE_METATYPE(QList<MNotificationGroupProxy>)
 
 DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationManagerInterface &interface)
     : NotificationSource(interface)
@@ -27,6 +33,10 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
     qDBusRegisterMetaType<QList<Notification> >();
     qDBusRegisterMetaType<NotificationGroup>();
     qDBusRegisterMetaType<QList<NotificationGroup> >();
+    qDBusRegisterMetaType<MNotificationProxy>();
+    qDBusRegisterMetaType<QList<MNotificationProxy> >();
+    qDBusRegisterMetaType<MNotificationGroupProxy>();
+    qDBusRegisterMetaType<QList<MNotificationGroupProxy> >();
 
     new DBusInterfaceNotificationSourceAdaptor(this);
 }
@@ -91,12 +101,12 @@ QList<uint> DBusInterfaceNotificationSource::notificationIdList(uint notificatio
     return manager.notificationIdList(notificationUserId);
 }
 
-QList<Notification> DBusInterfaceNotificationSource::notificationList(uint notificationUserId)
+QList<MNotificationProxy> DBusInterfaceNotificationSource::notificationList(uint notificationUserId)
 {
     return manager.notificationList(notificationUserId);
 }
 
-QList<NotificationGroup> DBusInterfaceNotificationSource::notificationGroupList(uint notificationUserId)
+QList<MNotificationGroupProxy> DBusInterfaceNotificationSource::notificationGroupList(uint notificationUserId)
 {
     return manager.notificationGroupList(notificationUserId);
 }
