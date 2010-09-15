@@ -9,6 +9,12 @@
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
 **
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
 ****************************************************************************/
 #include "lockscreenview.h"
 #include <MGConfItem>
@@ -20,19 +26,17 @@ const QString GCONF_BG_PORTRAIT = "/desktop/meego/background/portrait/picture_fi
 
 LockScreenView::LockScreenView(MSceneWindow* controller) : MSceneWindowView(controller),
     controller(controller),
-    gconfBgLandscape(new MGConfItem (GCONF_BG_LANDSCAPE, this)),
-    gconfBgPortrait(new MGConfItem (GCONF_BG_PORTRAIT, this)),
+    gconfBgLandscape(new MGConfItem(GCONF_BG_LANDSCAPE, this)),
+    gconfBgPortrait(new MGConfItem(GCONF_BG_PORTRAIT, this)),
     landscapePixmap(new QPixmap),
     portraitPixmap(new QPixmap)
 {
-    connect (gconfBgLandscape, SIGNAL(valueChanged()), this, SLOT(reloadLandscapeBackground()));
-    connect (gconfBgPortrait, SIGNAL(valueChanged()), this, SLOT(reloadPortraitBackground()));
+    connect(gconfBgLandscape, SIGNAL(valueChanged()), this, SLOT(reloadLandscapeBackground()));
+    connect(gconfBgPortrait, SIGNAL(valueChanged()), this, SLOT(reloadPortraitBackground()));
 
     // Load the backgrounds if any...
-    reloadLandscapeBackground ();
-    reloadPortraitBackground ();
-
-    setObjectName ("LockScreenWindow");
+    reloadLandscapeBackground();
+    reloadPortraitBackground();
 }
 
 LockScreenView::~LockScreenView()
@@ -43,26 +47,18 @@ LockScreenView::~LockScreenView()
     delete portraitPixmap;
 }
 
-void LockScreenView::paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void LockScreenView::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    QPixmap *pixmap = (geometry().height() > geometry().width()) ? portraitPixmap : landscapePixmap;
 
-    bool portrait = geometry().height() > geometry().width ();
-
-    if (portrait) {
-        painter->drawPixmap (0, 0, portraitPixmap->width(), portraitPixmap->height(), *portraitPixmap);
-    } else {
-        painter->drawPixmap (0, 0, landscapePixmap->width(), landscapePixmap->height(), *landscapePixmap);
-    }
+    painter->drawPixmap(0, 0, pixmap->width(), pixmap->height(), *pixmap);
 }
 
 void LockScreenView::reloadLandscapeBackground ()
 {
-    QVariant value = gconfBgLandscape->value();
-    QString filename = value.toString();
+    QString filename = gconfBgLandscape->value().toString();
     if (!filename.isEmpty()) {
-        landscapePixmap->load (filename);
+        landscapePixmap->load(filename);
     }
 }
 

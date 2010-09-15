@@ -21,8 +21,6 @@
 
 #include <MSceneWindow>
 
-class MWindow;
-
 class LockScreen : public MSceneWindow
 {
     Q_OBJECT
@@ -30,19 +28,15 @@ class LockScreen : public MSceneWindow
 public:
     LockScreen(MWindow* parent);
     virtual ~LockScreen();
-    void updateDateTime ();
-    void reset ();
-    MWindow* parent();
+    void updateDateTime();
+    void reset();
 
 signals:
-    void unlocked ();
+    void unlocked();
     void dateTimeChanged();
 
-protected:
-    void createContent ();
-
 private slots:
-    void sliderUnlocked ();
+    void sliderUnlocked();
 };
 
 #endif
