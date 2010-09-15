@@ -38,11 +38,15 @@ UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_disabled (false),
     m_showdialog (false)
 {
-#ifdef HAVE_QMSYSTEM
-    m_logic = new Maemo::QmUSBMode (this);
-#endif
-
+    /*
+     * Initialize a little bit later...
+     * we don't want to slow-down the sysuid startup
+     */
+#ifndef UNIT_TEST
+    QTimer::singleShot (3000, this, SLOT (initialize ()));
+#else
     initialize ();
+#endif
 }
 
 UsbUi::~UsbUi ()
@@ -53,6 +57,8 @@ void
 UsbUi::initialize ()
 {
 #ifdef HAVE_QMSYSTEM
+    m_logic = new Maemo::QmUSBMode (this);
+
     connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
              this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
 

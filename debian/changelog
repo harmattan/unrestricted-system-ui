@@ -10,8 +10,9 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: NB#190331 - Lack of text in notifications from Status Indicator Menu
   * Enabled portrait-mode shutdown logo (needs
     "icon-l-startup-nokia-logo-portrait" from theme)
+  * Fixes: NB#192188 - Don't create the usb-dialog from constructor...
 
- -- David Kedves <dkedves@blumsoft.eu>  Wed, 15 Sep 2010 15:18:28 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Wed, 15 Sep 2010 16:06:30 +0200
 
 system-ui (0.16.13-2) harmattan; urgency=low
 
