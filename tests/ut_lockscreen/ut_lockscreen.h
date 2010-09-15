@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright(C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,26 +18,37 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef LOCKSCREEN_H
-#define LOCKSCREEN_H
+#ifndef UT_LOCKSCREEN_H
+#define UT_LOCKSCREEN_H
 
-#include <MSceneWindow>
+#include <QtTest/QtTest>
+#include <QObject>
+#include <QPointer>
 
-class LockScreen : public MSceneWindow
+class MApplication;
+class MWindow;
+class LockScreen;
+
+class Ut_LockScreen : public QObject
 {
     Q_OBJECT
 
-public:
-    LockScreen(MWindow* parent);
-    virtual ~LockScreen();
-    void updateDateTime();
-
 signals:
     void unlocked();
-    void dateTimeChanged();
 
 private slots:
-    void sliderUnlocked();
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testUpdateDateAndTime();
+    void testSliderUnlocked();
+
+private:
+    MApplication *app;
+    MWindow *parent;
+    LockScreen  *lockScreen;
 };
 
 #endif

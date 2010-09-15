@@ -37,7 +37,3 @@ void LockScreen::updateDateTime ()
 {
     emit dateTimeChanged();
 }
-
-void LockScreen::reset ()
-{
-}
