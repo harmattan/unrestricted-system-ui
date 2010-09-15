@@ -30,7 +30,6 @@ class LockScreenStub : public StubBase {
   virtual void LockScreenConstructor();
   virtual void LockScreenDestructor();
   virtual void updateDateTime();
-  virtual void createContent();
   virtual void reset();
   virtual void sliderUnlocked();
 }; 
@@ -45,10 +44,6 @@ void LockScreenStub::LockScreenDestructor() {
 
 void LockScreenStub::updateDateTime() {
   stubMethodEntered("updateDateTime");
-}
-
-void LockScreenStub::createContent() {
-  stubMethodEntered("createContent");
 }
 
 void LockScreenStub::sliderUnlocked() {
@@ -76,10 +71,6 @@ LockScreen::~LockScreen() {
 
 void LockScreen::updateDateTime() {
   gLockScreenStub->updateDateTime();
-}
-
-void LockScreen::createContent() {
-  gLockScreenStub->createContent();
 }
 
 void LockScreen::sliderUnlocked() {
