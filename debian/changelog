@@ -7,6 +7,7 @@ system-ui (0.16.14~1) harmattan; urgency=low
   * Fixes: NB#182995 -  shutdown sequence is skipped with device power down and alarm
   * Fixes: NB#188724 - USB mode selection not working with SecFW special image
   * Fixes: NB#174471 - status icons do not scale properly to device DPI
+  * Fixes: NB#190331 - Lack of text in notifications from Status Indicator Menu
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 14 Sep 2010 12:08:48 +0200
 

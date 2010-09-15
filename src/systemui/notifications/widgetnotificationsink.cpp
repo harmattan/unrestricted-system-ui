@@ -60,9 +60,11 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     MBanner *infoBanner = new MBanner();
 
     // Create a banner on the basis of notification type
-    if (type == Notification::ApplicationEvent)
-    {
+    if (type == Notification::ApplicationEvent) {
+        infoBanner->setObjectName("EventBanner");
         infoBanner->setTitle(title);
+    } else {
+        infoBanner->setObjectName("SystemBanner");
     }
     // Add subtitle and iconid for both event and system notifications
     infoBanner->setSubtitle(subtitle);

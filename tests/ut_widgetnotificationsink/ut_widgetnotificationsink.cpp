@@ -284,6 +284,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithRemoteAction()
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
 
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
     QCOMPARE(infoBanner->title(), QString("title0"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle0"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon0"));
@@ -297,6 +298,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
     QCOMPARE(infoBanner->title(), QString("title1"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
@@ -307,6 +309,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithSystemEvent()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("SystemBanner"));
     // Check that title is not set for system event
     QCOMPARE(infoBanner->title(), QString(""));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
@@ -318,6 +321,7 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters
 {
     TestNotificationParameters parameters("title3", "subtitle3", "buttonicon3", "content1 2 3 4");
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
     QCOMPARE(infoBanner->title(), QString("title3"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle3"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon3"));
