@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright(C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
-** Contact: Nokia Corporation(directui@nokia.com)
+** Contact: Nokia Corporation (directui@nokia.com)
 **
 ** This file is part of systemui.
 **
@@ -29,6 +29,7 @@ public:
     LockScreen(MWindow* parent);
     virtual ~LockScreen();
     void updateDateTime();
+    void reset();
 
 signals:
     void unlocked();
