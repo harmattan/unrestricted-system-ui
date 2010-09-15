@@ -48,7 +48,7 @@ HEADERS +=                              \
     unlockwidgets.h                     \
     x11wrapper.h \
     lockscreenview.h \
-    lockscreenviewwithpadlock.h \
+    lockscreenwithpadlockview.h \
     lockscreen.h
 
 SOURCES +=                              \
@@ -71,7 +71,7 @@ SOURCES +=                              \
     unlockwidgets.cpp                   \
     x11wrapper.cpp \
     lockscreenview.cpp \
-    lockscreenviewwithpadlock.cpp \
+    lockscreenwithpadlockview.cpp \
     lockscreen.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)

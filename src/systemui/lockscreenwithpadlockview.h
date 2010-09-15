@@ -25,14 +25,14 @@
 class MImageWidget;
 class QGraphicsLinearLayout;
 
-class LockScreenViewWithPadlock : public LockScreenView
+class LockScreenWithPadlockView : public LockScreenView
 {
     Q_OBJECT
     M_VIEW(MSceneWindowModel, MSceneWindowStyle)
 
 public:
-    LockScreenViewWithPadlock (MSceneWindow* controller);
-    ~LockScreenViewWithPadlock ();
+    LockScreenWithPadlockView (MSceneWindow* controller);
+    ~LockScreenWithPadlockView ();
 
     void resetState ();
 

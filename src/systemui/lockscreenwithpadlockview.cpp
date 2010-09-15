@@ -27,7 +27,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <MSceneManager>
 
-#include "lockscreenviewwithpadlock.h"
+#include "lockscreenwithpadlockview.h"
 #include "lockscreen.h"
 #include "unlockwidgets.h"
 
@@ -35,7 +35,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-LockScreenViewWithPadlock::LockScreenViewWithPadlock(MSceneWindow* controller) :
+LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     LockScreenView(controller),
     dragAndDropWindow(dynamic_cast<MWindow*>(controller->parent())),
     dragAndDropIcon(0),
@@ -67,11 +67,11 @@ LockScreenViewWithPadlock::LockScreenViewWithPadlock(MSceneWindow* controller) :
     connect(controller, SIGNAL(dateTimeChanged()), this, SLOT(updateDataTime()));
 }
 
-LockScreenViewWithPadlock::~LockScreenViewWithPadlock()
+LockScreenWithPadlockView::~LockScreenWithPadlockView()
 {
 }
 
-void LockScreenViewWithPadlock::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     bool startDragAndDrop = false;
 
@@ -115,7 +115,7 @@ void LockScreenViewWithPadlock::mousePressEvent(QGraphicsSceneMouseEvent *event)
         dragAndDropState = STATE_NONE;
 }
 
-void LockScreenViewWithPadlock::redraw()
+void LockScreenWithPadlockView::redraw()
 {
     if (drawPending == true)
         return;
@@ -124,7 +124,7 @@ void LockScreenViewWithPadlock::redraw()
     QTimer::singleShot(50, this, SLOT(redrawIdle()));
 }
 
-void LockScreenViewWithPadlock::redrawIdle()
+void LockScreenWithPadlockView::redrawIdle()
 {
     drawPending = false;
 
@@ -132,7 +132,7 @@ void LockScreenViewWithPadlock::redrawIdle()
     updateDragAndDropIcon();
 }
 
-void LockScreenViewWithPadlock::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void LockScreenWithPadlockView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (lockLandArea == 0)
         return;
@@ -184,7 +184,7 @@ void LockScreenViewWithPadlock::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void LockScreenViewWithPadlock::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void LockScreenWithPadlockView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
     bool unlock = false;
@@ -216,7 +216,7 @@ void LockScreenViewWithPadlock::mouseReleaseEvent(QGraphicsSceneMouseEvent *even
     }
 }
 
-void LockScreenViewWithPadlock::resetState()
+void LockScreenWithPadlockView::resetState()
 {
     // Restore the default state ...
     if (lockLiftArea != 0)
@@ -228,7 +228,7 @@ void LockScreenViewWithPadlock::resetState()
     updateDragAndDropIcon();
 }
 
-void LockScreenViewWithPadlock::updateDragAndDropIcon()
+void LockScreenWithPadlockView::updateDragAndDropIcon()
 {
     bool enable = (dragAndDropState != STATE_NONE);
     // Icon not yet created... make it:
@@ -259,7 +259,7 @@ void LockScreenViewWithPadlock::updateDragAndDropIcon()
     }
 }
 
-void LockScreenViewWithPadlock::showHideNotifications(bool show)
+void LockScreenWithPadlockView::showHideNotifications(bool show)
 {
     if (notificationArea == 0)
         return;
@@ -279,9 +279,9 @@ void LockScreenViewWithPadlock::showHideNotifications(bool show)
     }
 }
 
-void LockScreenViewWithPadlock::updateDataTime()
+void LockScreenWithPadlockView::updateDataTime()
 {
     static_cast<UnlockHeader *>(lockLiftArea)->updateDateTime();
 }
 
-M_REGISTER_VIEW_NEW(LockScreenViewWithPadlock, LockScreen)
+M_REGISTER_VIEW_NEW(LockScreenWithPadlockView, LockScreen)
