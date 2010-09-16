@@ -487,7 +487,7 @@ MButtonStyle#StatusIndicatorMenuCloseButton {
 }
 
 MOverlayStyle#CloseButtonOverlay {
-    background-image: "duistatusmenuclose-background" 0px 0px 0px 0px;
+    background-image: "meegotouch-statusmenuclose-background" 0px 0px 0px 0px;
     minimum-size: 100% 6mm;
     preferred-size: 100% 6mm;
     maximum-size: 100% 6mm;
