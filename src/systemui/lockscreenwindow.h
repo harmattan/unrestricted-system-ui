@@ -16,38 +16,37 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef FT_LOCKSCREENBUSINESSLOGIC_H
-#define FT_LOCKSCREENBUSINESSLOGIC_H
+#ifndef LOCKSCREENWINDOW_H
+#define LOCKSCREENWINDOW_H
 
-#include <QtTest/QtTest>
-#include <QObject>
-#include "../ft_lockscreenui/xchecker.h"
+#include <MWindow>
 
-class MApplication;
-class MApplicationWindow;
-class LockScreenBusinessLogic;
+class LockScreen;
 
-class Ft_LockScreenBusinessLogic : public QObject
+class LockScreenWindow : public MWindow
 {
     Q_OBJECT
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
+public:
+    LockScreenWindow();
+    virtual ~LockScreenWindow();
 
-    void testLockScreenBusinessLogic ();
-    void testLockScreenBusinessLogicWithMainWindow ();
-#ifdef HAVE_QMSYSTEM
-    void testLockScreenBusinessLogicWithLocking ();
-#endif
+protected:
+    virtual void showEvent(QShowEvent *event);
+
+signals:
+    void unlocked();
+
+public slots:
+    void updateDateTime();
+    void reset();
 
 private:
-    XChecker                   m_XChecker;
-    MApplicationWindow        *m_MainWindow;
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
-    MApplication              *m_App;
+    LockScreen *lockScreen;
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenWindow;
+#endif
 };
 
 #endif

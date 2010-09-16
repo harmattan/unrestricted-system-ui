@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -27,8 +25,8 @@
 
 class MApplication;
 class MApplicationWindow;
-class LockScreenUI;
-class EventEaterUI;
+class LockScreenWindow;
+class EventEater;
 
 class Ft_LockScreenUI : public QObject
 {
@@ -55,8 +53,8 @@ private:
 private:
     XChecker             m_XChecker;
     MApplicationWindow  *m_MainWindow;
-    LockScreenUI        *m_LockScreenUI;
-    EventEaterUI        *m_EventEaterUI;
+    LockScreenWindow    *m_LockScreenWindow;
+    EventEater          *m_EventEaterUI;
     MApplication        *m_App;
 };
 

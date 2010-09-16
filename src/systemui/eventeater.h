@@ -1,3 +1,5 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -16,38 +18,35 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef FT_LOCKSCREENBUSINESSLOGIC_H
-#define FT_LOCKSCREENBUSINESSLOGIC_H
+#ifndef EVENTEATER_H
+#define EVENTEATER_H
 
-#include <QtTest/QtTest>
-#include <QObject>
-#include "../ft_lockscreenui/xchecker.h"
+#include <QWidget>
 
-class MApplication;
-class MApplicationWindow;
-class LockScreenBusinessLogic;
+class QMouseEvent;
+class QShowEvent;
 
-class Ft_LockScreenBusinessLogic : public QObject
+class EventEater : public QWidget
 {
     Q_OBJECT
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
+public:
+    EventEater ();
+    virtual void mousePressEvent (QMouseEvent *event);
+    virtual void mouseReleaseEvent (QMouseEvent *event);
 
-    void testLockScreenBusinessLogic ();
-    void testLockScreenBusinessLogicWithMainWindow ();
-#ifdef HAVE_QMSYSTEM
-    void testLockScreenBusinessLogicWithLocking ();
+protected:
+    virtual void showEvent(QShowEvent *event);
+
+signals:
+    void OneInput ();
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenUI;
+    friend class Ut_EventEater;
+    friend class Ft_LockScreenUI;
+    friend class Ut_LockScreenBusinessLogic;
+    friend class Ft_LockScreenBusinessLogic;
 #endif
-
-private:
-    XChecker                   m_XChecker;
-    MApplicationWindow        *m_MainWindow;
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
-    MApplication              *m_App;
 };
 
 #endif

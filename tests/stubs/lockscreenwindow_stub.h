@@ -19,7 +19,7 @@
 #ifndef LOCKSCREENWINDOW_STUB
 #define LOCKSCREENWINDOW_STUB
 
-#include "lockscreenui.h"
+#include "lockscreenwindow.h"
 #include <stubbase.h>
 
 
@@ -27,68 +27,33 @@
 // FIXME - stubgen is not yet finished
 class LockScreenWindowStub : public StubBase {
   public:
-  virtual void LockScreenWindowConstructor(MWindow *window, MWidget *locklift, MWidget *lockland);
+  virtual void LockScreenWindowConstructor();
   virtual void LockScreenWindowDestructor();
-  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-  virtual void reloadLandscapeBackground();
-  virtual void reloadPortraitBackground();
-  virtual void updateDnDicon();
-  virtual void resetState();
-}; 
+  virtual void updateDateTime();
+  virtual void reset();
+  virtual void showEvent(QShowEvent *event);
+};
 
 // 2. IMPLEMENT STUB
-void LockScreenWindowStub::LockScreenWindowConstructor(MWindow *window, MWidget *locklift, MWidget *lockland) {
-  Q_UNUSED(window);
-  Q_UNUSED(locklift);
-  Q_UNUSED(lockland);
-
+void LockScreenWindowStub::LockScreenWindowConstructor() {
 }
+
 void LockScreenWindowStub::LockScreenWindowDestructor() {
-
 }
-void LockScreenWindowStub::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+void LockScreenWindowStub::updateDateTime() {
+  stubMethodEntered("updateDateTime");
+}
+
+void LockScreenWindowStub::reset() {
+  stubMethodEntered("reset");
+}
+
+void LockScreenWindowStub::showEvent(QShowEvent *event)
+{
   QList<ParameterBase*> params;
-  params.append( new Parameter<QPainter * >(painter));
-  params.append( new Parameter<const QStyleOptionGraphicsItem * >(option));
-  params.append( new Parameter<QWidget * >(widget));
-  stubMethodEntered("paint",params);
-}
-
-void LockScreenWindowStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
-  stubMethodEntered("mousePressEvent",params);
-}
-
-void LockScreenWindowStub::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
-  stubMethodEntered("mouseMoveEvent",params);
-}
-
-void LockScreenWindowStub::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
-  stubMethodEntered("mouseReleaseEvent",params);
-}
-
-void LockScreenWindowStub::reloadLandscapeBackground() {
-  stubMethodEntered("reloadLandscapeBackground");
-}
-
-void LockScreenWindowStub::reloadPortraitBackground() {
-  stubMethodEntered("reloadPortraitBackground");
-}
-
-void LockScreenWindowStub::updateDnDicon() {
-  stubMethodEntered("updateDnDicon");
-}
-
-void LockScreenWindowStub::resetState() {
-  stubMethodEntered("resetState");
+  params.append( new Parameter<QShowEvent * >(event));
+  stubMethodEntered("showEvent", params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -97,55 +62,26 @@ LockScreenWindowStub* gLockScreenWindowStub = &gDefaultLockScreenWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreenWindow::LockScreenWindow(MWindow *window, MWidget *locklift, MWidget *lockland) :
-    m_confBgLandscape (0), m_confBgPortrait (0), m_Window (window),
-    m_DnDicon (0), m_DnDstate (0), m_LockLiftArea (0), m_LockLandArea (0)
+LockScreenWindow::LockScreenWindow()
 {
-  gLockScreenWindowStub->LockScreenWindowConstructor(window, locklift, lockland);
+  gLockScreenWindowStub->LockScreenWindowConstructor();
 }
 
 LockScreenWindow::~LockScreenWindow() {
   gLockScreenWindowStub->LockScreenWindowDestructor();
 }
 
-void LockScreenWindow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-  gLockScreenWindowStub->paint(painter, option, widget);
+void LockScreenWindow::updateDateTime() {
+  gLockScreenWindowStub->updateDateTime();
 }
 
-void LockScreenWindow::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  gLockScreenWindowStub->mousePressEvent(event);
+void LockScreenWindow::reset() {
+  gLockScreenWindowStub->reset();
 }
 
-void LockScreenWindow::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  gLockScreenWindowStub->mouseMoveEvent(event);
-}
-
-void LockScreenWindow::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  gLockScreenWindowStub->mouseReleaseEvent(event);
-}
-
-void LockScreenWindow::reloadLandscapeBackground() {
-  gLockScreenWindowStub->reloadLandscapeBackground();
-}
-
-void LockScreenWindow::reloadPortraitBackground() {
-  gLockScreenWindowStub->reloadPortraitBackground();
-}
-
-void LockScreenWindow::updateDnDicon() {
-  gLockScreenWindowStub->updateDnDicon();
-}
-
-void LockScreenWindow::resetState() {
-  gLockScreenWindowStub->resetState();
-}
-
-void LockScreenWindow::redraw() {
-
-}
-
-void LockScreenWindow::redrawIdle() {
-
+void LockScreenWindow::showEvent(QShowEvent *event)
+{
+    gLockScreenWindowStub->showEvent(event);
 }
 
 #endif

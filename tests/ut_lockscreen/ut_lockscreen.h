@@ -1,8 +1,10 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
+/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright(C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
+** Contact: Nokia Corporation(directui@nokia.com)
 **
 ** This file is part of systemui.
 **
@@ -16,20 +18,23 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef FT_LOCKSCREENBUSINESSLOGIC_H
-#define FT_LOCKSCREENBUSINESSLOGIC_H
+#ifndef UT_LOCKSCREEN_H
+#define UT_LOCKSCREEN_H
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include "../ft_lockscreenui/xchecker.h"
+#include <QPointer>
 
 class MApplication;
-class MApplicationWindow;
-class LockScreenBusinessLogic;
+class MWindow;
+class LockScreen;
 
-class Ft_LockScreenBusinessLogic : public QObject
+class Ut_LockScreen : public QObject
 {
     Q_OBJECT
+
+signals:
+    void unlocked();
 
 private slots:
     void init();
@@ -37,17 +42,13 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreenBusinessLogic ();
-    void testLockScreenBusinessLogicWithMainWindow ();
-#ifdef HAVE_QMSYSTEM
-    void testLockScreenBusinessLogicWithLocking ();
-#endif
+    void testUpdateDateAndTime();
+    void testSliderUnlocked();
 
 private:
-    XChecker                   m_XChecker;
-    MApplicationWindow        *m_MainWindow;
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
-    MApplication              *m_App;
+    MApplication *app;
+    MWindow *parent;
+    LockScreen  *lockScreen;
 };
 
 #endif

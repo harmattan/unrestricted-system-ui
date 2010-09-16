@@ -18,22 +18,16 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef Ut_LockScreenUIWIDGET_H
-#define Ut_LockScreenUIWIDGET_H
+#ifndef Ut_EventEater_H
+#define Ut_EventEater_H
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <QGraphicsSceneEvent>
-#include <QPointer>
-#include "lockscreenui.h"
-#include "../ft_lockscreenui/xchecker.h"
 
 class MApplication;
-class MApplicationWindow;
-class LockScreenUI;
-class EventEaterUI;
+class EventEater;
 
-class LockScreenUIEventSink : public QObject 
+class LockScreenUIEventSink : public QObject
 {
     Q_OBJECT
 
@@ -49,7 +43,8 @@ public:
     bool      m_UnlockedCame;
 };
 
-class Ut_LockScreenUI : public QObject
+
+class Ut_EventEater : public QObject
 {
     Q_OBJECT
 
@@ -59,19 +54,12 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreenWindow ();
-    void testLockScreenUI ();
-    void testLockScreenUISignals ();
-    void testLockScreenUIWindowName ();
-    void testEventEaterUI ();
-    void testEventEaterUIWindowName ();
+    void testEventEater();
+    void testEventEaterWindowName();
 
 private:
-    XChecker               m_XChecker;
     LockScreenUIEventSink  m_EventSink;
-    MApplicationWindow    *m_MainWindow;
-    QPointer <LockScreenUI>  m_LockScreenUI;
-    EventEaterUI          *m_EventEaterUI;
+    EventEater          *m_EventEater;
     MApplication          *m_App;
 };
 

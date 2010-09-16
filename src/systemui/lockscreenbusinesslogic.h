@@ -27,8 +27,8 @@
 #include <qmdisplaystate.h>
 #endif
 
-class LockScreenUI;
-class EventEaterUI;
+class LockScreenWindow;
+class EventEater;
 
 class LockScreenBusinessLogic : public QObject
 {
@@ -60,9 +60,9 @@ private: //methods
     void mayStopTimer();
     bool displayIsOn ();
 
-private: 
-    LockScreenUI     *lockUI;
-    EventEaterUI     *eaterUI;
+private:
+    LockScreenWindow    *lockScreenWindow;
+    EventEater     *eaterUI;
 #ifdef HAVE_QMSYSTEM
     Maemo::QmDisplayState    m_QmDisplay;
     Maemo::QmLocks           m_QmLocks;

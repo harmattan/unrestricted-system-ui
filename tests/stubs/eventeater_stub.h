@@ -19,37 +19,37 @@
 #ifndef EVENTEATERUI_STUB
 #define EVENTEATERUI_STUB
 
-#include "lockscreenui.h"
+#include "eventeater.h"
 #include <stubbase.h>
 
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class EventEaterUIStub : public StubBase {
+class EventEaterStub : public StubBase {
   public:
-  virtual void EventEaterUIConstructor();
+  virtual void EventEaterConstructor();
   virtual void mousePressEvent(QMouseEvent *event);
   virtual void mouseReleaseEvent(QMouseEvent *event);
   virtual void showEvent(QShowEvent *event);
 }; 
 
 // 2. IMPLEMENT STUB
-void EventEaterUIStub::EventEaterUIConstructor() {
+void EventEaterStub::EventEaterConstructor() {
 
 }
-void EventEaterUIStub::mousePressEvent(QMouseEvent *event) {
+void EventEaterStub::mousePressEvent(QMouseEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QMouseEvent * >(event));
   stubMethodEntered("mousePressEvent",params);
 }
 
-void EventEaterUIStub::mouseReleaseEvent(QMouseEvent *event) {
+void EventEaterStub::mouseReleaseEvent(QMouseEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QMouseEvent * >(event));
   stubMethodEntered("mouseReleaseEvent",params);
 }
 
-void EventEaterUIStub::showEvent(QShowEvent *event) {
+void EventEaterStub::showEvent(QShowEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QShowEvent * >(event));
   stubMethodEntered("showEvent",params);
@@ -58,25 +58,25 @@ void EventEaterUIStub::showEvent(QShowEvent *event) {
 
 
 // 3. CREATE A STUB INSTANCE
-EventEaterUIStub gDefaultEventEaterUIStub;
-EventEaterUIStub* gEventEaterUIStub = &gDefaultEventEaterUIStub;
+EventEaterStub gDefaultEventEaterStub;
+EventEaterStub* gEventEaterStub = &gDefaultEventEaterStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-EventEaterUI::EventEaterUI() {
-  gEventEaterUIStub->EventEaterUIConstructor();
+EventEater::EventEater() {
+  gEventEaterStub->EventEaterConstructor();
 }
 
-void EventEaterUI::mousePressEvent(QMouseEvent *event) {
-  gEventEaterUIStub->mousePressEvent(event);
+void EventEater::mousePressEvent(QMouseEvent *event) {
+  gEventEaterStub->mousePressEvent(event);
 }
 
-void EventEaterUI::mouseReleaseEvent(QMouseEvent *event) {
-  gEventEaterUIStub->mouseReleaseEvent(event);
+void EventEater::mouseReleaseEvent(QMouseEvent *event) {
+  gEventEaterStub->mouseReleaseEvent(event);
 }
 
-void EventEaterUI::showEvent(QShowEvent *event) {
-  gEventEaterUIStub->showEvent(event);
+void EventEater::showEvent(QShowEvent *event) {
+  gEventEaterStub->showEvent(event);
 }
 
 

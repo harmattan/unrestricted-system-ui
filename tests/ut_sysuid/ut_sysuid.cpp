@@ -39,6 +39,7 @@
 #include "unlocknotificationsinkstub.h"
 #include "pannedwidgetcontroller_stub.h"
 #include "volumecontrolui_stub.h"
+#include "x11wrapper_stub.h"
 
 MApplication *exitPtr;
 

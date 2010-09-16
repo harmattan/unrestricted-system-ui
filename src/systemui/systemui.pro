@@ -2,7 +2,7 @@ include(../coverage.pri)
 include(../../mconfig.pri)
 
 MOC_DIR = .moc
-MGEN_OUTDIR = .gen
+M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 QMAKE_LFLAGS_RPATH = -Wl
 QMAKE_LFLAGS = -Wl,--as-needed
@@ -34,7 +34,8 @@ HEADERS +=                              \
     batterybusinesslogic.h              \
     sysuid.h                            \
     lockscreenbusinesslogic.h           \
-    lockscreenui.h                      \
+    lockscreenwindow.h                  \
+    eventeater.h                        \
     shutdownui.h                        \
     shutdownbusinesslogic.h             \
     lockscreenbusinesslogicadaptor.h    \
@@ -45,7 +46,10 @@ HEADERS +=                              \
     unlocknotificationsink.h            \
     unlockmissedevents.h                \
     unlockwidgets.h                     \
-    x11wrapper.h
+    x11wrapper.h \
+    lockscreenview.h \
+    lockscreenwithpadlockview.h \
+    lockscreen.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -54,7 +58,8 @@ SOURCES +=                              \
     batterybusinesslogic.cpp            \
     sysuid.cpp                          \
     lockscreenbusinesslogic.cpp         \
-    lockscreenui.cpp                    \
+    lockscreenwindow.cpp                \
+    eventeater.cpp                      \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \
     lockscreenbusinesslogicadaptor.cpp  \
@@ -64,7 +69,10 @@ SOURCES +=                              \
     unlocknotificationsink.cpp          \
     unlockmissedevents.cpp              \
     unlockwidgets.cpp                   \
-    x11wrapper.cpp
+    x11wrapper.cpp \
+    lockscreenview.cpp \
+    lockscreenwithpadlockview.cpp \
+    lockscreen.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
@@ -101,4 +109,3 @@ dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
 INSTALLS += target \
             dbus_policy
-

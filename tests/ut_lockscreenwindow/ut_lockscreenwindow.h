@@ -1,8 +1,8 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright(C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
+** Contact: Nokia Corporation(directui@nokia.com)
 **
 ** This file is part of systemui.
 **
@@ -16,18 +16,17 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef FT_LOCKSCREENBUSINESSLOGIC_H
-#define FT_LOCKSCREENBUSINESSLOGIC_H
+#ifndef UT_LOCKSCREENWINDOW_H
+#define UT_LOCKSCREENWINDOW_H
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include "../ft_lockscreenui/xchecker.h"
+#include "lockscreenwindow.h"
 
 class MApplication;
-class MApplicationWindow;
-class LockScreenBusinessLogic;
+class LockScreenWindow;
 
-class Ft_LockScreenBusinessLogic : public QObject
+class Ut_LockScreenWindow : public QObject
 {
     Q_OBJECT
 
@@ -37,17 +36,12 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testLockScreenBusinessLogic ();
-    void testLockScreenBusinessLogicWithMainWindow ();
-#ifdef HAVE_QMSYSTEM
-    void testLockScreenBusinessLogicWithLocking ();
-#endif
-
+    void testWhenDataAndTimeIsUpdatedLockScreenDateAndTimeIsUpdated();
+    void testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
+    void testWhenWindowIsCreatedLockScreenAppears();
 private:
-    XChecker                   m_XChecker;
-    MApplicationWindow        *m_MainWindow;
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
-    MApplication              *m_App;
+    MApplication *app;
+    LockScreenWindow *lockScreenWindow;
 };
 
 #endif

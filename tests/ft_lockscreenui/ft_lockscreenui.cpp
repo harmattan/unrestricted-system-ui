@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -20,7 +18,8 @@
 ****************************************************************************/
 
 #include "ft_lockscreenui.h"
-#include "lockscreenui.h"
+#include "lockscreenwindow.h"
+#include "eventeater.h"
 #include "sysuid_stub.h"
 #include "unlockmissedevents.h"
 #include <MApplication>
@@ -63,7 +62,7 @@ const QString styleDir = themeDir + "style/";
 void Ft_LockScreenUI::initTestCase()
 {
     m_EventEaterUI = 0;
-    m_LockScreenUI = 0;
+    m_LockScreenWindow = 0;
     m_MainWindow = 0;
 
     SYS_DEBUG ("+++ Creating application.");
@@ -78,7 +77,7 @@ void Ft_LockScreenUI::initTestCase()
 void 
 Ft_LockScreenUI::cleanupTestCase()
 {
-    delete m_LockScreenUI;
+    delete m_LockScreenWindow;
     delete m_EventEaterUI;
     delete m_MainWindow; 
 
@@ -149,15 +148,15 @@ Ft_LockScreenUI::testLockScreenUIShowHide ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Showing lockscreenUI **************************");
         SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->show ();
+        m_LockScreenWindow->show ();
         QTest::qWait (WMDelay);
         /*
          * From this point the lock screen should be realized, shown and visible.
          */
-        QVERIFY (m_LockScreenUI->m_Realized);
-        QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
-        QVERIFY (m_LockScreenUI->isVisible());
-        WindowID = m_LockScreenUI->internalWinId();
+        QVERIFY (m_LockScreenWindow->m_Realized);
+        QVERIFY (m_LockScreenWindow->m_SceneWindow != NULL);
+        QVERIFY (m_LockScreenWindow->isVisible());
+        WindowID = m_LockScreenWindow->internalWinId();
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
     
@@ -168,10 +167,10 @@ Ft_LockScreenUI::testLockScreenUIShowHide ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
         SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->hide();
+        m_LockScreenWindow->hide();
         QTest::qWait (WMDelay);
-        WindowID = m_LockScreenUI->internalWinId();
-        QVERIFY (!m_LockScreenUI->isVisible());
+        WindowID = m_LockScreenWindow->internalWinId();
+        QVERIFY (!m_LockScreenWindow->isVisible());
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsInvisible));
     }
 #endif
@@ -209,15 +208,15 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Showing lockscreenUI **************************");
         SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->show ();
+        m_LockScreenWindow->show ();
         QTest::qWait (WMDelay);
         /*
          * From this point the lock screen should be realized, shown and visible.
          */
-        QVERIFY (m_LockScreenUI->m_Realized);
-        QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
-        QVERIFY (m_LockScreenUI->isVisible());
-        WindowID = m_LockScreenUI->internalWinId();
+        QVERIFY (m_LockScreenWindow->m_Realized);
+        QVERIFY (m_LockScreenWindow->m_SceneWindow != NULL);
+        QVERIFY (m_LockScreenWindow->isVisible());
+        WindowID = m_LockScreenWindow->internalWinId();
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
         QVERIFY (m_XChecker.checkWindow(MWindowID, XChecker::CheckIsInvisible));
@@ -230,10 +229,10 @@ Ft_LockScreenUI::testLockScreenUIShowHideWithMainWindow ()
         SYS_DEBUG ("***************************************************");
         SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
         SYS_DEBUG ("***************************************************");
-        m_LockScreenUI->hide();
+        m_LockScreenWindow->hide();
         QTest::qWait (WMDelay);
-        WindowID = m_LockScreenUI->internalWinId();
-        QVERIFY (!m_LockScreenUI->isVisible());
+        WindowID = m_LockScreenWindow->internalWinId();
+        QVERIFY (!m_LockScreenWindow->isVisible());
         QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsInvisible));
         QVERIFY (m_XChecker.checkWindow(MWindowID, XChecker::CheckIsInvisible));
     }
@@ -327,7 +326,7 @@ Ft_LockScreenUI::testLockScreenUIWithTSOff ()
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Showing lockscreenUI **************************");
     SYS_DEBUG ("***************************************************");
-    m_LockScreenUI->show ();
+    m_LockScreenWindow->show ();
     QTest::qWait (WMDelay);
 
     /*
@@ -339,10 +338,10 @@ Ft_LockScreenUI::testLockScreenUIWithTSOff ()
      /*
      * From this point the lock screen should be realized, shown and visible.
      */
-    QVERIFY (m_LockScreenUI->m_Realized);
-    QVERIFY (m_LockScreenUI->m_SceneWindow != NULL);
-    QVERIFY (m_LockScreenUI->isVisible());
-    WindowID = m_LockScreenUI->internalWinId();
+    QVERIFY (m_LockScreenWindow->m_Realized);
+    QVERIFY (m_LockScreenWindow->m_SceneWindow != NULL);
+    QVERIFY (m_LockScreenWindow->isVisible());
+    WindowID = m_LockScreenWindow->internalWinId();
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
 #endif
@@ -366,7 +365,7 @@ Ft_LockScreenUI::testMissedEvents ()
    SYS_DEBUG ("***************************************************");
    SYS_DEBUG ("*** Showing lockscreenUI **************************");
    SYS_DEBUG ("***************************************************");
-   m_LockScreenUI->show ();
+   m_LockScreenWindow->show ();
    QTest::qWait (WMDelay);
    /*
     * From this point the lock screen should be realized, shown and visible.
@@ -415,10 +414,10 @@ Ft_LockScreenUI::testMissedEvents ()
    SYS_DEBUG ("***************************************************");
    SYS_DEBUG ("*** Hiding lockscreenUI ***************************");
    SYS_DEBUG ("***************************************************");
-   m_LockScreenUI->hide();
+   m_LockScreenWindow->hide();
    QTest::qWait (WMDelay);
-   WindowID = m_LockScreenUI->internalWinId();
-   QVERIFY (!m_LockScreenUI->isVisible());
+   WindowID = m_LockScreenWindow->internalWinId();
+   QVERIFY (!m_LockScreenWindow->isVisible());
    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsInvisible));
 }
 #endif
@@ -426,15 +425,15 @@ Ft_LockScreenUI::testMissedEvents ()
 void
 Ft_LockScreenUI::createLockScreenUI ()
 {
-    if (!m_LockScreenUI)
-        m_LockScreenUI = new LockScreenUI ();
+    if (!m_LockScreenWindow)
+        m_LockScreenWindow = new LockScreenWindow ();
 }
 
 void
 Ft_LockScreenUI::createEventEaterUI ()
 {
     if (!m_EventEaterUI)
-        m_EventEaterUI = new EventEaterUI ();
+        m_EventEaterUI = new EventEater ();
 }
 
 QTEST_APPLESS_MAIN(Ft_LockScreenUI)
