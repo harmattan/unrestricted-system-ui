@@ -3,6 +3,8 @@ M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 DESTDIR = ../../lib
 
+QMAKE_LFLAGS_RPATH = -Wl
+
 TEMPLATE = lib
 TARGET = notificationsystem
 CONFIG += meegotouch \

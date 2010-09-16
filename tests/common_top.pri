@@ -1,6 +1,7 @@
 include(../check.pri)
 include(../../mconfig.pri)
 include(../../localconfig.pri)
+
 ROOTSRCDIR = ../../src
 LIBNOTIFICATIONSRCDIR = $$ROOTSRCDIR/libnotificationsystem
 SRCDIR = $$ROOTSRCDIR/systemui
@@ -13,6 +14,7 @@ QT += testlib network gui dbus xml
 TEMPLATE = app
 DEFINES += UNIT_TEST
 LIBS += -L../../lib
+QMAKE_LFLAGS_RPATH = -Wl
 
 contains(DEFINES, HAVE_LIBNGF) {
     PKGCONFIG += libngf0
