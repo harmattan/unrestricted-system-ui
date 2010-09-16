@@ -1,6 +1,6 @@
 include(../coverage.pri)
 include(../common_top.pri)
-
+INCLUDEPATH += $$SRCDIR/lockscreen
  
 TARGET = ut_unlockwidgets
 
