@@ -2,7 +2,7 @@ include(../coverage.pri)
 include(../../mconfig.pri)
 
 MOC_DIR = .moc
-MGEN_OUTDIR = .gen
+M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 QMAKE_LFLAGS_RPATH = -Wl
 QMAKE_LFLAGS = -Wl,--as-needed
