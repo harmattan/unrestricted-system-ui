@@ -42,6 +42,10 @@ public slots:
 
 private:
     LockScreen* lockScreen;
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenWindow;
+#endif
 };
 
 #endif
