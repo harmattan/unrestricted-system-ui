@@ -53,8 +53,6 @@ void Ut_NotificationParameters::testKeyValueAPI()
 {
     NotificationParameters params;
 
-    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
-
     QVariant v1(5);
     QVariant v2("Test");
     params.add("test1", v1);
@@ -79,6 +77,10 @@ void Ut_NotificationParameters::testParameterAPI()
 void Ut_NotificationParameters::testWhenUpdatingParametersThenTheParametersGetUpdated()
 {
     NotificationParameters params;
+    params.add(GenericNotificationParameterFactory::unseenKey(), "true");
+
+    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
+
     NotificationParameters updated;
     updated.add(GenericNotificationParameterFactory::unseenKey(), "false");
     params.update(updated);
@@ -89,6 +91,10 @@ void Ut_NotificationParameters::testWhenUpdatingParametersThenTheParametersGetUp
 void Ut_NotificationParameters::testWhenUpdatingParametersThenTheExistingParametersRemain()
 {
     NotificationParameters params;
+    params.add(GenericNotificationParameterFactory::unseenKey(), "true");
+
+    QCOMPARE(params.value(GenericNotificationParameterFactory::unseenKey()).toBool(), true);
+
     NotificationParameters updated;
     updated.add("updatedKey", "updatedValue");
     params.update(updated);

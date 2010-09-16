@@ -1312,11 +1312,10 @@ void Ut_NotificationManager::testRemovingGroupsWithEventType()
 
 void Ut_NotificationManager::testRemovalOfUnseenFlags()
 {
-    // Create notification
+    // Create a notification with "unseen" parameter set
     NotificationParameters param;
+    param.add(UNSEEN, true);
     uint id = manager->addNotification(0, param);
-    // Notifications are created with unseen params
-    QCOMPARE(manager->notifications.value(id).parameters().value(UNSEEN).toBool(), true);
 
     connect(this, SIGNAL(notifierSinkActive(bool)), manager, SLOT(removeUnseenFlags(bool)));
     emit notifierSinkActive(false);

@@ -100,6 +100,16 @@ public:
     static NotificationParameter createClassParameter(const QString &notificationClass) {
         return NotificationParameter(classKey(), QVariant(notificationClass));
     }
+
+    /*!
+     * Creates a NotificationParameter with the given unseen status.
+     *
+     * \param unseen the unseen status of the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createUnseenParameter(bool unseen) {
+        return NotificationParameter(unseenKey(), QVariant(unseen));
+    }
 };
 
 #endif // GENERICNOTIFICATIONPARAMETERFACTORY_H

@@ -24,6 +24,9 @@
 #include "genericnotificationparameterfactory.h"
 #include "ngfadapter_stub.h"
 
+#define UNSEEN GenericNotificationParameterFactory::unseenKey()
+#define COUNT  GenericNotificationParameterFactory::countKey()
+
 void Ut_NotifierNotificationSink::initTestCase()
 {
 }
@@ -51,17 +54,21 @@ void Ut_NotifierNotificationSink::testAddNotification()
 {
     QSignalSpy spy(m_subject, SIGNAL(notifierSinkActive(bool)));
 
-    // Adding a notification should cause a notification count change
-    NotificationParameters notification1Parameters;
-    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
+    // Adding an unseen notification should cause a notification count change
+    NotificationParameters params1;
+    params1.add(UNSEEN, true);
+    Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
+
     QCOMPARE(spy.count(), 1);
     QList<QVariant> arguments = spy.at(0);
     QCOMPARE(arguments.at(0).toBool(), true);
 
-    // Adding a new notification should not send further signals
-    Notification notification2(2, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
+    // Adding a new unseen notification (having one unseen notification 
+    // already) should not send further signals
+    Notification notification2(2, 0, 2, params1, Notification::ApplicationEvent, 0);
     emit addNotification(notification2);
+
     QCOMPARE(spy.count(), 1);
 }
 
@@ -69,11 +76,14 @@ void Ut_NotifierNotificationSink::testAddSystemNotification()
 {
     QSignalSpy spy(m_subject, SIGNAL(notifierSinkActive(bool)));
 
-    // Adding a system notification should cause no notification count change
-    NotificationParameters notification1Parameters;
-    notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, Notification::SystemEvent, 0);
+    // Adding an unseen system notification should cause no notification count
+    // change
+    NotificationParameters params1;
+    params1.add(UNSEEN, true);
+    params1.add(COUNT, QVariant((uint)5));
+    Notification notification1(1, 0, 2, params1, Notification::SystemEvent, 0);
     emit addNotification(notification1);
+
     QCOMPARE(spy.count(), 0);
 }
 
@@ -81,21 +91,25 @@ void Ut_NotifierNotificationSink::testRemoveNotification()
 {
     QSignalSpy spy(m_subject, SIGNAL(notifierSinkActive(bool)));
 
-    // Adding a notification should cause a notification count change
-    NotificationParameters notification1Parameters;
-    notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
-    Notification notification2(2, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
+    // Adding an unseen notification should cause a notification count change
+    NotificationParameters params1;
+    params1.add(UNSEEN, true);
+    params1.add(COUNT, QVariant((uint)5));
+
+    Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
+    Notification notification2(2, 0, 2, params1, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
     emit addNotification(notification2);
     QCOMPARE(m_subject->notificationCount, uint(2));
 
     // Removing one notification does not do anything just changes the notification count
     emit removeNotification(1);
+
     QCOMPARE(spy.count(), 1); // Only add sent a signal
     QCOMPARE(m_subject->notificationCount, uint(1));
 
     emit removeNotification(2);
+
     QCOMPARE(spy.count(), 2); // Now a signal was sent as all notifications are removed
     QCOMPARE(m_subject->notificationCount, uint(0));
     QList<QVariant> arguments = spy.at(1);
@@ -107,14 +121,19 @@ void Ut_NotifierNotificationSink::testClearSink()
     QSignalSpy spy(m_subject, SIGNAL(notifierSinkActive(bool)));
 
     // Add two notifications
-    NotificationParameters notification1Parameters;
-    notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
-    NotificationParameters notification2Parameters;
-    notification2Parameters.add("count", QVariant((uint)8));
-    Notification notification2(2, 0, 2, notification2Parameters, Notification::ApplicationEvent, 0);
+    NotificationParameters params1;
+    params1.add(UNSEEN, true);
+    params1.add(COUNT, QVariant((uint)5));
+    Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
+
+    NotificationParameters params2;
+    params2.add(COUNT, QVariant((uint)8));
+    params2.add(UNSEEN, true);
+    Notification notification2(2, 0, 2, params2, Notification::ApplicationEvent, 0);
+
     emit addNotification(notification1);
     emit addNotification(notification2);
+
     QCOMPARE(m_subject->notificationCount, uint(2));
 
     m_subject->clearSink();
@@ -131,20 +150,22 @@ void Ut_NotifierNotificationSink::testDisablingNotificationAdditions()
 
     m_subject->disableNotificationAdditions(true);
 
-    // Try to add a notification while disabled
-    NotificationParameters notification1Parameters;
-    notification1Parameters.add("count", QVariant((uint)5));
-    Notification notification1(1, 0, 2, notification1Parameters, Notification::ApplicationEvent, 0);
+    // Try to add an unseen notification while disabled
+    NotificationParameters params1;
+    params1.add(COUNT, QVariant((uint)5));
+    params1.add(UNSEEN, true);
+    Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
 
     QCOMPARE(spy.count(), 0);
 
     m_subject->disableNotificationAdditions(false);
 
-    // Add a notification when enabled
-    NotificationParameters notification2Parameters;
-    notification2Parameters.add("count", QVariant((uint)8));
-    Notification notification2(2, 0, 2, notification2Parameters, Notification::ApplicationEvent, 0);
+    // Add an unseen notification when enabled
+    NotificationParameters params2;
+    params2.add(COUNT, QVariant((uint)5));
+    params2.add(UNSEEN, true);
+    Notification notification2(2, 0, 2, params2, Notification::ApplicationEvent, 0);
     emit addNotification(notification2);
 
     QCOMPARE(spy.count(), 1);
@@ -156,7 +177,7 @@ void Ut_NotifierNotificationSink::testSeenNotificationAddedThenNotifierNotUpdate
 
     // Adding a seen notification should not cause a notification count change
     NotificationParameters params;
-    params.add(GenericNotificationParameterFactory::unseenKey(), false);
+    params.add(UNSEEN, false);
     Notification notification1(1, 0, 2, params, Notification::ApplicationEvent, 0);
     emit addNotification(notification1);
     QCOMPARE(spy.count(), 0);
@@ -184,15 +205,19 @@ void Ut_NotifierNotificationSink::testWhenRemoveSystemNotificationNotificationId
 
 void Ut_NotifierNotificationSink::testNGFEvents()
 {
+    NotificationParameters params;
+    params.add(COUNT, QVariant((uint)1));
+    params.add(UNSEEN, true);
+    Notification notification(1, 0, 2, params, Notification::ApplicationEvent, 0);
+
     // Test that NGF start is called when notification is added
-    NotificationParameters notificationParameters;
-    notificationParameters.add("count", QVariant((uint)1));
-    Notification notification(1, 0, 2, notificationParameters, Notification::ApplicationEvent, 0);
     emit addNotification(notification);
+
     QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
 
     // Test that NGF stop is called when last notification is removed
     emit removeNotification(1);
+
     QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 }
 

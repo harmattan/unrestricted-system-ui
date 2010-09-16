@@ -25,7 +25,6 @@
 
 NotificationParameters::NotificationParameters()
 {
-    parameterValues.insert(GenericNotificationParameterFactory::unseenKey(), QVariant(true));
 }
 
 NotificationParameters::~NotificationParameters()
@@ -72,6 +71,7 @@ QDataStream &operator>>(QDataStream &datastream, NotificationParameters &paramet
 QDBusArgument &operator<<(QDBusArgument &argument, const NotificationParameters &parameters)
 {
     QHashIterator<QString, QVariant> i(parameters.parameterValues);
+
     argument.beginMap(QMetaType::QString, qMetaTypeId<QDBusVariant>());
     while (i.hasNext()) {
         i.next();
