@@ -113,6 +113,7 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
             if (painter.isActive()) {
                 painter.fillRect(sourceRect, QColor(Qt::black));
                 scene->render(&painter, sourceRect, sourceRect);
+                QApplication::syncX();
             }
         }
     }

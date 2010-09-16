@@ -32,6 +32,12 @@ QRectF rectReceived(0,0,0,0);
 QEvent::Type eventReceived;
 MOnDisplayChangeEvent::State eventStateReceived;
 
+bool Ut_StatusAreaRenderer_syncX_Called = false;
+void QApplication::syncX()
+{
+    Ut_StatusAreaRenderer_syncX_Called = true;
+}
+
 const MStyle* MTheme::style(const char *styleClassName,
                             const QString &objectName,
                             const QString &mode,
@@ -77,6 +83,7 @@ void Ut_StatusAreaRenderer::init()
 
 void Ut_StatusAreaRenderer::cleanup()
 {
+    Ut_StatusAreaRenderer_syncX_Called = false;
     Ut_StatusAreaRenderer_Scene_Render_Called = false;
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
     rectReceived.setRect(0,0,0,0);
@@ -104,14 +111,17 @@ void Ut_StatusAreaRenderer::testSceneChanged()
     connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
     emit changed(rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
+    QCOMPARE(Ut_StatusAreaRenderer_syncX_Called, true);
 
     // Test when rect has no intersection with pixmap
     Ut_StatusAreaRenderer_Scene_Render_Called = false;
+    Ut_StatusAreaRenderer_syncX_Called = false;
     rectList.pop_front();
     QRectF rect2(40,50,30,80);
     rectList.append(rect2);
     emit changed(rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
+    QCOMPARE(Ut_StatusAreaRenderer_syncX_Called, false);
 
     // Test when two rects called then scene render called with complete intersection rect( final rect should be Rect1 U Rect2 Intersectin sharedPixmapRect)
     rectList.pop_front();
@@ -121,6 +131,7 @@ void Ut_StatusAreaRenderer::testSceneChanged()
     rectList.append(rect4);
     emit changed(rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
+    QCOMPARE(Ut_StatusAreaRenderer_syncX_Called, true);
     QRectF unitedRect = rect3.united(rect4) ;
     QRectF expectedRect = unitedRect.intersected(QRectF(0,0,30,80));
     QCOMPARE(rectReceived,expectedRect);
