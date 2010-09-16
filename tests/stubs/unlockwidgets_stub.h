@@ -17,50 +17,117 @@
 **
 ****************************************************************************/
 #include <unlockwidgets.h>
+#include <stubbase.h>
 
-UnlockHeader::UnlockHeader() {
+// 1. DECLARE STUB
+class UnlockHeaderStub : public StubBase {
+public:
+    virtual void UnlockHeaderConstructor();
+    virtual void UnlockHeaderDestructor();
+    virtual void updateDateTime();
+    virtual void setActive(bool active);
+};
 
+void UnlockHeaderStub::UnlockHeaderConstructor()
+{
 }
 
-UnlockHeader::~UnlockHeader() {
-
+void UnlockHeaderStub::UnlockHeaderDestructor()
+{
 }
 
-void
-UnlockHeader::updateDateTime() {
+void UnlockHeaderStub::updateDateTime()
+{
+}
 
+void UnlockHeaderStub::setActive(bool active)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<bool>(active));
+    stubMethodEntered("setActive", params);
+}
+
+class UnlockAreaStub : public StubBase {
+public:
+    virtual void UnlockAreaConstructor();
+    virtual void UnlockAreaDestructor();
+    virtual void setEnabled (bool enabled);
+    virtual void setActive(bool active);
+};
+
+void UnlockAreaStub::UnlockAreaConstructor()
+{
+}
+
+void UnlockAreaStub::UnlockAreaDestructor()
+{
+}
+
+void UnlockAreaStub::setEnabled(bool enabled)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<bool>(enabled));
+    stubMethodEntered("setEnabled", params);
+}
+
+void UnlockAreaStub::setActive(bool active)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<bool>(active));
+    stubMethodEntered("setActive", params);
+}
+
+
+// 3. CREATE A STUB INSTANCE
+UnlockHeaderStub gDefaultUnlockHeaderStub;
+UnlockHeaderStub* gUnlockHeaderStub = &gDefaultUnlockHeaderStub;
+
+UnlockAreaStub gDefaultUnlockAreaStub;
+UnlockAreaStub* gUnlockAreaStub = &gDefaultUnlockAreaStub;
+
+UnlockHeader::UnlockHeader()
+{
+    gUnlockHeaderStub->UnlockHeaderConstructor();
+}
+
+UnlockHeader::~UnlockHeader()
+{
+    gUnlockHeaderStub->UnlockHeaderDestructor();
+}
+
+void UnlockHeader::updateDateTime()
+{
+    gUnlockHeaderStub->updateDateTime();
 }
 
 #ifdef HAVE_QMSYSTEM
-void
-UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what) {
+void UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what) {
     Q_UNUSED (what);
 }
 #endif
 
-void
-UnlockHeader::setActive (bool active)
+void UnlockHeader::setActive (bool active)
 {
-    Q_UNUSED(active);
+    gUnlockHeaderStub->setActive(active);
 }
 
-UnlockArea::UnlockArea() {
-
-}
-
-UnlockArea::~UnlockArea() {
-
-}
-
-void
-UnlockArea::setEnabled (bool enabled)
+UnlockArea::UnlockArea()
 {
-    Q_UNUSED(enabled);
+    gUnlockAreaStub->UnlockAreaConstructor();
 }
 
-void
-UnlockArea::setActive (bool active)
+UnlockArea::~UnlockArea()
 {
-    Q_UNUSED(active);
+    gUnlockAreaStub->UnlockAreaDestructor();
+}
+
+void UnlockArea::setEnabled (bool enabled)
+{
+    gUnlockAreaStub->setEnabled(enabled);
+}
+
+void UnlockArea::setActive(bool active)
+{
+    gUnlockAreaStub->setActive(active);
 }
 

@@ -40,9 +40,6 @@ public:
         STATE_MOVING_ACTIVE
     };
 
-signals:
-    void unlocked ();
-
 protected:
     virtual void mousePressEvent (QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
@@ -74,6 +71,10 @@ private:
     QGraphicsLinearLayout *layoutPolicy;
     MWidget *notificationArea;
     MSceneWindow* controller;
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenWithPadlockView;
+#endif
 };
 
 #endif
