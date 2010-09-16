@@ -117,20 +117,30 @@ QDBusArgument &operator<<(QDBusArgument &argument, const Notification &notificat
 {
     argument.beginStructure();
     argument << notification.notificationId_;
+    argument << qint32(notification.type_);
     argument << notification.groupId_;
-    argument << notification.parameters_.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
-    argument << notification.parameters_.value(NotificationWidgetParameterFactory::summaryKey()).toString();
-    argument << notification.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
-    argument << notification.parameters_.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
-    argument << notification.parameters_.value(NotificationWidgetParameterFactory::actionKey()).toString();
-    argument << notification.parameters_.value(GenericNotificationParameterFactory::countKey()).toUInt();
+    argument << notification.userId_;
+    argument << notification.timeout_;
+    argument << notification.parameters_;
     argument.endStructure();
 
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, Notification &)
+const QDBusArgument &operator>>(const QDBusArgument &argument, Notification &notification)
 {
-    /* Not used */
+    argument.beginStructure();
+    argument >> notification.notificationId_;
+
+    qint32 s;
+    argument >> s;
+    notification.type_ = static_cast<Notification::NotificationType>(s);
+
+    argument >> notification.groupId_;
+    argument >> notification.userId_;
+    argument >> notification.timeout_;
+    argument >> notification.parameters_;
+    argument.endStructure();
+
     return argument;
 }

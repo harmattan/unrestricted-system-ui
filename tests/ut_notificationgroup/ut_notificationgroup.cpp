@@ -18,29 +18,10 @@
 ****************************************************************************/
 
 #include <QByteArray>
-#include <QDBusArgument>
+#include "qdbusargument_fake.h"
 #include "ut_notificationgroup.h"
 #include "notificationparameters.h"
 #include "notificationgroup.h"
-
-
-QList<uint> qdbusUIntArgs;
-
-QDBusArgument &QDBusArgument::operator<<(uint arg)
-{
-    qdbusUIntArgs.append(arg);
-
-    return *this;
-}
-
-QList<QString> qdbusStringArgs;
-
-QDBusArgument &QDBusArgument::operator<<(const QString &arg)
-{
-    qdbusStringArgs.append(arg);
-
-    return *this;
-}
 
 void Ut_NotificationGroup::initTestCase()
 {
@@ -52,8 +33,6 @@ void Ut_NotificationGroup::cleanupTestCase()
 
 void Ut_NotificationGroup::init()
 {
-    qdbusUIntArgs.clear();
-    qdbusStringArgs.clear();
 }
 
 void Ut_NotificationGroup::cleanup()
@@ -114,8 +93,6 @@ void Ut_NotificationGroup::testSerializationAndDeserialization()
 
 void Ut_NotificationGroup::testDBusSerialization()
 {
-    QDBusArgument arg;
-
     NotificationParameters parameters0;
     parameters0.add("eventType", "type");
     parameters0.add("imageId", "icon");
@@ -125,18 +102,30 @@ void Ut_NotificationGroup::testDBusSerialization()
     parameters0.add("count",  456);
 
     NotificationGroup n1(20, 678, parameters0);
+    NotificationGroup n2;
 
+    // Transfer a NotificationGroup from n1 to n2 by serializing it
+    // to a QDBusArgument and unserializing it
+    QDBusArgument arg;
     arg << n1;
+    arg >> n2;
 
-    QCOMPARE(qdbusUIntArgs.count(), 2);
-    QCOMPARE(qdbusUIntArgs.at(0), uint(20));
-    QCOMPARE(qdbusUIntArgs.at(1), uint(456));
-    QCOMPARE(qdbusStringArgs.count(), 5);
-    QCOMPARE(qdbusStringArgs.at(0), QString("type"));
-    QCOMPARE(qdbusStringArgs.at(1), QString("summary"));
-    QCOMPARE(qdbusStringArgs.at(2), QString("body"));
-    QCOMPARE(qdbusStringArgs.at(3), QString("icon"));
-    QCOMPARE(qdbusStringArgs.at(4), QString("action"));
+    QCOMPARE(n1.groupId(), n2.groupId());
+    QCOMPARE(n1.userId(), n2.userId());
+    QCOMPARE(n1.parameters().count(), n2.parameters().count());
+    QCOMPARE(n1.parameters().value("eventType"),
+             n2.parameters().value("eventType"));
+    QCOMPARE(n1.parameters().value("imageId"),
+             n2.parameters().value("imageId"));
+    QCOMPARE(n1.parameters().value("summary"),
+             n2.parameters().value("summary"));
+    QCOMPARE(n1.parameters().value("body"),
+             n2.parameters().value("body"));
+    QCOMPARE(n1.parameters().value("action"),
+             n2.parameters().value("action"));
+    QCOMPARE(n1.parameters().value("count"),
+             n2.parameters().value("count"));
+
 }
 
 

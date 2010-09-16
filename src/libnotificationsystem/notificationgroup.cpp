@@ -86,19 +86,20 @@ QDBusArgument &operator<<(QDBusArgument &argument, const NotificationGroup &grou
 {
     argument.beginStructure();
     argument << group.groupId_;
-    argument << group.parameters_.value(GenericNotificationParameterFactory::eventTypeKey()).toString();
-    argument << group.parameters_.value(NotificationWidgetParameterFactory::summaryKey()).toString();
-    argument << group.parameters_.value(NotificationWidgetParameterFactory::bodyKey()).toString();
-    argument << group.parameters_.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
-    argument << group.parameters_.value(NotificationWidgetParameterFactory::actionKey()).toString();
-    argument << group.parameters_.value(GenericNotificationParameterFactory::countKey()).toUInt();
+    argument << group.userId_;
+    argument << group.parameters_;
     argument.endStructure();
 
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, NotificationGroup &)
+const QDBusArgument &operator>>(const QDBusArgument &argument, NotificationGroup &group)
 {
-    /* Not used */
+    argument.beginStructure();
+    argument >> group.groupId_;
+    argument >> group.userId_;
+    argument >> group.parameters_;
+    argument.endStructure();
+
     return argument;
 }

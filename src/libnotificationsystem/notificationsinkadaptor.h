@@ -33,7 +33,7 @@ class NotificationSinkAdaptor: public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Introspection", ""
 "  <interface name=\"com.meego.core.MNotificationSink\">\n"
 "    <method name=\"addNotification\">\n"
-"      <arg direction=\"in\" type=\"(uusssssu)\" name=\"notification\"/>\n"
+"      <arg direction=\"in\" type=\"(uiuuia{sv})\" name=\"notification\"/>\n"
 "      <annotation value=\"Notification\" name=\"com.trolltech.QtDBus.QtTypeName.In0\"/>\n"
 "    </method>\n"
 "    <method name=\"removeNotification\">\n"

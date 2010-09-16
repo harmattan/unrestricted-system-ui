@@ -17,4 +17,8 @@ HEADERS += \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h
 
+HEADERS += \
+    qdbusargument_fake.h
+
+   
 include(../common_bot.pri)
