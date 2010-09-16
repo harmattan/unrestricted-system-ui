@@ -38,7 +38,6 @@ signals:
     void unlocked();
 
 public slots:
-    void updateDateTime();
     void reset();
 
 private:

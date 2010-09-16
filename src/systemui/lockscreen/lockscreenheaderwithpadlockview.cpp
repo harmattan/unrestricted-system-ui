@@ -17,11 +17,21 @@
 **
 ****************************************************************************/
 
+#include <QGraphicsLinearLayout>
+#include <MImageWidget>
 #include "lockscreenheaderwithpadlockview.h"
 
 LockScreenHeaderWithPadlockView::LockScreenHeaderWithPadlockView(MWidgetController *controller) :
-    LockScreenHeaderView(controller)
+        LockScreenHeaderView(controller)
 {
+    padlockImageWidget = new MImageWidget;
+    padlockImageWidget->setVisible (true);
+    padlockImageWidget->setImage ("icon-m-common-locked", QSize (32, 32));
+    padlockImageWidget->setZoomFactor (1.0);
+    padlockImageWidget->setObjectName ("lockscreenIconLocked");
+
+    layout->addItem(padlockImageWidget);
+    layout->setAlignment (padlockImageWidget, Qt::AlignRight | Qt::AlignVCenter);
 }
 
 LockScreenHeaderWithPadlockView::~LockScreenHeaderWithPadlockView()

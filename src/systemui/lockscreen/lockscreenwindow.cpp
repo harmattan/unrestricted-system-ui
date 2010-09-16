@@ -35,11 +35,6 @@ LockScreenWindow::~LockScreenWindow()
     delete lockScreen;
 }
 
-void LockScreenWindow::updateDateTime()
-{
-    lockScreen->updateDateTime();
-}
-
 void LockScreenWindow::reset()
 {
     lockScreen->reset();

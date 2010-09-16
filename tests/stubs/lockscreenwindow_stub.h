@@ -29,7 +29,6 @@ class LockScreenWindowStub : public StubBase {
   public:
   virtual void LockScreenWindowConstructor();
   virtual void LockScreenWindowDestructor();
-  virtual void updateDateTime();
   virtual void reset();
   virtual void showEvent(QShowEvent *event);
 };
@@ -39,10 +38,6 @@ void LockScreenWindowStub::LockScreenWindowConstructor() {
 }
 
 void LockScreenWindowStub::LockScreenWindowDestructor() {
-}
-
-void LockScreenWindowStub::updateDateTime() {
-  stubMethodEntered("updateDateTime");
 }
 
 void LockScreenWindowStub::reset() {
@@ -69,10 +64,6 @@ LockScreenWindow::LockScreenWindow()
 
 LockScreenWindow::~LockScreenWindow() {
   gLockScreenWindowStub->LockScreenWindowDestructor();
-}
-
-void LockScreenWindow::updateDateTime() {
-  gLockScreenWindowStub->updateDateTime();
 }
 
 void LockScreenWindow::reset() {

@@ -49,7 +49,6 @@ private slots:
     void redraw ();
     void redrawIdle ();
     void showHideNotifications (bool show);
-    void updateDataTime();
     void resetState ();
 
 private:
@@ -63,12 +62,10 @@ private:
     // The DnD state
     int dragAndDropState;
     // Needed to determine the current DnD states:
-    MWidget *lockLiftArea;
     MWidget *lockLandArea;
     // for frame-dropping
     bool drawPending;
     QPointF dragAndDropPosition;
-    QGraphicsLinearLayout *layoutPolicy;
     MWidget *notificationArea;
     MSceneWindow* controller;
 

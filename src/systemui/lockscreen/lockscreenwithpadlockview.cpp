@@ -35,29 +35,24 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     dragAndDropWindow(dynamic_cast<MWindow*>(controller->parent())),
     dragAndDropIcon(0),
     dragAndDropState(STATE_NONE),
-    lockLiftArea( new UnlockHeader),
     lockLandArea(new UnlockArea),
     drawPending(false),
-    layoutPolicy(new QGraphicsLinearLayout(Qt::Vertical)),
     notificationArea(new UnlockNotifications),
     controller(controller)
 {
+    lockScreenHeader->setViewType("lockScreenHeaderWithPadlock");
+    lockScreenHeader->setObjectName("LockLiftArea");
+
     dragAndDropOverlay.setVisible(false);
     dragAndDropOverlay.setManagedManually(true);
     setObjectName("LockScreenViewWithPadlock");
-
-    layoutPolicy->setContentsMargins(0., 0., 0., 0.);
-    layoutPolicy->setSpacing(0.);
 
     notificationArea->setVisible(false);
 
     connect(notificationArea, SIGNAL(needToShow(bool)), this, SLOT(showHideNotifications(bool)), Qt::DirectConnection);
 
-    layoutPolicy->addItem(lockLiftArea);
-    layoutPolicy->addItem(lockLandArea);
+    layout->addItem(lockLandArea);
 
-    // Set the main layout
-    controller->setLayout(layoutPolicy);
     connect(this, SIGNAL(unlocked()), controller, SLOT(sliderUnlocked()), Qt::DirectConnection);
     connect(controller, SIGNAL(dateTimeChanged()), this, SLOT(updateDataTime()));
     connect(controller, SIGNAL(resetRequested()), this, SLOT(resetState()));
@@ -71,18 +66,15 @@ void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     bool startDragAndDrop = false;
 
-    if (lockLiftArea == 0)
-        return;
-
-    if ((lockLiftArea->pos().y() + lockLiftArea->preferredHeight()) > event->pos().y()) {
-        if (lockLiftArea->layoutDirection() == Qt::RightToLeft) {
+    if ((lockScreenHeader->pos().y() + lockScreenHeader->preferredHeight()) > event->pos().y()) {
+        if (lockScreenHeader->layoutDirection() == Qt::RightToLeft) {
             // Icon position in RTL layout direction
             // TODO: What is this 160 ?
             startDragAndDrop = event->pos().x() < 160;
         } else {
             // Icon position in LTR layout direction
             // TODO: What is this 160 ?
-            startDragAndDrop = event->pos().x() > lockLiftArea->preferredWidth() - 160;
+            startDragAndDrop = event->pos().x() > lockScreenHeader->preferredWidth() - 160;
         }
     }
 
@@ -99,7 +91,7 @@ void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
         redraw();
 
-        static_cast<UnlockHeader*>(lockLiftArea)->setActive(false);
+        static_cast<UnlockHeader*>(lockScreenHeader)->setActive(false);
         static_cast<UnlockArea*>(lockLandArea)->setEnabled(true);
 
         /*
@@ -215,8 +207,8 @@ void LockScreenWithPadlockView::mouseReleaseEvent(QGraphicsSceneMouseEvent *even
 void LockScreenWithPadlockView::resetState()
 {
     // Restore the default state ...
-    if (lockLiftArea != 0)
-        static_cast<UnlockHeader*>(lockLiftArea)->setActive(true);
+    if (lockScreenHeader != 0)
+        static_cast<UnlockHeader*>(lockScreenHeader)->setActive(true);
     if (lockLandArea != 0)
         static_cast<UnlockArea*>(lockLandArea)->setEnabled(false);
 
@@ -264,20 +256,15 @@ void LockScreenWithPadlockView::showHideNotifications(bool show)
     // there is no any missed events...
     if (notificationArea->isVisible() && (show == false)) {
         notificationArea->setVisible(false);
-        layoutPolicy->removeItem(notificationArea);
+        layout->removeItem(notificationArea);
     }
 
     // Add notification area to policy when previously was
     // hidden, but there are some missed events...
     if ((notificationArea->isVisible() == false) && (show == true)) {
         notificationArea->setVisible(true);
-        layoutPolicy->insertItem(0, notificationArea);
+        layout->insertItem(0, notificationArea);
     }
-}
-
-void LockScreenWithPadlockView::updateDataTime()
-{
-    static_cast<UnlockHeader *>(lockLiftArea)->updateDateTime();
 }
 
 M_REGISTER_VIEW_NEW(LockScreenWithPadlockView, LockScreen)

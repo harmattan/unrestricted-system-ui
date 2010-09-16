@@ -103,7 +103,6 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
     // The timer should not be started if the display is off
     QCOMPARE (logic.timer.isActive (), false);
-    QCOMPARE(gLockScreenWindowStub->stubCallCount("updateDateTime"), 0);
 
     // Then try with display on: the timer should be started
     qmDisplayState = Maemo::QmDisplayState::On;
@@ -113,7 +112,6 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
     QCOMPARE (logic.timer.isActive (), true);
     QCOMPARE (logic.timer.interval (), 1000);
-    QCOMPARE(gLockScreenWindowStub->stubCallCount("updateDateTime"), 1);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);

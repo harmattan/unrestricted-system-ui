@@ -77,7 +77,6 @@ LockScreenBusinessLogic::LockScreenBusinessLogic (QObject* parent) :
     Q_ASSERT (connectSuccess);
 #endif
 
-    connect (&timer, SIGNAL (timeout ()), lockScreenWindow, SLOT (updateDateTime ()));
 }
 
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
@@ -188,8 +187,6 @@ LockScreenBusinessLogic::mayStartTimer ()
         return;
 
     SYS_DEBUG ("Starting timer");
-    // It's better to update the time straight away.
-   lockScreenWindow->updateDateTime ();
 
     // TODO: some adjustments of time may be done
     timer.start (1000);

@@ -47,13 +47,6 @@ void Ut_LockScreen::cleanupTestCase()
     delete app;
 }
 
-void Ut_LockScreen::testUpdateDateAndTime()
-{
-    QSignalSpy spy(lockScreen, SIGNAL(dateTimeChanged()));
-    lockScreen->updateDateTime();
-    QCOMPARE(spy.count(), 1);
-}
-
 void Ut_LockScreen::testSliderUnlocked()
 {
     connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));

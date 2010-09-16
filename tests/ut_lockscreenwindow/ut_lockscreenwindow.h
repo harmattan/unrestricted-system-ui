@@ -36,7 +36,6 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testWhenDataAndTimeIsUpdatedLockScreenDateAndTimeIsUpdated();
     void testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
     void testWhenWindowIsCreatedLockScreenAppears();
 private:

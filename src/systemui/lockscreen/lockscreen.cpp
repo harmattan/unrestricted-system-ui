@@ -33,11 +33,6 @@ void LockScreen::sliderUnlocked()
     emit unlocked();
 }
 
-void LockScreen::updateDateTime()
-{
-    emit dateTimeChanged();
-}
-
 void LockScreen::reset()
 {
     emit resetRequested();

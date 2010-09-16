@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QGraphicsLinearLayout>
 #include "lockscreenview.h"
 #include <MGConfItem>
 #include <MViewCreator>
@@ -25,12 +26,23 @@ const QString GCONF_BG_LANDSCAPE = "/desktop/meego/background/landscape/picture_
 const QString GCONF_BG_PORTRAIT = "/desktop/meego/background/portrait/picture_filename";
 
 LockScreenView::LockScreenView(MSceneWindow* controller) : MSceneWindowView(controller),
+    layout(new QGraphicsLinearLayout(Qt::Vertical)),
+    lockScreenHeader(new MWidgetController),
     controller(controller),
     gconfBgLandscape(new MGConfItem(GCONF_BG_LANDSCAPE, this)),
     gconfBgPortrait(new MGConfItem(GCONF_BG_PORTRAIT, this)),
     landscapePixmap(new QPixmap),
     portraitPixmap(new QPixmap)
 {
+    // Set the main layout
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    controller->setLayout(layout);
+
+    // Create a header for the lock screen
+    lockScreenHeader->setViewType("lockScreenHeader");
+    layout->addItem(lockScreenHeader);
+
     connect(gconfBgLandscape, SIGNAL(valueChanged()), this, SLOT(reloadLandscapeBackground()));
     connect(gconfBgPortrait, SIGNAL(valueChanged()), this, SLOT(reloadPortraitBackground()));
 

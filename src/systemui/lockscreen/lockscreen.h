@@ -28,7 +28,6 @@ class LockScreen : public MSceneWindow
 public:
     LockScreen(MWindow* parent);
     virtual ~LockScreen();
-    void updateDateTime();
     void reset();
 
 signals:

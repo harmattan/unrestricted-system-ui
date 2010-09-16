@@ -21,8 +21,10 @@
 
 #include <mscenewindowview.h>
 
+class QGraphicsLinearLayout;
 class MGConfItem;
 class QPixmap;
+class MWidgetController;
 
 class LockScreenView : public MSceneWindowView
 {
@@ -36,18 +38,24 @@ public:
 signals:
     void unlocked ();
 
+private slots:
+    void reloadLandscapeBackground ();
+    void reloadPortraitBackground ();
+
 protected:
     //! \reimp
     virtual void paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     //! \reimp_end
 
-private slots:
-    void reloadLandscapeBackground ();
-    void reloadPortraitBackground ();
+    //! Layout for the view
+    QGraphicsLinearLayout *layout;
+    //! lock screen header widget
+    MWidgetController *lockScreenHeader;
 
 private:
-    // The background GConf keys:
     MSceneWindow* controller;
+
+    // The background GConf keys:
     MGConfItem *gconfBgLandscape;
     MGConfItem *gconfBgPortrait;
     QPixmap* landscapePixmap;

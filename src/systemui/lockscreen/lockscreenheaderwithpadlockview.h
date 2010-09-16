@@ -22,8 +22,10 @@
 
 #include "lockscreenheaderview.h"
 
+class MImageWidget;
+
 /*!
- * The feed view draws a header for the lock screen.
+ * The LockScreenHeaderWithPadlockView class draws header containing a padlock for the lock screen
  */
 class LockScreenHeaderWithPadlockView : public LockScreenHeaderView
 {
@@ -42,6 +44,10 @@ public:
      * Destroys the LockScreenHeaderWithPadlockView.
      */
     virtual ~LockScreenHeaderWithPadlockView();
+
+private:
+    //! Image widget used to show the dragable pad lock
+    MImageWidget *padlockImageWidget;
 };
 
 #endif /* LOCKSCREENHEADERWITHPADLOCKVIEW_H_ */

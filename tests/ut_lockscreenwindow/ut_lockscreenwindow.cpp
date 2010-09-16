@@ -59,12 +59,6 @@ void Ut_LockScreenWindow::cleanup()
     appearedWindow = NULL;
 }
 
-void Ut_LockScreenWindow::testWhenDataAndTimeIsUpdatedLockScreenDateAndTimeIsUpdated()
-{
-    lockScreenWindow->updateDateTime();
-    QCOMPARE(gLockScreenStub->stubCallCount("updateDateTime"), 1);
-}
-
 void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
 {
     bool result = disconnect(lockScreenWindow->lockScreen, SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked()));
