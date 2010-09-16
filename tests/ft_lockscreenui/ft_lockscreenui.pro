@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ft_lockscreenui
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
 
 contains(DEFINES, HAVE_QMSYSTEM) {
 	PKGCONFIG += qmsystem
@@ -11,25 +11,25 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 SOURCES += ft_lockscreenui.cpp \
     xchecker.cpp \
     $$SRCDIR/debug.cpp \
-    $$SRCDIR/unlockwidgets.cpp \
-    $$SRCDIR/lockscreen.cpp  \
-    $$SRCDIR/lockscreenwindow.cpp  \
-    $$SRCDIR/eventeater.cpp  \
+    $$SRCDIR/lockscreen/unlockwidgets.cpp \
+    $$SRCDIR/lockscreen/lockscreen.cpp  \
+    $$SRCDIR/lockscreen/lockscreenwindow.cpp  \
+    $$SRCDIR/lockscreen/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
-    $$SRCDIR/unlockmissedevents.cpp \
-    $$SRCDIR/unlocknotifications.cpp \
+    $$SRCDIR/lockscreen/unlockmissedevents.cpp \
+    $$SRCDIR/lockscreen/unlocknotifications.cpp \
     $$SRCDIR/x11wrapper.cpp
 
 HEADERS += ft_lockscreenui.h \
     xchecker.h \
     $$SRCDIR/debug.h \
-    $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/lockscreen.h \
-    $$SRCDIR/lockscreenwindow.h  \
-    $$SRCDIR/eventeater.h \
+    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/lockscreen.h \
+    $$SRCDIR/lockscreen/lockscreenwindow.h  \
+    $$SRCDIR/lockscreen/eventeater.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/unlockmissedevents.h \
-    $$SRCDIR/unlocknotifications.h \
+    $$SRCDIR/lockscreen/unlockmissedevents.h \
+    $$SRCDIR/lockscreen/unlocknotifications.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)

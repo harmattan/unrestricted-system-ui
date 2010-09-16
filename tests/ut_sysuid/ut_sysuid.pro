@@ -1,10 +1,8 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_sysuid
-INCLUDEPATH += $$SRCDIR $$NOTIFICATIONSRCDIR $$SRCDIR/statusarea $$LIBNOTIFICATIONSRCDIR
-INCLUDEPATH += $$SRCDIR/statusindicatormenu $$SRCDIR/volumecontrol
-INCLUDEPATH += /usr/include/contextsubscriber
-INCLUDEPATH += /usr/include/resource/qt4
+INCLUDEPATH += $$SRCDIR/statusarea $$LIBNOTIFICATIONSRCDIR $$NOTIFICATIONSRCDIR $$SRCDIR/statusindicatormenu $$SRCDIR/volumecontrol $$SRCDIR/lockscreen
+INCLUDEPATH += /usr/include/contextsubscriber /usr/include/resource/qt4
 
 PKGCONFIG += dbus-1
 
@@ -13,13 +11,13 @@ SOURCES += \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/shutdownui.cpp \
     $$SRCDIR/usbui.cpp \
-    $$SRCDIR/lockscreen.cpp \
-    $$SRCDIR/eventeater.cpp \
-    $$SRCDIR/lockscreenwindow.cpp \
+    $$SRCDIR/lockscreen/lockscreen.cpp \
+    $$SRCDIR/lockscreen/eventeater.cpp \
+    $$SRCDIR/lockscreen/lockscreenwindow.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
-    $$SRCDIR/lockscreenbusinesslogic.cpp \
-    $$SRCDIR/lockscreenbusinesslogicadaptor.cpp \
+    $$SRCDIR/lockscreen/lockscreenbusinesslogic.cpp \
+    $$SRCDIR/lockscreen/lockscreenbusinesslogicadaptor.cpp \
     $$SRCDIR/sysuid.cpp \
     ut_sysuid.cpp \
 
@@ -37,13 +35,13 @@ HEADERS += \
     $$SRCDIR/volumecontrol/volumecontrolui.h \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
-    $$SRCDIR/lockscreen.h \
-    $$SRCDIR/lockscreenwindow.h \
-    $$SRCDIR/eventeater.h \
+    $$SRCDIR/lockscreen/lockscreen.h \
+    $$SRCDIR/lockscreen/lockscreenwindow.h \
+    $$SRCDIR/lockscreen/eventeater.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
-    $$SRCDIR/lockscreenbusinesslogic.h \
-    $$SRCDIR/lockscreenbusinesslogicadaptor.h \
+    $$SRCDIR/lockscreen/lockscreenbusinesslogic.h \
+    $$SRCDIR/lockscreen/lockscreenbusinesslogicadaptor.h \
     $$SRCDIR/sysuidrequest.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \
@@ -54,10 +52,10 @@ HEADERS += \
    $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
    $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
    $$NOTIFICATIONSRCDIR/notificationmanager.h \
-    $$SRCDIR/unlockwidgets.h \
-    $$SRCDIR/unlocknotifications.h \
-    $$SRCDIR/unlocknotificationsink.h \
-    $$SRCDIR/unlockmissedevents.h \
+    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/unlocknotifications.h \
+    $$SRCDIR/lockscreen/unlocknotificationsink.h \
+    $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \

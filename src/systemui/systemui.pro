@@ -33,23 +33,12 @@ HEADERS +=                              \
     sysuidrequest.h                     \
     batterybusinesslogic.h              \
     sysuid.h                            \
-    lockscreenbusinesslogic.h           \
-    lockscreenwindow.h                  \
-    eventeater.h                        \
     shutdownui.h                        \
     shutdownbusinesslogic.h             \
-    lockscreenbusinesslogicadaptor.h    \
     usbui.h                             \
     contextframeworkcontext.h           \
     applicationcontext.h                \
-    unlocknotifications.h               \
-    unlocknotificationsink.h            \
-    unlockmissedevents.h                \
-    unlockwidgets.h                     \
-    x11wrapper.h \
-    lockscreenview.h \
-    lockscreenwithpadlockview.h \
-    lockscreen.h
+    x11wrapper.h
 
 SOURCES +=                              \
     debug.cpp                           \
@@ -57,27 +46,17 @@ SOURCES +=                              \
     sysuidrequest.cpp                   \
     batterybusinesslogic.cpp            \
     sysuid.cpp                          \
-    lockscreenbusinesslogic.cpp         \
-    lockscreenwindow.cpp                \
-    eventeater.cpp                      \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \
-    lockscreenbusinesslogicadaptor.cpp  \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
-    unlocknotifications.cpp             \
-    unlocknotificationsink.cpp          \
-    unlockmissedevents.cpp              \
-    unlockwidgets.cpp                   \
-    x11wrapper.cpp \
-    lockscreenview.cpp \
-    lockscreenwithpadlockview.cpp \
-    lockscreen.cpp
+    x11wrapper.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 include(volumecontrol/volumecontrol.pri)
+include(lockscreen/lockscreen.pri)
 include(../../localconfig.pri)
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
