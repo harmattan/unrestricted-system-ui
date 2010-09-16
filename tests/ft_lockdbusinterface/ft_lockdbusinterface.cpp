@@ -392,7 +392,7 @@ Ft_LockDBusInterface::checkEaterIsVisible ()
     bool windowVisible;
         
     windowVisible = m_XChecker.checkWindow (
-            "EventEaterUI", 
+            "EventEater",
             XChecker::CheckIsVisible);
 
     //m_XChecker.debug_dump_windows ();
@@ -405,7 +405,7 @@ Ft_LockDBusInterface::checkEaterIsInvisible ()
     bool windowInVisible;
         
     windowInVisible = m_XChecker.checkWindow (
-            "EventEaterUI", 
+            "EventEater",
             XChecker::CheckIsInvisible);
     //m_XChecker.debug_dump_windows ();
     QVERIFY (windowInVisible);
