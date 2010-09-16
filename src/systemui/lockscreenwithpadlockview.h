@@ -34,8 +34,6 @@ public:
     LockScreenWithPadlockView (MSceneWindow* controller);
     ~LockScreenWithPadlockView ();
 
-    void resetState ();
-
     enum dnd_state {
         STATE_NONE = 0,
         STATE_MOVING,
@@ -55,6 +53,7 @@ private slots:
     void redrawIdle ();
     void showHideNotifications (bool show);
     void updateDataTime();
+    void resetState ();
 
 private:
     void updateDragAndDropIcon ();

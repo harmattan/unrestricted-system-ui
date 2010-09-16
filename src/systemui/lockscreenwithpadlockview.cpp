@@ -26,14 +26,9 @@
 #include <MViewCreator>
 #include <QGraphicsSceneMouseEvent>
 #include <MSceneManager>
-
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen.h"
 #include "unlockwidgets.h"
-
-// For WM_SET_NAME:
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     LockScreenView(controller),
@@ -65,6 +60,7 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     controller->setLayout(layoutPolicy);
     connect(this, SIGNAL(unlocked()), controller, SLOT(sliderUnlocked()), Qt::DirectConnection);
     connect(controller, SIGNAL(dateTimeChanged()), this, SLOT(updateDataTime()));
+    connect(controller, SIGNAL(resetRequested()), this, SLOT(resetState()));
 }
 
 LockScreenWithPadlockView::~LockScreenWithPadlockView()
