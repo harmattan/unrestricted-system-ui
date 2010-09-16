@@ -32,11 +32,11 @@ Date::Date(QGraphicsItem *parent) : MWidget(parent),
     setLayout(layout);
 
     // Create the labels
-    dayOfWeekLabel = new MLabel(this);
+    dayOfWeekLabel = new MLabel;
     dayOfWeekLabel->setObjectName("EventsDayLabel");
-    layout->addItem(dayOfWeekLabel);
-    dateLabel = new MLabel(this);
+    dateLabel = new MLabel;
     dateLabel->setObjectName("EventsDateLabel");
+    layout->addItem(dayOfWeekLabel);
     layout->addItem(dateLabel);
 
 #ifdef HAVE_QMSYSTEM
@@ -71,7 +71,7 @@ void Date::updateDate()
 {
     // Set current time in the labels
     QDateTime currentTime = QDateTime::currentDateTime();
-    dayOfWeekLabel->setText(locale->formatDateTime(currentTime, weekDayFormat).toUpper());
+    dayOfWeekLabel->setText(locale->formatDateTime(currentTime, weekDayFormat));
     dateLabel->setText(locale->formatDateTime(currentTime, dateFormat));
 
     // Calculate the time for the next update
