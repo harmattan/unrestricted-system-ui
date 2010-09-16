@@ -140,7 +140,6 @@ MLabelStyle#ClockLabel {
     maximum-size: -0.1mm 3.0mm;
 }
 
-
 StatusIndicatorIconStyle {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";
@@ -528,3 +527,46 @@ MContainerStyle#MExtensionAreaInvisibleContainer {
     background-image: ;
 }
 
+LockScreenHeaderStyle {
+    day-of-week-format: "%A";
+    date-format: "%B %d";
+}
+
+ClockStyle#LockScreenHeaderClock {
+    margin-left: 0.6mm;
+    margin-right: 0.6mm;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    time-format: "%R";
+    short-remove-am-pm-indicator: false;
+}
+
+Clock#LockScreenHeaderClock MLabelStyle#ClockLabel {
+    font: $FONT_XLARGE;
+    color: #FFFFFF;
+    margin-left: 1.6mm;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: -0.1mm 3.0mm;
+    minimum-size: -0.1mm 3.0mm;
+    maximum-size: -0.1mm 3.0mm;
+}
+
+MLabelStyle#EventsDayLabel {
+    font: "Nokia Standard" bold 1.8mm;
+    color: #ffffff;
+}
+
+MLabelStyle#EventsDateLabel {
+    font: $FONT_XSMALL;
+    color: #ffffff;
+}

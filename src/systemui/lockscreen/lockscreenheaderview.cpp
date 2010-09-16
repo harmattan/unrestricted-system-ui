@@ -25,7 +25,8 @@
 
 LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     MWidgetView(controller),
-    layout(new QGraphicsLinearLayout(Qt::Horizontal))
+    layout(new QGraphicsLinearLayout(Qt::Horizontal)),
+    date(new Date)
 {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
@@ -38,7 +39,6 @@ LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     clock->setObjectName("LockScreenHeaderClock");
     dateTimeLayout->addItem(clock);
     dateTimeLayout->setAlignment(clock, Qt::AlignLeft);
-    Date *date = new Date;
     dateTimeLayout->addItem(date);
     dateTimeLayout->setAlignment(date, Qt::AlignLeft);
 
@@ -50,6 +50,14 @@ LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
 
 LockScreenHeaderView::~LockScreenHeaderView()
 {
+}
+
+void LockScreenHeaderView::applyStyle()
+{
+    MWidgetView::applyStyle();
+
+    date->setWeekDayFormat(style()->dayOfWeekFormat());
+    date->setDateFormat(style()->dateFormat());
 }
 
 M_REGISTER_VIEW_NEW(LockScreenHeaderView, MWidgetController)

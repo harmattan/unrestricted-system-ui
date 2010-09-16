@@ -24,6 +24,7 @@
 #include "lockscreenheaderstyle.h"
 
 class QGraphicsLinearLayout;
+class Date;
 
 /*!
  * The feed view draws a header for the lock screen.
@@ -47,8 +48,15 @@ public:
     virtual ~LockScreenHeaderView();
 
 protected:
+    //! \reimp
+    virtual void applyStyle();
+    //! \reimp_end
+
     //! The main layout
     QGraphicsLinearLayout *layout;
+
+    //! The date widget
+    Date *date;
 };
 
 #endif /* LOCKSCREENHEADERVIEW_H_ */

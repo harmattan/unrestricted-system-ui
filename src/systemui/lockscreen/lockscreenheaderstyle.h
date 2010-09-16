@@ -26,6 +26,12 @@ class LockScreenHeaderStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(LockScreenHeaderStyle)
+
+    //! Format string for the day of week
+    M_STYLE_ATTRIBUTE(QString, dayOfWeekFormat, DayOfWeekFormat)
+
+    //! Format string for the date
+    M_STYLE_ATTRIBUTE(QString, dateFormat, DateFormat)
 };
 
 class LockScreenHeaderStyleContainer : public MWidgetStyleContainer
