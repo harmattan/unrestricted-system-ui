@@ -22,24 +22,18 @@
 #include "lockscreenwindow.h"
 #include "lockscreen_stub.h"
 #include <X11/Xutil.h>
+#include "x11wrapper_stub.h"
 
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
 {
 }
 
-bool sceneWindowAppearCalled = false;
-void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
+MWindow* appearedWindow = NULL;
+void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
 {
-    Q_UNUSED(window);
+    appearedWindow = window;
     Q_UNUSED(policy);
-    sceneWindowAppearCalled = true;
-}
-
-bool sceneWindowDisappearCalled = false;
-void MSceneWindow::disappear()
-{
-    sceneWindowDisappearCalled = true;
 }
 
 void Ut_LockScreenWindow::initTestCase()
@@ -61,22 +55,10 @@ void Ut_LockScreenWindow::init()
 
 void Ut_LockScreenWindow::cleanup()
 {
-    sceneWindowAppearCalled = false;
-    sceneWindowDisappearCalled = false;
     delete lockScreenWindow;
+    appearedWindow = NULL;
 }
 
-void Ut_LockScreenWindow::testWhenWindowAppearIsCalledLockScreenIsAppeared()
-{
-    lockScreenWindow->appear();
-    QCOMPARE(sceneWindowAppearCalled, true);
-}
-
-void Ut_LockScreenWindow::testWhenWindowDisappearIsCalledLockScreenIsDisappeared()
-{
-    lockScreenWindow->disappear();
-    QCOMPARE(sceneWindowDisappearCalled, true);
-}
 void Ut_LockScreenWindow::testWhenDataAndTimeIsUpdatedLockScreenDateAndTimeIsUpdated()
 {
     lockScreenWindow->updateDateTime();
@@ -87,6 +69,11 @@ void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsC
 {
     bool result = disconnect(lockScreenWindow->lockScreen, SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked()));
     QCOMPARE(result, true);
+}
+
+void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
+{
+    QCOMPARE(appearedWindow, lockScreenWindow);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

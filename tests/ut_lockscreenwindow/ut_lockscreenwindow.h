@@ -36,10 +36,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testWhenWindowAppearIsCalledLockScreenIsAppeared();
-    void testWhenWindowDisappearIsCalledLockScreenIsDisappeared();
     void testWhenDataAndTimeIsUpdatedLockScreenDateAndTimeIsUpdated();
     void testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
+    void testWhenWindowIsCreatedLockScreenAppears();
 private:
     MApplication *app;
     LockScreenWindow *lockScreenWindow;

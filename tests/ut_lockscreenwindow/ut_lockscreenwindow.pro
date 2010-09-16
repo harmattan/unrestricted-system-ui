@@ -10,7 +10,8 @@ SOURCES += ut_lockscreenwindow.cpp \
 
 HEADERS += ut_lockscreenwindow.h \
     $$SRCDIR/lockscreenwindow.h  \
-    $$SRCDIR/lockscreen.h
+    $$SRCDIR/lockscreen.h \
+    $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)
 

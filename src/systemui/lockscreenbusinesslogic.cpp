@@ -151,11 +151,9 @@ LockScreenBusinessLogic::toggleScreenLockUI (
          * we need to reset its state.
          */
         lockScreenWindow->reset();
-        lockScreenWindow->appear();
         lockScreenWindow->show();
         mayStartTimer ();
     } else {
-        lockScreenWindow->disappear();
         lockScreenWindow->hide();
         mayStopTimer ();
     }

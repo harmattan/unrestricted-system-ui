@@ -30,8 +30,6 @@ class LockScreenWindow : public MWindow
 public:
     LockScreenWindow();
     virtual ~LockScreenWindow();
-    void appear();
-    void disappear();
 
 protected:
     virtual void showEvent(QShowEvent *event);

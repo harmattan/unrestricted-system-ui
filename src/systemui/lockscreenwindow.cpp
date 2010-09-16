@@ -25,6 +25,7 @@ LockScreenWindow::LockScreenWindow() :
     lockScreen(new LockScreen(this))
 {
     setWindowTitle("LockScreenUI");
+    lockScreen->appear(this);
     setObjectName("LockScreenWindow");
     connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
 }
@@ -32,16 +33,6 @@ LockScreenWindow::LockScreenWindow() :
 LockScreenWindow::~LockScreenWindow()
 {
     delete lockScreen;
-}
-
-void LockScreenWindow::appear()
-{
-    lockScreen->appear(this);
-}
-
-void LockScreenWindow::disappear()
-{
-    lockScreen->disappear();
 }
 
 void LockScreenWindow::updateDateTime()
