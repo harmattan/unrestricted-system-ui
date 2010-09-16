@@ -2,7 +2,7 @@ include(../coverage.pri)
 include(../common_top.pri)
 
 TARGET = ut_unlocknotificationsink
-INCLUDEPATH +=$$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
+INCLUDEPATH += $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
 DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_DIR\")\'
 
 SOURCES += ut_unlocknotificationsink.cpp \
