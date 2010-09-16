@@ -33,15 +33,18 @@ public:
     void appear();
     void disappear();
 
+protected:
+    virtual void showEvent(QShowEvent *event);
+
 signals:
-    void unlocked ();
+    void unlocked();
 
 public slots:
     void updateDateTime();
     void reset();
 
 private:
-    LockScreen* lockScreen;
+    LockScreen *lockScreen;
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenWindow;

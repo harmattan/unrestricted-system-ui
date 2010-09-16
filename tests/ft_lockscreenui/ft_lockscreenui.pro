@@ -1,5 +1,6 @@
 include(../common_top.pri)
 TARGET = ft_lockscreenui
+PKGCONFIG += xcomposite
 
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR
 
@@ -16,7 +17,8 @@ SOURCES += ft_lockscreenui.cpp \
     $$SRCDIR/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/unlockmissedevents.cpp \
-    $$SRCDIR/unlocknotifications.cpp
+    $$SRCDIR/unlocknotifications.cpp \
+    $$SRCDIR/x11wrapper.cpp
 
 HEADERS += ft_lockscreenui.h \
     xchecker.h \
@@ -27,7 +29,8 @@ HEADERS += ft_lockscreenui.h \
     $$SRCDIR/eventeater.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/unlockmissedevents.h \
-    $$SRCDIR/unlocknotifications.h
+    $$SRCDIR/unlocknotifications.h \
+    $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)
 

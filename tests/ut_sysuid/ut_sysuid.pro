@@ -60,7 +60,8 @@ HEADERS += \
     $$SRCDIR/unlockmissedevents.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/applicationcontext.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
+    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/x11wrapper.h
 
 # service classes
 HEADERS += \

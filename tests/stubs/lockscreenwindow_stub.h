@@ -33,6 +33,7 @@ class LockScreenWindowStub : public StubBase {
   virtual void reset();
   virtual void appear();
   virtual void disappear();
+  virtual void showEvent(QShowEvent *event);
 };
 
 // 2. IMPLEMENT STUB
@@ -57,6 +58,14 @@ void LockScreenWindowStub::appear() {
 void LockScreenWindowStub::disappear() {
   stubMethodEntered("disappear");
 }
+
+void LockScreenWindowStub::showEvent(QShowEvent *event)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QShowEvent * >(event));
+  stubMethodEntered("showEvent", params);
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -90,6 +99,11 @@ void LockScreenWindow::appear()
 void LockScreenWindow::disappear()
 {
     gLockScreenWindowStub->disappear();
+}
+
+void LockScreenWindow::showEvent(QShowEvent *event)
+{
+    gLockScreenWindowStub->showEvent(event);
 }
 
 #endif

@@ -18,10 +18,13 @@
 ****************************************************************************/
 #include "lockscreenwindow.h"
 #include "lockscreen.h"
+#include <QX11Info>
+#include "x11wrapper.h"
 
 LockScreenWindow::LockScreenWindow() :
     lockScreen(new LockScreen(this))
 {
+    setWindowTitle("LockScreenUI");
     setObjectName("LockScreenWindow");
     connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
 }
@@ -49,4 +52,17 @@ void LockScreenWindow::updateDateTime()
 void LockScreenWindow::reset()
 {
     lockScreen->reset();
+}
+
+void LockScreenWindow::showEvent(QShowEvent *)
+{
+    Display *display = QX11Info::display();
+    Window windowID = internalWinId();
+
+    // Set the stacking layer.
+    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom != None) {
+        long layer = 2;
+        X11Wrapper::XChangeProperty(display, windowID, stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
+    }
 }
