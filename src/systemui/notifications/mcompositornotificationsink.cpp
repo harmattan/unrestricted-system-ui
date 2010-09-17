@@ -28,13 +28,15 @@
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
 MCompositorNotificationSink::MCompositorNotificationSink() :
-        sinkDisabled(false), allPreviewsDisabled(false),
+        sinkDisabled(false),
+        allPreviewsDisabled(false),
         window(new MWindow)
 {
     window->setTranslucentBackground(true);
     window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
     window->setObjectName("MCompositorNotificationSinkWindow");
+    window->setWindowTitle("Notification");
 
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();
@@ -130,8 +132,9 @@ void MCompositorNotificationSink::notificationDone(uint notificationId, bool not
 {
     MBanner *banner = idToBanner.take(notificationId);
     if (banner != NULL) {
-        window->sceneManager()->disappearSceneWindow(banner);
+        // Make the banner disappear. It can disappear immediately, so any signal connections must be done before calling disappearSceneWindow()
         connect(banner, SIGNAL(disappeared()), this, SLOT(removeBannerFromCurrentBanners()));
+        window->sceneManager()->disappearSceneWindow(banner);
     }
     if (notificationIdInUse) {
         idToBanner.insert(notificationId, NULL);
