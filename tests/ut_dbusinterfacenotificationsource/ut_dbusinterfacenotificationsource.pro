@@ -8,7 +8,7 @@ SOURCES += \
     ut_dbusinterfacenotificationsource.cpp \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.cpp \
    $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
+   $$NOTIFICATIONSRCDIR/notificationsource.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 

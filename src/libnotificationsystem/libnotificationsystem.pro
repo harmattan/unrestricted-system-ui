@@ -7,8 +7,7 @@ QMAKE_LFLAGS_RPATH = -Wl
 
 TEMPLATE = lib
 TARGET = notificationsystem
-CONFIG += meegotouch \
-    no_check_exist
+CONFIG += meegotouch
 INCLUDEPATH +=  .
 DEPENDPATH += .
 
@@ -22,7 +21,6 @@ contains(COV_OPTION, on) {
 }
 
 HEADERS += \
-    notificationsource.h \
     notificationsink.h \
     notificationsinkadaptor.h \
     notificationparameters.h \
@@ -31,11 +29,9 @@ HEADERS += \
     notification.h \
     genericnotificationparameterfactory.h \
     notificationwidgetparameterfactory.h \
-    notificationmanagerinterface.h \
     metatypedeclarations.h
 
 SOURCES += \
-    notificationsource.cpp \
     notificationsink.cpp \
     notificationsinkadaptor.cpp \
     notificationparameters.cpp \

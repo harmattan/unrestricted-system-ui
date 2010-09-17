@@ -11,7 +11,7 @@ SOURCES += \
     $$NOTIFICATIONSRCDIR/notificationmanager.cpp \
     $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
     $$SRCDIR/contextframeworkcontext.cpp \
-    $$LIBNOTIFICATIONSRCDIR/notificationsource.cpp \
+    $$NOTIFICATIONSRCDIR/notificationsource.cpp \
     $$LIBNOTIFICATIONSRCDIR/notification.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
@@ -30,7 +30,7 @@ HEADERS += \
     $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/contextframeworkcontext.h \
-    $$LIBNOTIFICATIONSRCDIR/notificationsource.h \
+    $$NOTIFICATIONSRCDIR/notificationsource.h \
     $$LIBNOTIFICATIONSRCDIR/notification.h \
     $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
