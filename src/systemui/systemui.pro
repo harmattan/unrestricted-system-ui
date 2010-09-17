@@ -81,6 +81,7 @@ contains(DEFINES, HAVE_LIBNGF) {
 
 PKGCONFIG += \
     dbus-1 \
+    dbus-glib-1 \
     xcomposite
 
 dbus_policy.files += systemui.conf
