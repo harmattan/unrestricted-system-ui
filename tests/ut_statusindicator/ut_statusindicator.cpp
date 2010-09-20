@@ -202,9 +202,26 @@ void Ut_StatusIndicator::testBattery()
 {
     m_subject = new BatteryStatusIndicator(*testContext);
 
-    testContextItems["Battery.ChargePercentage"]->setValue(QVariant(100));
+    // testing full battery
+    QList<QVariant> values;
+    values << QVariant(8) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
     QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 100);
+
+    // testing empty battery
+    values.clear();
+    values << QVariant(0) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 0);
+
+    // testing battery somewhere between empty and full
+    values.clear();
+    values << QVariant(6) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 75);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Level") >= 0);

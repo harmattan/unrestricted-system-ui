@@ -231,8 +231,8 @@ void BatteryStatusIndicator::batteryLevelChanged()
     if (!batteryCharging->value().toBool()) {
         QList<QVariant> chargeBars = batteryLevel->value().toList();
         if(chargeBars.count() == 2 ) {
-           int remainingBars = chargeBars.at(0).toInt();
-           int maximumBars = chargeBars.at(1).toInt();
+           double remainingBars = chargeBars.at(0).toDouble();
+           double maximumBars = chargeBars.at(1).toDouble();
 
            //simple  mapping to percentage value
            double chargeValue  = remainingBars/maximumBars;
