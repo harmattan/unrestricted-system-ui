@@ -38,6 +38,7 @@ Date::Date(QGraphicsItem *parent) : MWidget(parent),
     dateLabel->setObjectName("EventsDateLabel");
     layout->addItem(dayOfWeekLabel);
     layout->addItem(dateLabel);
+    layout->addStretch();
 
 #ifdef HAVE_QMSYSTEM
     // Listen for changes in time settings

@@ -545,10 +545,10 @@ ClockStyle#LockScreenHeaderClock {
     short-remove-am-pm-indicator: false;
 }
 
-Clock#LockScreenHeaderClock MLabelStyle#ClockLabel {
-    font: $FONT_XLARGE;
+MLabelStyle#LockScreenHeaderClockLabel {
+    font: $FONT_FAMILY normal 9mm;
     color: #FFFFFF;
-    margin-left: 1.6mm;
+    margin-left: 0mm;
     margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
@@ -556,17 +556,39 @@ Clock#LockScreenHeaderClock MLabelStyle#ClockLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -0.1mm 3.0mm;
-    minimum-size: -0.1mm 3.0mm;
-    maximum-size: -0.1mm 3.0mm;
+    preferred-size: -0.1mm 9.0mm;
+    minimum-size: -0.1mm 9.0mm;
+    maximum-size: -0.1mm 9.0mm;
 }
 
 MLabelStyle#EventsDayLabel {
-    font: "Nokia Standard" bold 1.8mm;
+    font: $FONT_XXSMALL_BOLD;
     color: #ffffff;
+    margin-left: 0.6mm;
+    margin-right: 1.3mm;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: -0.1mm 1.3mm;
+    minimum-size: -0.1mm 1.3mm;
+    maximum-size: -0.1mm 1.3mm;
 }
 
 MLabelStyle#EventsDateLabel {
     font: $FONT_XSMALL;
     color: #ffffff;
+    margin-left: 0.6mm;
+    margin-right: 1.3mm;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: -0.1mm 1.3mm;
+    minimum-size: -0.1mm 1.3mm;
+    maximum-size: -0.1mm 1.3mm;
 }

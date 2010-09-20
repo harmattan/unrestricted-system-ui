@@ -20,14 +20,17 @@
 #ifndef LOCKSCREENHEADERWITHPADLOCKVIEW_H_
 #define LOCKSCREENHEADERWITHPADLOCKVIEW_H_
 
-#include "lockscreenheaderview.h"
+#include <MWidgetView>
+#include "lockscreenheaderstyle.h"
 
 class MImageWidget;
+class QGraphicsLinearLayout ;
+class Date;
 
 /*!
  * The LockScreenHeaderWithPadlockView class draws header containing a padlock for the lock screen
  */
-class LockScreenHeaderWithPadlockView : public LockScreenHeaderView
+class LockScreenHeaderWithPadlockView : public MWidgetView
 {
     Q_OBJECT
     M_VIEW(MWidgetModel, LockScreenHeaderStyle)
@@ -45,9 +48,20 @@ public:
      */
     virtual ~LockScreenHeaderWithPadlockView();
 
+protected:
+    //! \reimp
+    virtual void applyStyle();
+    //! \reimp_end
+
 private:
     //! Image widget used to show the dragable pad lock
     MImageWidget *padlockImageWidget;
+
+    //! The main layout
+    QGraphicsLinearLayout *layout;
+
+    Date* date;
+
 };
 
 #endif /* LOCKSCREENHEADERWITHPADLOCKVIEW_H_ */

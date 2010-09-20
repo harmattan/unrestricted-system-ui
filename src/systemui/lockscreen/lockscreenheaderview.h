@@ -52,6 +52,7 @@ protected:
     virtual void applyStyle();
     //! \reimp_end
 
+private:
     //! The main layout
     QGraphicsLinearLayout *layout;
 

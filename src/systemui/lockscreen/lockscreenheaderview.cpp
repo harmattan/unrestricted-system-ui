@@ -31,20 +31,30 @@ LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
+    Clock *clock = new Clock;
+    clock->setObjectName("LockScreenHeaderClock");
+    QGraphicsLinearLayout* clockArea = new QGraphicsLinearLayout(Qt::Horizontal);
+    clockArea->setContentsMargins(0, 0, 0, 0);
+    clockArea->setSpacing(0);
+    clockArea->addStretch();
+    clockArea->addItem(clock);
+
+    QGraphicsLinearLayout* dateArea = new QGraphicsLinearLayout(Qt::Horizontal);
+    dateArea->setContentsMargins(0, 0, 0, 0);
+    dateArea->setSpacing(0);
+    dateArea->addStretch();
+    dateArea->addItem(date);
+
     // Create a layout for the date and time
     QGraphicsLinearLayout *dateTimeLayout = new QGraphicsLinearLayout(Qt::Vertical);
     dateTimeLayout->setContentsMargins(0, 0, 0, 0);
     dateTimeLayout->setSpacing(0);
-    Clock *clock = new Clock;
-    clock->setObjectName("LockScreenHeaderClock");
-    dateTimeLayout->addItem(clock);
-    dateTimeLayout->setAlignment(clock, Qt::AlignLeft);
-    dateTimeLayout->addItem(date);
-    dateTimeLayout->setAlignment(date, Qt::AlignLeft);
+    dateTimeLayout->addItem(clockArea);
+    dateTimeLayout->addItem(dateArea);
+    dateTimeLayout->addStretch();
 
     // Add the date and time to the main layout
     layout->addItem(dateTimeLayout);
-    layout->setAlignment(dateTimeLayout, Qt::AlignLeft | Qt::AlignTop);
     controller->setLayout(layout);
 }
 

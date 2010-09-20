@@ -35,7 +35,7 @@ ClockView::ClockView(Clock *controller) :
     controller->setLayout(l);
 
     label = new MLabel(NULL);
-    label->setObjectName("ClockLabel");
+    label->setObjectName(controller->objectName() + "Label");
     l->addItem(label);
 
     // React to system-wide locale changes
