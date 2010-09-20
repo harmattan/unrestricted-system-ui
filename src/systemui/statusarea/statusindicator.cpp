@@ -99,10 +99,10 @@ void StatusIndicator::setModelUpdatesEnabled(bool modelUpdatesEnabled)
 void StatusIndicator::updateAnimationStatus()
 {
     if (modelUpdatesEnabled) {
-	SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
+        SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
         model()->setAnimate(animateIfPossible);
     } else {
-	SYS_DEBUG ("setAnimate(false)");
+        SYS_DEBUG ("setAnimate(false)");
         model()->setAnimate(false);
     }
 }
@@ -208,7 +208,7 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
     }
 #endif
 
-    batteryLevel = createContextItem(context, "Battery.ChargePercentage");
+    batteryLevel = createContextItem(context, "Battery.ChargeBars");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
 
     batteryCharging = createContextItem(context, "Battery.IsCharging");
@@ -229,7 +229,15 @@ BatteryStatusIndicator::~BatteryStatusIndicator()
 void BatteryStatusIndicator::batteryLevelChanged()
 {
     if (!batteryCharging->value().toBool()) {
-        setValue(batteryLevel->value().toDouble() * 0.01f);
+        QList<QVariant> chargeBars = batteryLevel->value().toList();
+        if(chargeBars.count() == 2 ) {
+           int remainingBars = chargeBars.at(0).toInt();
+           int maximumBars = chargeBars.at(1).toInt();
+
+           //simple  mapping to percentage value
+           double chargeValue  = remainingBars/maximumBars;
+           setValue(chargeValue);
+        }
     }
 }
 
