@@ -33,12 +33,8 @@
 
 namespace ResourcePolicy
 {
-    ResourceSet::ResourceSet(const QString& str, QObject* o, bool a, bool b)
+    ResourceSet::ResourceSet(const QString&, QObject*)
     {
-        Q_UNUSED(str);
-        Q_UNUSED(o);
-        Q_UNUSED(a);
-        Q_UNUSED(b);
     }
 
     bool
