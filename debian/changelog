@@ -1,3 +1,9 @@
+system-ui (0.16.15~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 21 Sep 2010 10:31:27 +0300
+
 system-ui (0.16.14-1) harmattan; urgency=low
 
   * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
