@@ -5,6 +5,7 @@ system-ui (0.17.0~1) harmattan; urgency=low
   * Fixes: NB#192188 - Don't create the usb-dialog from constructor...
   * Fixes: NB#188917 - Status indicators sometimes appear and disappear when orientation changed
   * Fixes: NB#191279 - A transparent notification window appears on top of all windows eating all touch events
+  * Fixes: NB#191742 - Status bar background image is not refreshed on orientation changes
 
  -- David Kedves <dkedves@blumsoft.eu>  Tue, 21 Sep 2010 10:31:27 +0300
 
