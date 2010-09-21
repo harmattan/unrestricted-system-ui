@@ -1,5 +1,15 @@
 system-ui (0.17.0~1) harmattan; urgency=low
 
+  * Enabled portrait-mode shutdown logo (needs
+    "icon-l-startup-nokia-logo-portrait" from theme)
+  * Fixes: NB#192188 - Don't create the usb-dialog from constructor...
+  * Fixes: NB#188917 - Status indicators sometimes appear and disappear when orientation changed
+  * Fixes: NB#191279 - A transparent notification window appears on top of all windows eating all touch events
+
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 21 Sep 2010 10:31:27 +0300
+
+system-ui (0.16.14-1) harmattan; urgency=low
+
   * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
   * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
   * Fixes: BMC#6114 - Lock screen does not rotate with an animation
@@ -8,11 +18,6 @@ system-ui (0.17.0~1) harmattan; urgency=low
   * Fixes: NB#188724 - USB mode selection not working with SecFW special image
   * Fixes: NB#174471 - status icons do not scale properly to device DPI
   * Fixes: NB#190331 - Lack of text in notifications from Status Indicator Menu
-  * Enabled portrait-mode shutdown logo (needs
-    "icon-l-startup-nokia-logo-portrait" from theme)
-  * Fixes: NB#192188 - Don't create the usb-dialog from constructor...
-  * Fixes: NB#188917 - Status indicators sometimes appear and disappear when orientation changed
-  * Fixes: NB#191279 - A transparent notification window appears on top of all windows eating all touch events
 
  -- David Kedves <dkedves@blumsoft.eu>  Wed, 15 Sep 2010 16:06:30 +0200
 
