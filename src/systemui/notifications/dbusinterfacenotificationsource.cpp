@@ -33,6 +33,7 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
     qDBusRegisterMetaType<QList<Notification> >();
     qDBusRegisterMetaType<NotificationGroup>();
     qDBusRegisterMetaType<QList<NotificationGroup> >();
+    qDBusRegisterMetaType<NotificationParameters>();
     qDBusRegisterMetaType<MNotificationProxy>();
     qDBusRegisterMetaType<QList<MNotificationProxy> >();
     qDBusRegisterMetaType<MNotificationGroupProxy>();
