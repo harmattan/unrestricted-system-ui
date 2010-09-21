@@ -200,24 +200,14 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
 {
     setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
 
-    batterySaveModeEnabled = false;
-#ifdef HAVE_QMSYSTEM
-    if (qmDeviceMode.getPSMState() == Maemo::QmDeviceMode::PSMStateOn) {
-        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
-        batterySaveModeEnabled = true;
-    }
-#endif
-
     batteryLevel = createContextItem(context, "Battery.ChargeBars");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
 
     batteryCharging = createContextItem(context, "Battery.IsCharging");
     connect(batteryCharging, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
 
-#ifdef HAVE_QMSYSTEM
-    connect(&qmDeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
-            this, SLOT(batterySaveModeChanged(Maemo::QmDeviceMode::PSMState)));
-#endif
+    batterySaveMode = createContextItem(context, "System.PowerSaveMode");
+    connect(batterySaveMode, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
 
     batteryLevelChanged ();
 }
@@ -244,14 +234,14 @@ void BatteryStatusIndicator::batteryLevelChanged()
 void BatteryStatusIndicator::batteryChargingChanged()
 {
     if (batteryCharging->value().toBool()) {
-        if (batterySaveModeEnabled) {
+        if (batterySaveMode->value().toBool()) {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE_AND_CHARGING);
         } else {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_CHARGING);
         }
         animateIfPossible = true;
     } else {
-        if (batterySaveModeEnabled) {
+        if (batterySaveMode->value().toBool()) {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
         } else {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
@@ -263,18 +253,6 @@ void BatteryStatusIndicator::batteryChargingChanged()
     //SYS_DEBUG ("extra batteryLevelChanged() call");
     batteryLevelChanged ();
 }
-
-#ifdef HAVE_QMSYSTEM
-void BatteryStatusIndicator::batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state)
-{
-    if (state == Maemo::QmDeviceMode::PSMStateOn) {
-        batterySaveModeEnabled = true;
-    } else {
-        batterySaveModeEnabled = false;
-    }
-    batteryChargingChanged();
-}
-#endif
 
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)
