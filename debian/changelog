@@ -1,4 +1,4 @@
-system-ui (0.16.14~1) harmattan; urgency=low
+system-ui (0.16.14-1) harmattan; urgency=low
 
   * Fixes: NB#184457 - system-ui eats too much CPU on language/region changes
   * Fixes: NB#190497 - Lock-screen UI region format is not properly updated
