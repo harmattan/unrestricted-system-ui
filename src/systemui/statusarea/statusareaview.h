@@ -61,8 +61,8 @@ public:
 
 protected:
     //! Widgets for the landscape and portrait areas
-    QGraphicsWidget *landscapeWidget;
-    QGraphicsWidget *portraitWidget;
+    MWidgetController *landscapeWidget;
+    MWidgetController *portraitWidget;
 
 private:
     //! Context framework application context for the indicators

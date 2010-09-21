@@ -31,8 +31,8 @@
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
     MWidgetView(controller),
-    landscapeWidget(new QGraphicsWidget),
-    portraitWidget(new QGraphicsWidget),
+    landscapeWidget(new MWidgetController),
+    portraitWidget(new MWidgetController),
     controller(controller),
     landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
@@ -69,9 +69,13 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
+    landscapeWidget->setView(new MWidgetView(landscapeWidget));
+    landscapeWidget->setObjectName("StatusBarLandscapeWidget");
     landscapeWidget->setLayout(createLandscapeLayout());
     landscapeWidget->setParent(controller);
     portraitWidget->setParent(controller);
+    portraitWidget->setView(new MWidgetView(portraitWidget));
+    portraitWidget->setObjectName("StatusBarPortraitWidget");
     portraitWidget->setLayout(createPortraitLayout());
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);

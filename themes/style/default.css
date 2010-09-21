@@ -71,11 +71,33 @@ MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
 }
 
 StatusAreaStyle {
-    background-image:;
-    background-color: #000000;
     minimum-size: 100% 6mm;
     preferred-size: 100% 6mm;
     maximum-size: 100% 6mm;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+MWidgetStyle#StatusBarLandscapeWidget {
+    background-color: #000000;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+MWidgetStyle#StatusBarPortraitWidget {
+    background-color: #000000;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
