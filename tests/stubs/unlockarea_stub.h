@@ -16,7 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <unlockwidgets.h>
+#include <unlockarea.h>
 #include <stubbase.h>
 
 // 1. DECLARE STUB
