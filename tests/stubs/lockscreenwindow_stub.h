@@ -57,7 +57,7 @@ LockScreenWindowStub* gLockScreenWindowStub = &gDefaultLockScreenWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreenWindow::LockScreenWindow()
+LockScreenWindow::LockScreenWindow(QWidget *)
 {
   gLockScreenWindowStub->LockScreenWindowConstructor();
 }

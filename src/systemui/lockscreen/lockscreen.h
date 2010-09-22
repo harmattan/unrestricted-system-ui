@@ -26,7 +26,7 @@ class LockScreen : public MSceneWindow
     Q_OBJECT
 
 public:
-    LockScreen(MWindow* parent);
+    LockScreen(QGraphicsItem *parent = NULL);
     virtual ~LockScreen();
     void reset();
 

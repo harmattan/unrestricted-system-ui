@@ -38,14 +38,14 @@ class UnlockArea : public MStylableWidget
     Q_OBJECT
 
 public:
-    UnlockArea ();
-    virtual ~UnlockArea ();
+    UnlockArea(QGraphicsItem *parent = NULL);
+    virtual ~UnlockArea();
 
-    void setEnabled (bool enabled);
-    virtual void setActive (bool active);
+    void setEnabled(bool enabled);
+    virtual void setActive(bool active);
 
 private:
-    void updateState ();
+    void updateState();
 
     MWidget         *m_unlock_icon;
     bool             m_enabled;

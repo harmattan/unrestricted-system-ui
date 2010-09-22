@@ -40,7 +40,6 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     notificationArea(new UnlockNotifications),
     controller(controller)
 {
-    lockScreenHeader->setViewType("lockScreenHeaderWithPadlock");
     lockScreenHeader->setObjectName("LockLiftAreaWithPadlock");
 
     dragAndDropOverlay.setVisible(false);

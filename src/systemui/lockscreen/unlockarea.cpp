@@ -29,9 +29,10 @@
 #undef DEBUG
 #include "debug.h"
 
-UnlockArea::UnlockArea () :
-    m_enabled (false),
-    m_active (false)
+UnlockArea::UnlockArea(QGraphicsItem *parent) :
+    MStylableWidget(parent),
+    m_enabled(false),
+    m_active(false)
 {
     QGraphicsLinearLayout   *layout =
         new QGraphicsLinearLayout (Qt::Vertical);

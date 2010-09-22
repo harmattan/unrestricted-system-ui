@@ -21,13 +21,17 @@
 #include <QX11Info>
 #include "x11wrapper.h"
 
-LockScreenWindow::LockScreenWindow() :
-    lockScreen(new LockScreen(this))
+LockScreenWindow::LockScreenWindow(QWidget *parent) :
+    MWindow(parent),
+    lockScreen(new LockScreen)
 {
     setWindowTitle("LockScreenUI");
-    lockScreen->appear(this);
     setObjectName("LockScreenWindow");
+
     connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
+    lockScreen->setParent(this);
+    lockScreen->setObjectName("LockScreen");
+    lockScreen->appear(this);
 }
 
 LockScreenWindow::~LockScreenWindow()

@@ -18,10 +18,8 @@
  ****************************************************************************/
 #include "lockscreen.h"
 
-LockScreen::LockScreen(MWindow* parent)
+LockScreen::LockScreen(QGraphicsItem *parent) : MSceneWindow(parent)
 {
-    setParent(parent);
-    setObjectName("LockScreen");
 }
 
 LockScreen::~LockScreen()

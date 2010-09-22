@@ -28,7 +28,7 @@ class LockScreenWindow : public MWindow
     Q_OBJECT
 
 public:
-    LockScreenWindow();
+    LockScreenWindow(QWidget *parent = NULL);
     virtual ~LockScreenWindow();
 
 protected:

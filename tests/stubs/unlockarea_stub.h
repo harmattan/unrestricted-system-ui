@@ -55,7 +55,7 @@ void UnlockAreaStub::setActive(bool active)
 UnlockAreaStub gDefaultUnlockAreaStub;
 UnlockAreaStub* gUnlockAreaStub = &gDefaultUnlockAreaStub;
 
-UnlockArea::UnlockArea()
+UnlockArea::UnlockArea(QGraphicsItem *)
 {
     gUnlockAreaStub->UnlockAreaConstructor();
 }

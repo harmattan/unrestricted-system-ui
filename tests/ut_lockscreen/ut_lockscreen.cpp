@@ -24,14 +24,12 @@
 
 void Ut_LockScreen::init()
 {
-    parent = new MWindow;
-    lockScreen = new LockScreen(parent);
+    lockScreen = new LockScreen;
 }
 
 void Ut_LockScreen::cleanup()
 {
     delete lockScreen;
-    delete parent;
 }
 
 void Ut_LockScreen::initTestCase()
