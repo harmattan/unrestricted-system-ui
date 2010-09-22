@@ -9,7 +9,7 @@ SOURCES += ft_lockscreenbusinesslogic.cpp \
     $$SRCDIR/debug.cpp \
     $$SRCDIR/lockscreen/unlockmissedevents.cpp \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.cpp \
-    $$SRCDIR/lockscreen/unlockwidgets.cpp \
+    $$SRCDIR/lockscreen/unlockarea.cpp \
     $$SRCDIR/lockscreen/lockscreenwindow.cpp \
     $$SRCDIR/lockscreen/lockscreen.cpp \
     $$SRCDIR/lockscreen/eventeater.cpp  \
@@ -22,7 +22,7 @@ HEADERS += ft_lockscreenbusinesslogic.h \
     $$SRCDIR/debug.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.h \
-    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/eventeater.h  \

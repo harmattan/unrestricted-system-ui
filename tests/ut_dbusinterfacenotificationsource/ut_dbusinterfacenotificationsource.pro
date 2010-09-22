@@ -20,7 +20,7 @@ SOURCES += \
 HEADERS += \
     ut_dbusinterfacenotificationsource.h \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
-   $$NOTIFICATIONSRCDIR/mnotificationproxy.h \ \
+   $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsourceadaptor.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h

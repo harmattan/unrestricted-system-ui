@@ -28,7 +28,7 @@
 #include <MSceneManager>
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen.h"
-#include "unlockwidgets.h"
+#include "unlockarea.h"
 
 LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     LockScreenView(controller),

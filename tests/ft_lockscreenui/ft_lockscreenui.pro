@@ -11,7 +11,7 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 SOURCES += ft_lockscreenui.cpp \
     xchecker.cpp \
     $$SRCDIR/debug.cpp \
-    $$SRCDIR/lockscreen/unlockwidgets.cpp \
+    $$SRCDIR/lockscreen/unlockarea.cpp \
     $$SRCDIR/lockscreen/lockscreen.cpp  \
     $$SRCDIR/lockscreen/lockscreenwindow.cpp  \
     $$SRCDIR/lockscreen/eventeater.cpp  \
@@ -23,7 +23,7 @@ SOURCES += ft_lockscreenui.cpp \
 HEADERS += ft_lockscreenui.h \
     xchecker.h \
     $$SRCDIR/debug.h \
-    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h  \
     $$SRCDIR/lockscreen/eventeater.h \

@@ -52,7 +52,7 @@ HEADERS += \
    $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
    $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
    $$NOTIFICATIONSRCDIR/notificationmanager.h \
-    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
     $$SRCDIR/lockscreen/unlocknotificationsink.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
@@ -73,6 +73,6 @@ HEADERS += \
     $$STUBSDIR/statusarearenderer_stub.h \
     $$STUBSDIR/unlocknotifications_stub.h \
     $$STUBSDIR/unlockmissedevents_stub.h \
-    $$STUBSDIR/unlockwidgets_stub.h
+    $$STUBSDIR/unlockarea_stub.h
 
 include(../common_bot.pri)

@@ -12,7 +12,7 @@ SOURCES += ut_lockscreenwithpadlockview.cpp \
 
 HEADERS += ut_lockscreenwithpadlockview.h \
     $$SRCDIR/debug.h \
-    $$SRCDIR/lockscreen/unlockwidgets.h \
+    $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
     $$SRCDIR/lockscreen/lockscreenwithpadlockview.h \
     $$SRCDIR/lockscreen/lockscreenview.h \
