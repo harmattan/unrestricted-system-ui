@@ -23,11 +23,11 @@
 #include "clock.h"
 #include "date.h"
 
-LockScreenHeaderWithPadlockView::LockScreenHeaderWithPadlockView(MWidgetController *controller):
-        layout(new QGraphicsLinearLayout(Qt::Horizontal)),
-        date(new Date)
+LockScreenHeaderWithPadlockView::LockScreenHeaderWithPadlockView(MWidgetController *controller) :
+    MWidgetView(controller),
+    layout(new QGraphicsLinearLayout(Qt::Horizontal)),
+    date(new Date)
 {
-
     // Create a layout for the date and time
     QGraphicsLinearLayout *dateTimeLayout = new QGraphicsLinearLayout(Qt::Vertical);
     dateTimeLayout->setContentsMargins(0, 0, 0, 0);
@@ -35,23 +35,24 @@ LockScreenHeaderWithPadlockView::LockScreenHeaderWithPadlockView(MWidgetControll
 
     Clock *clock = new Clock;
     clock->setObjectName("LockScreenHeaderClock");
-
     dateTimeLayout->addItem(clock);
-    dateTimeLayout->setAlignment(clock, Qt::AlignLeft);
     dateTimeLayout->addItem(date);
-    dateTimeLayout->setAlignment(clock, Qt::AlignLeft);
 
+    // Create a layout for the padlock image widget
     QGraphicsLinearLayout *imageWidgetLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     imageWidgetLayout->setContentsMargins(0, 0, 0, 0);
     imageWidgetLayout->setSpacing(0);
     padlockImageWidget = new MImageWidget;
-    padlockImageWidget->setVisible (true);
-    padlockImageWidget->setImage ("icon-m-common-locked", QSize (32, 32));
-    padlockImageWidget->setZoomFactor (1.0);
-    padlockImageWidget->setObjectName ("lockscreenIconLocked");
+    padlockImageWidget->setVisible(true);
+    padlockImageWidget->setImage("icon-m-common-locked", QSize (32, 32));
+    padlockImageWidget->setZoomFactor(1.0);
+    padlockImageWidget->setObjectName("lockscreenIconLocked");
     imageWidgetLayout->addStretch();
     imageWidgetLayout->addItem(padlockImageWidget);
 
+    // Set up the main layout
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     layout->addItem(dateTimeLayout);
     layout->addStretch();
     layout->addItem(imageWidgetLayout);
@@ -66,8 +67,8 @@ void LockScreenHeaderWithPadlockView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    date->setWeekDayFormat(style()->dayOfWeekFormat());
-    date->setDateFormat(style()->dateFormat());
+    date->setFormat(style()->dateFormat());
+    padlockImageWidget->setVisible(style()->padlockVisible());
 }
 
 M_REGISTER_VIEW_NEW(LockScreenHeaderWithPadlockView, MWidgetController)

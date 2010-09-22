@@ -24,6 +24,8 @@
 
 class MImageWidget;
 class QGraphicsLinearLayout;
+class UnlockArea;
+class UnlockNotifications;
 
 class LockScreenWithPadlockView : public LockScreenView
 {
@@ -62,11 +64,11 @@ private:
     // The DnD state
     int dragAndDropState;
     // Needed to determine the current DnD states:
-    MWidget *lockLandArea;
+    UnlockArea *lockLandArea;
     // for frame-dropping
     bool drawPending;
     QPointF dragAndDropPosition;
-    MWidget *notificationArea;
+    UnlockNotifications *notificationArea;
     MSceneWindow* controller;
 
 #ifdef UNIT_TEST

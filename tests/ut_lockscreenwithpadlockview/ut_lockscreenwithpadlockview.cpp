@@ -20,7 +20,7 @@
 #include "ut_lockscreenwithpadlockview.h"
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen_stub.h"
-#include "unlockwidgets_stub.h"
+#include "unlockarea_stub.h"
 #include "unlocknotifications_stub.h"
 #include <MFeedback>
 
@@ -56,7 +56,6 @@ void Ut_LockScreenWithPadlockView::init()
 void Ut_LockScreenWithPadlockView::cleanup()
 {
     gAppearSceneWindowList.clear();
-    gUnlockHeaderStub->stubReset();
     gUnlockAreaStub->stubReset();
     delete controller;
 }
@@ -104,14 +103,14 @@ void Ut_LockScreenWithPadlockView::testDraggableIconMovement()
     QFETCH(int, layoutDirection);
 
     QSignalSpy unlockSpy(m_subject, SIGNAL(unlocked()));
-    m_subject->lockLiftArea->setLayoutDirection((Qt::LayoutDirection)layoutDirection);
-    m_subject->lockLiftArea->setPreferredSize(100, 10);
+    m_subject->lockScreenHeader->setLayoutDirection((Qt::LayoutDirection)layoutDirection);
+    m_subject->lockScreenHeader->setPreferredSize(100, 10);
 
     // send three mouse events that ultimately will send the unlocked signal from the window.
     QGraphicsSceneMouseEvent *pressEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMousePress);
     pressEvent->setPos(QPointF(layoutDirection == Qt::LeftToRight ?
-                               m_subject->lockLiftArea->preferredWidth() : 0,
-                               m_subject->lockLiftArea->pos().y()));
+                               m_subject->lockScreenHeader->preferredWidth() : 0,
+                               m_subject->lockScreenHeader->pos().y()));
 
     QGraphicsSceneMouseEvent *moveEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseMove);
     moveEvent->setPos(QPointF(400, 240));
@@ -135,7 +134,7 @@ void Ut_LockScreenWithPadlockView::testDraggableIconMovement()
     QCOMPARE(gAppearSceneWindowList.at(0), &m_subject->dragAndDropOverlay);
     QCOMPARE(m_subject->dragAndDropIcon->objectName(), QString("LockScreenDnDIcon"));
     QVERIFY(m_subject->dragAndDropOverlay.isVisible());
-    QVERIFY(!gUnlockHeaderStub->stubLastCallTo("setActive").parameter<bool>(0));
+    QCOMPARE(m_subject->lockScreenHeader->objectName(), QString("LockLiftArea"));
     QVERIFY(gUnlockAreaStub->stubLastCallTo("setEnabled").parameter<bool>(0));
 
     // move the mouse right into the middle of the screen
@@ -165,7 +164,7 @@ void Ut_LockScreenWithPadlockView::testDraggableIconMovement()
     QVERIFY(nameOfLastFeedback == "release-inside-dragndrop-dropzone");
     QCOMPARE(m_subject->dragAndDropIcon->objectName(), QString("LockScreenDnDIcon"));
     QVERIFY(!m_subject->dragAndDropOverlay.isVisible());
-    QVERIFY(gUnlockHeaderStub->stubLastCallTo("setActive").parameter<bool>(0));
+    QCOMPARE(m_subject->lockScreenHeader->objectName(), QString("LockLiftAreaWithPadlock"));
     QVERIFY(!gUnlockAreaStub->stubLastCallTo("setEnabled").parameter<bool>(0));
 }
 
@@ -175,7 +174,7 @@ void Ut_LockScreenWithPadlockView::testNotificationAreaVisibility()
     QVERIFY(m_subject->notificationArea->parentLayoutItem() == 0);
     m_subject->showHideNotifications(true);
     QVERIFY(m_subject->notificationArea->isVisible());
-    QVERIFY(m_subject->notificationArea->parentLayoutItem() == m_subject->layoutPolicy);
+    QVERIFY(m_subject->notificationArea->parentLayoutItem() == m_subject->layout);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWithPadlockView)

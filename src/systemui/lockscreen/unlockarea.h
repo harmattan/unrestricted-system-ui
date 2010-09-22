@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,8 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UNLOCKWIDGETS_H
-#define _UNLOCKWIDGETS_H
+#ifndef _UNLOCKAREA_H
+#define _UNLOCKAREA_H
 
 class MLabel;
 class MWidget;
@@ -34,35 +32,6 @@ class MImageWidget;
 #endif
 
 #include "unlocknotifications.h"
-
-class UnlockHeader : public MStylableWidget
-{
-    Q_OBJECT
-
-public:
-    UnlockHeader ();
-    virtual ~UnlockHeader ();
-
-    virtual void setActive (bool active);
-    void updateDateTime ();
-
-private:
-    MImageWidget    *m_icon;
-    MLabel          *m_TimeLabel;
-    MLabel          *m_DateLabel;
-    MLocale          m_locale;
-
-#ifdef HAVE_QMSYSTEM
-    Maemo::QmTime  *m_time;
-
-private slots:
-    void timeSettingsChanged (Maemo::QmTimeWhatChanged what);
-#endif
-
-#ifdef UNIT_TEST
-    friend class ut_unlockwidgets;
-#endif
-};
 
 class UnlockArea : public MStylableWidget
 {

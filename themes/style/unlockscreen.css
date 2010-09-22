@@ -58,14 +58,19 @@ MLabelStyle#LockNotifierLabel {
     margin-right: $MARGIN_DOUBLE;
 }
 
-
-MWidgetStyle#LockLiftArea {
+LockScreenHeaderWithPadlockStyle {
     background-image: "lockscreen-lock-lift-area-background" 0 380 0 0;
     background-opacity: 0.9;
 
     minimum-size: 100% 14mm;
     preferred-size: 100% 14mm;
     maximum-size: 100% 14mm;
+
+    padlock-visible: false;
+}
+
+LockScreenHeaderWithPadlockStyle#LockLiftAreaWithPadlock {
+    padlock-visible: true;
 }
 
 #lockscreenTimeLabel {
@@ -87,9 +92,8 @@ MImageWidgetStyle#lockscreenIconLocked {
     background-image: "lockscreen-lock";
     background-opacity: 1.0;
 
-    margin-left: 1mm;
-    margin-right: 1mm;
-    margin-top : 1.1mm;
+    margin-right: 2mm;
+    margin-top: 2mm;
  
     preferred-size: 10mm 10mm;
     minimum-size:   10mm 10mm;

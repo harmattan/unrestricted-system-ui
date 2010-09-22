@@ -1,4 +1,4 @@
-/***************************************************************************
+t/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -16,13 +16,13 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_UNLOCKWIDGETS_
-#define _UT_UNLOCKWIDGETS_
+#ifndef _UT_UNLOCKAREA_
+#define _UT_UNLOCKAREA_
 
 #include <QtTest/QtTest>
 #include <QObject>
 
-class ut_unlockwidgets : public QObject
+class ut_unlockarea : public QObject
 {
     Q_OBJECT
 
@@ -32,7 +32,6 @@ private slots:
     void initTestCase ();
     void cleanupTestCase ();
 
-    void test_unlock_header ();
     void test_unlock_area ();
 };
 #endif

@@ -64,6 +64,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
     connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
 
+    // Set up the clock styles
+    landscapeClock->setObjectName("StatusAreaLandscapeClock");
+    portraitClock->setObjectName("StatusAreaPortraitClock");
+
     // Set the clock to short time display when alarm is present
     connect(portraitAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), portraitClock, SLOT(setShortDisplay(bool)));
     connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
@@ -95,13 +99,7 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     setupTestability();
 }
 
-void StatusAreaView::setupTestabilityObjectNames()
-{
-    landscapeClock->setObjectName("landscapeclock");
-    portraitClock->setObjectName("portraitclock");
-}
-
-void StatusAreaView::setupTestabilityParents()
+void StatusAreaView::setupTestability()
 {
     portraitPhoneNetworkIndicator->setParent(portraitWidget);
     landscapeAlarmIndicator->setParent(landscapeWidget);
@@ -127,12 +125,6 @@ void StatusAreaView::setupTestabilityParents()
     portraitCallIndicator->setParent(portraitWidget);
     landscapeClock->setParent(landscapeWidget);
     portraitClock->setParent(portraitWidget);
-}
-
-void StatusAreaView::setupTestability()
-{
-    setupTestabilityObjectNames();
-    setupTestabilityParents();
 }
 
 StatusAreaView::~StatusAreaView()

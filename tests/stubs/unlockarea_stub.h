@@ -20,33 +20,6 @@
 #include <stubbase.h>
 
 // 1. DECLARE STUB
-class UnlockHeaderStub : public StubBase {
-public:
-    virtual void UnlockHeaderConstructor();
-    virtual void UnlockHeaderDestructor();
-    virtual void updateDateTime();
-    virtual void setActive(bool active);
-};
-
-void UnlockHeaderStub::UnlockHeaderConstructor()
-{
-}
-
-void UnlockHeaderStub::UnlockHeaderDestructor()
-{
-}
-
-void UnlockHeaderStub::updateDateTime()
-{
-}
-
-void UnlockHeaderStub::setActive(bool active)
-{
-    QList<ParameterBase*> params;
-    params.append(new Parameter<bool>(active));
-    stubMethodEntered("setActive", params);
-}
-
 class UnlockAreaStub : public StubBase {
 public:
     virtual void UnlockAreaConstructor();
@@ -79,37 +52,8 @@ void UnlockAreaStub::setActive(bool active)
 
 
 // 3. CREATE A STUB INSTANCE
-UnlockHeaderStub gDefaultUnlockHeaderStub;
-UnlockHeaderStub* gUnlockHeaderStub = &gDefaultUnlockHeaderStub;
-
 UnlockAreaStub gDefaultUnlockAreaStub;
 UnlockAreaStub* gUnlockAreaStub = &gDefaultUnlockAreaStub;
-
-UnlockHeader::UnlockHeader()
-{
-    gUnlockHeaderStub->UnlockHeaderConstructor();
-}
-
-UnlockHeader::~UnlockHeader()
-{
-    gUnlockHeaderStub->UnlockHeaderDestructor();
-}
-
-void UnlockHeader::updateDateTime()
-{
-    gUnlockHeaderStub->updateDateTime();
-}
-
-#ifdef HAVE_QMSYSTEM
-void UnlockHeader::timeSettingsChanged (Maemo::QmTimeWhatChanged what) {
-    Q_UNUSED (what);
-}
-#endif
-
-void UnlockHeader::setActive (bool active)
-{
-    gUnlockHeaderStub->setActive(active);
-}
 
 UnlockArea::UnlockArea()
 {

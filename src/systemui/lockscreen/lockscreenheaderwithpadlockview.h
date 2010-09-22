@@ -21,10 +21,10 @@
 #define LOCKSCREENHEADERWITHPADLOCKVIEW_H_
 
 #include <MWidgetView>
-#include "lockscreenheaderstyle.h"
+#include "lockscreenheaderwithpadlockstyle.h"
 
 class MImageWidget;
-class QGraphicsLinearLayout ;
+class QGraphicsLinearLayout;
 class Date;
 
 /*!
@@ -33,7 +33,7 @@ class Date;
 class LockScreenHeaderWithPadlockView : public MWidgetView
 {
     Q_OBJECT
-    M_VIEW(MWidgetModel, LockScreenHeaderStyle)
+    M_VIEW(MWidgetModel, LockScreenHeaderWithPadlockStyle)
 
 public:
     /*!
@@ -54,14 +54,14 @@ protected:
     //! \reimp_end
 
 private:
-    //! Image widget used to show the dragable pad lock
+    //! Image widget used to show the background of the pad lock
     MImageWidget *padlockImageWidget;
 
     //! The main layout
     QGraphicsLinearLayout *layout;
 
-    Date* date;
-
+    //! The date widget
+    Date *date;
 };
 
 #endif /* LOCKSCREENHEADERWITHPADLOCKVIEW_H_ */

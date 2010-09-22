@@ -16,61 +16,41 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "ut_unlockwidgets.h"
+#include "ut_unlockarea.h"
 #include <debug.h>
 #include <MTheme>
 #include <MApplication>
-#include <unlockwidgets.h>
+#include <unlockarea.h>
 #include <MImageWidget>
 
 int   argc = 1;
 char *argv[] = {
-    (char *) "./ut_unlockwidgets",
+    (char *) "./ut_unlockarea",
     NULL };
 
 MApplication    *m_App;
 
-void ut_unlockwidgets::initTestCase ()
+void ut_unlockarea::initTestCase ()
 {
     m_App = new MApplication(argc, argv);
 }
 
-void ut_unlockwidgets::cleanupTestCase ()
+void ut_unlockarea::cleanupTestCase ()
 {
     m_App->deleteLater();
 }
 
-void ut_unlockwidgets::init ()
+void ut_unlockarea::init ()
 {
 
 }
 
-void ut_unlockwidgets::cleanup ()
+void ut_unlockarea::cleanup ()
 {
 
 }
 
-void ut_unlockwidgets::test_unlock_header ()
-{
-    UnlockHeader *header = new UnlockHeader;
-
-    header->setActive (true);
-
-    MImageWidget *icon = header->m_icon;
-
-    QVERIFY (icon != 0);
-    if (icon != 0)
-        QVERIFY (icon->isVisible () == true);
-
-    header->setActive (false);
-
-    if (icon != 0)
-        QVERIFY (icon->isVisible () == false);
-
-    delete header;
-}
-
-void ut_unlockwidgets::test_unlock_area ()
+void ut_unlockarea::test_unlock_area ()
 {
     UnlockArea  *area = new UnlockArea;
 
@@ -93,5 +73,5 @@ void ut_unlockwidgets::test_unlock_area ()
     delete area;
 }
 
-QTEST_APPLESS_MAIN (ut_unlockwidgets)
+QTEST_APPLESS_MAIN (ut_unlockarea)
 

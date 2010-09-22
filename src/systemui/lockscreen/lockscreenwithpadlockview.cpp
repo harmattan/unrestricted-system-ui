@@ -41,7 +41,7 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     controller(controller)
 {
     lockScreenHeader->setViewType("lockScreenHeaderWithPadlock");
-    lockScreenHeader->setObjectName("LockLiftArea");
+    lockScreenHeader->setObjectName("LockLiftAreaWithPadlock");
 
     dragAndDropOverlay.setVisible(false);
     dragAndDropOverlay.setManagedManually(true);
@@ -91,8 +91,8 @@ void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
         redraw();
 
-        static_cast<UnlockHeader*>(lockScreenHeader)->setActive(false);
-        static_cast<UnlockArea*>(lockLandArea)->setEnabled(true);
+        lockScreenHeader->setObjectName("LockLiftArea");
+        lockLandArea->setEnabled(true);
 
         /*
          * Playing the appropriate feedback.
@@ -122,95 +122,76 @@ void LockScreenWithPadlockView::redrawIdle()
 
 void LockScreenWithPadlockView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (lockLandArea == 0)
-        return;
+    if (dragAndDropState != STATE_NONE) {
+        // First of all, icon should follow the mouse positions:
+        QSizeF size = dragAndDropOverlay.preferredSize();
+        QPointF pos(event->pos());
 
-    if (dragAndDropState == STATE_NONE)
-        return;
+        pos.rx() -= (size.width() / 1.4);
+        pos.ry() -= (size.height() / 1.4);
+        dragAndDropOverlay.setPos(pos);
 
-    // First of all, icon should follow the mouse positions:
-    QSizeF size = dragAndDropOverlay.preferredSize();
-    QPointF pos(event->pos());
+        // And then check which icon we need to show:
+        int newState = STATE_MOVING;
 
-    pos.rx() -= (size.width() / 1.4);
-    pos.ry() -= (size.height() / 1.4);
-    dragAndDropOverlay.setPos(pos);
-
-    // And then check which icon we need to show:
-    int newState = STATE_MOVING;
-
-    // Check whether the DnD icon is inside the lock-land area...
-    if (event->pos().y() > lockLandArea->pos().y()) {
-        newState = STATE_MOVING_ACTIVE;
-    }
-
-    // To avoid unnecessary screen updates...
-    if (newState != dragAndDropState) {
-        MFeedback feedback;
-        dragAndDropState = newState;
-        switch(newState) {
-        case STATE_MOVING_ACTIVE:
-            /*
-             * Entered the active area.
-             */
-            feedback.setName("enter-dragndrop-dropzone");
-            feedback.play();
-            static_cast<UnlockArea*>(lockLandArea)->setActive(true);
-            break;
-        case STATE_MOVING:
-        default:
-            /*
-             * Exited the active area.
-             */
-            feedback.setName("exit-dragndrop-dropzone");
-            feedback.play();
-            static_cast<UnlockArea*>(lockLandArea)->setActive(false);
-            break;
+        // Check whether the DnD icon is inside the lock-land area...
+        if (event->pos().y() > lockLandArea->pos().y()) {
+            newState = STATE_MOVING_ACTIVE;
         }
-        // And update the DnD icon based on the current state :
-        updateDragAndDropIcon();
+
+        // To avoid unnecessary screen updates...
+        if (newState != dragAndDropState) {
+            MFeedback feedback;
+            dragAndDropState = newState;
+            switch(newState) {
+            case STATE_MOVING_ACTIVE:
+                /*
+                 * Entered the active area.
+                 */
+                feedback.setName("enter-dragndrop-dropzone");
+                feedback.play();
+                lockLandArea->setActive(true);
+                break;
+            case STATE_MOVING:
+            default:
+                /*
+                 * Exited the active area.
+                 */
+                feedback.setName("exit-dragndrop-dropzone");
+                feedback.play();
+                lockLandArea->setActive(false);
+                break;
+            }
+            // And update the DnD icon based on the current state :
+            updateDragAndDropIcon();
+        }
     }
 }
 
-void LockScreenWithPadlockView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void LockScreenWithPadlockView::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
-    Q_UNUSED(event);
-    bool unlock = false;
-    MFeedback feedback;
+    if (dragAndDropState != STATE_NONE) {
+        bool unlock = dragAndDropState == STATE_MOVING_ACTIVE;
 
-    if (dragAndDropState == STATE_NONE) {
-        return;
-    }
+        // Play the appropriate feedback.
+        MFeedback feedback;
+        feedback.setName(unlock ? "release-inside-dragndrop-dropzone" : "release-outside-dragndrop-dropzone");
+        feedback.play();
 
-    if (dragAndDropState == STATE_MOVING_ACTIVE) {
-        unlock = true;
-    }
+        // Reset the state to defaults...
+        resetState();
 
-    /*
-     * Playing the appropriate feedback.
-     */
-    if (unlock) {
-        feedback.setName("release-inside-dragndrop-dropzone");
-    } else {
-        feedback.setName("release-outside-dragndrop-dropzone");
-    }
-    feedback.play();
-
-    // Reset the state to defaults...
-    resetState();
-
-    if (unlock == true) {
-        emit unlocked();
+        if (unlock) {
+            emit unlocked();
+        }
     }
 }
 
 void LockScreenWithPadlockView::resetState()
 {
     // Restore the default state ...
-    if (lockScreenHeader != 0)
-        static_cast<UnlockHeader*>(lockScreenHeader)->setActive(true);
-    if (lockLandArea != 0)
-        static_cast<UnlockArea*>(lockLandArea)->setEnabled(false);
+    lockScreenHeader->setObjectName("LockLiftAreaWithPadlock");
+    lockLandArea->setEnabled(false);
 
     dragAndDropState = STATE_NONE;
     updateDragAndDropIcon();
@@ -249,19 +230,16 @@ void LockScreenWithPadlockView::updateDragAndDropIcon()
 
 void LockScreenWithPadlockView::showHideNotifications(bool show)
 {
-    if (notificationArea == 0)
-        return;
-
     // Hide the whole missed events notification area when
     // there is no any missed events...
-    if (notificationArea->isVisible() && (show == false)) {
+    if (notificationArea->isVisible() && !show) {
         notificationArea->setVisible(false);
         layout->removeItem(notificationArea);
     }
 
     // Add notification area to policy when previously was
     // hidden, but there are some missed events...
-    if ((notificationArea->isVisible() == false) && (show == true)) {
+    if (!notificationArea->isVisible() && show) {
         notificationArea->setVisible(true);
         layout->insertItem(0, notificationArea);
     }

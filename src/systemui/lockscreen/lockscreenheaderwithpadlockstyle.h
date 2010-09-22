@@ -17,23 +17,23 @@
 **
 ****************************************************************************/
 
-#ifndef LOCKSCREENHEADERSTYLE_H_
-#define LOCKSCREENHEADERSTYLE_H_
+#ifndef LOCKSCREENHEADERWITHPADLOCKSTYLE_H_
+#define LOCKSCREENHEADERWITHPADLOCKSTYLE_H_
 
-#include <MWidgetStyle>
+#include "lockscreenheaderstyle.h"
 
-class LockScreenHeaderStyle : public MWidgetStyle
+class LockScreenHeaderWithPadlockStyle : public LockScreenHeaderStyle
 {
     Q_OBJECT
-    M_STYLE(LockScreenHeaderStyle)
+    M_STYLE(LockScreenHeaderWithPadlockStyle)
 
-    //! Format string for the date
-    M_STYLE_ATTRIBUTE(QString, dateFormat, DateFormat)
+    //! Whether the padlock is visible or not
+    M_STYLE_ATTRIBUTE(bool, padlockVisible, PadlockVisible)
 };
 
-class LockScreenHeaderStyleContainer : public MWidgetStyleContainer
+class LockScreenHeaderWithPadlockStyleContainer : public LockScreenHeaderStyleContainer
 {
-    M_STYLE_CONTAINER(LockScreenHeaderStyle)
+    M_STYLE_CONTAINER(LockScreenHeaderWithPadlockStyle)
 };
 
 #endif /* LOCKSCREENHEADERSTYLE_H_ */

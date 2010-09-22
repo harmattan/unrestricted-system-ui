@@ -66,8 +66,7 @@ void LockScreenHeaderView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    date->setWeekDayFormat(style()->dayOfWeekFormat());
-    date->setDateFormat(style()->dateFormat());
+    date->setFormat(style()->dateFormat());
 }
 
 M_REGISTER_VIEW_NEW(LockScreenHeaderView, MWidgetController)

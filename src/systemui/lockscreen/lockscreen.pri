@@ -1,7 +1,8 @@
 include(../../mconfig.pri)
 INCLUDEPATH += lockscreen
 
-STYLE_HEADERS += lockscreen/lockscreenheaderstyle.h
+STYLE_HEADERS += lockscreen/lockscreenheaderstyle.h \
+    lockscreen/lockscreenheaderwithpadlockstyle.h
 
 HEADERS += \
     lockscreen/lockscreenbusinesslogic.h \
@@ -11,13 +12,14 @@ HEADERS += \
     lockscreen/unlocknotifications.h \
     lockscreen/unlocknotificationsink.h \
     lockscreen/unlockmissedevents.h \
-    lockscreen/unlockwidgets.h \
+    lockscreen/unlockarea.h \
     lockscreen/lockscreenview.h \
     lockscreen/lockscreenwithpadlockview.h \
     lockscreen/lockscreen.h \
     lockscreen/lockscreenheaderview.h \
-    lockscreen/lockscreenheaderwithpadlockview.h \
     lockscreen/lockscreenheaderstyle.h \
+    lockscreen/lockscreenheaderwithpadlockview.h \
+    lockscreen/lockscreenheaderwithpadlockstyle.h \
     lockscreen/date.h
 
 SOURCES += \
@@ -28,7 +30,7 @@ SOURCES += \
     lockscreen/unlocknotifications.cpp \
     lockscreen/unlocknotificationsink.cpp \
     lockscreen/unlockmissedevents.cpp \
-    lockscreen/unlockwidgets.cpp \
+    lockscreen/unlockarea.cpp \
     lockscreen/lockscreenview.cpp \
     lockscreen/lockscreenwithpadlockview.cpp \
     lockscreen/lockscreen.cpp \
