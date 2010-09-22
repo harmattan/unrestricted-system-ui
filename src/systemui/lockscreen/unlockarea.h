@@ -52,7 +52,7 @@ private:
     bool             m_active;
 
 #ifdef UNIT_TEST
-    friend class ut_unlockwidgets;
+    friend class ut_unlockarea;
 #endif
 };
 
