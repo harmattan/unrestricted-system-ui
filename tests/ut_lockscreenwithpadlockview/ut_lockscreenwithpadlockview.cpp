@@ -78,7 +78,6 @@ void Ut_LockScreenWithPadlockView::testInitialState()
     QVERIFY(!m_subject->notificationArea->isVisible());
     QVERIFY(disconnect(m_subject->notificationArea, SIGNAL(needToShow(bool)), m_subject, SLOT(showHideNotifications(bool))));
     QVERIFY(disconnect(m_subject, SIGNAL(unlocked()), m_subject->controller, SLOT(sliderUnlocked())));
-    QVERIFY(disconnect(m_subject->controller, SIGNAL(dateTimeChanged()), m_subject, SLOT(updateDataTime())));
     QVERIFY(disconnect(m_subject->controller, SIGNAL(resetRequested()), m_subject, SLOT(resetState())));
 }
 
