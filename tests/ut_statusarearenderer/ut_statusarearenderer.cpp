@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 #include "ut_statusarearenderer.h"
-#include <MApplication>
 #include <MOnDisplayChangeEvent>
 #include "statusarearenderer.h"
 #include "statusarea_stub.h"
@@ -31,8 +30,10 @@ bool Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
 QRectF rectReceived(0,0,0,0);
 QEvent::Type eventReceived;
 MOnDisplayChangeEvent::State eventStateReceived;
-
 bool Ut_StatusAreaRenderer_syncX_Called = false;
+
+QList<QGraphicsItem *> item_list;
+
 void QApplication::syncX()
 {
     Ut_StatusAreaRenderer_syncX_Called = true;
@@ -52,6 +53,21 @@ const MStyle* MTheme::style(const char *styleClassName,
     Q_UNUSED(orientation);
     Q_UNUSED(parent);
     return NULL;
+}
+
+void QGraphicsScene::removeItem(QGraphicsItem *item)
+{
+    item_list.removeOne(item);
+}
+
+void QGraphicsScene::addItem(QGraphicsItem *item)
+{
+    item_list.append(item);
+}
+
+QList<QGraphicsItem *> QGraphicsScene::items() const
+{
+    return item_list;
 }
 
 void QGraphicsScene::render(QPainter *painter, const QRectF &target, const QRectF &source, Qt::AspectRatioMode aspectRatioMode)
@@ -92,14 +108,10 @@ void Ut_StatusAreaRenderer::cleanup()
 
 void Ut_StatusAreaRenderer::initTestCase()
 {
-    static int argc = 1;
-    static char *app_name = (char *)"./ut_statusarearenderer";
-    app = new MApplication(argc, &app_name);
 }
 
 void Ut_StatusAreaRenderer::cleanupTestCase()
 {
-    delete app;
 }
 
 void Ut_StatusAreaRenderer::testSceneChanged()
@@ -234,4 +246,4 @@ void Ut_StatusAreaRenderer::testSharedPixmapHandle()
     QCOMPARE(handle, statusAreaWindow->sharedPixmapHandle());
 }
 
-QTEST_APPLESS_MAIN(Ut_StatusAreaRenderer)
+QTEST_MAIN(Ut_StatusAreaRenderer)

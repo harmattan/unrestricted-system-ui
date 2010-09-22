@@ -26,7 +26,6 @@
 #endif
 
 class StatusAreaRenderer;
-class MApplication;
 
 class Ut_StatusAreaRenderer : public QObject
 {
@@ -34,7 +33,6 @@ class Ut_StatusAreaRenderer : public QObject
 
 private:
     StatusAreaRenderer *statusAreaWindow;
-    MApplication *app;
 
 signals:
     void changed(QList<QRectF> rectList);
