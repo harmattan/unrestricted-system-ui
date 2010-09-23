@@ -1,4 +1,4 @@
-system-ui (0.17.0~1) harmattan; urgency=low
+system-ui (0.17.0-1) harmattan; urgency=low
 
   * Enabled portrait-mode shutdown logo (needs
     "icon-l-startup-nokia-logo-portrait" from theme)
