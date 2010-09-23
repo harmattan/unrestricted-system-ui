@@ -44,15 +44,15 @@ void LockScreenWindow::reset()
     lockScreen->reset();
 }
 
-void LockScreenWindow::showEvent(QShowEvent *)
+void LockScreenWindow::showEvent(QShowEvent *event)
 {
-    Display *display = QX11Info::display();
-    Window windowID = internalWinId();
+    MWindow::showEvent(event);
 
-    // Set the stacking layer.
+    // Set the stacking layer
+    Display *display = QX11Info::display();
     Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
     if (stackingLayerAtom != None) {
         long layer = 2;
-        X11Wrapper::XChangeProperty(display, windowID, stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
+        X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
 }

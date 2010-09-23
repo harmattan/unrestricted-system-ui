@@ -20,7 +20,6 @@
 #define LOCKSCREENBUSINESSLOGIC_H
 
 #include <QObject>
-#include <QTimer>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
@@ -35,44 +34,42 @@ class LockScreenBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    LockScreenBusinessLogic (QObject* parent = 0);
-    virtual ~LockScreenBusinessLogic ();
+    LockScreenBusinessLogic(QObject* parent = 0);
+    virtual ~LockScreenBusinessLogic();
 
 public slots:
-    void toggleScreenLockUI (bool toggle);
-    void toggleEventEater   (bool toggle);
+    void toggleScreenLockUI(bool toggle);
+    void toggleEventEater(bool toggle);
 
 private slots:
     void unlockScreen();
     void hideEventEater();
+
 #ifdef HAVE_QMSYSTEM
     void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
     void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
 
 signals:
-    void updateTime ();
-    void unlockConfirmed ();
-    void screenIsLocked (bool locked);
-
-private: //methods
-    void mayStartTimer();
-    void mayStopTimer();
-    bool displayIsOn ();
+    void updateTime();
+    void unlockConfirmed();
+    void screenIsLocked(bool locked);
 
 private:
-    LockScreenWindow    *lockScreenWindow;
-    EventEater     *eaterUI;
+    bool displayIsOn();
+
+    LockScreenWindow *lockScreenWindow;
+    EventEater *eaterUI;
+
 #ifdef HAVE_QMSYSTEM
     Maemo::QmDisplayState    m_QmDisplay;
     Maemo::QmLocks           m_QmLocks;
 #endif
-    QTimer            timer;
+
 #ifdef UNIT_TEST
     friend class Ut_LockScreenBusinessLogic;
     friend class Ft_LockScreenBusinessLogic;
 #endif
-
 };
 
 #endif

@@ -30,15 +30,13 @@ class LockScreenWindow : public MWindow
 public:
     LockScreenWindow(QWidget *parent = NULL);
     virtual ~LockScreenWindow();
+    void reset();
 
 protected:
     virtual void showEvent(QShowEvent *event);
 
 signals:
     void unlocked();
-
-public slots:
-    void reset();
 
 private:
     LockScreen *lockScreen;
