@@ -33,6 +33,9 @@ public:
     void reset();
 
 protected:
+    /*!
+     * Sets the _MEEGO_STACKING_LAYER window property to 2.
+     */
     virtual void showEvent(QShowEvent *event);
 
 signals:

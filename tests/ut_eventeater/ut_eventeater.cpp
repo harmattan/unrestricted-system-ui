@@ -19,16 +19,11 @@
 
 #include "ut_eventeater.h"
 #include "eventeater.h"
-
 #include <QEvent>
 #include <QShowEvent>
-
 #include <MApplication>
 #include <MWindow>
-
-#define DEBUG
-#include "debug.h"
-
+#include "x11wrapper_stub.h"
 
 /******************************************************************************
  * The helper class to watch the signals.
@@ -39,7 +34,7 @@ LockScreenUIEventSink::LockScreenUIEventSink() :
 {
 }
 
-void LockScreenUIEventSink::OneInput()
+void LockScreenUIEventSink::inputReceived()
 {
     m_OneInputCame = true;
 }
@@ -71,7 +66,6 @@ void Ut_EventEater::initTestCase()
 {
     m_EventEater = 0;
 
-    SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
 }
@@ -97,10 +91,10 @@ Ut_EventEater::testEventEater()
     m_EventEater = new EventEater;
 
     /*
-     * We test if we can connect to the OneInput() signal.
+     * We test if we can connect to the inputEventReceived() signal.
      */
-    connectSuccess = connect (m_EventEater, SIGNAL(OneInput()),
-            &m_EventSink, SLOT(OneInput()));
+    connectSuccess = connect (m_EventEater, SIGNAL(inputEventReceived()),
+            &m_EventSink, SLOT(inputReceived()));
     QVERIFY (connectSuccess);
 
     /*

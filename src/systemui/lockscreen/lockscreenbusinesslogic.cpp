@@ -29,7 +29,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     connect(lockScreenWindow, SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
 
     // Hide the event eater when it is clicked
-    connect(eventEaterWindow, SIGNAL(OneInput()), this, SLOT(hideEventEater()));
+    connect(eventEaterWindow, SIGNAL(inputEventReceived()), this, SLOT(hideEventEater()));
 
 #ifdef HAVE_QMSYSTEM
     connect(&displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));

@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -19,121 +17,40 @@
 **
 ****************************************************************************/
 #include "eventeater.h"
-#include "sysuid.h"
 #include <QMouseEvent>
 #include <QX11Info>
+#include "x11wrapper.h"
 
-
-#undef DEBUG
-#define WARNING
-#include "debug.h"
-
-// For WM_SET_NAME:
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
-
-/******************************************************************************
- * The EventEater implementation.
- */
-EventEater::EventEater ()
+EventEater::EventEater()
 {
-    SYS_DEBUG ("");
+    setWindowTitle("EventEater");
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_X11NetWmWindowTypeDialog);
     setAttribute(Qt::WA_X11DoNotAcceptFocus);
-    setObjectName ("EventEater");
-    setProperty ("NoMStyle", true);
+    setObjectName("EventEater");
+    setProperty("NoMStyle", true);
 }
 
-/*!
- * We got the mouse events, so we can close the event eater window even if MCE
- * does not ask for the closing.
- */
-void
-EventEater::mousePressEvent (
-        QMouseEvent *event)
+void EventEater::mousePressEvent(QMouseEvent *)
 {
-    SYS_DEBUG ("");
-
-    Q_UNUSED (event);
-    emit OneInput ();
+    emit inputEventReceived();
 }
 
-/*!
- * We got the mouse events, so we can close the event eater window even if MCE
- * does not ask for the closing.
- */
-void
-EventEater::mouseReleaseEvent (
-        QMouseEvent *event)
+void EventEater::mouseReleaseEvent(QMouseEvent *)
 {
-    SYS_DEBUG ("");
-
-    Q_UNUSED (event);
-    emit OneInput ();
+    emit inputEventReceived();
 }
 
-/*!
- * This method is called when we have a windowID, so we can set some properties
- * with the low level XLib API. Currently we set the following properties:
- *   o Window name: it is used for debugging purposes.
- *   o Stackinglayer: please check NB#175815 for further details.
- */
-void
-EventEater::showEvent (
-        QShowEvent *event)
+void EventEater::showEvent(QShowEvent *event)
 {
-    Q_UNUSED (event);
+    QWidget::showEvent(event);
 
-    Window      windowID;
-    Display    *display;
-    Atom        nameAtom;
-    Atom        utf8StringAtom;
-    Atom        stackingLayerAtom;
-    const char *windowName = "EventEater";
-    long        layer = 6;
-
-    display = QX11Info::display ();
-    if (!display) {
-        SYS_WARNING ("QX11Info::display() failed");
-        return;
+    // Set the stacking layer
+    Display *display = QX11Info::display();
+    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom != None) {
+        long layer = 6;
+        X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
     }
-
-    stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
-    if (stackingLayerAtom == None) {
-        SYS_WARNING ("Atom '_MEEGO_STACKING_LAYER' does not exists");
-    }
-
-    nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
-    if (nameAtom == None) {
-        SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
-    }
-
-    utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
-    if (utf8StringAtom == None) {
-        SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
-    }
-
-    windowID = internalWinId();
-    if (windowID == None) {
-        SYS_WARNING ("internalWinId() failed");
-    }
-    SYS_DEBUG ("*** windowID = 0x%lx", windowID);
-
-    /*
-     * Setting the stacking layer.
-     */
-    if (stackingLayerAtom != None)
-        XChangeProperty (display, windowID, stackingLayerAtom, XA_CARDINAL,
-                32, PropModeReplace, (unsigned char*)&layer, 1);
-
-    /*
-     * Setting the name.
-     */
-    if (nameAtom != None && utf8StringAtom != None)
-        XChangeProperty (display, windowID, nameAtom, utf8StringAtom,
-                8, PropModeReplace,
-                (unsigned char *) windowName, strlen(windowName));
 }
 
