@@ -105,7 +105,6 @@ UnlockNotificationSink::addNotification (const Notification &notification)
     if ((m_enabled == false) || (canAddNotification (notification) == false))
         return;
 
-    QString lastSummary;
     UnlockMissedEvents::Types type = UnlockMissedEvents::NotifyOther;
 
     QString event_type =
@@ -125,21 +124,28 @@ UnlockNotificationSink::addNotification (const Notification &notification)
             event_type == MESSAGING_IM)
         type = UnlockMissedEvents::NotifyMessage;
 
-    QString genericTextId = notification.parameters().value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
 
-    if(!genericTextId.isEmpty()) {
-        QString genericTextCatalogue = notification.parameters().value(NotificationWidgetParameterFactory::genericTextCatalogueKey()).toString();
+    QString lastSummary;
 
-        if(!genericTextCatalogue.isEmpty()) {
-            MLocale locale;
-            // Load the catalog from disk if it's not yet loaded
-            locale.installTrCatalog(genericTextCatalogue);
-            MLocale::setDefault(locale);
+    // TODO: should show generic text as the summary if some at this point unknown setting is enabled
+    if(true) {
+        lastSummary = notification.parameters ().value(NotificationWidgetParameterFactory::summaryKey ()).toString();
+    } else {
+        QString genericTextId = notification.parameters().value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
 
-            lastSummary = qtTrId(genericTextId.toUtf8());
+        if(!genericTextId.isEmpty()) {
+            QString genericTextCatalogue = notification.parameters().value(NotificationWidgetParameterFactory::genericTextCatalogueKey()).toString();
+
+            if(!genericTextCatalogue.isEmpty()) {
+                MLocale locale;
+                // Load the catalog from disk if it's not yet loaded
+                locale.installTrCatalog(genericTextCatalogue);
+                MLocale::setDefault(locale);
+
+                lastSummary = qtTrId(genericTextId.toUtf8());
+            }
         }
     }
-
 
     SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
 
