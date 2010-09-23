@@ -113,13 +113,13 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
     QTest::qWait (10);
-    QCOMPARE(logic.eaterUI->isVisible(), true);
+    QCOMPARE(logic.eventEaterWindow->isVisible(), true);
     // XXX: Stub not really allows us to test this:
-    // QCOMPARE(logic.eaterUI->isFullScreen(), true);
+    // QCOMPARE(logic.eventEaterWindow->isFullScreen(), true);
 
     logic.toggleEventEater(false);
     QTest::qWait (10);
-    QCOMPARE(logic.eaterUI->isVisible(), false);
+    QCOMPARE(logic.eventEaterWindow->isVisible(), false);
 }
 
 void Ut_LockScreenBusinessLogic::testUnlockScreen()
@@ -145,7 +145,7 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
 
     logic.hideEventEater();
     QTest::qWait (10);
-    QCOMPARE(logic.eaterUI->isVisible(), false);
+    QCOMPARE(logic.eventEaterWindow->isVisible(), false);
 }
 
 #ifdef HAVE_QMSYSTEM
