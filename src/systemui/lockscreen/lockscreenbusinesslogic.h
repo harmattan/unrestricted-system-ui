@@ -46,8 +46,8 @@ private slots:
     void hideEventEater();
 
 #ifdef HAVE_QMSYSTEM
-    void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
-    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+    void locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
 
 signals:
@@ -59,11 +59,11 @@ private:
     bool displayIsOn();
 
     LockScreenWindow *lockScreenWindow;
-    EventEater *eaterUI;
+    EventEater *eventEaterWindow;
 
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmDisplayState    m_QmDisplay;
-    Maemo::QmLocks           m_QmLocks;
+    Maemo::QmDisplayState displayState;
+    Maemo::QmLocks locks;
 #endif
 
 #ifdef UNIT_TEST

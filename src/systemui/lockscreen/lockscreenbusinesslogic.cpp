@@ -23,20 +23,17 @@
 LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     QObject(parent),
     lockScreenWindow(new LockScreenWindow),
-    eaterUI(new EventEater)
+    eventEaterWindow(new EventEater)
 {
     connect(lockScreenWindow, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
     connect(lockScreenWindow, SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
 
     // Hide the event eater when it is clicked
-    connect(eaterUI, SIGNAL(OneInput()), this, SLOT(hideEventEater()));
+    connect(eventEaterWindow, SIGNAL(OneInput()), this, SLOT(hideEventEater()));
 
 #ifdef HAVE_QMSYSTEM
-    // Reset the lock screen when the display is toggled on
-    connect(&m_QmDisplay, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)),
-            this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect(&m_QmLocks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
-            this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    connect(&displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
+    connect(&locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)), this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
 #endif
 
 }
@@ -44,6 +41,7 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
 LockScreenBusinessLogic::~LockScreenBusinessLogic()
 {
     delete lockScreenWindow;
+    delete eventEaterWindow;
 }
 
 void LockScreenBusinessLogic::unlockScreen()
@@ -55,7 +53,7 @@ void LockScreenBusinessLogic::unlockScreen()
 void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
 {
     // When the screen is unlocked, the lockscreen is visible the lock screen needs to be reset
-    if (state == Maemo::QmDisplayState::On && lockScreenWindow->isVisible ()) {
+    if (state == Maemo::QmDisplayState::On && lockScreenWindow->isVisible()) {
         lockScreenWindow->reset();
         lockScreenWindow->setFocus();
     }
@@ -70,7 +68,7 @@ void LockScreenBusinessLogic::hideEventEater()
 void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
 {
     if (toggle) {
-        // Whenever we're showing the lock-screen-ui we need to reset its state
+        // Whenever we're showing the lock screen we need to reset its state
         lockScreenWindow->reset();
         lockScreenWindow->show();
     } else {
@@ -81,17 +79,17 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
 void LockScreenBusinessLogic::toggleEventEater(bool toggle)
 {
     if (toggle) {
-        eaterUI->show();
-        eaterUI->showFullScreen();
+        eventEaterWindow->show();
+        eventEaterWindow->showFullScreen();
     } else {
-        eaterUI->hide();
+        eventEaterWindow->hide();
     }
 }
 
 bool LockScreenBusinessLogic::displayIsOn()
 {
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
-    return m_QmDisplay.get () == Maemo::QmDisplayState::On;
+    return displayState.get() == Maemo::QmDisplayState::On;
 #else
     return true;
 #endif
