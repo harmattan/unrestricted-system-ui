@@ -20,6 +20,7 @@
 #include <notification.h>
 #include <notificationparameters.h>
 #include <genericnotificationparameterfactory.h>
+#include <notificationwidgetparameterfactory.h>
 
 #include "ut_unlocknotificationsink.h"
 #include "unlockmissedevents_stub.h"
@@ -28,6 +29,7 @@
 #include <MApplication>
 #include <QList>
 #include <QVariant>
+#include <MLocale>
 
 // Users group and user id:
 #define GID 29999
@@ -40,6 +42,29 @@
 #define EVENT_IM    "im.received"
 // and an another one for testing:
 #define EVENT_OTHER "device.added"
+
+QString qtTrId(const char *id, int)
+{
+    if(QString(id) == "translationid")
+        return "translatedstring";
+    else
+        return "";
+}
+
+// MLocale stubs
+QString gInstalledTrCatalog;
+MLocale *gInstalledCatalogLocale;
+void MLocale::installTrCatalog(const QString &name)
+{
+    gInstalledCatalogLocale = this;
+    gInstalledTrCatalog = name;
+}
+
+MLocale *gSetDefaultLocale;
+void MLocale::setDefault(const MLocale &locale)
+{
+    gSetDefaultLocale = const_cast<MLocale*>(&locale);
+}
 
 static int argc = 1;
 static char *app_name = (char *) "./ut_unlocknotificationsink";
@@ -62,6 +87,11 @@ void
 Ut_UnlockNotificationSink::init ()
 {
     sink = new UnlockNotificationSink ();
+
+    gUnlockMissedEventsStub->stubReset ();
+    gInstalledTrCatalog = "";
+    gInstalledCatalogLocale = NULL;
+    gSetDefaultLocale = NULL;
 }
 
 void
@@ -73,8 +103,6 @@ Ut_UnlockNotificationSink::cleanup ()
 void
 Ut_UnlockNotificationSink::testAddNotification ()
 {
-    gUnlockMissedEventsStub->stubReset ();
-
     // Test enabled sink (locked-state)
     sink->setLockedState (true);
 
@@ -175,6 +203,52 @@ Ut_UnlockNotificationSink::testAddNotification ()
              == (int) UnlockMissedEvents::NotifyOther);
     gUnlockMissedEventsStub->stubReset ();
 }
+
+void Ut_UnlockNotificationSink::testWhenGenericTextIdPresentAndCatalogueNotPresentThenSummaryIsEmpty()
+{
+    sink->setLockedState (true);
+
+    NotificationParameters params;
+    params.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
+
+    Notification notification(100,
+                              GID,
+                              UID,
+                              params,
+                              Notification::ApplicationEvent,
+                              -1);
+
+    sink->addNotification(notification);
+
+    QCOMPARE(gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QCOMPARE(gUnlockMissedEventsStub->stubLastCallTo("addNotification").parameter<QString>(1), QString(""));
+}
+
+void Ut_UnlockNotificationSink::testWhenGenericTextIdPresentAndCataloguePresentThenSummaryIsSet()
+{
+    sink->setLockedState (true);
+
+    QString catalogue("translationcatalogue");
+
+    NotificationParameters params;
+    params.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
+    params.add(NotificationWidgetParameterFactory::genericTextCatalogueKey(), catalogue);
+
+    Notification notification(100,
+                              GID,
+                              UID,
+                              params,
+                              Notification::ApplicationEvent,
+                              -1);
+
+    sink->addNotification(notification);
+
+    QCOMPARE(gInstalledTrCatalog, catalogue);
+    QCOMPARE(gSetDefaultLocale, gInstalledCatalogLocale);
+    QCOMPARE(gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
+    QCOMPARE(gUnlockMissedEventsStub->stubLastCallTo("addNotification").parameter<QString>(1), QString("translatedstring"));
+}
+
 
 void
 Ut_UnlockNotificationSink::testEnableDisableLocking ()

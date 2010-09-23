@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <MLocale>
 #include "unlocknotificationsink.h"
 #include "unlockmissedevents.h"
 #include "genericnotificationparameterfactory.h"
@@ -46,6 +47,7 @@
 
 // These notifications will be filtered out.
 #define EVENT_BATTERY  "x-nokia.battery"
+
 
 UnlockNotificationSink::UnlockNotificationSink () :
     m_enabled (false)
@@ -123,14 +125,23 @@ UnlockNotificationSink::addNotification (const Notification &notification)
             event_type == MESSAGING_IM)
         type = UnlockMissedEvents::NotifyMessage;
 
-    if (! notification.parameters ().value
-           (NotificationWidgetParameterFactory::summaryKey ()).isNull ())
-    {
-        lastSummary = notification.parameters ().value (
-                NotificationWidgetParameterFactory::summaryKey ()).toString ();
+    QString genericTextId = notification.parameters().value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
 
-        SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
+    if(!genericTextId.isEmpty()) {
+        QString genericTextCatalogue = notification.parameters().value(NotificationWidgetParameterFactory::genericTextCatalogueKey()).toString();
+
+        if(!genericTextCatalogue.isEmpty()) {
+            MLocale locale;
+            // Load the catalog from disk if it's not yet loaded
+            locale.installTrCatalog(genericTextCatalogue);
+            MLocale::setDefault(locale);
+
+            lastSummary = qtTrId(genericTextId.toUtf8());
+        }
     }
+
+
+    SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
 
     UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
 }

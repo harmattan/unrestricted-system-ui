@@ -35,6 +35,8 @@ private slots:
     void cleanupTestCase ();
 
     void testAddNotification();
+    void testWhenGenericTextIdPresentAndCatalogueNotPresentThenSummaryIsEmpty();
+    void testWhenGenericTextIdPresentAndCataloguePresentThenSummaryIsSet();
     void testEnableDisableLocking();
 
 private:

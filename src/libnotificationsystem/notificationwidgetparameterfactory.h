@@ -73,6 +73,20 @@ public:
     }
 
     /*!
+     * Returns the keyname of the generic text id key
+     */
+    static QString genericTextIdKey() {
+        return QString("genericTextId");
+    }
+
+    /*!
+     * Returns the keyname of the translation catalogue of the generic text id
+     */
+    static QString genericTextCatalogueKey() {
+        return QString("genericTextCatalogue");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given icon ID.
      *
      * \param iconId the icon ID for the notification
