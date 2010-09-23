@@ -209,6 +209,11 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
     batterySaveMode = createContextItem(context, "System.PowerSaveMode");
     connect(batterySaveMode, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
 
+    // Set the initial power save mode (in case it has been switched on before reboot, etc)
+    if (batterySaveMode->value().toBool()) {
+        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+    }
+
     batteryLevelChanged ();
 }
 
@@ -221,12 +226,18 @@ void BatteryStatusIndicator::batteryLevelChanged()
     if (!batteryCharging->value().toBool()) {
         QList<QVariant> chargeBars = batteryLevel->value().toList();
         if(chargeBars.count() == 2 ) {
-           double remainingBars = chargeBars.at(0).toDouble();
-           double maximumBars = chargeBars.at(1).toDouble();
+            double remainingBars = chargeBars.at(0).toDouble();
+            double maximumBars = chargeBars.at(1).toDouble();
 
-           //simple  mapping to percentage value
-           double chargeValue  = remainingBars/maximumBars;
-           setValue(chargeValue);
+            // Smoke test - check that charge bar values are valid
+            if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
+                //simple  mapping to percentage value
+                double chargeValue  = remainingBars/maximumBars;
+                setValue(chargeValue);
+            } else {
+                // Error situation
+                setValue(0.0);
+            }
         }
     }
 }
