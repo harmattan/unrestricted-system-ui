@@ -1,5 +1,11 @@
 system-ui (0.17.1~1) harmattan; urgency=low
 
+  * [ UNRELEASED ]
+
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 24 Sep 2010 12:46:00 +0300
+
+system-ui (0.17.0-2) harmattan; urgency=low
+
   * Fixes: NB#188724 - usb-moded should be installed before system-ui,
     or credential request will be simply skipped by aegis
 
