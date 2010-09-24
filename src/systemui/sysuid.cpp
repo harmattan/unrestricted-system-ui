@@ -31,6 +31,9 @@
 #include "lockscreenbusinesslogic.h"
 #include "shutdownbusinesslogic.h"
 #include "statusarearenderer.h"
+#include "statusarearendereradaptor.h"
+#include "statusindicatormenuadaptor.h"
+#include "statusindicatormenuwindow.h"
 #include "notificationmanager.h"
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
@@ -49,7 +52,7 @@
 
 Sysuid* Sysuid::m_Sysuid = NULL;
 
-Sysuid::Sysuid (QObject* parent) : QObject (parent)
+Sysuid::Sysuid(QObject* parent) : QObject (parent)
 {
     SYS_DEBUG ("Starting sysuidaemon");
 
@@ -79,15 +82,21 @@ Sysuid::Sysuid (QObject* parent) : QObject (parent)
         qCritical () << Q_FUNC_INFO << "failed to register dbus object";
         abort();
     }
-    // Show status area when sysui daemon starts
-    m_statusArea = new StatusAreaRenderer(this);
 
-    // Connect to D-Bus and register the DBus source as an object
+    // Create a status area renderer for rendering the shared status area pixmap
+    m_statusAreaRenderer = new StatusAreaRenderer(this);
+    new StatusAreaRendererAdaptor(m_statusAreaRenderer);
     bus.registerService("com.meego.core.MStatusBar");
-    bus.registerObject("/statusbar", m_statusArea);
+    bus.registerObject("/statusbar", m_statusAreaRenderer);
 
-    connect (m_statusArea, SIGNAL (statusIndicatorMenuVisibilityChanged (bool)),
-             m_compositorNotificationSink, SLOT (setDisabled (bool)));
+    // Create a status indicator menu
+    m_statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
+    new StatusIndicatorMenuAdaptor(m_statusIndicatorMenuWindow);
+    bus.registerService("com.meego.core.MStatusIndicatorMenu");
+    bus.registerObject("/statusindicatormenu", m_statusIndicatorMenuWindow);
+    connect(m_statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), m_statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
+    connect(m_statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), m_compositorNotificationSink, SLOT(setDisabled(bool)));
+
     // Connect the notification signals for the compositor notification sink
     connect (m_notificationManager, SIGNAL (notificationUpdated (const Notification &)),
              m_compositorNotificationSink, SLOT (addNotification (const Notification &)));
@@ -152,6 +161,7 @@ Sysuid::~Sysuid ()
     m_Sysuid = 0;
     delete m_sysuidRequest;
     delete m_volumeBar;
+    delete m_statusIndicatorMenuWindow;
 }
 
 Sysuid* Sysuid::sysuid ()

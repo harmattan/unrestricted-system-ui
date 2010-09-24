@@ -30,9 +30,11 @@
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
 #include "statusarearenderer_stub.h"
+#include "statusarearendereradaptor_stub.h"
 #include "unlockarea_stub.h"
 #include "sysuidrequest_stub.h"
 #include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenuadaptor_stub.h"
 #include "mcompositornotificationsink_stub.h"
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
@@ -150,6 +152,12 @@ void Ut_Sysuid::cleanup()
 {
     delete sysuid;
     delete app;
+}
+
+void Ut_Sysuid::testSignalConnections()
+{
+    QVERIFY(disconnect(sysuid->m_statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->m_statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
+    QVERIFY(disconnect(sysuid->m_statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->m_compositorNotificationSink, SLOT(setDisabled(bool))));
 }
 
 void Ut_Sysuid::testUseMode()

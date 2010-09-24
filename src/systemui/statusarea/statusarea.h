@@ -20,13 +20,8 @@
 #ifndef STATUSAREA_H
 #define STATUSAREA_H
 
-#include "statusindicatormenuwindow.h"
+#include <MWidgetController>
 #include "statusareamodel.h"
-
-#include <MButton>
-#include <QSharedPointer>
-
-class StatusAreaRenderer;
 
 /*!
  * Status area is the top part on the home screen. It contains the clock,
@@ -43,7 +38,7 @@ public:
      *
      * \param parent the parent widget of the status area
      */
-    StatusArea(MWidget *parent = NULL, StatusAreaRenderer *statusAreaWindow = NULL);
+    StatusArea(QGraphicsItem *parent = NULL);
 
     /*!
      * \brief Destructor
@@ -55,16 +50,6 @@ signals:
     void statusIndicatorMenuVisibilityChanged(bool);
 
 private:
-    //! The name of the status indicator menu service
-    static const QString STATUS_INDICATOR_MENU_SERVICE_NAME;
-    //! Status indicator menu
-    QSharedPointer<StatusIndicatorMenuWindow> statusIndicatorMenuWindow;
-
-    /*!
-     * Shows the status indicator menu when the user swipes the status area
-     */
-    void showStatusIndicatorMenu();
-
 #ifdef UNIT_TEST
     friend class Ut_StatusArea;
 #endif

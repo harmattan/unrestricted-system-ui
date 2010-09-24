@@ -24,7 +24,6 @@
 #include "statusarea.h"
 #include <MStyle>
 #include "statusareastyle.h"
-#include "statusarearendereradaptor.h"
 #include <QFile>
 #include <QDir>
 #include <QApplication>
@@ -33,7 +32,7 @@
 StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
     scene(new QGraphicsScene),
-    statusArea_(new StatusArea(NULL,this)),
+    statusArea(new StatusArea),
     statusAreaPixmap(NULL),
 #ifdef HAVE_QMSYSTEM
     displayState(new Maemo::QmDisplayState()),
@@ -42,10 +41,9 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 {
     scene->setParent(this);
     scene->setObjectName("statusareascene");
-    scene->addItem(statusArea_);
-    statusArea_->setObjectName("statusarea");
-
-    new StatusAreaRendererAdaptor(this);
+    scene->addItem(statusArea);
+    statusArea->setObjectName("statusarea");
+    connect(this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
 
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
@@ -89,8 +87,8 @@ uint StatusAreaRenderer::sharedPixmapHandle()
 
 StatusAreaRenderer::~StatusAreaRenderer()
 {
-    scene->removeItem(statusArea_);
-    delete statusArea_;
+    scene->removeItem(statusArea);
+    delete statusArea;
     delete statusAreaPixmap;
 
 #ifdef HAVE_QMSYSTEM

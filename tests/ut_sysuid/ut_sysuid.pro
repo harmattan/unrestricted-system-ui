@@ -57,8 +57,10 @@ HEADERS += \
     $$SRCDIR/lockscreen/unlocknotificationsink.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
+    $$SRCDIR/statusarea/statusarearendereradaptor.h \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
     $$SRCDIR/x11wrapper.h
 
 # service classes
@@ -66,13 +68,6 @@ HEADERS += \
     $$STUBSDIR/stubbase.h \
     $$STUBSDIR/systemstatestub.h \
     $$STUBSDIR/locksstub.h \
-    $$STUBSDIR/testcontextitem.h \
-    $$STUBSDIR/widgetnotificationsink_stub.h \
-    $$STUBSDIR/eventtypestore_stub.h \
-    $$STUBSDIR/notificationmanager_stub.h \
-    $$STUBSDIR/statusarearenderer_stub.h \
-    $$STUBSDIR/unlocknotifications_stub.h \
-    $$STUBSDIR/unlockmissedevents_stub.h \
-    $$STUBSDIR/unlockarea_stub.h
+    $$STUBSDIR/testcontextitem.h
 
 include(../common_bot.pri)

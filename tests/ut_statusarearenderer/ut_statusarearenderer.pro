@@ -2,7 +2,6 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusarearenderer
 INCLUDEPATH += $$SRCDIR/statusarea
-INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
 # unit test and unit classes
 SOURCES += \
@@ -18,8 +17,6 @@ SOURCES += \
 HEADERS += \
     ut_statusarearenderer.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
-    $$SRCDIR/statusarea/statusarea.h \
-    $$SRCDIR/statusarea/statusarearendereradaptor.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h
+    $$SRCDIR/statusarea/statusarea.h
 
 include(../common_bot.pri)

@@ -29,6 +29,7 @@ class UsbUi;
 class BatteryBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaRenderer;
+class StatusIndicatorMenuWindow;
 class NotificationManager;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
@@ -90,7 +91,10 @@ private:
     static Sysuid           *m_Sysuid;
 
     //! Status area
-    StatusAreaRenderer      *m_statusArea;
+    StatusAreaRenderer      *m_statusAreaRenderer;
+
+    //! Status indicator menu
+    StatusIndicatorMenuWindow *m_statusIndicatorMenuWindow;
 
     //! Notification manager
     NotificationManager     *m_notificationManager;
@@ -112,6 +116,10 @@ private:
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;
+
+#ifdef UNIT_TEST
+    friend class Ut_Sysuid;
+#endif
 };
 
 #endif // SYSUID_H

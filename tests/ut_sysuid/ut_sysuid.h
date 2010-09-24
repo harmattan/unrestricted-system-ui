@@ -44,7 +44,8 @@ private slots:
     // Executed once after last test case
     void cleanupTestCase();
 
-    // Test the Use.Mode context property
+    // Test cases
+    void testSignalConnections();
     void testUseMode();
 };
 

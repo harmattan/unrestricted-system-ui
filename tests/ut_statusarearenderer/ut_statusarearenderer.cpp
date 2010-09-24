@@ -20,9 +20,6 @@
 #include <MOnDisplayChangeEvent>
 #include "statusarearenderer.h"
 #include "statusarea_stub.h"
-#include "pannedwidgetcontroller_stub.h"
-#include "statusindicatormenuwindow_stub.h"
-#include "statusarearendereradaptor_stub.h"
 
 QPixmap *statusAreaPixmap = NULL;
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
@@ -92,9 +89,9 @@ bool QGraphicsScene::sendEvent(QGraphicsItem *item, QEvent *event)
 
 void Ut_StatusAreaRenderer::init()
 {
-    statusAreaWindow = new StatusAreaRenderer();
+    statusAreaRenderer = new StatusAreaRenderer();
     statusAreaPixmap = new QPixmap(30,80);
-    statusAreaWindow->statusAreaPixmap = statusAreaPixmap;
+    statusAreaRenderer->statusAreaPixmap = statusAreaPixmap;
 }
 
 void Ut_StatusAreaRenderer::cleanup()
@@ -103,7 +100,7 @@ void Ut_StatusAreaRenderer::cleanup()
     Ut_StatusAreaRenderer_Scene_Render_Called = false;
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
     rectReceived.setRect(0,0,0,0);
-    delete statusAreaWindow;
+    delete statusAreaRenderer;
 }
 
 void Ut_StatusAreaRenderer::initTestCase()
@@ -120,7 +117,7 @@ void Ut_StatusAreaRenderer::testSceneChanged()
     QList<QRectF> rectList;
     QRectF rect1(0,0,30,80);
     rectList.append(rect1);
-    connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+    connect(this, SIGNAL(changed(QList<QRectF>)), statusAreaRenderer, SLOT(sceneChanged(QList<QRectF>)));
     emit changed(rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
     QCOMPARE(Ut_StatusAreaRenderer_syncX_Called, true);
@@ -158,12 +155,12 @@ void RenderTestsHelper::setupRect()
     rectList->append(rect1);
 }
 
-QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaWindow)
+QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaRenderer)
 {
     setupRect();
-    QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaWindow, SLOT(sceneChanged(QList<QRectF>)));
+    QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaRenderer, SLOT(sceneChanged(QList<QRectF>)));
 #ifdef HAVE_QMSYSTEM
-    QObject::connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaWindow, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    QObject::connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaRenderer, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
 #endif
     return rectList;
 }
@@ -183,7 +180,7 @@ RenderTestsHelper::~RenderTestsHelper()
 void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOn()
 {
     RenderTestsHelper helper;
-    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
     emit displayStateChanged(Maemo::QmDisplayState::On);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
@@ -192,7 +189,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOn()
 void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOff()
 {
     RenderTestsHelper helper;
-    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
     emit displayStateChanged(Maemo::QmDisplayState::Off);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
@@ -201,7 +198,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOff()
 void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateDimmed()
 {
     RenderTestsHelper helper;
-    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaWindow);
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
     emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
@@ -211,7 +208,7 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
 {
     // Initial condition
     RenderTestsHelper helper;
-    helper.setupRenderTests(this, statusAreaWindow);
+    helper.setupRenderTests(this, statusAreaRenderer);
     emit displayStateChanged(Maemo::QmDisplayState::On);
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
 
@@ -242,8 +239,8 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
 
 void Ut_StatusAreaRenderer::testSharedPixmapHandle()
 {
-    uint handle = static_cast<quint32> (statusAreaWindow->statusAreaPixmap->handle());
-    QCOMPARE(handle, statusAreaWindow->sharedPixmapHandle());
+    uint handle = static_cast<quint32> (statusAreaRenderer->statusAreaPixmap->handle());
+    QCOMPARE(handle, statusAreaRenderer->sharedPixmapHandle());
 }
 
 QTEST_MAIN(Ut_StatusAreaRenderer)

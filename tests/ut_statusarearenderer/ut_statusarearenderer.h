@@ -32,7 +32,7 @@ class Ut_StatusAreaRenderer : public QObject
     Q_OBJECT
 
 private:
-    StatusAreaRenderer *statusAreaWindow;
+    StatusAreaRenderer *statusAreaRenderer;
 
 signals:
     void changed(QList<QRectF> rectList);
@@ -71,7 +71,7 @@ class RenderTestsHelper
 public:
     RenderTestsHelper();
     ~RenderTestsHelper();
-    QList<QRectF>* setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaWindow);
+    QList<QRectF>* setupRenderTests(Ut_StatusAreaRenderer* testClass, StatusAreaRenderer* statusAreaRenderer);
 private:
     QList<QRectF>* rectList;
     void setupRect();

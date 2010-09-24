@@ -28,19 +28,14 @@
 // FIXME - stubgen is not yet finished
 class StatusAreaStub : public StubBase {
   public:
-  virtual void StatusAreaConstructor(MWidget *parent, StatusAreaRenderer *statusAreaWindow);
+  virtual void StatusAreaConstructor(QGraphicsItem *parent);
   virtual void StatusAreaDestructor();
   virtual bool sceneEvent(QEvent *event);
-   const QString STATUS_INDICATOR_MENU_SERVICE_NAME ;
-   QPointF firstPos, lastPos ;
-   QSharedPointer<StatusIndicatorMenuWindow> statusIndicatorMenuWindow ;
-  virtual void showStatusIndicatorMenu();
 }; 
 
 // 2. IMPLEMENT STUB
-void StatusAreaStub::StatusAreaConstructor(MWidget *parent, StatusAreaRenderer *statusAreaWindow) {
+void StatusAreaStub::StatusAreaConstructor(QGraphicsItem *parent) {
   Q_UNUSED(parent);
-  Q_UNUSED(statusAreaWindow);
 }
 void StatusAreaStub::StatusAreaDestructor() {
 
@@ -52,10 +47,6 @@ bool StatusAreaStub::sceneEvent(QEvent *event) {
   return stubReturnValue<bool>("sceneEvent");
 }
 
-void StatusAreaStub::showStatusIndicatorMenu() {
-  stubMethodEntered("showStatusIndicatorMenu");
-}
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -64,16 +55,12 @@ StatusAreaStub* gStatusAreaStub = &gDefaultStatusAreaStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusArea::StatusArea(MWidget *parent, StatusAreaRenderer *statusAreaWindow) {
-  gStatusAreaStub->StatusAreaConstructor(parent, statusAreaWindow);
+StatusArea::StatusArea(QGraphicsItem *parent) {
+  gStatusAreaStub->StatusAreaConstructor(parent);
 }
 
 StatusArea::~StatusArea() {
   gStatusAreaStub->StatusAreaDestructor();
-}
-
-void StatusArea::showStatusIndicatorMenu() {
-  gStatusAreaStub->showStatusIndicatorMenu();
 }
 
 

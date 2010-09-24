@@ -80,7 +80,7 @@ private:
     QGraphicsScene *scene;
 
     //! The status area to be displayed in this window
-    StatusArea *statusArea_;
+    StatusArea *statusArea;
 
     //! Shared Pixmap between libmeegotouch and systemui for the status area.
     QPixmap* statusAreaPixmap;

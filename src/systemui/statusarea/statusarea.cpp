@@ -18,35 +18,12 @@
 ****************************************************************************/
 
 #include "statusarea.h"
-#include "statusarearenderer.h"
-#include <MApplicationIfProxy>
-#include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenuwindow.h"
-#include "statusindicatormenuadaptor.h"
-#include "notificationstatusindicator.h"
 
-const QString StatusArea::STATUS_INDICATOR_MENU_SERVICE_NAME = "com.nokia.mstatusindicatormenu";
-
-StatusArea::StatusArea(MWidget *parent, StatusAreaRenderer *statusAreaWindow) :
-    MWidgetController(parent),
-    statusIndicatorMenuWindow(new StatusIndicatorMenuWindow)
+StatusArea::StatusArea(QGraphicsItem *parent) :
+    MWidgetController(parent)
 {
-    if (statusAreaWindow != NULL) {
-        connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), statusAreaWindow, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
-    }
-    connect(statusIndicatorMenuWindow.data(), SIGNAL(visibilityChanged(bool)), this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
-
-    // Register status indicator menu object on DBus
-    new StatusIndicatorMenuAdaptor(statusIndicatorMenuWindow.data());
-    QDBusConnection::sessionBus().registerService("com.meego.core.MStatusIndicatorMenu");
-    QDBusConnection::sessionBus().registerObject("/statusindicatormenu", statusIndicatorMenuWindow.data());
 }
 
 StatusArea::~StatusArea()
 {
-}
-
-void StatusArea::showStatusIndicatorMenu()
-{
-    statusIndicatorMenuWindow->makeVisible();
 }
