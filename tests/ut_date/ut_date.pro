@@ -4,6 +4,8 @@ TARGET = ut_date
 
 INCLUDEPATH += $$SRCDIR/lockscreen
 
+STYLE_HEADERS += $$SRCDIR/lockscreen/datestyle.h
+
 # unit test and unit
 SOURCES += \
     ut_date.cpp \
@@ -13,5 +15,6 @@ SOURCES += \
 HEADERS += \
     ut_date.h \
     $$SRCDIR/lockscreen/date.h \
+    $$SRCDIR/lockscreen/datestyle.h
 
 include(../common_bot.pri)

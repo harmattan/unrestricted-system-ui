@@ -119,6 +119,7 @@ ClockStyle {
     padding-bottom: 0;
     time-format: "%R";
     short-remove-am-pm-indicator: false;
+    horizontal-align: left;
 }
 ClockStyle:twelve-hour {
     time-format: "%r";
@@ -543,7 +544,23 @@ MContainerStyle#MExtensionAreaInvisibleContainer {
 }
 
 LockScreenHeaderStyle {
-    date-format: "%A, %B %d %Y";
+    minimum-size: 100% -1;
+    preferred-size: 100% -1;
+    maximum-size: 100% -1;    
+}
+
+LockScreenStatusAreaStyle {
+    minimum-size: 100% 3mm;
+    preferred-size: 100% 3mm;
+    maximum-size: 100% 3mm;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 ClockStyle#LockScreenHeaderClock {
@@ -557,6 +574,7 @@ ClockStyle#LockScreenHeaderClock {
     padding-bottom: 0;
     time-format: "%R";
     short-remove-am-pm-indicator: false;
+    horizontal-align: left;
 }
 ClockStyle#LockScreenHeaderClock:twelve-hour {
     time-format: "%r";
@@ -573,9 +591,14 @@ MLabelStyle#LockScreenHeaderClockLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 9.0mm;
-    minimum-size: -1 9.0mm;
-    maximum-size: -1 9.0mm;
+    preferred-size: -1 9mm;
+    minimum-size: -1 9mm;
+    maximum-size: -1 9mm;
+}
+
+DateStyle {
+    date-format: "%A, %B %d %Y";
+    horizontal-align: left;
 }
 
 MLabelStyle#DateLabel {

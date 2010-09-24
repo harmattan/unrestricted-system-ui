@@ -146,4 +146,18 @@ void Ut_ClockView::testUpdateTimeFormat()
     QCOMPARE(m_subject->styleContainer().currentMode(), QString());
 }
 
+void Ut_ClockView::testAlignment()
+{
+    m_subject->setModel(&clockModel);
+    Qt::Alignment alignment = Qt::AlignLeft;
+    m_subject->modifiableStyle()->setHorizontalAlign(alignment);
+    m_subject->applyStyle();
+    QCOMPARE(m_subject->label->alignment(), alignment);
+
+    alignment = Qt::AlignRight;
+    m_subject->modifiableStyle()->setHorizontalAlign(alignment);
+    m_subject->applyStyle();
+    QCOMPARE(m_subject->label->alignment(), alignment);
+}
+
 QTEST_APPLESS_MAIN(Ut_ClockView)

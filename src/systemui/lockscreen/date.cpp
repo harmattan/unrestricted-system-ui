@@ -24,7 +24,7 @@
 #include <QDateTime>
 
 Date::Date(QGraphicsItem *parent) :
-    MWidget(parent),
+    MStylableWidget(parent),
     locale(MLocale::createSystemMLocale())
 {
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -53,9 +53,11 @@ Date::~Date()
 {
 }
 
-void Date::setFormat(const QString &format)
+void Date::applyStyle()
 {
-    this->format = format;
+    MStylableWidget::applyStyle();
+
+    label->setAlignment(style()->horizontalAlign());
     updateDate();
 }
 
@@ -63,7 +65,7 @@ void Date::updateDate()
 {
     // Set current time in the labels
     QDateTime currentTime = QDateTime::currentDateTime();
-    label->setText(locale->formatDateTime(currentTime, format));
+    label->setText(locale->formatDateTime(currentTime, style()->dateFormat()));
 
     // Calculate the time for the next update
     QDateTime nextUpdateTime = currentTime.addDays(1);

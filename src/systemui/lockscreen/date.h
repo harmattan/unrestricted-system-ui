@@ -19,8 +19,9 @@
 #ifndef DATE_H_
 #define DATE_H_
 
-#include <MWidget>
+#include <MStylableWidget>
 #include <QTimer>
+#include "datestyle.h"
 
 #ifdef HAVE_QMSYSTEM
 #include <qmtime.h>
@@ -30,9 +31,9 @@ class MLabel;
 class MLocale;
 
 /*!
- * Shows the day of the week, month and day
+ * Shows the date
  */
-class Date : public MWidget
+class Date : public MStylableWidget
 {
     Q_OBJECT
 
@@ -47,11 +48,10 @@ public:
      */
     virtual ~Date();
 
-    /*!
-     * Sets the format string of the date label
-     * \param format the format string
-     */
-    void setFormat(const QString &format);
+protected:
+    //! \reimp
+    virtual void applyStyle();
+    //! \reimp_end
 
 private slots:
     /*!
@@ -73,9 +73,6 @@ private:
     //! System locale
     MLocale *locale;
 
-    //! Format string of the date label
-    QString format;
-
     //! Update timer
     QTimer timer;
 
@@ -83,6 +80,8 @@ private:
     //! QmTime object for listening date changes
     Maemo::QmTime qmTime;
 #endif
+
+    M_STYLABLE_WIDGET(DateStyle)
 
 #ifdef UNIT_TEST
     friend class Ut_Date;

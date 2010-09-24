@@ -156,8 +156,8 @@ void Ut_Sysuid::cleanup()
 
 void Ut_Sysuid::testSignalConnections()
 {
-    QVERIFY(disconnect(instance->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), instance->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
-    QVERIFY(disconnect(instance->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), instance->mCompositorNotificationSink, SLOT(setDisabled(bool))));
+    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
+    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->mCompositorNotificationSink, SLOT(setDisabled(bool))));
 }
 
 void Ut_Sysuid::testUseMode()

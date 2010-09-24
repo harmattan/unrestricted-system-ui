@@ -1,4 +1,4 @@
-/***************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -17,20 +17,20 @@
 **
 ****************************************************************************/
 
-#ifndef LOCKSCREENHEADERSTYLE_H_
-#define LOCKSCREENHEADERSTYLE_H_
+#ifndef LOCKSCREENSTATUSAREASTYLE_H
+#define LOCKSCREENSTATUSAREASTYLE_H
 
-#include <MWidgetStyle>
+#include <mwidgetstyle.h>
 
-class LockScreenHeaderStyle : public MWidgetStyle
+class LockScreenStatusAreaStyle : public MWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(LockScreenHeaderStyle)
+    M_STYLE(LockScreenStatusAreaStyle)
 };
 
-class LockScreenHeaderStyleContainer : public MWidgetStyleContainer
+class LockScreenStatusAreaStyleContainer : public MWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(LockScreenHeaderStyle)
+    M_STYLE_CONTAINER(LockScreenStatusAreaStyle)
 };
 
-#endif /* LOCKSCREENHEADERSTYLE_H_ */
+#endif

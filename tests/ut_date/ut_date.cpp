@@ -17,8 +17,10 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_date.h"
 #include "date.h"
+#include "datestyle.h"
 #include <MApplication>
 #include <MLabel>
 #include <MLocale>
@@ -28,6 +30,11 @@ QDateTime gCurrentDateTime;
 QDateTime QDateTime::currentDateTime()
 {
     return gCurrentDateTime;
+}
+
+DateStyle *Ut_Date::style()
+{
+    return const_cast<DateStyle *>(m_subject->style().operator ->());
 }
 
 void Ut_Date::initTestCase()
@@ -47,7 +54,8 @@ void Ut_Date::init()
     locale = MLocale::createSystemMLocale();
     gCurrentDateTime = QDateTime(QDate(2042, 12, 21), QTime(12, 32));
     m_subject = new Date;
-    m_subject->setFormat("\%A \%B \%d");
+    style()->setDateFormat("\%A \%B \%d");
+    m_subject->applyStyle();
 }
 
 void Ut_Date::cleanup()
@@ -95,5 +103,17 @@ void Ut_Date::testTimeSettingChanged()
     checkNextUpdate();
 }
 
+void Ut_Date::testAlignment()
+{
+    Qt::Alignment alignment = Qt::AlignLeft;
+    style()->setHorizontalAlign(alignment);
+    m_subject->applyStyle();
+    QCOMPARE(m_subject->label->alignment(), alignment);
+
+    alignment = Qt::AlignRight;
+    style()->setHorizontalAlign(alignment);
+    m_subject->applyStyle();
+    QCOMPARE(m_subject->label->alignment(), alignment);
+}
 
 QTEST_APPLESS_MAIN(Ut_Date)

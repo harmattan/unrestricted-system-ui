@@ -20,12 +20,12 @@
 #ifndef UT_DATE_H
 #define UT_DATE_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class MApplication;
-class Date;
 class MLocale;
+class Date;
+class DateStyle;
 
 class Ut_Date : public QObject
 {
@@ -46,14 +46,16 @@ private slots:
     void testInitialState();
     void testDateUpdates();
     void testTimeSettingChanged();
+    void testAlignment();
 
 private:
+    DateStyle *style();
     MApplication *app;
+
     // The object being tested
     Date *m_subject;
 
     MLocale *locale;
-
 };
 
 #endif

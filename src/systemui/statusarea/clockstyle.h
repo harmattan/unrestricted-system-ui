@@ -34,6 +34,8 @@ class ClockStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString, timeFormat, TimeFormat)
     //! Formatting string for the time, short variant
     M_STYLE_ATTRIBUTE(bool, shortRemoveAmPmIndicator, ShortRemoveAmPmIndicator)
+    //! Label alignment
+    M_STYLE_ATTRIBUTE(Qt::Alignment, horizontalAlign, HorizontalAlign)
 };
 
 class ClockStyleContainer : public MWidgetStyleContainer

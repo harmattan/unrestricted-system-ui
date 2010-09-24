@@ -20,9 +20,7 @@
 #ifndef STATUSAREAVIEW_H
 #define STATUSAREAVIEW_H
 
-#include <MButtonView>
-#include <MNamespace>
-
+#include <MWidgetView>
 #include "statusareastyle.h"
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
@@ -30,9 +28,7 @@
 class Clock;
 class StatusArea;
 class StatusIndicator;
-class MSceneWindow;
 class QGraphicsLinearLayout;
-class QGraphicsWidget;
 
 /*!
  * Status area view draws the status area.
@@ -44,7 +40,7 @@ class StatusAreaView : public MWidgetView
 
 public:
    /*!
-     * Constructs a view for a status area button.
+     * Constructs a view for a status area.
      *
      * \param controller the controller of this StatusAreaView
      */

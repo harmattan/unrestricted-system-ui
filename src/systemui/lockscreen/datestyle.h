@@ -17,20 +17,25 @@
 **
 ****************************************************************************/
 
-#ifndef LOCKSCREENHEADERSTYLE_H_
-#define LOCKSCREENHEADERSTYLE_H_
+#ifndef DATESTYLE_H_
+#define DATESTYLE_H_
 
 #include <MWidgetStyle>
 
-class LockScreenHeaderStyle : public MWidgetStyle
+class DateStyle : public MWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(LockScreenHeaderStyle)
+    M_STYLE(DateStyle)
+
+    //! Format string for the date
+    M_STYLE_ATTRIBUTE(QString, dateFormat, DateFormat)
+    //! Label alignment
+    M_STYLE_ATTRIBUTE(Qt::Alignment, horizontalAlign, HorizontalAlign)
 };
 
-class LockScreenHeaderStyleContainer : public MWidgetStyleContainer
+class DateStyleContainer : public MWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(LockScreenHeaderStyle)
+    M_STYLE_CONTAINER(DateStyle)
 };
 
-#endif /* LOCKSCREENHEADERSTYLE_H_ */
+#endif /* DATESTYLE_H_ */

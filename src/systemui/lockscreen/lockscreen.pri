@@ -1,8 +1,10 @@
 include(../../mconfig.pri)
-INCLUDEPATH += lockscreen
+INCLUDEPATH += lockscreen statusarea
 
 STYLE_HEADERS += lockscreen/lockscreenheaderstyle.h \
-    lockscreen/lockscreenheaderwithpadlockstyle.h
+    lockscreen/lockscreenheaderwithpadlockstyle.h \
+    lockscreen/lockscreenstatusareastyle.h \
+    lockscreen/datestyle.h
 
 HEADERS += \
     lockscreen/lockscreenbusinesslogic.h \
@@ -20,7 +22,10 @@ HEADERS += \
     lockscreen/lockscreenheaderstyle.h \
     lockscreen/lockscreenheaderwithpadlockview.h \
     lockscreen/lockscreenheaderwithpadlockstyle.h \
-    lockscreen/date.h
+    lockscreen/lockscreenstatusareaview.h \
+    lockscreen/lockscreenstatusareastyle.h \
+    lockscreen/date.h \
+    lockscreen/datestyle.h
 
 SOURCES += \
     lockscreen/lockscreenbusinesslogic.cpp \
@@ -36,5 +41,6 @@ SOURCES += \
     lockscreen/lockscreen.cpp \
     lockscreen/lockscreenheaderview.cpp \
     lockscreen/lockscreenheaderwithpadlockview.cpp \
+    lockscreen/lockscreenstatusareaview.cpp \
     lockscreen/date.cpp
 

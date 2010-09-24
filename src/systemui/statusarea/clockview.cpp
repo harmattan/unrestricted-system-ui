@@ -34,7 +34,7 @@ ClockView::ClockView(Clock *controller) :
     l->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(l);
 
-    label = new MLabel(NULL);
+    label = new MLabel;
     label->setObjectName(controller->objectName() + "Label");
     l->addItem(label);
 
@@ -43,8 +43,11 @@ ClockView::ClockView(Clock *controller) :
     connect(locale, SIGNAL(settingsChanged()), this, SLOT(updateLabel()));
 }
 
-void ClockView::styleUpdated()
+void ClockView::applyStyle()
 {
+    MWidgetView::applyStyle();
+
+    label->setAlignment(style()->horizontalAlign());
     updateLabel();
 }
 

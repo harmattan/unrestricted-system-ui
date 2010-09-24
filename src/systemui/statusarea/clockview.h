@@ -44,7 +44,7 @@ public:
 
 protected:
     //! \reimp
-    virtual void styleUpdated();
+    virtual void applyStyle();
     void setupModel();
     //! \reimp_end
 
@@ -67,6 +67,10 @@ private:
 
     //! A pointer to the system locale object
     MLocale* locale;
+
+#ifdef UNIT_TEST
+    friend class Ut_ClockView;
+#endif
 };
 
 #endif

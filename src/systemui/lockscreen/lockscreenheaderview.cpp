@@ -20,53 +20,47 @@
 #include <MWidgetController>
 #include <QGraphicsLinearLayout>
 #include "lockscreenheaderview.h"
+#include "statusarea.h"
 #include "clock.h"
 #include "date.h"
 
 LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     MWidgetView(controller),
-    layout(new QGraphicsLinearLayout(Qt::Horizontal)),
+    layout(new QGraphicsLinearLayout(Qt::Vertical)),
     date(new Date)
 {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
+    // Add a status area to the main layout
+    StatusArea *statusArea = new StatusArea;
+    statusArea->setViewType("lockScreen");
+    layout->addItem(statusArea);
+
+    // Create a layout for the time and date
     Clock *clock = new Clock;
     clock->setObjectName("LockScreenHeaderClock");
-    QGraphicsLinearLayout* clockArea = new QGraphicsLinearLayout(Qt::Horizontal);
-    clockArea->setContentsMargins(0, 0, 0, 0);
-    clockArea->setSpacing(0);
-    clockArea->addStretch();
-    clockArea->addItem(clock);
-
-    QGraphicsLinearLayout* dateArea = new QGraphicsLinearLayout(Qt::Horizontal);
-    dateArea->setContentsMargins(0, 0, 0, 0);
-    dateArea->setSpacing(0);
-    dateArea->addStretch();
-    dateArea->addItem(date);
-
-    // Create a layout for the date and time
     QGraphicsLinearLayout *dateTimeLayout = new QGraphicsLinearLayout(Qt::Vertical);
     dateTimeLayout->setContentsMargins(0, 0, 0, 0);
     dateTimeLayout->setSpacing(0);
-    dateTimeLayout->addItem(clockArea);
-    dateTimeLayout->addItem(dateArea);
+    dateTimeLayout->addItem(clock);
+    dateTimeLayout->addItem(date);
     dateTimeLayout->addStretch();
 
+    // Create a horizontal layout to align the time and date to the right (without allowing them to grow)
+    QGraphicsLinearLayout *horizontalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    horizontalLayout->setContentsMargins(0, 0, 0, 0);
+    horizontalLayout->setSpacing(0);
+    horizontalLayout->addStretch();
+    horizontalLayout->addItem(dateTimeLayout);
+
     // Add the date and time to the main layout
-    layout->addItem(dateTimeLayout);
+    layout->addItem(horizontalLayout);
     controller->setLayout(layout);
 }
 
 LockScreenHeaderView::~LockScreenHeaderView()
 {
-}
-
-void LockScreenHeaderView::applyStyle()
-{
-    MWidgetView::applyStyle();
-
-    date->setFormat(style()->dateFormat());
 }
 
 M_REGISTER_VIEW_NEW(LockScreenHeaderView, MWidgetController)

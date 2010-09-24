@@ -67,7 +67,6 @@ void LockScreenHeaderWithPadlockView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    date->setFormat(style()->dateFormat());
     padlockImageWidget->setVisible(style()->padlockVisible());
 }
 

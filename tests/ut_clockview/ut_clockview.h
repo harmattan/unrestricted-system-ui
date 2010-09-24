@@ -72,6 +72,7 @@ private slots:
     void testUpdateTime();
     void testSetShortDisplay();
     void testUpdateTimeFormat();
+    void testAlignment();
 
 public:
     static QString timeAsString;
