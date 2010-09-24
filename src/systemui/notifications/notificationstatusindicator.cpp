@@ -32,10 +32,10 @@ NotificationStatusIndicator::NotificationStatusIndicator(MWidget *parent) :
 {
     setObjectName(QString(metaObject()->className()));
 
-    NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
+    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
 
     // Connect notification signals
-    connect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
+    connect(&Sysuid::instance()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierSink, SLOT(removeNotification(uint)));
     connect(notifierSink, SIGNAL(notifierSinkActive(bool)), this, SLOT(setActive(bool)));
     connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));

@@ -90,10 +90,10 @@ void Ut_NotificationStatusIndicator::testMenuVisibilityChange()
 
 void Ut_NotificationStatusIndicator::testConnections()
 {
-    NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
+    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
     bool result = m_subject->disconnect(notificationManager, SIGNAL(notificationRestored(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
     QCOMPARE(result, true);
-    result = m_subject->disconnect(&Sysuid::sysuid()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
+    result = m_subject->disconnect(&Sysuid::instance()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
     QCOMPARE(result, true);
     result = m_subject->disconnect(notificationManager, SIGNAL(notificationRemoved(uint)), m_subject->notifierSink, SLOT(removeNotification(uint)));
     QCOMPARE(result, true);

@@ -42,77 +42,77 @@ class Sysuid : public QObject
     Q_OBJECT
 
 public:
-    Sysuid (QObject* parent);
-    virtual ~Sysuid ();
-    static Sysuid* sysuid ();
-    static QString dbusService ();
-    static QString dbusPath ();
+    Sysuid(QObject* parent);
+    virtual ~Sysuid();
+    static Sysuid* instance();
+    static QString dbusService();
+    static QString dbusPath();
 
     /*!
      * Returns a reference to the notification manager.
      *
      * \return a reference to the notification manager
      */
-    NotificationManager &notificationManager ();
+    NotificationManager &notificationManager();
 
     /*!
      * Returns a reference to the compositor notification sink.
      *
      * \return a reference to the compositor notification sink
      */
-    MCompositorNotificationSink& compositorNotificationSink ();
+    MCompositorNotificationSink& compositorNotificationSink();
 
     /*!
      * Returns a reference to the unlock-screen notification sink.
      *
      * \return a reference to the unlock-screen notification sink
      */
-    UnlockNotificationSink& unlockNotificationSink ();
+    UnlockNotificationSink& unlockNotificationSink();
 
 signals:
     /*!
       * Inform about orientation changes
       */
-    void orientationChangeFinished (const M::Orientation &);
+    void orientationChangeFinished(const M::Orientation &);
 
 private slots:
     /*!
      * Enables or disables various sinks according to current use mode
      */
-    void applyUseMode ();
+    void applyUseMode();
 
 private:
-    void loadTranslations ();
+    void loadTranslations();
 
 private:
-    BatteryBusinessLogic    *m_BatteryLogic;
-    ShutdownBusinessLogic   *m_ShutdownLogic;
-    UsbUi                   *m_UsbUi;
-    static Sysuid           *m_Sysuid;
+    BatteryBusinessLogic *batteryBusinessLogic;
+    ShutdownBusinessLogic *shutdownBusinessLogic;
+    UsbUi *usbUi;
+    static Sysuid *instance_;
 
     //! Status area
-    StatusAreaRenderer      *m_statusAreaRenderer;
+    StatusAreaRenderer *statusAreaRenderer;
 
     //! Status indicator menu
-    StatusIndicatorMenuWindow *m_statusIndicatorMenuWindow;
+    StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
 
     //! Notification manager
-    NotificationManager     *m_notificationManager;
+    NotificationManager *notificationManager_;
 
     //! Compositor notification sink for visualizing the notification outside home
-    MCompositorNotificationSink *m_compositorNotificationSink;
+    MCompositorNotificationSink *mCompositorNotificationSink;
 
     //! Feedback notification sink for presenting the notification as a feedback
-    NGFNotificationSink     *m_ngfNotificationSink;
+    NGFNotificationSink *ngfNotificationSink;
 
     //! Unlock screen notification sink for presenting missed events on ui
-    UnlockNotificationSink  *m_unlockNotificationSink;
+    UnlockNotificationSink *unlockNotificationSink_;
 
     //! The system-bus adaptor class for unlock-screen interface
-    SysUidRequest           *m_sysuidRequest;
+    SysUidRequest *sysUidRequest;
 
     //! The volume-control ui
-    VolumeControlUI         *m_volumeBar;
+    VolumeControlUI *volumeControlUI;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

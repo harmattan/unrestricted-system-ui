@@ -28,7 +28,7 @@ NotificationArea::NotificationArea(MWidget *parent) :
     notificationAreaSink(new NotificationAreaSink)
 {
     // Connect notification signals
-    NotificationManager *notificationManager = &Sysuid::sysuid()->notificationManager();
+    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
 
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));

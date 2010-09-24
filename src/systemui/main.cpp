@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -124,7 +122,7 @@ public:
         SYS_DEBUG ("");
         /*
          * No operation, we must not let meegotouch to
-         * raise/activate some hidden sysuid window..
+         * raise/activate some hidden sysuid window.
          */
     }
 };
@@ -147,7 +145,7 @@ main (int argc, char** argv)
     signal (SIGHUP,  termination_signal_handler);
     signal (SIGINT,  termination_signal_handler);
     signal (SIGQUIT,  termination_signal_handler);
-    
+
     signal (SIGILL,  termination_signal_handler);
     signal (SIGSEGV, termination_signal_handler);
     signal (SIGBUS, termination_signal_handler);
@@ -156,7 +154,7 @@ main (int argc, char** argv)
     #else
     signal (SIGINT, sysuid_exit);
     #endif
-    
+
     MApplication app (argc, argv, new SystemUIservice);
     exitPtr = &app;
 
