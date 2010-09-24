@@ -99,10 +99,10 @@ void StatusIndicator::setModelUpdatesEnabled(bool modelUpdatesEnabled)
 void StatusIndicator::updateAnimationStatus()
 {
     if (modelUpdatesEnabled) {
-	SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
+        SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
         model()->setAnimate(animateIfPossible);
     } else {
-	SYS_DEBUG ("setAnimate(false)");
+        SYS_DEBUG ("setAnimate(false)");
         model()->setAnimate(false);
     }
 }
@@ -200,24 +200,19 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWid
 {
     setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
 
-    batterySaveModeEnabled = false;
-#ifdef HAVE_QMSYSTEM
-    if (qmDeviceMode.getPSMState() == Maemo::QmDeviceMode::PSMStateOn) {
-        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
-        batterySaveModeEnabled = true;
-    }
-#endif
-
-    batteryLevel = createContextItem(context, "Battery.ChargePercentage");
+    batteryLevel = createContextItem(context, "Battery.ChargeBars");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
 
     batteryCharging = createContextItem(context, "Battery.IsCharging");
     connect(batteryCharging, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
 
-#ifdef HAVE_QMSYSTEM
-    connect(&qmDeviceMode, SIGNAL(devicePSMStateChanged(Maemo::QmDeviceMode::PSMState)),
-            this, SLOT(batterySaveModeChanged(Maemo::QmDeviceMode::PSMState)));
-#endif
+    batterySaveMode = createContextItem(context, "System.PowerSaveMode");
+    connect(batterySaveMode, SIGNAL(contentsChanged()), this, SLOT(batteryChargingChanged()));
+
+    // Set the initial power save mode (in case it has been switched on before reboot, etc)
+    if (batterySaveMode->value().toBool()) {
+        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+    }
 
     batteryLevelChanged ();
 }
@@ -229,21 +224,35 @@ BatteryStatusIndicator::~BatteryStatusIndicator()
 void BatteryStatusIndicator::batteryLevelChanged()
 {
     if (!batteryCharging->value().toBool()) {
-        setValue(batteryLevel->value().toDouble() * 0.01f);
+        QList<QVariant> chargeBars = batteryLevel->value().toList();
+        if(chargeBars.count() == 2 ) {
+            double remainingBars = chargeBars.at(0).toDouble();
+            double maximumBars = chargeBars.at(1).toDouble();
+
+            // Smoke test - check that charge bar values are valid
+            if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
+                //simple  mapping to percentage value
+                double chargeValue  = remainingBars/maximumBars;
+                setValue(chargeValue);
+            } else {
+                // Error situation
+                setValue(0.0);
+            }
+        }
     }
 }
 
 void BatteryStatusIndicator::batteryChargingChanged()
 {
     if (batteryCharging->value().toBool()) {
-        if (batterySaveModeEnabled) {
+        if (batterySaveMode->value().toBool()) {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE_AND_CHARGING);
         } else {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_CHARGING);
         }
         animateIfPossible = true;
     } else {
-        if (batterySaveModeEnabled) {
+        if (batterySaveMode->value().toBool()) {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
         } else {
             setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
@@ -255,18 +264,6 @@ void BatteryStatusIndicator::batteryChargingChanged()
     //SYS_DEBUG ("extra batteryLevelChanged() call");
     batteryLevelChanged ();
 }
-
-#ifdef HAVE_QMSYSTEM
-void BatteryStatusIndicator::batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state)
-{
-    if (state == Maemo::QmDeviceMode::PSMStateOn) {
-        batterySaveModeEnabled = true;
-    } else {
-        batterySaveModeEnabled = false;
-    }
-    batteryChargingChanged();
-}
-#endif
 
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
     StatusIndicator(parent)

@@ -207,17 +207,10 @@ private slots:
     void batteryLevelChanged();
     void batteryChargingChanged();
 
-#ifdef HAVE_QMSYSTEM
-    void batterySaveModeChanged(Maemo::QmDeviceMode::PSMState state);
-#endif
-
 private:
     ContextItem *batteryLevel;
     ContextItem *batteryCharging;
-#ifdef HAVE_QMSYSTEM
-    Maemo::QmDeviceMode qmDeviceMode;
-#endif
-    bool batterySaveModeEnabled;
+    ContextItem *batterySaveMode;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicator;

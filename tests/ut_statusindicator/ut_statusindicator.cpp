@@ -202,46 +202,62 @@ void Ut_StatusIndicator::testBattery()
 {
     m_subject = new BatteryStatusIndicator(*testContext);
 
-    testContextItems["Battery.ChargePercentage"]->setValue(QVariant(100));
+    // testing full battery
+    QList<QVariant> values;
+    values << QVariant(8) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
     QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 100);
+
+    // testing empty battery
+    values.clear();
+    values << QVariant(0) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 0);
+
+    // testing battery somewhere between empty and full
+    values.clear();
+    values << QVariant(6) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 75);
+
+    // testing battery with invalid charge bar values
+    values.clear();
+    values << QVariant(-1) << QVariant(0);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 0);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
-}
-
-#ifdef HAVE_QMSYSTEM
-void Ut_StatusIndicator::testBatteryWhenQmSystemAvailable()
-{
-    // tests all possible four combinations of states for testContext
-    m_subject = new BatteryStatusIndicator(*testContext);
 
     // battery not charging and power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
-    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOff);
+    testContextItems["System.PowerSaveMode"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
 
     // battery not charging, but power save on
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
-    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOn);
+    testContextItems["System.PowerSaveMode"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("PowerSave") >= 0);
     QVERIFY(m_subject->objectName().indexOf("Charging") < 0);
 
     // battery charging, but power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
-    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOff);
+    testContextItems["System.PowerSaveMode"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
     QVERIFY(m_subject->objectName().indexOf("PowerSave") < 0);
 
     // battery charging and power save on
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
-    qobject_cast<BatteryStatusIndicator*>(m_subject)->batterySaveModeChanged(Maemo::QmDeviceMode::PSMStateOn);
+    testContextItems["System.PowerSaveMode"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("PowerSaveCharging") >= 0);
 }
-#endif
 
 
 void Ut_StatusIndicator::testAlarm()
