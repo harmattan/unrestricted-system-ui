@@ -1,6 +1,8 @@
 system-ui (0.17.1~1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
+  * Implemented: SWP#DUI-3945 Status bar in the lock screen
+  * Implemented: SWP#DUI-3812 Private notification banners for the lock screen
+  * Implemented: SWP#DUI-3815 Opening screen lock when the lock screen window is not on top
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 24 Sep 2010 12:46:00 +0300
 
