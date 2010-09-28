@@ -330,6 +330,7 @@ StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
     maximum-size: 1.6mm 1.6mm;
     padding-top: 0.1mm;
     padding-bottom: 0.1mm;
+    margin-top: 0;
     margin-left: 0;
 }
 
