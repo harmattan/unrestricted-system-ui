@@ -41,6 +41,8 @@
 #include "profilestatusindicator_stub.h"
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
+#include "notifiernotificationsink_stub.h"
+#include "notificationsink_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include "statusindicatormenuwindowstyle.h"
 #include <MSceneWindow>
@@ -119,14 +121,18 @@ void Ut_StatusAreaWithNotifierView::testNotifierAddedToLayout()
 void Ut_StatusAreaWithNotifierView::testStatusIndicatorMenuVisibilityChangedSignal()
 {
     connect(this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
+
+    // verify that we don't do anything when visibility is false
     emit statusIndicatorMenuVisibilityChanged(false);
+    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("clearSink"), 0);
+    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("disableNotificationAdditions"), 1);
+    QCOMPARE(gNotifierNotificationSinkStub->stubLastCallTo("disableNotificationAdditions").parameter<bool>(0), false);
 
-    // Call count is 2 because of two indicators for landscape and portrait
-    QCOMPARE(gNotificationStatusIndicatorStub->stubCallCount("statusIndicatorMenuVisibilityChange"), 2);
-    QCOMPARE(gNotificationStatusIndicatorStub->stubLastCallTo("statusIndicatorMenuVisibilityChange").parameter<bool>(0), false);
-
-    QVERIFY(disconnect(statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), m_subject->landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool))));
-    QVERIFY(disconnect(statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), m_subject->portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool))));
+    // verify that sink is cleared when status menu comes visible
+    emit statusIndicatorMenuVisibilityChanged(true);
+    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("clearSink"), 1);
+    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("disableNotificationAdditions"), 2);
+    QCOMPARE(gNotifierNotificationSinkStub->stubLastCallTo("disableNotificationAdditions").parameter<bool>(0), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaWithNotifierView)

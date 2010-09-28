@@ -25,7 +25,7 @@
 #include "statusareastyle.h"
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
-
+#include "notifiernotificationsink.h"
 
 /*!
  * Status area view draws the status area.
@@ -48,20 +48,17 @@ public:
      */
     virtual ~StatusAreaWithNotifierView();
 
+private slots:
+    //! Slot to listen status indicator menu visibility changes
+    void controlSinkBasedOnVisibility(bool menuVisible);
+
 private:
+    //! Notifier notification sink for the indicators
+    NotifierNotificationSink notifierNotificationSink;
 
     //! Notification indicator
     StatusIndicator *landscapeNotificationIndicator;
     StatusIndicator *portraitNotificationIndicator;
-
-    //! sets up object names for functional testing
-    void setupTestabilityObjectNames();
-
-    //! sets up parents relationship for functional testing
-    void setupTestabilityParents();
-
-    //! set up class for functional testing
-    void setupTestability();
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaWithNotifierView;

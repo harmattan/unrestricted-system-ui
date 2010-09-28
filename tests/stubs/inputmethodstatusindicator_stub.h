@@ -28,12 +28,12 @@
 class InputMethodStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void InputMethodStatusIndicatorConstructor(MWidget *parent);
+    virtual void InputMethodStatusIndicatorConstructor(QGraphicsItem *parent);
     virtual void InputMethodStatusIndicatorDestructor();
 };
 
 // 2. IMPLEMENT STUB
-void InputMethodStatusIndicatorStub::InputMethodStatusIndicatorConstructor(MWidget *parent)
+void InputMethodStatusIndicatorStub::InputMethodStatusIndicatorConstructor(QGraphicsItem *parent)
 {
     Q_UNUSED(parent);
 
@@ -51,7 +51,7 @@ InputMethodStatusIndicatorStub *gInputMethodStatusIndicatorStub = &gDefaultInput
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-InputMethodStatusIndicator::InputMethodStatusIndicator(MWidget *parent)
+InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent)
 {
     gInputMethodStatusIndicatorStub->InputMethodStatusIndicatorConstructor(parent);
 }

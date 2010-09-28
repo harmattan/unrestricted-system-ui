@@ -88,9 +88,10 @@ bool NotifierNotificationSink::isUnseen(const Notification &notification)
 
 void NotifierNotificationSink::playNotifierNGF(bool play)
 {
-    if (play) {
+    if (play && ngfEventId == 0) {
         ngfEventId = ngfAdapter->play(NOTIFIER_NGF_ID);
-    } else {
+    } else if (!play && ngfEventId != 0) {
         ngfAdapter->stop(ngfEventId);
+        ngfEventId = 0;
     }
 }

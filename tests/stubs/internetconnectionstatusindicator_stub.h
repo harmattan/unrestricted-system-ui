@@ -28,13 +28,13 @@
 class InternetConnectionStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void InternetConnectionStatusIndicatorDestructor();
     virtual void updateStatus();
 };
 
 // 2. IMPLEMENT STUB
-void InternetConnectionStatusIndicatorStub::InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void InternetConnectionStatusIndicatorStub::InternetConnectionStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -56,7 +56,7 @@ InternetConnectionStatusIndicatorStub *gInternetConnectionStatusIndicatorStub = 
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent)
+InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gInternetConnectionStatusIndicatorStub->InternetConnectionStatusIndicatorConstructor(context, parent);
 }

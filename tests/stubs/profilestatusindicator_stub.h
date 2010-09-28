@@ -28,13 +28,13 @@
 class ProfileStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void ProfileStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void ProfileStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void ProfileStatusIndicatorDestructor();
     virtual void profileChanged();
 };
 
 // 2. IMPLEMENT STUB
-void ProfileStatusIndicatorStub::ProfileStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void ProfileStatusIndicatorStub::ProfileStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -57,7 +57,7 @@ ProfileStatusIndicatorStub *gProfileStatusIndicatorStub = &gDefaultProfileStatus
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, MWidget *parent)
+ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gProfileStatusIndicatorStub->ProfileStatusIndicatorConstructor(context, parent);
 }

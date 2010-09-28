@@ -38,16 +38,12 @@ public:
      * Constructs a NotificationStatusIndicator.
      * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
      */
-    explicit NotificationStatusIndicator(MWidget *parent = NULL);
+    explicit NotificationStatusIndicator(NotifierNotificationSink *notifierSink, QGraphicsItem *parent = NULL);
 
     virtual ~NotificationStatusIndicator();
 
-public slots:
-    //! Slot to listen status indicator menu visibility changes
-    void statusIndicatorMenuVisibilityChange(bool visible);
-
 private slots:
-    //! Slot to listen whether status indicator is acitive(displaying) or not
+    //! Slot to listen whether status indicator is active (displaying) or not
     void setActive(bool active);
 
 private:

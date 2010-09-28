@@ -28,14 +28,14 @@
 class PhoneNetworkSignalStrengthStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void PhoneNetworkSignalStrengthStatusIndicatorDestructor();
     virtual void signalStrengthChanged();
     virtual void setDisplay(bool display);
 };
 
 // 2. IMPLEMENT STUB
-void PhoneNetworkSignalStrengthStatusIndicatorStub::PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void PhoneNetworkSignalStrengthStatusIndicatorStub::PhoneNetworkSignalStrengthStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -64,7 +64,7 @@ PhoneNetworkSignalStrengthStatusIndicatorStub *gPhoneNetworkSignalStrengthStatus
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent)
+PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gPhoneNetworkSignalStrengthStatusIndicatorStub->PhoneNetworkSignalStrengthStatusIndicatorConstructor(context, parent);
 }

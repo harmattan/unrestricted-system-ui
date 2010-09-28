@@ -9,24 +9,16 @@
 // FIXME - stubgen is not yet finished
 class NotificationStatusIndicatorStub : public StubBase {
   public:
-  virtual void NotificationStatusIndicatorConstructor(MWidget *parent);
+  virtual void NotificationStatusIndicatorConstructor(NotifierNotificationSink *notifierSink, QGraphicsItem *parent);
   virtual void NotificationStatusIndicatorDestructor();
-  virtual void statusIndicatorMenuVisibilityChange(bool visible);
   virtual void setActive(bool active);
 }; 
 
 // 2. IMPLEMENT STUB
-void NotificationStatusIndicatorStub::NotificationStatusIndicatorConstructor(MWidget *parent) {
-  Q_UNUSED(parent);
-
+void NotificationStatusIndicatorStub::NotificationStatusIndicatorConstructor(NotifierNotificationSink *, QGraphicsItem *) {
 }
 void NotificationStatusIndicatorStub::NotificationStatusIndicatorDestructor() {
 
-}
-void NotificationStatusIndicatorStub::statusIndicatorMenuVisibilityChange(bool visible) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<bool >(visible));
-  stubMethodEntered("statusIndicatorMenuVisibilityChange",params);
 }
 
 void NotificationStatusIndicatorStub::setActive(bool active) {
@@ -42,16 +34,13 @@ NotificationStatusIndicatorStub* gNotificationStatusIndicatorStub = &gDefaultNot
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-NotificationStatusIndicator::NotificationStatusIndicator(MWidget *parent) {
-  gNotificationStatusIndicatorStub->NotificationStatusIndicatorConstructor(parent);
+NotificationStatusIndicator::NotificationStatusIndicator(NotifierNotificationSink *notifierSink, QGraphicsItem *parent)
+{
+  gNotificationStatusIndicatorStub->NotificationStatusIndicatorConstructor(notifierSink, parent);
 }
 
 NotificationStatusIndicator::~NotificationStatusIndicator() {
   gNotificationStatusIndicatorStub->NotificationStatusIndicatorDestructor();
-}
-
-void NotificationStatusIndicator::statusIndicatorMenuVisibilityChange(bool visible) {
-  gNotificationStatusIndicatorStub->statusIndicatorMenuVisibilityChange(visible);
 }
 
 void NotificationStatusIndicator::setActive(bool active) {

@@ -25,17 +25,14 @@
 
 StatusAreaWithNotifierView::StatusAreaWithNotifierView(StatusArea *controller) :
     StatusAreaView(controller),
-    landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
-    portraitNotificationIndicator(new NotificationStatusIndicator(controller))
+    landscapeNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
+    portraitNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller))
 {
-    //Getting layout from controller that has been initialized in base class
-    if (QGraphicsAnchorLayout *compositeLayout =
-        dynamic_cast<QGraphicsAnchorLayout *> (controller->layout()))
-    {
-        // Connet controller's singal for notifying status menu window's visibility change
-        connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), landscapeNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
-        connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), portraitNotificationIndicator, SLOT(statusIndicatorMenuVisibilityChange(bool)));
+    // Connect controller's signal for notifying status menu window's visibility change
+    connect(controller, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), this, SLOT(controlSinkBasedOnVisibility(bool)));
 
+    // Getting layout from controller that has been initialized in base class
+    if (QGraphicsAnchorLayout *compositeLayout = dynamic_cast<QGraphicsAnchorLayout *> (controller->layout())) {
         // Add notification indicator and anchor it to middle of landscape and portrait widgets
         compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorVerticalCenter, landscapeWidget, Qt::AnchorVerticalCenter);
         compositeLayout->addAnchor(landscapeNotificationIndicator, Qt::AnchorHorizontalCenter, landscapeWidget, Qt::AnchorHorizontalCenter);
@@ -43,29 +40,25 @@ StatusAreaWithNotifierView::StatusAreaWithNotifierView(StatusArea *controller) :
         compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorVerticalCenter, portraitWidget, Qt::AnchorVerticalCenter);
         compositeLayout->addAnchor(portraitNotificationIndicator, Qt::AnchorHorizontalCenter, portraitWidget, Qt::AnchorHorizontalCenter);
     }
-    //Set up the class for functional testing
-    setupTestability();
-}
 
-void StatusAreaWithNotifierView::setupTestabilityObjectNames()
-{
-}
-
-void StatusAreaWithNotifierView::setupTestabilityParents()
-{
+    // Set up the class for functional testing
     landscapeNotificationIndicator->setParent(landscapeWidget);
     portraitNotificationIndicator->setParent(portraitWidget);
-}
-
-void StatusAreaWithNotifierView::setupTestability()
-{
-    setupTestabilityObjectNames();
-    setupTestabilityParents();
 }
 
 StatusAreaWithNotifierView::~StatusAreaWithNotifierView()
 {
 }
 
+void StatusAreaWithNotifierView::controlSinkBasedOnVisibility(bool menuVisible)
+{
+    // When status menu is opened remove all notifications from the sink
+    if (menuVisible) {
+        notifierNotificationSink.clearSink();
+    }
+
+    // We need to enable/disable notifications from being added to notifier sink when status menu is invisible/visible
+    notifierNotificationSink.disableNotificationAdditions(menuVisible);
+}
 
 M_REGISTER_VIEW_NEW(StatusAreaWithNotifierView, StatusArea)

@@ -28,14 +28,14 @@
 class PresenceStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void PresenceStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void PresenceStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void PresenceStatusIndicatorDestructor();
     virtual void presenceChanged();
     ContextItem *presence ;
 };
 
 // 2. IMPLEMENT STUB
-void PresenceStatusIndicatorStub::PresenceStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void PresenceStatusIndicatorStub::PresenceStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -58,7 +58,7 @@ PresenceStatusIndicatorStub *gPresenceStatusIndicatorStub = &gDefaultPresenceSta
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, MWidget *parent)
+PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gPresenceStatusIndicatorStub->PresenceStatusIndicatorConstructor(context, parent);
 }

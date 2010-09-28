@@ -28,13 +28,13 @@
 class PhoneNetworkStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void PhoneNetworkStatusIndicatorDestructor();
     virtual void phoneNetworkChanged();
 };
 
 // 2. IMPLEMENT STUB
-void PhoneNetworkStatusIndicatorStub::PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void PhoneNetworkStatusIndicatorStub::PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -57,7 +57,7 @@ PhoneNetworkStatusIndicatorStub *gPhoneNetworkStatusIndicatorStub = &gDefaultPho
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent)
+PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gPhoneNetworkStatusIndicatorStub->PhoneNetworkStatusIndicatorConstructor(context, parent);
 }

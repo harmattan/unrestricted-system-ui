@@ -47,7 +47,7 @@ public:
      *
      * \param parent parent MWidget
      */
-    explicit StatusIndicator(MWidget *parent = NULL);
+    explicit StatusIndicator(QGraphicsItem *parent = NULL);
 
     /*!
      * \brief Destructor
@@ -137,7 +137,7 @@ public:
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~PhoneNetworkSignalStrengthStatusIndicator();
 
@@ -166,7 +166,7 @@ public:
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit PhoneNetworkTypeStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~PhoneNetworkTypeStatusIndicator();
 
@@ -199,7 +199,7 @@ public:
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit BatteryStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit BatteryStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~BatteryStatusIndicator();
 
@@ -232,7 +232,7 @@ public:
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit AlarmStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit AlarmStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~AlarmStatusIndicator();
 
@@ -263,7 +263,7 @@ public:
      * \param parent parent MWidget
      */
     explicit BluetoothStatusIndicator(ApplicationContext &context,
-                                      MWidget *parent = NULL);
+                                      QGraphicsItem *parent = NULL);
 
     virtual ~BluetoothStatusIndicator();
 
@@ -291,7 +291,7 @@ public:
      * \param parent parent MWidget
      */
     explicit PresenceStatusIndicator(ApplicationContext &context,
-                                      MWidget *parent = NULL);
+                                      QGraphicsItem *parent = NULL);
 
     virtual ~PresenceStatusIndicator();
 
@@ -313,7 +313,7 @@ class InternetConnectionStatusIndicator : public StatusIndicator
     M_CONTROLLER(InternetConnectionStatusIndicator)
 
 public:
-    explicit InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit InternetConnectionStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~InternetConnectionStatusIndicator();
 
@@ -344,7 +344,7 @@ public:
      * \param context the application context to get status information from
      * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
      */
-    explicit PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~PhoneNetworkStatusIndicator();
 
@@ -370,7 +370,7 @@ public:
      *
      * \param parent parent MWidget
      */
-    explicit InputMethodStatusIndicator(MWidget *parent = NULL);
+    explicit InputMethodStatusIndicator(QGraphicsItem *parent = NULL);
 
     virtual ~InputMethodStatusIndicator();
 
@@ -388,7 +388,7 @@ class CallStatusIndicator : public StatusIndicator
     M_CONTROLLER(CallStatusIndicator)
 
 public:
-    explicit CallStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit CallStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~CallStatusIndicator();
 
@@ -410,7 +410,7 @@ class ProfileStatusIndicator : public StatusIndicator
     M_CONTROLLER(ProfileStatusIndicator)
 
 public:
-    explicit ProfileStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit ProfileStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~ProfileStatusIndicator();
 
@@ -436,7 +436,7 @@ public:
      * \param context the application context to get GPS status information from
      * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
      */
-    explicit GPSStatusIndicator(ApplicationContext &context, MWidget *parent = NULL);
+    explicit GPSStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
 
     virtual ~GPSStatusIndicator();
 

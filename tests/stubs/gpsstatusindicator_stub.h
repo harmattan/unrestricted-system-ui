@@ -28,13 +28,13 @@
 class GPSStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void GPSStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void GPSStatusIndicatorDestructor();
     virtual void gpsStateChanged();
 };
 
 // 2. IMPLEMENT STUB
-void GPSStatusIndicatorStub::GPSStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void GPSStatusIndicatorStub::GPSStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -57,7 +57,7 @@ GPSStatusIndicatorStub *gGPSStatusIndicatorStub = &gDefaultGPSStatusIndicatorStu
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, MWidget *parent)
+GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gGPSStatusIndicatorStub->GPSStatusIndicatorConstructor(context, parent);
 }

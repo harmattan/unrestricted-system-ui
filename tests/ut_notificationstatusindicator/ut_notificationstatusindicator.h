@@ -23,6 +23,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #include "notificationstatusindicator.h"
+#include "notifiernotificationsink.h"
 
 class MApplication;
 class NotificationManager;
@@ -37,6 +38,7 @@ private:
     NotificationStatusIndicator *m_subject;
     NotificationManager *mgr;
     MCompositorNotificationSink *compositorSink;
+    NotifierNotificationSink notifierNotificationSink;
 
 signals:
     void notifierSinkActive(bool);
@@ -56,8 +58,6 @@ private slots:
 
     // Tests active state of status indicator
     void testSetActive();
-    // Tests notification status indicator when status indicator menu visibility changes
-    void testMenuVisibilityChange();
     // Test that notification manager is connected to notifier sink
     void testConnections();
 };

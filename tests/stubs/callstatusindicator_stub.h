@@ -28,13 +28,13 @@
 class CallStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void CallStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void CallStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void CallStatusIndicatorDestructor();
     virtual void callOrMutedChanged();
 };
 
 // 2. IMPLEMENT STUB
-void CallStatusIndicatorStub::CallStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void CallStatusIndicatorStub::CallStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -57,7 +57,7 @@ CallStatusIndicatorStub *gCallStatusIndicatorStub = &gDefaultCallStatusIndicator
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, MWidget *parent)
+CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gCallStatusIndicatorStub->CallStatusIndicatorConstructor(context, parent);
 }

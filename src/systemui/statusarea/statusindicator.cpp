@@ -37,7 +37,7 @@ static const QString BATTERY_MODE_CHARGING = "Charging";
 static const QString BATTERY_MODE_POWERSAVE = "PowerSave";
 static const QString BATTERY_MODE_POWERSAVE_AND_CHARGING = "PowerSaveCharging";
 
-StatusIndicator::StatusIndicator(MWidget *parent) :
+StatusIndicator::StatusIndicator(QGraphicsItem *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
     modelUpdatesEnabled(true),
@@ -114,7 +114,7 @@ ContextItem *StatusIndicator::createContextItem(ApplicationContext& context, con
     return item;
 }
 
-PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, MWidget *parent) :
+PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -145,7 +145,7 @@ void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
 }
 
 
-PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, MWidget *parent) :
+PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
         StatusIndicator(parent), networkAvailable(false)
 {
     cellularDataTechnology = createContextItem(context, "Cellular.DataTechnology");
@@ -195,7 +195,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     setObjectName(metaObject()->className() + postFix);
 }
 
-BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, MWidget *parent) :
+BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
@@ -265,7 +265,7 @@ void BatteryStatusIndicator::batteryChargingChanged()
     batteryLevelChanged ();
 }
 
-AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent) :
+AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -292,7 +292,7 @@ void AlarmStatusIndicator::alarmChanged()
     emit alarmSettingChanged(isSet);
 }
 
-BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, MWidget *parent) :
+BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -323,7 +323,7 @@ void BluetoothStatusIndicator::bluetoothChanged()
     }
 }
 
-PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, MWidget *parent) :
+PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -352,7 +352,7 @@ void PresenceStatusIndicator::presenceChanged()
     }
 }
 
-InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, MWidget *parent) :
+InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     connectionType = createContextItem(context, "Internet.NetworkType");
@@ -410,7 +410,7 @@ void InternetConnectionStatusIndicator::updateStatus()
     updateAnimationStatus();
 }
 
-PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, MWidget *parent) :
+PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -429,7 +429,7 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
     setValue(networkName->value().toString().left(13));
 }
 
-InputMethodStatusIndicator::InputMethodStatusIndicator(MWidget *parent) :
+InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -445,7 +445,7 @@ void InputMethodStatusIndicator::setIconID(const QString &iconID)
     setValue(iconID);
 }
 
-CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, MWidget *parent) :
+CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -482,7 +482,7 @@ void CallStatusIndicator::callOrMutedChanged()
     updateAnimationStatus();
 }
 
-ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, MWidget *parent) :
+ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
@@ -504,7 +504,7 @@ void ProfileStatusIndicator::profileChanged()
     }
 }
 
-GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, MWidget *parent) :
+GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());

@@ -28,7 +28,7 @@
 class StatusIndicatorStub : public StubBase
 {
 public:
-    virtual void StatusIndicatorConstructor(MWidget *parent);
+    virtual void StatusIndicatorConstructor(QGraphicsItem *parent);
     virtual void StatusIndicatorDestructor();
     virtual void updateGeometry();
     virtual void enterDisplayEvent();
@@ -40,7 +40,7 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void StatusIndicatorStub::StatusIndicatorConstructor(MWidget *parent)
+void StatusIndicatorStub::StatusIndicatorConstructor(QGraphicsItem *parent)
 {
     Q_UNUSED(parent);
 
@@ -97,7 +97,7 @@ StatusIndicatorStub *gStatusIndicatorStub = &gDefaultStatusIndicatorStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-StatusIndicator::StatusIndicator(MWidget *parent)
+StatusIndicator::StatusIndicator(QGraphicsItem *parent)
 {
     gStatusIndicatorStub->StatusIndicatorConstructor(parent);
 }

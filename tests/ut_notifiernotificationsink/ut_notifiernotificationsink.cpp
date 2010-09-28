@@ -43,6 +43,7 @@ void Ut_NotifierNotificationSink::init()
     connect(this, SIGNAL(removeGroup(uint)), m_subject, SLOT(removeGroup(uint)));
 
     gNGFAdapterStub->stubReset();
+    gNGFAdapterStub->stubSetReturnValue("play", (uint)1);
 }
 
 void Ut_NotifierNotificationSink::cleanup()
@@ -205,19 +206,33 @@ void Ut_NotifierNotificationSink::testWhenRemoveSystemNotificationNotificationId
 
 void Ut_NotifierNotificationSink::testNGFEvents()
 {
-    NotificationParameters params;
-    params.add(COUNT, QVariant((uint)1));
-    params.add(UNSEEN, true);
-    Notification notification(1, 0, 2, params, Notification::ApplicationEvent, 0);
+    NotificationParameters params1;
+    NotificationParameters params2;
+    params1.add(COUNT, QVariant((uint)1));
+    params1.add(UNSEEN, true);
+    params2.add(COUNT, QVariant((uint)1));
+    params2.add(UNSEEN, true);
+    Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
+    Notification notification2(2, 0, 2, params2, Notification::ApplicationEvent, 0);
 
     // Test that NGF start is called when notification is added
-    emit addNotification(notification);
+    emit addNotification(notification1);
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+
+    // Test that NGF start is not called again if it has already been called
+    emit addNotification(notification2);
 
     QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
 
     // Test that NGF stop is called when last notification is removed
     emit removeNotification(1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
+    emit removeNotification(2);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 
+    // Test that NGF stop is not called again if it has already been called
+    emit removeNotification(2);
     QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 }
 

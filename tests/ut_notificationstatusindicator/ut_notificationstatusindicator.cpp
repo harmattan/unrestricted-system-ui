@@ -37,7 +37,7 @@ void Ut_NotificationStatusIndicator::init()
     compositorSink = new MCompositorNotificationSink;
     gSysuidStub->stubSetReturnValue("compositorNotificationSink", compositorSink);
     gSysuidStub->stubSetReturnValue("notificationManager", mgr);
-    m_subject = new NotificationStatusIndicator;
+    m_subject = new NotificationStatusIndicator(&notifierNotificationSink);
 }
 
 void Ut_NotificationStatusIndicator::cleanup()
@@ -70,27 +70,13 @@ void Ut_NotificationStatusIndicator::testSetActive()
     QVERIFY(m_subject->objectName().indexOf("On") >= 0);
 
     emit notifierSinkActive(false);
-     QVERIFY(m_subject->objectName().indexOf("On") < 0);
-}
-
-void Ut_NotificationStatusIndicator::testMenuVisibilityChange()
-{
-    // verify that we don't do anything when visibility is false
-    m_subject->statusIndicatorMenuVisibilityChange(false);
-    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("clearSink"), 0);
-    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("disableNotificationAdditions"), 1);
-    QCOMPARE(gNotifierNotificationSinkStub->stubLastCallTo("disableNotificationAdditions").parameter<bool>(0), false);
-
-    // verify that sink is cleared when status menu comes visible
-    m_subject->statusIndicatorMenuVisibilityChange(true);
-    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("clearSink"), 1);
-    QCOMPARE(gNotifierNotificationSinkStub->stubCallCount("disableNotificationAdditions"), 2);
-    QCOMPARE(gNotifierNotificationSinkStub->stubLastCallTo("disableNotificationAdditions").parameter<bool>(0), true);
+    QVERIFY(m_subject->objectName().indexOf("On") < 0);
 }
 
 void Ut_NotificationStatusIndicator::testConnections()
 {
     NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
+    QCOMPARE(m_subject->notifierSink, &notifierNotificationSink);
     bool result = m_subject->disconnect(notificationManager, SIGNAL(notificationRestored(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));
     QCOMPARE(result, true);
     result = m_subject->disconnect(&Sysuid::instance()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), m_subject->notifierSink, SLOT(addNotification(const Notification &)));

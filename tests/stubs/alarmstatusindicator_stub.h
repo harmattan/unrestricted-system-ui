@@ -28,13 +28,13 @@
 class AlarmStatusIndicatorStub : public StubBase
 {
 public:
-    virtual void AlarmStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent);
+    virtual void AlarmStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void AlarmStatusIndicatorDestructor();
     virtual void alarmChanged();
 };
 
 // 2. IMPLEMENT STUB
-void AlarmStatusIndicatorStub::AlarmStatusIndicatorConstructor(ApplicationContext &context, MWidget *parent)
+void AlarmStatusIndicatorStub::AlarmStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent)
 {
     Q_UNUSED(context);
     Q_UNUSED(parent);
@@ -57,7 +57,7 @@ AlarmStatusIndicatorStub *gAlarmStatusIndicatorStub = &gDefaultAlarmStatusIndica
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, MWidget *parent)
+AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, QGraphicsItem *parent)
 {
     gAlarmStatusIndicatorStub->AlarmStatusIndicatorConstructor(context, parent);
 }
