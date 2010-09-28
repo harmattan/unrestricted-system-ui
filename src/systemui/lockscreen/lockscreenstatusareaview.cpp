@@ -30,10 +30,17 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     phoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     batteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
-    phoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller))
+    phoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
+    internetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
+    bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    gpsIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
+    presenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
+    profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
+    callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
+    alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller))
 {
     // Connect related phone network indicators
-    connect(phoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+    connect(phoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
 
     // Put indicators into the layout
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -43,6 +50,14 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addItem(phoneSignalStrengthIndicator);
     layout->addItem(phoneNetworkTypeIndicator);
     layout->addItem(phoneNetworkIndicator);
+    layout->addStretch();
+    layout->addItem(internetConnectionIndicator);
+    layout->addItem(bluetoothIndicator);
+    layout->addItem(gpsIndicator);
+    layout->addItem(presenceIndicator);
+    layout->addItem(profileIndicator);
+    layout->addItem(callIndicator);
+    layout->addItem(alarmIndicator);
     controller->setLayout(layout);
 }
 

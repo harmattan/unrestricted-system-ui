@@ -553,6 +553,7 @@ LockScreenStatusAreaStyle {
     minimum-size: 100% 3mm;
     preferred-size: 100% 3mm;
     maximum-size: 100% 3mm;
+    background-color: #000000;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;

@@ -29,7 +29,7 @@ class StatusArea;
 class StatusIndicator;
 
 /*!
- * Status area view draws the status area.
+ * Lock screen status area view draws the status area for the lock screen.
  */
 class LockScreenStatusAreaView : public MWidgetView
 {
@@ -67,6 +67,27 @@ private:
 
     //! Phone network type indicator
     StatusIndicator *phoneNetworkTypeIndicator;
+
+    //! Internet connection indicator
+    StatusIndicator *internetConnectionIndicator;
+
+    //! Bluetooth indicator
+    StatusIndicator *bluetoothIndicator;
+
+    //! GPS indicator
+    StatusIndicator *gpsIndicator;
+
+    //! Presence indicator
+    StatusIndicator *presenceIndicator;
+
+    //! Profile indicator
+    StatusIndicator *profileIndicator;
+
+    //! Call indicator
+    StatusIndicator *callIndicator;
+
+    //! Alarm indicator
+    StatusIndicator *alarmIndicator;
 };
 
-#endif // STATUSAREAVIEW_H
+#endif // LOCKSCREENSTATUSAREAVIEW_H
