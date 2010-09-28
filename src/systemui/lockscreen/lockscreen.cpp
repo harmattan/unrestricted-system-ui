@@ -20,6 +20,7 @@
 
 LockScreen::LockScreen(QGraphicsItem *parent) : MSceneWindow(parent)
 {
+    connect(this, SIGNAL(displayExited()), this, SLOT(sliderUnlocked()));
 }
 
 LockScreen::~LockScreen()
@@ -28,7 +29,12 @@ LockScreen::~LockScreen()
 
 void LockScreen::sliderUnlocked()
 {
-    emit unlocked();
+#ifdef HAVE_QMSYSTEM
+    if(displayState.get() == Maemo::QmDisplayState::On)
+#endif
+    {
+        emit unlocked();
+    }
 }
 
 void LockScreen::reset()

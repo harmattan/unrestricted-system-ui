@@ -41,6 +41,7 @@ private slots:
     void cleanupTestCase();
 
     void testSliderUnlocked();
+    void testWhenDisplayExitsLockScreenIsUnlocked();
 
 private:
     MApplication *app;

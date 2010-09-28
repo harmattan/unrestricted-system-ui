@@ -20,6 +20,7 @@
 #define LOCKSCREENWINDOW_H
 
 #include <MWindow>
+#include <X11/Xdefs.h>
 
 class LockScreen;
 
@@ -43,6 +44,9 @@ signals:
 
 private:
     LockScreen *lockScreen;
+    //! Set window properties to not show the window in the switcher
+    void excludeFromTaskBar();
+    void changeNetWmState(bool set, Atom one, Atom two = 0);
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenWindow;

@@ -71,6 +71,7 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
         // Whenever we're showing the lock screen we need to reset its state
         lockScreenWindow->reset();
         lockScreenWindow->show();
+        lockScreenWindow->raise();
     } else {
         lockScreenWindow->hide();
     }

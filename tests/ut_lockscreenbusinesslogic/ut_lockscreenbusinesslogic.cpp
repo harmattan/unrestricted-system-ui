@@ -43,6 +43,12 @@ Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
 }
 #endif
 
+bool gQWidgetRaiseCalled = false;
+void QWidget::raise()
+{
+    gQWidgetRaiseCalled = true;
+}
+
 void Ut_LockScreenBusinessLogic::init()
 {
     gLockScreenWindowStub->stubReset();
@@ -53,6 +59,7 @@ void Ut_LockScreenBusinessLogic::init()
 
 void Ut_LockScreenBusinessLogic::cleanup()
 {
+    gQWidgetRaiseCalled = false;
 }
 
 void Ut_LockScreenBusinessLogic::initTestCase()
@@ -96,7 +103,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     spy.clear ();
 #endif
     QCOMPARE(logic.lockScreenWindow->isVisible(), true);
-
+    QCOMPARE(gQWidgetRaiseCalled, true);
     // Check whether the lock-screen-ui state has be reset to defaults
     QCOMPARE(gLockScreenWindowStub->stubCallCount("reset"), 1);
 

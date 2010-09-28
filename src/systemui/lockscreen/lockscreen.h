@@ -21,6 +21,10 @@
 
 #include <MSceneWindow>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+#endif
+
 class LockScreen : public MSceneWindow
 {
     Q_OBJECT
@@ -37,6 +41,13 @@ signals:
 
 private slots:
     void sliderUnlocked();
+
+private:
+#ifdef HAVE_QMSYSTEM
+    //! Keeps track if the display is on/off/dimmed
+    Maemo::QmDisplayState displayState;
+#endif
+
 };
 
 #endif

@@ -55,4 +55,37 @@ void LockScreenWindow::showEvent(QShowEvent *event)
         long layer = 2;
         X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
+    excludeFromTaskBar();
 }
+
+void LockScreenWindow::excludeFromTaskBar()
+{
+    // Tell the window to not to be shown in the switcher
+    Atom skipTaskbarAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
+    changeNetWmState(true, skipTaskbarAtom);
+
+    Atom netWmStateAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_WM_STATE", False);
+    QVector<Atom> atoms;
+    atoms.append(skipTaskbarAtom);
+    X11Wrapper::XChangeProperty(QX11Info::display(), internalWinId(), netWmStateAtom, XA_ATOM, 32, PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
+ }
+
+void LockScreenWindow::changeNetWmState(bool set, Atom one, Atom two)
+{
+    XEvent e;
+    e.xclient.type = ClientMessage;
+    Display *display = QX11Info::display();
+    Atom netWmStateAtom = X11Wrapper::XInternAtom(display, "_NET_WM_STATE", FALSE);
+    e.xclient.message_type = netWmStateAtom;
+    e.xclient.display = display;
+    e.xclient.window = internalWinId();
+    e.xclient.format = 32;
+    e.xclient.data.l[0] = set ? 1 : 0;
+    e.xclient.data.l[1] = one;
+    e.xclient.data.l[2] = two;
+    e.xclient.data.l[3] = 0;
+   e.xclient.data.l[4] = 0;
+    X11Wrapper::XSendEvent(display, RootWindow(display, x11Info().screen()), FALSE, (SubstructureNotifyMask | SubstructureRedirectMask), &e);
+    X11Wrapper::XSync(display, FALSE);
+}
+

@@ -22,6 +22,15 @@
 #include <MApplication>
 #include <MWindow>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+Maemo::QmDisplayState::DisplayState gDisplayState = Maemo::QmDisplayState::Unknown;
+Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
+{
+    return gDisplayState;
+}
+#endif
+
 void Ut_LockScreen::init()
 {
     lockScreen = new LockScreen;
@@ -30,6 +39,7 @@ void Ut_LockScreen::init()
 void Ut_LockScreen::cleanup()
 {
     delete lockScreen;
+    gDisplayState = Maemo::QmDisplayState::Unknown;
 }
 
 void Ut_LockScreen::initTestCase()
@@ -48,9 +58,24 @@ void Ut_LockScreen::cleanupTestCase()
 void Ut_LockScreen::testSliderUnlocked()
 {
     connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
+    gDisplayState = Maemo::QmDisplayState::On;
     QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
     emit unlocked();
     QCOMPARE(spy.count(), 1);
+
+    gDisplayState = Maemo::QmDisplayState::Off;
+    emit unlocked();
+    QCOMPARE(spy.count(), 1);
+
+    gDisplayState = Maemo::QmDisplayState::Dimmed;
+    emit unlocked();
+    QCOMPARE(spy.count(), 1);
+}
+
+void Ut_LockScreen::testWhenDisplayExitsLockScreenIsUnlocked()
+{
+    bool ret = disconnect(lockScreen, SIGNAL(displayExited()), lockScreen, SLOT(sliderUnlocked()));
+    QCOMPARE(ret, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreen)
