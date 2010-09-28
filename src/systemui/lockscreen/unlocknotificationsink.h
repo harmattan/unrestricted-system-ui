@@ -4,6 +4,8 @@
 #include <QObject>
 #include "notificationsink.h"
 
+class MGConfItem;
+
 class UnlockNotificationSink : public NotificationSink
 {
     Q_OBJECT
@@ -22,7 +24,10 @@ protected:
     bool canAddNotification (const Notification &notification);
 
 private:
-    bool             m_enabled;
+    bool m_enabled;
+
+    //! GConf key for enabling/disabling private notifications
+    MGConfItem *privateNotificationSetting;
 
 #ifdef UNIT_TEST
 friend class Ut_UnlockNotificationSink;

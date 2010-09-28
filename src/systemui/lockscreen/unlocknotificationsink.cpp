@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 #include <MLocale>
+#include <MGConfItem>
 #include "unlocknotificationsink.h"
 #include "unlockmissedevents.h"
 #include "genericnotificationparameterfactory.h"
@@ -50,7 +51,7 @@
 
 
 UnlockNotificationSink::UnlockNotificationSink () :
-    m_enabled (false)
+    m_enabled (false), privateNotificationSetting(new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this))
 {
     SYS_DEBUG ("");
 }
@@ -127,10 +128,7 @@ UnlockNotificationSink::addNotification (const Notification &notification)
 
     QString lastSummary;
 
-    // TODO: should show generic text as the summary if some at this point unknown setting is enabled
-    if(true) {
-        lastSummary = notification.parameters ().value(NotificationWidgetParameterFactory::summaryKey ()).toString();
-    } else {
+    if(privateNotificationSetting->value().toBool()) {
         QString genericTextId = notification.parameters().value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
 
         if(!genericTextId.isEmpty()) {
@@ -145,6 +143,8 @@ UnlockNotificationSink::addNotification (const Notification &notification)
                 lastSummary = qtTrId(genericTextId.toUtf8());
             }
         }
+    } else {
+        lastSummary = notification.parameters ().value(NotificationWidgetParameterFactory::summaryKey ()).toString();
     }
 
     SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));

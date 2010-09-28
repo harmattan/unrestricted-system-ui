@@ -30,6 +30,7 @@
 #include <QList>
 #include <QVariant>
 #include <MLocale>
+#include <MGConfItem>
 
 // Users group and user id:
 #define GID 29999
@@ -66,6 +67,19 @@ void MLocale::setDefault(const MLocale &locale)
     gSetDefaultLocale = const_cast<MLocale*>(&locale);
 }
 
+// MGConfItem stubs
+
+bool gMGConfPrivateNotificationValue;
+QVariant MGConfItem::value() const
+{
+    if(this->key() == "/desktop/meego/privacy/private_lockscreen_notifications") {
+        return QVariant(gMGConfPrivateNotificationValue);
+    }
+
+    return QVariant();
+}
+
+
 static int argc = 1;
 static char *app_name = (char *) "./ut_unlocknotificationsink";
 
@@ -92,6 +106,7 @@ Ut_UnlockNotificationSink::init ()
     gInstalledTrCatalog = "";
     gInstalledCatalogLocale = NULL;
     gSetDefaultLocale = NULL;
+    gMGConfPrivateNotificationValue = false;
 }
 
 void
@@ -224,9 +239,8 @@ void Ut_UnlockNotificationSink::testWhenPrivacyModeOffThenSummaryIsFromNotificat
 void Ut_UnlockNotificationSink::testWhenPrivacyModeOnAndGenericTextIdPresentAndCatalogueNotPresentThenSummaryIsEmpty()
 {
     sink->setLockedState(true);
-    // TODO: set privacy mode on when it's known what sets it
+    gMGConfPrivateNotificationValue = true;
 
-    /*
     NotificationParameters params;
     params.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
 
@@ -236,15 +250,13 @@ void Ut_UnlockNotificationSink::testWhenPrivacyModeOnAndGenericTextIdPresentAndC
 
     QCOMPARE(gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
     QCOMPARE(gUnlockMissedEventsStub->stubLastCallTo("addNotification").parameter<QString>(1), QString(""));
-    */
 }
 
 void Ut_UnlockNotificationSink::testWhenPrivacyModeOnAndGenericTextIdPresentAndCataloguePresentThenSummaryIsSet()
 {
     sink->setLockedState(true);
-    // TODO: set privacy mode on when it's known what sets it
+    gMGConfPrivateNotificationValue = true;
 
-    /*
     QString catalogue("translationcatalogue");
 
     NotificationParameters params;
@@ -259,7 +271,6 @@ void Ut_UnlockNotificationSink::testWhenPrivacyModeOnAndGenericTextIdPresentAndC
     QCOMPARE(gSetDefaultLocale, gInstalledCatalogLocale);
     QCOMPARE(gUnlockMissedEventsStub->stubCallCount ("addNotification"), 1);
     QCOMPARE(gUnlockMissedEventsStub->stubLastCallTo("addNotification").parameter<QString>(1), QString("translatedstring"));
-    */
 }
 
 
