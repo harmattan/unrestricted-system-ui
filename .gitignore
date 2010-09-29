@@ -16,6 +16,8 @@
 lib
 *.qm
 *.ts
+.project
+.cproject
 core
 doc/html
 debian/system-ui
