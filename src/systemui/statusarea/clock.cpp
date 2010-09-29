@@ -18,22 +18,35 @@
 ****************************************************************************/
 
 #include "clock.h"
+#include <MLocale>
 
-Clock::Clock(QGraphicsItem *parent) : MWidgetController(new ClockModel, parent)
+Clock::Clock(QGraphicsItem *parent) :
+    MWidgetController(new ClockModel, parent),
+    locale(MLocale::createSystemMLocale())
 {
-#ifdef HAVE_QMSYSTEM
     // Set the initial 24 hour mode
-    model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);
+    updateLocaleSettings();
 
-    // Be interested in changes in the 24 hour mode
+#ifdef HAVE_QMSYSTEM
+    // Be interested in changes to system time
     connect(&qmTime, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
             this, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
 #endif
+
+    // Be interested in changes to 24h mode
+    connect(locale.data(), SIGNAL(settingsChanged()),
+            this, SLOT(updateLocaleSettings()));
+    locale->connectSettings();
 
     // Configure the timer
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateModelAndSetupTimer()));
     updateModelAndSetupTimer();
+}
+
+
+Clock::~Clock()
+{
 }
 
 void Clock::updateModelAndSetupTimer()
@@ -55,28 +68,22 @@ void Clock::updateModelAndSetupTimer()
 #ifdef HAVE_QMSYSTEM
 void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged)
 {
-    bool timeChanged = false;
-    bool settingsChanged = false;
-
-    if (whatChanged == Maemo::QmTimeOnlySettingsChanged) {
-        settingsChanged = true;
-    } else if (whatChanged == Maemo::QmTimeTimeChanged) {
-        timeChanged = true;
-        settingsChanged = true;
-    }
-
     if (whatChanged == Maemo::QmTimeTimeChanged) {
         // Set the time when it was changed (set by the user)
         updateModelAndSetupTimer();
     }
-
-    if (whatChanged == Maemo::QmTimeOnlySettingsChanged ||
-        whatChanged == Maemo::QmTimeTimeChanged) {
-        // Set the 24 hour mode when settings have changed
-        model()->setTimeFormat24h(qmTime.getTimeFormat() == Maemo::QmTime::format24h);
-    }
 }
 #endif
+
+void Clock::updateLocaleSettings()
+{
+    MLocale::TimeFormat24h currentFormat = locale->timeFormat24h();
+    if (currentFormat == MLocale::LocaleDefaultTimeFormat24h) {
+        currentFormat = locale->defaultTimeFormat24h();
+    }
+    model()->setTimeFormat24h(
+        MLocale::TwentyFourHourTimeFormat24h == currentFormat);
+}
 
 void Clock::setShortDisplay(bool isShort) {
     // Set the short display model field

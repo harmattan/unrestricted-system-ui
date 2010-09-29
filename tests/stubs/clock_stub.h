@@ -21,18 +21,19 @@
 
 #include "clock.h"
 #include <stubbase.h>
-
+#include <MLocale>
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
 class ClockStub : public StubBase {
   public:
   virtual void ClockConstructor(QGraphicsItem *parent);
-
+  virtual void ClockDestructor();
   virtual void updateModelAndSetupTimer();
 #ifdef HAVE_QMSYSTEM
   virtual void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
 #endif
+  virtual void updateLocaleSettings();
   virtual void setShortDisplay(bool isShort);
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
@@ -41,6 +42,9 @@ class ClockStub : public StubBase {
 // 2. IMPLEMENT STUB
 void ClockStub::ClockConstructor(QGraphicsItem *parent) {
   Q_UNUSED(parent);
+}
+
+void ClockStub::ClockDestructor() {
 }
 
 void ClockStub::updateModelAndSetupTimer() {
@@ -54,6 +58,11 @@ void ClockStub::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   stubMethodEntered("updateSettings",params);
 }
 #endif
+
+void ClockStub::updateLocaleSettings()
+{
+  stubMethodEntered("updateLocaleSettings");
+}
 
 void ClockStub::setShortDisplay(bool isShort) {
   QList<ParameterBase*> params;
@@ -81,6 +90,9 @@ Clock::Clock(QGraphicsItem *parent) {
   gClockStub->ClockConstructor(parent);
 }
 
+Clock::~Clock() {
+}
+
 void Clock::updateModelAndSetupTimer() {
   gClockStub->updateModelAndSetupTimer();
 }
@@ -90,6 +102,10 @@ void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
   gClockStub->updateSettings(whatChanged);
 }
 #endif
+
+void Clock::updateLocaleSettings() {
+  gClockStub->updateLocaleSettings();
+}
 
 void Clock::setShortDisplay(bool isShort) {
   gClockStub->setShortDisplay(isShort);

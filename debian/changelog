@@ -3,6 +3,8 @@ system-ui (0.17.1~1) harmattan; urgency=low
   * Implemented: SWP#DUI-3945 Status bar in the lock screen
   * Implemented: SWP#DUI-3812 Private notification banners for the lock screen
   * Implemented: SWP#DUI-3815 Opening screen lock when the lock screen window is not on top
+  * Fixes: NB#191056 -  Selected time format(24hr) is not getting reflected in status bar.
+  * Fixes: NB#186771 -  Regional settings 'suomi' sets 12h clock by default
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 24 Sep 2010 12:46:00 +0300
 

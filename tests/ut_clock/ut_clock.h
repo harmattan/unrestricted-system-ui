@@ -46,14 +46,17 @@ signals:
     void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
 #endif
     void shortDisplayMode(bool isSet);
-
+    void localeSettingsChanged();
 private slots:
     void initTestCase();
     void cleanupTestCase();
     void init();
     void cleanup();
-
+    void testConstruction();
+    void testDestruction();
+    void test24HourModeDuringCreation_data();
     void test24HourModeDuringCreation();
+    void test24HourModeToggling_data();
     void test24HourModeToggling();
     void testTimeUpdate();
     void testModelUpdates();
