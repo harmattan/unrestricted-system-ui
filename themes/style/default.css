@@ -190,6 +190,9 @@ StatusIndicatorAnimationStyle:icon {
 
 StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
     use-icon-size: true;
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
 }
 
 StatusIndicatorLabelStyle {
