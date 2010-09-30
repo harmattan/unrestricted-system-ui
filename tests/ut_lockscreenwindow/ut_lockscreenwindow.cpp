@@ -51,6 +51,7 @@ void Ut_LockScreenWindow::cleanupTestCase()
 void Ut_LockScreenWindow::init()
 {
     lockScreenWindow = new LockScreenWindow;
+    gX11WrapperStub->stubReset();
 }
 
 void Ut_LockScreenWindow::cleanup()
@@ -68,6 +69,26 @@ void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsC
 void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
 {
     QCOMPARE(appearedWindow, lockScreenWindow);
+}
+
+void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
+{
+    Display *display = QX11Info::display();
+
+    lockScreenWindow->show();
+    QCOMPARE(gX11WrapperStub->stubCallCount("XSendEvent"), 1);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Display *>(0), display);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Window>(1), RootWindow(display, lockScreenWindow->x11Info().screen()));
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Bool>(2), (Bool)False);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<long>(3), (long)(SubstructureNotifyMask | SubstructureRedirectMask));
+    XEvent event = gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<XEvent>(4);
+    QCOMPARE(event.xclient.type, ClientMessage);
+    QCOMPARE(event.xclient.display, display);
+    QCOMPARE(event.xclient.window, lockScreenWindow->internalWinId());
+    QCOMPARE(event.xclient.message_type, X11Wrapper::XInternAtom(display, "_NET_WM_STATE", False));
+    QCOMPARE(event.xclient.format, 32);
+    QCOMPARE(event.xclient.data.l[0], (long)1);
+    QCOMPARE(event.xclient.data.l[1], (long)X11Wrapper::XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", False));
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

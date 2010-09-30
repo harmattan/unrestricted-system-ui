@@ -38,6 +38,8 @@ private slots:
 
     void testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
     void testWhenWindowIsCreatedLockScreenAppears();
+    void testWhenWindowIsShownItIsExcludedFromTaskbar();
+
 private:
     MApplication *app;
     LockScreenWindow *lockScreenWindow;

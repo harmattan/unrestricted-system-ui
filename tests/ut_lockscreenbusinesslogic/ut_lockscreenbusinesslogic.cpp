@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -43,6 +41,13 @@ Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
 }
 #endif
 
+QMap<QWidget *, bool> gQWidgetVisible;
+void QWidget::setVisible(bool visible)
+{
+    gQWidgetVisible[this] = visible;
+    setAttribute(Qt::WA_WState_Visible, visible);
+}
+
 bool gQWidgetRaiseCalled = false;
 void QWidget::raise()
 {
@@ -60,6 +65,7 @@ void Ut_LockScreenBusinessLogic::init()
 void Ut_LockScreenBusinessLogic::cleanup()
 {
     gQWidgetRaiseCalled = false;
+    gQWidgetVisible.clear();
 }
 
 void Ut_LockScreenBusinessLogic::initTestCase()
@@ -102,10 +108,31 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 #else
     spy.clear ();
 #endif
-    QCOMPARE(logic.lockScreenWindow->isVisible(), true);
+
+    // The lock screen should now be visible
+    QCOMPARE(gQWidgetVisible[logic.lockScreenWindow], true);
+
+    // Raising should happen
     QCOMPARE(gQWidgetRaiseCalled, true);
-    // Check whether the lock-screen-ui state has be reset to defaults
+
+    // The lock screen needs to be reset
     QCOMPARE(gLockScreenWindowStub->stubCallCount("reset"), 1);
+
+    // Reset the stubs
+    gQWidgetVisible[logic.lockScreenWindow] = false;
+    gQWidgetRaiseCalled = false;
+
+    // Lock the screen again
+    logic.toggleScreenLockUI(true);
+
+    // show() should not be called
+    QCOMPARE(gQWidgetVisible[logic.lockScreenWindow], false);
+
+    // Raising should happen
+    QCOMPARE(gQWidgetRaiseCalled, true);
+
+    // The lock screen still needs to be reset
+    QCOMPARE(gLockScreenWindowStub->stubCallCount("reset"), 2);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);

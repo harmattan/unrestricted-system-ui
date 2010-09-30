@@ -70,20 +70,30 @@ void LockScreenBusinessLogic::toggleScreenLockUI(bool toggle)
     if (toggle) {
         // Whenever we're showing the lock screen we need to reset its state
         lockScreenWindow->reset();
-        lockScreenWindow->show();
+
+        if (!lockScreenWindow->isVisible()) {
+            lockScreenWindow->show();
+        }
+
         lockScreenWindow->raise();
     } else {
-        lockScreenWindow->hide();
+        if (lockScreenWindow->isVisible()) {
+            lockScreenWindow->hide();
+        }
     }
 }
 
 void LockScreenBusinessLogic::toggleEventEater(bool toggle)
 {
     if (toggle) {
-        eventEaterWindow->show();
-        eventEaterWindow->showFullScreen();
+        if (!eventEaterWindow->isVisible()) {
+            eventEaterWindow->show();
+            eventEaterWindow->showFullScreen();
+        }
     } else {
-        eventEaterWindow->hide();
+        if (eventEaterWindow->isVisible()) {
+            eventEaterWindow->hide();
+        }
     }
 }
 
