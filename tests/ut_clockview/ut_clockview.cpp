@@ -37,6 +37,14 @@ const MWidgetModel *MWidgetController::model() const
     return &clockModel;
 }
 
+// MLabel stub
+void MLabel::setAlignment(Qt::Alignment alignment)
+{
+    Ut_ClockView::alignment = alignment;
+}
+
+Qt::Alignment Ut_ClockView::alignment;
+
 // QGraphicsLinearLayout stubs (prevents crashing)
 void QGraphicsLinearLayout::insertItem(int , QGraphicsLayoutItem *)
 {
@@ -152,12 +160,12 @@ void Ut_ClockView::testAlignment()
     Qt::Alignment alignment = Qt::AlignLeft;
     m_subject->modifiableStyle()->setHorizontalAlign(alignment);
     m_subject->applyStyle();
-    QCOMPARE(m_subject->label->alignment(), alignment);
+    QCOMPARE(Ut_ClockView::alignment, alignment);
 
     alignment = Qt::AlignRight;
     m_subject->modifiableStyle()->setHorizontalAlign(alignment);
     m_subject->applyStyle();
-    QCOMPARE(m_subject->label->alignment(), alignment);
+    QCOMPARE(Ut_ClockView::alignment, alignment);
 }
 
 QTEST_APPLESS_MAIN(Ut_ClockView)

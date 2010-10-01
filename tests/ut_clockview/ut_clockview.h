@@ -75,6 +75,7 @@ private slots:
     void testAlignment();
 
 public:
+    static Qt::Alignment alignment;
     static QString timeAsString;
 
 private:
