@@ -54,6 +54,9 @@ protected:
     //! \reimp_end
 
 private:
+    //! Updates the layout
+    void updateLayout();
+
     //! The layout for the banners
     QGraphicsLinearLayout *bannerLayout;
 
@@ -62,6 +65,9 @@ private:
 
     //! The clear button
     MButton *clearButton;
+
+    //! And more banner
+    MBanner *andMoreBanner;
 
 #ifdef UNIT_TEST
     friend class Ut_NotificationAreaView;

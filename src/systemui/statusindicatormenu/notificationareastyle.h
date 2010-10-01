@@ -26,6 +26,11 @@ class NotificationAreaStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(NotificationAreaStyle)
+
+    //! Controls whether to show a clear button on the notification area
+    M_STYLE_ATTRIBUTE(bool, clearButton, ClearButton);
+    //! The maximum number of banners in notification area
+    M_STYLE_ATTRIBUTE(int, maxBanners, MaxBanners);
 };
 
 class NotificationAreaStyleContainer : public MWidgetStyleContainer

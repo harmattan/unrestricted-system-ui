@@ -45,6 +45,10 @@ private slots:
     void testAddClearButton_data();
     void testAddClearButton();
     void testRemoveClearButton();
+    void testClearButtonStyle_data();
+    void testClearButtonStyle();
+    void testMaxBannersStyle_data();
+    void testMaxBannersStyle();
 
 private:
     // Application instance

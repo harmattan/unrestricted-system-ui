@@ -20,8 +20,6 @@
 #include <MViewCreator>
 #include "lockscreenwithoutpadlockview.h"
 #include "lockscreen.h"
-#include "unlockarea.h"
-
 #include "notificationarea.h"
 
 LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MSceneWindow* controller) :

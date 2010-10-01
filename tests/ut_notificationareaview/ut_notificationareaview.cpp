@@ -27,6 +27,7 @@
 #include "notificationarea_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "notificationareaview.h"
+#include "notificationareastyle.h"
 
 QList<MBanner *> bannersClicked;
 void MBanner::click()
@@ -54,6 +55,9 @@ void Ut_NotificationAreaView::init()
     m_subject = new NotificationAreaView(notificationArea);
     notificationArea->setView(m_subject);
     bannersClicked.clear();
+    NotificationAreaStyle *s = const_cast<NotificationAreaStyle *>(m_subject->style().operator ->());
+    s->setClearButton(true);
+    s->setMaxBanners(-1);
 }
 
 void Ut_NotificationAreaView::cleanup()
@@ -113,6 +117,59 @@ void Ut_NotificationAreaView::testRemoveClearButton()
     banners.clear();
     notificationArea->model()->setBanners(banners);
     QCOMPARE(m_subject->clearButton->objectName(), QString("NotificationAreaClearButton"));
+}
+
+void Ut_NotificationAreaView::testClearButtonStyle_data()
+{
+    QTest::addColumn<bool>("clearButtonEnabled");
+
+    QTest::newRow("Clear button disabled") << false;
+    QTest::newRow("Clear button enabled") << true;
+}
+
+void Ut_NotificationAreaView::testClearButtonStyle()
+{
+    QFETCH(bool, clearButtonEnabled);
+
+    NotificationAreaStyle *s = const_cast<NotificationAreaStyle *>(m_subject->style().operator ->());
+    s->setClearButton(clearButtonEnabled);
+
+    BannerList banners;
+    banners << createBanner(true);
+
+    notificationArea->model()->setBanners(banners);
+    QCOMPARE(m_subject->clearButton->objectName(), clearButtonEnabled ? QString("NotificationAreaClearButtonVisible") : QString("NotificationAreaClearButton"));
+}
+
+void Ut_NotificationAreaView::testMaxBannersStyle_data()
+{
+    QTest::addColumn<int>("maxBanners");
+
+    QTest::newRow("Unlimited banners") << -1;
+    QTest::newRow("Max 0 banner") << 0;
+    QTest::newRow("Max 1 banner") << 1;
+    QTest::newRow("Max 5 banners") << 5;
+    QTest::newRow("Max 10 banners") << 10;
+}
+
+void Ut_NotificationAreaView::testMaxBannersStyle()
+{
+    QFETCH(int, maxBanners);
+
+    NotificationAreaStyle *s = const_cast<NotificationAreaStyle *>(m_subject->style().operator ->());
+    s->setMaxBanners(maxBanners);
+
+    BannerList banners;
+    for (int i = 0; i < 10; i++) {
+        banners << createBanner(true);
+    }
+
+    notificationArea->model()->setBanners(banners);
+    if (maxBanners >= 0) {
+        QCOMPARE(m_subject->bannerLayout->count(), banners.count() > maxBanners ? (maxBanners + 1) : maxBanners);
+    } else {
+        QCOMPARE(m_subject->bannerLayout->count(), 10);
+    }
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaView)

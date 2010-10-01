@@ -29,7 +29,8 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     MWidgetView(controller),
     bannerLayout(new QGraphicsLinearLayout(Qt::Vertical)),
     clearButtonLayout(new QGraphicsLinearLayout(Qt::Horizontal)),
-    clearButton(NULL)
+    clearButton(NULL),
+    andMoreBanner(NULL)
 {
     // Set up the main layout
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -46,7 +47,6 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     // Put a clear button into the clear button layout
     clearButtonLayout->setContentsMargins(0, 0, 0, 0);
     clearButtonLayout->setSpacing(0);
-
     //% "Clear"
     clearButton = new MButton(qtTrId("qtn_noti_clear"));
     clearButton->setObjectName("NotificationAreaClearButton");
@@ -62,6 +62,9 @@ NotificationAreaView::~NotificationAreaView()
     while (bannerLayout->count() > 0) {
         bannerLayout->removeAt(0);
     }
+
+    delete clearButtonLayout;
+    delete andMoreBanner;
 }
 
 void NotificationAreaView::updateData(const QList<const char *>& modifications)
@@ -71,20 +74,7 @@ void NotificationAreaView::updateData(const QList<const char *>& modifications)
     const char *member;
     foreach(member, modifications) {
         if (member == NotificationAreaModel::Banners) {
-            // Remove all banners from the banner layout (do not destroy them)
-            while (bannerLayout->count() > 0) {
-                bannerLayout->removeAt(0);
-            }
-
-            // Add banners from the model to the layout
-            bool removableBannersExist = false;
-            foreach(MBanner *banner, model()->banners()) {
-                removableBannersExist |= banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool();
-                bannerLayout->addItem(banner);
-            }
-
-            // If removable banners exist make the clear button visible
-            clearButton->setObjectName(removableBannersExist ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");
+            updateLayout();
         }
     }
 }
@@ -93,8 +83,39 @@ void NotificationAreaView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    // TODO: Without this the banner layout size did not reflect the new banner sizes. Go figure.
-    bannerLayout->invalidate();
+    // Update the layout since "clear all" button visibility or the maximum amount of banners may have changed
+    updateLayout();
+}
+
+void NotificationAreaView::updateLayout()
+{
+    // Remove all banners from the banner layout (do not destroy them)
+    while (bannerLayout->count() > 0) {
+        bannerLayout->removeAt(0);
+    }
+
+    delete andMoreBanner;
+    andMoreBanner = NULL;
+
+    // Add up to the maximum amount of banners to the layout
+    bool removableBannersExist = false;
+    for (int i = 0; (style()->maxBanners() < 0 || i < style()->maxBanners()) && i < model()->banners().count(); i++) {
+        MBanner *banner = model()->banners().at(i);
+        removableBannersExist |= banner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool();
+        bannerLayout->addItem(banner);
+    }
+
+    if (style()->maxBanners() >= 0 && model()->banners().count() > style()->maxBanners()) {
+        // There are more than maximum number of banners to be added: add a "and more" banner
+        andMoreBanner = new MBanner;
+        andMoreBanner->setObjectName("EventBanner");
+        //% "And more"
+        andMoreBanner->setTitle(qtTrId("qtn_noti_more"));
+        bannerLayout->addItem(andMoreBanner);
+    }
+
+    // If removable banners exist make the clear button visible
+    clearButton->setObjectName((removableBannersExist && style()->clearButton()) ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");
 }
 
 M_REGISTER_VIEW_NEW(NotificationAreaView, NotificationArea)

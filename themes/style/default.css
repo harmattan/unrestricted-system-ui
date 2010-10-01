@@ -37,6 +37,8 @@ NotificationAreaStyle {
     margin-top:    0;
     margin-right:  0;
     margin-bottom: 0;
+    clear-button: true;
+    max-banners: -1;
 }
 
 MButtonStyle#NotificationAreaClearButton {
