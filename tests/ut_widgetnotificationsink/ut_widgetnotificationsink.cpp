@@ -23,6 +23,8 @@
 #include "testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
 #include <MApplication>
+#include <MLocale>
+#include <MGConfItem>
 
 // List of event type files
 QStringList eventTypeFilesList;
@@ -64,6 +66,40 @@ QString TestWidgetNotificationSink::determineIconId(const NotificationParameters
 void TestWidgetNotificationSink::updateActions(MBanner *infoBanner, const Notification &notification)
 {
     WidgetNotificationSink::updateActions(infoBanner, notification.parameters());
+}
+
+QString qtTrId(const char *id, int)
+{
+    if(QString(id) == "translationid")
+        return "translatedstring";
+    else
+        return "";
+}
+
+// MLocale stubs
+QString gInstalledTrCatalog;
+MLocale *gInstalledCatalogLocale;
+void MLocale::installTrCatalog(const QString &name)
+{
+    gInstalledCatalogLocale = this;
+    gInstalledTrCatalog = name;
+}
+
+MLocale *gSetDefaultLocale;
+void MLocale::setDefault(const MLocale &locale)
+{
+    gSetDefaultLocale = const_cast<MLocale*>(&locale);
+}
+
+// MGConfItem stubs
+bool gMGConfPrivateNotificationValue;
+QVariant MGConfItem::value() const
+{
+    if(this->key() == "/desktop/meego/privacy/private_lockscreen_notifications") {
+        return QVariant(gMGConfPrivateNotificationValue);
+    }
+
+    return QVariant();
 }
 
 // QFileInfo stubs
@@ -146,6 +182,10 @@ void Ut_WidgetNotificationSink::init()
     contents.clear();
     actions.clear();
     actionTriggeredCount = 0;
+    gInstalledTrCatalog = "";
+    gInstalledCatalogLocale = NULL;
+    gSetDefaultLocale = NULL;
+    gMGConfPrivateNotificationValue = false;
 }
 
 void Ut_WidgetNotificationSink::cleanup()
@@ -329,6 +369,59 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content1 2 3 4"));
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredButNotEnabled()
+{
+    m_subject->setHonorPrivacySetting(true);
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
+    QCOMPARE(infoBanner->title(), QString("title1"));
+    QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
+    QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogIdDefined()
+{
+    m_subject->setHonorPrivacySetting(true);
+    gMGConfPrivateNotificationValue = true;
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
+    QCOMPARE(infoBanner->title(), QString());
+    QCOMPARE(infoBanner->subtitle(), QString());
+    QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogNameDefined()
+{
+    m_subject->setHonorPrivacySetting(true);
+    gMGConfPrivateNotificationValue = true;
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    parameters.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
+    QCOMPARE(infoBanner->title(), QString());
+    QCOMPARE(infoBanner->subtitle(), QString());
+    QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresent()
+{
+    QString catalogue("translationcatalogue");
+    m_subject->setHonorPrivacySetting(true);
+    gMGConfPrivateNotificationValue = true;
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    parameters.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
+    parameters.add(NotificationWidgetParameterFactory::genericTextCatalogueKey(), catalogue);
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
+    QCOMPARE(infoBanner->title(), QString("translatedstring"));
+    QCOMPARE(infoBanner->subtitle(), QString());
+    QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
+    QCOMPARE(gInstalledTrCatalog, catalogue);
+    QCOMPARE(gSetDefaultLocale, gInstalledCatalogLocale);
 }
 
 void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreated()

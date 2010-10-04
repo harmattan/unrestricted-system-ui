@@ -59,6 +59,10 @@ private slots:
     void testInfoBannerCreationWithoutRemoteAction();
     void testInfoBannerCreationWithNotificationParameters();
     void testInfoBannerCreationWithSystemEvent();
+    void testInfoBannerCreationWhenPrivacyIsHonoredButNotEnabled();
+    void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogIdDefined();
+    void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogNameDefined();
+    void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresent();
     void testUserRemovablePropertyIsSetWhenBannerIsCreated();
 
 private:

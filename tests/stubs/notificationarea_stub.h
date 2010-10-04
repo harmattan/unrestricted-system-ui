@@ -32,6 +32,7 @@ public:
     virtual void moveNotificationToTop(MBanner &notification);
     virtual void removeNotification(MBanner &notification);
     virtual void removeAllRemovableBanners();
+    virtual void setHonorPrivacySetting(bool honor);
 };
 
 void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent)
@@ -73,6 +74,13 @@ void NotificationAreaStub::removeAllRemovableBanners()
     stubMethodEntered("removeAllRemovableBanners");
 }
 
+void NotificationAreaStub::setHonorPrivacySetting(bool honor)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<bool >(honor));
+    stubMethodEntered("setHonorPrivacySetting", params);
+}
+
 NotificationAreaStub gDefaultNotificationAreaStub;
 NotificationAreaStub *gNotificationAreaStub = &gDefaultNotificationAreaStub;
 
@@ -104,6 +112,11 @@ void NotificationArea::removeNotification(MBanner &notification)
 void NotificationArea::removeAllRemovableBanners()
 {
     gNotificationAreaStub->removeAllRemovableBanners();
+}
+
+void NotificationArea::setHonorPrivacySetting(bool honor)
+{
+    gNotificationAreaStub->setHonorPrivacySetting(honor);
 }
 
 #endif

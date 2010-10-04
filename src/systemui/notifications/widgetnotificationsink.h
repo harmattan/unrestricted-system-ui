@@ -23,19 +23,43 @@
 #include "notificationsink.h"
 #include <MBanner>
 
+class MGConfItem;
+
 /*!
  * WidgetNotificationSink is a common base class for all notification sinks that trigger
  * visual feedback using a graphics widget.
  *
  * WidgetNotificationSink creates MBanner widgets for notifications. When MBanner
  * is clicked the action bound to the notification is triggered and notification is removed
- * from the notification system signalling notificationRemovalRequested().
+ * from the notification system signaling notificationRemovalRequested().
+ *
+ * The sink can be configured to always show the given notification text in the
+ * banners (the default mode) or to only show a generic text instead of the
+ * given notification text if the privacy mode is enabled by setting the value
+ * of the /desktop/meego/privacy/private_lockscreen_notifications GConf key to
+ * true. This can be accomplished with the setHonorPrivacySetting() call.
  */
 class WidgetNotificationSink : public NotificationSink
 {
     Q_OBJECT
 
 public:
+    /*!
+     * Constructs a widget notification sink.
+     */
+    WidgetNotificationSink();
+
+    /*!
+     * Controls whether the notification banners should only show a generic text
+     * instead of the full notification text if the
+     * /desktop/meego/privacy/private_lockscreen_notifications GConf key is
+     * set to true. If the GConf key is not honored the private mode is never
+     * used.
+     *
+     * \param honor if \c true, privacy setting is honored. If \c false, the privacy setting is ignored.
+     */
+    void setHonorPrivacySetting(bool honor);
+
     //! MBanner property to store the notification ID into
     static const char *NOTIFICATION_ID_PROPERTY;
     //! MBanner property to store the group ID into
@@ -89,20 +113,31 @@ protected:
      * \param parameters the NotificationParameters to get the title text from
      * \return the title text
      */
-    QString infoBannerTitleText(const NotificationParameters &parameters);
+    static QString infoBannerTitleText(const NotificationParameters &parameters);
 
     /*!
      * Creates a subtitle text string from notification parameters.
      * \param parameters the NotificationParameters to get the subtitle text from
      * \return the subtitle text
      */
-    QString infoBannerSubtitleText(const NotificationParameters &parameters);
+    static QString infoBannerSubtitleText(const NotificationParameters &parameters);
+
+    /*!
+     * Creates a generic text string from notification parameters.
+     * \param parameters the NotificationParameters to get the generic text from
+     * \return the generic text
+     */
+    static QString infoBannerGenericText(const NotificationParameters &parameters);
 
 private slots:
     /*!
      * A slot for catching info banner clicks
      */
     void infoBannerClicked();
+
+private:
+    //! GConf key for enabling/disabling private notifications
+    MGConfItem *privacySetting;
 };
 
 #endif // WIDGETNOTIFICATIONSINK_H

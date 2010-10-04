@@ -49,6 +49,17 @@ public:
      */
     virtual ~NotificationArea();
 
+    /*!
+     * Controls whether the notification banners on this area should only show
+     * a generic text instead of the full notification text if the
+     * /desktop/meego/privacy/private_lockscreen_notifications GConf key is
+     * set to true. If the GConf key is not honored the private mode is never
+     * used.
+     *
+     * \param honor if \c true, privacy setting is honored. If \c false, the privacy setting is ignored.
+     */
+    void setHonorPrivacySetting(bool honor);
+
 signals:
     /*!
      * Requests removal of a notification from the notification system.

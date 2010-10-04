@@ -26,6 +26,7 @@
 #include "ut_notificationareaview.h"
 #include "notificationarea_stub.h"
 #include "widgetnotificationsink_stub.h"
+#include "notificationsink_stub.h"
 #include "notificationareaview.h"
 #include "notificationareastyle.h"
 

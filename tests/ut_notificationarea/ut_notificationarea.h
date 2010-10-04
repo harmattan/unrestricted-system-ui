@@ -43,16 +43,13 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
-    // Test adding a notification
+    // Test cases
     void testAddNotification();
-    // Test removing a notification
     void testRemoveNotification();
-    // Test when a notification is added, then latest comes first.
     void testAddNotificationLatestComesFirst();
-    // Test when a notification is updated then that banner comes first
     void testUpdatedNotificationComesFirst();
-    // Test removing all removable banners
     void testRemoveAllRemovableBanners();
+    void testHonorPrivacySetting();
 
 signals:
     void addNotification(MBanner &notification);

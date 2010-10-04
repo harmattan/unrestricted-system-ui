@@ -21,10 +21,18 @@
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
 #include <MRemoteAction>
+#include <MLocale>
+#include <MGConfItem>
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
+
+WidgetNotificationSink::WidgetNotificationSink() :
+    NotificationSink(),
+    privacySetting(NULL)
+{
+}
 
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
@@ -54,22 +62,22 @@ MBanner *WidgetNotificationSink::createInfoBanner(const Notification &notificati
 
 MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters)
 {
-    QString title    = infoBannerTitleText(parameters);
-    QString subtitle = infoBannerSubtitleText(parameters);
-    QString iconID  = determineIconId(parameters);
-    MBanner *infoBanner = new MBanner();
-
     // Create a banner on the basis of notification type
-    if (type == Notification::ApplicationEvent) {
-        infoBanner->setObjectName("EventBanner");
-        infoBanner->setTitle(title);
-    } else {
-        infoBanner->setObjectName("SystemBanner");
-    }
-    // Add subtitle and iconid for both event and system notifications
-    infoBanner->setSubtitle(subtitle);
-    infoBanner->setIconID(iconID);
+    MBanner *infoBanner = new MBanner;
+    infoBanner->setObjectName(type == Notification::ApplicationEvent ? "EventBanner" : "SystemBanner");
 
+    if (privacySetting != NULL && privacySetting->value().toBool()) {
+        // Privacy is honored and privacy mode is enabled: use a generic text in the banner
+        infoBanner->setTitle(infoBannerGenericText(parameters));
+    } else {
+        // Privacy is not honored or privacy mode is disabled: use the given text in the banner
+        if (type == Notification::ApplicationEvent) {
+            infoBanner->setTitle(infoBannerTitleText(parameters));
+        }
+        infoBanner->setSubtitle(infoBannerSubtitleText(parameters));
+    }
+
+    infoBanner->setIconID(determineIconId(parameters));
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
 
@@ -108,6 +116,27 @@ QString WidgetNotificationSink::infoBannerSubtitleText(const NotificationParamet
     return parameters.value(NotificationWidgetParameterFactory::bodyKey()).toString();
 }
 
+QString WidgetNotificationSink::infoBannerGenericText(const NotificationParameters &parameters)
+{
+    QString genericText;
+    QString genericTextId = parameters.value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
+
+    if(!genericTextId.isEmpty()) {
+        QString genericTextCatalogue = parameters.value(NotificationWidgetParameterFactory::genericTextCatalogueKey()).toString();
+
+        if(!genericTextCatalogue.isEmpty()) {
+            // Load the catalog from disk if it's not yet loaded
+            MLocale locale;
+            locale.installTrCatalog(genericTextCatalogue);
+            MLocale::setDefault(locale);
+
+            genericText = qtTrId(genericTextId.toUtf8());
+        }
+    }
+
+    return genericText;
+}
+
 void WidgetNotificationSink::infoBannerClicked()
 {
     MBanner *infoBanner = qobject_cast<MBanner *>(sender());
@@ -137,5 +166,17 @@ void WidgetNotificationSink::infoBannerClicked()
                 }
             }
         }
+    }
+}
+
+void WidgetNotificationSink::setHonorPrivacySetting(bool honor)
+{
+    if (honor) {
+        if (privacySetting == NULL) {
+            privacySetting = new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this);
+        }
+    } else {
+        delete privacySetting;
+        privacySetting = NULL;
     }
 }

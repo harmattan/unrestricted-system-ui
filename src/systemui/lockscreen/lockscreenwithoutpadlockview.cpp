@@ -27,6 +27,7 @@ LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MSceneWindow* control
 {
     NotificationArea* notificationArea = new NotificationArea;
     notificationArea->setObjectName("LockScreenNotificationArea");
+    notificationArea->setHonorPrivacySetting(true);
     layout->addStretch();
     layout->addItem(notificationArea);
     layout->addStretch();

@@ -28,6 +28,7 @@
 class WidgetNotificationSinkStub : public StubBase
 {
 public:
+    virtual void WidgetNotificationSinkConstructor();
     virtual void notificationRemovalRequested(uint notificationId);
     virtual void notificationGroupClearingRequested(uint groupId);
     virtual QString determineIconId(const NotificationParameters &parameters);
@@ -35,9 +36,15 @@ public:
     virtual MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
     virtual void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
     virtual void infoBannerClicked();
+    virtual void setHonorPrivacySetting(bool honor);
 };
 
 // 2. IMPLEMENT STUB
+void WidgetNotificationSinkStub::WidgetNotificationSinkConstructor()
+{
+    stubMethodEntered("WidgetNotificationSinkConstructor");
+}
+
 void WidgetNotificationSinkStub::notificationRemovalRequested(uint notificationId)
 {
     QList<ParameterBase *> params;
@@ -91,6 +98,13 @@ void WidgetNotificationSinkStub::infoBannerClicked()
     stubMethodEntered("infoBannerClicked");
 }
 
+void WidgetNotificationSinkStub::setHonorPrivacySetting(bool honor)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<bool >(honor));
+    stubMethodEntered("setHonorPrivacySetting", params);
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -102,6 +116,11 @@ WidgetNotificationSinkStub *gWidgetNotificationSinkStub = &gDefaultWidgetNotific
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
+
+WidgetNotificationSink::WidgetNotificationSink() : NotificationSink()
+{
+    gWidgetNotificationSinkStub->WidgetNotificationSinkConstructor();
+}
 
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
@@ -126,6 +145,11 @@ void WidgetNotificationSink::updateActions(MBanner *infoBanner, const Notificati
 void WidgetNotificationSink::infoBannerClicked()
 {
     gWidgetNotificationSinkStub->infoBannerClicked();
+}
+
+void WidgetNotificationSink::setHonorPrivacySetting(bool honor)
+{
+    gWidgetNotificationSinkStub->setHonorPrivacySetting(honor);
 }
 
 

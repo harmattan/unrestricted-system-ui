@@ -52,6 +52,8 @@ void Ut_NotificationArea::init()
     connect(this, SIGNAL(addNotification(MBanner &)), m_subject, SLOT(addNotification(MBanner &)));
     connect(this, SIGNAL(removeNotification(MBanner &)), m_subject, SLOT(removeNotification(MBanner &)));
     connect(this, SIGNAL(notificationUpdated(MBanner &)), m_subject, SLOT(moveNotificationToTop(MBanner &)));
+
+    gWidgetNotificationSinkStub->stubReset();
 }
 
 void Ut_NotificationArea::cleanup()
@@ -121,6 +123,17 @@ void Ut_NotificationArea::testRemoveAllRemovableBanners()
     QCOMPARE(notificationGroupSpy.count(), 1);
     QCOMPARE(notificationSpy.at(0).at(0).toInt(), 1);
     QCOMPARE(notificationGroupSpy.at(0).at(0).toInt(), 2);
+}
+
+void Ut_NotificationArea::testHonorPrivacySetting()
+{
+    m_subject->setHonorPrivacySetting(true);
+    QCOMPARE(gWidgetNotificationSinkStub->stubCallCount("setHonorPrivacySetting"), 1);
+    QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setHonorPrivacySetting").parameter<bool>(0), true);
+
+    m_subject->setHonorPrivacySetting(false);
+    QCOMPARE(gWidgetNotificationSinkStub->stubCallCount("setHonorPrivacySetting"), 2);
+    QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setHonorPrivacySetting").parameter<bool>(0), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationArea)

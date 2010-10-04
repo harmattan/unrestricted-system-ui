@@ -21,7 +21,9 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/notificationareaview.h \
     $$SRCDIR/statusindicatormenu/notificationareastyle.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
-    $$SRCDIR/statusindicatormenu/notificationareamodel.h
+    $$SRCDIR/statusindicatormenu/notificationareamodel.h \
+    $$SRCDIR/notifications/widgetnotificationsink.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h
 
 # base classes
 HEADERS += \

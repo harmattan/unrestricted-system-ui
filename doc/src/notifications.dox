@@ -43,15 +43,19 @@ iconId=Icon-close
 feedbackId=press
 userRemovable=false
 class=system
+genericTextId=qtn_something_happened
+genericTextCatalogue=events
 \endverbatim
 
 The \c iconId key can be used to define the ID of the icon displayed in the visual notifications of the given type. If the notification sink does not display any visual notifications it can ignore this key. As an example all classes derived from \c WidgetNotificationSink will use the \c iconId to show the icon in the notification banner.
 
-The \c feedbackId key can be used to define whether a notification of given type produces a feed back. A notification sink may choose to diregard this key if it is not approprioate behaviour for that sink. As an example the \c NGFNotificationSink will use the \c feedbackId to play the associated sound, vibration or led indication or a combination of these. The \c NGFNotificationSink uses \libngf to play these indications.
+The \c feedbackId key can be used to define whether a notification of given type produces a feed back. A notification sink may choose to disregard this key if it is not appropriate behaviour for that sink. As an example the \c NGFNotificationSink will use the \c feedbackId to play the associated sound, vibration or led indication or a combination of these. The \c NGFNotificationSink uses \libngf to play these indications.
 
 The \c userRemovable key can be used to define whether a notification of given type is user removable when the user taps on the notification banner. If userRemovable equals false the notification will not be removed when the banner is tapped. The associated actions are executed but the application needs to remove the notification. If userRemovable equals true or the key is missing the notification is removed when it is tapped.
 
 The \c class key can be used to define whether a notification of given type is a system notification or an application notification. If class equals system the notification is a system notification. It class equals application or the key is missing the notification is an application notification. System notifications may be treated differently by the notification sinks. For instance, system notifications are not displayed by the \c NotificationAreaSink. They may also have a higher priority than the application notifications.
+
+The \c genericTextId key and the \c genericTextCatalogue key can be used to define the translation ID and the translation catalogue of a generic text for the visual notifications of the given type. This generic text can replace the notification content when showing the content is not desired, for instance when the device is locked and privacy is of concern. Both keys are needed to define the generic text. Otherwise the generic text is considered to be empty.
 
 \section links Links
 

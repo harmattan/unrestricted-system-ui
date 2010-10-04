@@ -98,3 +98,8 @@ void NotificationArea::removeAllRemovableBanners()
         }
     }
 }
+
+void NotificationArea::setHonorPrivacySetting(bool honor)
+{
+    notificationAreaSink->setHonorPrivacySetting(honor);
+}
