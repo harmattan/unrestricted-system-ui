@@ -23,6 +23,7 @@
 #include <QtTest/QtTest>
 #include <MRemoteAction>
 #include <MApplication>
+#include <MGConfItem>
 #include "testnotificationparameters.h"
 #include "notification.h"
 
@@ -31,6 +32,17 @@ static QSettings *settings;
 QStringList QCoreApplication::arguments()
 {
     return QStringList();
+}
+
+// MGConfItem stubs
+bool gMGConfPrivateNotificationValue;
+QVariant MGConfItem::value() const
+{
+    if(this->key() == "/desktop/meego/privacy/private_lockscreen_notifications") {
+        return QVariant(gMGConfPrivateNotificationValue);
+    }
+
+    return QVariant();
 }
 
 // MRemoteAction stubs (used by NotificationAreaSink)
@@ -337,6 +349,45 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);
     QCOMPARE(contents[1], QString("content1"));
+}
+
+void Ut_NotificationAreaSink::testApplyPrivacySetting_data()
+{
+    QTest::addColumn<bool>("honorPrivacy");
+    QTest::addColumn<bool>("privacyEnabled");
+    QTest::addColumn<QString>("title");
+    QTest::addColumn<QString>("subtitle");
+
+    QTest::newRow("Privacy enabled and honored") << true << true << "test0" << QString();
+    QTest::newRow("Privacy disabled and honored") << true << false << "title0" << "subtitle0";
+    QTest::newRow("Privacy enabled but not honored") << false << true << "title0" << "subtitle0";
+    QTest::newRow("Privacy disabled and not honored") << false << false << "title0" << "subtitle0";
+}
+
+void Ut_NotificationAreaSink::testApplyPrivacySetting()
+{
+    QFETCH(bool, honorPrivacy);
+    QFETCH(bool, privacyEnabled);
+    QFETCH(QString, title);
+    QFETCH(QString, subtitle);
+
+    sink->setHonorPrivacySetting(honorPrivacy);
+    gMGConfPrivateNotificationValue = privacyEnabled;
+
+    connect(this, SIGNAL(privacySettingChanged(bool)), sink, SIGNAL(privacySettingChanged(bool)));
+
+    // Create a notification
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
+    parameters0.add(NotificationWidgetParameterFactory::createGenericTextIdParameter("test0"));
+    parameters0.add(NotificationWidgetParameterFactory::createGenericTextCatalogueParameter("test0"));
+    emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
+
+    emit privacySettingChanged(privacyEnabled);
+
+    QCOMPARE(titles.length(), 1);
+    QCOMPARE(titles[0], title);
+    QCOMPARE(subtitles.length(), 1);
+    QCOMPARE(subtitles[0], subtitle);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)

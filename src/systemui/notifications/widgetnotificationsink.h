@@ -60,19 +60,32 @@ public:
      */
     void setHonorPrivacySetting(bool honor);
 
+    /*!
+     * Sets if notifications are clickable
+     * \param clickable \c true if notifications are clickable. \c false if notifications are not clickable
+     */
+    void setNotificationsClickable(bool clickable);
+
     //! MBanner property to store the notification ID into
     static const char *NOTIFICATION_ID_PROPERTY;
     //! MBanner property to store the group ID into
     static const char *GROUP_ID_PROPERTY;
     //! MBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
+    //! MBanner property to store the title text
+    static const char *TITLE_TEXT_PROPERTY;
+    //! MBanner property to store the subtitle text
+    static const char *SUBTITLE_TEXT_PROPERTY;
+    //! MBanner property to store the generic text
+    static const char *GENERIC_TEXT_PROPERTY;
 
+signals:
     /*!
-     * Sets if notifications are clickable
-     * \param clickable \c true if notifications are clickable. \c false if notifications are not clickable
+     * Informs about a change in the privacy setting.
+     *
+     * \param privacyEnabled \c true if the privacy was enabled, \c false if disabled
      */
-
-    virtual void setNotificationsClickable(bool clickable);
+    void privacySettingChanged(bool privacyEnabled);
 
 protected:
     /*!
@@ -105,6 +118,13 @@ protected:
      * \param params NotificationParameters according to which configure the MBanner.
      */
     MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
+
+    /*!
+     * Updates the titles in a banner based on the current privacy mode.
+     *
+     * \param infoBanner the MBanner to update
+     */
+    void updateTitles(MBanner *infoBanner);
 
     /*!
      * Removes old actions from the given info banner and adds the action
@@ -142,12 +162,21 @@ private slots:
      */
     void infoBannerClicked();
 
+    /*!
+     * Emits the privacySettingChanged() signal with the current privacy setting value
+     */
+    void emitPrivacySettingValue();
+
 private:
     //! GConf key for enabling/disabling private notifications
     MGConfItem *privacySetting;
 
     //! Stores if the notification in this area are clickable
     bool clickableNotifications;
+
+#ifdef UNIT_TEST
+    friend class Ut_WidgetNotificationSink;
+#endif
 };
 
 #endif // WIDGETNOTIFICATIONSINK_H

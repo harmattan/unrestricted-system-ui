@@ -63,24 +63,18 @@ private slots:
     // Executed once after last test case
     void cleanupTestCase();
 
-    // Test that correct kinds of notification widgets are displayed that their IDs are unique
+    // Test cases
     void testAddNotification();
-    // Test that adding a group creates correct notification widget but doesn't send signals if empty
     void testAddGroup();
-    // Tests that signals for removing the group is sent only if notification was added to the group
     void testRemoveGroup();
-    // Tests that adding a notification to a group will show the group notification
     void testAddNotificationToGroup();
-    // Tests that a notification group is updated correctly
     void testUpdateGroup();
-    // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
-    // Test that canceling with an ID cancels the correct notification
     void testRemoveNotification();
-    // Test that when no notifications left in the group, group banner is removed
     void testRemovingNotificationsWhenNoNotificationLeftGroupBannerIsRemoved();
-    // Test when a new notification is added to the group then area is relayout
-    void testAddNewNotificationToGroupUpdatesNotificationArea()    ;
+    void testAddNewNotificationToGroupUpdatesNotificationArea();
+    void testApplyPrivacySetting_data();
+    void testApplyPrivacySetting();
 
 signals:
     void addGroup(uint groupId, const NotificationParameters &parameters);
@@ -88,6 +82,7 @@ signals:
     void addNotification(Notification);
     void removeNotification(uint notificationId);
     void removeBanner(uint groupId);
+    void privacySettingChanged(bool privacyEnabled);
 };
 
 #endif // UT_NOTIFICATIONAREASINK_H

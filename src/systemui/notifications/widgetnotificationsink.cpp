@@ -26,6 +26,9 @@
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
 const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
+const char *WidgetNotificationSink::TITLE_TEXT_PROPERTY = "titleText";
+const char *WidgetNotificationSink::SUBTITLE_TEXT_PROPERTY = "subtitleText";
+const char *WidgetNotificationSink::GENERIC_TEXT_PROPERTY = "genericText";
 
 WidgetNotificationSink::WidgetNotificationSink() :
     NotificationSink(),
@@ -65,22 +68,13 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     // Create a banner on the basis of notification type
     MBanner *infoBanner = new MBanner;
     infoBanner->setObjectName(type == Notification::ApplicationEvent ? "EventBanner" : "SystemBanner");
-
-    if (privacySetting != NULL && privacySetting->value().toBool()) {
-        // Privacy is honored and privacy mode is enabled: use a generic text in the banner
-        infoBanner->setTitle(infoBannerGenericText(parameters));
-    } else {
-        // Privacy is not honored or privacy mode is disabled: use the given text in the banner
-        if (type == Notification::ApplicationEvent) {
-            infoBanner->setTitle(infoBannerTitleText(parameters));
-        }
-        infoBanner->setSubtitle(infoBannerSubtitleText(parameters));
-    }
-
-    infoBanner->setIconID(determineIconId(parameters));
+    infoBanner->setProperty(TITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
+    infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
+    infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
-
+    infoBanner->setIconID(determineIconId(parameters));
+    updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
 
     // Catch clicks from the info banner
@@ -88,6 +82,19 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
         connect(infoBanner, SIGNAL(clicked()), this, SLOT(infoBannerClicked()), Qt::QueuedConnection);
     }
     return infoBanner;
+}
+
+void WidgetNotificationSink::updateTitles(MBanner *infoBanner)
+{
+    if (privacySetting != NULL && privacySetting->value().toBool()) {
+        // Privacy is honored and privacy mode is enabled: use a generic text in the banner
+        infoBanner->setTitle(infoBanner->property(GENERIC_TEXT_PROPERTY).toString());
+        infoBanner->setSubtitle(QString());
+    } else {
+        // Privacy is not honored or privacy mode is disabled: use the given text in the banner
+        infoBanner->setTitle(infoBanner->objectName() == "EventBanner" ? infoBanner->property(TITLE_TEXT_PROPERTY).toString() : QString());
+        infoBanner->setSubtitle(infoBanner->property(SUBTITLE_TEXT_PROPERTY).toString());
+    }
 }
 
 void WidgetNotificationSink::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
@@ -175,11 +182,23 @@ void WidgetNotificationSink::setHonorPrivacySetting(bool honor)
     if (honor) {
         if (privacySetting == NULL) {
             privacySetting = new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this);
+            emitPrivacySettingValue();
+
+            connect(privacySetting, SIGNAL(valueChanged()), this, SLOT(emitPrivacySettingValue()));
         }
     } else {
-        delete privacySetting;
-        privacySetting = NULL;
+        if (privacySetting != NULL) {
+            delete privacySetting;
+            privacySetting = NULL;
+
+            emitPrivacySettingValue();
+        }
     }
+}
+
+void WidgetNotificationSink::emitPrivacySettingValue()
+{
+    emit privacySettingChanged(privacySetting != NULL ? privacySetting->value().toBool() : false);
 }
 
 void WidgetNotificationSink::setNotificationsClickable(bool clickable)

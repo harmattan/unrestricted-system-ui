@@ -23,8 +23,9 @@
 #include <MBanner>
 #include <MRemoteAction>
 
-NotificationAreaSink::NotificationAreaSink()
+NotificationAreaSink::NotificationAreaSink() : WidgetNotificationSink()
 {
+    connect(this, SIGNAL(privacySettingChanged(bool)), this, SLOT(applyPrivacySetting(bool)));
 }
 
 NotificationAreaSink::~NotificationAreaSink()
@@ -220,4 +221,14 @@ uint NotificationAreaSink::decreaseNotificationCountOfGroup(uint groupId)
     uint notificationIdsCount = notificationCountOfGroup.value(groupId);
     notificationCountOfGroup.insert(groupId, --notificationIdsCount);
     return  notificationIdsCount;
+}
+
+void NotificationAreaSink::applyPrivacySetting(bool)
+{
+    foreach (MBanner *banner, notificationIdToMBanner) {
+        updateTitles(banner);
+    }
+    foreach (MBanner *banner, groupIdToMBanner) {
+        updateTitles(banner);
+    }
 }

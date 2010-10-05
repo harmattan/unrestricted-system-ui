@@ -37,7 +37,8 @@ public:
     virtual void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
     virtual void infoBannerClicked();
     virtual void setHonorPrivacySetting(bool honor);
-    void setNotificationsClickable(bool clickable);
+    virtual void emitPrivacySettingValue();
+    virtual void setNotificationsClickable(bool clickable);
 };
 
 // 2. IMPLEMENT STUB
@@ -106,12 +107,19 @@ void WidgetNotificationSinkStub::setHonorPrivacySetting(bool honor)
     stubMethodEntered("setHonorPrivacySetting", params);
 }
 
+void WidgetNotificationSinkStub::emitPrivacySettingValue()
+{
+    stubMethodEntered("emitPrivacySettingValue");
+}
+
 void WidgetNotificationSinkStub::setNotificationsClickable(bool clickable)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<bool>(clickable));
     stubMethodEntered("setNotificationsClickable", params);
 }
+
+
 
 // 3. CREATE A STUB INSTANCE
 WidgetNotificationSinkStub gDefaultWidgetNotificationSinkStub;
@@ -156,6 +164,11 @@ void WidgetNotificationSink::infoBannerClicked()
 void WidgetNotificationSink::setHonorPrivacySetting(bool honor)
 {
     gWidgetNotificationSinkStub->setHonorPrivacySetting(honor);
+}
+
+void WidgetNotificationSink::emitPrivacySettingValue()
+{
+    gWidgetNotificationSinkStub->emitPrivacySettingValue();
 }
 
 void WidgetNotificationSink::setNotificationsClickable(bool clickable)

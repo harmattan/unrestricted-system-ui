@@ -437,6 +437,44 @@ void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreate
     QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), false);
 }
 
+void Ut_WidgetNotificationSink::testPrivacySettingValueEmittedWhenHonoringChanges_data()
+{
+    QTest::addColumn<bool>("honorPrivacy");
+    QTest::addColumn<bool>("privacyEnabled");
+    QTest::addColumn<bool>("emittedValue");
+
+    QTest::newRow("Privacy enabled and honored") << true << true << true;
+    QTest::newRow("Privacy disabled and honored") << true << false << false;
+    QTest::newRow("Privacy enabled but not honored") << false << true << false;
+    QTest::newRow("Privacy disabled and not honored") << false << false << false;
+}
+
+void Ut_WidgetNotificationSink::testPrivacySettingValueEmittedWhenHonoringChanges()
+{
+    QFETCH(bool, honorPrivacy);
+    QFETCH(bool, privacyEnabled);
+    QFETCH(bool, emittedValue);
+
+    // First set the value to the opposite of what is wanted
+    m_subject->setHonorPrivacySetting(!honorPrivacy);
+
+    QSignalSpy privacySettingSpy(m_subject, SIGNAL(privacySettingChanged(bool)));
+    gMGConfPrivateNotificationValue = privacyEnabled;
+    m_subject->setHonorPrivacySetting(honorPrivacy);
+    QCOMPARE(privacySettingSpy.count(), 1);
+    QCOMPARE(privacySettingSpy.at(0).at(0).toBool(), emittedValue);
+
+    // Setting the same value again should cause no new signal
+    m_subject->setHonorPrivacySetting(honorPrivacy);
+    QCOMPARE(privacySettingSpy.count(), 1);
+}
+
+void Ut_WidgetNotificationSink::testPrivacySettingValueEmittedWhenPrivacySettingChanges()
+{
+    m_subject->setHonorPrivacySetting(true);
+    QVERIFY(disconnect(m_subject->privacySetting, SIGNAL(valueChanged()), m_subject, SLOT(emitPrivacySettingValue())));
+}
+
 void Ut_WidgetNotificationSink::testWhenNotificationsCreatedAreNotClickableWhenClickingThemDoesNotWork()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");

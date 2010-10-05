@@ -163,6 +163,26 @@ public:
     static NotificationParameter createUserRemovableParameter(bool userRemovable) {
         return NotificationParameter(userRemovableKey(), QVariant(userRemovable));
     }
+
+    /*!
+     * Creates a NotificationParameter with the given generic text value.
+     *
+     * \param genericTextID ID for the generic text for the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createGenericTextIdParameter(const QString &genericTextId) {
+        return NotificationParameter(genericTextIdKey(), QVariant(genericTextId));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given generic text catalogue value.
+     *
+     * \param genericTextID catalogue for the generic text for the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createGenericTextCatalogueParameter(const QString &genericTextCatalogue) {
+        return NotificationParameter(genericTextCatalogueKey(), QVariant(genericTextCatalogue));
+    }
 };
 
 #endif /* NOTIFICATIONWIDGETPARAMETERFACTORY_H_ */

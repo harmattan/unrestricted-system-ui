@@ -39,6 +39,7 @@ public:
     virtual void setupInfoBanner(MBanner *infoBanner);
     virtual MBanner *updateNotification(MBanner *dn, const NotificationParameters &parameters);
     virtual void removeGroupBanner(uint groupId);
+    virtual void applyPrivacySetting(bool privacyEnabled);
 };
 
 // 2. IMPLEMENT STUB
@@ -116,6 +117,13 @@ void NotificationAreaSinkStub::removeGroupBanner(uint groupId)
     stubMethodEntered("removeGroup", params);
 }
 
+void NotificationAreaSinkStub::applyPrivacySetting(bool privacyEnabled)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<bool >(privacyEnabled));
+    stubMethodEntered("applyPrivacySetting", params);
+}
+
 
 // 3. CREATE A STUB INSTANCE
 NotificationAreaSinkStub gDefaultNotificationAreaSinkStub;
@@ -166,6 +174,11 @@ MBanner *NotificationAreaSink::updateNotification(MBanner *dn, const Notificatio
 void NotificationAreaSink::removeGroupBanner(uint groupId)
 {
     return gNotificationAreaSinkStub->removeGroupBanner(groupId);
+}
+
+void NotificationAreaSink::applyPrivacySetting(bool privacyEnabled)
+{
+    return gNotificationAreaSinkStub->applyPrivacySetting(privacyEnabled);
 }
 
 #endif

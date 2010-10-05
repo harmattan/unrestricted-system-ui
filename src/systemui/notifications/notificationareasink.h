@@ -50,6 +50,13 @@ private slots:
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
 
+    /*!
+     * Applies the current privacy setting to all banners.
+     *
+     * \param privacyEnabled \c true if privacy is enabled, \c false if disabled
+     */
+    void applyPrivacySetting(bool privacyEnabled);
+
 signals:
     /*!
      * Adds a notification to a notification area.
