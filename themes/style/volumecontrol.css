@@ -1,29 +1,22 @@
-#VolumeOverlay {
-    padding-left:   10px;
-    padding-right:  10px;
-    padding-top:    10px;
-    padding-bottom: 10px;
 
-    minimum-size: -1 400;
-    maximum-size: 100% 100%;
-
+#FSVolumeOverlay {
     background-color: black;
     background-opacity: 0.8;
+
+    minimum-size: 100% 100%;
+    maximum-size: 100% 100%;
 }
 
-#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#In {
-    origin: "left";
-}
+#FSVolumeBar {
+    background-image: "meegotouch-slider-received-background-horizontal" 4px 4px 4px 4px;
+    background-opacity: 0.8;
 
-#VolumeOverlay.Landscape MWidgetSlideAnimationStyle#Out {
-    origin: "left";
-}
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 
-#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#In {
-    origin: "right";
-}
-
-#VolumeOverlay.Portrait MWidgetSlideAnimationStyle#Out {
-    origin: "right";
+    minimum-size: 440px 0px;
+    maximum-size: 100%  100%;
 }
 

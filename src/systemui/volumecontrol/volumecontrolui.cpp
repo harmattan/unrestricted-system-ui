@@ -20,6 +20,8 @@
 #include "volumeoverlay.h"
 #include "volumebarlogic.h"
 
+#include <QTimer>
+
 #undef DEBUG
 #include "../debug.h"
 
@@ -55,6 +57,10 @@ VolumeControlUI::VolumeControlUI (QObject *parent) :
              this, SLOT (hwKeyResourceLost ()));
 
     m_hwkeyResource->acquire ();
+#endif
+
+#ifdef TEST_IT
+    QTimer::singleShot (1000, this, SLOT (testIt ()));
 #endif
 }
 
@@ -200,3 +206,27 @@ VolumeControlUI::hwKeyResourceLost ()
     m_hwkeys->disconnect ();
 #endif
 }
+
+#ifdef TEST_IT
+/*
+ * Function to test volume-control gui
+ */
+void
+VolumeControlUI::testIt ()
+{
+    const int max = 12;
+    static int current;
+
+    current++;
+    if (current > 12)
+        current = 0;
+
+    if (m_overlay == 0)
+        m_overlay = new VolumeOverlay;
+
+    m_overlay->UpdateVolume (current, max);
+
+    QTimer::singleShot (1000, this, SLOT (testIt ()));
+}
+#endif
+

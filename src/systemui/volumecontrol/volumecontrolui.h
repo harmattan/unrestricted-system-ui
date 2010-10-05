@@ -24,6 +24,8 @@
 class VolumeBarLogic;
 class VolumeOverlay;
 
+#undef TEST_IT
+
 #ifdef HAVE_LIBRESOURCEQT
 #include <policy/resource-set.h>
 #endif
@@ -50,6 +52,9 @@ private slots:
 #endif
     void hwKeyResourceAcquired ();
     void hwKeyResourceLost ();
+#ifdef TEST_IT
+    void testIt ();
+#endif
 
 private:
     VolumeBarLogic  *m_logic;

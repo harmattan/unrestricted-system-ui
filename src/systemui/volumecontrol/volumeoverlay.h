@@ -6,7 +6,8 @@
 #include <QObject>
 
 class QGraphicsLinearLayout;
-class MSlider;
+class MStylableWidget;
+class MImageWidget;
 class QTimer;
 
 class VolumeOverlay : public MOverlay
@@ -25,17 +26,16 @@ class VolumeOverlay : public MOverlay
 
   private slots:
     void hideMe ();
-    /*
-     * for window mask handling:
-     */
-    void updateMask ();
-    void removeMask ();
+    void updateContents ();
 
   private:
     QTimer                  *m_timer;
-    MSlider                 *m_slider;
     MWindow                 *m_window;
     QGraphicsLinearLayout   *m_layout;
+    MStylableWidget         *m_slider;
+    MImageWidget            *m_icon;
+    int                      m_value;
+    int                      m_valueMax;
 
     void constructUi ();
 
