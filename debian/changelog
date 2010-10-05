@@ -1,4 +1,10 @@
-system-ui (0.17.1~2) harmattan; urgency=low
+system-ui (0.17.2~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 05 Oct 2010 12:38:09 +0300
+
+system-ui (0.17.1-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-3945 Status bar in the lock screen
   * Implemented: SWP#DUI-3812 Private notification banners for the lock screen
