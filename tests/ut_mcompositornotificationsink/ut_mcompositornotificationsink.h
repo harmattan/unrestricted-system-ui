@@ -117,6 +117,9 @@ private slots:
     // Test that the window mask is set correctly in all orientations
     void testWindowMasking_data();
     void testWindowMasking();
+
+    // Test preview icon in notification preview
+    void testPreviewIconId();
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

@@ -73,6 +73,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
     } else {
          // Create and set up info banner widget
         MBanner *banner = createInfoBanner(notification);
+        banner->setIconID(determinePreviewIconId(notification.parameters()));
         setupWindowTimer(banner, notification);
 
         // Keep track of the mapping between IDs and private notification information classes
@@ -116,7 +117,7 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
         // Update the info banner widget
         banner->setTitle(infoBannerTitleText(notification.parameters()));
         banner->setSubtitle(infoBannerSubtitleText(notification.parameters()));
-        banner->setIconID(determineIconId(notification.parameters()));
+        banner->setIconID(determinePreviewIconId(notification.parameters()));
 
         // Update the info banner's actions
         updateActions(banner, notification.parameters());
@@ -244,3 +245,11 @@ void MCompositorNotificationSink::changeNotificationPreviewMode()
     }
 }
 
+QString MCompositorNotificationSink::determinePreviewIconId(const NotificationParameters &parameters)
+{
+    QString previewIconID = parameters.value(NotificationWidgetParameterFactory::previewIconIdKey()).toString();
+    if (previewIconID.isEmpty()) {
+        previewIconID = determineIconId(parameters);
+    }
+    return previewIconID;
+}

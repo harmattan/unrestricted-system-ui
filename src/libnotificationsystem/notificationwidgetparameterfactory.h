@@ -38,6 +38,14 @@ public:
     }
 
     /*!
+     * Returns the keyname of the preview icon id parameter
+     */
+    static QString previewIconIdKey() {
+        return QString("previewIconId");
+    }
+
+
+    /*!
      * Returns the keyname of the summary parameter
      */
     static QString summaryKey() {
@@ -94,6 +102,16 @@ public:
      */
     static NotificationParameter createIconIdParameter(const QString &iconId) {
         return NotificationParameter(iconIdKey(), QVariant(iconId));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given preview icon ID.
+     *
+     * \param previewIconId the preview icon ID for the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createPreviewIconIdParameter(const QString &previewIconId) {
+        return NotificationParameter(iconIdKey(), QVariant(previewIconId));
     }
 
     /*!

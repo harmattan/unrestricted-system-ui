@@ -536,4 +536,21 @@ void Ut_MCompositorNotificationSink::testWindowMasking()
     QCOMPARE(mWindowMaskRegion, region);
 }
 
+void Ut_MCompositorNotificationSink::testPreviewIconId()
+{
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0);
+
+    // Check default icon is used if preview icon id is not defined
+    sendOnDisplayChangeEvent();
+    MBanner *banner = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
+    QCOMPARE(banner->iconID(), QString("buttonicon0"));
+
+    // Check that preview icon id is used if defined
+    parameters0.add("previewIconId", "previewicon0");
+    notificationManager->updateNotification(0, 0, parameters0);
+    sendOnDisplayChangeEvent();
+    QCOMPARE(banner->iconID(), QString("previewicon0"));
+}
+
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

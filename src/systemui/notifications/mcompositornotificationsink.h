@@ -126,6 +126,13 @@ private:
      */
     void setupWindowTimer(MBanner *banner, const Notification &notification);
 
+    /*!
+     * Determines preview icon id of a notification based on the given notification parameters.
+     * \param parameters Notification parameters to determine the preview icon id from.
+     * \return Logical icon id as a string
+     */
+    static QString determinePreviewIconId(const NotificationParameters &parameters);
+
     //! A mapping between notification IDs and info banners
     QHash<uint, MBanner *> idToBanner;
 
