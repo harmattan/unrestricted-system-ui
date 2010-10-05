@@ -67,6 +67,13 @@ public:
     //! MBanner property to store the user removability into
     static const char *USER_REMOVABLE_PROPERTY;
 
+    /*!
+     * Sets if notifications are clickable
+     * \param clickable \c true if notifications are clickable. \c false if notifications are not clickable
+     */
+
+    virtual void setNotificationsClickable(bool clickable);
+
 protected:
     /*!
      * Determines icon id of a notification based on the given notification parameters.
@@ -138,6 +145,9 @@ private slots:
 private:
     //! GConf key for enabling/disabling private notifications
     MGConfItem *privacySetting;
+
+    //! Stores if the notification in this area are clickable
+    bool clickableNotifications;
 };
 
 #endif // WIDGETNOTIFICATIONSINK_H

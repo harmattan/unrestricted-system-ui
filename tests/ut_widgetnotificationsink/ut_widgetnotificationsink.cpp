@@ -437,4 +437,13 @@ void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreate
     QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), false);
 }
 
+void Ut_WidgetNotificationSink::testWhenNotificationsCreatedAreNotClickableWhenClickingThemDoesNotWork()
+{
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    m_subject->setNotificationsClickable(false);
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    bool ret = disconnect(infoBanner.data(), SIGNAL(clicked()), m_subject, SLOT(infoBannerClicked()));
+    QCOMPARE(ret, false);
+}
+
 QTEST_APPLESS_MAIN(Ut_WidgetNotificationSink)

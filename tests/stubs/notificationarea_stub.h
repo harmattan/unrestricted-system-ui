@@ -26,7 +26,7 @@
 class NotificationAreaStub : public StubBase
 {
 public:
-    virtual void notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent);
+    virtual void notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent, bool notificationsClickable);
     virtual void notificationAreaDestructor();
     virtual void addNotification(MBanner &notification);
     virtual void moveNotificationToTop(MBanner &notification);
@@ -35,11 +35,12 @@ public:
     virtual void setHonorPrivacySetting(bool honor);
 };
 
-void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent)
+void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, MWidget *parent, bool notificationsClickable)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<NotificationArea *>(notificationArea));
     params.append(new Parameter<MWidget *>(parent));
+    params.append((new Parameter<bool>(notificationsClickable)));
     stubMethodEntered("notificationAreaConstructor", params);
 }
 
@@ -84,9 +85,9 @@ void NotificationAreaStub::setHonorPrivacySetting(bool honor)
 NotificationAreaStub gDefaultNotificationAreaStub;
 NotificationAreaStub *gNotificationAreaStub = &gDefaultNotificationAreaStub;
 
-NotificationArea::NotificationArea(MWidget *parent)
+NotificationArea::NotificationArea(MWidget *parent, bool notificationsClickable)
 {
-    gNotificationAreaStub->notificationAreaConstructor(this, parent);
+    gNotificationAreaStub->notificationAreaConstructor(this, parent, notificationsClickable);
 }
 
 NotificationArea::~NotificationArea()

@@ -64,6 +64,7 @@ private slots:
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogNameDefined();
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresent();
     void testUserRemovablePropertyIsSetWhenBannerIsCreated();
+    void testWhenNotificationsCreatedAreNotClickableWhenClickingThemDoesNotWork();
 
 private:
     // Helper for the "test clicking when not user removable" cases

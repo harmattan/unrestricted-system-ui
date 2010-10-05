@@ -164,7 +164,6 @@ void Ut_NotificationAreaSink::cleanup()
     notifications.clear();
     destroyedNotifications.clear();
 }
-
 void Ut_NotificationAreaSink::testAddNotification()
 {
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
@@ -341,3 +340,4 @@ void Ut_NotificationAreaSink::testUpdateGroup()
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)
+

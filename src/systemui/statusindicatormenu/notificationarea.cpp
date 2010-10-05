@@ -23,13 +23,13 @@
 #include "notificationmanager.h"
 #include <MBanner>
 
-NotificationArea::NotificationArea(MWidget *parent) :
+NotificationArea::NotificationArea(MWidget *parent, bool notificationsClickable) :
     MWidgetController(new NotificationAreaModel, parent),
     notificationAreaSink(new NotificationAreaSink)
 {
     // Connect notification signals
     NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
-
+    notificationAreaSink->setNotificationsClickable(notificationsClickable);
     connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));

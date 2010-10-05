@@ -42,7 +42,7 @@ public:
      *
      * \param parent the parent widget of the NotificationArea, defaults to NULL
      */
-    NotificationArea(MWidget *parent = NULL);
+    NotificationArea(MWidget *parent = NULL, bool notificationsClickable = true);
 
     /*!
      * Destroys the NotificationArea.

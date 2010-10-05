@@ -136,4 +136,16 @@ void Ut_NotificationArea::testHonorPrivacySetting()
     QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setHonorPrivacySetting").parameter<bool>(0), false);
 }
 
+void Ut_NotificationArea::testWhenNotificationAreaIsCreatedNotificationAreaSinkHasClickablePropertySet()
+{
+    delete m_subject;
+    m_subject = new NotificationArea(NULL, true);
+    gWidgetNotificationSinkStub->stubCallCount("setNotificationsClickable");
+    QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setNotificationsClickable").parameter<bool>(0), true);
+    delete m_subject;
+    m_subject = new NotificationArea(NULL, false);
+    gWidgetNotificationSinkStub->stubCallCount("setNotificationsClickable");
+    QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setNotificationsClickable").parameter<bool>(0), false);
+}
+
 QTEST_APPLESS_MAIN(Ut_NotificationArea)

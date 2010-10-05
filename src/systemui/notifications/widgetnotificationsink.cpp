@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "widgetnotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
@@ -30,7 +29,8 @@ const char *WidgetNotificationSink::USER_REMOVABLE_PROPERTY = "userRemovable";
 
 WidgetNotificationSink::WidgetNotificationSink() :
     NotificationSink(),
-    privacySetting(NULL)
+    privacySetting(NULL),
+    clickableNotifications(true)
 {
 }
 
@@ -84,8 +84,9 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     updateActions(infoBanner, parameters);
 
     // Catch clicks from the info banner
-    connect(infoBanner, SIGNAL(clicked()), this, SLOT(infoBannerClicked()), Qt::QueuedConnection);
-
+    if(clickableNotifications) {
+        connect(infoBanner, SIGNAL(clicked()), this, SLOT(infoBannerClicked()), Qt::QueuedConnection);
+    }
     return infoBanner;
 }
 
@@ -179,4 +180,9 @@ void WidgetNotificationSink::setHonorPrivacySetting(bool honor)
         delete privacySetting;
         privacySetting = NULL;
     }
+}
+
+void WidgetNotificationSink::setNotificationsClickable(bool clickable)
+{
+    clickableNotifications = clickable;
 }
