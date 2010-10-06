@@ -374,16 +374,26 @@ void Ut_NotificationAreaSink::testApplyPrivacySetting()
     sink->setHonorPrivacySetting(honorPrivacy);
     gMGConfPrivateNotificationValue = privacyEnabled;
 
-    connect(this, SIGNAL(privacySettingChanged(bool)), sink, SIGNAL(privacySettingChanged(bool)));
-
     // Create a notification
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
     parameters0.add(NotificationWidgetParameterFactory::createGenericTextIdParameter("test0"));
     parameters0.add(NotificationWidgetParameterFactory::createGenericTextCatalogueParameter("test0"));
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
 
+    // Set the privacy mode
+    connect(this, SIGNAL(privacySettingChanged(bool)), sink, SIGNAL(privacySettingChanged(bool)));
     emit privacySettingChanged(privacyEnabled);
 
+    // The titles should be as expected
+    QCOMPARE(titles.length(), 1);
+    QCOMPARE(titles[0], title);
+    QCOMPARE(subtitles.length(), 1);
+    QCOMPARE(subtitles[0], subtitle);
+
+    // Update the notification
+    emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
+
+    // The titles should still be as expected
     QCOMPARE(titles.length(), 1);
     QCOMPARE(titles[0], title);
     QCOMPARE(subtitles.length(), 1);

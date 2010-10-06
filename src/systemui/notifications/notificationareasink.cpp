@@ -53,13 +53,16 @@ void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
 MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     // Update the info banner widget
-    infoBanner->setTitle(infoBannerTitleText(parameters));
-    infoBanner->setSubtitle(infoBannerSubtitleText(parameters));
-    infoBanner->setIconID(determineIconId(parameters));
+    infoBanner->setProperty(TITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
+    infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
+    infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
+    infoBanner->setIconID(determineIconId(parameters));
 
-    // Update the info banner's actions
+    // Update the info banner's titles and actions
+    updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
+
     return infoBanner;
 }
 
