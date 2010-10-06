@@ -63,6 +63,7 @@ private slots:
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogIdDefined();
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledButNoCatalogNameDefined();
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresent();
+    void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresentPlural();
     void testUserRemovablePropertyIsSetWhenBannerIsCreated();
     void testPrivacySettingValueEmittedWhenHonoringChanges_data();
     void testPrivacySettingValueEmittedWhenHonoringChanges();

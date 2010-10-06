@@ -138,7 +138,8 @@ QString WidgetNotificationSink::infoBannerGenericText(const NotificationParamete
             locale.installTrCatalog(genericTextCatalogue);
             MLocale::setDefault(locale);
 
-            genericText = qtTrId(genericTextId.toUtf8());
+            int eventCount = parameters.value(GenericNotificationParameterFactory::countKey()).toInt();
+            genericText = qtTrId(genericTextId.toUtf8(), eventCount).arg(eventCount);
         }
     }
 

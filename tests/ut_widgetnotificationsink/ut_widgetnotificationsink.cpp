@@ -68,10 +68,17 @@ void TestWidgetNotificationSink::updateActions(MBanner *infoBanner, const Notifi
     WidgetNotificationSink::updateActions(infoBanner, notification.parameters());
 }
 
-QString qtTrId(const char *id, int)
+QString qtTrId(const char *id, int count)
 {
     if(QString(id) == "translationid")
-        return "translatedstring";
+        if (1 == count)
+        {
+            return "translatedstring %1";
+        }
+        else if (count > 1)
+        {
+            return "translatedpluralstring %1";
+        }
     else
         return "";
 }
@@ -415,9 +422,28 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredAndEna
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
     parameters.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
     parameters.add(NotificationWidgetParameterFactory::genericTextCatalogueKey(), catalogue);
-    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    parameters.add(GenericNotificationParameterFactory::countKey(), "1");
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 1, parameters, Notification::ApplicationEvent, 1020)));
     QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
-    QCOMPARE(infoBanner->title(), QString("translatedstring"));
+    QCOMPARE(infoBanner->title(), QString("translatedstring 1"));
+    QCOMPARE(infoBanner->subtitle(), QString());
+    QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
+    QCOMPARE(gInstalledTrCatalog, catalogue);
+    QCOMPARE(gSetDefaultLocale, gInstalledCatalogLocale);
+}
+
+void Ut_WidgetNotificationSink::testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresentPlural()
+{
+    QString catalogue("translationcatalogue");
+    m_subject->setHonorPrivacySetting(true);
+    gMGConfPrivateNotificationValue = true;
+    TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    parameters.add(NotificationWidgetParameterFactory::genericTextIdKey(), "translationid");
+    parameters.add(NotificationWidgetParameterFactory::genericTextCatalogueKey(), catalogue);
+    parameters.add(GenericNotificationParameterFactory::countKey(), "2");
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 2, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
+    QCOMPARE(infoBanner->title(), QString("translatedpluralstring 2"));
     QCOMPARE(infoBanner->subtitle(), QString());
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(gInstalledTrCatalog, catalogue);
