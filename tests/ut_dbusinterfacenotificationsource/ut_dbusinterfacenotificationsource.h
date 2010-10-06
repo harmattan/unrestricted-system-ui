@@ -97,6 +97,8 @@ private slots:
     void testNotificationList();
     //Test the query of groups
     void testNotificationGroupList();
+    //Test updating group with empty strings
+    void testUpdateGroupWithEmptyStrings();
 
 private:
     // Notification manager interface used by the test subject

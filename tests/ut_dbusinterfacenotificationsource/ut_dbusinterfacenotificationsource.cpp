@@ -346,5 +346,18 @@ void Ut_DBusInterfaceNotificationSource::testNotificationGroupList()
     QVERIFY(manager->notificationGroupListCalled);
 }
 
+void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithEmptyStrings()
+{
+    source->updateGroup(3, 4, "event", "summary", "body", "action", "imageURI", 42);
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
+
+    source->updateGroup(3, 4, "event", "", "", "", "", 42);
+    QCOMPARE(manager->updateGroupParameters.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
+    QCOMPARE(manager->updateGroupParameters.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::summaryKey()), QVariant(""));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::bodyKey()), QVariant(""));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant(""));
+    QCOMPARE(manager->updateGroupParameters.value(NotificationWidgetParameterFactory::actionKey()), QVariant(""));
+}
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSource)

@@ -32,16 +32,16 @@ NotificationParameters NotificationSource::notificationParameters(const QString 
     parameters.add(GenericNotificationParameterFactory::createEventTypeParameter(eventType));
     parameters.add(GenericNotificationParameterFactory::createUnseenParameter(unseen));
     parameters.add(GenericNotificationParameterFactory::createCountParameter(count));
-    if (!summary.isEmpty()) {
+    if (!summary.isNull()) {
         parameters.add(NotificationWidgetParameterFactory::createSummaryParameter(summary));
     }
-    if (!body.isEmpty()) {
+    if (!body.isNull()) {
         parameters.add(NotificationWidgetParameterFactory::createBodyParameter(body));
     }
-    if (!imageURI.isEmpty()) {
+    if (!imageURI.isNull()) {
         parameters.add(NotificationWidgetParameterFactory::createImageIdParameter(imageURI));
     }
-    if (!action.isEmpty()) {
+    if (!action.isNull()) {
         parameters.add(NotificationWidgetParameterFactory::createActionParameter(action));
     }
 
