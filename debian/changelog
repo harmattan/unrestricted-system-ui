@@ -1,18 +1,18 @@
 system-ui (0.17.2~1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
-  * Fixes: NB#184624 -  FT_SE: Whole operator name is not displayed
+  * Implemented: SWP#DUI-3952 Notification area in lock screen
+  * Fixes: NB#184624 - FT_SE: Whole operator name is not displayed
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 05 Oct 2010 12:38:09 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 06 Oct 2010 17:02:09 +0300
 
 system-ui (0.17.1-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-3945 Status bar in the lock screen
   * Implemented: SWP#DUI-3812 Private notification banners for the lock screen
   * Implemented: SWP#DUI-3815 Opening screen lock when the lock screen window is not on top
-  * Fixes: NB#191056 -  Selected time format(24hr) is not getting reflected in status bar.
-  * Fixes: NB#186771 -  Regional settings 'suomi' sets 12h clock by default
-  * Fixes: NB#190801 -  Input method indicator in the status bar is not shown properly
+  * Fixes: NB#191056 - Selected time format(24hr) is not getting reflected in status bar.
+  * Fixes: NB#186771 - Regional settings 'suomi' sets 12h clock by default
+  * Fixes: NB#190801 - Input method indicator in the status bar is not shown properly
   * Fixes: NB#194119 - Notifications from different numbers not grouped properly - For missed calls.
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 30 Sep 2010 16:35:00 +0300
