@@ -82,6 +82,7 @@ private slots:
     void testPresence();
     void testInternetConnection();
     void testAnimation();
+    void testPhoneNetwork_data();
     void testPhoneNetwork();
     void testInputMethod();
     void testCall_data();

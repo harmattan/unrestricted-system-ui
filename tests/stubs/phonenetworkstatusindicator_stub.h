@@ -31,6 +31,7 @@ public:
     virtual void PhoneNetworkStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void PhoneNetworkStatusIndicatorDestructor();
     virtual void phoneNetworkChanged();
+    virtual void showVisitorNetworkName();
 };
 
 // 2. IMPLEMENT STUB
@@ -48,6 +49,11 @@ void PhoneNetworkStatusIndicatorStub::phoneNetworkChanged()
 {
     stubMethodEntered("phoneNetworkChanged");
 }
+void PhoneNetworkStatusIndicatorStub::showVisitorNetworkName()
+{
+    stubMethodEntered("showVisitorNetworkName");
+}
+
 
 
 
@@ -70,6 +76,11 @@ PhoneNetworkStatusIndicator::~PhoneNetworkStatusIndicator()
 void PhoneNetworkStatusIndicator::phoneNetworkChanged()
 {
     gPhoneNetworkStatusIndicatorStub->phoneNetworkChanged();
+}
+
+void PhoneNetworkStatusIndicator::showVisitorNetworkName()
+{
+    gPhoneNetworkStatusIndicatorStub->showVisitorNetworkName();
 }
 
 

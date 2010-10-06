@@ -51,7 +51,14 @@ void StatusIndicatorLabelView::updateData(const QList<const char *>& modificatio
     foreach(member, modifications) {
         if (member == StatusIndicatorModel::Value) {
             label->setText(model()->value().toString());
+        } else if (member == MWidgetModel::StyleName) {
+            if (controller->styleName().contains("Landscape")) {
+                label->setStyleName("StatusIndicatorLabelLandscape");
+            } else {
+                label->setStyleName("StatusIndicatorLabelPortrait");
+            }
         }
     }
 }
+
 M_REGISTER_VIEW_NEW(StatusIndicatorLabelView, StatusIndicator)

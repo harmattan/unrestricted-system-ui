@@ -25,6 +25,7 @@
 #include "testcontextitem.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
 
+
 #ifdef HAVE_QMSYSTEM
 #include <qmdevicemode_stub.h>
 #endif
@@ -65,6 +66,16 @@ void TestStatusIndicatorIconView::updateData(const QList<const char *>& modifica
 }
 
 
+bool timerStarted = false;
+void QTimer::start()
+{
+    timerStarted = true;
+}
+
+void QTimer::stop()
+{
+    timerStarted = false;
+}
 
 void Ut_StatusIndicator::init()
 {
@@ -384,13 +395,65 @@ void Ut_StatusIndicator::testAnimation()
     delete m_subject;
 }
 
+void Ut_StatusIndicator::testPhoneNetwork_data() {
+    QTest::addColumn<QString>("netstring");
+    QTest::addColumn<QString>("home");
+    QTest::addColumn<QString>("visitor");
+
+    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString();
+    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar";
+    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString();
+    QTest::newRow("MissingBoth") << QString() << QString() << QString();
+    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo";
+    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString();
+    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString();
+    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar";
+    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()";
+}
+
 void Ut_StatusIndicator::testPhoneNetwork()
 {
+    QFETCH(QString, netstring);
+    QFETCH(QString, home);
+    QFETCH(QString, visitor);
+
     StatusIndicator *m_subject = new PhoneNetworkStatusIndicator(*testContext);
 
-    testContextItems["Cellular.NetworkName"]->setValue(QVariant("foobarbarabush"));
-    QVERIFY(m_subject->model()->value().type() == QVariant::String);
-    QCOMPARE(m_subject->model()->value(), QVariant("foobarbarabus"));
+    testContextItems["Cellular.NetworkName"]->setValue(QVariant(netstring));
+    PhoneNetworkStatusIndicator* indicator = qobject_cast<PhoneNetworkStatusIndicator*>(m_subject);
+
+    // reconnect timer timeout and check that reconnection fails i.e. is already connected
+    bool disconnectSuccess = disconnect(&indicator->networkChangeShowVisitorTimer, SIGNAL(timeout()), indicator, SLOT(showVisitorNetworkName()));
+    QCOMPARE(disconnectSuccess, true);
+
+    // test methods
+    QCOMPARE(indicator->homeNetwork(), home);
+    QCOMPARE(indicator->visitorNetwork(), visitor);
+
+    // check if home network is visible at first
+    QCOMPARE(m_subject->model()->value(), QVariant(QString(home)));
+
+    if (home.isEmpty() || visitor.isEmpty() || (home == visitor)) {
+        // check if home or visitor empty or same, timer is not started
+        QCOMPARE(timerStarted, false);
+    } else {
+        // check if timer has been started
+        QCOMPARE(timerStarted, true);
+        // else check for correct interval
+        QCOMPARE(indicator->networkChangeShowVisitorTimer.interval(), 3000);
+        // "triggers" timeout and shows visitor network name
+        indicator->showVisitorNetworkName();
+        // stops timer to reset it's value to not started
+        indicator->networkChangeShowVisitorTimer.stop();
+    }
+
+    // check that visitor is showing only if home and visitor are non-empty and not same
+    // and else home network is showing
+    if (!home.isEmpty() && !visitor.isEmpty() && (home != visitor)) {
+        QCOMPARE(m_subject->model()->value(), QVariant(QString(visitor)));
+    } else {
+        QCOMPARE(m_subject->model()->value(), QVariant(QString(home)));
+    }
 }
 
 void Ut_StatusIndicator::testInputMethod()

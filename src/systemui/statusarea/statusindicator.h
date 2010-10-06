@@ -22,6 +22,7 @@
 
 #include <MWidgetController>
 #include "statusindicatormodel.h"
+#include <QTimer>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdevicemode.h>
@@ -350,9 +351,18 @@ public:
 
 private slots:
     void phoneNetworkChanged();
+    void showVisitorNetworkName();
 
 private:
+    QString homeNetwork() const;
+    QString visitorNetwork() const;
+
     ContextItem *networkName;
+    QTimer networkChangeShowVisitorTimer;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
 };
 
 /*!

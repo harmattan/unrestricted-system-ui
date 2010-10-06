@@ -1,6 +1,7 @@
 system-ui (0.17.2~1) harmattan; urgency=low
 
   * [ UNRELEASED ]
+  * Fixes: NB#184624 -  FT_SE: Whole operator name is not displayed
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 05 Oct 2010 12:38:09 +0300
 

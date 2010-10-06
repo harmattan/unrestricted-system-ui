@@ -37,6 +37,9 @@ static const QString BATTERY_MODE_CHARGING = "Charging";
 static const QString BATTERY_MODE_POWERSAVE = "PowerSave";
 static const QString BATTERY_MODE_POWERSAVE_AND_CHARGING = "PowerSaveCharging";
 
+static const QString NETWORK_NAME_START_DELIMITER = "(";
+static const QString NETWORK_NAME_END_DELIMITER = ")";
+
 StatusIndicator::StatusIndicator(QGraphicsItem *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
@@ -417,7 +420,37 @@ PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &con
 
     networkName = createContextItem(context, "Cellular.NetworkName");
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+    connect(&networkChangeShowVisitorTimer, SIGNAL(timeout()), this, SLOT(showVisitorNetworkName()));
+    networkChangeShowVisitorTimer.setSingleShot(true);
+    networkChangeShowVisitorTimer.setInterval(3*1000);
     phoneNetworkChanged();
+}
+
+QString PhoneNetworkStatusIndicator::homeNetwork() const {
+    QStringList netNames(QString(networkName->value().toString()).split(NETWORK_NAME_START_DELIMITER));
+    if (netNames.count() >= 1) {
+        return netNames.first().trimmed();
+    } else {
+        return QString();
+    }
+}
+
+QString PhoneNetworkStatusIndicator::visitorNetwork() const {
+    QString networkString = networkName->value().toString().trimmed();
+    if (networkString.contains(NETWORK_NAME_START_DELIMITER) &&
+        networkString.endsWith(NETWORK_NAME_END_DELIMITER)) {
+        // separates networkString into pieces divided by "("
+        QStringList netNames(networkString.split(NETWORK_NAME_START_DELIMITER));
+        // removes first string before "(" which is home network
+        netNames.removeFirst();
+        // returns remaining string as it was, by joining the separated strings
+        QString visitor = netNames.join(QString(NETWORK_NAME_START_DELIMITER));
+        // removes end delimiter ")"
+        visitor.chop(1);
+        return visitor.trimmed();
+    } else {
+        return QString();
+    }
 }
 
 PhoneNetworkStatusIndicator::~PhoneNetworkStatusIndicator()
@@ -426,7 +459,19 @@ PhoneNetworkStatusIndicator::~PhoneNetworkStatusIndicator()
 
 void PhoneNetworkStatusIndicator::phoneNetworkChanged()
 {
-    setValue(networkName->value().toString().left(13));
+    if (networkChangeShowVisitorTimer.isActive()) {
+        networkChangeShowVisitorTimer.stop();
+    }
+    QString home(homeNetwork());
+    QString visitor(visitorNetwork());
+    setValue(home);
+    if (!visitor.isEmpty() && !home.isEmpty() && (home != visitor)) {
+        networkChangeShowVisitorTimer.start();
+    }
+}
+
+void PhoneNetworkStatusIndicator::showVisitorNetworkName() {
+    setValue(visitorNetwork());
 }
 
 InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent) :

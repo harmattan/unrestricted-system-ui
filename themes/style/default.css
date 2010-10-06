@@ -197,6 +197,7 @@ StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
     maximum-size: -1 -1;
 }
 
+
 StatusIndicatorLabelStyle {
     margin-left: 0;
     margin-right: 0;
@@ -212,6 +213,20 @@ StatusIndicatorLabelStyle {
 }
 
 MLabelStyle#StatusIndicatorLabel {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: 13.0mm 3mm;
+    minimum-size: 0 3mm;
+    maximum-size: 13.0mm 3mm;
+}
+
+MLabelStyle#StatusIndicatorLabelLandscape {
     font: $FONT_SMALL;
     color: #FFFFFF;
     margin-left: 0;
@@ -222,9 +237,25 @@ MLabelStyle#StatusIndicatorLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: 13.0mm 3mm;
+    preferred-size: 55.0mm 3mm;
     minimum-size: 0 3mm;
-    maximum-size: 13.0mm 3mm;
+    maximum-size: 55.0mm 3mm;
+}
+
+MLabelStyle#StatusIndicatorLabelPortrait {
+    font: $FONT_SMALL;
+    color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0.1mm;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    preferred-size: 17.0mm 3mm;
+    minimum-size: 0 3mm;
+    maximum-size: 17.0mm 3mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
