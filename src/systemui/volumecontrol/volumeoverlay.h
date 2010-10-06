@@ -4,8 +4,10 @@
 #include <MWindow>
 #include <MOverlay>
 #include <QObject>
+#include <QPointer>
 
 class QGraphicsLinearLayout;
+class QPropertyAnimation;
 class MStylableWidget;
 class MImageWidget;
 class QTimer;
@@ -28,6 +30,9 @@ class VolumeOverlay : public MOverlay
     void hideMe ();
     void updateContents ();
 
+  protected:
+    void mousePressEvent (QGraphicsSceneMouseEvent *event);
+
   private:
     QTimer                  *m_timer;
     MWindow                 *m_window;
@@ -36,6 +41,7 @@ class VolumeOverlay : public MOverlay
     MImageWidget            *m_icon;
     int                      m_value;
     int                      m_valueMax;
+    QPointer<QPropertyAnimation>    m_anim;
 
     void constructUi ();
 

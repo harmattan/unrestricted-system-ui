@@ -20,7 +20,7 @@
 #define WARNING
 #include "../debug.h"
 
-#define HIDE_TIMEOUT 3000
+#define HIDE_TIMEOUT 1000
 
 VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
     MOverlay (parent),
@@ -55,19 +55,6 @@ VolumeOverlay::constructUi ()
     m_slider = new MStylableWidget (this);
     m_slider->setObjectName ("FSVolumeBar");
 
-    // TODO: Implement volume-level-changing via touch-screen..
-    // [left side of screen decreases, right side increases the volume
-#if 0
-    // Stop the timeout when the slider is in pressed state ...
-    connect (m_slider, SIGNAL (sliderPressed ()),
-             m_timer, SLOT (stop ()));
-    // ...and re-start it when slider released.
-    connect (m_slider, SIGNAL (sliderReleased ()),
-             m_timer, SLOT (start ()));
-
-    //FIXME emit VolumeChanged on volume-changes...
-#endif
-
     // create a new scene manager
     m_window = new MWindow (new MSceneManager);
     m_window->setTranslucentBackground (true);
@@ -91,12 +78,36 @@ VolumeOverlay::constructUi ()
 }
 
 void
+VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
+{
+    /* tapping on screen left side should decrease the value */
+    int step = -1;
+
+    /* .. and tapping on right side should increase the value */
+    if (event->pos ().x () > size ().width () / 2)
+        step = 1;
+
+    m_value += step;
+
+    /* check for corner cases... */
+    if (m_value < 0)
+        m_value = 0;
+    if (m_value > m_valueMax)
+        m_value = m_valueMax;
+
+    /* emit VolumeChanged signal... */
+    emit VolumeChanged (m_value);
+    /* and the update the UI */
+    UpdateVolume (m_value, m_valueMax);
+}
+
+void
 VolumeOverlay::updateContents ()
 {
     MSceneManager *sm = m_window->sceneManager ();
     QSize screen = sm->visibleSceneSize (sm->orientation ());
 
-    /* 
+    /*
      * update the bar geometry based on current screen size,
      * and on actual volume-level
      */
@@ -112,12 +123,16 @@ VolumeOverlay::updateContents ()
 
     if (isOnDisplay ())
     {
-        QPropertyAnimation *anim = new QPropertyAnimation (m_slider, "geometry");
-        anim->setDuration (300);
-        anim->setStartValue (m_slider->geometry ());
-        anim->setEndValue (barGeom);
+        if (m_anim.isNull ())
+            m_anim = new QPropertyAnimation (m_slider, "geometry");
+        else
+            m_anim->stop ();
 
-        anim->start (QAbstractAnimation::DeleteWhenStopped);
+        m_anim->setDuration (100);
+        m_anim->setStartValue (m_slider->geometry ());
+        m_anim->setEndValue (barGeom);
+
+        m_anim->start (QAbstractAnimation::DeleteWhenStopped);
     }
     else
     {
@@ -133,13 +148,6 @@ VolumeOverlay::UpdateVolume (int val, int max)
 
     m_value = val;
     m_valueMax = max;
-
-#if 0
-    if (m_window->orientation () == M::Landscape)
-        m_window->setPortraitOrientation ();
-    else
-        m_window->setLandscapeOrientation ();
-#endif
 
     updateContents ();
 
