@@ -75,6 +75,8 @@ VolumeOverlay::constructUi ()
     m_layout->addStretch (1);
 
     setLayout (m_layout);
+
+    m_window->sceneManager()->appearSceneWindow (this);
 }
 
 void
@@ -159,11 +161,7 @@ VolumeOverlay::UpdateVolume (int val, int max)
     updateContents ();
 
     if (m_window->isVisible () == false)
-    {
         m_window->show ();
-        m_window->showFullScreen ();
-        m_window->sceneManager ()->appearSceneWindow (this);
-    }
 
     m_timer->start ();
 }
@@ -172,7 +170,6 @@ void
 VolumeOverlay::hideMe ()
 {
     m_timer->stop ();
-    m_window->sceneManager ()->disappearSceneWindow (this);
     m_window->hide ();
 }
 

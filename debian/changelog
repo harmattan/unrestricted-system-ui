@@ -4,8 +4,9 @@ system-ui (0.17.3~1) harmattan; urgency=low
 
   [ David Kedves ]
   * Implemented: SWP#DUI-4105 Volume bar in full-screen mode
+  * Fixes: NB#196318 - Screen goes black when adjusting volume with HW keys
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 07 Oct 2010 15:59:40 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 07 Oct 2010 17:37:14 +0200
 
 system-ui (0.17.2-1) harmattan; urgency=low
 
