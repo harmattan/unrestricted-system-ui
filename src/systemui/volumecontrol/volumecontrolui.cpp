@@ -60,7 +60,7 @@ VolumeControlUI::VolumeControlUI (QObject *parent) :
 #endif
 
 #ifdef TEST_IT
-    QTimer::singleShot (1000, this, SLOT (testIt ()));
+    QTimer::singleShot (500, this, SLOT (testIt ()));
 #endif
 }
 
@@ -226,7 +226,7 @@ VolumeControlUI::testIt ()
 
     m_overlay->UpdateVolume (current, max);
 
-    QTimer::singleShot (1000, this, SLOT (testIt ()));
+    QTimer::singleShot (500, this, SLOT (testIt ()));
 }
 #endif
 

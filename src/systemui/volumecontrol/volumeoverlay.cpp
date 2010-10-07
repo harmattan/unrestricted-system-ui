@@ -104,6 +104,7 @@ VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
 void
 VolumeOverlay::updateContents ()
 {
+    bool orientationChanged = false;
     MSceneManager *sm = m_window->sceneManager ();
     QSize screen = sm->visibleSceneSize (sm->orientation ());
 
@@ -121,7 +122,13 @@ VolumeOverlay::updateContents ()
     barGeom.setY (screen.height () - newSize.height ());
     barGeom.setSize (newSize);
 
-    if (isOnDisplay ())
+    if (qAbs (m_slider->geometry ().width () - screen.width ()) > 10)
+    {
+        /* when orientation changed, we don't want animation */
+        orientationChanged = true;
+    }
+
+    if (isOnDisplay () && ! orientationChanged)
     {
         if (m_anim.isNull ())
             m_anim = new QPropertyAnimation (m_slider, "geometry");
