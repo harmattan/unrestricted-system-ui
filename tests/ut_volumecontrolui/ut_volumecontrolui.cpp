@@ -141,15 +141,15 @@ VolumeOverlay::hideMe ()
 }
 
 void
-VolumeOverlay::updateMask ()
+VolumeOverlay::updateContents ()
 {
 
 }
 
 void
-VolumeOverlay::removeMask ()
+VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
 {
-
+  Q_UNUSED (event);
 }
 
 /*********************************************************************************

@@ -1,9 +1,13 @@
 system-ui (0.17.2~1) harmattan; urgency=low
 
+  [ Vesa Halttunen ]
   * Implemented: SWP#DUI-3952 Notification area in lock screen
   * Fixes: NB#184624 - FT_SE: Whole operator name is not displayed
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 06 Oct 2010 17:02:09 +0300
+  [ David Kedves ]
+  * Implemented: SWP#DUI-4105 Volume bar in full-screen mode
+
+ -- David Kedves <dkedves@blumsoft.eu>  Thu, 07 Oct 2010 10:19:54 +0200
 
 system-ui (0.17.1-1) harmattan; urgency=low
 

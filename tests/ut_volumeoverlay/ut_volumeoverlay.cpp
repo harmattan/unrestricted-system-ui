@@ -20,7 +20,6 @@
 #include <volumeoverlay.h>
 #include <QDebug>
 #include <MSceneWindow>
-#include <MSlider>
 #include <MApplication>
 #include <MSceneManager>
 #include <QGraphicsLinearLayout>
@@ -65,62 +64,6 @@ QTimer::stop()
 }
 
 /*********************************************************************************
- * Stub for MSlider
- */
-int ms_value = 0;
-int ms_minrange = 0;
-int ms_maxrange = 0;
-
-void
-MSlider::setOrientation(Qt::Orientation direction)
-{
-    Q_UNUSED(direction);
-    QTest::qWarn("MSlider::setOrientation");
-}
-
-void
-MSlider::setMaxLabelIconID(const QString &iconID)
-{
-    Q_UNUSED(iconID);
-    QTest::qWarn("MSlider::setMaxLabelIconID");
-}
-
-void
-MSlider::setMaxLabelVisible(bool visible)
-{
-    Q_UNUSED(visible);
-    QTest::qWarn("MSlider::setMaxLabelVisible");
-}
-
-void
-MSlider::setMinLabelIconID(const QString &iconID)
-{
-    Q_UNUSED(iconID);
-    QTest::qWarn("MSlider::setMinLabelIconID");
-}
-
-void
-MSlider::setMinLabelVisible(bool visible)
-{
-    Q_UNUSED(visible);
-    QTest::qWarn("MSlider::setMinLabelVisible");
-}
-
-void
-MSlider::setValue(int value)
-{
-    ms_value = value;
-    QTest::qWarn("MSlider::setMinLabelVisible");
-}
-
-void
-MSlider::setRange(int minimum, int maximum)
-{
-    ms_minrange = minimum;
-    ms_maxrange = maximum;
-}
-
-/*********************************************************************************
  * Stub for MWindow
  */
 M::Orientation mw_orientation = M::Portrait;
@@ -139,9 +82,6 @@ MWindow::visibleSceneSize(M::Orientation orientation) const
 void
 Ut_VolumeOverlay::init ()
 {
-    ms_value = 0;
-    ms_minrange = 0;
-    ms_maxrange = 0;
     t_interval = 0;
     t_isStarted = false;
     mw_orientation = M::Portrait;
@@ -170,8 +110,8 @@ void
 Ut_VolumeOverlay::testUpdateVolume ()
 {
     m_Api->UpdateVolume(20, 100);
-    QVERIFY(ms_value = 20);
-    QVERIFY(ms_value = 99);
+    QCOMPARE (m_Api->m_value, 20);
+    QCOMPARE (m_Api->m_valueMax, 100);
     QVERIFY(t_isStarted);
 }
 
@@ -190,3 +130,4 @@ Ut_VolumeOverlay::cleanupTestCase ()
 }
 
 QTEST_APPLESS_MAIN(Ut_VolumeOverlay)
+
