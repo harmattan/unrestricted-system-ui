@@ -1,4 +1,4 @@
-system-ui (0.17.2~1) harmattan; urgency=low
+system-ui (0.17.2-1) harmattan; urgency=low
 
   * Implemented: SWP#DUI-3952 Notification area in lock screen
   * Fixes: NB#184624 - FT_SE: Whole operator name is not displayed
