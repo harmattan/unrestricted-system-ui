@@ -1,11 +1,17 @@
-system-ui (0.17.2~1) harmattan; urgency=low
+system-ui (0.17.3~1) harmattan; urgency=low
+
+  * [ UNRELEASED ]
+
+  [ David Kedves ]
+  * Implemented: SWP#DUI-4105 Volume bar in full-screen mode
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 07 Oct 2010 15:59:40 +0300
+
+system-ui (0.17.2-1) harmattan; urgency=low
 
   [ Vesa Halttunen ]
   * Implemented: SWP#DUI-3952 Notification area in lock screen
   * Fixes: NB#184624 - FT_SE: Whole operator name is not displayed
-
-  [ David Kedves ]
-  * Implemented: SWP#DUI-4105 Volume bar in full-screen mode
 
  -- David Kedves <dkedves@blumsoft.eu>  Thu, 07 Oct 2010 10:19:54 +0200
 
