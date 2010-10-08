@@ -65,7 +65,12 @@ void Date::updateDate()
 {
     // Set current time in the labels
     QDateTime currentTime = QDateTime::currentDateTime();
-    label->setText(locale->formatDateTime(currentTime, style()->dateFormat()));
+    QString dateFormat = style()->dateFormat();
+    if (dateFormat.isEmpty()) {
+        label->setText(locale->formatDateTime(currentTime, MLocale::DateFull, MLocale::TimeNone));
+    } else {
+        label->setText(locale->formatDateTime(currentTime, dateFormat));
+    }
 
     // Calculate the time for the next update
     QDateTime nextUpdateTime = currentTime.addDays(1);

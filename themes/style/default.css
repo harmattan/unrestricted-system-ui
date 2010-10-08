@@ -635,7 +635,7 @@ MLabelStyle#LockScreenHeaderClockLabel {
 }
 
 DateStyle {
-    date-format: "%A, %B %d %Y";
+    date-format:;
     horizontal-align: left;
 }
 

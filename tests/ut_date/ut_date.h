@@ -47,6 +47,7 @@ private slots:
     void testDateUpdates();
     void testTimeSettingChanged();
     void testAlignment();
+    void testEmptyDateFormat();
 
 private:
     DateStyle *style();

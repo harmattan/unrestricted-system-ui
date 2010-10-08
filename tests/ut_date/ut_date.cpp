@@ -73,7 +73,7 @@ void Ut_Date::checkNextUpdate()
 
 void Ut_Date::testInitialState()
 {
-    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, "\%A \%B \%d"));
+    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, style()->dateFormat()));
 
     checkNextUpdate();
 
@@ -88,7 +88,7 @@ void Ut_Date::testDateUpdates()
     gCurrentDateTime = QDateTime(QDate(2100, 4, 13), QTime(1, 23));
     m_subject->updateDate();
 
-    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, "\%A \%B \%d"));
+    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, style()->dateFormat()));
 
     checkNextUpdate();
 }
@@ -98,7 +98,7 @@ void Ut_Date::testTimeSettingChanged()
     gCurrentDateTime = QDateTime(QDate(2100, 4, 13), QTime(1, 23));
     m_subject->updateSettings(Maemo::QmTimeTimeChanged);
 
-    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, "\%A \%B \%d"));
+    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, style()->dateFormat()));
 
     checkNextUpdate();
 }
@@ -114,6 +114,13 @@ void Ut_Date::testAlignment()
     style()->setHorizontalAlign(alignment);
     m_subject->applyStyle();
     QCOMPARE(m_subject->label->alignment(), alignment);
+}
+
+void Ut_Date::testEmptyDateFormat()
+{
+    style()->setDateFormat(QString());
+    m_subject->applyStyle();
+    QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, MLocale::DateFull, MLocale::TimeNone));
 }
 
 QTEST_APPLESS_MAIN(Ut_Date)
