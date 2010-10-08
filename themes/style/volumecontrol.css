@@ -8,7 +8,7 @@
 }
 
 #FSVolumeBar {
-    background-image: "meegotouch-slider-received-background-horizontal" 4px 4px 4px 4px;
+    background-image: "meegotouch-slider-elapsed-background-horizontal" 4px 4px 4px 4px;
     background-opacity: 0.8;
 
     margin-top: 20px;

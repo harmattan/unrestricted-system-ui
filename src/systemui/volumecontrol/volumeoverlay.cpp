@@ -20,6 +20,11 @@
 #define WARNING
 #include "../debug.h"
 
+/*
+ * define this if you want volume-change animation...
+ */
+#undef WANT_ANIMATION
+
 #define HIDE_TIMEOUT 1000
 
 VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
@@ -94,8 +99,8 @@ VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
     /* check for corner cases... */
     if (m_value < 0)
         m_value = 0;
-    if (m_value > m_valueMax)
-        m_value = m_valueMax;
+    if (m_value >= m_valueMax)
+        m_value = m_valueMax - 1;
 
     /* emit VolumeChanged signal... */
     emit VolumeChanged (m_value);
@@ -106,7 +111,9 @@ VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
 void
 VolumeOverlay::updateContents ()
 {
+#ifdef WANT_ANIMATION
     bool orientationChanged = false;
+#endif
     MSceneManager *sm = m_window->sceneManager ();
     QSize screen = sm->visibleSceneSize (sm->orientation ());
 
@@ -116,7 +123,7 @@ VolumeOverlay::updateContents ()
      */
 
     QSizeF newSize;
-    newSize.setHeight ((screen.height () / m_valueMax) * m_value);
+    newSize.setHeight ((screen.height () / (m_valueMax - 1)) * m_value);
     newSize.setWidth (screen.width ());
 
     QRectF barGeom;
@@ -124,6 +131,7 @@ VolumeOverlay::updateContents ()
     barGeom.setY (screen.height () - newSize.height ());
     barGeom.setSize (newSize);
 
+#ifdef WANT_ANIMATION
     if (qAbs (m_slider->geometry ().width () - screen.width ()) > 10)
     {
         /* when orientation changed, we don't want animation */
@@ -132,18 +140,19 @@ VolumeOverlay::updateContents ()
 
     if (isOnDisplay () && ! orientationChanged)
     {
-        if (m_anim.isNull ())
-            m_anim = new QPropertyAnimation (m_slider, "geometry");
-        else
+        if (! m_anim.isNull ())
             m_anim->stop ();
+        // previous stop call also delete the previous animation obj.
+        m_anim = new QPropertyAnimation (m_slider, "geometry");
 
-        m_anim->setDuration (100);
+        m_anim->setDuration (50);
         m_anim->setStartValue (m_slider->geometry ());
         m_anim->setEndValue (barGeom);
 
         m_anim->start (QAbstractAnimation::DeleteWhenStopped);
     }
     else
+#endif
     {
         // overlay is not visible on the display, just set the new geom.:
         m_slider->setGeometry (barGeom);
@@ -170,6 +179,12 @@ void
 VolumeOverlay::hideMe ()
 {
     m_timer->stop ();
+
+#ifdef WANT_ANIMATION
+    if (! m_anim.isNull ())
+        m_anim->stop ();
+#endif
+
     m_window->hide ();
 }
 

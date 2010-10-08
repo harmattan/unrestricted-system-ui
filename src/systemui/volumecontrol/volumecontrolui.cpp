@@ -218,7 +218,7 @@ VolumeControlUI::testIt ()
     static int current;
 
     current++;
-    if (current > 12)
+    if (current => 12)
         current = 0;
 
     if (m_overlay == 0)
