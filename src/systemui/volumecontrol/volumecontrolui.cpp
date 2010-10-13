@@ -58,10 +58,6 @@ VolumeControlUI::VolumeControlUI (QObject *parent) :
 
     m_hwkeyResource->acquire ();
 #endif
-
-#ifdef TEST_IT
-    QTimer::singleShot (500, this, SLOT (testIt ()));
-#endif
 }
 
 VolumeControlUI::~VolumeControlUI ()
@@ -163,7 +159,7 @@ VolumeControlUI::locksChanged (
     {
         m_locked = true;
         if (m_overlay)
-            m_overlay->hide ();
+            m_overlay->hideWindow ();
     }
     else if (how == Maemo::QmLocks::Unlocked)
     {
@@ -206,27 +202,4 @@ VolumeControlUI::hwKeyResourceLost ()
     m_hwkeys->disconnect ();
 #endif
 }
-
-#ifdef TEST_IT
-/*
- * Function to test volume-control gui
- */
-void
-VolumeControlUI::testIt ()
-{
-    const int max = 12;
-    static int current;
-
-    current++;
-    if (current => 12)
-        current = 0;
-
-    if (m_overlay == 0)
-        m_overlay = new VolumeOverlay;
-
-    m_overlay->UpdateVolume (current, max);
-
-    QTimer::singleShot (500, this, SLOT (testIt ()));
-}
-#endif
 

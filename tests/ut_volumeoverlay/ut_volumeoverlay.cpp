@@ -119,7 +119,7 @@ void
 Ut_VolumeOverlay::testHideMe()
 {
     t_isStarted = true;
-    m_Api->hideMe();
+    m_Api->hideWindow();
     QVERIFY(t_isStarted == false);
 }
 

@@ -7,7 +7,6 @@
 #include <QPointer>
 
 class QGraphicsLinearLayout;
-class QPropertyAnimation;
 class MStylableWidget;
 class MImageWidget;
 class QTimer;
@@ -25,9 +24,9 @@ class VolumeOverlay : public MOverlay
 
   public slots:
     void UpdateVolume (int val, int max);
+    void hideWindow ();
 
   private slots:
-    void hideMe ();
     void updateContents ();
 
   protected:
@@ -41,7 +40,6 @@ class VolumeOverlay : public MOverlay
     MImageWidget            *m_icon;
     int                      m_value;
     int                      m_valueMax;
-    QPointer<QPropertyAnimation>    m_anim;
 
     void constructUi ();
 

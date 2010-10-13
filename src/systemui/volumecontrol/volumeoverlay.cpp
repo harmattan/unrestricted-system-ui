@@ -17,15 +17,12 @@
 #include <QPropertyAnimation>
 
 #undef DEBUG
-#define WARNING
 #include "../debug.h"
 
 /*
- * define this if you want volume-change animation...
+ * 3 sec timeout shoulde be used here:
  */
-#undef WANT_ANIMATION
-
-#define HIDE_TIMEOUT 1000
+#define HIDE_TIMEOUT 3000
 
 VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
     MOverlay (parent),
@@ -39,7 +36,7 @@ VolumeOverlay::VolumeOverlay (QGraphicsItem *parent) :
     m_timer = new QTimer;
     m_timer->setInterval (HIDE_TIMEOUT);
     connect (m_timer, SIGNAL (timeout ()),
-             this, SLOT (hideMe ()));
+             this, SLOT (hideWindow ()));
 
     setObjectName ("FSVolumeOverlay");
 
@@ -111,9 +108,6 @@ VolumeOverlay::mousePressEvent (QGraphicsSceneMouseEvent *event)
 void
 VolumeOverlay::updateContents ()
 {
-#ifdef WANT_ANIMATION
-    bool orientationChanged = false;
-#endif
     MSceneManager *sm = m_window->sceneManager ();
     QSize screen = sm->visibleSceneSize (sm->orientation ());
 
@@ -121,7 +115,6 @@ VolumeOverlay::updateContents ()
      * update the bar geometry based on current screen size,
      * and on actual volume-level
      */
-
     QSizeF newSize;
     newSize.setHeight ((screen.height () / (m_valueMax - 1)) * m_value);
     newSize.setWidth (screen.width ());
@@ -131,32 +124,7 @@ VolumeOverlay::updateContents ()
     barGeom.setY (screen.height () - newSize.height ());
     barGeom.setSize (newSize);
 
-#ifdef WANT_ANIMATION
-    if (qAbs (m_slider->geometry ().width () - screen.width ()) > 10)
-    {
-        /* when orientation changed, we don't want animation */
-        orientationChanged = true;
-    }
-
-    if (isOnDisplay () && ! orientationChanged)
-    {
-        if (! m_anim.isNull ())
-            m_anim->stop ();
-        // previous stop call also delete the previous animation obj.
-        m_anim = new QPropertyAnimation (m_slider, "geometry");
-
-        m_anim->setDuration (50);
-        m_anim->setStartValue (m_slider->geometry ());
-        m_anim->setEndValue (barGeom);
-
-        m_anim->start (QAbstractAnimation::DeleteWhenStopped);
-    }
-    else
-#endif
-    {
-        // overlay is not visible on the display, just set the new geom.:
-        m_slider->setGeometry (barGeom);
-    }
+    m_slider->setGeometry (barGeom);
 }
 
 void
@@ -170,20 +138,15 @@ VolumeOverlay::UpdateVolume (int val, int max)
     updateContents ();
 
     if (m_window->isVisible () == false)
-        m_window->show ();
+      m_window->show ();
 
     m_timer->start ();
 }
 
 void
-VolumeOverlay::hideMe ()
+VolumeOverlay::hideWindow ()
 {
     m_timer->stop ();
-
-#ifdef WANT_ANIMATION
-    if (! m_anim.isNull ())
-        m_anim->stop ();
-#endif
 
     m_window->hide ();
 }

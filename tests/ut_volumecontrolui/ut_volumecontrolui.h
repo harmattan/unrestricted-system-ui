@@ -35,11 +35,11 @@ Q_OBJECT
 
 private slots:
     void initTestCase ();
-    void testOverlayChanged ();
 #ifdef HAVE_QMSYSTEM
-    void testHwKeyEvent ();
     void testLocking ();
+    void testHwKeyEvent ();
 #endif
+    void testOverlayChanged ();
     void cleanupTestCase ();
     
 private:

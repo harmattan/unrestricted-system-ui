@@ -117,6 +117,8 @@ namespace Maemo
 /*********************************************************************************
  * Stub for VolumeOverlay
  */
+bool stub_hidewindow_called;
+
 VolumeOverlay::VolumeOverlay(QGraphicsItem *parent)
 {
     Q_UNUSED(parent);
@@ -135,9 +137,9 @@ VolumeOverlay::UpdateVolume (int val, int max)
 }
 
 void
-VolumeOverlay::hideMe ()
+VolumeOverlay::hideWindow ()
 {
-
+    stub_hidewindow_called = true;
 }
 
 void
@@ -268,16 +270,6 @@ Ut_VolumeControlUI::testLocking()
     m_Api->locksChanged (Maemo::QmLocks::Device, Maemo::QmLocks::Locked);
     QCOMPARE (m_Api->m_locked, true);
 
-    /*
-     * Volume controlling should work,
-     * but overlay should not be shown:
-     */
-    if (m_Api->m_overlay != 0)
-    {
-        delete m_Api->m_overlay;
-        m_Api->m_overlay = 0;
-    }
-
     // Turn up the volume
     m_Api->overlayChanged(20);
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
@@ -314,6 +306,19 @@ Ut_VolumeControlUI::testLocking()
     m_Api->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
     /* Overlay should be instantiated: */
     QVERIFY (m_Api->m_overlay != 0);
+
+    stub_hidewindow_called = false;
+    /* lock the screen */
+    m_Api->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
+    QCOMPARE (m_Api->m_locked, true);
+    /* hideWindow method should be called on VolumeOverlay, not hide! */
+    QCOMPARE (stub_hidewindow_called, true);
+
+    stub_hidewindow_called = false;
+    /* unlock the screen */
+    m_Api->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
+    QCOMPARE (m_Api->m_locked, false);
+    QCOMPARE (stub_hidewindow_called, false);
 }
 #endif
 
