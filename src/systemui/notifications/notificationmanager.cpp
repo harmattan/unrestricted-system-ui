@@ -29,6 +29,7 @@
 #include "notificationwidgetparameterfactory.h"
 #include <QDBusConnection>
 #include <QDir>
+#include <QDateTime>
 #include <mfiledatastore.h>
 #include <eventtypestore.h>
 
@@ -263,7 +264,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         uint notificationId = nextAvailableNotificationID();
 
         NotificationParameters fullParameters(appendEventTypeParameters(parameters));
-
+        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc());
         Notification notification(notificationId, groupId, notificationUserId, fullParameters, determineType(fullParameters), relayInterval);
 
         // Mark the notification used

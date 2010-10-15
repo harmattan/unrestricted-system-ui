@@ -1,5 +1,10 @@
 # Input
 include(eventtypes/eventtypes.pri)
+
+system(qdbusxml2cpp ../../libnotificationsystem/notificationsink.xml -p dbusinterfacenotificationsinkproxy -c DBusInterfaceNotificationSinkProxy -i metatypedeclarations.h)
+system(qdbusxml2cpp dbusinterfacenotificationsink.xml -a dbusinterfacenotificationsinkadaptor -c DBusInterfaceNotificationSinkAdaptor -l DBusInterfaceNotificationSink -i dbusinterfacenotificationsink.h -i metatypedeclarations.h)
+system(qdbusxml2cpp notificationmanager.xml -a dbusinterfacenotificationsourceadaptor -c DBusInterfaceNotificationSourceAdaptor -l DBusInterfaceNotificationSource -i dbusinterfacenotificationsource.h -i metatypedeclarations.h)
+
 SYSTEMUI_NOTIFICATIONS_SRC_DIR = $$SYSTEMUI_SOURCE_DIR/notifications
 INCLUDEPATH += $$SYSTEMUI_SOURCE_DIR/notifications $$SYSTEMUI_SOURCE_DIR/libnotificationsystem
 HEADERS +=  \

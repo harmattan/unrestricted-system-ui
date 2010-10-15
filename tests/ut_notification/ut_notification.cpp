@@ -24,6 +24,8 @@
 #include "notificationparameters.h"
 #include "notification.h"
 
+static QDateTime timestamp = QDateTime::fromString("M1d1y9911:11:11", "'M'M'd'd'y'yyhh:mm:ss"); //Fri Jan 1 11:11:11 1999
+
 void Ut_Notification::initTestCase()
 {
 }
@@ -75,6 +77,7 @@ void Ut_Notification::testSerializationAndDeserialization()
 {
     NotificationParameters parameters0;
     parameters0.add("imageId", "icon0");
+    parameters0.add("timestamp", timestamp);
 
     Notification n1(1234, 20, 678, parameters0, Notification::ApplicationEvent, 2345);
     Notification n2;
@@ -93,6 +96,7 @@ void Ut_Notification::testSerializationAndDeserialization()
     QCOMPARE(n2.type(), Notification::ApplicationEvent);
     QCOMPARE(n2.timeout(), int(2345));
     QCOMPARE(n2.parameters().value("imageId").toString(), QString("icon0"));
+    QCOMPARE(n2.parameters().value("timestamp").toDateTime(), timestamp);
 }
 
 
@@ -105,6 +109,7 @@ void Ut_Notification::testDBusSerialization()
     parameters0.add("body", "body");
     parameters0.add("action", "action");
     parameters0.add("count",  456);
+    parameters0.add("timestamp", timestamp);
 
     Notification n1(1234, 20, 678, parameters0, Notification::ApplicationEvent, 0);
     Notification n2;
@@ -133,6 +138,8 @@ void Ut_Notification::testDBusSerialization()
              n2.parameters().value("action"));
     QCOMPARE(n1.parameters().value("count"),
              n2.parameters().value("count"));
+    QCOMPARE(n1.parameters().value("timestamp"),
+             n2.parameters().value("timestamp"));
 }
 
 QTEST_MAIN(Ut_Notification)

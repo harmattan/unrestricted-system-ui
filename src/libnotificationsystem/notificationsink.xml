@@ -2,7 +2,7 @@
 <node>
   <interface name="com.meego.core.MNotificationSink">
     <method name="addNotification">
-      <arg name="notification" type="(uusssssu)" direction="in"/>
+      <arg name="notification" type="(uiuuia{sv})" direction="in"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="Notification"/>
     </method>
     <method name="removeNotification">

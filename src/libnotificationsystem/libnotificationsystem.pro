@@ -20,6 +20,8 @@ contains(COV_OPTION, on) {
         -fprofile-arcs
 }
 
+system(qdbusxml2cpp notificationsink.xml -a notificationsinkadaptor -c NotificationSinkAdaptor -l NotificationSink -i notificationsink.h -i metatypedeclarations.h)
+
 HEADERS += \
     notificationsink.h \
     notificationsinkadaptor.h \
