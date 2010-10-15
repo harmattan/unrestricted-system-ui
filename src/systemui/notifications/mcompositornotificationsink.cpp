@@ -37,6 +37,7 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
     window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
     window->setObjectName("MCompositorNotificationSinkWindow");
     window->setWindowTitle("Notification");
+    window->setProperty("followsCurrentApplicationWindowOrientation", true);
 
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();

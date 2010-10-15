@@ -63,6 +63,7 @@ VolumeOverlay::constructUi ()
     m_window->setAttribute (Qt::WA_X11NetWmWindowTypeNotification, true);
     m_window->setAttribute (Qt::WA_X11DoNotAcceptFocus, true);
     m_window->setObjectName ("VolumeOverlayWindow");
+    m_window->setProperty("followsCurrentApplicationWindowOrientation", true);
 
     connect (m_window->sceneManager (), SIGNAL (orientationChangeFinished(M::Orientation)),
              this, SLOT (updateContents ()));

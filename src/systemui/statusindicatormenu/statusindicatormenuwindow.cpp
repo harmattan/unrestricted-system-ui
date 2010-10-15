@@ -87,6 +87,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 {
     setTranslucentBackground(true);
     setWindowTitle("Status Indicator Menu");
+    setProperty("followsCurrentApplicationWindowOrientation", true);
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 

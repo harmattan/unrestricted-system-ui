@@ -2,6 +2,7 @@ system-ui (0.17.3~1) harmattan; urgency=low
 
   * [ UNRELEASED ]
   * Fixes: NB#196548 - Comma used between day and date on Lock screen
+  * Fixes: NB#198127 - Notifications do not follow the orientation of the topmost window
 
   [ David Kedves ]
   * Implemented: SWP#DUI-4105 Volume bar in full-screen mode
