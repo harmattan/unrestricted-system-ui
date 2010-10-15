@@ -37,6 +37,7 @@ public:
     static Status XGetWMName(Display *display, Window w, XTextProperty *text_prop_return);
     static Status XGetTextProperty(Display *display, Window w, XTextProperty *text_prop_return, Atom property);
     static XWMHints *XGetWMHints(Display *display, Window w);
+    static Pixmap XCreatePixmap(Display *display, Drawable drawable, unsigned int width, unsigned height, unsigned int depth);
     static int XFreePixmap(Display *display, Pixmap pixmap);
     static Pixmap XCompositeNameWindowPixmap(Display *dpy, Window window);
     static Damage XDamageCreate(Display *dpy, Drawable drawable, int level);

@@ -59,6 +59,11 @@ XWMHints *X11Wrapper::XGetWMHints(Display *display, Window w)
     return ::XGetWMHints(display, w);
 }
 
+Pixmap X11Wrapper::XCreatePixmap(Display *display, Drawable drawable, unsigned int width, unsigned height, unsigned int depth)
+{
+    return ::XCreatePixmap(display, drawable, width, height, depth);
+}
+
 int X11Wrapper::XFreePixmap(Display *display, Pixmap pixmap)
 {
     return ::XFreePixmap(display, pixmap);

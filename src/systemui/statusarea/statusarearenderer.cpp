@@ -28,6 +28,8 @@
 #include <QDir>
 #include <QApplication>
 #include <QDebug>
+#include <QX11Info>
+#include "x11wrapper.h"
 
 StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
@@ -70,8 +72,12 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
 {
     // Create a pixmap in which top portion TopLeft(0,0) BottomRight(status area width,status area height) is landscpae.
     // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
-    statusAreaPixmap = new QPixmap(statusAreaWidth, 2*statusAreaHeight);
+
+    Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
+                                              statusAreaWidth, 2*statusAreaHeight, 16);
     QApplication::syncX();
+    statusAreaPixmap = new QPixmap();
+    *statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
 
     if (!statusAreaPixmap->isNull()) {
         return true;
