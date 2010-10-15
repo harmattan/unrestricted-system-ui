@@ -1,6 +1,5 @@
-system-ui (0.17.3~1) harmattan; urgency=low
+system-ui (0.17.3-1) harmattan; urgency=low
 
-  * [ UNRELEASED ]
   * Fixes: NB#196548 - Comma used between day and date on Lock screen
 
   [ David Kedves ]
