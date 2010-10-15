@@ -118,9 +118,9 @@ Ut_VolumeOverlay::testUpdateVolume ()
 void
 Ut_VolumeOverlay::testHideMe()
 {
-    t_isStarted = true;
     m_Api->hideWindow();
-    QVERIFY(t_isStarted == false);
+
+    QCOMPARE(m_Api->m_window->isVisible (), false);
 }
 
 void
