@@ -2,16 +2,15 @@
 @import "volumecontrol.css";
 @import "shutdownscreen.css";
 
-MSceneWindowStyle#StatusIndicatorMenuWindow {
-    /* Add top padding so that the status indicator menu window does not go under the status area */
+
+StatusIndicatorMenuWindowStyle {
     padding-top: 2.8mm;
     background-color: #000000;
     background-opacity: 0.4;
-}
 
-StatusIndicatorMenuWindowStyle {
     notification-area: true;
 }
+
 MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {
     background-image: "meegotouch-applicationpage-background";
 }

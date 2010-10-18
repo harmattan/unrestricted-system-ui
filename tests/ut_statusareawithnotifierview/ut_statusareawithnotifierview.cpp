@@ -45,6 +45,7 @@
 #include "notificationsink_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenu_stub.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>
 #include <MWidget>

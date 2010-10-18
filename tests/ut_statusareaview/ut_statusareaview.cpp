@@ -39,6 +39,7 @@
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
+#include "statusindicatormenu_stub.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>
 #include <MWidget>

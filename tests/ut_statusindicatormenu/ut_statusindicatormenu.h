@@ -21,20 +21,22 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenuwindow.h"
+#include "statusindicatormenu.h"
 
-class StatusIndicatorMenuWindow;
+class StatusIndicatorMenu;
 class MApplication;
+class MApplicationExtensionInterface;
 
-class Ut_StatusIndicatorMenuWindow : public QObject
+class Ut_StatusIndicatorMenu : public QObject
 {
     Q_OBJECT
 
 signals:
-    void displayExited();
+    void settingsButtonClicked();
+    void extensionInstantiated(MApplicationExtensionInterface*);
 
 private:
-    StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
+    StatusIndicatorMenu *statusIndicatorMenu;
     MApplication *app;
 
 private slots:
@@ -48,16 +50,9 @@ private slots:
     void cleanupTestCase();
 
     // Test cases
-    void testMakeVisible();
-    void testWindowType();
-    void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
-#ifdef HAVE_QMSYSTEM
-    void testQmLocksSignalConnectionWhenDeviceLocked();
-    void testWhenDeviceLockedMenuIsNotVisible();
-    void testWhenDeviceUnlockedMenuIsVisible();
-    void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
-    void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
-#endif
+    void testSettingsButtonClicked();
+    void testExtensionInstantiated();
+    void testSignals();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

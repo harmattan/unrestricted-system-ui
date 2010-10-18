@@ -16,25 +16,25 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_STATUSINDICATORMENUWINDOW_
-#define _UT_STATUSINDICATORMENUWINDOW_
+#ifndef _UT_STATUSINDICATORMENUDROPDOWNVIEW_
+#define _UT_STATUSINDICATORMENUDROPDOWNVIEW_
 
 #include <QObject>
-#include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenuwindow.h"
 
-class StatusIndicatorMenuWindow;
+class StatusIndicatorMenuDropDownView;
+class StatusIndicatorMenu;
 class MApplication;
 
-class Ut_StatusIndicatorMenuWindow : public QObject
+class Ut_StatusIndicatorMenuDropDownView : public QObject
 {
     Q_OBJECT
 
 signals:
-    void displayExited();
+    void positionOrSizeChanged();
 
 private:
-    StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
+    StatusIndicatorMenuDropDownView *m_subject;
+    StatusIndicatorMenu *controller;
     MApplication *app;
 
 private slots:
@@ -48,16 +48,16 @@ private slots:
     void cleanupTestCase();
 
     // Test cases
-    void testMakeVisible();
-    void testWindowType();
-    void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
-#ifdef HAVE_QMSYSTEM
-    void testQmLocksSignalConnectionWhenDeviceLocked();
-    void testWhenDeviceLockedMenuIsNotVisible();
-    void testWhenDeviceUnlockedMenuIsVisible();
-    void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
-    void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
-#endif
+    void testCloseButtonOverlay();
+    void testConnections();
+    void testWhenPressedBelowMenuContentsThenWindowShouldHide();
+    void testCloseButtonPosition();
+    void testSetPannability();
+    void testPannableAreaBackgroundWidget();
+    void testTopRowInitialization();
+    void testVerticalExtensionArea();
+    void testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated();
+    void testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated();
 };
 
-#endif //_UT_STATUSINDICATORMENUWINDOW_
+#endif //_UT_STATUSINDICATORMENUDROPDOWNVIEW_

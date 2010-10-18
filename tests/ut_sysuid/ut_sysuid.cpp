@@ -39,7 +39,6 @@
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "pannedwidgetcontroller_stub.h"
 #include "volumecontrolui_stub.h"
 #include "x11wrapper_stub.h"
 

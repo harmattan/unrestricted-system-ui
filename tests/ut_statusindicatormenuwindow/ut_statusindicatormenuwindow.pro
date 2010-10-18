@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusindicatormenuwindow
-INCLUDEPATH += $$SRCDIR/statusindicatormenu $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
+INCLUDEPATH += $$SRCDIR/statusindicatormenu
 
 # unit test and unit classes
 SOURCES += \
@@ -16,6 +16,6 @@ SOURCES += \
 HEADERS += \
     ut_statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
-    $$SRCDIR/statusindicatormenu/notificationarea.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenu.h \
     $$STUBSDIR/qmlocks_stub.h
 include(../common_bot.pri)

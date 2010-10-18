@@ -20,7 +20,7 @@
 #ifndef PANNEDWIDGETCONTROLLER_STUB
 #define PANNEDWIDGETCONTROLLER_STUB
 
-#include "statusindicatormenuwindow.h"
+#include "statusindicatormenudropdownview.h"
 #include <QGraphicsItem>
 #include <stubbase.h>
 

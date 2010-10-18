@@ -32,6 +32,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenu.h \
     $$NOTIFICATIONSRCDIR/notificationstatusindicator.h \
     $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h
