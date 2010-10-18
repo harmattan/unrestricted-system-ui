@@ -122,6 +122,9 @@ public:
      */
     virtual ~StatusIndicatorMenuDropDownView();
 
+    //! Delay for the initialization of the view (in milliseconds)
+    static const int VIEW_INITIALIZATION_DELAY;
+
 protected:
     //! \reimp
     virtual void applyStyle();

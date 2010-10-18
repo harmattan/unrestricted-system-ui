@@ -30,9 +30,12 @@
 #include <MViewCreator>
 #include <mstatusbar.h>
 #include <QGraphicsAnchorLayout>
+#include <QTimer>
 #include "statusindicatormenu.h"
 #include "statusindicatormenudropdownview.h"
 #include "statusindicatormenuwindowstyle.h"
+
+const int StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY = 30 * 1000;
 
 
 void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -99,6 +102,9 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
 
     connect(controller, SIGNAL(hideRequested()), this, SLOT(resetViewport()));
     connect(controller, SIGNAL(displayEntered()), SLOT(ensureIsViewable()));
+
+    // Schedule the view to be initialized
+    QTimer::singleShot(VIEW_INITIALIZATION_DELAY, this, SLOT(ensureIsViewable()));
 }
 
 

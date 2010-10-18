@@ -159,10 +159,28 @@ QObject *findChildItemByObjectName(QGraphicsItem* root, const QString &name) {
     return NULL;
 }
 
+struct QTimer_singleShot_params
+{
+    int msec;
+    QObject *receiver;
+    QString member;
+};
+QList<QTimer_singleShot_params> gQTimer_singleShot_params;
+void QTimer::singleShot(int msec, QObject *receiver, const char * member)
+{
+    QTimer_singleShot_params params;
+    params.msec = msec;
+    params.receiver = receiver;
+    params.member = member;
+    gQTimer_singleShot_params.append(params);
+}
+
 
 void Ut_StatusIndicatorMenuDropDownView::init()
 {
     gX11WrapperStub->stubReset();
+    gQTimer_singleShot_params.clear();
+
     controller = new StatusIndicatorMenu();
     controller->setModel(new MWidgetModel());
     m_subject = new StatusIndicatorMenuDropDownView(controller);
@@ -330,7 +348,6 @@ void Ut_StatusIndicatorMenuDropDownView::testVerticalExtensionArea()
     QCOMPARE(mApplicationExtensionAreaVerticalOrderDuringInit, ((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop")));
 }
 
-
 void Ut_StatusIndicatorMenuDropDownView::testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated()
 {
     cleanup();
@@ -356,6 +373,15 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenSettings
     connect(this, SIGNAL(displayEntered()), controller, SIGNAL(displayEntered()));
     emit displayEntered();
     QCOMPARE(gMApplicationExtensionArea_init_callCount, 1);
+}
+
+void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability()
+{
+    QCOMPARE(gQTimer_singleShot_params.count(), 1);
+    QCOMPARE(gQTimer_singleShot_params.at(0).msec, StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY);
+    QCOMPARE(gQTimer_singleShot_params.at(0).receiver, m_subject);
+    QString timedSlotName(gQTimer_singleShot_params.at(0).member);
+    QVERIFY2(timedSlotName.endsWith(QString("ensureIsViewable()")), qPrintable(QString("Actual timed slot name was: ") + timedSlotName));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuDropDownView)
