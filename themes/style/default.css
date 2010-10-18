@@ -649,7 +649,7 @@ MLabelStyle#DateLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 2mm;
-    minimum-size: -1 2mm;
-    maximum-size: -1 2mm;
+    preferred-size: -1 2.4mm;
+    minimum-size: -1 2.4mm;
+    maximum-size: -1 2.4mm;
 }

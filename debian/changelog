@@ -2,6 +2,7 @@ system-ui (0.17.4~1) harmattan; urgency=low
 
   * [ UNRELEASED ]
   * Fixes: NB#198127 - Notifications do not follow the orientation of the topmost window
+  * Fixes: NB#197396 - Date on Lock screen is not shown clearly.
 
  -- David Kedves <dkedves@blumsoft.eu>  Fri, 15 Oct 2010 11:21:16 +0300
 
