@@ -75,6 +75,7 @@ void MApplicationExtensionArea::setOrder(const QStringList &order)
     }
 }
 
+int gMApplicationExtensionArea_init_callCount = 0;
 QRegExp mApplicationExtensionAreaInProcessFilterDuringInit;
 QRegExp mApplicationExtensionAreaVerticalFilterDuringInit;
 QRegExp mApplicationExtensionAreaOutOfProcessFilterDuringInit;
@@ -82,6 +83,8 @@ QStringList mApplicationExtensionAreaOrderDuringInit;
 QStringList mApplicationExtensionAreaVerticalOrderDuringInit;
 bool MApplicationExtensionArea::init()
 {
+    ++gMApplicationExtensionArea_init_callCount;
+
     mApplicationExtensionAreaInProcessFilterDuringInit = mApplicationExtensionAreaInProcessFilter;
     mApplicationExtensionAreaVerticalFilterDuringInit = mApplicationExtensionAreaVerticalFilter;
     mApplicationExtensionAreaOutOfProcessFilterDuringInit = mApplicationExtensionAreaOutOfProcessFilter;
@@ -169,6 +172,7 @@ void Ut_StatusIndicatorMenuDropDownView::init()
 
     gSetVisible.first = 0;
     gSetVisible.second = false;
+    gMApplicationExtensionArea_init_callCount = 0;
 
     connect(this, SIGNAL(positionOrSizeChanged()), m_subject, SLOT(setPannabilityAndLayout()));
 }
@@ -345,6 +349,13 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenNotificationAreaIsEnabledInStyl
     QCOMPARE(contentWidget->layout()->count(), 2);
     NotificationArea* notificationArea = dynamic_cast<NotificationArea*>(contentWidget->layout()->itemAt(1));
     QVERIFY(notificationArea);
+}
+
+void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenSettingsExtensionAreaGetsInitialized()
+{
+    connect(this, SIGNAL(displayEntered()), controller, SIGNAL(displayEntered()));
+    emit displayEntered();
+    QCOMPARE(gMApplicationExtensionArea_init_callCount, 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuDropDownView)

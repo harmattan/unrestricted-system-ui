@@ -82,6 +82,7 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
     MSceneWindowView(controller),
     controller(controller),
     statusBar(new MStatusBar),
+    settingsPluginsExtensionArea(NULL),
     pannableViewport(NULL),
     closeButtonOverlay(NULL),
     backgroundWidget(new MWidgetController)
@@ -97,6 +98,7 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
     backgroundWidget->setObjectName("StatusIndicatorMenuWindowBackground");
 
     connect(controller, SIGNAL(hideRequested()), this, SLOT(resetViewport()));
+    connect(controller, SIGNAL(displayEntered()), SLOT(ensureIsViewable()));
 }
 
 
@@ -109,13 +111,12 @@ StatusIndicatorMenuDropDownView::~StatusIndicatorMenuDropDownView()
 QGraphicsWidget* StatusIndicatorMenuDropDownView::createTopRow()
 {
     // Create an extension area for the top row plugins
-    MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
-    connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
-    extensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
-    extensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
-    extensionArea->setOutOfProcessFilter(QRegExp("$^"));
-    extensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
-    extensionArea->init();
+    settingsPluginsExtensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
+    connect(settingsPluginsExtensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
+    settingsPluginsExtensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
+    settingsPluginsExtensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
+    settingsPluginsExtensionArea->setOutOfProcessFilter(QRegExp("$^"));
+    settingsPluginsExtensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
 
     // Create a button for accessing the full settings
     //% "Settings"
@@ -130,7 +131,7 @@ QGraphicsWidget* StatusIndicatorMenuDropDownView::createTopRow()
     topRowLayout->setContentsMargins(0, 0, 0, 0);
     topRowLayout->setSpacing(0);
     topRowLayout->addStretch();
-    topRowLayout->addItem(extensionArea);
+    topRowLayout->addItem(settingsPluginsExtensionArea);
     topRowLayout->addItem(settingsButton);
     topRowLayout->addStretch();
 
@@ -253,6 +254,11 @@ MOverlay *StatusIndicatorMenuDropDownView::createCloseButtonOverlay()
     return closeButtonOverlay;
 }
 
+void StatusIndicatorMenuDropDownView::ensureIsViewable()
+{
+    settingsPluginsExtensionArea->init();
+}
+
 void StatusIndicatorMenuDropDownView::setPannabilityAndLayout()
 {
     QGraphicsWidget *pannableWidget = pannableViewport->widget();
@@ -282,12 +288,10 @@ void StatusIndicatorMenuDropDownView::setPannabilityAndLayout()
     backgroundWidget->setMaximumHeight(backgroundHeight);
 }
 
-
 void StatusIndicatorMenuDropDownView::resetViewport()
 {
     pannableViewport->setPosition(QPointF(0,0));
 }
-
 
 void StatusIndicatorMenuDropDownView::applyStyle()
 {

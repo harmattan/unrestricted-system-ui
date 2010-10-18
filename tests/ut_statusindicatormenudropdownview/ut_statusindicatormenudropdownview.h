@@ -31,6 +31,7 @@ class Ut_StatusIndicatorMenuDropDownView : public QObject
 
 signals:
     void positionOrSizeChanged();
+    void displayEntered();
 
 private:
     StatusIndicatorMenuDropDownView *m_subject;
@@ -58,6 +59,7 @@ private slots:
     void testVerticalExtensionArea();
     void testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated();
     void testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated();
+    void testWhenWidgetEntersDisplayThenSettingsExtensionAreaGetsInitialized();
 };
 
 #endif //_UT_STATUSINDICATORMENUDROPDOWNVIEW_

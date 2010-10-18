@@ -128,6 +128,9 @@ protected:
     //! \reimp_end
 
 private slots:
+    //! Ensures that everything is ready for the window to be shown.
+    void ensureIsViewable();
+
     //! Set the pannability and layout based on the size and position of the pannable area
     void setPannabilityAndLayout();
 
@@ -141,6 +144,9 @@ private:
 
     //! Status Bar
     MStatusBar *statusBar;
+
+    //! The application extension area for the settings plugins
+    MApplicationExtensionArea *settingsPluginsExtensionArea;
 
     //! Extension area for call ui and transfer ui plugins
     MApplicationExtensionArea* createVerticalExtensionArea();
