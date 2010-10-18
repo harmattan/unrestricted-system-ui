@@ -39,57 +39,52 @@
 #endif
 
 // MApplicationExtensionArea stubs
-QString mApplicationExtensionAreaInterface;
+struct MApplicationExtensionAreaProperties
+{
+    QString mInterface;
+    QRegExp mInProcessFilter;
+    QRegExp mOutOfProcessFilter;
+    QStringList mOrder;
+    bool mInitCalled;
+
+    MApplicationExtensionAreaProperties() :
+            mInitCalled(false)
+    {}
+};
+
+QHash<MApplicationExtensionArea*, MApplicationExtensionAreaProperties> gMApplicationExtensionAreaProperties;
+
 MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, QGraphicsItem *)
 {
-    mApplicationExtensionAreaInterface = interface;
+    MApplicationExtensionAreaProperties &props = gMApplicationExtensionAreaProperties[this];
+    props.mInterface = interface;
 }
 
 MApplicationExtensionArea::~MApplicationExtensionArea() { }
 
-QRegExp mApplicationExtensionAreaInProcessFilter;
-QRegExp mApplicationExtensionAreaVerticalFilter;
 void MApplicationExtensionArea::setInProcessFilter(const QRegExp &inProcessFilter)
 {
-    if (inProcessFilter == QRegExp("/statusindicatormenu-(call|transfer).desktop$")) {
-        mApplicationExtensionAreaVerticalFilter = inProcessFilter;
-    } else {
-        mApplicationExtensionAreaInProcessFilter = inProcessFilter;
-    }
+    MApplicationExtensionAreaProperties &props = gMApplicationExtensionAreaProperties[this];
+    props.mInProcessFilter = inProcessFilter;
 }
 
-QRegExp mApplicationExtensionAreaOutOfProcessFilter;
 void MApplicationExtensionArea::setOutOfProcessFilter(const QRegExp &outOfProcessFilter)
 {
-    mApplicationExtensionAreaOutOfProcessFilter = outOfProcessFilter;
+    MApplicationExtensionAreaProperties &props = gMApplicationExtensionAreaProperties[this];
+    props.mOutOfProcessFilter = outOfProcessFilter;
 }
 
-QStringList mApplicationExtensionAreaOrder;
-QStringList mApplicationExtensionAreaVerticalOrder;
 void MApplicationExtensionArea::setOrder(const QStringList &order)
 {
-    if (order.contains("statusindicatormenu-call.desktop") || order.contains("statusindicatormenu-transfer.desktop")) {
-        mApplicationExtensionAreaVerticalOrder = order;
-    } else {
-        mApplicationExtensionAreaOrder = order;
-    }
+    MApplicationExtensionAreaProperties &props = gMApplicationExtensionAreaProperties[this];
+    props.mOrder = order;
 }
 
-int gMApplicationExtensionArea_init_callCount = 0;
-QRegExp mApplicationExtensionAreaInProcessFilterDuringInit;
-QRegExp mApplicationExtensionAreaVerticalFilterDuringInit;
-QRegExp mApplicationExtensionAreaOutOfProcessFilterDuringInit;
-QStringList mApplicationExtensionAreaOrderDuringInit;
-QStringList mApplicationExtensionAreaVerticalOrderDuringInit;
 bool MApplicationExtensionArea::init()
 {
-    ++gMApplicationExtensionArea_init_callCount;
+    MApplicationExtensionAreaProperties &props = gMApplicationExtensionAreaProperties[this];
+    props.mInitCalled = true;
 
-    mApplicationExtensionAreaInProcessFilterDuringInit = mApplicationExtensionAreaInProcessFilter;
-    mApplicationExtensionAreaVerticalFilterDuringInit = mApplicationExtensionAreaVerticalFilter;
-    mApplicationExtensionAreaOutOfProcessFilterDuringInit = mApplicationExtensionAreaOutOfProcessFilter;
-    mApplicationExtensionAreaOrderDuringInit = mApplicationExtensionAreaOrder;
-    mApplicationExtensionAreaVerticalOrderDuringInit = mApplicationExtensionAreaVerticalOrder;
     return true;
 }
 
@@ -180,6 +175,7 @@ void Ut_StatusIndicatorMenuDropDownView::init()
 {
     gX11WrapperStub->stubReset();
     gQTimer_singleShot_params.clear();
+    gMApplicationExtensionAreaProperties.clear();
 
     controller = new StatusIndicatorMenu();
     controller->setModel(new MWidgetModel());
@@ -190,7 +186,6 @@ void Ut_StatusIndicatorMenuDropDownView::init()
 
     gSetVisible.first = 0;
     gSetVisible.second = false;
-    gMApplicationExtensionArea_init_callCount = 0;
 
     connect(this, SIGNAL(positionOrSizeChanged()), m_subject, SLOT(setPannabilityAndLayout()));
 }
@@ -335,17 +330,29 @@ void Ut_StatusIndicatorMenuDropDownView::testPannableAreaBackgroundWidget()
 
 void Ut_StatusIndicatorMenuDropDownView::testTopRowInitialization()
 {
-    QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
-    QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit, QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
-    QCOMPARE(mApplicationExtensionAreaOutOfProcessFilterDuringInit, QRegExp("$^"));
-    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
+    foreach (const MApplicationExtensionAreaProperties &props, gMApplicationExtensionAreaProperties) {
+        if (props.mInProcessFilter == QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$")) {
+            QCOMPARE(props.mInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
+            QCOMPARE(props.mOutOfProcessFilter, QRegExp("$^"));
+            QCOMPARE(props.mOrder, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
+            return;
+        }
+    }
+
+    QVERIFY2(false, "No valid extension area was created");
 }
 
 void Ut_StatusIndicatorMenuDropDownView::testVerticalExtensionArea()
 {
-    QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
-    QCOMPARE(mApplicationExtensionAreaVerticalFilterDuringInit, QRegExp("/statusindicatormenu-(call|transfer).desktop$"));
-    QCOMPARE(mApplicationExtensionAreaVerticalOrderDuringInit, ((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop")));
+    foreach (const MApplicationExtensionAreaProperties &props, gMApplicationExtensionAreaProperties) {
+        if (props.mInProcessFilter == QRegExp("/statusindicatormenu-(call|transfer).desktop$")) {
+            QCOMPARE(props.mInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
+            QCOMPARE(props.mOrder, ((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop")));
+            return;
+        }
+    }
+
+    QVERIFY2(false, "No valid extension area was created");
 }
 
 void Ut_StatusIndicatorMenuDropDownView::testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated()
@@ -368,11 +375,14 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenNotificationAreaIsEnabledInStyl
     QVERIFY(notificationArea);
 }
 
-void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenSettingsExtensionAreaGetsInitialized()
+void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenExtensionAreasGetInitialized()
 {
     connect(this, SIGNAL(displayEntered()), controller, SIGNAL(displayEntered()));
     emit displayEntered();
-    QCOMPARE(gMApplicationExtensionArea_init_callCount, 1);
+
+    QCOMPARE(gMApplicationExtensionAreaProperties.count(), 2);
+    QCOMPARE(gMApplicationExtensionAreaProperties.values().at(0).mInitCalled, true);
+    QCOMPARE(gMApplicationExtensionAreaProperties.values().at(1).mInitCalled, true);
 }
 
 void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability()

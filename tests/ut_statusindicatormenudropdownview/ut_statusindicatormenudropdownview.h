@@ -59,7 +59,7 @@ private slots:
     void testVerticalExtensionArea();
     void testWhenNotificationAreaIsDisabledInStyleThenNotificationAreaIsNotCreated();
     void testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated();
-    void testWhenWidgetEntersDisplayThenSettingsExtensionAreaGetsInitialized();
+    void testWhenWidgetEntersDisplayThenExtensionAreasGetInitialized();
     void testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability();
 };
 

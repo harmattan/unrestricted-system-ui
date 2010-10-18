@@ -86,6 +86,7 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
     controller(controller),
     statusBar(new MStatusBar),
     settingsPluginsExtensionArea(NULL),
+    statusIndicatorExtensionArea(NULL),
     pannableViewport(NULL),
     closeButtonOverlay(NULL),
     backgroundWidget(new MWidgetController)
@@ -159,19 +160,18 @@ MApplicationExtensionArea* StatusIndicatorMenuDropDownView::createVerticalExtens
     extensionArea->setOutOfProcessFilter(QRegExp("$^"));
     extensionArea->setOrder((QStringList() << "statusindicatormenu-call.desktop" << "statusindicatormenu-transfer.desktop"));
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
-    extensionArea->init();
     return extensionArea;
 }
 
 MPannableViewport* StatusIndicatorMenuDropDownView::createPannableArea()
 {
     // Create pannable area contents
-    MApplicationExtensionArea *extensionArea = createVerticalExtensionArea();
+    statusIndicatorExtensionArea = createVerticalExtensionArea();
 
     QGraphicsLinearLayout *contentLayout = new QGraphicsLinearLayout(Qt::Vertical);
     contentLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setSpacing(0);
-    contentLayout->addItem(extensionArea);
+    contentLayout->addItem(statusIndicatorExtensionArea);
 
     if(style()->notificationArea()) {
         NotificationArea *notificationArea = new NotificationArea;
@@ -263,6 +263,10 @@ MOverlay *StatusIndicatorMenuDropDownView::createCloseButtonOverlay()
 void StatusIndicatorMenuDropDownView::ensureIsViewable()
 {
     settingsPluginsExtensionArea->init();
+
+    if (statusIndicatorExtensionArea) {
+        statusIndicatorExtensionArea->init();
+    }
 }
 
 void StatusIndicatorMenuDropDownView::setPannabilityAndLayout()

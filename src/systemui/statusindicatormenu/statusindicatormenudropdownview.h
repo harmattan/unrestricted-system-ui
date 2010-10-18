@@ -151,6 +151,9 @@ private:
     //! The application extension area for the settings plugins
     MApplicationExtensionArea *settingsPluginsExtensionArea;
 
+    //! The application extension area for the status indicator widgets
+    MApplicationExtensionArea *statusIndicatorExtensionArea;
+
     //! Extension area for call ui and transfer ui plugins
     MApplicationExtensionArea* createVerticalExtensionArea();
 
