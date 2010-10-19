@@ -1,0 +1,6 @@
+dbusinterfacenotificationsinkadaptor.cpp
+dbusinterfacenotificationsinkadaptor.h
+dbusinterfacenotificationsinkproxy.cpp
+dbusinterfacenotificationsinkproxy.h
+dbusinterfacenotificationsourceadaptor.cpp
+dbusinterfacenotificationsourceadaptor.h
