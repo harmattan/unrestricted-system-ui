@@ -39,11 +39,7 @@ WidgetNotificationSink::WidgetNotificationSink() :
 
 QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
 {
-    QString iconID = parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
-    if (iconID.isEmpty()) {
-        iconID = "default";
-    }
-    return iconID;
+    return parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
 }
 
 bool WidgetNotificationSink::determineUserRemovability(const NotificationParameters &parameters)
