@@ -47,6 +47,7 @@ private slots:
     // Test cases
     void testSignalConnections();
     void testUseMode();
+    void testLocaleContainsNotificationCatalog();
 };
 
 #endif //_UT_STATUSBAR_

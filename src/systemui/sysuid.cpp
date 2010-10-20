@@ -163,6 +163,7 @@ void Sysuid::loadTranslations()
     locale.installTrCatalog("profiles");
     locale.installTrCatalog("screenlock");
     locale.installTrCatalog("status");
+    locale.installTrCatalog("notification");
 
     // and the engineering english ones
     locale.installTrCatalog("systemui");

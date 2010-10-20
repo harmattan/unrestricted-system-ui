@@ -21,6 +21,7 @@
 
 #include <QDBusConnection>
 #include <MApplication>
+#include <MLocale>
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
@@ -120,6 +121,17 @@ bool QDBusConnection::registerObject(QString const &, QObject *, QFlags<QDBusCon
     return true;
 }
 
+QHash<const MLocale*, QSet<QString> > gInstalledTranslationCatalogs;
+void MLocale::installTrCatalog(const QString &name)
+{
+    gInstalledTranslationCatalogs[this].insert(name);
+}
+const MLocale *gDefaultLocale;
+void MLocale::setDefault(const MLocale &locale)
+{
+    gDefaultLocale = &locale;
+}
+
 // ContextFrameworkContext stub
 TestContextItem *testContextItem;
 ContextItem *ContextFrameworkContext::createContextItem(const QString&)
@@ -142,6 +154,9 @@ void Ut_Sysuid::init()
     static int argc = sizeof(args) / sizeof(char *);
 
     app = new MApplication(argc, args);
+
+    gInstalledTranslationCatalogs.clear();
+    gDefaultLocale = NULL;
     sysuid = new Sysuid(NULL);
     Ut_SysuidCompositorNotificationState = false;
     Ut_SysuidFeedbackNotificationState = false;
@@ -167,6 +182,13 @@ void Ut_Sysuid::testUseMode()
     testContextItem->setValue("recording");
     QVERIFY(!Ut_SysuidCompositorNotificationState);
     QVERIFY(!Ut_SysuidFeedbackNotificationState);
+}
+
+void Ut_Sysuid::testLocaleContainsNotificationCatalog()
+{
+    QVERIFY(gDefaultLocale != NULL);
+    QCOMPARE(gInstalledTranslationCatalogs.contains(gDefaultLocale), true);
+    QCOMPARE(gInstalledTranslationCatalogs[gDefaultLocale].contains("notification"), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)
