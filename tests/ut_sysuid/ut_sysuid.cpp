@@ -142,19 +142,18 @@ ContextItem *ContextFrameworkContext::createContextItem(const QString&)
 
 void Ut_Sysuid::initTestCase()
 {
+    static char *args[] = {(char *) "./ut_sysuid"};
+    static int argc = sizeof(args) / sizeof(char *);
+    app = new MApplication(argc, args);
 }
 
 void Ut_Sysuid::cleanupTestCase()
 {
+    delete app;
 }
 
 void Ut_Sysuid::init()
 {
-    static char *args[] = {(char *) "./ut_sysuid"};
-    static int argc = sizeof(args) / sizeof(char *);
-
-    app = new MApplication(argc, args);
-
     gInstalledTranslationCatalogs.clear();
     gDefaultLocale = NULL;
     sysuid = new Sysuid(NULL);
@@ -165,7 +164,6 @@ void Ut_Sysuid::init()
 void Ut_Sysuid::cleanup()
 {
     delete sysuid;
-    delete app;
 }
 
 void Ut_Sysuid::testSignalConnections()
