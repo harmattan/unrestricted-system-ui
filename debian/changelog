@@ -1,3 +1,9 @@
+system-ui (0.17.5~1) harmattan; urgency=low
+
+  * [UNRELEASED]
+
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 21 Oct 2010 13:43:23 +0300
+
 system-ui (0.17.4-1) harmattan; urgency=low
 
   * Fixes: NB#198127 - Notifications do not follow the orientation of the topmost window
