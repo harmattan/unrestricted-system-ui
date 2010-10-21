@@ -17,6 +17,8 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void makeVisible();
   virtual void displayActive();
   virtual void displayInActive();
+  virtual bool event(QEvent *);
+  virtual void resetMenuWidget();
 #ifdef HAVE_QMSYSTEM
   virtual void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
@@ -40,6 +42,17 @@ void StatusIndicatorMenuWindowStub::displayActive() {
 
 void StatusIndicatorMenuWindowStub::displayInActive() {
   stubMethodEntered("displayInActive");
+}
+
+bool StatusIndicatorMenuWindowStub::event(QEvent *event) {
+  stubMethodEntered("event");
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QEvent *>(event));
+  return stubReturnValue<bool>("event");
+}
+
+void StatusIndicatorMenuWindowStub::resetMenuWidget() {
+  stubMethodEntered("resetMenuWidget");
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -75,6 +88,14 @@ void StatusIndicatorMenuWindow::displayActive() {
 
 void StatusIndicatorMenuWindow::displayInActive() {
   gStatusIndicatorMenuWindowStub->displayInActive();
+}
+
+bool StatusIndicatorMenuWindow::event(QEvent *event) {
+  return gStatusIndicatorMenuWindowStub->event(event);
+}
+
+void StatusIndicatorMenuWindow::resetMenuWidget() {
+  gStatusIndicatorMenuWindowStub->resetMenuWidget();
 }
 
 #ifdef HAVE_QMSYSTEM

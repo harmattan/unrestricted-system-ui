@@ -24,6 +24,7 @@
 #include <MSceneManager>
 #include <QtTest/QtTest>
 #include "statusindicatormenu_stub.h"
+#include <MLocale>
 
 #ifdef HAVE_QMSYSTEM
 #include "qmlocks_stub.h"
@@ -37,9 +38,16 @@ void MWindow::setVisible(bool visible)
     gSetVisible.second = visible;
 }
 
+// MLocale stubs
+QString gLanguage;
+QString MLocale::language() const {
+    return gLanguage;
+}
+
 
 void Ut_StatusIndicatorMenuWindow::init()
 {
+    gLanguage = "en";
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
     gSetVisible.first = 0;
     gSetVisible.second = false;
@@ -63,6 +71,14 @@ void Ut_StatusIndicatorMenuWindow::initTestCase()
 void Ut_StatusIndicatorMenuWindow::cleanupTestCase()
 {
     delete app;
+}
+
+void Ut_StatusIndicatorMenuWindow::testInitialization()
+{
+    QVERIFY(statusIndicatorMenuWindow->menuWidget);
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Appeared);
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(showRequested()), statusIndicatorMenuWindow, SLOT(makeVisible())));
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow, SLOT(hide())));
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible()
@@ -91,6 +107,28 @@ void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuI
     connect(this, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive()));
     emit displayExited();
     QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangesThenMenuWidgetIsResetted()
+{
+    StatusIndicatorMenu *oldMenuWidget = statusIndicatorMenuWindow->menuWidget;
+
+    gLanguage = "de";
+    QEvent languageChangeEvent(QEvent::LanguageChange);
+    statusIndicatorMenuWindow->event(&languageChangeEvent);
+
+    QVERIFY(oldMenuWidget != statusIndicatorMenuWindow->menuWidget);
+    testInitialization();
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted()
+{
+    StatusIndicatorMenu *oldMenuWidget = statusIndicatorMenuWindow->menuWidget;
+
+    QEvent languageChangeEvent(QEvent::LanguageChange);
+    statusIndicatorMenuWindow->event(&languageChangeEvent);
+
+    QVERIFY(oldMenuWidget == statusIndicatorMenuWindow->menuWidget);
 }
 
 #ifdef HAVE_QMSYSTEM

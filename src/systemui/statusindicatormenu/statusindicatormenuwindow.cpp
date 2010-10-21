@@ -16,16 +16,19 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include <MSceneManager>
 #include <MScene>
 #include "statusindicatormenuwindow.h"
 #include "statusindicatormenu.h"
-
+#include <MLocale>
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
-    menuWidget(new StatusIndicatorMenu())
+    menuWidget(NULL)
 {
+    currentLanguage = MLocale().language();
+
     setTranslucentBackground(true);
     setWindowTitle("Status Indicator Menu");
     setProperty("followsCurrentApplicationWindowOrientation", true);
@@ -50,17 +53,26 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     // home screen can provide the correct UI flow
     setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
 
-    // The scene takes ownership of menuWidget
-    sceneManager()->appearSceneWindowNow(menuWidget);
-
-    connect(menuWidget, SIGNAL(showRequested()), this, SLOT(makeVisible()));
-    connect(menuWidget, SIGNAL(hideRequested()), this, SLOT(hide()));
+    resetMenuWidget();
 }
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
 }
 
+void StatusIndicatorMenuWindow::resetMenuWidget()
+{
+    if (menuWidget) {
+        sceneManager()->dismissSceneWindowNow(menuWidget);
+    }
+
+    menuWidget = new StatusIndicatorMenu();
+    // The scene takes ownership of menuWidget
+    sceneManager()->appearSceneWindowNow(menuWidget, MSceneWindow::DestroyWhenDismissed);
+
+    connect(menuWidget, SIGNAL(showRequested()), this, SLOT(makeVisible()));
+    connect(menuWidget, SIGNAL(hideRequested()), this, SLOT(hide()));
+}
 
 void StatusIndicatorMenuWindow::displayActive()
 {
@@ -109,3 +121,18 @@ void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(Maemo::
 }
 
 #endif
+
+bool StatusIndicatorMenuWindow::event(QEvent *event)
+{
+    bool windowIsHandlingEvent = MWindow::event(event);
+    // Recreate status menu widget when language changes and window is handling the language change
+    if (event->type() == QEvent::LanguageChange && windowIsHandlingEvent) {
+        QString newLanguage = MLocale().language();
+        // Check that language actually changed to avoid unnecessary resets
+        if (currentLanguage != newLanguage) {
+            currentLanguage = newLanguage;
+            resetMenuWidget();
+        }
+    }
+    return windowIsHandlingEvent;
+}

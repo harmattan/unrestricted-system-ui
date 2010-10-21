@@ -48,9 +48,13 @@ private slots:
     void cleanupTestCase();
 
     // Test cases
+    void testInitialization();
     void testMakeVisible();
     void testWindowType();
     void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
+    void testWhenLanguageChangesThenMenuWidgetIsResetted();
+    void testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted();
+
 #ifdef HAVE_QMSYSTEM
     void testQmLocksSignalConnectionWhenDeviceLocked();
     void testWhenDeviceLockedMenuIsNotVisible();

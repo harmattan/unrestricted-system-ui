@@ -50,6 +50,11 @@ public:
      */
     ~StatusIndicatorMenuWindow();
 
+protected:
+    //! \reimp
+    bool event(QEvent *event);
+    //! \reimp_end
+
 public slots:
     /*!
      * Makes the window visible by showing or raising it.
@@ -81,9 +86,18 @@ private slots:
     void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
 #endif
 
-private: // data
+private:
+    /*! Resets menu widget.
+     *
+     * Dismisses window from scene manager, if window is appeared there.
+     * Creates a new menu widget and appears window to scene manager.
+     */
+    void resetMenuWidget();
 
     StatusIndicatorMenu* menuWidget;
+
+    //! Current language
+    QString currentLanguage;
 
 #ifdef HAVE_QMSYSTEM
     //! QmSystem watcher for device lock
