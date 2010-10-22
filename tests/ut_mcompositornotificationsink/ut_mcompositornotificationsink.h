@@ -25,9 +25,22 @@
 #include <QString>
 #include "notificationmanagerinterface.h"
 #include <QTimer>
+#include <MSceneWindow>
 
 class MApplication;
 class MCompositorNotificationSink;
+
+/*!
+ * A class used to access the MSceneWindow internals, modeled after 'ut_mscenewindow'
+ * in libmeegotouch
+ */
+class MSceneWindowBridge : public QObject
+{
+    Q_OBJECT
+public:
+    MSceneWindowBridge(QObject *parent = 0);
+    void setSceneWindowState(MSceneWindow::SceneWindowState newState);
+};
 
 class MockNotificationManager : public QObject, public NotificationManagerInterface
 {
@@ -80,10 +93,6 @@ private:
 signals:
     void statusIndictorMenuVisibilityChanged(bool);
 
-private:
-    // Helper for sending the display change event
-    void sendOnDisplayChangeEvent();
-
 private slots:
     // Executed once before every test case
     void init();
@@ -93,6 +102,8 @@ private slots:
     void initTestCase();
     // Executed once after last test case
     void cleanupTestCase();
+
+    void sendOnDisplayChangeEvent();
 
     // Test window properties
     void testNotificationWindowProperties();
@@ -119,9 +130,12 @@ private slots:
     // Test that the window mask is set correctly in all orientations
     void testWindowMasking_data();
     void testWindowMasking();
-
+    void testWindowMaskingWhenOrientationChangeSignalsEmitted();
     // Test preview icon in notification preview
     void testPreviewIconId();
+
+private:
+    const QRegion calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window);
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

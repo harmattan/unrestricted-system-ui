@@ -16,10 +16,10 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "mcompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include <MSceneManager>
+#include <MScene>
 #include <MOnDisplayChangeEvent>
 #include <QApplication>
 #include <MGConfItem>
@@ -45,16 +45,28 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
 
     // Clear the mask for the duration of orientation change, because the mask is not rotated along with the notification
     connect(window->sceneManager(), SIGNAL(orientationAboutToChange(M::Orientation)), this, SLOT(clearWindowMask()));
-    connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateWindowMask()));
+    connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(resolveCurrentBannerAndUpdateWindowMask()));
+    connect(window, SIGNAL(displayEntered()), this, SLOT(addOldestBannerToWindow()));
 }
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
 {
     // Destroy the remaining notifications
     foreach(uint id, idToBanner.keys()) {
-        notificationDone(id, false);
+        removeNotification(id);
     }
     delete window;
+}
+
+void MCompositorNotificationSink::resolveCurrentBannerAndUpdateWindowMask()
+{
+     foreach (QGraphicsItem* item, window->sceneManager()->scene()->items()) {
+        // The scene will have only one banner visible at any given time
+        MBanner* banner = dynamic_cast<MBanner*>(item);
+        if (banner) {
+            updateWindowMask(banner);
+        }
+     }
 }
 
 void MCompositorNotificationSink::addNotification(const Notification &notification)
@@ -75,39 +87,27 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
          // Create and set up info banner widget
         MBanner *banner = createInfoBanner(notification);
         banner->setIconID(determinePreviewIconId(notification.parameters()));
-        setupWindowTimer(banner, notification);
+        banner->setProperty("notificationId", notification.notificationId());
+        banner->setProperty("timeout", notification.timeout());
 
         // Keep track of the mapping between IDs and private notification information classes
         idToBanner.insert(notification.notificationId(), banner);
-        currentBanners.append(banner);
+        currentBanners.prepend(banner);
         emit notificationAdded(notification);
 
-        // Check whether the window was open
-        bool windowWasOpen = window->isVisible();
-
-        // Make sure the window is open now
-        showOrHideWindow();
-
-        if (windowWasOpen) {
-            // If the window was already open the latest banner can directly be added to the window
-            addLatestBannerToWindow();
-        } else {
-            // If the window was not open yet a fake display change event is needed so that the banner will animate (since otherwise it thinks it's not on display)
-            connect(window, SIGNAL(displayEntered()), this, SLOT(addLatestBannerToWindow()));
-            MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0, 0, 1, 1));
-            QApplication::sendEvent(window, event);
+        if (!window->isVisible()) {
+            window->show();
         }
     }
 }
 
-void MCompositorNotificationSink::setupWindowTimer(MBanner *banner, const Notification &notification)
+void MCompositorNotificationSink::setupWindowTimer(MBanner *banner)
 {
     // Create a timer for the banner; make it a child of the banner so it is destroyed automatically
     QTimer *timer = new QTimer(banner);
     connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
     timer->setSingleShot(true);
-    timer->setProperty("notificationId", notification.notificationId());
-    timer->start(notification.timeout());
+    timer->start(banner->property("timeout").toInt());
 }
 
 void MCompositorNotificationSink::updateNotification(const Notification &notification)
@@ -119,6 +119,8 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
         banner->setTitle(infoBannerTitleText(notification.parameters()));
         banner->setSubtitle(infoBannerSubtitleText(notification.parameters()));
         banner->setIconID(determinePreviewIconId(notification.parameters()));
+        banner->setProperty("notificationId", notification.notificationId());
+        banner->setProperty("timeout", notification.timeout());
 
         // Update the info banner's actions
         updateActions(banner, notification.parameters());
@@ -127,57 +129,38 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
 
 void MCompositorNotificationSink::removeNotification(uint notificationId)
 {
-    notificationDone(notificationId, false);
+    MBanner *banner = idToBanner.take(notificationId);
+    if (banner) {
+        currentBanners.removeAll(banner);
+        delete banner;
+    }
 }
 
-void MCompositorNotificationSink::notificationDone(uint notificationId, bool notificationIdInUse)
+void MCompositorNotificationSink::bannerDone(MBanner* banner)
 {
-    MBanner *banner = idToBanner.take(notificationId);
     if (banner != NULL) {
-        // Make the banner disappear. It can disappear immediately, so any signal connections must be done before calling disappearSceneWindow()
-        connect(banner, SIGNAL(disappeared()), this, SLOT(removeBannerFromCurrentBanners()));
+        // Once the current banner is off the screen show the next one
+        connect(banner, SIGNAL(disappeared()), this, SLOT(addOldestBannerToWindow()));
+        // Remove our internal references to the banner as it will get destroyed
+        // after the scene is done with it.
+        int id = banner->property("notificationId").toInt();
+        idToBanner.remove(id);
+        currentBanners.removeAll(banner);
         window->sceneManager()->disappearSceneWindow(banner);
     }
-    if (notificationIdInUse) {
-        idToBanner.insert(notificationId, NULL);
-    }
 }
 
-void MCompositorNotificationSink::showOrHideWindow()
-{
-    if (window->isVisible() == currentBanners.isEmpty()) {
-        // If the window is visible when there are no banners or is not visible when there are banners something needs to be done
-        if (currentBanners.isEmpty()) {
-            // If there are no banners to be shown the window should not be visible
-            window->hide();
-        } else {
-            // If there is at least one banner to show the window should be visible
-            window->show();
-        }
-    }
-}
-
-void MCompositorNotificationSink::addLatestBannerToWindow()
+void MCompositorNotificationSink::addOldestBannerToWindow()
 {
     if (!currentBanners.isEmpty()) {
         // The latest banner should be shown
-        MBanner *banner = currentBanners.last();
+        MBanner *banner = currentBanners.takeLast();
         window->sceneManager()->appearSceneWindow(banner, MSceneWindow::DestroyWhenDone);
-        updateWindowMask();
-        disconnect(window, SIGNAL(displayEntered()), this, SLOT(addLatestBannerToWindow()));
+        setupWindowTimer(banner);
+        updateWindowMask(banner);
     } else {
-        // If the window timer has timed out before displayEntered() was sent there is no banner anymore and the window should just be hidden
-        showOrHideWindow();
-    }
-}
-
-void MCompositorNotificationSink::removeBannerFromCurrentBanners()
-{
-    MBanner *banner = qobject_cast<MBanner *>(sender());
-
-    if (banner != NULL) {
-        currentBanners.removeAll(banner);
-        showOrHideWindow();
+        // No more banners exist to be shown -> hide the window
+        window->hide();
     }
 }
 
@@ -187,12 +170,10 @@ void MCompositorNotificationSink::timeout()
 
     if (timer != NULL) {
         // Get the notification ID from the timer
-        bool ok = false;
-        uint notificationId = timer->property("notificationId").toUInt(&ok);
-
-        if (ok) {
-            // Remove the notification
-            notificationDone(notificationId, true);
+        MBanner* banner = qobject_cast<MBanner*>(timer->parent());
+        if (banner) {
+            // Remove the banner...
+            bannerDone(banner);
         }
     }
 }
@@ -202,35 +183,31 @@ void MCompositorNotificationSink::setDisabled(bool disabled)
     sinkDisabled = disabled;
 }
 
-void MCompositorNotificationSink::updateWindowMask()
+void MCompositorNotificationSink::updateWindowMask(MBanner* banner)
 {
-    // Set up window mask so that mouse events are passed on to lower widgets.
-    if (!currentBanners.isEmpty()) {
-        MBanner *banner = currentBanners.last();
-        QSize  size = banner->preferredSize().toSize();
-        QPoint origin;
+    QSize  size = banner->preferredSize().toSize();
+    QPoint origin;
 
-        switch(window->sceneManager()->orientationAngle()) {
-        case M::Angle90:
-            size.transpose();
-            origin.setX(window->width() - size.width() - banner->pos().y());
-            origin.setY(banner->pos().x());
-            break;
-        case M::Angle270:
-            size.transpose();
-            origin.setX(banner->pos().y());
-            origin.setY(-banner->pos().x());
-            break;
-        case M::Angle180:
-            origin.setY(window->height() - size.height() - banner->pos().y());
-            origin.setX(-banner->pos().x());
-            break;
-        default:
-            origin = banner->pos().toPoint();
-            break;
-        }
-        window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
+    switch(window->sceneManager()->orientationAngle()) {
+    case M::Angle90:
+        size.transpose();
+        origin.setX(window->width() - size.width() - banner->pos().y());
+        origin.setY(banner->pos().x());
+        break;
+    case M::Angle270:
+        size.transpose();
+        origin.setX(banner->pos().y());
+        origin.setY(-banner->pos().x());
+        break;
+    case M::Angle180:
+        origin.setY(window->height() - size.height() - banner->pos().y());
+        origin.setX(-banner->pos().x());
+        break;
+    default:
+        origin = banner->pos().toPoint();
+        break;
     }
+    window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
 }
 
 void MCompositorNotificationSink::clearWindowMask()

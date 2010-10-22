@@ -73,19 +73,9 @@ private slots:
     void setDisabled(bool disabled);
 
     /*!
-     * Shows or hides the fullscreen window based on whether there are banners to be shown in it.
-     */
-    void showOrHideWindow();
-
-    /*!
-      * Adds the latest banner to a fullscreen window which was created earlier.
+      * Adds the oldest banner to a fullscreen window which was created earlier.
       */
-    void addLatestBannerToWindow();
-
-    /*!
-      * Removes a banner from the current banners when it disappears off the screen after timeout.
-      */
-    void removeBannerFromCurrentBanners();
+    void addOldestBannerToWindow();
 
     /*!
       * Enables or disables Notification Previews according to provided GConf key
@@ -93,14 +83,21 @@ private slots:
     void changeNotificationPreviewMode();
 
     /*!
-     * Updates the window mask to contain the current notification
+     * Updates the window mask to contain the current notification of the given banner
+     * \param banner The banner that is used to update the window mask
      */
-    void updateWindowMask();
+    void updateWindowMask(MBanner* banner);
 
     /*!
      * Clears the window mask
      */
     void clearWindowMask();
+
+    /*!
+     * A helper function to resolve the current banner on display. This is needed in order to
+     * update the window masks correctly when the orientation changes.
+     */
+    void resolveCurrentBannerAndUpdateWindowMask();
 
 private:
     /*!
@@ -111,20 +108,21 @@ private:
     void updateNotification(const Notification &notification);
 
     /*!
-     * Destroys the notification objects and optionally marks the notification ID to be still in use.
+     * Fired when the banner is ready to be animated off the screen. This method will try
+     * to show the next banner by connecting the \s disappeared() signal to
+     * \s addLatestBannerToWindow
      *
-     * \param notificationId the ID of the notification to be removed
-     * \param notificationIdInUse true if the notification ID should be marked to be still in use, false otherwise
+     * \param banner The banner to animate off the screen
      */
-    void notificationDone(uint notificationId, bool notificationIdInUse);
+    void bannerDone(MBanner* banner);
 
     /*!
-     * Sets up a timer for the banner disappearing
+     * Sets up a timer or the banner disappearing. The timeout for the timer is a property in the banner
+     * itself. The origin for the timeout is the notification that the banner is visualizing.
      *
      * \param banner MBanner whose disappearance it handles. Timer would be parented to this banner.
-     * \param notification the notification associated with the banner
      */
-    void setupWindowTimer(MBanner *banner, const Notification &notification);
+    void setupWindowTimer(MBanner *banner);
 
     /*!
      * Determines preview icon id of a notification based on the given notification parameters.

@@ -35,12 +35,11 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void timeout();
   virtual void setDisabled(bool disabled);
   virtual void updateNotification(const Notification &notification);
-  virtual void notificationDone(uint notificationId, bool notificationIdInUse);
-  virtual void showOrHideWindow();
-  virtual void addLatestBannerToWindow();
-  virtual void removeBannerFromCurrentBanners();
+  virtual void bannerDone(MBanner* banner);
+  virtual void addOldestBannerToWindow();
   virtual void changeNotificationPreviewMode();
-}; 
+  virtual void resolveCurrentBannerAndUpdateWindowMask();
+};
 
 // 2. IMPLEMENT STUB
 void MCompositorNotificationSinkStub::MCompositorNotificationSinkConstructor() {
@@ -72,16 +71,8 @@ void MCompositorNotificationSinkStub::setDisabled(bool disabled) {
   stubMethodEntered("setDisabled",params);
 }
 
-void MCompositorNotificationSinkStub::showOrHideWindow() {
-    stubMethodEntered("showOrHideWindow");
-}
-
-void MCompositorNotificationSinkStub::addLatestBannerToWindow() {
-    stubMethodEntered("addLatestBannerToWindow");
-}
-
-void MCompositorNotificationSinkStub::removeBannerFromCurrentBanners() {
-    stubMethodEntered("removeBannerFromCurrentBanners");
+void MCompositorNotificationSinkStub::addOldestBannerToWindow() {
+    stubMethodEntered("addOldestBannerToWindow");
 }
 
 void MCompositorNotificationSinkStub::changeNotificationPreviewMode() {
@@ -94,13 +85,16 @@ void MCompositorNotificationSinkStub::updateNotification(const Notification &not
   stubMethodEntered("updateNotification",params);
 }
 
-void MCompositorNotificationSinkStub::notificationDone(uint notificationId, bool notificationIdInUse) {
+void MCompositorNotificationSinkStub::bannerDone(MBanner* banner) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<uint >(notificationId));
-  params.append( new Parameter<bool >(notificationIdInUse));
-  stubMethodEntered("notificationDone",params);
+  params.append( new Parameter<MBanner*>(banner));
+  stubMethodEntered("bannerDone",params);
 }
 
+void MCompositorNotificationSinkStub::resolveCurrentBannerAndUpdateWindowMask()
+{
+  stubMethodEntered("resolveCurrentBannerAndUpdateWindowMask");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -137,30 +131,27 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
   gMCompositorNotificationSinkStub->updateNotification(notification);
 }
 
-void MCompositorNotificationSink::notificationDone(uint notificationId, bool notificationIdInUse) {
-  gMCompositorNotificationSinkStub->notificationDone(notificationId, notificationIdInUse);
+void MCompositorNotificationSink::bannerDone(MBanner* banner) {
+  gMCompositorNotificationSinkStub->bannerDone(banner);
 }
 
-void MCompositorNotificationSink::showOrHideWindow() {
-    gMCompositorNotificationSinkStub->showOrHideWindow();
-}
-
-void MCompositorNotificationSink::addLatestBannerToWindow() {
-    gMCompositorNotificationSinkStub->addLatestBannerToWindow();
-}
-
-void MCompositorNotificationSink::removeBannerFromCurrentBanners() {
-    gMCompositorNotificationSinkStub->removeBannerFromCurrentBanners();
+void MCompositorNotificationSink::addOldestBannerToWindow() {
+    gMCompositorNotificationSinkStub->addOldestBannerToWindow();
 }
 
 void MCompositorNotificationSink::changeNotificationPreviewMode() {
     gMCompositorNotificationSinkStub->changeNotificationPreviewMode();
 }
 
-void MCompositorNotificationSink::updateWindowMask() {
+void MCompositorNotificationSink::updateWindowMask(MBanner*) {
 }
 
 void MCompositorNotificationSink::clearWindowMask() {
+}
+
+void MCompositorNotificationSink::resolveCurrentBannerAndUpdateWindowMask()
+{
+    gMCompositorNotificationSinkStub->resolveCurrentBannerAndUpdateWindowMask();
 }
 
 #endif

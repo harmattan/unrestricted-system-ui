@@ -16,9 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "ut_mcompositornotificationsink.h"
-
 #include <QtTest/QtTest>
 #include <MApplication>
 #include <MSceneManager>
@@ -30,6 +28,22 @@
 #include <MGConfItem>
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
+
+static QList<MSceneWindow*> gMSceneWindowsAppeared;
+static QList<MSceneWindow::DeletionPolicy> gMSceneWindowDeletionPolicies;
+
+MSceneWindowBridge::MSceneWindowBridge(QObject *parent): QObject(parent)
+{
+}
+
+void MSceneWindowBridge::setSceneWindowState(MSceneWindow::SceneWindowState newState)
+{
+    QObject *testInterface = children()[0];
+
+    QMetaObject::invokeMethod(testInterface, "setSceneWindowState", Qt::DirectConnection,
+            Q_ARG(MSceneWindow::SceneWindowState, newState));
+}
+
 
 // Mock notification manager (used by MCompositorNotificationSink)
 MockNotificationManager::MockNotificationManager() :
@@ -168,6 +182,11 @@ void QWidget::setMask(const QRegion &region)
         mWindowMaskRegion = region;
     }
 }
+static bool gQWidgetClearMaskCalled = false;
+void QWidget::clearMask()
+{
+    gQWidgetClearMaskCalled = true;
+}
 
 // MGConfItem stub
 QVariant gconfValue = QVariant();
@@ -195,14 +214,23 @@ void MGConfItem::unset() {
     gconfValue = QVariant();
 }
 
-MSceneWindow *mSceneManagerAppearSceneWindowWindow = NULL;
-bool mSceneManagerAppearSceneWindowPolicy = false;
+QList<QGraphicsItem *> QGraphicsScene::items () const
+{
+    QList<QGraphicsItem*> items;
+    if (gMSceneWindowsAppeared.size() > 0) {
+        items.append(gMSceneWindowsAppeared.at(0));
+    }
+    return items;
+}
+
 void MSceneManager::appearSceneWindow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy)
 {
-    mSceneManagerAppearSceneWindowWindow = sceneWindow;
-    if(policy == MSceneWindow::DestroyWhenDone) {
-        mSceneManagerAppearSceneWindowPolicy = true;
-    }
+    gMSceneWindowsAppeared.append(sceneWindow);
+    gMSceneWindowDeletionPolicies.append(policy);
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(sceneWindow);
+    bridge.setSceneWindowState(MSceneWindow::Appeared);
 }
 
 MSceneWindow *mSceneManagerDisappearSceneWindowWindow= NULL;
@@ -217,17 +245,32 @@ M::OrientationAngle MSceneManager::orientationAngle() const
     return gCurrentOrientationAngle;
 }
 
+void MSceneManager::setOrientationAngle(M::OrientationAngle angle, TransitionMode mode)
+{
+    Q_UNUSED(mode);
+    gCurrentOrientationAngle = angle;
+    M::Orientation o = (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
+
+    emit orientationAboutToChange(o);
+    emit orientationChangeFinished(o);
+}
+
 // QTimer stubs (used by MCompositorNotificationSink)
 bool qTimerStarted = false;
+bool qQTimerEmitTimeoutImmediately = true;
 void QTimer::start(int)
 {
     qTimerStarted = true;
+    if (qQTimerEmitTimeoutImmediately) {
+        emit timeout();
+    }
 }
 
-// MSceneWindow stubs (used by MCompositorNotificationSink)
-void MSceneWindow::disappear()
+void Ut_MCompositorNotificationSink::sendOnDisplayChangeEvent()
 {
-    emit disappeared();
+    // The rectangle does not make a difference - it just needs to be non-empty.
+    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0, 0, 1, 1));
+    QApplication::sendEvent(sink->window, event);
 }
 
 // Tests
@@ -253,8 +296,11 @@ void Ut_MCompositorNotificationSink::init()
     gCurrentOrientationAngle = M::Angle0;
     mWindowSetVisibleValue = false;
     mWindowSetVisibleWidget = NULL;
-    mSceneManagerAppearSceneWindowWindow = NULL;
-    mSceneManagerAppearSceneWindowPolicy = false;
+    gQWidgetClearMaskCalled = false;
+    gMSceneWindowsAppeared.clear();
+    gMSceneWindowDeletionPolicies.clear();
+
+    qQTimerEmitTimeoutImmediately = true;
     qTimerStarted = false;
     mSceneManagerDisappearSceneWindowWindow = NULL;
     windowEventFilterCalled = false;
@@ -266,13 +312,6 @@ void Ut_MCompositorNotificationSink::cleanup()
 {
     delete sink;
     delete notificationManager;
-}
-
-void Ut_MCompositorNotificationSink::sendOnDisplayChangeEvent()
-{
-    // The rectangle does not make a difference - it just needs to be non-empty.
-    MOnDisplayChangeEvent* event = new MOnDisplayChangeEvent(true, QRectF(0, 0, 1, 1));
-    QApplication::sendEvent(sink->window, event);
 }
 
 NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
@@ -298,30 +337,18 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowNotOpen()
 {
     QSignalSpy spy(sink, SIGNAL(notificationAdded(const Notification&)));
 
-    // Install an event filter for the window and block MOnDisplayChangeEvents but catch them
-    QSharedPointer<WindowEventFilter> windowEventFilter(new WindowEventFilter);
-    sink->window->installEventFilter(windowEventFilter.data());
-    windowEventFilterBlock = true;
-
     // Create a notification
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
+    sendOnDisplayChangeEvent();
 
     // Check that a MWindow was shown(window->show() called)
     QCOMPARE(mWindowSetVisibleWidget, sink->window);
     QCOMPARE(mWindowSetVisibleValue, true);
 
-    // Check that the MBanner was not yet shown but an MOnDisplayChangeEvent was sent
-    QCOMPARE(windowEventFilterCalled, true);
-    QCOMPARE(mSceneManagerAppearSceneWindowWindow, (MSceneWindow *)NULL);
-
-    // Unblock MOnDisplayChangeEvents and check that sending one will create the banner
-    windowEventFilterBlock = false;
-    sendOnDisplayChangeEvent();
-
     // Check that a MBanner was created with the given parameters
-    QCOMPARE(mSceneManagerAppearSceneWindowPolicy, true);
-    MBanner *banner = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+    QVERIFY(banner);
     QCOMPARE(banner->iconID(), QString("buttonicon0"));
     QCOMPARE(banner->title(), QString("title0"));
     QCOMPARE(banner->subtitle(), QString("subtitle0"));
@@ -338,29 +365,37 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowAlreadyOpen()
     // Create a notification: this will create a window
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-
-    // Create a banner for the first notification
     sendOnDisplayChangeEvent();
+    QVERIFY(mWindowSetVisibleWidget);
+    QVERIFY(mWindowSetVisibleValue);
+    QVERIFY(qTimerStarted);
 
     // Reset stubs to see what happens next
     mWindowSetVisibleWidget = NULL;
     mWindowSetVisibleValue = false;
     qTimerStarted = false;
-    mSceneManagerAppearSceneWindowWindow = NULL;
-    mSceneManagerAppearSceneWindowPolicy = false;
+
     QSignalSpy spy(sink, SIGNAL(notificationAdded(const Notification&)));
 
     // Create another notification
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 0 0 0");
     notificationManager->addNotification(1, parameters1, 0);
+    sendOnDisplayChangeEvent();
+
+    MBanner* first_banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+    QVERIFY(first_banner);
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(first_banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
 
     // Check that the MWindow was not unnecessarily shown again
-    QCOMPARE(mWindowSetVisibleWidget, (QWidget *)NULL);
-    QCOMPARE(mWindowSetVisibleValue, false);
+    QVERIFY(!mWindowSetVisibleWidget);
+    QVERIFY(!mWindowSetVisibleValue);
 
     // Check that a MBanner was created with the given parameters
-    QCOMPARE(mSceneManagerAppearSceneWindowPolicy, true);
-    MBanner *banner = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(1));
+    QVERIFY(banner);
     QCOMPARE(banner->iconID(), QString("buttonicon1"));
     QCOMPARE(banner->title(), QString("title1"));
     QCOMPARE(banner->subtitle(), QString("subtitle1"));
@@ -378,18 +413,24 @@ void Ut_MCompositorNotificationSink::testUpdateNotification()
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0);
     sendOnDisplayChangeEvent();
-    MBanner *banner1 = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
+    MBanner* banner1 = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
 
     TestNotificationParameters parameters1( "title1", "subtitle1", "buttonicon1", "content1 1 1 1");
     uint id = notificationManager->addNotification(0, parameters1);
     // Window will not drop to displaychange event slot unless window is explicitly hidden
     mWindowSetVisibleWidget->hide();
     sendOnDisplayChangeEvent();
-    MBanner *banner2 = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
 
     // Update the second notification
     TestNotificationParameters parametersX("titleX", "subtitleX", "buttoniconX", "contentX X X X");
     notificationManager->updateNotification(0, id, parametersX);
+
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(banner1);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+    sendOnDisplayChangeEvent();
+    MBanner* banner2 = static_cast<MBanner*>(gMSceneWindowsAppeared.at(1));
 
     QCOMPARE(banner2->title(), QString("titleX"));
     QCOMPARE(banner2->subtitle(), QString("subtitleX"));
@@ -409,38 +450,39 @@ void Ut_MCompositorNotificationSink::testRemoveNotification()
     notificationManager->addNotification(0, parameters0, 0);
     sendOnDisplayChangeEvent();
 
+    // Make sure that the first one has been shown
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+    QVERIFY(banner);
+
+    // Create and immediately remove a notification
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 1 1 1");
     uint id = notificationManager->addNotification(0, parameters1);
-    // Window will not drop to displaychange event slot unless window is explicitly hidden
-    mWindowSetVisibleWidget->hide();
-    sendOnDisplayChangeEvent();
-    MBanner *banner = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
-
-    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "");
-    notificationManager->addNotification(0, parameters2);
-    // Window will not drop to displaychange event slot unless window is explicitly hidden
-    mWindowSetVisibleWidget->hide();
-    sendOnDisplayChangeEvent();
-
-    // Remove the second one
     notificationManager->removeNotification(0, id);
-    // Check that the window was removed
-    QCOMPARE(banner, mSceneManagerDisappearSceneWindowWindow);
+
+    // Now make the first banner disappear
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    QVERIFY(mWindowSetVisibleWidget);
+    QVERIFY(!mWindowSetVisibleValue);
 }
 
 void Ut_MCompositorNotificationSink::testTimeout()
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
-    uint notificationId = notificationManager->addNotification(0, parameters0);
+    notificationManager->addNotification(0, parameters0);
     sendOnDisplayChangeEvent();
-
-    connect(this, SIGNAL(timeout()), sink, SLOT(timeout()));
-    setProperty("notificationId", notificationId);
-    emit(timeout());
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
 
     // Check that the window disappeared
-    QVERIFY(mSceneManagerDisappearSceneWindowWindow != NULL);
-    QCOMPARE(mSceneManagerAppearSceneWindowWindow, mSceneManagerDisappearSceneWindowWindow);
+    QVERIFY(mSceneManagerDisappearSceneWindowWindow);
+    QCOMPARE(gMSceneWindowsAppeared.at(0), mSceneManagerDisappearSceneWindowWindow);
 }
 
 void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisabled()
@@ -449,6 +491,7 @@ void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisab
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     sink->setApplicationEventsEnabled(false);
     notificationManager->addNotification(0, parameters);
+    sendOnDisplayChangeEvent();
     QCOMPARE(mWindowSetVisibleValue, false);
 
     sink->setApplicationEventsEnabled(true);
@@ -462,7 +505,6 @@ void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
     QCOMPARE(mWindowSetVisibleValue, false);
     emit statusIndictorMenuVisibilityChanged(false);
     notificationManager->addNotification(0, parameters);
-    sendOnDisplayChangeEvent();
     QCOMPARE(mWindowSetVisibleValue, true);
 }
 
@@ -524,42 +566,69 @@ void Ut_MCompositorNotificationSink::testWindowMasking_data()
     QTest::newRow("270") << M::Angle270;
 }
 
+const QRegion Ut_MCompositorNotificationSink::calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window)
+{
+    QRect maskRect;
+    switch(angle) {
+    case M::Angle0:   maskRect = QRect(0, 0, window->preferredWidth(), window->preferredHeight()); break;
+    case M::Angle90:  maskRect = QRect(sink->window->width() - window->preferredHeight(), 0, window->preferredHeight(), window->preferredWidth()); break;
+    case M::Angle180: maskRect = QRect(0, sink->window->height() - window->preferredHeight(), window->preferredWidth(), window->preferredHeight()); break;
+    case M::Angle270: maskRect = QRect(0, 0, window->preferredHeight(), window->preferredWidth()); break;
+    }
+
+    QRegion region(maskRect, QRegion::Rectangle);
+    return region;
+}
+
 void Ut_MCompositorNotificationSink::testWindowMasking()
 {
     QFETCH(M::OrientationAngle, angle);
     gCurrentOrientationAngle = angle;
+    qQTimerEmitTimeoutImmediately = false;
 
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-
     sendOnDisplayChangeEvent();
 
-    QRect maskRect;
-    switch(angle) {
-    case M::Angle0:   maskRect = QRect(0, 0, mSceneManagerAppearSceneWindowWindow->preferredWidth(), mSceneManagerAppearSceneWindowWindow->preferredHeight()); break;
-    case M::Angle90:  maskRect = QRect(sink->window->width() - mSceneManagerAppearSceneWindowWindow->preferredHeight(), 0, mSceneManagerAppearSceneWindowWindow->preferredHeight(), mSceneManagerAppearSceneWindowWindow->preferredWidth()); break;
-    case M::Angle180: maskRect = QRect(0, sink->window->height() - mSceneManagerAppearSceneWindowWindow->preferredHeight(), mSceneManagerAppearSceneWindowWindow->preferredWidth(), mSceneManagerAppearSceneWindowWindow->preferredHeight()); break;
-    case M::Angle270: maskRect = QRect(0, 0, mSceneManagerAppearSceneWindowWindow->preferredHeight(), mSceneManagerAppearSceneWindowWindow->preferredWidth()); break;
-    }
+    MSceneWindow* window = gMSceneWindowsAppeared.at(0);
 
-    QRegion region(maskRect, QRegion::Rectangle);
+    QRegion region = calculateTargetMaskRegion(angle, window);
+    QCOMPARE(mWindowMaskRegion, region);
+}
+
+void Ut_MCompositorNotificationSink::testWindowMaskingWhenOrientationChangeSignalsEmitted()
+{
+    qQTimerEmitTimeoutImmediately = false;
+
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0);
+    sendOnDisplayChangeEvent();
+    int newAngle = sink->window->sceneManager()->orientationAngle() + M::Angle90;
+    gCurrentOrientationAngle = (M::OrientationAngle)newAngle;
+
+    sink->window->sceneManager()->setOrientationAngle(gCurrentOrientationAngle, MSceneManager::ImmediateTransition);
+    QVERIFY(gQWidgetClearMaskCalled);
+
+    MSceneWindow* window = gMSceneWindowsAppeared.at(0);
+    QRegion region = calculateTargetMaskRegion(gCurrentOrientationAngle, window);
     QCOMPARE(mWindowMaskRegion, region);
 }
 
 void Ut_MCompositorNotificationSink::testPreviewIconId()
 {
+    qQTimerEmitTimeoutImmediately = false;
+
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
-    notificationManager->addNotification(0, parameters0);
+    uint id = notificationManager->addNotification(0, parameters0);
+    sendOnDisplayChangeEvent();
 
     // Check default icon is used if preview icon id is not defined
-    sendOnDisplayChangeEvent();
-    MBanner *banner = static_cast<MBanner*>(mSceneManagerAppearSceneWindowWindow);
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
     QCOMPARE(banner->iconID(), QString("buttonicon0"));
 
     // Check that preview icon id is used if defined
     parameters0.add("previewIconId", "previewicon0");
-    notificationManager->updateNotification(0, 0, parameters0);
-    sendOnDisplayChangeEvent();
+    notificationManager->updateNotification(0, id, parameters0);
     QCOMPARE(banner->iconID(), QString("previewicon0"));
 }
 
