@@ -9,11 +9,9 @@ MODEL_HEADERS += $$SRCDIR/statusarea/statusareamodel.h
 
 # unit test and unit
 SOURCES += \
-    $$SRCDIR/debug.cpp \
     ut_statusareaview.cpp \
     $$SRCDIR/statusarea/statusareaview.cpp \
-    $$SRCDIR/statusarea/statusarea.cpp \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.cpp
+    $$SRCDIR/statusarea/statusarea.cpp
 
 # service classes
 SOURCES += ../stubs/stubbase.cpp
@@ -28,14 +26,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusarea.h \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenu.h \
-   $$NOTIFICATIONSRCDIR/notificationstatusindicator.h
-
-# service classes
-HEADERS += \
-    $$STUBSDIR/statusindicatormenuadaptor_stub.h \
+    $$NOTIFICATIONSRCDIR/notificationstatusindicator.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)

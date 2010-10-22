@@ -38,13 +38,8 @@
 #include "profilestatusindicator_stub.h"
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
-#include "statusindicatormenuadaptor_stub.h"
-#include "statusindicatormenu_stub.h"
-#include <MSceneWindow>
-#include <QGraphicsLayout>
-#include <MWidget>
 #include "x11wrapper_stub.h"
-#include "statusindicatormenuwindowstyle.h"
+#include <MSceneWindow>
 
 int Ut_StatusAreaView::windowExecutionCount;
 int Ut_StatusAreaView::windowRejectionCount;
@@ -60,10 +55,6 @@ void MSceneWindow::disappear()
     Ut_StatusAreaView::windowRejectionCount++;
 }
 
-const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
-{
-    return true;
-}
 // Called before the first testfunction is executed
 void Ut_StatusAreaView::initTestCase()
 {
