@@ -61,6 +61,7 @@ private slots:
     void testWhenNotificationAreaIsEnabledInStyleThenNotificationAreaIsCreated();
     void testWhenWidgetEntersDisplayThenExtensionAreasGetInitialized();
     void testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability();
+    void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
 };
 
 #endif //_UT_STATUSINDICATORMENUDROPDOWNVIEW_

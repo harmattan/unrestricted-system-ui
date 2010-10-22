@@ -51,6 +51,7 @@ private slots:
     void testConnections();
     void testExtensionAreaInitialization();
     void testLayoutPositions();
+    void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
 };
 
 #endif //_UT_STATUSINDICATORMENUVERTICALVIEW_

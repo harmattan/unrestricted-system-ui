@@ -119,21 +119,40 @@ const bool& StatusIndicatorMenuStyle::notificationArea() const
     return showNotificationArea;
 }
 
+QList<MSceneWindow*> g_visibleSceneWindows;
 
 void MSceneManager::appearSceneWindowNow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy)
 {
     Q_UNUSED(policy);
     sceneWindow->setVisible(true);
+    g_visibleSceneWindows.append(sceneWindow);
 }
 
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
 {
     sceneWindow->setVisible(false);
+    g_visibleSceneWindows.removeAll(sceneWindow);
 }
+
+void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
+{
+    sceneWindow->setVisible(false);
+    g_visibleSceneWindows.removeAll(sceneWindow);
+}
+
+MSceneWindow::~MSceneWindow()
+{
+    g_visibleSceneWindows.removeAll(this);
+}
+
 
 QSize MSceneManager::visibleSceneSize() const
 {
     return QSize(864, 480);
+}
+
+void MSceneWindowView::applyStyle()
+{
 }
 
 
@@ -392,6 +411,18 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsSta
     QCOMPARE(gQTimer_singleShot_params.at(0).receiver, m_subject);
     QString timedSlotName(gQTimer_singleShot_params.at(0).member);
     QVERIFY2(timedSlotName.endsWith(QString("ensureIsViewable()")), qPrintable(QString("Actual timed slot name was: ") + timedSlotName));
+}
+
+void Ut_StatusIndicatorMenuDropDownView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
+{
+    controller->setView(NULL);
+    m_subject = NULL;
+
+    // All the items added by the view should have disappeared
+    QCOMPARE(controller->childItems().count(), 0);
+
+    // All the SceneWindows should be gone as well
+    QCOMPARE(g_visibleSceneWindows.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuDropDownView)

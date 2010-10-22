@@ -85,15 +85,30 @@ bool MApplicationExtensionArea::init()
     return true;
 }
 
+QList<MSceneWindow*> g_visibleSceneWindows;
+
 void MSceneManager::appearSceneWindowNow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy)
 {
     Q_UNUSED(policy);
     sceneWindow->setVisible(true);
+    g_visibleSceneWindows.append(sceneWindow);
 }
 
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
 {
     sceneWindow->setVisible(false);
+    g_visibleSceneWindows.removeAll(sceneWindow);
+}
+
+void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
+{
+    sceneWindow->setVisible(false);
+    g_visibleSceneWindows.removeAll(sceneWindow);
+}
+
+MSceneWindow::~MSceneWindow()
+{
+    g_visibleSceneWindows.removeAll(this);
 }
 
 class TestStatusIndicatorMenuExtensionInterface : public MStatusIndicatorMenuExtensionInterface
@@ -197,6 +212,17 @@ void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
 
     // It should have the bottom position set
     QCOMPARE(settingsButton->layoutPosition(), M::VerticalBottomPosition);
+}
+
+void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
+{
+    controller->setView(NULL);
+
+    // All the items added by the view should have disappeared
+    QCOMPARE(controller->childItems().count(), 0);
+
+    // All the SceneWindows should be gone as well
+    QCOMPARE(g_visibleSceneWindows.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuVerticalView)

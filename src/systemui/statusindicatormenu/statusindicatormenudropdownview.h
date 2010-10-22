@@ -163,6 +163,9 @@ private:
     //! An overlay for the close button
     MOverlay *closeButtonOverlay;
 
+    //! The widget containing the top row of buttons
+    QGraphicsWidget *topRowWidget;
+
     //! Creates windows top row containing extension area and settings button
     QGraphicsWidget *createTopRow();
 

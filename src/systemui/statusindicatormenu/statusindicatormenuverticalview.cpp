@@ -62,7 +62,7 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     vlayout->addItem(settingsButton);
 
     // Create a container widget for extension area and settings button layout
-    MWidgetController *containerWidget = new MWidgetController(controller);
+    containerWidget = new MWidgetController(controller);
     containerWidget->setView(new MWidgetView(containerWidget));
     containerWidget->setObjectName("StatusIndicatorMenuExtensionAreaWidget");
     containerWidget->setLayout(vlayout);
@@ -88,6 +88,7 @@ void StatusIndicatorMenuVerticalView::setExtensionLayoutPosition(MApplicationExt
 
 StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
 {
+    delete containerWidget;
     delete statusBar;
 }
 

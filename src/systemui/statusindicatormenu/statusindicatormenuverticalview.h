@@ -29,6 +29,8 @@ class MApplicationExtensionInterface;
 class StatusIndicatorMenuWindow;
 class StatusIndicatorMenu;
 class MStatusBar;
+class MButton;
+class MWidgetController;
 
 /*!
  * A view class for the status indicator menu with the extension area and the
@@ -61,6 +63,9 @@ private:
 
     //! Status Bar
     MStatusBar *statusBar;
+
+    //! Container for the main content
+    MWidgetController *containerWidget;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuVerticalView;

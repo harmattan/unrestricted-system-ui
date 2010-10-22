@@ -111,8 +111,11 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
 
 StatusIndicatorMenuDropDownView::~StatusIndicatorMenuDropDownView()
 {
+    delete backgroundWidget;
     delete statusBar;
     delete closeButtonOverlay;
+    delete pannableViewport;
+    delete topRowWidget;
 }
 
 QGraphicsWidget* StatusIndicatorMenuDropDownView::createTopRow()
@@ -316,10 +319,11 @@ void StatusIndicatorMenuDropDownView::applyStyle()
 
         // Put all the stuff into the scene window layout
         pannableViewport = createPannableArea();
+        topRowWidget = createTopRow();
         QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
         layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(0);
-        layout->addItem(createTopRow());
+        layout->addItem(topRowWidget);
         layout->addItem(backgroundLayout);
         layout->addItem(pannableViewport);
         controller->setLayout(layout);
