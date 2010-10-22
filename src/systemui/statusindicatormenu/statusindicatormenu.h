@@ -37,7 +37,7 @@ public:
      * Constructs a StatusIndicatorMenu widget.
      *
      */
-    StatusIndicatorMenu();
+    StatusIndicatorMenu(QGraphicsItem *parent = NULL);
 
     /*!
      * Destroys the StatusIndicatorMenu.
@@ -48,6 +48,10 @@ public:
     virtual void showStatusIndicatorMenu();
 
     virtual void hideStatusIndicatorMenu();
+
+    void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     //! \reimp_end
 
 signals:

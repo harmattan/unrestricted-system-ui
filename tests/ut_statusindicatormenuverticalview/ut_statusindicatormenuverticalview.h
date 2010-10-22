@@ -16,27 +16,25 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_STATUSINDICATORMENUWINDOW_
-#define _UT_STATUSINDICATORMENUWINDOW_
+#ifndef _UT_STATUSINDICATORMENUVERTICALVIEW_
+#define _UT_STATUSINDICATORMENUVERTICALVIEW_
 
 #include <QObject>
-#include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenu.h"
 
+class StatusIndicatorMenuVerticalView;
 class StatusIndicatorMenu;
 class MApplication;
-class MApplicationExtensionInterface;
 
-class Ut_StatusIndicatorMenu : public QObject
+class Ut_StatusIndicatorMenuVerticalView : public QObject
 {
     Q_OBJECT
 
 signals:
-    void settingsButtonClicked();
-    void extensionInstantiated(MApplicationExtensionInterface*);
+    void positionOrSizeChanged();
 
 private:
-    StatusIndicatorMenu *statusIndicatorMenu;
+    StatusIndicatorMenuVerticalView *m_subject;
+    StatusIndicatorMenu *controller;
     MApplication *app;
 
 private slots:
@@ -50,10 +48,9 @@ private slots:
     void cleanupTestCase();
 
     // Test cases
-    void testSettingsButtonClicked();
-    void testExtensionInstantiated();
-    void testSignals();
-    void testWhenPressedOutsideMenuContentsThenWindowShouldHide();
+    void testConnections();
+    void testExtensionAreaInitialization();
+    void testLayoutPositions();
 };
 
-#endif //_UT_STATUSINDICATORMENUWINDOW_
+#endif //_UT_STATUSINDICATORMENUVERTICALVIEW_

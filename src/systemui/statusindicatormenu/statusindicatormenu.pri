@@ -8,7 +8,8 @@ SOURCES += \
     statusindicatormenu/notificationarea.cpp \
     statusindicatormenu/notificationareaview.cpp \
     statusindicatormenu/statusindicatormenu.cpp \
-    statusindicatormenu/statusindicatormenudropdownview.cpp
+    statusindicatormenu/statusindicatormenudropdownview.cpp \
+    statusindicatormenu/statusindicatormenuverticalview.cpp
 
 HEADERS += \
     statusindicatormenu/statusindicatormenuwindow.h \
@@ -19,7 +20,8 @@ HEADERS += \
     statusindicatormenu/notificationareastyle.h \
     statusindicatormenu/statusindicatormenuwindowstyle.h \
     statusindicatormenu/statusindicatormenu.h \
-    statusindicatormenu/statusindicatormenudropdownview.h
+    statusindicatormenu/statusindicatormenudropdownview.h \
+    statusindicatormenu/statusindicatormenuverticalview.h
 
 MODEL_HEADERS += statusindicatormenu/notificationareamodel.h
 STYLE_HEADERS += statusindicatormenu/notificationareastyle.h \
