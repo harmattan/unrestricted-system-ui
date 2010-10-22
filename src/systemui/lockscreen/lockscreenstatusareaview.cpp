@@ -21,8 +21,11 @@
 #include "statusarea.h"
 #include "statusindicator.h"
 #include "contextframeworkcontext.h"
+#include "x11wrapper.h"
 #include <QGraphicsLinearLayout>
+#include <QX11Info>
 #include <MViewCreator>
+#include <MSceneManager>
 
 LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     MWidgetView(controller),
@@ -37,7 +40,8 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     presenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
-    alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller))
+    alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
+    orientationChangeSignalConnected(false)
 {
     // Connect related phone network indicators
     connect(phoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
@@ -63,6 +67,42 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
 
 LockScreenStatusAreaView::~LockScreenStatusAreaView()
 {
+}
+
+void LockScreenStatusAreaView::setGeometry(const QRectF &rect)
+{
+    MWidgetView::setGeometry(rect);
+
+    if (!orientationChangeSignalConnected && controller->sceneManager() != NULL) {
+        // Update the status bar geometry property when the orientation change animation finishes.
+        // This connection can not be made in the constructor because the scene manager does not exist at that point. In setGeometry() the manager definitely exists.
+        connect(controller->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateStatusBarGeometryProperty()));
+
+        orientationChangeSignalConnected = true;
+    }
+}
+
+void LockScreenStatusAreaView::updateStatusBarGeometryProperty()
+{
+    if (controller->scene() != NULL) {
+        Display *display = QX11Info::display();
+        Atom atom = X11Wrapper::XInternAtom(display, "_MEEGOTOUCH_MSTATUSBAR_GEOMETRY", False);
+        long data[4];
+
+        foreach (QGraphicsView *view, controller->scene()->views()) {
+            // Set the _MEEGOTOUCH_MSTATUSBAR_GEOMETRY property into each view (window) the StatusArea belongs to
+            QRectF statusBarGeometry = controller->mapRectToScene(QRectF(QPointF(), controller->geometry().size()));
+            if (statusBarGeometry != updatedStatusBarGeometry && statusBarGeometry.x() >= 0 && statusBarGeometry.y() >= 0) {
+                data[0] = statusBarGeometry.x();
+                data[1] = statusBarGeometry.y();
+                data[2] = statusBarGeometry.width();
+                data[3] = statusBarGeometry.height();
+                X11Wrapper::XChangeProperty(display, view->winId(), atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)data, 4);
+
+                updatedStatusBarGeometry = statusBarGeometry;
+            }
+        }
+    }
 }
 
 M_REGISTER_VIEW_NEW(LockScreenStatusAreaView, StatusArea)

@@ -49,6 +49,14 @@ public:
      */
     virtual ~LockScreenStatusAreaView();
 
+    //! \reimp
+    virtual void setGeometry(const QRectF &rect);
+    //! \reimp_end
+
+private slots:
+    //! Updates the _MEEGOTOUCH_MSTATUSBAR_GEOMETRY X window property
+    void updateStatusBarGeometryProperty();
+
 private:
     //! Context framework application context for the indicators
     ContextFrameworkContext contextFrameworkContext;
@@ -88,6 +96,16 @@ private:
 
     //! Alarm indicator
     StatusIndicator *alarmIndicator;
+
+    //! The status bar geometry that has been put into the _MEEGOTOUCH_MSTATUSBAR_GEOMETRY property
+    QRectF updatedStatusBarGeometry;
+
+    //! Whether the orientation change signal has been connected or not
+    bool orientationChangeSignalConnected;
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenStatusAreaView;
+#endif
 };
 
 #endif // LOCKSCREENSTATUSAREAVIEW_H
