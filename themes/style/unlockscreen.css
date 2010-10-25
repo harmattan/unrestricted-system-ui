@@ -145,3 +145,14 @@ MImageWidgetStyle#LockScreenUnlockIcon {
     maximum-size:   10mm 10mm;
 }
 
+MAbstractLayoutPolicyStyle#NotificationAreaBannerLayoutPolicy {
+    vertical-spacing: 0.8mm;
+    margin-left:   0.8mm;
+    margin-right:  0.8mm;
+    margin-bottom: 0.8mm;
+}
+
+NotificationArea#LockScreenNotificationArea MBannerStyle {
+   minimum-size: 0 0;
+}
+

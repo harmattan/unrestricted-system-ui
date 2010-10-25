@@ -27,6 +27,8 @@
 
 class NotificationArea;
 class QGraphicsLinearLayout;
+class MLayout;
+class MLinearLayoutPolicy;
 class MButton;
 
 class NotificationAreaView : public MWidgetView
@@ -58,7 +60,10 @@ private:
     void updateLayout();
 
     //! The layout for the banners
-    QGraphicsLinearLayout *bannerLayout;
+    MLayout *bannerLayout;
+
+    //! The layout policy for the banners
+    MLinearLayoutPolicy *bannerPolicy;
 
     //! A layout for the clear button
     QGraphicsLinearLayout *clearButtonLayout;

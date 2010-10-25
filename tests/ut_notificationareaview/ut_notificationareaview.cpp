@@ -19,6 +19,7 @@
 
 #include <QtTest/QtTest>
 #include <QGraphicsLinearLayout>
+#include <MLayout>
 #include <QAction>
 #include <QSharedPointer>
 #include <MApplication>
