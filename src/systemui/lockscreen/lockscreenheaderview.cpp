@@ -26,8 +26,7 @@
 
 LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     MWidgetView(controller),
-    layout(new QGraphicsLinearLayout(Qt::Vertical)),
-    date(new Date)
+    layout(new QGraphicsLinearLayout(Qt::Vertical))
 {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
@@ -40,22 +39,26 @@ LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     // Create a layout for the time and date
     Clock *clock = new Clock;
     clock->setObjectName("LockScreenHeaderClock");
-    QGraphicsLinearLayout *dateTimeLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    dateTimeLayout->setContentsMargins(0, 0, 0, 0);
-    dateTimeLayout->setSpacing(0);
-    dateTimeLayout->addItem(clock);
-    dateTimeLayout->addItem(date);
-    dateTimeLayout->addStretch();
+    QGraphicsLinearLayout *dateTimeVerticalLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    dateTimeVerticalLayout->setContentsMargins(0, 0, 0, 0);
+    dateTimeVerticalLayout->setSpacing(0);
+    dateTimeVerticalLayout->addItem(clock);
+    dateTimeVerticalLayout->addItem(new Date);
+    dateTimeVerticalLayout->addStretch();
 
-    // Create a horizontal layout to align the time and date to the right (without allowing them to grow)
-    QGraphicsLinearLayout *horizontalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    horizontalLayout->setContentsMargins(0, 0, 0, 0);
-    horizontalLayout->setSpacing(0);
-    horizontalLayout->addStretch();
-    horizontalLayout->addItem(dateTimeLayout);
+    // Create a widget with a horizontal layout to align the time and date to the right and to apply a background image
+    MWidgetController *dateTimeWidget = new MWidgetController;
+    dateTimeWidget->setView(new MWidgetView(dateTimeWidget));
+    dateTimeWidget->setObjectName("LockScreenHeaderDateTime");
+    QGraphicsLinearLayout *dateTimeHorizontalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    dateTimeHorizontalLayout->setContentsMargins(0, 0, 0, 0);
+    dateTimeHorizontalLayout->setSpacing(0);
+    dateTimeHorizontalLayout->addStretch();
+    dateTimeHorizontalLayout->addItem(dateTimeVerticalLayout);
+    dateTimeWidget->setLayout(dateTimeHorizontalLayout);
 
     // Add the date and time to the main layout
-    layout->addItem(horizontalLayout);
+    layout->addItem(dateTimeWidget);
     controller->setLayout(layout);
 }
 
