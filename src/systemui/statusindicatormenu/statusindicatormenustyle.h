@@ -22,18 +22,18 @@
 
 #include <mscenewindowstyle.h>
 
-class StatusIndicatorMenuWindowStyle : public MSceneWindowStyle
+class StatusIndicatorMenuStyle : public MSceneWindowStyle
 {
     Q_OBJECT
-    M_STYLE(StatusIndicatorMenuWindowStyle)
+    M_STYLE(StatusIndicatorMenuStyle)
 
     //! controls whether to show a notification area in status indicator menu window
     M_STYLE_ATTRIBUTE(bool, notificationArea, NotificationArea);
 };
 
-class StatusIndicatorMenuWindowStyleContainer : public MSceneWindowStyleContainer
+class StatusIndicatorMenuStyleContainer : public MSceneWindowStyleContainer
 {
-    M_STYLE_CONTAINER(StatusIndicatorMenuWindowStyle)
+    M_STYLE_CONTAINER(StatusIndicatorMenuStyle)
 };
 
 #endif

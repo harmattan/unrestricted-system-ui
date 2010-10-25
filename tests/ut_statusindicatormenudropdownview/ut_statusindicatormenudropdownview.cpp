@@ -31,7 +31,7 @@
 #include "notificationarea_stub.h"
 #include <MPannableViewport>
 #include "x11wrapper_stub.h"
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 #include <MSceneManager>
 
 #ifdef HAVE_QMSYSTEM
@@ -99,22 +99,22 @@ void MWindow::setVisible(bool visible)
 
 bool showNotificationArea = true;
 
-StatusIndicatorMenuWindowStyleContainer::StatusIndicatorMenuWindowStyleContainer() :
+StatusIndicatorMenuStyleContainer::StatusIndicatorMenuStyleContainer() :
   d_ptr(NULL)
 {
 }
 
 
-const char* StatusIndicatorMenuWindowStyleContainer::styleType() const
+const char* StatusIndicatorMenuStyleContainer::styleType() const
 {
     return "MWidgetStyle";
 }
 
-StatusIndicatorMenuWindowStyleContainer::~StatusIndicatorMenuWindowStyleContainer()
+StatusIndicatorMenuStyleContainer::~StatusIndicatorMenuStyleContainer()
 {
 }
 
-const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
+const bool& StatusIndicatorMenuStyle::notificationArea() const
 {
     return showNotificationArea;
 }

@@ -23,7 +23,7 @@
 #include <MSceneWindow>
 #include <MOverlay>
 #include <mscenewindowview.h>
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsLinearLayout;
@@ -107,7 +107,7 @@ private:
 class StatusIndicatorMenuDropDownView : public MSceneWindowView
 {
     Q_OBJECT
-    M_VIEW(MSceneWindowModel, StatusIndicatorMenuWindowStyle)
+    M_VIEW(MSceneWindowModel, StatusIndicatorMenuStyle)
 
 public:
     /*!

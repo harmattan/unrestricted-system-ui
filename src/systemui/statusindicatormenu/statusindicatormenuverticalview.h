@@ -21,7 +21,7 @@
 #define STATUSINDICATORMENUVERTICALVIEW_H_
 
 #include <mscenewindowview.h>
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 
 class QGraphicsLinearLayout;
 class MApplicationExtensionArea;
@@ -37,7 +37,7 @@ class MStatusBar;
 class StatusIndicatorMenuVerticalView : public MSceneWindowView
 {
     Q_OBJECT
-    M_VIEW(MSceneWindowModel, StatusIndicatorMenuWindowStyle)
+    M_VIEW(MSceneWindowModel, StatusIndicatorMenuStyle)
 
 public slots:
 

@@ -18,8 +18,8 @@ HEADERS += \
     ut_statusindicatormenuverticalview.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuverticalview.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenu.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindowstyle.h
+    $$SRCDIR/statusindicatormenu/statusindicatormenustyle.h
 
-STYLE_HEADERS += $$SRCDIR/statusindicatormenu/statusindicatormenuwindowstyle.h
+STYLE_HEADERS += $$SRCDIR/statusindicatormenu/statusindicatormenustyle.h
 
 include(../common_bot.pri)

@@ -25,7 +25,7 @@
 #include <MApplicationExtensionArea>
 #include <QtTest/QtTest>
 #include "x11wrapper_stub.h"
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 #include <MSceneManager>
 #include <QGraphicsLayout>
 

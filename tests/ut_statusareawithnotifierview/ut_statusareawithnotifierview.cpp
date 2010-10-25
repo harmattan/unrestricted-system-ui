@@ -44,7 +44,7 @@
 #include "notifiernotificationsink_stub.h"
 #include "notificationsink_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 #include "statusindicatormenu_stub.h"
 #include <MSceneWindow>
 #include <QGraphicsLayout>
@@ -63,7 +63,7 @@ const MStyle *MTheme::style(const char *styleClassName,
 };
 
 bool isNotificationArea = true;
-const bool& StatusIndicatorMenuWindowStyle::notificationArea() const
+const bool& StatusIndicatorMenuStyle::notificationArea() const
 {
     return isNotificationArea;
 }

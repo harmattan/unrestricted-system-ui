@@ -33,7 +33,7 @@
 #include <QTimer>
 #include "statusindicatormenu.h"
 #include "statusindicatormenudropdownview.h"
-#include "statusindicatormenuwindowstyle.h"
+#include "statusindicatormenustyle.h"
 
 const int StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY = 30 * 1000;
 

@@ -3,7 +3,7 @@
 @import "shutdownscreen.css";
 
 
-StatusIndicatorMenuWindowStyle {
+StatusIndicatorMenuStyle {
     padding-top: 2.8mm;
     background-color: #000000;
     background-opacity: 0.4;
