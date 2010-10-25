@@ -1,8 +1,8 @@
-system-ui (0.17.5~1) harmattan; urgency=low
+system-ui (0.17.5-1) harmattan; urgency=low
 
-  * [UNRELEASED]
-  * Fixes: NB#194744 -  Status Area Menu: Missing translations: Only 'no alarms' string is localized when changing language
- -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 21 Oct 2010 13:43:23 +0300
+  * Fixes: NB#194744 - Status Area Menu: Missing translations: Only 'no alarms' string is localized when changing language
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 25 Oct 2010 11:17:45 +0300
 
 system-ui (0.17.4-1) harmattan; urgency=low
 
