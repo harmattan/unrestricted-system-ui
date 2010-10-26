@@ -22,7 +22,7 @@
 
 Clock::Clock(QGraphicsItem *parent) :
     MWidgetController(new ClockModel, parent),
-    locale(MLocale::createSystemMLocale())
+    locale(new MLocale())
 {
     // Set the initial 24 hour mode
     updateLocaleSettings();
