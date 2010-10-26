@@ -319,7 +319,6 @@ void
 Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
 {
     Maemo::QmLocks locks;
-    bool    lockingSuccess, unlockingSuccess;
     Window  LockScreenUIWindowID;
     Window  EventEaterWindowID;
 
@@ -329,11 +328,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Locking the screen ****************************");
     SYS_DEBUG ("***************************************************");
-    lockingSuccess = locks.setState (
-            Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
-    #ifndef __i386__
-    QVERIFY (lockingSuccess);
-    #endif
+    locks.setState (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
     QTest::qWait (DelayBetweenTests);
 
     /*
@@ -351,11 +346,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Unlocking the screen **************************");
     SYS_DEBUG ("***************************************************");
-    unlockingSuccess = locks.setState (
-            Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
-    #ifndef __i386__
-    QVERIFY (unlockingSuccess);
-    #endif
+    locks.setState (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
     QTest::qWait (WMDelay);
 
     /*
