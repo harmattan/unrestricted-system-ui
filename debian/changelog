@@ -1,8 +1,9 @@
 system-ui (0.17.6~1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#199313 - Volume slider cannot be used with touch screen to
+    increase volume
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 25 Oct 2010 11:18:23 +0300
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 26 Oct 2010 11:55:50 +0200
 
 system-ui (0.17.5-1) harmattan; urgency=low
 
