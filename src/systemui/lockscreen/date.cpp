@@ -25,7 +25,7 @@
 
 Date::Date(QGraphicsItem *parent) :
     MStylableWidget(parent),
-    locale(MLocale::createSystemMLocale())
+    locale(new MLocale(this))
 {
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);
