@@ -4,6 +4,8 @@ PKGCONFIG += xcomposite
 
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
 
+STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
+
 SOURCES += ft_lockscreenbusinesslogic.cpp \
     ../ft_lockscreenui/xchecker.cpp \
     $$SRCDIR/debug.cpp \
@@ -24,6 +26,7 @@ HEADERS += ft_lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h \
+    $$SRCDIR/lockscreen/lockscreenwindowstyle.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/eventeater.h  \
     $$SRCDIR/sysuid.h \

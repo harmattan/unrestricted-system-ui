@@ -29,6 +29,7 @@ class LockScreenWindowStub : public StubBase {
   public:
   virtual void LockScreenWindowConstructor();
   virtual void LockScreenWindowDestructor();
+  virtual void applyStyle();
   virtual void reset();
   virtual void showEvent(QShowEvent *event);
 };
@@ -38,6 +39,10 @@ void LockScreenWindowStub::LockScreenWindowConstructor() {
 }
 
 void LockScreenWindowStub::LockScreenWindowDestructor() {
+}
+
+void LockScreenWindowStub::applyStyle() {
+  stubMethodEntered("applyStyle");
 }
 
 void LockScreenWindowStub::reset() {
@@ -64,6 +69,10 @@ LockScreenWindow::LockScreenWindow(QWidget *)
 
 LockScreenWindow::~LockScreenWindow() {
   gLockScreenWindowStub->LockScreenWindowDestructor();
+}
+
+void LockScreenWindow::applyStyle() {
+  gLockScreenWindowStub->applyStyle();
 }
 
 void LockScreenWindow::reset() {

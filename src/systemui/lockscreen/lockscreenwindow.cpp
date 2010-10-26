@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 #include "lockscreenwindow.h"
+#include "lockscreenwindowstyle.h"
 #include "lockscreen.h"
 #include <QX11Info>
 #include "x11wrapper.h"
@@ -38,6 +39,20 @@ LockScreenWindow::~LockScreenWindow()
     delete lockScreen;
 }
 
+void LockScreenWindow::applyStyle()
+{
+    const LockScreenWindowStyle *style = static_cast<const LockScreenWindowStyle *>(MTheme::style("LockScreenWindowStyle", "", "", "", M::Landscape, NULL));
+    if (style->lockedOrientation() == "landscape") {
+        setLandscapeOrientation();
+        setOrientationLocked(true);
+    } else if (style->lockedOrientation() == "portrait") {
+        setPortraitOrientation();
+        setOrientationLocked(true);
+    } else {
+        setOrientationLocked(false);
+    }
+}
+
 void LockScreenWindow::reset()
 {
     lockScreen->reset();
@@ -56,6 +71,7 @@ void LockScreenWindow::showEvent(QShowEvent *event)
     }
 
     excludeFromTaskBar();
+    applyStyle();
 }
 
 void LockScreenWindow::excludeFromTaskBar()

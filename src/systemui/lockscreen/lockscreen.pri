@@ -4,11 +4,13 @@ INCLUDEPATH += lockscreen statusarea
 STYLE_HEADERS += lockscreen/lockscreenheaderstyle.h \
     lockscreen/lockscreenheaderwithpadlockstyle.h \
     lockscreen/lockscreenstatusareastyle.h \
+    lockscreen/lockscreenwindowstyle.h \
     lockscreen/datestyle.h
 
 HEADERS += \
     lockscreen/lockscreenbusinesslogic.h \
     lockscreen/lockscreenwindow.h \
+    lockscreen/lockscreenwindowstyle.h \
     lockscreen/eventeater.h \
     lockscreen/lockscreenbusinesslogicadaptor.h \
     lockscreen/unlocknotifications.h \

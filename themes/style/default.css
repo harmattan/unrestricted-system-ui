@@ -608,6 +608,10 @@ MContainerStyle#MExtensionAreaInvisibleContainer {
     background-image: ;
 }
 
+LockScreenWindowStyle {
+    locked-orientation:;
+}
+
 LockScreenHeaderStyle {
     minimum-size: 100% -1;
     preferred-size: 100% -1;

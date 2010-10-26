@@ -18,8 +18,10 @@
 ****************************************************************************/
 
 #include <MApplication>
+#include <QShowEvent>
 #include "ut_lockscreenwindow.h"
 #include "lockscreenwindow.h"
+#include "lockscreenwindowstyle.h"
 #include "lockscreen_stub.h"
 #include <X11/Xutil.h>
 #include "x11wrapper_stub.h"
@@ -27,6 +29,23 @@
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
 {
+}
+
+bool mWindowOrientationLocked = false;
+void MWindow::setOrientationLocked(bool locked)
+{
+    mWindowOrientationLocked = locked;
+}
+
+QString mWindowOrientation;
+void MWindow::setLandscapeOrientation()
+{
+    mWindowOrientation = "landscape";
+}
+
+void MWindow::setPortraitOrientation()
+{
+    mWindowOrientation = "portrait";
 }
 
 MWindow* appearedWindow = NULL;
@@ -57,7 +76,10 @@ void Ut_LockScreenWindow::init()
 void Ut_LockScreenWindow::cleanup()
 {
     delete lockScreenWindow;
+    lockScreenWindow = NULL;
     appearedWindow = NULL;
+    mWindowOrientationLocked = false;
+    mWindowOrientation.clear();
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
@@ -89,6 +111,32 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
     QCOMPARE(event.xclient.format, 32);
     QCOMPARE(event.xclient.data.l[0], (long)1);
     QCOMPARE(event.xclient.data.l[1], (long)X11Wrapper::XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", False));
+}
+
+void Ut_LockScreenWindow::testOrientationLocking_data()
+{
+    QTest::addColumn<QString>("lockedOrientation");
+    QTest::addColumn<bool>("orientationLocked");
+    QTest::addColumn<QString>("expectedOrientation");
+
+    QTest::newRow("No locking") << QString() << false << QString();
+    QTest::newRow("Locked to landscape") << QString("landscape") << true << QString("landscape");
+    QTest::newRow("Locked to portrait") << QString("portrait") << true << QString("portrait");
+    QTest::newRow("Locked to something else") << QString("unknown") << false << QString();
+}
+
+void Ut_LockScreenWindow::testOrientationLocking()
+{
+    QFETCH(QString, lockedOrientation);
+    QFETCH(bool, orientationLocked);
+    QFETCH(QString, expectedOrientation);
+
+    LockScreenWindowStyle *style = const_cast<LockScreenWindowStyle *>(static_cast<const LockScreenWindowStyle *>(MTheme::style("LockScreenWindowStyle", "", "", "", M::Landscape, NULL)));
+    style->setLockedOrientation(lockedOrientation);
+    QShowEvent event;
+    lockScreenWindow->showEvent(&event);
+    QCOMPARE(mWindowOrientationLocked, orientationLocked);
+    QCOMPARE(mWindowOrientation, expectedOrientation);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

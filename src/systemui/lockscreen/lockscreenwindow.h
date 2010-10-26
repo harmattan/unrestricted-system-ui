@@ -44,9 +44,13 @@ signals:
 
 private:
     LockScreen *lockScreen;
+
     //! Set window properties to not show the window in the switcher
     void excludeFromTaskBar();
     void changeNetWmState(bool set, Atom one, Atom two = 0);
+
+    //! Applies the lock screen orientation and locking from the style
+    void applyStyle();
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenWindow;

@@ -6,6 +6,8 @@ INCLUDEPATH += /usr/include/contextsubscriber /usr/include/resource/qt4
 
 PKGCONFIG += dbus-1
 
+STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
+
 # unit test and unit classes
 SOURCES += \
     $$SRCDIR/debug.cpp \
@@ -37,6 +39,7 @@ HEADERS += \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h \
+    $$SRCDIR/lockscreen/lockscreenwindowstyle.h \
     $$SRCDIR/lockscreen/eventeater.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \

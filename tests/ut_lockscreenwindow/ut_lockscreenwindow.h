@@ -39,6 +39,8 @@ private slots:
     void testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
     void testWhenWindowIsCreatedLockScreenAppears();
     void testWhenWindowIsShownItIsExcludedFromTaskbar();
+    void testOrientationLocking_data();
+    void testOrientationLocking();
 
 private:
     MApplication *app;
