@@ -226,21 +226,19 @@ BatteryStatusIndicator::~BatteryStatusIndicator()
 
 void BatteryStatusIndicator::batteryLevelChanged()
 {
-    if (!batteryCharging->value().toBool()) {
-        QList<QVariant> chargeBars = batteryLevel->value().toList();
-        if(chargeBars.count() == 2 ) {
-            double remainingBars = chargeBars.at(0).toDouble();
-            double maximumBars = chargeBars.at(1).toDouble();
+    QList<QVariant> chargeBars = batteryLevel->value().toList();
+    if(chargeBars.count() == 2 ) {
+        double remainingBars = chargeBars.at(0).toDouble();
+        double maximumBars = chargeBars.at(1).toDouble();
 
-            // Smoke test - check that charge bar values are valid
-            if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
-                //simple  mapping to percentage value
-                double chargeValue  = remainingBars/maximumBars;
-                setValue(chargeValue);
-            } else {
-                // Error situation
-                setValue(0.0);
-            }
+        // Smoke test - check that charge bar values are valid
+        if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
+            //simple  mapping to percentage value
+            double chargeValue  = remainingBars/maximumBars;
+            setValue(chargeValue);
+        } else {
+            // Error situation
+            setValue(0.0);
         }
     }
 }

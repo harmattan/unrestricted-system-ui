@@ -247,6 +247,13 @@ void Ut_StatusIndicator::testBattery()
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
 
+    // testing battery level when charging
+    values.clear();
+    values << QVariant(6) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 75);
+
     // battery not charging and power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(false));
