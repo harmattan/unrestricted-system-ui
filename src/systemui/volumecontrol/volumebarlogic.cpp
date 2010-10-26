@@ -1,5 +1,21 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
+/****************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (directui@nokia.com)
+**
+** This file is part of systemui.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at directui@nokia.com.
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
+****************************************************************************/
 #include "volumebarlogic.h"
 
 #include <stdlib.h>
@@ -20,11 +36,6 @@
         dbus_error_free (&err); \
     }
 
-static void
-stepsUpdatedSignal (DBusConnection *conn,
-                    DBusMessage    *message,
-                    VolumeBarLogic *logic);
-
 #define DEFAULT_ADDRESS "unix:path=/var/run/pulse/dbus-socket"
 
 #define VOLUME_SV    "com.Nokia.MainVolume1"
@@ -33,31 +44,28 @@ stepsUpdatedSignal (DBusConnection *conn,
 
 VolumeBarLogic::VolumeBarLogic () :
     QObject (),
-    m_dbus_conn (NULL),
-    m_currentvolume (0),
-    m_currentmax (0)
+    dbus_conn (NULL),
+    currentvolume (0),
+    currentmax (0)
 {
     openConnection (true);
 }
 
 VolumeBarLogic::~VolumeBarLogic ()
 {
-    if (m_dbus_conn)
-    {
-        dbus_connection_unref (m_dbus_conn);
-        m_dbus_conn = 0;
+    if (dbus_conn) {
+        dbus_connection_unref (dbus_conn);
+        dbus_conn = 0;
     }
 }
 
-void
-VolumeBarLogic::openConnection (bool init)
+void VolumeBarLogic::openConnection (bool init)
 {
     /*
      * Check the connection first, maybe this function
      * only called because of lost connection
      */
-    if ((m_dbus_conn != NULL) &&
-        (dbus_connection_get_is_connected (m_dbus_conn)))
+    if ((dbus_conn != NULL) && (dbus_connection_get_is_connected (dbus_conn)))
         return;
 
     DBusError dbus_err;
@@ -68,17 +76,16 @@ VolumeBarLogic::openConnection (bool init)
 
     dbus_error_init (&dbus_err);
 
-    m_dbus_conn = dbus_connection_open (pa_bus_address, &dbus_err);
+    dbus_conn = dbus_connection_open (pa_bus_address, &dbus_err);
 
     DBUS_ERR_CHECK (dbus_err);
 
-    if (m_dbus_conn != NULL)
-    {
-        dbus_connection_setup_with_g_main (m_dbus_conn, NULL);
+    if (dbus_conn != NULL) {
+        dbus_connection_setup_with_g_main (dbus_conn, NULL);
 
         dbus_connection_add_filter (
-            m_dbus_conn,
-            (DBusHandleMessageFunction) stepsUpdatedSignal,
+            dbus_conn,
+            (DBusHandleMessageFunction) VolumeBarLogic::stepsUpdatedSignal,
             (void *) this, NULL);
 
         if (init == true)
@@ -86,8 +93,7 @@ VolumeBarLogic::openConnection (bool init)
     }
 }
 
-void
-VolumeBarLogic::initValues ()
+void VolumeBarLogic::initValues ()
 {
     SYS_DEBUG ("");
 
@@ -108,27 +114,24 @@ VolumeBarLogic::initValues ()
 
     reply =
         dbus_connection_send_with_reply_and_block (
-                        m_dbus_conn, msg, -1, &error);
+                        dbus_conn, msg, -1, &error);
 
     DBUS_ERR_CHECK (error);
 
     dbus_message_unref (msg);
-                            
+
     if (reply && (dbus_message_get_type (reply) ==
-                  DBUS_MESSAGE_TYPE_METHOD_RETURN))
-    {
-        DBusMessageIter iter;        
+                  DBUS_MESSAGE_TYPE_METHOD_RETURN)) {
+        DBusMessageIter iter;
         dbus_message_iter_init (reply, &iter);
         // Recurse into the array [array of dicts]
-        while (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_INVALID)
-        {
+        while (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_INVALID) {
             DBusMessageIter dict_entry;
             dbus_message_iter_recurse (&iter, &dict_entry);
 
             // Recurse into the dict [ dict_entry (string, variant(int)) ]
-            while (dbus_message_iter_get_arg_type (&dict_entry) != DBUS_TYPE_INVALID)
-            {
-                DBusMessageIter in_dict; 
+            while (dbus_message_iter_get_arg_type (&dict_entry) != DBUS_TYPE_INVALID) {
+                DBusMessageIter in_dict;
                 // Recurse into the dict_entry [ string, variant(int) ]
                 dbus_message_iter_recurse (&dict_entry, &in_dict);
                 {
@@ -148,10 +151,10 @@ VolumeBarLogic::initValues ()
 
                   if (prop_name &&
                       strcmp (prop_name, "StepCount") == 0)
-                    m_currentmax = value;
+                    currentmax = value;
                   else if (prop_name &&
                            strcmp (prop_name, "CurrentStep") == 0)
-                    m_currentvolume = value;
+                    currentvolume = value;
 
                   SYS_DEBUG ("%s: %d", prop_name, value);
                 }
@@ -168,8 +171,7 @@ VolumeBarLogic::initValues ()
     addSignalMatch ();
 }
 
-void
-VolumeBarLogic::addSignalMatch ()
+void VolumeBarLogic::addSignalMatch ()
 {
     SYS_DEBUG ("start");
 
@@ -182,14 +184,13 @@ VolumeBarLogic::addSignalMatch ()
                                             NULL,
                                             "ListenForSignal");
 
-    if (message != NULL)
-    {
+    if (message != NULL) {
         dbus_message_append_args (message,
                                   DBUS_TYPE_STRING, &signal,
                                   DBUS_TYPE_ARRAY, DBUS_TYPE_OBJECT_PATH, &emptyarray, 0,
                                   DBUS_TYPE_INVALID);
 
-        dbus_connection_send (m_dbus_conn, message, NULL);
+        dbus_connection_send (dbus_conn, message, NULL);
     }
     else
         SYS_WARNING ("Cannot listen for PulseAudio signals [out of memory]");
@@ -200,16 +201,12 @@ VolumeBarLogic::addSignalMatch ()
     SYS_DEBUG ("end");
 }
 
-static void
-stepsUpdatedSignal (DBusConnection *conn,
-                    DBusMessage    *message,
-                    VolumeBarLogic *logic)
+void VolumeBarLogic::stepsUpdatedSignal (
+    DBusConnection *conn, DBusMessage *message, VolumeBarLogic *logic)
 {
     Q_UNUSED (conn);
 
-    if (message &&
-        dbus_message_has_member (message, "StepsUpdated"))
-    {
+    if (message && dbus_message_has_member (message, "StepsUpdated")) {
         DBusError error;
         quint32   value = 0;
         quint32   maxvalue = 0;
@@ -219,8 +216,7 @@ stepsUpdatedSignal (DBusConnection *conn,
         if (dbus_message_get_args (message, &error,
                                    DBUS_TYPE_UINT32, &maxvalue,
                                    DBUS_TYPE_UINT32, &value,
-                                   DBUS_TYPE_INVALID))
-        {
+                                   DBUS_TYPE_INVALID)) {
             SYS_DEBUG ("StepsUpdated (StepCount: %u, CurrentStep: %u);",
                        maxvalue, value);
             logic->stepsUpdated (value, maxvalue);
@@ -230,28 +226,25 @@ stepsUpdatedSignal (DBusConnection *conn,
     }
 }
 
-
-void
-VolumeBarLogic::stepsUpdated (quint32 value, quint32 maxvalue)
+void VolumeBarLogic::stepsUpdated (quint32 value, quint32 maxvalue)
 {
     SYS_DEBUG ("val = %d [max = %d]", value, maxvalue);
 
-    m_currentvolume = value;
-    m_currentmax = maxvalue;
+    currentvolume = value;
+    currentmax = maxvalue;
 
-    emit volumeChanged (value, maxvalue, false);
+    emit volumeChanged (value, maxvalue);
 }
 
-void
-VolumeBarLogic::setVolume (quint32 value)
+void VolumeBarLogic::setVolume (quint32 value)
 {
-    m_currentvolume = value;
+    currentvolume = value;
 
     // Check the connection, maybe PulseAudio restarted meanwhile
     openConnection ();
 
     // Don't try to set the volume via d-bus when it isn't available
-    if (m_dbus_conn == NULL)
+    if (dbus_conn == NULL)
         return;
 
     DBusMessage     *message;
@@ -267,8 +260,7 @@ VolumeBarLogic::setVolume (quint32 value)
         dbus_message_append_args (message,
                                   DBUS_TYPE_STRING, &volume_if,
                                   DBUS_TYPE_STRING, &method,
-                                  DBUS_TYPE_INVALID))
-    {
+                                  DBUS_TYPE_INVALID)) {
         DBusMessageIter  append;
         DBusMessageIter  sub;
 
@@ -285,7 +277,7 @@ VolumeBarLogic::setVolume (quint32 value)
         dbus_message_iter_close_container (&append, &sub);
 
         // Send/flush the message immediately:
-        dbus_connection_send (m_dbus_conn, message, NULL);
+        dbus_connection_send (dbus_conn, message, NULL);
     }
     else
         SYS_WARNING ("Cannot set volume! [not enough memory]");
@@ -294,20 +286,20 @@ VolumeBarLogic::setVolume (quint32 value)
         dbus_message_unref (message);
 }
 
-quint32
-VolumeBarLogic::getVolume ()
+quint32 VolumeBarLogic::volume ()
 {
-    SYS_DEBUG ("volume = %d", m_currentvolume);
+    ping ();
+    SYS_DEBUG ("volume = %d", currentvolume);
 
-    return m_currentvolume;
+    return currentvolume;
 }
 
-quint32
-VolumeBarLogic::getMaxVolume ()
+quint32 VolumeBarLogic::maxVolume ()
 {
-    SYS_DEBUG ("max = %d", m_currentmax);
+    ping ();
+    SYS_DEBUG ("max = %d", currentmax);
 
-    return m_currentmax;
+    return currentmax;
 }
 
 /*
@@ -318,11 +310,10 @@ VolumeBarLogic::getMaxVolume ()
  * and meanwhile PulseAudio volume-values changed, and we
  * didn't get any info about those...
  */
-void
-VolumeBarLogic::ping ()
+void VolumeBarLogic::ping ()
 {
-    if ((m_dbus_conn != NULL) &&
-        (dbus_connection_get_is_connected (m_dbus_conn)))
+    if ((dbus_conn != NULL) &&
+        (dbus_connection_get_is_connected (dbus_conn)))
         return;
 
     /*
@@ -330,6 +321,6 @@ VolumeBarLogic::ping ()
      */
     openConnection (true);
 
-    stepsUpdated (m_currentvolume, m_currentmax);
+    stepsUpdated (currentvolume, currentmax);
 }
 

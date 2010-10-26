@@ -37,7 +37,7 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "unlocknotificationsink.h"
-#include "volumecontrolui.h"
+#include "volumebarwindow.h"
 #include <QX11Info>
 
 Sysuid* Sysuid::instance_ = NULL;
@@ -125,13 +125,13 @@ Sysuid::Sysuid(QObject* parent) :
     }
 
     // Instantiate the volume-control UI
-    volumeControlUI = new VolumeControlUI;
+    volumeBarWindow = new VolumeBarWindow;
 }
 
 Sysuid::~Sysuid()
 {
     delete sysUidRequest;
-    delete volumeControlUI;
+    delete volumeBarWindow;
     delete statusIndicatorMenuWindow;
     instance_ = 0;
 }

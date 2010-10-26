@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et sw=4 ts=4 sts=4: */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -18,15 +16,18 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_VOLUMEOVERLAY_H
-#define UT_VOLUMEOVERLAY_H
+#ifndef UT_VOLUMEBARWINDOW_H
+#define UT_VOLUMEBARWINDOW_H
 
 #include <QtTest/QtTest>
 #include <QObject>
-class VolumeOverlay;
-class MApplication;
 
-class Ut_VolumeOverlay : public QObject
+class MApplication;
+class VolumeBarWindow;
+class VolumeBarLogic;
+class VolumeBar;
+
+class Ut_VolumeBarWindow : public QObject
 {
 Q_OBJECT
 
@@ -34,14 +35,17 @@ private slots:
     void init ();
     void cleanup ();
     void initTestCase ();
-    void testUpdateVolume ();
-    void testHideMe ();
     void cleanupTestCase ();
+
+#ifdef HAVE_QMSYSTEM
+    void testLocking ();
+    void testHwKeyEvent ();
+#endif
+    void testVolumeBarChanged ();
     
 private:
-    VolumeOverlay  *m_Api;
-    MApplication   *m_App;
-
+    MApplication    *app;
+    VolumeBarWindow *volumeBarWindow;
 };
 
 #endif

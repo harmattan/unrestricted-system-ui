@@ -40,7 +40,7 @@
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "volumecontrolui_stub.h"
+#include "volumebarwindow_stub.h"
 #include "x11wrapper_stub.h"
 
 MApplication *exitPtr;

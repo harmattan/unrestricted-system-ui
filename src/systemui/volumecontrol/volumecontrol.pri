@@ -3,13 +3,17 @@ INCLUDEPATH += \
     volumecontrol/ \
     /usr/include/resource/qt4 
 
+STYLE_HEADERS += \
+    volumecontrol/volumebarstyle.h
+
 HEADERS+= \
     volumecontrol/volumebarlogic.h \
-    volumecontrol/volumeoverlay.h \
-    volumecontrol/volumecontrolui.h
+    volumecontrol/volumebar.h \
+    volumecontrol/volumebarwindow.h \
+    $$STYLE_HEADERS
 
 SOURCES+= \
     volumecontrol/volumebarlogic.cpp \
-    volumecontrol/volumeoverlay.cpp \
-    volumecontrol/volumecontrolui.cpp
+    volumecontrol/volumebar.cpp \
+    volumecontrol/volumebarwindow.cpp
 

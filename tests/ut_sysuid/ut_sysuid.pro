@@ -31,8 +31,8 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     $$SRCDIR/debug.h \
-    $$STUBSDIR/volumecontrolui_stub.h \
-    $$SRCDIR/volumecontrol/volumecontrolui.h \
+    $$STUBSDIR/volumebarwindow_stub.h \
+    $$SRCDIR/volumecontrol/volumebarwindow.h \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
     $$SRCDIR/lockscreen/lockscreen.h \
