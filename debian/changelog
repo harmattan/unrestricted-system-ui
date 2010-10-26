@@ -1,4 +1,4 @@
-system-ui (0.17.6~1) unstable; urgency=low
+system-ui (0.17.6~2) unstable; urgency=low
 
   * Fixes: NB#199313 - Volume slider cannot be used with touch screen to
     increase volume
