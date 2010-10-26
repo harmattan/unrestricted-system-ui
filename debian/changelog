@@ -2,8 +2,14 @@ system-ui (0.17.6~1) unstable; urgency=low
 
   * Fixes: NB#199313 - Volume slider cannot be used with touch screen to
     increase volume
+  * Implemented: SWP#DUI-4223 Volume control not to change layout for behavior
+    in landscape mode
+  * Implemented: SWP#DUI-4197 New volume bar to support sliding
+  * Implemented: SWP#DUI-4240 Volume bar fade in and fade out transitions
+  * Implemented: SWP#DUI-4241 Volume bar increments and decrements should be
+    smooth
 
- -- David Kedves <dkedves@blumsoft.eu>  Tue, 26 Oct 2010 11:55:50 +0200
+ -- David Kedves <dkedves@blumsoft.eu>  Tue, 26 Oct 2010 14:47:44 +0200
 
 system-ui (0.17.5-1) harmattan; urgency=low
 
