@@ -42,16 +42,18 @@ void Ut_Date::initTestCase()
     static int argc = 1;
     static char *app_name = (char *)"./ut_date";
     app = new MApplication(argc, &app_name);
+
+    locale = new MLocale();
 }
 
 void Ut_Date::cleanupTestCase()
 {
+    delete locale;
     delete app;
 }
 
 void Ut_Date::init()
 {
-    locale = MLocale::createSystemMLocale();
     gCurrentDateTime = QDateTime(QDate(2042, 12, 21), QTime(12, 32));
     m_subject = new Date;
     style()->setDateFormat("\%A \%B \%d");

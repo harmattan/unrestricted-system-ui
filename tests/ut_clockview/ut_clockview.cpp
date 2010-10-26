@@ -67,11 +67,14 @@ void Ut_ClockView::initTestCase()
     static int argc = 1;
     static char *app_name = (char *)"./ut_clockview";
     app = new MApplication(argc, &app_name);
+
+    locale = new MLocale();
 }
 
 // Called after the last testfunction was executed
 void Ut_ClockView::cleanupTestCase()
 {
+    delete locale;
     delete app;
 }
 
@@ -80,7 +83,6 @@ void Ut_ClockView::init()
 {
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
-    locale = MLocale::createSystemMLocale();
 
     // Set model defaults
     clockModel.setTimeFormat24h(true);
@@ -93,8 +95,6 @@ void Ut_ClockView::cleanup()
     delete testClock;  // this also deletes the view
     testClock = NULL;
     m_subject = NULL;
-    delete locale;
-    locale = NULL;
 }
 
 void Ut_ClockView::testUpdateTime()
