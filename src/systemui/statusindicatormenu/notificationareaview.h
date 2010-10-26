@@ -71,8 +71,8 @@ private:
     //! The clear button
     MButton *clearButton;
 
-    //! And more banner
-    MBanner *andMoreBanner;
+    //! And more
+    MWidgetController *andMore;
 
 #ifdef UNIT_TEST
     friend class Ut_NotificationAreaView;

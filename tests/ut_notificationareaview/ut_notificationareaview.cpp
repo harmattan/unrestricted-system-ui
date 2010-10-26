@@ -140,7 +140,7 @@ void Ut_NotificationAreaView::testClearButtonStyle()
     banners << createBanner(true);
 
     notificationArea->model()->setBanners(banners);
-    QCOMPARE(m_subject->clearButton->objectName(), clearButtonEnabled ? QString("NotificationAreaClearButtonVisible") : QString("NotificationAreaClearButton"));
+    QCOMPARE(m_subject->clearButton->objectName(), QString(clearButtonEnabled ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton"));
 }
 
 void Ut_NotificationAreaView::testMaxBannersStyle_data()
@@ -167,11 +167,8 @@ void Ut_NotificationAreaView::testMaxBannersStyle()
     }
 
     notificationArea->model()->setBanners(banners);
-    if (maxBanners >= 0) {
-        QCOMPARE(m_subject->bannerLayout->count(), banners.count() > maxBanners ? (maxBanners + 1) : maxBanners);
-    } else {
-        QCOMPARE(m_subject->bannerLayout->count(), 10);
-    }
+    QCOMPARE(m_subject->bannerLayout->count(), maxBanners >= 0 ? maxBanners : 10);
+    QCOMPARE(m_subject->andMore->objectName(), QString(maxBanners >= 0 && banners.count() > maxBanners ? "AndMoreVisible" : "AndMore"));
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaView)

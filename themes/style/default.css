@@ -57,6 +57,35 @@ MButtonStyle#NotificationAreaClearButtonVisible {
     maximum-size: 46mm $SIZE_BUTTON;
 }
 
+MWidgetStyle#AndMore {
+    maximum-size: 100% 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+MWidgetStyle#AndMoreVisible {
+    maximum-size: 100% 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+MLabelStyle#AndMoreLabel {
+    font: $FONT_XSMALL;
+    color: #ffffff;
+}
+
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
     font: $FONT_XSMALL;
     text-color: $COLOR_FOREGROUND;
