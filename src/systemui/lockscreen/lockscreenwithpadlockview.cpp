@@ -53,7 +53,7 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
     layout->addItem(lockLandArea);
 
     connect(this, SIGNAL(unlocked()), controller, SLOT(sliderUnlocked()), Qt::DirectConnection);
-    connect(controller, SIGNAL(dateTimeChanged()), this, SLOT(updateDataTime()));
+    connect(controller, SIGNAL(dateTimeChanged()), this, SLOT(updateDateTime()));
     connect(controller, SIGNAL(resetRequested()), this, SLOT(resetState()));
 }
 
