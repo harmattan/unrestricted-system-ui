@@ -122,6 +122,10 @@ private:
     StatusIndicator *landscapeNotificationIndicator;
     StatusIndicator *portraitNotificationIndicator;
 
+    //! Transfer status indicator
+    StatusIndicator *landscapeTransferStatusIndicator;
+    StatusIndicator *portraitTransferStatusIndicator;
+
     //! Clock
     Clock *landscapeClock;
     Clock *portraitClock;

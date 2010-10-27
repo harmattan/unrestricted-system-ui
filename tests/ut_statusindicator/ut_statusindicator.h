@@ -89,6 +89,8 @@ private slots:
     void testCall();
     void testProfile();
     void testGPS();
+    void testTransferStatusIndicatorDBusConnectionCreationInConstructor();
+    void testTransferStatusStateChange();
 };
 
 #endif //_UT_STATUSINDICATOR_

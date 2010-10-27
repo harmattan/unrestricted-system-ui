@@ -97,4 +97,9 @@ class NotificationStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(NotificationStatusIndicatorModel)
 };
 
+class TransferStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(TransferStatusIndicatorModel)
+};
+
 #endif /* STATUSINDICATORMODEL_H_ */

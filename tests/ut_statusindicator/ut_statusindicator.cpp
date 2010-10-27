@@ -30,6 +30,19 @@
 #include <qmdevicemode_stub.h>
 #endif
 
+// QDBusConnection::connect stub
+static QHash<QString, QString> qDBusConnectionConnectParameters;
+bool QDBusConnection::connect ( const QString & service, const QString & path, const QString & interface, const QString & name, QObject * receiver, const char * slot )
+{
+    qDBusConnectionConnectParameters["service"]=service;
+    qDBusConnectionConnectParameters["path"]= path;
+    qDBusConnectionConnectParameters["interface"]= interface;
+    qDBusConnectionConnectParameters["name"]= name;
+    qDBusConnectionConnectParameters["receiver"]= receiver->metaObject()->className();
+    qDBusConnectionConnectParameters["slot"]= slot;
+    return true;
+}
+
 QHash<QString, TestContextItem *> testContextItems;
 
 // Test context
@@ -566,5 +579,38 @@ void Ut_StatusIndicator::testGPS()
     QVERIFY(m_subject->objectName().indexOf("Search") >= 0);
     QVERIFY(m_subject->objectName().indexOf("On") < 0);
 }
+
+void Ut_StatusIndicator::testTransferStatusIndicatorDBusConnectionCreationInConstructor()
+{
+    QScopedPointer<TransferStatusIndicator> transferStatusIndicator(new TransferStatusIndicator());
+
+    QCOMPARE(qDBusConnectionConnectParameters["service"], QString());
+    QCOMPARE(qDBusConnectionConnectParameters["path"], transferStatusIndicator->TRANSFER_UI_DBUS_PATH);
+    QCOMPARE(qDBusConnectionConnectParameters["interface"], transferStatusIndicator->TRANSFER_UI_DBUS_INTERFACE);
+    QCOMPARE(qDBusConnectionConnectParameters["name"], transferStatusIndicator->TRANSFER_UI_DBUS_SIGNAL);
+    QCOMPARE(qDBusConnectionConnectParameters["receiver"], QString(transferStatusIndicator->metaObject()->className()));
+    QCOMPARE(qDBusConnectionConnectParameters["slot"].contains("transferStateChanged(const QString&)"), QBool(true));
+
+}
+
+void Ut_StatusIndicator::testTransferStatusStateChange()
+{
+    QScopedPointer<TransferStatusIndicator> transferStatusIndicator(new TransferStatusIndicator());
+
+    QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator"));
+
+    transferStatusIndicator->transferStateChanged(transferStatusIndicator->TRANSFER_UI_STATE_LIVE);
+    QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator") + transferStatusIndicator->TRANSFER_UI_SUFFIX_LIVE);
+
+    transferStatusIndicator->transferStateChanged(transferStatusIndicator->TRANSFER_UI_STATE_FAIL);
+    QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator") + transferStatusIndicator->TRANSFER_UI_SUFFIX_FAIL);
+
+    transferStatusIndicator->transferStateChanged(transferStatusIndicator->TRANSFER_UI_STATE_IDLE);
+    QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator"));
+
+    transferStatusIndicator->transferStateChanged(transferStatusIndicator->TRANSFER_UI_STATE_PENDING);
+    QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator") + transferStatusIndicator->TRANSFER_UI_SUFFIX_PENDING);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)

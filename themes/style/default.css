@@ -581,6 +581,34 @@ StatusIndicatorIconStyle#NotificationStatusIndicator {
     maximum-size: 0mm 1.8mm;
 }
 
+StatusIndicatorIconStyle#TransferStatusIndicator {
+    image-list: "";
+    preferred-size: 0mm 1.8mm;
+    minimum-size: 0mm 1.8mm;
+    maximum-size: 0mm 1.8mm;
+}
+
+StatusIndicatorIconStyle#TransferStatusIndicatorLive {
+    image-list: "icon-m-status-transfer-content";
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
+}
+
+StatusIndicatorIconStyle#TransferStatusIndicatorFail {
+    image-list: "icon-m-status-transfer-error";
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
+}
+
+StatusIndicatorIconStyle#TransferStatusIndicatorPending {
+    image-list: "icon-m-status-transfer-pending";
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
+}
+
 MButtonStyle#StatusIndicatorMenuCloseButton {
     icon-size: $SIZE_ICON_LARGE $SIZE_ICON_LARGE;
     preferred-size: 6.4mm 6.4mm;

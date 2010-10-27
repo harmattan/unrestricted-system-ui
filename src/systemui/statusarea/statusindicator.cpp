@@ -40,6 +40,17 @@ static const QString BATTERY_MODE_POWERSAVE_AND_CHARGING = "PowerSaveCharging";
 static const QString NETWORK_NAME_START_DELIMITER = "(";
 static const QString NETWORK_NAME_END_DELIMITER = ")";
 
+const QString TransferStatusIndicator::TRANSFER_UI_DBUS_PATH="/com/nokia/transferui";
+const QString TransferStatusIndicator::TRANSFER_UI_DBUS_INTERFACE="com.nokia.transferui";
+const QString TransferStatusIndicator::TRANSFER_UI_DBUS_SIGNAL="stateChanged";
+const QString TransferStatusIndicator::TRANSFER_UI_STATE_IDLE = "idle";
+const QString TransferStatusIndicator::TRANSFER_UI_STATE_LIVE = "live";
+const QString TransferStatusIndicator::TRANSFER_UI_STATE_FAIL = "fail";
+const QString TransferStatusIndicator::TRANSFER_UI_STATE_PENDING = "pending";
+const QString TransferStatusIndicator::TRANSFER_UI_SUFFIX_FAIL = "Fail";
+const QString TransferStatusIndicator::TRANSFER_UI_SUFFIX_LIVE = "Live";
+const QString TransferStatusIndicator::TRANSFER_UI_SUFFIX_PENDING = "Pending";
+
 StatusIndicator::StatusIndicator(QGraphicsItem *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
@@ -576,3 +587,34 @@ void GPSStatusIndicator::gpsStateChanged()
     }
     updateAnimationStatus();
 }
+
+TransferStatusIndicator::TransferStatusIndicator(QGraphicsItem *parent) :
+    StatusIndicator(parent),
+    connectionSessionBus(QDBusConnection::sessionBus())
+{
+    setStyleName(metaObject()->className());
+
+    connectionSessionBus.connect(QString(),TRANSFER_UI_DBUS_PATH, TRANSFER_UI_DBUS_INTERFACE, TRANSFER_UI_DBUS_SIGNAL,
+        this, SLOT(transferStateChanged(const QString&)));
+
+}
+
+TransferStatusIndicator::~TransferStatusIndicator()
+{
+}
+
+void TransferStatusIndicator::transferStateChanged(const QString &state)
+{
+    if (state == TRANSFER_UI_STATE_LIVE) {
+        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_LIVE);
+    } else if (state == TRANSFER_UI_STATE_FAIL) {
+        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_FAIL);
+    } else if (state == TRANSFER_UI_STATE_PENDING) {
+        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_PENDING);
+    } else {
+        setStyleName(metaObject()->className());
+    }
+
+    updateAnimationStatus();
+}
+

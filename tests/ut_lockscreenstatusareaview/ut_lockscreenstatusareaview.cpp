@@ -42,6 +42,7 @@
 #include "callstatusindicator_stub.h"
 #include "profilestatusindicator_stub.h"
 #include "notificationstatusindicator_stub.h"
+#include "transferstatusindicator_stub.h"
 #include "x11wrapper.h"
 
 WId qWidgetWinId = 0xdeadbeef;

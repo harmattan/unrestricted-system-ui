@@ -59,6 +59,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
     portraitNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
+    landscapeTransferStatusIndicator(new TransferStatusIndicator(controller)),
+    portraitTransferStatusIndicator(new TransferStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
     portraitClock(new Clock(controller))
 {
@@ -133,6 +135,8 @@ void StatusAreaView::setupTestability()
     portraitNotificationIndicator->setParent(portraitWidget);
     landscapeClock->setParent(landscapeWidget);
     portraitClock->setParent(portraitWidget);
+    landscapeTransferStatusIndicator->setParent(landscapeWidget);
+    portraitTransferStatusIndicator->setParent(portraitWidget);
 }
 
 StatusAreaView::~StatusAreaView()
@@ -163,6 +167,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapePhoneNetworkIndicator);
     layout->addStretch();
     layout->addItem(landscapeNotificationIndicator);
+    layout->addItem(landscapeTransferStatusIndicator);
     layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeBluetoothIndicator);
     layout->addItem(landscapeGPSIndicator);
@@ -189,6 +194,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPhoneNetworkIndicator);
     layout->addStretch();
     layout->addItem(portraitNotificationIndicator);
+    layout->addItem(portraitTransferStatusIndicator);
     layout->addItem(portraitInternetConnectionIndicator);
     layout->addItem(portraitBluetoothIndicator);
     layout->addItem(portraitGPSIndicator);

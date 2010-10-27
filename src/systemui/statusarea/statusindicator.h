@@ -21,6 +21,7 @@
 #define STATUSINDICATOR_H
 
 #include <MWidgetController>
+#include <QDBusConnection>
 #include "statusindicatormodel.h"
 #include <QTimer>
 
@@ -455,6 +456,71 @@ private slots:
 
 private:
     ContextItem *gpsState;
+};
+
+
+/*!
+ * A status indicator for showing the status of transfer.
+ * Shows ongoing transfer and error in transfer.
+ */
+class TransferStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(TransferStatusIndicator)
+
+public:
+    /*!
+     * Constructs a TransferStatusIndicator. Starts listening changes in transfer's state
+     * from Transfer UI dbus interface.
+     *
+     * \param parent parent QGraphicsItem. If parent is NULL, the creating client must take the responsibility to delete the indicator.
+     */
+    explicit TransferStatusIndicator(QGraphicsItem *parent = NULL);
+
+    /*!
+     * Destroys the TransferStatusIndicator.
+     */
+    virtual ~TransferStatusIndicator();
+
+
+private slots:
+    /*!
+     * Sets object's object name to resemble the transfer state.
+     * States are: idle, live, fail.
+     *
+     * \param state of the transfer operation.
+     */
+    void transferStateChanged(const QString &state);
+
+private:
+    //! Connection to dbus session bus
+    QDBusConnection connectionSessionBus;
+
+    //! dbus path that is listened
+    static const QString TRANSFER_UI_DBUS_PATH;
+    //! dbus interface that is listened
+    static const QString TRANSFER_UI_DBUS_INTERFACE;
+    //! dbus signal call that delivers transfer state
+    static const QString TRANSFER_UI_DBUS_SIGNAL;
+    //! State that is received when transfer state becomes idle
+    static const QString TRANSFER_UI_STATE_IDLE;
+    //! State notifying that there is at least one active transfer and no errors
+    static const QString TRANSFER_UI_STATE_LIVE;
+    //! State notifying that there is at least one failed transfer
+    static const QString TRANSFER_UI_STATE_FAIL;
+    //! State notifying that there is only pending and paused transfers
+    static const QString TRANSFER_UI_STATE_PENDING;
+    //! Suffix that is added to style name when state is fail
+    static const QString TRANSFER_UI_SUFFIX_FAIL;
+    //! Suffix that is added to style name when state is live
+    static const QString TRANSFER_UI_SUFFIX_LIVE;
+    //! Suffix that is added to style name when state is pending
+    static const QString TRANSFER_UI_SUFFIX_PENDING;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
+
 };
 
 #endif // STATUSINDICATOR_H

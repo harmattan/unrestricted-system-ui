@@ -4,6 +4,7 @@ system-ui (0.17.7~1) unstable; urgency=low
   * Fixes: NB#185390 - SA battery indicator animation is not cumulative when booting from acting_dead to user
   * Fixes: NB#197710 - Two screen lock ui are overlapping if theme applied is Development.
   * Implemented: SWP#DUI-4075 New notification notifier
+  * Implemented: SWP#DUI-3567 - Status indicator for ongoing transfers and transfer errors.
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Oct 2010 19:13:16 +0300
 
