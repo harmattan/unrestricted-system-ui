@@ -2,6 +2,7 @@ system-ui (0.17.7~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#185390 - SA battery indicator animation is not cumulative when booting from acting_dead to user
+  * Implemented: SWP#DUI-4075 New notification notifier
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Oct 2010 19:13:16 +0300
 

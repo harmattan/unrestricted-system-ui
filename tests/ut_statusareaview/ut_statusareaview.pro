@@ -27,6 +27,8 @@ HEADERS += \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$NOTIFICATIONSRCDIR/notificationstatusindicator.h \
-    $$SRCDIR/statusindicatormenu/notificationarea.h
+    $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
+    $$SRCDIR/statusindicatormenu/notificationarea.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h
 
 include(../common_bot.pri)

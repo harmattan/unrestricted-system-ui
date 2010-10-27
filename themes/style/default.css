@@ -569,9 +569,9 @@ StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
 
 StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
     image-list: "icon-s-status-notifier";
-    preferred-size: 4.8mm 1.8mm;
-    minimum-size: 4.8mm 1.8mm;
-    maximum-size: 4.8mm 1.8mm;
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#NotificationStatusIndicator {

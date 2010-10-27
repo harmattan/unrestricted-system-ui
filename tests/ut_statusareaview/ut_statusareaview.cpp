@@ -38,6 +38,8 @@
 #include "profilestatusindicator_stub.h"
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
+#include "notificationsink_stub.h"
+#include "notifiernotificationsink_stub.h"
 #include "x11wrapper_stub.h"
 #include <MSceneWindow>
 

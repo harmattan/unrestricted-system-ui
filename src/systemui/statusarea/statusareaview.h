@@ -24,6 +24,7 @@
 #include "statusareastyle.h"
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
+#include "notifiernotificationsink.h"
 
 class Clock;
 class StatusArea;
@@ -113,6 +114,13 @@ private:
     //! Call indicator
     StatusIndicator *landscapeCallIndicator;
     StatusIndicator *portraitCallIndicator;
+
+    //! Notifier notification sink for the indicators
+    NotifierNotificationSink notifierNotificationSink;
+
+    //! Notification notifier
+    StatusIndicator *landscapeNotificationIndicator;
+    StatusIndicator *portraitNotificationIndicator;
 
     //! Clock
     Clock *landscapeClock;
