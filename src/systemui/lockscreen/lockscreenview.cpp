@@ -57,6 +57,7 @@ LockScreenView::~LockScreenView()
     delete gconfBgPortrait;
     delete landscapePixmap;
     delete portraitPixmap;
+    delete lockScreenHeader;
 }
 
 void LockScreenView::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

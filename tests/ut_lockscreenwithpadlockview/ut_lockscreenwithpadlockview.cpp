@@ -41,16 +41,41 @@ void MFeedback::play() const
 }
 
 QList<MSceneWindow*> gAppearSceneWindowList;
+QList<MSceneWindow*> gVisibleSceneWindows;
 
 void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::DeletionPolicy /*policy*/)
 {
     gAppearSceneWindowList.append(window);
+    window->setVisible(true);
+    gVisibleSceneWindows.append(window);
+}
+
+void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
+{
+    sceneWindow->setVisible(false);
+    gVisibleSceneWindows.removeAll(sceneWindow);
+}
+
+void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
+{
+    sceneWindow->setVisible(false);
+    gVisibleSceneWindows.removeAll(sceneWindow);
+}
+
+MSceneWindow::~MSceneWindow()
+{
+    gVisibleSceneWindows.removeAll(this);
+}
+
+MWidgetView::~MWidgetView()
+{
 }
 
 void Ut_LockScreenWithPadlockView::init()
 {
     controller = new LockScreen(NULL);
     m_subject = new LockScreenWithPadlockView(controller);
+    controller->setView(m_subject);
 }
 
 void Ut_LockScreenWithPadlockView::cleanup()
@@ -174,6 +199,17 @@ void Ut_LockScreenWithPadlockView::testNotificationAreaVisibility()
     m_subject->showHideNotifications(true);
     QVERIFY(m_subject->notificationArea->isVisible());
     QVERIFY(m_subject->notificationArea->parentLayoutItem() == m_subject->layout);
+}
+
+void Ut_LockScreenWithPadlockView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
+{
+    controller->setView(NULL);
+
+    // All the items added by the view should have disappeared
+    QCOMPARE(controller->childItems().count(), 0);
+
+    // All the SceneWindows should be gone as well
+    QCOMPARE(gVisibleSceneWindows.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWithPadlockView)

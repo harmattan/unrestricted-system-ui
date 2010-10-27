@@ -38,6 +38,7 @@ private slots:
     void testDraggableIconMovement_data();
     void testDraggableIconMovement();
     void testNotificationAreaVisibility();
+    void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
 
 private:
     LockScreenWithPadlockView *m_subject;

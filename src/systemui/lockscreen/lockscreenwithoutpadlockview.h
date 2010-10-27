@@ -29,8 +29,22 @@ class LockScreenWithoutPadlockView : public LockScreenView
     M_VIEW(MSceneWindowModel, MSceneWindowStyle)
 
 public:
+    /*!
+     * \brief Constructs a new LockScreenWithoutPadlockView.
+     *
+     * \param controller the controller this is a view for
+     */
     LockScreenWithoutPadlockView (MSceneWindow* controller);
+
+    /*!
+     * \brief Destroys the LockScreenWithoutPadlockView.
+     */
     ~LockScreenWithoutPadlockView ();
+
+private:
+
+    //! Notification area
+    NotificationArea* notificationArea;
 };
 
 #endif

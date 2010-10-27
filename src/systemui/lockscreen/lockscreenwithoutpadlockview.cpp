@@ -25,7 +25,7 @@
 LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MSceneWindow* controller) :
     LockScreenView(controller)
 {
-    NotificationArea* notificationArea = new NotificationArea(controller, false);
+    notificationArea = new NotificationArea(controller, false);
     notificationArea->setObjectName("LockScreenNotificationArea");
     notificationArea->setHonorPrivacySetting(true);
     layout->addStretch();
@@ -34,6 +34,7 @@ LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MSceneWindow* control
 
 LockScreenWithoutPadlockView::~LockScreenWithoutPadlockView()
 {
+    delete notificationArea;
 }
 
 M_REGISTER_VIEW_NEW(LockScreenWithoutPadlockView, LockScreen)

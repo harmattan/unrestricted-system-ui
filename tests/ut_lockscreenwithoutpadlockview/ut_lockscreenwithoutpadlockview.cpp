@@ -21,6 +21,7 @@ void Ut_LockScreenWithoutPadlockView::init()
 {
     controller = new LockScreen(NULL);
     m_subject = new LockScreenWithoutPadlockView(controller);
+    controller->setView(m_subject);
 }
 
 void Ut_LockScreenWithoutPadlockView::cleanup()
@@ -45,6 +46,14 @@ void Ut_LockScreenWithoutPadlockView::testNotificationArea()
 {
     QCOMPARE(gNotificationAreaStub->stubCallCount("setHonorPrivacySetting"), 1);
     QCOMPARE(gNotificationAreaStub->stubLastCallTo("setHonorPrivacySetting").parameter<bool>(0), true);
+}
+
+void Ut_LockScreenWithoutPadlockView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
+{
+    controller->setView(NULL);
+
+    // All the items added by the view should have disappeared
+    QCOMPARE(controller->childItems().count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWithoutPadlockView)

@@ -33,6 +33,7 @@ private slots:
     void cleanupTestCase();
 
     void testNotificationArea();
+    void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
 
 private:
     LockScreenWithoutPadlockView *m_subject;

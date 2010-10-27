@@ -59,6 +59,7 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MSceneWindow* controller) :
 
 LockScreenWithPadlockView::~LockScreenWithPadlockView()
 {
+    delete lockLandArea;
 }
 
 void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
