@@ -257,9 +257,8 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         uint notificationId = nextAvailableNotificationID();
 
         NotificationParameters fullParameters(appendEventTypeParameters(parameters));
-        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc());
-        Notification notification(notificationId, groupId, notificationUserId,
-                                  fullParameters, determineType(fullParameters), relayInterval);
+        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+        Notification notification(notificationId, groupId, notificationUserId, fullParameters, determineType(fullParameters), relayInterval);
 
         // Mark the notification used
         notificationContainer.insert(notificationId, notification);

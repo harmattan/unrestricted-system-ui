@@ -352,6 +352,9 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithoutRemoteAction()
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithSystemEvent()
 {
     TestNotificationParameters parameters("title1", "subtitle1", "buttonicon1");
+    //Adding a timestamp to parameters to test that it doesnt get added to SystemBanners
+    uint timestamp = QDateTime::currentDateTime().toTime_t();
+    parameters.add("timestamp", timestamp);
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020)));
     QCOMPARE(infoBanner->objectName(), QString("SystemBanner"));
     // Check that title is not set for system event
@@ -359,17 +362,21 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithSystemEvent()
     QCOMPARE(infoBanner->subtitle(), QString(""));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(infoBanner->actions().count(), 0);
+    QVERIFY(infoBanner->bannerTimeStamp().isNull());
 }
 
 void Ut_WidgetNotificationSink::testInfoBannerCreationWithNotificationParameters()
 {
     TestNotificationParameters parameters("title3", "subtitle3", "buttonicon3", "content1 2 3 4");
+    uint timestamp = QDateTime::currentDateTime().toTime_t();
+    parameters.add("timestamp", timestamp);
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
     QCOMPARE(infoBanner->objectName(), QString("EventBanner"));
     QCOMPARE(infoBanner->title(), QString("title3"));
     QCOMPARE(infoBanner->subtitle(), QString("subtitle3"));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon3"));
     QCOMPARE(infoBanner->actions().count(), 1);
+    QCOMPARE(infoBanner->bannerTimeStamp().toTime_t(), timestamp);
     MRemoteAction *remoteAction = dynamic_cast<MRemoteAction *>(infoBanner->actions().at(0));
     QVERIFY(remoteAction != NULL);
     QCOMPARE(remoteAction->toString(), QString("content1 2 3 4"));

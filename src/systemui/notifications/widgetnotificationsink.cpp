@@ -73,6 +73,10 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
 
+    if(type == Notification::ApplicationEvent) {
+        infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
+    }
+
     // Catch clicks from the info banner
     if(clickableNotifications) {
         connect(infoBanner, SIGNAL(clicked()), this, SLOT(infoBannerClicked()), Qt::QueuedConnection);
