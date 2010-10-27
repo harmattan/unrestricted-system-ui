@@ -28,7 +28,7 @@
 
 ClockView::ClockView(Clock *controller) :
     MWidgetView(controller),
-    locale(MLocale::createSystemMLocale())
+    locale(new MLocale(this))
 {
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->setContentsMargins(0, 0, 0, 0);
