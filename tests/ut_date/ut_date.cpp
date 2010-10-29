@@ -32,6 +32,12 @@ QDateTime QDateTime::currentDateTime()
     return gCurrentDateTime;
 }
 
+static bool gLocaleSettingsConnected = false;
+void MLocale::connectSettings()
+{
+    gLocaleSettingsConnected = true;
+}
+
 DateStyle *Ut_Date::style()
 {
     return const_cast<DateStyle *>(m_subject->style().operator ->());
@@ -55,6 +61,7 @@ void Ut_Date::cleanupTestCase()
 void Ut_Date::init()
 {
     gCurrentDateTime = QDateTime(QDate(2042, 12, 21), QTime(12, 32));
+    gLocaleSettingsConnected = false;
     m_subject = new Date;
     style()->setDateFormat("\%A \%B \%d");
     m_subject->applyStyle();
@@ -83,6 +90,9 @@ void Ut_Date::testInitialState()
                         m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged))));
 
     QVERIFY(disconnect(&m_subject->timer, SIGNAL(timeout()), m_subject, SLOT(updateDate())));
+
+    QVERIFY(gLocaleSettingsConnected);
+    QVERIFY(disconnect(m_subject->locale, SIGNAL(settingsChanged()), m_subject, SLOT(updateDate())));
 }
 
 void Ut_Date::testDateUpdates()

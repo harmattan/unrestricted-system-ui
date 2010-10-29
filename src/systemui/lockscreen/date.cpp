@@ -43,6 +43,10 @@ Date::Date(QGraphicsItem *parent) :
             this, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
 #endif
 
+    // Listen the changes in the system locale settings
+    connect(locale, SIGNAL(settingsChanged()), this, SLOT(updateDate()));
+    locale->connectSettings();
+
     // Configure the timer
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateDate()));

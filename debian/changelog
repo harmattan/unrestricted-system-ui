@@ -3,6 +3,7 @@ system-ui (0.17.7~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#185390 - SA battery indicator animation is not cumulative when booting from acting_dead to user
   * Fixes: NB#197710 - Two screen lock ui are overlapping if theme applied is Development.
+  * Fixes: NB#196647 - Date format is not getting updated in lock screen UI when region is changed.
   * Implemented: SWP#DUI-4075 New notification notifier
   * Implemented: SWP#DUI-3567 - Status indicator for ongoing transfers and transfer errors.
 
