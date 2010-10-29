@@ -24,6 +24,7 @@
 #include "lockscreenstatusareastyle.h"
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
+#include "notifiernotificationsink.h"
 
 class StatusArea;
 class StatusIndicator;
@@ -96,6 +97,15 @@ private:
 
     //! Alarm indicator
     StatusIndicator *alarmIndicator;
+
+    //! Notifier notification sink for the notification indicator
+    NotifierNotificationSink notifierNotificationSink;
+
+    //! Notification notifier
+    StatusIndicator *notifierIndicator;
+
+    //! Transfer status indicator
+    StatusIndicator *transferStatusIndicator;
 
     //! The status bar geometry that has been put into the _MEEGOTOUCH_MSTATUSBAR_GEOMETRY property
     QRectF updatedStatusBarGeometry;

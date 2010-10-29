@@ -22,6 +22,7 @@
 #include "statusindicator.h"
 #include "contextframeworkcontext.h"
 #include "x11wrapper.h"
+#include "notificationstatusindicator.h" 
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
 #include <MViewCreator>
@@ -41,6 +42,8 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
+    notifierIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
+    transferStatusIndicator(new TransferStatusIndicator(controller)),
     orientationChangeSignalConnected(false)
 {
     // Connect related phone network indicators
@@ -55,6 +58,8 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addItem(phoneNetworkTypeIndicator);
     layout->addItem(phoneNetworkIndicator);
     layout->addStretch();
+    layout->addItem(notifierIndicator);
+    layout->addItem(transferStatusIndicator);
     layout->addItem(internetConnectionIndicator);
     layout->addItem(bluetoothIndicator);
     layout->addItem(gpsIndicator);

@@ -44,6 +44,8 @@
 #include "notificationstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
 #include "x11wrapper.h"
+#include "notificationsink_stub.h"
+#include "notifiernotificationsink_stub.h"
 
 WId qWidgetWinId = 0xdeadbeef;
 WId QWidget::winId() const
