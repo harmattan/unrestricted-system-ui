@@ -65,6 +65,13 @@ public:
     }
 
     /*!
+     * Returns the keyname of the identifier parameter
+     */
+    static QString identifierKey() {
+        return QString("identifier");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given event type.
      *
      * \param eventType the event type of the notification
@@ -112,6 +119,16 @@ public:
      */
     static NotificationParameter createUnseenParameter(bool unseen) {
         return NotificationParameter(unseenKey(), QVariant(unseen));
+    }
+
+    /*!
+     * Creates a NotificationParameter with the given identifier.
+     *
+     * \param identifier the identifier of the notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createIdentifierParameter(const QString &identifier) {
+        return NotificationParameter(identifierKey(), QVariant(identifier));
     }
 };
 
