@@ -53,7 +53,7 @@ public slots:
 
 private slots:
 #ifdef HAVE_QMSYSTEM
-    void displayStateChanged (Maemo::QmDisplayState::DisplayState state);
+    void displayStateChanged (MeeGo::QmDisplayState::DisplayState state);
 #endif
 
 signals:
@@ -61,7 +61,7 @@ signals:
 
 private:
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmDisplayState       *m_Display;
+    MeeGo::QmDisplayState       *m_Display;
 #endif
     QTimer                      *m_Timer;
     QTime                        m_Time;
@@ -113,10 +113,10 @@ public slots:
 
 private slots:
 #ifdef HAVE_QMSYSTEM
-    void batteryStateChanged (Maemo::QmBattery::BatteryState state);
-    void chargingStateChanged (Maemo::QmBattery::ChargingState state);
-    void batteryChargerEvent (Maemo::QmBattery::ChargerType type);
-    void devicePSMStateChanged (Maemo::QmDeviceMode::PSMState PSMState);
+    void batteryStateChanged (MeeGo::QmBattery::BatteryState state);
+    void chargingStateChanged (MeeGo::QmBattery::ChargingState state);
+    void batteryChargerEvent (MeeGo::QmBattery::ChargerType type);
+    void devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState PSMState);
 #endif
     void utiliseLED (bool activate, const QString &pattern);
 
@@ -131,10 +131,10 @@ private:
     LowBatteryNotifier              *m_LowBatteryNotifier;
     MNotification                   *m_notification;
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmBattery                *m_Battery;
-    Maemo::QmDeviceMode             *m_DeviceMode;
-    Maemo::QmLED                    *m_Led;
-    Maemo::QmBattery::ChargerType    m_ChargerType;
+    MeeGo::QmBattery                *m_Battery;
+    MeeGo::QmDeviceMode             *m_DeviceMode;
+    MeeGo::QmLED                    *m_Led;
+    MeeGo::QmBattery::ChargerType    m_ChargerType;
 #endif
 
 #ifdef UNIT_TEST

@@ -43,7 +43,7 @@ public:
 
 private slots:
 #ifdef HAVE_QMSYSTEM
-    void currentModeChanged (Maemo::QmUSBMode::Mode mode);
+    void currentModeChanged (MeeGo::QmUSBMode::Mode mode);
 #endif
     void OviSuiteSelected ();
     void MassStorageSelected ();
@@ -56,7 +56,7 @@ private:
     void ShowNotification (int id);
 
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmUSBMode    *m_logic;
+    MeeGo::QmUSBMode    *m_logic;
 #endif
     MNotification       *m_notification;
     QPointer<MDialog>    m_dialog;

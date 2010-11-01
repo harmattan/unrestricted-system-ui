@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-namespace Maemo
+namespace MeeGo
 {
 
     class QmUSBMode : public QObject
@@ -54,7 +54,7 @@ namespace Maemo
         }
 
     signals:
-        void modeChanged (Maemo::QmUSBMode::Mode mode);
+        void modeChanged (MeeGo::QmUSBMode::Mode mode);
 
     /*
      * Tese are only available in this stub, not in real life

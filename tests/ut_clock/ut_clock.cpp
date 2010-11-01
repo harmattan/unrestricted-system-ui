@@ -27,10 +27,10 @@
 Q_DECLARE_METATYPE(MLocale::TimeFormat24h);
 
 #ifdef HAVE_QMSYSTEM
-Q_DECLARE_METATYPE(Maemo::QmTime::TimeFormat);
-Q_DECLARE_METATYPE(Maemo::QmTimeWhatChanged);
+Q_DECLARE_METATYPE(MeeGo::QmTime::TimeFormat);
+Q_DECLARE_METATYPE(MeeGo::QmTimeWhatChanged);
 
-Maemo::QmTime::TimeFormat Maemo::QmTime::getTimeFormat()
+MeeGo::QmTime::TimeFormat MeeGo::QmTime::getTimeFormat()
 {
     return Ut_Clock::expectedTimeFormat;
 }
@@ -79,7 +79,7 @@ void MLocale::connectSettings()
 int Ut_Clock::timerTimeout;
 QDateTime Ut_Clock::expectedDateTime;
 #ifdef HAVE_QMSYSTEM
-Maemo::QmTime::TimeFormat Ut_Clock::expectedTimeFormat;
+MeeGo::QmTime::TimeFormat Ut_Clock::expectedTimeFormat;
 #endif
 
 // Called before the first testfunction is executed
@@ -99,7 +99,7 @@ void Ut_Clock::init()
     g_localeDestroyed = false;
     g_localeSettingsConnected = false;
 #ifdef HAVE_QMSYSTEM
-    expectedTimeFormat = Maemo::QmTime::format12h;
+    expectedTimeFormat = MeeGo::QmTime::format12h;
 #endif
 
     m_subject = new Clock;
@@ -109,8 +109,8 @@ void Ut_Clock::init()
             m_subject, SLOT(updateLocaleSettings()));
 
 #ifdef HAVE_QMSYSTEM
-    connect(this, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
-            m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
+    connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
+            m_subject, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
 #endif
 }
 
@@ -125,9 +125,9 @@ void Ut_Clock::testConstruction()
     QVERIFY(m_subject->locale);
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&m_subject->qmTime,
-                       SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
+                       SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
                        m_subject,
-                       SLOT(updateSettings(Maemo::QmTimeWhatChanged))));
+                       SLOT(updateSettings(MeeGo::QmTimeWhatChanged))));
 #endif
     QVERIFY(disconnect(m_subject->locale.data(),
                        SIGNAL(settingsChanged()),
@@ -212,19 +212,19 @@ void Ut_Clock::test24HourModeToggling_data()
 {
     columnsFor24HourModeTests();
 #ifdef HAVE_QMSYSTEM
-    QTest::addColumn<Maemo::QmTime::TimeFormat>("expectedFormat");
-    QTest::addColumn<Maemo::QmTimeWhatChanged>("whatChanged");
+    QTest::addColumn<MeeGo::QmTime::TimeFormat>("expectedFormat");
+    QTest::addColumn<MeeGo::QmTimeWhatChanged>("whatChanged");
 #endif
     QVector<QTestData*> rows = rowsFor24HourModeTests();
 #ifdef HAVE_QMSYSTEM
-    *rows[0] << Maemo::QmTime::format24h
-            << Maemo::QmTimeOnlySettingsChanged;
-    *rows[1] << Maemo::QmTime::format12h
-            << Maemo::QmTimeOnlySettingsChanged;
-    *rows[2] << Maemo::QmTime::format24h
-            << Maemo::QmTimeTimeChanged;
-    *rows[3] << Maemo::QmTime::format12h
-            << Maemo::QmTimeTimeChanged;
+    *rows[0] << MeeGo::QmTime::format24h
+            << MeeGo::QmTimeOnlySettingsChanged;
+    *rows[1] << MeeGo::QmTime::format12h
+            << MeeGo::QmTimeOnlySettingsChanged;
+    *rows[2] << MeeGo::QmTime::format24h
+            << MeeGo::QmTimeTimeChanged;
+    *rows[3] << MeeGo::QmTime::format12h
+            << MeeGo::QmTimeTimeChanged;
 #endif
 }
 
@@ -245,9 +245,9 @@ void Ut_Clock::test24HourModeToggling()
     // of values that QMSystem signals don't change the 24h format
     // at all
     bool oldValue = m_subject->model()->timeFormat24h();
-    QFETCH(Maemo::QmTime::TimeFormat, expectedFormat);
+    QFETCH(MeeGo::QmTime::TimeFormat, expectedFormat);
     expectedTimeFormat = expectedFormat;
-    QFETCH(Maemo::QmTimeWhatChanged, whatChanged);
+    QFETCH(MeeGo::QmTimeWhatChanged, whatChanged);
     emit timeOrSettingsChanged(whatChanged);
     QCOMPARE(m_subject->model()->timeFormat24h(), oldValue);
 #endif
@@ -261,7 +261,7 @@ void Ut_Clock::testTimeUpdate()
 #ifdef HAVE_QMSYSTEM
     // If qmsystem notifies up that time changed, model should be updated accordingly
     expectedDateTime = QDateTime(QDate(2010, 1, 1));
-    emit timeOrSettingsChanged(Maemo::QmTimeTimeChanged);
+    emit timeOrSettingsChanged(MeeGo::QmTimeTimeChanged);
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 #endif
 }

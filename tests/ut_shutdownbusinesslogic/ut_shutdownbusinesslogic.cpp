@@ -131,17 +131,17 @@ Ut_ShutdownBusinessLogic::testShowUI ()
 void 
 Ut_ShutdownBusinessLogic::testSystemStateChanged ()
 {
-    m_Api->systemStateChanged (Maemo::QmSystemState::BatteryStateEmpty);
+    m_Api->systemStateChanged (MeeGo::QmSystemState::BatteryStateEmpty);
     QVERIFY (bodyOfLastNotification == "qtn_shut_batt_empty");
     
-    m_Api->systemStateChanged (Maemo::QmSystemState::ShutdownDeniedUSB);
+    m_Api->systemStateChanged (MeeGo::QmSystemState::ShutdownDeniedUSB);
     QVERIFY (bodyOfLastNotification == "qtn_shut_unplug_usb");
     QVERIFY (nameOfLastFeedback == "IDF_INFORMATION_SOUND");
     
-    m_Api->systemStateChanged (Maemo::QmSystemState::ThermalStateFatal);
+    m_Api->systemStateChanged (MeeGo::QmSystemState::ThermalStateFatal);
     QVERIFY (bodyOfLastNotification == "qtn_shut_high_temp");
     
-    m_Api->systemStateChanged (Maemo::QmSystemState::Shutdown);
+    m_Api->systemStateChanged (MeeGo::QmSystemState::Shutdown);
     QVERIFY (m_Api->m_Ui->m_Text1.isEmpty());
     QVERIFY (m_Api->m_Ui->m_Text2.isEmpty());
     QVERIFY (m_Api->m_Ui->m_Delay == 2000);

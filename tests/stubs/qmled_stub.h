@@ -71,7 +71,7 @@ QmLEDStub *gQmLEDStub = &gDefaultQmLEDStub;
 /*
  * Create a proxy which calls the stub
  */
-namespace Maemo
+namespace MeeGo
 {
 
 QmLED::QmLED (QObject *parent)
@@ -116,6 +116,6 @@ QmLED::disable ()
     return true;
 }
 
-} /* namespace Maemo */
+} /* namespace MeeGo */
 
 #endif

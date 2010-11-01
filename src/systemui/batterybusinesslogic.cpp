@@ -58,12 +58,12 @@ LowBatteryNotifier::LowBatteryNotifier (
     m_Time.start ();
 
 #ifdef HAVE_QMSYSTEM
-    m_Display = new Maemo::QmDisplayState;
-    m_Sleep = m_Display->get () == Maemo::QmDisplayState::Off;
+    m_Display = new MeeGo::QmDisplayState;
+    m_Sleep = m_Display->get () == MeeGo::QmDisplayState::Off;
     connect (m_Display,
-            SIGNAL (displayStateChanged (Maemo::QmDisplayState::DisplayState)),
+            SIGNAL (displayStateChanged (MeeGo::QmDisplayState::DisplayState)),
             this,
-            SLOT (displayStateChanged (Maemo::QmDisplayState::DisplayState)));
+            SLOT (displayStateChanged (MeeGo::QmDisplayState::DisplayState)));
 #endif
 
     connect (m_Timer, SIGNAL (timeout ()),
@@ -86,13 +86,13 @@ LowBatteryNotifier::showLowBatteryNotification ()
 
 #ifdef HAVE_QMSYSTEM
     switch (m_Display->get ()) {
-        case Maemo::QmDisplayState::On:
-        case Maemo::QmDisplayState::Dimmed:
+        case MeeGo::QmDisplayState::On:
+        case MeeGo::QmDisplayState::Dimmed:
             m_Sleep = false;
             m_Timer->start (m_ActiveInterval);
             break;
 
-        case Maemo::QmDisplayState::Off:
+        case MeeGo::QmDisplayState::Off:
             m_Sleep = true;
             m_Timer->start (m_InactiveInterval);
             break;
@@ -108,12 +108,12 @@ LowBatteryNotifier::showLowBatteryNotification ()
 #ifdef HAVE_QMSYSTEM
 void
 LowBatteryNotifier::displayStateChanged (
-        Maemo::QmDisplayState::DisplayState state)
+        MeeGo::QmDisplayState::DisplayState state)
 {
     SYS_DEBUG ("");
 
     switch (state) {
-        case Maemo::QmDisplayState::On:
+        case MeeGo::QmDisplayState::On:
             if (!m_Sleep)
                 break;
             if (m_Time.elapsed () < m_ActiveInterval)
@@ -123,11 +123,11 @@ LowBatteryNotifier::displayStateChanged (
             m_Sleep = false;
             break;
 
-        case Maemo::QmDisplayState::Dimmed:
+        case MeeGo::QmDisplayState::Dimmed:
             m_Sleep = false;
             break;
 
-        case Maemo::QmDisplayState::Off:
+        case MeeGo::QmDisplayState::Off:
             m_Timer->setInterval (m_InactiveInterval - m_Time.elapsed ());
             m_Sleep = true;
             break;
@@ -148,10 +148,10 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_LowBatteryNotifier (0),
     m_notification (0)
 #ifdef HAVE_QMSYSTEM
-   ,m_Battery (new Maemo::QmBattery),
-    m_DeviceMode (new Maemo::QmDeviceMode),
-    m_Led (new Maemo::QmLED),
-    m_ChargerType (Maemo::QmBattery::Unknown)
+   ,m_Battery (new MeeGo::QmBattery),
+    m_DeviceMode (new MeeGo::QmDeviceMode),
+    m_Led (new MeeGo::QmLED),
+    m_ChargerType (MeeGo::QmBattery::Unknown)
 #endif
 {
     SYS_DEBUG ("----------------- start ----------------------");
@@ -160,22 +160,22 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     /* connect to QmSystem signals */
     SYS_DEBUG ("Connecting QmSystem signals");
     connect (m_Battery,
-             SIGNAL (batteryStateChanged (Maemo::QmBattery::BatteryState)),
+             SIGNAL (batteryStateChanged (MeeGo::QmBattery::BatteryState)),
              this,
-             SLOT (batteryStateChanged (Maemo::QmBattery::BatteryState)));
+             SLOT (batteryStateChanged (MeeGo::QmBattery::BatteryState)));
     connect (m_Battery,
-             SIGNAL (chargingStateChanged (Maemo::QmBattery::ChargingState)),
+             SIGNAL (chargingStateChanged (MeeGo::QmBattery::ChargingState)),
              this,
-             SLOT (chargingStateChanged (Maemo::QmBattery::ChargingState)));
+             SLOT (chargingStateChanged (MeeGo::QmBattery::ChargingState)));
     connect (m_Battery,
-             SIGNAL (chargerEvent (Maemo::QmBattery::ChargerType)),
+             SIGNAL (chargerEvent (MeeGo::QmBattery::ChargerType)),
              this,
-             SLOT (batteryChargerEvent (Maemo::QmBattery::ChargerType)));
+             SLOT (batteryChargerEvent (MeeGo::QmBattery::ChargerType)));
 
     connect (m_DeviceMode,
-             SIGNAL (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)),
+             SIGNAL (devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState)),
              this,
-             SLOT (devicePSMStateChanged (Maemo::QmDeviceMode::PSMState)));
+             SLOT (devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState)));
 #endif
 
     // Init battery values delayed...
@@ -225,15 +225,15 @@ BatteryBusinessLogic::lowBatteryAlert ()
 #ifdef HAVE_QMSYSTEM
 void
 BatteryBusinessLogic::chargingStateChanged (
-        Maemo::QmBattery::ChargingState state)
+        MeeGo::QmBattery::ChargingState state)
 {
     SYS_DEBUG ("");
 
     switch (state) {
-        case Maemo::QmBattery::StateCharging:
+        case MeeGo::QmBattery::StateCharging:
             SYS_DEBUG ("Charging");
 
-            if (m_Battery->getChargerType () == Maemo::QmBattery::USB_100mA)
+            if (m_Battery->getChargerType () == MeeGo::QmBattery::USB_100mA)
             {
                 sendNotification (NotificationNoEnoughPower);
             }
@@ -253,12 +253,12 @@ BatteryBusinessLogic::chargingStateChanged (
             }
             break;
 
-        case Maemo::QmBattery::StateNotCharging:
+        case MeeGo::QmBattery::StateNotCharging:
             SYS_DEBUG ("Not charging");
             utiliseLED (false, QString ("PatternBatteryCharging"));
             break;
 
-        case Maemo::QmBattery::StateChargingFailed:
+        case MeeGo::QmBattery::StateChargingFailed:
             SYS_DEBUG ("Charging not started");
             sendNotification (NotificationChargingNotStarted);
             break;
@@ -267,24 +267,24 @@ BatteryBusinessLogic::chargingStateChanged (
 
 void
 BatteryBusinessLogic::batteryStateChanged (
-        Maemo::QmBattery::BatteryState state)
+        MeeGo::QmBattery::BatteryState state)
 {
     SYS_DEBUG ("");
 
     switch (state) {
-    case Maemo::QmBattery::StateFull:
+    case MeeGo::QmBattery::StateFull:
         SYS_DEBUG ("QmBattery::StateFull");
         sendNotification (NotificationChargingComplete);
         break;
 
-    case Maemo::QmBattery::StateOK:
+    case MeeGo::QmBattery::StateOK:
         SYS_DEBUG ("QmBattery::StateOK");
         /* no-operation here... */
         break;
 
-    case Maemo::QmBattery::StateLow:
+    case MeeGo::QmBattery::StateLow:
         SYS_DEBUG ("QmBattery::StateLow");
-        if (m_Battery->getChargingState () != Maemo::QmBattery::StateCharging) {
+        if (m_Battery->getChargingState () != MeeGo::QmBattery::StateCharging) {
             if (m_LowBatteryNotifier == 0) {
                 m_LowBatteryNotifier = new LowBatteryNotifier ();
                 connect (m_LowBatteryNotifier, SIGNAL(lowBatteryAlert()),
@@ -295,24 +295,24 @@ BatteryBusinessLogic::batteryStateChanged (
         }
         break;
 
-    case Maemo::QmBattery::StateEmpty:
+    case MeeGo::QmBattery::StateEmpty:
         SYS_DEBUG ("QmBattery::StateEmpty");
         sendNotification (NotificationRechargeBattery);
         break;
 
-    case Maemo::QmBattery::StateError:
+    case MeeGo::QmBattery::StateError:
         break;
     }
 }
 
 void
 BatteryBusinessLogic::batteryChargerEvent (
-        Maemo::QmBattery::ChargerType type)
+        MeeGo::QmBattery::ChargerType type)
 {
     SYS_DEBUG ("");
 
     switch (type) {
-        case Maemo::QmBattery::None:
+        case MeeGo::QmBattery::None:
             SYS_DEBUG ("QmBattery::None");
             /*
              * After the user plugs out the charger from the device, this system
@@ -321,21 +321,21 @@ BatteryBusinessLogic::batteryChargerEvent (
              * notification should not be shown in case if USB cable is used for
              * charging the device.
              */
-            if (m_ChargerType == Maemo::QmBattery::Wall)
+            if (m_ChargerType == MeeGo::QmBattery::Wall)
                 sendNotification (NotificationRemoveCharger);
             break;
 
-        case Maemo::QmBattery::Wall:
+        case MeeGo::QmBattery::Wall:
             // Wall charger
             SYS_DEBUG ("QmBattery::Wall");
             break;
 
-        case Maemo::QmBattery::USB_500mA:
+        case MeeGo::QmBattery::USB_500mA:
             // USB with 500mA output
             SYS_DEBUG ("QmBattery::USB_500mA");
             break;
 
-        case Maemo::QmBattery::USB_100mA:
+        case MeeGo::QmBattery::USB_100mA:
             // USB with 100mA output
             SYS_DEBUG ("QmBattery::USB_100mA");
             break;
@@ -351,13 +351,13 @@ BatteryBusinessLogic::batteryChargerEvent (
 
 void
 BatteryBusinessLogic::devicePSMStateChanged (
-        Maemo::QmDeviceMode::PSMState PSMState)
+        MeeGo::QmDeviceMode::PSMState PSMState)
 {
-    if (PSMState == Maemo::QmDeviceMode::PSMStateOff)
+    if (PSMState == MeeGo::QmDeviceMode::PSMStateOff)
     {
         sendNotification (NotificationExitingPSM);
     }
-    else if (PSMState == Maemo::QmDeviceMode::PSMStateOn)
+    else if (PSMState == MeeGo::QmDeviceMode::PSMStateOn)
     {
         sendNotification (NotificationEnteringPSM);
     }

@@ -64,9 +64,9 @@ private slots:
 #ifdef HAVE_QMSYSTEM
     /*!
      * \brief A slot for setting if the scene renders to pixmap or not.
-     * \param Maemo::QmDisplayState::DisplayState. When Maemo::QmDisplayState::Off / Maemo::QmDisplayState::Dimmed the scene does not render. When Maemo::QmDisplayState::On scene renders to pixmap
+     * \param MeeGo::QmDisplayState::DisplayState. When MeeGo::QmDisplayState::Off / MeeGo::QmDisplayState::Dimmed the scene does not render. When MeeGo::QmDisplayState::On scene renders to pixmap
      */
-    void setSceneRender(Maemo::QmDisplayState::DisplayState state);
+    void setSceneRender(MeeGo::QmDisplayState::DisplayState state);
 #endif
 
 signals:
@@ -97,7 +97,7 @@ private:
 
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
-    Maemo::QmDisplayState* displayState;
+    MeeGo::QmDisplayState* displayState;
 #endif
 
     //! Keep track whether scene should render or not

@@ -16,11 +16,11 @@ void VolumeBarWindow::volumeBarChanged (int)
 }
 
 #ifdef HAVE_QMSYSTEM
-void VolumeBarWindow::hwKeyEvent (Maemo::QmKeys::Key, Maemo::QmKeys::State)
+void VolumeBarWindow::hwKeyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)
 {
 }
 
-void VolumeBarWindow::locksChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)
+void VolumeBarWindow::locksChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)
 {
 }
 #endif

@@ -38,12 +38,12 @@ public:
     static int timerTimeout;
     static QDateTime expectedDateTime;
 #ifdef HAVE_QMSYSTEM
-    static Maemo::QmTime::TimeFormat expectedTimeFormat;
+    static MeeGo::QmTime::TimeFormat expectedTimeFormat;
 #endif
 
 signals:
 #ifdef HAVE_QMSYSTEM
-    void timeOrSettingsChanged(Maemo::QmTimeWhatChanged);
+    void timeOrSettingsChanged(MeeGo::QmTimeWhatChanged);
 #endif
     void shortDisplayMode(bool isSet);
     void localeSettingsChanged();

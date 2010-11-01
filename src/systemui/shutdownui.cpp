@@ -243,16 +243,16 @@ ShutdownUI::turnOffScreen ()
      * No way dimming or turning off the screen inside scratchbox.
      */
     #if defined(HAVE_QMSYSTEM)
-    Maemo::QmDisplayState  display;
+    MeeGo::QmDisplayState  display;
 
     // Try to dim
-    success = display.set (Maemo::QmDisplayState::Dimmed);
+    success = display.set (MeeGo::QmDisplayState::Dimmed);
     if (! success) {
         SYS_WARNING ("Dimming the display failed!");
     }
 
     // Try to turn off
-    success = display.set (Maemo::QmDisplayState::Off);
+    success = display.set (MeeGo::QmDisplayState::Off);
     if (! success) {
         SYS_WARNING ("Turning off the display failed!");
     }

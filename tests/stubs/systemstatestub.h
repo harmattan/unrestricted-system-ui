@@ -23,7 +23,7 @@
 
 // STUB CLASS
 
-namespace Maemo {
+namespace MeeGo {
 
 /**
  * @brief Provides information and actions on device state.
@@ -76,7 +76,7 @@ signals:
      * Sent when device state indication has been received.
      * @param what Received state indication type.
      */
-    void systemStateChanged(Maemo::QmSystemState::StateIndication what);
+    void systemStateChanged(MeeGo::QmSystemState::StateIndication what);
 };
 }
 

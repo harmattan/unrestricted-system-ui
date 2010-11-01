@@ -83,7 +83,7 @@ private slots:
      * \param what tells which lockstate has been changed, either Device or TouchScreen/Keyboard
      * \param how tells to which state lock has been changed, one of Locked, Unlocked or Unknown
      */
-    void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    void setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
 
 private:
@@ -101,7 +101,7 @@ private:
 
 #ifdef HAVE_QMSYSTEM
     //! QmSystem watcher for device lock
-    Maemo::QmLocks qmLocks;
+    MeeGo::QmLocks qmLocks;
 
     //! Device lock status
     bool deviceLocked;

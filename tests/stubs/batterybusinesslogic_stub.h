@@ -25,16 +25,16 @@ class BatteryBusinessLogicStub : public StubBase {
   virtual void lowBatteryAlert();
   virtual void batteryEnergyLevelChanged(int energyLevel);
 #ifdef HAVE_QMSYSTEM
-  virtual void batteryStateChanged(Maemo::QmBattery::BatteryState state);
-  virtual void chargingStateChanged(Maemo::QmBattery::ChargingState state);
-  virtual void batteryChargerEvent(Maemo::QmBattery::ChargerType type);
-  virtual void devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState);
+  virtual void batteryStateChanged(MeeGo::QmBattery::BatteryState state);
+  virtual void chargingStateChanged(MeeGo::QmBattery::ChargingState state);
+  virtual void batteryChargerEvent(MeeGo::QmBattery::ChargerType type);
+  virtual void devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState PSMState);
 #endif
   virtual void utiliseLED(bool activate, const QString &pattern);
   virtual void setPSMState(bool on);
   virtual void initSystemUIGConfKeys();
 #ifdef HAVE_QMSYSTEM
-  virtual int animationRate(Maemo::QmBattery::ChargerType type);
+  virtual int animationRate(MeeGo::QmBattery::ChargerType type);
 #endif
   virtual void sendNotification(BatteryBusinessLogic::NotificationID id);
   virtual void sendNotification(const QString &text, const QString &feedback, const QString &icon);
@@ -120,27 +120,27 @@ void BatteryBusinessLogicStub::batteryEnergyLevelChanged(int energyLevel) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void BatteryBusinessLogicStub::batteryStateChanged(Maemo::QmBattery::BatteryState state) {
+void BatteryBusinessLogicStub::batteryStateChanged(MeeGo::QmBattery::BatteryState state) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmBattery::BatteryState >(state));
+  params.append( new Parameter<MeeGo::QmBattery::BatteryState >(state));
   stubMethodEntered("batteryStateChanged",params);
 }
 
-void BatteryBusinessLogicStub::chargingStateChanged(Maemo::QmBattery::ChargingState state) {
+void BatteryBusinessLogicStub::chargingStateChanged(MeeGo::QmBattery::ChargingState state) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmBattery::ChargingState >(state));
+  params.append( new Parameter<MeeGo::QmBattery::ChargingState >(state));
   stubMethodEntered("chargingStateChanged",params);
 }
 
-void BatteryBusinessLogicStub::batteryChargerEvent(Maemo::QmBattery::ChargerType type) {
+void BatteryBusinessLogicStub::batteryChargerEvent(MeeGo::QmBattery::ChargerType type) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmBattery::ChargerType >(type));
+  params.append( new Parameter<MeeGo::QmBattery::ChargerType >(type));
   stubMethodEntered("batteryChargerEvent",params);
 }
 
-void BatteryBusinessLogicStub::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState) {
+void BatteryBusinessLogicStub::devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState PSMState) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmDeviceMode::PSMState >(PSMState));
+  params.append( new Parameter<MeeGo::QmDeviceMode::PSMState >(PSMState));
   stubMethodEntered("devicePSMStateChanged",params);
 }
 #endif
@@ -163,9 +163,9 @@ void BatteryBusinessLogicStub::initSystemUIGConfKeys() {
 }
 
 #ifdef HAVE_QMSYSTEM
-int BatteryBusinessLogicStub::animationRate(Maemo::QmBattery::ChargerType type) {
+int BatteryBusinessLogicStub::animationRate(MeeGo::QmBattery::ChargerType type) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmBattery::ChargerType >(type));
+  params.append( new Parameter<MeeGo::QmBattery::ChargerType >(type));
   stubMethodEntered("animationRate",params);
   return stubReturnValue<int>("animationRate");
 }
@@ -254,19 +254,19 @@ void BatteryBusinessLogic::batteryEnergyLevelChanged(int energyLevel) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void BatteryBusinessLogic::batteryStateChanged(Maemo::QmBattery::BatteryState state) {
+void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState state) {
   gBatteryBusinessLogicStub->batteryStateChanged(state);
 }
 
-void BatteryBusinessLogic::chargingStateChanged(Maemo::QmBattery::ChargingState state) {
+void BatteryBusinessLogic::chargingStateChanged(MeeGo::QmBattery::ChargingState state) {
   gBatteryBusinessLogicStub->chargingStateChanged(state);
 }
 
-void BatteryBusinessLogic::batteryChargerEvent(Maemo::QmBattery::ChargerType type) {
+void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType type) {
   gBatteryBusinessLogicStub->batteryChargerEvent(type);
 }
 
-void BatteryBusinessLogic::devicePSMStateChanged(Maemo::QmDeviceMode::PSMState PSMState) {
+void BatteryBusinessLogic::devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState PSMState) {
   gBatteryBusinessLogicStub->devicePSMStateChanged(PSMState);
 }
 #endif
@@ -284,7 +284,7 @@ void BatteryBusinessLogic::initSystemUIGConfKeys() {
 }
 
 #ifdef HAVE_QMSYSTEM
-int BatteryBusinessLogic::animationRate(Maemo::QmBattery::ChargerType type) {
+int BatteryBusinessLogic::animationRate(MeeGo::QmBattery::ChargerType type) {
   return gBatteryBusinessLogicStub->animationRate(type);
 }
 #endif

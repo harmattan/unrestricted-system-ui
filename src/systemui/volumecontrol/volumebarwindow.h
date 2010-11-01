@@ -59,13 +59,13 @@ private slots:
      * \key the key type
      * \state the key new state
      */
-    void hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state);
+    void hwKeyEvent (MeeGo::QmKeys::Key key, MeeGo::QmKeys::State state);
     /*! An internal slot to handle the screen and/or device lock changes
      * (volume-bar shouldn't appear on top of these) (see QmLocks API documentation)
      * \locks what the type of lock
      * \how the lock new state
      */
-    void locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    void locksChanged (MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
     //! An internal slot to handle the case when we got the hardware volume keys resource
     void hwKeyResourceAcquired ();
@@ -83,9 +83,9 @@ private:
     MOverlay        *overlay;
 #ifdef HAVE_QMSYSTEM
     //! an QmKeys instance to get signals about volume-key presses
-    Maemo::QmKeys   *hwkeys;
+    MeeGo::QmKeys   *hwkeys;
     //! a QmLocks instance to get signals about screen/device lock changes
-    Maemo::QmLocks  *locks;
+    MeeGo::QmLocks  *locks;
 #endif
     //! here we store the current lock-state
     bool             locked;

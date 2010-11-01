@@ -24,8 +24,8 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
-Maemo::QmDisplayState::DisplayState gDisplayState = Maemo::QmDisplayState::Unknown;
-Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
+MeeGo::QmDisplayState::DisplayState gDisplayState = MeeGo::QmDisplayState::Unknown;
+MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
 {
     return gDisplayState;
 }
@@ -39,7 +39,7 @@ void Ut_LockScreen::init()
 void Ut_LockScreen::cleanup()
 {
     delete lockScreen;
-    gDisplayState = Maemo::QmDisplayState::Unknown;
+    gDisplayState = MeeGo::QmDisplayState::Unknown;
 }
 
 void Ut_LockScreen::initTestCase()
@@ -58,16 +58,16 @@ void Ut_LockScreen::cleanupTestCase()
 void Ut_LockScreen::testSliderUnlocked()
 {
     connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
-    gDisplayState = Maemo::QmDisplayState::On;
+    gDisplayState = MeeGo::QmDisplayState::On;
     QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
     emit unlocked();
     QCOMPARE(spy.count(), 1);
 
-    gDisplayState = Maemo::QmDisplayState::Off;
+    gDisplayState = MeeGo::QmDisplayState::Off;
     emit unlocked();
     QCOMPARE(spy.count(), 1);
 
-    gDisplayState = Maemo::QmDisplayState::Dimmed;
+    gDisplayState = MeeGo::QmDisplayState::Dimmed;
     emit unlocked();
     QCOMPARE(spy.count(), 1);
 }

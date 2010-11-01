@@ -37,11 +37,11 @@ VolumeBarWindow::VolumeBarWindow (QWidget *parent) :
     locked (false)
 {
 #ifdef HAVE_QMSYSTEM
-    hwkeys = new Maemo::QmKeys (this);
-    locks = new Maemo::QmLocks (this);
+    hwkeys = new MeeGo::QmKeys (this);
+    locks = new MeeGo::QmLocks (this);
 
-    connect (locks, SIGNAL (stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)),
-             SLOT (locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    connect (locks, SIGNAL (stateChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)),
+             SLOT (locksChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
 #endif
 
 #ifdef HAVE_LIBRESOURCEQT
@@ -102,20 +102,20 @@ void VolumeBarWindow::volumeBarChanged (int val)
 }
 
 #ifdef HAVE_QMSYSTEM
-void VolumeBarWindow::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State state)
+void VolumeBarWindow::hwKeyEvent (MeeGo::QmKeys::Key key, MeeGo::QmKeys::State state)
 {
     int change_val = 0;
 
-    if (state == Maemo::QmKeys::KeyUp)
+    if (state == MeeGo::QmKeys::KeyUp)
         return;
 
     switch (key)
     {
-        case Maemo::QmKeys::VolumeUp:
+        case MeeGo::QmKeys::VolumeUp:
             SYS_DEBUG ("volume-up");
             change_val++;
             break;
-        case Maemo::QmKeys::VolumeDown:
+        case MeeGo::QmKeys::VolumeDown:
             SYS_DEBUG ("volume-down");
             change_val--;
             break;
@@ -149,28 +149,28 @@ void VolumeBarWindow::hwKeyEvent (Maemo::QmKeys::Key key, Maemo::QmKeys::State s
     volumeBar->updateVolume (current_volume, max_volume);
 }
 
-void VolumeBarWindow::locksChanged (Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+void VolumeBarWindow::locksChanged (MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
-    if (how == Maemo::QmLocks::Locked)
+    if (how == MeeGo::QmLocks::Locked)
     {
         locked = true;
         // hide the window if it is visible
         if (isVisible () == true)
             hide ();
     }
-    else if (how == Maemo::QmLocks::Unlocked)
+    else if (how == MeeGo::QmLocks::Unlocked)
     {
         /*
          * Check wether all the locks went away...
          */
-        if ((what == Maemo::QmLocks::Device) &&
-            (locks->getState (Maemo::QmLocks::TouchAndKeyboard) ==
-             Maemo::QmLocks::Unlocked))
+        if ((what == MeeGo::QmLocks::Device) &&
+            (locks->getState (MeeGo::QmLocks::TouchAndKeyboard) ==
+             MeeGo::QmLocks::Unlocked))
         {
             locked = false;
         }
-        else if (locks->getState (Maemo::QmLocks::Device) ==
-                 Maemo::QmLocks::Unlocked)
+        else if (locks->getState (MeeGo::QmLocks::Device) ==
+                 MeeGo::QmLocks::Unlocked)
         {
             locked = false;
         }
@@ -185,8 +185,8 @@ void VolumeBarWindow::hwKeyResourceAcquired ()
     // Disconnect from everything first
     hwkeys->disconnect ();
 
-    connect(hwkeys, SIGNAL (keyEvent (Maemo::QmKeys::Key, Maemo::QmKeys::State)),
-            this, SLOT (hwKeyEvent (Maemo::QmKeys::Key, Maemo::QmKeys::State)));
+    connect(hwkeys, SIGNAL (keyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)),
+            this, SLOT (hwKeyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)));
 #endif
 }
 

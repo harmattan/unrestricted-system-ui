@@ -29,8 +29,8 @@ Clock::Clock(QGraphicsItem *parent) :
 
 #ifdef HAVE_QMSYSTEM
     // Be interested in changes to system time
-    connect(&qmTime, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
-            this, SLOT(updateSettings(Maemo::QmTimeWhatChanged)));
+    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
+            this, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
 #endif
 
     // Be interested in changes to 24h mode
@@ -66,9 +66,9 @@ void Clock::updateModelAndSetupTimer()
 }
 
 #ifdef HAVE_QMSYSTEM
-void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged)
+void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged)
 {
-    if (whatChanged == Maemo::QmTimeTimeChanged) {
+    if (whatChanged == MeeGo::QmTimeTimeChanged) {
         // Set the time when it was changed (set by the user)
         updateModelAndSetupTimer();
     }

@@ -30,7 +30,7 @@ LockScreen::~LockScreen()
 void LockScreen::sliderUnlocked()
 {
 #ifdef HAVE_QMSYSTEM
-    if(displayState.get() == Maemo::QmDisplayState::On)
+    if(displayState.get() == MeeGo::QmDisplayState::On)
 #endif
     {
         emit unlocked();

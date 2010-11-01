@@ -23,7 +23,7 @@
 
 // STUB CLASS
 
-namespace Maemo
+namespace MeeGo
 {
 
 /**
@@ -94,7 +94,7 @@ signals:
      * @param what Which lock state was changed
      * @param how Which state the lock was changed to.
      */
-    void stateChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    void stateChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 };
 }
 

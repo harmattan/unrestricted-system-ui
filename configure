@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then
         echo DEFINES += HAVE_CONTEXTSUBSCRIBER >> ${FILENAME}
     fi
 
-    pkg-config --exists qmsystem
+    pkg-config --exists qmsystem2
     if [ $? -eq 0 ]; then
         echo DEFINES += HAVE_QMSYSTEM >> ${FILENAME}
     fi

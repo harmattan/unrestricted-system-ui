@@ -72,9 +72,9 @@ namespace ResourcePolicy
 #include <qmkeys.h>
 #include <qmlocks.h>
 /*********************************************************************************
- * Stub for Maemo::QmKeys && Maemo::QmLocks
+ * Stub for MeeGo::QmKeys && MeeGo::QmLocks
  */
-namespace Maemo
+namespace MeeGo
 {
     QmKeys::QmKeys(QObject *parent)
     {
@@ -91,7 +91,7 @@ namespace Maemo
     {
         Q_UNUSED(parent);
 
-        qmlocksStubRetval = Maemo::QmLocks::Unlocked;
+        qmlocksStubRetval = MeeGo::QmLocks::Unlocked;
     }
 
     QmLocks::~QmLocks()
@@ -252,38 +252,38 @@ void Ut_VolumeBarWindow::testHwKeyEvent()
 {
     // when current_volume >= max_volume
     volumeBarWindow->volumeBarChanged(120);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 99u);
 
     // Turn up the volume
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 21u);
 
     // Turn down the volume
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeDown, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeDown, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 19u);
 
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyUp);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyUp);
     QCOMPARE(volumeBarWindow->logic->volume(), 20u);
 
     // push some other hw key
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::Camera, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::Camera, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 20u);
 }
 
 void Ut_VolumeBarWindow::testLocking()
 {
     // Device locked
-    volumeBarWindow->locksChanged (Maemo::QmLocks::Device, Maemo::QmLocks::Locked);
+    volumeBarWindow->locksChanged (MeeGo::QmLocks::Device, MeeGo::QmLocks::Locked);
     QCOMPARE (volumeBarWindow->locked, true);
 
     // Turn up the volume
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 21u);
 
     // window should be non-visible
@@ -291,30 +291,30 @@ void Ut_VolumeBarWindow::testLocking()
 
     // Turn down the volume
     volumeBarWindow->volumeBarChanged(20);
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeDown, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeDown, MeeGo::QmKeys::KeyDown);
     QCOMPARE(volumeBarWindow->logic->volume(), 19u);
 
     // window should be non-visible
     QCOMPARE (isWindowVisible, false);
 
     // Lock also the touchscreen & keyboard
-    volumeBarWindow->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
+    volumeBarWindow->locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Locked);
     QCOMPARE (volumeBarWindow->locked, true);
 
     // Unlock only the device
     /* TouchscreenAndKeyboard is still locked: */
-    Maemo::qmlocksStubRetval = Maemo::QmLocks::Locked;
-    volumeBarWindow->locksChanged (Maemo::QmLocks::Device, Maemo::QmLocks::Unlocked);
+    MeeGo::qmlocksStubRetval = MeeGo::QmLocks::Locked;
+    volumeBarWindow->locksChanged (MeeGo::QmLocks::Device, MeeGo::QmLocks::Unlocked);
     QCOMPARE (volumeBarWindow->locked, true);
 
     // And now unlock the touch-screen also:
     /* Device is unlocked already:: */
-    Maemo::qmlocksStubRetval = Maemo::QmLocks::Unlocked;
-    volumeBarWindow->locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
+    MeeGo::qmlocksStubRetval = MeeGo::QmLocks::Unlocked;
+    volumeBarWindow->locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Unlocked);
     QCOMPARE (volumeBarWindow->locked, false);
 
     /* Press a volume down key */
-    volumeBarWindow->hwKeyEvent(Maemo::QmKeys::VolumeUp, Maemo::QmKeys::KeyDown);
+    volumeBarWindow->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
     // window should be visible now
     QCOMPARE (isWindowVisible, true);
 }

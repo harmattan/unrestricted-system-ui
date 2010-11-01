@@ -13,7 +13,7 @@ class StatusAreaRendererStub : public StubBase {
   virtual void StatusAreaRendererDestructor();
   virtual void sceneChanged(const QList<QRectF> &region);
 #ifdef HAVE_QMSYSTEM
-  virtual void setSceneRender(Maemo::QmDisplayState::DisplayState state);
+  virtual void setSceneRender(MeeGo::QmDisplayState::DisplayState state);
 #endif
   virtual uint sharedPixmapHandle();
   virtual bool createSharedPixmapHandle();
@@ -35,9 +35,9 @@ void StatusAreaRendererStub::sceneChanged(const QList<QRectF> &region) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusAreaRendererStub::setSceneRender(Maemo::QmDisplayState::DisplayState state) {
+void StatusAreaRendererStub::setSceneRender(MeeGo::QmDisplayState::DisplayState state) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmDisplayState::DisplayState >(state));
+  params.append( new Parameter<MeeGo::QmDisplayState::DisplayState >(state));
   stubMethodEntered("setSceneRender",params);
 }
 #endif
@@ -77,7 +77,7 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state) {
+void StatusAreaRenderer::setSceneRender(MeeGo::QmDisplayState::DisplayState state) {
   gStatusAreaRendererStub->setSceneRender(state);
 }
 #endif

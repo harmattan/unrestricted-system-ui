@@ -160,7 +160,7 @@ QList<QRectF>* RenderTestsHelper::setupRenderTests(Ut_StatusAreaRenderer* testCl
     setupRect();
     QObject::connect(testClass, SIGNAL(changed(QList<QRectF>)), statusAreaRenderer, SLOT(sceneChanged(QList<QRectF>)));
 #ifdef HAVE_QMSYSTEM
-    QObject::connect(testClass, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), statusAreaRenderer, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    QObject::connect(testClass, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), statusAreaRenderer, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
 #endif
     return rectList;
 }
@@ -181,7 +181,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOn()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
-    emit displayStateChanged(Maemo::QmDisplayState::On);
+    emit displayStateChanged(MeeGo::QmDisplayState::On);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
 }
@@ -190,7 +190,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateOff()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
-    emit displayStateChanged(Maemo::QmDisplayState::Off);
+    emit displayStateChanged(MeeGo::QmDisplayState::Off);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 }
@@ -199,7 +199,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlDisplayStateDimmed()
 {
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
-    emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
+    emit displayStateChanged(MeeGo::QmDisplayState::Dimmed);
     emit changed(*rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 }
@@ -209,12 +209,12 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     // Initial condition
     RenderTestsHelper helper;
     helper.setupRenderTests(this, statusAreaRenderer);
-    emit displayStateChanged(Maemo::QmDisplayState::On);
+    emit displayStateChanged(MeeGo::QmDisplayState::On);
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
 
     // Change to Dimmed state should produce a
     // MOnDisplayedChangeEvent with FullyOffDisplay state
-    emit displayStateChanged(Maemo::QmDisplayState::Dimmed);
+    emit displayStateChanged(MeeGo::QmDisplayState::Dimmed);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
     QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
@@ -222,7 +222,7 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     // Change to On state should produce a
     // MOnDisplayedChangeEvent with FullyOnDisplay state
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
-    emit displayStateChanged(Maemo::QmDisplayState::On);
+    emit displayStateChanged(MeeGo::QmDisplayState::On);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
     QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOnDisplay);
@@ -230,7 +230,7 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     // Change to Off state should produce a
     // MOnDisplayedChangeEvent with FullyOffDisplay state
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
-    emit displayStateChanged(Maemo::QmDisplayState::Off);
+    emit displayStateChanged(MeeGo::QmDisplayState::Off);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_SendEvent_Called, true);
     QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);

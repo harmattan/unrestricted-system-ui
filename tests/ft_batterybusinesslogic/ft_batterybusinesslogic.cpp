@@ -189,7 +189,7 @@ Ft_BatteryBusinessLogic::testBatteryStateChanged ()
     gQmLEDStub->stubReset ();
 
     /* StateFull */
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateFull);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateFull);
     QTest::qWait (10);
     QVERIFY (hasPublishedNotification(
                 "x-nokia.battery.chargingcomplete",
@@ -197,13 +197,13 @@ Ft_BatteryBusinessLogic::testBatteryStateChanged ()
             );
     
     /* StateOK */
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateOK);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateOK);
 
     QTest::qWait (10);
     /* no signals/notifications should come, just silently no-op */
 
     /* StateEmpty */
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateEmpty);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateEmpty);
     QTest::qWait (10);
     QVERIFY (hasPublishedNotification (
                 "x-nokia.battery.recharge",
@@ -211,22 +211,22 @@ Ft_BatteryBusinessLogic::testBatteryStateChanged ()
             );
 
     /* StateError */
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateError);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateError);
 
     QTest::qWait (10);
     /* no signals/notifications should come, just silently no-op */
 
     /* StateLow and charging */
-    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
-        "getChargingState", Maemo::QmBattery::StateCharging);
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
+        "getChargingState", MeeGo::QmBattery::StateCharging);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
     QTest::qWait (10);
     /* no signals/notifications should come, because battery is charging... */
 
     /* StateLow and not charging */
-    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
-        "getChargingState", Maemo::QmBattery::StateNotCharging);
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
+        "getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
     QTest::qWait (10);
     QVERIFY (hasPublishedNotification (
                 "x-nokia.battery.lowbattery",
@@ -241,12 +241,12 @@ Ft_BatteryBusinessLogic::testBatteryChargerEvent ()
 {
 #ifdef HAVE_QMSYSTEM
     /* Wall charger */
-    m_logic->batteryChargerEvent (Maemo::QmBattery::Wall);
-    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::Wall);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::Wall);
+    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::Wall);
 
     /* Plug out : charger type = none */
-    m_logic->batteryChargerEvent (Maemo::QmBattery::None);
-    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::None);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::None);
+    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::None);
 
     QTest::qWait (10);
     /* Look for the notification: "Disconnect the charger from..." */
@@ -256,16 +256,16 @@ Ft_BatteryBusinessLogic::testBatteryChargerEvent ()
             );
     
     /* USB 500mA */
-    m_logic->batteryChargerEvent (Maemo::QmBattery::USB_500mA);
-    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_500mA);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::USB_500mA);
+    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::USB_500mA);
 
     /* USB 100mA */
-    m_logic->batteryChargerEvent (Maemo::QmBattery::USB_100mA);
-    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::USB_100mA);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::USB_100mA);
+    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::USB_100mA);
 
     /* Unknown */
-    m_logic->batteryChargerEvent (Maemo::QmBattery::Unknown);
-    QCOMPARE (m_logic->m_ChargerType, Maemo::QmBattery::Unknown);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::Unknown);
+    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::Unknown);
 #endif
 }
 
@@ -274,7 +274,7 @@ Ft_BatteryBusinessLogic::testPSMStateChanged ()
 {
 #ifdef HAVE_QMSYSTEM
     /* Entering to power-save mode */
-    m_logic->devicePSMStateChanged (Maemo::QmDeviceMode::PSMStateOn);
+    m_logic->devicePSMStateChanged (MeeGo::QmDeviceMode::PSMStateOn);
     QTest::qWait (10);
     QVERIFY (hasPublishedNotification(
                 "x-nokia.battery.enterpsm",
@@ -282,7 +282,7 @@ Ft_BatteryBusinessLogic::testPSMStateChanged ()
             );
 
     /* Exiting from power-save mode */
-    m_logic->devicePSMStateChanged (Maemo::QmDeviceMode::PSMStateOff);
+    m_logic->devicePSMStateChanged (MeeGo::QmDeviceMode::PSMStateOff);
     QTest::qWait (10);
     QVERIFY (hasPublishedNotification(
                 "x-nokia.battery.exitpsm",
@@ -299,9 +299,9 @@ Ft_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
     QVERIFY (m_logic->m_LowBatteryNotifier == 0);
 
     /* Simulate battery-state-low change */
-    gQmBatteryStub->stubSetReturnValue<Maemo::QmBattery::ChargingState> (
-        "getChargingState", Maemo::QmBattery::StateNotCharging);
-    m_logic->batteryStateChanged (Maemo::QmBattery::StateLow);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
+        "getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
 
     /* LowBatteryNotifier should be exists now... */
     QVERIFY (m_logic->m_LowBatteryNotifier != 0);
@@ -314,7 +314,7 @@ Ft_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
             );
 
     /* Simulate now a charging event */
-    m_logic->chargingStateChanged (Maemo::QmBattery::StateCharging);
+    m_logic->chargingStateChanged (MeeGo::QmBattery::StateCharging);
 
     /* After this call LowBatteryNotifier should be destroyed */
     QVERIFY (m_logic->m_LowBatteryNotifier == 0);

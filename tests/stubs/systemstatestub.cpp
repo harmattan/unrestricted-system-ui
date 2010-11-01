@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-namespace Maemo {
+namespace MeeGo {
 
 QmSystemState::QmSystemState(QObject *parent)
              : QObject(parent)

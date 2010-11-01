@@ -5,7 +5,7 @@ PKGCONFIG += xcomposite
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
 
 contains(DEFINES, HAVE_QMSYSTEM) {
-	PKGCONFIG += qmsystem
+	PKGCONFIG += qmsystem2
 }
 
 STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h

@@ -32,8 +32,8 @@ LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     connect(eventEaterWindow, SIGNAL(inputEventReceived()), this, SLOT(hideEventEater()));
 
 #ifdef HAVE_QMSYSTEM
-    connect(&displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(Maemo::QmDisplayState::DisplayState)));
-    connect(&locks, SIGNAL(stateChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)), this, SLOT(locksChanged(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
+    connect(&locks, SIGNAL(stateChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(locksChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
 #endif
 
 }
@@ -50,10 +50,10 @@ void LockScreenBusinessLogic::unlockScreen()
 }
 
 #ifdef HAVE_QMSYSTEM
-void LockScreenBusinessLogic::displayStateChanged(Maemo::QmDisplayState::DisplayState state)
+void LockScreenBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::DisplayState state)
 {
     // When the screen is unlocked, the lockscreen is visible the lock screen needs to be reset
-    if (state == Maemo::QmDisplayState::On && lockScreenWindow->isVisible()) {
+    if (state == MeeGo::QmDisplayState::On && lockScreenWindow->isVisible()) {
         lockScreenWindow->reset();
         lockScreenWindow->setFocus();
     }
@@ -100,18 +100,18 @@ void LockScreenBusinessLogic::toggleEventEater(bool toggle)
 bool LockScreenBusinessLogic::displayIsOn()
 {
 #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
-    return displayState.get() == Maemo::QmDisplayState::On;
+    return displayState.get() == MeeGo::QmDisplayState::On;
 #else
     return true;
 #endif
 }
 
 #if HAVE_QMSYSTEM
-void LockScreenBusinessLogic::locksChanged(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+void LockScreenBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
-    if (what == Maemo::QmLocks::TouchAndKeyboard) {
+    if (what == MeeGo::QmLocks::TouchAndKeyboard) {
         switch (how) {
-        case Maemo::QmLocks::Locked:
+        case MeeGo::QmLocks::Locked:
             emit screenIsLocked(true);
             break;
         default:

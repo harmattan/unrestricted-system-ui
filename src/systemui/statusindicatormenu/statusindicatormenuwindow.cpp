@@ -40,9 +40,9 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
      * We need to receive updates when device lock state changes
      * to prevent status indicator menu opening when device lock is on
      */
-    connect (&qmLocks, SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)), this,
-                                   SLOT(setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
-    if (qmLocks.getState(Maemo::QmLocks::Device) != Maemo::QmLocks::Locked) {
+    connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this,
+                                   SLOT(setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
+    if (qmLocks.getState(MeeGo::QmLocks::Device) != MeeGo::QmLocks::Locked) {
         deviceLocked = false;
     } else {
         deviceLocked = true;
@@ -106,10 +106,10 @@ void StatusIndicatorMenuWindow::makeVisible()
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how)
+void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
-    if (what == Maemo::QmLocks::Device) {
-        if (how == Maemo::QmLocks::Unlocked) {
+    if (what == MeeGo::QmLocks::Device) {
+        if (how == MeeGo::QmLocks::Unlocked) {
             deviceLocked = false;
         } else {
             deviceLocked = true;

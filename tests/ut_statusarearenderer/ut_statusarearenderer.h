@@ -38,7 +38,7 @@ signals:
     void changed(QList<QRectF> rectList);
 
 #ifdef HAVE_QMSYSTEM
-    void displayStateChanged(Maemo::QmDisplayState::DisplayState);
+    void displayStateChanged(MeeGo::QmDisplayState::DisplayState);
 #endif
 
 private slots:

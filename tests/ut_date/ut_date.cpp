@@ -86,8 +86,8 @@ void Ut_Date::testInitialState()
 
     checkNextUpdate();
 
-    QVERIFY(disconnect(&m_subject->qmTime, SIGNAL(timeOrSettingsChanged(Maemo::QmTimeWhatChanged)),
-                        m_subject, SLOT(updateSettings(Maemo::QmTimeWhatChanged))));
+    QVERIFY(disconnect(&m_subject->qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
+                        m_subject, SLOT(updateSettings(MeeGo::QmTimeWhatChanged))));
 
     QVERIFY(disconnect(&m_subject->timer, SIGNAL(timeout()), m_subject, SLOT(updateDate())));
 
@@ -108,7 +108,7 @@ void Ut_Date::testDateUpdates()
 void Ut_Date::testTimeSettingChanged()
 {
     gCurrentDateTime = QDateTime(QDate(2100, 4, 13), QTime(1, 23));
-    m_subject->updateSettings(Maemo::QmTimeTimeChanged);
+    m_subject->updateSettings(MeeGo::QmTimeTimeChanged);
 
     QCOMPARE(m_subject->label->text(), locale->formatDateTime(gCurrentDateTime, style()->dateFormat()));
 

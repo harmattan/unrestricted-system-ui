@@ -31,52 +31,52 @@
 class QmBatteryStub : public StubBase
 {
 public:
-    virtual Maemo::QmBattery::ChargerType getChargerType ();
-    virtual Maemo::QmBattery::ChargingState getChargingState ();
-    virtual Maemo::QmBattery::BatteryState getBatteryState ();
-    virtual int getRemainingTalkTime (Maemo::QmBattery::RemainingTimeMode mode);
-    virtual int getRemainingIdleTime (Maemo::QmBattery::RemainingTimeMode mode);
+    virtual MeeGo::QmBattery::ChargerType getChargerType ();
+    virtual MeeGo::QmBattery::ChargingState getChargingState ();
+    virtual MeeGo::QmBattery::BatteryState getBatteryState ();
+    virtual int getRemainingTalkTime (MeeGo::QmBattery::RemainingTimeMode mode);
+    virtual int getRemainingIdleTime (MeeGo::QmBattery::RemainingTimeMode mode);
     virtual int getRemainingCapacityPct ();
     virtual int getMaxBars ();
 };
 
-Maemo::QmBattery::ChargingState
+MeeGo::QmBattery::ChargingState
 QmBatteryStub::getChargingState ()
 {
     stubMethodEntered ("getChargingState");
-    return stubReturnValue<Maemo::QmBattery::ChargingState> ("getChargingState");
+    return stubReturnValue<MeeGo::QmBattery::ChargingState> ("getChargingState");
 }
 
-Maemo::QmBattery::ChargerType
+MeeGo::QmBattery::ChargerType
 QmBatteryStub::getChargerType ()
 {
     stubMethodEntered ("getChargerType");
-    return stubReturnValue<Maemo::QmBattery::ChargerType> ("getChargerType");
+    return stubReturnValue<MeeGo::QmBattery::ChargerType> ("getChargerType");
 }
 
 
-Maemo::QmBattery::BatteryState
+MeeGo::QmBattery::BatteryState
 QmBatteryStub::getBatteryState ()
 {
     stubMethodEntered ("getBatteryState");
-    return stubReturnValue<Maemo::QmBattery::BatteryState> ("getBatteryState");
+    return stubReturnValue<MeeGo::QmBattery::BatteryState> ("getBatteryState");
 }
 
 
 int
-QmBatteryStub::getRemainingTalkTime (Maemo::QmBattery::RemainingTimeMode mode)
+QmBatteryStub::getRemainingTalkTime (MeeGo::QmBattery::RemainingTimeMode mode)
 {
     QList<ParameterBase*> params;
-    params.append (new Parameter<Maemo::QmBattery::RemainingTimeMode> (mode));
+    params.append (new Parameter<MeeGo::QmBattery::RemainingTimeMode> (mode));
     stubMethodEntered ("getRemainingTalkTime", params);
     return stubReturnValue<int> ("getRemainingTalkTime");
 }
 
 int
-QmBatteryStub::getRemainingIdleTime (Maemo::QmBattery::RemainingTimeMode mode)
+QmBatteryStub::getRemainingIdleTime (MeeGo::QmBattery::RemainingTimeMode mode)
 {
     QList<ParameterBase*> params;
-    params.append (new Parameter<Maemo::QmBattery::RemainingTimeMode> (mode));
+    params.append (new Parameter<MeeGo::QmBattery::RemainingTimeMode> (mode));
     stubMethodEntered ("getRemainingIdleTime", params);
     return stubReturnValue<int> ("getRemainingIdleTime");
 }
@@ -105,7 +105,7 @@ QmBatteryStub *gQmBatteryStub = &gDefaultQmBatteryStub;
 /*
  * Create a proxy which calls the stub
  */
-namespace Maemo
+namespace MeeGo
 {
 
 class QmBatteryPrivate
@@ -168,6 +168,6 @@ QmBattery::getMaxBars () const
     return gQmBatteryStub->getMaxBars ();
 }
 
-} /* namespace Maemo */
+} /* namespace MeeGo */
 
 #endif

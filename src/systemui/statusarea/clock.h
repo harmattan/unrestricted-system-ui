@@ -65,7 +65,7 @@ private slots:
     /*!
      * \brief Updates the clock if the system time has been adjusted
      */
-    void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+    void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
 #endif
 
     /*!
@@ -83,7 +83,7 @@ private:
 
 #ifdef HAVE_QMSYSTEM
     //! QmTime object to get the time format is
-    Maemo::QmTime qmTime;
+    MeeGo::QmTime qmTime;
 #endif
     QScopedPointer<MLocale> locale;
 #ifdef UNIT_TEST

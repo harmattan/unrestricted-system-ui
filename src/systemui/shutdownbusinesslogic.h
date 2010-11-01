@@ -54,7 +54,7 @@ public:
 
 public slots:
 #ifdef HAVE_QMSYSTEM
-    void systemStateChanged (Maemo::QmSystemState::StateIndication what);
+    void systemStateChanged (MeeGo::QmSystemState::StateIndication what);
 #endif
 
 private:
@@ -65,7 +65,7 @@ private:
 private:
     ShutdownUI             *m_Ui;
 #ifdef HAVE_QMSYSTEM
-    Maemo::QmSystemState   *m_State;
+    MeeGo::QmSystemState   *m_State;
 #endif
 
 #ifdef UNIT_TEST

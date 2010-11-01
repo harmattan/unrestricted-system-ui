@@ -31,7 +31,7 @@ class ClockStub : public StubBase {
   virtual void ClockDestructor();
   virtual void updateModelAndSetupTimer();
 #ifdef HAVE_QMSYSTEM
-  virtual void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+  virtual void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
 #endif
   virtual void updateLocaleSettings();
   virtual void setShortDisplay(bool isShort);
@@ -52,9 +52,9 @@ void ClockStub::updateModelAndSetupTimer() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void ClockStub::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
+void ClockStub::updateSettings(MeeGo::QmTimeWhatChanged whatChanged) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmTimeWhatChanged >(whatChanged));
+  params.append( new Parameter<MeeGo::QmTimeWhatChanged >(whatChanged));
   stubMethodEntered("updateSettings",params);
 }
 #endif
@@ -98,7 +98,7 @@ void Clock::updateModelAndSetupTimer() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void Clock::updateSettings(Maemo::QmTimeWhatChanged whatChanged) {
+void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged) {
   gClockStub->updateSettings(whatChanged);
 }
 #endif

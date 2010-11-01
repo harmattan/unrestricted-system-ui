@@ -20,7 +20,7 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual bool event(QEvent *);
   virtual void resetMenuWidget();
 #ifdef HAVE_QMSYSTEM
-  virtual void setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+  virtual void setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
 };
 
@@ -56,10 +56,10 @@ void StatusIndicatorMenuWindowStub::resetMenuWidget() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusIndicatorMenuWindowStub::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how) {
+void StatusIndicatorMenuWindowStub::setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmLocks::Lock>(what));
-  params.append( new Parameter<Maemo::QmLocks::State>(how));
+  params.append( new Parameter<MeeGo::QmLocks::Lock>(what));
+  params.append( new Parameter<MeeGo::QmLocks::State>(how));
   stubMethodEntered("setWindowStateAccordingToDeviceLockState",params);
 }
 #endif
@@ -99,7 +99,7 @@ void StatusIndicatorMenuWindow::resetMenuWidget() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how) {
+void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
   gStatusIndicatorMenuWindowStub->setWindowStateAccordingToDeviceLockState(what, how);
 }
 #endif

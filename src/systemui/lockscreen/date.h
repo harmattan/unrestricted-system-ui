@@ -63,7 +63,7 @@ private slots:
     /*!
      * Updates the labels if the time was changed in settings
      */
-    void updateSettings(Maemo::QmTimeWhatChanged whatChanged);
+    void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
 #endif
 
 private:
@@ -78,7 +78,7 @@ private:
 
 #ifdef HAVE_QMSYSTEM
     //! QmTime object for listening date changes
-    Maemo::QmTime qmTime;
+    MeeGo::QmTime qmTime;
 #endif
 
     M_STYLABLE_WIDGET(DateStyle)

@@ -20,7 +20,7 @@
 
 #include <QDebug>
 
-namespace Maemo
+namespace MeeGo
 {
 
 QmLocks::QmLocks(QObject *parent) :

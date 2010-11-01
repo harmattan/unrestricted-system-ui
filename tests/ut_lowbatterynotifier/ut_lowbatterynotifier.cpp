@@ -110,9 +110,9 @@ Ut_LowBatteryNotifier::cleanupTestCase ()
 /*
  * QmDisplayState stub
  */
-static Maemo::QmDisplayState::DisplayState value;
+static MeeGo::QmDisplayState::DisplayState value;
 
-namespace Maemo
+namespace MeeGo
 {
 
 QmDisplayState::DisplayState
@@ -121,13 +121,13 @@ QmDisplayState::get() const
     return value;
 }
 
-} /* namespace Maemo */
+} /* namespace MeeGo */
 
 
 void
 Ut_LowBatteryNotifier::turnDisplay (bool On)
 {
-    value = On ? Maemo::QmDisplayState::On : Maemo::QmDisplayState::Off;
+    value = On ? MeeGo::QmDisplayState::On : MeeGo::QmDisplayState::Off;
 
     m_subject->displayStateChanged (value);
 }

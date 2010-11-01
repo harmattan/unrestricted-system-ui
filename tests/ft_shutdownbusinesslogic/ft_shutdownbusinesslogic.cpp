@@ -97,7 +97,7 @@ Ft_ShutdownBusinessLogic::testThermalState ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating ThermalStateFatal state ******");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (Maemo::QmSystemState::ThermalStateFatal);
+    logic->systemStateChanged (MeeGo::QmSystemState::ThermalStateFatal);
     QTest::qWait (WMDelay);
     
     /*
@@ -123,7 +123,7 @@ Ft_ShutdownBusinessLogic::testShutDownDenied ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating ShutdownDeniedUSB ************");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (Maemo::QmSystemState::ShutdownDeniedUSB);
+    logic->systemStateChanged (MeeGo::QmSystemState::ShutdownDeniedUSB);
     QTest::qWait (WMDelay);
     
     /*
@@ -149,7 +149,7 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
     SYS_DEBUG ("*********************************************");
     SYS_DEBUG ("*** Simulating BatteryStateEmpty ************");
     SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (Maemo::QmSystemState::BatteryStateEmpty);
+    logic->systemStateChanged (MeeGo::QmSystemState::BatteryStateEmpty);
     QTest::qWait (WMDelay);
     
     /*
@@ -177,7 +177,7 @@ Ft_ShutdownBusinessLogic::testShutDown ()
      * If we change the system to shutdown, the shutdown full screen window must
      * be shown.
      */
-    logic->systemStateChanged (Maemo::QmSystemState::Shutdown);
+    logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
     QTest::qWait (WMDelay);
 
     /*

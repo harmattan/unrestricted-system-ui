@@ -64,7 +64,7 @@ contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
 }
 
 contains(DEFINES, HAVE_QMSYSTEM) {
-    PKGCONFIG += qmsystem
+    PKGCONFIG += qmsystem2
 }
 
 contains(DEFINES, HAVE_AEGIS_CRYPTO) {

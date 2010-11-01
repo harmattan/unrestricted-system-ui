@@ -36,12 +36,12 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     m_Ui (0)
 {
 #ifdef HAVE_QMSYSTEM
-    m_State = new Maemo::QmSystemState (this);
+    m_State = new MeeGo::QmSystemState (this);
     connect (
         m_State, 
-        SIGNAL(systemStateChanged (Maemo::QmSystemState::StateIndication)),
+        SIGNAL(systemStateChanged (MeeGo::QmSystemState::StateIndication)),
         this, 
-        SLOT(systemStateChanged (Maemo::QmSystemState::StateIndication)));
+        SLOT(systemStateChanged (MeeGo::QmSystemState::StateIndication)));
 #endif
 }
 
@@ -72,27 +72,27 @@ ShutdownBusinessLogic::showUI (
  */
 void 
 ShutdownBusinessLogic::systemStateChanged (
-        Maemo::QmSystemState::StateIndication what)
+        MeeGo::QmSystemState::StateIndication what)
 {
     switch (what) {
-        case Maemo::QmSystemState::Shutdown:
+        case MeeGo::QmSystemState::Shutdown:
             SYS_DEBUG ("QmSystemState::Shutdown");
             // To avoid early quitting on shutdown...
             exitPtr = 0;
             showUI ();
             break;
 
-        case Maemo::QmSystemState::ThermalStateFatal:
+        case MeeGo::QmSystemState::ThermalStateFatal:
             SYS_DEBUG ("QmSystemState::ThermalStateFatal");
             thermalShutdown ();
             break;
             
-        case Maemo::QmSystemState::ShutdownDeniedUSB:
+        case MeeGo::QmSystemState::ShutdownDeniedUSB:
             SYS_DEBUG ("QmSystemState::ShutdownDeniedUSB");
             shutdownDeniedUSB ();
             break;
 
-        case Maemo::QmSystemState::BatteryStateEmpty:
+        case MeeGo::QmSystemState::BatteryStateEmpty:
             SYS_DEBUG ("QmSystemState::BatteryStateEmpty");
             batteryShutdown ();
             break;

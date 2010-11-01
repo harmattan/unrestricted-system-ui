@@ -4,7 +4,7 @@ TARGET = ut_usbui
 INCLUDEPATH += $$SRCDIR
 
 contains(DEFINES, HAVE_QMSYSTEM) {
-	PKGCONFIG += qmsystem
+	PKGCONFIG += qmsystem2
 }
 
 # unit test and unit

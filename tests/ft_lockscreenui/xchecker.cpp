@@ -685,13 +685,13 @@ bool
 XChecker::turnOffDisplay ()
 {
     #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
-    Maemo::QmDisplayState  display;
+    MeeGo::QmDisplayState  display;
     bool                   success;
 
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Turning off the touch screen ******************");
     SYS_DEBUG ("***************************************************");
-    success = display.set (Maemo::QmDisplayState::Off);
+    success = display.set (MeeGo::QmDisplayState::Off);
     if (! success) {
         SYS_WARNING ("Turning off the display failed!");
     }
@@ -706,13 +706,13 @@ bool
 XChecker::turnOnDisplay ()
 {
     #if !defined(__i386__) && defined(HAVE_QMSYSTEM)
-    Maemo::QmDisplayState  display;
+    MeeGo::QmDisplayState  display;
     bool                   success;
 
     SYS_DEBUG ("***************************************************");
     SYS_DEBUG ("*** Turning on the screen *************************");
     SYS_DEBUG ("***************************************************");
-    success = display.set (Maemo::QmDisplayState::On);
+    success = display.set (MeeGo::QmDisplayState::On);
     if (! success) {
         SYS_WARNING ("Turning on the display failed!");
     }

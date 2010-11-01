@@ -1,3 +1,10 @@
+system-ui (0.18.0~1) unstable; urgency=low
+
+  * Fixes: NB#201489 - systemUI / qmsystem namespace change from Maemo to
+    MeeGo
+
+ -- David Kedves <dkedves@blumsoft.eu>  Mon, 01 Nov 2010 13:44:12 +0100
+
 system-ui (0.17.7~1) unstable; urgency=low
 
   * [UNRELEASED]

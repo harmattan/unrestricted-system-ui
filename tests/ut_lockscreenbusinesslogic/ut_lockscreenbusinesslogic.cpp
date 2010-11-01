@@ -34,8 +34,8 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
-Maemo::QmDisplayState::DisplayState qmDisplayState;
-Maemo::QmDisplayState::DisplayState Maemo::QmDisplayState::get() const
+MeeGo::QmDisplayState::DisplayState qmDisplayState;
+MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
 {
     return qmDisplayState;
 }
@@ -58,7 +58,7 @@ void Ut_LockScreenBusinessLogic::init()
 {
     gLockScreenWindowStub->stubReset();
 #ifdef HAVE_QMSYSTEM
-    qmDisplayState = Maemo::QmDisplayState::On;
+    qmDisplayState = MeeGo::QmDisplayState::On;
 #endif
 }
 
@@ -95,8 +95,8 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
 #ifdef HAVE_QMSYSTEM
     // First try with display off
-    qmDisplayState = Maemo::QmDisplayState::Off;
-    logic.locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Locked);
+    qmDisplayState = MeeGo::QmDisplayState::Off;
+    logic.locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Locked);
 #endif
 
     // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
@@ -163,7 +163,7 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
 
     logic.unlockScreen();
 #ifdef HAVE_QMSYSTEM
-    logic.locksChanged (Maemo::QmLocks::TouchAndKeyboard, Maemo::QmLocks::Unlocked);
+    logic.locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Unlocked);
     QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
@@ -191,8 +191,8 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
     // When lock-screen-ui is shown reset should be called on it
     QCOMPARE(gLockScreenWindowStub->stubCallCount ("reset"), 1);
 
-    logic.displayStateChanged(Maemo::QmDisplayState::Off);
-    logic.displayStateChanged(Maemo::QmDisplayState::On);
+    logic.displayStateChanged(MeeGo::QmDisplayState::Off);
+    logic.displayStateChanged(MeeGo::QmDisplayState::On);
 
     // Also check whether the reset called on the
     // lock-screen-ui (after display turn on)

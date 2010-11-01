@@ -13,7 +13,7 @@ class LowBatteryNotifierStub : public StubBase {
   virtual void LowBatteryNotifierDestructor();
   virtual void showLowBatteryNotification();
 #ifdef HAVE_QMSYSTEM
-  virtual void displayStateChanged(Maemo::QmDisplayState::DisplayState state);
+  virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
 #endif
 }; 
 
@@ -30,9 +30,9 @@ void LowBatteryNotifierStub::showLowBatteryNotification() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void LowBatteryNotifierStub::displayStateChanged(Maemo::QmDisplayState::DisplayState state) {
+void LowBatteryNotifierStub::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<Maemo::QmDisplayState::DisplayState >(state));
+  params.append( new Parameter<MeeGo::QmDisplayState::DisplayState >(state));
   stubMethodEntered("displayStateChanged",params);
 }
 #endif
@@ -58,7 +58,7 @@ void LowBatteryNotifier::showLowBatteryNotification() {
 }
 
 #ifdef HAVE_QMSYSTEM
-void LowBatteryNotifier::displayStateChanged(Maemo::QmDisplayState::DisplayState state) {
+void LowBatteryNotifier::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
   gLowBatteryNotifierStub->displayStateChanged(state);
 }
 #endif

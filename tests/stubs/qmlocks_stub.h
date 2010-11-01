@@ -10,8 +10,8 @@ class QmLocksStub : public StubBase {
 public:
     virtual void QmLocksConstructor(QObject *parent = 0);
     virtual void QmLocksDestructor();
-    virtual Maemo::QmLocks::State getState(Maemo::QmLocks::Lock what) const;
-    virtual bool setState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how);
+    virtual MeeGo::QmLocks::State getState(MeeGo::QmLocks::Lock what) const;
+    virtual bool setState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
     virtual bool setDeviceAutolockTime(int seconds);
     virtual int getDeviceAutolockTime();
 };
@@ -25,17 +25,17 @@ void QmLocksStub::QmLocksDestructor() {
 
 }
 
-Maemo::QmLocks::State QmLocksStub::getState(Maemo::QmLocks::Lock what) const {
+MeeGo::QmLocks::State QmLocksStub::getState(MeeGo::QmLocks::Lock what) const {
     QList<ParameterBase*> params;
-    params.append(new Parameter<Maemo::QmLocks::Lock>(what));
+    params.append(new Parameter<MeeGo::QmLocks::Lock>(what));
     stubMethodEntered("getState", params);
-    return stubReturnValue<Maemo::QmLocks::State>("getState");
+    return stubReturnValue<MeeGo::QmLocks::State>("getState");
 }
 
-bool QmLocksStub::setState(Maemo::QmLocks::Lock what, Maemo::QmLocks::State how) {
+bool QmLocksStub::setState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
     QList<ParameterBase*> params;
-    params.append(new Parameter<Maemo::QmLocks::Lock>(what));
-    params.append(new Parameter<Maemo::QmLocks::State>(how));
+    params.append(new Parameter<MeeGo::QmLocks::Lock>(what));
+    params.append(new Parameter<MeeGo::QmLocks::State>(how));
     stubMethodEntered("setState", params);
     return stubReturnValue<bool>("setState");
 }
@@ -57,7 +57,7 @@ QmLocksStub gDefaultQmLocksStub;
 QmLocksStub* gQmLocksStub = &gDefaultQmLocksStub;
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-namespace Maemo
+namespace MeeGo
 {
 
 QmLocks::QmLocks(QObject *parent) {

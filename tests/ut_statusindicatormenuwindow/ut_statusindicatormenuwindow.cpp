@@ -52,7 +52,7 @@ void Ut_StatusIndicatorMenuWindow::init()
     gSetVisible.first = 0;
     gSetVisible.second = false;
 #ifdef HAVE_QMSYSTEM
-    gQmLocksStub->stubSetReturnValue("getState", Maemo::QmLocks::Unlocked);
+    gQmLocksStub->stubSetReturnValue("getState", MeeGo::QmLocks::Unlocked);
 #endif
 }
 
@@ -134,8 +134,8 @@ void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangeEventWithoutLanguageCha
 #ifdef HAVE_QMSYSTEM
 void Ut_StatusIndicatorMenuWindow::testQmLocksSignalConnectionWhenDeviceLocked()
 {
-    bool connectionExisted = disconnect(&statusIndicatorMenuWindow->qmLocks, SIGNAL(stateChanged (Maemo::QmLocks::Lock, Maemo::QmLocks::State)), statusIndicatorMenuWindow,
-                                        SLOT(setWindowStateAccordingToDeviceLockState(Maemo::QmLocks::Lock, Maemo::QmLocks::State)));
+    bool connectionExisted = disconnect(&statusIndicatorMenuWindow->qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), statusIndicatorMenuWindow,
+                                        SLOT(setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
     QCOMPARE(connectionExisted, true);
 }
 
@@ -164,7 +164,7 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromLockedToUnl
     // change status from locked to unlocked
     statusIndicatorMenuWindow->deviceLocked = true;
     statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
-            Maemo::QmLocks::Device, Maemo::QmLocks::Unlocked);
+            MeeGo::QmLocks::Device, MeeGo::QmLocks::Unlocked);
     QCOMPARE(statusIndicatorMenuWindow->deviceLocked, false);
 }
 
@@ -173,7 +173,7 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromUnlockedToL
     // change status from unlocked to locked and test if menu closes
     statusIndicatorMenuWindow->deviceLocked = false;
     statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
-            Maemo::QmLocks::Device, Maemo::QmLocks::Locked);
+            MeeGo::QmLocks::Device, MeeGo::QmLocks::Locked);
     QCOMPARE(statusIndicatorMenuWindow->deviceLocked, true);
     QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
 }

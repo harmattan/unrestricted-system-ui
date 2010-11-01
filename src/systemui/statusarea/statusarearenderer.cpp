@@ -37,7 +37,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     statusArea(new StatusArea),
     statusAreaPixmap(NULL),
 #ifdef HAVE_QMSYSTEM
-    displayState(new Maemo::QmDisplayState()),
+    displayState(new MeeGo::QmDisplayState()),
 #endif
     renderScene(true)
 {
@@ -50,7 +50,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 #ifdef HAVE_QMSYSTEM
-    connect(displayState, SIGNAL(displayStateChanged(Maemo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(Maemo::QmDisplayState::DisplayState)));
+    connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
 #endif
 
     setSizeFromStyle();
@@ -124,16 +124,16 @@ void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusAreaRenderer::setSceneRender(Maemo::QmDisplayState::DisplayState state)
+void StatusAreaRenderer::setSceneRender(MeeGo::QmDisplayState::DisplayState state)
 {
     bool oldRenderScene = renderScene;
 
     switch(state) {
-    case Maemo::QmDisplayState::Dimmed:
-    case Maemo::QmDisplayState::Off:
+    case MeeGo::QmDisplayState::Dimmed:
+    case MeeGo::QmDisplayState::Off:
         renderScene = false;
         break;
-    case Maemo::QmDisplayState::On:
+    case MeeGo::QmDisplayState::On:
         renderScene = true;
         break;
     default:

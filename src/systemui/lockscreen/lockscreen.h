@@ -45,7 +45,7 @@ private slots:
 private:
 #ifdef HAVE_QMSYSTEM
     //! Keeps track if the display is on/off/dimmed
-    Maemo::QmDisplayState displayState;
+    MeeGo::QmDisplayState displayState;
 #endif
 
 };

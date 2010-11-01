@@ -11,7 +11,7 @@ INCLUDEPATH +=  \
 CONFIG += link_pkgconfig
 
 PKGCONFIG += libresourceqt1
-PKGCONFIG += qmsystem
+PKGCONFIG += qmsystem2
 
 STYLE_HEADERS += \
     $$SRCDIR/volumecontrol/volumebarstyle.h

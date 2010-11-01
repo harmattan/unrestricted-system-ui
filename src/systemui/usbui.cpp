@@ -57,10 +57,10 @@ void
 UsbUi::initialize ()
 {
 #ifdef HAVE_QMSYSTEM
-    m_logic = new Maemo::QmUSBMode (this);
+    m_logic = new MeeGo::QmUSBMode (this);
 
-    connect (m_logic, SIGNAL (modeChanged (Maemo::QmUSBMode::Mode)),
-             this, SLOT (currentModeChanged (Maemo::QmUSBMode::Mode)));
+    connect (m_logic, SIGNAL (modeChanged (MeeGo::QmUSBMode::Mode)),
+             this, SLOT (currentModeChanged (MeeGo::QmUSBMode::Mode)));
 
     currentModeChanged (m_logic->getMode ());
 #endif
@@ -171,7 +171,7 @@ UsbUi::OviSuiteSelected ()
     }
 
 #ifdef HAVE_QMSYSTEM
-    m_logic->setMode (Maemo::QmUSBMode::OviSuite);
+    m_logic->setMode (MeeGo::QmUSBMode::OviSuite);
 #endif
 }
 
@@ -186,13 +186,13 @@ UsbUi::MassStorageSelected ()
     }
 
 #ifdef HAVE_QMSYSTEM
-    m_logic->setMode (Maemo::QmUSBMode::MassStorage);
+    m_logic->setMode (MeeGo::QmUSBMode::MassStorage);
 #endif
 }
 
 #ifdef HAVE_QMSYSTEM
 void
-UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
+UsbUi::currentModeChanged (MeeGo::QmUSBMode::Mode mode)
 {
 #if 0
     SYS_WARNING ("mode = %d", (int) mode);
@@ -200,11 +200,11 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
 
     switch (mode)
     {
-        case Maemo::QmUSBMode::Ask:
-        case Maemo::QmUSBMode::ModeRequest:
+        case MeeGo::QmUSBMode::Ask:
+        case MeeGo::QmUSBMode::ModeRequest:
             ShowDialog ();
             break;
-        case Maemo::QmUSBMode::Disconnected:
+        case MeeGo::QmUSBMode::Disconnected:
             m_showdialog = false;
 
             // remove the previous notification
@@ -223,11 +223,11 @@ UsbUi::currentModeChanged (Maemo::QmUSBMode::Mode mode)
             }
 
             break;
-        case Maemo::QmUSBMode::OviSuite:
-        case Maemo::QmUSBMode::MassStorage:
+        case MeeGo::QmUSBMode::OviSuite:
+        case MeeGo::QmUSBMode::MassStorage:
             ShowNotification ((int) mode);
             break;
-        case Maemo::QmUSBMode::ChargingOnly:
+        case MeeGo::QmUSBMode::ChargingOnly:
             SYS_DEBUG ("mode : Charging only");
             // no-op
             break;
@@ -261,11 +261,11 @@ UsbUi::ShowNotification (int id)
     switch (id)
     {
 #ifdef HAVE_QMSYSTEM
-        case Maemo::QmUSBMode::OviSuite:
+        case MeeGo::QmUSBMode::OviSuite:
             //% "Ovi Suite mode"
             mode_text = new QString (qtTrId ("qtn_usb_ovi_suite"));
             break;
-        case Maemo::QmUSBMode::MassStorage:
+        case MeeGo::QmUSBMode::MassStorage:
             //% "Mass Storage mode"
             mode_text = new QString (qtTrId ("qtn_usb_mass_storage"));
             break;
