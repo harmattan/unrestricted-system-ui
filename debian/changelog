@@ -1,20 +1,13 @@
 system-ui (0.18.0~1) unstable; urgency=low
 
-  * Fixes: NB#201489 - systemUI / qmsystem namespace change from Maemo to
-    MeeGo
-
- -- David Kedves <dkedves@blumsoft.eu>  Mon, 01 Nov 2010 13:44:12 +0100
-
-system-ui (0.17.7~1) unstable; urgency=low
-
-  * [UNRELEASED]
+  * Fixes: NB#201489 - systemUI / qmsystem namespace change from Maemo to MeeGo
   * Fixes: NB#185390 - SA battery indicator animation is not cumulative when booting from acting_dead to user
   * Fixes: NB#197710 - Two screen lock ui are overlapping if theme applied is Development.
   * Fixes: NB#196647 - Date format is not getting updated in lock screen UI when region is changed.
   * Implemented: SWP#DUI-4075 New notification notifier
   * Implemented: SWP#DUI-3567 - Status indicator for ongoing transfers and transfer errors.
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Oct 2010 19:13:16 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 01 Nov 2010 15:59:16 +0200
 
 system-ui (0.17.6-1) unstable; urgency=low
 
