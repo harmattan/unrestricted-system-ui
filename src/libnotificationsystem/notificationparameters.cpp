@@ -21,7 +21,6 @@
 
 #include "notificationparameters.h"
 #include "notificationparameter.h"
-#include "genericnotificationparameterfactory.h"
 
 NotificationParameters::NotificationParameters()
 {
