@@ -57,6 +57,9 @@ public:
         return QString("class");
     }
 
+    /*!
+     * Returns the keyname of the unseen parameter
+     */
     static QString unseenKey() {
         return QString("unseen");
     }
