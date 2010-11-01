@@ -82,8 +82,10 @@ void LockScreenStatusAreaView::setGeometry(const QRectF &rect)
         // Update the status bar geometry property when the orientation change animation finishes.
         // This connection can not be made in the constructor because the scene manager does not exist at that point. In setGeometry() the manager definitely exists.
         connect(controller->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateStatusBarGeometryProperty()));
-
         orientationChangeSignalConnected = true;
+
+        // Do the initial update of the status bar geometry property
+        updateStatusBarGeometryProperty();
     }
 }
 

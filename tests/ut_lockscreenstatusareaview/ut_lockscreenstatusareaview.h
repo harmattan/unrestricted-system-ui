@@ -41,6 +41,8 @@ private slots:
     void testOrientationChangeUpdatesStatusBarGeometry();
 
 private:
+    void testStatusBarGeometryProperty();
+
     MApplication *app;
     LockScreenStatusAreaView *m_subject;
     StatusArea *statusArea;

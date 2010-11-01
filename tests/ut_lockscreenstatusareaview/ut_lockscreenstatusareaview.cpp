@@ -197,26 +197,8 @@ void Ut_LockScreenStatusAreaView::cleanup()
     mWidgetSceneManager = NULL;
 }
 
-void Ut_LockScreenStatusAreaView::testSetGeometryConnectsOrientationChangeSignal()
+void Ut_LockScreenStatusAreaView::testStatusBarGeometryProperty()
 {
-    QRectF geometry(0, 0, 15, 20);
-    statusArea->setGeometry(geometry);
-    QVERIFY(!disconnect(statusArea->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), m_subject, SLOT(updateStatusBarGeometryProperty())));
-
-    MSceneManager manager;
-    mWidgetSceneManager = &manager;
-    statusArea->setGeometry(geometry);
-    QVERIFY(disconnect(statusArea->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), m_subject, SLOT(updateStatusBarGeometryProperty())));
-}
-
-void Ut_LockScreenStatusAreaView::testOrientationChangeUpdatesStatusBarGeometry()
-{
-    QGraphicsScene scene;
-    QGraphicsView view;
-    view.setScene(&scene);
-    scene.addItem(statusArea);
-    statusArea->setGeometry(QRectF(5, 10, 15, 20));
-    m_subject->updateStatusBarGeometryProperty();
     Display *display = QX11Info::display();
     QCOMPARE(xChangePropertyCallCount, 1);
     QCOMPARE(xChangePropertyDisplay, display);
@@ -232,6 +214,37 @@ void Ut_LockScreenStatusAreaView::testOrientationChangeUpdatesStatusBarGeometry(
     QCOMPARE(data[1], (long)statusBarGeometry.y());
     QCOMPARE(data[2], (long)statusBarGeometry.width());
     QCOMPARE(data[3], (long)statusBarGeometry.height());
+}
+
+void Ut_LockScreenStatusAreaView::testSetGeometryConnectsOrientationChangeSignal()
+{
+    QRectF geometry(0, 0, 15, 20);
+    statusArea->setGeometry(geometry);
+    QVERIFY(!disconnect(statusArea->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), m_subject, SLOT(updateStatusBarGeometryProperty())));
+    QCOMPARE(xChangePropertyCallCount, 0);
+
+    MSceneManager manager;
+    mWidgetSceneManager = &manager;
+    QGraphicsScene scene;
+    QGraphicsView view;
+    view.setScene(&scene);
+    scene.addItem(statusArea);
+    statusArea->setGeometry(geometry);
+    QVERIFY(disconnect(statusArea->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), m_subject, SLOT(updateStatusBarGeometryProperty())));
+    testStatusBarGeometryProperty();
+    scene.removeItem(statusArea);
+}
+
+void Ut_LockScreenStatusAreaView::testOrientationChangeUpdatesStatusBarGeometry()
+{
+    QGraphicsScene scene;
+    QGraphicsView view;
+    view.setScene(&scene);
+    scene.addItem(statusArea);
+    statusArea->setGeometry(QRectF(5, 10, 15, 20));
+    m_subject->updateStatusBarGeometryProperty();
+
+    testStatusBarGeometryProperty();
 
     // Setting the same geometry should do nothing
     m_subject->updateStatusBarGeometryProperty();
