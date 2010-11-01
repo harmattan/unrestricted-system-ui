@@ -87,6 +87,16 @@ void MBanner::setIconID(const QString &iconId)
     }
 }
 
+void MBanner::setBannerTimeStamp(const QDateTime &time)
+{
+    int index = Ut_NotificationAreaSink::notifications.indexOf(this);
+    if (index >= 0) {
+        Ut_NotificationAreaSink::timestamps.replace(index, time);
+    } else {
+        Ut_NotificationAreaSink::timestamps.append(time);
+    }
+}
+
 // MSceneWindow stubs (used by NotificationAreaSink)
 void MSceneWindow::disappear()
 {
@@ -114,6 +124,7 @@ QList<QString> Ut_NotificationAreaSink::titles;
 QList<QString> Ut_NotificationAreaSink::subtitles;
 QList<QString> Ut_NotificationAreaSink::buttonIcons;
 QList<QString> Ut_NotificationAreaSink::contents;
+QList<QDateTime> Ut_NotificationAreaSink::timestamps;
 QList<MBanner *> Ut_NotificationAreaSink::notifications;
 QList<MBanner *> Ut_NotificationAreaSink::destroyedNotifications;
 
@@ -161,6 +172,7 @@ void Ut_NotificationAreaSink::removeNotification(MBanner &notification)
         Ut_NotificationAreaSink::subtitles.removeAt(index);
         Ut_NotificationAreaSink::buttonIcons.removeAt(index);
         Ut_NotificationAreaSink::notifications.removeAt(index);
+        Ut_NotificationAreaSink::timestamps.removeAt(index);
 
         notification.setParentItem(0);
     }
@@ -172,6 +184,7 @@ void Ut_NotificationAreaSink::cleanup()
     titles.clear();
     subtitles.clear();
     buttonIcons.clear();
+    timestamps.clear();
     contents.clear();
     notifications.clear();
     destroyedNotifications.clear();
@@ -181,12 +194,14 @@ void Ut_NotificationAreaSink::testAddNotification()
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Create three notifications - two with a content link and one without
-    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0", 123);
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123);
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
     emit addNotification(Notification(1, 0, 2, parameters1, Notification::SystemEvent, 1000));
-    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "");
+    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "", 12345);
     emit addNotification(Notification(2, 0, 2, parameters2, Notification::ApplicationEvent, 1000));
+    QCOMPARE(timestamps[1].toTime_t(), (uint)12345);
 
     // Check that the addNotification() signal was emitted by the sink two times
     QCOMPARE(addSpy.count(), 2);
@@ -198,12 +213,14 @@ void Ut_NotificationAreaSink::testUpdateNotification()
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Add two notifications with the same id; the second should update the existing one.
-    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0",123);
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
-    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123);
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1", 12345);
     emit addNotification(Notification(0, 0, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(addSpy.count(), 1);
+    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
     QCOMPARE(notifications.count(), 1);
 
     // TODO: even though contents.length is 2, there's only 1 action in the mnotification
@@ -255,9 +272,10 @@ void Ut_NotificationAreaSink::testAddGroup()
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
 
     // Creating a group should not send signals, just create the mnotification
-    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0", 123);
     emit addGroup(1, parameters0);
     QCOMPARE(addSpy.count(), 0);
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123);
     QCOMPARE(notifications.count(), 0);
 }
 
@@ -300,11 +318,13 @@ void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGro
 void Ut_NotificationAreaSink::testAddNotificationToGroup()
 {
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
-    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0", 123);
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1");
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123);
+    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1", 12345);
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
+    QCOMPARE(timestamps[1].toTime_t(), (uint)12345);
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
 }
@@ -323,9 +343,9 @@ void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationAr
 
 void Ut_NotificationAreaSink::testUpdateGroup()
 {
-    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0");
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0", 12345);
     emit addGroup(1, parameters0);
-    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1", 123456);
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
     QCOMPARE(titles.length(), 1);
@@ -334,6 +354,7 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     QCOMPARE(subtitles[0], QString("subtitle0"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon0"));
+    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
     QCOMPARE(contents.length(), 1);
     QCOMPARE(contents[0], QString("content0"));
 
@@ -345,6 +366,7 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     QCOMPARE(subtitles[0], QString("subtitle1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123456);
     // TODO: even though contents.length is 2, there's only 1 action in the mnotification
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);

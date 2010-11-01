@@ -25,10 +25,10 @@
 class TestNotificationParameters : public NotificationParameters
 {
 public:
-    TestNotificationParameters(QString summary = "", QString body = "", QString iconId = "", QString action = "");
+    TestNotificationParameters(QString summary = "", QString body = "", QString iconId = "", QString action = "", uint timestamp = 0);
 };
 
-TestNotificationParameters::TestNotificationParameters(QString summary, QString body, QString iconId, QString action)
+TestNotificationParameters::TestNotificationParameters(QString summary, QString body, QString iconId, QString action, uint timestamp)
 {
     if (!summary.isEmpty()) {
         add(NotificationWidgetParameterFactory::createSummaryParameter(summary));
@@ -41,6 +41,9 @@ TestNotificationParameters::TestNotificationParameters(QString summary, QString 
     }
     if (!action.isEmpty()) {
         add(NotificationWidgetParameterFactory::createActionParameter(action));
+    }
+    if (timestamp != 0) {
+        add(NotificationParameter("timestamp", timestamp));
     }
 }
 

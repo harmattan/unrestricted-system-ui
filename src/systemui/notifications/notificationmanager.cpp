@@ -282,13 +282,15 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
     QHash<uint, Notification>::iterator ni = notificationContainer.find(notificationId);
 
     if (ni != notificationContainer.end()) {
-        (*ni).updateParameters(parameters);
+        NotificationParameters fullParameters(parameters);
+        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+        (*ni).updateParameters(fullParameters);
 
         saveNotifications();
 
         int waitQueueIndex = findNotificationFromWaitQueue(notificationId);
         if (waitQueueIndex >= 0) {
-            waitQueue[waitQueueIndex].updateParameters(parameters);
+            waitQueue[waitQueueIndex].updateParameters(fullParameters);
         } else {
             // Inform the sinks about the update
             emit notificationUpdated(notificationContainer.value(notificationId));
@@ -353,6 +355,7 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
     restoreData();
 
     NotificationParameters fullParameters(appendEventTypeParameters(parameters));
+    fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
 
     uint groupID = nextAvailableGroupID();
     NotificationGroup group(groupID, notificationUserId, fullParameters);
@@ -374,7 +377,10 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
     QHash<uint, NotificationGroup>::iterator gi = groupContainer.find(groupId);
 
     if (gi != groupContainer.end()) {
-        gi->updateParameters(parameters);
+        NotificationParameters fullParameters(parameters);
+        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+
+        gi->updateParameters(fullParameters);
 
         saveStateData();
 

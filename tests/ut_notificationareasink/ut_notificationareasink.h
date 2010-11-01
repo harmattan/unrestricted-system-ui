@@ -40,6 +40,7 @@ public:
     static QList<QString> subtitles;
     static QList<QString> buttonIcons;
     static QList<QString> contents;
+    static QList<QDateTime> timestamps;
     static QList<MBanner *> notifications;
     static QList<MBanner *> destroyedNotifications;
 

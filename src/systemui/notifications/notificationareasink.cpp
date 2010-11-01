@@ -58,6 +58,7 @@ MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const Not
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
     infoBanner->setIconID(determineIconId(parameters));
+    infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
     // Update the info banner's titles and actions
     updateTitles(infoBanner);
@@ -152,9 +153,11 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
         if(infoBanner == NULL) {
             // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Revive the banner.
             infoBanner = reviveGroupBanner(notification);
+        } else {
+            infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
         }
 
-        if(infoBanner != NULL && infoBanner->parentItem() == NULL) {
+        if (infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group
             emit addNotification(*infoBanner);
         } else {
