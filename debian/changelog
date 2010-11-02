@@ -1,5 +1,6 @@
 system-ui (0.18.0~1) unstable; urgency=low
 
+  * Fixes: NB#195022 - Status menu sometimes not displayed after tapping.
   * Fixes: NB#201489 - systemUI / qmsystem namespace change from Maemo to MeeGo
   * Fixes: NB#185390 - SA battery indicator animation is not cumulative when booting from acting_dead to user
   * Fixes: NB#197710 - Two screen lock ui are overlapping if theme applied is Development.

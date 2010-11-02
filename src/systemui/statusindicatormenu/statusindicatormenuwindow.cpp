@@ -99,10 +99,10 @@ void StatusIndicatorMenuWindow::makeVisible()
     if (!isVisible()) {
         // If status indicator window is not visible, then show it
         show();
-    } else {
-        // Otherwise, raise it
-        raise();
     }
+
+    // Raise it on top
+    raise();
 }
 
 #ifdef HAVE_QMSYSTEM

@@ -49,6 +49,7 @@ private slots:
 
     // Test cases
     void testInitialization();
+    void testMakeVisible_data();
     void testMakeVisible();
     void testWindowType();
     void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();

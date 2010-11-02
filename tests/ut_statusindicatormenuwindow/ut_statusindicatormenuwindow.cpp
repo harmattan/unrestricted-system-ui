@@ -31,11 +31,18 @@
 #endif
 
 // QWidget stubs
-QPair<void*, bool> gSetVisible(0, false);
+QPair<void*, bool> mWindowSetVisible(0, false);
 void MWindow::setVisible(bool visible)
 {
-    gSetVisible.first = this;
-    gSetVisible.second = visible;
+    setAttribute(Qt::WA_WState_Visible, visible);
+    mWindowSetVisible.first = this;
+    mWindowSetVisible.second = visible;
+}
+
+QWidget *qWidgetRaise = NULL;
+void QWidget::raise()
+{
+    qWidgetRaise = this;
 }
 
 // MLocale stubs
@@ -49,8 +56,6 @@ void Ut_StatusIndicatorMenuWindow::init()
 {
     gLanguage = "en";
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
-    gSetVisible.first = 0;
-    gSetVisible.second = false;
 #ifdef HAVE_QMSYSTEM
     gQmLocksStub->stubSetReturnValue("getState", MeeGo::QmLocks::Unlocked);
 #endif
@@ -59,6 +64,9 @@ void Ut_StatusIndicatorMenuWindow::init()
 void Ut_StatusIndicatorMenuWindow::cleanup()
 {
     delete statusIndicatorMenuWindow;
+    mWindowSetVisible.first = 0;
+    mWindowSetVisible.second = false;
+    qWidgetRaise = NULL;
 }
 
 void Ut_StatusIndicatorMenuWindow::initTestCase()
@@ -81,20 +89,38 @@ void Ut_StatusIndicatorMenuWindow::testInitialization()
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow, SLOT(hide())));
 }
 
+void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
+{
+    QTest::addColumn<bool>("deviceLocked");
+    QTest::addColumn<bool>("visible");
+    QTest::addColumn<bool>("showCalled");
+    QTest::addColumn<bool>("raiseCalled");
+
+    QTest::newRow("Device locked") << true << false << false << false;
+    QTest::newRow("Window not visible") << false << false << true << true;
+    QTest::newRow("Window already visible") << false << true << false << true;
+}
+
 void Ut_StatusIndicatorMenuWindow::testMakeVisible()
 {
-    statusIndicatorMenuWindow->hide();
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
-    statusIndicatorMenuWindow->makeVisible();
+    QFETCH(bool, deviceLocked);
+    QFETCH(bool, visible);
+    QFETCH(bool, showCalled);
+    QFETCH(bool, raiseCalled);
 
+    // Set up the original window state
 #ifdef HAVE_QMSYSTEM
-    if (statusIndicatorMenuWindow->deviceLocked) {
-        QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
-        return;
-    }
+    statusIndicatorMenuWindow->deviceLocked = deviceLocked;
 #endif
+    statusIndicatorMenuWindow->setVisible(visible);
+    mWindowSetVisible.first = NULL;
+    mWindowSetVisible.second = false;
 
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && gSetVisible.second);
+    // Try to make it visible
+    statusIndicatorMenuWindow->makeVisible();
+    QCOMPARE(mWindowSetVisible.first, showCalled ? statusIndicatorMenuWindow : NULL);
+    QCOMPARE(mWindowSetVisible.second, showCalled);
+    QCOMPARE(qWidgetRaise, raiseCalled ? statusIndicatorMenuWindow : NULL);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWindowType()
@@ -106,7 +132,7 @@ void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuI
 {
     connect(this, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive()));
     emit displayExited();
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangesThenMenuWidgetIsResetted()
@@ -144,9 +170,9 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockedMenuIsNotVisible()
     // test when device lock state is locked
     statusIndicatorMenuWindow->hide();
     statusIndicatorMenuWindow->deviceLocked = true;
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenDeviceUnlockedMenuIsVisible()
@@ -154,9 +180,9 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceUnlockedMenuIsVisible()
     // test when device lock state is unlocked
     statusIndicatorMenuWindow->hide();
     statusIndicatorMenuWindow->deviceLocked = false;
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && !gSetVisible.second);
+    QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
-    QVERIFY(gSetVisible.first == statusIndicatorMenuWindow && gSetVisible.second);
+    QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && mWindowSetVisible.second);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates()
