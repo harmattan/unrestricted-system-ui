@@ -26,11 +26,11 @@ NotificationSource::NotificationSource(NotificationManagerInterface &m)
 {
 }
 
-NotificationParameters NotificationSource::notificationParameters(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool unseen, const QString &identifier)
+NotificationParameters NotificationSource::notificationParameters(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
 {
     NotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::createEventTypeParameter(eventType));
-    parameters.add(GenericNotificationParameterFactory::createUnseenParameter(unseen));
+    parameters.add(GenericNotificationParameterFactory::createUnseenParameter(true));
     parameters.add(GenericNotificationParameterFactory::createCountParameter(count));
     if (!summary.isNull()) {
         parameters.add(NotificationWidgetParameterFactory::createSummaryParameter(summary));

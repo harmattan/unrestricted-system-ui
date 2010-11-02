@@ -57,6 +57,11 @@ uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, u
     return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count), groupId);
 }
 
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+{
+    return manager.addNotification(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count, identifier), groupId);
+}
+
 bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType)
 {
     return manager.updateNotification(notificationUserId, notificationId, notificationParameters(eventType));

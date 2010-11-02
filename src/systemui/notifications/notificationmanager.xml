@@ -58,6 +58,18 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="out"/>
     </method>
+    <method name="addNotification">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="groupId" type="u" direction="in"/>
+      <arg name="eventType" type="s" direction="in"/>
+      <arg name="summary" type="s" direction="in"/>
+      <arg name="body" type="s" direction="in"/>
+      <arg name="action" type="s" direction="in"/>
+      <arg name="imageURI" type="s" direction="in"/>
+      <arg name="count" type="u" direction="in"/>
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="notificationId" type="u" direction="out"/>
+    </method>
     <method name="updateNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="in"/>

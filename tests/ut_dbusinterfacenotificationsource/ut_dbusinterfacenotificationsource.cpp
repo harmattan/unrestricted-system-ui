@@ -50,6 +50,11 @@ uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const Q
     return 0;
 }
 
+uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint, const QString &)
+{
+    return 0;
+}
+
 bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint, uint, const QString &)
 {
     return true;
@@ -155,6 +160,27 @@ void Ut_DBusInterfaceNotificationSource::testAddNotification()
     QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<uint>(2), (uint)6);
     params = gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<NotificationParameters>(1);
     QCOMPARE(params.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
+}
+
+void Ut_DBusInterfaceNotificationSource::testAddNotificationWithIdentifier()
+{
+    const uint USER_ID = 1;
+    const uint GROUP_ID = 2;
+    const QString EVENT = "event";
+    const QString SUMMARY = "summary";
+    const QString BODY = "body";
+    const QString ACTION = "action";
+    const QString IMAGE = "image";
+    const uint COUNT = 1;
+    const QString IDENTIFIER = "identifier";
+
+    const uint NEW_NOTIFICATION_ID = 9;
+    gDefaultNotificationManagerStub.stubSetReturnValue("addNotification", NEW_NOTIFICATION_ID);
+
+    QCOMPARE(source->addNotification(USER_ID, GROUP_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), NEW_NOTIFICATION_ID);
+
+    NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<NotificationParameters>(1);
+    QCOMPARE(params.value(GenericNotificationParameterFactory::identifierKey()), QVariant(IDENTIFIER));
 }
 
 void Ut_DBusInterfaceNotificationSource::testUpdateNotification()

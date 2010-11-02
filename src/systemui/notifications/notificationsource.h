@@ -39,7 +39,7 @@ public:
     NotificationSource(NotificationManagerInterface &manager);
 
     //! Creates NotificationParameters from a set of simple API parameters
-    NotificationParameters notificationParameters(const QString &eventType, const QString &summary = QString(), const QString &body = QString(), const QString &action = QString(), const QString &imageURI = QString(), uint count = 1, bool unseen = true, const QString &identifier = QString());
+    NotificationParameters notificationParameters(const QString &eventType, const QString &summary = QString(), const QString &body = QString(), const QString &action = QString(), const QString &imageURI = QString(), uint count = 1, const QString &identifier = QString());
 
 protected:
     //! NotificationManagerInterface object used with this NotificationSource
