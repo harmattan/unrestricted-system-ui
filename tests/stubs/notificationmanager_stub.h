@@ -79,19 +79,19 @@ void NotificationManagerStub::restorePersistentData() {
 
 uint NotificationManagerStub::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<uint >(notificationUserId));
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  params.append( new Parameter<uint >(groupId));
-  stubMethodEntered("addNotification",params);
+  params.append(new Parameter<uint>(notificationUserId));
+  params.append(new Parameter<NotificationParameters>(parameters));
+  params.append(new Parameter<uint>(groupId));
+  stubMethodEntered("addNotification", params);
   return stubReturnValue<uint>("addNotification");
 }
 
 bool NotificationManagerStub::updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<uint >(notificationUserId));
-  params.append( new Parameter<uint >(notificationId));
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  stubMethodEntered("updateNotification",params);
+  params.append(new Parameter<uint>(notificationUserId));
+  params.append(new Parameter<uint>(notificationId));
+  params.append(new Parameter<NotificationParameters>(parameters));
+  stubMethodEntered("updateNotification", params);
   return stubReturnValue<bool>("updateNotification");
 }
 
@@ -105,18 +105,18 @@ bool NotificationManagerStub::removeNotification(uint notificationUserId, uint n
 
 uint NotificationManagerStub::addGroup(uint notificationUserId, const NotificationParameters &parameters) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<uint >(notificationUserId));
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  stubMethodEntered("addGroup",params);
+  params.append(new Parameter<uint>(notificationUserId));
+  params.append(new Parameter<NotificationParameters>(parameters));
+  stubMethodEntered("addGroup", params);
   return stubReturnValue<uint>("addGroup");
 }
 
 bool NotificationManagerStub::updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<uint >(notificationUserId));
-  params.append( new Parameter<uint >(groupId));
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  stubMethodEntered("updateGroup",params);
+  params.append(new Parameter<uint>(notificationUserId));
+  params.append(new Parameter<uint>(groupId));
+  params.append(new Parameter<NotificationParameters>(parameters));
+  stubMethodEntered("updateGroup", params);
   return stubReturnValue<bool>("updateGroup");
 }
 

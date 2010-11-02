@@ -24,6 +24,7 @@
 #include "notificationgroup.h"
 #include "mnotificationproxy.h"
 #include "notificationmanagerinterface.h"
+#include "eventtypestore.h"
 
 #include <QObject>
 #include <QHash>
@@ -39,7 +40,6 @@
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
 class DBusInterfaceNotificationSink;
-class EventTypeStore;
 
 /*!
  * The NotificationManager allows a program to display a notification,

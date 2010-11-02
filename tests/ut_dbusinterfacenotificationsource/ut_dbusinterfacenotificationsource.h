@@ -22,49 +22,11 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include "notificationmanagerinterface.h"
 
-// class MApplication;
 class DBusInterfaceNotificationSource;
 class MNotificationProxy;
 class MNotificationGroupProxy;
-
-// MockNotificationManager used by the DBusInterfaceNotificationSource
-class MockNotificationManager : public NotificationManagerInterface
-{
-public:
-    MockNotificationManager();
-    uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId = 0);
-    bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
-    bool removeNotification(uint notificationUserId, uint notificationId);
-    uint addGroup(uint notificationUserId, const NotificationParameters &parameters);
-    bool updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters);
-    bool removeGroup(uint notificationUserId, uint groupId);
-    uint notificationUserId();
-    QList< uint > notificationIdList(uint notificationUserId);
-    QList<MNotificationProxy> notificationList(uint notificationUserId);
-    QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
-
-    uint addNotificationNotificationUserId;
-    uint addNotificationGroupId;
-    NotificationParameters addNotificationParameters;
-    uint updateNotificationNotificationUserId;
-    uint updateNotificationId;
-    NotificationParameters updateNotificationParameters;
-    uint removeNotificationNotificationUserId;
-    uint removeNotificationId;
-    uint addGroupNotificationUserId;
-    NotificationParameters addGroupParameters;
-    uint updateGroupNotificationUserId;
-    uint updateGroupId;
-    NotificationParameters updateGroupParameters;
-    uint removeGroupNotificationUserId;
-    uint removeGroupId;
-    uint lastNotificationUserId;
-    uint queryNotificationUserId;
-    bool notificationListCalled;
-    bool notificationGroupListCalled;
-};
+class NotificationManager;
 
 class Ut_DBusInterfaceNotificationSource : public QObject
 {
@@ -102,7 +64,7 @@ private slots:
 
 private:
     // Notification manager interface used by the test subject
-    MockNotificationManager *manager;
+    NotificationManager *manager;
     // The object being tested
     DBusInterfaceNotificationSource *source;
 };

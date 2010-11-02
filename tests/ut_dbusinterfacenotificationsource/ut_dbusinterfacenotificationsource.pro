@@ -6,11 +6,11 @@ INCLUDEPATH += $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 # unit test and unit
 SOURCES += \
     ut_dbusinterfacenotificationsource.cpp \
-   $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.cpp \
-   $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
-   $$NOTIFICATIONSRCDIR/notificationsource.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
+    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.cpp \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
+    $$NOTIFICATIONSRCDIR/notificationsource.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 
 # service classes
 SOURCES += \
@@ -19,10 +19,11 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_dbusinterfacenotificationsource.h \
-   $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
-   $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
-   $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsourceadaptor.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h
+    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.h \
+    $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
+    $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsourceadaptor.h \
+    $$NOTIFICATIONSRCDIR/notificationmanager.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h
 
 include(../common_bot.pri)
