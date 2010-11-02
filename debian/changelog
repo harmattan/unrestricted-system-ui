@@ -1,4 +1,4 @@
-system-ui (0.18.0~1) unstable; urgency=low
+system-ui (0.18.0-1) unstable; urgency=low
 
   * Fixes: NB#195022 - Status menu sometimes not displayed after tapping.
   * Fixes: NB#201489 - systemUI / qmsystem namespace change from Maemo to MeeGo
@@ -8,7 +8,7 @@ system-ui (0.18.0~1) unstable; urgency=low
   * Implemented: SWP#DUI-4075 New notification notifier
   * Implemented: SWP#DUI-3567 - Status indicator for ongoing transfers and transfer errors.
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 01 Nov 2010 15:59:16 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 02 Nov 2010 18:28:00 +0200
 
 system-ui (0.17.6-1) unstable; urgency=low
 
