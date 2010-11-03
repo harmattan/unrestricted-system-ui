@@ -114,10 +114,20 @@
        <arg name="result" type="a(uusssssu)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationProxy &gt; "/>
     </method>
+    <method name="notificationListWithIdentifiers">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(uusssssus)" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationWithIdentifierProxy &gt; "/>
+    </method>
     <method name="notificationGroupList">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(usssssu)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupProxy &gt; "/>
+    </method>
+    <method name="notificationGroupListWithIdentifiers">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(usssssus)" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupWithIdentifierProxy &gt; "/>
     </method>
   </interface>
 </node>

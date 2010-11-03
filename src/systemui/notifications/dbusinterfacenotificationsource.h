@@ -224,12 +224,28 @@ public:
     QList<MNotificationProxy> notificationList(uint notificationUserId);
 
     /*!
+     * Returns list of notifications with associated identifiers by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notifications with associated identifiers that belong to notificationUserId
+     */
+    QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
+
+    /*!
      * Returns list of notification groups by user id
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
      */
     QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
+
+    /*!
+     * Returns list of notification groups with associated identifiers by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notification groups with associated identifiers that belong to notificationUserId
+     */
+    QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
 };
 
 #endif // DBUSINTERFACENOTIFICATIONSOURCE_H

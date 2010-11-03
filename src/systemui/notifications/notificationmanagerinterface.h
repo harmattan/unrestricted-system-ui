@@ -26,7 +26,9 @@
 #include "notificationgroup.h"
 
 class MNotificationProxy;
+class MNotificationWithIdentifierProxy;
 class MNotificationGroupProxy;
+class MNotificationGroupWithIdentifierProxy;
 
 /*!
  * Abstract notification manager interface. Declares interface for adding,
@@ -119,12 +121,29 @@ public:
     virtual QList<MNotificationProxy> notificationList(uint notificationUserId) = 0;
 
     /*!
+     * Returns list of notifications with identifiers by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notifications with identifiers that belong to notificationUserId
+     */
+    virtual QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId) = 0;
+
+    /*!
      * Returns list of notification groups by user id
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
      */
     virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId) = 0;
+
+
+    /*!
+     * Returns list of notification groups with identifiers by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notification groups with identifiers that belong to notificationUserId
+     */
+    virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId) = 0;
 
 public slots:
     /*!

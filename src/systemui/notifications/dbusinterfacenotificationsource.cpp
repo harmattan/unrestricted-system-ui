@@ -22,9 +22,13 @@
 #include "mnotificationproxy.h"
 
 Q_DECLARE_METATYPE(MNotificationProxy)
+Q_DECLARE_METATYPE(MNotificationWithIdentifierProxy)
 Q_DECLARE_METATYPE(MNotificationGroupProxy)
+Q_DECLARE_METATYPE(MNotificationGroupWithIdentifierProxy)
 Q_DECLARE_METATYPE(QList<MNotificationProxy>)
+Q_DECLARE_METATYPE(QList<MNotificationWithIdentifierProxy>)
 Q_DECLARE_METATYPE(QList<MNotificationGroupProxy>)
+Q_DECLARE_METATYPE(QList<MNotificationGroupWithIdentifierProxy>)
 
 DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationManagerInterface &interface)
     : NotificationSource(interface)
@@ -36,8 +40,12 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
     qDBusRegisterMetaType<NotificationParameters>();
     qDBusRegisterMetaType<MNotificationProxy>();
     qDBusRegisterMetaType<QList<MNotificationProxy> >();
+    qDBusRegisterMetaType<MNotificationWithIdentifierProxy>();
+    qDBusRegisterMetaType<QList<MNotificationWithIdentifierProxy> >();
     qDBusRegisterMetaType<MNotificationGroupProxy>();
     qDBusRegisterMetaType<QList<MNotificationGroupProxy> >();
+    qDBusRegisterMetaType<MNotificationGroupWithIdentifierProxy>();
+    qDBusRegisterMetaType<QList<MNotificationGroupWithIdentifierProxy> >();
 
     new DBusInterfaceNotificationSourceAdaptor(this);
 }
@@ -117,7 +125,17 @@ QList<MNotificationProxy> DBusInterfaceNotificationSource::notificationList(uint
     return manager.notificationList(notificationUserId);
 }
 
+QList<MNotificationWithIdentifierProxy> DBusInterfaceNotificationSource::notificationListWithIdentifiers(uint notificationUserId)
+{
+    return manager.notificationListWithIdentifiers(notificationUserId);
+}
+
 QList<MNotificationGroupProxy> DBusInterfaceNotificationSource::notificationGroupList(uint notificationUserId)
 {
     return manager.notificationGroupList(notificationUserId);
+}
+
+QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSource::notificationGroupListWithIdentifiers(uint notificationUserId)
+{
+    return manager.notificationGroupListWithIdentifiers(notificationUserId);
 }

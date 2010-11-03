@@ -87,7 +87,9 @@ public slots:
     uint notificationUserId();
     QList<uint> notificationIdList(uint notificationUserId);
     QList<MNotificationProxy> notificationList(uint notificationUserId);
+    QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
     QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
+    QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
     //! \reimp_end
 
     /*!

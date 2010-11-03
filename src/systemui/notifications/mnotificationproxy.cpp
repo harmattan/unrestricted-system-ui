@@ -95,6 +95,54 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationProx
     return argument;
 }
 
+
+
+MNotificationWithIdentifierProxy::MNotificationWithIdentifierProxy()
+{
+}
+
+MNotificationWithIdentifierProxy::MNotificationWithIdentifierProxy(const Notification &notification) : MNotificationProxy(notification)
+{
+    const NotificationParameters &p = notification.parameters();
+
+    identifier = p.value(GenericNotificationParameterFactory::identifierKey()).toString();
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationWithIdentifierProxy &notification)
+{
+    argument.beginStructure();
+    argument << notification.notificationId;
+    argument << notification.groupId;
+    argument << notification.eventType;
+    argument << notification.summary;
+    argument << notification.body;
+    argument << notification.imageId;
+    argument << notification.action;
+    argument << notification.count;
+    argument << notification.identifier;
+    argument.endStructure();
+
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationWithIdentifierProxy &notification)
+{
+    argument.beginStructure();
+    argument >> notification.notificationId;
+    argument >> notification.groupId;
+    argument >> notification.eventType;
+    argument >> notification.summary;
+    argument >> notification.body;
+    argument >> notification.imageId;
+    argument >> notification.action;
+    argument >> notification.count;
+    argument >> notification.identifier;
+    argument.endStructure();
+
+    return argument;
+}
+
+
 MNotificationGroupProxy::MNotificationGroupProxy()
 {
 }
@@ -160,4 +208,46 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGrou
     return argument;
 }
 
+MNotificationGroupWithIdentifierProxy::MNotificationGroupWithIdentifierProxy()
+{
+}
+
+MNotificationGroupWithIdentifierProxy::MNotificationGroupWithIdentifierProxy(const NotificationGroup &group) : MNotificationGroupProxy(group)
+{
+    const NotificationParameters p = group.parameters();
+
+    groupIdentifier = p.value(GenericNotificationParameterFactory::identifierKey()).toString();
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroupWithIdentifierProxy &group)
+{
+    argument.beginStructure();
+    argument << group.groupId;
+    argument << group.eventType;
+    argument << group.summary;
+    argument << group.body;
+    argument << group.imageId;
+    argument << group.action;
+    argument << group.count;
+    argument << group.groupIdentifier;
+    argument.endStructure();
+
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGroupWithIdentifierProxy &group)
+{
+    argument.beginStructure();
+    argument >> group.groupId;
+    argument >> group.eventType;
+    argument >> group.summary;
+    argument >> group.body;
+    argument >> group.imageId;
+    argument >> group.action;
+    argument >> group.count;
+    argument >> group.groupIdentifier;
+    argument.endStructure();
+
+    return argument;
+}
 

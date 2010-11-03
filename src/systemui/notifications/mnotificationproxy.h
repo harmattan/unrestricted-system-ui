@@ -70,6 +70,39 @@ QDBusArgument &operator<<(QDBusArgument &, const MNotificationProxy &);
 const QDBusArgument &operator>>(const QDBusArgument &, MNotificationProxy &);
 
 /*!
+ * \brief A proxy class for serializing Notification with identifer key as MNotification
+ *
+ * MNotificationWithIdentifierProxy is a simple data class that serializes to DBus
+ * argument the same way as MNotification and is used to return Notification
+ * data to libmeegotouch notifications subsystem. MNotificationWithIdentifierProxy objects
+ * are initialized from Notificattion and will contain a copy of the
+ * notification data along with identifier key relevant to the MNotification class referring to the
+ * same notification object.
+ */
+class MNotificationWithIdentifierProxy : public MNotificationProxy
+{
+public:
+    /*!
+     * Empty constructor. Initializes the values to defaults.
+     */
+    MNotificationWithIdentifierProxy();
+    /*!
+     * Constructor.
+     *
+     * \param notification A Notification object to initialize the data from
+     */
+    MNotificationWithIdentifierProxy(const Notification &notification);
+
+   //! Notification identifier
+    QString identifier;
+};
+
+QDBusArgument &operator<<(QDBusArgument &, const MNotificationWithIdentifierProxy &);
+const QDBusArgument &operator>>(const QDBusArgument &, MNotificationWithIdentifierProxy &);
+
+
+
+/*!
  * \brief A proxy class for serializing NotificationGroup as MNotificationGroup
  *
  * MNotificationGroupProxy is a simple data class that serializes to DBus
@@ -111,5 +144,36 @@ public:
 
 QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroupProxy &);
 const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroupProxy &);
+
+/*!
+ * \brief A proxy class for serializing NotificationGroup as MNotificationGroup
+ *
+ * MNotificationGroupWithIdentifierProxy is a simple data class that serializes to DBus
+ * argument the same way as MNotificationGroup and is used to return
+ * NotificationGroup data to libmeegotouch notifications subsystem.
+ * MNotificationProxy objects are initialized from NotificattionGroup and
+ * will contain a copy of the notification group data with identifier key relevant to the
+ * MNotificationGroup class referring to the same notification group object.
+ */
+class MNotificationGroupWithIdentifierProxy : public MNotificationGroupProxy
+{
+public:
+    /*!
+     * Empty constructor. Initializes the values to defaults.
+     */
+    MNotificationGroupWithIdentifierProxy();
+    /*!
+     * Constructor.
+     *
+     * \param notification A NotificationGroup object to initialize the data from
+     */
+    MNotificationGroupWithIdentifierProxy(const NotificationGroup &group);
+
+    //! Notification group identifier
+    QString groupIdentifier;
+};
+
+QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroupWithIdentifierProxy &);
+const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroupWithIdentifierProxy &);
 
 #endif

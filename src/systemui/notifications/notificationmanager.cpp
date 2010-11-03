@@ -483,6 +483,20 @@ QList<MNotificationProxy> NotificationManager::notificationList(uint notificatio
     return userNotifications;
 }
 
+QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWithIdentifiers(uint notificationUserId)
+{
+    QList<MNotificationWithIdentifierProxy> userNotificationsWithIdentifers;
+
+    foreach(const Notification & notification, notifications) {
+        if (notification.userId() == notificationUserId) {
+            MNotificationWithIdentifierProxy mnotification(notification);
+            userNotificationsWithIdentifers.append(mnotification);
+        }
+    }
+
+    return userNotificationsWithIdentifers;
+}
+
 QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint notificationUserId)
 {
     QList<MNotificationGroupProxy> userGroups;
@@ -490,6 +504,20 @@ QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint n
     foreach(const NotificationGroup & group, groups) {
         if (group.userId() == notificationUserId) {
             MNotificationGroupProxy mnotificationgroup(group);
+            userGroups.append(mnotificationgroup);
+        }
+    }
+
+    return userGroups;
+}
+
+QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId)
+{
+    QList<MNotificationGroupWithIdentifierProxy> userGroups;
+
+    foreach(const NotificationGroup & group, groups) {
+        if (group.userId() == notificationUserId) {
+            MNotificationGroupWithIdentifierProxy mnotificationgroup(group);
             userGroups.append(mnotificationgroup);
         }
     }

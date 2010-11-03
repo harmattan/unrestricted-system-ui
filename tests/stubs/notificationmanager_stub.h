@@ -44,7 +44,9 @@ class NotificationManagerStub : public StubBase {
   virtual uint notificationUserId();
   virtual QList<uint> notificationIdList(uint notificationUserId);
   virtual QList<MNotificationProxy> notificationList(uint notificationUserId);
+  virtual QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
   virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
+  virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
   virtual bool removeNotification(uint notificationId);
   virtual bool removeNotificationsInGroup(uint groupId);
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
@@ -148,12 +150,28 @@ QList<MNotificationProxy> NotificationManagerStub::notificationList(uint notific
     return stubReturnValue<QList<MNotificationProxy> >("notificationList");
 }
 
+QList<MNotificationWithIdentifierProxy> NotificationManagerStub::notificationListWithIdentifiers(uint notificationUserId)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<uint >(notificationUserId));
+    stubMethodEntered("notificationListWithIdentifiers",params);
+    return stubReturnValue<QList<MNotificationWithIdentifierProxy> >("notificationListWithIdentifiers");
+}
+
 QList<MNotificationGroupProxy> NotificationManagerStub::notificationGroupList(uint notificationUserId)
 {
     QList<ParameterBase*> params;
     params.append( new Parameter<uint >(notificationUserId));
     stubMethodEntered("notificationGroupList",params);
     return stubReturnValue<QList<MNotificationGroupProxy> >("notificationGroupList");
+}
+
+QList<MNotificationGroupWithIdentifierProxy> NotificationManagerStub::notificationGroupListWithIdentifiers(uint notificationUserId)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<uint >(notificationUserId));
+    stubMethodEntered("notificationGroupListWithIdentifiers",params);
+    return stubReturnValue<QList<MNotificationGroupWithIdentifierProxy> >("notificationGroupListWithIdentifiers");
 }
 
 bool NotificationManagerStub::removeNotification(uint notificationId) {
@@ -304,10 +322,17 @@ QList<MNotificationProxy> NotificationManager::notificationList(uint notificatio
     return gNotificationManagerStub->notificationList(notificationUserId);
 }
 
+QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWithIdentifiers(uint notificationUserId) {
+    return gNotificationManagerStub->notificationListWithIdentifiers(notificationUserId);
+}
+
 QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint notificationUserId) {
     return gNotificationManagerStub->notificationGroupList(notificationUserId);
 }
 
+QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId) {
+    return gNotificationManagerStub->notificationGroupListWithIdentifiers(notificationUserId);
+}
 
 bool NotificationManager::removeNotification(uint notificationId) {
   return gNotificationManagerStub->removeNotification(notificationId);

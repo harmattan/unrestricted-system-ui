@@ -108,8 +108,12 @@ private slots:
     void testNotificationIdListNotificationListEmpty();
     // Test querying the notification data
     void testNotificationList();
+    // Test querying the notification data with identifer
+    void testNotificationListWithIdentifiers();
     // Test querying the notification group data
     void testNotificationGroupList();
+    // Test querying the notification group data with identifier
+    void testNotificationGroupListWithIdentifiers();
 #ifdef HAVE_AEGIS_CRYPTO
     // Test that the group info is saved to the persistent storage
     void testGroupInfoPersistentStorage();

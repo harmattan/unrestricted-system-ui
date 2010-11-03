@@ -25,6 +25,7 @@
 
 class DBusInterfaceNotificationSource;
 class MNotificationProxy;
+class MNotificationWithIdentifierProxy;
 class MNotificationGroupProxy;
 class NotificationManager;
 
@@ -60,8 +61,10 @@ private slots:
     //Test the query of notifications
     void testNotificationIdList();
     void testNotificationList();
+    void testNotificationListWithIdentifiers();
     //Test the query of groups
     void testNotificationGroupList();
+    void testNotificationGroupListWithIdentifiers();
     //Test updating group with empty strings
     void testUpdateGroupWithEmptyStrings();
 

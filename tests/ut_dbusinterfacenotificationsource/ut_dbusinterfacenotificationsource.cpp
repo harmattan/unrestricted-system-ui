@@ -113,9 +113,21 @@ QList < MNotificationProxy >  DBusInterfaceNotificationSourceAdaptor::notificati
     return l;
 }
 
+QList < MNotificationWithIdentifierProxy>  DBusInterfaceNotificationSourceAdaptor::notificationListWithIdentifiers(uint)
+{
+    QList<MNotificationWithIdentifierProxy> l;
+    return l;
+}
+
 QList<MNotificationGroupProxy> DBusInterfaceNotificationSourceAdaptor::notificationGroupList(uint)
 {
     QList<MNotificationGroupProxy> l;
+    return l;
+}
+
+QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSourceAdaptor::notificationGroupListWithIdentifiers(uint)
+{
+    QList<MNotificationGroupWithIdentifierProxy> l;
     return l;
 }
 
@@ -301,11 +313,25 @@ void Ut_DBusInterfaceNotificationSource::testNotificationList()
     QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationList").parameter<uint>(0), (uint)10);
 }
 
+void Ut_DBusInterfaceNotificationSource::testNotificationListWithIdentifiers()
+{
+    source->notificationListWithIdentifiers(10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationListWithIdentifiers"), 1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationListWithIdentifiers").parameter<uint>(0), (uint)10);
+}
+
 void Ut_DBusInterfaceNotificationSource::testNotificationGroupList()
 {
     source->notificationGroupList(10);
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationGroupList"), 1);
     QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupList").parameter<uint>(0), (uint)10);
+}
+
+void Ut_DBusInterfaceNotificationSource::testNotificationGroupListWithIdentifiers()
+{
+    source->notificationGroupListWithIdentifiers(10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationGroupListWithIdentifiers"), 1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupListWithIdentifiers").parameter<uint>(0), (uint)10);
 }
 
 void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithEmptyStrings()
