@@ -54,6 +54,7 @@ private slots:
     void testRemoveNotification();
     // Test notification group adding
     void testAddGroup();
+    void testAddGroupWithIdentifier();
     // Test notification group updating
     void testUpdateGroup();
     // Test notification group removal

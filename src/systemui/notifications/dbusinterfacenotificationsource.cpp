@@ -100,6 +100,11 @@ uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QS
     return manager.addGroup(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count));
 }
 
+uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+{
+    return manager.addGroup(notificationUserId, notificationParameters(eventType, summary, body, action, imageURI, count, identifier));
+}
+
 bool DBusInterfaceNotificationSource::updateGroup(uint notificationUserId, uint groupId, const QString &eventType)
 {
     return manager.updateGroup(notificationUserId, groupId, notificationParameters(eventType));

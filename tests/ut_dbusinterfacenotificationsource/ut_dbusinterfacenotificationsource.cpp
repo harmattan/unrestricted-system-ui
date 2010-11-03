@@ -80,6 +80,11 @@ uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &, con
     return 0;
 }
 
+uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint, const QString &)
+{
+    return 0;
+}
+
 bool DBusInterfaceNotificationSourceAdaptor::removeGroup(uint, uint)
 {
     return true;
@@ -165,6 +170,7 @@ const QString IDENTIFIER = "identifier";
 const bool CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS = true;
 const bool CALL_TO_NOTIFICATION_MANAGER_DOES_NOT_SUCCEED = false;
 const uint NEW_NOTIFICATION_ID = 9;
+const uint NEW_GROUP_ID = 11;
 
 void Ut_DBusInterfaceNotificationSource::testAddNotification()
 {
@@ -265,6 +271,16 @@ void Ut_DBusInterfaceNotificationSource::testAddGroup()
     QCOMPARE(params.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
+}
+
+void Ut_DBusInterfaceNotificationSource::testAddGroupWithIdentifier()
+{
+    gDefaultNotificationManagerStub.stubSetReturnValue("addGroup", NEW_GROUP_ID);
+
+    QCOMPARE(source->addGroup(USER_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), NEW_GROUP_ID);
+
+    NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("addGroup").parameter<NotificationParameters>(1);
+    QCOMPARE(params.value(GenericNotificationParameterFactory::identifierKey()), QVariant(IDENTIFIER));
 }
 
 void Ut_DBusInterfaceNotificationSource::testUpdateGroup()
