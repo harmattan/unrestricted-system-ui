@@ -55,6 +55,13 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
     Q_UNUSED(policy);
 }
 
+QPair<QGraphicsItem *, QRectF> qGraphicsItemUpdate(NULL, QRectF());
+void QGraphicsItem::update(const QRectF &rect)
+{
+    qGraphicsItemUpdate.first = this;
+    qGraphicsItemUpdate.second = rect;
+}
+
 void Ut_LockScreenWindow::initTestCase()
 {
     int   argc = 1;
@@ -70,7 +77,6 @@ void Ut_LockScreenWindow::cleanupTestCase()
 void Ut_LockScreenWindow::init()
 {
     lockScreenWindow = new LockScreenWindow;
-    gX11WrapperStub->stubReset();
 }
 
 void Ut_LockScreenWindow::cleanup()
@@ -80,6 +86,10 @@ void Ut_LockScreenWindow::cleanup()
     appearedWindow = NULL;
     mWindowOrientationLocked = false;
     mWindowOrientation.clear();
+    gX11WrapperStub->stubReset();
+    gLockScreenStub->stubReset();
+    qGraphicsItemUpdate.first = NULL;
+    qGraphicsItemUpdate.second = QRectF();
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
@@ -137,6 +147,15 @@ void Ut_LockScreenWindow::testOrientationLocking()
     lockScreenWindow->showEvent(&event);
     QCOMPARE(mWindowOrientationLocked, orientationLocked);
     QCOMPARE(mWindowOrientation, expectedOrientation);
+}
+
+void Ut_LockScreenWindow::testReset()
+{
+    lockScreenWindow->reset();
+
+    QCOMPARE(gLockScreenStub->stubCallCount("reset"), 1);
+    QCOMPARE(qGraphicsItemUpdate.first, lockScreenWindow->lockScreen);
+    QCOMPARE(qGraphicsItemUpdate.second, QRectF());
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

@@ -41,6 +41,7 @@ private slots:
     void testWhenWindowIsShownItIsExcludedFromTaskbar();
     void testOrientationLocking_data();
     void testOrientationLocking();
+    void testReset();
 
 private:
     MApplication *app;

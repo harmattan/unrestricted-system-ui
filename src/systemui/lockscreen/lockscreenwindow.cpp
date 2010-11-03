@@ -56,6 +56,9 @@ void LockScreenWindow::applyStyle()
 void LockScreenWindow::reset()
 {
     lockScreen->reset();
+
+    // Ask the lock screen to redraw itself since it may be necessary if the display used to be turned off
+    lockScreen->update();
 }
 
 void LockScreenWindow::showEvent(QShowEvent *event)
