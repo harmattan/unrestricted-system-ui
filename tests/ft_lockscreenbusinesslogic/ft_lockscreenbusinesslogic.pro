@@ -2,13 +2,12 @@ include(../common_top.pri)
 TARGET = ft_lockscreenbusinesslogic
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen $$COMMONDIR
 
 STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
 
 SOURCES += ft_lockscreenbusinesslogic.cpp \
-    ../ft_lockscreenui/xchecker.cpp \
-    $$SRCDIR/debug.cpp \
+    $$COMMONDIR/xchecker.cpp \
     $$SRCDIR/lockscreen/unlockmissedevents.cpp \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreen/unlockarea.cpp \
@@ -20,8 +19,7 @@ SOURCES += ft_lockscreenbusinesslogic.cpp \
     $$SRCDIR/x11wrapper.cpp
 
 HEADERS += ft_lockscreenbusinesslogic.h \
-    ../ft_lockscreenui/xchecker.h \
-    $$SRCDIR/debug.h \
+    $$COMMONDIR/xchecker.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreen/unlockarea.h \

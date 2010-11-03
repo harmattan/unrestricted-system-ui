@@ -26,9 +26,6 @@
 #include <MNotification>
 #include <MLocale>
 
-#define DEBUG
-#include "debug.h"
-
 extern MApplication *exitPtr;
 
 ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
@@ -48,7 +45,6 @@ ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
     if (m_Ui) {
-        SYS_DEBUG ("Calling m_Ui->deleteLater()");
         m_Ui->deleteLater ();
         m_Ui = 0;
     }
@@ -76,29 +72,24 @@ ShutdownBusinessLogic::systemStateChanged (
 {
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
-            SYS_DEBUG ("QmSystemState::Shutdown");
             // To avoid early quitting on shutdown...
             exitPtr = 0;
             showUI ();
             break;
 
         case MeeGo::QmSystemState::ThermalStateFatal:
-            SYS_DEBUG ("QmSystemState::ThermalStateFatal");
             thermalShutdown ();
             break;
-            
+
         case MeeGo::QmSystemState::ShutdownDeniedUSB:
-            SYS_DEBUG ("QmSystemState::ShutdownDeniedUSB");
             shutdownDeniedUSB ();
             break;
 
         case MeeGo::QmSystemState::BatteryStateEmpty:
-            SYS_DEBUG ("QmSystemState::BatteryStateEmpty");
             batteryShutdown ();
             break;
 
         default:
-            SYS_WARNING ("Unknown state");
             break;
     }
 }
@@ -107,8 +98,6 @@ ShutdownBusinessLogic::systemStateChanged (
 void 
 ShutdownBusinessLogic::thermalShutdown ()
 {
-    SYS_DEBUG ("Creating a notification & feedback");
-    
     /*
      * Creating a notification.
      */
@@ -127,8 +116,6 @@ ShutdownBusinessLogic::thermalShutdown ()
 void
 ShutdownBusinessLogic::batteryShutdown ()
 {
-    SYS_DEBUG ("Creating a notification");
-    
     /*
      * Creating a notification.
      */
@@ -144,8 +131,6 @@ ShutdownBusinessLogic::batteryShutdown ()
 void 
 ShutdownBusinessLogic::shutdownDeniedUSB ()
 {
-    SYS_DEBUG ("Creating a notification & feedback");
-
     /*
      * Creating the feedback.
      */
@@ -185,9 +170,6 @@ ShutdownBusinessLogicAdaptor::showScreen (
     QString text2,
     int     timeout)
 {
-    SYS_DEBUG ("text1 = %s, text2 = %s, timeout = %d",
-               SYS_STR (text1), SYS_STR (text2), timeout);
-
     m_logic->showUI (text1, text2, timeout);
 }
 

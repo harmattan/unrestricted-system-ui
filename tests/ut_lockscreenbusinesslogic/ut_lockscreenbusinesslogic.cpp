@@ -29,9 +29,6 @@
 #include <MApplication>
 #include <MApplicationWindow>
 
-#define DEBUG
-#include "debug.h"
-
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
 MeeGo::QmDisplayState::DisplayState qmDisplayState;

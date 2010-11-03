@@ -5,13 +5,11 @@ TARGET = ut_lockscreenwithpadlockview
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
 
 SOURCES += ut_lockscreenwithpadlockview.cpp \
-    $$SRCDIR/debug.cpp \
     $$SRCDIR/lockscreen/lockscreenwithpadlockview.cpp  \
     $$SRCDIR/lockscreen/lockscreenview.cpp  \
     $$STUBSDIR/stubbase.cpp \
 
 HEADERS += ut_lockscreenwithpadlockview.h \
-    $$SRCDIR/debug.h \
     $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
     $$SRCDIR/lockscreen/lockscreenwithpadlockview.h \

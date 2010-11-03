@@ -2,9 +2,11 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ft_batterybusinesslogic
 
+INCLUDEPATH += $$COMMONDIR
+
 HEADERS += \
     ft_batterybusinesslogic.h \
-    $$SRCDIR/debug.h \
+    $$COMMONDIR/debug.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$STUBSDIR/qmled_stub.h \
     $$STUBSDIR/qmbattery_stub.h \
@@ -13,7 +15,7 @@ HEADERS += \
 
 SOURCES += \
     ft_batterybusinesslogic.cpp \
-    $$SRCDIR/debug.cpp \
+    $$COMMONDIR/debug.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$STUBSDIR/stubbase.cpp
 

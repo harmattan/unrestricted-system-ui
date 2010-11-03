@@ -24,15 +24,12 @@
 #include <QTimer>
 #include <QVariant>
 #include <QString>
-
-#undef DEBUG
-#define WARNING
-#include "../debug.h"
+#include <QDebug>
 
 #define DBUS_ERR_CHECK(err) \
     if (dbus_error_is_set (&err)) \
     { \
-        SYS_WARNING (err.message); \
+        qWarning() << err.message; \
         dbus_error_free (&err); \
     }
 
@@ -95,8 +92,6 @@ void VolumeBarLogic::openConnection (bool init)
 
 void VolumeBarLogic::initValues ()
 {
-    SYS_DEBUG ("");
-
     DBusMessage *msg;
     DBusMessage *reply;
     DBusError    error;
@@ -155,8 +150,6 @@ void VolumeBarLogic::initValues ()
                   else if (prop_name &&
                            strcmp (prop_name, "CurrentStep") == 0)
                     currentvolume = value;
-
-                  SYS_DEBUG ("%s: %d", prop_name, value);
                 }
 
                 dbus_message_iter_next (&dict_entry);
@@ -173,8 +166,6 @@ void VolumeBarLogic::initValues ()
 
 void VolumeBarLogic::addSignalMatch ()
 {
-    SYS_DEBUG ("start");
-
     DBusMessage     *message = NULL;
     char            *signal = (char *) "com.Nokia.MainVolume1.StepsUpdated";
     char           **emptyarray = { NULL };
@@ -191,14 +182,12 @@ void VolumeBarLogic::addSignalMatch ()
                                   DBUS_TYPE_INVALID);
 
         dbus_connection_send (dbus_conn, message, NULL);
+    } else {
+        qWarning() << "Cannot listen for PulseAudio signals [out of memory]";
     }
-    else
-        SYS_WARNING ("Cannot listen for PulseAudio signals [out of memory]");
 
     if (message)
         dbus_message_unref (message);
-
-    SYS_DEBUG ("end");
 }
 
 void VolumeBarLogic::stepsUpdatedSignal (
@@ -217,8 +206,6 @@ void VolumeBarLogic::stepsUpdatedSignal (
                                    DBUS_TYPE_UINT32, &maxvalue,
                                    DBUS_TYPE_UINT32, &value,
                                    DBUS_TYPE_INVALID)) {
-            SYS_DEBUG ("StepsUpdated (StepCount: %u, CurrentStep: %u);",
-                       maxvalue, value);
             logic->stepsUpdated (value, maxvalue);
         }
 
@@ -228,8 +215,6 @@ void VolumeBarLogic::stepsUpdatedSignal (
 
 void VolumeBarLogic::stepsUpdated (quint32 value, quint32 maxvalue)
 {
-    SYS_DEBUG ("val = %d [max = %d]", value, maxvalue);
-
     currentvolume = value;
     currentmax = maxvalue;
 
@@ -278,9 +263,9 @@ void VolumeBarLogic::setVolume (quint32 value)
 
         // Send/flush the message immediately:
         dbus_connection_send (dbus_conn, message, NULL);
+    } else {
+        qWarning() << "Cannot set volume! [not enough memory]";
     }
-    else
-        SYS_WARNING ("Cannot set volume! [not enough memory]");
 
     if (message)
         dbus_message_unref (message);
@@ -289,7 +274,6 @@ void VolumeBarLogic::setVolume (quint32 value)
 quint32 VolumeBarLogic::volume ()
 {
     ping ();
-    SYS_DEBUG ("volume = %d", currentvolume);
 
     return currentvolume;
 }
@@ -297,7 +281,6 @@ quint32 VolumeBarLogic::volume ()
 quint32 VolumeBarLogic::maxVolume ()
 {
     ping ();
-    SYS_DEBUG ("max = %d", currentmax);
 
     return currentmax;
 }

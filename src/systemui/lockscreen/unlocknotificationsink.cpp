@@ -23,9 +23,6 @@
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
 
-#undef DEBUG
-#include "debug.h"
-
 /*
  * Used event-types:
  * Please check the /usr/share/meegotouch/notifications/eventtypes directory for
@@ -53,7 +50,6 @@
 UnlockNotificationSink::UnlockNotificationSink () :
     m_enabled (false), privateNotificationSetting(new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this))
 {
-    SYS_DEBUG ("");
 }
 
 void
@@ -61,8 +57,6 @@ UnlockNotificationSink::setLockedState (bool islocked)
 {
     if (islocked == m_enabled)
         return;
-
-    SYS_DEBUG ("islocked = %s", SYS_BOOL (islocked));
 
     // Set the internal state
     m_enabled = islocked;
@@ -146,8 +140,6 @@ UnlockNotificationSink::addNotification (const Notification &notification)
     } else {
         lastSummary = notification.parameters ().value(NotificationWidgetParameterFactory::summaryKey ()).toString();
     }
-
-    SYS_DEBUG ("summary = \"%s\"", SYS_STR (lastSummary));
 
     UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
 }

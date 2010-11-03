@@ -12,14 +12,12 @@ STYLE_HEADERS += \
     $$SRCDIR/volumecontrol/volumebarstyle.h
 
 HEADERS += \
-    $$SRCDIR/debug.h \
     ut_volumebar.h \
     $$SRCDIR/volumecontrol/volumebar.h \
     $$STYLE_HEADERS
 
 
 SOURCES += \
-    $$SRCDIR/debug.cpp \
     ut_volumebar.cpp \
     $$SRCDIR/volumecontrol/volumebar.cpp
 

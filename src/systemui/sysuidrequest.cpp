@@ -19,14 +19,11 @@
 
 #include <QDBusConnection>
 #include <QDBusError>
+#include <QDebug>
 
 #include "sysuidrequest.h"
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
-
-#define DEBUG
-#define WARNING
-#include "debug.h"
 
 SysUidRequest::SysUidRequest ()
 {
@@ -37,14 +34,11 @@ SysUidRequest::SysUidRequest ()
      */
     QDBusConnection bus = QDBusConnection::systemBus ();
 
-    SYS_DEBUG ("Registering service/object on system bus.");
     if (!bus.registerService (dbusService ())) {
-        SYS_WARNING ("failed to register dbus service");
         dbusError (bus, false);
     }
 
     if (!bus.registerObject (dbusPath (), this)) {
-        SYS_WARNING ("failed to register dbus object");
         dbusError (bus, false);
     }
 
@@ -63,11 +57,7 @@ SysUidRequest::dbusError (
 {
     QDBusError error = connection.lastError ();
 
-    if (error.isValid()) {
-        SYS_WARNING ("DBus error: %s", SYS_STR(error.message()));
-    } else {
-        SYS_WARNING ("Unknown DBus error");
-    }
+    qWarning() << "DBus error: " << error.message();
 
     if (abortProgram)
         abort();

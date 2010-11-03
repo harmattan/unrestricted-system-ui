@@ -23,10 +23,6 @@
 #include "inputmethodstatusindicatoradaptor.h"
 #include "applicationcontext.h"
 
-//#define DEBUG
-#define WARNING
-#include "debug.h"
-
 // keep these in sync with the context framework!
 static const QString CONTEXT_CALLSTATE_ALERTING = "alerting";
 static const QString CONTEXT_CALLSTATE_KNOCKING = "knocking";
@@ -81,7 +77,6 @@ void StatusIndicator::setValue(QVariant v)
 
 QVariant StatusIndicator::value() const
 {
-    SYS_DEBUG ("*** currentValue = %g", currentValue.toDouble());
     return currentValue;
 }
 
@@ -113,10 +108,8 @@ void StatusIndicator::setModelUpdatesEnabled(bool modelUpdatesEnabled)
 void StatusIndicator::updateAnimationStatus()
 {
     if (modelUpdatesEnabled) {
-        SYS_DEBUG ("setAnimate(%s)", SYS_BOOL(animateIfPossible));
         model()->setAnimate(animateIfPossible);
     } else {
-        SYS_DEBUG ("setAnimate(false)");
         model()->setAnimate(false);
     }
 }
@@ -273,7 +266,6 @@ void BatteryStatusIndicator::batteryChargingChanged()
     }
 
     updateAnimationStatus();
-    //SYS_DEBUG ("extra batteryLevelChanged() call");
     batteryLevelChanged ();
 }
 

@@ -4,7 +4,6 @@ TARGET = ut_batterybusinesslogic
 
 HEADERS += \
     ut_batterybusinesslogic.h \
-    $$SRCDIR/debug.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$STUBSDIR/qmled_stub.h \
     $$STUBSDIR/qmbattery_stub.h \
@@ -13,7 +12,6 @@ HEADERS += \
 
 SOURCES += \
     ut_batterybusinesslogic.cpp \
-    $$SRCDIR/debug.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$STUBSDIR/stubbase.cpp
 

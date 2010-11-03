@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -32,10 +30,6 @@
 using namespace MeeGo;
 #endif
 
-#define DEBUG
-#include "debug.h"
-
-
 #ifdef HAVE_QMSYSTEM
 static bool dimmingShouldSucceed = true;
 
@@ -45,7 +39,6 @@ QmDisplayState::set(
 {
     Q_UNUSED (state);
 
-    SYS_DEBUG ("*************");
     //m_State = state;
     return dimmingShouldSucceed;
 }
@@ -61,7 +54,6 @@ static QString nameOfLastFeedback;
 void
 MFeedback::play () const 
 {
-    SYS_DEBUG ("*** name = %s", SYS_STR(name()));
     nameOfLastFeedback = name();
 }
 
@@ -69,11 +61,8 @@ MFeedback::play () const
  * Stubbing the QWidget, so the UI will not be really shown.
  */
 void 
-QWidget::setVisible (bool visible)
+QWidget::setVisible (bool)
 {
-    SYS_DEBUG ("----------------------------------------------------------");
-    SYS_DEBUG ("*** visible = %s", SYS_BOOL(visible));
-    SYS_DEBUG ("*** this    = %p", this);
 }
 
 /*******************************************************************************
@@ -95,7 +84,6 @@ char *argv[] = {
 
 void Ut_ShutdownUI::initTestCase()
 {
-    SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
 

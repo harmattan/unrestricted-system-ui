@@ -22,9 +22,6 @@
 #include <MDialog>
 #include <QTest>
 
-#define DEBUG
-#include <debug.h>
-
 #include "ut_usbui.h"
 #include "usbmode_stub.h"
 
@@ -68,7 +65,6 @@ static bool dialog_visible;
 void
 MDialog::appear (MSceneWindow::DeletionPolicy policy)
 {
-    SYS_DEBUG ("");
     Q_UNUSED (policy);
     dialog_visible = true;
 }
@@ -76,7 +72,6 @@ MDialog::appear (MSceneWindow::DeletionPolicy policy)
 void
 MSceneWindow::disappear ()
 {
-    SYS_DEBUG ("");
     dialog_visible = false;
 }
 

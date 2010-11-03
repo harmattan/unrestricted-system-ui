@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 #include "ut_unlockarea.h"
-#include <debug.h>
 #include <MTheme>
 #include <MApplication>
 #include <unlockarea.h>

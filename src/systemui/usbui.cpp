@@ -28,10 +28,6 @@
 #include <MLocale>
 #include <QTimer>
 
-#undef DEBUG
-#define WARNING
-#include "debug.h"
-
 UsbUi::UsbUi (QObject *parent) : QObject (parent),
     m_notification (0),
     m_dialog (0),
@@ -69,8 +65,6 @@ UsbUi::initialize ()
 void
 UsbUi::setDisabled (bool disable)
 {
-    SYS_DEBUG ("disable = %s", SYS_BOOL (disable));
-
     m_disabled = disable;
 
     if (disable == true)
@@ -97,7 +91,6 @@ UsbUi::setDisabled (bool disable)
 void
 UsbUi::ShowDialog ()
 {
-    SYS_DEBUG ("");
     MWidget       *centralwidget;
     MContentItem  *button;
     MLabel        *label;
@@ -163,7 +156,6 @@ UsbUi::ShowDialog ()
 void
 UsbUi::OviSuiteSelected ()
 {
-    SYS_DEBUG ("");
     if (m_dialog)
     {
         m_dialog->accept ();
@@ -178,7 +170,6 @@ UsbUi::OviSuiteSelected ()
 void
 UsbUi::MassStorageSelected ()
 {
-    SYS_DEBUG ("");
     if (m_dialog)
     {
         m_dialog->accept ();
@@ -194,10 +185,6 @@ UsbUi::MassStorageSelected ()
 void
 UsbUi::currentModeChanged (MeeGo::QmUSBMode::Mode mode)
 {
-#if 0
-    SYS_WARNING ("mode = %d", (int) mode);
-#endif
-
     switch (mode)
     {
         case MeeGo::QmUSBMode::Ask:
@@ -228,11 +215,9 @@ UsbUi::currentModeChanged (MeeGo::QmUSBMode::Mode mode)
             ShowNotification ((int) mode);
             break;
         case MeeGo::QmUSBMode::ChargingOnly:
-            SYS_DEBUG ("mode : Charging only");
             // no-op
             break;
         default:
-            SYS_DEBUG ("What about mode = %d?", mode);
             // doing nothing, no ui interaction specified here...
             break;
     }
@@ -243,7 +228,6 @@ UsbUi::currentModeChanged (MeeGo::QmUSBMode::Mode mode)
 void
 UsbUi::ShowNotification (int id)
 {
-    SYS_DEBUG ("");
     QString *mode_text;
 
     // no-op when disabled

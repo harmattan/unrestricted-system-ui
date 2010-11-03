@@ -35,10 +35,6 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
 
-#define DEBUG
-#define WARNING
-#include "debug.h"
-
 // For WM_SET_NAME:
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -67,9 +63,8 @@ ShutdownUI::ShutdownUI () :
 ShutdownUI::~ShutdownUI ()
 {
     delete m_Timer;
-    
+
     if (m_SceneWindow) {
-        SYS_DEBUG ("deleting m_SceneWindow");
         delete m_SceneWindow;
     }
     // FIXME: What about m_Feedback?
@@ -82,8 +77,6 @@ ShutdownUI::~ShutdownUI ()
 void
 ShutdownUI::realize ()
 {
-    SYS_DEBUG ("");
-
     if (m_Realized)
         return;
 
@@ -155,8 +148,6 @@ ShutdownUI::showWindow (
         const QString    &text2, 
         int               timeout)
 {
-    SYS_DEBUG ("");
-    
     /*
      * If the widgets are not created we create them now.
      */
@@ -202,7 +193,6 @@ ShutdownUI::showWindow (
 void
 ShutdownUI::showLogo ()
 {
-    SYS_DEBUG ("");
     m_Timer->stop ();
 
     /*
@@ -237,8 +227,6 @@ ShutdownUI::turnOffScreen ()
 {
     bool success = false;
 
-    SYS_DEBUG ("");
-
     /*
      * No way dimming or turning off the screen inside scratchbox.
      */
@@ -247,17 +235,11 @@ ShutdownUI::turnOffScreen ()
 
     // Try to dim
     success = display.set (MeeGo::QmDisplayState::Dimmed);
-    if (! success) {
-        SYS_WARNING ("Dimming the display failed!");
-    }
 
     // Try to turn off
     success = display.set (MeeGo::QmDisplayState::Off);
-    if (! success) {
-        SYS_WARNING ("Turning off the display failed!");
-    }
     #endif
-    
+
     if (!success) {
         QPalette Palette (palette());
 
@@ -289,31 +271,17 @@ ShutdownUI::showEvent (
 
     display = QX11Info::display ();
     if (!display) {
-        SYS_WARNING ("QX11Info::display() failed");
         return;
     }
     
     stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
-    if (stackingLayerAtom == None) {
-        SYS_WARNING ("Atom '_MEEGO_STACKING_LAYER' does not exists");
-    }
-
     nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
-    if (nameAtom == None) {
-        SYS_WARNING ("Atom '_NET_WM_NAME' does not exists");
-    }
-
     utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
-    if (utf8StringAtom == None) {
-        SYS_WARNING ("Atom 'UTF8_STRING' does not exists");
-    }
 
     windowID = internalWinId();
     if (windowID == None) {
-        SYS_WARNING ("internalWinId() failed");
         return;
     }
-    SYS_DEBUG ("*** windowID = 0x%lx", windowID);
 
     /*
      * Setting the stacking layer.

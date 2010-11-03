@@ -29,7 +29,6 @@ contains(cov, true) {
 }
 
 HEADERS +=                              \
-    debug.h                             \
     sysuidrequest.h                     \
     batterybusinesslogic.h              \
     sysuid.h                            \
@@ -41,7 +40,6 @@ HEADERS +=                              \
     x11wrapper.h
 
 SOURCES +=                              \
-    debug.cpp                           \
     main.cpp                            \
     sysuidrequest.cpp                   \
     batterybusinesslogic.cpp            \

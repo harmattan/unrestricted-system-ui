@@ -124,6 +124,16 @@ QList<MNotificationGroupProxy> MockNotificationManager::notificationGroupList(ui
     return QList<MNotificationGroupProxy>();
 }
 
+QList<MNotificationWithIdentifierProxy> MockNotificationManager::notificationListWithIdentifiers(uint)
+{
+    return QList<MNotificationWithIdentifierProxy>();
+}
+
+QList<MNotificationGroupWithIdentifierProxy> MockNotificationManager::notificationGroupListWithIdentifiers(uint)
+{
+    return QList<MNotificationGroupWithIdentifierProxy>();
+}
+
 bool windowEventFilterCalled = false;
 bool windowEventFilterBlock = false;
 bool WindowEventFilter::eventFilter(QObject *obj, QEvent *event)

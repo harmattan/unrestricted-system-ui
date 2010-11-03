@@ -21,9 +21,6 @@
 #include <QTimer>
 #include "lockscreenbusinesslogicadaptor.h"
 
-#undef DEBUG
-#include "debug.h"
-
 LockScreenBusinessLogicAdaptor::LockScreenBusinessLogicAdaptor (
         QObject                 *obj,
         LockScreenBusinessLogic *logic) :
@@ -67,24 +64,6 @@ LockScreenBusinessLogicAdaptor::tklock_open (
     Q_UNUSED(flicker);
     Q_UNUSED(silent);
 
-#if 1
-    SYS_DEBUG (
-"---------------Start------------------\n"
-"\n*** service   = '%s'"
-"\n*** path      = '%s'"
-"\n*** interface = '%s'"
-"\n*** method    = '%s'"
-"\n*** u         = %u"
-"\n*** silent    = %s"
-"\n*** flicker   = %s",
-            SYS_STR (service),
-            SYS_STR (path),
-            SYS_STR (interface),
-            SYS_STR (method),
-            mode,
-            silent ? "true" : "false",
-            flicker ? "true" : "false");
-#endif
     m_MCECallbackService = service;
     m_MCECallbackPath = path;
     m_MCECallbackInterface = interface;
@@ -96,11 +75,9 @@ LockScreenBusinessLogicAdaptor::tklock_open (
      */
     switch (mode) {
         case TkLockModeNone:
-            SYS_DEBUG ("### TkLockModeNone");
             break;
 
         case TkLockModeEnable:
-            SYS_DEBUG ("### TkLockModeEnable");
 
             /*
              * Show the visual earliest...
@@ -117,18 +94,15 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             /*
              * Not used/deprecated.
              */
-            SYS_DEBUG ("### TkLockModeHelp");
             break;
 
         case TkLockModeSelect:
             /*
              * Not used/deprecated.
              */
-            SYS_DEBUG ("### TkLockModeSelect");
             break;
 
         case TkLockModeOneInput:
-            SYS_DEBUG ("### TkLockModeOneInput");
             /*
              * The event eater supposed to consume exactly one event, hence the
              * name.
@@ -137,7 +111,6 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
 
         case TkLockEnableVisual:
-            SYS_DEBUG ("### TkLockEnableVisual");
             /*
              * This mode is where we actually should show the screen to unlock
              * the screen.
@@ -148,18 +121,15 @@ LockScreenBusinessLogicAdaptor::tklock_open (
             break;
 
         default:
-            SYS_WARNING ("### Unknown mode");
             break;
     }
 
-    SYS_DEBUG ("-------------End----------------------\n");
     return (int) TkLockReplyOk;
 }
 
 void
 LockScreenBusinessLogicAdaptor::enableVisual ()
 {
-    SYS_DEBUG ("");
     m_LockScreenBusinessLogic->toggleScreenLockUI (true);
     m_LockScreenBusinessLogic->toggleEventEater (false);
 }
@@ -167,14 +137,12 @@ LockScreenBusinessLogicAdaptor::enableVisual ()
 void
 LockScreenBusinessLogicAdaptor::enableEater ()
 {
-    SYS_DEBUG ("");
     m_LockScreenBusinessLogic->toggleEventEater (true);
 }
 
 void
 LockScreenBusinessLogicAdaptor::hideVisualAndEater ()
 {
-    SYS_DEBUG ("");
     /*
      * This functions will hides both page,
      * the event eater and the unlock-ui
@@ -192,7 +160,6 @@ int
 LockScreenBusinessLogicAdaptor::tklock_close (
         bool   silent)
 {
-    SYS_DEBUG ("");
     Q_UNUSED (silent);
 
     QTimer::singleShot (0, this, SLOT (hideVisualAndEater ()));
@@ -203,8 +170,6 @@ LockScreenBusinessLogicAdaptor::tklock_close (
 void
 LockScreenBusinessLogicAdaptor::unlockConfirmed ()
 {
-    SYS_DEBUG ("");
-
     if (m_CallbackDbusIf)
         delete m_CallbackDbusIf;
 
@@ -224,32 +189,9 @@ LockScreenBusinessLogicAdaptor::unlockConfirmed ()
         } tklock_status;
      * Where TKLOCK_UNLOCK == TkLockReplyOk so I just leave it now.
      */
-    #if 0
-    /*
-     * We can turn on some extra debug messages here, if we need to.
-     */
-    SYS_DEBUG ("Sending answer:");
-    SYS_DEBUG ("*** service    = %s", SYS_STR(m_MCECallbackService));
-    SYS_DEBUG ("*** path       = %s", SYS_STR(m_MCECallbackPath));
-    SYS_DEBUG ("*** interface  = %s", SYS_STR(m_MCECallbackInterface));
-    SYS_DEBUG ("*** callback   = %s", SYS_STR(m_MCECallbackMethod));
-    SYS_DEBUG ("*** param(int) = %d", (int) TkLockReplyOk);
-    #endif
-   	
+
     QDBusMessage message;
     message = m_CallbackDbusIf->call (QDBus::NoBlock,
             m_MCECallbackMethod, //QString ("tklock_callback"),
             (int) TkLockReplyOk);
-
-    #if 0
-    /*
-     * We used to check things here...
-     */
-    SYS_DEBUG ("Answer sent...");
-    QString errorString = message.errorMessage();
-    QString errorName = message.errorName ();
-    SYS_DEBUG ("*** errorMessage = %s", SYS_STR(errorString));
-    SYS_DEBUG ("*** errorName    = %s", SYS_STR(errorName));
-    #endif
 }
-

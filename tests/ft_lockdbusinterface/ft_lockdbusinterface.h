@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QDBusInterface>
 #include <QDBusError>
-#include "../ft_lockscreenui/xchecker.h"
+#include "xchecker.h"
 
 class MApplication;
 

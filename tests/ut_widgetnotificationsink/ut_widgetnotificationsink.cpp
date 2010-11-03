@@ -70,17 +70,14 @@ void TestWidgetNotificationSink::updateActions(MBanner *infoBanner, const Notifi
 
 QString qtTrId(const char *id, int count)
 {
-    if(QString(id) == "translationid")
-        if (1 == count)
-        {
+    if(QString(id) == "translationid") {
+        if (1 == count) {
             return "translatedstring %1";
-        }
-        else if (count > 1)
-        {
+        } else if (count > 1) {
             return "translatedpluralstring %1";
         }
-    else
-        return "";
+    }
+    return QString();
 }
 
 // MLocale stubs

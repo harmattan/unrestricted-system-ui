@@ -7,7 +7,6 @@ DEFINES += NOTIFICATIONS_EVENT_TYPES=\'$$quote(\"$$M_NOTIFICATIONS_EVENT_TYPES_D
 
 SOURCES += ut_unlocknotificationsink.cpp \
     $$SRCDIR/lockscreen/unlocknotificationsink.cpp \
-    $$SRCDIR/debug.cpp \
     $$STUBSDIR/stubbase.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
     $$LIBNOTIFICATIONSRCDIR/notification.cpp \
@@ -17,7 +16,6 @@ SOURCES += ut_unlocknotificationsink.cpp \
 
 HEADERS += ut_unlocknotificationsink.h \
     $$SRCDIR/lockscreen/unlocknotificationsink.h \
-    $$SRCDIR/debug.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$STUBSDIR/unlockmissedevents_stub.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \

@@ -26,9 +26,6 @@
 #include <MLabel>
 #include <MImageWidget>
 
-#undef DEBUG
-#include "debug.h"
-
 UnlockArea::UnlockArea(QGraphicsItem *parent) :
     MStylableWidget(parent),
     m_enabled(false),
@@ -73,7 +70,6 @@ UnlockArea::~UnlockArea ()
 void
 UnlockArea::setActive (bool active)
 {
-    SYS_DEBUG ("active = %s", SYS_BOOL (active));
     if (m_enabled == false)
         return; /* no-op when disabled... */
 
@@ -88,7 +84,6 @@ UnlockArea::setActive (bool active)
 void
 UnlockArea::setEnabled (bool enabled)
 {
-    SYS_DEBUG ("enabled = %s", SYS_BOOL (enabled));
     if (m_enabled == enabled)
         return;
 
@@ -102,8 +97,6 @@ UnlockArea::setEnabled (bool enabled)
 void
 UnlockArea::updateState ()
 {
-    SYS_DEBUG ("");
-
     if (m_enabled == false)
     {
         setObjectName ("LockLandArea");

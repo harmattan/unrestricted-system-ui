@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ft_lockscreenui
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen $$COMMONDIR
 
 contains(DEFINES, HAVE_QMSYSTEM) {
 	PKGCONFIG += qmsystem2
@@ -11,8 +11,7 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
 
 SOURCES += ft_lockscreenui.cpp \
-    xchecker.cpp \
-    $$SRCDIR/debug.cpp \
+    $$COMMONDIR/xchecker.cpp \
     $$SRCDIR/lockscreen/unlockarea.cpp \
     $$SRCDIR/lockscreen/lockscreen.cpp  \
     $$SRCDIR/lockscreen/lockscreenwindow.cpp  \
@@ -23,8 +22,7 @@ SOURCES += ft_lockscreenui.cpp \
     $$SRCDIR/x11wrapper.cpp
 
 HEADERS += ft_lockscreenui.h \
-    xchecker.h \
-    $$SRCDIR/debug.h \
+    $$COMMONDIR/xchecker.h \
     $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h \

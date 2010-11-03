@@ -17,7 +17,6 @@ STYLE_HEADERS += \
     $$SRCDIR/volumecontrol/volumebarstyle.h
 
 HEADERS += \
-    $$SRCDIR/debug.h \
     ut_volumebarwindow.h \
     $$SRCDIR/volumecontrol/volumebarwindow.h \
     $$SRCDIR/volumecontrol/volumebarlogic.h \
@@ -26,7 +25,6 @@ HEADERS += \
 
 
 SOURCES += \
-    $$SRCDIR/debug.cpp \
     ut_volumebarwindow.cpp \
     $$SRCDIR/volumecontrol/volumebarwindow.cpp
 

@@ -7,6 +7,7 @@ LIBNOTIFICATIONSRCDIR = $$ROOTSRCDIR/libnotificationsystem
 SRCDIR = $$ROOTSRCDIR/systemui
 NOTIFICATIONSRCDIR = $$SRCDIR/notifications
 STUBSDIR = ../stubs
+COMMONDIR = ../common
 INCLUDEPATH += $$M_INSTALL_HEADERS $$SRCDIR $$STUBSDIR
 DEPENDPATH = $$INCLUDEPATH
 CONFIG += meegotouch link_pkgconfig qmsystem2

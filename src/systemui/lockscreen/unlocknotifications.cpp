@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -28,9 +26,6 @@
 #include <MSceneManager>
 #include <MStylableWidget>
 #include <MOrientationChangeEvent>
-
-#define DEBUG
-#include "debug.h"
 
 #define ICON_SIZE 32
 
@@ -140,7 +135,6 @@ UnlockNotifications::orientationChanged (
 {
     if (orientation == M::Landscape)
     {
-        SYS_DEBUG ("M:Landscape");
         /*
          * Remove & hide the most recent area from top
          */
@@ -161,7 +155,6 @@ UnlockNotifications::orientationChanged (
     }
     else
     {
-        SYS_DEBUG ("M:Portrait");
         /*
          * Remove the most recent event widgets from other events layout
          */
@@ -191,8 +184,6 @@ UnlockNotifications::orientationChanged (
 void
 UnlockNotifications::updateContents ()
 {
-    SYS_DEBUG ("");
-
     UnlockMissedEvents::Types mostRecent =
         UnlockMissedEvents::getInstance ().getLastType ();
 
@@ -311,7 +302,6 @@ UnlockNotifications::updateContents ()
         /* Somehow isVisible sometimes lying at first call :-S */
         if (m_icon_layout->count () == 0)
             newIndex = 0;
-        SYS_DEBUG ("newIndex = %d", newIndex);
 
         /*
          * Put the new icons to the proper place...

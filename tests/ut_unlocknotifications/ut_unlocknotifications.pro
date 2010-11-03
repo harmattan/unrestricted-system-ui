@@ -9,7 +9,6 @@ SOURCES += \
     ../common/MTester.cpp \
     ut_unlocknotifications.cpp \
     $$SRCDIR/lockscreen/unlocknotifications.cpp \
-    $$SRCDIR/debug.cpp \
     $$STUBSDIR/stubbase.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
     $$LIBNOTIFICATIONSRCDIR/notification.cpp \
@@ -21,7 +20,6 @@ HEADERS += \
     ../common/MTester.h \
     ut_unlocknotifications.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
-    $$SRCDIR/debug.h \
     $$SRCDIR/lockscreen/unlockmissedevents.h \
     $$STUBSDIR/unlockmissedevents_stub.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \

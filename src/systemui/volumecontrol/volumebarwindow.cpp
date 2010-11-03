@@ -23,9 +23,6 @@
 #include <MSceneManager>
 #include <MOverlay>
 
-#undef DEBUG
-#include "../debug.h"
-
 VolumeBarWindow::VolumeBarWindow (QWidget *parent) :
     MWindow (parent),
     logic (new VolumeBarLogic),
@@ -112,11 +109,9 @@ void VolumeBarWindow::hwKeyEvent (MeeGo::QmKeys::Key key, MeeGo::QmKeys::State s
     switch (key)
     {
         case MeeGo::QmKeys::VolumeUp:
-            SYS_DEBUG ("volume-up");
             change_val++;
             break;
         case MeeGo::QmKeys::VolumeDown:
-            SYS_DEBUG ("volume-down");
             change_val--;
             break;
         default:
@@ -180,7 +175,6 @@ void VolumeBarWindow::locksChanged (MeeGo::QmLocks::Lock what, MeeGo::QmLocks::S
 
 void VolumeBarWindow::hwKeyResourceAcquired ()
 {
-    SYS_DEBUG ("");
 #ifdef HAVE_QMSYSTEM
     // Disconnect from everything first
     hwkeys->disconnect ();
@@ -192,7 +186,6 @@ void VolumeBarWindow::hwKeyResourceAcquired ()
 
 void VolumeBarWindow::hwKeyResourceLost ()
 {
-    SYS_DEBUG ("");
 #ifdef HAVE_QMSYSTEM
     hwkeys->disconnect ();
 #endif

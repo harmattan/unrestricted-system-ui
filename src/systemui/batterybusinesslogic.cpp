@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -38,10 +36,6 @@ namespace {
     const int   ChargingAnimationRateWall = 400; // 400 ms
 }
 
-#undef DEBUG
-#include "debug.h"
-
-
 /******************************************************************************
  * Methods for the LowBatteryNotifier class.
  */
@@ -51,8 +45,6 @@ LowBatteryNotifier::LowBatteryNotifier (
         m_Timer (new QTimer (this)),
         m_Sleep (false)
 {
-    SYS_DEBUG ("----------------------------------------------");
-
     m_ActiveInterval = LowBatteryActiveInterval;
     m_InactiveInterval = LowBatteryInactiveInterval;
     m_Time.start ();
@@ -78,8 +70,6 @@ LowBatteryNotifier::~LowBatteryNotifier ()
 void
 LowBatteryNotifier::showLowBatteryNotification ()
 {
-    SYS_DEBUG ("");
-
     emit lowBatteryAlert ();
 
     m_Time.start (); //restart time
@@ -98,8 +88,6 @@ LowBatteryNotifier::showLowBatteryNotification ()
             break;
 
         default:
-            // FIXME: what about the other states [Unknown]?
-            SYS_WARNING ("Unknown display state");
             break;
     }
 #endif
@@ -110,8 +98,6 @@ void
 LowBatteryNotifier::displayStateChanged (
         MeeGo::QmDisplayState::DisplayState state)
 {
-    SYS_DEBUG ("");
-
     switch (state) {
         case MeeGo::QmDisplayState::On:
             if (!m_Sleep)
@@ -154,11 +140,8 @@ BatteryBusinessLogic::BatteryBusinessLogic (
     m_ChargerType (MeeGo::QmBattery::Unknown)
 #endif
 {
-    SYS_DEBUG ("----------------- start ----------------------");
-
 #ifdef HAVE_QMSYSTEM
     /* connect to QmSystem signals */
-    SYS_DEBUG ("Connecting QmSystem signals");
     connect (m_Battery,
              SIGNAL (batteryStateChanged (MeeGo::QmBattery::BatteryState)),
              this,
@@ -180,8 +163,6 @@ BatteryBusinessLogic::BatteryBusinessLogic (
 
     // Init battery values delayed...
     initBattery ();
-
-    SYS_DEBUG ("------------------ end -----------------------");
 }
 
 
@@ -227,12 +208,8 @@ void
 BatteryBusinessLogic::chargingStateChanged (
         MeeGo::QmBattery::ChargingState state)
 {
-    SYS_DEBUG ("");
-
     switch (state) {
         case MeeGo::QmBattery::StateCharging:
-            SYS_DEBUG ("Charging");
-
             if (m_Battery->getChargerType () == MeeGo::QmBattery::USB_100mA)
             {
                 sendNotification (NotificationNoEnoughPower);
@@ -254,12 +231,10 @@ BatteryBusinessLogic::chargingStateChanged (
             break;
 
         case MeeGo::QmBattery::StateNotCharging:
-            SYS_DEBUG ("Not charging");
             utiliseLED (false, QString ("PatternBatteryCharging"));
             break;
 
         case MeeGo::QmBattery::StateChargingFailed:
-            SYS_DEBUG ("Charging not started");
             sendNotification (NotificationChargingNotStarted);
             break;
     }
@@ -269,21 +244,16 @@ void
 BatteryBusinessLogic::batteryStateChanged (
         MeeGo::QmBattery::BatteryState state)
 {
-    SYS_DEBUG ("");
-
     switch (state) {
     case MeeGo::QmBattery::StateFull:
-        SYS_DEBUG ("QmBattery::StateFull");
         sendNotification (NotificationChargingComplete);
         break;
 
     case MeeGo::QmBattery::StateOK:
-        SYS_DEBUG ("QmBattery::StateOK");
         /* no-operation here... */
         break;
 
     case MeeGo::QmBattery::StateLow:
-        SYS_DEBUG ("QmBattery::StateLow");
         if (m_Battery->getChargingState () != MeeGo::QmBattery::StateCharging) {
             if (m_LowBatteryNotifier == 0) {
                 m_LowBatteryNotifier = new LowBatteryNotifier ();
@@ -296,7 +266,6 @@ BatteryBusinessLogic::batteryStateChanged (
         break;
 
     case MeeGo::QmBattery::StateEmpty:
-        SYS_DEBUG ("QmBattery::StateEmpty");
         sendNotification (NotificationRechargeBattery);
         break;
 
@@ -309,11 +278,8 @@ void
 BatteryBusinessLogic::batteryChargerEvent (
         MeeGo::QmBattery::ChargerType type)
 {
-    SYS_DEBUG ("");
-
     switch (type) {
         case MeeGo::QmBattery::None:
-            SYS_DEBUG ("QmBattery::None");
             /*
              * After the user plugs out the charger from the device, this system
              * banner is displayed to remind the users to unplug charger from
@@ -327,22 +293,17 @@ BatteryBusinessLogic::batteryChargerEvent (
 
         case MeeGo::QmBattery::Wall:
             // Wall charger
-            SYS_DEBUG ("QmBattery::Wall");
             break;
 
         case MeeGo::QmBattery::USB_500mA:
             // USB with 500mA output
-            SYS_DEBUG ("QmBattery::USB_500mA");
             break;
 
         case MeeGo::QmBattery::USB_100mA:
             // USB with 100mA output
-            SYS_DEBUG ("QmBattery::USB_100mA");
             break;
 
         default: 
-            //QmBattery::Unknown
-            SYS_WARNING ("Unknown charger state");
             break;
     }
 
@@ -383,7 +344,6 @@ BatteryBusinessLogic::sendNotification (
 {
     switch (id) {
         case NotificationCharging:
-            SYS_DEBUG ("Notifying NotificationCharging");
             utiliseLED (true, QString ("PatternBatteryCharging"));
             sendNotification (
                     "x-nokia.battery",
@@ -393,7 +353,6 @@ BatteryBusinessLogic::sendNotification (
             break;
 
         case NotificationChargingComplete:
-            SYS_DEBUG ("Notifying NotificationChargingComplete");
             utiliseLED (true, QString ("PatternBatteryFull"));
             sendNotification (
                     "x-nokia.battery.chargingcomplete",
@@ -402,7 +361,6 @@ BatteryBusinessLogic::sendNotification (
             break;
 
         case NotificationRemoveCharger:
-            SYS_DEBUG ("Notifying NotificationRemoveCharger");
             sendNotification (
                     "x-nokia.battery.removecharger",
                     //% "Disconnect charger from power supply to save energy"
@@ -461,10 +419,6 @@ BatteryBusinessLogic::sendNotification (
         const QString &text,
         const QString &icon)
 {
-    SYS_DEBUG ("*** text      = %s", SYS_STR(text));
-    SYS_DEBUG ("*** eventType = %s", SYS_STR(eventType));
-    SYS_DEBUG ("*** icon      = %s", SYS_STR(icon));
-
     if (m_notification != 0) { 
         m_notification->remove (); 
         delete m_notification; 
@@ -475,8 +429,6 @@ BatteryBusinessLogic::sendNotification (
      * We send this signal before the actual notification so it will arrive as
      * soon as possible.
      */
-    SYS_DEBUG ("Emitting notificationSent (%s, %s, %s)",
-            SYS_STR(eventType), SYS_STR(text), SYS_STR(icon));
     emit notificationSent (eventType, text, icon);
 
     m_notification = new MNotification (eventType, "", text);

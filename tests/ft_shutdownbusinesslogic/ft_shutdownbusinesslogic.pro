@@ -1,23 +1,19 @@
 include(../common_top.pri)
 TARGET = ft_shutdownbusinesslogic
 
- 
- 
-
 INCLUDEPATH += \
     $$SRCDIR \
-    $$STUBSDIR
+    $$STUBSDIR \
+    $$COMMONDIR
 
 SOURCES += ft_shutdownbusinesslogic.cpp \
-    ../ft_lockscreenui/xchecker.cpp \
+    $$COMMONDIR/xchecker.cpp \
     $$STUBSDIR/stubbase.cpp \
-    $$SRCDIR/debug.cpp \
     $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/shutdownui.cpp 
 
 HEADERS += ft_shutdownbusinesslogic.h \
-    ../ft_lockscreenui/xchecker.h \
-    $$SRCDIR/debug.h \
+    $$COMMONDIR/xchecker.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/shutdownui.h 

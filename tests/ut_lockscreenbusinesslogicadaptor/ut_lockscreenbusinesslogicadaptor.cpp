@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -28,9 +26,6 @@
 #define TEST_PATH      QString ("/com/nokia/mcetest")
 #define TEST_INTERFACE QString ("com.nokia.mcetest")
 #define TEST_METHOD    QString ("testmethod")
-
-#define DEBUG
-#include "debug.h"
 
 QString lastCalledMethod;
 QString lastCalledPath;
@@ -61,11 +56,6 @@ QDBusAbstractInterface::call (
     Q_UNUSED (arg8);
 
     QDBusMessage message;
-    SYS_DEBUG (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    SYS_DEBUG ("*** method    = %s", SYS_STR(method));
-    SYS_DEBUG ("*** path      = %s", SYS_STR(path()));
-    SYS_DEBUG ("*** service   = %s", SYS_STR(service()));
-    SYS_DEBUG ("*** interface = %s", SYS_STR(interface()));
 
     lastCalledMethod = method;
     lastCalledPath = path ();

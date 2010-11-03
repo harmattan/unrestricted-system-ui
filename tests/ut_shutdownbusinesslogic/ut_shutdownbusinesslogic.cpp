@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -30,9 +28,6 @@
 
 MApplication *exitPtr;
 
-#define DEBUG
-#include "debug.h"
-
 /******************************************************************************
  * Stubbed version of th ShutdownUI class.
  */
@@ -47,10 +42,6 @@ ShutdownUI::showWindow (
         const QString &text2, 
         int            delay)
 {
-    SYS_DEBUG ("*** text1 = %s", SYS_STR(text1));
-    SYS_DEBUG ("*** text2 = %s", SYS_STR(text2));
-    SYS_DEBUG ("*** delay = %d", delay);
-
     m_Text1 = text1;
     m_Text2 = text2;
     m_Delay = delay;
@@ -66,7 +57,6 @@ static QString bodyOfLastNotification;
 bool
 MNotification::publish ()
 {
-    SYS_DEBUG ("*** body = %s", SYS_STR(body()));
     bodyOfLastNotification = body();
 
     return true;
@@ -80,7 +70,6 @@ static QString nameOfLastFeedback;
 void
 MFeedback::play () const 
 {
-    SYS_DEBUG ("*** name = %s", SYS_STR(name()));
     nameOfLastFeedback = name();
 }
 
@@ -103,7 +92,6 @@ char *argv[] = {
 
 void Ut_ShutdownBusinessLogic::initTestCase()
 {
-    SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
 

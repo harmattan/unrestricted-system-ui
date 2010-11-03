@@ -26,9 +26,6 @@
 #include <QDebug>
 #include <MFeedback>
 
-#define DEBUG
-#include "debug.h"
-
 namespace
 {
     const int Act = 100;
@@ -47,7 +44,6 @@ static QString nameOfLastFeedback;
 void
 MFeedback::play () const 
 {
-    SYS_DEBUG ("*** name = %s", SYS_STR(name()));
     nameOfLastFeedback = name();
 }
 

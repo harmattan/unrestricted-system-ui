@@ -28,6 +28,7 @@
 #define SHORT_DEBUG
 #define DEBUG
 #include "debug.h"
+#include "debug.cpp"
 
 XChecker::XChecker()
 {

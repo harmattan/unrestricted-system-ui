@@ -9,13 +9,11 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 
 # unit test and unit
 SOURCES += \
-    $$SRCDIR/debug.cpp \
     $$SRCDIR/usbui.cpp \
     $$STUBSDIR/locksstub.cpp \
     ut_usbui.cpp
 
 HEADERS += \
-    $$SRCDIR/debug.h \
     $$SRCDIR/usbui.h \
     $$STUBSDIR/usbmode_stub.h \
     $$STUBSDIR/locksstub.h \

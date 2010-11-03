@@ -22,10 +22,7 @@
 #include <MTheme>
 #include <QGraphicsLinearLayout>
 #include <QTimeLine>
-
-#define DEBUG
-#define WARNING
-#include "debug.h"
+#include <QDebug>
 
 StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *controller) :
     MWidgetView(controller),
@@ -177,7 +174,7 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
         if (not
             (style()->preferredSize() == style()->minimumSize()
              && style()->preferredSize() == style()->maximumSize())) {
-            SYS_DEBUG ("*** status indicators don't support cases where preferred size is not equal to minimum and maximum size!");
+            qWarning() << "Status indicators don't support cases where preferred size is not equal to minimum and maximum size!";
         }
     }
 }
