@@ -115,6 +115,11 @@ bool DBusInterfaceNotificationSource::updateGroup(uint notificationUserId, uint 
     return manager.updateGroup(notificationUserId, groupId, notificationParameters(eventType, summary, body, action, imageURI, count));
 }
 
+bool DBusInterfaceNotificationSource::updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+{
+    return manager.updateGroup(notificationUserId, groupId, notificationParameters(eventType, summary, body, action, imageURI, count, identifier));
+}
+
 bool DBusInterfaceNotificationSource::removeGroup(uint notificationUserId, uint groupId)
 {
     return manager.removeGroup(notificationUserId, groupId);

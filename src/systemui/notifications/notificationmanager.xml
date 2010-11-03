@@ -47,6 +47,18 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="result" type="b" direction="out"/>
     </method>
+    <method name="updateGroup">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="groupId" type="u" direction="in"/>
+      <arg name="eventType" type="s" direction="in"/>
+      <arg name="summary" type="s" direction="in"/>
+      <arg name="body" type="s" direction="in"/>
+      <arg name="action" type="s" direction="in"/>
+      <arg name="imageURI" type="s" direction="in"/>
+      <arg name="count" type="u" direction="in"/>
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+    </method>
     <method name="removeGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="groupId" type="u" direction="in"/>

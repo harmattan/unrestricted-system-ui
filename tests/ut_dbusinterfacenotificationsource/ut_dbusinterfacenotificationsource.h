@@ -57,6 +57,8 @@ private slots:
     void testAddGroupWithIdentifier();
     // Test notification group updating
     void testUpdateGroup();
+    void testUpdateGroupWithIdentifier();
+    void testWhenUpdatingGroupInManagerFailsThenUpdateGroupReturnsFalse();
     // Test notification group removal
     void testRemoveGroup();
     //Test the query of notifications

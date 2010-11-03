@@ -100,6 +100,11 @@ bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint, uint, const QStri
     return true;
 }
 
+bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint, uint, const QString &, const QString &, const QString &, const QString &, const QString &, uint, const QString &)
+{
+    return true;
+}
+
 uint DBusInterfaceNotificationSourceAdaptor::notificationUserId()
 {
     return 1;
@@ -301,6 +306,24 @@ void Ut_DBusInterfaceNotificationSource::testUpdateGroup()
     QCOMPARE(params.value(NotificationWidgetParameterFactory::bodyKey()), QVariant("body"));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
+}
+
+void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithIdentifier()
+{
+    gDefaultNotificationManagerStub.stubSetReturnValue("addGroup", NEW_GROUP_ID);
+    gDefaultNotificationManagerStub.stubSetReturnValue("updateGroup", CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
+
+    uint id = source->addGroup(USER_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT);
+    QCOMPARE(source->updateGroup(USER_ID, id, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
+
+    NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<NotificationParameters>(2);
+    QCOMPARE(params.value(GenericNotificationParameterFactory::identifierKey()), QVariant(IDENTIFIER));
+}
+
+void Ut_DBusInterfaceNotificationSource::testWhenUpdatingGroupInManagerFailsThenUpdateGroupReturnsFalse()
+{
+    gDefaultNotificationManagerStub.stubSetReturnValue("updateGroup", CALL_TO_NOTIFICATION_MANAGER_DOES_NOT_SUCCEED);
+    QCOMPARE(source->updateGroup(USER_ID, NEW_GROUP_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), CALL_TO_NOTIFICATION_MANAGER_DOES_NOT_SUCCEED);
 }
 
 void Ut_DBusInterfaceNotificationSource::testRemoveGroup()
