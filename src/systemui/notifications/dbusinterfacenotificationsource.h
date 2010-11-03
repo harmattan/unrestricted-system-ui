@@ -126,6 +126,22 @@ public:
     bool updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
+     * Updates an existing notification.
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param notificationId the ID of the notification to be updated
+     * \param eventType the event type of the notification
+     * \param summary the summary text to be used in the notification
+     * \param body the body text to be used in the notification
+     * \param action the ID of the content to be used in the notification
+     * \param imageURI the ID of the icon to be used in the notification
+     * \param count the number of items inside this notification
+     * \param identifier the user supplied identifier
+     * \return true if the update succeeded, false otherwise
+     */
+    bool updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
+
+    /*!
      * Removes a notification.
      *
      * \param notificationUserId the ID of the user of notifications

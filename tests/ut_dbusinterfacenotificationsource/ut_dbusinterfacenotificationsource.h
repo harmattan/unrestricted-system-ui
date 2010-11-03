@@ -47,6 +47,8 @@ private slots:
     void testAddNotificationWithIdentifier();
     // Test notification updating
     void testUpdateNotification();
+    void testUpdateNotificationWithIdentifier();
+    void testWhenUpdatingNotificationInManagerFailsThenUpdateNotificationReturnsFalse();
     // Test notification removal
     void testRemoveNotification();
     // Test notification group adding

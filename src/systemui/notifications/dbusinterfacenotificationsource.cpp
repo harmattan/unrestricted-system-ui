@@ -72,6 +72,11 @@ bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId
     return manager.updateNotification(notificationUserId, notificationId, notificationParameters(eventType, summary, body, action, imageURI, count));
 }
 
+bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+{
+    return manager.updateNotification(notificationUserId, notificationId, notificationParameters(eventType, summary, body, action, imageURI, count, identifier));
+}
+
 bool DBusInterfaceNotificationSource::removeNotification(uint notificationUserId, uint notificationId)
 {
     return manager.removeNotification(notificationUserId, notificationId);
