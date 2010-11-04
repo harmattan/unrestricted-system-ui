@@ -37,15 +37,15 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
 #ifdef HAVE_QMSYSTEM
     /*
-     * We need to receive updates when touch screen lock state changes
-     * to prevent status indicator menu opening when touch screen lock is on
+     * We need to receive updates when device lock state changes
+     * to prevent status indicator menu opening when device lock is on
      */
     connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this,
-                                   SLOT(setWindowStateAccordingToTouchScreenLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
-    if (qmLocks.getState(MeeGo::QmLocks::TouchAndKeyboard) != MeeGo::QmLocks::Locked) {
-        touchScreenLocked = false;
+                                   SLOT(setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
+    if (qmLocks.getState(MeeGo::QmLocks::Device) != MeeGo::QmLocks::Locked) {
+        deviceLocked = false;
     } else {
-        touchScreenLocked = true;
+        deviceLocked = true;
     }
 #endif
 
@@ -92,7 +92,7 @@ void StatusIndicatorMenuWindow::displayInActive()
 void StatusIndicatorMenuWindow::makeVisible()
 {
 #ifdef HAVE_QMSYSTEM
-    if (touchScreenLocked) {
+    if (deviceLocked) {
         return;
     }
 #endif
@@ -106,13 +106,13 @@ void StatusIndicatorMenuWindow::makeVisible()
 }
 
 #ifdef HAVE_QMSYSTEM
-void StatusIndicatorMenuWindow::setWindowStateAccordingToTouchScreenLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
+void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
-    if (what == MeeGo::QmLocks::TouchAndKeyboard) {
+    if (what == MeeGo::QmLocks::Device) {
         if (how == MeeGo::QmLocks::Unlocked) {
-            touchScreenLocked = false;
+            deviceLocked = false;
         } else {
-            touchScreenLocked = true;
+            deviceLocked = true;
             if (isVisible()) {
                 hide();
             }

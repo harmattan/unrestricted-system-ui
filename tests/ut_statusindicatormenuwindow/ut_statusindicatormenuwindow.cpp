@@ -91,26 +91,26 @@ void Ut_StatusIndicatorMenuWindow::testInitialization()
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
 {
-    QTest::addColumn<bool>("touchScreenLocked");
+    QTest::addColumn<bool>("deviceLocked");
     QTest::addColumn<bool>("visible");
     QTest::addColumn<bool>("showCalled");
     QTest::addColumn<bool>("raiseCalled");
 
-    QTest::newRow("Touch screen locked") << true << false << false << false;
+    QTest::newRow("Device locked") << true << false << false << false;
     QTest::newRow("Window not visible") << false << false << true << true;
     QTest::newRow("Window already visible") << false << true << false << true;
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible()
 {
-    QFETCH(bool, touchScreenLocked);
+    QFETCH(bool, deviceLocked);
     QFETCH(bool, visible);
     QFETCH(bool, showCalled);
     QFETCH(bool, raiseCalled);
 
     // Set up the original window state
 #ifdef HAVE_QMSYSTEM
-    statusIndicatorMenuWindow->touchScreenLocked = touchScreenLocked;
+    statusIndicatorMenuWindow->deviceLocked = deviceLocked;
 #endif
     statusIndicatorMenuWindow->setVisible(visible);
     mWindowSetVisible.first = NULL;
@@ -158,49 +158,49 @@ void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangeEventWithoutLanguageCha
 }
 
 #ifdef HAVE_QMSYSTEM
-void Ut_StatusIndicatorMenuWindow::testQmLocksSignalConnectionWhenTouchScreenLocked()
+void Ut_StatusIndicatorMenuWindow::testQmLocksSignalConnectionWhenDeviceLocked()
 {
     bool connectionExisted = disconnect(&statusIndicatorMenuWindow->qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), statusIndicatorMenuWindow,
-                                        SLOT(setWindowStateAccordingToTouchScreenLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
+                                        SLOT(setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
     QCOMPARE(connectionExisted, true);
 }
 
-void Ut_StatusIndicatorMenuWindow::testWhenTouchScreenLockedMenuIsNotVisible()
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockedMenuIsNotVisible()
 {
     // test when device lock state is locked
     statusIndicatorMenuWindow->hide();
-    statusIndicatorMenuWindow->touchScreenLocked = true;
+    statusIndicatorMenuWindow->deviceLocked = true;
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
 }
 
-void Ut_StatusIndicatorMenuWindow::testWhenTouchScreenUnlockedMenuIsVisible()
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceUnlockedMenuIsVisible()
 {
     // test when device lock state is unlocked
     statusIndicatorMenuWindow->hide();
-    statusIndicatorMenuWindow->touchScreenLocked = false;
+    statusIndicatorMenuWindow->deviceLocked = false;
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
     statusIndicatorMenuWindow->makeVisible();
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && mWindowSetVisible.second);
 }
 
-void Ut_StatusIndicatorMenuWindow::testWhenTouchScreenLockStateChangesFromLockedToUnlockedWindowActivates()
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates()
 {
     // change status from locked to unlocked
-    statusIndicatorMenuWindow->touchScreenLocked = true;
-    statusIndicatorMenuWindow->setWindowStateAccordingToTouchScreenLockState(
-            MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Unlocked);
-    QCOMPARE(statusIndicatorMenuWindow->touchScreenLocked, false);
+    statusIndicatorMenuWindow->deviceLocked = true;
+    statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
+            MeeGo::QmLocks::Device, MeeGo::QmLocks::Unlocked);
+    QCOMPARE(statusIndicatorMenuWindow->deviceLocked, false);
 }
 
-void Ut_StatusIndicatorMenuWindow::testWhenTouchScreenLockStateChangesFromUnlockedToLockedWindowDeactivates()
+void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates()
 {
     // change status from unlocked to locked and test if menu closes
-    statusIndicatorMenuWindow->touchScreenLocked = false;
-    statusIndicatorMenuWindow->setWindowStateAccordingToTouchScreenLockState(
-            MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Locked);
-    QCOMPARE(statusIndicatorMenuWindow->touchScreenLocked, true);
+    statusIndicatorMenuWindow->deviceLocked = false;
+    statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(
+            MeeGo::QmLocks::Device, MeeGo::QmLocks::Locked);
+    QCOMPARE(statusIndicatorMenuWindow->deviceLocked, true);
     QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
 }
 

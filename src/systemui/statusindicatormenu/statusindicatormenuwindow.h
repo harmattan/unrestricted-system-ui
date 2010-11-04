@@ -79,11 +79,11 @@ private slots:
 
 #ifdef HAVE_QMSYSTEM
     /*!
-     * \brief Slot for receiving touch screen lock status changes
+     * \brief Slot for receiving device lock status changes
      * \param what tells which lockstate has been changed, either Device or TouchScreen/Keyboard
      * \param how tells to which state lock has been changed, one of Locked, Unlocked or Unknown
      */
-    void setWindowStateAccordingToTouchScreenLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
+    void setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
 
 private:
@@ -103,8 +103,8 @@ private:
     //! QmSystem watcher for device lock
     MeeGo::QmLocks qmLocks;
 
-    //! Touch screen lock status
-    bool touchScreenLocked;
+    //! Device lock status
+    bool deviceLocked;
 #endif
 
 #ifdef UNIT_TEST

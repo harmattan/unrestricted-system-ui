@@ -57,11 +57,11 @@ private slots:
     void testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted();
 
 #ifdef HAVE_QMSYSTEM
-    void testQmLocksSignalConnectionWhenTouchScreenLocked();
-    void testWhenTouchScreenLockedMenuIsNotVisible();
-    void testWhenTouchScreenUnlockedMenuIsVisible();
-    void testWhenTouchScreenLockStateChangesFromLockedToUnlockedWindowActivates();
-    void testWhenTouchScreenLockStateChangesFromUnlockedToLockedWindowDeactivates();
+    void testQmLocksSignalConnectionWhenDeviceLocked();
+    void testWhenDeviceLockedMenuIsNotVisible();
+    void testWhenDeviceUnlockedMenuIsVisible();
+    void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
+    void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
 #endif
 };
 
