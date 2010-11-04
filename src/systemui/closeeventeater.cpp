@@ -26,7 +26,7 @@ CloseEventEater::CloseEventEater(QObject *parent) : QObject(parent)
 bool CloseEventEater::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::Close) {
-        event->accept();
+        event->ignore();
         return true;
     } else {
         return QObject::eventFilter(obj, event);

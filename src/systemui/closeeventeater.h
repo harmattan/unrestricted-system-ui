@@ -43,6 +43,10 @@ protected:
     //! \reimp
     bool eventFilter(QObject *obj, QEvent *event);
     //! \reimp_end
+
+#ifdef UNIT_TEST
+    friend class Ut_CloseEventEater;
+#endif
 };
 
 #endif /* CLOSEEVENTEATER_H_ */
