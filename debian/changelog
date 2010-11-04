@@ -1,9 +1,8 @@
-system-ui (0.18.1~1) unstable; urgency=low
+system-ui (0.18.1-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#200807 - lock/unlock behaviour completely unpredictable
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 02 Nov 2010 18:28:42 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Nov 2010 17:45:10 +0200
 
 system-ui (0.18.0-1) unstable; urgency=low
 
