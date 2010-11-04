@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of systemui.
+** This file is part of mhome.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -16,16 +16,31 @@
 ** of this file.
 **
 ****************************************************************************/
+
+#include <QtTest/QtTest>
+#include <MApplication>
 #include "ut_template.h"
+
+void Ut_Template::initTestCase()
+{
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_template" };
+    app = new MApplication(argc, app_name);
+}
+
+void Ut_Template::cleanupTestCase()
+{
+    delete app;
+}
 
 void Ut_Template::init()
 {
-
+//    m_subject = new Template();
 }
 
 void Ut_Template::cleanup()
 {
-
+//    delete m_subject;
 }
 
 QTEST_APPLESS_MAIN(Ut_Template)

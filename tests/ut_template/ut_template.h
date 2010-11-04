@@ -16,21 +16,35 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_TEST_
-#define _UT_TEST_
 
-#include <QtTest/QtTest>
+#ifndef UT_TEMPLATE_H
+#define UT_TEMPLATE_H
+
 #include <QObject>
+
+class MApplication;
+//class Template;
 
 class Ut_Template : public QObject
 {
     Q_OBJECT
 
 private slots:
-    // Executed once before every test case
+    // Called before the first testfunction is executed
+    void initTestCase();
+    // Called after the last testfunction was executed
+    void cleanupTestCase();
+    // Called before each testfunction is executed
     void init();
-
-    // Executed once after every test case
+    // Called after every testfunction
     void cleanup();
+
+    // Test cases
+private:
+    // MApplication
+    MApplication *app;
+    // The object being tested
+//    Template *m_subject;
 };
-#endif //_UT_TEST_
+
+#endif
