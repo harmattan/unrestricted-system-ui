@@ -19,6 +19,7 @@
 #include "shutdownbusinesslogic.h"
 #include "shutdownui.h"
 #include "sysuid.h"
+#include <signal.h>
 
 #include <MApplication>
 #include <MFeedback>
@@ -26,7 +27,7 @@
 #include <MNotification>
 #include <MLocale>
 
-extern MApplication *exitPtr;
+extern sighandler_t originalSigIntHandler;
 
 ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
     QObject (parent),
@@ -73,7 +74,7 @@ ShutdownBusinessLogic::systemStateChanged (
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
             // To avoid early quitting on shutdown...
-            exitPtr = 0;
+            signal(SIGINT, originalSigIntHandler);
             showUI ();
             break;
 

@@ -38,12 +38,15 @@
 #include "contextframeworkcontext.h"
 #include "unlocknotificationsink.h"
 #include "volumebarwindow.h"
+#include "closeeventeater.h"
 #include <QX11Info>
 
 Sysuid* Sysuid::instance_ = NULL;
 
-Sysuid::Sysuid(QObject* parent) :
-    QObject(parent)
+static const QString DBUS_SERVICE = "com.nokia.systemui";
+static const QString DBUS_PATH = "/";
+
+Sysuid::Sysuid(QObject* parent) : QObject(parent)
 {
     instance_ = this;
 
@@ -63,14 +66,17 @@ Sysuid::Sysuid(QObject* parent) :
     new ShutdownBusinessLogicAdaptor(this, shutdownBusinessLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (!bus.registerService(dbusService())) {
+    if (!bus.registerService(DBUS_SERVICE)) {
         qCritical() << Q_FUNC_INFO << "failed to register dbus service";
         abort();
     }
-    if (!bus.registerObject(dbusPath(), instance())) {
+    if (!bus.registerObject(DBUS_PATH, instance())) {
         qCritical() << Q_FUNC_INFO << "failed to register dbus object";
         abort();
     }
+
+    // Create a close event eater for the windows
+    CloseEventEater *closeEventEater = new CloseEventEater(this);
 
     // Create a status area renderer for rendering the shared status area pixmap
     statusAreaRenderer = new StatusAreaRenderer(this);
@@ -80,6 +86,7 @@ Sysuid::Sysuid(QObject* parent) :
 
     // Create a status indicator menu
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
+    statusIndicatorMenuWindow->installEventFilter(closeEventEater);
     new StatusIndicatorMenuAdaptor(statusIndicatorMenuWindow);
     bus.registerService("com.meego.core.MStatusIndicatorMenu");
     bus.registerObject("/statusindicatormenu", statusIndicatorMenuWindow);
@@ -118,14 +125,15 @@ Sysuid::Sysuid(QObject* parent) :
     sysUidRequest = new SysUidRequest;
 
     // Connect the unlock-screen notification sink to LockScreenBusinessLogic
-    if (sysUidRequest->getLockScreenLogic() != 0) {
-        connect(sysUidRequest->getLockScreenLogic(), SIGNAL(screenIsLocked(bool)), unlockNotificationSink_, SLOT(setLockedState(bool)));
-        connect(sysUidRequest->getLockScreenLogic(), SIGNAL(screenIsLocked(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
-        connect(sysUidRequest->getLockScreenLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
+    if (sysUidRequest->lockScreenBusinessLogic() != 0) {
+        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), unlockNotificationSink_, SLOT(setLockedState(bool)));
+        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
+        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
     }
 
     // Instantiate the volume-control UI
     volumeBarWindow = new VolumeBarWindow;
+    volumeBarWindow->installEventFilter(closeEventEater);
 }
 
 Sysuid::~Sysuid()
@@ -139,16 +147,6 @@ Sysuid::~Sysuid()
 Sysuid* Sysuid::instance()
 {
     return instance_;
-}
-
-QString Sysuid::dbusService()
-{
-    return QString("com.nokia.systemui");
-}
-
-QString Sysuid::dbusPath()
-{
-    return QString("/");
 }
 
 void Sysuid::loadTranslations()

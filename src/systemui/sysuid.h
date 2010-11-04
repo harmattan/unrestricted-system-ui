@@ -45,8 +45,6 @@ public:
     Sysuid(QObject* parent);
     virtual ~Sysuid();
     static Sysuid* instance();
-    static QString dbusService();
-    static QString dbusPath();
 
     /*!
      * Returns a reference to the notification manager.

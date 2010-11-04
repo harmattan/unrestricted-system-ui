@@ -18,15 +18,14 @@
 ****************************************************************************/
 
 #include "ut_shutdownbusinesslogic.h"
-
 #include "shutdownbusinesslogic.h"
-
+#include <signal.h>
 #include <MApplication>
 #include <MWindow>
 #include <MNotification>
 #include <MFeedback>
 
-MApplication *exitPtr;
+sighandler_t originalSigIntHandler = NULL;
 
 /******************************************************************************
  * Stubbed version of th ShutdownUI class.

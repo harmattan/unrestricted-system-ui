@@ -21,6 +21,7 @@
 #include "shutdownbusinesslogic.h"
 #include "shutdownui.h"
 #include "sysuid_stub.h"
+#include <signal.h>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmsystemstate.h>
@@ -33,7 +34,7 @@
 #include <MLabel>
 #include <MImageWidget>
 
-MApplication *exitPtr;
+sighandler_t originalSigIntHandler = NULL;
 
 #define DEBUG
 #include "debug.h"

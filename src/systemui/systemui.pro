@@ -29,6 +29,7 @@ contains(cov, true) {
 }
 
 HEADERS +=                              \
+    closeeventeater.h                   \
     sysuidrequest.h                     \
     batterybusinesslogic.h              \
     sysuid.h                            \
@@ -41,6 +42,7 @@ HEADERS +=                              \
 
 SOURCES +=                              \
     main.cpp                            \
+    closeeventeater.cpp                 \
     sysuidrequest.cpp                   \
     batterybusinesslogic.cpp            \
     sysuid.cpp                          \

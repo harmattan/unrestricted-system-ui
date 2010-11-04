@@ -25,59 +25,41 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenbusinesslogicadaptor.h"
 
-SysUidRequest::SysUidRequest ()
+static const QString DBUS_SERVICE = "com.nokia.system_ui";
+static const QString DBUS_PATH = "/com/nokia/system_ui/request";
+
+SysUidRequest::SysUidRequest() :
+    lockScreenBusinessLogic_(NULL)
 {
     /*
      * Registering on the system bus, because MCE needs us to provide interface
      * on the system bus, not the session bus. This is not going to work under
      * the scratchbox if the libosso-dbus-conf package is not installed.
      */
-    QDBusConnection bus = QDBusConnection::systemBus ();
+    QDBusConnection bus = QDBusConnection::systemBus();
 
-    if (!bus.registerService (dbusService ())) {
-        dbusError (bus, false);
+    if (!bus.registerService(DBUS_SERVICE)) {
+        dbusError(bus, false);
     }
 
-    if (!bus.registerObject (dbusPath (), this)) {
-        dbusError (bus, false);
+    if (!bus.registerObject(DBUS_PATH, this)) {
+        dbusError(bus, false);
     }
 
-    m_LockScreenLogic = new LockScreenBusinessLogic (this);
-    new LockScreenBusinessLogicAdaptor (this, m_LockScreenLogic);
+    lockScreenBusinessLogic_ = new LockScreenBusinessLogic(this);
+    new LockScreenBusinessLogicAdaptor(this, lockScreenBusinessLogic_);
 }
 
-/*!
- * An error printing method. It is implemented so we know what external cause
- * aborted the sysuid.
- */
-void 
-SysUidRequest::dbusError (
-        QDBusConnection &connection,
-        bool abortProgram)
+void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram)
 {
-    QDBusError error = connection.lastError ();
+    qWarning() << "DBus error: " << connection.lastError().message();
 
-    qWarning() << "DBus error: " << error.message();
-
-    if (abortProgram)
+    if (abortProgram) {
         abort();
+    }
 }
 
-QString 
-SysUidRequest::dbusService ()
+LockScreenBusinessLogic *SysUidRequest::lockScreenBusinessLogic()
 {
-    return QString ("com.nokia.system_ui");
+    return lockScreenBusinessLogic_;
 }
-
-QString
-SysUidRequest::dbusPath ()
-{
-    return QString ("/com/nokia/system_ui/request");
-}
-
-LockScreenBusinessLogic *
-SysUidRequest::getLockScreenLogic ()
-{
-    return m_LockScreenLogic;
-}
-

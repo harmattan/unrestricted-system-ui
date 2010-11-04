@@ -28,30 +28,13 @@
 class SysUidRequestStub : public StubBase {
   public:
   virtual void SysUidRequestConstructor();
-  virtual QString dbusService();
-  virtual QString dbusPath();
   virtual void dbusError(QDBusConnection &connection, bool abortProgram);
-  virtual LockScreenBusinessLogic *getLockScreenLogic();
+  virtual LockScreenBusinessLogic *lockScreenBusinessLogic();
 }; 
 
 // 2. IMPLEMENT STUB
 void SysUidRequestStub::SysUidRequestConstructor() {
 
-}
-QString SysUidRequestStub::dbusService() {
-  stubMethodEntered("dbusService");
-  return stubReturnValue<QString>("dbusService");
-}
-
-QString SysUidRequestStub::dbusPath() {
-  stubMethodEntered("dbusPath");
-  return stubReturnValue<QString>("dbusPath");
-}
-
-LockScreenBusinessLogic *SysUidRequestStub::getLockScreenLogic()
-{
-  stubMethodEntered("getLockScreenLogic");
-  return 0;
 }
 
 void SysUidRequestStub::dbusError(QDBusConnection &connection, bool abortProgram) {
@@ -59,6 +42,12 @@ void SysUidRequestStub::dbusError(QDBusConnection &connection, bool abortProgram
   params.append( new Parameter<QDBusConnection & >(connection));
   params.append( new Parameter<bool >(abortProgram));
   stubMethodEntered("dbusError",params);
+}
+
+LockScreenBusinessLogic *SysUidRequestStub::lockScreenBusinessLogic()
+{
+  stubMethodEntered("lockScreenBusinessLogic");
+  return stubReturnValue<LockScreenBusinessLogic *>("lockScreenBusinessLogic");
 }
 
 
@@ -73,21 +62,13 @@ SysUidRequest::SysUidRequest() {
   gSysUidRequestStub->SysUidRequestConstructor();
 }
 
-QString SysUidRequest::dbusService() {
-  return gSysUidRequestStub->dbusService();
-}
-
-QString SysUidRequest::dbusPath() {
-  return gSysUidRequestStub->dbusPath();
-}
-
 void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram) {
   gSysUidRequestStub->dbusError(connection, abortProgram);
 }
 
-LockScreenBusinessLogic *SysUidRequest::getLockScreenLogic()
+LockScreenBusinessLogic *SysUidRequest::lockScreenBusinessLogic()
 {
-  return gSysUidRequestStub->getLockScreenLogic();
+  return gSysUidRequestStub->lockScreenBusinessLogic();
 }
 
 #endif

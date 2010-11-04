@@ -10,17 +10,13 @@ STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
 
 # unit test and unit classes
 SOURCES += \
+    ut_sysuid.cpp \
     $$SRCDIR/shutdownui.cpp \
     $$SRCDIR/usbui.cpp \
-    $$SRCDIR/lockscreen/lockscreen.cpp \
-    $$SRCDIR/lockscreen/eventeater.cpp \
-    $$SRCDIR/lockscreen/lockscreenwindow.cpp \
-    $$SRCDIR/shutdownbusinesslogic.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$SRCDIR/lockscreen/lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreen/lockscreenbusinesslogicadaptor.cpp \
-    $$SRCDIR/sysuid.cpp \
-    ut_sysuid.cpp \
+    $$SRCDIR/sysuid.cpp
 
 # service classes
 SOURCES += \
@@ -31,6 +27,7 @@ SOURCES += \
 
 # unit test and unit classes
 HEADERS += \
+    ut_sysuid.h \
     $$STUBSDIR/volumebarwindow_stub.h \
     $$SRCDIR/volumecontrol/volumebarwindow.h \
     $$SRCDIR/shutdownui.h \
@@ -46,13 +43,12 @@ HEADERS += \
     $$SRCDIR/sysuidrequest.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \
-    ut_sysuid.h \
-   $$NOTIFICATIONSRCDIR/eventtypestore.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
-   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
-   $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
-   $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
-   $$NOTIFICATIONSRCDIR/notificationmanager.h \
+    $$NOTIFICATIONSRCDIR/eventtypestore.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+    $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+    $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
+    $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
+    $$NOTIFICATIONSRCDIR/notificationmanager.h \
     $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
     $$SRCDIR/lockscreen/unlocknotificationsink.h \
@@ -62,7 +58,8 @@ HEADERS += \
     $$SRCDIR/applicationcontext.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
-    $$SRCDIR/x11wrapper.h
+    $$SRCDIR/x11wrapper.h \
+    $$SRCDIR/closeeventeater.h
 
 # service classes
 HEADERS += \

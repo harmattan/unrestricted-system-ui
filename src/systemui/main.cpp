@@ -19,43 +19,35 @@
 #include "sysuid.h"
 #include <MApplication>
 #include <MApplicationService>
-#include <QObject>
 #include <signal.h>
 
-MApplication *exitPtr;
+sighandler_t originalSigIntHandler = NULL;
 
-void sysuid_exit(int)
+void sigIntHandler(int)
 {
-    if (exitPtr != NULL) {
-        exitPtr->quit();
-        exitPtr = NULL;
+    if (qApp != NULL) {
+        qApp->quit();
     }
 }
 
 class SystemUIservice : public MApplicationService
 {
 public:
-    SystemUIservice(QObject *parent = 0) :
-        MApplicationService("com.nokia.sysuid", parent)
+    SystemUIservice(QObject *parent = 0) : MApplicationService("com.nokia.sysuid", parent)
     {
     }
 
     void launch()
     {
-        /*
-         * No operation, we must not let meegotouch to
-         * raise/activate some hidden sysuid window.
-         */
+        // No operation, we must not let meegotouch to raise/activate some hidden sysuid window
     }
 };
 
 int main(int argc, char** argv)
 {
-    signal(SIGINT, sysuid_exit);
+    originalSigIntHandler = signal(SIGINT, sigIntHandler);
 
     MApplication app(argc, argv, new SystemUIservice);
-    exitPtr = &app;
-
     app.setQuitOnLastWindowClosed(false);
 
     Sysuid daemon(&app);

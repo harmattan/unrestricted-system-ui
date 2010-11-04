@@ -13,6 +13,7 @@ HEADERS += ut_lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreen/lockscreen.h \
     $$SRCDIR/lockscreen/lockscreenwindow.h \
     $$SRCDIR/lockscreen/eventeater.h \
+    $$SRCDIR/closeeventeater.h
 
 include(../common_bot.pri)
 

@@ -16,7 +16,8 @@ SOURCES += ft_lockscreenbusinesslogic.cpp \
     $$SRCDIR/lockscreen/eventeater.cpp  \
     $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/lockscreen/unlocknotifications.cpp \
-    $$SRCDIR/x11wrapper.cpp
+    $$SRCDIR/x11wrapper.cpp \
+    $$SRCDIR/closeeventeater.cpp
 
 HEADERS += ft_lockscreenbusinesslogic.h \
     $$COMMONDIR/xchecker.h \
@@ -29,7 +30,8 @@ HEADERS += ft_lockscreenbusinesslogic.h \
     $$SRCDIR/lockscreen/eventeater.h  \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \
-    $$SRCDIR/x11wrapper.h
+    $$SRCDIR/x11wrapper.h \
+    $$SRCDIR/closeeventeater.h
 
 include(../common_bot.pri)
 

@@ -26,6 +26,7 @@
 #include "eventeater.h"
 #include "sysuid_stub.h"
 #include "eventeater_stub.h"
+#include "closeeventeater_stub.h"
 #include <MApplication>
 #include <MApplicationWindow>
 

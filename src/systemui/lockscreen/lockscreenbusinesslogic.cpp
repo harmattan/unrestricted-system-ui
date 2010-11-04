@@ -19,12 +19,18 @@
 #include "lockscreenbusinesslogic.h"
 #include "lockscreenwindow.h"
 #include "eventeater.h"
+#include "closeeventeater.h"
 
 LockScreenBusinessLogic::LockScreenBusinessLogic(QObject* parent) :
     QObject(parent),
     lockScreenWindow(new LockScreenWindow),
     eventEaterWindow(new EventEater)
 {
+    // Install a close event eater for the windows
+    CloseEventEater *closeEventEater = new CloseEventEater(this);
+    lockScreenWindow->installEventFilter(closeEventEater);
+    eventEaterWindow->installEventFilter(closeEventEater);
+
     connect(lockScreenWindow, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
     connect(lockScreenWindow, SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
 

@@ -30,8 +30,6 @@ class SysuidStub : public StubBase {
   virtual void SysuidConstructor(QObject *parent);
   virtual void SysuidDestructor();
   virtual Sysuid * sysuid();
-  virtual QString dbusService();
-  virtual QString dbusPath();
   virtual NotificationManager & notificationManager();
   virtual MCompositorNotificationSink & compositorNotificationSink();
   virtual void loadTranslations();
@@ -51,16 +49,6 @@ void SysuidStub::SysuidDestructor() {
 Sysuid * SysuidStub::sysuid() {
   stubMethodEntered("sysuid");
   return stubReturnValue<Sysuid *>("sysuid");
-}
-
-QString SysuidStub::dbusService() {
-  stubMethodEntered("dbusService");
-  return stubReturnValue<QString>("dbusService");
-}
-
-QString SysuidStub::dbusPath() {
-  stubMethodEntered("dbusPath");
-  return stubReturnValue<QString>("dbusPath");
 }
 
 NotificationManager & SysuidStub::notificationManager() {
@@ -104,14 +92,6 @@ Sysuid::~Sysuid() {
 
 Sysuid * Sysuid::instance() {
   return gSysuidStub->sysuid();
-}
-
-QString Sysuid::dbusService() {
-  return gSysuidStub->dbusService();
-}
-
-QString Sysuid::dbusPath() {
-  return gSysuidStub->dbusPath();
 }
 
 NotificationManager & Sysuid::notificationManager() {

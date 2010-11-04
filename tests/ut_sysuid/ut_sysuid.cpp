@@ -26,6 +26,9 @@
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
 #include "sysuid.h"
+#include "lockscreenwindow_stub.h"
+#include "lockscreen_stub.h"
+#include "eventeater_stub.h"
 #include "contextframeworkitem_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "eventtypestore_stub.h"
@@ -34,6 +37,8 @@
 #include "statusarearendereradaptor_stub.h"
 #include "unlockarea_stub.h"
 #include "sysuidrequest_stub.h"
+#include "shutdownbusinesslogic_stub.h"
+#include "shutdownbusinesslogicadaptor_stub.h"
 #include "statusindicatormenuwindow_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include "mcompositornotificationsink_stub.h"
@@ -42,9 +47,7 @@
 #include "unlocknotificationsinkstub.h"
 #include "volumebarwindow_stub.h"
 #include "x11wrapper_stub.h"
-
-MApplication *exitPtr;
-
+#include "closeeventeater_stub.h"
 
 Notification::~Notification()
 {

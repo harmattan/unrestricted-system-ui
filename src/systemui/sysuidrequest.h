@@ -16,15 +16,12 @@
 ** of this file.
 **
 ****************************************************************************/
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 #ifndef SYSUIDREQUEST_H
 #define SYSUIDREQUEST_H
+
 #include <QObject>
 
-//class QString;
 class LockScreenBusinessLogic;
-//class EventHandler;
 class QDBusConnection;
 
 /*!
@@ -37,15 +34,23 @@ class SysUidRequest : public QObject
     Q_OBJECT
 
 public:
-    SysUidRequest ();
-    LockScreenBusinessLogic * getLockScreenLogic ();
+    /*!
+     * Constructs a SysUidRequest instance.
+     */
+    SysUidRequest();
+
+    //! Returns an instance of the lock screen business logic
+    LockScreenBusinessLogic *lockScreenBusinessLogic();
 
 private:
-    QString dbusService ();
-    QString dbusPath ();
-    void dbusError (QDBusConnection &connection, bool abortProgram = true);
+    /*!
+     * An error printing method. It is implemented so we know what external cause
+     * aborted the sysuid.
+     */
+    void dbusError(QDBusConnection &connection, bool abortProgram = true);
 
-    LockScreenBusinessLogic *m_LockScreenLogic;
+    //! The lock screen business logic
+    LockScreenBusinessLogic *lockScreenBusinessLogic_;
 };
 
 #endif
