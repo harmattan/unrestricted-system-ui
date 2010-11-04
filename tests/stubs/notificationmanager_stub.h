@@ -34,7 +34,7 @@ class NotificationManagerStub : public StubBase {
   public:
   virtual void NotificationManagerConstructor(int relayInterval, uint maxWaitQueueSize);
   virtual void NotificationManagerDestructor();
-  virtual void restorePersistentData();
+  virtual void restoreData();
   virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId);
   virtual bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
   virtual bool removeNotification(uint notificationUserId, uint notificationId);
@@ -52,7 +52,6 @@ class NotificationManagerStub : public StubBase {
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
   virtual void updateNotificationsWithEventType(const QString &eventType);
   virtual void relayNextNotification();
-  virtual bool determinePersistence(const NotificationParameters &parameters);
   virtual Notification::NotificationType determineType(const NotificationParameters &parameters);
   virtual void submitNotification(const Notification &notification);
   virtual int findNotificationFromWaitQueue(uint notificationId);
@@ -62,7 +61,7 @@ class NotificationManagerStub : public StubBase {
   virtual void initializeEventTypeStore();
   virtual bool ensurePersistentDataPath();
   virtual void saveStateData();
-  virtual void savePersistentNotifications();
+  virtual void saveNotifications();
   virtual void removeUnseenFlags(bool ignore);
   };
 
@@ -75,7 +74,7 @@ void NotificationManagerStub::NotificationManagerConstructor(int relayInterval, 
 void NotificationManagerStub::NotificationManagerDestructor() {
 
 }
-void NotificationManagerStub::restorePersistentData() {
+void NotificationManagerStub::restoreData() {
   stubMethodEntered("restorePersistentData");
 }
 
@@ -204,13 +203,6 @@ void NotificationManagerStub::relayNextNotification() {
   stubMethodEntered("relayNextNotification");
 }
 
-bool NotificationManagerStub::determinePersistence(const NotificationParameters &parameters) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<const NotificationParameters & >(parameters));
-  stubMethodEntered("determinePersistence",params);
-  return stubReturnValue<bool>("determinePersistence");
-}
-
 Notification::NotificationType NotificationManagerStub::determineType(const NotificationParameters &parameters) {
   QList<ParameterBase*> params;
   params.append( new Parameter<const NotificationParameters & >(parameters));
@@ -258,8 +250,8 @@ void NotificationManagerStub::saveStateData() {
   stubMethodEntered("saveStateData");
 }
 
-void NotificationManagerStub::savePersistentNotifications() {
-  stubMethodEntered("savePersistentNotifications");
+void NotificationManagerStub::saveNotifications() {
+  stubMethodEntered("saveNotifications");
 }
 
 void NotificationManagerStub::removeUnseenFlags(bool ignore)
@@ -282,8 +274,8 @@ NotificationManager::~NotificationManager() {
   gNotificationManagerStub->NotificationManagerDestructor();
 }
 
-void NotificationManager::restorePersistentData() {
-  gNotificationManagerStub->restorePersistentData();
+void NotificationManager::restoreData() {
+  gNotificationManagerStub->restoreData();
 }
 
 uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId) {
@@ -352,10 +344,6 @@ void NotificationManager::updateNotificationsWithEventType(const QString &eventT
 
 void NotificationManager::relayNextNotification() {
   gNotificationManagerStub->relayNextNotification();
-}
-
-bool NotificationManager::determinePersistence(const NotificationParameters &parameters) {
-  return gNotificationManagerStub->determinePersistence(parameters);
 }
 
 Notification::NotificationType NotificationManager::determineType(const NotificationParameters &parameters) {

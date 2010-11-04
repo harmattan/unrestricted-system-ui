@@ -116,7 +116,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     applyUseMode();
 
     // Restore persistent notifications after all the signal connections are made to the notification sinks
-    notificationManager_->restorePersistentData();
+    notificationManager_->restoreData();
 
     /*
      * The screen locking is implemented in this separate class, because it is

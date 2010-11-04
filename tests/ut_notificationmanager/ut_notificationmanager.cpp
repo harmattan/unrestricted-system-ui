@@ -38,7 +38,6 @@ bool Ut_NotificationManager::catchTimerTimeouts;
 QList<int> Ut_NotificationManager::timerTimeouts;
 QBuffer gStateBuffer;
 QBuffer gNotificationBuffer;
-QSet<uint> gPersistentGroupSet;
 QList<NotificationGroup> gGroupList;
 QList<NotificationGroup> gGroupListWithIdentifiers;
 QList<Notification> gNotificationList;
@@ -207,20 +206,18 @@ void EventTypeStore::loadSettings(const QString &)
 }
 
 // Helper function for loading the last given user id and group information from gStateBuffer
-// and repopulating gPersistentGroupSet and gGroupList accordingly
+// and repopulating gGroupList accordingly
 void loadStateData()
 {
     gStateBuffer.open(QIODevice::ReadOnly);
     QDataStream gds;
     gds.setDevice(&gStateBuffer);
 
-    gPersistentGroupSet.clear();
     gGroupList.clear();
 
     gStateBuffer.seek(0);
 
     gds >> gLastUserId;
-    gds >> gPersistentGroupSet;
 
     NotificationGroup ng;
 
@@ -1210,7 +1207,7 @@ void Ut_NotificationManager::testNotificationGroupListWithIdentifiers()
 }
 
 #ifdef HAVE_AEGIS_CRYPTO
-void Ut_NotificationManager::testGroupInfoPersistentStorage()
+void Ut_NotificationManager::testGroupInfoStorage()
 {
     gTestingPersistent = true;
 
@@ -1222,7 +1219,7 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     delete manager;
     manager = new TestNotificationManager(3000);
 
-    // Add two groups to the notification manager.
+    // Add two groups to the notification manager
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
     uint id0 = manager->addGroup(0, parameters0);
@@ -1230,107 +1227,88 @@ void Ut_NotificationManager::testGroupInfoPersistentStorage()
     parameters1.add(BODY, "body1");
     parameters1.add("eventType", "persistent");
     uint id1 = manager->addGroup(0, parameters1);
-
     loadStateData();
-
-    QCOMPARE((uint)gPersistentGroupSet.count(), (uint)1);
-    QCOMPARE((bool)gPersistentGroupSet.contains(id1), (bool)true);
     QCOMPARE((uint)gGroupList.count(), (uint)2);
-
-    NotificationGroup   ng = gGroupList.at(0);
+    QCOMPARE((uint)gGroupList.at(0).groupId(), id0);
+    QCOMPARE((uint)gGroupList.at(1).groupId(), id1);
+    NotificationGroup ng = gGroupList.at(0);
     QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
     ng = gGroupList.at(1);
     QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
-
+    //Remove group and check that it is removed
     manager->removeGroup(0, id0);
-
     loadStateData();
-
-    QCOMPARE((uint)gPersistentGroupSet.count(), (uint)1);
-    QCOMPARE((bool)gPersistentGroupSet.contains(id1), (bool)true);
     QCOMPARE((uint)gGroupList.count(), (uint)1);
-
+    QCOMPARE((uint)gGroupList.at(0).groupId(), id1);
     ng = gGroupList.at(0);
     QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
-
+    //Update group and verify that it is updated
     manager->updateGroup(0, id1, parameters0);
-
     loadStateData();
-
-    QCOMPARE((uint)gPersistentGroupSet.count(), (uint)1);
-    QCOMPARE((bool)gPersistentGroupSet.contains(id1), (bool)true);
     QCOMPARE((uint)gGroupList.count(), (uint)1);
-
+    QCOMPARE((uint)gGroupList.at(0).groupId(), id1);
     ng = gGroupList.at(0);
     QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
 }
 
-void Ut_NotificationManager::testPersistentNotificationStorage()
+void Ut_NotificationManager::tesNotificationStorage()
 {
     gEventTypeSettings["persistent"][PERSISTENT] = "true";
 
     delete manager;
     manager = new TestNotificationManager(3000);
 
-    // Add two groups to the notification manager,
-    // the other one as persistent
+    // Add two groups to the notification manager
     NotificationParameters gparameters0;
     gparameters0.add(IMAGE, "icon0");
     uint gid0 = manager->addGroup(0, gparameters0);
-
     NotificationParameters gparameters1;
     gparameters1.add(BODY, "body1");
     gparameters1.add(EVENT_TYPE, "persistent");
     uint gid1 = manager->addGroup(0, gparameters1);
 
-    // Create three notifications - two persistent and one non-persistent
+    // Create three notifications
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
-
-    // Non-persistent
-    manager->addNotification(0, parameters0);
+    uint id0 =manager->addNotification(0, parameters0);
     NotificationParameters parameters1;
     parameters1.add(BODY, "body1");
     parameters1.add(EVENT_TYPE, "persistent");
-
-    // Persistent in a non-persistent group
     uint id1 = manager->addNotification(0, parameters1, gid0);
     NotificationParameters parameters2;
     parameters2.add(ICON, "buttonicon2");
+    manager->addNotification(0, parameters2, gid1);
 
-    // Non-persistent in a persistent group
-    uint id2 = manager->addNotification(0, parameters2, gid1);
-
+    //Load notifications and check that they are restored
     loadNotifications();
-
-    QCOMPARE((uint)gNotificationList.count(), (uint)2);
+    QCOMPARE((uint)gNotificationList.count(), (uint)3);
     Notification notification = gNotificationList.at(0);
+    QCOMPARE(notification.parameters().value(IMAGE).toString(), QString("icon0"));
+    notification = gNotificationList.at(1);
+    QCOMPARE(notification.parameters().value(BODY).toString(), QString("body1"));
+    notification = gNotificationList.at(2);
+    QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
+
+    //Remove one notification and check that it is removed from persistent storage
+    manager->removeNotification(0, id0);
+    loadNotifications();
+    QCOMPARE((uint)gNotificationList.count(), (uint)2);
+    notification = gNotificationList.at(0);
     QCOMPARE(notification.parameters().value(BODY).toString(), QString("body1"));
     notification = gNotificationList.at(1);
     QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
-
-    manager->removeNotification(0, id1);
-
+    //Verify that persistent storage notifications can be updated
+    manager->updateNotification(0, id1, parameters0);
     loadNotifications();
-
-    QCOMPARE((uint)gNotificationList.count(), (uint)1);
-    notification = gNotificationList.at(0);
-    QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
-
-
-    manager->updateNotification(0, id2, parameters0);
-
-    loadNotifications();
-
-    QCOMPARE((uint)gNotificationList.count(), (uint)1);
+    QCOMPARE((uint)gNotificationList.count(), (uint)2);
     notification = gNotificationList.at(0);
     QCOMPARE(notification.parameters().value(IMAGE).toString(), QString("icon0"));
 }
 
-void Ut_NotificationManager::testPersistentNotificationRestoration()
+void Ut_NotificationManager::testNotificationRestoration()
 {
     delete manager;
 
@@ -1357,7 +1335,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
 
     manager = new TestNotificationManager(0);
     QSignalSpy spy(manager, SIGNAL(notificationRestored(Notification)));
-    manager->restorePersistentData();
+    manager->restoreData();
 
     // Verify that timer was not started
     QCOMPARE(timerTimeouts.count(), 0);
@@ -1391,7 +1369,7 @@ void Ut_NotificationManager::testPersistentNotificationRestoration()
 
     gTestingPersistent = false;
 }
-#endif
+#endif //HAVE_AEGIS_CRYPTO
 
 void Ut_NotificationManager::testRemovingNotificationsWithEventType()
 {

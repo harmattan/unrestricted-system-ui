@@ -70,11 +70,11 @@ public:
     virtual ~NotificationManager();
 
     /*!
-     * Restore persistent data.
+     * Restores data.
      *
-     * Restores the saved groups and persistent notifications and sends the respective notificationUpdated and groupUpdated signals.
+     * Restores the saved groups and notifications and sends the respective notificationUpdated and groupUpdated signals.
      */
-    void restorePersistentData();
+    void restoreData();
 
 public slots:
     //! \reimp
@@ -180,13 +180,6 @@ protected slots:
     void removeUnseenFlags(bool ignore);
 
 private:
-    /*!
-     * Determines persistence of a notification from the notification parameters.
-     *
-     * \param parameters NotificationParameters to determine the persistence from
-     * \return \c true if the notification is persistent, \c false otherwise.
-     */
-    bool determinePersistence(const NotificationParameters &parameters);
 
     /*!
      * Determines the type of a notification from the notification parameters.
@@ -259,21 +252,15 @@ private:
     void saveStateData();
 
     /*!
-     * Stores the notifications marked as permanent to a permanent storage
+     * Stores the notifications to a permanent storage
      */
-    void savePersistentNotifications();
+    void saveNotifications();
 
     //! Hash of all notifications keyed by notification IDs
     QHash<uint, Notification> notifications;
 
     //! Hash of all notification groups keyed by group IDs
     QHash<uint, NotificationGroup> groups;
-
-    //! Collection of the persistent notification IDs
-    QSet<uint> persistentNotifications;
-
-    //! Collection of the persistent group IDs
-    QSet<uint> persistentGroups;
 
     //! Used to store notifications that wait their turn to be relayed to sinks.
     QList<Notification> waitQueue;

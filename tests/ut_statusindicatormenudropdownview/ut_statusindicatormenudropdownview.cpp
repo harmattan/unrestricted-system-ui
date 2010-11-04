@@ -406,7 +406,7 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenExtensio
 
 void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability()
 {
-    QCOMPARE(gQTimer_singleShot_params.count(), 1);
+    QCOMPARE(gQTimer_singleShot_params.count(), 3);
     QCOMPARE(gQTimer_singleShot_params.at(0).msec, StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY);
     QCOMPARE(gQTimer_singleShot_params.at(0).receiver, m_subject);
     QString timedSlotName(gQTimer_singleShot_params.at(0).member);
