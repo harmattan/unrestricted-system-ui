@@ -33,10 +33,14 @@ class NotifierNotificationSinkStub : public StubBase {
   virtual void removeGroup(uint groupId);
   virtual void addNotification(const Notification &notification);
   virtual void removeNotification(uint notificationId);
+  virtual void enableNotifierSink();
+  virtual void disableNotifierSink();
+  virtual void setNotifierSinkEnabled(bool active);
+  virtual void updateStatusOfLedFeedback();
+
   void clearSink();
   void disableNotificationAdditions(bool disable);
-  void playNotifierNGF(bool play);
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void NotifierNotificationSinkStub::NotifierNotificationSinkConstructor() {
@@ -82,11 +86,24 @@ void NotifierNotificationSinkStub::disableNotificationAdditions(bool disable)
   stubMethodEntered("disableNotificationAdditions", params);
 }
 
-void NotifierNotificationSinkStub::playNotifierNGF(bool play)
+void NotifierNotificationSinkStub::enableNotifierSink() {
+  stubMethodEntered("enableNotifierSink");
+}
+
+void NotifierNotificationSinkStub::disableNotifierSink() {
+  stubMethodEntered("disableNotifierSink");
+}
+
+void NotifierNotificationSinkStub::setNotifierSinkEnabled(bool enabled)
 {
   QList<ParameterBase*> params;
-  params.append( new Parameter<bool >(play));
-  stubMethodEntered("playNotifierNGF", params);
+  params.append( new Parameter<bool>(enabled));
+  stubMethodEntered("setNotifierSinkEnabled", params);
+}
+
+void NotifierNotificationSinkStub::updateStatusOfLedFeedback()
+{
+  stubMethodEntered("updateStatusOfLedFeedback");
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -120,9 +137,24 @@ void NotifierNotificationSink::disableNotificationAdditions(bool disable)
   gNotifierNotificationSinkStub->disableNotificationAdditions(disable);
 }
 
-void NotifierNotificationSink::playNotifierNGF(bool play)
+void NotifierNotificationSink::enableNotifierSink()
 {
-    gNotifierNotificationSinkStub->playNotifierNGF(play);
+    gNotifierNotificationSinkStub->setNotifierSinkEnabled(true);
+}
+
+void NotifierNotificationSink::disableNotifierSink()
+{
+    gNotifierNotificationSinkStub->setNotifierSinkEnabled(false);
+}
+
+void NotifierNotificationSink::setNotifierSinkEnabled(bool enabled)
+{
+    gNotifierNotificationSinkStub->setNotifierSinkEnabled(enabled);
+}
+
+void NotifierNotificationSink::updateStatusOfLedFeedback()
+{
+    gNotifierNotificationSinkStub->updateStatusOfLedFeedback();
 }
 
 #endif

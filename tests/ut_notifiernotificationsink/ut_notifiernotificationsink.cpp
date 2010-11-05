@@ -27,6 +27,15 @@
 #define UNSEEN GenericNotificationParameterFactory::unseenKey()
 #define COUNT  GenericNotificationParameterFactory::countKey()
 
+#ifdef HAVE_QMSYSTEM
+// MeeGo::QmDisplayState stub
+static MeeGo::QmDisplayState::DisplayState meeGoQmDisplayState;
+MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
+{
+    return meeGoQmDisplayState;
+}
+#endif
+
 void Ut_NotifierNotificationSink::initTestCase()
 {
 }
@@ -204,7 +213,7 @@ void Ut_NotifierNotificationSink::testWhenRemoveSystemNotificationNotificationId
     QCOMPARE(m_subject->systemNotificationIds.count(), 0);
 }
 
-void Ut_NotifierNotificationSink::testNGFEvents()
+void Ut_NotifierNotificationSink::testThatNotifierIsActiveOnlyWhenThereIsNotifications()
 {
     NotificationParameters params1;
     NotificationParameters params2;
@@ -215,25 +224,117 @@ void Ut_NotifierNotificationSink::testNGFEvents()
     Notification notification1(1, 0, 2, params1, Notification::ApplicationEvent, 0);
     Notification notification2(2, 0, 2, params2, Notification::ApplicationEvent, 0);
 
-    // Test that NGF start is called when notification is added
     emit addNotification(notification1);
 
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(m_subject->notifierEnabled, true);
 
-    // Test that NGF start is not called again if it has already been called
     emit addNotification(notification2);
 
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(m_subject->notifierEnabled, true);
 
-    // Test that NGF stop is called when last notification is removed
     emit removeNotification(1);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
+    QCOMPARE(m_subject->notifierEnabled, true);
     emit removeNotification(2);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
+    QCOMPARE(m_subject->notifierEnabled, false);
 
-    // Test that NGF stop is not called again if it has already been called
     emit removeNotification(2);
+    QCOMPARE(m_subject->notifierEnabled, false);
+}
+
+#ifdef HAVE_QMSYSTEM
+void Ut_NotifierNotificationSink::testConnectionsInConstruction()
+{
+    bool result = disconnect(&m_subject->displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
+        m_subject, SLOT(updateStatusOfLedFeedback()));
+
+    QCOMPARE(result, true);
+
+    connect(&m_subject->displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
+        m_subject, SLOT(updateStatusOfLedFeedback()));
+
+}
+
+void Ut_NotifierNotificationSink::testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive_data()
+{
+    QTest::addColumn<bool>("enabled");
+    QTest::addColumn<int>("ngfEventIdValue");
+    QTest::addColumn<int>("callCountPlayDispOff");
+    QTest::addColumn<int>("callCountStopDispOff");
+    QTest::addColumn<int>("callCountPlayDispOn");
+    QTest::addColumn<int>("callCountStopDispOn");
+
+    QTest::newRow("Notifier active") << true << 10 << 1 << 0 << 1 << 1;
+    QTest::newRow("Notifier inactive and ngfEnveId 0") << false << 0 << 0 << 0 << 0 << 0;
+}
+
+void Ut_NotifierNotificationSink::testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive()
+{
+    QFETCH(bool, enabled);
+    QFETCH(int, ngfEventIdValue);
+    QFETCH(int, callCountPlayDispOff);
+    QFETCH(int, callCountStopDispOff);
+    QFETCH(int, callCountPlayDispOn);
+    QFETCH(int, callCountStopDispOn);
+
+    m_subject->setNotifierSinkEnabled(enabled);
+    m_subject->ngfEventId = ngfEventIdValue;
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::Off;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), callCountPlayDispOff);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), callCountStopDispOff);
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::On;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), callCountPlayDispOn);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), callCountStopDispOn);
+}
+
+void Ut_NotifierNotificationSink::testThatLEDFeedbackIsActivatedWhenDisplayIsOffAndNotifierIsActivated()
+{
+    m_subject->setNotifierSinkEnabled(false);
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::Off;
+    m_subject->updateStatusOfLedFeedback();
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 0);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
+
+    m_subject->setNotifierSinkEnabled(true);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::On;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
     QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
 }
+
+void Ut_NotifierNotificationSink::testThatLEDFeedbackIsDisabledWhenDisplayIsOnAndNotifierIsInactive()
+{
+    m_subject->setNotifierSinkEnabled(true);
+    meeGoQmDisplayState = MeeGo::QmDisplayState::Off;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::On;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
+
+    m_subject->setNotifierSinkEnabled(false);
+
+    meeGoQmDisplayState = MeeGo::QmDisplayState::Off;
+    m_subject->updateStatusOfLedFeedback();
+
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
+}
+#endif //HAVE_QMSYSTEM
 
 QTEST_APPLESS_MAIN(Ut_NotifierNotificationSink)

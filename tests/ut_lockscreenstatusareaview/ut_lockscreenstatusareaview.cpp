@@ -47,6 +47,13 @@
 #include "notificationsink_stub.h"
 #include "notifiernotificationsink_stub.h"
 
+#ifdef HAVE_QMSYSTEM
+// MeeGo::QmDisplayState stub
+MeeGo::QmDisplayState::~QmDisplayState()
+{
+}
+#endif
+
 WId qWidgetWinId = 0xdeadbeef;
 WId QWidget::winId() const
 {

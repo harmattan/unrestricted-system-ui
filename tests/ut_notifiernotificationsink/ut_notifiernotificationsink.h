@@ -50,7 +50,14 @@ private slots:
     void testSeenNotificationAddedThenNotifierNotUpdated();
     void testWhenAddSystemNotificationNotificationIdIsStored();
     void testWhenRemoveSystemNotificationNotificationIdIsRemoved();
-    void testNGFEvents();
+    void testThatNotifierIsActiveOnlyWhenThereIsNotifications();
+#ifdef HAVE_QMSYSTEM
+    void testConnectionsInConstruction();
+    void testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive_data();
+    void testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive();
+    void testThatLEDFeedbackIsActivatedWhenDisplayIsOffAndNotifierIsActivated();
+    void testThatLEDFeedbackIsDisabledWhenDisplayIsOnAndNotifierIsInactive();
+#endif
 
 signals:
     void addNotification(const Notification &notification);

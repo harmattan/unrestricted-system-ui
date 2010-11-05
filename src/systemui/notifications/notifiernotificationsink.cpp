@@ -27,13 +27,18 @@ NotifierNotificationSink::NotifierNotificationSink() :
     ngfAdapter(new NGFAdapter),
     notificationCount(0),
     additionsDisabled(false),
-    ngfEventId(0)
+    ngfEventId(0),
+    notifierEnabled(false)
 {
-    connect(this, SIGNAL(notifierSinkActive(bool)), this, SLOT(playNotifierNGF(bool)));
+#ifdef HAVE_QMSYSTEM
+    connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
+        this, SLOT(updateStatusOfLedFeedback()));
+#endif
 }
 
 NotifierNotificationSink::~NotifierNotificationSink()
 {
+    delete ngfAdapter;
 }
 
 void NotifierNotificationSink::addNotification(const Notification &notification)
@@ -49,7 +54,7 @@ void NotifierNotificationSink::addNotification(const Notification &notification)
     if(isUnseen(notification)) {
         notificationCount++;
         if(notificationCount == 1) {
-            emit notifierSinkActive(true);
+            enableNotifierSink();
         }
     }
 }
@@ -63,7 +68,7 @@ void NotifierNotificationSink::removeNotification(uint notificationId)
     if(notificationCount > 0) {
         notificationCount--;
         if(notificationCount == 0) {
-            emit notifierSinkActive(false);
+            disableNotifierSink();
         }
     }
 }
@@ -71,7 +76,7 @@ void NotifierNotificationSink::removeNotification(uint notificationId)
 void NotifierNotificationSink::clearSink()
 {
     notificationCount = 0;
-    emit notifierSinkActive(false);
+    disableNotifierSink();
 }
 
 void NotifierNotificationSink::disableNotificationAdditions(bool disable)
@@ -86,12 +91,31 @@ bool NotifierNotificationSink::isUnseen(const Notification &notification)
     return unseenVariant.toBool();
 }
 
-void NotifierNotificationSink::playNotifierNGF(bool play)
+void NotifierNotificationSink::enableNotifierSink()
 {
-    if (play && ngfEventId == 0) {
+    setNotifierSinkEnabled(true);
+}
+
+void NotifierNotificationSink::disableNotifierSink()
+{
+    setNotifierSinkEnabled(false);
+}
+
+void NotifierNotificationSink::setNotifierSinkEnabled(bool enabled)
+{
+    emit notifierSinkActive(enabled);
+    notifierEnabled = enabled;
+    updateStatusOfLedFeedback();
+}
+
+void NotifierNotificationSink::updateStatusOfLedFeedback()
+{
+#ifdef HAVE_QMSYSTEM
+    if (displayState.get() == MeeGo::QmDisplayState::Off && notifierEnabled) {
         ngfEventId = ngfAdapter->play(NOTIFIER_NGF_ID);
-    } else if (!play && ngfEventId != 0) {
+    } else if (ngfEventId != 0) {
         ngfAdapter->stop(ngfEventId);
         ngfEventId = 0;
     }
+#endif
 }

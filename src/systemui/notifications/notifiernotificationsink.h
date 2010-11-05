@@ -23,6 +23,10 @@
 #include "notificationsink.h"
 #include <QSet>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+#endif
+
 class NGFAdapter;
 
 /*!
@@ -71,12 +75,25 @@ private slots:
     //! \reimp_end
 
     /*!
-     * Play or stop the notier NGF play.
-     * \param play Whether NGF should be played or stopped.
+     * Updates status of notifier's LED feedback to playing or stopped.
+     * Play is set only when notifier is enabled and display is off.
      */
-    void playNotifierNGF(bool play);
+    void updateStatusOfLedFeedback();
 
 private:
+
+    //! Enables notifier sink
+    void enableNotifierSink();
+
+    //! Disables notifier sink
+    void disableNotifierSink();
+
+    /*!
+     * Sets notifier sink enabled or disabled.
+     * Emits notifierSinkActive signal and updates led feedback state.
+     */
+    void setNotifierSinkEnabled(bool active);
+
     //! The id for notifier NGF
     static const QString NOTIFIER_NGF_ID;
 
@@ -99,6 +116,14 @@ private:
 
     //! The event id of the currently playing NGF feedback
     uint ngfEventId;
+
+    //! Represents the state of the notifier
+    bool notifierEnabled;
+
+#ifdef HAVE_QMSYSTEM
+    //! Display state of the device. Needed for LED feedback.
+    MeeGo::QmDisplayState displayState;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_NotifierNotificationSink;
