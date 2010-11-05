@@ -88,6 +88,8 @@ Ut_UsbUi::show_hide_dialog ()
     QTest::qWait (10);
 
     QCOMPARE (dialog_visible, true);
+    QVERIFY (!m_subject->m_dialog->isModal());
+    QVERIFY (m_subject->m_dialog->isSystem());
 
     // Emit the disconnect signal
     m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Disconnected);

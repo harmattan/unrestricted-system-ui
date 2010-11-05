@@ -112,6 +112,7 @@ UsbUi::ShowDialog ()
 
     //% "Connected to USB device"
     m_dialog->setTitle (qtTrId ("qtn_usb_connected"));
+    m_dialog->setModal (false);
     m_dialog->setSystem (true);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout (Qt::Vertical);

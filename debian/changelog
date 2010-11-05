@@ -1,6 +1,7 @@
 system-ui (0.18.2~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#201164 - Unable to dismiss the USB connection selection menu.
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Nov 2010 17:45:38 +0200
 
