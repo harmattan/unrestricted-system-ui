@@ -397,8 +397,8 @@ QString MLocaleStub::formatDateTimeICU(const MCalendar &mCalendar, const QString
 QString MLocaleStub::formatDateTime(const QDateTime &dateTime, const QString &formatString) const
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<const QDateTime & >(dateTime));
-    params.append(new Parameter<const QString & >(formatString));
+    params.append(new Parameter<QDateTime>(dateTime));
+    params.append(new Parameter<QString>(formatString));
     stubMethodEntered("formatDateTime", params);
     return stubReturnValue<QString>("formatDateTime");
 }

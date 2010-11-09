@@ -140,12 +140,19 @@ void Ut_ClockView::testWhenDefault24HourModeIsInUseThenDefault24HourTimeFormatIs
 
 void Ut_ClockView::testUpdateTime()
 {
+    const QString FORMAT_STRING("format string");
+    const QString FORMATTED_DATE_TIME("formatted date/time");
+
     m_subject->setModel(&clockModel);
-    m_subject->modifiableStyle()->setTimeFormat(QString("%R"));
+    m_subject->modifiableStyle()->setTimeFormat(FORMAT_STRING);
     QDateTime time(QDate(), QTime(23, 23));
 
+    gMLocaleStub->stubSetReturnValue("formatDateTime", FORMATTED_DATE_TIME);
     clockModel.setTime(time);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%R"));
+    QVERIFY(gMLocaleStub->stubCallCount("formatDateTime") > 0);
+    QCOMPARE(gMLocaleStub->stubLastCallTo("formatDateTime").parameter<QDateTime>(0), time);
+    QCOMPARE(gMLocaleStub->stubLastCallTo("formatDateTime").parameter<QString>(1), FORMAT_STRING);
+    QCOMPARE(Ut_ClockView::timeAsString, FORMATTED_DATE_TIME);
 }
 
 void Ut_ClockView::testSetShortDisplay()
