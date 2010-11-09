@@ -63,15 +63,20 @@ class Ut_ClockView : public QObject
 {
     Q_OBJECT
 
+signals:
+    void localeChanged();
+
 private slots:
     void initTestCase();
     void cleanupTestCase();
     void init();
     void cleanup();
 
+    void testWhenConstructedThenCurrent24HourModeIsTakenInToUse();
+    void testWhen24HourModeChangesThenThe24HourModeIsTakenInToUse();
+    void testWhenDefault24HourModeIsInUseThenDefault24HourTimeFormatIsUsed();
     void testUpdateTime();
     void testSetShortDisplay();
-    void testUpdateTimeFormat();
     void testAlignment();
 
 public:

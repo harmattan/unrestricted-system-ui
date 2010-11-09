@@ -21,29 +21,19 @@
 #include <MLocale>
 
 Clock::Clock(QGraphicsItem *parent) :
-    MWidgetController(new ClockModel, parent),
-    locale(new MLocale())
+    MWidgetController(new ClockModel, parent)
 {
-    // Set the initial 24 hour mode
-    updateLocaleSettings();
-
 #ifdef HAVE_QMSYSTEM
     // Be interested in changes to system time
     connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
             this, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
 #endif
 
-    // Be interested in changes to 24h mode
-    connect(locale.data(), SIGNAL(settingsChanged()),
-            this, SLOT(updateLocaleSettings()));
-    locale->connectSettings();
-
     // Configure the timer
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateModelAndSetupTimer()));
     updateModelAndSetupTimer();
 }
-
 
 Clock::~Clock()
 {
@@ -74,16 +64,6 @@ void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged)
     }
 }
 #endif
-
-void Clock::updateLocaleSettings()
-{
-    MLocale::TimeFormat24h currentFormat = locale->timeFormat24h();
-    if (currentFormat == MLocale::LocaleDefaultTimeFormat24h) {
-        currentFormat = locale->defaultTimeFormat24h();
-    }
-    model()->setTimeFormat24h(
-        MLocale::TwentyFourHourTimeFormat24h == currentFormat);
-}
 
 void Clock::setShortDisplay(bool isShort) {
     // Set the short display model field

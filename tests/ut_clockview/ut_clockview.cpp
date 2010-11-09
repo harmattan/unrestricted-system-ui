@@ -21,7 +21,7 @@
 #include "clock_stub.h"
 #include <MApplication>
 #include <MLabel>
-#include <MLocale>
+#include "mlocale_stub.h"
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 #include "applicationcontext.h"
@@ -83,18 +83,59 @@ void Ut_ClockView::init()
 {
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
+    connect(this, SIGNAL(localeChanged()), m_subject->locale.data(), SIGNAL(settingsChanged()));
 
     // Set model defaults
-    clockModel.setTimeFormat24h(true);
     clockModel.setShortDisplay(false);
+
+    gMLocaleStub->stubReset();
 }
 
 // Called after every testfunction
 void Ut_ClockView::cleanup()
 {
+    disconnect(m_subject->locale.data());
     delete testClock;  // this also deletes the view
     testClock = NULL;
     m_subject = NULL;
+}
+
+void Ut_ClockView::testWhenConstructedThenCurrent24HourModeIsTakenInToUse()
+{
+    gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::TwelveHourTimeFormat24h);
+
+    Clock clock;
+    TestClockView *view = new TestClockView(&clock);
+    view->setModel(&clockModel);
+
+    QCOMPARE(view->styleContainer().currentMode(), QString("twelve-hour"));
+}
+
+void Ut_ClockView::testWhen24HourModeChangesThenThe24HourModeIsTakenInToUse()
+{
+    m_subject->setModel(&clockModel);
+
+    gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::TwelveHourTimeFormat24h);
+    emit localeChanged();
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelve-hour"));
+
+    gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::TwentyFourHourTimeFormat24h);
+    emit localeChanged();
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString(""));
+}
+
+void Ut_ClockView::testWhenDefault24HourModeIsInUseThenDefault24HourTimeFormatIsUsed()
+{
+    m_subject->setModel(&clockModel);
+
+    gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::LocaleDefaultTimeFormat24h);
+    gMLocaleStub->stubSetReturnValue("defaultTimeFormat24h", MLocale::TwentyFourHourTimeFormat24h);
+    emit localeChanged();
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString(""));
+
+    gMLocaleStub->stubSetReturnValue("defaultTimeFormat24h", MLocale::TwelveHourTimeFormat24h);
+    emit localeChanged();
+    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelve-hour"));
 }
 
 void Ut_ClockView::testUpdateTime()
@@ -143,15 +184,6 @@ void Ut_ClockView::testSetShortDisplay()
     QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%p %I:%M"));
     clockModel.setShortDisplay(true);
     QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
-}
-
-void Ut_ClockView::testUpdateTimeFormat()
-{
-    m_subject->setModel(&clockModel);
-    clockModel.setTimeFormat24h(false);
-    QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelve-hour"));
-    clockModel.setTimeFormat24h(true);
-    QCOMPARE(m_subject->styleContainer().currentMode(), QString());
 }
 
 void Ut_ClockView::testAlignment()

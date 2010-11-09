@@ -22,14 +22,11 @@
 
 #include <MWidgetController>
 #include <QTimer>
-#include <QScopedPointer>
 #include "clockmodel.h"
 
 #ifdef HAVE_QMSYSTEM
 #include <qmtime.h>
 #endif
-
-class MLocale;
 
 /*!
  * A widget for showing the current time.
@@ -45,12 +42,12 @@ public:
      */
     explicit Clock(QGraphicsItem *parent = NULL);
 
-    /* !
+    /*!
      * \brief Destructor
      */
     ~Clock();
 public slots:
-    /* !
+    /*!
      * \brief Select whether to show time using the normal or short time format.
      */
     void setShortDisplay(bool isShort);
@@ -68,10 +65,6 @@ private slots:
     void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
 #endif
 
-    /*!
-     * \brief Updates the 24 hour mode if the mode has been changed
-     */
-    void updateLocaleSettings();
 private:
     //! \reimp
     virtual void enterDisplayEvent();
@@ -85,7 +78,7 @@ private:
     //! QmTime object to get the time format is
     MeeGo::QmTime qmTime;
 #endif
-    QScopedPointer<MLocale> locale;
+
 #ifdef UNIT_TEST
     friend class Ut_Clock;
 #endif

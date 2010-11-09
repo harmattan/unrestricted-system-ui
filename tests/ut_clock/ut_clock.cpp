@@ -19,12 +19,9 @@
 
 #include <QtTest/QtTest>
 #include <MOnDisplayChangeEvent>
-#include <MLocale>
 #include <QScopedPointer>
 #include "ut_clock.h"
 #include "clock.h"
-
-Q_DECLARE_METATYPE(MLocale::TimeFormat24h);
 
 #ifdef HAVE_QMSYSTEM
 Q_DECLARE_METATYPE(MeeGo::QmTime::TimeFormat);
@@ -51,31 +48,6 @@ void QTimer::stop()
     Ut_Clock::timerTimeout = -1;
 }
 
-
-static MLocale::TimeFormat24h g_timeFormat24h = MLocale::TwelveHourTimeFormat24h;
-MLocale::TimeFormat24h MLocale::timeFormat24h() const
-{
-    return g_timeFormat24h;
-}
-
-static MLocale::TimeFormat24h g_defaultTimeFormat24h = MLocale::TwelveHourTimeFormat24h;
-MLocale::TimeFormat24h MLocale::defaultTimeFormat24h() const
-{
-    return g_defaultTimeFormat24h;
-}
-
-static bool g_localeDestroyed = false;
-MLocale::~MLocale()
-{
-    g_localeDestroyed = true;
-}
-
-static bool g_localeSettingsConnected = false;
-void MLocale::connectSettings()
-{
-    g_localeSettingsConnected = true;
-}
-
 int Ut_Clock::timerTimeout;
 QDateTime Ut_Clock::expectedDateTime;
 #ifdef HAVE_QMSYSTEM
@@ -96,8 +68,6 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
-    g_localeDestroyed = false;
-    g_localeSettingsConnected = false;
 #ifdef HAVE_QMSYSTEM
     expectedTimeFormat = MeeGo::QmTime::format12h;
 #endif
@@ -105,8 +75,6 @@ void Ut_Clock::init()
     m_subject = new Clock;
     connect(this, SIGNAL(shortDisplayMode(bool)),
             m_subject, SLOT(setShortDisplay(bool)));
-    connect(this, SIGNAL(localeSettingsChanged()),
-            m_subject, SLOT(updateLocaleSettings()));
 
 #ifdef HAVE_QMSYSTEM
     connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
@@ -122,18 +90,12 @@ void Ut_Clock::cleanup()
 
 void Ut_Clock::testConstruction()
 {
-    QVERIFY(m_subject->locale);
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&m_subject->qmTime,
                        SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
                        m_subject,
                        SLOT(updateSettings(MeeGo::QmTimeWhatChanged))));
 #endif
-    QVERIFY(disconnect(m_subject->locale.data(),
-                       SIGNAL(settingsChanged()),
-                       m_subject,
-                       SLOT(updateLocaleSettings())));
-    QVERIFY(g_localeSettingsConnected);
     QVERIFY(disconnect(&m_subject->timer,
                        SIGNAL(timeout()),
                        m_subject, SLOT(updateModelAndSetupTimer())));
@@ -143,114 +105,6 @@ void Ut_Clock::testConstruction()
     time.setHMS(time.hour(), time.minute(), 0);
     nextUpdateTime.setTime(time);
     QVERIFY(timerTimeout > expectedDateTime.msecsTo(nextUpdateTime));
-}
-
-void Ut_Clock::testDestruction()
-{
-    Clock* subject(new Clock);
-    delete subject;
-    QVERIFY(g_localeDestroyed);
-}
-
-
-static void columnsFor24HourModeTests()
-{
-    QTest::addColumn<MLocale::TimeFormat24h>("formatToSet");
-    QTest::addColumn<MLocale::TimeFormat24h>("defaultFormatToSet");
-    QTest::addColumn<bool>("expected24h");
-}
-
-static QVector<QTestData*> rowsFor24HourModeTests()
-{
-    QVector<QTestData*> returnValue;
-    QTestData& row1 = QTest::newRow("12h forced");
-    row1
-        << MLocale::TwelveHourTimeFormat24h
-        << MLocale::TwentyFourHourTimeFormat24h
-        << false;
-    returnValue.append(&row1);
-    QTestData& row2 = QTest::newRow("24h forced");
-    row2
-        << MLocale::TwentyFourHourTimeFormat24h
-        << MLocale::TwelveHourTimeFormat24h
-        << true;
-    returnValue.append(&row2);
-    QTestData& row3 = QTest::newRow("12h locale default");
-    row3
-        << MLocale::LocaleDefaultTimeFormat24h
-        << MLocale::TwelveHourTimeFormat24h
-        << false;
-    returnValue.append(&row3);
-    QTestData& row4 = QTest::newRow("24h locale default");
-    row4
-        << MLocale::LocaleDefaultTimeFormat24h
-        << MLocale::TwentyFourHourTimeFormat24h
-        << true;
-    returnValue.append(&row4);
-    return returnValue;
-}
-
-void Ut_Clock::test24HourModeDuringCreation_data()
-{
-    columnsFor24HourModeTests();
-    rowsFor24HourModeTests();
-}
-
-void Ut_Clock::test24HourModeDuringCreation()
-{
-    QFETCH(MLocale::TimeFormat24h, formatToSet);
-    g_timeFormat24h = formatToSet;
-    QFETCH(MLocale::TimeFormat24h, defaultFormatToSet);
-    g_defaultTimeFormat24h = defaultFormatToSet;
-    QScopedPointer<Clock> subject(new Clock);
-    QFETCH(bool, expected24h);
-    QCOMPARE(subject->model()->timeFormat24h(),
-             expected24h);
-}
-
-void Ut_Clock::test24HourModeToggling_data()
-{
-    columnsFor24HourModeTests();
-#ifdef HAVE_QMSYSTEM
-    QTest::addColumn<MeeGo::QmTime::TimeFormat>("expectedFormat");
-    QTest::addColumn<MeeGo::QmTimeWhatChanged>("whatChanged");
-#endif
-    QVector<QTestData*> rows = rowsFor24HourModeTests();
-#ifdef HAVE_QMSYSTEM
-    *rows[0] << MeeGo::QmTime::format24h
-            << MeeGo::QmTimeOnlySettingsChanged;
-    *rows[1] << MeeGo::QmTime::format12h
-            << MeeGo::QmTimeOnlySettingsChanged;
-    *rows[2] << MeeGo::QmTime::format24h
-            << MeeGo::QmTimeTimeChanged;
-    *rows[3] << MeeGo::QmTime::format12h
-            << MeeGo::QmTimeTimeChanged;
-#endif
-}
-
-void Ut_Clock::test24HourModeToggling()
-{
-    QFETCH(MLocale::TimeFormat24h, formatToSet);
-    g_timeFormat24h = formatToSet;
-    QFETCH(MLocale::TimeFormat24h, defaultFormatToSet);
-    g_defaultTimeFormat24h = defaultFormatToSet;
-    emit localeSettingsChanged();
-    QFETCH(bool, expected24h);
-    QCOMPARE(m_subject->model()->timeFormat24h(),
-             expected24h);
-
-#ifdef HAVE_QMSYSTEM
-    // QMSystem settings changes no longer affect clock 24h mode,
-    // only MLocale settings changes will, so we test with a variety
-    // of values that QMSystem signals don't change the 24h format
-    // at all
-    bool oldValue = m_subject->model()->timeFormat24h();
-    QFETCH(MeeGo::QmTime::TimeFormat, expectedFormat);
-    expectedTimeFormat = expectedFormat;
-    QFETCH(MeeGo::QmTimeWhatChanged, whatChanged);
-    emit timeOrSettingsChanged(whatChanged);
-    QCOMPARE(m_subject->model()->timeFormat24h(), oldValue);
-#endif
 }
 
 void Ut_Clock::testTimeUpdate()

@@ -20,12 +20,13 @@
 #define CLOCKVIEW_H
 
 #include <MWidgetView>
+#include <MLocale>
+#include <QScopedPointer>
 #include "clockmodel.h"
 #include "clockstyle.h"
 
 class Clock;
 class MLabel;
-class MLocale;
 
 /*!
  * A view class for the Clock.
@@ -57,16 +58,22 @@ protected slots:
     //! \reimp_end
 
     /*!
+     * Gets the latest locale configuration and applies that to the display.
+     */
+    void applyCurrentLocale();
+
+    /*!
      * Updates the visuals of this view
      */
     void updateLabel();
+
 private:
 
     //! The previous label
     QString previousLabel;
 
-    //! A pointer to the system locale object
-    MLocale* locale;
+    //! A pointer to the locale object
+    QScopedPointer<MLocale> locale;
 
 #ifdef UNIT_TEST
     friend class Ut_ClockView;

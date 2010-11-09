@@ -33,11 +33,10 @@ class ClockStub : public StubBase {
 #ifdef HAVE_QMSYSTEM
   virtual void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
 #endif
-  virtual void updateLocaleSettings();
   virtual void setShortDisplay(bool isShort);
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void ClockStub::ClockConstructor(QGraphicsItem *parent) {
@@ -58,11 +57,6 @@ void ClockStub::updateSettings(MeeGo::QmTimeWhatChanged whatChanged) {
   stubMethodEntered("updateSettings",params);
 }
 #endif
-
-void ClockStub::updateLocaleSettings()
-{
-  stubMethodEntered("updateLocaleSettings");
-}
 
 void ClockStub::setShortDisplay(bool isShort) {
   QList<ParameterBase*> params;
@@ -102,10 +96,6 @@ void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged) {
   gClockStub->updateSettings(whatChanged);
 }
 #endif
-
-void Clock::updateLocaleSettings() {
-  gClockStub->updateLocaleSettings();
-}
 
 void Clock::setShortDisplay(bool isShort) {
   gClockStub->setShortDisplay(isShort);

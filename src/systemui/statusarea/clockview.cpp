@@ -40,7 +40,7 @@ ClockView::ClockView(Clock *controller) :
 
     // React to system-wide locale changes
     locale->connectSettings();
-    connect(locale, SIGNAL(settingsChanged()), this, SLOT(updateLabel()));
+    connect(locale.data(), SIGNAL(settingsChanged()), SLOT(applyCurrentLocale()));
 }
 
 void ClockView::applyStyle()
@@ -54,9 +54,11 @@ void ClockView::applyStyle()
 void ClockView::setupModel()
 {
     MWidgetView::setupModel();
+
+    applyCurrentLocale();
+
     QList<const char *> modifications;
     modifications << ClockModel::Time;
-    modifications << ClockModel::TimeFormat24h;
     updateData(modifications);
 }
 
@@ -67,16 +69,22 @@ void ClockView::updateData(const QList<const char *>& modifications)
     foreach(member, modifications) {
         if (member == ClockModel::Time || member == ClockModel::ShortDisplay) {
             updateLabel();
-        } else if (member == ClockModel::TimeFormat24h) {
-
-            if (model()->timeFormat24h()) {
-                style().setModeDefault();
-            } else {
-                style().setModeTwelveHour();
-            }
-            updateLabel();
         }
     }
+}
+
+void ClockView::applyCurrentLocale()
+{
+    MLocale::TimeFormat24h currentFormat = locale->timeFormat24h();
+    if (currentFormat == MLocale::LocaleDefaultTimeFormat24h) {
+        currentFormat = locale->defaultTimeFormat24h();
+    }
+    if (currentFormat == MLocale::TwentyFourHourTimeFormat24h) {
+        style().setModeDefault();
+    } else {
+        style().setModeTwelveHour();
+    }
+    updateLabel();
 }
 
 void ClockView::updateLabel()
