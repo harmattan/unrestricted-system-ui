@@ -179,14 +179,14 @@ struct QTimer_singleShot_params
     QObject *receiver;
     QString member;
 };
-QList<QTimer_singleShot_params> gQTimer_singleShot_params;
+QHash<QObject*, QTimer_singleShot_params> gQTimer_singleShot_params;
 void QTimer::singleShot(int msec, QObject *receiver, const char * member)
 {
     QTimer_singleShot_params params;
     params.msec = msec;
     params.receiver = receiver;
     params.member = member;
-    gQTimer_singleShot_params.append(params);
+    gQTimer_singleShot_params[receiver] = params;
 }
 
 
@@ -406,10 +406,11 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenWidgetEntersDisplayThenExtensio
 
 void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability()
 {
-    QCOMPARE(gQTimer_singleShot_params.count(), 3);
-    QCOMPARE(gQTimer_singleShot_params.at(0).msec, StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY);
-    QCOMPARE(gQTimer_singleShot_params.at(0).receiver, m_subject);
-    QString timedSlotName(gQTimer_singleShot_params.at(0).member);
+    QVERIFY(gQTimer_singleShot_params.contains(m_subject));
+    const QTimer_singleShot_params &params(gQTimer_singleShot_params.value(m_subject));
+    QCOMPARE(params.msec, StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY);
+    QCOMPARE(params.receiver, m_subject);
+    QString timedSlotName(params.member);
     QVERIFY2(timedSlotName.endsWith(QString("ensureIsViewable()")), qPrintable(QString("Actual timed slot name was: ") + timedSlotName));
 }
 
