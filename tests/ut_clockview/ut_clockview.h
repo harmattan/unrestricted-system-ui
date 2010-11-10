@@ -75,6 +75,7 @@ private slots:
     void testWhen24HourModeChangesThenThe24HourModeIsTakenInToUse();
     void testWhenDefault24HourModeIsInUseThenDefault24HourTimeFormatIsUsed();
     void testUpdateTime();
+    void testSetShortDisplay_data();
     void testSetShortDisplay();
     void testAlignment();
 
