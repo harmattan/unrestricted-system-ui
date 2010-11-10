@@ -83,6 +83,7 @@ void Ut_ClockView::init()
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
     connect(this, SIGNAL(localeChanged()), m_subject->locale.data(), SIGNAL(settingsChanged()));
+    m_subject->setModel(&clockModel);
 
     // Set model defaults
     clockModel.setShortDisplay(false);
@@ -112,8 +113,6 @@ void Ut_ClockView::testWhenConstructedThenCurrent24HourModeIsTakenInToUse()
 
 void Ut_ClockView::testWhen24HourModeChangesThenThe24HourModeIsTakenInToUse()
 {
-    m_subject->setModel(&clockModel);
-
     gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::TwelveHourTimeFormat24h);
     emit localeChanged();
     QCOMPARE(m_subject->styleContainer().currentMode(), QString("twelve-hour"));
@@ -125,8 +124,6 @@ void Ut_ClockView::testWhen24HourModeChangesThenThe24HourModeIsTakenInToUse()
 
 void Ut_ClockView::testWhenDefault24HourModeIsInUseThenDefault24HourTimeFormatIsUsed()
 {
-    m_subject->setModel(&clockModel);
-
     gMLocaleStub->stubSetReturnValue("timeFormat24h", MLocale::LocaleDefaultTimeFormat24h);
     gMLocaleStub->stubSetReturnValue("defaultTimeFormat24h", MLocale::TwentyFourHourTimeFormat24h);
     emit localeChanged();
@@ -142,7 +139,6 @@ void Ut_ClockView::testUpdateTime()
     const QString FORMAT_STRING("format string");
     const QString FORMATTED_DATE_TIME("formatted date/time");
 
-    m_subject->setModel(&clockModel);
     m_subject->modifiableStyle()->setTimeFormat(FORMAT_STRING);
     QDateTime time(QDate(), QTime(23, 23));
 
@@ -180,7 +176,6 @@ void Ut_ClockView::testSetShortDisplay()
 {
     gMLocaleStub = &gEnhancedMLocaleStub;
 
-    m_subject->setModel(&clockModel);
     m_subject->modifiableStyle()->setShortRemoveAmPmIndicator(true);
     QDateTime time(QDate(), QTime(1, 1));
 
@@ -220,7 +215,6 @@ void Ut_ClockView::testSetShortDisplay()
 
 void Ut_ClockView::testAlignment()
 {
-    m_subject->setModel(&clockModel);
     Qt::Alignment alignment = Qt::AlignLeft;
     m_subject->modifiableStyle()->setHorizontalAlign(alignment);
     m_subject->applyStyle();
