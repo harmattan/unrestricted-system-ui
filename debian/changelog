@@ -1,11 +1,10 @@
-system-ui (0.18.2~1) unstable; urgency=low
+system-ui (0.18.2-1) unstable; urgency=low
 
-  * [UNRELEASED]
-  * Fixes: NB#201164 - Unable to dismiss the USB connection selection menu.
   * Implemented: SWP#DUI-4166 Modify the LED feedback of unhandled notifications to follow the UI specification.
+  * Fixes: NB#201164 - Unable to dismiss the USB connection selection menu.
   * Fixes: NB#195715 - Empty notification window on top of _NET_CLIENT_LIST_STACKING
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Nov 2010 17:45:38 +0200
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 11 Nov 2010 15:17:00 +0200
 
 system-ui (0.18.1-1) unstable; urgency=low
 
