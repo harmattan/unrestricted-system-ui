@@ -23,7 +23,7 @@ MWidgetStyle#LockMostRecentLabel {
 
 MImageWidgetStyle#LockMostRecentIcon {
     margin-top: 1.2mm;
-    margin-left: 2.9 mm;
+    margin-left: 2.9mm;
     margin-right: $MARGIN_DOUBLE;
 
     minimum-size: 3.6mm 3.6mm;
