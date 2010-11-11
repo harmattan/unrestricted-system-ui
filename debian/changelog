@@ -1,3 +1,9 @@
+system-ui (0.18.3~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 11 Nov 2010 15:17:19 +0200
+
 system-ui (0.18.2-1) unstable; urgency=low
 
   * Implemented: SWP#DUI-4166 Modify the LED feedback of unhandled notifications to follow the UI specification.
