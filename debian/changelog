@@ -1,11 +1,10 @@
-system-ui (0.18.3~1) unstable; urgency=low
+system-ui (0.18.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#202913 - system-ui package provided aegis tokens not in sync with documentation
   * Fixes: NB#203638 - Harmattan Systemui hardcodes 16bit UI
   * Fixes: NB#200597 - Homescreen: Service Provider name is almost not visible in LHS corner
 
- -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 11 Nov 2010 15:17:19 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 12 Nov 2010 14:56:19 +0200
 
 system-ui (0.18.2-1) unstable; urgency=low
 
