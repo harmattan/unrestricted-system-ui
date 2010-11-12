@@ -59,13 +59,23 @@ public:
      */
     virtual ~StatusIndicatorMenuVerticalView();
 
+protected:
+    //! \reimp
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    //! \reimp_end
+
 private:
+    //! Controller for the view
+    StatusIndicatorMenu *controller;
 
     //! Status Bar
     MStatusBar *statusBar;
 
     //! Container for the main content
     MWidgetController *containerWidget;
+
+    //! Button for accessing the full settings
+    MButton *settingsButton;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuVerticalView;

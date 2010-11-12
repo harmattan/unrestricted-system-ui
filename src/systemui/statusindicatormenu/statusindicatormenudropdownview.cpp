@@ -278,7 +278,8 @@ void StatusIndicatorMenuDropDownView::setPannabilityAndLayout()
 
     // Enable pannability if there is too much content to fit on the screen
     bool viewportShouldBePannable = pannableWidget->effectiveSizeHint(Qt::PreferredSize).height() > pannableViewport->geometry().height();
-    pannableViewport->setEnabled(viewportShouldBePannable);
+    // TODO change this to setPanningEnabled() when such a function exists
+//    pannableViewport->setPanningEnabled(viewportShouldBePannable);
 
     // Appear or disappear the close button overlay based on close area position
     const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(pannableViewport->widget())->bottommostWidget();
@@ -308,7 +309,7 @@ void StatusIndicatorMenuDropDownView::resetViewport()
 
 void StatusIndicatorMenuDropDownView::applyStyle()
 {
-    MWidgetView::applyStyle();
+    MSceneWindowView::applyStyle();
 
     if (pannableViewport == NULL) {
         QGraphicsAnchorLayout *backgroundLayout = new QGraphicsAnchorLayout;

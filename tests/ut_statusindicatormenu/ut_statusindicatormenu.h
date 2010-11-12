@@ -53,7 +53,6 @@ private slots:
     void testSettingsButtonClicked();
     void testExtensionInstantiated();
     void testSignals();
-    void testWhenPressedOutsideMenuContentsThenWindowShouldHide();
 };
 
 #endif //_UT_STATUSINDICATORMENUWINDOW_

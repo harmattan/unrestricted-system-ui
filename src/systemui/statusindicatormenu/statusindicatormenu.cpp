@@ -17,14 +17,10 @@
 **
 ****************************************************************************/
 #include <MApplicationIfProxy>
-#include <QGraphicsSceneMouseEvent>
-#include <MSceneManager>
-#include <MScene>
 #include "statusindicatormenu.h"
 #include "statusindicatormenudropdownview.h"
 
 const QString StatusIndicatorMenu::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
-
 
 StatusIndicatorMenu::StatusIndicatorMenu(QGraphicsItem *parent) :
     MSceneWindow(parent)
@@ -61,22 +57,5 @@ void StatusIndicatorMenu::showStatusIndicatorMenu()
 
 void StatusIndicatorMenu::hideStatusIndicatorMenu()
 {
-    emit hideRequested();
-}
-
-void StatusIndicatorMenu::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-    /* Ignore the event if this isn't the topmost item,
-       otherwise the subsequent mouse events are passed to this item */
-    if (sceneManager()->scene()->itemAt(event->scenePos()) != this) {
-        event->ignore();
-    }
-}
-
-void StatusIndicatorMenu::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-    Q_UNUSED(event);
-
-    /* Close the menu as the user pressed outside the content */
     emit hideRequested();
 }

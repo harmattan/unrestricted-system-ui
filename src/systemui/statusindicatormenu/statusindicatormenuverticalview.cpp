@@ -21,16 +21,19 @@
 #include <MApplicationExtensionArea>
 #include <MButton>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneMouseEvent>
 #include <mscenewindowview.h>
 #include "notificationarea.h"
 #include <mstatusbar.h>
 #include "statusindicatormenu.h"
 #include "statusindicatormenuverticalview.h"
 
-
 StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicatorMenu *controller) :
     MSceneWindowView(controller),
-    statusBar(new MStatusBar)
+    controller(controller),
+    statusBar(new MStatusBar),
+    //% "Settings"
+    settingsButton(new MButton(qtTrId("qtn_stat_menu_settings")))
 {
     // Show status bar
     controller->sceneManager()->appearSceneWindowNow(statusBar);
@@ -45,9 +48,7 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     extensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
     extensionArea->init();
 
-    // Create a button for accessing the full settings
-    //% "Settings"
-    MButton *settingsButton = new MButton(qtTrId("qtn_stat_menu_settings"));
+    // Set up the button for accessing the full settings
     settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
     settingsButton->setViewType(MButton::iconType);
     settingsButton->setIconID("icon-m-status-menu-settings");
@@ -90,6 +91,16 @@ StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
 {
     delete containerWidget;
     delete statusBar;
+}
+
+void StatusIndicatorMenuVerticalView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    MSceneWindowView::mousePressEvent(event);
+
+    // Close the menu if the Y position of the event is bigger than the bottom edge of the settings button
+    if (controller->mapToItem(settingsButton, event->pos()).y() >= settingsButton->geometry().height()) {
+        controller->hideStatusIndicatorMenu();
+    }
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorMenuVerticalView, StatusIndicatorMenu)

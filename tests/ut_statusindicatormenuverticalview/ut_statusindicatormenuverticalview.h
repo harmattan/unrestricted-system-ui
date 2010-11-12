@@ -52,6 +52,7 @@ private slots:
     void testExtensionAreaInitialization();
     void testLayoutPositions();
     void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
+    void testMousePressBelowSettingsButtonHidesMenu();
 };
 
 #endif //_UT_STATUSINDICATORMENUVERTICALVIEW_

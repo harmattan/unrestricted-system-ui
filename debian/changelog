@@ -1,6 +1,8 @@
 system-ui (0.18.4~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#204567 - Unable to close the status indicator menu
+  * Fixes: NB#204568 - Status indicator menu does not rotate
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 12 Nov 2010 14:59:40 +0200
 

@@ -18,16 +18,19 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_statusindicatormenuverticalview.h"
 #include "statusindicatormenuverticalview.h"
 #include "statusindicatormenu.h"
 #include <MApplication>
 #include <MApplicationExtensionArea>
-#include <QtTest/QtTest>
-#include "x11wrapper_stub.h"
 #include "statusindicatormenustyle.h"
 #include <MSceneManager>
+#include <MButton>
 #include <QGraphicsLayout>
+#include <QEvent>
+#include <QGraphicsSceneMouseEvent>
+#include "x11wrapper_stub.h"
 
 #ifdef HAVE_QMSYSTEM
 #include "qmlocks_stub.h"
@@ -223,6 +226,22 @@ void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheContro
 
     // All the SceneWindows should be gone as well
     QCOMPARE(g_visibleSceneWindows.count(), 0);
+}
+
+void Ut_StatusIndicatorMenuVerticalView::testMousePressBelowSettingsButtonHidesMenu()
+{
+    QSignalSpy spy(controller, SIGNAL(hideRequested()));
+    QGraphicsSceneMouseEvent event;
+
+    // Check that clicking above the settings button does nothing
+    event.setPos(QPointF(0, m_subject->settingsButton->geometry().y() - 1));
+    m_subject->mousePressEvent(&event);
+    QCOMPARE(spy.count(), 0);
+
+    // Check that clicking below the settings button does nothing
+    event.setPos(QPointF(0, m_subject->settingsButton->geometry().y() + m_subject->settingsButton->geometry().height()));
+    m_subject->mousePressEvent(&event);
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuVerticalView)

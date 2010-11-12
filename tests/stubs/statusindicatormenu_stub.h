@@ -15,8 +15,6 @@ class StatusIndicatorMenuStub : public StubBase {
   virtual void hideStatusIndicatorMenu();
   virtual void setStatusIndicatorMenuInterface(MApplicationExtensionInterface *extension);
   virtual void launchControlPanelAndHide();
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent*);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent*);
 };
 
 // 2. IMPLEMENT STUB
@@ -44,13 +42,6 @@ void StatusIndicatorMenuStub::launchControlPanelAndHide() {
   stubMethodEntered("launchControlPanelAndHide");
 }
 
-void StatusIndicatorMenuStub::mousePressEvent(QGraphicsSceneMouseEvent*) {
-  stubMethodEntered("mousePressEvent");
-}
-
-void StatusIndicatorMenuStub::mouseReleaseEvent(QGraphicsSceneMouseEvent*) {
-  stubMethodEntered("mouseReleaseEvent");
-}
 
 // 3. CREATE A STUB INSTANCE
 StatusIndicatorMenuStub gDefaultStatusIndicatorMenuStub;
@@ -81,14 +72,6 @@ void StatusIndicatorMenu::setStatusIndicatorMenuInterface(MApplicationExtensionI
 
 void StatusIndicatorMenu::launchControlPanelAndHide() {
   gStatusIndicatorMenuStub->launchControlPanelAndHide();
-}
-
-void StatusIndicatorMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  gStatusIndicatorMenuStub->mousePressEvent(event);
-}
-
-void StatusIndicatorMenu::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  gStatusIndicatorMenuStub->mouseReleaseEvent(event);
 }
 
 #endif

@@ -46,12 +46,7 @@ public:
 
     //! \reimp
     virtual void showStatusIndicatorMenu();
-
     virtual void hideStatusIndicatorMenu();
-
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     //! \reimp_end
 
 signals:
