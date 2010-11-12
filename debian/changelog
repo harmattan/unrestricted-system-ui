@@ -1,6 +1,7 @@
 system-ui (0.18.3~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#202913 - system-ui package provided aegis tokens not in sync with documentation
 
  -- Aki Koskinen <aki.koskinen@nokia.com>  Thu, 11 Nov 2010 15:17:19 +0200
 
