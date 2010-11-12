@@ -74,7 +74,7 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
     // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
 
     Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
-                                              statusAreaWidth, 2*statusAreaHeight, 16);
+                                              statusAreaWidth, 2*statusAreaHeight, QX11Info::appDepth());
     QApplication::syncX();
     statusAreaPixmap = new QPixmap();
     *statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
