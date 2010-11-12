@@ -180,12 +180,13 @@ Ft_ShutdownBusinessLogic::testShutDown ()
      */
     logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
     QTest::qWait (WMDelay);
-
     /*
      * This time the window has to be there.
      */
     QVERIFY (logic->m_Ui != 0);
     WindowID = logic->m_Ui->internalWinId();
+    //Test that second call works
+    logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
     SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
     QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));

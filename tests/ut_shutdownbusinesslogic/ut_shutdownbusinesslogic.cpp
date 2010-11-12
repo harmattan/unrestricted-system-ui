@@ -77,10 +77,12 @@ MFeedback::play () const
  */
 void Ut_ShutdownBusinessLogic::init()
 {
+    m_Api = new ShutdownBusinessLogic;
 }
 
 void Ut_ShutdownBusinessLogic::cleanup()
 {
+    delete m_Api;
 }
 
 
@@ -93,14 +95,11 @@ void Ut_ShutdownBusinessLogic::initTestCase()
 {
     m_App = new MApplication(argc, argv);
     m_App->setQuitOnLastWindowClosed (false);
-
-    m_Api = new ShutdownBusinessLogic;
 }
 
 void 
 Ut_ShutdownBusinessLogic::cleanupTestCase()
 {
-    delete m_Api;
     m_App->deleteLater ();
 }
 

@@ -57,10 +57,10 @@ ShutdownBusinessLogic::showUI (
     QString  text2,
     int      timeout)
 {
-    if (m_Ui == 0)
+    if (m_Ui == 0) {
         m_Ui = new ShutdownUI;
-
-    m_Ui->showWindow (text1, text2, timeout);
+        m_Ui->showWindow (text1, text2, timeout);
+    }
 }
 
 #ifdef HAVE_QMSYSTEM
