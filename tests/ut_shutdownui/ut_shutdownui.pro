@@ -8,11 +8,13 @@ INCLUDEPATH += \
 
 SOURCES += \
     ut_shutdownui.cpp \
-    $$SRCDIR/shutdownui.cpp
+    $$SRCDIR/shutdownui.cpp \
+    $$STUBSDIR/stubbase.cpp
 
 HEADERS += \
     ut_shutdownui.h \
-    $$SRCDIR/shutdownui.h
+    $$SRCDIR/shutdownui.h \
+    $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)
 

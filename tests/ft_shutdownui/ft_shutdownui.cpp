@@ -1,5 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim:set et ai sw=4 ts=4 sts=4: tw=80 cino="(0,W2s,i2s,t0,l1,:0" */
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -97,30 +95,7 @@ void
 Ft_ShutdownUI::testConstructDestruct ()
 {
     m_ShutDownUI = new ShutdownUI;
-    QVERIFY (!m_ShutDownUI->m_Realized);
-    delete m_ShutDownUI;
-    m_ShutDownUI = 0;
-}
-
-void 
-Ft_ShutdownUI::testShutdownUIRealizing ()
-{ 
-    m_ShutDownUI = new ShutdownUI;
-    
-    /*
-     * After 2s the shutdownUI should realize itself. We could wait more, but
-     * this value seems to be reasonable.
-     */
-    QTest::qWait (2000);
-    QVERIFY (m_ShutDownUI->m_Realized);
-    QVERIFY (m_ShutDownUI->m_SceneWindow != 0);
-    QVERIFY (m_ShutDownUI->m_Timer != 0);
-    QVERIFY (m_ShutDownUI->m_Label1 != 0);
-    QVERIFY (m_ShutDownUI->m_Label2 != 0);
-    QVERIFY (m_ShutDownUI->m_logo != 0);
-    QVERIFY (m_ShutDownUI->m_Feedback != 0);
-
-
+    QVERIFY (!m_ShutDownUI->realized);
     delete m_ShutDownUI;
     m_ShutDownUI = 0;
 }
@@ -154,18 +129,18 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     /*
      * Also the labels has to be visible. 
      */
-    QVERIFY (m_ShutDownUI->m_Label1 != 0 && 
-            m_ShutDownUI->m_Label1->isVisible());
-    QVERIFY (m_ShutDownUI->m_Label2 != 0 && 
-            m_ShutDownUI->m_Label2->isVisible());
+    QVERIFY (m_ShutDownUI->label1 != 0 && 
+            m_ShutDownUI->label1->isVisible());
+    QVERIFY (m_ShutDownUI->label2 != 0 && 
+            m_ShutDownUI->label2->isVisible());
 
     /*
      * Then we wait a little bit more than the reguiested delay while the labels
      * disappear and the image is shown.
      */
     QTest::qWait (2500);
-    QVERIFY (m_ShutDownUI->m_logo != 0 && 
-            m_ShutDownUI->m_logo->isVisible());
+    QVERIFY (m_ShutDownUI->logo != 0 && 
+            m_ShutDownUI->logo->isVisible());
 
     /*
      * A bit more to see the screen dimming.
@@ -193,5 +168,3 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
 }
 
 QTEST_APPLESS_MAIN(Ft_ShutdownUI)
-
-

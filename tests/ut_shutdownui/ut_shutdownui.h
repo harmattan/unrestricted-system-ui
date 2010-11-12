@@ -19,12 +19,9 @@
 #ifndef UT_SHUTDOWNUI_H
 #define UT_SHUTDOWNUI_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include <QPointer>
 
 class MApplication;
-class MApplicationWindow;
 class ShutdownUI;
 
 class Ut_ShutdownUI : public QObject
@@ -37,11 +34,13 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     
-    void testShowWindow ();
+    void testInitialization();
+    void testRealize();
+    void testShowWindow();
     
 private:
-    MApplication          *m_App;
-    QPointer <ShutdownUI>  m_Api;
+    MApplication *app;
+    ShutdownUI *m_subject;
 };
 
 #endif

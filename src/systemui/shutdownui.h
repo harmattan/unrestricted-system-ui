@@ -41,29 +41,53 @@ public:
     ShutdownUI ();
     virtual ~ShutdownUI ();
 
-
-    void showWindow (
-		    const QString  &text1, 
-		    const QString  &text2, 
-		    int             timeout);
+    /*!
+     * Shows a full screen window with two lines of text, then waits for the
+     * specified amount of time and will hide the text lines and show an image.
+     * After the image image shown for some time will dim the screen.
+     *
+     * \param text1 The text of the primary message line
+     * \param text2 The text of the secondary message line
+     * \param timeout After this timeout we will hide the texts and show the logo
+     */
+    void showWindow(const QString &text1, const QString &text2, int timeout);
 
 protected:
-   void showEvent (QShowEvent *event); 
+    //! \reimp
+    void showEvent (QShowEvent *event);
+    //! \reimp_end
 
 private slots:
+    /*!
+     * Hides the labels, shows the logo image and starts up a timer to turn off the
+     * screen.
+     */
     void showLogo ();
+
+    /*!
+     * We need to turn off the screen so that the user will not see the actual
+     * shutdown on the GUI. We could show a black screen but we might be prematurely
+     * killed, so this window will be removed early. Turning off the screen is an
+     * excellent way to solve this issue... except that we might be killed even
+     * sooner.
+     */
     void turnOffScreen ();
+
+    /*!
+     * Here we create the widgets that we use, and we put them into the layout that
+     * we use. The logo will not be shown yet.
+     */
     void realize ();
 
 private:
-    bool                    m_Realized;
-    MSceneWindow           *m_SceneWindow;
-    QTimer                 *m_Timer;
-    MLabel                 *m_Label1;
-    MLabel                 *m_Label2;
-    MStylableWidget        *m_logo;
-    QGraphicsLinearLayout  *m_layout;
-    MFeedback              *m_Feedback;
+    bool realized;
+    MSceneWindow *sceneWindow;
+    QTimer *timer;
+    MLabel *label1;
+    MLabel *label2;
+    MStylableWidget *logo;
+    QGraphicsLinearLayout *layout;
+    MFeedback *feedback;
 
 #ifdef UNIT_TEST
     friend class Ft_ShutdownUI;

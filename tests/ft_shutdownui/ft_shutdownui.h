@@ -38,7 +38,6 @@ private slots:
     void cleanupTestCase();
 
     void testConstructDestruct ();
-    void testShutdownUIRealizing ();
     void testShutdownUIShowHide ();
 
 private:

@@ -1,21 +1,21 @@
 /****************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of systemui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of systemui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #include "shutdownui.h"
 #include "sysuid.h"
 
@@ -27,6 +27,8 @@
 #include <MSceneManager>
 #include <MStylableWidget>
 #include <MLocale>
+#include <QX11Info>
+#include "x11wrapper.h"
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -35,171 +37,116 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(ShutdownUI)
 
-// For WM_SET_NAME:
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
-ShutdownUI::ShutdownUI () :
-        m_Realized (false),
-        m_SceneWindow (0),
-        m_Timer (new QTimer),
-        m_Label1 (0),
-        m_Label2 (0),
-        m_logo (0),
-        m_layout (0),
-        m_Feedback (0)
+ShutdownUI::ShutdownUI() :
+    MWindow((QWidget *)NULL),
+    realized(false),
+    sceneWindow(0),
+    timer(new QTimer(this)),
+    label1(0),
+    label2(0),
+    logo(0),
+    layout(0),
+    feedback(0)
 {
-    setObjectName ("ShutdownUIWindow");
-    /*
-     * We have to pre-created/load the shutdown ui content because when it
-     * should show, the in should show quickly
-     */
-    QTimer::singleShot (500, this, SLOT (realize()));
+    setWindowTitle("ShutdownUI");
+    setObjectName("ShutdownUIWindow");
 
-    connect (m_Timer, SIGNAL (timeout ()),
-             this, SLOT (showLogo ()));
+    // Pre-create/load the shutdown UI content to show it quickly when requested
+    QTimer::singleShot(5000, this, SLOT(realize()));
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(showLogo()));
 }
 
-ShutdownUI::~ShutdownUI ()
+ShutdownUI::~ShutdownUI()
 {
-    delete m_Timer;
-
-    if (m_SceneWindow) {
-        delete m_SceneWindow;
-    }
-    // FIXME: What about m_Feedback?
+    delete sceneWindow;
 }
 
-/*
- * Here we create the widgets that we use, and we put them into the layout that
- * we use. The logo will not be shown yet.
- */
-void
-ShutdownUI::realize ()
+void ShutdownUI::realize()
 {
-    if (m_Realized)
+    if(realized) {
         return;
+    }
 
-    // Initilaize non-graphical feedback
-    m_Feedback = new MFeedback (this);
-    m_Feedback->setName ("power-off");
+    // Initialize non-graphical feedback
+    feedback = new MFeedback(this);
+    feedback->setName("power-off");
 
     //% "Shutting down"
-    m_Label1 = new MLabel (qtTrId ("qtn_shut_down"));
-    m_Label1->setAlignment (Qt::AlignCenter);
-    m_Label1->setObjectName ("shutdownTextFirst");
+    label1 = new MLabel(qtTrId("qtn_shut_down"));
+    label1->setAlignment(Qt::AlignCenter);
+    label1->setObjectName("shutdownTextFirst");
 
     //% "Good bye!"
-    m_Label2 = new MLabel (qtTrId ("qtn_shut_greeting"));
-    m_Label2->setAlignment (Qt::AlignCenter);
-    m_Label2->setObjectName ("shutdownTextSecond");
+    label2 = new MLabel(qtTrId("qtn_shut_greeting"));
+    label2->setAlignment(Qt::AlignCenter);
+    label2->setObjectName("shutdownTextSecond");
 
-    /*
-     * A full screen logo that we show when the labels are already gone.
-     */
-    m_logo = new MStylableWidget;
-    m_logo->setObjectName ("shutdownLogo");
+    // A full screen logo shown when the labels are already gone
+    logo = new MStylableWidget;
+    logo->setObjectName("shutdownLogo");
 
-    m_layout = new QGraphicsLinearLayout (Qt::Vertical);
-    m_layout->setContentsMargins (0., 0., 0., 0.);
-    m_layout->setSpacing (0.);
+    layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    m_layout->addItem (m_Label1);
-    m_layout->addItem (m_Label2);
+    layout->addItem(label1);
+    layout->addItem(label2);
 
-    /*
-     * Creating a scene window and putting everything into it.
-     */
-    m_SceneWindow = new MSceneWindow;
-    m_SceneWindow->setObjectName ("shutdownWindow");
-    m_SceneWindow->setContentsMargins (0., 0., 0., 0.);
-    m_SceneWindow->setLayout (m_layout);
-    m_SceneWindow->appear (this);
+    // Create a scene window and put everything into it
+    sceneWindow = new MSceneWindow;
+    sceneWindow->setObjectName("shutdownWindow");
+    sceneWindow->setContentsMargins(0, 0, 0, 0);
+    sceneWindow->setLayout(layout);
+    sceneWindow->appear(this);
 
-    m_Realized = true;
+    realized = true;
 }
 
-// Hack for RFS/CUD
-#ifdef NOTDEFINED
-static const char * const ids [] =
+void ShutdownUI::showWindow(const QString &text1, const QString &text2, int timeout)
 {
-    //% "Restoring settings"
-    QT_TRID_NOOP("qtn_rset_restore_down"),
-    //% "Clearing device"
-    QT_TRID_NOOP("qtn_rset_clear_down"),
-    //% "Please wait!"
-    QT_TRID_NOOP("qtn_rset_wait"),
-    0,
-};
-#endif
+    // If the widgets are not created we create them now
+    realize();
 
-/*!
- * \param text1 The text of the primary message line
- * \param text2 The text of the secondary message line
- * \param timeout After this timeout we will hide the texts and show the logo
- *
- * Shows a full screen window with two lines of text, then waits for the
- * specified amount of time and will hide the text lines and show an image.
- * After the image image shown for some time will dimm the screen.
- */
-void
-ShutdownUI::showWindow (
-        const QString    &text1, 
-        const QString    &text2, 
-        int               timeout)
-{
-    /*
-     * If the widgets are not created we create them now.
-     */
-    if (!m_Realized)
-        realize ();
-    
-    /*
-     * We set the labels to show the text strings that we got.
-     */
-    if (! (text1.isEmpty () && text2.isEmpty ())) {
-        if (text1.startsWith ("qtn"))
-            m_Label1->setText (qtTrId (text1.toLatin1 ().constData ()));
-        else
-            m_Label1->setText (text1);
+    // Set the labels to show the text strings that we got
+    if (!(text1.isEmpty() && text2.isEmpty())) {
+        if (label1 != NULL) {
+            if (text1.startsWith("qtn")) {
+                label1->setText(qtTrId(text1.toLatin1().constData()));
+            } else {
+                label1->setText(text1);
+            }
+        }
 
-        if (text2.startsWith ("qtn"))
-            m_Label2->setText (qtTrId (text2.toLatin1 ().constData ()));
-        else
-            m_Label2->setText (text2);
+        if (label2 != NULL) {
+            if (text2.startsWith("qtn")) {
+                label2->setText(qtTrId(text2.toLatin1().constData()));
+            } else {
+                label2->setText(text2);
+            }
+        }
     }
 
+    timer->stop();
 
-    // Stop the previous timer...
-    m_Timer->stop ();
+    show();
 
-    /*
-     * It is as simple as this when we use MWindow.
-     */
-    show ();
+    feedback->play();
 
-    m_Feedback->play ();
-
-    // Set the interval and start the timer to the next phase: hiding the labels
-    // and showing the logo.
-    m_Timer->setInterval (timeout);
-    m_Timer->start ();
+    // Set the interval and start the timer to the next phase: hiding the labels and showing the logo
+    timer->setInterval(timeout);
+    timer->start();
 }
 
-/*
- * Hides the labels, shows the logo image and starts up a timer to turn off the
- * screen.
- */
-void
-ShutdownUI::showLogo ()
+void ShutdownUI::showLogo()
 {
-    m_Timer->stop ();
+    timer->stop();
 
-    /*
-     * We hide the labels and show the image.
-     */
-    for (int i = m_layout->count (); i > 0; i--)
-        m_layout->removeAt (0);
+    // Hide the labels and show the image
+    for (int i = layout->count(); i > 0; i--) {
+        layout->removeAt(0);
+    }
+    layout->addItem(logo);
 
 #if 0
     /* Logo available only for portait ATM */
@@ -207,95 +154,49 @@ ShutdownUI::showLogo ()
     lockOrientation ();
 #endif
 
-    m_layout->addItem (m_logo);
+    delete label1;
+    delete label2;
+    label1 = NULL;
+    label2 = NULL;
 
-    delete m_Label1;
-    delete m_Label2;
-
-    QTimer::singleShot (2000, this, SLOT (turnOffScreen ()));
+    QTimer::singleShot(2000, this, SLOT(turnOffScreen()));
 }
 
-/*!
- * We need to turn off the screen so that the user will not see the actual
- * shutdown on the GUI. We could show a black screen but we might be prematurely
- * killed, so this window will be removed early. Turning off the screen is an
- * excellent way to solve this issue... except that we might be killed even
- * sooner.
- */
-void
-ShutdownUI::turnOffScreen ()
+void ShutdownUI::turnOffScreen()
 {
     bool success = false;
 
-    /*
-     * No way dimming or turning off the screen inside scratchbox.
-     */
-    #if defined(HAVE_QMSYSTEM)
-    MeeGo::QmDisplayState  display;
+    // No way dimming or turning off the screen inside scratchbox
+#if defined(HAVE_QMSYSTEM)
+    MeeGo::QmDisplayState display;
 
     // Try to dim
-    success = display.set (MeeGo::QmDisplayState::Dimmed);
+    success = display.set(MeeGo::QmDisplayState::Dimmed);
 
     // Try to turn off
-    success = display.set (MeeGo::QmDisplayState::Off);
-    #endif
+    success &= display.set(MeeGo::QmDisplayState::Off);
+#endif
 
     if (!success) {
-        QPalette Palette (palette());
+        QPalette Palette(palette());
 
-        Palette.setColor(QPalette::Background, QColor ("black"));
+        Palette.setColor(QPalette::Background, QColor("black"));
         setPalette(Palette);
 
-        setBackgroundRole (QPalette::Background);
-        m_logo->hide ();
+        setBackgroundRole(QPalette::Background);
+        logo->hide();
     }
 }
 
-/*
- * Set the highest stacking layer here 
- * and the window-name for debugging purposes
- */
-void 
-ShutdownUI::showEvent (
-        QShowEvent *event)
+void ShutdownUI::showEvent(QShowEvent *event)
 {
-    Q_UNUSED (event);
-
-    Window      windowID;
-    Display    *display;
-    Atom        nameAtom;
-    Atom        utf8StringAtom;
-    Atom        stackingLayerAtom;
-    const char *windowName = "ShutdownUI";
-    long        layer = 6;
-
-    display = QX11Info::display ();
-    if (!display) {
-        return;
-    }
+    MWindow::showEvent(event);
     
-    stackingLayerAtom = XInternAtom (display, "_MEEGO_STACKING_LAYER", False);
-    nameAtom = XInternAtom (display, "_NET_WM_NAME", False);
-    utf8StringAtom = XInternAtom (display, "UTF8_STRING", False);
-
-    windowID = internalWinId();
-    if (windowID == None) {
-        return;
+    // Set the stacking layer
+    Display *display = QX11Info::display();
+    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom != None) {
+        long layer = 6;
+        X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
-
-    /*
-     * Setting the stacking layer.
-     */
-    if (stackingLayerAtom != None)
-        XChangeProperty (display, windowID, stackingLayerAtom, XA_CARDINAL, 
-                32, PropModeReplace, (unsigned char*)&layer, 1);
-
-    /*
-     * Setting the name.
-     */
-    if (nameAtom != None && utf8StringAtom != None)
-        XChangeProperty (display, windowID, nameAtom, utf8StringAtom, 
-                8, PropModeReplace, 
-                (unsigned char *) windowName, strlen(windowName));
 }
-
