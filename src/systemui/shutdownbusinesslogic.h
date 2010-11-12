@@ -45,25 +45,29 @@ class ShutdownBusinessLogic : public QObject
     Q_OBJECT
 
 public:
-    ShutdownBusinessLogic (QObject *parent = 0);
+    ShutdownBusinessLogic(QObject *parent = 0);
     virtual ~ShutdownBusinessLogic ();
 
-    void showUI (QString text1 = QString (""),
-                 QString text2 = QString (""),
-                 int timeout = 2000);
+    void showUI(QString text1 = QString (""), QString text2 = QString (""), int timeout = 2000);
 
 public slots:
 #ifdef HAVE_QMSYSTEM
+    /*!
+     * This function is called when the QmSystem reports a state change.
+     */
     void systemStateChanged (MeeGo::QmSystemState::StateIndication what);
 #endif
 
 private:
-    void thermalShutdown ();
-    void batteryShutdown ();
-    void shutdownDeniedUSB ();
+    void thermalShutdown();
+    void batteryShutdown();
+    void shutdownDeniedUSB();
+    void createAndPublishNotification(const QString &type, const QString &summary, const QString &body);
 
 private:
-    ShutdownUI             *m_Ui;
+    //! Window that shows the shutdown information
+    ShutdownUI *shutdownUi;
+
 #ifdef HAVE_QMSYSTEM
     MeeGo::QmSystemState   *m_State;
 #endif

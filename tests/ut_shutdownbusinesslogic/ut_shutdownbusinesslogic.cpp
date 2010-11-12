@@ -27,16 +27,13 @@
 
 sighandler_t originalSigIntHandler = NULL;
 
-/******************************************************************************
- * Stubbed version of th ShutdownUI class.
- */
+// Stubbed version of th ShutdownUI class.
 ShutdownUI::ShutdownUI ()
 {
     m_Delay = 0;
 }
 
-bool 
-ShutdownUI::showWindow (
+bool ShutdownUI::showWindow (
         const QString &text1, 
         const QString &text2, 
         int            delay)
@@ -48,33 +45,23 @@ ShutdownUI::showWindow (
     return true;
 }
 
-/******************************************************************************
- * The stub for MNotification class.
- */
+// The stub for MNotification class.
 static QString bodyOfLastNotification;
 
-bool
-MNotification::publish ()
+bool MNotification::publish ()
 {
     bodyOfLastNotification = body();
-
     return true;
 }
 
-/******************************************************************************
- * The stub for MFeedback class.
- */
+//The stub for MFeedback class
 static QString nameOfLastFeedback;
 
-void
-MFeedback::play () const 
+void MFeedback::play () const
 {
     nameOfLastFeedback = name();
 }
 
-/*******************************************************************************
- * The Ut_ShutdownBusinessLogic implements the unit tests.
- */
 void Ut_ShutdownBusinessLogic::init()
 {
     m_Api = new ShutdownBusinessLogic;
@@ -84,7 +71,6 @@ void Ut_ShutdownBusinessLogic::cleanup()
 {
     delete m_Api;
 }
-
 
 int   argc = 1;
 char *argv[] = {
@@ -97,40 +83,40 @@ void Ut_ShutdownBusinessLogic::initTestCase()
     m_App->setQuitOnLastWindowClosed (false);
 }
 
-void 
-Ut_ShutdownBusinessLogic::cleanupTestCase()
+void Ut_ShutdownBusinessLogic::cleanupTestCase()
 {
-    m_App->deleteLater ();
+    m_App->deleteLater();
 }
 
-void 
-Ut_ShutdownBusinessLogic::testShowUI ()
+void Ut_ShutdownBusinessLogic::testShowUI ()
 {
     m_Api->showUI ("text1", "text2", 50);
 
-    QVERIFY (m_Api->m_Ui->m_Text1 == "text1");
-    QVERIFY (m_Api->m_Ui->m_Text2 == "text2");
-    QVERIFY (m_Api->m_Ui->m_Delay == 50);
+    QVERIFY (m_Api->shutdownUi->m_Text1 == "text1");
+    QVERIFY (m_Api->shutdownUi->m_Text2 == "text2");
+    QVERIFY (m_Api->shutdownUi->m_Delay == 50);
 }
 
 #ifdef HAVE_QMSYSTEM
-void 
-Ut_ShutdownBusinessLogic::testSystemStateChanged ()
+void  Ut_ShutdownBusinessLogic::testSystemStateChanged()
 {
-    m_Api->systemStateChanged (MeeGo::QmSystemState::BatteryStateEmpty);
+    m_Api->systemStateChanged(MeeGo::QmSystemState::BatteryStateEmpty);
     QVERIFY (bodyOfLastNotification == "qtn_shut_batt_empty");
     
-    m_Api->systemStateChanged (MeeGo::QmSystemState::ShutdownDeniedUSB);
+    m_Api->systemStateChanged(MeeGo::QmSystemState::ShutdownDeniedUSB);
     QVERIFY (bodyOfLastNotification == "qtn_shut_unplug_usb");
     QVERIFY (nameOfLastFeedback == "IDF_INFORMATION_SOUND");
     
-    m_Api->systemStateChanged (MeeGo::QmSystemState::ThermalStateFatal);
+    m_Api->systemStateChanged(MeeGo::QmSystemState::ThermalStateFatal);
     QVERIFY (bodyOfLastNotification == "qtn_shut_high_temp");
-    
-    m_Api->systemStateChanged (MeeGo::QmSystemState::Shutdown);
-    QVERIFY (m_Api->m_Ui->m_Text1.isEmpty());
-    QVERIFY (m_Api->m_Ui->m_Text2.isEmpty());
-    QVERIFY (m_Api->m_Ui->m_Delay == 2000);
+}
+
+void Ut_ShutdownBusinessLogic::testShutdownWindow()
+{
+    m_Api->systemStateChanged(MeeGo::QmSystemState::Shutdown);
+    QVERIFY (m_Api->shutdownUi->m_Text1.isEmpty());
+    QVERIFY (m_Api->shutdownUi->m_Text2.isEmpty());
+    QVERIFY (m_Api->shutdownUi->m_Delay == 2000);
 }
 #endif
 

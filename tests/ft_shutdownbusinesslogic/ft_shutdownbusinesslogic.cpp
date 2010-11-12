@@ -50,17 +50,16 @@ static int WMDelay = 400;
  */
 static int DelayBetweenTests = 5000;
 
-void 
-Ft_ShutdownBusinessLogic::init()
+void Ft_ShutdownBusinessLogic::init()
+{
+    QTest::qWait(DelayBetweenTests);
+}
+
+void Ft_ShutdownBusinessLogic::cleanup()
 {
 }
 
-void 
-Ft_ShutdownBusinessLogic::cleanup()
-{
-}
-
-int   argc = 1;
+int argc = 1;
 char *argv[] = {
     (char *) "./ft_shutdownbusinesslogic",
     NULL };
@@ -68,8 +67,7 @@ char *argv[] = {
 const QString themeDir = "/usr/share/themes/base/meegotouch/sysuid/";
 const QString styleDir = themeDir + "style/";
 
-void 
-Ft_ShutdownBusinessLogic::initTestCase()
+void Ft_ShutdownBusinessLogic::initTestCase()
 {
     SYS_DEBUG ("+++ Creating application.");
     m_App = new MApplication (argc, argv);
@@ -81,24 +79,18 @@ Ft_ShutdownBusinessLogic::initTestCase()
     MTheme::loadCSS (styleDir + "unlockscreen.css");
 }
 
-void 
-Ft_ShutdownBusinessLogic::cleanupTestCase()
+void Ft_ShutdownBusinessLogic::cleanupTestCase()
 {
     SYS_DEBUG ("");
     m_App->deleteLater ();
 }
 
 #ifdef HAVE_QMSYSTEM
-void 
-Ft_ShutdownBusinessLogic::testThermalState ()
+void Ft_ShutdownBusinessLogic::testThermalState ()
 {
-    ShutdownBusinessLogic *logic;
-    logic = new ShutdownBusinessLogic;
+    ShutdownBusinessLogic logic;
 
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Simulating ThermalStateFatal state ******");
-    SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (MeeGo::QmSystemState::ThermalStateFatal);
+    logic.systemStateChanged (MeeGo::QmSystemState::ThermalStateFatal);
     QTest::qWait (WMDelay);
     
     /*
@@ -106,25 +98,12 @@ Ft_ShutdownBusinessLogic::testThermalState ()
      * that m_XChecker is failed to get the notification data. It might be a bug
      * in Meego.
      */
-
-    QTest::qWait (DelayBetweenTests);
-    
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
-    SYS_DEBUG ("*********************************************");
-    delete logic;
 }
 
-void 
-Ft_ShutdownBusinessLogic::testShutDownDenied ()
+void Ft_ShutdownBusinessLogic::testShutDownDenied ()
 {
-    ShutdownBusinessLogic *logic;
-    logic = new ShutdownBusinessLogic;
-
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Simulating ShutdownDeniedUSB ************");
-    SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (MeeGo::QmSystemState::ShutdownDeniedUSB);
+    ShutdownBusinessLogic logic;
+    logic.systemStateChanged (MeeGo::QmSystemState::ShutdownDeniedUSB);
     QTest::qWait (WMDelay);
     
     /*
@@ -132,25 +111,12 @@ Ft_ShutdownBusinessLogic::testShutDownDenied ()
      * that m_XChecker is failed to get the notification data. It might be a bug
      * in Meego.
      */
-
-    QTest::qWait (DelayBetweenTests);
-    
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
-    SYS_DEBUG ("*********************************************");
-    delete logic;
 }
 
-void 
-Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
+void Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
 {
-    ShutdownBusinessLogic *logic;
-    logic = new ShutdownBusinessLogic;
-
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Simulating BatteryStateEmpty ************");
-    SYS_DEBUG ("*********************************************");
-    logic->systemStateChanged (MeeGo::QmSystemState::BatteryStateEmpty);
+    ShutdownBusinessLogic logic;
+    logic.systemStateChanged (MeeGo::QmSystemState::BatteryStateEmpty);
     QTest::qWait (WMDelay);
     
     /*
@@ -158,51 +124,29 @@ Ft_ShutdownBusinessLogic::testBatteryStateEmpty ()
      * that m_XChecker is failed to get the notification data. It might be a bug
      * in Meego.
      */
-
-    QTest::qWait (DelayBetweenTests);
-    
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
-    SYS_DEBUG ("*********************************************");
-    delete logic;
 }
 
-void 
-Ft_ShutdownBusinessLogic::testShutDown ()
+void Ft_ShutdownBusinessLogic::testShutDown()
 {
-    ShutdownBusinessLogic *logic;
-    Window                 WindowID;
-    logic = new ShutdownBusinessLogic;
-
-    /*
-     * If we change the system to shutdown, the shutdown full screen window must
-     * be shown.
-     */
+    ShutdownBusinessLogic *logic = new ShutdownBusinessLogic;
     logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
-    QTest::qWait (WMDelay);
-    /*
-     * This time the window has to be there.
-     */
-    QVERIFY (logic->m_Ui != 0);
-    WindowID = logic->m_Ui->internalWinId();
-    //Test that second call works
-    logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
-    SYS_DEBUG ("*** WindowID = 0x%lx", WindowID);
-    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsVisible));
-    QVERIFY (m_XChecker.checkWindow(WindowID, XChecker::CheckIsFullscreen));
+
+    QTest::qWait(WMDelay);
+
+    //Check that we correct window
+    QVERIFY(logic->shutdownUi != 0);
+    Window windowId = logic->shutdownUi->internalWinId();
+    QVERIFY(m_XChecker.checkWindow(windowId, XChecker::CheckIsVisible));
+    QVERIFY(m_XChecker.checkWindow(windowId, XChecker::CheckIsFullscreen));
 
     QTest::qWait (5000);
+    logic->systemStateChanged (MeeGo::QmSystemState::Shutdown);
+    QTest::qWait (5000);
 
-    SYS_DEBUG ("*********************************************");
-    SYS_DEBUG ("*** Destroying ShutdownBusinessLogic ********");
-    SYS_DEBUG ("*********************************************");
     delete logic;
-
-    /*
-     * We want to be sure we leave the screen on...
-     */
     QTest::qWait (WMDelay);
-    QVERIFY(m_XChecker.turnOnDisplay ());
+    //Check that display is on
+    QVERIFY(m_XChecker.turnOnDisplay());
 }
 #endif
 

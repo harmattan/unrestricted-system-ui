@@ -55,6 +55,7 @@ private slots:
     void testShowUI ();
 #ifdef HAVE_QMSYSTEM
     void testSystemStateChanged ();
+    void testShutdownWindow();
 #endif
     
 private:

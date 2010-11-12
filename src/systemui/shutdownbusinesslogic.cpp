@@ -29,65 +29,55 @@
 
 extern sighandler_t originalSigIntHandler;
 
-ShutdownBusinessLogic::ShutdownBusinessLogic (QObject *parent) :
-    QObject (parent),
-    m_Ui (0)
+ShutdownBusinessLogic::ShutdownBusinessLogic(QObject *parent) :
+    QObject(parent),
+    shutdownUi(NULL)
 {
 #ifdef HAVE_QMSYSTEM
-    m_State = new MeeGo::QmSystemState (this);
-    connect (
-        m_State, 
-        SIGNAL(systemStateChanged (MeeGo::QmSystemState::StateIndication)),
-        this, 
-        SLOT(systemStateChanged (MeeGo::QmSystemState::StateIndication)));
+    m_State = new MeeGo::QmSystemState(this);
+    connect(m_State, SIGNAL(systemStateChanged(MeeGo::QmSystemState::StateIndication)),
+        this, SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
 #endif
 }
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic ()
 {
-    if (m_Ui) {
-        m_Ui->deleteLater ();
-        m_Ui = 0;
+    if (shutdownUi) {
+        shutdownUi->deleteLater();
+        shutdownUi = 0;
     }
 }
 
-void 
-ShutdownBusinessLogic::showUI (
-    QString  text1,
-    QString  text2,
-    int      timeout)
+void  ShutdownBusinessLogic::showUI (QString  text1, QString  text2, int timeout)
 {
-    if (m_Ui == 0) {
-        m_Ui = new ShutdownUI;
-        m_Ui->showWindow (text1, text2, timeout);
+
+    if (NULL == shutdownUi) {
+        shutdownUi = new ShutdownUI();
+        shutdownUi->showWindow(text1, text2, timeout);
     }
 }
 
 #ifdef HAVE_QMSYSTEM
-/*!
- * This function is called when the QmSystem reports a state change.
- */
-void 
-ShutdownBusinessLogic::systemStateChanged (
-        MeeGo::QmSystemState::StateIndication what)
+
+void ShutdownBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndication what)
 {
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
             // To avoid early quitting on shutdown...
             signal(SIGINT, originalSigIntHandler);
-            showUI ();
+            showUI();
             break;
 
         case MeeGo::QmSystemState::ThermalStateFatal:
-            thermalShutdown ();
+            thermalShutdown();
             break;
 
         case MeeGo::QmSystemState::ShutdownDeniedUSB:
-            shutdownDeniedUSB ();
+            shutdownDeniedUSB();
             break;
 
         case MeeGo::QmSystemState::BatteryStateEmpty:
-            batteryShutdown ();
+            batteryShutdown();
             break;
 
         default:
@@ -96,81 +86,43 @@ ShutdownBusinessLogic::systemStateChanged (
 }
 #endif
 
-void 
-ShutdownBusinessLogic::thermalShutdown ()
+void ShutdownBusinessLogic::createAndPublishNotification(const QString &type, const QString &summary, const QString &body)
 {
-    /*
-     * Creating a notification.
-     */
-    MNotification notification (
-           "x-nokia.battery.temperature",
-           "", 
-           //% "Temperature too high. Device shutting down."
-           qtTrId ("qtn_shut_high_temp"));
-
-    /*
-     * Playing/publishing them.
-     */
+    MNotification notification(type, summary, body);
     notification.publish ();
 }
 
-void
-ShutdownBusinessLogic::batteryShutdown ()
+void ShutdownBusinessLogic::thermalShutdown ()
 {
-    /*
-     * Creating a notification.
-     */
-    MNotification notification (
-		   "x-nokia.battery.shutdown",
-           "",
-           //% "Battery empty. Device shutting down."
-           qtTrId ("qtn_shut_batt_empty"));
-
-    notification.publish ();
+    //% "Temperature too high. Device shutting down."
+    QString body(qtTrId ("qtn_shut_high_temp"));
+    createAndPublishNotification("x-nokia.battery.temperature","", body);
 }
 
-void 
-ShutdownBusinessLogic::shutdownDeniedUSB ()
+void ShutdownBusinessLogic::batteryShutdown ()
 {
-    /*
-     * Creating the feedback.
-     */
+    //% "Battery empty. Device shutting down."
+    QString body(qtTrId ("qtn_shut_batt_empty"));
+    createAndPublishNotification("x-nokia.battery.shutdown", "", body);
+}
+
+void ShutdownBusinessLogic::shutdownDeniedUSB ()
+{
+    //% "USB cable plugged in. Unplug the USB cable to shutdown."
+    QString body(qtTrId ("qtn_shut_unplug_usb"));
+    createAndPublishNotification(MNotification::DeviceAddedEvent, "", body);
+
     MFeedback feedback("IDF_INFORMATION_SOUND");
-    
-    /*
-     * Creating a notification.
-     */
-    MNotification notification (
-           /* this has the usb-icon: */
-		   MNotification::DeviceAddedEvent,
-           "", 
-           //% "USB cable plugged in. Unplug the USB cable to shutdown."
-           qtTrId ("qtn_shut_unplug_usb"));
-
-    /*
-     * Playing/publishing them.
-     */
-    notification.publish ();
     feedback.play();
 }
 
-/******************************************************************************
- * Implementation for ShutdownBusinessLogicAdaptor.
- */
-ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor (
-    QObject                 *parent,
-    ShutdownBusinessLogic   *logic) :
-    QDBusAbstractAdaptor (parent),
-    m_logic (logic)
+ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor (QObject *parent, ShutdownBusinessLogic *logic) :
+    QDBusAbstractAdaptor(parent),
+    m_logic(logic)
 {
 }
 
-void
-ShutdownBusinessLogicAdaptor::showScreen (
-    QString text1,
-    QString text2,
-    int     timeout)
+void ShutdownBusinessLogicAdaptor::showScreen(QString text1, QString text2, int timeout)
 {
     m_logic->showUI (text1, text2, timeout);
 }
-
