@@ -241,6 +241,8 @@ StatusIndicatorLabelStyle {
 }
 
 MLabelStyle#StatusIndicatorLabel {
+    font: $FONT_SMALL;
+    color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
