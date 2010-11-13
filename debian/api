@@ -8,6 +8,6 @@ dev-pkg: system-ui
 interface: MStatusIndicatorMenuExtensionInterface
 type: library
 scope: Platform
-state: experimental
+state: stable
 libs-pkg: system-ui
 dev-pkg: system-ui-dev
