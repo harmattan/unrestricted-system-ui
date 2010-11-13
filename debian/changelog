@@ -1,6 +1,7 @@
 system-ui (0.18.5~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#191437 - Source package 'system-ui' interfaces not frozen in 0.2010.36-5
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 12 Nov 2010 22:44:55 +0200
 
