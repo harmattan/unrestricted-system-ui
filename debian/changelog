@@ -1,3 +1,9 @@
+system-ui (0.18.7~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Sat, 13 Nov 2010 18:09:54 +0200
+
 system-ui (0.18.6-1) unstable; urgency=low
 
   * Use the proper style names for banners appearing on top of all apps
