@@ -27,13 +27,13 @@
 #include <MDialog>
 
 Profile::Profile(ProfilePlugin *profilePlugin, QGraphicsItem *parent) :
-    MButton(parent),
+    MContentItem(MContentItem::IconAndTwoTextLabels, parent),
     plugin(profilePlugin)
 {
-    setText("Silent");
-    setViewType(MButton::iconType);
-    setObjectName("StatusIndicatorMenuTopRowExtensionButton");
-    setIconID("icon-m-profile-silent");
+    setTitle("Profile");
+    setSubtitle("Silent");
+    setObjectName("StatusIndicatorMenuExtensionContentItem");
+    setImageID("icon-m-profile-silent");
     connect(this, SIGNAL(clicked()), this, SLOT(showProfileDialog()));
 }
 

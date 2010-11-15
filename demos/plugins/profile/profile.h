@@ -20,7 +20,7 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include <MButton>
+#include <MContentItem>
 
 class MStatusIndicatorMenuInterface;
 class ProfilePlugin;
@@ -29,7 +29,7 @@ class ProfilePlugin;
  * The Profile widget makes it possible to select the currently
  * active profile.
  */
-class Profile : public MButton
+class Profile : public MContentItem
 {
     Q_OBJECT
 
