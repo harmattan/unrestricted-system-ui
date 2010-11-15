@@ -67,28 +67,25 @@ void Ut_ClockView::initTestCase()
     static int argc = 1;
     static char *app_name = (char *)"./ut_clockview";
     app = new MApplication(argc, &app_name);
-
-    locale = new MLocale();
 }
 
 // Called after the last testfunction was executed
 void Ut_ClockView::cleanupTestCase()
 {
-    delete locale;
     delete app;
 }
 
 // Called before each testfunction is executed
 void Ut_ClockView::init()
 {
+    gMLocaleStub = &gDefaultMLocaleStub;
+
     testClock = new Clock();
     m_subject = new TestClockView(testClock);
     connect(this, SIGNAL(localeChanged()), m_subject->locale.data(), SIGNAL(settingsChanged()));
 
     // Set model defaults
     clockModel.setShortDisplay(false);
-
-    gMLocaleStub->stubReset();
 }
 
 // Called after every testfunction
@@ -98,6 +95,8 @@ void Ut_ClockView::cleanup()
     delete testClock;  // this also deletes the view
     testClock = NULL;
     m_subject = NULL;
+
+    gMLocaleStub->stubReset();
 }
 
 void Ut_ClockView::testWhenConstructedThenCurrent24HourModeIsTakenInToUse()
@@ -155,8 +154,32 @@ void Ut_ClockView::testUpdateTime()
     QCOMPARE(Ut_ClockView::timeAsString, FORMATTED_DATE_TIME);
 }
 
+const QString TO_REMOVE("toremove");
+
+class EnhancedMLocaleStub : public MLocaleStub {
+public:
+    // Returns TO_REMOVE string if formatString parameter is "%p",
+    // otherwise returns the formatString parameter as is.
+    virtual QString formatDateTime(const QDateTime &dateTime, const QString &formatString) const
+    {
+        QString ret = MLocaleStub::formatDateTime(dateTime, formatString);
+
+        if (formatString == "%p") {
+            ret = TO_REMOVE;
+        } else {
+            ret = formatString;
+        }
+
+        return ret;
+    }
+};
+
+EnhancedMLocaleStub gEnhancedMLocaleStub;
+
 void Ut_ClockView::testSetShortDisplay()
 {
+    gMLocaleStub = &gEnhancedMLocaleStub;
+
     m_subject->setModel(&clockModel);
     m_subject->modifiableStyle()->setShortRemoveAmPmIndicator(true);
     QDateTime time(QDate(), QTime(1, 1));
@@ -164,33 +187,35 @@ void Ut_ClockView::testSetShortDisplay()
     clockModel.setShortDisplay(true);
     clockModel.setTime(time);
 
+    const QString FORMAT("format");
+
     // Test am/pm indicator behind
-    m_subject->modifiableStyle()->setTimeFormat(QString("%I:%M%p"));
+    m_subject->modifiableStyle()->setTimeFormat(FORMAT + TO_REMOVE);
     clockModel.setShortDisplay(false);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M%p"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT + TO_REMOVE);
     clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT);
 
     // Test am/pm indicator behind, with a space
-    m_subject->modifiableStyle()->setTimeFormat(QString("%I:%M %p"));
+    m_subject->modifiableStyle()->setTimeFormat(FORMAT + " " + TO_REMOVE);
     clockModel.setShortDisplay(false);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M %p"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT + " " + TO_REMOVE);
     clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT);
 
     // Test am/pm indicator in front
-    m_subject->modifiableStyle()->setTimeFormat(QString("%p%I:%M"));
+    m_subject->modifiableStyle()->setTimeFormat(TO_REMOVE + FORMAT);
     clockModel.setShortDisplay(false);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%p%I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, TO_REMOVE + FORMAT);
     clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT);
 
     // Test am/pm indicator in front, with a space
-    m_subject->modifiableStyle()->setTimeFormat(QString("%p %I:%M"));
+    m_subject->modifiableStyle()->setTimeFormat(TO_REMOVE + " " + FORMAT);
     clockModel.setShortDisplay(false);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%p %I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, TO_REMOVE + " " + FORMAT);
     clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, locale->formatDateTime(time, "%I:%M"));
+    QCOMPARE(Ut_ClockView::timeAsString, FORMAT);
 }
 
 void Ut_ClockView::testAlignment()

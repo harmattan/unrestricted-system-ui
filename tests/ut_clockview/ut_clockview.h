@@ -26,7 +26,6 @@
 
 class Clock;
 class MApplication;
-class MLocale;
 
 class TestClockStyle : public ClockStyle
 {
@@ -87,7 +86,6 @@ private:
     MApplication *app;
     TestClockView *m_subject;
     Clock *testClock;
-    MLocale *locale;
 };
 
 #endif
