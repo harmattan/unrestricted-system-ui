@@ -1,8 +1,8 @@
-system-ui (0.18.7~1) unstable; urgency=low
+system-ui (0.18.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#194423 - COREWEB: /usr/bin/sysuid 'MWidgetController::model MWidgetController::model MLabel::setText ShutdownUI::showWindow ShutdownBusinessLogic::showUI'
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Sat, 13 Nov 2010 18:09:54 +0200
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 15 Nov 2010 16:58:54 +0200
 
 system-ui (0.18.6-1) unstable; urgency=low
 
