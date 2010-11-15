@@ -95,7 +95,14 @@ StatusAreaRenderer::~StatusAreaRenderer()
 {
     scene->removeItem(statusArea);
     delete statusArea;
-    delete statusAreaPixmap;
+
+    if (statusAreaPixmap != NULL) {
+        Pixmap pixmap = statusAreaPixmap->handle();
+        delete statusAreaPixmap;
+        if (pixmap != 0) {
+            X11Wrapper::XFreePixmap(QX11Info::display(), pixmap);
+        }
+    }
 
 #ifdef HAVE_QMSYSTEM
     delete displayState;
