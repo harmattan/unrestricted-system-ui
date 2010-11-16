@@ -1,10 +1,9 @@
-system-ui (0.18.8~1) unstable; urgency=low
+system-ui (0.18.8-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#193048 - Ulockscreen does not resize background images
   * Fixes: NB#199187 - A white wallpaper is set is shown on screen lock ui after reset settings
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 15 Nov 2010 16:59:58 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 16 Nov 2010 18:33:58 +0200
 
 system-ui (0.18.7-1) unstable; urgency=low
 
