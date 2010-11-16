@@ -22,8 +22,10 @@
 
 #include <QSharedPointer>
 #include "notificationsink.h"
+#include "notificationgroup.h"
 
 class DBusInterfaceNotificationSinkProxy;
+class NotificationManagerInterface;
 
 /*!
  * A notification sink that handles communication with external sinks.
@@ -35,8 +37,9 @@ class DBusInterfaceNotificationSink : public NotificationSink
 public:
     /*!
      * Creates a notification sink that handles communication with external sinks.
+     * \param notificationManager manager that keeps track of current notificationstatus
      */
-    DBusInterfaceNotificationSink();
+    DBusInterfaceNotificationSink(NotificationManagerInterface* notificationManager);
 
     /*!
      * Destroys the DBusInterfaceNotificationSink.
@@ -59,6 +62,14 @@ public:
      */
     void unregisterSink(const QString &service, const QString &path);
 
+private:
+    //! Service name, service path pair that identifies the proxy
+    typedef QPair<QString, QString> ProxyAddress;
+    //! DBus proxy interface
+    typedef QSharedPointer<DBusInterfaceNotificationSinkProxy> DBusInterface;
+    //! Key is proxy address and value pointer to proxy
+    typedef QHash<ProxyAddress,  DBusInterface> ProxyContainer;
+
 private slots:
     //! \reimp
     virtual void addGroup(uint groupId, const NotificationParameters &parameters);
@@ -66,13 +77,40 @@ private slots:
     virtual void addNotification(const Notification &notification);
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
+    /*!
+     * Fetches copy of all groups and notifications from notification manager and
+     * sends them to proxy.
+     * \param proxy proxy that receives the notifications
+     */
+    virtual void sendCurrentNotifications(const DBusInterface &proxy) const;
+
+    /*!
+     * Send groups to specified proxy
+     * \param groups groups to send
+     * \param proxyInterface specifies the DBusProxy
+     */
+    void sendGroupsToProxy(const QList<NotificationGroup> &groups, const DBusInterface &proxyInterface) const;
+
+    /*!
+     * Send notifications to specified proxy
+     * \param notifications notifications that will be sent
+     * \param proxyInterface specifies the DBusProxy
+     */
+    void sendNotificationsToProxy(const QList<Notification> &notifications, const DBusInterface &proxyInterface) const;
 
 private:
     /*!
      * Proxies for the registered external sinks.
      * Maps a D-Bus service and path pair to a sink proxy
      */
-    QHash<QPair<QString, QString>, QSharedPointer<DBusInterfaceNotificationSinkProxy> > proxies;
+    ProxyContainer proxies;
+
+    //! Notification manger that is handling the notifications
+    const NotificationManagerInterface *notificationManager;
+
+#ifdef UNIT_TEST
+    friend class Ut_DBusInterfaceNotificationSink;
+#endif
 };
 
 #endif /* DBUSINTERFACENOTIFICATIONSINK_H_ */

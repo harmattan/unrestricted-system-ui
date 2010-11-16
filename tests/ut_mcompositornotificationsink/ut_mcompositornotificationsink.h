@@ -60,8 +60,12 @@ public:
     QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
     QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
 
+    QList<Notification> notifications() const;
+    QList<NotificationGroup> groups() const;
+
     uint nextAvailableNotificationID;
-    QList<Notification> notifications;
+    QList<Notification> notificationContainer;
+
 
 public slots:
     bool removeNotification(uint notificationUserId, uint notificationId);

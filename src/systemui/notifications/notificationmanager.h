@@ -76,6 +76,12 @@ public:
      */
     void restoreData();
 
+public:
+    //! \reimp
+    QList<Notification> notifications() const;
+    QList<NotificationGroup> groups() const;
+    //! \reimp_end
+
 public slots:
     //! \reimp
     uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0);
@@ -123,6 +129,8 @@ public slots:
      * \param eventType the event type of the notifications to update
      */
     void updateNotificationsWithEventType(const QString &eventType);
+
+
 
 signals:
     /*!
@@ -257,10 +265,10 @@ private:
     void saveNotifications();
 
     //! Hash of all notifications keyed by notification IDs
-    QHash<uint, Notification> notifications;
+    QHash<uint, Notification> notificationContainer;
 
     //! Hash of all notification groups keyed by group IDs
-    QHash<uint, NotificationGroup> groups;
+    QHash<uint, NotificationGroup> groupContainer;
 
     //! Used to store notifications that wait their turn to be relayed to sinks.
     QList<Notification> waitQueue;

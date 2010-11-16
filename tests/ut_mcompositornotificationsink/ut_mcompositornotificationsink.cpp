@@ -66,7 +66,7 @@ uint MockNotificationManager::addNotification(uint, const NotificationParameters
     } else {
         notification = Notification(notificationId, groupId, 0, parameters, Notification::ApplicationEvent, timeout);
     }
-    notifications.append(notification);
+    notificationContainer.append(notification);
     emit notificationUpdated(notification);
     return notificationId;
 }
@@ -78,11 +78,11 @@ uint MockNotificationManager::addNotification(uint notificationUserId, const Not
 
 bool MockNotificationManager::updateNotification(uint, uint notificationId, const NotificationParameters &parameters)
 {
-    for (int i = 0; i < notifications.count(); ++i) {
-        if (notifications.at(i).notificationId() == notificationId) {
-            Notification oldNotification = notifications.at(i);
+    for (int i = 0; i < notificationContainer.count(); ++i) {
+        if (notificationContainer.at(i).notificationId() == notificationId) {
+            Notification oldNotification = notificationContainer.at(i);
             Notification newNotification = Notification(notificationId, oldNotification.groupId(), oldNotification.userId(), parameters, oldNotification.type(), 1000);
-            notifications[i] = newNotification;
+            notificationContainer[i] = newNotification;
             emit notificationUpdated(newNotification);
             return true;
         }
@@ -93,9 +93,9 @@ bool MockNotificationManager::updateNotification(uint, uint notificationId, cons
 bool MockNotificationManager::removeNotification(uint, uint notificationId)
 {
     bool removed = false;
-    for (int i = 0; i < notifications.count(); ++i) {
-        if (notifications.at(i).notificationId() == notificationId) {
-            notifications.removeAt(i);
+    for (int i = 0; i < notificationContainer.count(); ++i) {
+        if (notificationContainer.at(i).notificationId() == notificationId) {
+            notificationContainer.removeAt(i);
             removed = true;
             break;
         }
@@ -152,6 +152,18 @@ QList<MNotificationWithIdentifierProxy> MockNotificationManager::notificationLis
 QList<MNotificationGroupWithIdentifierProxy> MockNotificationManager::notificationGroupListWithIdentifiers(uint)
 {
     return QList<MNotificationGroupWithIdentifierProxy>();
+}
+
+QList<Notification> MockNotificationManager::notifications() const
+{
+    QList<Notification> tmp;
+    return tmp;
+}
+
+QList<NotificationGroup> MockNotificationManager::groups() const
+{
+    QList<NotificationGroup> tmp;
+    return tmp;
 }
 
 bool windowEventFilterCalled = false;

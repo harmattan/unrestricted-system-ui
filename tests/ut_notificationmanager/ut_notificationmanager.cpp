@@ -82,7 +82,7 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
 }
 
 // DBusInterfaceNotificationSink stubs
-DBusInterfaceNotificationSink::DBusInterfaceNotificationSink()
+DBusInterfaceNotificationSink::DBusInterfaceNotificationSink(NotificationManagerInterface *)
 {
 }
 
@@ -94,7 +94,15 @@ void DBusInterfaceNotificationSink::addNotification(const Notification &)
 {
 }
 
+void DBusInterfaceNotificationSink::sendNotificationsToProxy(const QList<Notification> &, const DBusInterface &) const
+{
+}
+
 void DBusInterfaceNotificationSink::removeNotification(uint)
+{
+}
+
+void DBusInterfaceNotificationSink::sendGroupsToProxy(const QList<NotificationGroup> &, const DBusInterface &) const
 {
 }
 
@@ -106,6 +114,9 @@ void DBusInterfaceNotificationSink::removeGroup(uint)
 {
 }
 
+void DBusInterfaceNotificationSink::sendCurrentNotifications(const DBusInterface&) const
+{
+}
 
 #ifdef HAVE_AEGIS_CRYPTO
 // aegis crypto stubs
@@ -1044,38 +1055,17 @@ void Ut_NotificationManager::testNotificationListWithIdentifiers()
 {
     // normal notification
     NotificationParameters parameters0;
-    parameters0.add(EVENT_TYPE, "type0");
-    parameters0.add(SUMMARY, "summary0");
-    parameters0.add(BODY, "body0");
-    parameters0.add(IMAGE, "image0");
-    parameters0.add(ACTION, "action0");
-    parameters0.add(COUNT, 0);
-    parameters0.add(IDENTIFIER, "identifier0");
-    manager->addNotification(1, parameters0);
+    addNotification(&parameters0, "0", 1, 0, true);
 
     // another notification, in a group
-    NotificationParameters parameters1;
     NotificationParameters gparameters;
-    parameters1.add(EVENT_TYPE, "type1");
-    parameters1.add(SUMMARY, "summary1");
-    parameters1.add(BODY, "body1");
-    parameters1.add(IMAGE, "image1");
-    parameters1.add(ACTION, "action1");
-    parameters1.add(COUNT, 1);
-    parameters1.add(IDENTIFIER, "identifier1");
     uint gid = manager->addGroup(1, gparameters);
-    manager->addNotification(1, parameters1, gid);
+    NotificationParameters parameters1;
+    addNotification(&parameters1, "1", 1 , gid, true);
 
     // third notification, a different user
     NotificationParameters parameters2;
-    parameters2.add(EVENT_TYPE, "type2");
-    parameters2.add(SUMMARY, "summary2");
-    parameters2.add(BODY, "body2");
-    parameters2.add(IMAGE, "image2");
-    parameters2.add(ACTION, "action2");
-    parameters2.add(COUNT, 2);
-    parameters2.add(IDENTIFIER, "identifier2");
-    manager->addNotification(2, parameters2);
+    addNotification(&parameters2, "2", 2, 0, true);
 
     QList<MNotificationWithIdentifierProxy> list = manager->notificationListWithIdentifiers(1);
     QCOMPARE(list.size(), 2);
@@ -1099,37 +1089,49 @@ void Ut_NotificationManager::testNotificationListWithIdentifiers()
     QCOMPARE(list.size(), 0);
 }
 
+
+void Ut_NotificationManager::addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier)
+{
+    parameters->add(EVENT_TYPE, "type" + index);
+    parameters->add(SUMMARY, "summary" + index);
+    parameters->add(BODY, "body" + index);
+    parameters->add(IMAGE, "image" + index);
+    parameters->add(ACTION, "action" + index);
+    parameters->add(COUNT, index.toInt());
+    if (addIdentifier) {
+        parameters->add(IDENTIFIER, "identifier" + index);
+    }
+    manager->addGroup(groupid, *parameters);
+}
+
+uint Ut_NotificationManager::addNotification(NotificationParameters *parameters, QString index,
+                                              int notificationId, int groupId, bool addIdentifier)
+{
+    parameters->add(EVENT_TYPE, "type" + index);
+    parameters->add(SUMMARY, "summary" + index);
+    parameters->add(BODY, "body" + index);
+    parameters->add(IMAGE, "image" + index);
+    parameters->add(ACTION, "action" + index);
+    parameters->add(COUNT, index.toInt());
+    if (addIdentifier) {
+        parameters->add(IDENTIFIER, "identifier" + index);
+    }
+    return manager->addNotification(notificationId, *parameters, groupId);
+}
+
 void Ut_NotificationManager::testNotificationGroupList()
 {
     // normal group
     NotificationParameters parameters0;
-    parameters0.add(EVENT_TYPE, "type0");
-    parameters0.add(SUMMARY, "summary0");
-    parameters0.add(BODY, "body0");
-    parameters0.add(IMAGE, "image0");
-    parameters0.add(ACTION, "action0");
-    parameters0.add(COUNT, 0);
-    manager->addGroup(1, parameters0);
+    addGroup(&parameters0, "0", 1);
 
     // another group
     NotificationParameters parameters1;
-    parameters1.add(EVENT_TYPE, "type1");
-    parameters1.add(SUMMARY, "summary1");
-    parameters1.add(BODY, "body1");
-    parameters1.add(IMAGE, "image1");
-    parameters1.add(ACTION, "action1");
-    parameters1.add(COUNT, 1);
-    manager->addGroup(1, parameters1);
+    addGroup(&parameters1, "1", 1);
 
     // third group, a different user
     NotificationParameters parameters2;
-    parameters2.add(EVENT_TYPE, "type2");
-    parameters2.add(SUMMARY, "summary2");
-    parameters2.add(BODY, "body2");
-    parameters2.add(IMAGE, "image2");
-    parameters2.add(ACTION, "action2");
-    parameters2.add(COUNT, 2);
-    manager->addGroup(2, parameters2);
+    addGroup(&parameters2, "2", 2);
 
     QList<MNotificationGroupProxy> list = manager->notificationGroupList(1);
     QCOMPARE(list.size(), 2);
@@ -1154,36 +1156,15 @@ void Ut_NotificationManager::testNotificationGroupListWithIdentifiers()
 {
     // normal group
     NotificationParameters parameters0;
-    parameters0.add(EVENT_TYPE, "type0");
-    parameters0.add(SUMMARY, "summary0");
-    parameters0.add(BODY, "body0");
-    parameters0.add(IMAGE, "image0");
-    parameters0.add(ACTION, "action0");
-    parameters0.add(COUNT, 0);
-    parameters0.add(IDENTIFIER, "identifier0");
-    manager->addGroup(1, parameters0);
+    addGroup(&parameters0, 0, 1, true);
 
     // another group
     NotificationParameters parameters1;
-    parameters1.add(EVENT_TYPE, "type1");
-    parameters1.add(SUMMARY, "summary1");
-    parameters1.add(BODY, "body1");
-    parameters1.add(IMAGE, "image1");
-    parameters1.add(ACTION, "action1");
-    parameters1.add(COUNT, 1);
-    parameters1.add(IDENTIFIER, "identifier1");
-    manager->addGroup(1, parameters1);
+    addGroup(&parameters1, "1", 1, true);
 
     // third group, a different user
     NotificationParameters parameters2;
-    parameters2.add(EVENT_TYPE, "type2");
-    parameters2.add(SUMMARY, "summary2");
-    parameters2.add(BODY, "body2");
-    parameters2.add(IMAGE, "image2");
-    parameters2.add(ACTION, "action2");
-    parameters2.add(COUNT, 2);
-    parameters2.add(IDENTIFIER, "identifier2");
-    manager->addGroup(2, parameters2);
+    addGroup(&parameters2, "2", 2, true);
 
     QList<MNotificationGroupWithIdentifierProxy> list = manager->notificationGroupListWithIdentifiers(1);
     QCOMPARE(list.size(), 2);
@@ -1417,7 +1398,7 @@ void Ut_NotificationManager::testRemovalOfUnseenFlags()
     connect(this, SIGNAL(notifierSinkActive(bool)), manager, SLOT(removeUnseenFlags(bool)));
     emit notifierSinkActive(false);
 
-    QCOMPARE(manager->notifications.value(id).parameters().value(UNSEEN).toBool(), false);
+    QCOMPARE(manager->notificationContainer.value(id).parameters().value(UNSEEN).toBool(), false);
 }
 
 void Ut_NotificationManager::testDBusNotificationSinkConnections()
@@ -1429,6 +1410,31 @@ void Ut_NotificationManager::testDBusNotificationSinkConnections()
     QVERIFY(disconnect(manager, SIGNAL(notificationUpdated(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationRemovalRequested(uint)), manager, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationGroupClearingRequested(uint)), manager, SLOT(removeNotificationsInGroup(uint))));
+}
+
+void Ut_NotificationManager::testGetNotificationGroups()
+{
+    NotificationParameters params;
+    addGroup(&params, "0", 1);
+    addGroup(&params, "1", 2);
+    QList<NotificationGroup> groups = manager->groups();
+    QCOMPARE(groups.count(), 2);
+    QCOMPARE(groups.at(0).groupId(), (uint)1);
+    QCOMPARE(groups.at(1).groupId(), (uint)2);
+}
+
+void Ut_NotificationManager::testGetNotifications()
+{
+    NotificationParameters parameters0;
+    uint id0 = addNotification(&parameters0, "0" ,1);
+
+    NotificationParameters parameters1;
+    uint id1 = addNotification(&parameters1, "1" ,2);
+
+    QList<Notification> notifications = manager->notifications();
+    QCOMPARE(notifications.count(), 2);
+    QCOMPARE(notifications.at(0).notificationId(), id0);
+    QCOMPARE(notifications.at(1).notificationId(), id1);
 }
 
 QTEST_MAIN(Ut_NotificationManager)

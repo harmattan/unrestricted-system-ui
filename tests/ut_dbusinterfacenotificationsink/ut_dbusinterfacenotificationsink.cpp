@@ -16,15 +16,48 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "ut_dbusinterfacenotificationsink.h"
 #include "dbusinterfacenotificationsink.h"
 #include "dbusinterfacenotificationsinkadaptor.h"
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
 #include "notification_stub.h"
-#include "notificationgroup_stub.h"
+#include "notificationgroup.h"
+#include "notificationparameters.h"
+#include "notificationmanager_stub.h"
 
+NotificationParameters fakeParams;
+
+//NotificationGroup fake needed because parameters call using stub does not work
+NotificationGroup::NotificationGroup() {}
+NotificationGroup::NotificationGroup(uint, uint, const NotificationParameters &)
+{
+}
+
+NotificationGroup::~NotificationGroup() {}
+
+uint NotificationGroup::groupId() const
+{
+    return 0;
+}
+
+uint NotificationGroup::userId() const
+{
+    return 0;
+}
+
+const NotificationParameters& NotificationGroup::parameters() const
+{
+    return fakeParams;
+}
+
+void NotificationGroup::setParameters(const NotificationParameters &)
+{
+}
+
+void NotificationGroup::updateParameters(const NotificationParameters &)
+{
+}
 
 // DBusInterfaceNotificationSinkAdaptor stubs (used by NotificationManager)
 DBusInterfaceNotificationSinkAdaptor::DBusInterfaceNotificationSinkAdaptor(DBusInterfaceNotificationSink *parent) : QDBusAbstractAdaptor(parent)
@@ -120,20 +153,23 @@ void Ut_DBusInterfaceNotificationSink::init()
     qDBusConnectionConnectReceiver.clear();
     qDBusConnectionConnectSlot.clear();
 
-    sink = new DBusInterfaceNotificationSink();
+    manager = new NotificationManager;
+    sink = new DBusInterfaceNotificationSink(manager);
 
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(addGroup(uint,NotificationParameters)), sink, SLOT(addGroup(uint,NotificationParameters)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(removeGroup(uint)), sink, SLOT(removeGroup(uint)));
+    gNotificationManagerStub->stubReset();
 }
 
 void Ut_DBusInterfaceNotificationSink::cleanup()
 {
     delete sink;
-
+    delete manager;
     gAddNotificationProxies.clear();
     gNewSinkProxies.clear();
+    gAddGroupProxies.clear();
 }
 
 void Ut_DBusInterfaceNotificationSink::testNothingCalledWhenNothingRegistered()
@@ -151,6 +187,7 @@ void Ut_DBusInterfaceNotificationSink::testNothingCalledWhenNothingRegistered()
     QCOMPARE(gRemoveNotificationProxies.count(), 0);
     QCOMPARE(gRemoveGroupProxies.count(), 0);
 }
+
 
 void Ut_DBusInterfaceNotificationSink::testProxyCalledWhenServiceRegistered()
 {
@@ -197,7 +234,6 @@ void Ut_DBusInterfaceNotificationSink::testSignalsConnectedWhenServiceRegistered
 void Ut_DBusInterfaceNotificationSink::testRegisteringSameServiceAndPathReplacesPrevious()
 {
     Notification n;
-    NotificationParameters np;
 
     sink->registerSink("service1", "path");
     QCOMPARE(gNewSinkProxies.count(), 1);
@@ -244,5 +280,73 @@ void Ut_DBusInterfaceNotificationSink::testUnregistering()
     QCOMPARE(gAddNotificationProxies.count(), 1);
     QCOMPARE(gAddNotificationProxies.at(0), gNewSinkProxies.at(1));
 }
+
+QList<NotificationGroup> createGroups()
+{
+    NotificationGroup ng;
+    QList<NotificationGroup> ngs;
+    ngs.append(ng);
+    return ngs;
+}
+
+QList<Notification> createNotifications()
+{
+    Notification n;
+    QList<Notification> ns;
+    ns.append(n);
+    return ns;
+}
+
+void Ut_DBusInterfaceNotificationSink::testNotificationsAndGroupsFetchedWhenProxyRegisters()
+{
+    sink->registerSink("service1", "path");
+    QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 1);
+    QCOMPARE(gNotificationManagerStub->stubCallCount("notifications"), 1);
+}
+
+
+void Ut_DBusInterfaceNotificationSink::testSendingGroupsToProxy()
+{
+    QList<Notification> notifications;
+    gNotificationManagerStub->stubSetReturnValue("notifications", notifications);
+
+    QList<NotificationGroup> groups(createGroups());
+    gNotificationManagerStub->stubSetReturnValue("groups", groups);
+
+    sink->registerSink("service1", "path");
+
+    QCOMPARE(gAddGroupProxies.count(), 1);
+}
+
+void Ut_DBusInterfaceNotificationSink::testSendingNotificationsToProxy()
+{
+
+    QList<Notification> notifications(createNotifications());
+    gNotificationManagerStub->stubSetReturnValue("notifications", notifications);
+
+    QList<NotificationGroup> groups;
+    gNotificationManagerStub->stubSetReturnValue("groups", groups);
+
+    sink->registerSink("service1", "path");
+
+    QCOMPARE(gAddNotificationProxies.count(), 1);
+}
+
+void Ut_DBusInterfaceNotificationSink::testManagerNotDefined()
+{
+    delete sink;
+    sink = new DBusInterfaceNotificationSink(NULL);
+    QList<NotificationGroup> groups;
+    gNotificationManagerStub->stubSetReturnValue("groups", groups);
+
+    QList<Notification> notifications(createNotifications());
+    gNotificationManagerStub->stubSetReturnValue("notifications", notifications);
+
+    sink->registerSink("service1", "path");
+
+    QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 0);
+    QCOMPARE(gNotificationManagerStub->stubCallCount("notifications"), 0);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSink)

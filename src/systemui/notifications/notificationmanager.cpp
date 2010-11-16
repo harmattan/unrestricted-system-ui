@@ -47,8 +47,8 @@ static const QString NOTIFICATIONS_FILE_NAME = PERSISTENT_DATA_PATH + QString("n
 static const QString SYSTEM_EVENT_ID = "system";
 
 NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSize) :
-    notifications(),
-    groups(),
+    notificationContainer(),
+    groupContainer(),
     maxWaitQueueSize(maxWaitQueueSize),
     notificationInProgress(false),
     relayInterval(relayInterval),
@@ -60,7 +60,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
 #endif
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
-    dBusSink = new DBusInterfaceNotificationSink;
+    dBusSink = new DBusInterfaceNotificationSink(this);
 
     connect(this, SIGNAL(groupUpdated(uint, const NotificationParameters &)), dBusSink, SLOT(addGroup(uint, const NotificationParameters &)));
     connect(this, SIGNAL(groupRemoved(uint)), dBusSink, SLOT(removeGroup(uint)));
@@ -114,7 +114,7 @@ void NotificationManager::saveStateData()
 
         stream << lastUsedNotificationUserId;
 
-        foreach(const NotificationGroup & group, groups) {
+        foreach(const NotificationGroup & group, groupContainer) {
             stream << group;
         }
 
@@ -132,12 +132,12 @@ void NotificationManager::saveNotifications()
 {
 #ifdef HAVE_AEGIS_CRYPTO
     if (ensurePersistentDataPath()) {
-        if (notifications.size()) {
+        if (notificationContainer.size()) {
             QBuffer buffer;
             buffer.open(QIODevice::WriteOnly);
             QDataStream stream(&buffer);
 
-            foreach(const Notification &notification, notifications) {
+            foreach(const Notification &notification, notificationContainer) {
                 stream << notification;
             }
 
@@ -181,7 +181,7 @@ void NotificationManager::restoreData()
 
             while (!stream.atEnd()) {
                 stream >> group;
-                groups.insert(group.groupId(), group);
+                groupContainer.insert(group.groupId(), group);
                 emit groupUpdated(group.groupId(), group.parameters());
             }
         }
@@ -200,7 +200,7 @@ void NotificationManager::restoreData()
 
             while (!stream.atEnd()) {
                 stream >> notification;
-                notifications.insert(notification.notificationId(), notification);
+                notificationContainer.insert(notification.notificationId(), notification);
                 emit notificationRestored(notification);
             }
         }
@@ -224,14 +224,14 @@ void NotificationManager::initializeEventTypeStore()
 
 void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType)
 {
-    foreach(const Notification &notification, notifications) {
+    foreach(const Notification &notification, notificationContainer) {
         if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
             removeNotification(notification.notificationId());
         }
     }
 
-    foreach(const NotificationGroup &group, groups) {
+    foreach(const NotificationGroup &group, groupContainer) {
         if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
             removeGroup(0, group.groupId());
@@ -241,7 +241,7 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
 
 void NotificationManager::updateNotificationsWithEventType(const QString &eventType)
 {
-    foreach(const Notification &notification, notifications) {
+    foreach(const Notification &notification, notificationContainer) {
         if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
             updateNotification(notification.userId(), notification.notificationId(), notification.parameters());
@@ -253,7 +253,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
 {
     restoreData();
 
-    if (groupId == 0 || groups.contains(groupId)) {
+    if (groupId == 0 || groupContainer.contains(groupId)) {
         uint notificationId = nextAvailableNotificationID();
 
         NotificationParameters fullParameters(appendEventTypeParameters(parameters));
@@ -262,7 +262,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
                                   fullParameters, determineType(fullParameters), relayInterval);
 
         // Mark the notification used
-        notifications.insert(notificationId, notification);
+        notificationContainer.insert(notificationId, notification);
 
         saveNotifications();
 
@@ -280,9 +280,9 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
 
     restoreData();
 
-    QHash<uint, Notification>::iterator ni = notifications.find(notificationId);
+    QHash<uint, Notification>::iterator ni = notificationContainer.find(notificationId);
 
-    if (ni != notifications.end()) {
+    if (ni != notificationContainer.end()) {
         (*ni).updateParameters(parameters);
 
         saveNotifications();
@@ -292,7 +292,7 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
             waitQueue[waitQueueIndex].updateParameters(parameters);
         } else {
             // Inform the sinks about the update
-            emit notificationUpdated(notifications.value(notificationId));
+            emit notificationUpdated(notificationContainer.value(notificationId));
         }
 
         return true;
@@ -312,9 +312,9 @@ bool NotificationManager::removeNotification(uint notificationId)
 {
     restoreData();
 
-    if (notifications.contains(notificationId)) {
+    if (notificationContainer.contains(notificationId)) {
         // Mark the notification unused
-        notifications.take(notificationId);
+        notificationContainer.take(notificationId);
 
         saveNotifications();
 
@@ -336,7 +336,7 @@ bool NotificationManager::removeNotificationsInGroup(uint groupId)
 {
     QList<uint> notificationIds;
 
-    foreach(const Notification & notification, notifications.values()) {
+    foreach(const Notification & notification, notificationContainer.values()) {
         if (notification.groupId() == groupId) {
             notificationIds.append(notification.notificationId());
         }
@@ -357,7 +357,7 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
 
     uint groupID = nextAvailableGroupID();
     NotificationGroup group(groupID, notificationUserId, fullParameters);
-    groups.insert(groupID, group);
+    groupContainer.insert(groupID, group);
 
     saveStateData();
 
@@ -372,9 +372,9 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
 
     restoreData();
 
-    QHash<uint, NotificationGroup>::iterator gi = groups.find(groupId);
+    QHash<uint, NotificationGroup>::iterator gi = groupContainer.find(groupId);
 
-    if (gi != groups.end()) {
+    if (gi != groupContainer.end()) {
         gi->updateParameters(parameters);
 
         saveStateData();
@@ -391,8 +391,8 @@ bool NotificationManager::removeGroup(uint notificationUserId, uint groupId)
 {
     restoreData();
 
-    if (groups.remove(groupId)) {
-        foreach(const Notification & notification, notifications) {
+    if (groupContainer.remove(groupId)) {
+        foreach(const Notification & notification, notificationContainer) {
             if (notification.groupId() == groupId) {
                 removeNotification(notificationUserId, notification.notificationId());
             }
@@ -434,7 +434,7 @@ QList<uint> NotificationManager::notificationIdList(uint notificationUserId)
 {
     QList<uint> listOfNotificationIds;
 
-    foreach(const Notification & notification, notifications) {
+    foreach(const Notification & notification, notificationContainer) {
         if (notification.userId() == notificationUserId) {
             listOfNotificationIds.append(notification.notificationId());
         }
@@ -447,7 +447,7 @@ QList<MNotificationProxy> NotificationManager::notificationList(uint notificatio
 {
     QList<MNotificationProxy> userNotifications;
 
-    foreach(const Notification & notification, notifications) {
+    foreach(const Notification & notification, notificationContainer) {
         if (notification.userId() == notificationUserId) {
             MNotificationProxy mnotification(notification);
             userNotifications.append(mnotification);
@@ -461,7 +461,7 @@ QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWit
 {
     QList<MNotificationWithIdentifierProxy> userNotificationsWithIdentifers;
 
-    foreach(const Notification & notification, notifications) {
+    foreach(const Notification & notification, notificationContainer) {
         if (notification.userId() == notificationUserId) {
             MNotificationWithIdentifierProxy mnotification(notification);
             userNotificationsWithIdentifers.append(mnotification);
@@ -475,7 +475,7 @@ QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint n
 {
     QList<MNotificationGroupProxy> userGroups;
 
-    foreach(const NotificationGroup & group, groups) {
+    foreach(const NotificationGroup & group, groupContainer) {
         if (group.userId() == notificationUserId) {
             MNotificationGroupProxy mnotificationgroup(group);
             userGroups.append(mnotificationgroup);
@@ -489,7 +489,7 @@ QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGr
 {
     QList<MNotificationGroupWithIdentifierProxy> userGroups;
 
-    foreach(const NotificationGroup & group, groups) {
+    foreach(const NotificationGroup & group, groupContainer) {
         if (group.userId() == notificationUserId) {
             MNotificationGroupWithIdentifierProxy mnotificationgroup(group);
             userGroups.append(mnotificationgroup);
@@ -561,7 +561,7 @@ uint NotificationManager::nextAvailableNotificationID()
 {
     unsigned int i = 1;
     // Try to find an unused ID but only do it up to 2^32-1 times
-    while (i != 0 && notifications.contains(i)) {
+    while (i != 0 && notificationContainer.contains(i)) {
         ++i;
     }
     return i;
@@ -571,7 +571,7 @@ uint NotificationManager::nextAvailableGroupID()
 {
     unsigned int i = 1;
     // Try to find an unused ID but only do it up to 2^32-1 times
-    while (i != 0 && groups.contains(i)) {
+    while (i != 0 && groupContainer.contains(i)) {
         ++i;
     }
     return i;
@@ -580,8 +580,8 @@ uint NotificationManager::nextAvailableGroupID()
 void NotificationManager::removeUnseenFlags(bool ignore)
 {
     if (!ignore) {
-        QHash<uint, Notification>::iterator it = notifications.begin();
-        while (it != notifications.end()) {
+        QHash<uint, Notification>::iterator it = notificationContainer.begin();
+        while (it != notificationContainer.end()) {
             NotificationParameters newParameters = (*it).parameters();
             newParameters.add(GenericNotificationParameterFactory::unseenKey(), QVariant(false));
             (*it).setParameters(newParameters);
@@ -590,4 +590,14 @@ void NotificationManager::removeUnseenFlags(bool ignore)
         // Change the states in the filestore
         saveNotifications();
     }
+}
+
+ QList<Notification> NotificationManager::notifications() const
+{
+     return notificationContainer.values();
+}
+
+QList<NotificationGroup> NotificationManager::groups() const
+{
+    return groupContainer.values();
 }

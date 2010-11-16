@@ -16,12 +16,13 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "dbusinterfacenotificationsink.h"
 #include "dbusinterfacenotificationsinkadaptor.h"
 #include "dbusinterfacenotificationsinkproxy.h"
+#include "notificationmanagerinterface.h"
 
-DBusInterfaceNotificationSink::DBusInterfaceNotificationSink()
+DBusInterfaceNotificationSink::DBusInterfaceNotificationSink(NotificationManagerInterface *interface) :
+        notificationManager(interface)
 {
     new DBusInterfaceNotificationSinkAdaptor(this);
 }
@@ -32,15 +33,17 @@ DBusInterfaceNotificationSink::~DBusInterfaceNotificationSink()
 
 void DBusInterfaceNotificationSink::registerSink(const QString &service, const QString &path)
 {
-    proxies.insert(QPair<QString, QString>(service, path),
-                   QSharedPointer<DBusInterfaceNotificationSinkProxy>(new DBusInterfaceNotificationSinkProxy(service, path, QDBusConnection::sessionBus())));
+    ProxyAddress proxy(service, path);
+    DBusInterface proxyInterface(new DBusInterfaceNotificationSinkProxy(service, path, QDBusConnection::sessionBus()));
+    proxies.insert(proxy, proxyInterface);
     QDBusConnection::sessionBus().connect(service, path, DBusInterfaceNotificationSinkProxy::staticInterfaceName(), "notificationRemovalRequested", this, SIGNAL(notificationRemovalRequested(uint)));
     QDBusConnection::sessionBus().connect(service, path, DBusInterfaceNotificationSinkProxy::staticInterfaceName(), "notificationGroupClearingRequested", this, SIGNAL(notificationGroupClearingRequested(uint)));
+    sendCurrentNotifications(proxyInterface);
 }
 
 void DBusInterfaceNotificationSink::unregisterSink(const QString &service, const QString &path)
 {
-    proxies.remove(QPair<QString, QString>(service, path));
+    proxies.remove(ProxyAddress(service, path));
 }
 
 void DBusInterfaceNotificationSink::addNotification(const Notification &notification)
@@ -68,5 +71,30 @@ void DBusInterfaceNotificationSink::removeGroup(uint groupId)
 {
     foreach (QSharedPointer<DBusInterfaceNotificationSinkProxy> proxy, proxies) {
         proxy->removeGroup(groupId);
+    }
+}
+
+void DBusInterfaceNotificationSink::sendGroupsToProxy(const QList<NotificationGroup> &groups, const DBusInterface &proxy) const
+{
+    foreach(const NotificationGroup &group, groups) {
+        proxy->addGroup(group.groupId(), group.parameters());
+    }
+}
+
+void DBusInterfaceNotificationSink::sendNotificationsToProxy(const QList<Notification> &notifications, const DBusInterface &proxy) const
+{
+    foreach(const Notification &notification, notifications) {
+        proxy->addNotification(notification);
+    }
+}
+
+void DBusInterfaceNotificationSink::sendCurrentNotifications(const DBusInterface &proxyInterface) const
+{
+    if (notificationManager != NULL) {
+        QList<NotificationGroup> groups = notificationManager->groups();
+        sendGroupsToProxy(groups, proxyInterface);
+
+        QList<Notification> notifications = notificationManager->notifications();
+        sendNotificationsToProxy(notifications, proxyInterface);
     }
 }

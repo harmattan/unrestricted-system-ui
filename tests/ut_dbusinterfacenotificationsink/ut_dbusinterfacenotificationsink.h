@@ -27,6 +27,8 @@
 #include <QDBusAbstractInterface>
 #include <QDBusPendingReply>
 
+class NotificationManager;
+
 class DBusInterfaceNotificationSinkProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
@@ -65,6 +67,10 @@ private slots:
     void testRegisteringSameServiceAndPathReplacesPrevious();
     void testRegisteringTwoDifferentServicesCallsBoth();
     void testUnregistering();
+    void testNotificationsAndGroupsFetchedWhenProxyRegisters();
+    void testSendingGroupsToProxy();
+    void testSendingNotificationsToProxy();
+    void testManagerNotDefined();
 
 signals:
     void addNotification(Notification n);
@@ -75,6 +81,8 @@ signals:
 private:
     // The object being tested
     DBusInterfaceNotificationSink *sink;
+    //Stubbed manager
+    NotificationManager *manager;
 };
 
 #endif

@@ -96,6 +96,12 @@ public:
      */
     virtual bool removeGroup(uint notificationUserId, uint groupId) = 0;
 
+    //! Returns copy of groups known to manager
+    virtual QList<NotificationGroup> groups() const = 0;
+
+    //! Returns copy of notifications know to manager
+    virtual QList<Notification> notifications() const = 0;
+
     /*!
      * Returns a user ID for the notification system. The user ID has to
      * be supplied with every notification system call.

@@ -28,6 +28,7 @@
 
 class NotificationManager;
 class TestNotificationManager;
+class NotificationParameters;
 
 class Ut_NotificationManager : public QObject
 {
@@ -43,6 +44,10 @@ signals:
 
 private:
     TestNotificationManager *manager;
+
+private:
+    void addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier = false);
+    uint addNotification(NotificationParameters *parameters, QString index, int notificationId, int groupId = 0, bool addIdentifier = false);
 
 private slots:
     // Executed once before every test case
@@ -131,6 +136,11 @@ private slots:
 
     // Test that relevant signals are connected to the DBus sink
     void testDBusNotificationSinkConnections();
+    // Test getting groups
+    void testGetNotificationGroups();
+    // Test getting notifications
+    void testGetNotifications();
+
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H
