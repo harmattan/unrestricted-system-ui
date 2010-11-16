@@ -20,19 +20,68 @@
 #include "lockscreenview.h"
 #include <MGConfItem>
 #include <MViewCreator>
+#include <MSceneManager>
 #include "lockscreen.h"
 
-const QString GCONF_BG_LANDSCAPE = "/desktop/meego/background/landscape/picture_filename";
-const QString GCONF_BG_PORTRAIT = "/desktop/meego/background/portrait/picture_filename";
+const QString GCONF_KEY_LANDSCAPE = "/desktop/meego/background/landscape/picture_filename";
+const QString GCONF_KEY_PORTRAIT = "/desktop/meego/background/portrait/picture_filename";
+
+LockScreenBackgroundPixmap::LockScreenBackgroundPixmap(const QString &gConfKey) :
+    gConfItem(new MGConfItem(gConfKey, this)),
+    pixmap(NULL),
+    pixmapFromTheme(false)
+{
+    updatePixmap();
+
+    connect(gConfItem, SIGNAL(valueChanged()), this, SLOT(updatePixmap()));
+}
+
+LockScreenBackgroundPixmap::~LockScreenBackgroundPixmap()
+{
+    destroyPixmap();
+}
+
+void LockScreenBackgroundPixmap::updatePixmap()
+{
+    // Destroy the old pixmap
+    destroyPixmap();
+
+    QString image = gConfItem->value().toString();
+    if (!image.isEmpty()) {
+        if (image.startsWith('/')) {
+            // Load from absolute path: if it fails the pixmap will be invalid and the default will be used
+            pixmapFromTheme = false;
+            pixmap = new QPixmap;
+            pixmap->load(image);
+        } else {
+            // Load from theme
+            pixmapFromTheme = true;
+            pixmap = const_cast<QPixmap *>(MTheme::pixmap(image));
+        }
+    }
+
+    // Let the view know about the updated pixmap
+    emit pixmapUpdated();
+}
+
+void LockScreenBackgroundPixmap::destroyPixmap()
+{
+    if (pixmap != NULL) {
+        if (pixmapFromTheme) {
+            MTheme::releasePixmap(pixmap);
+        } else {
+            delete pixmap;
+        }
+        pixmap = NULL;
+    }
+}
 
 LockScreenView::LockScreenView(MSceneWindow* controller) : MSceneWindowView(controller),
     layout(new QGraphicsLinearLayout(Qt::Vertical)),
     lockScreenHeader(new MWidgetController),
     controller(controller),
-    gconfBgLandscape(new MGConfItem(GCONF_BG_LANDSCAPE, this)),
-    gconfBgPortrait(new MGConfItem(GCONF_BG_PORTRAIT, this)),
-    landscapePixmap(new QPixmap),
-    portraitPixmap(new QPixmap)
+    landscapePixmap(GCONF_KEY_LANDSCAPE),
+    portraitPixmap(GCONF_KEY_PORTRAIT)
 {
     // Set the main layout
     layout->setContentsMargins(0, 0, 0, 0);
@@ -43,44 +92,39 @@ LockScreenView::LockScreenView(MSceneWindow* controller) : MSceneWindowView(cont
     lockScreenHeader->setViewType("lockScreenHeader");
     layout->addItem(lockScreenHeader);
 
-    connect(gconfBgLandscape, SIGNAL(valueChanged()), this, SLOT(reloadLandscapeBackground()));
-    connect(gconfBgPortrait, SIGNAL(valueChanged()), this, SLOT(reloadPortraitBackground()));
-
-    // Load the backgrounds if any...
-    reloadLandscapeBackground();
-    reloadPortraitBackground();
+    // Update the style name based on whether there are any custom background pixmaps or not
+    updateStyleName();
+    connect(&landscapePixmap, SIGNAL(pixmapUpdated()), this, SLOT(updateStyleName()));
+    connect(&portraitPixmap, SIGNAL(pixmapUpdated()), this, SLOT(updateStyleName()));
 }
 
 LockScreenView::~LockScreenView()
 {
-    delete gconfBgLandscape;
-    delete gconfBgPortrait;
-    delete landscapePixmap;
-    delete portraitPixmap;
     delete lockScreenHeader;
 }
 
-void LockScreenView::paint (QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void LockScreenView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    QPixmap *pixmap = (geometry().height() > geometry().width()) ? portraitPixmap : landscapePixmap;
+    QPixmap *pixmap = controller->sceneManager()->orientation() == M::Landscape ? landscapePixmap.pixmap : portraitPixmap.pixmap;
 
-    painter->drawPixmap(0, 0, pixmap->width(), pixmap->height(), *pixmap);
-}
-
-void LockScreenView::reloadLandscapeBackground ()
-{
-    QString filename = gconfBgLandscape->value().toString();
-    if (!filename.isEmpty()) {
-        landscapePixmap->load(filename);
+    if (pixmap == NULL || pixmap->isNull()) {
+        // If no specific pixmap has been loaded or the pixmap is not valid, use the default
+        MSceneWindowView::drawBackground(painter, option);
+    } else {
+        // Otherwise draw the specific pixmap
+        painter->drawPixmap(QRectF(QPointF(), controller->geometry().size()), *pixmap, QRectF(0, 0, pixmap->width(), pixmap->height()));
     }
 }
 
-void LockScreenView::reloadPortraitBackground ()
+void LockScreenView::updateStyleName()
 {
-    QString filename = gconfBgPortrait->value().toString();
-    if (!filename.isEmpty()) {
-        portraitPixmap->load (filename);
-    }
+    // Set the style name to LockScreenWithCustomBackground only if there is a valid custom pixmap for both orientations
+    controller->setStyleName((landscapePixmap.pixmap != NULL && !landscapePixmap.pixmap->isNull() &&
+                              portraitPixmap.pixmap != NULL && !portraitPixmap.pixmap->isNull()) ?
+                              "LockScreenWithCustomBackground" : "LockScreenWithDefaultBackground");
+
+    // Refresh the display
+    update();
 }
 
 M_REGISTER_VIEW_NEW(LockScreenView, LockScreen)

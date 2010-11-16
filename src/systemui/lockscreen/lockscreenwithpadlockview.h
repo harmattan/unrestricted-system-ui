@@ -47,6 +47,9 @@ protected:
     virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent (QGraphicsSceneMouseEvent *event);
 
+signals:
+    void unlocked ();
+
 private slots:
     void redraw ();
     void redrawIdle ();

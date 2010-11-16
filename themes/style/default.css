@@ -657,6 +657,18 @@ LockScreenWindowStyle {
     locked-orientation:;
 }
 
+MSceneWindowStyle#LockScreenWithDefaultBackground.Landscape {
+    background-image: "meegotouch-wallpaper-landscape";
+}
+
+MSceneWindowStyle#LockScreenWithDefaultBackground.Portrait {
+    background-image: "meegotouch-wallpaper-portrait";
+}
+
+MSceneWindowStyle#LockScreenWithCustomBackground {
+    background-image: ;
+}
+
 LockScreenHeaderStyle {
     minimum-size: 100% -1;
     preferred-size: 100% -1;

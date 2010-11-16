@@ -24,42 +24,98 @@
 class QGraphicsLinearLayout;
 class MGConfItem;
 class QPixmap;
-class MWidgetController;
 
+/*!
+ * LockScreenBackgroundPixmap represents a background pixmap.
+ */
+class LockScreenBackgroundPixmap : public QObject
+{
+    Q_OBJECT
+
+public:
+    /*!
+     * Creates a background pixmap representation.
+     *
+     * \param gConfKey the name of the GConf key to get the pixmap name from
+     */
+    LockScreenBackgroundPixmap(const QString &gConfKey);
+
+    /*!
+     * Destroys the background pixmap representation.
+     */
+    ~LockScreenBackgroundPixmap();
+
+    //! GConf item for the background image
+    MGConfItem *gConfItem;
+
+    //! The background pixmap
+    QPixmap *pixmap;
+
+    //! Whether the background pixmap is from the theme
+    bool pixmapFromTheme;
+
+private slots:
+    //! Updates the pixmap based on the GConf key value
+    void updatePixmap();
+
+signals:
+    //! Signaled when the pixmap is updated
+    void pixmapUpdated();
+
+private:
+    //! Destroys the pixmap
+    void destroyPixmap();
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreenView;
+#endif
+};
+
+/*!
+ * LockScreenView renders the background image of the lock screen.
+ */
 class LockScreenView : public MSceneWindowView
 {
     Q_OBJECT
     M_VIEW(MSceneWindowModel, MSceneWindowStyle)
 
 public:
+    /*!
+     * Creates a lock screen view.
+     *
+     * \param controller controller for the view
+     */
     LockScreenView(MSceneWindow* controller);
-    ~LockScreenView();
 
-signals:
-    void unlocked ();
-
-private slots:
-    void reloadLandscapeBackground ();
-    void reloadPortraitBackground ();
+    /*!
+     * Destroys the lock screen view.
+     */
+    virtual ~LockScreenView();
 
 protected:
     //! \reimp
-    virtual void paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     //! \reimp_end
 
     //! Layout for the view
     QGraphicsLinearLayout *layout;
-    //! lock screen header widget
+
+    //! Lock screen header widget
     MWidgetController *lockScreenHeader;
 
-private:
-    MSceneWindow* controller;
+private slots:
+    //! Updates the style name of the controller based on whether there are custom pixmaps in use
+    void updateStyleName();
 
-    // The background GConf keys:
-    MGConfItem *gconfBgLandscape;
-    MGConfItem *gconfBgPortrait;
-    QPixmap* landscapePixmap;
-    QPixmap* portraitPixmap;
+private:
+    //! Controller for the view
+    MSceneWindow *controller;
+
+    //! Data for the landscape pixmap
+    LockScreenBackgroundPixmap landscapePixmap;
+
+    //! Data for the portrait pixmap
+    LockScreenBackgroundPixmap portraitPixmap;
 
     Q_DISABLE_COPY(LockScreenView)
 

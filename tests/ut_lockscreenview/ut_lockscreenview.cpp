@@ -13,86 +13,194 @@
 
 #include <MApplication>
 #include <MGConfItem>
+#include <MSceneManager>
 #include "ut_lockscreenview.h"
 
-QStringList backgroundImageFilenames;
-bool QPixmap::load(const QString  &fileName, const char *format, Qt::ImageConversionFlags flags)
+QStringList qPixmapLoadFilenames;
+QList<QPixmap *> qPixmapLoadPixmaps;
+bool QPixmap::load(const QString &fileName, const char *, Qt::ImageConversionFlags)
 {
-    Q_UNUSED(format);
-    Q_UNUSED(flags);
-    backgroundImageFilenames.append(fileName);
+    qPixmapLoadPixmaps.append(this);
+    qPixmapLoadFilenames.append(fileName);
     return true;
 }
 
-QVariant MGConfItem::value() const
+bool QPixmap::isNull() const
 {
-    if(this->key() == "/desktop/meego/background/landscape/picture_filename") {
-        return QVariant("Landscape");
-    } else if(this->key() == "/desktop/meego/background/portrait/picture_filename") {
-        return QVariant("Portrait");
-    }
-    return QVariant("");
+    return false;
 }
 
-const QPixmap *pixmapDrawn = NULL;
-void QPainter::drawPixmap(const QPointF &p, const QPixmap &pm)
+QVariant mGConfItemValueLandscape;
+QVariant mGConfItemValuePortrait;
+QVariant MGConfItem::value() const
 {
-    Q_UNUSED(p)
-    pixmapDrawn = &pm;
+    if (key() == "/desktop/meego/background/landscape/picture_filename") {
+        return mGConfItemValueLandscape;
+    } else if (key() == "/desktop/meego/background/portrait/picture_filename") {
+        return mGConfItemValuePortrait;
+    }
+
+    return QVariant();
+}
+
+QRectF qPainterDrawPixmapTargetRect;
+const QPixmap *qPainterDrawPixmapPixmap = NULL;
+QRectF qPainterDrawPixmapSourceRect;
+void QPainter::drawPixmap(const QRectF &targetRect, const QPixmap &pixmap, const QRectF &sourceRect)
+{
+    qPainterDrawPixmapTargetRect = targetRect;
+    qPainterDrawPixmapPixmap = &pixmap;
+    qPainterDrawPixmapSourceRect = sourceRect;
+}
+
+bool mWidgetViewDrawBackgroundCalled = false;
+void MWidgetView::drawBackground(QPainter *, const QStyleOptionGraphicsItem *) const
+{
+    mWidgetViewDrawBackgroundCalled = true;
+}
+
+QStringList mThemePixmapIds;
+const QPixmap *mThemePixmapPixmap = NULL;
+const QPixmap *MTheme::pixmap(const QString &id, const QSize &)
+{
+    mThemePixmapIds.append(id);
+    return mThemePixmapPixmap;
+}
+
+M::Orientation mSceneManagerOrientation = M::Portrait;
+M::Orientation MSceneManager::orientation() const
+{
+    return mSceneManagerOrientation;
 }
 
 void Ut_LockScreenView::init()
 {
-    lockScreenView = new LockScreenView(&controller);
-    pixmapDrawn = new QPixmap;
+    mGConfItemValueLandscape = QVariant("/landscape.png");
+    mGConfItemValuePortrait = QVariant("/portrait.png");
+    controller = new MSceneWindow;
+    lockScreenView = new LockScreenView(controller);
+    controller->setView(lockScreenView);
 }
 
 void Ut_LockScreenView::cleanup()
 {
-    backgroundImageFilenames.clear();
-    delete pixmapDrawn;
-    pixmapDrawn = NULL;
-
+    delete controller;
+    qPixmapLoadFilenames.clear();
+    qPainterDrawPixmapTargetRect = QRectF();
+    qPainterDrawPixmapPixmap = NULL;
+    qPainterDrawPixmapSourceRect = QRectF();
+    mWidgetViewDrawBackgroundCalled = false;
+    mThemePixmapIds.clear();
+    qPixmapLoadPixmaps.clear();
+    mSceneManagerOrientation = M::Portrait;
 }
 
 void Ut_LockScreenView::initTestCase()
 {
-    int   argc = 1;
+    int argc = 1;
     static char *app_name = (char *)"./ut_lockscreenview";
     app = new MApplication(argc, &app_name);
 }
 
 void Ut_LockScreenView::cleanupTestCase()
 {
+    delete app;
 }
 
-void Ut_LockScreenView::testWhenLockScreenViewIsCreatedGConfKeysAreConnectedForBackgroudImage()
+void Ut_LockScreenView::testGConfKeyConnections()
 {
-    bool result = disconnect (lockScreenView->gconfBgLandscape, SIGNAL(valueChanged()), lockScreenView, SLOT(reloadLandscapeBackground()));
-    QCOMPARE(result, true);
-    result = disconnect (lockScreenView->gconfBgPortrait, SIGNAL(valueChanged()), lockScreenView, SLOT(reloadPortraitBackground()));
-    QCOMPARE(result, true);
+    QVERIFY(disconnect(lockScreenView->landscapePixmap.gConfItem, SIGNAL(valueChanged()), &lockScreenView->landscapePixmap, SLOT(updatePixmap())));
+    QVERIFY(disconnect(lockScreenView->portraitPixmap.gConfItem, SIGNAL(valueChanged()), &lockScreenView->portraitPixmap, SLOT(updatePixmap())));
 }
 
-void Ut_LockScreenView::testWhenLockScreenCreatedBackgroundImagesLoaded()
+void Ut_LockScreenView::testUpdatePixmapWithNoImage()
 {
-    QCOMPARE(backgroundImageFilenames.count(), 2);
-    QCOMPARE(backgroundImageFilenames.at(0), QString("Landscape"));
-    QCOMPARE(backgroundImageFilenames.at(1), QString("Portrait"));
+    mGConfItemValueLandscape = QVariant();
+    mGConfItemValuePortrait = QVariant();
+    lockScreenView->landscapePixmap.updatePixmap();
+    lockScreenView->portraitPixmap.updatePixmap();
+    QCOMPARE(lockScreenView->portraitPixmap.pixmap, (QPixmap *)NULL);
+    QCOMPARE(controller->styleName(), QString("LockScreenWithDefaultBackground"));
 }
 
-void Ut_LockScreenView::testWhenPortraitPortraitImageIsDrawn()
+void Ut_LockScreenView::testUpdatePixmapFromTheme()
 {
-    lockScreenView->setGeometry(QRectF(0,0,20,30)); // height > width so portrait
-    QCOMPARE(pixmapDrawn->width(), lockScreenView->portraitPixmap->width());
-    QCOMPARE(pixmapDrawn->height(), lockScreenView->portraitPixmap->height());
+    qPixmapLoadFilenames.clear();
+    qPixmapLoadPixmaps.clear();
+
+    QPixmap pixmap;
+    mThemePixmapPixmap = &pixmap;
+    mGConfItemValueLandscape = QVariant("fromThemeLandscape");
+    mGConfItemValuePortrait = QVariant("fromThemePortrait");
+    lockScreenView->landscapePixmap.updatePixmap();
+    lockScreenView->portraitPixmap.updatePixmap();
+    QCOMPARE(mThemePixmapIds.count(), 2);
+    QCOMPARE(mThemePixmapIds.at(0), mGConfItemValueLandscape.toString());
+    QCOMPARE(mThemePixmapIds.at(1), mGConfItemValuePortrait.toString());
+    QCOMPARE(qPixmapLoadFilenames.count(), 0);
+    QCOMPARE(lockScreenView->landscapePixmap.pixmap, mThemePixmapPixmap);
+    QCOMPARE(lockScreenView->portraitPixmap.pixmap, mThemePixmapPixmap);
+    QCOMPARE(controller->styleName(), QString("LockScreenWithCustomBackground"));
 }
 
-void Ut_LockScreenView::testWhenLandscapeLndscapeImageIsDrawn()
+void Ut_LockScreenView::testUpdatePixmapFromFile()
 {
-    lockScreenView->setGeometry(QRectF(0,0,30,20)); // width > height so landscape
-    QCOMPARE(pixmapDrawn->width(), lockScreenView->landscapePixmap->width());
-    QCOMPARE(pixmapDrawn->height(), lockScreenView->landscapePixmap->height());
+    qPixmapLoadFilenames.clear();
+    qPixmapLoadPixmaps.clear();
+
+    mGConfItemValueLandscape = QVariant("/fromFileLandscape.png");
+    mGConfItemValuePortrait = QVariant("/fromFilePortrait.png");
+    lockScreenView->landscapePixmap.updatePixmap();
+    lockScreenView->portraitPixmap.updatePixmap();
+    QCOMPARE(qPixmapLoadFilenames.count(), 2);
+    QCOMPARE(qPixmapLoadFilenames.at(0), mGConfItemValueLandscape.toString());
+    QCOMPARE(qPixmapLoadFilenames.at(1), mGConfItemValuePortrait.toString());
+    QCOMPARE(mThemePixmapIds.isEmpty(), true);
+    QCOMPARE(qPixmapLoadPixmaps.count(), 2);
+    QCOMPARE(lockScreenView->landscapePixmap.pixmap, qPixmapLoadPixmaps.at(0));
+    QCOMPARE(lockScreenView->portraitPixmap.pixmap, qPixmapLoadPixmaps.at(1));
+    QCOMPARE(controller->styleName(), QString("LockScreenWithCustomBackground"));
+}
+
+void Ut_LockScreenView::testInitialImageLoading()
+{
+    QCOMPARE(qPixmapLoadFilenames.count(), 2);
+    QCOMPARE(qPixmapLoadFilenames.at(0), mGConfItemValueLandscape.toString());
+    QCOMPARE(qPixmapLoadFilenames.at(1), mGConfItemValuePortrait.toString());
+}
+
+void Ut_LockScreenView::testDrawBackgroundWithDefaultPixmap()
+{
+    mGConfItemValuePortrait = QVariant();
+    lockScreenView->portraitPixmap.updatePixmap();
+
+    QPainter painter;
+    lockScreenView->drawBackground(&painter, NULL);
+    QCOMPARE(mWidgetViewDrawBackgroundCalled, true);
+}
+
+void Ut_LockScreenView::testDrawBackgroundWithLoadedPixmap_data()
+{
+    QTest::addColumn<M::Orientation>("orientation");
+
+    QTest::newRow("Landscape") << M::Landscape;
+    QTest::newRow("Portrait") << M::Portrait;
+}
+
+void Ut_LockScreenView::testDrawBackgroundWithLoadedPixmap()
+{
+    QFETCH(M::Orientation, orientation);
+
+    mSceneManagerOrientation = orientation;
+    LockScreenBackgroundPixmap *pixmap = orientation == M::Landscape ? &lockScreenView->landscapePixmap : &lockScreenView->portraitPixmap;
+
+    QPainter painter;
+    controller->setGeometry(QRectF(0, 0, 20, 30));
+    lockScreenView->drawBackground(&painter, NULL);
+    QCOMPARE(mWidgetViewDrawBackgroundCalled, false);
+    QCOMPARE(qPainterDrawPixmapTargetRect, QRectF(QPointF(), controller->geometry().size()));
+    QCOMPARE(qPainterDrawPixmapPixmap, pixmap->pixmap);
+    QCOMPARE(qPainterDrawPixmapSourceRect, QRectF(0, 0, pixmap->pixmap->width(), pixmap->pixmap->height()));
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenView)
