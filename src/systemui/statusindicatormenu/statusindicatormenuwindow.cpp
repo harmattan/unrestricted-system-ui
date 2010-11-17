@@ -19,14 +19,19 @@
 
 #include <MSceneManager>
 #include <MScene>
+#include <MLocale>
+#include <mstatusbar.h>
 #include "statusindicatormenuwindow.h"
 #include "statusindicatormenu.h"
-#include <MLocale>
 
 StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     MWindow(parent),
+    statusBar(new MStatusBar),
     menuWidget(NULL)
 {
+    // Show status bar
+    sceneManager()->appearSceneWindowNow(statusBar);
+
     currentLanguage = MLocale().language();
 
     setTranslucentBackground(true);

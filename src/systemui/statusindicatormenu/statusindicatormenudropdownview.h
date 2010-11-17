@@ -33,7 +33,6 @@ class MPannableViewport;
 class MApplicationExtensionArea;
 class StatusIndicatorMenuWindow;
 class StatusIndicatorMenu;
-class MStatusBar;
 
 /*!
   * Overlay widget to be added to close button overlay of M Status Indicator Menu Window
@@ -144,9 +143,6 @@ private:
 
     //! The controller
     StatusIndicatorMenu *controller;
-
-    //! Status Bar
-    MStatusBar *statusBar;
 
     //! The application extension area for the settings plugins
     MApplicationExtensionArea *settingsPluginsExtensionArea;

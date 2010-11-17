@@ -28,7 +28,6 @@ class MApplicationExtensionArea;
 class MApplicationExtensionInterface;
 class StatusIndicatorMenuWindow;
 class StatusIndicatorMenu;
-class MStatusBar;
 class MButton;
 class MWidgetController;
 
@@ -67,9 +66,6 @@ protected:
 private:
     //! Controller for the view
     StatusIndicatorMenu *controller;
-
-    //! Status Bar
-    MStatusBar *statusBar;
 
     //! Container for the main content
     MWidgetController *containerWidget;

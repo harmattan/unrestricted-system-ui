@@ -28,7 +28,6 @@
 #include <MWidgetView>
 #include "notificationarea.h"
 #include <MViewCreator>
-#include <mstatusbar.h>
 #include <QGraphicsAnchorLayout>
 #include <QTimer>
 #include "statusindicatormenu.h"
@@ -84,16 +83,12 @@ void PannedWidgetController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicatorMenu *controller) :
     MSceneWindowView(controller),
     controller(controller),
-    statusBar(new MStatusBar),
     settingsPluginsExtensionArea(NULL),
     statusIndicatorExtensionArea(NULL),
     pannableViewport(NULL),
     closeButtonOverlay(NULL),
     backgroundWidget(new MWidgetController)
 {
-    // Show status bar
-    controller->sceneManager()->appearSceneWindowNow(statusBar);
-
     // Create close button overlay
     closeButtonOverlay = createCloseButtonOverlay();
 
@@ -112,7 +107,6 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
 StatusIndicatorMenuDropDownView::~StatusIndicatorMenuDropDownView()
 {
     delete backgroundWidget;
-    delete statusBar;
     delete closeButtonOverlay;
     delete pannableViewport;
     delete topRowWidget;

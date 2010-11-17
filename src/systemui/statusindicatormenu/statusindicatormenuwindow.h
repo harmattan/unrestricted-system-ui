@@ -26,6 +26,7 @@
 #include <qmlocks.h>
 #endif
 
+class MStatusBar;
 class StatusIndicatorMenu;
 
 /*!
@@ -94,7 +95,11 @@ private:
      */
     void resetMenuWidget();
 
-    StatusIndicatorMenu* menuWidget;
+    //! Status bar
+    MStatusBar *statusBar;
+
+    //! The actual menu widget
+    StatusIndicatorMenu *menuWidget;
 
     //! Current language
     QString currentLanguage;

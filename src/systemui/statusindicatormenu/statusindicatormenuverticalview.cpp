@@ -24,20 +24,15 @@
 #include <QGraphicsSceneMouseEvent>
 #include <mscenewindowview.h>
 #include "notificationarea.h"
-#include <mstatusbar.h>
 #include "statusindicatormenu.h"
 #include "statusindicatormenuverticalview.h"
 
 StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicatorMenu *controller) :
     MSceneWindowView(controller),
     controller(controller),
-    statusBar(new MStatusBar),
     //% "Settings"
     settingsButton(new MButton(qtTrId("qtn_stat_menu_settings")))
 {
-    // Show status bar
-    controller->sceneManager()->appearSceneWindowNow(statusBar);
-
     // Create an extension area for the top row plugins
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
@@ -90,7 +85,6 @@ void StatusIndicatorMenuVerticalView::setExtensionLayoutPosition(MApplicationExt
 StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
 {
     delete containerWidget;
-    delete statusBar;
 }
 
 void StatusIndicatorMenuVerticalView::mousePressEvent(QGraphicsSceneMouseEvent *event)
