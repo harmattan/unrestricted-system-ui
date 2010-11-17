@@ -22,12 +22,25 @@
 #include <signal.h>
 
 sighandler_t originalSigIntHandler = NULL;
+sighandler_t originalSigTermHandler = NULL;
 
-void sigIntHandler(int)
+void quitSignalHandler(int)
 {
     if (qApp != NULL) {
         qApp->quit();
     }
+}
+
+void installSignalHandlers()
+{
+    originalSigIntHandler = signal(SIGINT, quitSignalHandler);
+    originalSigTermHandler = signal(SIGTERM, quitSignalHandler);
+}
+
+void restoreSignalHandlers()
+{
+    signal(SIGINT, originalSigIntHandler);
+    signal(SIGTERM, originalSigTermHandler);
 }
 
 class SystemUIservice : public MApplicationService
@@ -45,7 +58,7 @@ public:
 
 int main(int argc, char** argv)
 {
-    originalSigIntHandler = signal(SIGINT, sigIntHandler);
+    installSignalHandlers();
 
     MApplication app(argc, argv, new SystemUIservice);
     app.setQuitOnLastWindowClosed(false);

@@ -34,7 +34,7 @@
 #include <MLabel>
 #include <MImageWidget>
 
-sighandler_t originalSigIntHandler = NULL;
+void restoreSignalHandlers() { }
 
 #define DEBUG
 #include "debug.h"

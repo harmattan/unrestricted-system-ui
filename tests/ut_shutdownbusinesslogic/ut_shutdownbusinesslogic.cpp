@@ -25,7 +25,7 @@
 #include <MNotification>
 #include <MFeedback>
 
-sighandler_t originalSigIntHandler = NULL;
+void restoreSignalHandlers() { }
 
 // Stubbed version of th ShutdownUI class.
 ShutdownUI::ShutdownUI ()

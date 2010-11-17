@@ -27,7 +27,7 @@
 #include <MNotification>
 #include <MLocale>
 
-extern sighandler_t originalSigIntHandler;
+extern void restoreSignalHandlers();
 
 ShutdownBusinessLogic::ShutdownBusinessLogic(QObject *parent) :
     QObject(parent),
@@ -64,7 +64,7 @@ void ShutdownBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndica
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
             // To avoid early quitting on shutdown...
-            signal(SIGINT, originalSigIntHandler);
+            restoreSignalHandlers();
             showUI();
             break;
 
