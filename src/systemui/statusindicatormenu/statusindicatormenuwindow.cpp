@@ -144,3 +144,22 @@ bool StatusIndicatorMenuWindow::event(QEvent *event)
     }
     return windowIsHandlingEvent;
 }
+
+void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent * event)
+{
+    mousePressPosition = event->pos();
+
+    // Don't pass the event to the status bar
+    if (itemAt(mousePressPosition) != statusBar) {
+        MWindow::mousePressEvent(event);
+    }
+}
+
+void StatusIndicatorMenuWindow::mouseReleaseEvent(QMouseEvent * event)
+{
+    if (itemAt(mousePressPosition) == statusBar && menuWidget) {
+        menuWidget->disappear();
+    } else {
+        MWindow::mouseReleaseEvent(event);
+    }
+}

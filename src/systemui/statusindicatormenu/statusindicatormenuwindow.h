@@ -54,6 +54,8 @@ public:
 protected:
     //! \reimp
     bool event(QEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     //! \reimp_end
 
 public slots:
@@ -103,6 +105,9 @@ private:
 
     //! Current language
     QString currentLanguage;
+
+    //! Position of the previous mouse press event
+    QPoint mousePressPosition;
 
 #ifdef HAVE_QMSYSTEM
     //! QmSystem watcher for device lock

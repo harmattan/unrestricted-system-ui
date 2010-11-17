@@ -19,6 +19,8 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void displayInActive();
   virtual bool event(QEvent *);
   virtual void resetMenuWidget();
+  virtual void mousePressEvent(QMouseEvent*);
+  virtual void mouseReleaseEvent(QMouseEvent*);
 #ifdef HAVE_QMSYSTEM
   virtual void setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
@@ -53,6 +55,18 @@ bool StatusIndicatorMenuWindowStub::event(QEvent *event) {
 
 void StatusIndicatorMenuWindowStub::resetMenuWidget() {
   stubMethodEntered("resetMenuWidget");
+}
+
+void StatusIndicatorMenuWindowStub::mousePressEvent(QMouseEvent *event) {
+  stubMethodEntered("mousePressEvent");
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QMouseEvent>(*event));
+}
+
+void StatusIndicatorMenuWindowStub::mouseReleaseEvent(QMouseEvent *event) {
+  stubMethodEntered("mouseReleaseEvent");
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QMouseEvent>(*event));
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -96,6 +110,14 @@ bool StatusIndicatorMenuWindow::event(QEvent *event) {
 
 void StatusIndicatorMenuWindow::resetMenuWidget() {
   gStatusIndicatorMenuWindowStub->resetMenuWidget();
+}
+
+void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent *event) {
+  gStatusIndicatorMenuWindowStub->mousePressEvent(event);
+}
+
+void StatusIndicatorMenuWindow::mouseReleaseEvent(QMouseEvent *event) {
+  gStatusIndicatorMenuWindowStub->mouseReleaseEvent(event);
 }
 
 #ifdef HAVE_QMSYSTEM

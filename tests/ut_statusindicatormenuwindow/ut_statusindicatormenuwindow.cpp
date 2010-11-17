@@ -17,7 +17,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "ut_statusindicatormenuwindow.h"
 #include "statusindicatormenuwindow.h"
 #include <MApplication>
@@ -25,6 +24,8 @@
 #include <QtTest/QtTest>
 #include "statusindicatormenu_stub.h"
 #include <MLocale>
+#include <QMouseEvent>
+#include <mstatusbar.h>
 
 #ifdef HAVE_QMSYSTEM
 #include "qmlocks_stub.h"
@@ -56,39 +57,9 @@ QString MLocale::language() const {
     return gLanguage;
 }
 
-QList<MSceneWindow*> gAppearSceneWindowList;
-QList<MSceneWindow*> gVisibleSceneWindows;
-QMap<const MSceneWindow*, MSceneWindow::SceneWindowState> gSceneWindowStateMap;
-
-void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::DeletionPolicy /*policy*/)
-{
-    gAppearSceneWindowList.append(window);
-    window->setVisible(true);
-    gVisibleSceneWindows.append(window);
-}
-
-void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
-{
-    sceneWindow->setVisible(false);
-    gVisibleSceneWindows.removeAll(sceneWindow);
-    gSceneWindowStateMap[sceneWindow] = MSceneWindow::Disappeared;
-}
-
-MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
-{
-    return gSceneWindowStateMap[this];
-}
-
-MSceneWindow::~MSceneWindow()
-{
-    gVisibleSceneWindows.removeAll(this);
-}
-
 void Ut_StatusIndicatorMenuWindow::init()
 {
     gStatusIndicatorMenuStub->stubReset();
-    gVisibleSceneWindows.clear();
-    gAppearSceneWindowList.clear();
     gLanguage = "en";
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
 #ifdef HAVE_QMSYSTEM
@@ -169,15 +140,13 @@ void Ut_StatusIndicatorMenuWindow::testWindowType()
 
 void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuIsClosed()
 {
-    gVisibleSceneWindows.append(statusIndicatorMenuWindow->menuWidget);
-    gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget] = MSceneWindow::Appeared;
+    statusIndicatorMenuWindow->displayActive();
 
     connect(this, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive()));
     emit displayExited();
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
 
-    QCOMPARE(gVisibleSceneWindows.count(), 0);
-    QCOMPARE(gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget], MSceneWindow::Disappeared);
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangesThenMenuWidgetIsResetted()
@@ -204,14 +173,39 @@ void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangeEventWithoutLanguageCha
 
 void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuAppearsAfterEnteringDisplay()
 {
-    QVERIFY(!gVisibleSceneWindows.count());
-    QVERIFY(!gAppearSceneWindowList.count());
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Disappeared);
+    statusIndicatorMenuWindow->displayActive();
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Appeared);
+}
 
+
+void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped()
+{
     statusIndicatorMenuWindow->displayActive();
 
-    QCOMPARE(gVisibleSceneWindows.count(), 1);
-    QCOMPARE(gAppearSceneWindowList.count(), 1);
-    QCOMPARE(gAppearSceneWindowList.first(), statusIndicatorMenuWindow->menuWidget);
+    statusIndicatorMenuWindow->statusBar->setGeometry(QRectF(0.0, 0.0, 800.0, 30.0));
+
+    QRectF statusBarGeo(statusIndicatorMenuWindow->mapFromScene(statusIndicatorMenuWindow->statusBar->geometry()).boundingRect());
+
+    QPoint inside(statusBarGeo.x()+statusBarGeo.width()/2,
+                  statusBarGeo.y()+statusBarGeo.height()/2);
+
+    QMouseEvent pressInside(QEvent::MouseButtonPress,
+                             inside,
+                             Qt::LeftButton,
+                             Qt::MouseButtons(Qt::LeftButton),
+                             Qt::KeyboardModifiers(Qt::NoModifier));
+
+    QMouseEvent releaseInside(QEvent::MouseButtonRelease,
+                              inside,
+                              Qt::LeftButton,
+                              Qt::MouseButtons(Qt::LeftButton),
+                              Qt::KeyboardModifiers(Qt::NoModifier));
+
+    statusIndicatorMenuWindow->mousePressEvent(&pressInside);
+    statusIndicatorMenuWindow->mouseReleaseEvent(&releaseInside);
+
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
 #ifdef HAVE_QMSYSTEM

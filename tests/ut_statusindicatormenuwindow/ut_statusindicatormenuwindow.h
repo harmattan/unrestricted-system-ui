@@ -56,6 +56,7 @@ private slots:
     void testWhenLanguageChangesThenMenuWidgetIsResetted();
     void testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted();
     void testStatusIndicatorMenuAppearsAfterEnteringDisplay();
+    void testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped();
 
 #ifdef HAVE_QMSYSTEM
     void testQmLocksSignalConnectionWhenDeviceLocked();
