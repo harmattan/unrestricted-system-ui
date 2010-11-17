@@ -1,9 +1,8 @@
-system-ui (0.18.10~1) unstable; urgency=low
+system-ui (0.18.10-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#203111 - Sysuid dies uncontrollable when initctl stop xsession/sysuid is used
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 17 Nov 2010 12:10:37 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 17 Nov 2010 17:49:05 +0200
 
 system-ui (0.18.9-1) unstable; urgency=low
 
