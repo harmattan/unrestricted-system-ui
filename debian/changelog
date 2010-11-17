@@ -1,9 +1,8 @@
-system-ui (0.18.9~1) unstable; urgency=low
+system-ui (0.18.9-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#205260 - Banner background is transparent so it makes the banner text very hard to see
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 16 Nov 2010 18:34:00 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 17 Nov 2010 12:10:00 +0200
 
 system-ui (0.18.8-1) unstable; urgency=low
 
