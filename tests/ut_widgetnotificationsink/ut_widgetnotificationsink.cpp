@@ -355,8 +355,8 @@ void Ut_WidgetNotificationSink::testInfoBannerCreationWithSystemEvent()
     QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::SystemEvent, 1020)));
     QCOMPARE(infoBanner->objectName(), QString("SystemBanner"));
     // Check that title is not set for system event
-    QCOMPARE(infoBanner->title(), QString(""));
-    QCOMPARE(infoBanner->subtitle(), QString("subtitle1"));
+    QCOMPARE(infoBanner->title(), QString("subtitle1"));
+    QCOMPARE(infoBanner->subtitle(), QString(""));
     QCOMPARE(infoBanner->iconID(), QString("buttonicon1"));
     QCOMPARE(infoBanner->actions().count(), 0);
 }

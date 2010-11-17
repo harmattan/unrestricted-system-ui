@@ -88,8 +88,15 @@ void WidgetNotificationSink::updateTitles(MBanner *infoBanner)
         infoBanner->setSubtitle(QString());
     } else {
         // Privacy is not honored or privacy mode is disabled: use the given text in the banner
-        infoBanner->setTitle(infoBanner->objectName() == "EventBanner" ? infoBanner->property(TITLE_TEXT_PROPERTY).toString() : QString());
-        infoBanner->setSubtitle(infoBanner->property(SUBTITLE_TEXT_PROPERTY).toString());
+        if (infoBanner->objectName() == "EventBanner") {
+            // Event banner: use both title and subtitle text
+            infoBanner->setTitle(infoBanner->property(TITLE_TEXT_PROPERTY).toString());
+            infoBanner->setSubtitle(infoBanner->property(SUBTITLE_TEXT_PROPERTY).toString());
+        } else {
+            // System banner: use subtitle text only
+            infoBanner->setTitle(infoBanner->property(SUBTITLE_TEXT_PROPERTY).toString());
+            infoBanner->setSubtitle(QString());
+        }
     }
 }
 
