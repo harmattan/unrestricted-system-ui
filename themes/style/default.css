@@ -5,16 +5,10 @@
 
 StatusIndicatorMenuStyle {
     padding-top: 2.8mm;
+    background-color: #000000;
+    background-opacity: 0.4;
 
     notification-area: true;
-}
-
-StatusIndicatorMenu MWidgetSlideAnimationStyle#In {
-    origin: "top";
-}
-
-StatusIndicatorMenu MWidgetSlideAnimationStyle#Out {
-    origin: "top";
 }
 
 MWidgetStyle#StatusIndicatorMenuExtensionAreaWidget {

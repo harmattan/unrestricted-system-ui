@@ -55,7 +55,6 @@ private slots:
     void testWhenFullScreenWindowComesOnTopStatusMenuIsClosed();
     void testWhenLanguageChangesThenMenuWidgetIsResetted();
     void testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted();
-    void testStatusIndicatorMenuAppearsAfterEnteringDisplay();
 
 #ifdef HAVE_QMSYSTEM
     void testQmLocksSignalConnectionWhenDeviceLocked();

@@ -23,9 +23,8 @@
 const QString StatusIndicatorMenu::CONTROL_PANEL_SERVICE_NAME = "com.nokia.DuiControlPanel";
 
 StatusIndicatorMenu::StatusIndicatorMenu(QGraphicsItem *parent) :
-    MApplicationMenu()
+    MSceneWindow(parent)
 {
-    Q_UNUSED(parent);
 }
 
 StatusIndicatorMenu::~StatusIndicatorMenu()

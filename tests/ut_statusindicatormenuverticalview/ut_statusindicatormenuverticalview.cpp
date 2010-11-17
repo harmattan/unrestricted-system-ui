@@ -228,4 +228,20 @@ void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheContro
     QCOMPARE(g_visibleSceneWindows.count(), 0);
 }
 
+void Ut_StatusIndicatorMenuVerticalView::testMousePressBelowSettingsButtonHidesMenu()
+{
+    QSignalSpy spy(controller, SIGNAL(hideRequested()));
+    QGraphicsSceneMouseEvent event;
+
+    // Check that clicking above the settings button does nothing
+    event.setPos(QPointF(0, m_subject->settingsButton->geometry().y() - 1));
+    m_subject->mousePressEvent(&event);
+    QCOMPARE(spy.count(), 0);
+
+    // Check that clicking below the settings button does nothing
+    event.setPos(QPointF(0, m_subject->settingsButton->geometry().y() + m_subject->settingsButton->geometry().height()));
+    m_subject->mousePressEvent(&event);
+    QCOMPARE(spy.count(), 1);
+}
+
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuVerticalView)

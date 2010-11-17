@@ -62,34 +62,30 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
 StatusIndicatorMenuWindow::~StatusIndicatorMenuWindow()
 {
-    delete menuWidget;
 }
 
 void StatusIndicatorMenuWindow::resetMenuWidget()
 {
-    delete menuWidget;
+    if (menuWidget) {
+        sceneManager()->dismissSceneWindowNow(menuWidget);
+    }
 
     menuWidget = new StatusIndicatorMenu();
+    // The scene takes ownership of menuWidget
+    sceneManager()->appearSceneWindowNow(menuWidget, MSceneWindow::DestroyWhenDismissed);
 
     connect(menuWidget, SIGNAL(showRequested()), this, SLOT(makeVisible()));
-    connect(menuWidget, SIGNAL(hideRequested()), menuWidget, SLOT(disappear()));
-    connect(menuWidget, SIGNAL(disappeared()), this, SLOT(hide()));
+    connect(menuWidget, SIGNAL(hideRequested()), this, SLOT(hide()));
 }
 
 void StatusIndicatorMenuWindow::displayActive()
 {
     emit visibilityChanged(true);
-    sceneManager()->appearSceneWindow(menuWidget);
 }
 
 void StatusIndicatorMenuWindow::displayInActive()
 {
     emit visibilityChanged(false);
-
-    if (menuWidget && menuWidget->sceneWindowState() != MSceneWindow::Disappeared) {
-        sceneManager()->disappearSceneWindowNow(menuWidget);
-    }
-
     // Hide the window when the it is obscured by another view
     // Note: Dialogs and notifications won't close it anyways,
     // as they are not supposed to be full screen and don't completely
@@ -104,13 +100,13 @@ void StatusIndicatorMenuWindow::makeVisible()
         return;
     }
 #endif
-
-    if (!isOnDisplay()) {
+    if (!isVisible()) {
         // If status indicator window is not visible, then show it
         show();
-        // Raise it on top
-        raise();
     }
+
+    // Raise it on top
+    raise();
 }
 
 #ifdef HAVE_QMSYSTEM
