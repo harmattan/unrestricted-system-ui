@@ -58,11 +58,6 @@ public:
      */
     virtual ~StatusIndicatorMenuVerticalView();
 
-protected:
-    //! \reimp
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    //! \reimp_end
-
 private:
     //! Controller for the view
     StatusIndicatorMenu *controller;

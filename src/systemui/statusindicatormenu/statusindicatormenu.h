@@ -20,7 +20,7 @@
 #ifndef STATUSINDICATORMENU_H_
 #define STATUSINDICATORMENU_H_
 
-#include <MSceneWindow>
+#include <MApplicationMenu>
 #include "mstatusindicatormenuextensioninterface.h"
 
 class StatusIndicatorMenuWindow;
@@ -28,7 +28,7 @@ class StatusIndicatorMenuWindow;
 /*!
  * The StatusIndicatorMenu shows the status indicator menu extensions
  */
-class StatusIndicatorMenu : public MSceneWindow, public MStatusIndicatorMenuInterface
+class StatusIndicatorMenu : public MApplicationMenu, public MStatusIndicatorMenuInterface
 {
     Q_OBJECT
 

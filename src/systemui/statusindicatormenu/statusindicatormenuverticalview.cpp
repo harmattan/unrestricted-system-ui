@@ -87,14 +87,4 @@ StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
     delete containerWidget;
 }
 
-void StatusIndicatorMenuVerticalView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    MSceneWindowView::mousePressEvent(event);
-
-    // Close the menu if the Y position of the event is bigger than the bottom edge of the settings button
-    if (controller->mapToItem(settingsButton, event->pos()).y() >= settingsButton->geometry().height()) {
-        controller->hideStatusIndicatorMenu();
-    }
-}
-
 M_REGISTER_VIEW_NEW(StatusIndicatorMenuVerticalView, StatusIndicatorMenu)

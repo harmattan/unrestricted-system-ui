@@ -19,11 +19,13 @@ class StatusIndicatorMenuStub : public StubBase {
 
 // 2. IMPLEMENT STUB
 void StatusIndicatorMenuStub::StatusIndicatorMenuConstructor() {
-
+  stubMethodEntered("StatusIndicatorMenuConstructor");
 }
+
 void StatusIndicatorMenuStub::StatusIndicatorMenuDestructor() {
-
+  stubMethodEntered("StatusIndicatorMenuDestructor");
 }
+
 void StatusIndicatorMenuStub::showStatusIndicatorMenu() {
   stubMethodEntered("showStatusIndicatorMenu");
 }

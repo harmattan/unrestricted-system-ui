@@ -39,6 +39,11 @@ void MWindow::setVisible(bool visible)
     mWindowSetVisible.second = visible;
 }
 
+bool MWindow::isOnDisplay() const
+{
+    return testAttribute(Qt::WA_WState_Visible);
+}
+
 QWidget *qWidgetRaise = NULL;
 void QWidget::raise()
 {
@@ -51,9 +56,39 @@ QString MLocale::language() const {
     return gLanguage;
 }
 
+QList<MSceneWindow*> gAppearSceneWindowList;
+QList<MSceneWindow*> gVisibleSceneWindows;
+QMap<const MSceneWindow*, MSceneWindow::SceneWindowState> gSceneWindowStateMap;
+
+void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::DeletionPolicy /*policy*/)
+{
+    gAppearSceneWindowList.append(window);
+    window->setVisible(true);
+    gVisibleSceneWindows.append(window);
+}
+
+void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
+{
+    sceneWindow->setVisible(false);
+    gVisibleSceneWindows.removeAll(sceneWindow);
+    gSceneWindowStateMap[sceneWindow] = MSceneWindow::Disappeared;
+}
+
+MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
+{
+    return gSceneWindowStateMap[this];
+}
+
+MSceneWindow::~MSceneWindow()
+{
+    gVisibleSceneWindows.removeAll(this);
+}
 
 void Ut_StatusIndicatorMenuWindow::init()
 {
+    gStatusIndicatorMenuStub->stubReset();
+    gVisibleSceneWindows.clear();
+    gAppearSceneWindowList.clear();
     gLanguage = "en";
     statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
 #ifdef HAVE_QMSYSTEM
@@ -84,9 +119,13 @@ void Ut_StatusIndicatorMenuWindow::cleanupTestCase()
 void Ut_StatusIndicatorMenuWindow::testInitialization()
 {
     QVERIFY(statusIndicatorMenuWindow->menuWidget);
-    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Appeared);
+
+    QVERIFY(disconnect(statusIndicatorMenuWindow, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive())));
+    QVERIFY(disconnect(statusIndicatorMenuWindow, SIGNAL(displayEntered()), statusIndicatorMenuWindow, SLOT(displayActive())));
+
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(showRequested()), statusIndicatorMenuWindow, SLOT(makeVisible())));
-    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow, SLOT(hide())));
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow->menuWidget, SLOT(disappear())));
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(disappeared()), statusIndicatorMenuWindow, SLOT(hide())));
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
@@ -98,7 +137,7 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
 
     QTest::newRow("Device locked") << true << false << false << false;
     QTest::newRow("Window not visible") << false << false << true << true;
-    QTest::newRow("Window already visible") << false << true << false << true;
+    QTest::newRow("Window already visible") << false << true << false << false;
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible()
@@ -130,31 +169,49 @@ void Ut_StatusIndicatorMenuWindow::testWindowType()
 
 void Ut_StatusIndicatorMenuWindow::testWhenFullScreenWindowComesOnTopStatusMenuIsClosed()
 {
+    gVisibleSceneWindows.append(statusIndicatorMenuWindow->menuWidget);
+    gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget] = MSceneWindow::Appeared;
+
     connect(this, SIGNAL(displayExited()), statusIndicatorMenuWindow, SLOT(displayInActive()));
     emit displayExited();
     QVERIFY(mWindowSetVisible.first == statusIndicatorMenuWindow && !mWindowSetVisible.second);
+
+    QCOMPARE(gVisibleSceneWindows.count(), 0);
+    QCOMPARE(gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget], MSceneWindow::Disappeared);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangesThenMenuWidgetIsResetted()
 {
-    StatusIndicatorMenu *oldMenuWidget = statusIndicatorMenuWindow->menuWidget;
-
     gLanguage = "de";
+
     QEvent languageChangeEvent(QEvent::LanguageChange);
     statusIndicatorMenuWindow->event(&languageChangeEvent);
 
-    QVERIFY(oldMenuWidget != statusIndicatorMenuWindow->menuWidget);
+    QCOMPARE(gStatusIndicatorMenuStub->stubCallCount("StatusIndicatorMenuConstructor"), 2);
+    QCOMPARE(gStatusIndicatorMenuStub->stubCallCount("StatusIndicatorMenuDestructor"), 1);
+
     testInitialization();
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted()
 {
-    StatusIndicatorMenu *oldMenuWidget = statusIndicatorMenuWindow->menuWidget;
-
     QEvent languageChangeEvent(QEvent::LanguageChange);
     statusIndicatorMenuWindow->event(&languageChangeEvent);
 
-    QVERIFY(oldMenuWidget == statusIndicatorMenuWindow->menuWidget);
+    QCOMPARE(gStatusIndicatorMenuStub->stubCallCount("StatusIndicatorMenuConstructor"), 1);
+    QCOMPARE(gStatusIndicatorMenuStub->stubCallCount("StatusIndicatorMenuDestructor"), 0);
+}
+
+void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuAppearsAfterEnteringDisplay()
+{
+    QVERIFY(!gVisibleSceneWindows.count());
+    QVERIFY(!gAppearSceneWindowList.count());
+
+    statusIndicatorMenuWindow->displayActive();
+
+    QCOMPARE(gVisibleSceneWindows.count(), 1);
+    QCOMPARE(gAppearSceneWindowList.count(), 1);
+    QCOMPARE(gAppearSceneWindowList.first(), statusIndicatorMenuWindow->menuWidget);
 }
 
 #ifdef HAVE_QMSYSTEM
