@@ -1,3 +1,9 @@
+system-ui (0.18.12~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 18 Nov 2010 17:28:24 +0200
+
 system-ui (0.18.11-1) unstable; urgency=low
 
   * Fixes: NB#204881 - Status menu doesn't close from sides in landscape
