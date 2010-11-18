@@ -43,6 +43,7 @@
 #include "profilestatusindicator_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
+#include "sysuid_stub.h"
 #include "x11wrapper.h"
 #include "notificationsink_stub.h"
 #include "notifiernotificationsink_stub.h"
@@ -172,11 +173,14 @@ void Ut_LockScreenStatusAreaView::initTestCase()
     int argc = 1;
     static char *app_name = (char *)"./ut_lockscreenstatusareaview";
     app = new MApplication(argc, &app_name);
+    notifierNotificationSink = new NotifierNotificationSink;
+    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierNotificationSink);
 }
 
 // Called after the last testfunction was executed
 void Ut_LockScreenStatusAreaView::cleanupTestCase()
 {
+    delete notifierNotificationSink;
     delete app;
 }
 
@@ -202,6 +206,11 @@ void Ut_LockScreenStatusAreaView::cleanup()
     xChangePropertyMode = 0;
     xChangePropertyNElements = 0;
     mWidgetSceneManager = NULL;
+}
+
+void Ut_LockScreenStatusAreaView::testSignalConnections()
+{
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->notifierIndicator, SLOT(setActive(bool))));
 }
 
 void Ut_LockScreenStatusAreaView::testStatusBarGeometryProperty()

@@ -24,7 +24,6 @@
 #include "statusareastyle.h"
 #include "statusareamodel.h"
 #include "contextframeworkcontext.h"
-#include "notifiernotificationsink.h"
 
 class Clock;
 class StatusArea;
@@ -115,9 +114,6 @@ private:
     StatusIndicator *landscapeCallIndicator;
     StatusIndicator *portraitCallIndicator;
 
-    //! Notifier notification sink for the indicators
-    NotifierNotificationSink notifierNotificationSink;
-
     //! Notification notifier
     StatusIndicator *landscapeNotificationIndicator;
     StatusIndicator *portraitNotificationIndicator;
@@ -138,6 +134,10 @@ private:
 
     //! Set up class for functional testing
     void setupTestability();
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusAreaView;
+#endif
 };
 
 #endif // STATUSAREAVIEW_H

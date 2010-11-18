@@ -22,10 +22,9 @@
 #include <QObject>
 
 class MApplication;
-class MWindow;
+class NotifierNotificationSink;
 class LockScreenStatusAreaView;
 class StatusArea;
-class MButton;
 
 class Ut_LockScreenStatusAreaView : public QObject
 {
@@ -37,6 +36,7 @@ private slots:
     void init();
     void cleanup();
 
+    void testSignalConnections();
     void testSetGeometryConnectsOrientationChangeSignal();
     void testOrientationChangeUpdatesStatusBarGeometry();
 
@@ -44,6 +44,7 @@ private:
     void testStatusBarGeometryProperty();
 
     MApplication *app;
+    NotifierNotificationSink *notifierNotificationSink;
     LockScreenStatusAreaView *m_subject;
     StatusArea *statusArea;
 };

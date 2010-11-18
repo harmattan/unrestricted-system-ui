@@ -22,7 +22,9 @@
 #include "statusindicator.h"
 #include "contextframeworkcontext.h"
 #include "x11wrapper.h"
-#include "notificationstatusindicator.h" 
+#include "notificationstatusindicator.h"
+#include "notifiernotificationsink.h"
+#include "sysuid.h"
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
 #include <MViewCreator>
@@ -42,12 +44,15 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
-    notifierIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
+    notifierIndicator(new NotificationStatusIndicator(controller)),
     transferStatusIndicator(new TransferStatusIndicator(controller)),
     orientationChangeSignalConnected(false)
 {
     // Connect related phone network indicators
     connect(phoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+
+    // Connect notification signals
+    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), notifierIndicator, SLOT(setActive(bool)));
 
     // Put indicators into the layout
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);

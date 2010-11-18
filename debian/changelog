@@ -1,6 +1,7 @@
 system-ui (0.18.11~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#197134 - Lankku/Dali call/SMS/IM indication LED status not cleared
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 17 Nov 2010 17:50:11 +0200
 

@@ -32,6 +32,7 @@ class SysuidStub : public StubBase {
   virtual Sysuid * sysuid();
   virtual NotificationManager & notificationManager();
   virtual MCompositorNotificationSink & compositorNotificationSink();
+  virtual NotifierNotificationSink & notifierNotificationSink();
   virtual void loadTranslations();
   virtual void applyUseMode();
 }; 
@@ -61,6 +62,11 @@ MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
   return *stubReturnValue<MCompositorNotificationSink *>("compositorNotificationSink");
 }
 
+NotifierNotificationSink & SysuidStub::notifierNotificationSink() {
+  stubMethodEntered("notifierNotificationSink");
+  return *stubReturnValue<NotifierNotificationSink *>("notifierNotificationSink");
+}
+
 void SysuidStub::loadTranslations() {
   stubMethodEntered("loadTranslations");
 }
@@ -80,7 +86,7 @@ Sysuid::Sysuid(QObject* parent) :
     batteryBusinessLogic (0), shutdownBusinessLogic (0),
     usbUi (0), statusAreaRenderer (0), statusIndicatorMenuWindow (0), notificationManager_ (0),
     mCompositorNotificationSink (0), ngfNotificationSink (0),
-    unlockNotificationSink_ (0), sysUidRequest (0),
+    unlockNotificationSink_ (0), notifierNotificationSink_(0), sysUidRequest (0),
     volumeBarWindow (0)
 {
   gSysuidStub->SysuidConstructor(parent);
@@ -100,6 +106,10 @@ NotificationManager & Sysuid::notificationManager() {
 
 MCompositorNotificationSink & Sysuid::compositorNotificationSink() {
   return gSysuidStub->compositorNotificationSink();
+}
+
+NotifierNotificationSink & Sysuid::notifierNotificationSink() {
+  return gSysuidStub->notifierNotificationSink();
 }
 
 void Sysuid::loadTranslations() {

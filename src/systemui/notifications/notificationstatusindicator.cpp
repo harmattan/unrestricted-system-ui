@@ -20,29 +20,11 @@
 #include "notificationstatusindicator.h"
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
-#include "inputmethodstatusindicatoradaptor.h"
-#include "applicationcontext.h"
-#include "sysuid.h"
-#include "notificationmanager.h"
-#include "notifiernotificationsink.h"
-#include "mcompositornotificationsink.h"
 
-NotificationStatusIndicator::NotificationStatusIndicator(NotifierNotificationSink *notifierSink, QGraphicsItem *parent) :
-    StatusIndicator(parent),
-    notifierSink(notifierSink)
+NotificationStatusIndicator::NotificationStatusIndicator(QGraphicsItem *parent) :
+    StatusIndicator(parent)
 {
     setObjectName(QString(metaObject()->className()));
-
-    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
-
-    // Connect notification signals
-    if (notifierSink != NULL) {
-        connect(&Sysuid::instance()->compositorNotificationSink(), SIGNAL(notificationAdded(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
-        connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierSink, SLOT(removeNotification(uint)));
-        connect(notifierSink, SIGNAL(notifierSinkActive(bool)), this, SLOT(setActive(bool)));
-        connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notifierSink, SLOT(addNotification(const Notification &)));
-        connect(notifierSink, SIGNAL(notifierSinkActive(bool)), notificationManager, SLOT(removeUnseenFlags(bool)));
-    }
 }
 
 NotificationStatusIndicator::~NotificationStatusIndicator()

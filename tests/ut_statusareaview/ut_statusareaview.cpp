@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_statusareaview.h"
 #include "statusareaview.h"
 #include "statusarea.h"
@@ -41,32 +42,25 @@
 #include "notificationstatusindicator_stub.h"
 #include "notificationsink_stub.h"
 #include "notifiernotificationsink_stub.h"
+#include "sysuid_stub.h"
 #include "x11wrapper_stub.h"
-#include <MSceneWindow>
-
-int Ut_StatusAreaView::windowExecutionCount;
-int Ut_StatusAreaView::windowRejectionCount;
-
-// SceneWindow stubs
-void MSceneWindow::appear(MSceneWindow::DeletionPolicy)
-{
-    Ut_StatusAreaView::windowExecutionCount++;
-}
-
-void MSceneWindow::disappear()
-{
-    Ut_StatusAreaView::windowRejectionCount++;
-}
+#include <MApplication>
 
 // Called before the first testfunction is executed
 void Ut_StatusAreaView::initTestCase()
 {
+    int argc = 1;
+    static char *app_name = (char *)"./ut_lockscreenstatusareaview";
+    app = new MApplication(argc, &app_name);
+    notifierNotificationSink = new NotifierNotificationSink;
+    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierNotificationSink);
 }
 
 // Called after the last testfunction was executed
 void Ut_StatusAreaView::cleanupTestCase()
 {
-
+    delete notifierNotificationSink;
+    delete app;
 }
 
 // Called before each testfunction is executed
@@ -82,6 +76,12 @@ void Ut_StatusAreaView::cleanup()
 {
     delete statusArea;
     statusArea = NULL;
+}
+
+void Ut_StatusAreaView::testSignalConnections()
+{
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->landscapeNotificationIndicator, SLOT(setActive(bool))));
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->portraitNotificationIndicator, SLOT(setActive(bool))));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaView)

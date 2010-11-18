@@ -23,6 +23,8 @@
 #include "clock.h"
 #include "contextframeworkcontext.h"
 #include "notificationstatusindicator.h"
+#include "notifiernotificationsink.h"
+#include "sysuid.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
 #include <QDBusConnection>
@@ -57,8 +59,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
-    landscapeNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
-    portraitNotificationIndicator(new NotificationStatusIndicator(&notifierNotificationSink, controller)),
+    landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
+    portraitNotificationIndicator(new NotificationStatusIndicator(controller)),
     landscapeTransferStatusIndicator(new TransferStatusIndicator(controller)),
     portraitTransferStatusIndicator(new TransferStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
@@ -102,6 +104,10 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     // Set different style names to PhoneNetworkStatusIndicator in landscape and portrait
     landscapePhoneNetworkIndicator->setStyleName(QString(landscapePhoneNetworkIndicator->metaObject()->className()) + "Landscape");
     portraitPhoneNetworkIndicator->setStyleName(QString(portraitPhoneNetworkIndicator->metaObject()->className()) + "Portrait");
+
+    // Connect notification signals
+    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), landscapeNotificationIndicator, SLOT(setActive(bool)));
+    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), portraitNotificationIndicator, SLOT(setActive(bool)));
 
     // Set up the class for functional testing
     setupTestability();

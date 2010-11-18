@@ -38,7 +38,6 @@ private:
     NotificationStatusIndicator *m_subject;
     NotificationManager *mgr;
     MCompositorNotificationSink *compositorSink;
-    NotifierNotificationSink notifierNotificationSink;
 
 signals:
     void notifierSinkActive(bool);
@@ -58,8 +57,6 @@ private slots:
 
     // Tests active state of status indicator
     void testSetActive();
-    // Test that notification manager is connected to notifier sink
-    void testConnections();
 };
 
 #endif //_UT_NOTIFICATIONSTATUSINDICATOR_

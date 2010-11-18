@@ -33,9 +33,7 @@ class NotifierNotificationSinkStub : public StubBase {
   virtual void removeGroup(uint groupId);
   virtual void addNotification(const Notification &notification);
   virtual void removeNotification(uint notificationId);
-  virtual void enableNotifierSink();
-  virtual void disableNotifierSink();
-  virtual void setNotifierSinkEnabled(bool active);
+  virtual void setNotifierEnabled(bool active);
   virtual void updateStatusOfLedFeedback();
 
   void clearSink();
@@ -86,19 +84,11 @@ void NotifierNotificationSinkStub::disableNotificationAdditions(bool disable)
   stubMethodEntered("disableNotificationAdditions", params);
 }
 
-void NotifierNotificationSinkStub::enableNotifierSink() {
-  stubMethodEntered("enableNotifierSink");
-}
-
-void NotifierNotificationSinkStub::disableNotifierSink() {
-  stubMethodEntered("disableNotifierSink");
-}
-
-void NotifierNotificationSinkStub::setNotifierSinkEnabled(bool enabled)
+void NotifierNotificationSinkStub::setNotifierEnabled(bool enabled)
 {
   QList<ParameterBase*> params;
   params.append( new Parameter<bool>(enabled));
-  stubMethodEntered("setNotifierSinkEnabled", params);
+  stubMethodEntered("setNotifierEnabled", params);
 }
 
 void NotifierNotificationSinkStub::updateStatusOfLedFeedback()
@@ -137,19 +127,9 @@ void NotifierNotificationSink::disableNotificationAdditions(bool disable)
   gNotifierNotificationSinkStub->disableNotificationAdditions(disable);
 }
 
-void NotifierNotificationSink::enableNotifierSink()
+void NotifierNotificationSink::setNotifierEnabled(bool enabled)
 {
-    gNotifierNotificationSinkStub->setNotifierSinkEnabled(true);
-}
-
-void NotifierNotificationSink::disableNotifierSink()
-{
-    gNotifierNotificationSinkStub->setNotifierSinkEnabled(false);
-}
-
-void NotifierNotificationSink::setNotifierSinkEnabled(bool enabled)
-{
-    gNotifierNotificationSinkStub->setNotifierSinkEnabled(enabled);
+    gNotifierNotificationSinkStub->setNotifierEnabled(enabled);
 }
 
 void NotifierNotificationSink::updateStatusOfLedFeedback()

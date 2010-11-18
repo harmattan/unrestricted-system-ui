@@ -9,13 +9,13 @@
 // FIXME - stubgen is not yet finished
 class NotificationStatusIndicatorStub : public StubBase {
   public:
-  virtual void NotificationStatusIndicatorConstructor(NotifierNotificationSink *notifierSink, QGraphicsItem *parent);
+  virtual void NotificationStatusIndicatorConstructor(QGraphicsItem *parent);
   virtual void NotificationStatusIndicatorDestructor();
   virtual void setActive(bool active);
 }; 
 
 // 2. IMPLEMENT STUB
-void NotificationStatusIndicatorStub::NotificationStatusIndicatorConstructor(NotifierNotificationSink *, QGraphicsItem *) {
+void NotificationStatusIndicatorStub::NotificationStatusIndicatorConstructor(QGraphicsItem *) {
 }
 void NotificationStatusIndicatorStub::NotificationStatusIndicatorDestructor() {
 
@@ -34,9 +34,9 @@ NotificationStatusIndicatorStub* gNotificationStatusIndicatorStub = &gDefaultNot
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-NotificationStatusIndicator::NotificationStatusIndicator(NotifierNotificationSink *notifierSink, QGraphicsItem *parent)
+NotificationStatusIndicator::NotificationStatusIndicator(QGraphicsItem *parent)
 {
-  gNotificationStatusIndicatorStub->NotificationStatusIndicatorConstructor(notifierSink, parent);
+  gNotificationStatusIndicatorStub->NotificationStatusIndicatorConstructor(parent);
 }
 
 NotificationStatusIndicator::~NotificationStatusIndicator() {

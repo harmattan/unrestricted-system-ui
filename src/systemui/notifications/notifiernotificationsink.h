@@ -81,38 +81,26 @@ private slots:
     void updateStatusOfLedFeedback();
 
 private:
-
-    //! Enables notifier sink
-    void enableNotifierSink();
-
-    //! Disables notifier sink
-    void disableNotifierSink();
-
     /*!
-     * Sets notifier sink enabled or disabled.
+     * Sets notifier enabled or disabled.
      * Emits notifierSinkActive signal and updates led feedback state.
      */
-    void setNotifierSinkEnabled(bool active);
+    void setNotifierEnabled(bool active);
+
+    //! Checks if the notification is still unseen.
+    static bool isUnseen(const Notification &notification);
 
     //! The id for notifier NGF
     static const QString NOTIFIER_NGF_ID;
 
-    /*!
-     * The NGF Adapter
-     */
-    NGFAdapter* ngfAdapter;
-
-    //! Current notification count
-    uint notificationCount;
+    //! The NGF Adapter
+    NGFAdapter *ngfAdapter;
 
     //! Whether adding of notifications is disabled
     bool additionsDisabled;
 
-    //! Checks if the notification is still unseen.
-    bool isUnseen(const Notification &notification);
-
-    //! list of system notifications which have arrived here.
-    QSet<uint> systemNotificationIds;
+    //! A set of application notifications which have arrived here
+    QSet<uint> applicationEventIds;
 
     //! The event id of the currently playing NGF feedback
     uint ngfEventId;

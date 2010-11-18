@@ -48,15 +48,11 @@ private slots:
     void testClearSink();
     void testDisablingNotificationAdditions();
     void testSeenNotificationAddedThenNotifierNotUpdated();
-    void testWhenAddSystemNotificationNotificationIdIsStored();
-    void testWhenRemoveSystemNotificationNotificationIdIsRemoved();
+    void testWhenAddSystemNotificationNotificationIdIsNotStored();
     void testThatNotifierIsActiveOnlyWhenThereIsNotifications();
 #ifdef HAVE_QMSYSTEM
-    void testConnectionsInConstruction();
-    void testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive_data();
-    void testThatLEDFeedbackIsOnlyOnWhenDisplayIsOffAndNotierIsActive();
-    void testThatLEDFeedbackIsActivatedWhenDisplayIsOffAndNotifierIsActivated();
-    void testThatLEDFeedbackIsDisabledWhenDisplayIsOnAndNotifierIsInactive();
+    void testSignalConnections();
+    void testLedFeedbackStatus();
 #endif
 
 signals:

@@ -37,6 +37,7 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "unlocknotificationsink.h"
+#include "notifiernotificationsink.h"
 #include "volumebarwindow.h"
 #include "closeeventeater.h"
 #include <QX11Info>
@@ -61,6 +62,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     mCompositorNotificationSink = new MCompositorNotificationSink;
     ngfNotificationSink = new NGFNotificationSink;
     unlockNotificationSink_ = new UnlockNotificationSink;
+    notifierNotificationSink_ = new NotifierNotificationSink;
 
     // D-Bus registration and stuff
     new ShutdownBusinessLogicAdaptor(this, shutdownBusinessLogic);
@@ -94,20 +96,26 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
 
     // Connect the notification signals for the compositor notification sink
-    connect (notificationManager_, SIGNAL (notificationUpdated (const Notification &)),
-            mCompositorNotificationSink, SLOT (addNotification (const Notification &)));
+    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
+            mCompositorNotificationSink, SLOT(addNotification (const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), mCompositorNotificationSink, SLOT(removeNotification(uint)));
     connect(mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager_, SLOT(removeNotification(uint)));
 
     // Connect the notification signals for the feedback notification sink
-    connect (notificationManager_, SIGNAL (notificationUpdated (const Notification &)),
-            ngfNotificationSink, SLOT (addNotification (const Notification &)));
+    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
+            ngfNotificationSink, SLOT(addNotification (const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
 
-    // Connect the notification signals for the unlock-screen notification sink
-    connect (notificationManager_, SIGNAL (notificationUpdated (const Notification &)),
-            unlockNotificationSink_, SLOT (addNotification (const Notification &)));
+    // Connect the notification signals for the unlock screen notification sink
+    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
+            unlockNotificationSink_, SLOT(addNotification (const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), unlockNotificationSink_, SLOT(removeNotification(uint)));
+
+    // Connect the notification signals for the notifier notification sink
+    connect(mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), notifierNotificationSink_, SLOT(removeNotification(uint)));
+    connect(notificationManager_, SIGNAL(notificationRestored(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), notificationManager_, SLOT(removeUnseenFlags(bool)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
@@ -125,7 +133,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     sysUidRequest = new SysUidRequest;
 
     // Connect the unlock-screen notification sink to LockScreenBusinessLogic
-    if (sysUidRequest->lockScreenBusinessLogic() != 0) {
+    if (sysUidRequest->lockScreenBusinessLogic() != NULL) {
         connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), unlockNotificationSink_, SLOT(setLockedState(bool)));
         connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
         connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
@@ -141,6 +149,11 @@ Sysuid::~Sysuid()
     delete sysUidRequest;
     delete volumeBarWindow;
     delete statusIndicatorMenuWindow;
+    delete notifierNotificationSink_;
+    delete unlockNotificationSink_;
+    delete ngfNotificationSink;
+    delete mCompositorNotificationSink;
+    delete notificationManager_;
     instance_ = 0;
 }
 
@@ -182,6 +195,11 @@ MCompositorNotificationSink& Sysuid::compositorNotificationSink()
 UnlockNotificationSink& Sysuid::unlockNotificationSink()
 {
     return *unlockNotificationSink_;
+}
+
+NotifierNotificationSink& Sysuid::notifierNotificationSink()
+{
+    return *notifierNotificationSink_;
 }
 
 void Sysuid::applyUseMode()

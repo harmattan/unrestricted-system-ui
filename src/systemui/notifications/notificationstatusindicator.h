@@ -38,8 +38,11 @@ public:
      * Constructs a NotificationStatusIndicator.
      * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
      */
-    explicit NotificationStatusIndicator(NotifierNotificationSink *notifierSink, QGraphicsItem *parent = NULL);
+    explicit NotificationStatusIndicator(QGraphicsItem *parent = NULL);
 
+    /*!
+     * Destroys the status indicator.
+     */
     virtual ~NotificationStatusIndicator();
 
 private slots:
@@ -47,9 +50,6 @@ private slots:
     void setActive(bool active);
 
 private:
-    //! The notification sink for the notifier
-    NotifierNotificationSink *notifierSink;
-
 #ifdef UNIT_TEST
     friend class Ut_NotificationStatusIndicator;
 #endif

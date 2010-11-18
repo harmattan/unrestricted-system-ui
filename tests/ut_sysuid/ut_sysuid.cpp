@@ -22,7 +22,6 @@
 #include <QDBusConnection>
 #include <MApplication>
 #include <MLocale>
-#include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
 #include "sysuid.h"
@@ -48,6 +47,7 @@
 #include "volumebarwindow_stub.h"
 #include "x11wrapper_stub.h"
 #include "closeeventeater_stub.h"
+#include "notifiernotificationsink_stub.h"
 
 Notification::~Notification()
 {
@@ -173,6 +173,17 @@ void Ut_Sysuid::testSignalConnections()
 {
     QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
     QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->mCompositorNotificationSink, SLOT(setDisabled(bool))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->mCompositorNotificationSink, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->mCompositorNotificationSink, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->ngfNotificationSink, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->ngfNotificationSink, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->unlockNotificationSink_, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->unlockNotificationSink_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager_, SLOT(removeUnseenFlags(bool))));
 }
 
 void Ut_Sysuid::testUseMode()

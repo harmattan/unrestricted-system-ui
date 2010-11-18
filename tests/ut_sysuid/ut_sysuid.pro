@@ -48,6 +48,7 @@ HEADERS += \
     $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
     $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
     $$NOTIFICATIONSRCDIR/ngfnotificationsink.h \
+    $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
     $$NOTIFICATIONSRCDIR/notificationmanager.h \
     $$SRCDIR/lockscreen/unlockarea.h \
     $$SRCDIR/lockscreen/unlocknotifications.h \

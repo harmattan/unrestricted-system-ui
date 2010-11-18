@@ -34,6 +34,7 @@ class NotificationManager;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
 class UnlockNotificationSink;
+class NotifierNotificationSink;
 class SysUidRequest;
 class VolumeBarWindow;
 
@@ -61,11 +62,18 @@ public:
     MCompositorNotificationSink& compositorNotificationSink();
 
     /*!
-     * Returns a reference to the unlock-screen notification sink.
+     * Returns a reference to the unlock screen notification sink.
      *
-     * \return a reference to the unlock-screen notification sink
+     * \return a reference to the unlock screen notification sink
      */
     UnlockNotificationSink& unlockNotificationSink();
+
+    /*!
+     * Returns a reference to the notifier notification sink.
+     *
+     * \return a reference to the notifier notification sink
+     */
+    NotifierNotificationSink& notifierNotificationSink();
 
 signals:
     /*!
@@ -97,14 +105,17 @@ private:
     //! Notification manager
     NotificationManager *notificationManager_;
 
-    //! Compositor notification sink for visualizing the notification outside home
+    //! Notification sink for visualizing the notification outside home
     MCompositorNotificationSink *mCompositorNotificationSink;
 
-    //! Feedback notification sink for presenting the notification as a feedback
+    //! Notification sink for presenting the notification as a feedback
     NGFNotificationSink *ngfNotificationSink;
 
-    //! Unlock screen notification sink for presenting missed events on ui
+    //! Notification sink for presenting missed events on the lock screen
     UnlockNotificationSink *unlockNotificationSink_;
+
+    //! Notification sink for showing unread notifications
+    NotifierNotificationSink *notifierNotificationSink_;
 
     //! The system-bus adaptor class for unlock-screen interface
     SysUidRequest *sysUidRequest;

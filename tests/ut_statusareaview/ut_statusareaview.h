@@ -19,20 +19,16 @@
 #ifndef UT_STATUSAREAVIEW_H
 #define UT_STATUSAREAVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
+class MApplication;
+class NotifierNotificationSink;
 class StatusAreaView;
 class StatusArea;
-class MButton;
 
 class Ut_StatusAreaView : public QObject
 {
     Q_OBJECT
-
-public:
-    static int windowExecutionCount;
-    static int windowRejectionCount;
 
 private slots:
     void initTestCase();
@@ -40,7 +36,11 @@ private slots:
     void init();
     void cleanup();
 
+    void testSignalConnections();
+
 private:
+    MApplication *app;
+    NotifierNotificationSink *notifierNotificationSink;
     StatusAreaView *m_subject;
     StatusArea *statusArea;
 };

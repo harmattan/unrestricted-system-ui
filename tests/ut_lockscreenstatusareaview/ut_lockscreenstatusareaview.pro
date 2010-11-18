@@ -29,6 +29,7 @@ HEADERS += \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$SRCDIR/notifications/notificationstatusindicator.h \
     $$SRCDIR/notifications/notifiernotificationsink.h \
+    $$SRCDIR/sysuid.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)
