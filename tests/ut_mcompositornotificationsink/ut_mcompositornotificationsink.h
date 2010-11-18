@@ -92,6 +92,7 @@ private:
 
 signals:
     void statusIndictorMenuVisibilityChanged(bool);
+    void displayEntered();
 
 private slots:
     // Executed once before every test case
@@ -103,17 +104,17 @@ private slots:
     // Executed once after last test case
     void cleanupTestCase();
 
-    void sendOnDisplayChangeEvent();
-
     // Test window properties
     void testNotificationWindowProperties();
     // Test that notifications can be added
     void testAddNotificationWhenWindowNotOpen();
     void testAddNotificationWhenWindowAlreadyOpen();
+    void testWhenWindowOnDisplayThenNotificationAddedWithoutSignal();
     // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
-    // Test that canceling with an ID cancels the correct notification
+    // Test removing notifications
     void testRemoveNotification();
+    void testWhenRemovingCurrentNotificationThenTimerStopsAndBannerDisappears();
     // Test that notification windows are destroyed after a timeout
     void testTimeout();
     // Test that notifications are NOT added while recording

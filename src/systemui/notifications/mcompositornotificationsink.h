@@ -21,6 +21,7 @@
 #define MCOMPOSITORNOTIFICATIONSINK_H_
 
 #include <QHash>
+#include <QTimer>
 #include "widgetnotificationsink.h"
 
 class MBanner;
@@ -62,9 +63,9 @@ private slots:
     //! \reimp_end
 
     /*!
-     * A slot for timing out the notification windows
+     * Makes the currently showing banner disappear
      */
-    void timeout();
+    void disappearCurrentBanner();
 
     /*!
      * A slot for disabling sink(No notifications generated, they are just transfered)
@@ -83,6 +84,11 @@ private slots:
     void changeNotificationPreviewMode();
 
     /*!
+     * Updates the window mask based on the currently showing banner.
+     */
+    void updateWindowMask();
+
+    /*!
      * Updates the window mask to contain the current notification of the given banner
      * \param banner The banner that is used to update the window mask
      */
@@ -94,10 +100,10 @@ private slots:
     void clearWindowMask();
 
     /*!
-     * A helper function to resolve the current banner on display. This is needed in order to
-     * update the window masks correctly when the orientation changes.
+     * When current banner starts to disappear, this should be called to remove references
+     * to the banner.
      */
-    void resolveCurrentBannerAndUpdateWindowMask();
+    void currentBannerDone();
 
 private:
     /*!
@@ -108,21 +114,11 @@ private:
     void updateNotification(const Notification &notification);
 
     /*!
-     * Fired when the banner is ready to be animated off the screen. This method will try
-     * to show the next banner by connecting the \s disappeared() signal to
-     * \s addLatestBannerToWindow
+     * Returns the banner that is currently on the screen, or NULL is no banner is on the screen.
      *
-     * \param banner The banner to animate off the screen
+     * \return the current banner
      */
-    void bannerDone(MBanner* banner);
-
-    /*!
-     * Sets up a timer or the banner disappearing. The timeout for the timer is a property in the banner
-     * itself. The origin for the timeout is the notification that the banner is visualizing.
-     *
-     * \param banner MBanner whose disappearance it handles. Timer would be parented to this banner.
-     */
-    void setupWindowTimer(MBanner *banner);
+    MBanner *currentBanner();
 
     /*!
      * Determines preview icon id of a notification based on the given notification parameters.
@@ -148,6 +144,9 @@ private:
 
     //! The banners currently being displayed, oldest first
     QList<MBanner *> currentBanners;
+
+    //! Timer for disappearing the current banner
+    QTimer bannerTimer;
 
 #ifdef UNIT_TEST
     friend class Ut_MCompositorNotificationSink;
