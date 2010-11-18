@@ -40,7 +40,7 @@ ShutdownBusinessLogic::ShutdownBusinessLogic(QObject *parent) :
 #endif
 }
 
-ShutdownBusinessLogic::~ShutdownBusinessLogic ()
+ShutdownBusinessLogic::~ShutdownBusinessLogic()
 {
     if (shutdownUi) {
         shutdownUi->deleteLater();
@@ -48,10 +48,10 @@ ShutdownBusinessLogic::~ShutdownBusinessLogic ()
     }
 }
 
-void  ShutdownBusinessLogic::showUI (QString  text1, QString  text2, int timeout)
+void  ShutdownBusinessLogic::showUI(QString text1, QString text2, int timeout)
 {
 
-    if (NULL == shutdownUi) {
+    if (shutdownUi == NULL) {
         shutdownUi = new ShutdownUI();
         shutdownUi->showWindow(text1, text2, timeout);
     }
@@ -89,40 +89,37 @@ void ShutdownBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndica
 void ShutdownBusinessLogic::createAndPublishNotification(const QString &type, const QString &summary, const QString &body)
 {
     MNotification notification(type, summary, body);
-    notification.publish ();
+    notification.publish();
 }
 
-void ShutdownBusinessLogic::thermalShutdown ()
+void ShutdownBusinessLogic::thermalShutdown()
 {
     //% "Temperature too high. Device shutting down."
-    QString body(qtTrId ("qtn_shut_high_temp"));
+    QString body(qtTrId("qtn_shut_high_temp"));
     createAndPublishNotification("x-nokia.battery.temperature","", body);
 }
 
-void ShutdownBusinessLogic::batteryShutdown ()
+void ShutdownBusinessLogic::batteryShutdown()
 {
     //% "Battery empty. Device shutting down."
-    QString body(qtTrId ("qtn_shut_batt_empty"));
+    QString body(qtTrId("qtn_shut_batt_empty"));
     createAndPublishNotification("x-nokia.battery.shutdown", "", body);
 }
 
-void ShutdownBusinessLogic::shutdownDeniedUSB ()
+void ShutdownBusinessLogic::shutdownDeniedUSB()
 {
     //% "USB cable plugged in. Unplug the USB cable to shutdown."
-    QString body(qtTrId ("qtn_shut_unplug_usb"));
+    QString body(qtTrId("qtn_shut_unplug_usb"));
     createAndPublishNotification(MNotification::DeviceAddedEvent, "", body);
-
-    MFeedback feedback("IDF_INFORMATION_SOUND");
-    feedback.play();
 }
 
-ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor (QObject *parent, ShutdownBusinessLogic *logic) :
+ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor(QObject *parent, ShutdownBusinessLogic *logic) :
     QDBusAbstractAdaptor(parent),
-    m_logic(logic)
+    shutdownBusinessLogic(logic)
 {
 }
 
 void ShutdownBusinessLogicAdaptor::showScreen(QString text1, QString text2, int timeout)
 {
-    m_logic->showUI (text1, text2, timeout);
+    shutdownBusinessLogic->showUI(text1, text2, timeout);
 }

@@ -92,7 +92,7 @@ public slots:
     Q_NOREPLY void showScreen (QString text1, QString text2, int timeout);
 
 private:
-    ShutdownBusinessLogic   *m_logic;
+    ShutdownBusinessLogic *shutdownBusinessLogic;
 #ifdef UNIT_TEST
     friend class Ft_ShutdownBusinessLogic;
     friend class Ut_ShutdownBusinessLogic;
