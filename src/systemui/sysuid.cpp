@@ -46,6 +46,7 @@ Sysuid* Sysuid::instance_ = NULL;
 
 static const QString DBUS_SERVICE = "com.nokia.systemui";
 static const QString DBUS_PATH = "/";
+static int NOTIFICATION_RELAY_INTERVAL = 5000;
 
 Sysuid::Sysuid(QObject* parent) : QObject(parent)
 {
@@ -58,7 +59,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     batteryBusinessLogic = new BatteryBusinessLogic(this);
     usbUi = new UsbUi(this);
 
-    notificationManager_ = new NotificationManager(3000);
+    notificationManager_ = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
     mCompositorNotificationSink = new MCompositorNotificationSink;
     ngfNotificationSink = new NGFNotificationSink;
     unlockNotificationSink_ = new UnlockNotificationSink;
