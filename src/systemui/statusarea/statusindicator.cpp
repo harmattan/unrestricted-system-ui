@@ -237,9 +237,10 @@ void BatteryStatusIndicator::batteryLevelChanged()
 
         // Smoke test - check that charge bar values are valid
         if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
-            //simple  mapping to percentage value
-            double chargeValue  = remainingBars/maximumBars;
-            setValue(chargeValue);
+            // imageList contains maximumBars + 2 images
+            double images = maximumBars + 2;
+            // First icon is for battery empty situation, hence remainingBars + 1
+            setValue((remainingBars + 1) / images);
         } else {
             // Error situation
             setValue(0.0);

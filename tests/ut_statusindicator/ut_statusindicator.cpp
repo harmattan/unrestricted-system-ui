@@ -231,28 +231,28 @@ void Ut_StatusIndicator::testBattery()
     values << QVariant(8) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 100);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 9);
 
     // testing empty battery
     values.clear();
     values << QVariant(0) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 0);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 1);
 
     // testing battery somewhere between empty and full
     values.clear();
     values << QVariant(6) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 75);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 7);
 
     // testing battery with invalid charge bar values
     values.clear();
     values << QVariant(-1) << QVariant(0);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 0);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 0);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
@@ -265,7 +265,7 @@ void Ut_StatusIndicator::testBattery()
     values << QVariant(6) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 100), 75);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 7);
 
     // battery not charging and power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
