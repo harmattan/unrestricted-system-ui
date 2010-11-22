@@ -130,6 +130,7 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
     timer->stop();
 
     show();
+    raise();
 
     feedback->play();
 
