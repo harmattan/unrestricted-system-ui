@@ -57,6 +57,37 @@ QString MLocale::language() const {
     return gLanguage;
 }
 
+QMap<const MSceneWindow*, MSceneWindow::SceneWindowState> gSceneWindowStateMap;
+
+void MSceneManager::appearSceneWindow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy)
+{
+    gSceneWindowStateMap[sceneWindow] = MSceneWindow::Appeared;
+}
+
+void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
+{
+    gSceneWindowStateMap[sceneWindow] = MSceneWindow::Disappeared;
+}
+
+void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
+{
+    gSceneWindowStateMap[sceneWindow] = MSceneWindow::Disappeared;
+}
+
+void MSceneWindow::disappear()
+{
+    gSceneWindowStateMap[this] = MSceneWindow::Disappeared;
+}
+
+MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
+{
+    if (!gSceneWindowStateMap.contains(this)) {
+        gSceneWindowStateMap[this] = MSceneWindow::Disappeared;
+    }
+
+    return gSceneWindowStateMap[this];
+}
+
 void Ut_StatusIndicatorMenuWindow::init()
 {
     gStatusIndicatorMenuStub->stubReset();
