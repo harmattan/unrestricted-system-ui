@@ -9,7 +9,7 @@ system-ui (0.18.12~1) unstable; urgency=low
 system-ui (0.18.11-1) unstable; urgency=low
 
   * Fixes: NB#204881 - Status menu doesn't close from sides in landscape
-  * Fixes: NB#197134 - Lankku/Dali call/SMS/IM indication LED status not cleared
+  * Fixes: NB#197134 - Call/SMS/IM indication LED status not cleared
   * Fixes: NB#195715 - Empty notification window on top of _NET_CLIENT_LIST_STACKING
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 18 Nov 2010 17:22:32 +0200
