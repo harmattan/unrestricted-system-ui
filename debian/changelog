@@ -1,11 +1,10 @@
-system-ui (0.18.12~1) unstable; urgency=low
+system-ui (0.18.12-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#205958 - Banner stays no more than 3 seconds
   * Fixes: NB#201241 - Percentage to bars not correctly shown in status area Battery icon
   * Implemented: SWP#DUI-4036 - Opening status menu
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 18 Nov 2010 17:28:24 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 23 Nov 2010 14:20:24 +0200
 
 system-ui (0.18.11-1) unstable; urgency=low
 
