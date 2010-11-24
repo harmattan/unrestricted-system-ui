@@ -212,16 +212,16 @@ void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuAppearsAfterEnteringDi
 
 void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped()
 {
-    QSKIP("This test method currently fails due to a problem in mapping the status bar to the scene", SkipAll);
-
     statusIndicatorMenuWindow->displayActive();
 
-    statusIndicatorMenuWindow->statusBar->setGeometry(QRectF(0.0, 0.0, 800.0, 30.0));
-
-    QRectF statusBarGeo(statusIndicatorMenuWindow->mapFromScene(statusIndicatorMenuWindow->statusBar->geometry()).boundingRect());
+    // Map the bounding rect to the scene
+    QRectF statusBarGeo(statusIndicatorMenuWindow->statusBar->sceneBoundingRect());
 
     QPoint inside(statusBarGeo.x()+statusBarGeo.width()/2,
                   statusBarGeo.y()+statusBarGeo.height()/2);
+
+    // Then map a point inside it to the viewport
+    inside = statusIndicatorMenuWindow->mapFromScene(inside);
 
     QMouseEvent pressInside(QEvent::MouseButtonPress,
                              inside,
