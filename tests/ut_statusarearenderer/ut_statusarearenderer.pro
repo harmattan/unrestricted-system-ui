@@ -2,7 +2,8 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_statusarearenderer
 INCLUDEPATH += $$SRCDIR/statusarea
-PKGCONFIG += xcomposite
+PKGCONFIG += xcomposite 
+PKGCONFIG += glib-2.0
 
 # unit test and unit classes
 SOURCES += \
