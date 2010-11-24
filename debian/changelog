@@ -2,6 +2,7 @@ system-ui (0.18.13~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#200579 Device does not read EF-MWIS file upon powering ON
+  * Fixes: NB#204770 - Pressing power key several times in a row unlocks the device
  
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 23 Nov 2010 14:20:56 +0200
 

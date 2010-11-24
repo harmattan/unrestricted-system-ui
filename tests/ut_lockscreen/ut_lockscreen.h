@@ -23,6 +23,10 @@
 #include <QObject>
 #include <QPointer>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+#endif
+
 class MApplication;
 class MWindow;
 class LockScreen;
@@ -32,6 +36,9 @@ class Ut_LockScreen : public QObject
     Q_OBJECT
 
 signals:
+#ifdef HAVE_QMSYSTEM
+    void displayStateChanged(MeeGo::QmDisplayState::DisplayState displayState);
+#endif
     void unlocked();
 
 private slots:
@@ -40,7 +47,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+#ifdef HAVE_QMSYSTEM
+    void testSliderUnlocked_data();
+#endif
     void testSliderUnlocked();
+    void testConstruction();
     void testWhenDisplayExitsLockScreenIsUnlocked();
 
 private:

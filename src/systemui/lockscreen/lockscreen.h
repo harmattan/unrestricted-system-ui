@@ -40,13 +40,22 @@ signals:
 
 private slots:
     void sliderUnlocked();
-
-private:
 #ifdef HAVE_QMSYSTEM
-    //! Keeps track if the display is on/off/dimmed
-    MeeGo::QmDisplayState displayState;
+    void updateDisplayState(MeeGo::QmDisplayState::DisplayState state);
 #endif
 
+private:
+    //! A boolean that indicates if the display is currently on
+    bool displayOn;
+
+#ifdef HAVE_QMSYSTEM
+    //! The QmSystem object that signals the display state changes
+    MeeGo::QmDisplayState qmDisplayState;
+#endif
+
+#ifdef UNIT_TEST
+    friend class Ut_LockScreen;
+#endif
 };
 
 #endif

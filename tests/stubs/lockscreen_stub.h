@@ -31,6 +31,9 @@ class LockScreenStub : public StubBase {
   virtual void LockScreenDestructor();
   virtual void reset();
   virtual void sliderUnlocked();
+#ifdef HAVE_QMSYSTEM
+  virtual void updateDisplayState(MeeGo::QmDisplayState::DisplayState state);
+#endif
 }; 
 
 // 2. IMPLEMENT STUB
@@ -48,6 +51,14 @@ void LockScreenStub::sliderUnlocked() {
 void LockScreenStub::reset() {
   stubMethodEntered("reset");
 }
+
+#ifdef HAVE_QMSYSTEM
+void LockScreenStub::updateDisplayState(MeeGo::QmDisplayState::DisplayState state) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<MeeGo::QmDisplayState::DisplayState >(state));
+  stubMethodEntered("updateDisplayState",params);
+}
+#endif
 
 // 3. CREATE A STUB INSTANCE
 LockScreenStub gDefaultLockScreenStub;
@@ -71,5 +82,11 @@ void LockScreen::sliderUnlocked() {
 void LockScreen::reset() {
   gLockScreenStub->reset();
 }
+
+#ifdef HAVE_QMSYSTEM
+void LockScreen::updateDisplayState(MeeGo::QmDisplayState::DisplayState state) {
+  gLockScreenStub->updateDisplayState(state);
+}
+#endif
 
 #endif

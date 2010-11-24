@@ -18,20 +18,35 @@
  ****************************************************************************/
 #include "lockscreen.h"
 
-LockScreen::LockScreen(QGraphicsItem *parent) : MSceneWindow(parent)
+LockScreen::LockScreen(QGraphicsItem *parent) :
+    MSceneWindow(parent),
+    displayOn(true)
+
 {
     connect(this, SIGNAL(displayExited()), this, SLOT(sliderUnlocked()));
+
+#ifdef HAVE_QMSYSTEM
+    connect(&qmDisplayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(updateDisplayState(MeeGo::QmDisplayState::DisplayState)));
+
+    // Update the display state from the current QmSystem value
+    updateDisplayState(qmDisplayState.get());
+#endif
 }
 
 LockScreen::~LockScreen()
 {
 }
 
+#ifdef HAVE_QMSYSTEM
+void LockScreen::updateDisplayState(MeeGo::QmDisplayState::DisplayState state)
+{
+    displayOn = state == MeeGo::QmDisplayState::On;
+}
+#endif
+
 void LockScreen::sliderUnlocked()
 {
-#ifdef HAVE_QMSYSTEM
-    if(displayState.get() == MeeGo::QmDisplayState::On)
-#endif
+    if(displayOn)
     {
         emit unlocked();
     }
