@@ -612,21 +612,21 @@ StatusIndicatorIconStyle#TransferStatusIndicator {
 }
 
 StatusIndicatorIconStyle#TransferStatusIndicatorLive {
-    image-list: "icon-m-status-transfer-content";
+    image-list: "icon-s-status-transfer-content";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#TransferStatusIndicatorFail {
-    image-list: "icon-m-status-transfer-error";
+    image-list: "icon-s-status-transfer-error";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#TransferStatusIndicatorPending {
-    image-list: "icon-m-status-transfer-pending";
+    image-list: "icon-s-status-transfer-pending";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
