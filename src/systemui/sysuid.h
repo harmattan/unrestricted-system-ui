@@ -25,6 +25,10 @@
 #include <QSharedPointer>
 #include "applicationcontext.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
+#endif
+
 class UsbUi;
 class BatteryBusinessLogic;
 class ShutdownBusinessLogic;
@@ -87,6 +91,11 @@ private slots:
      */
     void applyUseMode();
 
+    /*!
+     * Enables or disables the compositor sink based on current state
+     */
+    void updateCompositorNotificationSinkEnabledStatus();
+
 private:
     void loadTranslations();
 
@@ -125,6 +134,11 @@ private:
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;
+
+#ifdef HAVE_QMSYSTEM
+    //! QmSystem watcher for device lock
+    MeeGo::QmLocks qmLocks;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_Sysuid;

@@ -337,8 +337,7 @@ void Ut_MCompositorNotificationSink::cleanup()
 
 NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
 {
-    connect(this, SIGNAL(statusIndictorMenuVisibilityChanged(bool)), sink, SLOT(setDisabled(bool)));
-    emit statusIndictorMenuVisibilityChanged(true);
+    sink->setDisabled(true);
     // Create notification
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     if (isSystemEvent) {
@@ -560,7 +559,7 @@ void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
 {
     NotificationParameters parameters = setupSinkDisabledTests();
     QCOMPARE(mWindowSetVisibleValue, false);
-    emit statusIndictorMenuVisibilityChanged(false);
+    sink->setDisabled(false);
     notificationManager->addNotification(0, parameters);
     QCOMPARE(mWindowSetVisibleValue, true);
 }

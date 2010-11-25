@@ -22,7 +22,6 @@ SOURCES += \
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
     $$STUBSDIR/systemstatestub.cpp \
-    $$STUBSDIR/locksstub.cpp \
     $$STUBSDIR/testcontextitem.cpp \
 
 # unit test and unit classes

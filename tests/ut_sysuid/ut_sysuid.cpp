@@ -49,6 +49,38 @@
 #include "closeeventeater_stub.h"
 #include "notifiernotificationsink_stub.h"
 
+
+bool gQmLocksDeviceLock = false;
+bool gQmLocksScreenLock = false;
+
+#ifdef HAVE_QMSYSTEM
+namespace MeeGo
+{
+
+QmLocks::State QmLocks::getState(QmLocks::Lock what) const {
+    if(what == QmLocks::Device)
+        return gQmLocksDeviceLock ? QmLocks::Locked : QmLocks::Unlocked;
+    else if(what == QmLocks::TouchAndKeyboard)
+        return gQmLocksScreenLock ? QmLocks::Locked : QmLocks::Unlocked;
+    else
+        return QmLocks::Unknown;
+}
+
+bool QmLocks::setState(QmLocks::Lock, QmLocks::State) {
+    return false;
+}
+
+bool QmLocks::setDeviceAutolockTime(int) {
+    return false;
+}
+
+int QmLocks::getDeviceAutolockTime() {
+    return 0;
+}
+
+}
+#endif
+
 Notification::~Notification()
 {
 }
@@ -162,6 +194,9 @@ void Ut_Sysuid::init()
     sysuid = new Sysuid(NULL);
     Ut_SysuidCompositorNotificationState = false;
     Ut_SysuidFeedbackNotificationState = false;
+    gQmLocksDeviceLock = false;
+    gQmLocksScreenLock = false;
+    gMCompositorNotificationSinkStub->stubReset();
 }
 
 void Ut_Sysuid::cleanup()
@@ -172,7 +207,7 @@ void Ut_Sysuid::cleanup()
 void Ut_Sysuid::testSignalConnections()
 {
     QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
-    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->mCompositorNotificationSink, SLOT(setDisabled(bool))));
+    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
     QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->mCompositorNotificationSink, SLOT(addNotification (const Notification &))));
     QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->mCompositorNotificationSink, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager_, SLOT(removeNotification(uint))));
@@ -184,6 +219,9 @@ void Ut_Sysuid::testSignalConnections()
     QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager_, SLOT(removeUnseenFlags(bool))));
+#ifdef HAVE_QMSYSTEM
+    QVERIFY(disconnect(&sysuid->qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
+#endif
 }
 
 void Ut_Sysuid::testUseMode()
@@ -202,5 +240,40 @@ void Ut_Sysuid::testLocaleContainsNotificationCatalog()
     QCOMPARE(gInstalledTranslationCatalogs.contains(gDefaultLocale), true);
     QCOMPARE(gInstalledTranslationCatalogs[gDefaultLocale].contains("notification"), true);
 }
+
+void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled_data()
+{
+    QTest::addColumn<int>("state");
+    QTest::addColumn<bool>("sinkDisabled");
+
+#ifdef HAVE_QMSYSTEM
+    int rows = 8;
+#else
+    int rows = 2;
+#endif
+
+    for(int i = 0; i < rows; i++) {
+        QTest::newRow(QString::number(i).toAscii()) << i << (i != 0);
+    }
+}
+
+void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled()
+{
+    QFETCH(int, state);
+    QFETCH(bool, sinkDisabled);
+
+    if(state & 1) {
+        sysuid->statusIndicatorMenuWindow->show();
+    } else {
+        sysuid->statusIndicatorMenuWindow->hide();
+    }
+    gQmLocksDeviceLock = state & 2;
+    gQmLocksScreenLock = state & 4;
+
+    sysuid->updateCompositorNotificationSinkEnabledStatus();
+    QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setDisabled"), 1);
+    QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setDisabled").parameter<bool>(0), sinkDisabled);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

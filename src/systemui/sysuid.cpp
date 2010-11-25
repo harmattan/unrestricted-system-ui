@@ -94,7 +94,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     bus.registerService("com.meego.core.MStatusIndicatorMenu");
     bus.registerObject("/statusindicatormenu", statusIndicatorMenuWindow);
     connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
-    connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
+    connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
 
     // Connect the notification signals for the compositor notification sink
     connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
@@ -136,9 +136,15 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     // Connect the unlock-screen notification sink to LockScreenBusinessLogic
     if (sysUidRequest->lockScreenBusinessLogic() != NULL) {
         connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), unlockNotificationSink_, SLOT(setLockedState(bool)));
-        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), mCompositorNotificationSink, SLOT(setDisabled(bool)));
         connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
     }
+
+    // Update the enabled status of compositor notification sink based on screen and device locks
+#ifdef HAVE_QMSYSTEM
+    connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this,
+                       SLOT(updateCompositorNotificationSinkEnabledStatus()));
+#endif
+    updateCompositorNotificationSinkEnabledStatus();
 
     // Instantiate the volume-control UI
     volumeBarWindow = new VolumeBarWindow;
@@ -209,4 +215,14 @@ void Sysuid::applyUseMode()
 
     mCompositorNotificationSink->setApplicationEventsEnabled(!videoRecording);
     ngfNotificationSink->setApplicationEventsEnabled(!videoRecording);
+}
+
+void Sysuid::updateCompositorNotificationSinkEnabledStatus()
+{
+    mCompositorNotificationSink->setDisabled(statusIndicatorMenuWindow->isVisible()
+#ifdef HAVE_QMSYSTEM
+                                             || qmLocks.getState(MeeGo::QmLocks::Device) == MeeGo::QmLocks::Locked
+                                             || qmLocks.getState(MeeGo::QmLocks::TouchAndKeyboard) == MeeGo::QmLocks::Locked
+#endif
+                                             );
 }

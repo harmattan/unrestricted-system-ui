@@ -56,6 +56,13 @@ signals:
      */
     void notificationAdded(const Notification &notification);
 
+public:
+    /*!
+     * Disables or enables the sink (no notifications generated when disabled, they are just transferred).
+     * \param disabled if true, the sink is disabled, otherwise it's enabled
+     */
+    void setDisabled(bool disabled);
+
 private slots:
     //! \reimp
     virtual void addNotification(const Notification &notification);
@@ -66,12 +73,6 @@ private slots:
      * Makes the currently showing banner disappear
      */
     void disappearCurrentBanner();
-
-    /*!
-     * A slot for disabling sink(No notifications generated, they are just transfered)
-     * \param bool disabled true for suppressing notification banner from sink. false if sink should generate notification banners
-     */
-    void setDisabled(bool disabled);
 
     /*!
       * Adds the oldest banner to a fullscreen window which was created earlier.

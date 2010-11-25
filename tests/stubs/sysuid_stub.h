@@ -35,6 +35,7 @@ class SysuidStub : public StubBase {
   virtual NotifierNotificationSink & notifierNotificationSink();
   virtual void loadTranslations();
   virtual void applyUseMode();
+  virtual void updateCompositorNotificationSinkEnabledStatus();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -73,6 +74,11 @@ void SysuidStub::loadTranslations() {
 
 void SysuidStub::applyUseMode() {
     stubMethodEntered("applyUseMode");
+}
+
+void SysuidStub::updateCompositorNotificationSinkEnabledStatus()
+{
+    stubMethodEntered("updateCompositorNotificationSinkEnabledStatus");
 }
 
 
@@ -118,6 +124,10 @@ void Sysuid::loadTranslations() {
 
 void Sysuid::applyUseMode() {
   gSysuidStub->applyUseMode();
+}
+
+void Sysuid::updateCompositorNotificationSinkEnabledStatus() {
+  gSysuidStub->updateCompositorNotificationSinkEnabledStatus();
 }
 
 #endif

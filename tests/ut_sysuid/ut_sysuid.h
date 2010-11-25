@@ -48,6 +48,8 @@ private slots:
     void testSignalConnections();
     void testUseMode();
     void testLocaleContainsNotificationCatalog();
+    void testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled_data();
+    void testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled();
 };
 
 #endif //_UT_STATUSBAR_

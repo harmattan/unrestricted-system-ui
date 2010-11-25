@@ -95,7 +95,6 @@ private:
     NotificationParameters setupSinkDisabledTests(bool isSystemEvent = false);
 
 signals:
-    void statusIndictorMenuVisibilityChanged(bool);
     void displayEntered();
 
 private slots:
