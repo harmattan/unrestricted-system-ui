@@ -67,6 +67,10 @@ const QPixmap *MTheme::pixmap(const QString &id, const QSize &)
     return mThemePixmapPixmap;
 }
 
+void MTheme::releasePixmap(const QPixmap*)
+{
+}
+
 M::Orientation mSceneManagerOrientation = M::Portrait;
 M::Orientation MSceneManager::orientation() const
 {
