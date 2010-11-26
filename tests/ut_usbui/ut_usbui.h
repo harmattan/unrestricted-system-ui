@@ -19,27 +19,38 @@
 #ifndef _UT_USBUI_H
 #define _UT_USBUI_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-#include <usbui.h>
+class MApplication;
+class UsbUi;
 
-class Ut_UsbUi : public QObject
-{
+class Ut_UsbUi : public QObject {
     Q_OBJECT
 
-    private slots:
-        void initTestCase ();
-        void cleanupTestCase ();
+private slots:
+    // Executed once before every test case
+    void init();
 
+    // Executed once after every test case
+    void cleanup();
+
+    // Executed once before first test case
+    void initTestCase();
+
+    // Executed once after last test case
+    void cleanupTestCase();
+
+    // Test cases
 #ifdef HAVE_QMSYSTEM
-        void show_hide_dialog ();
-        void usbnotifications ();
-        void testdialogbuttoncallbacks ();
+    void testConnections();
+    void testShowHideDialog();
+    void testUSBNotifications();
+    void testDialogButtons();
 #endif
 
-    private:
-        UsbUi   *m_subject;
+private:
+    MApplication *m_App;
+    UsbUi *m_subject;
 };
 
 #endif

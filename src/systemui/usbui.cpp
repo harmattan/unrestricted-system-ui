@@ -27,244 +27,211 @@
 #include <MLabel>
 #include <MLocale>
 #include <QTimer>
+#include <QDateTime>
 
-UsbUi::UsbUi (QObject *parent) : QObject (parent),
-    m_notification (0),
-    m_dialog (0),
-    m_disabled (false),
-    m_showdialog (false)
-{
-    /*
-     * Initialize a little bit later...
-     * we don't want to slow-down the sysuid startup
-     */
-#ifndef UNIT_TEST
-    QTimer::singleShot (3000, this, SLOT (initialize ()));
-#else
-    initialize ();
+UsbUi::UsbUi(QObject *parent) : QObject(parent),
+#ifdef HAVE_QMSYSTEM
+    usbMode(new MeeGo::QmUSBMode(this)),
+    requestedUSBMode(MeeGo::QmUSBMode::Undefined),
 #endif
-}
-
-UsbUi::~UsbUi ()
-{
-}
-
-void
-UsbUi::initialize ()
+    notification(0),
+    dialog(0),
+    disabled(false),
+    shouldShowDialog(false)
 {
 #ifdef HAVE_QMSYSTEM
-    m_logic = new MeeGo::QmUSBMode (this);
+    connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
 
-    connect (m_logic, SIGNAL (modeChanged (MeeGo::QmUSBMode::Mode)),
-             this, SLOT (currentModeChanged (MeeGo::QmUSBMode::Mode)));
-
-    currentModeChanged (m_logic->getMode ());
+    // Lazy initialize to improve startup time
+    QTimer::singleShot(5000, this, SLOT(applyCurrentUSBMode()));
 #endif
 }
 
-void
-UsbUi::setDisabled (bool disable)
+UsbUi::~UsbUi()
 {
-    m_disabled = disable;
+}
 
-    if (disable == true)
-    {
-        // Hide the mode-selection dialog
-        if (m_dialog && m_dialog->isVisible ())
-        {
-            m_showdialog = true;
-            m_dialog->reject ();
-            m_dialog->disappear ();
+#ifdef HAVE_QMSYSTEM
+void UsbUi::applyCurrentUSBMode()
+{
+    applyUSBMode(usbMode->getMode());
+}
+#endif
+
+void UsbUi::setDisabled(bool disable)
+{
+    disabled = disable;
+
+    if (disable) {
+        // Hide the mode selection dialog if it was visible
+        if (dialog != NULL && dialog->isVisible()) {
+            shouldShowDialog = true;
+            hideDialog(false);
         }
-    }
-    else // (enable == true)
-    {
-        if (m_showdialog == true)
-        {
-            m_showdialog = false;
-            ShowDialog ();
+    } else {
+        // Show the mode selection dialog if it should be shown
+        if (shouldShowDialog) {
+            shouldShowDialog = false;
+            showDialog();
         }
     }
 }
 
-// Showing the mode selection dialog
-void
-UsbUi::ShowDialog ()
+void UsbUi::showDialog()
 {
-    MWidget       *centralwidget;
-    MContentItem  *button;
-    MLabel        *label;
-
-    if (m_disabled == true)
-    {
+    if (disabled) {
         // Do not show the dialog when it is disabled
-        m_showdialog = true;
+        shouldShowDialog = true;
         return;
     }
 
-    if (m_dialog)
-    {
-        m_dialog->appear (MSceneWindow::DestroyWhenDone);
+    if (dialog != NULL) {
+        dialog->appear(MSceneWindow::DestroyWhenDone);
         return;
     }
 
-    m_dialog = new MDialog;
-
-    //% "Connected to USB device"
-    m_dialog->setTitle (qtTrId ("qtn_usb_connected"));
-    m_dialog->setModal (false);
-    m_dialog->setSystem (true);
-
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout (Qt::Vertical);
+    // Create dialog content buttons and put them into a central widget
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
 
     //% "Current state: Charging only"
-    label = new MLabel (qtTrId ("qtn_usb_charging"));
-    label->setAlignment (Qt::AlignLeft);
+    MLabel *label = new MLabel(qtTrId("qtn_usb_charging"));
+    label->setAlignment(Qt::AlignLeft);
+    layout->addItem(label);
 
-    layout->addItem (label);
-
-    button = new MContentItem (MContentItem::SingleTextLabel);
+    MContentItem *contentItem = new MContentItem(MContentItem::SingleTextLabel);
     //% "Mass Storage mode"
-    button->setTitle (qtTrId ("qtn_usb_mass_storage"));
+    contentItem->setTitle(qtTrId("qtn_usb_mass_storage"));
+    connect(contentItem, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
+    layout->addItem(contentItem);
 
-    layout->addItem (button);
-
-    QObject::connect (button, SIGNAL (clicked ()),
-                      this, SLOT (MassStorageSelected ()));
-
-    button = new MContentItem (MContentItem::SingleTextLabel);
+    contentItem = new MContentItem(MContentItem::SingleTextLabel);
     //% "Ovi Suite mode"
-    button->setTitle (qtTrId ("qtn_usb_ovi_suite"));
+    contentItem->setTitle(qtTrId("qtn_usb_ovi_suite"));
+    QObject::connect(contentItem, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
+    layout->addItem(contentItem);
 
-    layout->addItem (button);
+    MWidget *centralWidget = new MWidget;
+    centralWidget->setLayout(layout);
 
-    QObject::connect (button, SIGNAL (clicked ()),
-                      this, SLOT (OviSuiteSelected ()));
+    // Create the dialog
+    dialog = new MDialog;
+    dialog->setModal(false);
+    dialog->setSystem(true);
+    dialog->setButtonBoxVisible(false);
+    dialog->setCentralWidget(centralWidget);
+    //% "Connected to USB device"
+    dialog->setTitle(qtTrId("qtn_usb_connected"));
 
-    centralwidget = new MWidget;
-    centralwidget->setLayout (layout);
-
-    m_dialog->setButtonBoxVisible (false);
-    m_dialog->setCentralWidget (centralwidget);
-
-    /*
-     * System dialogs always create a new top level window and a scene manager
-     * so no need to worry about registering to a specific scene manager here
-     */
-    m_dialog->appear (MSceneWindow::DestroyWhenDone);
+    // System dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
-void
-UsbUi::OviSuiteSelected ()
+void UsbUi::hideDialog(bool accept)
 {
-    if (m_dialog)
-    {
-        m_dialog->accept ();
-        m_dialog->disappear ();
+    if (dialog != NULL) {
+        if (accept) {
+            dialog->accept();
+        } else {
+            dialog->reject();
+        }
+        dialog->disappear();
     }
+}
+
+void UsbUi::setOviSuiteMode()
+{
+    hideDialog(true);
 
 #ifdef HAVE_QMSYSTEM
-    m_logic->setMode (MeeGo::QmUSBMode::OviSuite);
+    requestedUSBMode = MeeGo::QmUSBMode::OviSuite;
+    QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
 #endif
 }
 
-void
-UsbUi::MassStorageSelected ()
+void UsbUi::setMassStorageMode()
 {
-    if (m_dialog)
-    {
-        m_dialog->accept ();
-        m_dialog->disappear ();
-    }
+    hideDialog(true);
 
 #ifdef HAVE_QMSYSTEM
-    m_logic->setMode (MeeGo::QmUSBMode::MassStorage);
+    requestedUSBMode = MeeGo::QmUSBMode::MassStorage;
+    QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
 #endif
 }
 
 #ifdef HAVE_QMSYSTEM
-void
-UsbUi::currentModeChanged (MeeGo::QmUSBMode::Mode mode)
+void UsbUi::setRequestedUSBMode()
 {
-    switch (mode)
-    {
-        case MeeGo::QmUSBMode::Ask:
-        case MeeGo::QmUSBMode::ModeRequest:
-            ShowDialog ();
-            break;
-        case MeeGo::QmUSBMode::Disconnected:
-            m_showdialog = false;
+    if (requestedUSBMode != MeeGo::QmUSBMode::Undefined) {
+        usbMode->setMode(requestedUSBMode);
+        requestedUSBMode = MeeGo::QmUSBMode::Undefined;
+    }
+}
 
-            // remove the previous notification
-            if (m_notification)
-            {
-                m_notification->remove ();
-                delete m_notification;
-                m_notification = 0;
-            }
+void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
+{
+    switch (mode) {
+    case MeeGo::QmUSBMode::Ask:
+    case MeeGo::QmUSBMode::ModeRequest:
+        showDialog();
+        break;
+    case MeeGo::QmUSBMode::Disconnected:
+        shouldShowDialog = false;
 
-            // Hide the mode-selection dialog
-            if (m_dialog && m_dialog->isVisible ())
-            {
-                m_dialog->reject ();
-                m_dialog->disappear ();
-            }
+        // remove the previous notification
+        hideNotification();
 
-            break;
-        case MeeGo::QmUSBMode::OviSuite:
-        case MeeGo::QmUSBMode::MassStorage:
-            ShowNotification ((int) mode);
-            break;
-        case MeeGo::QmUSBMode::ChargingOnly:
-            // no-op
-            break;
-        default:
-            // doing nothing, no ui interaction specified here...
-            break;
+        // Hide the mode-selection dialog
+        if (dialog && dialog->isVisible()) {
+            hideDialog(false);
+        }
+        break;
+    case MeeGo::QmUSBMode::OviSuite:
+    case MeeGo::QmUSBMode::MassStorage:
+        showNotification((int)mode);
+        break;
+    case MeeGo::QmUSBMode::ChargingOnly:
+        // no-op
+        break;
+    default:
+        break;
     }
 }
 #endif
 
-// id should be an usb_modes enum value
-void
-UsbUi::ShowNotification (int id)
+void UsbUi::showNotification(int id)
 {
-    QString *mode_text;
-
-    // no-op when disabled
-    if (m_disabled)
+    if (disabled)
         return;
 
-    // remove previous one
-    if (m_notification)
-    {
-        m_notification->remove ();
-        delete m_notification;
-        m_notification = 0;
-    }
+    // Remove previous notification
+    hideNotification();
 
-    switch (id)
-    {
+    QString mode_text;
+    switch (id) {
 #ifdef HAVE_QMSYSTEM
-        case MeeGo::QmUSBMode::OviSuite:
-            //% "Ovi Suite mode"
-            mode_text = new QString (qtTrId ("qtn_usb_ovi_suite"));
-            break;
-        case MeeGo::QmUSBMode::MassStorage:
-            //% "Mass Storage mode"
-            mode_text = new QString (qtTrId ("qtn_usb_mass_storage"));
-            break;
+    case MeeGo::QmUSBMode::OviSuite:
+        //% "Ovi Suite mode"
+        mode_text = qtTrId("qtn_usb_ovi_suite");
+        break;
+    case MeeGo::QmUSBMode::MassStorage:
+        //% "Mass Storage mode"
+        mode_text = qtTrId("qtn_usb_mass_storage");
+        break;
 #endif
-        default:
-            // no notification should be shown...
-            return;
-            break;
+    default:
+        return;
     }
 
     //% "USB connected.<br />%1"
-    m_notification =
-        new MNotification (MNotification::DeviceAddedEvent, "",
-                           qtTrId ("qtn_usb_info_connected").arg (*mode_text));
-    m_notification->publish ();
+    notification = new MNotification(MNotification::DeviceAddedEvent, "", qtTrId("qtn_usb_info_connected").arg(mode_text));
+    notification->publish();
 }
 
+void UsbUi::hideNotification()
+{
+    if (notification != NULL) {
+        notification->remove();
+        delete notification;
+        notification = NULL;
+    }
+}

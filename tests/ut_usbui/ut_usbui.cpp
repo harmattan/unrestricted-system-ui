@@ -1,26 +1,27 @@
 /***************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of system-ui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of system-ui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #include <MApplication>
 #include <MSceneWindow>
 #include <MNotification>
 #include <MDialog>
-#include <QTest>
+#include <QtTest/QtTest>
+#include <usbui.h>
 
 #include "ut_usbui.h"
 #include "usbmode_stub.h"
@@ -35,119 +36,115 @@ bool MNotification::isPublished() const
     return true;
 }
 
-int   argc = 1;
-char *argv[] = {
-    (char *) "./ut_usbui",
-    NULL };
+int argc = 1;
+char *argv[] = { (char *) "./ut_usbui", NULL };
 
-MApplication    *m_App;
-
-void
-Ut_UsbUi::initTestCase ()
+void Ut_UsbUi::initTestCase()
 {
-    m_App = new MApplication (argc, argv);
-    m_subject = new UsbUi;
-#ifdef HAVE_QMSYSTEM
-    m_subject->m_logic->setMode(MeeGo::QmUSBMode::Undefined);
-#endif
-
-    QTest::qWait (100);
+    m_App = new MApplication(argc, argv);
 }
 
-void
-Ut_UsbUi::cleanupTestCase ()
+void Ut_UsbUi::cleanupTestCase()
 {
     m_App->deleteLater();
 }
 
+void Ut_UsbUi::init()
+{
+    m_subject = new UsbUi;
+#ifdef HAVE_QMSYSTEM
+    m_subject->usbMode->setMode(MeeGo::QmUSBMode::Undefined);
+#endif
+}
+
+void Ut_UsbUi::cleanup()
+{
+    delete m_subject;
+}
+
 static bool dialog_visible;
 
-void
-MDialog::appear (MSceneWindow::DeletionPolicy policy)
+void MDialog::appear(MSceneWindow::DeletionPolicy policy)
 {
     Q_UNUSED (policy);
     dialog_visible = true;
 }
 
-void
-MSceneWindow::disappear ()
+void MSceneWindow::disappear()
 {
     dialog_visible = false;
 }
 
 #ifdef HAVE_QMSYSTEM
-void
-Ut_UsbUi::show_hide_dialog ()
+void Ut_UsbUi::testConnections()
+{
+    QVERIFY(disconnect(m_subject->usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), m_subject, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode))));
+}
+
+void Ut_UsbUi::testShowHideDialog()
 {
     dialog_visible = false;
     // Set mode to ask
-    m_subject->m_logic->setDefaultMode(MeeGo::QmUSBMode::Ask);
+    m_subject->usbMode->setDefaultMode(MeeGo::QmUSBMode::Ask);
 
     // Emit the ask signal...
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Ask);
-    QTest::qWait (10);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Ask);
 
-    QCOMPARE (dialog_visible, true);
-    QVERIFY (!m_subject->m_dialog->isModal());
-    QVERIFY (m_subject->m_dialog->isSystem());
+    QCOMPARE(dialog_visible, true);
+    QVERIFY(!m_subject->dialog->isModal());
+    QVERIFY(m_subject->dialog->isSystem());
 
     // Emit the disconnect signal
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Disconnected);
-    QTest::qWait (10);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
 
-    QCOMPARE (dialog_visible, false);
+    QCOMPARE(dialog_visible, false);
 
     // Emit the moderequest signal
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::ModeRequest);
-    QTest::qWait (10);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::ModeRequest);
 
-    QCOMPARE (dialog_visible, true);
+    QCOMPARE(dialog_visible, true);
 
     // Emit the disconnect signal
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Disconnected);
-    QTest::qWait (10);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
 
-    QCOMPARE (dialog_visible, false);
+    QCOMPARE(dialog_visible, false);
 }
 
-void
-Ut_UsbUi::usbnotifications ()
+void Ut_UsbUi::testUSBNotifications()
 {
     // Init to some known state ...
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Connected);
-    if (m_subject->m_notification)
-        m_subject->m_notification->remove ();
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
+    if (m_subject->notification)
+        m_subject->notification->remove();
 
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::OviSuite);
-    QTest::qWait (200);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::OviSuite);
 
-    QCOMPARE (m_subject->m_notification->isPublished (), true);
+    QCOMPARE(m_subject->notification->isPublished (), true);
 
-    if (m_subject->m_notification)
-        m_subject->m_notification->remove ();
+    if (m_subject->notification)
+        m_subject->notification->remove();
 
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::MassStorage);
-    QTest::qWait (200);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::MassStorage);
 
-    QCOMPARE (m_subject->m_notification->isPublished (), true);
+    QCOMPARE(m_subject->notification->isPublished (), true);
 }
 
-void
-Ut_UsbUi::testdialogbuttoncallbacks ()
+void Ut_UsbUi::testDialogButtons()
 {
     // Go to connected state...
-    m_subject->m_logic->test_emitModeChanged(MeeGo::QmUSBMode::Connected);
-    QTest::qWait (100);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
 
     // Call the Ovi Suite callback function...
-    m_subject->OviSuiteSelected ();
+    m_subject->setOviSuiteMode();
+    m_subject->setRequestedUSBMode();
 
-    QVERIFY (m_subject->m_logic->getMode () == MeeGo::QmUSBMode::OviSuite);
+    QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::OviSuite);
 
     // Call the Mass Storage callback function...
-    m_subject->MassStorageSelected ();
+    m_subject->setMassStorageMode();
+    m_subject->setRequestedUSBMode();
 
-    QVERIFY (m_subject->m_logic->getMode () == MeeGo::QmUSBMode::MassStorage);
+    QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::MassStorage);
 }
 #endif
 

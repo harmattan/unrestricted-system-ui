@@ -24,44 +24,81 @@
 #include <MDialog>
 
 #ifdef HAVE_QMSYSTEM
-#ifndef UNIT_TEST
 #include <qmusbmode.h>
-#else
-#include "usbmode_stub.h"
-#endif
 #endif
 
 class MNotification;
 
-class UsbUi : public QObject
-{
+/*!
+ * The USB UI takes care of USB related user interfaces.
+ */
+class UsbUi : public QObject {
     Q_OBJECT
 
 public:
-    UsbUi (QObject *parent = 0);
-    ~UsbUi ();
+    /*!
+     * Constructs an USB UI.
+     */
+    UsbUi(QObject *parent = NULL);
+
+    /*!
+     * Destroys the USB UI.
+     */
+    virtual ~UsbUi();
 
 private slots:
 #ifdef HAVE_QMSYSTEM
-    void currentModeChanged (MeeGo::QmUSBMode::Mode mode);
-#endif
-    void OviSuiteSelected ();
-    void MassStorageSelected ();
-    void ShowDialog ();
+    /*!
+     * Shows the USB dialog/banners based on the current USB mode.
+     */
+    void applyCurrentUSBMode();
 
-    void initialize ();
-    void setDisabled (bool disable);
+    /*!
+     * Shows the USB dialog/banners based on the given USB mode.
+     *
+     * \param mode the USB mode to show UI elements for
+     */
+    void applyUSBMode(MeeGo::QmUSBMode::Mode mode);
+
+    /*!
+     * Sets the USB mode to the requested mode (if any).
+     */
+    void setRequestedUSBMode();
+#endif
+    /*!
+     * Sets the USB mode to Ovi Suite.
+     */
+    void setOviSuiteMode();
+
+    /*!
+     * Sets the USB mode to mass storage.
+     */
+    void setMassStorageMode();
+
+    /*!
+     * Shows the mode selection dialog.
+     */
+    void showDialog();
+    void setDisabled(bool disable);
 
 private:
-    void ShowNotification (int id);
+    /*!
+     * Shows a notification.
+     *
+     * \param id an usb_modes enum value for the notification
+     */
+    void showNotification(int id);
+    void hideNotification();
+    void hideDialog(bool accept);
 
 #ifdef HAVE_QMSYSTEM
-    MeeGo::QmUSBMode    *m_logic;
+    MeeGo::QmUSBMode *usbMode;
+    MeeGo::QmUSBMode::Mode requestedUSBMode;
 #endif
-    MNotification       *m_notification;
-    QPointer<MDialog>    m_dialog;
-    bool                 m_disabled;
-    bool                 m_showdialog;
+    MNotification *notification;
+    QPointer<MDialog> dialog;
+    bool disabled;
+    bool shouldShowDialog;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

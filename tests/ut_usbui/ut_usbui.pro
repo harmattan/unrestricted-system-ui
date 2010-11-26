@@ -15,7 +15,6 @@ SOURCES += \
 
 HEADERS += \
     $$SRCDIR/usbui.h \
-    $$STUBSDIR/usbmode_stub.h \
     $$STUBSDIR/locksstub.h \
     ut_usbui.h
 
