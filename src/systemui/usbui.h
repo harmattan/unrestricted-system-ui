@@ -79,7 +79,20 @@ private slots:
      * Shows the mode selection dialog.
      */
     void showDialog();
+
+    /*!
+     * Enables or disables the USB UIs.
+     *
+     * \param disable \c true if the USB UIs should be disabled, \c false otherwise
+     */
     void setDisabled(bool disable);
+
+    /*!
+     * Shows an error string.
+     *
+     * \param error the translation ID of the error to show
+     */
+    void showError(const QString &error);
 
 private:
     /*!

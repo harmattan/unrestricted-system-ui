@@ -36,6 +36,11 @@ bool MNotification::isPublished() const
     return true;
 }
 
+bool MNotification::remove()
+{
+    return true;
+}
+
 int argc = 1;
 char *argv[] = { (char *) "./ut_usbui", NULL };
 
@@ -113,20 +118,17 @@ void Ut_UsbUi::testShowHideDialog()
 void Ut_UsbUi::testUSBNotifications()
 {
     // Init to some known state ...
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
-    if (m_subject->notification)
-        m_subject->notification->remove();
-
     m_subject->applyUSBMode(MeeGo::QmUSBMode::OviSuite);
 
-    QCOMPARE(m_subject->notification->isPublished (), true);
-
-    if (m_subject->notification)
-        m_subject->notification->remove();
+    QVERIFY(m_subject->notification != NULL);
+    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_info_connected").arg(qtTrId("qtn_usb_ovi_suite")));
+    QCOMPARE(m_subject->notification->isPublished(), true);
 
     m_subject->applyUSBMode(MeeGo::QmUSBMode::MassStorage);
 
-    QCOMPARE(m_subject->notification->isPublished (), true);
+    QVERIFY(m_subject->notification != NULL);
+    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_info_connected").arg(qtTrId("qtn_usb_mass_storage")));
+    QCOMPARE(m_subject->notification->isPublished(), true);
 }
 
 void Ut_UsbUi::testDialogButtons()
@@ -147,6 +149,14 @@ void Ut_UsbUi::testDialogButtons()
     QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::MassStorage);
 }
 #endif
+
+void Ut_UsbUi::testShowError()
+{
+    m_subject->showError("test");
+    QVERIFY(m_subject->notification != NULL);
+    QCOMPARE(m_subject->notification->body(), qtTrId("test"));
+    QCOMPARE(m_subject->notification->isPublished(), true);
+}
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)
 

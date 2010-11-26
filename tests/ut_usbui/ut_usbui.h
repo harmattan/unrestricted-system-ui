@@ -46,6 +46,7 @@ private slots:
     void testShowHideDialog();
     void testUSBNotifications();
     void testDialogButtons();
+    void testShowError();
 #endif
 
 private:

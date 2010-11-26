@@ -41,6 +41,7 @@ UsbUi::UsbUi(QObject *parent) : QObject(parent),
 {
 #ifdef HAVE_QMSYSTEM
     connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
+    connect(usbMode, SIGNAL(error(const QString &)), this, SLOT(showError(const QString &)));
 
     // Lazy initialize to improve startup time
     QTimer::singleShot(5000, this, SLOT(applyCurrentUSBMode()));
@@ -233,5 +234,17 @@ void UsbUi::hideNotification()
         notification->remove();
         delete notification;
         notification = NULL;
+    }
+}
+
+void UsbUi::showError(const QString &error)
+{
+    if (!disabled) {
+        // Remove previous notification
+        hideNotification();
+
+        //% "USB connection error occurred"
+        notification = new MNotification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
+        notification->publish();
     }
 }
