@@ -4,6 +4,7 @@ system-ui (0.18.13~1) unstable; urgency=low
   * Fixes: NB#200579 Device does not read EF-MWIS file upon powering ON
   * Fixes: NB#204770 - Pressing power key several times in a row unlocks the device
   * Fixes: NB#203329 - Short event banner should be disabled when the Devicelock is active on device
+  * Implemented: SWP#DUI-4027 Time stamp on notifications
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 23 Nov 2010 14:20:56 +0200
 
