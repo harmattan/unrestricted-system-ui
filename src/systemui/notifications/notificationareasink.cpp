@@ -157,7 +157,7 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
             infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
         }
 
-        if (infoBanner->parentItem() == NULL) {
+        if (infoBanner != NULL && infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group
             emit addNotification(*infoBanner);
         } else {
