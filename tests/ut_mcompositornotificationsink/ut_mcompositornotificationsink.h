@@ -107,35 +107,24 @@ private slots:
     // Executed once after last test case
     void cleanupTestCase();
 
-    // Test window properties
+    // Test cases
     void testNotificationWindowProperties();
-    // Test that notifications can be added
     void testAddNotificationWhenWindowNotOpen();
     void testAddNotificationWhenWindowAlreadyOpen();
+    void testWhenNotificationAlreadyOnDisplayNoNewNotificationIsShown();
     void testWhenWindowOnDisplayThenNotificationAddedWithoutSignal();
-    // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
-    // Test removing notifications
     void testRemoveNotification();
     void testWhenRemovingCurrentNotificationThenTimerStopsAndBannerDisappears();
-    // Test that notification windows are destroyed after a timeout
     void testTimeout();
-    // Test that notifications are NOT added while recording
     void testNotificationWhileApplicationEventsDisabled();
-    // Test when sink is set to disabled, no notifications are generated
     void testWhenSinkDisableTrueNoBannerCreated();
-    // Test when sink is set to disabled, but system notifications are generated
     void testWhenSinkIsSetToDisabledSystemNotificationsAreStillGenerated();
-
-    // Tests notification preview disabling with several possible values
     void testNotificationPreviewsDisabled_data();
     void testNotificationPreviewsDisabled();
-
-    // Test that the window mask is set correctly in all orientations
     void testWindowMasking_data();
     void testWindowMasking();
     void testWindowMaskingWhenOrientationChangeSignalsEmitted();
-    // Test preview icon in notification preview
     void testPreviewIconId();
 
 private:

@@ -30,7 +30,8 @@ static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notification
 MCompositorNotificationSink::MCompositorNotificationSink() :
         sinkDisabled(false),
         allPreviewsDisabled(false),
-        window(new MWindow)
+        window(new MWindow),
+        currentBanner(NULL)
 {
     window->setTranslucentBackground(true);
     window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
@@ -55,24 +56,11 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
 {
-    // Destroy the remaining notifications
-    foreach(uint id, idToBanner.keys()) {
-        removeNotification(id);
+    // Destroy the queued banners; the current banner (if any) will get destroyed with the window so don't destroy it here
+    foreach(MBanner *banner, bannerQueue) {
+        delete banner;
     }
     delete window;
-}
-
-MBanner *MCompositorNotificationSink::currentBanner()
-{
-    foreach (QGraphicsItem *item, window->sceneManager()->scene()->items()) {
-        // The scene will have only one banner visible at any given time
-        MBanner *banner = dynamic_cast<MBanner*>(item);
-        if(banner) {
-            return banner;
-        }
-    }
-
-    return NULL;
 }
 
 void MCompositorNotificationSink::addNotification(const Notification &notification)
@@ -81,7 +69,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if ((sinkDisabled && notification.type() != Notification::SystemEvent) || allPreviewsDisabled ) {
+    if ((sinkDisabled && notification.type() != Notification::SystemEvent) || allPreviewsDisabled) {
         emit notificationAdded(notification);
         return;
     }
@@ -99,12 +87,11 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
 
         // Connect slots to cleanup disappearing banner and handle next banner when disappeared
         // The banner sends disappear either by timeout or by user clicking on it
-        connect(banner, SIGNAL(disappearing()), this, SLOT(currentBannerDone()));
-        connect(banner, SIGNAL(disappeared()), this, SLOT(addOldestBannerToWindow()));
+        connect(banner, SIGNAL(disappeared()), this, SLOT(currentBannerDone()));
 
         // Keep track of the mapping between IDs and private notification information classes
         idToBanner.insert(notification.notificationId(), banner);
-        currentBanners.prepend(banner);
+        bannerQueue.append(banner);
         emit notificationAdded(notification);
 
         if (!window->isVisible()) {
@@ -141,11 +128,13 @@ void MCompositorNotificationSink::removeNotification(uint notificationId)
     MBanner *banner = idToBanner.take(notificationId);
 
     if (banner) {
-        if(currentBanner() == banner) {
+        if(currentBanner == banner) {
+            // The banner is on the screen, so make it disappear
             bannerTimer.stop();
             window->sceneManager()->disappearSceneWindow(banner);
         } else {
-            currentBanners.removeAll(banner);
+            // The banner is in the queue - remove it
+            bannerQueue.removeAll(banner);
             delete banner;
         }
     }
@@ -153,33 +142,36 @@ void MCompositorNotificationSink::removeNotification(uint notificationId)
 
 void MCompositorNotificationSink::disappearCurrentBanner()
 {
-    MBanner *banner = currentBanner();
-    if(banner) {
-        window->sceneManager()->disappearSceneWindow(banner);
+    if (currentBanner != NULL) {
+        window->sceneManager()->disappearSceneWindow(currentBanner);
     }
 }
 
 void MCompositorNotificationSink::currentBannerDone()
 {
-    MBanner *banner = currentBanner();
-    if(banner) {
-        int id = banner->property("notificationId").toInt();
+    if (currentBanner != NULL) {
+        int id = currentBanner->property("notificationId").toInt();
         idToBanner.remove(id);
-        currentBanners.removeAll(banner);
+        currentBanner = NULL;
     }
+
+    addOldestBannerToWindow();
 }
 
 void MCompositorNotificationSink::addOldestBannerToWindow()
 {
-    if (!currentBanners.isEmpty()) {
-        // The latest banner should be shown
-        MBanner *banner = currentBanners.takeLast();
-        window->sceneManager()->appearSceneWindow(banner, MSceneWindow::DestroyWhenDone);
-        bannerTimer.start(banner->property("timeout").toInt());
-        updateWindowMask(banner);
-    } else {
-        // No more banners exist to be shown -> hide the window
-        window->hide();
+    if (currentBanner == NULL) {
+        // A banner can only be added if there is no current banner
+        if (!bannerQueue.isEmpty()) {
+            // The oldest banner should be shown
+            currentBanner = bannerQueue.takeFirst();
+            window->sceneManager()->appearSceneWindow(currentBanner, MSceneWindow::DestroyWhenDone);
+            bannerTimer.start(currentBanner->property("timeout").toInt());
+            updateWindowMask(currentBanner);
+        } else {
+            // No more banners exist to be shown -> hide the window
+            window->hide();
+        }
     }
 }
 
@@ -190,9 +182,8 @@ void MCompositorNotificationSink::setDisabled(bool disabled)
 
 void MCompositorNotificationSink::updateWindowMask()
 {
-    MBanner *banner = currentBanner();
-    if(banner) {
-        updateWindowMask(banner);
+    if (currentBanner != NULL) {
+        updateWindowMask(currentBanner);
     }
 }
 

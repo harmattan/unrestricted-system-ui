@@ -115,13 +115,6 @@ private:
     void updateNotification(const Notification &notification);
 
     /*!
-     * Returns the banner that is currently on the screen, or NULL is no banner is on the screen.
-     *
-     * \return the current banner
-     */
-    MBanner *currentBanner();
-
-    /*!
      * Determines preview icon id of a notification based on the given notification parameters.
      * \param parameters Notification parameters to determine the preview icon id from.
      * \return Logical icon id as a string
@@ -143,8 +136,11 @@ private:
     //! GConf item which tracks if notification previews are enabled
     MGConfItem* notificationPreviewMode;
 
-    //! The banners currently being displayed, oldest first
-    QList<MBanner *> currentBanners;
+    //! The banners to be displayed, oldest first
+    QList<MBanner *> bannerQueue;
+
+    //! The banner currently being displayed
+    MBanner *currentBanner;
 
     //! Timer for disappearing the current banner
     QTimer bannerTimer;

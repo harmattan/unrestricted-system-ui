@@ -403,6 +403,7 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowAlreadyOpen()
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 0 0 0");
     notificationManager->addNotification(1, parameters1, 0);
 
+    // Disappear the first notification
     MBanner* first_banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
     QVERIFY(first_banner);
     MSceneWindowBridge bridge;
@@ -428,18 +429,38 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowAlreadyOpen()
     QCOMPARE(spy.count(), 1);
 }
 
+void Ut_MCompositorNotificationSink::testWhenNotificationAlreadyOnDisplayNoNewNotificationIsShown()
+{
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0, 0);
+    emit displayEntered();
+
+    sink->window->QGraphicsView::setVisible(false);
+    gMWindowIsOnDisplay = true;
+
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 0 0 0");
+    notificationManager->addNotification(1, parameters1, 0);
+
+    QCOMPARE(gMSceneWindowsAppeared.count(), 1);
+}
+
 void Ut_MCompositorNotificationSink::testWhenWindowOnDisplayThenNotificationAddedWithoutSignal()
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
     emit displayEntered();
 
+    // Disappear the first notification
     MBanner* first_banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
     QVERIFY(first_banner);
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(first_banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
 
     sink->window->QGraphicsView::setVisible(false);
-
     gMWindowIsOnDisplay = true;
+
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 0 0 0");
     notificationManager->addNotification(1, parameters1, 0);
 
