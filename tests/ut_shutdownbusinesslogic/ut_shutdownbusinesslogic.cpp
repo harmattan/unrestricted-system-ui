@@ -83,6 +83,12 @@ void Ut_ShutdownBusinessLogic::testShowUI()
     QCOMPARE(m_Api->shutdownUi->m_Text1, QString("text1"));
     QCOMPARE(m_Api->shutdownUi->m_Text2, QString("text2"));
     QCOMPARE(m_Api->shutdownUi->m_Delay, 50);
+
+    m_Api->showUI("text3", "text4", 150);
+
+    QCOMPARE(m_Api->shutdownUi->m_Text1, QString("text3"));
+    QCOMPARE(m_Api->shutdownUi->m_Text2, QString("text4"));
+    QCOMPARE(m_Api->shutdownUi->m_Delay, 150);
 }
 
 #ifdef HAVE_QMSYSTEM

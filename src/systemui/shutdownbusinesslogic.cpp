@@ -42,19 +42,16 @@ ShutdownBusinessLogic::ShutdownBusinessLogic(QObject *parent) :
 
 ShutdownBusinessLogic::~ShutdownBusinessLogic()
 {
-    if (shutdownUi) {
-        shutdownUi->deleteLater();
-        shutdownUi = 0;
-    }
+    delete shutdownUi;
 }
 
 void  ShutdownBusinessLogic::showUI(QString text1, QString text2, int timeout)
 {
-
     if (shutdownUi == NULL) {
-        shutdownUi = new ShutdownUI();
-        shutdownUi->showWindow(text1, text2, timeout);
+        shutdownUi = new ShutdownUI;
     }
+
+    shutdownUi->showWindow(text1, text2, timeout);
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -63,7 +60,7 @@ void ShutdownBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndica
 {
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
-            // To avoid early quitting on shutdown...
+            // To avoid early quitting on shutdown
             restoreSignalHandlers();
             showUI();
             break;
@@ -95,22 +92,19 @@ void ShutdownBusinessLogic::createAndPublishNotification(const QString &type, co
 void ShutdownBusinessLogic::thermalShutdown()
 {
     //% "Temperature too high. Device shutting down."
-    QString body(qtTrId("qtn_shut_high_temp"));
-    createAndPublishNotification("x-nokia.battery.temperature","", body);
+    createAndPublishNotification("x-nokia.battery.temperature","", qtTrId("qtn_shut_high_temp"));
 }
 
 void ShutdownBusinessLogic::batteryShutdown()
 {
     //% "Battery empty. Device shutting down."
-    QString body(qtTrId("qtn_shut_batt_empty"));
-    createAndPublishNotification("x-nokia.battery.shutdown", "", body);
+    createAndPublishNotification("x-nokia.battery.shutdown", "", qtTrId("qtn_shut_batt_empty"));
 }
 
 void ShutdownBusinessLogic::shutdownDeniedUSB()
 {
     //% "USB cable plugged in. Unplug the USB cable to shutdown."
-    QString body(qtTrId("qtn_shut_unplug_usb"));
-    createAndPublishNotification(MNotification::DeviceAddedEvent, "", body);
+    createAndPublishNotification(MNotification::DeviceAddedEvent, "", qtTrId("qtn_shut_unplug_usb"));
 }
 
 ShutdownBusinessLogicAdaptor::ShutdownBusinessLogicAdaptor(QObject *parent, ShutdownBusinessLogic *logic) :

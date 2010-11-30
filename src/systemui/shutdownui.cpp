@@ -105,11 +105,11 @@ void ShutdownUI::realize()
 
 void ShutdownUI::showWindow(const QString &text1, const QString &text2, int timeout)
 {
-    // If the widgets are not created we create them now
+    // If the widgets are not created create them now
     realize();
 
-    // Set the labels to show the text strings that we got
     if (!(text1.isEmpty() && text2.isEmpty())) {
+        // Set the labels to show the text strings that we got only if they exist
         if (label1 != NULL) {
             if (text1.startsWith("qtn")) {
                 label1->setText(qtTrId(text1.toLatin1().constData()));
@@ -135,8 +135,7 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
     feedback->play();
 
     // Set the interval and start the timer to the next phase: hiding the labels and showing the logo
-    timer->setInterval(timeout);
-    timer->start();
+    timer->start(timeout);
 }
 
 void ShutdownUI::showLogo()
@@ -148,12 +147,6 @@ void ShutdownUI::showLogo()
         layout->removeAt(0);
     }
     layout->addItem(logo);
-
-#if 0
-    /* Logo available only for portait ATM */
-    sceneManager ()->setOrientationAngle (M::Angle0, MSceneManager::ImmediateTransition);
-    lockOrientation ();
-#endif
 
     delete label1;
     delete label2;
