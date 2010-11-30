@@ -19,10 +19,6 @@ void VolumeBarWindow::volumeBarChanged (int)
 void VolumeBarWindow::hwKeyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)
 {
 }
-
-void VolumeBarWindow::locksChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)
-{
-}
 #endif
 
 void VolumeBarWindow::hwKeyResourceAcquired ()
