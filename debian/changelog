@@ -1,9 +1,8 @@
-system-ui (0.18.15~1) unstable; urgency=low
+system-ui (0.18.15-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#205825 - Volume indicator is not displayed in call view when adjustingvolume via HW key.
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 30 Nov 2010 13:37:55 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 30 Nov 2010 16:50:55 +0200
 
 system-ui (0.18.14-1) unstable; urgency=low
 
