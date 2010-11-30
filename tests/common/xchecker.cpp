@@ -535,10 +535,10 @@ XChecker::checkWindow (
             break;
 
         case CheckIsFullscreen:
-            if (width_return == 864 && height_return == 480)
+            if (width_return == 854 && height_return == 480)
                 retval = true;
 
-            if (width_return == 480 && height_return == 864)
+            if (width_return == 480 && height_return == 854)
                 retval = true;
 
             if (!retval) {
