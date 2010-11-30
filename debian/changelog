@@ -1,9 +1,8 @@
-system-ui (0.18.14~1) unstable; urgency=low
+system-ui (0.18.14-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#208431 - shutdown screen d-bus api doesn't let to update the shutdown-screen texts
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 29 Nov 2010 13:33:34 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 30 Nov 2010 13:37:34 +0200
 
 system-ui (0.18.13-1) unstable; urgency=low
 
