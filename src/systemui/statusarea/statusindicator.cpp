@@ -155,6 +155,9 @@ void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
 PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
         StatusIndicator(parent), networkAvailable(false)
 {
+    systemOfflineMode = createContextItem(context, "System.OfflineMode");
+    connect(systemOfflineMode, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
     cellularDataTechnology = createContextItem(context, "Cellular.DataTechnology");
     connect(cellularDataTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
@@ -172,29 +175,34 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
     QString postFix = "NoNetwork";
 
+    bool offlineMode = systemOfflineMode->value().toBool();
     QString dataTechnology = cellularDataTechnology->value().toString();     // gprs egprs umts hspa
     QString status         = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
 
     setValue(0);
 
-    if(status == "no-sim") {
-        postFix = "NoSIM";
-    } else if(status == "" || status == "offline" || status == "forbidden") {
+    if (offlineMode) {
         postFix = "Offline";
     } else {
-        if(dataTechnology == "gprs") {
-            postFix = "2G";
-        } else if(dataTechnology == "egprs") {
-            postFix = "25G";
-        } else if(dataTechnology == "umts") {
-            postFix = "3G";
-        } else if(dataTechnology == "hspa") {
-            postFix = "35G";
+        if (status == "no-sim") {
+            postFix = "NoSIM";
+        } else if (status == "" || status == "offline" || status == "forbidden") {
+            postFix = "NoNetwork";
+        } else {
+            if (dataTechnology == "gprs") {
+                postFix = "2G";
+            } else if(dataTechnology == "egprs") {
+                postFix = "25G";
+            } else if(dataTechnology == "umts") {
+                postFix = "3G";
+            } else if(dataTechnology == "hspa") {
+                postFix = "35G";
+            }
         }
     }
 
     bool n = !(postFix == "NoNetwork" || postFix == "Offline" || postFix == "NoSIM");
-    if(n != networkAvailable) {
+    if (n != networkAvailable) {
         networkAvailable = n;
         emit networkAvailabilityChanged(n);
     }

@@ -50,8 +50,6 @@ class TestContext : public ApplicationContext
 {
 public:
     virtual ContextItem *createContextItem(const QString &key) {
-        Q_UNUSED(key)
-
         testContextItems[key] = new TestContextItem;
 
         return testContextItems[key];
@@ -150,12 +148,12 @@ void Ut_StatusIndicator::testContextItemSubscribe()
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
     qApp->sendEvent(m_subject, &exitDisplayEvent);
-    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 2);
+    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 3);
 
     // When the application becomes not visible, the context item updates
     // should be subscribed to
     qApp->sendEvent(m_subject, &enterDisplayEvent);
-    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 2);
+    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 3);
 }
 
 void Ut_StatusIndicator::testContextItemDeletion()
@@ -165,14 +163,14 @@ void Ut_StatusIndicator::testContextItemDeletion()
 
     // There should be a total of two items constructed using the
     // StatusIndicator::createContextItem() call
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 2);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 3);
 
     delete m_subject;
     m_subject = NULL;
 
     // There should be a total of two items deleted by the
     // StatusIndicator destructor
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 2);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 3);
 }
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
@@ -194,28 +192,33 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 
 void Ut_StatusIndicator::testPhoneNetworkTypeObjectName_data()
 {
+    QTest::addColumn<bool>("SystemOfflineMode");
     QTest::addColumn<QString>("CellularRegistrationStatus");
     QTest::addColumn<QString>("CellularDataTechnology");
     QTest::addColumn<QString>("ExpectedObjectNamePostfix");
 
-    QTest::newRow("Empty registration status") << QString("") << QString("") << QString("Offline");
-    QTest::newRow("No-sim registration status") << QString("no-sim") << QString("") << QString("NoSIM");
-    QTest::newRow("Offline registration status") << QString("offline") << QString("") << QString("Offline");
-    QTest::newRow("Home registration status without data technology") << QString("home") << QString("") << QString("NoNetwork");
-    QTest::newRow("Home registration status with gprs data technology") << QString("home") << QString("gprs") << QString("2G");
-    QTest::newRow("Home registration status with egprs data technology") << QString("home") << QString("egprs") << QString("25G");
-    QTest::newRow("Home registration status with umts data technology") << QString("home") << QString("umts") << QString("3G");
-    QTest::newRow("Home registration status with hspa data technology") << QString("home") << QString("hspa") << QString("35G");
+    QTest::newRow("Offline mode") << true << QString("") << QString("") << QString("Offline");
+    QTest::newRow("No-sim registration status") << false << QString("no-sim") << QString("") << QString("NoSIM");
+    QTest::newRow("Empty registration status") << false << QString("") << QString("") << QString("NoNetwork");
+    QTest::newRow("Offline registration status") << false << QString("offline") << QString("") << QString("NoNetwork");
+    QTest::newRow("Offline registration status") << false << QString("forbidden") << QString("") << QString("NoNetwork");
+    QTest::newRow("Home registration status without data technology") << false << QString("home") << QString("") << QString("NoNetwork");
+    QTest::newRow("Home registration status with gprs data technology") << false << QString("home") << QString("gprs") << QString("2G");
+    QTest::newRow("Home registration status with egprs data technology") << false << QString("home") << QString("egprs") << QString("25G");
+    QTest::newRow("Home registration status with umts data technology") << false << QString("home") << QString("umts") << QString("3G");
+    QTest::newRow("Home registration status with hspa data technology") << false << QString("home") << QString("hspa") << QString("35G");
 }
 
 void Ut_StatusIndicator::testPhoneNetworkTypeObjectName()
 {
+    QFETCH(bool, SystemOfflineMode);
     QFETCH(QString, CellularRegistrationStatus);
     QFETCH(QString, CellularDataTechnology);
     QFETCH(QString, ExpectedObjectNamePostfix);
 
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
 
+    testContextItems["System.OfflineMode"]->setValue(SystemOfflineMode);
     testContextItems["Cellular.RegistrationStatus"]->setValue(CellularRegistrationStatus);
     testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
 

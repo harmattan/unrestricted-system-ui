@@ -179,6 +179,7 @@ private slots:
     void setNetworkType();
 
 private:
+    ContextItem *systemOfflineMode;
     ContextItem *cellularDataTechnology;
     ContextItem *cellularRegistrationStatus;
 
