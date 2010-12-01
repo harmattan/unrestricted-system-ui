@@ -192,32 +192,58 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     QVERIFY(statusIndicator->objectName() != "");
 }
 
-void Ut_StatusIndicator::testPhoneNetworkType()
+void Ut_StatusIndicator::testPhoneNetworkTypeObjectName_data()
+{
+    QTest::addColumn<QString>("CellularRegistrationStatus");
+    QTest::addColumn<QString>("CellularDataTechnology");
+    QTest::addColumn<QString>("ExpectedObjectNamePostfix");
+
+    QTest::newRow("Empty registration status") << QString("") << QString("") << QString("Offline");
+    QTest::newRow("No-sim registration status") << QString("no-sim") << QString("") << QString("NoSIM");
+    QTest::newRow("Offline registration status") << QString("offline") << QString("") << QString("Offline");
+    QTest::newRow("Home registration status without data technology") << QString("home") << QString("") << QString("NoNetwork");
+    QTest::newRow("Home registration status with gprs data technology") << QString("home") << QString("gprs") << QString("2G");
+    QTest::newRow("Home registration status with egprs data technology") << QString("home") << QString("egprs") << QString("25G");
+    QTest::newRow("Home registration status with umts data technology") << QString("home") << QString("umts") << QString("3G");
+    QTest::newRow("Home registration status with hspa data technology") << QString("home") << QString("hspa") << QString("35G");
+}
+
+void Ut_StatusIndicator::testPhoneNetworkTypeObjectName()
+{
+    QFETCH(QString, CellularRegistrationStatus);
+    QFETCH(QString, CellularDataTechnology);
+    QFETCH(QString, ExpectedObjectNamePostfix);
+
+    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+
+    testContextItems["Cellular.RegistrationStatus"]->setValue(CellularRegistrationStatus);
+    testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
+
+    QCOMPARE(m_subject->objectName().contains(ExpectedObjectNamePostfix), QBool(true));
+}
+
+void Ut_StatusIndicator::testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted()
 {
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
     QSignalSpy spy(m_subject, SIGNAL(networkAvailabilityChanged(bool)));
 
-    QVERIFY(m_subject->objectName().indexOf("Offline") >= 0);
-    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("no-sim"));
-    QVERIFY(m_subject->objectName().indexOf("NoSIM") >= 0);
-    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
-    QVERIFY(m_subject->objectName().indexOf("Offline") >= 0);
-    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("forbidden"));
-    QVERIFY(m_subject->objectName().indexOf("Offline") >= 0);
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
-    QVERIFY(m_subject->objectName().indexOf("NoNetwork") >= 0);
     testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
-    QVERIFY(m_subject->objectName().indexOf("2G") >= 0);
+
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0)[0], QVariant(true));
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("egprs"));
-    QVERIFY(m_subject->objectName().indexOf("25G") >= 0);
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("umts"));
-    QVERIFY(m_subject->objectName().indexOf("3G") >= 0);
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("hspa"));
-    QVERIFY(m_subject->objectName().indexOf("35G") >= 0);
-    spy.clear();
+}
+
+void Ut_StatusIndicator::testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitted()
+{
+    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
+    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
+
+    QSignalSpy spy(m_subject, SIGNAL(networkAvailabilityChanged(bool)));
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
+
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0)[0], QVariant(false));
 }
@@ -289,7 +315,6 @@ void Ut_StatusIndicator::testBattery()
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(true));
     QVERIFY(m_subject->objectName().indexOf("PowerSaveCharging") >= 0);
 }
-
 
 void Ut_StatusIndicator::testAlarm()
 {

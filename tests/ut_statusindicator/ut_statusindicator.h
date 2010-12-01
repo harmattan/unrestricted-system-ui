@@ -75,7 +75,10 @@ private slots:
     void testContextItemSubscribe();
     void testContextItemDeletion();
     void testPhoneNetworkSignalStrength();
-    void testPhoneNetworkType();
+    void testPhoneNetworkTypeObjectName_data();
+    void testPhoneNetworkTypeObjectName();
+    void testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted();
+    void testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitted();
     void testBattery();
     void testAlarm();
     void testBluetooth();
