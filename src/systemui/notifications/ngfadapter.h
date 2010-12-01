@@ -22,9 +22,7 @@
 
 #include <QObject>
 
-#include <glib.h>
 #include <dbus/dbus.h>
-#include <dbus/dbus-glib-lowlevel.h>
 
 #ifdef HAVE_LIBNGF
 #include <libngf/client.h>

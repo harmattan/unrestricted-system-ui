@@ -20,6 +20,8 @@
 #include "ngfadapter.h"
 
 #ifdef HAVE_LIBNGF
+#include <dbus/dbus-glib-lowlevel.h>
+
 NGFAdapter::NGFAdapter()
 {
     connection = dbus_bus_get(DBUS_BUS_SYSTEM, NULL);

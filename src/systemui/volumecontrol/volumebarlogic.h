@@ -20,9 +20,7 @@
 #define VOLUMEBARLOGIC_H
 
 #include <QObject>
-#include <glib.h>
 #include <dbus/dbus.h>
-#include <dbus/dbus-glib-lowlevel.h>
 
 //! Provides informations and actions on PulseAudio MainVolume API
 class VolumeBarLogic : public QObject
@@ -92,7 +90,7 @@ private:
 
     //! The current volume level (< currentmax)
     quint32     currentvolume;
-    //! The stepcount of volume 
+    //! The stepcount of volume
     quint32     currentmax;
 
 #ifdef UNIT_TEST

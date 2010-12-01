@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
 #include <QTimer>
 #include <QVariant>

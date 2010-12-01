@@ -3,6 +3,9 @@ include(../common_top.pri)
 TARGET = ut_ngfadapter
 INCLUDEPATH +=$$NOTIFICATIONSRCDIR
 
+PKGCONFIG += \
+    dbus-glib-1
+
 # unit test and unit
 SOURCES += \
     ut_ngfadapter.cpp \
