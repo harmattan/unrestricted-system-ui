@@ -26,6 +26,9 @@
 #include <MGConfItem>
 #include "testnotificationparameters.h"
 #include "notification.h"
+#include "notificationgroup_stub.h"
+#include "sysuid_stub.h"
+#include "notificationmanager_stub.h"
 
 static QSettings *settings;
 // QCoreApplication stubs to avoid crashing in processEvents()
@@ -422,5 +425,27 @@ void Ut_NotificationAreaSink::testApplyPrivacySetting()
     QCOMPARE(subtitles[0], subtitle);
 }
 
-QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)
+void Ut_NotificationAreaSink::testNotificationsFetchedFromNotificationManager()
+{
 
+    NotificationManager stubManager;
+    gSysuidStub->stubSetReturnValue("notificationManager", &stubManager);
+    QList<Notification> notifications;
+    Notification n;
+    notifications.append(n);
+    gNotificationManagerStub->stubSetReturnValue("notifications", notifications);
+
+    QList<NotificationGroup> groups;
+    NotificationGroup ng;
+    gNotificationManagerStub->stubSetReturnValue("groups", groups);
+
+    QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
+    sink->updateCurrentNotifications();
+
+    QCOMPARE(gNotificationManagerStub->stubCallCount("notifications"), 1);
+    QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 1);
+
+    QCOMPARE(addSpy.count(), 1);
+}
+
+QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)

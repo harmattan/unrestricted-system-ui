@@ -51,6 +51,7 @@ private slots:
     void testRemoveAllRemovableBanners();
     void testHonorPrivacySetting();
     void testWhenNotificationAreaIsCreatedNotificationAreaSinkHasClickablePropertySet();
+    void testNotificationsUpdatedToModelWhenAreaIsCreated();
 
 signals:
     void addNotification(MBanner &notification);

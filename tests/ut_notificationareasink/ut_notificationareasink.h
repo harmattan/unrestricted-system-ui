@@ -76,6 +76,7 @@ private slots:
     void testAddNewNotificationToGroupUpdatesNotificationArea();
     void testApplyPrivacySetting_data();
     void testApplyPrivacySetting();
+    void testNotificationsFetchedFromNotificationManager();
 
 signals:
     void addGroup(uint groupId, const NotificationParameters &parameters);

@@ -47,6 +47,7 @@ void Ut_NotificationArea::cleanupTestCase()
 
 void Ut_NotificationArea::init()
 {
+    gNotificationAreaSinkStub->stubReset();
     m_subject = new NotificationArea();
 
     connect(this, SIGNAL(addNotification(MBanner &)), m_subject, SLOT(addNotification(MBanner &)));
@@ -146,6 +147,11 @@ void Ut_NotificationArea::testWhenNotificationAreaIsCreatedNotificationAreaSinkH
     m_subject = new NotificationArea(NULL, false);
     gWidgetNotificationSinkStub->stubCallCount("setNotificationsClickable");
     QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setNotificationsClickable").parameter<bool>(0), false);
+}
+
+void Ut_NotificationArea::testNotificationsUpdatedToModelWhenAreaIsCreated()
+{
+    QCOMPARE(gNotificationAreaSinkStub->stubCallCount("updateCurrentNotifications") , 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationArea)

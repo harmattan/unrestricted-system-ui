@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "sysuid.h"
 #include "notificationarea.h"
 #include "notificationareasink.h"
@@ -43,6 +42,8 @@ NotificationArea::NotificationArea(MWidget *parent, bool notificationsClickable)
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
     connect(this, SIGNAL(notificationRemovalRequested(uint)), notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)));
     connect(this, SIGNAL(notificationGroupClearingRequested(uint)), notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)));
+
+    notificationAreaSink->updateCurrentNotifications();
 }
 
 NotificationArea::~NotificationArea()

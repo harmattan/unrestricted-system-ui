@@ -42,6 +42,9 @@ public:
      */
     virtual ~NotificationAreaSink();
 
+    //! Updates the current notifications from manager
+    void updateCurrentNotifications();
+
 private slots:
     //! \reimp
     virtual void addGroup(uint groupId, const NotificationParameters &parameters);
