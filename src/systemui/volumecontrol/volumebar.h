@@ -71,6 +71,9 @@ protected:
     //! \reimp_end
 
 private:
+    //! Calculate new volume based on the given mouse event
+    void calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event);
+
     //! a timer for visibility-timeout
     QTimer                   timer;
     //! the overlay main widget, the slider widget

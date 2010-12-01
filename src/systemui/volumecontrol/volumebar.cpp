@@ -112,16 +112,8 @@ void VolumeBar::constructUi ()
     setLayout (layout);
 }
 
-void VolumeBar::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+void VolumeBar::calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event)
 {
-  MStylableWidget::mouseMoveEvent (event);
-  // just pass the event to mousePressEvent handler
-  mousePressEvent (event);
-}
-
-void VolumeBar::mousePressEvent (QGraphicsSceneMouseEvent *event)
-{
-    MStylableWidget::mousePressEvent (event);
     qreal percentage = 0.0;
     /*
      * increase & decrease the volume based on the tap/movement
@@ -141,6 +133,19 @@ void VolumeBar::mousePressEvent (QGraphicsSceneMouseEvent *event)
     emit volumeChanged (value);
     /* and the update the UI */
     updateVolume (value, valueMax);
+}
+
+void VolumeBar::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+{
+    MStylableWidget::mouseMoveEvent (event);
+    calculateNewVolumeForEvent(event);
+}
+
+void VolumeBar::mousePressEvent (QGraphicsSceneMouseEvent *event)
+{
+    MStylableWidget::mousePressEvent (event);
+    event->accept();
+    calculateNewVolumeForEvent(event);
 }
 
 void VolumeBar::updateContents ()

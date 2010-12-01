@@ -123,6 +123,7 @@ void Ut_VolumeBar::testChangeVolume()
 
     // send it
     volumeBar->mousePressEvent (pressEvent);
+    QVERIFY(pressEvent->isAccepted());
 
     // check whether we got a volumeChanged signal
     QCOMPARE (spy.count (), 1);
