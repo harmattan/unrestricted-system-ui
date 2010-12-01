@@ -19,37 +19,37 @@
 #ifndef LOCKSCREENWINDOW_STUB
 #define LOCKSCREENWINDOW_STUB
 
-#include "lockscreenwindow.h"
+#include "screenlockwindow.h"
 #include <stubbase.h>
 
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class LockScreenWindowStub : public StubBase {
+class ScreenLockWindowStub : public StubBase {
   public:
-  virtual void LockScreenWindowConstructor();
-  virtual void LockScreenWindowDestructor();
+  virtual void ScreenLockWindowConstructor();
+  virtual void ScreenLockWindowDestructor();
   virtual void applyStyle();
   virtual void reset();
   virtual void showEvent(QShowEvent *event);
 };
 
 // 2. IMPLEMENT STUB
-void LockScreenWindowStub::LockScreenWindowConstructor() {
+void ScreenLockWindowStub::ScreenLockWindowConstructor() {
 }
 
-void LockScreenWindowStub::LockScreenWindowDestructor() {
+void ScreenLockWindowStub::ScreenLockWindowDestructor() {
 }
 
-void LockScreenWindowStub::applyStyle() {
+void ScreenLockWindowStub::applyStyle() {
   stubMethodEntered("applyStyle");
 }
 
-void LockScreenWindowStub::reset() {
+void ScreenLockWindowStub::reset() {
   stubMethodEntered("reset");
 }
 
-void LockScreenWindowStub::showEvent(QShowEvent *event)
+void ScreenLockWindowStub::showEvent(QShowEvent *event)
 {
   QList<ParameterBase*> params;
   params.append( new Parameter<QShowEvent * >(event));
@@ -57,31 +57,41 @@ void LockScreenWindowStub::showEvent(QShowEvent *event)
 }
 
 // 3. CREATE A STUB INSTANCE
-LockScreenWindowStub gDefaultLockScreenWindowStub;
-LockScreenWindowStub* gLockScreenWindowStub = &gDefaultLockScreenWindowStub;
+ScreenLockWindowStub gDefaultScreenLockWindowStub;
+ScreenLockWindowStub* gScreenLockWindowStub = &gDefaultScreenLockWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-LockScreenWindow::LockScreenWindow(QWidget *)
+ScreenLockWindow::ScreenLockWindow(QWidget *)
 {
-  gLockScreenWindowStub->LockScreenWindowConstructor();
+  gScreenLockWindowStub->ScreenLockWindowConstructor();
 }
 
-LockScreenWindow::~LockScreenWindow() {
-  gLockScreenWindowStub->LockScreenWindowDestructor();
+ScreenLockWindow::~ScreenLockWindow() {
+  gScreenLockWindowStub->ScreenLockWindowDestructor();
 }
 
-void LockScreenWindow::applyStyle() {
-  gLockScreenWindowStub->applyStyle();
+void ScreenLockWindow::applyStyle() {
+  gScreenLockWindowStub->applyStyle();
 }
 
-void LockScreenWindow::reset() {
-  gLockScreenWindowStub->reset();
+void ScreenLockWindow::reset() {
+  gScreenLockWindowStub->reset();
 }
 
-void LockScreenWindow::showEvent(QShowEvent *event)
+void ScreenLockWindow::showEvent(QShowEvent *event)
 {
-    gLockScreenWindowStub->showEvent(event);
+    gScreenLockWindowStub->showEvent(event);
+}
+
+void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *)
+{
+    // TODO
+}
+
+void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *)
+{
+    // TODO
 }
 
 #endif

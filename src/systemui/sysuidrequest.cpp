@@ -22,14 +22,14 @@
 #include <QDebug>
 
 #include "sysuidrequest.h"
-#include "lockscreenbusinesslogic.h"
-#include "lockscreenbusinesslogicadaptor.h"
+#include "screenlockbusinesslogic.h"
+#include "screenlockbusinesslogicadaptor.h"
 
 static const QString DBUS_SERVICE = "com.nokia.system_ui";
 static const QString DBUS_PATH = "/com/nokia/system_ui/request";
 
 SysUidRequest::SysUidRequest() :
-    lockScreenBusinessLogic_(NULL)
+    screenLockBusinessLogic_(NULL)
 {
     /*
      * Registering on the system bus, because MCE needs us to provide interface
@@ -46,8 +46,8 @@ SysUidRequest::SysUidRequest() :
         dbusError(bus, false);
     }
 
-    lockScreenBusinessLogic_ = new LockScreenBusinessLogic(this);
-    new LockScreenBusinessLogicAdaptor(this, lockScreenBusinessLogic_);
+    screenLockBusinessLogic_ = new ScreenLockBusinessLogic(this);
+    new ScreenLockBusinessLogicAdaptor(this, screenLockBusinessLogic_);
 }
 
 void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram)
@@ -59,7 +59,7 @@ void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram)
     }
 }
 
-LockScreenBusinessLogic *SysUidRequest::lockScreenBusinessLogic()
+ScreenLockBusinessLogic *SysUidRequest::screenLockBusinessLogic()
 {
-    return lockScreenBusinessLogic_;
+    return screenLockBusinessLogic_;
 }

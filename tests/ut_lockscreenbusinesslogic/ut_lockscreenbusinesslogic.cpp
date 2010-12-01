@@ -20,8 +20,7 @@
 #include <QtTest/QtTest>
 
 #include "ut_lockscreenbusinesslogic.h"
-#include "lockscreenbusinesslogic.h"
-#include "lockscreen_stub.h"
+#include "screenlockbusinesslogic.h"
 #include "lockscreenwindow_stub.h"
 #include "eventeater.h"
 #include "sysuid_stub.h"
@@ -54,7 +53,7 @@ void QWidget::raise()
 
 void Ut_LockScreenBusinessLogic::init()
 {
-    gLockScreenWindowStub->stubReset();
+    gScreenLockWindowStub->stubReset();
 #ifdef HAVE_QMSYSTEM
     qmDisplayState = MeeGo::QmDisplayState::On;
 #endif
@@ -88,7 +87,7 @@ void Ut_LockScreenBusinessLogic::cleanupTestCase()
 
 void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 {
-    LockScreenBusinessLogic logic;
+    ScreenLockBusinessLogic logic;
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
 #ifdef HAVE_QMSYSTEM
@@ -108,39 +107,39 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 #endif
 
     // The lock screen should now be visible
-    QCOMPARE(gQWidgetVisible[logic.lockScreenWindow], true);
+    QCOMPARE(gQWidgetVisible[logic.screenLockWindow], true);
 
     // Raising should happen
     QCOMPARE(gQWidgetRaiseCalled, true);
 
     // The lock screen needs to be reset
-    QCOMPARE(gLockScreenWindowStub->stubCallCount("reset"), 1);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount("reset"), 1);
 
     // Reset the stubs
-    gQWidgetVisible[logic.lockScreenWindow] = false;
+    gQWidgetVisible[logic.screenLockWindow] = false;
     gQWidgetRaiseCalled = false;
 
     // Lock the screen again
     logic.toggleScreenLockUI(true);
 
     // show() should not be called
-    QCOMPARE(gQWidgetVisible[logic.lockScreenWindow], false);
+    QCOMPARE(gQWidgetVisible[logic.screenLockWindow], false);
 
     // Raising should happen
     QCOMPARE(gQWidgetRaiseCalled, true);
 
     // The lock screen still needs to be reset
-    QCOMPARE(gLockScreenWindowStub->stubCallCount("reset"), 2);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount("reset"), 2);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);
     QTest::qWait (10);
-    QCOMPARE(logic.lockScreenWindow->isVisible(), false);
+    QCOMPARE(logic.screenLockWindow->isVisible(), false);
 }
 
 void Ut_LockScreenBusinessLogic::testToggleEventEater()
 {
-    LockScreenBusinessLogic logic;
+    ScreenLockBusinessLogic logic;
 
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
@@ -156,7 +155,7 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
 
 void Ut_LockScreenBusinessLogic::testUnlockScreen()
 {
-    LockScreenBusinessLogic logic;
+    ScreenLockBusinessLogic logic;
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
 
     logic.unlockScreen();
@@ -168,12 +167,12 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
 #else
     spy.clear ();
 #endif
-    QCOMPARE(logic.lockScreenWindow->isVisible(), false);
+    QCOMPARE(logic.screenLockWindow->isVisible(), false);
 }
 
 void Ut_LockScreenBusinessLogic::testHideEventEater()
 {
-    LockScreenBusinessLogic logic;
+    ScreenLockBusinessLogic logic;
 
     logic.hideEventEater();
     QTest::qWait (10);
@@ -183,18 +182,18 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
 #ifdef HAVE_QMSYSTEM
 void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 {
-    LockScreenBusinessLogic logic;
+    ScreenLockBusinessLogic logic;
     logic.toggleScreenLockUI(true);
 
     // When lock-screen-ui is shown reset should be called on it
-    QCOMPARE(gLockScreenWindowStub->stubCallCount ("reset"), 1);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount ("reset"), 1);
 
     logic.displayStateChanged(MeeGo::QmDisplayState::Off);
     logic.displayStateChanged(MeeGo::QmDisplayState::On);
 
     // Also check whether the reset called on the
     // lock-screen-ui (after display turn on)
-    QCOMPARE(gLockScreenWindowStub->stubCallCount ("reset"), 2);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount ("reset"), 2);
 }
 #endif
 

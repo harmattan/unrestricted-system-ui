@@ -81,7 +81,7 @@ void Ut_LockScreenView::init()
 {
     mGConfItemValueLandscape = QVariant("/landscape.png");
     mGConfItemValuePortrait = QVariant("/portrait.png");
-    controller = new MSceneWindow;
+    controller = new MWidgetController;
     lockScreenView = new LockScreenView(controller);
     controller->setView(lockScreenView);
 }

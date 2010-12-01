@@ -2,17 +2,17 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_lockscreenwithoutpadlockview
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen $$SRCDIR/statusindicatormenu
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$ROOTSRCDIR/extensions/screenlock $$SRCDIR/statusindicatormenu
 
 SOURCES += ut_lockscreenwithoutpadlockview.cpp \
-    $$SRCDIR/lockscreen/lockscreenwithoutpadlockview.cpp  \
-    $$SRCDIR/lockscreen/lockscreenview.cpp  \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenwithoutpadlockview.cpp  \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenview.cpp  \
     $$STUBSDIR/stubbase.cpp \
 
 HEADERS += ut_lockscreenwithoutpadlockview.h \
-    $$SRCDIR/lockscreen/lockscreenwithoutpadlockview.h \
-    $$SRCDIR/lockscreen/lockscreenview.h \
-    $$SRCDIR/lockscreen/lockscreen.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenwithoutpadlockview.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenview.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreen.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h
 
 include(../common_bot.pri)

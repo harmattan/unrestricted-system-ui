@@ -2,35 +2,35 @@ include(../common_top.pri)
 TARGET = ft_lockscreenui
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen $$COMMONDIR
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/screenlock $$ROOTSRCDIR/extensions/screenlock $$COMMONDIR
 
 contains(DEFINES, HAVE_QMSYSTEM) {
 	PKGCONFIG += qmsystem2
 }
 
-STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
+STYLE_HEADERS += $$SRCDIR/screenlock/screenlockwindowstyle.h
 
 SOURCES += ft_lockscreenui.cpp \
+    $$SRCDIR/screenlock/screenlockwindow.cpp  \
+    $$SRCDIR/screenlock/eventeater.cpp  \
+    $$ROOTSRCDIR/extensions/screenlock/unlockarea.cpp \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreen.cpp  \
+    $$ROOTSRCDIR/extensions/screenlock/unlockmissedevents.cpp \
+    $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.cpp \
     $$COMMONDIR/xchecker.cpp \
-    $$SRCDIR/lockscreen/unlockarea.cpp \
-    $$SRCDIR/lockscreen/lockscreen.cpp  \
-    $$SRCDIR/lockscreen/lockscreenwindow.cpp  \
-    $$SRCDIR/lockscreen/eventeater.cpp  \
+    $$SRCDIR/x11wrapper.cpp \
     $$STUBSDIR/stubbase.cpp \
-    $$SRCDIR/lockscreen/unlockmissedevents.cpp \
-    $$SRCDIR/lockscreen/unlocknotifications.cpp \
-    $$SRCDIR/x11wrapper.cpp
 
 HEADERS += ft_lockscreenui.h \
-    $$COMMONDIR/xchecker.h \
-    $$SRCDIR/lockscreen/unlockarea.h \
-    $$SRCDIR/lockscreen/lockscreen.h \
-    $$SRCDIR/lockscreen/lockscreenwindow.h \
-    $$SRCDIR/lockscreen/lockscreenwindowstyle.h \
-    $$SRCDIR/lockscreen/eventeater.h \
+    $$SRCDIR/screenlock/screenlockwindow.h \
+    $$SRCDIR/screenlock/screenlockwindowstyle.h \
+    $$SRCDIR/screenlock/eventeater.h \
+    $$ROOTSRCDIR/extensions/screenlock/unlockarea.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreen.h \
+    $$ROOTSRCDIR/extensions/screenlock/unlockmissedevents.h \
+    $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/lockscreen/unlockmissedevents.h \
-    $$SRCDIR/lockscreen/unlocknotifications.h \
+    $$COMMONDIR/xchecker.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)

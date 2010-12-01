@@ -28,5 +28,3 @@ desktop_entry.files = *.desktop
 INSTALLS += \
     target \
     desktop_entry
-
-include(../check.pri)

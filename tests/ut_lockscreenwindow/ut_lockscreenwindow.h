@@ -21,10 +21,9 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include "lockscreenwindow.h"
 
 class MApplication;
-class LockScreenWindow;
+class ScreenLockWindow;
 
 class Ut_LockScreenWindow : public QObject
 {
@@ -45,7 +44,7 @@ private slots:
 
 private:
     MApplication *app;
-    LockScreenWindow *lockScreenWindow;
+    ScreenLockWindow *lockScreenWindow;
 };
 
 #endif

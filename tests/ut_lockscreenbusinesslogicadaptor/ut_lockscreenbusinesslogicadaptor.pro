@@ -1,17 +1,17 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_lockscreenbusinesslogicadaptor
-INCLUDEPATH += $$SRCDIR/lockscreen
+INCLUDEPATH += $$SRCDIR/screenlock
 
 # unit test and unit
 SOURCES += \
-    $$SRCDIR/lockscreen/lockscreenbusinesslogicadaptor.cpp \
-    $$STUBSDIR/lockscreenbusinesslogic_stub.cpp \
+    $$SRCDIR/screenlock/screenlockbusinesslogicadaptor.cpp \
+    $$STUBSDIR/stubbase.cpp \
     ut_lockscreenbusinesslogicadaptor.cpp
 
 HEADERS += \
-    $$SRCDIR/lockscreen/lockscreenbusinesslogicadaptor.h \
-    $$STUBSDIR/lockscreenbusinesslogic_stub.h \
+    $$SRCDIR/screenlock/screenlockbusinesslogicadaptor.h \
+    $$SRCDIR/screenlock/screenlockbusinesslogic.h \
     ut_lockscreenbusinesslogicadaptor.h
 
 include(../common_bot.pri)

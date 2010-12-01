@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=X-MeeGoApplicationExtension
+Name=Screen Lock Extension
+
+[X-MeeGoApplicationExtension]
+Interface=com.meego.core.ScreenLockExtensionInterface/1.0
+Extension=libsysuid-screenlock.so

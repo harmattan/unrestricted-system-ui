@@ -24,6 +24,7 @@
 #include "contextframeworkcontext.h"
 #include "notificationstatusindicator.h"
 #include "notifiernotificationsink.h"
+#include "inputmethodstatusindicatoradaptor.h"
 #include "sysuid.h"
 #include <QGraphicsLinearLayout>
 #include <QGraphicsAnchorLayout>
@@ -98,6 +99,7 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     controller->setLayout(compositeLayout);
 
     // Connect to D-Bus and register the DBus source as an object
+    new InputMethodStatusIndicatorAdaptor(landscapeInputMethodIndicator);
     QDBusConnection::sessionBus().registerService("com.meego.core.MInputMethodStatusIndicator");
     QDBusConnection::sessionBus().registerObject("/inputmethodstatusindicator", landscapeInputMethodIndicator);
 

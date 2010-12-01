@@ -28,6 +28,7 @@
 class Clock;
 class StatusArea;
 class StatusIndicator;
+class InputMethodStatusIndicator;
 class QGraphicsLinearLayout;
 
 /*!
@@ -108,7 +109,7 @@ private:
     StatusIndicator *portraitProfileIndicator;
 
     //! Input method indicator (only in landscape)
-    StatusIndicator *landscapeInputMethodIndicator;
+    InputMethodStatusIndicator *landscapeInputMethodIndicator;
 
     //! Call indicator
     StatusIndicator *landscapeCallIndicator;

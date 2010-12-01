@@ -1,18 +1,17 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_lockscreenbusinesslogic
-INCLUDEPATH += $$SRCDIR/lockscreen
+INCLUDEPATH += $$SRCDIR/screenlock
 
 SOURCES += ut_lockscreenbusinesslogic.cpp \
-    $$SRCDIR/lockscreen/lockscreenbusinesslogic.cpp \
+    $$SRCDIR/screenlock/screenlockbusinesslogic.cpp \
     $$STUBSDIR/stubbase.cpp
 
 HEADERS += ut_lockscreenbusinesslogic.h \
-    $$SRCDIR/lockscreen/lockscreenbusinesslogic.h \
+    $$SRCDIR/screenlock/screenlockbusinesslogic.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/lockscreen/lockscreen.h \
-    $$SRCDIR/lockscreen/lockscreenwindow.h \
-    $$SRCDIR/lockscreen/eventeater.h \
+    $$SRCDIR/screenlock/screenlockwindow.h \
+    $$SRCDIR/screenlock/eventeater.h \
     $$SRCDIR/closeeventeater.h
 
 include(../common_bot.pri)

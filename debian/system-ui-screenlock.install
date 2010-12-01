@@ -1,0 +1,4 @@
+usr/share/themes/base/meegotouch/libsysuid-screenlock/style/*.css
+usr/share/themes/base/meegotouch/libsysuid-screenlock/*.conf
+usr/lib/meegotouch/applicationextensions/libsysuid-screenlock.so
+usr/share/meegotouch/applicationextensions/sysuid-screenlock.desktop

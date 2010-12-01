@@ -33,6 +33,7 @@
 #include "statusindicatormenu.h"
 #include "statusindicatormenudropdownview.h"
 #include "statusindicatormenustyle.h"
+#include "sysuid.h"
 
 const int StatusIndicatorMenuDropDownView::VIEW_INITIALIZATION_DELAY = 30 * 1000;
 
@@ -172,6 +173,7 @@ MPannableViewport* StatusIndicatorMenuDropDownView::createPannableArea()
 
     if(style()->notificationArea()) {
         NotificationArea *notificationArea = new NotificationArea;
+        notificationArea->setNotificationManager(Sysuid::instance()->notificationManager());
         connect(notificationArea, SIGNAL(bannerClicked()), controller, SIGNAL(hideRequested()));
         contentLayout->addItem(notificationArea);
     }

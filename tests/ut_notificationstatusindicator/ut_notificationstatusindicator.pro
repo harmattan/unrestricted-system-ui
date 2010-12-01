@@ -8,7 +8,7 @@ MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h
 
 # unit test and unit classes
 HEADERS += ut_notificationstatusindicator.h \
-   $$NOTIFICATIONSRCDIR/notificationstatusindicator.h \
+   $$SRCDIR/statusarea/notificationstatusindicator.h \
    $$SRCDIR/statusarea/statusindicator.h \
    $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h \
    $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
@@ -26,7 +26,7 @@ HEADERS += ut_notificationstatusindicator.h \
 
 # unit test and unit classes
 SOURCES += ut_notificationstatusindicator.cpp \
-   $$NOTIFICATIONSRCDIR/notificationstatusindicator.cpp \
+   $$SRCDIR/statusarea/notificationstatusindicator.cpp \
    $$SRCDIR/statusarea/statusindicator.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp

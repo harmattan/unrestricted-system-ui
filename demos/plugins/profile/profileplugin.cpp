@@ -17,11 +17,11 @@
 **
 ****************************************************************************/
 
+#include <MLibrary>
 #include "profileplugin.h"
 #include "profile.h"
 
 Q_EXPORT_PLUGIN2(profile, ProfilePlugin)
-
 
 ProfilePlugin::ProfilePlugin() : statusIndicatorMenu(0), profile(0)
 {
@@ -49,3 +49,5 @@ QGraphicsWidget *ProfilePlugin::widget()
 {
     return profile;
 }
+
+M_LIBRARY

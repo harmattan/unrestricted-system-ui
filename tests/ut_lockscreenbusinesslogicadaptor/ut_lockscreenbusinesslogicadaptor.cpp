@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#include "lockscreenbusinesslogic_stub.h"
 #include "ut_lockscreenbusinesslogicadaptor.h"
+#include "screenlockbusinesslogic_stub.h"
 
 #include <QDBusAbstractInterface>
 
@@ -69,8 +69,8 @@ QDBusAbstractInterface::call (
 void
 Ut_LockScreenBusinessLogicAdaptor::initTestCase ()
 {
-    m_logic = new LockScreenBusinessLogic;
-    m_subject = new LockScreenBusinessLogicAdaptor (this, m_logic);
+    m_logic = new ScreenLockBusinessLogic;
+    m_subject = new ScreenLockBusinessLogicAdaptor (this, m_logic);
 }
 
 void
@@ -94,10 +94,10 @@ Ut_LockScreenBusinessLogicAdaptor::testTklockOpen ()
      */
     reply = m_subject->tklock_open (
 		    TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD,
-		    LockScreenBusinessLogicAdaptor::TkLockModeNone, 
+		    ScreenLockBusinessLogicAdaptor::TkLockModeNone, 
 		    false, false);
     
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
     QCOMPARE (m_subject->m_MCECallbackService,   TEST_SERVICE);
     QCOMPARE (m_subject->m_MCECallbackPath,      TEST_PATH);
     QCOMPARE (m_subject->m_MCECallbackInterface, TEST_INTERFACE);
@@ -108,10 +108,10 @@ Ut_LockScreenBusinessLogicAdaptor::testTklockOpen ()
      */
     reply = m_subject->tklock_open (
 		    TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD,
-		    LockScreenBusinessLogicAdaptor::TkLockModeHelp, 
+		    ScreenLockBusinessLogicAdaptor::TkLockModeHelp, 
 		    false, false);
     
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
     QCOMPARE (m_subject->m_MCECallbackService,   TEST_SERVICE);
     QCOMPARE (m_subject->m_MCECallbackPath,      TEST_PATH);
     QCOMPARE (m_subject->m_MCECallbackInterface, TEST_INTERFACE);
@@ -122,10 +122,10 @@ Ut_LockScreenBusinessLogicAdaptor::testTklockOpen ()
      */
     reply = m_subject->tklock_open (
 		    TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD,
-		    LockScreenBusinessLogicAdaptor::TkLockModeSelect, 
+		    ScreenLockBusinessLogicAdaptor::TkLockModeSelect, 
 		    false, false);
     
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
     QCOMPARE (m_subject->m_MCECallbackService,   TEST_SERVICE);
     QCOMPARE (m_subject->m_MCECallbackPath,      TEST_PATH);
     QCOMPARE (m_subject->m_MCECallbackInterface, TEST_INTERFACE);
@@ -142,10 +142,10 @@ Ut_LockScreenBusinessLogicAdaptor::testUnlockConfirmed ()
      */
     reply = m_subject->tklock_open (
 		    TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD,
-		    LockScreenBusinessLogicAdaptor::TkLockModeNone, 
+		    ScreenLockBusinessLogicAdaptor::TkLockModeNone, 
 		    false, false);
     
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
 
     /*
      * Calling the unlockConfirmed() twice intentionaly.
@@ -170,23 +170,23 @@ Ut_LockScreenBusinessLogicAdaptor::EventEaterIf ()
     int reply;
 
     // Check the visibility of the event-eater ui
-    QCOMPARE (m_logic->eaterUIvisible, false);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleEventEater").parameter<bool>(0), false);
 
     // Call the interface like MCE to show the event eater
     reply = m_subject->tklock_open (TEST_SERVICE,
                                     TEST_PATH,
                                     TEST_INTERFACE,
                                     TEST_METHOD,
-                                    LockScreenBusinessLogicAdaptor::TkLockModeOneInput,
+                                    ScreenLockBusinessLogicAdaptor::TkLockModeOneInput,
                                     false,
                                     false);
     QTest::qWait (100);
 
     // Check the reply
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
 
     // Check the visibility of the event-eater ui
-    QCOMPARE (m_logic->eaterUIvisible, true);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleEventEater").parameter<bool>(0), true);
 
     // Call the interface like MCE to hide the event eater
     reply = m_subject->tklock_close (false);
@@ -194,10 +194,10 @@ Ut_LockScreenBusinessLogicAdaptor::EventEaterIf ()
     QTest::qWait (100);
 
     // Check the reply
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
 
     // Check the visibility of the event-eater ui
-    QCOMPARE (m_logic->eaterUIvisible, false);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleEventEater").parameter<bool>(0), false);
 }
 
 void
@@ -206,23 +206,23 @@ Ut_LockScreenBusinessLogicAdaptor::UnlockScreenIf ()
     int reply;
 
     // Check the visibility of the tklock ui
-    QCOMPARE (m_logic->lockUIvisible, false);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleScreenLockUI").parameter<bool>(0), false);
 
     // Call the interface like MCE to show the unlock screen
     reply = m_subject->tklock_open (TEST_SERVICE,
                                     TEST_PATH,
                                     TEST_INTERFACE,
                                     TEST_METHOD,
-                                    LockScreenBusinessLogicAdaptor::TkLockEnableVisual,
+                                    ScreenLockBusinessLogicAdaptor::TkLockEnableVisual,
                                     false,
                                     false);
     QTest::qWait (100);
 
     // Check the reply
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
 
     // Check the visibility of the tklock ui
-    QCOMPARE (m_logic->lockUIvisible, true);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleScreenLockUI").parameter<bool>(0), true);
 
     // Call the interface like MCE to hide the lockscreen ui
     reply = m_subject->tklock_close (false);
@@ -230,10 +230,10 @@ Ut_LockScreenBusinessLogicAdaptor::UnlockScreenIf ()
     QTest::qWait (100);
 
     // Check the reply
-    QVERIFY (reply == LockScreenBusinessLogicAdaptor::TkLockReplyOk);
+    QVERIFY (reply == ScreenLockBusinessLogicAdaptor::TkLockReplyOk);
 
     // Check the visibility of the tklock ui
-    QCOMPARE (m_logic->lockUIvisible, false);
+    QCOMPARE (gScreenLockBusinessLogicStub->stubLastCallTo("toggleScreenLockUI").parameter<bool>(0), false);
 }
 
 QTEST_MAIN(Ut_LockScreenBusinessLogicAdaptor)

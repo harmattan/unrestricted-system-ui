@@ -42,7 +42,7 @@ public:
      *
      * \param parent the parent widget of the NotificationArea, defaults to NULL
      */
-    NotificationArea(MWidget *parent = NULL, bool notificationsClickable = true);
+    NotificationArea(QGraphicsItem *parent = NULL, bool notificationsClickable = true);
 
     /*!
      * Destroys the NotificationArea.
@@ -59,6 +59,13 @@ public:
      * \param honor if \c true, privacy setting is honored. If \c false, the privacy setting is ignored.
      */
     void setHonorPrivacySetting(bool honor);
+
+    /*!
+     * Sets the notification manager to be used by this area.
+     *
+     * \param notificationManager the notification manager to be used by this area
+     */
+    void setNotificationManager(NotificationManager &notificationManager);
 
 signals:
     /*!

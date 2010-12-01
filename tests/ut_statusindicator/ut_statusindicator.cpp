@@ -23,8 +23,6 @@
 #include "statusindicator.h"
 #include "statusindicatoranimationview.h"
 #include "testcontextitem.h"
-#include "inputmethodstatusindicatoradaptor_stub.h"
-
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdevicemode_stub.h>

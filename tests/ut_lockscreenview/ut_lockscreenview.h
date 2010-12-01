@@ -41,7 +41,7 @@ private slots:
 
 private:
     MApplication *app;
-    MSceneWindow *controller;
+    MWidgetController *controller;
     LockScreenView *lockScreenView;
 };
 

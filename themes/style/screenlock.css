@@ -1,0 +1,35 @@
+ScreenLockWindowStyle {
+    locked-orientation:;
+}
+
+MSceneWindowStyle#ScreenLockWindow {
+    minimum-size: 100% 100%;
+    preferred-size: 100% 100%;
+    maximum-size: 100% 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+MApplicationExtensionAreaStyle#ScreenLockExtensionArea {
+    background-image:;
+    minimum-size: 100% 100%;
+    preferred-size: 100% 100%;
+    maximum-size: 100% 100%;
+    layout-orientation: vertical;
+    container-mode: false;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+

@@ -26,7 +26,7 @@
 #include "sysuid.h"
 #include "sysuidrequest.h"
 #include "batterybusinesslogic.h"
-#include "lockscreenbusinesslogic.h"
+#include "screenlockbusinesslogic.h"
 #include "shutdownbusinesslogic.h"
 #include "statusarearenderer.h"
 #include "statusarearendereradaptor.h"
@@ -36,7 +36,6 @@
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
-#include "unlocknotificationsink.h"
 #include "notifiernotificationsink.h"
 #include "volumebarwindow.h"
 #include "closeeventeater.h"
@@ -62,7 +61,6 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     notificationManager_ = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
     mCompositorNotificationSink = new MCompositorNotificationSink;
     ngfNotificationSink = new NGFNotificationSink;
-    unlockNotificationSink_ = new UnlockNotificationSink;
     notifierNotificationSink_ = new NotifierNotificationSink;
 
     // D-Bus registration and stuff
@@ -107,11 +105,6 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
             ngfNotificationSink, SLOT(addNotification (const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
 
-    // Connect the notification signals for the unlock screen notification sink
-    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
-            unlockNotificationSink_, SLOT(addNotification (const Notification &)));
-    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), unlockNotificationSink_, SLOT(removeNotification(uint)));
-
     // Connect the notification signals for the notifier notification sink
     connect(mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager_, SIGNAL(notificationRemoved(uint)), notifierNotificationSink_, SLOT(removeNotification(uint)));
@@ -132,11 +125,8 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
      * bound to the system bus (MCE wants to contact us on the system bus).
      */
     sysUidRequest = new SysUidRequest;
-
-    // Connect the unlock-screen notification sink to LockScreenBusinessLogic
-    if (sysUidRequest->lockScreenBusinessLogic() != NULL) {
-        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), unlockNotificationSink_, SLOT(setLockedState(bool)));
-        connect(sysUidRequest->lockScreenBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
+    if (sysUidRequest->screenLockBusinessLogic() != NULL) {
+        connect(sysUidRequest->screenLockBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
     }
 
     // Update the enabled status of compositor notification sink based on screen and device locks
@@ -157,7 +147,6 @@ Sysuid::~Sysuid()
     delete volumeBarWindow;
     delete statusIndicatorMenuWindow;
     delete notifierNotificationSink_;
-    delete unlockNotificationSink_;
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;
     delete notificationManager_;
@@ -197,11 +186,6 @@ NotificationManager &Sysuid::notificationManager()
 MCompositorNotificationSink& Sysuid::compositorNotificationSink()
 {
     return *mCompositorNotificationSink;
-}
-
-UnlockNotificationSink& Sysuid::unlockNotificationSink()
-{
-    return *unlockNotificationSink_;
 }
 
 NotifierNotificationSink& Sysuid::notifierNotificationSink()

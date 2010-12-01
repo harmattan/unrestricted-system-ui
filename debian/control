@@ -78,3 +78,8 @@ Section: devel
 Architecture: all
 Description: Engineering English translations for system-ui daemon.
 
+Package: system-ui-screenlock
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Description: Screen lock extension for system-ui

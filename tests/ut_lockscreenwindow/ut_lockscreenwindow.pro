@@ -2,18 +2,17 @@ include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_lockscreenwindow
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/lockscreen
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/screenlock
 
-STYLE_HEADERS += $$SRCDIR/lockscreen/lockscreenwindowstyle.h
+STYLE_HEADERS += $$SRCDIR/screenlock/screenlockwindowstyle.h
 
 SOURCES += ut_lockscreenwindow.cpp \
-    $$SRCDIR/lockscreen/lockscreenwindow.cpp \
+    $$SRCDIR/screenlock/screenlockwindow.cpp \
     $$STUBSDIR/stubbase.cpp \
 
 HEADERS += ut_lockscreenwindow.h \
-    $$SRCDIR/lockscreen/lockscreenwindow.h \
-    $$SRCDIR/lockscreen/lockscreenwindowstyle.h \
-    $$SRCDIR/lockscreen/lockscreen.h \
+    $$SRCDIR/screenlock/screenlockwindow.h \
+    $$SRCDIR/screenlock/screenlockwindowstyle.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)
