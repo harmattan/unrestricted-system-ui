@@ -126,6 +126,8 @@ private slots:
     void testWindowMasking();
     void testWindowMaskingWhenOrientationChangeSignalsEmitted();
     void testPreviewIconId();
+    void testNotificationPreviewsDisabledForApplication_data();
+    void testNotificationPreviewsDisabledForApplication();
 
 private:
     const QRegion calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window);

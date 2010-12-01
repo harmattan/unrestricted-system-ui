@@ -69,11 +69,6 @@ int X11Wrapper::XFreePixmap(Display *display, Pixmap pixmap)
     return ::XFreePixmap(display, pixmap);
 }
 
-Pixmap X11Wrapper::XCompositeNameWindowPixmap(Display *dpy, Window window)
-{
-    return ::XCompositeNameWindowPixmap(dpy, window);
-}
-
 Damage X11Wrapper::XDamageCreate(Display *dpy, Drawable drawable, int level)
 {
     return ::XDamageCreate(dpy, drawable, level);

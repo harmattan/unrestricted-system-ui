@@ -20,10 +20,13 @@
 #include "notificationwidgetparameterfactory.h"
 #include <MSceneManager>
 #include <MScene>
-#include <MOnDisplayChangeEvent>
 #include <QApplication>
 #include <MGConfItem>
 #include <QTimer>
+#include <QX11Info>
+#include "x11wrapper.h"
+
+#undef Bool
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
@@ -52,6 +55,9 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
     // Setup the timer which makes the banner disappear
     connect(&bannerTimer, SIGNAL(timeout()), this, SLOT(disappearCurrentBanner()));
     bannerTimer.setSingleShot(true);
+
+    currentAppWindowAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_CURRENT_APP_WINDOW", False);
+    notificationPreviewsDisabledAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False);
 }
 
 MCompositorNotificationSink::~MCompositorNotificationSink()
@@ -69,7 +75,8 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if ((sinkDisabled && notification.type() != Notification::SystemEvent) || allPreviewsDisabled) {
+    if ( ((currentApplicationHasPreviewsDisabled() || sinkDisabled) && notification.type() != Notification::SystemEvent)
+         || allPreviewsDisabled) {
         emit notificationAdded(notification);
         return;
     }
@@ -234,4 +241,33 @@ QString MCompositorNotificationSink::determinePreviewIconId(const NotificationPa
         previewIconID = determineIconId(parameters);
     }
     return previewIconID;
+}
+
+bool MCompositorNotificationSink::currentApplicationHasPreviewsDisabled()
+{
+    Atom actualType;
+    int actualFormat;
+    unsigned long numItemsReturn, bytesLeft;
+    unsigned char *data = NULL;
+    bool previewsDisabled = false;
+
+    Display *display = QX11Info::display();
+
+    Status result = X11Wrapper::XGetWindowProperty(display, QX11Info::appRootWindow(),
+                                                   currentAppWindowAtom, 0L, 1L, False, XA_WINDOW,
+                                                   &actualType, &actualFormat, &numItemsReturn, &bytesLeft, &data);
+    if (result == Success && numItemsReturn) {
+        Window currentApp = *(Window *)data;
+        X11Wrapper::XFree(data);
+
+        result = X11Wrapper::XGetWindowProperty(display, currentApp,
+                                                notificationPreviewsDisabledAtom, 0L, 1L, False, XA_INTEGER,
+                                                &actualType, &actualFormat, &numItemsReturn, &bytesLeft, &data);
+        if (result == Success && numItemsReturn) {
+            previewsDisabled = *(int *)data != 0;
+            X11Wrapper::XFree(data);
+        }
+    }
+
+    return previewsDisabled;
 }

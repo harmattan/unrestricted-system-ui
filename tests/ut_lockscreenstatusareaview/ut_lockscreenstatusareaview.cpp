@@ -115,11 +115,6 @@ int X11Wrapper::XFreePixmap(Display *, Pixmap)
     return 0;
 }
 
-Pixmap X11Wrapper::XCompositeNameWindowPixmap(Display *, Window)
-{
-    return 0;
-}
-
 Damage X11Wrapper::XDamageCreate(Display *, Drawable, int)
 {
     return 0;

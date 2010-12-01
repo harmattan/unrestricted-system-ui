@@ -23,6 +23,7 @@
 #include <QHash>
 #include <QTimer>
 #include "widgetnotificationsink.h"
+#include <X11/X.h>
 
 class MBanner;
 class MGConfItem;
@@ -121,6 +122,14 @@ private:
      */
     static QString determinePreviewIconId(const NotificationParameters &parameters);
 
+    /*!
+     * Find the current application window id through a root window property
+     * and then check a property on that window to determine whether
+     * notifications should be shown on that window or not.
+     */
+    bool currentApplicationHasPreviewsDisabled();
+
+
     //! A mapping between notification IDs and info banners
     QHash<uint, MBanner *> idToBanner;
 
@@ -144,6 +153,12 @@ private:
 
     //! Timer for disappearing the current banner
     QTimer bannerTimer;
+
+    //! The atom identifier for _MEEGOTOUCH_CURRENT_APP_WINDOW
+    Atom currentAppWindowAtom;
+
+    //! The atom identifier for _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED
+    Atom notificationPreviewsDisabledAtom;
 
 #ifdef UNIT_TEST
     friend class Ut_MCompositorNotificationSink;

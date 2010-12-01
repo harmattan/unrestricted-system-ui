@@ -36,7 +36,6 @@ public:
     virtual Status XGetWMName(Display *display, Window w, XTextProperty *text_prop_return);
     virtual XWMHints *XGetWMHints(Display *display, Window w);
     virtual int XFreePixmap(Display *display, Pixmap pixmap);
-    virtual Pixmap XCompositeNameWindowPixmap(Display *dpy, Window window);
     virtual Damage XDamageCreate(Display *dpy, Drawable drawable, int level);
     virtual void XDamageDestroy(Display *dpy, Damage damage);
     virtual int XSync(Display *display, Bool discard);
@@ -129,15 +128,6 @@ int X11WrapperStub::XFreePixmap(Display *display, Pixmap pixmap)
     params.append(new Parameter<Pixmap >(pixmap));
     stubMethodEntered("XFreePixmap", params);
     return stubReturnValue<int>("XFreePixmap");
-}
-
-Pixmap X11WrapperStub::XCompositeNameWindowPixmap(Display *dpy, Window window)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<Display * >(dpy));
-    params.append(new Parameter<Window >(window));
-    stubMethodEntered("XCompositeNameWindowPixmap", params);
-    return stubReturnValue<Pixmap>("XCompositeNameWindowPixmap");
 }
 
 Damage X11WrapperStub::XDamageCreate(Display *dpy, Drawable drawable, int level)
@@ -248,11 +238,6 @@ XWMHints *X11Wrapper::XGetWMHints(Display *display, Window w)
 int X11Wrapper::XFreePixmap(Display *display, Pixmap pixmap)
 {
     return gX11WrapperStub->XFreePixmap(display, pixmap);
-}
-
-Pixmap X11Wrapper::XCompositeNameWindowPixmap(Display *dpy, Window window)
-{
-    return gX11WrapperStub->XCompositeNameWindowPixmap(dpy, window);
 }
 
 Damage X11Wrapper::XDamageCreate(Display *dpy, Drawable drawable, int level)

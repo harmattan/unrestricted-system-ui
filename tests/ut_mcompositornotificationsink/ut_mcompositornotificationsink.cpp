@@ -20,12 +20,13 @@
 #include <QtTest/QtTest>
 #include <MApplication>
 #include <MSceneManager>
+#include <MOnDisplayChangeEvent>
 #include "mcompositornotificationsink.h"
 #include "mnotificationproxy.h"
 #include "testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
-#include <MOnDisplayChangeEvent>
 #include <MGConfItem>
+#include "x11wrapper.h"
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
@@ -290,6 +291,72 @@ void QTimer::stop()
     gQTimerStopped = true;
 }
 
+QMap<Window, QMap<Atom, int> > gWindowPropertyMap;
+QSet<int*> gXAllocs;
+
+Atom _MEEGOTOUCH_CURRENT_APP_WINDOW = 1;
+Atom _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED = 2;
+Window ROOT_WINDOW_ID = 0;
+
+Qt::HANDLE QX11Info::appRootWindow(int screen)
+{
+    Q_UNUSED(screen);
+
+    return ROOT_WINDOW_ID;
+}
+
+Atom X11Wrapper::XInternAtom(Display *display, const char *atom_name, Bool only_if_exists)
+{
+    Q_UNUSED(display);
+    Q_UNUSED(only_if_exists);
+
+    Atom atom = -1;
+
+    if (QString(atom_name) == "_MEEGOTOUCH_CURRENT_APP_WINDOW") {
+        atom = _MEEGOTOUCH_CURRENT_APP_WINDOW;
+    }
+
+    if (QString(atom_name) == "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED") {
+        atom = _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED;
+    }
+
+    return atom;
+}
+
+int X11Wrapper::XGetWindowProperty(Display *display, Window w, Atom property, long long_offset, long long_length, Bool del, Atom req_type, Atom *actual_type_return, int *actual_format_return, unsigned long *nitems_return, unsigned long *bytes_after_return, unsigned char **prop_return)
+{
+    Q_UNUSED(display);
+    Q_UNUSED(long_offset);
+    Q_UNUSED(long_length);
+    Q_UNUSED(del);
+    Q_UNUSED(req_type);
+    Q_UNUSED(actual_type_return);
+    Q_UNUSED(actual_format_return);
+    Q_UNUSED(bytes_after_return);
+
+    if (!gWindowPropertyMap.contains(w))
+        return BadWindow;
+
+    if (!gWindowPropertyMap[w].contains(property)) {
+        *nitems_return = 0;
+    } else {
+        *nitems_return = 1;
+        *(int**)prop_return = new int;
+        gXAllocs.insert(*(int**)prop_return);
+        **(int**)prop_return = gWindowPropertyMap[w][property];
+    }
+
+    return Success;
+}
+
+int X11Wrapper::XFree(void *data)
+{
+    gXAllocs.remove((int*)data);
+    delete (int*)data;
+
+    return Success;
+}
+
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
@@ -327,6 +394,9 @@ void Ut_MCompositorNotificationSink::init()
     gMWindowIsOnDisplay = false;
 
     connect(this, SIGNAL(displayEntered()), sink->window, SIGNAL(displayEntered()));
+
+    gWindowPropertyMap.clear();
+    gXAllocs.clear();
 }
 
 void Ut_MCompositorNotificationSink::cleanup()
@@ -708,5 +778,50 @@ void Ut_MCompositorNotificationSink::testPreviewIconId()
     notificationManager->updateNotification(0, id, parameters0);
     QCOMPARE(banner->iconID(), QString("previewicon0"));
 }
+
+void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabledForApplication_data()
+{
+    QTest::addColumn<bool>("propertySet");
+    QTest::addColumn<int>("value");
+    QTest::addColumn<bool>("system");
+    QTest::addColumn<bool>("windowshown");
+
+    QTest::newRow("property not set, window shown") << false << 0 << false << true;
+    QTest::newRow("property set to zero, window shown") << true << 0 <<  false << true;
+    QTest::newRow("property set to non-zero, window not shown") << true << 1 << false << false;
+    QTest::newRow("property set to non-zero, window shown for system notification") << true << 1 << true << true;
+}
+
+void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabledForApplication()
+{
+    QFETCH(bool, propertySet);
+    QFETCH(int, value);
+
+    // Set the current app root window property to point to a certain window
+    gWindowPropertyMap[ROOT_WINDOW_ID][_MEEGOTOUCH_CURRENT_APP_WINDOW] = 100;
+    if (propertySet) {
+        // Set the property value for the window
+        gWindowPropertyMap[100][_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED] = value;
+    }
+
+    QFETCH(bool, system);
+    QFETCH(bool, windowshown);
+
+    // Create normal notification
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+
+    if (system) {
+        // Create system notification
+        parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    }
+
+    // Check that notification is shown/not shown according to test data parameter
+    notificationManager->addNotification(0, parameters);
+    QCOMPARE(mWindowSetVisibleValue, windowshown);
+
+    // Check that all requested property data was freed
+    QCOMPARE(gXAllocs.count(), 0);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

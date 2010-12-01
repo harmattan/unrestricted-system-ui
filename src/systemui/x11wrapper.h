@@ -39,7 +39,6 @@ public:
     static XWMHints *XGetWMHints(Display *display, Window w);
     static Pixmap XCreatePixmap(Display *display, Drawable drawable, unsigned int width, unsigned height, unsigned int depth);
     static int XFreePixmap(Display *display, Pixmap pixmap);
-    static Pixmap XCompositeNameWindowPixmap(Display *dpy, Window window);
     static Damage XDamageCreate(Display *dpy, Drawable drawable, int level);
     static void XDamageDestroy(Display *dpy, Damage damage);
     static int XSync(Display *display, Bool discard);
