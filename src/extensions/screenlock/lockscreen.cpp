@@ -17,12 +17,13 @@
  **
  ****************************************************************************/
 #include "lockscreen.h"
+#include <QDebug>
 
 LockScreen::LockScreen(QGraphicsItem *parent) :
     MWidgetController(parent),
     displayOn(true)
 {
-    connect(this, SIGNAL(displayExited()), this, SLOT(sliderUnlocked()));
+    connect(this, SIGNAL(displayExited()), this, SLOT(unlock()));
 
 #ifdef HAVE_QMSYSTEM
     connect(&qmDisplayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(updateDisplayState(MeeGo::QmDisplayState::DisplayState)));
@@ -43,9 +44,11 @@ void LockScreen::updateDisplayState(MeeGo::QmDisplayState::DisplayState state)
 }
 #endif
 
-void LockScreen::sliderUnlocked()
+void LockScreen::unlock()
 {
-    if(displayOn) {
+    qDebug() << "XX UNLOCK";
+    if (displayOn) {
+        qDebug() << "XX EMITTING";
         emit unlocked();
     }
 }

@@ -48,9 +48,9 @@ private slots:
     void cleanupTestCase();
 
 #ifdef HAVE_QMSYSTEM
-    void testSliderUnlocked_data();
+    void testUnlock_data();
 #endif
-    void testSliderUnlocked();
+    void testUnlock();
     void testConstruction();
     void testWhenDisplayExitsLockScreenIsUnlocked();
 

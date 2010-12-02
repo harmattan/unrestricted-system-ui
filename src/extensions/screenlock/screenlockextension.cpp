@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <MLibrary>
+#include <QDebug>
 #include "screenlockextension.h"
 #include "lockscreen.h"
 
@@ -39,6 +40,7 @@ void ScreenLockExtension::reset()
 {
     if (lockScreen != NULL) {
         lockScreen->reset();
+        lockScreen->update();
     }
 }
 
@@ -50,7 +52,6 @@ void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInt
 bool ScreenLockExtension::initialize(const QString &)
 {
     lockScreen = new LockScreen;
-
     return true;
 }
 

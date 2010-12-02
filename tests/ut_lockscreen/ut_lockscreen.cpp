@@ -78,7 +78,7 @@ void Ut_LockScreen::testConstruction()
 }
 
 #ifdef HAVE_QMSYSTEM
-void Ut_LockScreen::testSliderUnlocked_data()
+void Ut_LockScreen::testUnlock_data()
 {
     QTest::addColumn<MeeGo::QmDisplayState::DisplayState>("displayState");
     QTest::addColumn<int>("expectedSignalCount");
@@ -91,7 +91,7 @@ void Ut_LockScreen::testSliderUnlocked_data()
         << MeeGo::QmDisplayState::Off << 0;
 }
 
-void Ut_LockScreen::testSliderUnlocked()
+void Ut_LockScreen::testUnlock()
 {
     QFETCH(MeeGo::QmDisplayState::DisplayState, displayState);
     QFETCH(int, expectedSignalCount);
@@ -100,7 +100,7 @@ void Ut_LockScreen::testSliderUnlocked()
             SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
             lockScreen,
             SLOT(updateDisplayState(MeeGo::QmDisplayState::DisplayState)));
-    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
+    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(unlock()));
     QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
 
     emit displayStateChanged(displayState);
@@ -108,9 +108,9 @@ void Ut_LockScreen::testSliderUnlocked()
     QCOMPARE(spy.count(), expectedSignalCount);
 }
 #else
-void Ut_LockScreen::testSliderUnlocked()
+void Ut_LockScreen::testUnlock()
 {
-    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
+    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(unlock()));
     QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
 
     emit unlocked();
@@ -120,7 +120,7 @@ void Ut_LockScreen::testSliderUnlocked()
 
 void Ut_LockScreen::testWhenDisplayExitsLockScreenIsUnlocked()
 {
-    bool ret = disconnect(lockScreen, SIGNAL(displayExited()), lockScreen, SLOT(sliderUnlocked()));
+    bool ret = disconnect(lockScreen, SIGNAL(displayExited()), lockScreen, SLOT(unlock()));
     QCOMPARE(ret, true);
 }
 

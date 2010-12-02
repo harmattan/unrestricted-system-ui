@@ -30,7 +30,7 @@ class LockScreenStub : public StubBase {
   virtual void LockScreenConstructor();
   virtual void LockScreenDestructor();
   virtual void reset();
-  virtual void sliderUnlocked();
+  virtual void unlock();
 #ifdef HAVE_QMSYSTEM
   virtual void updateDisplayState(MeeGo::QmDisplayState::DisplayState state);
 #endif
@@ -44,8 +44,8 @@ void LockScreenStub::LockScreenDestructor() {
 
 }
 
-void LockScreenStub::sliderUnlocked() {
-  stubMethodEntered("sliderUnlocked");
+void LockScreenStub::unlock() {
+  stubMethodEntered("unlock");
 }
 
 void LockScreenStub::reset() {
@@ -75,8 +75,8 @@ LockScreen::~LockScreen() {
   gLockScreenStub->LockScreenDestructor();
 }
 
-void LockScreen::sliderUnlocked() {
-  gLockScreenStub->sliderUnlocked();
+void LockScreen::unlock() {
+  gLockScreenStub->unlock();
 }
 
 void LockScreen::reset() {

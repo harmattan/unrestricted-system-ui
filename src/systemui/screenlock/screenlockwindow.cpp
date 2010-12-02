@@ -40,15 +40,17 @@ ScreenLockWindow::ScreenLockWindow(QWidget *parent) :
     extensionArea->setOutOfProcessFilter(QRegExp("$^"));
     extensionArea->init();
 
-    MSceneWindow *screenLockWindow = new MSceneWindow;
-    screenLockWindow->setStyleName("ScreenLockWindow");
-    screenLockWindow->appear(this);
-
+    // Create a layout for the extension area
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addItem(extensionArea);
+
+    // Put the extension area into a full screen scene window
+    MSceneWindow *screenLockWindow = new MSceneWindow;
+    screenLockWindow->setStyleName("ScreenLockWindow");
     screenLockWindow->setLayout(layout);
+    screenLockWindow->appear(this);
 }
 
 ScreenLockWindow::~ScreenLockWindow()
@@ -73,20 +75,14 @@ void ScreenLockWindow::reset()
 {
     foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
         screenLockExtension->reset();
-
-        // Ask the lock screen to redraw itself since it may be necessary if the display used to be turned off
-        screenLockExtension->widget()->update();
     }
 }
 
 void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *extension)
 {
-    ScreenLockExtensionInterface *screenLockExtension = dynamic_cast<ScreenLockExtensionInterface *>(extension);
-
-    if (screenLockExtension != NULL) {
-        screenLockExtensions.append(screenLockExtension);
-        connect(screenLockExtension->widget(), SIGNAL(unlocked()), this, SIGNAL(unlocked()));
-    }
+    ScreenLockExtensionInterface *screenLockExtension = static_cast<ScreenLockExtensionInterface *>(extension);
+    screenLockExtensions.append(screenLockExtension);
+    connect(screenLockExtension->widget(), SIGNAL(unlocked()), this, SIGNAL(unlocked()));
 }
 
 void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *extension)

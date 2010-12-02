@@ -39,7 +39,9 @@ signals:
     void resetRequested();
 
 private slots:
-    void sliderUnlocked();
+    //! Unlocks the screen lock
+    void unlock();
+
 #ifdef HAVE_QMSYSTEM
     void updateDisplayState(MeeGo::QmDisplayState::DisplayState state);
 #endif
