@@ -13,6 +13,7 @@ SOURCES += ut_lockscreenwindow.cpp \
 HEADERS += ut_lockscreenwindow.h \
     $$SRCDIR/screenlock/screenlockwindow.h \
     $$SRCDIR/screenlock/screenlockwindowstyle.h \
+    $$SRCDIR/sysuid.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)

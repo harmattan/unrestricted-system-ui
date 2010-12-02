@@ -23,6 +23,7 @@
 #include "ut_lockscreenwindow.h"
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
+#include "sysuid_stub.h"
 #include <X11/Xutil.h>
 #include "x11wrapper_stub.h"
 

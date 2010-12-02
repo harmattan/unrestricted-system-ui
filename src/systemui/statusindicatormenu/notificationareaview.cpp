@@ -88,7 +88,8 @@ void NotificationAreaView::updateData(const QList<const char *>& modifications)
 
     const char *member;
     foreach(member, modifications) {
-        if (member == NotificationAreaModel::Banners) {
+        // This comparison is done with strcmp since there are two instances of NotificationAreaModel::Banners so the pointer comparison won't work
+        if (strcmp(member, NotificationAreaModel::Banners) == 0) {
             updateLayout();
         }
     }
