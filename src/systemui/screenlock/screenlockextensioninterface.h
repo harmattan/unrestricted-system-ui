@@ -23,6 +23,8 @@
 #include <QObject>
 #include <mapplicationextensioninterface.h>
 
+class NotificationManagerInterface;
+
 /**
  * ScreenLockExtensionInterface is the base class for screen lock extension classes.
  *
@@ -43,6 +45,13 @@ public:
      * Resets the screen lock extension to its initial state.
      */
     virtual void reset() = 0;
+
+    /*!
+     * Sets the notification manager interface to be used in the extension.
+     *
+     * \param notificationManager the interface to be used in the extension
+     */
+    virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager) = 0;
 };
 
 Q_DECLARE_INTERFACE(ScreenLockExtensionInterface, "com.meego.core.ScreenLockExtensionInterface/1.0")

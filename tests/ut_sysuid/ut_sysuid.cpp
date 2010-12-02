@@ -102,7 +102,7 @@ NotificationParameters::~NotificationParameters()
 }
 
 // NotificationSink stubs (used by MCompositorNotificationSink)
-NotificationSink::NotificationSink()
+NotificationSink::NotificationSink(QObject *parent)
 {
 }
 

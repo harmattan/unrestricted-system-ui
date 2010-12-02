@@ -20,13 +20,14 @@
 #include <MLibrary>
 #include "screenlockextension.h"
 #include "lockscreen.h"
-#include <cstdio>
 
 Q_EXPORT_PLUGIN2(sysuid-screenlock, ScreenLockExtension)
 
-ScreenLockExtension::ScreenLockExtension() : lockScreen(NULL)
+NotificationManagerInterface *ScreenLockExtension::notificationManager = NULL;
+
+ScreenLockExtension::ScreenLockExtension() :
+    lockScreen(NULL)
 {
-    printf("SCREEN LOCK EXTENSION INITIALIZING\n");
 }
 
 ScreenLockExtension::~ScreenLockExtension()
@@ -41,6 +42,11 @@ void ScreenLockExtension::reset()
     }
 }
 
+void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInterface &notificationManager)
+{
+    ScreenLockExtension::notificationManager = &notificationManager;
+}
+
 bool ScreenLockExtension::initialize(const QString &)
 {
     lockScreen = new LockScreen;
@@ -51,6 +57,11 @@ bool ScreenLockExtension::initialize(const QString &)
 QGraphicsWidget *ScreenLockExtension::widget()
 {
     return lockScreen;
+}
+
+NotificationManagerInterface *ScreenLockExtension::notificationManagerInterface()
+{
+    return notificationManager;
 }
 
 M_LIBRARY

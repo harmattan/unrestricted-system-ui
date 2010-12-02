@@ -19,7 +19,9 @@
 
 #include "notificationsink.h"
 
-NotificationSink::NotificationSink() : appEventsEnabled(true)
+NotificationSink::NotificationSink(QObject *parent) :
+    QObject(parent),
+    appEventsEnabled(true)
 {
 }
 

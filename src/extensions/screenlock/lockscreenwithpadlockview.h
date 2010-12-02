@@ -26,6 +26,7 @@ class MImageWidget;
 class QGraphicsLinearLayout;
 class UnlockArea;
 class UnlockNotifications;
+class UnlockNotificationSink;
 
 class LockScreenWithPadlockView : public LockScreenView
 {
@@ -72,6 +73,7 @@ private:
     bool drawPending;
     QPointF dragAndDropPosition;
     UnlockNotifications *notificationArea;
+    UnlockNotificationSink *notificationSink;
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenWithPadlockView;

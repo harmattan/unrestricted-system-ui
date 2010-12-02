@@ -29,6 +29,9 @@
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen.h"
 #include "unlockarea.h"
+#include "unlocknotificationsink.h"
+#include "screenlockextension.h"
+#include "notificationmanagerinterface.h"
 
 LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controller) :
     LockScreenView(controller),
@@ -37,7 +40,8 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controll
     dragAndDropState(STATE_NONE),
     lockLandArea(new UnlockArea),
     drawPending(false),
-    notificationArea(new UnlockNotifications)
+    notificationArea(new UnlockNotifications),
+    notificationSink(new UnlockNotificationSink(this))
 {
     lockScreenHeader->setObjectName("LockLiftAreaWithPadlock");
 
@@ -47,6 +51,10 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controll
 
     notificationArea->setVisible(false);
 
+    // Connect the notification signals for the unlock screen notification sink
+    QObject *notificationManager = dynamic_cast<QObject *>(ScreenLockExtension::notificationManagerInterface());
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationSink, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationSink, SLOT(removeNotification(uint)));
     connect(notificationArea, SIGNAL(needToShow(bool)), this, SLOT(showHideNotifications(bool)), Qt::DirectConnection);
 
     layout->addItem(lockLandArea);
@@ -57,7 +65,6 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controll
 
 LockScreenWithPadlockView::~LockScreenWithPadlockView()
 {
-    delete lockLandArea;
 }
 
 void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)

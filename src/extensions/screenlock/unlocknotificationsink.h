@@ -11,7 +11,7 @@ class UnlockNotificationSink : public NotificationSink
     Q_OBJECT
 
 public:
-    UnlockNotificationSink ();
+    UnlockNotificationSink(QObject *parent = NULL);
 
 public slots:
     void setLockedState (bool islocked);

@@ -36,13 +36,20 @@ public:
 
     // Methods derived from ScreenLockExtensionInterface
     virtual void reset();
+    virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
 
     // Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
     virtual QGraphicsWidget *widget();
 
+    // Returns the notification manager interface
+    static NotificationManagerInterface *notificationManagerInterface();
 private:
+    //! The lock screen widget
     LockScreen *lockScreen;
+
+    //! Notification manager to use
+    static NotificationManagerInterface *notificationManager;
 };
 
 #endif // SCREENLOCKEXTENSION_H

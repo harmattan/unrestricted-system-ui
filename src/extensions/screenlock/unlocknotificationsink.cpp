@@ -47,8 +47,10 @@
 #define EVENT_BATTERY  "x-nokia.battery"
 
 
-UnlockNotificationSink::UnlockNotificationSink () :
-    m_enabled (false), privateNotificationSetting(new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this))
+UnlockNotificationSink::UnlockNotificationSink(QObject *parent) :
+    NotificationSink(parent),
+    m_enabled (false),
+    privateNotificationSetting(new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this))
 {
 }
 

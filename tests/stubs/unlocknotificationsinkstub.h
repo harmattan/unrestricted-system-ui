@@ -3,7 +3,7 @@
 
 #include <unlocknotificationsink.h>
 
-UnlockNotificationSink::UnlockNotificationSink ()
+UnlockNotificationSink::UnlockNotificationSink (QObject *parent) : NotificationSink(parent)
 {
     m_enabled = true;
 }
