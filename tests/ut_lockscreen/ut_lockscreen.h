@@ -36,10 +36,7 @@ class Ut_LockScreen : public QObject
     Q_OBJECT
 
 signals:
-#ifdef HAVE_QMSYSTEM
-    void displayStateChanged(MeeGo::QmDisplayState::DisplayState displayState);
-#endif
-    void unlocked();
+    void minimized();
 
 private slots:
     void init();
@@ -47,12 +44,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-#ifdef HAVE_QMSYSTEM
-    void testSliderUnlocked_data();
-#endif
-    void testSliderUnlocked();
     void testConstruction();
-    void testWhenDisplayExitsLockScreenIsUnlocked();
+    void testUnlock_data();
+    void testUnlock();
 
 private:
     MApplication *app;

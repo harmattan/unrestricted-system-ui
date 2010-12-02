@@ -22,32 +22,22 @@
 #include <MApplication>
 #include <MWindow>
 
-#ifdef HAVE_QMSYSTEM
-Q_DECLARE_METATYPE(MeeGo::QmDisplayState::DisplayState);
-
-int qmDisplayStateGetCalled = 0;
-MeeGo::QmDisplayState::DisplayState gDisplayState = MeeGo::QmDisplayState::Unknown;
-MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
+// MWidget stubs
+bool gMWidgetIsOnDisplay = false;
+bool MWidget::isOnDisplay() const
 {
-    qmDisplayStateGetCalled++;
-    return gDisplayState;
+    return gMWidgetIsOnDisplay;
 }
-#endif
 
 void Ut_LockScreen::init()
 {
-#ifdef HAVE_QMSYSTEM
-    qmDisplayStateGetCalled = 0;
-    gDisplayState = MeeGo::QmDisplayState::Unknown;
-#endif
-
+    gMWidgetIsOnDisplay = false;
     lockScreen = new LockScreen;
 }
 
 void Ut_LockScreen::cleanup()
 {
     delete lockScreen;
-    gDisplayState = MeeGo::QmDisplayState::Unknown;
 }
 
 void Ut_LockScreen::initTestCase()
@@ -65,63 +55,33 @@ void Ut_LockScreen::cleanupTestCase()
 
 void Ut_LockScreen::testConstruction()
 {
-#ifdef HAVE_QMSYSTEM
-    // Verify that QmDisplayState's displayStateChanged signal is tracked
-    QVERIFY(disconnect(&lockScreen->qmDisplayState,
-                       SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
+    // Verify that the MApplication's minimized slot is tracked
+    QVERIFY(disconnect(MApplication::instance(),
+                       SIGNAL(minimized()),
                        lockScreen,
-                       SLOT(updateDisplayState(MeeGo::QmDisplayState::DisplayState))));
-
-    // Verify that Lockscreen queries the display state at creation
-    QCOMPARE(qmDisplayStateGetCalled, 1);
-#endif
+                       SLOT(unlock())));
 }
 
-#ifdef HAVE_QMSYSTEM
-void Ut_LockScreen::testSliderUnlocked_data()
+void Ut_LockScreen::testUnlock_data()
 {
-    QTest::addColumn<MeeGo::QmDisplayState::DisplayState>("displayState");
+    QTest::addColumn<bool>("isOnDisplay");
     QTest::addColumn<int>("expectedSignalCount");
 
-    QTest::newRow("Display on, device unlocks")
-        << MeeGo::QmDisplayState::On << 1;
-    QTest::newRow("Display dimmed, device does not unlocks")
-        << MeeGo::QmDisplayState::Dimmed << 0;
-    QTest::newRow("Display off, device does not unlocks")
-        << MeeGo::QmDisplayState::Off << 0;
+    QTest::newRow("Window on display, device unlocks") << true << 1;
+    QTest::newRow("Window not on display, device does not unlock") << false << 0;
 }
 
-void Ut_LockScreen::testSliderUnlocked()
+void Ut_LockScreen::testUnlock()
 {
-    QFETCH(MeeGo::QmDisplayState::DisplayState, displayState);
+    QFETCH(bool, isOnDisplay);
     QFETCH(int, expectedSignalCount);
 
-    connect(this,
-            SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
-            lockScreen,
-            SLOT(updateDisplayState(MeeGo::QmDisplayState::DisplayState)));
-    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
+    connect(this, SIGNAL(minimized()), lockScreen, SLOT(unlock()));
     QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
 
-    emit displayStateChanged(displayState);
-    emit unlocked();
+    gMWidgetIsOnDisplay = isOnDisplay;
+    emit minimized();
     QCOMPARE(spy.count(), expectedSignalCount);
-}
-#else
-void Ut_LockScreen::testSliderUnlocked()
-{
-    connect(this, SIGNAL(unlocked()), lockScreen, SLOT(sliderUnlocked()));
-    QSignalSpy spy(lockScreen, SIGNAL(unlocked()));
-
-    emit unlocked();
-    QCOMPARE(spy.count(), 1);
-}
-#endif
-
-void Ut_LockScreen::testWhenDisplayExitsLockScreenIsUnlocked()
-{
-    bool ret = disconnect(lockScreen, SIGNAL(displayExited()), lockScreen, SLOT(sliderUnlocked()));
-    QCOMPARE(ret, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreen)

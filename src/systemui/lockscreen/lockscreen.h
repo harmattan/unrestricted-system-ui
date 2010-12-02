@@ -21,10 +21,6 @@
 
 #include <MSceneWindow>
 
-#ifdef HAVE_QMSYSTEM
-#include <qmdisplaystate.h>
-#endif
-
 class LockScreen : public MSceneWindow
 {
     Q_OBJECT
@@ -39,19 +35,7 @@ signals:
     void resetRequested();
 
 private slots:
-    void sliderUnlocked();
-#ifdef HAVE_QMSYSTEM
-    void updateDisplayState(MeeGo::QmDisplayState::DisplayState state);
-#endif
-
-private:
-    //! A boolean that indicates if the display is currently on
-    bool displayOn;
-
-#ifdef HAVE_QMSYSTEM
-    //! The QmSystem object that signals the display state changes
-    MeeGo::QmDisplayState qmDisplayState;
-#endif
+    void unlock();
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreen;
