@@ -17,7 +17,6 @@
  **
  ****************************************************************************/
 #include "lockscreen.h"
-#include <QDebug>
 
 LockScreen::LockScreen(QGraphicsItem *parent) :
     MWidgetController(parent),
@@ -46,9 +45,7 @@ void LockScreen::updateDisplayState(MeeGo::QmDisplayState::DisplayState state)
 
 void LockScreen::unlock()
 {
-    qDebug() << "XX UNLOCK";
     if (displayOn) {
-        qDebug() << "XX EMITTING";
         emit unlocked();
     }
 }

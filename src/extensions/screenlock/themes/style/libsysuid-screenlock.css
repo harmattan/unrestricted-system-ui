@@ -3,7 +3,6 @@
 
 /* Common view styles */
 LockScreenStyle {
-    background-color: #00ff00;
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;
@@ -185,7 +184,6 @@ NotificationArea#LockScreenNotificationArea MBannerStyle {
 
 /* Padlockless view styles */
 LockScreenHeaderStyle {
-    background-color: #00ff00;
     minimum-size: 100% -1;
     preferred-size: 100% -1;
     maximum-size: 100% -1;    
