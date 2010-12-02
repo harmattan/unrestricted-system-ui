@@ -24,7 +24,7 @@
 #include "notificationsink.h"
 #include "notificationareamodel.h"
 
-class NotificationManager;
+class NotificationManagerInterface;
 class NotificationAreaSink;
 class MBanner;
 
@@ -63,9 +63,9 @@ public:
     /*!
      * Sets the notification manager to be used by this area.
      *
-     * \param notificationManager the notification manager to be used by this area
+     * \param notificationManagerInterface the notification manager interface to be used by this area
      */
-    void setNotificationManager(NotificationManager &notificationManager);
+    void setNotificationManagerInterface(NotificationManagerInterface &notificationManagerInterface);
 
 signals:
     /*!

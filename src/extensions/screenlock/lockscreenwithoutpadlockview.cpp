@@ -21,6 +21,7 @@
 #include "lockscreenwithoutpadlockview.h"
 #include "lockscreen.h"
 #include "notificationarea.h"
+#include "screenlockextension.h"
 
 LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MWidgetController* controller) :
     LockScreenView(controller)
@@ -28,8 +29,7 @@ LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MWidgetController* co
     notificationArea = new NotificationArea(controller, false);
     notificationArea->setObjectName("LockScreenNotificationArea");
     notificationArea->setHonorPrivacySetting(true);
-    // TODO
-    //notificationArea->setNotificationManager(Sysuid::instance()->notifierNotificationSink());
+    notificationArea->setNotificationManagerInterface(*ScreenLockExtension::notificationManagerInterface());
     layout->addStretch();
     layout->addItem(notificationArea);
 }

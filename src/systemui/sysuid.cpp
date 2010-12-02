@@ -58,7 +58,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     batteryBusinessLogic = new BatteryBusinessLogic(this);
     usbUi = new UsbUi(this);
 
-    notificationManager_ = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
+    notificationManager = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
     mCompositorNotificationSink = new MCompositorNotificationSink;
     ngfNotificationSink = new NGFNotificationSink;
     notifierNotificationSink_ = new NotifierNotificationSink;
@@ -95,21 +95,21 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
 
     // Connect the notification signals for the compositor notification sink
-    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
+    connect (notificationManager, SIGNAL(notificationUpdated (const Notification &)),
             mCompositorNotificationSink, SLOT(addNotification (const Notification &)));
-    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), mCompositorNotificationSink, SLOT(removeNotification(uint)));
-    connect(mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager_, SLOT(removeNotification(uint)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), mCompositorNotificationSink, SLOT(removeNotification(uint)));
+    connect(mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
 
     // Connect the notification signals for the feedback notification sink
-    connect (notificationManager_, SIGNAL(notificationUpdated (const Notification &)),
+    connect (notificationManager, SIGNAL(notificationUpdated (const Notification &)),
             ngfNotificationSink, SLOT(addNotification (const Notification &)));
-    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
 
     // Connect the notification signals for the notifier notification sink
     connect(mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
-    connect(notificationManager_, SIGNAL(notificationRemoved(uint)), notifierNotificationSink_, SLOT(removeNotification(uint)));
-    connect(notificationManager_, SIGNAL(notificationRestored(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
-    connect(notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), notificationManager_, SLOT(removeUnseenFlags(bool)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierNotificationSink_, SLOT(removeNotification(uint)));
+    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
+    connect(notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), notificationManager, SLOT(removeUnseenFlags(bool)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
@@ -118,7 +118,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     applyUseMode();
 
     // Restore persistent notifications after all the signal connections are made to the notification sinks
-    notificationManager_->restoreData();
+    notificationManager->restoreData();
 
     /*
      * The screen locking is implemented in this separate class, because it is
@@ -149,7 +149,7 @@ Sysuid::~Sysuid()
     delete notifierNotificationSink_;
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;
-    delete notificationManager_;
+    delete notificationManager;
     instance_ = 0;
 }
 
@@ -178,9 +178,9 @@ void Sysuid::loadTranslations()
     MLocale::setDefault(locale);
 }
 
-NotificationManager &Sysuid::notificationManager()
+NotificationManagerInterface &Sysuid::notificationManagerInterface()
 {
-    return *notificationManager_;
+    return *notificationManager;
 }
 
 MCompositorNotificationSink& Sysuid::compositorNotificationSink()

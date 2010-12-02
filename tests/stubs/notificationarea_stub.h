@@ -33,7 +33,7 @@ public:
     virtual void removeNotification(MBanner &notification);
     virtual void removeAllRemovableBanners();
     virtual void setHonorPrivacySetting(bool honor);
-    virtual void setNotificationManager(NotificationManager &notificationManager);
+    virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManagerInterface);
 };
 
 void NotificationAreaStub::notificationAreaConstructor(NotificationArea *notificationArea, QGraphicsItem *parent, bool notificationsClickable)
@@ -83,11 +83,11 @@ void NotificationAreaStub::setHonorPrivacySetting(bool honor)
     stubMethodEntered("setHonorPrivacySetting", params);
 }
 
-void NotificationAreaStub::setNotificationManager(NotificationManager &notificationManager)
+void NotificationAreaStub::setNotificationManagerInterface(NotificationManagerInterface &notificationManagerInterface)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<NotificationManager *>(&notificationManager));
-    stubMethodEntered("setNotificationManager", params);
+    params.append(new Parameter<NotificationManagerInterface *>(&notificationManagerInterface));
+    stubMethodEntered("setNotificationManagerInterface", params);
 }
 
 NotificationAreaStub gDefaultNotificationAreaStub;
@@ -128,9 +128,9 @@ void NotificationArea::setHonorPrivacySetting(bool honor)
     gNotificationAreaStub->setHonorPrivacySetting(honor);
 }
 
-void NotificationArea::setNotificationManager(NotificationManager &notificationManager)
+void NotificationArea::setNotificationManagerInterface(NotificationManagerInterface &notificationManagerInterface)
 {
-    gNotificationAreaStub->setNotificationManager(notificationManager);
+    gNotificationAreaStub->setNotificationManagerInterface(notificationManagerInterface);
 }
 
 #endif

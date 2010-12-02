@@ -30,7 +30,7 @@ class SysuidStub : public StubBase {
   virtual void SysuidConstructor(QObject *parent);
   virtual void SysuidDestructor();
   virtual Sysuid * sysuid();
-  virtual NotificationManager & notificationManager();
+  virtual NotificationManagerInterface & notificationManagerInterface();
   virtual MCompositorNotificationSink & compositorNotificationSink();
   virtual NotifierNotificationSink & notifierNotificationSink();
   virtual void loadTranslations();
@@ -53,9 +53,9 @@ Sysuid * SysuidStub::sysuid() {
   return stubReturnValue<Sysuid *>("sysuid");
 }
 
-NotificationManager & SysuidStub::notificationManager() {
-  stubMethodEntered("notificationManager");
-  return *stubReturnValue<NotificationManager *>("notificationManager");
+NotificationManagerInterface & SysuidStub::notificationManagerInterface() {
+  stubMethodEntered("notificationManagerInterface");
+  return *stubReturnValue<NotificationManagerInterface *>("notificationManagerInterface");
 }
 
 MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
@@ -90,7 +90,7 @@ SysuidStub* gSysuidStub = &gDefaultSysuidStub;
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 Sysuid::Sysuid(QObject* parent) :
     batteryBusinessLogic (0), shutdownBusinessLogic (0),
-    usbUi (0), statusAreaRenderer (0), statusIndicatorMenuWindow (0), notificationManager_ (0),
+    usbUi (0), statusAreaRenderer (0), statusIndicatorMenuWindow (0), notificationManager (0),
     mCompositorNotificationSink (0), ngfNotificationSink (0),
     unlockNotificationSink_ (0), notifierNotificationSink_(0), sysUidRequest (0),
     volumeBarWindow (0)
@@ -106,8 +106,8 @@ Sysuid * Sysuid::instance() {
   return gSysuidStub->sysuid();
 }
 
-NotificationManager & Sysuid::notificationManager() {
-  return gSysuidStub->notificationManager();
+NotificationManagerInterface & Sysuid::notificationManagerInterface() {
+  return gSysuidStub->notificationManagerInterface();
 }
 
 MCompositorNotificationSink & Sysuid::compositorNotificationSink() {

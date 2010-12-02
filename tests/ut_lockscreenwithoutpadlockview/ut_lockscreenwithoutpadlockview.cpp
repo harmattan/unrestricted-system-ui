@@ -16,6 +16,7 @@
 #include "lockscreenwithoutpadlockview.h"
 #include "lockscreen_stub.h"
 #include "notificationarea_stub.h"
+#include "screenlockextension_stub.h"
 
 void Ut_LockScreenWithoutPadlockView::init()
 {

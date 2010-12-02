@@ -173,7 +173,7 @@ MPannableViewport* StatusIndicatorMenuDropDownView::createPannableArea()
 
     if(style()->notificationArea()) {
         NotificationArea *notificationArea = new NotificationArea;
-        notificationArea->setNotificationManager(Sysuid::instance()->notificationManager());
+        notificationArea->setNotificationManagerInterface(Sysuid::instance()->notificationManagerInterface());
         connect(notificationArea, SIGNAL(bannerClicked()), controller, SIGNAL(hideRequested()));
         contentLayout->addItem(notificationArea);
     }

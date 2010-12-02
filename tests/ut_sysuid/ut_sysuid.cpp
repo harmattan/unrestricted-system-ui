@@ -208,17 +208,17 @@ void Ut_Sysuid::testSignalConnections()
 {
     QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
     QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->mCompositorNotificationSink, SLOT(addNotification (const Notification &))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->mCompositorNotificationSink, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager_, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->ngfNotificationSink, SLOT(addNotification (const Notification &))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->ngfNotificationSink, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationUpdated (const Notification &)), sysuid->unlockNotificationSink_, SLOT(addNotification (const Notification &))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->unlockNotificationSink_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated (const Notification &)), sysuid->mCompositorNotificationSink, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->mCompositorNotificationSink, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated (const Notification &)), sysuid->ngfNotificationSink, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->ngfNotificationSink, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated (const Notification &)), sysuid->unlockNotificationSink_, SLOT(addNotification (const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->unlockNotificationSink_, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->notificationManager_, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
-    QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager_, SLOT(removeUnseenFlags(bool))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager, SLOT(removeUnseenFlags(bool))));
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&sysuid->qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
 #endif
