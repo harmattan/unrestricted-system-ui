@@ -606,3 +606,8 @@ QList<NotificationGroup> NotificationManager::groups() const
 {
     return groupContainer.values();
 }
+
+QObject *NotificationManager::qObject()
+{
+    return this;
+}

@@ -65,7 +65,7 @@ class NotificationManagerStub : public StubBase {
   virtual void removeUnseenFlags(bool ignore);
   virtual QList<Notification> notifications();
   virtual QList<NotificationGroup> groups();
-  };
+};
 
 // 2. IMPLEMENT STUB
 void NotificationManagerStub::NotificationManagerConstructor(int relayInterval, uint maxWaitQueueSize) {
@@ -410,6 +410,11 @@ QList<Notification> NotificationManager::notifications() const
 QList<NotificationGroup> NotificationManager::groups() const
 {
     return gNotificationManagerStub->groups();
+}
+
+QObject *NotificationManager::qObject()
+{
+    return this;
 }
 
 #endif

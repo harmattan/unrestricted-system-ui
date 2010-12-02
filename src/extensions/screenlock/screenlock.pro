@@ -70,6 +70,8 @@ HEADERS += ../../systemui/contextframeworkcontext.h \
            ../../systemui/statusarea/notificationstatusindicator.h \
            ../../systemui/statusindicatormenu/notificationarea.h \
            ../../systemui/statusindicatormenu/notificationareamodel.h \
+           ../../systemui/statusindicatormenu/notificationareastyle.h \
+           ../../systemui/statusindicatormenu/notificationareaview.h \
            ../../systemui/notifications/notificationareasink.h \
            ../../systemui/notifications/widgetnotificationsink.h \
            
@@ -80,12 +82,15 @@ SOURCES += ../../systemui/contextframeworkcontext.cpp \
            ../../systemui/statusarea/statusarea.cpp \
            ../../systemui/statusarea/notificationstatusindicator.cpp \
            ../../systemui/statusindicatormenu/notificationarea.cpp \
+           ../../systemui/statusindicatormenu/notificationareaview.cpp \
            ../../systemui/notifications/notificationareasink.cpp \
            ../../systemui/notifications/widgetnotificationsink.cpp \
 
-MODEL_HEADERS +=  ../../systemui/statusarea/clockmodel.h \
-                  ../../systemui/statusarea/statusindicatormodel.h \
-                  ../../systemui/statusindicatormenu/notificationareamodel.h \
+STYLE_HEADERS += ../../systemui/statusindicatormenu/notificationareastyle.h
+
+MODEL_HEADERS += ../../systemui/statusarea/clockmodel.h \
+                 ../../systemui/statusarea/statusindicatormodel.h \
+                 ../../systemui/statusindicatormenu/notificationareamodel.h
 
 TARGET        = $$qtLibraryTarget(sysuid-screenlock)
 DESTDIR       = ../../../lib

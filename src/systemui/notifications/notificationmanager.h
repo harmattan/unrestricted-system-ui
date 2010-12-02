@@ -69,6 +69,7 @@ public:
      */
     virtual ~NotificationManager();
 
+
     /*!
      * Restores data.
      *
@@ -76,10 +77,10 @@ public:
      */
     void restoreData();
 
-public:
     //! \reimp
     QList<Notification> notifications() const;
     QList<NotificationGroup> groups() const;
+    virtual QObject *qObject();
     //! \reimp_end
 
 public slots:
@@ -129,8 +130,6 @@ public slots:
      * \param eventType the event type of the notifications to update
      */
     void updateNotificationsWithEventType(const QString &eventType);
-
-
 
 signals:
     /*!

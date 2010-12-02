@@ -151,6 +151,13 @@ public:
      */
     virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId) = 0;
 
+    /*!
+     * Returns the qObject that implements the manager for signal connections.
+     *
+     * \return the qObject that implements the manager
+     */
+    virtual QObject *qObject() = 0;
+
 public slots:
     /*!
      * Removes a notification.

@@ -18,7 +18,6 @@
 ****************************************************************************/
 
 #include <MLibrary>
-#include <QDebug>
 #include "screenlockextension.h"
 #include "lockscreen.h"
 

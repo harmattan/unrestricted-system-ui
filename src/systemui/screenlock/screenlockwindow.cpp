@@ -20,6 +20,7 @@
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
 #include "screenlockextensioninterface.h"
+#include "sysuid.h"
 #include <MApplicationExtensionArea>
 #include <MSceneWindow>
 #include <QGraphicsLinearLayout>
@@ -82,6 +83,7 @@ void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *extensi
 {
     ScreenLockExtensionInterface *screenLockExtension = static_cast<ScreenLockExtensionInterface *>(extension);
     screenLockExtensions.append(screenLockExtension);
+    screenLockExtension->setNotificationManagerInterface(Sysuid::instance()->notificationManagerInterface());
     connect(screenLockExtension->widget(), SIGNAL(unlocked()), this, SIGNAL(unlocked()));
 }
 
