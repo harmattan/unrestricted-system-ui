@@ -49,9 +49,9 @@ void StatusIndicatorLabelView::updateData(const QList<const char *>& modificatio
 
     const char *member;
     foreach(member, modifications) {
-        if (member == StatusIndicatorModel::Value) {
+        if (strcmp(member, StatusIndicatorModel::Value) == 0) {
             label->setText(model()->value().toString());
-        } else if (member == MWidgetModel::StyleName) {
+        } else if (strcmp(member, MWidgetModel::StyleName) == 0) {
             if (controller->styleName().contains("Landscape")) {
                 label->setStyleName("StatusIndicatorLabelLandscape");
             } else {

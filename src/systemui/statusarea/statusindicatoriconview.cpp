@@ -36,9 +36,9 @@ void StatusIndicatorIconView::updateData(const QList<const char *>& modification
 
     const char *member;
     foreach(member, modifications) {
-        if (member == StatusIndicatorModel::Value ||
-			member == StatusIndicatorModel::Animate) {
-	    int frameNumber = model()->value().toDouble() * images.size();
+        if (strcmp(member, StatusIndicatorModel::Value) == 0 || strcmp(member, StatusIndicatorModel::Animate) == 0) {
+            int frameNumber = model()->value().toDouble() * images.size();
+
             // Set the animation frame based on the model value
             setFirstAnimationFrame(frameNumber);
             setAnimationFrame(frameNumber);
