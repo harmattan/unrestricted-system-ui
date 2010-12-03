@@ -1,6 +1,7 @@
 MOC_DIR = .moc
 M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
+LOCALLIBSDIR = ../../../lib
 
 include(../../../mconfig.pri)
 include(../../../localconfig.pri)
@@ -15,7 +16,7 @@ INCLUDEPATH  += \
     ../../systemui/screenlock \
     ../../systemui
 
-QMAKE_LIBDIR += ../../lib
+QMAKE_LIBDIR += $$LOCALLIBSDIR
 LIBS += -lnotificationsystem
 
 STYLE_HEADERS += lockscreenheaderstyle.h \
@@ -88,7 +89,7 @@ MODEL_HEADERS += ../../systemui/statusarea/clockmodel.h \
                  ../../systemui/statusindicatormenu/notificationareamodel.h
 
 TARGET        = $$qtLibraryTarget(sysuid-screenlock)
-DESTDIR       = ../../../lib
+DESTDIR       = $$LOCALLIBSDIR
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
     PKGCONFIG += contextsubscriber-1.0
