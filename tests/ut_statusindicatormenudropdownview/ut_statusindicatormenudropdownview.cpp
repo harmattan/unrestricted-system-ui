@@ -418,11 +418,15 @@ void Ut_StatusIndicatorMenuDropDownView::testWhenViewIsConstructedThenTimerIsSta
 
 void Ut_StatusIndicatorMenuDropDownView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
 {
+    QList<QGraphicsItem*> itemsFromTestSubject = controller->childItems();
+
     controller->setView(NULL);
     m_subject = NULL;
 
     // All the items added by the view should have disappeared
-    QCOMPARE(controller->childItems().count(), 0);
+    foreach (QGraphicsItem* item, itemsFromTestSubject) {
+        QCOMPARE(controller->childItems().contains(item), QBool(false));
+    }
 
     // All the SceneWindows should be gone as well
     QCOMPARE(g_visibleSceneWindows.count(), 0);
