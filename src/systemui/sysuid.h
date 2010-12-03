@@ -67,13 +67,6 @@ public:
     MCompositorNotificationSink& compositorNotificationSink();
 
     /*!
-     * Returns a reference to the unlock screen notification sink.
-     *
-     * \return a reference to the unlock screen notification sink
-     */
-    UnlockNotificationSink& unlockNotificationSink();
-
-    /*!
      * Returns a reference to the notifier notification sink.
      *
      * \return a reference to the notifier notification sink
@@ -120,9 +113,6 @@ private:
 
     //! Notification sink for presenting the notification as a feedback
     NGFNotificationSink *ngfNotificationSink;
-
-    //! Notification sink for presenting missed events on the lock screen
-    UnlockNotificationSink *unlockNotificationSink_;
 
     //! Notification sink for showing unread notifications
     NotifierNotificationSink *notifierNotificationSink_;

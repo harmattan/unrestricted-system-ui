@@ -1,21 +1,21 @@
 /****************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of systemui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of systemui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #include <MLocale>
 #include <MGConfItem>
 #include "unlocknotificationsink.h"
@@ -46,16 +46,33 @@
 // These notifications will be filtered out.
 #define EVENT_BATTERY  "x-nokia.battery"
 
-
 UnlockNotificationSink::UnlockNotificationSink(QObject *parent) :
     NotificationSink(parent),
-    m_enabled (false),
+    m_enabled(false),
     privateNotificationSetting(new MGConfItem("/desktop/meego/privacy/private_lockscreen_notifications", this))
 {
+#ifdef HAVE_QMSYSTEM
+    connect(&locks, SIGNAL(stateChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(locksChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
+#endif
 }
 
-void
-UnlockNotificationSink::setLockedState (bool islocked)
+#ifdef HAVE_QMSYSTEM
+void UnlockNotificationSink::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
+{
+    if (what == MeeGo::QmLocks::TouchAndKeyboard) {
+        switch (how) {
+        case MeeGo::QmLocks::Locked:
+            setLockedState(true);
+            break;
+        default:
+            setLockedState(false);
+            break;
+        }
+    }
+}
+#endif
+
+void UnlockNotificationSink::setLockedState(bool islocked)
 {
     if (islocked == m_enabled)
         return;
@@ -63,16 +80,14 @@ UnlockNotificationSink::setLockedState (bool islocked)
     // Set the internal state
     m_enabled = islocked;
 
-    UnlockMissedEvents::getInstance ().clearAll ();
+    UnlockMissedEvents::getInstance().clearAll();
 }
 
 /*!
  * \returns true for the notification that are going to be shown in the
  *   lockscreen.
  */
-bool
-UnlockNotificationSink::canAddNotification (
-        const Notification &notification)
+bool UnlockNotificationSink::canAddNotification(const Notification &notification)
 {
     Q_UNUSED (notification);
 
@@ -85,52 +100,42 @@ UnlockNotificationSink::canAddNotification (
      * not be shown in the lockscreen here.
      */
     bool retval = true;
-    QString event_type =
-        notification.parameters ().value (
-            GenericNotificationParameterFactory::eventTypeKey ()).toString ();
+    QString event_type = notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString();
 
-    if (event_type.startsWith (EVENT_BATTERY))
+    if (event_type.startsWith(EVENT_BATTERY))
         retval = false;
 
     return retval;
 }
 
-void
-UnlockNotificationSink::addNotification (const Notification &notification)
+void UnlockNotificationSink::addNotification(const Notification &notification)
 {
     // not locked state... skip
-    if ((m_enabled == false) || (canAddNotification (notification) == false))
+    if ((m_enabled == false) || (canAddNotification(notification) == false))
         return;
 
     UnlockMissedEvents::Types type = UnlockMissedEvents::NotifyOther;
 
-    QString event_type =
-        notification.parameters ().value (
-            GenericNotificationParameterFactory::eventTypeKey ()).toString ();
+    QString event_type = notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString();
 
     if (event_type == EVENT_EMAIL)
         type = UnlockMissedEvents::NotifyEmail;
-    else if (event_type == EVENT_MSG ||
-            event_type == EVENT_SMS || 
-            event_type == EVENT_MMS)
+    else if (event_type == EVENT_MSG || event_type == EVENT_SMS || event_type == EVENT_MMS)
         type = UnlockMissedEvents::NotifySms;
-    else if (event_type == EVENT_CALL ||
-            event_type == CALL_MISSED)
+    else if (event_type == EVENT_CALL || event_type == CALL_MISSED)
         type = UnlockMissedEvents::NotifyCall;
-    else if (event_type == IM_RECEIVED ||
-            event_type == MESSAGING_IM)
+    else if (event_type == IM_RECEIVED || event_type == MESSAGING_IM)
         type = UnlockMissedEvents::NotifyMessage;
-
 
     QString lastSummary;
 
-    if(privateNotificationSetting->value().toBool()) {
+    if (privateNotificationSetting->value().toBool()) {
         QString genericTextId = notification.parameters().value(NotificationWidgetParameterFactory::genericTextIdKey()).toString();
 
-        if(!genericTextId.isEmpty()) {
+        if (!genericTextId.isEmpty()) {
             QString genericTextCatalogue = notification.parameters().value(NotificationWidgetParameterFactory::genericTextCatalogueKey()).toString();
 
-            if(!genericTextCatalogue.isEmpty()) {
+            if (!genericTextCatalogue.isEmpty()) {
                 MLocale locale;
                 // Load the catalog from disk if it's not yet loaded
                 locale.installTrCatalog(genericTextCatalogue);
@@ -140,14 +145,13 @@ UnlockNotificationSink::addNotification (const Notification &notification)
             }
         }
     } else {
-        lastSummary = notification.parameters ().value(NotificationWidgetParameterFactory::summaryKey ()).toString();
+        lastSummary = notification.parameters().value(NotificationWidgetParameterFactory::summaryKey()).toString();
     }
 
-    UnlockMissedEvents::getInstance ().addNotification (type, lastSummary);
+    UnlockMissedEvents::getInstance().addNotification(type, lastSummary);
 }
 
-void
-UnlockNotificationSink::removeNotification (uint notificationId)
+void UnlockNotificationSink::removeNotification(uint notificationId)
 {
     Q_UNUSED (notificationId);
 

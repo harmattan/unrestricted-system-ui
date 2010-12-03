@@ -4,6 +4,10 @@
 #include <QObject>
 #include "notificationsink.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
+#endif
+
 class MGConfItem;
 
 class UnlockNotificationSink : public NotificationSink
@@ -13,21 +17,28 @@ class UnlockNotificationSink : public NotificationSink
 public:
     UnlockNotificationSink(QObject *parent = NULL);
 
-public slots:
-    void setLockedState (bool islocked);
-
 protected slots:
     virtual void addNotification (const Notification &notification);
     virtual void removeNotification (uint notificationId);
+
+#ifdef HAVE_QMSYSTEM
+    void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
+#endif
 
 protected:
     bool canAddNotification (const Notification &notification);
 
 private:
+    void setLockedState (bool islocked);
+
     bool m_enabled;
 
     //! GConf key for enabling/disabling private notifications
     MGConfItem *privateNotificationSetting;
+
+#ifdef HAVE_QMSYSTEM
+    MeeGo::QmLocks locks;
+#endif
 
 #ifdef UNIT_TEST
 friend class Ut_UnlockNotificationSink;
