@@ -126,7 +126,9 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
 {
     Display *display = QX11Info::display();
 
-    lockScreenWindow->show();
+    QShowEvent *showEvent = new QShowEvent;
+    lockScreenWindow->showEvent(showEvent);
+
     QCOMPARE(gX11WrapperStub->stubCallCount("XSendEvent"), 1);
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Display *>(0), display);
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Window>(1), RootWindow(display, lockScreenWindow->x11Info().screen()));
@@ -140,6 +142,7 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
     QCOMPARE(event.xclient.format, 32);
     QCOMPARE(event.xclient.data.l[0], (long)1);
     QCOMPARE(event.xclient.data.l[1], (long)X11Wrapper::XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", False));
+    delete showEvent;
 }
 
 void Ut_LockScreenWindow::testOrientationLocking_data()
