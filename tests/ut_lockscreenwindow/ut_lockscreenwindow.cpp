@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <MApplication>
 #include <MSceneWindow>
 #include <QShowEvent>
@@ -56,11 +57,28 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
     Q_UNUSED(policy);
 }
 
-QPair<QGraphicsItem *, QRectF> qGraphicsItemUpdate(NULL, QRectF());
-void QGraphicsItem::update(const QRectF &rect)
+ScreenLockExtension::ScreenLockExtension() : widget_(NULL)
 {
-    qGraphicsItemUpdate.first = this;
-    qGraphicsItemUpdate.second = rect;
+}
+ScreenLockExtension::~ScreenLockExtension()
+{
+}
+bool screenLockExtensionReset = false;
+void ScreenLockExtension::reset()
+{
+    screenLockExtensionReset = true;
+}
+void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInterface &)
+{
+}
+bool ScreenLockExtension::initialize(const QString &)
+{
+    widget_ = new LockScreen;
+    return true;
+}
+QGraphicsWidget *ScreenLockExtension::widget()
+{
+    return widget_;
 }
 
 void Ut_LockScreenWindow::initTestCase()
@@ -88,15 +106,15 @@ void Ut_LockScreenWindow::cleanup()
     mWindowOrientationLocked = false;
     mWindowOrientation.clear();
     gX11WrapperStub->stubReset();
-    qGraphicsItemUpdate.first = NULL;
-    qGraphicsItemUpdate.second = QRectF();
+    screenLockExtensionReset = false;
 }
 
-void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
+void Ut_LockScreenWindow::testWhenExtensionIsRegisteredUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
 {
-    // TODO
-    //bool result = disconnect(lockScreenWindow->lockScreen, SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked()));
-    //QCOMPARE(result, true);
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    lockScreenWindow->registerExtension(&screenLockExtension);
+    QVERIFY(disconnect(screenLockExtension.widget(), SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked())));
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
@@ -142,7 +160,7 @@ void Ut_LockScreenWindow::testOrientationLocking()
     QFETCH(bool, orientationLocked);
     QFETCH(QString, expectedOrientation);
 
-    ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("LockScreenWindowStyle", "", "", "", M::Landscape, NULL)));
+    ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL)));
     style->setLockedOrientation(lockedOrientation);
     QShowEvent event;
     lockScreenWindow->showEvent(&event);
@@ -152,14 +170,11 @@ void Ut_LockScreenWindow::testOrientationLocking()
 
 void Ut_LockScreenWindow::testReset()
 {
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    lockScreenWindow->registerExtension(&screenLockExtension);
     lockScreenWindow->reset();
-
-    // TODO
-    /*
-    QCOMPARE(gLockScreenStub->stubCallCount("reset"), 1);
-    QCOMPARE(qGraphicsItemUpdate.first, lockScreenWindow->lockScreen);
-    QCOMPARE(qGraphicsItemUpdate.second, QRectF());
-    */
+    QVERIFY(screenLockExtensionReset);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)
