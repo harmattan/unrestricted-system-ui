@@ -21,6 +21,7 @@
 #include <notificationparameters.h>
 #include <genericnotificationparameterfactory.h>
 #include <notificationwidgetparameterfactory.h>
+#include <unlocknotificationsink.h>
 
 #include "ut_unlocknotificationsink.h"
 #include "unlockmissedevents_stub.h"

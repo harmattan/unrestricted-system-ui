@@ -19,6 +19,7 @@
 #include "widgetnotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "genericnotificationparameterfactory.h"
+#include "widgetnotificationsink.h"
 #include <MRemoteAction>
 #include <MLocale>
 #include <MGConfItem>
