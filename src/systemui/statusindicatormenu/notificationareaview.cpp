@@ -55,7 +55,7 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     andMore->setView(new MWidgetView(andMore));
     andMore->setObjectName("AndMore");
     //% "And more"
-    MLabel *andMoreLabel = new MLabel(qtTrId("qtn_noti_more"));
+    MLabel *andMoreLabel = new MLabel(qtTrId("qtn_noti_and_more"));
     andMoreLabel->setObjectName("AndMoreLabel");
     QGraphicsLinearLayout *andMoreLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     andMoreLayout->setContentsMargins(0, 0, 0, 0);

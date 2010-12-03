@@ -4,6 +4,7 @@ system-ui (0.18.16~1) unstable; urgency=low
   * Fixes: NB#202981 - Volume level can not be adjusted by dragging the volume slider
   * Fixes: NB#208655 - No haptic feedback is received when connecting USB charger to DUT
   * Fixes: NB#188933 - Device shows Offline icon shortly after bootup
+  * Fixes: NB#209114 - "!! And more" text needs to be localized in the lock screen view
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 30 Nov 2010 16:51:23 +0200
 
