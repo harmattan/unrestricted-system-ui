@@ -432,6 +432,28 @@ void Ut_NotificationManager::testWhenNotificationIsAddedThenTheNotificationIsFil
     QCOMPARE(notification.parameters().value(PERSISTENT).toBool(), true);
 }
 
+void Ut_NotificationManager::testNotificationIsUpdatedWhenEventTypeIsUpdated()
+{
+    connect(this, SIGNAL(eventTypeModified(QString)),
+            manager, SLOT(updateNotificationsWithEventType(QString)));
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    gEventTypeSettings["testType"][IMAGE] = "iconId";
+
+    NotificationParameters parameters;
+    parameters.add(EVENT_TYPE, "testType");
+    manager->addNotification(0, parameters);
+
+    gEventTypeSettings["testType"][IMAGE] = "modified-iconId";
+    emit eventTypeModified("testType");
+
+    QCOMPARE(spy.count(), 2);
+    QList<QVariant> arguments = spy.takeFirst();
+    arguments = spy.takeFirst();
+    Notification n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("modified-iconId"));
+}
+
 void Ut_NotificationManager::testUpdateNotification()
 {
     QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));

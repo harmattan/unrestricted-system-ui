@@ -241,9 +241,10 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
 
 void NotificationManager::updateNotificationsWithEventType(const QString &eventType)
 {
-    foreach(const Notification &notification, notificationContainer) {
+    foreach(Notification notification, notificationContainer) {
         if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
+            notification.updateParameters(appendEventTypeParameters(notification.parameters()));
             updateNotification(notification.userId(), notification.notificationId(), notification.parameters());
         }
     }

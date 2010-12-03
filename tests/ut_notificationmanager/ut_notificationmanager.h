@@ -41,6 +41,7 @@ public:
 
 signals:
     void notifierSinkActive(bool ignore);
+    void eventTypeModified(const QString& eventType);
 
 private:
     TestNotificationManager *manager;
@@ -140,6 +141,8 @@ private slots:
     void testGetNotificationGroups();
     // Test getting notifications
     void testGetNotifications();
+
+    void testNotificationIsUpdatedWhenEventTypeIsUpdated();
 
 };
 
