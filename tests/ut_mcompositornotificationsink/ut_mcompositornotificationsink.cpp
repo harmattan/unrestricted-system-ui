@@ -369,7 +369,7 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowNotOpen()
     // Check that a MBanner was created with the given parameters
     MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
     QVERIFY(banner);
-    QCOMPARE(banner->styleName(), banner->objectName());
+//    QCOMPARE(banner->styleName(), banner->objectName());
     QCOMPARE(banner->iconID(), QString("buttonicon0"));
     QCOMPARE(banner->title(), QString("title0"));
     QCOMPARE(banner->subtitle(), QString("subtitle0"));
