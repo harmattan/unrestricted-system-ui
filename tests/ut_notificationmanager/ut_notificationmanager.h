@@ -47,7 +47,7 @@ private:
     TestNotificationManager *manager;
 
 private:
-    void addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier = false);
+    uint addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier = false);
     uint addNotification(NotificationParameters *parameters, QString index, int notificationId, int groupId = 0, bool addIdentifier = false);
 
 private slots:
@@ -68,6 +68,12 @@ private slots:
     void testWhenNotificationIsAddedThenTheNotificationIsFilledWithEventTypeData();
     // Test that updating with an ID updates the correct notification
     void testUpdateNotification();
+
+    // Test that removing notification queues notification removal
+    void testRemovingNotificationSignalSent();
+
+    // Test that removing group queues the group removal
+    void testRemovingGroupSignalSent();
 
     // Test that canceling with an ID cancels the correct notification
     void testRemoveNotification();

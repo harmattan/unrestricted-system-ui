@@ -69,6 +69,8 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     connect(this, SIGNAL(notificationUpdated(const Notification &)), dBusSink, SLOT(addNotification(const Notification &)));
     connect(dBusSink, SIGNAL(notificationRemovalRequested(uint)), this, SLOT(removeNotification(uint)));
     connect(dBusSink, SIGNAL(notificationGroupClearingRequested(uint)), this, SLOT(removeNotificationsInGroup(uint)));
+    connect(this, SIGNAL(queuedGroupRemove(uint)), this, SLOT(doRemoveGroup(uint)), Qt::QueuedConnection);
+    connect(this, SIGNAL(queuedNotificationRemove(uint)), this, SLOT(removeNotification(uint)), Qt::QueuedConnection);
 
     waitQueueTimer.setSingleShot(true);
     connect(&waitQueueTimer, SIGNAL(timeout()), this, SLOT(relayNextNotification()));
@@ -234,7 +236,7 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
     foreach(const NotificationGroup &group, groupContainer) {
         if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
            toString() == eventType) {
-            removeGroup(0, group.groupId());
+            doRemoveGroup(group.groupId());
         }
     }
 }
@@ -307,7 +309,12 @@ bool NotificationManager::removeNotification(uint notificationUserId, uint notif
 {
     Q_UNUSED(notificationUserId);
 
-    return removeNotification(notificationId);
+    if (notificationContainer.contains(notificationId))
+    {
+        emit queuedNotificationRemove(notificationId);
+        return true;
+    }
+    return false;
 }
 
 bool NotificationManager::removeNotification(uint notificationId)
@@ -395,22 +402,29 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
 
 bool NotificationManager::removeGroup(uint notificationUserId, uint groupId)
 {
+    Q_UNUSED(notificationUserId)
+
     restoreData();
 
+    if (groupContainer.contains(groupId)) {
+        emit queuedGroupRemove(groupId);
+        return true;
+    }
+    return false;
+}
+
+void NotificationManager::doRemoveGroup(uint groupId)
+{
     if (groupContainer.remove(groupId)) {
         foreach(const Notification & notification, notificationContainer) {
             if (notification.groupId() == groupId) {
-                removeNotification(notificationUserId, notification.notificationId());
+                removeNotification(notification.notificationId());
             }
         }
 
         saveStateData();
 
         emit groupRemoved(groupId);
-
-        return true;
-    } else {
-        return false;
     }
 }
 

@@ -65,6 +65,7 @@ class NotificationManagerStub : public StubBase {
   virtual void removeUnseenFlags(bool ignore);
   virtual QList<Notification> notifications();
   virtual QList<NotificationGroup> groups();
+  virtual void doRemoveGroup(uint groupId);
 };
 
 // 2. IMPLEMENT STUB
@@ -259,7 +260,7 @@ void NotificationManagerStub::saveNotifications() {
 void NotificationManagerStub::removeUnseenFlags(bool ignore)
 {
     QList<ParameterBase*> params;
-    params.append( new Parameter<bool>(ignore));
+    params.append(new Parameter<bool>(ignore));
     return stubMethodEntered("removeUnseenFlags", params);
 }
 
@@ -273,6 +274,13 @@ QList<NotificationGroup> NotificationManagerStub::groups()
 {
     stubMethodEntered("groups");
     return stubReturnValue<QList<NotificationGroup> >("groups");
+}
+
+void NotificationManagerStub::doRemoveGroup(uint groupId)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<uint>(groupId));
+    stubMethodEntered("doRemoveGroup");
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -415,6 +423,11 @@ QList<NotificationGroup> NotificationManager::groups() const
 QObject *NotificationManager::qObject()
 {
     return this;
+}
+
+void NotificationManager::doRemoveGroup(uint groupId)
+{
+    gNotificationManagerStub->doRemoveGroup(groupId);
 }
 
 #endif

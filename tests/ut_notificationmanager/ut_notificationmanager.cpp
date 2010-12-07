@@ -488,28 +488,66 @@ void Ut_NotificationManager::testUpdateNotification()
 
 }
 
+void Ut_NotificationManager::testRemovingNotificationSignalSent()
+{
+    QSignalSpy queuedSpy(manager, SIGNAL(queuedNotificationRemove(uint)));
+
+    // Create one notifications
+    NotificationParameters parameters1;
+    uint id1 = addNotification(&parameters1, "1", 2);
+
+    // Cancel non existing
+    manager->removeNotification(0, -1);
+
+    // Test that the signal is NOT are sent
+    QCOMPARE(queuedSpy.count(), 0);
+
+    // Cancel the notification
+    manager->removeNotification(0, id1);
+
+    // Test that the relevant signals are sent
+    QCOMPARE(queuedSpy.count(), 1);
+}
+
+void Ut_NotificationManager::testRemovingGroupSignalSent()
+{
+    QSignalSpy queuedSpy(manager, SIGNAL(queuedGroupRemove(uint)));
+
+    // Create one notifications
+    NotificationParameters parameters1;
+    uint id1 = addGroup(&parameters1, "1", 2);
+
+    // Cancel non existing
+    manager->removeGroup(0, -1);
+
+    // Test that the relevant signal is NOT are sent
+    QCOMPARE(queuedSpy.count(), 0);
+
+    // Cancel the notification
+    manager->removeGroup(0, id1);
+
+    // Test that the relevant signals are sent
+    QCOMPARE(queuedSpy.count(), 1);
+}
+
 void Ut_NotificationManager::testRemoveNotification()
 {
     QSignalSpy removeSpy(manager, SIGNAL(notificationRemoved(uint)));
 
     // Create three notifications
     NotificationParameters parameters0;
-    parameters0.add(IMAGE, "icon0");
-    parameters0.add(CLASS, "system");
-    manager->addNotification(0, parameters0, 0);
+    addNotification(&parameters0, "0", 1);
 
     NotificationParameters parameters1;
-    parameters1.add(BODY, "body1");
-    uint id1 = manager->addNotification(0, parameters1);
+    uint id1 = addNotification(&parameters1, "1", 2);
 
     NotificationParameters parameters2;
-    parameters2.add(ICON, "buttonicon2");
-    manager->addNotification(0, parameters2);
+    addNotification(&parameters2, "2", 3);
 
-    // Cancel the second one
-    manager->removeNotification(0, id1);
+    //Remove middle one
+    manager->removeNotification(id1);
 
-    // Test that the relevant signals are sent
+    //Check that it is removed
     QCOMPARE(removeSpy.count(), 1);
     QList<QVariant> arguments = removeSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
@@ -622,13 +660,14 @@ void Ut_NotificationManager::testUpdateNonexistingGroup()
     QCOMPARE(updateGroupSpy.count(), 0);
 }
 
+
+
 void Ut_NotificationManager::testRemoveGroup()
 {
     QSignalSpy removeGroupSpy(manager, SIGNAL(groupRemoved(uint)));
     NotificationParameters parameters1;
-    parameters1.add(IMAGE, "icon1");
-    uint id1 = manager->addGroup(0, parameters1);
-    manager->removeGroup(0, id1);
+    uint id1 = addGroup(&parameters1, "0" , 1);
+    manager->doRemoveGroup(id1);
     QCOMPARE(removeGroupSpy.count(), 1);
     QList<QVariant> arguments = removeGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
@@ -636,21 +675,21 @@ void Ut_NotificationManager::testRemoveGroup()
 
 void Ut_NotificationManager::testRemoveGroupWithNotifications()
 {
-    NotificationParameters gparameters1;
-    gparameters1.add(IMAGE, "gicon1");
-    uint groupId = manager->addGroup(0, gparameters1);
     QSignalSpy addSpy(manager, SIGNAL(notificationUpdated(Notification)));
     QSignalSpy removeGroupSpy(manager, SIGNAL(groupRemoved(uint)));
     QSignalSpy removeNotificationSpy(manager, SIGNAL(notificationRemoved(uint)));
+
+    NotificationParameters gparameters1;
+    uint groupId = addGroup(&gparameters1, "1", 1);
     NotificationParameters parameters0;
-    parameters0.add(IMAGE, "icon0");
-    uint id0 = manager->addNotification(0, parameters0, groupId);
+    uint id0 = addNotification(&parameters0, "0", 1, groupId);
     NotificationParameters parameters1;
-    parameters1.add(BODY, "body1");
-    uint id1 = manager->addNotification(0, parameters1, groupId);
+    uint id1 = addNotification(&parameters1, "1", 2, groupId);
+
     QCOMPARE(addSpy.count(), 2);
 
-    manager->removeGroup(0, groupId);
+    manager->doRemoveGroup(groupId);
+
     QCOMPARE(removeGroupSpy.count(), 1);
     QCOMPARE(removeNotificationSpy.count(), 2);
     QList<QVariant> arguments = removeNotificationSpy.takeFirst();
@@ -814,7 +853,7 @@ void Ut_NotificationManager::testCancellingNotificationInQueue()
     QCOMPARE(n.notificationId(), id0);
 
     // Cancel the middle notification
-    manager->removeNotification(0, id1);
+    manager->removeNotification(id1);
 
     // Check that notification sink was not signaled with cancel.
     QCOMPARE(removeSpy.count(), 0);
@@ -1164,7 +1203,7 @@ void Ut_NotificationManager::testNotificationListWithIdentifiers()
 }
 
 
-void Ut_NotificationManager::addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier)
+uint Ut_NotificationManager::addGroup(NotificationParameters *parameters, QString index, int groupid, bool addIdentifier)
 {
     parameters->add(EVENT_TYPE, "type" + index);
     parameters->add(SUMMARY, "summary" + index);
@@ -1175,7 +1214,7 @@ void Ut_NotificationManager::addGroup(NotificationParameters *parameters, QStrin
     if (addIdentifier) {
         parameters->add(IDENTIFIER, "identifier" + index);
     }
-    manager->addGroup(groupid, *parameters);
+    return manager->addGroup(groupid, *parameters);
 }
 
 uint Ut_NotificationManager::addNotification(NotificationParameters *parameters, QString index,
@@ -1280,23 +1319,20 @@ void Ut_NotificationManager::testGroupInfoStorage()
 
     // Add two groups to the notification manager
     NotificationParameters parameters0;
-    parameters0.add(IMAGE, "icon0");
-    uint id0 = manager->addGroup(0, parameters0);
+    uint id0 = addGroup(&parameters0, "0", 1);
     NotificationParameters parameters1;
-    parameters1.add(BODY, "body1");
-    parameters1.add("eventType", "persistent");
-    uint id1 = manager->addGroup(0, parameters1);
+    uint id1 = addGroup(&parameters1, "1", 2);
     loadStateData();
     QCOMPARE((uint)gGroupList.count(), (uint)2);
     QCOMPARE((uint)gGroupList.at(0).groupId(), id0);
     QCOMPARE((uint)gGroupList.at(1).groupId(), id1);
     NotificationGroup ng = gGroupList.at(0);
-    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
+    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("image0"));
     ng = gGroupList.at(1);
     QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
     //Remove group and check that it is removed
-    manager->removeGroup(0, id0);
+    manager->doRemoveGroup(id0);
     loadStateData();
     QCOMPARE((uint)gGroupList.count(), (uint)1);
     QCOMPARE((uint)gGroupList.at(0).groupId(), id1);
@@ -1309,7 +1345,7 @@ void Ut_NotificationManager::testGroupInfoStorage()
     QCOMPARE((uint)gGroupList.count(), (uint)1);
     QCOMPARE((uint)gGroupList.at(0).groupId(), id1);
     ng = gGroupList.at(0);
-    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("icon0"));
+    QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("image0"));
 }
 
 void Ut_NotificationManager::tesNotificationStorage()
@@ -1351,7 +1387,7 @@ void Ut_NotificationManager::tesNotificationStorage()
     QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
     //Remove one notification and check that it is removed from persistent storage
-    manager->removeNotification(0, id0);
+    manager->removeNotification(id0);
     loadNotifications();
     QCOMPARE((uint)gNotificationList.count(), (uint)2);
     notification = gNotificationList.at(0);
@@ -1488,6 +1524,8 @@ void Ut_NotificationManager::testDBusNotificationSinkConnections()
     QVERIFY(disconnect(manager, SIGNAL(notificationUpdated(const Notification &)), manager->dBusSink, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationRemovalRequested(uint)), manager, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(manager->dBusSink, SIGNAL(notificationGroupClearingRequested(uint)), manager, SLOT(removeNotificationsInGroup(uint))));
+    QVERIFY(disconnect(manager, SIGNAL(queuedGroupRemove(uint)), manager, SLOT(doRemoveGroup(uint))));
+    QVERIFY(disconnect(manager, SIGNAL(queuedNotificationRemove(uint)), manager, SLOT(removeNotification(uint))));
 }
 
 void Ut_NotificationManager::testGetNotificationGroups()

@@ -166,6 +166,19 @@ signals:
      */
     void notificationRestored(const Notification &notification);
 
+    /*!
+     * Signal used to queue group removal request
+     * \param groupId to be removed
+     */
+    void queuedGroupRemove(uint groupId);
+
+    /*!
+     * Signal used to queue notification removal request
+     * \param notificationId notificationId to be removed
+     */
+    void queuedNotificationRemove(uint notificationId);
+
+
 protected slots:
     /*!
      * Slot called to relay next notification from the notifications queue of this
@@ -184,6 +197,13 @@ protected slots:
       * \param ignore  \c true if ignore the call \c false to remove the flags
       */
     void removeUnseenFlags(bool ignore);
+
+private slots:
+    /*!
+     * Removes groups from internal storage
+     * \param groupId groupId to be removed
+     */
+    void doRemoveGroup(uint groupId);
 
 private:
 
