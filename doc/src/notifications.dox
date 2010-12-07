@@ -30,8 +30,21 @@ The \c NotificationManagerInterface also supports a concept of notification grou
 
 %Notification sinks (\c NotificationSink) get notified by notification manager when a notification they should act upon is triggered. %Notification sinks can create various feedback when a notification is triggered. For instance a \c NotificationSink can create and show a notification widget, play a sound or launch haptic feedback upon a notification.
 
-\c MCompositorNotificationSink communicates to MCompositor when a notification is triggered. This sink will create a special notification window and a \c MInfoBanner widget. A \b _NET_WM_TYPE_NOTIFICATION window hint is set to the created window. MCompositor will identify the notification window by the set window hint. \c MCompositorNotificationSink  will handle the showing of preview icon in the notification preview. \c MCompositorNotificationSink will handle the interaction affecting the notification widget. \c MCompositorNotificationSink will also destroy the notification widget and close the notification window when required. %Notification widget can be either cancelled or it can timeout. \c MCompositorNotificationSink will communicate the cause that closed the notification window to the MCompositor using custom X Atom. MCompositor is responsible for showing the notification window on top of any application as well as the transition animation of the notification window. After displaying the info banner the sink places the \c MInfoBanner widget onto the \c NotificationArea.
+\subsection MCompositorNotificationSink
+This sink will create a transparent window of type \b _NET_WM_TYPE_NOTIFICATION and sequentially displays an \c MBanner for all the queued notifications in that window. MCompositor will identify the notification window by the window type and is responsible for showing the notification window on top of any application. \c MCompositorNotificationSink hides the notification window after all the currently queued notifications have been shown.
 
+\subsubsection disabling_previews Disabling notification previews
+MCompositorNotificationSink can be prevented from showing its window and the banners in two ways:
+- Globally, by setting the GConf key /desktop/meego/notifications/previews_enabled to false. This disables previews for both application and system notifications.
+- On a per window basis, by setting the _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED window property to a non-zero value e.g.
+\code
+MWindow win;
+unsigned char data = 1;
+XChangeProperty(QX11Info::display(), win.internalWindId(), XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False),
+                XA_INTEGER, 8, PropModeReplace, &data, 1);
+\endcode \note Previews for system notifications can not be disabled this way.
+
+\subsection NGFNotificationSink
 \c NGFNotificationSink (Non Graphical Notification Sink) integrates to the low level notification framework libngf to produce the required notification sound, vibrations, led indications etc. The \c NGFNotificationSink uses the \c feedbackId key from the event type to determine which feedback to request from the \c libngf.
 
 \section event_types Event types
