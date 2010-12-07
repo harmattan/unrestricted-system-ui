@@ -65,6 +65,8 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controll
 
 LockScreenWithPadlockView::~LockScreenWithPadlockView()
 {
+    // Destroyed manually, since otherwise the ownership is in the controller and the widget won't get destroyed when switching themes
+    delete lockLandArea;
 }
 
 void LockScreenWithPadlockView::mousePressEvent(QGraphicsSceneMouseEvent *event)
