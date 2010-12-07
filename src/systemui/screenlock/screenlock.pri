@@ -15,3 +15,11 @@ SOURCES += \
     screenlock/screenlockbusinesslogicadaptor.cpp \
     screenlock/screenlockwindow.cpp \
     screenlock/eventeater.cpp
+
+headers.path = /usr/include/system-ui
+headers.files = \
+    screenlock/screenlockextensioninterface.h \
+    screenlock/ScreenLockExtensionInterface
+
+INSTALLS += \
+    headers
