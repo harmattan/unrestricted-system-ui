@@ -22,7 +22,7 @@
 #include <QObject>
 
 class MApplication;
-class NotifierNotificationSink;
+class ScreenLockExtension;
 class LockScreenStatusAreaView;
 class StatusArea;
 
@@ -44,7 +44,7 @@ private:
     void testStatusBarGeometryProperty();
 
     MApplication *app;
-    NotifierNotificationSink *notifierNotificationSink;
+    ScreenLockExtension *extension;
     LockScreenStatusAreaView *m_subject;
     StatusArea *statusArea;
 };

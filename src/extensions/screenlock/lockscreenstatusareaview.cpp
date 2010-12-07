@@ -23,8 +23,7 @@
 #include "contextframeworkcontext.h"
 #include "x11wrapper.h"
 #include "notificationstatusindicator.h"
-#include "notifiernotificationsink.h"
-#include "sysuid.h"
+#include "screenlockextension.h"
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
 #include <MViewCreator>
@@ -52,8 +51,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     connect(phoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
 
     // Connect notification signals
-    // TODO
-    //connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), notifierIndicator, SLOT(setActive(bool)));
+    connect(ScreenLockExtension::instance(), SIGNAL(notifierSinkActive(bool)), notifierIndicator, SLOT(setActive(bool)));
 
     // Put indicators into the layout
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);

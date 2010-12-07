@@ -24,6 +24,8 @@
 #include "ut_lockscreenwindow.h"
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
+#include "notifiernotificationsink_stub.h"
+#include "notificationsink_stub.h"
 #include "sysuid_stub.h"
 #include <X11/Xutil.h>
 #include "x11wrapper_stub.h"
@@ -80,16 +82,23 @@ QGraphicsWidget *ScreenLockExtension::widget()
 {
     return widget_;
 }
+QObject *ScreenLockExtension::qObject()
+{
+    return this;
+}
 
 void Ut_LockScreenWindow::initTestCase()
 {
     int   argc = 1;
     char *argv[] = {(char *) "./Ut_LockScreenWindow", NULL };
     app = new MApplication(argc, argv);
+    notifierSink = new NotifierNotificationSink;
+    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
 }
 
 void Ut_LockScreenWindow::cleanupTestCase()
 {
+    delete notifierSink;
     delete app;
 }
 
@@ -109,12 +118,13 @@ void Ut_LockScreenWindow::cleanup()
     screenLockExtensionReset = false;
 }
 
-void Ut_LockScreenWindow::testWhenExtensionIsRegisteredUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
+void Ut_LockScreenWindow::testWhenExtensionIsRegisteredSignalsAreConnected()
 {
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
     lockScreenWindow->registerExtension(&screenLockExtension);
-    QVERIFY(disconnect(screenLockExtension.widget(), SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked())));
+    QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked())));
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()

@@ -13,8 +13,10 @@ class ScreenLockExtensionStub : public StubBase {
   virtual void ScreenLockExtensionDestructor();
   virtual void reset();
   virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
+  virtual QObject * qObject();
   virtual bool initialize(const QString &interface);
   virtual QGraphicsWidget * widget();
+  virtual ScreenLockExtension * instance();
   virtual NotificationManagerInterface * notificationManagerInterface();
 }; 
 
@@ -35,6 +37,11 @@ void ScreenLockExtensionStub::setNotificationManagerInterface(NotificationManage
   stubMethodEntered("setNotificationManagerInterface",params);
 }
 
+QObject * ScreenLockExtensionStub::qObject() {
+  stubMethodEntered("qObject");
+  return stubReturnValue<QObject *>("qObject");
+}
+
 bool ScreenLockExtensionStub::initialize(const QString &interface) {
   QList<ParameterBase*> params;
   params.append( new Parameter<const QString & >(interface));
@@ -45,6 +52,11 @@ bool ScreenLockExtensionStub::initialize(const QString &interface) {
 QGraphicsWidget * ScreenLockExtensionStub::widget() {
   stubMethodEntered("widget");
   return stubReturnValue<QGraphicsWidget *>("widget");
+}
+
+ScreenLockExtension * ScreenLockExtensionStub::instance() {
+  stubMethodEntered("instance");
+  return stubReturnValue<ScreenLockExtension *>("instance");
 }
 
 NotificationManagerInterface * ScreenLockExtensionStub::notificationManagerInterface() {
@@ -76,12 +88,22 @@ void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInt
   gScreenLockExtensionStub->setNotificationManagerInterface(notificationManager);
 }
 
+QObject * ScreenLockExtension::qObject()
+{
+    return gScreenLockExtensionStub->qObject();
+}
+
 bool ScreenLockExtension::initialize(const QString &interface) {
   return gScreenLockExtensionStub->initialize(interface);
 }
 
 QGraphicsWidget * ScreenLockExtension::widget() {
   return gScreenLockExtensionStub->widget();
+}
+
+ScreenLockExtension * ScreenLockExtension::instance()
+{
+    return gScreenLockExtensionStub->instance();
 }
 
 NotificationManagerInterface * ScreenLockExtension::notificationManagerInterface() {

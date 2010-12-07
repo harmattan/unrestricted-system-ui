@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ft_lockscreenbusinesslogic
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$ROOTSRCDIR/extensions/screenlock $$SRCDIR/screenlock $$COMMONDIR
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$ROOTSRCDIR/extensions/screenlock $$SRCDIR/screenlock $$SRCDIR/notifications $$COMMONDIR
 
 STYLE_HEADERS += $$SRCDIR/screenlock/screenlockwindowstyle.h
 

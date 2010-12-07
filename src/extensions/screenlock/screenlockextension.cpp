@@ -23,16 +23,24 @@
 
 Q_EXPORT_PLUGIN2(sysuid-screenlock, ScreenLockExtension)
 
-NotificationManagerInterface *ScreenLockExtension::notificationManager = NULL;
+ScreenLockExtension *ScreenLockExtension::instance_ = NULL;
 
 ScreenLockExtension::ScreenLockExtension() :
-    lockScreen(NULL)
+    lockScreen(NULL),
+    notificationManager(NULL)
 {
+    instance_ = this;
 }
 
 ScreenLockExtension::~ScreenLockExtension()
 {
     delete lockScreen;
+    instance_ = NULL;
+}
+
+ScreenLockExtension *ScreenLockExtension::instance()
+{
+    return instance_;
 }
 
 void ScreenLockExtension::reset()
@@ -48,9 +56,15 @@ void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInt
     ScreenLockExtension::notificationManager = &notificationManager;
 }
 
+QObject *ScreenLockExtension::qObject()
+{
+    return this;
+}
+
 bool ScreenLockExtension::initialize(const QString &)
 {
     lockScreen = new LockScreen;
+    connect(lockScreen, SIGNAL(unlocked()), this, SIGNAL(unlocked()));
     return true;
 }
 

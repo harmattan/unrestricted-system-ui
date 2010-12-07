@@ -52,6 +52,13 @@ public:
      * \param notificationManager the interface to be used in the extension
      */
     virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager) = 0;
+
+    /*!
+     * Returns the QObject that implements the interface.
+     *
+     * \return the QObject that implements the interface
+     */
+    virtual QObject *qObject() = 0;
 };
 
 Q_DECLARE_INTERFACE(ScreenLockExtensionInterface, "com.meego.core.ScreenLockExtensionInterface/1.0")

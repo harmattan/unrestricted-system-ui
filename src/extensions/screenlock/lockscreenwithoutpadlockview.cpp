@@ -29,7 +29,7 @@ LockScreenWithoutPadlockView::LockScreenWithoutPadlockView(MWidgetController* co
     notificationArea = new NotificationArea(controller, false);
     notificationArea->setObjectName("LockScreenNotificationArea");
     notificationArea->setHonorPrivacySetting(true);
-    notificationArea->setNotificationManagerInterface(*ScreenLockExtension::notificationManagerInterface());
+    notificationArea->setNotificationManagerInterface(*ScreenLockExtension::instance()->notificationManagerInterface());
     layout->addStretch();
     layout->addItem(notificationArea);
 }

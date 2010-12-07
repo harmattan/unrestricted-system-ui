@@ -32,6 +32,8 @@ class ScreenLockWindowStub : public StubBase {
   virtual void applyStyle();
   virtual void reset();
   virtual void showEvent(QShowEvent *event);
+  virtual void registerExtension(MApplicationExtensionInterface *interface);
+  virtual void unregisterExtension(MApplicationExtensionInterface *interface);
 };
 
 // 2. IMPLEMENT STUB
@@ -54,6 +56,20 @@ void ScreenLockWindowStub::showEvent(QShowEvent *event)
   QList<ParameterBase*> params;
   params.append( new Parameter<QShowEvent * >(event));
   stubMethodEntered("showEvent", params);
+}
+
+void ScreenLockWindowStub::registerExtension(MApplicationExtensionInterface *interface)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
+    stubMethodEntered("registerExtension", params);
+}
+
+void ScreenLockWindowStub::unregisterExtension(MApplicationExtensionInterface *interface)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
+    stubMethodEntered("unregisterExtension", params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -84,14 +100,14 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
     gScreenLockWindowStub->showEvent(event);
 }
 
-void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *)
+void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *interface)
 {
-    // TODO
+    gScreenLockWindowStub->registerExtension(interface);
 }
 
-void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *)
+void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *interface)
 {
-    // TODO
+    gScreenLockWindowStub->unregisterExtension(interface);
 }
 
 #endif

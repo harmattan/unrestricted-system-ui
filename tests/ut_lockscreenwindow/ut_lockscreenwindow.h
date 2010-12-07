@@ -23,6 +23,7 @@
 #include "screenlockextensioninterface.h"
 
 class MApplication;
+class NotifierNotificationSink;
 class ScreenLockWindow;
 
 class LockScreen : public QGraphicsWidget
@@ -45,10 +46,15 @@ public:
     //! Methods derived from ScreenLockExtensionInterface
     virtual void reset();
     virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
+    virtual QObject *qObject();
 
     //! Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
     virtual QGraphicsWidget *widget();
+
+signals:
+    void unlocked();
+    void notifierSinkActive(bool active);
 
 private:
     QGraphicsWidget *widget_;
@@ -64,7 +70,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testWhenExtensionIsRegisteredUnlockedSignalFromLockScreenIsChainedToUnlockedSignal();
+    void testWhenExtensionIsRegisteredSignalsAreConnected();
     void testWhenWindowIsCreatedLockScreenAppears();
     void testWhenWindowIsShownItIsExcludedFromTaskbar();
     void testOrientationLocking_data();
@@ -73,6 +79,7 @@ private slots:
 
 private:
     MApplication *app;
+    NotifierNotificationSink *notifierSink;
     ScreenLockWindow *lockScreenWindow;
 };
 

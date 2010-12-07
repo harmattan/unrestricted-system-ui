@@ -1,7 +1,7 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_lockscreenstatusareaview
-INCLUDEPATH += $$SRCDIR/statusarea $$ROOTSRCDIR/extensions/screenlock $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
+INCLUDEPATH += $$SRCDIR/statusarea $$ROOTSRCDIR/extensions/screenlock $$SRCDIR/screenlock $$NOTIFICATIONSRCDIR $$LIBNOTIFICATIONSRCDIR
 INCLUDEPATH += /usr/include/contextsubscriber
 
 STYLE_HEADERS += $$ROOTSRCDIR/extensions/screenlock/lockscreenstatusareastyle.h
@@ -27,8 +27,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusindicator.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$SRCDIR/statusarea/notificationstatusindicator.h \
-    $$SRCDIR/notifications/notifiernotificationsink.h \
-    $$SRCDIR/sysuid.h \
+    $$ROOTSRCDIR/extensions/screenlock/screenlockextension.h \
     $$SRCDIR/x11wrapper.h
 
 include(../common_bot.pri)

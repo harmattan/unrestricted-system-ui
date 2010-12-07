@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ft_lockscreenui
 PKGCONFIG += xcomposite
 
-INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/screenlock $$ROOTSRCDIR/extensions/screenlock $$COMMONDIR
+INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/screenlock $$ROOTSRCDIR/extensions/screenlock $$SRCDIR/notifications $$COMMONDIR
 
 contains(DEFINES, HAVE_QMSYSTEM) {
 	PKGCONFIG += qmsystem2
