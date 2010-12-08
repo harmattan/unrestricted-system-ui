@@ -426,7 +426,6 @@ void Ut_NotificationAreaSink::testApplyPrivacySetting()
 
 void Ut_NotificationAreaSink::testNotificationsFetchedFromNotificationManager()
 {
-
     NotificationManager stubManager;
     QList<Notification> notifications;
     Notification n;

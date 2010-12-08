@@ -10,11 +10,12 @@ SOURCES += \
     ut_notificationarea.cpp \
     $$SRCDIR/statusindicatormenu/notificationarea.cpp
 
-# base classes
-SOURCES += \
-
 # service classes
 SOURCES += \
+    $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
     $$STUBSDIR/stubbase.cpp
 
 # unit test and unit
@@ -23,15 +24,15 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
     $$SRCDIR/statusindicatormenu/notificationareamodel.h
 
-# base classes
-HEADERS += \
-
-
 # service classes
 HEADERS += \
-   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
-   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
-   $$NOTIFICATIONSRCDIR/notificationareasink.h \
-    $$SRCDIR/sysuid.h
+    $$LIBNOTIFICATIONSRCDIR/notification.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
+    $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
+    $$NOTIFICATIONSRCDIR/notificationareasink.h \
+    $$NOTIFICATIONSRCDIR/notificationmanager.h
 
 include(../common_bot.pri)

@@ -23,12 +23,11 @@
 #include "ut_notificationarea.h"
 #include "notificationarea.h"
 #include "notificationareaview.h"
-#include "notificationmanager.h"
+#include "notificationmanager_stub.h"
 #include "notificationareasink.h"
 #include "notificationsink_stub.h"
 #include "notificationareasink_stub.h"
 #include "widgetnotificationsink_stub.h"
-#include "sysuid_stub.h"
 
 // Tests
 void Ut_NotificationArea::initTestCase()
@@ -149,8 +148,10 @@ void Ut_NotificationArea::testWhenNotificationAreaIsCreatedNotificationAreaSinkH
     QCOMPARE(gWidgetNotificationSinkStub->stubLastCallTo("setNotificationsClickable").parameter<bool>(0), false);
 }
 
-void Ut_NotificationArea::testNotificationsUpdatedToModelWhenAreaIsCreated()
+void Ut_NotificationArea::testNotificationSinkUpdatedWhenManagerIsSet()
 {
+    NotificationManager notificationManager;
+    m_subject->setNotificationManagerInterface(notificationManager);
     QCOMPARE(gNotificationAreaSinkStub->stubCallCount("updateCurrentNotifications") , 1);
 }
 
