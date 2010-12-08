@@ -1,3 +1,9 @@
+system-ui (0.18.17~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 08 Dec 2010 14:20:32 +0200
+
 system-ui (0.18.16-1) unstable; urgency=low
 
   * Fixes: NB#202981 - Volume level can not be adjusted by dragging the volume slider
