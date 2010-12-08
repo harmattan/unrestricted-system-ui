@@ -33,7 +33,6 @@ HEADERS += \
     unlockarea.h \
     lockscreenview.h \
     lockscreenwithpadlockview.h \
-    lockscreenwithoutpadlockview.h \
     lockscreenstyle.h \
     lockscreen.h \
     lockscreenheaderview.h \
@@ -53,7 +52,6 @@ SOURCES += \
     unlockarea.cpp \
     lockscreenview.cpp \
     lockscreenwithpadlockview.cpp \
-    lockscreenwithoutpadlockview.cpp \
     lockscreen.cpp \
     lockscreenheaderview.cpp \
     lockscreenheaderwithpadlockview.cpp \
