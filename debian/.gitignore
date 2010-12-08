@@ -3,12 +3,12 @@ system-ui-dbg
 system-ui-dev
 system-ui-doc
 system-ui-tests
+system-ui-screenlock-padlock
 systemui-l10n-engineering-english
 libnotificationsystem0
 libnotificationsystem-dev
 files
 tmp
-system-ui-screenlock
 *.substvars
 *.log
 *.debhelper
