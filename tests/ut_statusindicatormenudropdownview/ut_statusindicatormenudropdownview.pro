@@ -18,6 +18,7 @@ HEADERS += \
     ut_statusindicatormenudropdownview.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenudropdownview.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenu.h \
-    $$SRCDIR/statusindicatormenu/notificationarea.h
+    $$SRCDIR/statusindicatormenu/notificationarea.h \
+    $$SRCDIR/sysuid.h
 
 include(../common_bot.pri)

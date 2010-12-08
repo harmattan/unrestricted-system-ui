@@ -17,8 +17,6 @@ HEADERS +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfadapter.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notifiernotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.h \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicator.h \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanagerinterface.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationsource.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mnotificationproxy.h \
@@ -36,7 +34,6 @@ SOURCES +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfadapter.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notifiernotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/eventtypestore.cpp \
-    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicator.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationmanager.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationsource.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mnotificationproxy.cpp \

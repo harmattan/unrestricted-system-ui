@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "ft_lockscreenui.h"
-#include "lockscreenwindow.h"
+#include "screenlockwindow.h"
 #include "eventeater.h"
 #include "sysuid_stub.h"
 #include "unlockmissedevents.h"
@@ -426,7 +426,7 @@ void
 Ft_LockScreenUI::createLockScreenUI ()
 {
     if (!m_LockScreenWindow)
-        m_LockScreenWindow = new LockScreenWindow ();
+        m_LockScreenWindow = new ScreenLockWindow ();
 }
 
 void

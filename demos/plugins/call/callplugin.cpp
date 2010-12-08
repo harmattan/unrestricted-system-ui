@@ -17,11 +17,11 @@
 **
 ****************************************************************************/
 
+#include <MLibrary>
 #include "callplugin.h"
 #include "call.h"
 
 Q_EXPORT_PLUGIN2(call, CallPlugin)
-
 
 CallPlugin::CallPlugin() : statusIndicatorMenu(0), call(0)
 {
@@ -49,3 +49,5 @@ QGraphicsWidget *CallPlugin::widget()
 {
     return call;
 }
+
+M_LIBRARY

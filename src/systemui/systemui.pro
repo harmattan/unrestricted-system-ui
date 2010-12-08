@@ -56,7 +56,7 @@ include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 include(volumecontrol/volumecontrol.pri)
-include(lockscreen/lockscreen.pri)
+include(screenlock/screenlock.pri)
 include(../../localconfig.pri)
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {

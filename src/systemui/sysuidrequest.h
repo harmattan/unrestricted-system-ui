@@ -21,12 +21,12 @@
 
 #include <QObject>
 
-class LockScreenBusinessLogic;
+class ScreenLockBusinessLogic;
 class QDBusConnection;
 
 /*!
  * This class creates a connection between the system bus and the methods
- * implemented in the LockScreenBusinessLogicAdaptor where the methods
+ * implemented in the ScreenLockBusinessLogicAdaptor where the methods
  * implemented for the MCE handling the locking of the touch screen.
  */
 class SysUidRequest : public QObject
@@ -40,7 +40,7 @@ public:
     SysUidRequest();
 
     //! Returns an instance of the lock screen business logic
-    LockScreenBusinessLogic *lockScreenBusinessLogic();
+    ScreenLockBusinessLogic *screenLockBusinessLogic();
 
 private:
     /*!
@@ -50,7 +50,7 @@ private:
     void dbusError(QDBusConnection &connection, bool abortProgram = true);
 
     //! The lock screen business logic
-    LockScreenBusinessLogic *lockScreenBusinessLogic_;
+    ScreenLockBusinessLogic *screenLockBusinessLogic_;
 };
 
 #endif

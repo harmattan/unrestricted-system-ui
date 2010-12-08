@@ -43,17 +43,9 @@
 #include "profilestatusindicator_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
-#include "sysuid_stub.h"
+#include "screenlockextension_stub.h"
 #include "x11wrapper.h"
 #include "notificationsink_stub.h"
-#include "notifiernotificationsink_stub.h"
-
-#ifdef HAVE_QMSYSTEM
-// MeeGo::QmDisplayState stub
-MeeGo::QmDisplayState::~QmDisplayState()
-{
-}
-#endif
 
 WId qWidgetWinId = 0xdeadbeef;
 WId QWidget::winId() const
@@ -168,14 +160,14 @@ void Ut_LockScreenStatusAreaView::initTestCase()
     int argc = 1;
     static char *app_name = (char *)"./ut_lockscreenstatusareaview";
     app = new MApplication(argc, &app_name);
-    notifierNotificationSink = new NotifierNotificationSink;
-    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierNotificationSink);
+    extension = new ScreenLockExtension;
+    gScreenLockExtensionStub->stubSetReturnValue("instance", extension);
 }
 
 // Called after the last testfunction was executed
 void Ut_LockScreenStatusAreaView::cleanupTestCase()
 {
-    delete notifierNotificationSink;
+    delete extension;
     delete app;
 }
 
@@ -205,7 +197,7 @@ void Ut_LockScreenStatusAreaView::cleanup()
 
 void Ut_LockScreenStatusAreaView::testSignalConnections()
 {
-    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->notifierIndicator, SLOT(setActive(bool))));
+    QVERIFY(disconnect(extension, SIGNAL(notifierSinkActive(bool)), m_subject->notifierIndicator, SLOT(setActive(bool))));
 }
 
 void Ut_LockScreenStatusAreaView::testStatusBarGeometryProperty()

@@ -28,7 +28,7 @@
 class NotificationSinkStub : public StubBase
 {
 public:
-    virtual void NotificationSinkConstructor();
+    virtual void NotificationSinkConstructor(QObject *parent);
     virtual bool applicationEventsEnabled();
     virtual void setApplicationEventsEnabled(bool enabled);
     virtual bool canAddNotification(const Notification &notification);
@@ -39,7 +39,7 @@ public:
 };
 
 // 2. IMPLEMENT STUB
-void NotificationSinkStub::NotificationSinkConstructor()
+void NotificationSinkStub::NotificationSinkConstructor(QObject *)
 {
 
 }
@@ -87,9 +87,9 @@ NotificationSinkStub *gNotificationSinkStub = &gDefaultNotificationSinkStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-NotificationSink::NotificationSink()
+NotificationSink::NotificationSink(QObject *parent)
 {
-    gNotificationSinkStub->NotificationSinkConstructor();
+    gNotificationSinkStub->NotificationSinkConstructor(parent);
 }
 
 bool NotificationSink::applicationEventsEnabled()

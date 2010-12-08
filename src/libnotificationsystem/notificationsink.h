@@ -33,7 +33,7 @@ class NotificationSink : public QObject
     Q_OBJECT
 
 public:
-    NotificationSink();
+    NotificationSink(QObject *parent = NULL);
 
     //! Returns whether the the sink should process notifications with ApplicationEvent type
     bool applicationEventsEnabled();

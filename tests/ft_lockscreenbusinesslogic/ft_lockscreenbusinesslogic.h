@@ -25,7 +25,7 @@
 
 class MApplication;
 class MApplicationWindow;
-class LockScreenBusinessLogic;
+class ScreenLockBusinessLogic;
 
 class Ft_LockScreenBusinessLogic : public QObject
 {
@@ -46,7 +46,7 @@ private slots:
 private:
     XChecker                   m_XChecker;
     MApplicationWindow        *m_MainWindow;
-    LockScreenBusinessLogic   *m_LockScreenBusinessLogic;
+    ScreenLockBusinessLogic   *m_LockScreenBusinessLogic;
     MApplication              *m_App;
 };
 

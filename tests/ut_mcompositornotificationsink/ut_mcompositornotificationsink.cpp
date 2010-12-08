@@ -167,6 +167,11 @@ QList<NotificationGroup> MockNotificationManager::groups() const
     return tmp;
 }
 
+QObject* MockNotificationManager::qObject()
+{
+    return NULL;
+}
+
 bool windowEventFilterCalled = false;
 bool windowEventFilterBlock = false;
 bool WindowEventFilter::eventFilter(QObject *obj, QEvent *event)

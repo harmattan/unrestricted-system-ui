@@ -56,13 +56,13 @@ void StatusIndicatorAnimationView::updateData(const QList<const char *>& modific
     MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
-        if (member == StatusIndicatorModel::Value) {
+        if (strcmp(member, StatusIndicatorModel::Value) == 0) {
             if (model()->value().type() == QVariant::String) {
                 setupImageList(model()->value().toString());
                 setAnimationFrame(firstAnimationFrame);
                 setupAnimationTimeline();
             }
-        } else if (member == StatusIndicatorModel::Animate) {
+        } else if (strcmp(member, StatusIndicatorModel::Animate) == 0) {
             if (model()->animate()) {
                 startAnimation();
             } else {

@@ -16,11 +16,46 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <MSceneWindow>
+#include <notificationmanagerinterface.h>
 
 class MApplication;
 class LockScreenWithPadlockView;
 class LockScreen;
+
+class MNotificationProxy { };
+class MNotificationWithIdentifierProxy { };
+class MNotificationGroupProxy { };
+class MNotificationGroupWithIdentifierProxy { };
+
+class NotificationManager : public QObject, public NotificationManagerInterface
+{
+    Q_OBJECT
+
+public:
+    NotificationManager();
+
+    //! \reimp
+    virtual uint addNotification(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters(), uint groupId = 0);
+    virtual bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters = NotificationParameters());
+    virtual uint addGroup(uint notificationUserId, const NotificationParameters &parameters = NotificationParameters());
+    virtual bool updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters = NotificationParameters());
+    virtual bool removeGroup(uint notificationUserId, uint groupId);
+    virtual QList<NotificationGroup> groups() const;
+    virtual QList<Notification> notifications() const;
+    virtual uint notificationUserId();
+    virtual QList<uint> notificationIdList(uint notificationUserId);
+    virtual QList<MNotificationProxy> notificationList(uint notificationUserId);
+    virtual QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
+    virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
+    virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+    virtual QObject *qObject();
+    virtual bool removeNotification(uint notificationUserId, uint notificationId);
+    //! \reimp_end
+
+signals:
+    void notificationUpdated(const Notification &notification);
+    void notificationRemoved(uint notificationId);
+};
 
 class Ut_LockScreenWithPadlockView : public QObject
 {
@@ -42,7 +77,8 @@ private slots:
 
 private:
     LockScreenWithPadlockView *m_subject;
-    MApplication* app;
+    MApplication *app;
+    NotificationManager notificationManager;
     LockScreen *controller;
 };
 

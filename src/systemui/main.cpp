@@ -20,6 +20,8 @@
 #include <MApplication>
 #include <MApplicationService>
 #include <signal.h>
+#include <dlfcn.h>
+#include <cstdio>
 
 sighandler_t originalSigIntHandler = NULL;
 sighandler_t originalSigTermHandler = NULL;

@@ -20,7 +20,6 @@
 #include <MApplication>
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
-#include "inputmethodstatusindicatoradaptor.h"
 #include "applicationcontext.h"
 
 // keep these in sync with the context framework!
@@ -488,7 +487,6 @@ InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setObjectName(metaObject()->className());
-    new InputMethodStatusIndicatorAdaptor(this);
 }
 
 InputMethodStatusIndicator::~InputMethodStatusIndicator()

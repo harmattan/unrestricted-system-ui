@@ -16,28 +16,20 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "sysuid.h"
+
 #include "notificationarea.h"
 #include "notificationareasink.h"
-#include "notificationmanager.h"
+#include "notificationmanagerinterface.h"
 #include <MBanner>
 
-NotificationArea::NotificationArea(MWidget *parent, bool notificationsClickable) :
+NotificationArea::NotificationArea(QGraphicsItem *parent, bool notificationsClickable) :
     MWidgetController(new NotificationAreaModel, parent),
     notificationAreaSink(new NotificationAreaSink)
 {
     // Connect notification signals
-    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
     notificationAreaSink->setNotificationsClickable(notificationsClickable);
-    connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
-    connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
-    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
-    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
-    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationAreaSink, SIGNAL(addNotification(MBanner &)), this, SLOT(addNotification(MBanner &)));
     connect(notificationAreaSink, SIGNAL(removeNotification(MBanner &)), this, SLOT(removeNotification(MBanner &)));
-    connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
-    connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
     connect(notificationAreaSink, SIGNAL(notificationAddedToGroup(MBanner &)), this, SLOT(moveNotificationToTop(MBanner &)));
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
     connect(this, SIGNAL(notificationRemovalRequested(uint)), notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)));
@@ -49,6 +41,18 @@ NotificationArea::NotificationArea(MWidget *parent, bool notificationsClickable)
 NotificationArea::~NotificationArea()
 {
     delete notificationAreaSink;
+}
+
+void NotificationArea::setNotificationManagerInterface(NotificationManagerInterface &notificationManagerInterface)
+{
+    QObject *notificationManager = notificationManagerInterface.qObject();
+    connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationAreaSink, SLOT(addGroup(uint, const NotificationParameters &)));
+    connect(notificationManager, SIGNAL(groupRemoved(uint)), notificationAreaSink, SLOT(removeGroup(uint)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationAreaSink, SLOT(removeNotification(uint)));
+    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
+    connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
+    connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
 }
 
 void NotificationArea::moveNotificationToTop(MBanner &notification)

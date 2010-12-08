@@ -29,7 +29,7 @@ class SysUidRequestStub : public StubBase {
   public:
   virtual void SysUidRequestConstructor();
   virtual void dbusError(QDBusConnection &connection, bool abortProgram);
-  virtual LockScreenBusinessLogic *lockScreenBusinessLogic();
+  virtual ScreenLockBusinessLogic *screenLockBusinessLogic();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -44,10 +44,10 @@ void SysUidRequestStub::dbusError(QDBusConnection &connection, bool abortProgram
   stubMethodEntered("dbusError",params);
 }
 
-LockScreenBusinessLogic *SysUidRequestStub::lockScreenBusinessLogic()
+ScreenLockBusinessLogic *SysUidRequestStub::screenLockBusinessLogic()
 {
-  stubMethodEntered("lockScreenBusinessLogic");
-  return stubReturnValue<LockScreenBusinessLogic *>("lockScreenBusinessLogic");
+  stubMethodEntered("screenLockBusinessLogic");
+  return stubReturnValue<ScreenLockBusinessLogic *>("screenLockBusinessLogic");
 }
 
 
@@ -66,9 +66,9 @@ void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram) {
   gSysUidRequestStub->dbusError(connection, abortProgram);
 }
 
-LockScreenBusinessLogic *SysUidRequest::lockScreenBusinessLogic()
+ScreenLockBusinessLogic *SysUidRequest::screenLockBusinessLogic()
 {
-  return gSysUidRequestStub->lockScreenBusinessLogic();
+  return gSysUidRequestStub->screenLockBusinessLogic();
 }
 
 #endif

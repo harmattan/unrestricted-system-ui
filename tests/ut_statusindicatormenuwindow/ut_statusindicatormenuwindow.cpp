@@ -23,6 +23,7 @@
 #include <MSceneManager>
 #include <QtTest/QtTest>
 #include "statusindicatormenu_stub.h"
+#include "sysuid_stub.h"
 #include <MLocale>
 #include <QMouseEvent>
 #include <mstatusbar.h>

@@ -66,6 +66,8 @@ public:
     uint nextAvailableNotificationID;
     QList<Notification> notificationContainer;
 
+    QObject *qObject();
+
 
 public slots:
     bool removeNotification(uint notificationUserId, uint notificationId);

@@ -38,6 +38,5 @@ HEADERS +=  \
 # service classes
 HEADERS += $$SRCDIR/statusarea/statusindicatoranimationview.h \
     $$SRCDIR/statusarea/statusindicatorlabelview.h \
-    $$SRCDIR/statusarea/statusindicatoriconview.h \
-    $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h
+    $$SRCDIR/statusarea/statusindicatoriconview.h
 

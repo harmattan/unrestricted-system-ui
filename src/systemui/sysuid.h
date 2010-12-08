@@ -35,6 +35,7 @@ class ShutdownBusinessLogic;
 class StatusAreaRenderer;
 class StatusIndicatorMenuWindow;
 class NotificationManager;
+class NotificationManagerInterface;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
 class UnlockNotificationSink;
@@ -52,11 +53,11 @@ public:
     static Sysuid* instance();
 
     /*!
-     * Returns a reference to the notification manager.
+     * Returns a reference to the notification manager interface.
      *
-     * \return a reference to the notification manager
+     * \return a reference to the notification manager interface
      */
-    NotificationManager &notificationManager();
+    NotificationManagerInterface &notificationManagerInterface();
 
     /*!
      * Returns a reference to the compositor notification sink.
@@ -64,13 +65,6 @@ public:
      * \return a reference to the compositor notification sink
      */
     MCompositorNotificationSink& compositorNotificationSink();
-
-    /*!
-     * Returns a reference to the unlock screen notification sink.
-     *
-     * \return a reference to the unlock screen notification sink
-     */
-    UnlockNotificationSink& unlockNotificationSink();
 
     /*!
      * Returns a reference to the notifier notification sink.
@@ -111,17 +105,14 @@ private:
     //! Status indicator menu
     StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
 
-    //! Notification manager
-    NotificationManager *notificationManager_;
+    //! Notification manager interface
+    NotificationManager *notificationManager;
 
     //! Notification sink for visualizing the notification outside home
     MCompositorNotificationSink *mCompositorNotificationSink;
 
     //! Notification sink for presenting the notification as a feedback
     NGFNotificationSink *ngfNotificationSink;
-
-    //! Notification sink for presenting missed events on the lock screen
-    UnlockNotificationSink *unlockNotificationSink_;
 
     //! Notification sink for showing unread notifications
     NotifierNotificationSink *notifierNotificationSink_;

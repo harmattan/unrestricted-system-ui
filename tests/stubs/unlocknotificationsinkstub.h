@@ -3,7 +3,7 @@
 
 #include <unlocknotificationsink.h>
 
-UnlockNotificationSink::UnlockNotificationSink ()
+UnlockNotificationSink::UnlockNotificationSink (QObject *parent) : NotificationSink(parent)
 {
     m_enabled = true;
 }
@@ -25,5 +25,11 @@ UnlockNotificationSink::setLockedState(bool islocked)
 {
     Q_UNUSED (islocked);
 }
+
+#ifdef HAVE_QMSYSTEM
+void UnlockNotificationSink::locksChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)
+{
+}
+#endif
 
 #endif

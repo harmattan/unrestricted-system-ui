@@ -17,12 +17,16 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <MApplication>
+#include <MSceneWindow>
 #include <QShowEvent>
 #include "ut_lockscreenwindow.h"
-#include "lockscreenwindow.h"
-#include "lockscreenwindowstyle.h"
-#include "lockscreen_stub.h"
+#include "screenlockwindow.h"
+#include "screenlockwindowstyle.h"
+#include "notifiernotificationsink_stub.h"
+#include "notificationsink_stub.h"
+#include "sysuid_stub.h"
 #include <X11/Xutil.h>
 #include "x11wrapper_stub.h"
 
@@ -55,11 +59,32 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
     Q_UNUSED(policy);
 }
 
-QPair<QGraphicsItem *, QRectF> qGraphicsItemUpdate(NULL, QRectF());
-void QGraphicsItem::update(const QRectF &rect)
+ScreenLockExtension::ScreenLockExtension() : widget_(NULL)
 {
-    qGraphicsItemUpdate.first = this;
-    qGraphicsItemUpdate.second = rect;
+}
+ScreenLockExtension::~ScreenLockExtension()
+{
+}
+bool screenLockExtensionReset = false;
+void ScreenLockExtension::reset()
+{
+    screenLockExtensionReset = true;
+}
+void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInterface &)
+{
+}
+bool ScreenLockExtension::initialize(const QString &)
+{
+    widget_ = new LockScreen;
+    return true;
+}
+QGraphicsWidget *ScreenLockExtension::widget()
+{
+    return widget_;
+}
+QObject *ScreenLockExtension::qObject()
+{
+    return this;
 }
 
 void Ut_LockScreenWindow::initTestCase()
@@ -67,16 +92,19 @@ void Ut_LockScreenWindow::initTestCase()
     int   argc = 1;
     char *argv[] = {(char *) "./Ut_LockScreenWindow", NULL };
     app = new MApplication(argc, argv);
+    notifierSink = new NotifierNotificationSink;
+    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
 }
 
 void Ut_LockScreenWindow::cleanupTestCase()
 {
+    delete notifierSink;
     delete app;
 }
 
 void Ut_LockScreenWindow::init()
 {
-    lockScreenWindow = new LockScreenWindow;
+    lockScreenWindow = new ScreenLockWindow;
 }
 
 void Ut_LockScreenWindow::cleanup()
@@ -87,15 +115,16 @@ void Ut_LockScreenWindow::cleanup()
     mWindowOrientationLocked = false;
     mWindowOrientation.clear();
     gX11WrapperStub->stubReset();
-    gLockScreenStub->stubReset();
-    qGraphicsItemUpdate.first = NULL;
-    qGraphicsItemUpdate.second = QRectF();
+    screenLockExtensionReset = false;
 }
 
-void Ut_LockScreenWindow::testWhenWindowIsCreatedUnlockedSignalFromLockScreenIsChainedToUnlockedSignal()
+void Ut_LockScreenWindow::testWhenExtensionIsRegisteredSignalsAreConnected()
 {
-    bool result = disconnect(lockScreenWindow->lockScreen, SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked()));
-    QCOMPARE(result, true);
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    lockScreenWindow->registerExtension(&screenLockExtension);
+    QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked())));
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
@@ -107,7 +136,9 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
 {
     Display *display = QX11Info::display();
 
-    lockScreenWindow->show();
+    QShowEvent *showEvent = new QShowEvent;
+    lockScreenWindow->showEvent(showEvent);
+
     QCOMPARE(gX11WrapperStub->stubCallCount("XSendEvent"), 1);
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Display *>(0), display);
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Window>(1), RootWindow(display, lockScreenWindow->x11Info().screen()));
@@ -121,6 +152,7 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
     QCOMPARE(event.xclient.format, 32);
     QCOMPARE(event.xclient.data.l[0], (long)1);
     QCOMPARE(event.xclient.data.l[1], (long)X11Wrapper::XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", False));
+    delete showEvent;
 }
 
 void Ut_LockScreenWindow::testOrientationLocking_data()
@@ -141,7 +173,7 @@ void Ut_LockScreenWindow::testOrientationLocking()
     QFETCH(bool, orientationLocked);
     QFETCH(QString, expectedOrientation);
 
-    LockScreenWindowStyle *style = const_cast<LockScreenWindowStyle *>(static_cast<const LockScreenWindowStyle *>(MTheme::style("LockScreenWindowStyle", "", "", "", M::Landscape, NULL)));
+    ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL)));
     style->setLockedOrientation(lockedOrientation);
     QShowEvent event;
     lockScreenWindow->showEvent(&event);
@@ -151,11 +183,11 @@ void Ut_LockScreenWindow::testOrientationLocking()
 
 void Ut_LockScreenWindow::testReset()
 {
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    lockScreenWindow->registerExtension(&screenLockExtension);
     lockScreenWindow->reset();
-
-    QCOMPARE(gLockScreenStub->stubCallCount("reset"), 1);
-    QCOMPARE(qGraphicsItemUpdate.first, lockScreenWindow->lockScreen);
-    QCOMPARE(qGraphicsItemUpdate.second, QRectF());
+    QVERIFY(screenLockExtensionReset);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

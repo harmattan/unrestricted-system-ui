@@ -31,6 +31,7 @@ HEADERS += \
     notification.h \
     genericnotificationparameterfactory.h \
     notificationwidgetparameterfactory.h \
+    notificationmanagerinterface.h \
     metatypedeclarations.h
 
 SOURCES += \

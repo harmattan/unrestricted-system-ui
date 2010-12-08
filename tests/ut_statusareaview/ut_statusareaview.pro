@@ -18,7 +18,6 @@ SOURCES += ../stubs/stubbase.cpp
 
 # unit test and unit
 HEADERS += \
-    $$SRCDIR/debug.h \
     ut_statusareaview.h \
     $$SRCDIR/statusarea/statusareastyle.h \
     $$SRCDIR/statusarea/statusareamodel.h \
@@ -26,10 +25,11 @@ HEADERS += \
     $$SRCDIR/statusarea/statusarea.h \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
-    $$NOTIFICATIONSRCDIR/notificationstatusindicator.h \
+    $$SRCDIR/statusarea/notificationstatusindicator.h \
     $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
-    $$SRCDIR/sysuid.h
+    $$SRCDIR/sysuid.h \
+    $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h
 
 include(../common_bot.pri)

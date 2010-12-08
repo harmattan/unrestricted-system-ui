@@ -67,7 +67,7 @@ void ClockView::updateData(const QList<const char *>& modifications)
     MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
-        if (member == ClockModel::Time || member == ClockModel::ShortDisplay) {
+        if (strcmp(member, ClockModel::Time) == 0 || strcmp(member, ClockModel::ShortDisplay) == 0) {
             updateLabel();
         }
     }
