@@ -44,12 +44,12 @@ NotificationAreaSink::~NotificationAreaSink()
 
 void NotificationAreaSink::updateCurrentNotifications()
 {
-    NotificationManager *notificationManager = &Sysuid::instance()->notificationManager();
-    QList <NotificationGroup> groups = notificationManager->groups();
+    NotificationManagerInterface &notificationManager = Sysuid::instance()->notificationManagerInterface();
+    QList <NotificationGroup> groups = notificationManager.groups();
     foreach(NotificationGroup group, groups) {
         addGroup(group.groupId(), group.parameters());
     }
-    QList <Notification> notifications = notificationManager->notifications();
+    QList <Notification> notifications = notificationManager.notifications();
     foreach(Notification notification, notifications) {
         addNotification(notification);
     }
