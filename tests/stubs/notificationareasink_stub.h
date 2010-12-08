@@ -40,7 +40,7 @@ public:
     virtual MBanner *updateNotification(MBanner *dn, const NotificationParameters &parameters);
     virtual void removeGroupBanner(uint groupId);
     virtual void applyPrivacySetting(bool privacyEnabled);
-    virtual void updateCurrentNotifications();
+    virtual void updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface);
 };
 
 // 2. IMPLEMENT STUB
@@ -125,9 +125,11 @@ void NotificationAreaSinkStub::applyPrivacySetting(bool privacyEnabled)
     stubMethodEntered("applyPrivacySetting", params);
 }
 
-void NotificationAreaSinkStub::updateCurrentNotifications()
+void NotificationAreaSinkStub::updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface)
 {
-    stubMethodEntered("updateCurrentNotifications");
+    QList<ParameterBase *> params;
+    params.append(new Parameter<NotificationManagerInterface * >(&notificationManagerInterface));
+    stubMethodEntered("updateCurrentNotifications", params);
 }
 
 
@@ -187,8 +189,8 @@ void NotificationAreaSink::applyPrivacySetting(bool privacyEnabled)
     return gNotificationAreaSinkStub->applyPrivacySetting(privacyEnabled);
 }
 
-void NotificationAreaSink::updateCurrentNotifications()
+void NotificationAreaSink::updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface)
 {
-    gNotificationAreaSinkStub->updateCurrentNotifications();
+    gNotificationAreaSinkStub->updateCurrentNotifications(notificationManagerInterface);
 }
 #endif

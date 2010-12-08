@@ -23,6 +23,7 @@
 #include "widgetnotificationsink.h"
 
 class MBanner;
+class NotificationManagerInterface;
 
 /*!
  * A notification sink for the NotificationArea.
@@ -43,7 +44,7 @@ public:
     virtual ~NotificationAreaSink();
 
     //! Updates the current notifications from manager
-    void updateCurrentNotifications();
+    void updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface);
 
 private slots:
     //! \reimp

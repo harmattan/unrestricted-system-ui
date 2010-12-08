@@ -16,11 +16,9 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "sysuid.h"
 #include "notificationareasink.h"
 #include "notificationwidgetparameterfactory.h"
-#include "notificationmanager.h"
-
+#include "notificationmanagerinterface.h"
 #include <MBanner>
 #include <MRemoteAction>
 
@@ -32,24 +30,24 @@ NotificationAreaSink::NotificationAreaSink() : WidgetNotificationSink()
 NotificationAreaSink::~NotificationAreaSink()
 {
     // Destroy the remaining notifications
-    foreach(MBanner * n, notificationIdToMBanner) {
-        delete n;
+    foreach(MBanner *banner, notificationIdToMBanner) {
+        delete banner;
     }
 
     // Destroy the remaining groups
-    foreach(MBanner * n, groupIdToMBanner) {
-        delete n;
+    foreach(MBanner *banner, groupIdToMBanner) {
+        delete banner;
     }
 }
 
-void NotificationAreaSink::updateCurrentNotifications()
+void NotificationAreaSink::updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface)
 {
-    NotificationManagerInterface &notificationManager = Sysuid::instance()->notificationManagerInterface();
-    QList <NotificationGroup> groups = notificationManager.groups();
+    QList <NotificationGroup> groups = notificationManagerInterface.groups();
     foreach(NotificationGroup group, groups) {
         addGroup(group.groupId(), group.parameters());
     }
-    QList <Notification> notifications = notificationManager.notifications();
+
+    QList <Notification> notifications = notificationManagerInterface.notifications();
     foreach(Notification notification, notifications) {
         addNotification(notification);
     }

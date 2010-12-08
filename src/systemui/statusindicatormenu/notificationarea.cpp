@@ -34,8 +34,6 @@ NotificationArea::NotificationArea(QGraphicsItem *parent, bool notificationsClic
     connect(notificationAreaSink, SIGNAL(bannerClicked()), this, SIGNAL(bannerClicked()));
     connect(this, SIGNAL(notificationRemovalRequested(uint)), notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)));
     connect(this, SIGNAL(notificationGroupClearingRequested(uint)), notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)));
-
-    notificationAreaSink->updateCurrentNotifications();
 }
 
 NotificationArea::~NotificationArea()
@@ -53,6 +51,7 @@ void NotificationArea::setNotificationManagerInterface(NotificationManagerInterf
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationAreaSink, SLOT(addNotification(const Notification &)));
     connect(notificationAreaSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
     connect(notificationAreaSink, SIGNAL(notificationGroupClearingRequested(uint)), notificationManager, SLOT(removeNotificationsInGroup(uint)));
+    notificationAreaSink->updateCurrentNotifications(notificationManagerInterface);
 }
 
 void NotificationArea::moveNotificationToTop(MBanner &notification)

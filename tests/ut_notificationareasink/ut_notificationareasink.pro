@@ -25,7 +25,6 @@ HEADERS += ut_notificationareasink.h \
     $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
-    $$SRCDIR/sysuid.h \
     $$NOTIFICATIONSRCDIR/notificationmanager.h
 
 include(../common_bot.pri)

@@ -27,7 +27,6 @@
 #include "testnotificationparameters.h"
 #include "notification.h"
 #include "notificationgroup_stub.h"
-#include "sysuid_stub.h"
 #include "notificationmanager_stub.h"
 
 static QSettings *settings;
@@ -429,7 +428,6 @@ void Ut_NotificationAreaSink::testNotificationsFetchedFromNotificationManager()
 {
 
     NotificationManager stubManager;
-    gSysuidStub->stubSetReturnValue("notificationManager", &stubManager);
     QList<Notification> notifications;
     Notification n;
     notifications.append(n);
@@ -440,7 +438,7 @@ void Ut_NotificationAreaSink::testNotificationsFetchedFromNotificationManager()
     gNotificationManagerStub->stubSetReturnValue("groups", groups);
 
     QSignalSpy addSpy(sink, SIGNAL(addNotification(MBanner &)));
-    sink->updateCurrentNotifications();
+    sink->updateCurrentNotifications(stubManager);
 
     QCOMPARE(gNotificationManagerStub->stubCallCount("notifications"), 1);
     QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 1);
