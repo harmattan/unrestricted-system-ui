@@ -12,8 +12,6 @@ SOURCES += \
 
 # service classes
 SOURCES += \
-    $$LIBNOTIFICATIONSRCDIR/notification.cpp \
-    $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
     $$STUBSDIR/stubbase.cpp

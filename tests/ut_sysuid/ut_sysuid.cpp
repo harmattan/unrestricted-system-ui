@@ -32,6 +32,8 @@
 #include "widgetnotificationsink_stub.h"
 #include "eventtypestore_stub.h"
 #include "notificationmanager_stub.h"
+#include "notification_stub.h"
+#include "notificationgroup_stub.h"
 #include "statusarearenderer_stub.h"
 #include "statusarearendereradaptor_stub.h"
 #include "unlockarea_stub.h"
@@ -80,18 +82,6 @@ int QmLocks::getDeviceAutolockTime() {
 
 }
 #endif
-
-Notification::~Notification()
-{
-}
-
-Notification::Notification()
-{
-}
-
-NotificationGroup::~NotificationGroup()
-{
-}
 
 NotificationParameters::NotificationParameters()
 {

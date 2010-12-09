@@ -22,8 +22,6 @@
 #include "dbusinterfacenotificationsourceadaptor.h"
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
-#include "notification_stub.h"
-#include "notificationgroup_stub.h"
 #include "notificationmanager_stub.h"
 
 // DBusInterfaceNotificationSourceAdaptor stubs (used by NotificationManager)
@@ -164,7 +162,13 @@ void Ut_DBusInterfaceNotificationSource::cleanup()
 }
 
 const uint USER_ID = 1;
-const uint GROUP_ID = 2;
+const uint NOTIFICATION_ID1 = 3;
+const uint NOTIFICATION_ID2 = 4;
+const uint NOTIFICATION_GROUP_ID1 = 0;
+const uint NOTIFICATION_GROUP_ID2 = 1;
+const QString IDENTIFIER1("identifier1");
+const QString IDENTIFIER2("identifier2");
+
 const QString EVENT = "event";
 const QString SUMMARY = "summary";
 const QString BODY = "body";
@@ -207,7 +211,7 @@ void Ut_DBusInterfaceNotificationSource::testAddNotificationWithIdentifier()
 {
     gDefaultNotificationManagerStub.stubSetReturnValue("addNotification", NEW_NOTIFICATION_ID);
 
-    QCOMPARE(source->addNotification(USER_ID, GROUP_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), NEW_NOTIFICATION_ID);
+    QCOMPARE(source->addNotification(USER_ID, NOTIFICATION_GROUP_ID1, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), NEW_NOTIFICATION_ID);
 
     NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<NotificationParameters>(1);
     QCOMPARE(params.value(GenericNotificationParameterFactory::identifierKey()), QVariant(IDENTIFIER));
@@ -239,7 +243,7 @@ void Ut_DBusInterfaceNotificationSource::testUpdateNotificationWithIdentifier()
     gDefaultNotificationManagerStub.stubSetReturnValue("addNotification", NEW_NOTIFICATION_ID);
     gDefaultNotificationManagerStub.stubSetReturnValue("updateNotification", CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
-    uint id = source->addNotification(USER_ID, GROUP_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT);
+    uint id = source->addNotification(USER_ID, NOTIFICATION_GROUP_ID1, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT);
     QCOMPARE(source->updateNotification(USER_ID, id, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
     NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("updateNotification").parameter<NotificationParameters>(2);
@@ -347,30 +351,95 @@ void Ut_DBusInterfaceNotificationSource::testNotificationIdList()
 
 void Ut_DBusInterfaceNotificationSource::testNotificationList()
 {
-    source->notificationList(10);
+    QList<Notification> expectedResults;
+    NotificationParameters params;
+    expectedResults.append(Notification(NOTIFICATION_ID1, NOTIFICATION_GROUP_ID1, USER_ID, params, Notification::ApplicationEvent, 0));
+    expectedResults.append(Notification(NOTIFICATION_ID2, NOTIFICATION_GROUP_ID2, USER_ID, params, Notification::ApplicationEvent, 0));
+    gNotificationManagerStub->stubSetReturnValue("notificationList", expectedResults);
+
+    QList<MNotificationProxy> receivedResults = source->notificationList(USER_ID);
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationList"), 1);
-    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationList").parameter<uint>(0), (uint)10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationList").parameter<uint>(0), USER_ID);
+
+    QCOMPARE(receivedResults.count(), 2);
+    const MNotificationProxy &res0(receivedResults.at(0));
+    QCOMPARE(res0.notificationId, NOTIFICATION_ID1);
+    QCOMPARE(res0.groupId, NOTIFICATION_GROUP_ID1);
+
+    const MNotificationProxy &res1(receivedResults.at(1));
+    QCOMPARE(res1.notificationId, NOTIFICATION_ID2);
+    QCOMPARE(res1.groupId, NOTIFICATION_GROUP_ID2);
 }
 
 void Ut_DBusInterfaceNotificationSource::testNotificationListWithIdentifiers()
 {
-    source->notificationListWithIdentifiers(10);
+    QList<Notification> expectedResults;
+    NotificationParameters params;
+    params.add(IDENTIFIER, IDENTIFIER1);
+    expectedResults.append(Notification(NOTIFICATION_ID1, NOTIFICATION_GROUP_ID1, USER_ID, params, Notification::ApplicationEvent, 0));
+    params.add(IDENTIFIER, IDENTIFIER2);
+    expectedResults.append(Notification(NOTIFICATION_ID2, NOTIFICATION_GROUP_ID2, USER_ID, params, Notification::ApplicationEvent, 0));
+    gNotificationManagerStub->stubSetReturnValue("notificationListWithIdentifiers", expectedResults);
+
+    QList<MNotificationWithIdentifierProxy> receivedResults = source->notificationListWithIdentifiers(USER_ID);
+
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationListWithIdentifiers"), 1);
-    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationListWithIdentifiers").parameter<uint>(0), (uint)10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationListWithIdentifiers").parameter<uint>(0), USER_ID);
+
+    QCOMPARE(receivedResults.count(), 2);
+    const MNotificationWithIdentifierProxy &res0(receivedResults.at(0));
+    QCOMPARE(res0.notificationId, NOTIFICATION_ID1);
+    QCOMPARE(res0.groupId, NOTIFICATION_GROUP_ID1);
+    QCOMPARE(res0.identifier, IDENTIFIER1);
+
+    const MNotificationWithIdentifierProxy &res1(receivedResults.at(1));
+    QCOMPARE(res1.notificationId, NOTIFICATION_ID2);
+    QCOMPARE(res1.groupId, NOTIFICATION_GROUP_ID2);
+    QCOMPARE(res1.identifier, IDENTIFIER2);
 }
 
 void Ut_DBusInterfaceNotificationSource::testNotificationGroupList()
 {
-    source->notificationGroupList(10);
+    QList<NotificationGroup> expectedResults;
+    NotificationParameters params;
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID1, USER_ID, params));
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID2, USER_ID, params));
+    gNotificationManagerStub->stubSetReturnValue("notificationGroupList", expectedResults);
+
+    QList<MNotificationGroupProxy> receivedResults = source->notificationGroupList(USER_ID);
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationGroupList"), 1);
-    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupList").parameter<uint>(0), (uint)10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupList").parameter<uint>(0), USER_ID);
+
+    QCOMPARE(receivedResults.count(), 2);
+    const MNotificationGroupProxy &res0(receivedResults.at(0));
+    QCOMPARE(res0.groupId, NOTIFICATION_GROUP_ID1);
+
+    const MNotificationGroupProxy &res1(receivedResults.at(1));
+    QCOMPARE(res1.groupId, NOTIFICATION_GROUP_ID2);
 }
 
 void Ut_DBusInterfaceNotificationSource::testNotificationGroupListWithIdentifiers()
 {
-    source->notificationGroupListWithIdentifiers(10);
+    QList<NotificationGroup> expectedResults;
+    NotificationParameters params;
+    params.add(IDENTIFIER, IDENTIFIER1);
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID1, USER_ID, params));
+    params.add(IDENTIFIER, IDENTIFIER2);
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID2, USER_ID, params));
+    gNotificationManagerStub->stubSetReturnValue("notificationGroupListWithIdentifiers", expectedResults);
+
+    QList<MNotificationGroupWithIdentifierProxy> receivedResults = source->notificationGroupListWithIdentifiers(USER_ID);
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationGroupListWithIdentifiers"), 1);
-    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupListWithIdentifiers").parameter<uint>(0), (uint)10);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupListWithIdentifiers").parameter<uint>(0), USER_ID);
+
+    QCOMPARE(receivedResults.count(), 2);
+    const MNotificationGroupWithIdentifierProxy &res0(receivedResults.at(0));
+    QCOMPARE(res0.groupId, NOTIFICATION_GROUP_ID1);
+    QCOMPARE(res0.groupIdentifier, IDENTIFIER1);
+
+    const MNotificationGroupWithIdentifierProxy &res1(receivedResults.at(1));
+    QCOMPARE(res1.groupId, NOTIFICATION_GROUP_ID2);
+    QCOMPARE(res1.groupIdentifier, IDENTIFIER2);
 }
 
 void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithEmptyStrings()

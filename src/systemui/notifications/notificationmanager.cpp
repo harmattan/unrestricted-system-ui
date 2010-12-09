@@ -449,56 +449,52 @@ QList<uint> NotificationManager::notificationIdList(uint notificationUserId)
     return listOfNotificationIds;
 }
 
-QList<MNotificationProxy> NotificationManager::notificationList(uint notificationUserId)
+QList<Notification> NotificationManager::notificationList(uint notificationUserId)
 {
-    QList<MNotificationProxy> userNotifications;
+    QList<Notification> userNotifications;
 
-    foreach(const Notification & notification, notificationContainer) {
+    foreach (const Notification &notification, notificationContainer) {
         if (notification.userId() == notificationUserId) {
-            MNotificationProxy mnotification(notification);
-            userNotifications.append(mnotification);
+            userNotifications.append(notification);
         }
     }
 
     return userNotifications;
 }
 
-QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWithIdentifiers(uint notificationUserId)
+QList<Notification> NotificationManager::notificationListWithIdentifiers(uint notificationUserId)
 {
-    QList<MNotificationWithIdentifierProxy> userNotificationsWithIdentifers;
+    QList<Notification> userNotificationsWithIdentifiers;
 
-    foreach(const Notification & notification, notificationContainer) {
+    foreach (const Notification &notification, notificationContainer) {
         if (notification.userId() == notificationUserId) {
-            MNotificationWithIdentifierProxy mnotification(notification);
-            userNotificationsWithIdentifers.append(mnotification);
+            userNotificationsWithIdentifiers.append(notification);
         }
     }
 
-    return userNotificationsWithIdentifers;
+    return userNotificationsWithIdentifiers;
 }
 
-QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint notificationUserId)
+QList<NotificationGroup> NotificationManager::notificationGroupList(uint notificationUserId)
 {
-    QList<MNotificationGroupProxy> userGroups;
+    QList<NotificationGroup> userGroups;
 
-    foreach(const NotificationGroup & group, groupContainer) {
+    foreach (const NotificationGroup &group, groupContainer) {
         if (group.userId() == notificationUserId) {
-            MNotificationGroupProxy mnotificationgroup(group);
-            userGroups.append(mnotificationgroup);
+            userGroups.append(group);
         }
     }
 
     return userGroups;
 }
 
-QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId)
+QList<NotificationGroup> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId)
 {
-    QList<MNotificationGroupWithIdentifierProxy> userGroups;
+    QList<NotificationGroup> userGroups;
 
-    foreach(const NotificationGroup & group, groupContainer) {
+    foreach (const NotificationGroup &group, groupContainer) {
         if (group.userId() == notificationUserId) {
-            MNotificationGroupWithIdentifierProxy mnotificationgroup(group);
-            userGroups.append(mnotificationgroup);
+            userGroups.append(group);
         }
     }
 

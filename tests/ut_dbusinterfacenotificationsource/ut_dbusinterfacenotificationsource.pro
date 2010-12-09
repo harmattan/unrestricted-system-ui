@@ -9,6 +9,8 @@ SOURCES += \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsource.cpp \
     $$NOTIFICATIONSRCDIR/mnotificationproxy.cpp \
     $$NOTIFICATIONSRCDIR/notificationsource.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notification.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 
@@ -23,6 +25,8 @@ HEADERS += \
     $$NOTIFICATIONSRCDIR/mnotificationproxy.h \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsourceadaptor.h \
     $$NOTIFICATIONSRCDIR/notificationmanager.h \
+    $$LIBNOTIFICATIONSRCDIR/notification.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h
 

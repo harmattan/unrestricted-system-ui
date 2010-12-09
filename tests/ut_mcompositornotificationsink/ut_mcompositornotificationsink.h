@@ -55,10 +55,10 @@ public:
     bool removeGroup(uint notificationUserId, uint groupId);
     uint notificationUserId();
     QList<uint> notificationIdList(uint notificationUserId);
-    QList<MNotificationProxy> notificationList(uint notificationUserId);
-    QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
-    QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
-    QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+    QList<Notification> notificationList(uint notificationUserId);
+    QList<NotificationGroup> notificationGroupList(uint notificationUserId);
+    QList<Notification> notificationListWithIdentifiers(uint notificationUserId);
+    QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId);
 
     QList<Notification> notifications() const;
     QList<NotificationGroup> groups() const;

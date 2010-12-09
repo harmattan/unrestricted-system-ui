@@ -25,11 +25,6 @@
 #include "notification.h"
 #include "notificationgroup.h"
 
-class MNotificationProxy;
-class MNotificationWithIdentifierProxy;
-class MNotificationGroupProxy;
-class MNotificationGroupWithIdentifierProxy;
-
 /*!
  * Abstract notification manager interface. Declares interface for adding,
  * updating, removing individual notifications as well as adding a
@@ -124,7 +119,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications that belong to notificationUserId
      */
-    virtual QList<MNotificationProxy> notificationList(uint notificationUserId) = 0;
+    virtual QList<Notification> notificationList(uint notificationUserId) = 0;
 
     /*!
      * Returns list of notifications with identifiers by user id
@@ -132,7 +127,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications with identifiers that belong to notificationUserId
      */
-    virtual QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId) = 0;
+    virtual QList<Notification> notificationListWithIdentifiers(uint notificationUserId) = 0;
 
     /*!
      * Returns list of notification groups by user id
@@ -140,8 +135,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
      */
-    virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId) = 0;
-
+    virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId) = 0;
 
     /*!
      * Returns list of notification groups with identifiers by user id
@@ -149,7 +143,7 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups with identifiers that belong to notificationUserId
      */
-    virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId) = 0;
+    virtual QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId) = 0;
 
     /*!
      * Returns the qObject that implements the manager for signal connections.

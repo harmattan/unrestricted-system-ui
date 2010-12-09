@@ -24,6 +24,9 @@
 #include "unlocknotifications_stub.h"
 #include "unlocknotificationsinkstub.h"
 #include "notificationsink_stub.h"
+#include "notificationmanager_stub.h"
+#include "notification_stub.h"
+#include "notificationgroup_stub.h"
 #include "screenlockextension_stub.h"
 #include <MFeedback>
 
@@ -74,23 +77,6 @@ MWidgetView::~MWidgetView()
 {
 }
 
-NotificationManager::NotificationManager() : QObject(NULL) { }
-uint NotificationManager::addNotification(uint, const NotificationParameters &, uint) { return 0; }
-bool NotificationManager::updateNotification(uint, uint, const NotificationParameters &) { return true; }
-uint NotificationManager::addGroup(uint, const NotificationParameters &) { return 0; }
-bool NotificationManager::updateGroup(uint, uint, const NotificationParameters &) { return true; }
-bool NotificationManager::removeGroup(uint, uint) { return true; }
-QList<NotificationGroup> NotificationManager::groups() const { return QList<NotificationGroup>(); }
-QList<Notification> NotificationManager::notifications() const { return QList<Notification>(); }
-uint NotificationManager::notificationUserId() { return 0; }
-QList<uint> NotificationManager::notificationIdList(uint) { return QList<uint>(); }
-QList<MNotificationProxy> NotificationManager::notificationList(uint) { return QList<MNotificationProxy>(); }
-QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWithIdentifiers(uint) { return QList<MNotificationWithIdentifierProxy>(); }
-QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint) { return QList<MNotificationGroupProxy>(); }
-QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGroupListWithIdentifiers(uint) { return QList<MNotificationGroupWithIdentifierProxy>(); }
-QObject *NotificationManager::qObject() { return this; }
-bool NotificationManager::removeNotification(uint, uint) { return true; }
-
 void Ut_LockScreenWithPadlockView::init()
 {
     controller = new LockScreen(NULL);
@@ -110,7 +96,8 @@ void Ut_LockScreenWithPadlockView::initTestCase()
     int   argc = 1;
     static char *app_name = (char *)"./ut_lockscreenwithpadlockview";
     app = new MApplication(argc, &app_name);
-    gScreenLockExtensionStub->stubSetReturnValue("notificationManagerInterface", static_cast<NotificationManagerInterface *>(&notificationManager));
+    notificationManager = new NotificationManager;
+    gScreenLockExtensionStub->stubSetReturnValue("notificationManagerInterface", notificationManager);
 }
 
 void Ut_LockScreenWithPadlockView::cleanupTestCase()

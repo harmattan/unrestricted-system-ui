@@ -25,39 +25,9 @@
 #include "notificationgroup.h"
 #include "notificationparameters.h"
 #include "notificationmanager_stub.h"
+#include "notificationgroup_stub.h"
 
 NotificationParameters fakeParams;
-
-//NotificationGroup fake needed because parameters call using stub does not work
-NotificationGroup::NotificationGroup() {}
-NotificationGroup::NotificationGroup(uint, uint, const NotificationParameters &)
-{
-}
-
-NotificationGroup::~NotificationGroup() {}
-
-uint NotificationGroup::groupId() const
-{
-    return 0;
-}
-
-uint NotificationGroup::userId() const
-{
-    return 0;
-}
-
-const NotificationParameters& NotificationGroup::parameters() const
-{
-    return fakeParams;
-}
-
-void NotificationGroup::setParameters(const NotificationParameters &)
-{
-}
-
-void NotificationGroup::updateParameters(const NotificationParameters &)
-{
-}
 
 // DBusInterfaceNotificationSinkAdaptor stubs (used by NotificationManager)
 DBusInterfaceNotificationSinkAdaptor::DBusInterfaceNotificationSinkAdaptor(DBusInterfaceNotificationSink *parent) : QDBusAbstractAdaptor(parent)
@@ -161,6 +131,9 @@ void Ut_DBusInterfaceNotificationSink::init()
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(removeGroup(uint)), sink, SLOT(removeGroup(uint)));
     gNotificationManagerStub->stubReset();
+
+    gNotificationGroupStub->stubReset();
+    gNotificationGroupStub->stubSetReturnValue<const NotificationParameters&>("parameters", fakeParams);
 }
 
 void Ut_DBusInterfaceNotificationSink::cleanup()

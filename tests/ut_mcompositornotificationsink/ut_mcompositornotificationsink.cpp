@@ -135,24 +135,24 @@ QList< uint > MockNotificationManager::notificationIdList(uint /*notificationUse
     return tmp;
 }
 
-QList<MNotificationProxy> MockNotificationManager::notificationList(uint)
+QList<Notification> MockNotificationManager::notificationList(uint)
 {
-    return QList<MNotificationProxy>();
+    return QList<Notification>();
 }
 
-QList<MNotificationGroupProxy> MockNotificationManager::notificationGroupList(uint)
+QList<NotificationGroup> MockNotificationManager::notificationGroupList(uint)
 {
-    return QList<MNotificationGroupProxy>();
+    return QList<NotificationGroup>();
 }
 
-QList<MNotificationWithIdentifierProxy> MockNotificationManager::notificationListWithIdentifiers(uint)
+QList<Notification> MockNotificationManager::notificationListWithIdentifiers(uint)
 {
-    return QList<MNotificationWithIdentifierProxy>();
+    return QList<Notification>();
 }
 
-QList<MNotificationGroupWithIdentifierProxy> MockNotificationManager::notificationGroupListWithIdentifiers(uint)
+QList<NotificationGroup> MockNotificationManager::notificationGroupListWithIdentifiers(uint)
 {
-    return QList<MNotificationGroupWithIdentifierProxy>();
+    return QList<NotificationGroup>();
 }
 
 QList<Notification> MockNotificationManager::notifications() const

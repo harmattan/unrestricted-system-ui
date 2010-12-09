@@ -102,7 +102,7 @@ template <typename T>
 T &StubBase::stubReturnValueNoDefault(const QString &methodName) const
 {
     if (!_stubReturnValues.contains(methodName)) {
-        QString msg = QString("StubBase::") + __func__ + ": return value for method not found; check that you have used stubSetReturnValue(" + methodName + ")";
+        QString msg = QString("StubBase::") + __func__ + ": return value for method '" + methodName + "' not found; check that you have used stubSetReturnValue(" + methodName + ")";
         qFatal(qPrintable(msg));
     }
 

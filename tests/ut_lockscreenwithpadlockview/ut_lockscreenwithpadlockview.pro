@@ -7,9 +7,11 @@ INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$ROOTSRCDIR/extensions/screenlock $$SRCD
 STYLE_HEADERS += $$ROOTSRCDIR/extensions/screenlock/lockscreenstyle.h
 
 SOURCES += ut_lockscreenwithpadlockview.cpp \
-    $$ROOTSRCDIR/extensions/screenlock/lockscreenwithpadlockview.cpp  \
-    $$ROOTSRCDIR/extensions/screenlock/lockscreenview.cpp  \
-    $$STUBSDIR/stubbase.cpp \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenwithpadlockview.cpp \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenview.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
+    $$STUBSDIR/stubbase.cpp
 
 HEADERS += ut_lockscreenwithpadlockview.h \
     $$ROOTSRCDIR/extensions/screenlock/unlockarea.h \
@@ -20,6 +22,9 @@ HEADERS += ut_lockscreenwithpadlockview.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreen.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreenstyle.h \
     $$ROOTSRCDIR/extensions/screenlock/screenlockextension.h \
-    $$ROOTSRCDIR/libnotificationsystem/notificationsink.h \
+    $$NOTIFICATIONSRCDIR/notificationmanager.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
+    $$LIBNOTIFICATIONSRCDIR/notificationsink.h
 
 include(../common_bot.pri)

@@ -43,10 +43,10 @@ class NotificationManagerStub : public StubBase {
   virtual bool removeGroup(uint notificationUserId, uint groupId);
   virtual uint notificationUserId();
   virtual QList<uint> notificationIdList(uint notificationUserId);
-  virtual QList<MNotificationProxy> notificationList(uint notificationUserId);
-  virtual QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
-  virtual QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
-  virtual QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+  virtual QList<Notification> notificationList(uint notificationUserId);
+  virtual QList<Notification> notificationListWithIdentifiers(uint notificationUserId);
+  virtual QList<NotificationGroup> notificationGroupList(uint notificationUserId);
+  virtual QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId);
   virtual bool removeNotification(uint notificationId);
   virtual bool removeNotificationsInGroup(uint groupId);
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
@@ -143,36 +143,36 @@ QList<uint> NotificationManagerStub::notificationIdList(uint notificationUserId)
   return stubReturnValue<QList<uint> >("notificationIdList");
 }
 
-QList<MNotificationProxy> NotificationManagerStub::notificationList(uint notificationUserId)
+QList<Notification> NotificationManagerStub::notificationList(uint notificationUserId)
 {
     QList<ParameterBase*> params;
     params.append( new Parameter<uint >(notificationUserId));
     stubMethodEntered("notificationList",params);
-    return stubReturnValue<QList<MNotificationProxy> >("notificationList");
+    return stubReturnValue<QList<Notification> >("notificationList");
 }
 
-QList<MNotificationWithIdentifierProxy> NotificationManagerStub::notificationListWithIdentifiers(uint notificationUserId)
+QList<Notification> NotificationManagerStub::notificationListWithIdentifiers(uint notificationUserId)
 {
     QList<ParameterBase*> params;
     params.append( new Parameter<uint >(notificationUserId));
     stubMethodEntered("notificationListWithIdentifiers",params);
-    return stubReturnValue<QList<MNotificationWithIdentifierProxy> >("notificationListWithIdentifiers");
+    return stubReturnValue<QList<Notification> >("notificationListWithIdentifiers");
 }
 
-QList<MNotificationGroupProxy> NotificationManagerStub::notificationGroupList(uint notificationUserId)
+QList<NotificationGroup> NotificationManagerStub::notificationGroupList(uint notificationUserId)
 {
     QList<ParameterBase*> params;
     params.append( new Parameter<uint >(notificationUserId));
     stubMethodEntered("notificationGroupList",params);
-    return stubReturnValue<QList<MNotificationGroupProxy> >("notificationGroupList");
+    return stubReturnValue<QList<NotificationGroup> >("notificationGroupList");
 }
 
-QList<MNotificationGroupWithIdentifierProxy> NotificationManagerStub::notificationGroupListWithIdentifiers(uint notificationUserId)
+QList<NotificationGroup> NotificationManagerStub::notificationGroupListWithIdentifiers(uint notificationUserId)
 {
     QList<ParameterBase*> params;
     params.append( new Parameter<uint >(notificationUserId));
     stubMethodEntered("notificationGroupListWithIdentifiers",params);
-    return stubReturnValue<QList<MNotificationGroupWithIdentifierProxy> >("notificationGroupListWithIdentifiers");
+    return stubReturnValue<QList<NotificationGroup> >("notificationGroupListWithIdentifiers");
 }
 
 bool NotificationManagerStub::removeNotification(uint notificationId) {
@@ -325,19 +325,19 @@ QList<uint> NotificationManager::notificationIdList(uint notificationUserId) {
   return gNotificationManagerStub->notificationIdList(notificationUserId);
 }
 
-QList<MNotificationProxy> NotificationManager::notificationList(uint notificationUserId) {
+QList<Notification> NotificationManager::notificationList(uint notificationUserId) {
     return gNotificationManagerStub->notificationList(notificationUserId);
 }
 
-QList<MNotificationWithIdentifierProxy> NotificationManager::notificationListWithIdentifiers(uint notificationUserId) {
+QList<Notification> NotificationManager::notificationListWithIdentifiers(uint notificationUserId) {
     return gNotificationManagerStub->notificationListWithIdentifiers(notificationUserId);
 }
 
-QList<MNotificationGroupProxy> NotificationManager::notificationGroupList(uint notificationUserId) {
+QList<NotificationGroup> NotificationManager::notificationGroupList(uint notificationUserId) {
     return gNotificationManagerStub->notificationGroupList(notificationUserId);
 }
 
-QList<MNotificationGroupWithIdentifierProxy> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId) {
+QList<NotificationGroup> NotificationManager::notificationGroupListWithIdentifiers(uint notificationUserId) {
     return gNotificationManagerStub->notificationGroupListWithIdentifiers(notificationUserId);
 }
 

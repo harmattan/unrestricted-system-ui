@@ -24,6 +24,8 @@
 #include "notificationarea.h"
 #include "notificationareaview.h"
 #include "notificationmanager_stub.h"
+#include "notification_stub.h"
+#include "notificationgroup_stub.h"
 #include "notificationareasink.h"
 #include "notificationsink_stub.h"
 #include "notificationareasink_stub.h"

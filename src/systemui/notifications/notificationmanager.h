@@ -22,7 +22,6 @@
 
 #include "notification.h"
 #include "notificationgroup.h"
-#include "mnotificationproxy.h"
 #include "notificationmanagerinterface.h"
 #include "eventtypestore.h"
 
@@ -93,10 +92,10 @@ public slots:
     bool removeGroup(uint notificationUserId, uint groupId);
     uint notificationUserId();
     QList<uint> notificationIdList(uint notificationUserId);
-    QList<MNotificationProxy> notificationList(uint notificationUserId);
-    QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
-    QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
-    QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+    QList<Notification> notificationList(uint notificationUserId);
+    QList<Notification> notificationListWithIdentifiers(uint notificationUserId);
+    QList<NotificationGroup> notificationGroupList(uint notificationUserId);
+    QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId);
     //! \reimp_end
 
     /*!

@@ -132,20 +132,44 @@ QList<uint> DBusInterfaceNotificationSource::notificationIdList(uint notificatio
 
 QList<MNotificationProxy> DBusInterfaceNotificationSource::notificationList(uint notificationUserId)
 {
-    return manager.notificationList(notificationUserId);
+    QList<MNotificationProxy> userNotifications;
+
+    foreach (const Notification &notification, manager.notificationList(notificationUserId)) {
+        userNotifications.append(MNotificationProxy(notification));
+    }
+
+    return userNotifications;
 }
 
 QList<MNotificationWithIdentifierProxy> DBusInterfaceNotificationSource::notificationListWithIdentifiers(uint notificationUserId)
 {
-    return manager.notificationListWithIdentifiers(notificationUserId);
+    QList<MNotificationWithIdentifierProxy> userNotifications;
+
+    foreach (const Notification &notification, manager.notificationListWithIdentifiers(notificationUserId)) {
+        userNotifications.append(MNotificationWithIdentifierProxy(notification));
+    }
+
+    return userNotifications;
 }
 
 QList<MNotificationGroupProxy> DBusInterfaceNotificationSource::notificationGroupList(uint notificationUserId)
 {
-    return manager.notificationGroupList(notificationUserId);
+    QList<MNotificationGroupProxy> userGroups;
+
+    foreach (const NotificationGroup &group, manager.notificationGroupList(notificationUserId)) {
+        userGroups.append(MNotificationGroupProxy(group));
+    }
+
+    return userGroups;
 }
 
 QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSource::notificationGroupListWithIdentifiers(uint notificationUserId)
 {
-    return manager.notificationGroupListWithIdentifiers(notificationUserId);
+    QList<MNotificationGroupWithIdentifierProxy> userGroups;
+
+    foreach (const NotificationGroup &group, manager.notificationGroupListWithIdentifiers(notificationUserId)) {
+        userGroups.append(MNotificationGroupWithIdentifierProxy(group));
+    }
+
+    return userGroups;
 }
