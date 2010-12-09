@@ -33,24 +33,12 @@ static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notification
 MCompositorNotificationSink::MCompositorNotificationSink() :
         sinkDisabled(false),
         allPreviewsDisabled(false),
-        window(new MWindow),
+        window(NULL),
         currentBanner(NULL)
 {
-    window->setTranslucentBackground(true);
-    window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
-    window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
-    window->setObjectName("MCompositorNotificationSinkWindow");
-    window->setWindowTitle("Notification");
-    window->setProperty("followsCurrentApplicationWindowOrientation", true);
-
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();
     connect(notificationPreviewMode, SIGNAL(valueChanged()), this, SLOT(changeNotificationPreviewMode()));
-
-    // Clear the mask for the duration of orientation change, because the mask is not rotated along with the notification
-    connect(window->sceneManager(), SIGNAL(orientationAboutToChange(M::Orientation)), this, SLOT(clearWindowMask()));
-    connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateWindowMask()));
-    connect(window, SIGNAL(displayEntered()), this, SLOT(addOldestBannerToWindow()));
 
     // Setup the timer which makes the banner disappear
     connect(&bannerTimer, SIGNAL(timeout()), this, SLOT(disappearCurrentBanner()));
@@ -67,6 +55,25 @@ MCompositorNotificationSink::~MCompositorNotificationSink()
         delete banner;
     }
     delete window;
+}
+
+void MCompositorNotificationSink::createWindowIfNecessary()
+{
+    if (window == NULL) {
+        // Set up the window
+        window = new MWindow;
+        window->setTranslucentBackground(true);
+        window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
+        window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
+        window->setObjectName("MCompositorNotificationSinkWindow");
+        window->setWindowTitle("Notification");
+        window->setProperty("followsCurrentApplicationWindowOrientation", true);
+
+        // Clear the mask for the duration of orientation change, because the mask is not rotated along with the notification
+        connect(window->sceneManager(), SIGNAL(orientationAboutToChange(M::Orientation)), this, SLOT(clearWindowMask()));
+        connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateWindowMask()));
+        connect(window, SIGNAL(displayEntered()), this, SLOT(addOldestBannerToWindow()));
+    }
 }
 
 void MCompositorNotificationSink::addNotification(const Notification &notification)
@@ -101,8 +108,12 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         bannerQueue.append(banner);
         emit notificationAdded(notification);
 
+        // Create the window if it does not yet exist
+        createWindowIfNecessary();
+
         if (!window->isVisible()) {
             window->show();
+
             // Calling hide() causes the ondisplay property of the window to change with delay,
             // so if show() is called fast enough after hiding, ondisplay is never changed to false and we
             // never get a new displayEntered signal, so go to the slot immediately in that case.
@@ -138,7 +149,9 @@ void MCompositorNotificationSink::removeNotification(uint notificationId)
         if(currentBanner == banner) {
             // The banner is on the screen, so make it disappear
             bannerTimer.stop();
-            window->sceneManager()->disappearSceneWindow(banner);
+            if (window != NULL) {
+                window->sceneManager()->disappearSceneWindow(banner);
+            }
         } else {
             // The banner is in the queue - remove it
             bannerQueue.removeAll(banner);
@@ -149,7 +162,7 @@ void MCompositorNotificationSink::removeNotification(uint notificationId)
 
 void MCompositorNotificationSink::disappearCurrentBanner()
 {
-    if (currentBanner != NULL) {
+    if (currentBanner != NULL && window != NULL) {
         window->sceneManager()->disappearSceneWindow(currentBanner);
     }
 }
@@ -172,12 +185,16 @@ void MCompositorNotificationSink::addOldestBannerToWindow()
         if (!bannerQueue.isEmpty()) {
             // The oldest banner should be shown
             currentBanner = bannerQueue.takeFirst();
-            window->sceneManager()->appearSceneWindow(currentBanner, MSceneWindow::DestroyWhenDone);
+            if (window != NULL) {
+                window->sceneManager()->appearSceneWindow(currentBanner, MSceneWindow::DestroyWhenDone);
+            }
             bannerTimer.start(currentBanner->property("timeout").toInt());
             updateWindowMask(currentBanner);
         } else {
             // No more banners exist to be shown -> hide the window
-            window->hide();
+            if (window != NULL) {
+                window->hide();
+            }
         }
     }
 }
@@ -196,34 +213,38 @@ void MCompositorNotificationSink::updateWindowMask()
 
 void MCompositorNotificationSink::updateWindowMask(MBanner* banner)
 {
-    QSize  size = banner->preferredSize().toSize();
-    QPoint origin;
+    if (window != NULL) {
+        QSize size = banner->preferredSize().toSize();
+        QPoint origin;
 
-    switch(window->sceneManager()->orientationAngle()) {
-    case M::Angle90:
-        size.transpose();
-        origin.setX(window->width() - size.width() - banner->pos().y());
-        origin.setY(banner->pos().x());
-        break;
-    case M::Angle270:
-        size.transpose();
-        origin.setX(banner->pos().y());
-        origin.setY(-banner->pos().x());
-        break;
-    case M::Angle180:
-        origin.setY(window->height() - size.height() - banner->pos().y());
-        origin.setX(-banner->pos().x());
-        break;
-    default:
-        origin = banner->pos().toPoint();
-        break;
+        switch(window->sceneManager()->orientationAngle()) {
+        case M::Angle90:
+            size.transpose();
+            origin.setX(window->width() - size.width() - banner->pos().y());
+            origin.setY(banner->pos().x());
+            break;
+        case M::Angle270:
+            size.transpose();
+            origin.setX(banner->pos().y());
+            origin.setY(-banner->pos().x());
+            break;
+        case M::Angle180:
+            origin.setY(window->height() - size.height() - banner->pos().y());
+            origin.setX(-banner->pos().x());
+            break;
+        default:
+            origin = banner->pos().toPoint();
+            break;
+        }
+        window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
     }
-    window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
 }
 
 void MCompositorNotificationSink::clearWindowMask()
 {
-    window->clearMask();
+    if (window != NULL) {
+        window->clearMask();
+    }
 }
 
 void MCompositorNotificationSink::changeNotificationPreviewMode()

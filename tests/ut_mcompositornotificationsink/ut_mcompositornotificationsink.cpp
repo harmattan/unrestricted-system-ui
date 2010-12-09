@@ -398,8 +398,6 @@ void Ut_MCompositorNotificationSink::init()
     mWindowMaskRegion = QRegion();
     gMWindowIsOnDisplay = false;
 
-    connect(this, SIGNAL(displayEntered()), sink->window, SIGNAL(displayEntered()));
-
     gWindowPropertyMap.clear();
     gXAllocs.clear();
 }
@@ -408,6 +406,13 @@ void Ut_MCompositorNotificationSink::cleanup()
 {
     delete sink;
     delete notificationManager;
+}
+
+void Ut_MCompositorNotificationSink::emitDisplayEntered()
+{
+    disconnect(this, SIGNAL(displayEntered()), sink->window, SIGNAL(displayEntered()));
+    connect(this, SIGNAL(displayEntered()), sink->window, SIGNAL(displayEntered()));
+    emit displayEntered();
 }
 
 NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
@@ -424,6 +429,14 @@ NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bo
 
 void Ut_MCompositorNotificationSink::testNotificationWindowProperties()
 {
+    // Check that the window is not automatically created
+    QCOMPARE(sink->window, (MWindow *)NULL);
+
+    // Check that the window is created when a notification is added
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0, 0);
+    QVERIFY(sink->window != NULL);
+
     // Check that the window doesn't request focus
     QCOMPARE(sink->window->testAttribute(Qt::WA_X11DoNotAcceptFocus), true);
 }
@@ -435,7 +448,7 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowNotOpen()
     // Create a notification
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     // Check that a MWindow was shown(window->show() called)
     QCOMPARE(mWindowSetVisibleWidget, sink->window);
@@ -462,7 +475,7 @@ void Ut_MCompositorNotificationSink::testAddNotificationWhenWindowAlreadyOpen()
     qQTimerEmitTimeoutImmediately = false;
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
     QVERIFY(mWindowSetVisibleWidget);
     QVERIFY(mWindowSetVisibleValue);
     QVERIFY(qTimerStarted);
@@ -508,7 +521,7 @@ void Ut_MCompositorNotificationSink::testWhenNotificationAlreadyOnDisplayNoNewNo
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     sink->window->QGraphicsView::setVisible(false);
     gMWindowIsOnDisplay = true;
@@ -523,7 +536,7 @@ void Ut_MCompositorNotificationSink::testWhenWindowOnDisplayThenNotificationAdde
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     // Disappear the first notification
     MBanner* first_banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
@@ -547,7 +560,7 @@ void Ut_MCompositorNotificationSink::testWhenRemovingCurrentNotificationThenTime
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     uint id = notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     QCOMPARE(gMSceneWindowsAppeared.count(), 1);
     MBanner* banner = dynamic_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
@@ -564,14 +577,14 @@ void Ut_MCompositorNotificationSink::testUpdateNotification()
     // Create two notifications
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0);
-    emit displayEntered();
+    emitDisplayEntered();
     MBanner* banner1 = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
 
     TestNotificationParameters parameters1( "title1", "subtitle1", "buttonicon1", "content1 1 1 1");
     uint id = notificationManager->addNotification(0, parameters1);
     // Window will not drop to displaychange event slot unless window is explicitly hidden
     mWindowSetVisibleWidget->hide();
-    emit displayEntered();
+    emitDisplayEntered();
 
     // Update the second notification
     TestNotificationParameters parametersX("titleX", "subtitleX", "buttoniconX", "contentX X X X");
@@ -581,7 +594,7 @@ void Ut_MCompositorNotificationSink::testUpdateNotification()
     bridge.setObjectName("_m_testBridge");
     bridge.setParent(banner1);
     bridge.setSceneWindowState(MSceneWindow::Disappeared);
-    emit displayEntered();
+    emitDisplayEntered();
     MBanner* banner2 = static_cast<MBanner*>(gMSceneWindowsAppeared.at(1));
 
     QCOMPARE(banner2->title(), QString("titleX"));
@@ -600,7 +613,7 @@ void Ut_MCompositorNotificationSink::testRemoveNotification()
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     // Make sure that the first one has been shown
     MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
@@ -625,7 +638,7 @@ void Ut_MCompositorNotificationSink::testTimeout()
 {
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0);
-    emit displayEntered();
+    emitDisplayEntered();
     MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
     MSceneWindowBridge bridge;
     bridge.setObjectName("_m_testBridge");
@@ -643,7 +656,7 @@ void Ut_MCompositorNotificationSink::testNotificationWhileApplicationEventsDisab
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     sink->setApplicationEventsEnabled(false);
     notificationManager->addNotification(0, parameters);
-    emit displayEntered();
+    emitDisplayEntered();
     QCOMPARE(mWindowSetVisibleValue, false);
 
     sink->setApplicationEventsEnabled(true);
@@ -740,7 +753,7 @@ void Ut_MCompositorNotificationSink::testWindowMasking()
 
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0, 0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     MSceneWindow* window = gMSceneWindowsAppeared.at(0);
 
@@ -754,7 +767,7 @@ void Ut_MCompositorNotificationSink::testWindowMaskingWhenOrientationChangeSigna
 
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     notificationManager->addNotification(0, parameters0);
-    emit displayEntered();
+    emitDisplayEntered();
     int newAngle = sink->window->sceneManager()->orientationAngle() + M::Angle90;
     gCurrentOrientationAngle = (M::OrientationAngle)newAngle;
 
@@ -772,7 +785,7 @@ void Ut_MCompositorNotificationSink::testPreviewIconId()
 
     TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     uint id = notificationManager->addNotification(0, parameters0);
-    emit displayEntered();
+    emitDisplayEntered();
 
     // Check default icon is used if preview icon id is not defined
     MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));

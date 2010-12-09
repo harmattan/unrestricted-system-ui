@@ -109,6 +109,11 @@ private slots:
 
 private:
     /*!
+     * Creates the window for the notifications if it does not yet exist.
+     */
+    void createWindowIfNecessary();
+
+    /*!
      * Updates an existing info banner with the given notification parameters.
      *
      * \param notification the notification to be updated
