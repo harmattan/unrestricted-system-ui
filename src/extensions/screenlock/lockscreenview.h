@@ -25,6 +25,7 @@
 class QGraphicsLinearLayout;
 class MGConfItem;
 class QPixmap;
+class LockScreenHeader;
 
 /*!
  * LockScreenBackgroundPixmap represents a background pixmap.
@@ -105,7 +106,7 @@ protected:
     QGraphicsLinearLayout *layout;
 
     //! Lock screen header widget
-    MWidgetController *lockScreenHeader;
+    LockScreenHeader *lockScreenHeader;
 
 private slots:
     //! Updates the style name of the controller based on whether there are custom pixmaps in use

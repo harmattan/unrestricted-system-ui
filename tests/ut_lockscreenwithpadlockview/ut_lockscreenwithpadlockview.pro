@@ -21,6 +21,7 @@ HEADERS += ut_lockscreenwithpadlockview.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreenview.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreen.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreenstyle.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenheader.h \
     $$ROOTSRCDIR/extensions/screenlock/screenlockextension.h \
     $$NOTIFICATIONSRCDIR/notificationmanager.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \

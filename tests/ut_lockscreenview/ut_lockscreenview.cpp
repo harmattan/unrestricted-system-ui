@@ -14,6 +14,7 @@
 #include <MApplication>
 #include <MGConfItem>
 #include <MSceneManager>
+#include "lockscreenheader_stub.h"
 #include "ut_lockscreenview.h"
 
 QStringList qPixmapLoadFilenames;

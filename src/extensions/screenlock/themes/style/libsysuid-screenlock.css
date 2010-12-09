@@ -204,7 +204,7 @@ LockScreenStatusAreaStyle {
     padding-bottom: 0;
 }
 
-ClockStyle#LockScreenHeaderClock {
+LockScreen ClockStyle#LockScreenHeaderClock {
     margin-left: 1.2mm;
     margin-right: 0;
     margin-top: 1.2mm;
@@ -217,7 +217,7 @@ ClockStyle#LockScreenHeaderClock {
     short-remove-am-pm-indicator: false;
     horizontal-align: left;
 }
-ClockStyle#LockScreenHeaderClock:twelve-hour {
+LockScreen ClockStyle#LockScreenHeaderClock:twelve-hour {
     time-format: "%r";
     short-remove-am-pm-indicator: true;
 }
@@ -237,7 +237,7 @@ LockScreen MLabelStyle#LockScreenHeaderClockLabel {
     maximum-size: -1 9mm;
 }
 
-DateStyle {
+LockScreen DateStyle {
     date-format:;
     horizontal-align: left;
 }

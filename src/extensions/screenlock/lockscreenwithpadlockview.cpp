@@ -28,6 +28,7 @@
 #include <MSceneManager>
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen.h"
+#include "lockscreenheader.h"
 #include "unlockarea.h"
 #include "unlocknotificationsink.h"
 #include "screenlockextension.h"

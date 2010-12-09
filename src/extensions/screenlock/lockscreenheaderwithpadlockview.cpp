@@ -20,6 +20,7 @@
 #include <QGraphicsLinearLayout>
 #include <MImageWidget>
 #include "lockscreenheaderwithpadlockview.h"
+#include "lockscreenheader.h"
 #include "clock.h"
 #include "date.h"
 
@@ -70,4 +71,4 @@ void LockScreenHeaderWithPadlockView::applyStyle()
     padlockImageWidget->setVisible(style()->padlockVisible());
 }
 
-M_REGISTER_VIEW_NEW(LockScreenHeaderWithPadlockView, MWidgetController)
+M_REGISTER_VIEW_NEW(LockScreenHeaderWithPadlockView, LockScreenHeader)

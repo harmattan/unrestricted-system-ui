@@ -22,6 +22,7 @@
 #include <MSceneManager>
 #include "lockscreen.h"
 #include "lockscreenview.h"
+#include "lockscreenheader.h"
 
 const QString GCONF_KEY_LANDSCAPE = "/desktop/meego/background/landscape/picture_filename";
 const QString GCONF_KEY_PORTRAIT = "/desktop/meego/background/portrait/picture_filename";
@@ -79,7 +80,7 @@ void LockScreenBackgroundPixmap::destroyPixmap()
 LockScreenView::LockScreenView(MWidgetController* controller) : MWidgetView(controller),
     controller(controller),
     layout(new QGraphicsLinearLayout(Qt::Vertical)),
-    lockScreenHeader(new MWidgetController),
+    lockScreenHeader(new LockScreenHeader),
     landscapePixmap(GCONF_KEY_LANDSCAPE),
     portraitPixmap(GCONF_KEY_PORTRAIT)
 {
@@ -88,8 +89,7 @@ LockScreenView::LockScreenView(MWidgetController* controller) : MWidgetView(cont
     layout->setSpacing(0);
     controller->setLayout(layout);
 
-    // Create a header for the lock screen
-    lockScreenHeader->setViewType("lockScreenHeader");
+    // Add a header for the lock screen
     layout->addItem(lockScreenHeader);
 
     // Update the style name based on whether there are any custom background pixmaps or not

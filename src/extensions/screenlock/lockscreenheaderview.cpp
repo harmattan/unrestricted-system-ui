@@ -20,6 +20,7 @@
 #include <MWidgetController>
 #include <QGraphicsLinearLayout>
 #include "lockscreenheaderview.h"
+#include "lockscreenheader.h"
 #include "statusarea.h"
 #include "clock.h"
 #include "date.h"
@@ -66,4 +67,4 @@ LockScreenHeaderView::~LockScreenHeaderView()
 {
 }
 
-M_REGISTER_VIEW_NEW(LockScreenHeaderView, MWidgetController)
+M_REGISTER_VIEW_NEW(LockScreenHeaderView, LockScreenHeader)

@@ -11,6 +11,7 @@ SOURCES += ut_lockscreenview.cpp \
     $$STUBSDIR/stubbase.cpp \
 
 HEADERS += ut_lockscreenview.h \
+    $$ROOTSRCDIR/extensions/screenlock/lockscreenheader.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreenview.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreenstyle.h
 

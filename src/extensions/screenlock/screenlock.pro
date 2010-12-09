@@ -35,6 +35,7 @@ HEADERS += \
     lockscreenwithpadlockview.h \
     lockscreenstyle.h \
     lockscreen.h \
+    lockscreenheader.h \
     lockscreenheaderview.h \
     lockscreenheaderstyle.h \
     lockscreenheaderwithpadlockview.h \
@@ -53,6 +54,7 @@ SOURCES += \
     lockscreenview.cpp \
     lockscreenwithpadlockview.cpp \
     lockscreen.cpp \
+    lockscreenheader.cpp \
     lockscreenheaderview.cpp \
     lockscreenheaderwithpadlockview.cpp \
     lockscreenstatusareaview.cpp \

@@ -20,6 +20,7 @@
 #include "ut_lockscreenwithpadlockview.h"
 #include "lockscreenwithpadlockview.h"
 #include "lockscreen_stub.h"
+#include "lockscreenheader_stub.h"
 #include "unlockarea_stub.h"
 #include "unlocknotifications_stub.h"
 #include "unlocknotificationsinkstub.h"
