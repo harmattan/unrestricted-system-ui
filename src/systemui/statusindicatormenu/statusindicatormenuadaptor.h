@@ -21,7 +21,7 @@
 #define STATUSINDICATORMENUADAPTOR_H
 
 #include <QDBusAbstractAdaptor>
-#include "statusindicatormenuwindow.h"
+#include "statusindicatormenubusinesslogic.h"
 
 /*
  * Adaptor class for interface com.meego.core.MStatusIndicatorMenu
@@ -38,10 +38,10 @@ class StatusIndicatorMenuAdaptor : QDBusAbstractAdaptor
                 "")
 
 public:
-    StatusIndicatorMenuAdaptor(StatusIndicatorMenuWindow *parent);
+    StatusIndicatorMenuAdaptor(StatusIndicatorMenuBusinessLogic *parent);
 
-    inline StatusIndicatorMenuWindow *parent() const {
-        return static_cast<StatusIndicatorMenuWindow*>(QObject::parent());
+    inline StatusIndicatorMenuBusinessLogic *parent() const {
+        return static_cast<StatusIndicatorMenuBusinessLogic *>(QObject::parent());
     }
 
 public slots:

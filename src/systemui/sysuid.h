@@ -33,7 +33,7 @@ class UsbUi;
 class BatteryBusinessLogic;
 class ShutdownBusinessLogic;
 class StatusAreaRenderer;
-class StatusIndicatorMenuWindow;
+class StatusIndicatorMenuBusinessLogic;
 class NotificationManager;
 class NotificationManagerInterface;
 class MCompositorNotificationSink;
@@ -103,7 +103,7 @@ private:
     StatusAreaRenderer *statusAreaRenderer;
 
     //! Status indicator menu
-    StatusIndicatorMenuWindow *statusIndicatorMenuWindow;
+    StatusIndicatorMenuBusinessLogic *statusIndicatorMenuBusinessLogic;
 
     //! Notification manager interface
     NotificationManager *notificationManager;

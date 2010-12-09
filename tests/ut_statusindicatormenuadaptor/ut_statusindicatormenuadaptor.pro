@@ -20,12 +20,11 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenubusinesslogic.h \
     ut_statusindicatormenuadaptor.h
 
 # service classes
 HEADERS += \
     $$STUBSDIR/stubbase.h \
-    $$STUBSDIR/statusindicatormenuwindow_stub.h 
 
 include(../common_bot.pri)

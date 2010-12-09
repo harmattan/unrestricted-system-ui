@@ -3,6 +3,7 @@ include(../../mconfig.pri)
 INCLUDEPATH += statusindicatormenu
 
 SOURCES += \
+    statusindicatormenu/statusindicatormenubusinesslogic.cpp \
     statusindicatormenu/statusindicatormenuwindow.cpp \
     statusindicatormenu/statusindicatormenuadaptor.cpp \
     statusindicatormenu/notificationarea.cpp \
@@ -12,6 +13,7 @@ SOURCES += \
     statusindicatormenu/statusindicatormenuverticalview.cpp
 
 HEADERS += \
+    statusindicatormenu/statusindicatormenubusinesslogic.h \
     statusindicatormenu/statusindicatormenuwindow.h \
     statusindicatormenu/statusindicatormenuadaptor.h \
     statusindicatormenu/notificationarea.h \

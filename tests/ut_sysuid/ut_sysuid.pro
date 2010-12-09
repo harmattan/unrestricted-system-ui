@@ -56,7 +56,7 @@ HEADERS += \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/statusarea/statusarearendereradaptor.h \
     $$SRCDIR/applicationcontext.h \
-    $$SRCDIR/statusindicatormenu/statusindicatormenuwindow.h \
+    $$SRCDIR/statusindicatormenu/statusindicatormenubusinesslogic.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
     $$SRCDIR/x11wrapper.h \
     $$SRCDIR/closeeventeater.h

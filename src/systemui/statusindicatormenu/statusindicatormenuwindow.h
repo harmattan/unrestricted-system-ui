@@ -66,11 +66,11 @@ public slots:
 
 signals:
     /*!
-     * Signal the current visility status of window
+     * Signals the current visibility of the status indicator menu window.
+     *
      * \param visible true when window is top and false when window is obscured
      */
     void visibilityChanged(bool visible);
-
 
 private slots:
 

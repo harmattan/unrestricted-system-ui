@@ -38,7 +38,7 @@
 #include "sysuidrequest_stub.h"
 #include "shutdownbusinesslogic_stub.h"
 #include "shutdownbusinesslogicadaptor_stub.h"
-#include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenubusinesslogic_stub.h"
 #include "statusindicatormenuadaptor_stub.h"
 #include "mcompositornotificationsink_stub.h"
 #include "unlocknotifications_stub.h"
@@ -202,12 +202,13 @@ void Ut_Sysuid::init()
 void Ut_Sysuid::cleanup()
 {
     delete sysuid;
+    gStatusIndicatorMenuBusinessLogicStub->stubReset();
 }
 
 void Ut_Sysuid::testSignalConnections()
 {
-    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
-    QVERIFY(disconnect(sysuid->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
+    QVERIFY(disconnect(sysuid->statusIndicatorMenuBusinessLogic, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
+    QVERIFY(disconnect(sysuid->statusIndicatorMenuBusinessLogic, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated (const Notification &)), sysuid->mCompositorNotificationSink, SLOT(addNotification (const Notification &))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->mCompositorNotificationSink, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager, SLOT(removeNotification(uint))));
@@ -261,9 +262,9 @@ void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompo
     QFETCH(bool, sinkDisabled);
 
     if(state & 1) {
-        sysuid->statusIndicatorMenuWindow->show();
+        gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", true);
     } else {
-        sysuid->statusIndicatorMenuWindow->hide();
+        gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", false);
     }
     gQmLocksDeviceLock = state & 2;
     gQmLocksScreenLock = state & 4;
@@ -272,6 +273,5 @@ void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompo
     QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setDisabled"), 1);
     QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setDisabled").parameter<bool>(0), sinkDisabled);
 }
-
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

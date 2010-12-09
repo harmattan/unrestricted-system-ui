@@ -17,15 +17,14 @@
 **
 ****************************************************************************/
 
-#include <QtCore>
 #include "statusindicatormenuadaptor.h"
 
-StatusIndicatorMenuAdaptor::StatusIndicatorMenuAdaptor(StatusIndicatorMenuWindow *parent) :
+StatusIndicatorMenuAdaptor::StatusIndicatorMenuAdaptor(StatusIndicatorMenuBusinessLogic *parent) :
     QDBusAbstractAdaptor(parent)
 {
 }
 
 void StatusIndicatorMenuAdaptor::open()
 {
-    parent()->makeVisible();
+    parent()->showStatusIndicatorMenu();
 }

@@ -28,11 +28,12 @@ class StatusIndicatorMenuWindowStub : public StubBase {
 
 // 2. IMPLEMENT STUB
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowConstructor(QWidget *parent) {
-  Q_UNUSED(parent);
-
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QObject * >(parent));
+  stubMethodEntered("StatusIndicatorMenuWindow", params);
 }
 void StatusIndicatorMenuWindowStub::StatusIndicatorMenuWindowDestructor() {
-
+  stubMethodEntered("~StatusIndicatorMenuWindow");
 }
 void StatusIndicatorMenuWindowStub::makeVisible() {
   stubMethodEntered("makeVisible");
@@ -47,9 +48,9 @@ void StatusIndicatorMenuWindowStub::displayInActive() {
 }
 
 bool StatusIndicatorMenuWindowStub::event(QEvent *event) {
-  stubMethodEntered("event");
   QList<ParameterBase*> params;
   params.append( new Parameter<QEvent *>(event));
+  stubMethodEntered("event", params);
   return stubReturnValue<bool>("event");
 }
 
@@ -58,15 +59,15 @@ void StatusIndicatorMenuWindowStub::resetMenuWidget() {
 }
 
 void StatusIndicatorMenuWindowStub::mousePressEvent(QMouseEvent *event) {
-  stubMethodEntered("mousePressEvent");
   QList<ParameterBase*> params;
   params.append( new Parameter<QMouseEvent>(*event));
+  stubMethodEntered("mousePressEvent", params);
 }
 
 void StatusIndicatorMenuWindowStub::mouseReleaseEvent(QMouseEvent *event) {
-  stubMethodEntered("mouseReleaseEvent");
   QList<ParameterBase*> params;
   params.append( new Parameter<QMouseEvent>(*event));
+  stubMethodEntered("mouseReleaseEvent", params);
 }
 
 #ifdef HAVE_QMSYSTEM

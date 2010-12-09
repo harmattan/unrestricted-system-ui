@@ -44,7 +44,7 @@ StatusIndicatorMenuAdaptorStub gDefaultStatusIndicatorMenuAdaptorStub;
 StatusIndicatorMenuAdaptorStub *gStatusIndicatorMenuAdaptorStub = &gDefaultStatusIndicatorMenuAdaptorStub;
 
 
-StatusIndicatorMenuAdaptor::StatusIndicatorMenuAdaptor(StatusIndicatorMenuWindow *parent) :
+StatusIndicatorMenuAdaptor::StatusIndicatorMenuAdaptor(StatusIndicatorMenuBusinessLogic *parent) :
     QDBusAbstractAdaptor(parent)
 {
     gStatusIndicatorMenuAdaptorStub->StatusIndicatorMenuAdaptorConstructor();

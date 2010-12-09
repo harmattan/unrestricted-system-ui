@@ -23,19 +23,19 @@
 #include <MApplicationPage>
 #include <MEscapeButtonPanel>
 #include "statusindicatormenuadaptor.h"
-#include "statusindicatormenuwindow_stub.h"
+#include "statusindicatormenubusinesslogic_stub.h"
 
 void Ut_StatusIndicatorMenuAdaptor::init()
 {
-    menuWindow = new StatusIndicatorMenuWindow();
-    menuAdaptor = new StatusIndicatorMenuAdaptor(menuWindow);
-    gStatusIndicatorMenuWindowStub->stubReset();
+    menuBusinessLogic = new StatusIndicatorMenuBusinessLogic();
+    menuAdaptor = new StatusIndicatorMenuAdaptor(menuBusinessLogic);
+    gStatusIndicatorMenuBusinessLogicStub->stubReset();
 }
 
 void Ut_StatusIndicatorMenuAdaptor::cleanup()
 {
     delete menuAdaptor;
-    delete menuWindow;
+    delete menuBusinessLogic;
 }
 
 void Ut_StatusIndicatorMenuAdaptor::initTestCase()
@@ -58,9 +58,8 @@ void Ut_StatusIndicatorMenuAdaptor::testOpenSignal()
 {
     // When the adaptor open() method is called, the menu window
     // should be made visible via the makeVisible() method call.
-    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 0);
     menuAdaptor->open();
-    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 1);
+    QCOMPARE(gStatusIndicatorMenuBusinessLogicStub->stubCallCount("showStatusIndicatorMenu"), 1);
 }
 
 

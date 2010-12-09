@@ -1,10 +1,10 @@
-/****************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of systemui.
+** This file is part of mhome.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -16,39 +16,38 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef _UT_STATUSINDICATORMENUADAPTOR_
-#define _UT_STATUSINDICATORMENUADAPTOR_
 
-#include <QtTest/QtTest>
+#ifndef UT_STATUSINDICATORMENUBUSINESSLOGIC_H
+#define UT_STATUSINDICATORMENUBUSINESSLOGIC_H
+
 #include <QObject>
 
 class MApplication;
-class StatusIndicatorMenuAdaptor;
 class StatusIndicatorMenuBusinessLogic;
 
-class Ut_StatusIndicatorMenuAdaptor : public QObject
+class Ut_StatusIndicatorMenuBusinessLogic : public QObject
 {
     Q_OBJECT
 
-private:
-    MApplication  *app;
-    StatusIndicatorMenuBusinessLogic *menuBusinessLogic;
-    StatusIndicatorMenuAdaptor *menuAdaptor;
-
 private slots:
-    // Executed once before every test case
+    // Called before the first testfunction is executed
+    void initTestCase();
+    // Called after the last testfunction was executed
+    void cleanupTestCase();
+    // Called before each testfunction is executed
     void init();
-
-    // Executed once after every test case
+    // Called after every testfunction
     void cleanup();
 
-    // Executed once before first test case
-    void initTestCase();
+    // Test cases
+    void testShowStatusIndicatorMenu();
+    void testIsStatusIndicatorMenuVisible();
 
-    // Executed once after last test case
-    void cleanupTestCase();
-
-    void testOpenSignal();
+private:
+    // MApplication
+    MApplication *app;
+    // The object being tested
+    StatusIndicatorMenuBusinessLogic *m_subject;
 };
 
-#endif //_UT_STATUSINDICATORMENUADAPTOR_
+#endif
