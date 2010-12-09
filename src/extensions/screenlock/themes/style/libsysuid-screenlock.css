@@ -29,7 +29,7 @@ LockScreenStyle#LockScreenWithCustomBackground {
 }
 
 /* Padlock view styles */
-MWidgetStyle#LockMostRecentArea {
+LockScreen MWidgetStyle#LockMostRecentArea {
     background-image: "lockscreen-recent-event-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
@@ -39,7 +39,7 @@ MWidgetStyle#LockMostRecentArea {
     maximum-size: 100% 7.9mm;
 }
 
-MWidgetStyle#LockMostRecentLabel {
+LockScreen MWidgetStyle#LockMostRecentLabel {
     color: $COLOR_INVERTED_FOREGROUND;
     font: "Nokia Standard Bold" 28;
     /* or "Nokia Standard Light" ??? */
@@ -47,7 +47,7 @@ MWidgetStyle#LockMostRecentLabel {
     margin-right: $MARGIN_XLARGE;
 }
 
-MImageWidgetStyle#LockMostRecentIcon {
+LockScreen MImageWidgetStyle#LockMostRecentIcon {
     margin-top: 1.2mm;
     margin-left: 2.9mm;
     margin-right: $MARGIN_DOUBLE;
@@ -57,7 +57,7 @@ MImageWidgetStyle#LockMostRecentIcon {
     maximum-size: 3.6mm 3.6mm;
 }
 
-MWidgetStyle#LockOtherEventsArea {
+LockScreen MWidgetStyle#LockOtherEventsArea {
     background-image: "lockscreen-notification-area-background" 12 12 12 12;
     background-opacity: 1.0;
 
@@ -66,7 +66,7 @@ MWidgetStyle#LockOtherEventsArea {
     maximum-size: 100% 7mm;
 }
 
-MImageWidgetStyle#LockNotifierIcon {
+LockScreen MImageWidgetStyle#LockNotifierIcon {
     margin-top: 1.2mm;
     margin-left: 2.9mm;
 
@@ -75,7 +75,7 @@ MImageWidgetStyle#LockNotifierIcon {
     maximum-size: 3.6mm 3.6mm;
 }
 
-MLabelStyle#LockNotifierLabel {
+LockScreen MLabelStyle#LockNotifierLabel {
     color: $COLOR_INVERTED_FOREGROUND;
     font: "Nokia Standard Light" 28;
 
@@ -114,7 +114,7 @@ LockScreenHeaderWithPadlockStyle#LockLiftAreaWithPadlock {
     font: "Nokia Standard Light" 20;
 }
 
-MImageWidgetStyle#lockscreenIconLocked {
+LockScreen MImageWidgetStyle#lockscreenIconLocked {
     background-image: "lockscreen-lock";
     background-opacity: 1.0;
 
@@ -126,25 +126,25 @@ MImageWidgetStyle#lockscreenIconLocked {
     maximum-size:   10mm 10mm;
 }
 
-MWidgetStyle#LockLandArea {
+LockScreen MWidgetStyle#LockLandArea {
     background-image: none;
 
     minimum-size: 100% 100;
 }
 
-MWidgetStyle#LockLandAreaDragged {
+LockScreen MWidgetStyle#LockLandAreaDragged {
     background-image: "lockscreen-lock-land-area-background-dragged" 25 25 25 25;
 
     minimum-size: 100% 100;
 }
 
-MWidgetStyle#LockLandAreaActive {
+LockScreen MWidgetStyle#LockLandAreaActive {
     background-image: "lockscreen-lock-land-area-background-active" 25 25 25 25;
 
     minimum-size: 100% 100;
 }
 
-#LockScreenDnDIcon {
+LockScreen #LockScreenDnDIcon {
     background-image: "lockscreen-lock";
     background-opacity: 1.0;
 
@@ -153,7 +153,7 @@ MWidgetStyle#LockLandAreaActive {
     maximum-size: 13.8mm 13.8mm;
 }
 
-#LockScreenDnDIconActive {
+LockScreen #LockScreenDnDIconActive {
     background-image: "lockscreen-lock-active";
     background-opacity: 1.0;
 
@@ -162,7 +162,7 @@ MWidgetStyle#LockLandAreaActive {
     maximum-size: 13.8mm 13.8mm;
 }
 
-MImageWidgetStyle#LockScreenUnlockIcon {
+LockScreen MImageWidgetStyle#LockScreenUnlockIcon {
     background-image: "lockscreen-lock-land-area-center-background";
     background-opacity: 1.0;
 
@@ -221,7 +221,7 @@ ClockStyle#LockScreenHeaderClock:twelve-hour {
     time-format: "%r";
     short-remove-am-pm-indicator: true;
 }
-MLabelStyle#LockScreenHeaderClockLabel {
+LockScreen MLabelStyle#LockScreenHeaderClockLabel {
     font: $FONT_FAMILY light 8.1mm;
     color: #FFFFFF;
     margin-left: 0;
@@ -242,7 +242,7 @@ DateStyle {
     horizontal-align: left;
 }
 
-MLabelStyle#DateLabel {
+LockScreen MLabelStyle#DateLabel {
     font: $FONT_SMALL;
     color: #ffffff;
     margin-left: 2.2mm;

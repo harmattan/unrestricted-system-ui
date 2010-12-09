@@ -52,7 +52,7 @@ LockScreenWithPadlockView::LockScreenWithPadlockView(MWidgetController* controll
     notificationArea->setVisible(false);
 
     // Connect the notification signals for the unlock screen notification sink
-    QObject *notificationManager = dynamic_cast<QObject *>(ScreenLockExtension::instance()->notificationManagerInterface());
+    QObject *notificationManager = ScreenLockExtension::instance()->notificationManagerInterface()->qObject();
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationSink, SLOT(removeNotification(uint)));
     connect(notificationArea, SIGNAL(needToShow(bool)), this, SLOT(showHideNotifications(bool)), Qt::DirectConnection);

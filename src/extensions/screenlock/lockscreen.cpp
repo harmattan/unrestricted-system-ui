@@ -18,6 +18,7 @@
  ****************************************************************************/
 #include "lockscreen.h"
 #include <MApplication>
+#include <MWidgetCreator>
 
 LockScreen::LockScreen(QGraphicsItem *parent) :
     MWidgetController(parent)
@@ -42,3 +43,5 @@ void LockScreen::reset()
 {
     emit resetRequested();
 }
+
+M_REGISTER_WIDGET(LockScreen)
