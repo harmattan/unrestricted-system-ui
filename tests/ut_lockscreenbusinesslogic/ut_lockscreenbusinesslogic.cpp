@@ -67,8 +67,6 @@ void Ut_LockScreenBusinessLogic::cleanup()
 
 void Ut_LockScreenBusinessLogic::initTestCase()
 {
-    m_MainWindow = 0;
-
     static int argc = 1;
     static char *argv = (char *) "./ut_lockscreenbusinesslogic";
     m_App = new MApplication(argc, &argv);
@@ -79,9 +77,6 @@ void Ut_LockScreenBusinessLogic::initTestCase()
 
 void Ut_LockScreenBusinessLogic::cleanupTestCase()
 {
-    if (m_MainWindow)
-        delete m_MainWindow;
-
     m_App->deleteLater ();
 }
 
@@ -98,7 +93,6 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
     // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
     logic.toggleScreenLockUI(true);
-    QTest::qWait (10);
 #ifdef HAVE_QMSYSTEM
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), true);
@@ -133,7 +127,6 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);
-    QTest::qWait (10);
     QCOMPARE(logic.screenLockWindow->isVisible(), false);
 }
 
@@ -143,13 +136,11 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
 
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
-    QTest::qWait (10);
     QCOMPARE(logic.eventEaterWindow->isVisible(), true);
     // XXX: Stub not really allows us to test this:
     // QCOMPARE(logic.eventEaterWindow->isFullScreen(), true);
 
     logic.toggleEventEater(false);
-    QTest::qWait (10);
     QCOMPARE(logic.eventEaterWindow->isVisible(), false);
 }
 
@@ -161,13 +152,12 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
     logic.unlockScreen();
 #ifdef HAVE_QMSYSTEM
     logic.locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Unlocked);
-    QTest::qWait (10);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toBool(), false);
 #else
     spy.clear ();
 #endif
-    QCOMPARE(logic.screenLockWindow->isVisible(), false);
+    QVERIFY(logic.screenLockWindow == NULL);
 }
 
 void Ut_LockScreenBusinessLogic::testHideEventEater()
@@ -175,8 +165,7 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
     ScreenLockBusinessLogic logic;
 
     logic.hideEventEater();
-    QTest::qWait (10);
-    QCOMPARE(logic.eventEaterWindow->isVisible(), false);
+    QVERIFY(logic.eventEaterWindow == NULL);
 }
 
 #ifdef HAVE_QMSYSTEM

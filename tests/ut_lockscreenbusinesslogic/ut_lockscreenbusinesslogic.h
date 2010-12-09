@@ -43,7 +43,6 @@ private slots:
 #endif
 
 private:
-    MApplicationWindow       *m_MainWindow;
     MApplication             *m_App;
 };
 

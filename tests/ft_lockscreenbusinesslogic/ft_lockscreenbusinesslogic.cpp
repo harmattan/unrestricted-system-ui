@@ -102,10 +102,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     Window EventEaterWindowID;
 
     /*
-     * Once it is constructed the two UI elements must already be there.
+     * Once it is constructed the two UI elements should not be there.
      */
-    QVERIFY (m_LockScreenBusinessLogic->screenLockWindow != NULL);
-    QVERIFY (m_LockScreenBusinessLogic->screenLockWindow != NULL);
+    QVERIFY (m_LockScreenBusinessLogic->screenLockWindow == NULL);
+    QVERIFY (m_LockScreenBusinessLogic->eventEaterWindow == NULL);
 
     /*
      *
@@ -115,7 +115,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (true);
     QTest::qWait (WMDelay);
-    LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
     EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
     QVERIFY (m_XChecker.checkWindow (
@@ -124,9 +123,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     QVERIFY (m_XChecker.checkWindow (
                 EventEaterWindowID,
                 XChecker::CheckIsFullscreen));
-    QVERIFY (m_XChecker.checkWindow (
-                LockScreenUIWindowID,
-                XChecker::CheckIsInvisible));
 
     QTest::qWait (DelayBetweenTests);
 
@@ -138,14 +134,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (false);
     QTest::qWait (WMDelay);
-    LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
     EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,
-                XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.checkWindow(
-                LockScreenUIWindowID,
                 XChecker::CheckIsInvisible));
 
     QTest::qWait (DelayBetweenTests);
@@ -159,11 +151,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     m_LockScreenBusinessLogic->toggleScreenLockUI (true);
     QTest::qWait (WMDelay);
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsVisible));
@@ -182,11 +170,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     m_LockScreenBusinessLogic->toggleScreenLockUI (false);
     QTest::qWait (WMDelay);
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsInvisible));
@@ -214,10 +198,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("*** MainWindowID    = 0x%lx", MWindowID);
 
     /*
-     * Once it is constructed the two UI elements must already be there.
+     * Once it is constructed the two UI elements should not be there.
      */
-    QVERIFY (m_LockScreenBusinessLogic->screenLockWindow != NULL);
-    QVERIFY (m_LockScreenBusinessLogic->eventEaterWindow != NULL);
+    QVERIFY (m_LockScreenBusinessLogic->screenLockWindow == NULL);
+    QVERIFY (m_LockScreenBusinessLogic->eventEaterWindow == NULL);
 
     /*
      *
@@ -227,7 +211,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (true);
     QTest::qWait (WMDelay);
-    LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
     EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
     QVERIFY (m_XChecker.checkWindow(
@@ -236,9 +219,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,
                 XChecker::CheckIsFullscreen));
-    QVERIFY (m_XChecker.checkWindow(
-                LockScreenUIWindowID,
-                XChecker::CheckIsInvisible));
 
     QTest::qWait (DelayBetweenTests);
 
@@ -250,14 +230,10 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (false);
     QTest::qWait (WMDelay);
-    LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
     EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,
-                XChecker::CheckIsInvisible));
-    QVERIFY (m_XChecker.checkWindow(
-                LockScreenUIWindowID,
                 XChecker::CheckIsInvisible));
 
     QTest::qWait (DelayBetweenTests);
@@ -271,11 +247,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     m_LockScreenBusinessLogic->toggleScreenLockUI (true);
     QTest::qWait (WMDelay);
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsVisible));
@@ -294,11 +266,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     m_LockScreenBusinessLogic->toggleScreenLockUI (false);
     QTest::qWait (WMDelay);
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsInvisible));
@@ -320,7 +288,6 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
 {
     MeeGo::QmLocks locks;
     Window  LockScreenUIWindowID;
-    Window  EventEaterWindowID;
 
     /*
      * Locking the screen first.
@@ -353,11 +320,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
      * Now that the screen is on the lockscreenUI should be up and visible.
      */
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsVisible));
@@ -377,11 +340,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithLocking ()
     m_LockScreenBusinessLogic->toggleScreenLockUI (false);
     QTest::qWait (WMDelay);
     LockScreenUIWindowID = m_LockScreenBusinessLogic->screenLockWindow->internalWinId();
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
 
-    QVERIFY (m_XChecker.checkWindow(
-                EventEaterWindowID,
-                XChecker::CheckIsInvisible));
     QVERIFY (m_XChecker.checkWindow(
                 LockScreenUIWindowID,
                 XChecker::CheckIsInvisible));
