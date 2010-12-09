@@ -87,7 +87,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
     } else {
          // Create and set up info banner widget
         MBanner *banner = createInfoBanner(notification);
-        banner->setStyleName(banner->objectName());
+        banner->setStyleName(banner->objectName() == "EventBanner" ? "ShortEventBanner" : "SystemBanner");
         banner->setIconID(determinePreviewIconId(notification.parameters()));
         banner->setProperty("notificationId", notification.notificationId());
         banner->setProperty("timeout", notification.timeout());

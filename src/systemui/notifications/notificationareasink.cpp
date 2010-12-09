@@ -58,6 +58,9 @@ void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
     // Don't allow the scene manager to destroy the banner
     infoBanner->setManagedManually(true);
 
+    // Since the notification area only shows event banners, set the style name
+    infoBanner->setStyleName("FullEventBanner");
+
     // Catch clicks and send signal that a banner was clicked.
     connect(infoBanner, SIGNAL(clicked()), this, SIGNAL(bannerClicked()), Qt::QueuedConnection);
 }
