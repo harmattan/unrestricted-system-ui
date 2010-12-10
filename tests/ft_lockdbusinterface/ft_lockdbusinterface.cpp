@@ -367,7 +367,7 @@ Ft_LockDBusInterface::checkLockIsVisible ()
     bool windowVisible;
         
     windowVisible = m_XChecker.checkWindow (
-            "LockScreenUI", 
+            "Screen Lock",
             XChecker::CheckIsVisible);
 
     //m_XChecker.debug_dump_windows ();
@@ -380,7 +380,7 @@ Ft_LockDBusInterface::checkLockIsInvisible ()
     bool windowInVisible;
         
     windowInVisible = m_XChecker.checkWindow (
-            "LockScreenUI", 
+            "Screen Lock",
             XChecker::CheckIsInvisible);
     //m_XChecker.debug_dump_windows ();
     QVERIFY (windowInVisible);
