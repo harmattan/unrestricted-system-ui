@@ -27,8 +27,7 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     ut_sysuid.h \
-    $$STUBSDIR/volumebarwindow_stub.h \
-    $$SRCDIR/volumecontrol/volumebarwindow.h \
+    $$SRCDIR/volumecontrol/volumebarlogic.h \
     $$SRCDIR/shutdownui.h \
     $$SRCDIR/usbui.h \
     $$ROOTSRCDIR/extensions/screenlock/lockscreen.h \

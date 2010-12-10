@@ -37,7 +37,7 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "notifiernotificationsink.h"
-#include "volumebarwindow.h"
+#include "volumebarlogic.h"
 #include "closeeventeater.h"
 #include <QX11Info>
 
@@ -132,15 +132,13 @@ Sysuid::Sysuid(QObject* parent) :
 #endif
     updateCompositorNotificationSinkEnabledStatus();
 
-    // Instantiate the volume-control UI
-    volumeBarWindow = new VolumeBarWindow;
-    volumeBarWindow->installEventFilter(new CloseEventEater(this));
+    // Instantiate the volume control logic
+    volumeBarLogic = new VolumeBarLogic(this);
 }
 
 Sysuid::~Sysuid()
 {
     delete sysUidRequest;
-    delete volumeBarWindow;
     delete notifierNotificationSink_;
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;

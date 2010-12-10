@@ -1,20 +1,15 @@
 include(../coverage.pri)
 include(../common_top.pri)
 TARGET = ut_volumebarwindow
-
  
 INCLUDEPATH +=  \
                $$LIBNOTIFICATIONSRCDIR \
-               $$SRCDIR/volumecontrol \
-               /usr/include/resource/qt4
+               $$SRCDIR/volumecontrol
 
 CONFIG += link_pkgconfig
-
 PKGCONFIG += libresourceqt1
-PKGCONFIG += qmsystem2
 
-STYLE_HEADERS += \
-    $$SRCDIR/volumecontrol/volumebarstyle.h
+STYLE_HEADERS += $$SRCDIR/volumecontrol/volumebarstyle.h
 
 HEADERS += \
     ut_volumebarwindow.h \
@@ -23,9 +18,9 @@ HEADERS += \
     $$SRCDIR/volumecontrol/volumebar.h \
     $$STYLE_HEADERS
 
-
 SOURCES += \
     ut_volumebarwindow.cpp \
-    $$SRCDIR/volumecontrol/volumebarwindow.cpp
+    $$SRCDIR/volumecontrol/volumebarwindow.cpp \
+    $$STUBSDIR/stubbase.cpp
 
 include(../common_bot.pri)

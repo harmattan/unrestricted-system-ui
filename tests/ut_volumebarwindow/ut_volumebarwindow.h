@@ -19,13 +19,11 @@
 #ifndef UT_VOLUMEBARWINDOW_H
 #define UT_VOLUMEBARWINDOW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class MApplication;
 class VolumeBarWindow;
 class VolumeBarLogic;
-class VolumeBar;
 
 class Ut_VolumeBarWindow: public QObject {
     Q_OBJECT
@@ -36,13 +34,12 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-#ifdef HAVE_QMSYSTEM
-    void testHwKeyEvent();
-#endif
+    void testUpdateVolume();
     void testVolumeBarChanged();
 
 private:
     MApplication *app;
+    VolumeBarLogic *volumeBarLogic;
     VolumeBarWindow *volumeBarWindow;
 };
 

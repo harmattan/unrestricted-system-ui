@@ -17,9 +17,11 @@
 **
 ****************************************************************************/
 #include "volumebarlogic.h"
+#include "volumebarwindow.h"
+#include "closeeventeater.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <dbus/dbus-glib-lowlevel.h>
 
 #include <QTimer>
@@ -40,21 +42,42 @@
 #define VOLUME_PATH  "/com/meego/mainvolume1"
 #define VOLUME_IF    "com.Nokia.MainVolume1"
 
-VolumeBarLogic::VolumeBarLogic () :
-    QObject (),
+VolumeBarLogic::VolumeBarLogic(QObject *parent) :
+    QObject(parent),
+    volumeBarWindow(NULL),
     dbus_conn (NULL),
     currentvolume (0),
     currentmax (0)
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    ,hwkeys(new MeeGo::QmKeys(this))
+#endif
 {
     openConnection (true);
+
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    hwkeyResource = new ResourcePolicy::ResourceSet("event");
+    hwkeyResource->setAlwaysReply();
+
+    ResourcePolicy::ScaleButtonResource *volumeKeys = new ResourcePolicy::ScaleButtonResource;
+    hwkeyResource->addResourceObject(volumeKeys);
+    connect(hwkeyResource, SIGNAL(resourcesGranted(QList<ResourcePolicy::ResourceType>)), this, SLOT(hwKeyResourceAcquired()));
+    connect(hwkeyResource, SIGNAL(lostResources()), this, SLOT(hwKeyResourceLost()));
+
+    hwkeyResource->acquire();
+#endif
 }
 
 VolumeBarLogic::~VolumeBarLogic ()
 {
     if (dbus_conn) {
         dbus_connection_unref (dbus_conn);
-        dbus_conn = 0;
     }
+
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    hwkeyResource->deleteResource(ResourcePolicy::ScaleButtonType);
+#endif
+
+    delete volumeBarWindow;
 }
 
 void VolumeBarLogic::openConnection (bool init)
@@ -308,3 +331,65 @@ void VolumeBarLogic::ping ()
     stepsUpdated (currentvolume, currentmax);
 }
 
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+void VolumeBarLogic::hwKeyEvent(MeeGo::QmKeys::Key key, MeeGo::QmKeys::State state)
+{
+    if (state == MeeGo::QmKeys::KeyUp) {
+        // Do nothing on key releases
+        return;
+    }
+
+    int volumeChange = 0;
+    switch (key) {
+    case MeeGo::QmKeys::VolumeUp:
+        volumeChange = 1;
+        break;
+    case MeeGo::QmKeys::VolumeDown:
+        volumeChange = -1;
+        break;
+    default:
+        // no-op for other hw keys
+        return;
+    }
+
+    int volume = currentvolume + volumeChange;
+
+    // Keep the volume within limits
+    if (volume >= (int)currentmax) {
+        volume = currentmax - 1;
+    } else if (volume < 0) {
+        volume = 0;
+    }
+
+    // Take the new volume into use
+    setVolume(volume);
+
+    // Create the volume bar window if it does not exist yet
+    if (volumeBarWindow == NULL) {
+        volumeBarWindow = new VolumeBarWindow(this);
+        volumeBarWindow->installEventFilter(new CloseEventEater(this));
+    }
+
+    // Show the volume bar if the window is not visible
+    if (!volumeBarWindow->isVisible()) {
+        volumeBarWindow->show();
+    }
+    volumeBarWindow->raise();
+
+    // Update the volume bar geometry
+    volumeBarWindow->updateVolume();
+}
+
+void VolumeBarLogic::hwKeyResourceAcquired()
+{
+    // Disconnect from everything first
+    hwkeys->disconnect ();
+
+    connect(hwkeys, SIGNAL (keyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)), this, SLOT (hwKeyEvent (MeeGo::QmKeys::Key, MeeGo::QmKeys::State)));
+}
+
+void VolumeBarLogic::hwKeyResourceLost()
+{
+    hwkeys->disconnect();
+}
+#endif

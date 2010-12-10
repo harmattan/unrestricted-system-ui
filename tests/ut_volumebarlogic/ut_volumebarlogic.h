@@ -19,10 +19,9 @@
 #ifndef UT_VOLUMEBARLOGIC_H
 #define UT_VOLUMEBARLOGIC_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-class QCoreApplication;
+class MApplication;
 class VolumeBarLogic;
 
 class Ut_VolumeBarLogic : public QObject
@@ -33,14 +32,18 @@ private slots:
     void init ();
     void cleanup ();
     void initTestCase ();
+    void cleanupTestCase ();
     void testInitValues ();
     void testVolumeSetGet ();
     void testVolumeChangeByPa ();
     void testSignaling ();
     void testPing ();
-    void cleanupTestCase ();
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    void testHwKeyEvent();
+#endif
     
 private:
+    MApplication *app;
     VolumeBarLogic *volumeBarLogic;
     void resetStubs ();
 

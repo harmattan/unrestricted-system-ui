@@ -41,7 +41,7 @@ class NGFNotificationSink;
 class UnlockNotificationSink;
 class NotifierNotificationSink;
 class SysUidRequest;
-class VolumeBarWindow;
+class VolumeBarLogic;
 
 class Sysuid : public QObject
 {
@@ -120,8 +120,8 @@ private:
     //! The system-bus adaptor class for unlock-screen interface
     SysUidRequest *sysUidRequest;
 
-    //! The volume-control ui
-    VolumeBarWindow *volumeBarWindow;
+    //! The volume control logic
+    VolumeBarLogic *volumeBarLogic;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

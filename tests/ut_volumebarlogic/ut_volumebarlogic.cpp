@@ -16,13 +16,78 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
+#include <QDBusConnection>
+#include <MApplication>
+#include <MApplicationService>
+#include <MWindow>
+#include <MGConfItem>
+#include <mcomponentdata.h>
+#include <mfeedbackplayer.h>
 #include "ut_volumebarlogic.h"
-#include <volumebarlogic.h>
+#include "volumebarlogic.h"
+#include "volumebarwindow_stub.h"
+#include "closeeventeater_stub.h"
 extern "C"
 {
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib-lowlevel.h>
 }
+
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+#include <policy/resource-set.h>
+/*********************************************************************************
+ * Stub for ResourcePolicy
+ */
+
+namespace ResourcePolicy
+{
+    ResourceSet::ResourceSet(const QString&, QObject*)
+    {
+    }
+
+    bool ResourceSet::setAlwaysReply ()
+    {
+        return true;
+    }
+
+    ScaleButtonResource::ScaleButtonResource()
+    {
+    }
+
+    void ResourceSet::addResourceObject (ResourcePolicy::Resource* rsc)
+    {
+        Q_UNUSED(rsc);
+        return;
+    }
+
+    bool ResourceSet::acquire ()
+    {
+        return true;
+    }
+
+    void ResourceSet::deleteResource (ResourcePolicy::ResourceType)
+    {
+        return;
+    }
+}
+
+#include <qmkeys.h>
+/*********************************************************************************
+ * Stub for MeeGo::QmKeys
+ */
+namespace MeeGo
+{
+    QmKeys::QmKeys(QObject *parent)
+    {
+        Q_UNUSED(parent);
+    }
+
+    QmKeys::~QmKeys()
+    {
+    }
+}
+#endif
 
 bool Ut_VolumeBarLogic::dbus_message_new_method_call = false;
 bool Ut_VolumeBarLogic::dbus_message_append_args = false;
@@ -165,21 +230,78 @@ extern "C" {
         Ut_VolumeBarLogic::dbus_connection_get_is_connected = true;
         return 0;
     }
+
+    DBusDispatchStatus dbus_connection_get_dispatch_status (DBusConnection *)
+    {
+        return DBUS_DISPATCH_COMPLETE;
+    }
 }
 
-void Ut_VolumeBarLogic::init ()
+bool QDBusConnection::isConnected() const
+{
+    return true;
+}
+
+void MApplicationService::handleServiceRegistrationFailure()
 {
 }
 
-void Ut_VolumeBarLogic::cleanup ()
+MWindow::MWindow(QWidget *) : d_ptr(NULL)
 {
+}
+
+MWindow::~MWindow()
+{
+}
+
+void MWindow::setVisible(bool)
+{
+}
+
+MGConfItem::MGConfItem(const QString &, QObject *parent) : QObject(parent)
+{
+}
+
+MGConfItem::~MGConfItem()
+{
+}
+
+QVariant MGConfItem::value(const QVariant &def) const
+{
+    return def;
+}
+
+QVariant MGConfItem::value() const
+{
+    return QVariant();
+}
+
+QString MGConfItem::key() const
+{
+    return QString();
 }
 
 void Ut_VolumeBarLogic::initTestCase ()
 {
+    static int argc = 2;
+    static char *argv[] = { (char *)"./ut_volumebarwindow", (char *)"-disable-m-input-context", 0 };
+    app = new MApplication(argc, argv);
+}
+
+void Ut_VolumeBarLogic::cleanupTestCase ()
+{
+}
+
+void Ut_VolumeBarLogic::init ()
+{
     volumeBarLogic = new VolumeBarLogic;
     volumeBarLogic->stepsUpdated (30, 100);
     resetStubs();
+}
+
+void Ut_VolumeBarLogic::cleanup ()
+{
+    delete volumeBarLogic;
 }
 
 void Ut_VolumeBarLogic::testInitValues()
@@ -252,11 +374,6 @@ void Ut_VolumeBarLogic::testPing()
     QCOMPARE (arguments.at (1).toUInt (), volumeBarLogic->maxVolume ());
 }
 
-void Ut_VolumeBarLogic::cleanupTestCase ()
-{
-    delete volumeBarLogic;
-}
-
 void Ut_VolumeBarLogic::resetStubs()
 {
     counter = 0;
@@ -270,4 +387,34 @@ void Ut_VolumeBarLogic::resetStubs()
     dbus_connection_get_is_connected = false;
 }
 
-QTEST_MAIN(Ut_VolumeBarLogic)
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+void Ut_VolumeBarLogic::testHwKeyEvent()
+{
+    // when current_volume >= max_volume
+    volumeBarLogic->setVolume(120);
+    volumeBarLogic->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
+    QCOMPARE(volumeBarLogic->volume(), 99u);
+
+    // Turn up the volume
+    volumeBarLogic->setVolume(20);
+    volumeBarLogic->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyDown);
+    QCOMPARE(volumeBarLogic->volume(), 21u);
+
+    // Turn down the volume
+    volumeBarLogic->setVolume(20);
+    volumeBarLogic->hwKeyEvent(MeeGo::QmKeys::VolumeDown, MeeGo::QmKeys::KeyDown);
+    QCOMPARE(volumeBarLogic->volume(), 19u);
+
+    volumeBarLogic->setVolume(20);
+    volumeBarLogic->hwKeyEvent(MeeGo::QmKeys::VolumeUp, MeeGo::QmKeys::KeyUp);
+    QCOMPARE(volumeBarLogic->volume(), 20u);
+
+    // push some other hw key
+    volumeBarLogic->setVolume(20);
+    volumeBarLogic->hwKeyEvent(MeeGo::QmKeys::Camera, MeeGo::QmKeys::KeyDown);
+    QCOMPARE(volumeBarLogic->volume(), 20u);
+}
+#endif
+
+
+QTEST_APPLESS_MAIN(Ut_VolumeBarLogic)

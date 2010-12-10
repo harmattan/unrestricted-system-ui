@@ -22,6 +22,13 @@
 #include <QObject>
 #include <dbus/dbus.h>
 
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+#include <policy/resource-set.h>
+#include <qmkeys.h>
+#endif
+
+class VolumeBarWindow;
+
 //! Provides informations and actions on PulseAudio MainVolume API
 class VolumeBarLogic : public QObject
 {
@@ -29,9 +36,9 @@ Q_OBJECT
 
 public:
     //! Construct a VolumeBarLogic instance
-    VolumeBarLogic ();
+    VolumeBarLogic (QObject *parent = NULL);
     //! Destructs a VolumeBarLogic instance
-    ~VolumeBarLogic ();
+    virtual ~VolumeBarLogic ();
 
     //! get the current volume-level value
     quint32 volume ();
@@ -61,6 +68,22 @@ private slots:
     //! an internal method which queries the actual values from PulseAudio
     void initValues ();
 
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    /*!
+     * Internal slot to handle the hardware volume-key presses (see QmKeys API documentation)
+     *
+     * \param key the key type
+     * \param state the key new state
+     */
+    void hwKeyEvent (MeeGo::QmKeys::Key key, MeeGo::QmKeys::State state);
+
+    //! An internal slot to handle the case when we got the hardware volume keys resource
+    void hwKeyResourceAcquired();
+
+    //! An internal slot to handle the case when we lost the hardware volume keys resource
+    void hwKeyResourceLost();
+#endif
+
 private:
     Q_DISABLE_COPY(VolumeBarLogic)
 
@@ -85,6 +108,9 @@ private:
      */
     static void stepsUpdatedSignal (DBusConnection *conn, DBusMessage *message, VolumeBarLogic *logic);
 
+    //! Volume bar window
+    VolumeBarWindow *volumeBarWindow;
+
     //! A member for accessing D-Bus connection structure
     DBusConnection  *dbus_conn;
 
@@ -92,6 +118,14 @@ private:
     quint32     currentvolume;
     //! The stepcount of volume
     quint32     currentmax;
+
+#if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
+    //! an QmKeys instance to get signals about volume-key presses
+    MeeGo::QmKeys *hwkeys;
+
+    //! A resource object for volume(zoom)-hardware keys
+    ResourcePolicy::ResourceSet *hwkeyResource;
+#endif
 
 #ifdef UNIT_TEST
 friend class Ut_VolumeBarLogic;
