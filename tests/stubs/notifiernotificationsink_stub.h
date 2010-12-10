@@ -27,7 +27,7 @@
 // FIXME - stubgen is not yet finished
 class NotifierNotificationSinkStub : public StubBase {
   public:
-  virtual void NotifierNotificationSinkConstructor();
+  virtual void NotifierNotificationSinkConstructor(QObject *parent);
   virtual void NotifierNotificationSinkDestructor();
   virtual void addGroup(uint groupId, const NotificationParameters &parameters);
   virtual void removeGroup(uint groupId);
@@ -41,7 +41,7 @@ class NotifierNotificationSinkStub : public StubBase {
 };
 
 // 2. IMPLEMENT STUB
-void NotifierNotificationSinkStub::NotifierNotificationSinkConstructor() {
+void NotifierNotificationSinkStub::NotifierNotificationSinkConstructor(QObject *) {
 
 }
 void NotifierNotificationSinkStub::NotifierNotificationSinkDestructor() {
@@ -102,8 +102,8 @@ NotifierNotificationSinkStub* gNotifierNotificationSinkStub = &gDefaultNotifierN
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-NotifierNotificationSink::NotifierNotificationSink() {
-  gNotifierNotificationSinkStub->NotifierNotificationSinkConstructor();
+NotifierNotificationSink::NotifierNotificationSink(QObject *parent) : NotificationSink(parent) {
+  gNotifierNotificationSinkStub->NotifierNotificationSinkConstructor(parent);
 }
 
 NotifierNotificationSink::~NotifierNotificationSink() {

@@ -23,7 +23,8 @@
 
 const QString NotifierNotificationSink::NOTIFIER_NGF_ID = "notifier";
 
-NotifierNotificationSink::NotifierNotificationSink() :
+NotifierNotificationSink::NotifierNotificationSink(QObject *parent) :
+    NotificationSink(parent),
     ngfAdapter(new NGFAdapter),
     additionsDisabled(false),
     ngfEventId(0),

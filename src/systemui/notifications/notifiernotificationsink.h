@@ -39,8 +39,10 @@ class NotifierNotificationSink : public NotificationSink
 public:
     /*!
      * Creates a notifier notification sink.
+     *
+     * \param parent the parent object
      */
-    NotifierNotificationSink();
+    NotifierNotificationSink(QObject *parent = NULL);
 
     /*!
      * Destroys the NotifierNotificationSink.
