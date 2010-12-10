@@ -19,15 +19,11 @@
 #ifndef _UT_NOTIFICATIONSTATUSINDICATOR_
 #define _UT_NOTIFICATIONSTATUSINDICATOR_
 
-#include <QtGui>
 #include <QtTest/QtTest>
 #include <QObject>
 #include "notificationstatusindicator.h"
-#include "notifiernotificationsink.h"
 
 class MApplication;
-class NotificationManager;
-class MCompositorNotificationSink;
 
 class Ut_NotificationStatusIndicator : public QObject
 {
@@ -36,8 +32,6 @@ class Ut_NotificationStatusIndicator : public QObject
 private:
     MApplication  *app;
     NotificationStatusIndicator *m_subject;
-    NotificationManager *mgr;
-    MCompositorNotificationSink *compositorSink;
 
 signals:
     void notifierSinkActive(bool);

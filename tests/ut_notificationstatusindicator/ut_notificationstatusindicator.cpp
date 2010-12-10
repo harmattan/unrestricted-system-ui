@@ -18,47 +18,27 @@
 ****************************************************************************/
 
 #include "ut_notificationstatusindicator.h"
-#include "notification_stub.h"
-#include "statusindicator.h"
-#include <mapplication.h>
-#include "sysuid_stub.h"
-#include "notificationsink_stub.h"
-#include "notifiernotificationsink_stub.h"
-#include "mcompositornotificationsink_stub.h"
-#include "notificationmanager_stub.h"
-#include "widgetnotificationsink_stub.h"
-#include "inputmethodstatusindicatoradaptor_stub.h"
-#include "notificationgroup_stub.h"
-#include "eventtypestore_stub.h"
+#include <MApplication>
 
 void Ut_NotificationStatusIndicator::init()
 {
-    mgr = new NotificationManager;
-    compositorSink = new MCompositorNotificationSink;
-    gSysuidStub->stubSetReturnValue("compositorNotificationSink", compositorSink);
-    gSysuidStub->stubSetReturnValue("notificationManager", mgr);
     m_subject = new NotificationStatusIndicator;
 }
 
 void Ut_NotificationStatusIndicator::cleanup()
 {
-    gNotifierNotificationSinkStub->stubReset();
-    delete mgr;
-    delete compositorSink;
     delete m_subject;
 }
 
 void Ut_NotificationStatusIndicator::initTestCase()
 {
-    // MApplications must be created manually these days due to theme system changes
     static int argc = 1;
-    static char *app_name = (char *)"./Ut_NotificationStatusIndicator";
+    static char *app_name = (char *)"./ut_notificationstatusindicator";
     app = new MApplication(argc, &app_name);
 }
 
 void Ut_NotificationStatusIndicator::cleanupTestCase()
 {
-    // Destroy the MApplication
     delete app;
 }
 

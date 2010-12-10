@@ -8,28 +8,14 @@ MODEL_HEADERS += $$SRCDIR/statusarea/statusindicatormodel.h
 
 # unit test and unit classes
 HEADERS += ut_notificationstatusindicator.h \
-   $$SRCDIR/statusarea/notificationstatusindicator.h \
-   $$SRCDIR/statusarea/statusindicator.h \
-   $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
-   $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
-   $$NOTIFICATIONSRCDIR/mcompositornotificationsink.h \
-   $$NOTIFICATIONSRCDIR/widgetnotificationsink.h \
-   $$SRCDIR/sysuid.h \
-   $$SRCDIR/statusarea/statusindicatormodel.h \
-   $$NOTIFICATIONSRCDIR/notificationmanager.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
-   $$LIBNOTIFICATIONSRCDIR/notification.h \
-   $$LIBNOTIFICATIONSRCDIR/notificationgroup.h \
-   $$NOTIFICATIONSRCDIR/eventtypestore.h
+    $$SRCDIR/statusarea/notificationstatusindicator.h \
+    $$SRCDIR/statusarea/statusindicator.h \
+    $$SRCDIR/statusarea/statusindicatormodel.h \
 
 # unit test and unit classes
 SOURCES += ut_notificationstatusindicator.cpp \
    $$SRCDIR/statusarea/notificationstatusindicator.cpp \
    $$SRCDIR/statusarea/statusindicator.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
-   $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
 
 # helper classes
 SOURCES +=  \
