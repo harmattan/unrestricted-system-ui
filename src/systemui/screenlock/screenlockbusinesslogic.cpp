@@ -63,12 +63,12 @@ void ScreenLockBusinessLogic::hideEventEater()
 void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
 {
     if (toggle) {
-        if (lockScreenWindow == NULL) {
+        if (screenLockWindow == NULL) {
             // Create the lock screen window if it doesn't exist yet
-            lockScreenWindow = new LockScreenWindow;
-            lockScreenWindow->installEventFilter(new CloseEventEater(this));
-            connect(lockScreenWindow, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
-            connect(lockScreenWindow, SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
+            screenLockWindow = new ScreenLockWindow;
+            screenLockWindow->installEventFilter(new CloseEventEater(this));
+            connect(screenLockWindow, SIGNAL(unlocked()), this, SLOT(unlockScreen()));
+            connect(screenLockWindow, SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
         }
 
         // Whenever we're showing the lock screen we need to reset its state
