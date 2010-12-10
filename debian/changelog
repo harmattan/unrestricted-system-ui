@@ -2,9 +2,14 @@ system-ui (0.19.0~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#210858 - Settings in Status menu not according to layout guide
-  * Fixes: NB#210081 - Timestamp is displayed for short event banners (messaging)
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 08 Dec 2010 14:20:32 +0200
+
+system-ui (0.18.17-1) unstable; urgency=low
+
+  * Fixes: NB#210081 - Timestamp is displayed for short event banners (messaging)
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 09 Dec 2010 12:06:05 +0200
 
 system-ui (0.18.16-1) unstable; urgency=low
 
