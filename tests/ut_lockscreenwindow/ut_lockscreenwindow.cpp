@@ -20,6 +20,7 @@
 #include <QtTest/QtTest>
 #include <MApplication>
 #include <MSceneWindow>
+#include <MApplicationExtensionArea>
 #include <QShowEvent>
 #include "ut_lockscreenwindow.h"
 #include "screenlockwindow.h"
@@ -50,6 +51,11 @@ void MWindow::setLandscapeOrientation()
 void MWindow::setPortraitOrientation()
 {
     mWindowOrientation = "portrait";
+}
+
+bool MApplicationExtensionArea::init()
+{
+    return true;
 }
 
 MWindow* appearedWindow = NULL;
