@@ -28,7 +28,7 @@ class MApplicationExtensionArea;
 class MApplicationExtensionInterface;
 class StatusIndicatorMenuWindow;
 class StatusIndicatorMenu;
-class MButton;
+class MBasicListItem;
 class MWidgetController;
 
 /*!
@@ -65,8 +65,8 @@ private:
     //! Container for the main content
     MWidgetController *containerWidget;
 
-    //! Button for accessing the full settings
-    MButton *settingsButton;
+    //! Item for accessing the full settings
+    MBasicListItem *settingsItem;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuVerticalView;

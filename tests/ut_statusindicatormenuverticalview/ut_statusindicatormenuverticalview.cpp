@@ -184,8 +184,9 @@ void Ut_StatusIndicatorMenuVerticalView::cleanupTestCase()
 
 void Ut_StatusIndicatorMenuVerticalView::testConnections()
 {
-    QObject *ob = findChildItemByObjectName(controller, "StatusIndicatorMenuTopRowExtensionButton");
-    QVERIFY(disconnect(ob, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide())));
+    MWidget *container = static_cast<MWidget*>(findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionAreaWidget"));
+    MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count() - 2));
+    QVERIFY(disconnect(divider, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide())));
 
     QObject *extensionArea = findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionArea");
     QVERIFY(disconnect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*))));
@@ -209,12 +210,12 @@ void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
     // All the extensions should have the vertical center position
     QCOMPARE(static_cast<MWidgetController*>(extension.widget())->layoutPosition(), M::VerticalCenterPosition);
 
-    // Locate the settings button at the bottom of the container widget layout
+    // Locate the divider at the bottom of the container widget layout
     MWidget *container = static_cast<MWidget*>(findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionAreaWidget"));
-    MWidgetController *settingsButton = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count()-1));
+    MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count()-1));
 
     // It should have the bottom position set
-    QCOMPARE(settingsButton->layoutPosition(), M::VerticalBottomPosition);
+    QCOMPARE(divider->layoutPosition(), M::VerticalTopPosition);
 }
 
 void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()

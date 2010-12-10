@@ -19,7 +19,9 @@
 #include <MSceneManager>
 #include <MSeparator>
 #include <MApplicationExtensionArea>
-#include <MButton>
+#include <MBasicListItem>
+#include <MImageWidget>
+#include <MStylableWidget>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <mscenewindowview.h>
@@ -30,8 +32,7 @@
 StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicatorMenu *controller) :
     MSceneWindowView(controller),
     controller(controller),
-    //% "Settings"
-    settingsButton(new MButton(qtTrId("qtn_stat_menu_settings")))
+    settingsItem(new MBasicListItem(MBasicListItem::IconWithTitle))
 {
     // Create an extension area for the top row plugins
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
@@ -43,19 +44,25 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     extensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
     extensionArea->init();
 
-    // Set up the button for accessing the full settings
-    settingsButton->setObjectName("StatusIndicatorMenuTopRowExtensionButton");
-    settingsButton->setViewType(MButton::iconType);
-    settingsButton->setIconID("icon-m-status-menu-settings");
-    settingsButton->setLayoutPosition(M::VerticalBottomPosition);
-    connect(settingsButton, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide()));
+    // Set up an item for accessing the full settings
+    //% "Settings"
+    settingsItem->setTitle(qtTrId("qtn_stat_menu_settings"));
+    settingsItem->imageWidget()->setImage("icon-m-status-menu-settings");
+    settingsItem->setStyleName("CommonBasicListItemInverted");
+    connect(settingsItem, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide()));
 
-    // Put the extension area and the settings button to a horizontal layout
+    // Put the extension area and the settings item to a horizontal layout
     QGraphicsLinearLayout *vlayout = new QGraphicsLinearLayout(Qt::Vertical);
     vlayout->setContentsMargins(0, 0, 0, 0);
     vlayout->setSpacing(0);
     vlayout->addItem(extensionArea);
-    vlayout->addItem(settingsButton);
+    vlayout->addItem(settingsItem);
+
+    // Add a separator line on the bottom of the menu
+    MStylableWidget *bottomSeparator = new MStylableWidget;
+    bottomSeparator->setStyleName("StatusIndicatorMenuBottomSeparator");
+    bottomSeparator->setLayoutPosition(M::VerticalTopPosition);
+    vlayout->addItem(bottomSeparator);
 
     // Create a container widget for extension area and settings button layout
     containerWidget = new MWidgetController(controller);
