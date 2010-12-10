@@ -19,11 +19,6 @@
 
 #include <MWidgetController>
 #include "statusindicator.h"
-#include "statusindicatormodel.h"
-
-class ApplicationContext;
-class ContextItem;
-class NotifierNotificationSink;
 
 /*!
  * A status indicator for showing if there are new notifications

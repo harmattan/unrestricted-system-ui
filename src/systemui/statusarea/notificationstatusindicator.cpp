@@ -18,8 +18,6 @@
 ****************************************************************************/
 
 #include "notificationstatusindicator.h"
-#include "statusindicator.h"
-#include "statusindicatormodel.h"
 
 NotificationStatusIndicator::NotificationStatusIndicator(QGraphicsItem *parent) :
     StatusIndicator(parent)
