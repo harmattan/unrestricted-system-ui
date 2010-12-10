@@ -21,7 +21,7 @@
 #include "feedbackparameterfactory.h"
 #include "ngfadapter.h"
 
-NGFNotificationSink::NGFNotificationSink()
+NGFNotificationSink::NGFNotificationSink(QObject *parent) : NotificationSink(parent)
 {
     adapter = new NGFAdapter;
 }

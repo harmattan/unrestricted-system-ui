@@ -34,8 +34,10 @@ class NGFNotificationSink : public NotificationSink
 public:
     /*!
      * Constructs a new NGFNotificationSink.
+     *
+     * \param parent the parent object
      */
-    NGFNotificationSink();
+    NGFNotificationSink(QObject *parent = NULL);
 
     /*!
      * Destroys the NGFNotificationSink.

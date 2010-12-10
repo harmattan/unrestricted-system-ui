@@ -38,7 +38,7 @@ void Ut_NGFNotificationSink::cleanupTestCase()
 
 void Ut_NGFNotificationSink::init()
 {
-    sink = new NGFNotificationSink();
+    sink = new NGFNotificationSink;
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
 
