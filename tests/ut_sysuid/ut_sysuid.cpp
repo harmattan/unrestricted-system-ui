@@ -218,7 +218,7 @@ void Ut_Sysuid::testUseMode()
     testContextItem->setValue("");
     QVERIFY(Ut_SysuidCompositorNotificationState);
     QVERIFY(Ut_SysuidFeedbackNotificationState);
-    testContextItem->setValue("recording");
+    testContextItem->setValue("videorecording");
     QVERIFY(!Ut_SysuidCompositorNotificationState);
     QVERIFY(!Ut_SysuidFeedbackNotificationState);
 }

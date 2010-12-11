@@ -1,6 +1,7 @@
 system-ui (0.19.0-1) unstable; urgency=low
 
   * Fixes: NB#210858 - Settings in Status menu not according to layout guide
+  * Fixes: NB#200319 - Short event banner is mistakenly displayed while recording is ongoing
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 10 Dec 2010 17:44:49 +0200
 
