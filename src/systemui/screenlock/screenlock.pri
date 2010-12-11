@@ -17,7 +17,7 @@ SOURCES += \
     screenlock/eventeater.cpp
 
 headers.path = /usr/include/system-ui
-headers.files = \
+headers.files += \
     screenlock/screenlockextensioninterface.h \
     screenlock/ScreenLockExtensionInterface
 
