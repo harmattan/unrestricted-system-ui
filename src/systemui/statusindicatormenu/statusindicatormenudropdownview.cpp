@@ -253,8 +253,6 @@ MOverlay *StatusIndicatorMenuDropDownView::createCloseButtonOverlay()
     MOverlay *closeButtonOverlay = new MOverlay;
     closeButtonOverlay->setLayout(layout);
     closeButtonOverlay->setObjectName("CloseButtonOverlay");
-    controller->sceneManager()->appearSceneWindowNow(closeButtonOverlay);
-    controller->sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
 
     return closeButtonOverlay;
 }
@@ -279,13 +277,15 @@ void StatusIndicatorMenuDropDownView::setPannabilityAndLayout()
 
     // Appear or disappear the close button overlay based on close area position
     const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(pannableViewport->widget())->bottommostWidget();
-    qreal screenHeight = controller->sceneManager()->visibleSceneSize().height();
     qreal closeButtonRowBottomYPos = closeButtonRow->mapToItem(controller, QPointF(0, closeButtonRow->geometry().height())).y();
 
-    if (closeButtonRowBottomYPos <= screenHeight) {
-        controller->sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
-    } else {
-        controller->sceneManager()->appearSceneWindowNow(closeButtonOverlay);
+    if (controller->sceneManager()) {
+        qreal screenHeight = controller->sceneManager()->visibleSceneSize().height();
+        if (closeButtonRowBottomYPos <= screenHeight) {
+            controller->sceneManager()->disappearSceneWindowNow(closeButtonOverlay);
+        } else {
+            controller->sceneManager()->appearSceneWindowNow(closeButtonOverlay);
+        }
     }
 
     // Make the pannable area background window extend from the top of the pannable viewport halfway to the bottom of the close button row

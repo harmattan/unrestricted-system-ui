@@ -62,6 +62,7 @@ private slots:
     void testWhenWidgetEntersDisplayThenExtensionAreasGetInitialized();
     void testWhenViewIsConstructedThenTimerIsStartedForEnsuringViewability();
     void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
+    void testThatCloseButtonOverlayIsAddedToSceneManagerOnlyIfSceneManagerDoesExist();
 };
 
 #endif //_UT_STATUSINDICATORMENUDROPDOWNVIEW_

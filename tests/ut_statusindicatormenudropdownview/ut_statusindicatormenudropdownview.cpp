@@ -97,6 +97,16 @@ void MWindow::setVisible(bool visible)
     gSetVisible.second = visible;
 }
 
+// MWidget stub
+bool mWidgetSceneManagerExist = false;
+MSceneManager *MWidget::sceneManager() const
+{
+    if (mWidgetSceneManagerExist) {
+        return new MSceneManager(NULL, NULL);
+    } else {
+        return NULL;
+    }
+}
 
 bool showNotificationArea = true;
 
@@ -121,18 +131,22 @@ const bool& StatusIndicatorMenuStyle::notificationArea() const
 }
 
 QList<MSceneWindow*> g_visibleSceneWindows;
+bool mSceneManagerDisappearSceneWindowNowCalled = false;
+bool mSceneManagerAppearSceneWindowNowCalled = false;
 
 void MSceneManager::appearSceneWindowNow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy)
 {
     Q_UNUSED(policy);
     sceneWindow->setVisible(true);
     g_visibleSceneWindows.append(sceneWindow);
+    mSceneManagerAppearSceneWindowNowCalled = true;
 }
 
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
 {
     sceneWindow->setVisible(false);
     g_visibleSceneWindows.removeAll(sceneWindow);
+    mSceneManagerDisappearSceneWindowNowCalled = true;
 }
 
 void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
@@ -147,9 +161,10 @@ MSceneWindow::~MSceneWindow()
 }
 
 
+QSize mSceneManagerVisibleSceneSize;
 QSize MSceneManager::visibleSceneSize() const
 {
-    return QSize(864, 480);
+    return mSceneManagerVisibleSceneSize;
 }
 
 void MSceneWindowView::applyStyle()
@@ -193,6 +208,8 @@ void QTimer::singleShot(int msec, QObject *receiver, const char * member)
 
 void Ut_StatusIndicatorMenuDropDownView::init()
 {
+    mSceneManagerVisibleSceneSize = QSize(864, 480);
+    mWidgetSceneManagerExist = true;
     gX11WrapperStub->stubReset();
     gQTimer_singleShot_params.clear();
     gMApplicationExtensionAreaProperties.clear();
@@ -208,6 +225,9 @@ void Ut_StatusIndicatorMenuDropDownView::init()
     gSetVisible.second = false;
 
     connect(this, SIGNAL(positionOrSizeChanged()), m_subject, SLOT(setPannabilityAndLayout()));
+
+    mSceneManagerDisappearSceneWindowNowCalled = false;
+    mSceneManagerAppearSceneWindowNowCalled = false;
 }
 
 void Ut_StatusIndicatorMenuDropDownView::cleanup()
@@ -431,6 +451,29 @@ void Ut_StatusIndicatorMenuDropDownView::testCreatedItemsAreRemovedFromTheContro
 
     // All the SceneWindows should be gone as well
     QCOMPARE(g_visibleSceneWindows.count(), 0);
+}
+
+void Ut_StatusIndicatorMenuDropDownView::testThatCloseButtonOverlayIsAddedToSceneManagerOnlyIfSceneManagerDoesExist()
+{
+    const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(m_subject->pannableViewport->widget())->bottommostWidget();
+    // Set closeButtonRow y position to be greater than screen height. This will make closeButtonOverlay to appear.
+    mSceneManagerVisibleSceneSize = QSize(864, closeButtonRow->mapToItem(m_subject->controller, QPointF(0, (closeButtonRow->geometry().height() - 1))).y());
+
+    mWidgetSceneManagerExist = false;
+    emit positionOrSizeChanged();
+
+    QCOMPARE(mSceneManagerDisappearSceneWindowNowCalled, false);
+    QCOMPARE(mSceneManagerAppearSceneWindowNowCalled, false);
+    QCOMPARE(m_subject->closeButtonOverlay->isVisible(), false);
+    QVERIFY(!g_visibleSceneWindows.contains(m_subject->closeButtonOverlay));
+
+    mWidgetSceneManagerExist = true;
+    emit positionOrSizeChanged();
+
+    QCOMPARE(mSceneManagerDisappearSceneWindowNowCalled, false);
+    QCOMPARE(mSceneManagerAppearSceneWindowNowCalled, true);
+    QCOMPARE(m_subject->closeButtonOverlay->isVisible(), true);
+    QVERIFY(g_visibleSceneWindows.contains(m_subject->closeButtonOverlay));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuDropDownView)
