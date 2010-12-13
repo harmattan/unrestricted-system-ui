@@ -9,6 +9,13 @@ NotificationAreaStyle {
     max-banners: -1;
 }
 
+MAbstractLayoutPolicyStyle#NotificationAreaBannerLayoutPolicy {
+    vertical-spacing: 0.8mm;
+    margin-left:   0.8mm;
+    margin-right:  0.8mm;
+    margin-bottom: 0.8mm;
+}
+
 MButtonStyle#NotificationAreaClearButton {
     margin-left: 0;
     margin-right: 0;
