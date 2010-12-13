@@ -1,3 +1,9 @@
+system-ui (0.19.2~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 13 Dec 2010 09:20:46 +0200
+
 system-ui (0.19.1-1) unstable; urgency=low
 
   * Fixes: NB#211351 - MStatusIndicatorMenuExtensionInterface disappeared from system-ui-dev
