@@ -10,6 +10,7 @@ TARGET = notificationsystem
 CONFIG += meegotouch
 INCLUDEPATH +=  .
 DEPENDPATH += .
+QT += dbus
 
 include(../../localconfig.pri)
 
