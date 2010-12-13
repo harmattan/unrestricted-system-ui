@@ -1,11 +1,10 @@
-system-ui (0.19.2~1) unstable; urgency=low
+system-ui (0.19.2-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: Fixed sysuid crash caused by null scene manager in StatusIndicatorDropDownMenuView.
   * Fixes: Status Area; §qtn_conn_ic§ (internet connection view) is missing translation
   * Fixes: NB#211116 - 3g icon is stretched
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 13 Dec 2010 09:20:46 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 13 Dec 2010 16:29:06 +0200
 
 system-ui (0.19.1-1) unstable; urgency=low
 
