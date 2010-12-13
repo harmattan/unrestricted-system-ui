@@ -1,7 +1,8 @@
 system-ui (0.19.2~1) unstable; urgency=low
 
   * [UNRELEASED]
-  * Fixes: NB#207541 - Fixed sysuid crash caused by null scene manager in StatusIndicatorDropDownMenuView.
+  * Fixes: Fixed sysuid crash caused by null scene manager in StatusIndicatorDropDownMenuView.
+  * Fixes: Status Area; §qtn_conn_ic§ (internet connection view) is missing translation
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 13 Dec 2010 09:20:46 +0200
 
