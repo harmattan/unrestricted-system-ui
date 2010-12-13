@@ -196,30 +196,30 @@ StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2G {
     image-list: "icon-s-status-gsm";
-    preferred-size: 1.6mm 1.8mm;
-    minimum-size: 1.6mm 1.8mm;
-    maximum-size: 1.6mm 1.8mm;
+    preferred-size: 1.6mm 1.6mm;
+    minimum-size: 1.6mm 1.6mm;
+    maximum-size: 1.6mm 1.6mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25G {
     image-list: "icon-s-status-25g";
-    preferred-size: 3.1mm 1.8mm;
-    minimum-size: 3.1mm 1.8mm;
-    maximum-size: 3.1mm 1.8mm;
+    preferred-size: 1.6mm 1.6mm;
+    minimum-size: 1.6mm 1.6mm;
+    maximum-size: 1.6mm 1.6mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3G {
     image-list: "icon-s-status-3g";
-    preferred-size: 3.1mm 1.8mm;
-    minimum-size: 3.1mm 1.8mm;
-    maximum-size: 3.1mm 1.8mm;
+    preferred-size: 1.6mm 1.6mm;
+    minimum-size: 1.6mm 1.6mm;
+    maximum-size: 1.6mm 1.6mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35G {
     image-list: "icon-s-status-35g";
-    preferred-size: 3.1mm 1.8mm;
-    minimum-size: 3.1mm 1.8mm;
-    maximum-size: 3.1mm 1.8mm;
+    preferred-size: 1.6mm 1.6mm;
+    minimum-size: 1.6mm 1.6mm;
+    maximum-size: 1.6mm 1.6mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorNoSIM {
