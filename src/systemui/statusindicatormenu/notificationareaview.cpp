@@ -21,6 +21,7 @@
 #include "notificationarea.h"
 #include "widgetnotificationsink.h"
 #include <MViewCreator>
+#include <MStylableWidget>
 #include <MBanner>
 #include <MButton>
 #include <MLayout>
@@ -34,7 +35,7 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     clearButtonLayout(new QGraphicsLinearLayout(Qt::Horizontal)),
     //% "Clear"
     clearButton(new MButton(qtTrId("qtn_noti_clear"))),
-    andMore(new MWidgetController)
+    andMore(new MStylableWidget)
 {
     // Set up the main layout
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -52,8 +53,7 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     bannerLayout->setPolicy(bannerPolicy);
 
     // Create the "and more" area
-    andMore->setView(new MWidgetView(andMore));
-    andMore->setObjectName("AndMore");
+    andMore->setStyleName("AndMore");
     //% "And more"
     MLabel *andMoreLabel = new MLabel(qtTrId("qtn_noti_and_more"));
     andMoreLabel->setObjectName("AndMoreLabel");
@@ -119,7 +119,7 @@ void NotificationAreaView::updateLayout()
     }
 
     // If there are more than maximum number of banners to be added show "and more"
-    andMore->setObjectName((style()->maxBanners() >= 0 && model()->banners().count() > style()->maxBanners()) ? "AndMoreVisible" : "AndMore");
+    andMore->setStyleName((style()->maxBanners() >= 0 && model()->banners().count() > style()->maxBanners()) ? "AndMoreVisible" : "AndMore");
 
     // If removable banners exist make the clear button visible
     clearButton->setObjectName((removableBannersExist && style()->clearButton()) ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");

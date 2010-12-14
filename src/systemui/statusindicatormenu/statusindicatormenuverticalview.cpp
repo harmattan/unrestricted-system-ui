@@ -65,9 +65,8 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     vlayout->addItem(bottomSeparator);
 
     // Create a container widget for extension area and settings button layout
-    containerWidget = new MWidgetController(controller);
-    containerWidget->setView(new MWidgetView(containerWidget));
-    containerWidget->setObjectName("StatusIndicatorMenuExtensionAreaWidget");
+    containerWidget = new MStylableWidget;
+    containerWidget->setStyleName("StatusIndicatorMenuExtensionAreaWidget");
     containerWidget->setLayout(vlayout);
 
     QGraphicsLinearLayout *hlayout = new QGraphicsLinearLayout(Qt::Horizontal);

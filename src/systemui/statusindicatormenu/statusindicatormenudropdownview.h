@@ -21,6 +21,7 @@
 #define STATUSINDICATORMENUDROPDOWNVIEW_H_
 
 #include <MSceneWindow>
+#include <MStylableWidget>
 #include <MOverlay>
 #include <mscenewindowview.h>
 #include "statusindicatormenustyle.h"
@@ -52,7 +53,7 @@ public:
   * - Emits a signal when a mouse press event is received below
   *   the bottommost widget.
   */
-class PannedWidgetController : public MWidgetController
+class PannedWidgetController : public MStylableWidget
 {
     Q_OBJECT
 public:

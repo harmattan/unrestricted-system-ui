@@ -168,7 +168,7 @@ void Ut_NotificationAreaView::testMaxBannersStyle()
 
     notificationArea->model()->setBanners(banners);
     QCOMPARE(m_subject->bannerLayout->count(), maxBanners >= 0 ? maxBanners : 10);
-    QCOMPARE(m_subject->andMore->objectName(), QString(maxBanners >= 0 && banners.count() > maxBanners ? "AndMoreVisible" : "AndMore"));
+    QCOMPARE(m_subject->andMore->styleName(), QString(maxBanners >= 0 && banners.count() > maxBanners ? "AndMoreVisible" : "AndMore"));
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaView)

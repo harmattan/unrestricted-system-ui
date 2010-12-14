@@ -31,11 +31,12 @@
 #include <QDBusConnection>
 #include <MDeviceProfile>
 #include <MViewCreator>
+#include <MStylableWidget>
 
 StatusAreaView::StatusAreaView(StatusArea *controller) :
     MWidgetView(controller),
-    landscapeWidget(new MWidgetController),
-    portraitWidget(new MWidgetController),
+    landscapeWidget(new MStylableWidget),
+    portraitWidget(new MStylableWidget),
     controller(controller),
     landscapePhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkIndicator(new PhoneNetworkStatusIndicator(contextFrameworkContext, controller)),
@@ -80,14 +81,12 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     connect(landscapeAlarmIndicator, SIGNAL(alarmSettingChanged(bool)), landscapeClock, SLOT(setShortDisplay(bool)));
 
     // Set up landscape and portrait widgets and anchor them on top of each other
-    landscapeWidget->setView(new MWidgetView(landscapeWidget));
-    landscapeWidget->setObjectName("StatusBarLandscapeWidget");
+    landscapeWidget->setStyleName("StatusBarLandscapeWidget");
     landscapeWidget->setLayout(createLandscapeLayout());
     landscapeWidget->setParent(controller);
-    portraitWidget->setParent(controller);
-    portraitWidget->setView(new MWidgetView(portraitWidget));
-    portraitWidget->setObjectName("StatusBarPortraitWidget");
+    portraitWidget->setStyleName("StatusBarPortraitWidget");
     portraitWidget->setLayout(createPortraitLayout());
+    portraitWidget->setParent(controller);
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
     compositeLayout->setContentsMargins(0, 0, 0, 0);
     compositeLayout->setSpacing(0);

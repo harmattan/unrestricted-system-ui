@@ -27,7 +27,7 @@
 #include "statusindicatormenustyle.h"
 #include <MSceneManager>
 #include <MButton>
-#include <QGraphicsLayout>
+#include <QGraphicsLinearLayout>
 #include <QEvent>
 #include <QGraphicsSceneMouseEvent>
 #include "x11wrapper_stub.h"
@@ -37,13 +37,18 @@
 #endif
 
 // MApplicationExtensionArea stubs
+MApplicationExtensionArea *mApplicationExtensionAreaInstance = NULL;
 QString mApplicationExtensionAreaInterface;
 MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, QGraphicsItem *)
 {
+    mApplicationExtensionAreaInstance = this;
     mApplicationExtensionAreaInterface = interface;
 }
 
-MApplicationExtensionArea::~MApplicationExtensionArea() { }
+MApplicationExtensionArea::~MApplicationExtensionArea()
+{
+    mApplicationExtensionAreaInstance = NULL;
+}
 
 QRegExp mApplicationExtensionAreaInProcessFilter;
 QRegExp mApplicationExtensionAreaVerticalFilter;
@@ -168,6 +173,7 @@ void Ut_StatusIndicatorMenuVerticalView::init()
 void Ut_StatusIndicatorMenuVerticalView::cleanup()
 {
     delete controller;
+    mApplicationExtensionAreaInstance = NULL;
 }
 
 void Ut_StatusIndicatorMenuVerticalView::initTestCase()
@@ -182,15 +188,25 @@ void Ut_StatusIndicatorMenuVerticalView::cleanupTestCase()
     delete app;
 }
 
+MWidget *getContainerFromLayout(MWidgetController *controller)
+{
+    QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(controller->layout());
+    if (layout != NULL && layout->count() > 0) {
+        return static_cast<MWidget *>(layout->itemAt(layout->count() - 1));
+    } else {
+        return NULL;
+    }
+}
+
 void Ut_StatusIndicatorMenuVerticalView::testConnections()
 {
-    MWidget *container = static_cast<MWidget*>(findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionAreaWidget"));
-    MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count() - 2));
-    QVERIFY(disconnect(divider, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide())));
+    MWidget *container = getContainerFromLayout(controller);
+    QVERIFY(container != NULL);
 
-    QObject *extensionArea = findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionArea");
-    QVERIFY(disconnect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*))));
-    QVERIFY(disconnect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), m_subject, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*))));
+    MWidgetController *settingsItem = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count() - 2));
+    QVERIFY(disconnect(settingsItem, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide())));
+    QVERIFY(disconnect(mApplicationExtensionAreaInstance, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*))));
+    QVERIFY(disconnect(mApplicationExtensionAreaInstance, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), m_subject, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*))));
 }
 
 void Ut_StatusIndicatorMenuVerticalView::testExtensionAreaInitialization()
@@ -211,7 +227,7 @@ void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
     QCOMPARE(static_cast<MWidgetController*>(extension.widget())->layoutPosition(), M::VerticalCenterPosition);
 
     // Locate the divider at the bottom of the container widget layout
-    MWidget *container = static_cast<MWidget*>(findChildItemByObjectName(controller, "StatusIndicatorMenuExtensionAreaWidget"));
+    MWidget *container = getContainerFromLayout(controller);
     MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count()-1));
 
     // It should have the bottom position set

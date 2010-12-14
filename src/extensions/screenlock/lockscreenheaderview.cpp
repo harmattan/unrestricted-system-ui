@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <MWidgetController>
+#include <MStylableWidget>
 #include <QGraphicsLinearLayout>
 #include "lockscreenheaderview.h"
 #include "lockscreenheader.h"
@@ -48,9 +49,8 @@ LockScreenHeaderView::LockScreenHeaderView(MWidgetController *controller) :
     dateTimeVerticalLayout->addStretch();
 
     // Create a widget with a horizontal layout to align the time and date to the right and to apply a background image
-    MWidgetController *dateTimeWidget = new MWidgetController;
-    dateTimeWidget->setView(new MWidgetView(dateTimeWidget));
-    dateTimeWidget->setObjectName("LockScreenHeaderDateTime");
+    MWidgetController *dateTimeWidget = new MStylableWidget;
+    dateTimeWidget->setStyleName("LockScreenHeaderDateTime");
     QGraphicsLinearLayout *dateTimeHorizontalLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     dateTimeHorizontalLayout->setContentsMargins(0, 0, 0, 0);
     dateTimeHorizontalLayout->setSpacing(0);

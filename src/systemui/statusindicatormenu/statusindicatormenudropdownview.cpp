@@ -20,6 +20,7 @@
 #include <MSceneManager>
 #include <MSceneWindow>
 #include <MApplicationExtensionArea>
+#include <MStylableWidget>
 #include <MEscapeButtonPanel>
 #include <MButton>
 #include <MOverlay>
@@ -44,7 +45,7 @@ void EventEaterWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 
 PannedWidgetController::PannedWidgetController(QGraphicsItem *parent) :
-    MWidgetController(parent),
+    MStylableWidget(parent),
     bottommostWidget_(NULL)
 {
 }
@@ -88,14 +89,13 @@ StatusIndicatorMenuDropDownView::StatusIndicatorMenuDropDownView(StatusIndicator
     statusIndicatorExtensionArea(NULL),
     pannableViewport(NULL),
     closeButtonOverlay(NULL),
-    backgroundWidget(new MWidgetController)
+    backgroundWidget(new MStylableWidget)
 {
     // Create close button overlay
     closeButtonOverlay = createCloseButtonOverlay();
 
     // Create the pannable area background widget
-    backgroundWidget->setView(new MWidgetView(backgroundWidget));
-    backgroundWidget->setObjectName("StatusIndicatorMenuWindowBackground");
+    backgroundWidget->setStyleName("StatusIndicatorMenuWindowBackground");
 
     connect(controller, SIGNAL(hideRequested()), this, SLOT(resetViewport()));
     connect(controller, SIGNAL(displayEntered()), SLOT(ensureIsViewable()));
@@ -141,9 +141,8 @@ QGraphicsWidget* StatusIndicatorMenuDropDownView::createTopRow()
     topRowLayout->addStretch();
 
     // Create a container widget for extension area and settings button layout
-    MWidgetController *topRowWidget = new MWidgetController;
-    topRowWidget->setView(new MWidgetView(topRowWidget));
-    topRowWidget->setObjectName("StatusIndicatorMenuExtensionAreaWidget");
+    MWidgetController *topRowWidget = new MStylableWidget;
+    topRowWidget->setStyleName("StatusIndicatorMenuExtensionAreaWidget");
     topRowWidget->setLayout(topRowLayout);
 
     return topRowWidget;
@@ -178,9 +177,8 @@ MPannableViewport* StatusIndicatorMenuDropDownView::createPannableArea()
         contentLayout->addItem(notificationArea);
     }
 
-    MWidgetController *contentWidget = new MWidgetController;
-    contentWidget->setView(new MWidgetView(contentWidget));
-    contentWidget->setObjectName("StatusIndicatorMenuContentWidget");
+    MWidgetController *contentWidget = new MStylableWidget;
+    contentWidget->setStyleName("StatusIndicatorMenuContentWidget");
     contentWidget->setLayout(contentLayout);
 
     QGraphicsLinearLayout *pannableLayout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -193,7 +191,6 @@ MPannableViewport* StatusIndicatorMenuDropDownView::createPannableArea()
 
     // Create a container widget for the pannable area
     PannedWidgetController *pannedWidget = new PannedWidgetController;
-    pannedWidget->setView(new MWidgetView(pannedWidget));
     pannedWidget->setLayout(pannableLayout);
     pannedWidget->setBottommostWidget(closeButtonRow);
     connect(pannedWidget, SIGNAL(positionOrSizeChanged()), this, SLOT(setPannabilityAndLayout()));
@@ -224,9 +221,8 @@ QGraphicsWidget* StatusIndicatorMenuDropDownView::createCloseButtonRow()
     layout->addItem(new EventEaterWidget);
 
     // Create the area itself
-    MWidgetController *closeButtonArea = new MWidgetController;
-    closeButtonArea->setView(new MWidgetView(closeButtonArea));
-    closeButtonArea->setObjectName("CloseButtonArea");
+    MWidgetController *closeButtonArea = new MStylableWidget;
+    closeButtonArea->setStyleName("CloseButtonArea");
     closeButtonArea->setLayout(layout);
 
     return closeButtonArea;
