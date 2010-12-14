@@ -34,8 +34,12 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
 
     currentLanguage = MLocale().language();
 
+    // Set the X window type, so that the window does not appear in the switcher and
+    // home screen can provide the correct UI flow
+    setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
     setTranslucentBackground(true);
     setWindowTitle("Status Indicator Menu");
+    setProperty("followsCurrentApplicationWindowOrientation", true);
     connect(this, SIGNAL(displayEntered()), this, SLOT(displayActive()));
     connect(this, SIGNAL(displayExited()), this, SLOT(displayInActive()));
 
@@ -52,10 +56,6 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
         deviceLocked = true;
     }
 #endif
-
-    // Set the X window type, so that the window does not appear in the switcher and
-    // home screen can provide the correct UI flow
-    setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
 
     resetMenuWidget();
 }
