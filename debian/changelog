@@ -1,3 +1,9 @@
+system-ui (0.19.4~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 14 Dec 2010 16:43:54 +0200
+
 system-ui (0.19.3-1) unstable; urgency=low
 
   * Fixes: Status menu does not follow the orientation of the topmost window
