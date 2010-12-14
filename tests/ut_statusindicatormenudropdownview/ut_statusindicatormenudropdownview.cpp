@@ -321,6 +321,7 @@ void Ut_StatusIndicatorMenuDropDownView::testCloseButtonPosition()
     m_subject->pannableViewport->setPosition(QPointF());
     QCOMPARE(m_subject->closeButtonOverlay->isVisible(), false);
 
+    m_subject->pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
     m_subject->pannableViewport->setPosition(QPointF(0, -m_subject->controller->sceneManager()->visibleSceneSize().height()));
     QCOMPARE(m_subject->closeButtonOverlay->isVisible(), true);
 }
@@ -335,14 +336,12 @@ void Ut_StatusIndicatorMenuDropDownView::testSetPannability()
     // When the pannable viewport is taller than the panned widget there is no need to pan and the pannability should be disabled
     m_subject->pannableViewport->setGeometry(QRectF(0, 0, 1, pannedWidgetContentHeight + 1000));
     emit positionOrSizeChanged();
-    // TODO change this to isPanningEnabled() when such a function exists
-//    QCOMPARE(m_subject->pannableViewport->isEnabled(), false);
-
+    QCOMPARE(m_subject->pannableViewport->verticalPanningPolicy(), MPannableWidget::PanningAlwaysOff);
+    
     // When the pannable viewport is not taller than the panned widget there is a need to pan and the pannability should be enabled
     m_subject->pannableViewport->setGeometry(QRectF(0, 0, 1, 1));
     emit positionOrSizeChanged();
-    // TODO change this to isPanningEnabled() when such a function exists
-//    QCOMPARE(m_subject->pannableViewport->isEnabled(), true);
+    QCOMPARE(m_subject->pannableViewport->verticalPanningPolicy(), MPannableWidget::PanningAsNeeded);
 }
 
 void Ut_StatusIndicatorMenuDropDownView::testPannableAreaBackgroundWidget()
@@ -350,12 +349,14 @@ void Ut_StatusIndicatorMenuDropDownView::testPannableAreaBackgroundWidget()
     const QGraphicsWidget *closeButtonRow = static_cast<PannedWidgetController *>(m_subject->pannableViewport->widget())->bottommostWidget();
 
     // When the pannable viewport has been panned above extension area, the background height should be 0
+    m_subject->pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
     m_subject->pannableViewport->setPosition(QPointF(0, m_subject->pannableViewport->geometry().height()));
     emit positionOrSizeChanged();
     QCOMPARE(m_subject->backgroundWidget->minimumHeight(), qreal(0));
     QCOMPARE(m_subject->backgroundWidget->maximumHeight(), qreal(0));
 
     // When the pannable viewport has not been panned the background height should reach the bottom of the screen
+    m_subject->pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
     m_subject->pannableViewport->setPosition(QPointF());
     emit positionOrSizeChanged();
     qreal expectedHeight = (closeButtonRow->mapToItem(controller, QPointF(0, closeButtonRow->geometry().height())).y() - m_subject->pannableViewport->mapToItem(controller, QPointF()).y()) / 2;
@@ -363,6 +364,7 @@ void Ut_StatusIndicatorMenuDropDownView::testPannableAreaBackgroundWidget()
     QCOMPARE(m_subject->backgroundWidget->maximumHeight(), expectedHeight);
 
     // When the pannable viewport has been panned below the extension area the background widget should also be there
+    m_subject->pannableViewport->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
     m_subject->pannableViewport->setPosition(QPointF(0, -m_subject->pannableViewport->geometry().height()));
     emit positionOrSizeChanged();
     expectedHeight = (closeButtonRow->mapToItem(controller, QPointF(0, closeButtonRow->geometry().height())).y() - m_subject->pannableViewport->mapToItem(controller, QPointF()).y()) / 2;
