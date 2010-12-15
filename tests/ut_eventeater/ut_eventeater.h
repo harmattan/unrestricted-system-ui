@@ -25,23 +25,6 @@
 class MApplication;
 class EventEater;
 
-class LockScreenUIEventSink : public QObject
-{
-    Q_OBJECT
-
-public:
-    LockScreenUIEventSink();
-
-public slots:
-    void inputReceived();
-    void unlocked();
-
-public:
-    bool      m_OneInputCame;
-    bool      m_UnlockedCame;
-};
-
-
 class Ut_EventEater : public QObject
 {
     Q_OBJECT
@@ -52,13 +35,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testEventEater();
-    void testEventEaterWindowName();
+    void testButtonEvents_data();
+    void testButtonEvents();
 
 private:
-    LockScreenUIEventSink  m_EventSink;
-    EventEater          *m_EventEater;
-    MApplication          *m_App;
+    EventEater          *m_subject;
 };
 
 #endif

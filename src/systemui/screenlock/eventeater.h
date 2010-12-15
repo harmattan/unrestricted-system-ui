@@ -20,17 +20,27 @@
 #define EVENTEATER_H
 
 #include <QWidget>
+#include <QAbstractEventDispatcher>
 
-class QMouseEvent;
 class QShowEvent;
 
+/*!
+ * An EventEater window interrupts X press and release events. On event received EventEater hides it window.
+ *
+ * When creating an EventEater instance, it becomes the effective EventEater instance. Only effective instance interrupts
+ * events. There can be only one effective instance, so when EventEater is created any previous instances become obsolete
+ * and don't interrupt events any more.
+ */
 class EventEater : public QWidget {
     Q_OBJECT
-
 public:
+
     EventEater();
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual ~EventEater();
+
+    /*! Event filter method to handle input events.
+     */
+    bool eventFilter(XEvent *event);
 
 protected:
     /*!
@@ -39,6 +49,7 @@ protected:
     virtual void showEvent(QShowEvent *event);
 
 signals:
+    //! Emitted when input event is received for the window.
     void inputEventReceived();
 
 #ifdef UNIT_TEST

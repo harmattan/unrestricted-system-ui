@@ -28,25 +28,15 @@
 class EventEaterStub : public StubBase {
   public:
   virtual void EventEaterConstructor();
-  virtual void mousePressEvent(QMouseEvent *event);
-  virtual void mouseReleaseEvent(QMouseEvent *event);
+  virtual void EventEaterDestructor();
   virtual void showEvent(QShowEvent *event);
+  virtual bool eventFilter(XEvent *event);
 }; 
 
 // 2. IMPLEMENT STUB
 void EventEaterStub::EventEaterConstructor() {
-
 }
-void EventEaterStub::mousePressEvent(QMouseEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QMouseEvent * >(event));
-  stubMethodEntered("mousePressEvent",params);
-}
-
-void EventEaterStub::mouseReleaseEvent(QMouseEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QMouseEvent * >(event));
-  stubMethodEntered("mouseReleaseEvent",params);
+void EventEaterStub::EventEaterDestructor() {
 }
 
 void EventEaterStub::showEvent(QShowEvent *event) {
@@ -55,7 +45,12 @@ void EventEaterStub::showEvent(QShowEvent *event) {
   stubMethodEntered("showEvent",params);
 }
 
-
+bool EventEaterStub::eventFilter(XEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<XEvent * >(event));
+  stubMethodEntered("eventFilter",params);
+  return stubReturnValue<XEvent *>("eventFilter");
+}
 
 // 3. CREATE A STUB INSTANCE
 EventEaterStub gDefaultEventEaterStub;
@@ -66,18 +61,15 @@ EventEaterStub* gEventEaterStub = &gDefaultEventEaterStub;
 EventEater::EventEater() {
   gEventEaterStub->EventEaterConstructor();
 }
-
-void EventEater::mousePressEvent(QMouseEvent *event) {
-  gEventEaterStub->mousePressEvent(event);
+EventEater::~EventEater() {
+  gEventEaterStub->EventEaterDestructor();
 }
-
-void EventEater::mouseReleaseEvent(QMouseEvent *event) {
-  gEventEaterStub->mouseReleaseEvent(event);
-}
-
 void EventEater::showEvent(QShowEvent *event) {
   gEventEaterStub->showEvent(event);
 }
 
+bool EventEater::eventFilter(XEvent *event) {
+    return gEventEaterStub->eventFilter(event);
+}
 
 #endif

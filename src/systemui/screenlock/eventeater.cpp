@@ -16,10 +16,29 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include "eventeater.h"
 #include <QMouseEvent>
 #include <QX11Info>
+#include <QAbstractEventDispatcher>
 #include "x11wrapper.h"
+
+// Event eater instance that listens input events
+static EventEater *eventEaterListenerInstance = NULL;
+// Previous event filter
+QAbstractEventDispatcher::EventFilter  previousEventFilter = NULL;
+
+static bool eventEaterEventFilter(void *message)
+{
+    bool handled = false;
+    XEvent *event = static_cast<XEvent *>(message);
+    handled = eventEaterListenerInstance->eventFilter(event);
+
+    if (!handled && previousEventFilter && previousEventFilter != eventEaterEventFilter) {
+        handled = previousEventFilter(message);
+    }
+    return handled;
+}
 
 EventEater::EventEater()
 {
@@ -29,16 +48,21 @@ EventEater::EventEater()
     setAttribute(Qt::WA_X11DoNotAcceptFocus);
     setObjectName("EventEater");
     setProperty("NoMStyle", true);
+
+    if (previousEventFilter == NULL)
+        previousEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(eventEaterEventFilter);
+
+    eventEaterListenerInstance = this;
 }
 
-void EventEater::mousePressEvent(QMouseEvent *)
+EventEater::~EventEater()
 {
-    emit inputEventReceived();
-}
-
-void EventEater::mouseReleaseEvent(QMouseEvent *)
-{
-    emit inputEventReceived();
+    // If destroying effective instance, then set static instance and filter pointers to NULL and restore previous event filter
+    if (this == eventEaterListenerInstance) {
+        eventEaterListenerInstance = NULL;
+        QAbstractEventDispatcher::instance()->setEventFilter(previousEventFilter);
+        previousEventFilter = NULL;
+    }
 }
 
 void EventEater::showEvent(QShowEvent *event)
@@ -50,7 +74,17 @@ void EventEater::showEvent(QShowEvent *event)
     Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
     if (stackingLayerAtom != None) {
         long layer = 6;
-        X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
+        X11Wrapper::XChangeProperty(display, winId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
     }
 }
 
+bool EventEater::eventFilter(XEvent *event)
+{
+    bool handled = false;
+    if (isVisible() && event->xany.window == winId() && (event->type == ButtonPress || event->type == ButtonRelease)) {
+        handled = true;
+        emit inputEventReceived();
+    }
+
+    return handled;
+}
