@@ -9,6 +9,7 @@ system-ui (0.19.3-1) unstable; urgency=low
 
   * Fixes: Status menu does not follow the orientation of the topmost window
   * Fixes: NB#185636 - sysuid startup is too heavy
+  * Fixes: NB#208728 - Sysuid process causing high wakeups when device is in idle state
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 14 Dec 2010 16:39:39 +0200
 

@@ -63,6 +63,8 @@ private slots:
     void testSceneRenderControlDisplayStateDimmed();
     // Test MOnDisplayChangeEvent dispatching
     void testMOnDisplayChangeEvent();
+    // Test that scene is not rendered if initial display state is off
+    void testSceneRenderControlWhenInitialDisplayStateOff();
 #endif
 };
 

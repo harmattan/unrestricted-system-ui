@@ -52,6 +52,14 @@ const MStyle* MTheme::style(const char *styleClassName,
     return NULL;
 }
 
+#ifdef HAVE_QMSYSTEM
+MeeGo::QmDisplayState::DisplayState displayState = MeeGo::QmDisplayState::On;
+MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
+{
+    return displayState;
+}
+#endif
+
 void QGraphicsScene::removeItem(QGraphicsItem *item)
 {
     item_list.removeOne(item);
@@ -100,6 +108,10 @@ void Ut_StatusAreaRenderer::cleanup()
     Ut_StatusAreaRenderer_Scene_Render_Called = false;
     Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
     rectReceived.setRect(0,0,0,0);
+
+#ifdef HAVE_QMSYSTEM
+    displayState = MeeGo::QmDisplayState::On;
+#endif
     delete statusAreaRenderer;
 }
 
@@ -235,6 +247,16 @@ void Ut_StatusAreaRenderer::testMOnDisplayChangeEvent()
     QCOMPARE(eventReceived, MOnDisplayChangeEvent::eventNumber());
     QCOMPARE(eventStateReceived, MOnDisplayChangeEvent::FullyOffDisplay);
 }
+
+void Ut_StatusAreaRenderer::testSceneRenderControlWhenInitialDisplayStateOff()
+{
+    QCOMPARE(statusAreaRenderer->renderScene, true);
+    delete statusAreaRenderer;
+    displayState = MeeGo::QmDisplayState::Off;
+    statusAreaRenderer = new StatusAreaRenderer;
+    QCOMPARE(statusAreaRenderer->renderScene, false);
+}
+
 #endif
 
 void Ut_StatusAreaRenderer::testSharedPixmapHandle()

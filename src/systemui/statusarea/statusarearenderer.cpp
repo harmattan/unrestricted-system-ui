@@ -51,8 +51,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 #ifdef HAVE_QMSYSTEM
     connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
+    setSceneRender(displayState->get());
 #endif
-
     setSizeFromStyle();
     if(!createSharedPixmapHandle()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
