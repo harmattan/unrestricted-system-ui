@@ -22,7 +22,7 @@
 #include "ut_lockscreenbusinesslogic.h"
 #include "screenlockbusinesslogic.h"
 #include "lockscreenwindow_stub.h"
-#include "eventeater.h"
+#include "eventeater_stub.h"
 #include "sysuid_stub.h"
 #include "eventeater_stub.h"
 #include "closeeventeater_stub.h"
@@ -54,6 +54,7 @@ void QWidget::raise()
 void Ut_LockScreenBusinessLogic::init()
 {
     gScreenLockWindowStub->stubReset();
+    gEventEaterStub->stubReset();
 #ifdef HAVE_QMSYSTEM
     qmDisplayState = MeeGo::QmDisplayState::On;
 #endif
@@ -136,12 +137,10 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
 
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     logic.toggleEventEater(true);
-    QCOMPARE(logic.eventEaterWindow->isVisible(), true);
-    // XXX: Stub not really allows us to test this:
-    // QCOMPARE(logic.eventEaterWindow->isFullScreen(), true);
+    QCOMPARE(gEventEaterStub->stubCallCount("show"), 1);
 
     logic.toggleEventEater(false);
-    QCOMPARE(logic.eventEaterWindow->isVisible(), false);
+    QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
 }
 
 void Ut_LockScreenBusinessLogic::testUnlockScreen()

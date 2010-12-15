@@ -305,7 +305,7 @@ XChecker::pr (
 
 /*!
  * \param WindowID The current window ID for the recursion.
- * \param WMName The "_NET_WM_NAME" value for the windows to check.
+ * \param WMName The "_NET_WM_NAME" or "WM_NAME" value for the windows to check.
  */
 bool
 XChecker::check_window_rec (
@@ -323,6 +323,10 @@ XChecker::check_window_rec (
     attrs.map_state = IsUnmapped;
 
     wmname = get_utf8_prop (dpy, WindowID, name_atom);
+
+    if (!wmname)
+        wmname = get_str_prop (dpy, WindowID, name_atom2);
+
     XGetWindowAttributes(dpy, WindowID, &attrs);
 
     /*

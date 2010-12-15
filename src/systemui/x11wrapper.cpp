@@ -98,3 +98,33 @@ Status X11Wrapper::XSendEvent(Display *display, Window w, Bool propagate, long e
 {
     return ::XSendEvent(display, w, propagate, event_mask, event_send);
 }
+
+Window X11Wrapper::XCreateWindow(Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int border_width, int depth, unsigned int class_, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attributes)
+{
+    return ::XCreateWindow(display, parent, x, y, width, height, border_width, depth, class_, visual, valuemask, attributes);
+}
+
+int X11Wrapper::XDestroyWindow(Display *display, Window w)
+{
+    return ::XDestroyWindow(display, w);
+}
+
+int X11Wrapper::XMapRaised(Display *display, Window w)
+{
+    return ::XMapRaised(display, w);
+}
+
+int X11Wrapper::XUnmapWindow(Display *display, Window w)
+{
+    return ::XUnmapWindow(display, w);
+}
+
+int X11Wrapper::XStoreName(Display *display, Window w, char *window_name)
+{
+    return ::XStoreName(display, w, window_name);
+}
+
+int X11Wrapper::XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time)
+{
+    return ::XGrabKeyboard(display, grab_window, owner_events, pointer_mode, keyboard_mode, time);
+}

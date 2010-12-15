@@ -37,6 +37,11 @@ private slots:
 
     void testButtonEvents_data();
     void testButtonEvents();
+    void testWindowIsCreatedProperly();
+    void testStackingLayerPropertyIsSet();
+    void testWindowIsDestroyed();
+    void testShow();
+    void testHide();
 
 private:
     EventEater          *m_subject;

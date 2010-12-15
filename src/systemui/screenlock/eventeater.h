@@ -19,34 +19,41 @@
 #ifndef EVENTEATER_H
 #define EVENTEATER_H
 
-#include <QWidget>
+#include <QObject>
 #include <QAbstractEventDispatcher>
-
-class QShowEvent;
+#include <QX11Info>
+#include "x11wrapper.h"
 
 /*!
- * An EventEater window interrupts X press and release events. On event received EventEater hides it window.
+ * An EventEater window interrupts X pointer and key press events. On event received EventEater hides its window.
  *
  * When creating an EventEater instance, it becomes the effective EventEater instance. Only effective instance interrupts
  * events. There can be only one effective instance, so when EventEater is created any previous instances become obsolete
  * and don't interrupt events any more.
  */
-class EventEater : public QWidget {
+class EventEater : public QObject {
     Q_OBJECT
 public:
 
+    //! Creates a new EventEater instance and its window. This EventEater becomes the effective instance.
     EventEater();
+
+    //! Destroys the EventEater and its window.
     virtual ~EventEater();
 
     /*! Event filter method to handle input events.
      */
     bool eventFilter(XEvent *event);
 
-protected:
-    /*!
-     * Sets the _MEEGO_STACKING_LAYER window property to 6.
-     */
-    virtual void showEvent(QShowEvent *event);
+    /*! Show the event eater window */
+    void show();
+
+    /*! Hide the event eater window */
+    void hide();
+
+private:
+
+    Window window;
 
 signals:
     //! Emitted when input event is received for the window.

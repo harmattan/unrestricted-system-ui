@@ -27,19 +27,20 @@
 #include "x11wrapper_stub.h"
 
 // QWidget stubs
-static const WId WINDOW_ID = 69;
-WId QWidget::winId() const
-{
-    return WINDOW_ID;
-}
+static const Window WINDOW_ID = 69;
 
 void Ut_EventEater::init()
 {
+    gX11WrapperStub->stubReset();
+    gX11WrapperStub->stubSetReturnValue("XCreateWindow", WINDOW_ID);
+
     m_subject = new EventEater;
 }
 
 void Ut_EventEater::cleanup()
 {
+    if (m_subject)
+        delete m_subject;
 }
 
 void Ut_EventEater::initTestCase()
@@ -48,30 +49,25 @@ void Ut_EventEater::initTestCase()
 
 void Ut_EventEater::cleanupTestCase()
 {
-    delete m_subject;
 }
 
 void Ut_EventEater::testButtonEvents_data()
 {
     QTest::addColumn<int>("eventType");
-    QTest::addColumn<WId>("winId");
-    QTest::addColumn<bool>("isVisible");
+    QTest::addColumn<Window>("winId");
     QTest::addColumn<int>("verifyButtonEventSpyCount");
 
-    QTest::newRow("Button press") << ButtonPress << WINDOW_ID << true << 1;
-    QTest::newRow("Button release") << ButtonRelease << WINDOW_ID << true << 1;
-    QTest::newRow("Button press for wrong window id") << ButtonPress << WId(1) << true <<  0;
-    QTest::newRow("Button press when not visible") << ButtonPress << WINDOW_ID << false << 0;
+    QTest::newRow("Button press") << ButtonPress << WINDOW_ID << 1;
+    QTest::newRow("Key press") << KeyPress << WINDOW_ID << 1;
+    QTest::newRow("Button press for wrong window id") << ButtonPress << (Window)1 << 0;
+    QTest::newRow("Key press for wrong window id") << KeyPress << (Window)1 << 0;
 }
 
 void Ut_EventEater::testButtonEvents()
 {
     QFETCH(int, eventType);
-    QFETCH(WId, winId);
-    QFETCH(bool, isVisible);
+    QFETCH(Window, winId);
     QFETCH(int, verifyButtonEventSpyCount);
-
-    m_subject->setVisible(isVisible);
 
     XEvent event;
     event.type = eventType;
@@ -81,6 +77,100 @@ void Ut_EventEater::testButtonEvents()
     QAbstractEventDispatcher::instance()->filterEvent(&event);
 
     QCOMPARE(spy.count(), verifyButtonEventSpyCount);
+}
+
+void Ut_EventEater::testWindowIsCreatedProperly()
+{
+    Display *dpy = QX11Info::display();
+    int scr = DefaultScreen(dpy);
+    unsigned int width = DisplayWidth(dpy, scr);
+    unsigned int height = DisplayHeight(dpy, scr);
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XCreateWindow"), 1);
+    MethodCall &xcw = gX11WrapperStub->stubLastCallTo("XCreateWindow");
+    QCOMPARE(xcw.parameter<int>(2), 0);
+    QCOMPARE(xcw.parameter<int>(3), 0);
+    QCOMPARE(xcw.parameter<unsigned int>(4), width);
+    QCOMPARE(xcw.parameter<unsigned int>(5), height);
+    QCOMPARE(xcw.parameter<unsigned int>(8), (unsigned int)InputOnly);
+    QCOMPARE(xcw.parameter<unsigned long>(10), (unsigned long)CWOverrideRedirect);
+    QCOMPARE(xcw.parameter<XSetWindowAttributes>(11).override_redirect, (Bool)True);
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XSelectInput"), 1);
+    MethodCall &xsi = gX11WrapperStub->stubLastCallTo("XSelectInput");
+    QCOMPARE(xsi.parameter<Window>(1), WINDOW_ID);
+    QCOMPARE(xsi.parameter<long>(2), (long)(ButtonPressMask|ButtonReleaseMask|KeyPressMask));
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XStoreName"), 1);
+    MethodCall &xsn = gX11WrapperStub->stubLastCallTo("XStoreName");
+    QCOMPARE(xsn.parameter<Window>(1), WINDOW_ID);
+    QCOMPARE(QString(xsn.parameter<char*>(2)), QString("EventEater"));
+}
+
+void Ut_EventEater::testStackingLayerPropertyIsSet()
+{
+    QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 1);
+    MethodCall &xcp = gX11WrapperStub->stubLastCallTo("XChangeProperty");
+
+    QCOMPARE(xcp.parameter<Window>(1), WINDOW_ID);
+    QCOMPARE(xcp.parameter<Atom>(2), X11Wrapper::XInternAtom(0, "_MEEGO_STACKING_LAYER", False));
+    QCOMPARE(xcp.parameter<Atom>(3), XA_CARDINAL);
+    QCOMPARE(xcp.parameter<int>(4), 32);
+    QCOMPARE(xcp.parameter<int>(5), PropModeReplace);
+    QCOMPARE(*reinterpret_cast<long*>(xcp.parameter<QByteArray>(6).data()), (long)6);
+    QCOMPARE(xcp.parameter<int>(7), 1);
+}
+
+void Ut_EventEater::testWindowIsDestroyed()
+{
+    delete m_subject;
+    m_subject = NULL;
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XDestroyWindow"), 1);
+    MethodCall &xdw = gX11WrapperStub->stubLastCallTo("XDestroyWindow");
+    QCOMPARE(xdw.parameter<Window>(1), WINDOW_ID);
+}
+
+void Ut_EventEater::testShow()
+{
+    m_subject->show();
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XMapRaised"), 1);
+    MethodCall &xmr = gX11WrapperStub->stubLastCallTo("XMapRaised");
+    QCOMPARE(xmr.parameter<Window>(1), WINDOW_ID);
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XGrabKeyboard"), 1);
+    MethodCall &xgk = gX11WrapperStub->stubLastCallTo("XGrabKeyboard");
+
+    QCOMPARE(xgk.parameter<Window>(1), WINDOW_ID);
+    QCOMPARE(xgk.parameter<Bool>(2), False);
+    QCOMPARE(xgk.parameter<int>(3), (int)GrabModeAsync);
+    QCOMPARE(xgk.parameter<int>(4), (int)GrabModeAsync);
+    QCOMPARE(xgk.parameter<Time>(5), (Time)CurrentTime);
+
+    int xmr_i = 0, xgk_i = 0;
+
+    QList<MethodCall*> x11Calls = gX11WrapperStub->stubCallHistory();
+
+    for (int i=0;i<x11Calls.count();i++) {
+        if (x11Calls.at(i)->name() == "XMapRaised")
+            xmr_i = i;
+
+        if (x11Calls.at(i)->name() == "XGrabKeyboard")
+            xgk_i = i;
+    }
+
+    // The window must have been mapped before the grab
+    QVERIFY(xmr_i < xgk_i);
+}
+
+void Ut_EventEater::testHide()
+{
+    m_subject->hide();
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XUnmapWindow"), 1);
+    MethodCall &xuw = gX11WrapperStub->stubLastCallTo("XUnmapWindow");
+    QCOMPARE(xuw.parameter<Window>(1), WINDOW_ID);
 }
 
 QTEST_MAIN(Ut_EventEater)

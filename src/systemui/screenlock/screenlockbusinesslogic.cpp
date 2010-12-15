@@ -96,12 +96,9 @@ void ScreenLockBusinessLogic::toggleEventEater(bool toggle)
             connect(eventEaterWindow, SIGNAL(inputEventReceived()), this, SLOT(hideEventEater()));
         }
 
-        if (!eventEaterWindow->isVisible()) {
-            eventEaterWindow->show();
-            eventEaterWindow->showFullScreen();
-        }
+        eventEaterWindow->show();
     } else {
-        if (eventEaterWindow != NULL && eventEaterWindow->isVisible()) {
+        if (eventEaterWindow != NULL) {
             eventEaterWindow->hide();
         }
     }

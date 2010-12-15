@@ -18,10 +18,6 @@
 ****************************************************************************/
 
 #include "eventeater.h"
-#include <QMouseEvent>
-#include <QX11Info>
-#include <QAbstractEventDispatcher>
-#include "x11wrapper.h"
 
 // Event eater instance that listens input events
 static EventEater *eventEaterListenerInstance = NULL;
@@ -42,21 +38,42 @@ static bool eventEaterEventFilter(void *message)
 
 EventEater::EventEater()
 {
-    setWindowTitle("EventEater");
-    setAttribute(Qt::WA_TranslucentBackground);
-    setAttribute(Qt::WA_X11NetWmWindowTypeDialog);
-    setAttribute(Qt::WA_X11DoNotAcceptFocus);
-    setObjectName("EventEater");
-    setProperty("NoMStyle", true);
-
     if (previousEventFilter == NULL)
         previousEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(eventEaterEventFilter);
+
+    Display *dpy = QX11Info::display();
+    int scr = DefaultScreen(dpy);
+
+    XSetWindowAttributes attr;
+    attr.override_redirect = True;
+
+    window = X11Wrapper::XCreateWindow(dpy, DefaultRootWindow(dpy),
+                                       0, 0,
+                                       DisplayWidth(dpy, scr), DisplayHeight(dpy, scr),
+                                       0,
+                                       CopyFromParent,
+                                       InputOnly,
+                                       CopyFromParent,
+                                       CWOverrideRedirect,
+                                       &attr);
+
+    X11Wrapper::XSelectInput(dpy, window, ButtonPressMask|ButtonReleaseMask|KeyPressMask);
+    X11Wrapper::XStoreName(dpy, window, const_cast<char*>("EventEater"));
+
+    // Set the stacking layer
+    Atom stackingLayerAtom = X11Wrapper::XInternAtom(dpy, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom != None) {
+        long layer = 6;
+        X11Wrapper::XChangeProperty(dpy, window, stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
+    }
 
     eventEaterListenerInstance = this;
 }
 
 EventEater::~EventEater()
 {
+    X11Wrapper::XDestroyWindow(QX11Info::display(), window);
+
     // If destroying effective instance, then set static instance and filter pointers to NULL and restore previous event filter
     if (this == eventEaterListenerInstance) {
         eventEaterListenerInstance = NULL;
@@ -65,23 +82,28 @@ EventEater::~EventEater()
     }
 }
 
-void EventEater::showEvent(QShowEvent *event)
+void EventEater::show()
 {
-    QWidget::showEvent(event);
+    Display *dpy = QX11Info::display();
 
-    // Set the stacking layer
-    Display *display = QX11Info::display();
-    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
-    if (stackingLayerAtom != None) {
-        long layer = 6;
-        X11Wrapper::XChangeProperty(display, winId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
-    }
+    X11Wrapper::XMapRaised(dpy, window);
+
+    // Grab is released automatically at unmap
+    X11Wrapper::XGrabKeyboard(dpy, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
+}
+
+void EventEater::hide()
+{
+    X11Wrapper::XUnmapWindow(QX11Info::display(), window);
 }
 
 bool EventEater::eventFilter(XEvent *event)
 {
     bool handled = false;
-    if (isVisible() && event->xany.window == winId() && (event->type == ButtonPress || event->type == ButtonRelease)) {
+
+    if ((event->xany.window == window) &&
+        (event->type == ButtonPress || event->type == KeyPress)) {
+
         handled = true;
         emit inputEventReceived();
     }

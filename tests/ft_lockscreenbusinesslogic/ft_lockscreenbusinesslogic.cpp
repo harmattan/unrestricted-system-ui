@@ -115,7 +115,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (true);
     QTest::qWait (WMDelay);
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->window;
 
     QVERIFY (m_XChecker.checkWindow (
                 EventEaterWindowID,
@@ -134,7 +134,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogic ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (false);
     QTest::qWait (WMDelay);
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->window;
 
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,
@@ -211,7 +211,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (true);
     QTest::qWait (WMDelay);
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->window;
 
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,
@@ -230,7 +230,7 @@ Ft_LockScreenBusinessLogic::testLockScreenBusinessLogicWithMainWindow ()
     SYS_DEBUG ("***************************************************");
     m_LockScreenBusinessLogic->toggleEventEater (false);
     QTest::qWait (WMDelay);
-    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->internalWinId();
+    EventEaterWindowID = m_LockScreenBusinessLogic->eventEaterWindow->window;
 
     QVERIFY (m_XChecker.checkWindow(
                 EventEaterWindowID,

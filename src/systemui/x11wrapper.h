@@ -45,6 +45,12 @@ public:
     static XErrorHandler XSetErrorHandler(XErrorHandler handler);
     static int XChangeProperty(Display *display, Window w, Atom property, Atom type, int format, int mode, unsigned char *data, int nelements);
     static Status XSendEvent(Display *display, Window w, Bool propagate, long event_mask, XEvent *event_send);
+    static Window XCreateWindow(Display *display, Window parent, int x, int y, unsigned int width, unsigned int height, unsigned int border_width, int depth, unsigned int class_, Visual *visual, unsigned long valuemask, XSetWindowAttributes *attributes);
+    static int XDestroyWindow(Display *display, Window w);
+    static int XMapRaised(Display *display, Window w);
+    static int XUnmapWindow(Display *display, Window w);
+    static int XStoreName(Display *display, Window w, char *window_name);
+    static int XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time);
 };
 
 #endif /* X11WRAPPER_H_ */

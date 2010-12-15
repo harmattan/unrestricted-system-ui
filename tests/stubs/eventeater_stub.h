@@ -29,7 +29,8 @@ class EventEaterStub : public StubBase {
   public:
   virtual void EventEaterConstructor();
   virtual void EventEaterDestructor();
-  virtual void showEvent(QShowEvent *event);
+  virtual void show();
+  virtual void hide();
   virtual bool eventFilter(XEvent *event);
 }; 
 
@@ -39,10 +40,12 @@ void EventEaterStub::EventEaterConstructor() {
 void EventEaterStub::EventEaterDestructor() {
 }
 
-void EventEaterStub::showEvent(QShowEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QShowEvent * >(event));
-  stubMethodEntered("showEvent",params);
+void EventEaterStub::show() {
+  stubMethodEntered("show");
+}
+
+void EventEaterStub::hide() {
+  stubMethodEntered("hide");
 }
 
 bool EventEaterStub::eventFilter(XEvent *event) {
@@ -64,8 +67,13 @@ EventEater::EventEater() {
 EventEater::~EventEater() {
   gEventEaterStub->EventEaterDestructor();
 }
-void EventEater::showEvent(QShowEvent *event) {
-  gEventEaterStub->showEvent(event);
+
+void EventEater::show() {
+  gEventEaterStub->show();
+}
+
+void EventEater::hide() {
+  gEventEaterStub->hide();
 }
 
 bool EventEater::eventFilter(XEvent *event) {
