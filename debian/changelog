@@ -1,6 +1,7 @@
 system-ui (0.19.4~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#206058 - Sometimes MSceneWindow uses the landscape style even when the MWindow has been locked to portrait
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 14 Dec 2010 16:43:54 +0200
 

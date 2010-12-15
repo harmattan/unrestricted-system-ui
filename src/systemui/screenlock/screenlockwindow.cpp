@@ -33,6 +33,9 @@ ScreenLockWindow::ScreenLockWindow(QWidget *parent) :
 {
     setWindowTitle("Screen Lock");
 
+    excludeFromTaskBar();
+    applyStyle();
+
     // Create an extension area for the screen lock
     MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.ScreenLockExtensionInterface/1.0");
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(registerExtension(MApplicationExtensionInterface*)));
@@ -109,9 +112,6 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
         long layer = 2;
         X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
-
-    excludeFromTaskBar();
-    applyStyle();
 }
 
 void ScreenLockWindow::excludeFromTaskBar()
