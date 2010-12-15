@@ -179,10 +179,17 @@ void Ut_LockScreenWindow::testOrientationLocking()
     QFETCH(bool, orientationLocked);
     QFETCH(QString, expectedOrientation);
 
+    // Reset the stubs
+    mWindowOrientationLocked = false;
+    mWindowOrientation = QString();
+
+    // Set the style
     ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL)));
     style->setLockedOrientation(lockedOrientation);
-    QShowEvent event;
-    lockScreenWindow->showEvent(&event);
+
+    // Create a new window
+    delete lockScreenWindow;
+    lockScreenWindow = new ScreenLockWindow;
     QCOMPARE(mWindowOrientationLocked, orientationLocked);
     QCOMPARE(mWindowOrientation, expectedOrientation);
 }
