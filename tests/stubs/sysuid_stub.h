@@ -31,7 +31,6 @@ class SysuidStub : public StubBase {
   virtual void SysuidDestructor();
   virtual Sysuid * sysuid();
   virtual NotificationManagerInterface & notificationManagerInterface();
-  virtual MCompositorNotificationSink & compositorNotificationSink();
   virtual NotifierNotificationSink & notifierNotificationSink();
   virtual void loadTranslations();
   virtual void applyUseMode();
@@ -56,11 +55,6 @@ Sysuid * SysuidStub::sysuid() {
 NotificationManagerInterface & SysuidStub::notificationManagerInterface() {
   stubMethodEntered("notificationManagerInterface");
   return *stubReturnValue<NotificationManagerInterface *>("notificationManagerInterface");
-}
-
-MCompositorNotificationSink & SysuidStub::compositorNotificationSink() {
-  stubMethodEntered("compositorNotificationSink");
-  return *stubReturnValue<MCompositorNotificationSink *>("compositorNotificationSink");
 }
 
 NotifierNotificationSink & SysuidStub::notifierNotificationSink() {
@@ -108,10 +102,6 @@ Sysuid * Sysuid::instance() {
 
 NotificationManagerInterface & Sysuid::notificationManagerInterface() {
   return gSysuidStub->notificationManagerInterface();
-}
-
-MCompositorNotificationSink & Sysuid::compositorNotificationSink() {
-  return gSysuidStub->compositorNotificationSink();
 }
 
 NotifierNotificationSink & Sysuid::notifierNotificationSink() {

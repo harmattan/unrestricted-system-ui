@@ -177,11 +177,6 @@ NotificationManagerInterface &Sysuid::notificationManagerInterface()
     return *notificationManager;
 }
 
-MCompositorNotificationSink& Sysuid::compositorNotificationSink()
-{
-    return *mCompositorNotificationSink;
-}
-
 NotifierNotificationSink& Sysuid::notifierNotificationSink()
 {
     return *notifierNotificationSink_;

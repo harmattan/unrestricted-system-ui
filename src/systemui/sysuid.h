@@ -60,13 +60,6 @@ public:
     NotificationManagerInterface &notificationManagerInterface();
 
     /*!
-     * Returns a reference to the compositor notification sink.
-     *
-     * \return a reference to the compositor notification sink
-     */
-    MCompositorNotificationSink& compositorNotificationSink();
-
-    /*!
      * Returns a reference to the notifier notification sink.
      *
      * \return a reference to the notifier notification sink
