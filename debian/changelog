@@ -2,6 +2,7 @@ system-ui (0.19.4~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#206058 - Sometimes MSceneWindow uses the landscape style even when the MWindow has been locked to portrait
+  * Fixes: NB#208728 - Sysuid process causing high wakeups when device is in idle state
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 14 Dec 2010 16:43:54 +0200
 
@@ -9,7 +10,6 @@ system-ui (0.19.3-1) unstable; urgency=low
 
   * Fixes: Status menu does not follow the orientation of the topmost window
   * Fixes: NB#185636 - sysuid startup is too heavy
-  * Fixes: NB#208728 - Sysuid process causing high wakeups when device is in idle state
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 14 Dec 2010 16:39:39 +0200
 
