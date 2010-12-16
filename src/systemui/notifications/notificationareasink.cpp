@@ -75,6 +75,8 @@ MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const Not
     infoBanner->setIconID(determineIconId(parameters));
     infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
+    updatePrefixForNotificationGroupBannerTimestamp(infoBanner, parameters.value("count").toUInt());
+
     // Update the info banner's titles and actions
     updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
@@ -144,6 +146,7 @@ void NotificationAreaSink::increaseNotificationCountOfGroup(const Notification &
     // Update the groupid to count of notification ids hash
     uint notificationIdCount = notificationCountOfGroup.value(notification.groupId());
     notificationCountOfGroup.insert(notification.groupId(), ++notificationIdCount);
+    updatePrefixForNotificationGroupBannerTimestamp(groupIdToMBanner.value(notification.groupId()), notificationIdCount);
     // Update the notification id to group id hash
     notificationIdToGroupId.insert(notification.notificationId(), notification.groupId());
 }
@@ -161,7 +164,6 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
 {
     // Does the group id exist ?
     if(groupIdToMBanner.contains(notification.groupId())) {
-        increaseNotificationCountOfGroup(notification);
         // Yes it does, so get the banner associated with this.
         MBanner *infoBanner = groupIdToMBanner.value(notification.groupId());
 
@@ -178,6 +180,7 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
         } else {
             emit notificationAddedToGroup(*infoBanner);
         }
+        increaseNotificationCountOfGroup(notification);
     }
 }
 
@@ -241,6 +244,8 @@ uint NotificationAreaSink::decreaseNotificationCountOfGroup(uint groupId)
 {
     uint notificationIdsCount = notificationCountOfGroup.value(groupId);
     notificationCountOfGroup.insert(groupId, --notificationIdsCount);
+    updatePrefixForNotificationGroupBannerTimestamp(groupIdToMBanner.value(groupId),
+        notificationCountOfGroup.value(groupId));
     return  notificationIdsCount;
 }
 
@@ -251,5 +256,14 @@ void NotificationAreaSink::applyPrivacySetting(bool)
     }
     foreach (MBanner *banner, groupIdToMBanner) {
         updateTitles(banner);
+    }
+}
+
+void NotificationAreaSink::updatePrefixForNotificationGroupBannerTimestamp(MBanner *infoBanner, uint count)
+{
+    if (count > 1) {
+        infoBanner->setPrefixTimeStamp(qtTrId("qtn_noti_timestamp_latest"));
+    } else {
+        infoBanner->setPrefixTimeStamp("");
     }
 }

@@ -99,6 +99,11 @@ void MBanner::setBannerTimeStamp(const QDateTime &time)
     }
 }
 
+void MBanner::setPrefixTimeStamp(const QString &text)
+{
+    Ut_NotificationAreaSink::prefixTimeStamps[this] = text;
+}
+
 // MSceneWindow stubs (used by NotificationAreaSink)
 void MSceneWindow::disappear()
 {
@@ -127,6 +132,7 @@ QList<QString> Ut_NotificationAreaSink::subtitles;
 QList<QString> Ut_NotificationAreaSink::buttonIcons;
 QList<QString> Ut_NotificationAreaSink::contents;
 QList<QDateTime> Ut_NotificationAreaSink::timestamps;
+QHash<MBanner *, QString> Ut_NotificationAreaSink::prefixTimeStamps;
 QList<MBanner *> Ut_NotificationAreaSink::notifications;
 QList<MBanner *> Ut_NotificationAreaSink::destroyedNotifications;
 
@@ -175,6 +181,7 @@ void Ut_NotificationAreaSink::removeNotification(MBanner &notification)
         Ut_NotificationAreaSink::buttonIcons.removeAt(index);
         Ut_NotificationAreaSink::notifications.removeAt(index);
         Ut_NotificationAreaSink::timestamps.removeAt(index);
+        Ut_NotificationAreaSink::prefixTimeStamps.remove(&notification);
 
         notification.setParentItem(0);
     }
@@ -189,6 +196,7 @@ void Ut_NotificationAreaSink::cleanup()
     timestamps.clear();
     contents.clear();
     notifications.clear();
+    prefixTimeStamps.clear();
     destroyedNotifications.clear();
 }
 void Ut_NotificationAreaSink::testAddNotification()
@@ -443,6 +451,23 @@ void Ut_NotificationAreaSink::testNotificationsFetchedFromNotificationManager()
     QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 1);
 
     QCOMPARE(addSpy.count(), 1);
+}
+
+void Ut_NotificationAreaSink::testSetPrefixForNotificationGroupBannerWhenThereIsMoreThanOneNotificationInAGroup()
+{
+    TestNotificationParameters parameters0("title0", "subtitle0", "icon0", "content0", 123);
+    emit addGroup(1, parameters0);
+    TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1", 12345);
+    TestNotificationParameters parameters2("title1", "subtitle1", "icon1", "content1", 12346);
+    emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
+    emit addNotification(Notification(1, 1, 2, parameters2, Notification::ApplicationEvent, 1000));
+
+    QCOMPARE(notifications.count(), 1);
+    QCOMPARE(prefixTimeStamps.count(), 1);
+    QCOMPARE(prefixTimeStamps.value(notifications.at(0)).isEmpty(), false);
+
+    removeNotification(0);
+    QCOMPARE(prefixTimeStamps.value(notifications.at(0)).isEmpty(), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)

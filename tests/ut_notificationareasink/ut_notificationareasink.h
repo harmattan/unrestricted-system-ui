@@ -41,6 +41,7 @@ public:
     static QList<QString> buttonIcons;
     static QList<QString> contents;
     static QList<QDateTime> timestamps;
+    static QHash<MBanner *, QString> prefixTimeStamps;
     static QList<MBanner *> notifications;
     static QList<MBanner *> destroyedNotifications;
 
@@ -77,6 +78,7 @@ private slots:
     void testApplyPrivacySetting_data();
     void testApplyPrivacySetting();
     void testNotificationsFetchedFromNotificationManager();
+    void testSetPrefixForNotificationGroupBannerWhenThereIsMoreThanOneNotificationInAGroup();
 
 signals:
     void addGroup(uint groupId, const NotificationParameters &parameters);

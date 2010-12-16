@@ -121,6 +121,8 @@ private:
     void deleteGroupFromNotificationCountOfGroup(const uint groupId);
     //! Decreases notification count for the group
     uint decreaseNotificationCountOfGroup(uint groupId);
+    //! Updates the latest prefix for notification group timestamp.
+    void updatePrefixForNotificationGroupBannerTimestamp(MBanner *infoBanner, uint count);
 };
 
 #endif /* NOTIFICATIONAREASINK_H_ */
