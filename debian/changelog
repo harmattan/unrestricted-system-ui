@@ -1,3 +1,9 @@
+system-ui (0.19.6~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Ran Nyman <ran.nyman@nokia.com>  Thu, 16 Dec 2010 16:20:35 +0200
+
 system-ui (0.19.5-1) unstable; urgency=low
 
   * Fixes: NB#209416 - MNotificationGroup::remove() call takes long time
