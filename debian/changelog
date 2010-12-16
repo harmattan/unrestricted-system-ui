@@ -1,6 +1,5 @@
-system-ui (0.19.5~1) unstable; urgency=low
+system-ui (0.19.5-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#209416 - MNotificationGroup::remove() call takes long time
   * Fixes: A compositing artifact when the display is dimmed due to an idle timeout
 
