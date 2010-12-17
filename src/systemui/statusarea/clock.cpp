@@ -65,11 +65,6 @@ void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged)
 }
 #endif
 
-void Clock::setShortDisplay(bool isShort) {
-    // Set the short display model field
-    model()->setShortDisplay(isShort);
-}
-
 void Clock::enterDisplayEvent()
 {
     timer.stop();

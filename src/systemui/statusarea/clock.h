@@ -46,11 +46,6 @@ public:
      * \brief Destructor
      */
     ~Clock();
-public slots:
-    /*!
-     * \brief Select whether to show time using the normal or short time format.
-     */
-    void setShortDisplay(bool isShort);
 
 private slots:
     /*!

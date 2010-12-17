@@ -300,8 +300,6 @@ void AlarmStatusIndicator::alarmChanged()
     } else {
         setObjectName(QString(metaObject()->className()));
     }
-
-    emit alarmSettingChanged(isSet);
 }
 
 BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :

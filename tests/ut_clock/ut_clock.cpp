@@ -140,13 +140,4 @@ void Ut_Clock::testModelUpdates()
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
 
-void Ut_Clock::testShortDisplayToggling()
-{
-    // Check that the "setShortDisplay" slot sets the correct model field
-    emit shortDisplayMode(true);
-    QCOMPARE(m_subject->model()->shortDisplay(), true);
-    emit shortDisplayMode(false);
-    QCOMPARE(m_subject->model()->shortDisplay(), false);
-}
-
 QTEST_MAIN(Ut_Clock)

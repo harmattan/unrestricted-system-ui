@@ -67,7 +67,7 @@ void ClockView::updateData(const QList<const char *>& modifications)
     MWidgetView::updateData(modifications);
     const char *member;
     foreach(member, modifications) {
-        if (strcmp(member, ClockModel::Time) == 0 || strcmp(member, ClockModel::ShortDisplay) == 0) {
+        if (strcmp(member, ClockModel::Time) == 0) {
             updateLabel();
         }
     }
@@ -91,16 +91,6 @@ void ClockView::updateLabel()
 {
     QDateTime time = model()->time();
     QString text = locale->formatDateTime(time, style()->timeFormat());
-
-    if (model()->shortDisplay() && style()->shortRemoveAmPmIndicator()) {
-        /* Remove the AM/PM indicator in the "short display" mode if the
-         * theme dictates so. Also remove possible spaces that were between
-         * the time and the AM/PM indicator.
-         */
-        QString indicator = locale->formatDateTime(time, "%p");
-        text.remove(indicator);
-        text = text.trimmed();
-    }
 
     if (text != previousLabel) {
         // Only update the label if the text has changed

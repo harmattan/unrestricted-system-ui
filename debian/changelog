@@ -1,6 +1,7 @@
 system-ui (0.19.6~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: Clock shows wrong time indication when alarm(s) is(are) enabled
 
  -- Ran Nyman <ran.nyman@nokia.com>  Thu, 16 Dec 2010 16:20:35 +0200
 

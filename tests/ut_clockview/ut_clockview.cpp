@@ -84,9 +84,6 @@ void Ut_ClockView::init()
     m_subject = new TestClockView(testClock);
     connect(this, SIGNAL(localeChanged()), m_subject->locale.data(), SIGNAL(settingsChanged()));
     m_subject->setModel(&clockModel);
-
-    // Set model defaults
-    clockModel.setShortDisplay(false);
 }
 
 // Called after every testfunction
@@ -172,39 +169,6 @@ public:
 };
 
 EnhancedMLocaleStub gEnhancedMLocaleStub;
-
-void Ut_ClockView::testSetShortDisplay_data()
-{
-    QTest::addColumn<QString>("timeFormatInStyle");
-    QTest::addColumn<QString>("expectedLabelTextWithoutShortDisplay");
-    QTest::addColumn<QString>("expectedLabelTextWithShortDisplay");
-
-    QTest::newRow("am/pm indicator behind") << FORMAT + TO_REMOVE << FORMAT + TO_REMOVE << FORMAT;
-    QTest::newRow("am/pm indicator behind, with a space") << FORMAT + " " + TO_REMOVE << FORMAT + " " + TO_REMOVE << FORMAT;
-    QTest::newRow("am/pm indicator in front") << TO_REMOVE + FORMAT << TO_REMOVE + FORMAT << FORMAT;
-    QTest::newRow("am/pm indicator in front, with a space") << TO_REMOVE + " " + FORMAT << TO_REMOVE + " " + FORMAT << FORMAT;
-}
-
-void Ut_ClockView::testSetShortDisplay()
-{
-    gMLocaleStub = &gEnhancedMLocaleStub;
-
-    m_subject->modifiableStyle()->setShortRemoveAmPmIndicator(true);
-    QDateTime time(QDate(), QTime(1, 1));
-
-    clockModel.setShortDisplay(true);
-    clockModel.setTime(time);
-
-    QFETCH(QString, timeFormatInStyle);
-    QFETCH(QString, expectedLabelTextWithoutShortDisplay);
-    QFETCH(QString, expectedLabelTextWithShortDisplay);
-
-    m_subject->modifiableStyle()->setTimeFormat(timeFormatInStyle);
-    clockModel.setShortDisplay(false);
-    QCOMPARE(Ut_ClockView::timeAsString, expectedLabelTextWithoutShortDisplay);
-    clockModel.setShortDisplay(true);
-    QCOMPARE(Ut_ClockView::timeAsString, expectedLabelTextWithShortDisplay);
-}
 
 void Ut_ClockView::testAlignment()
 {

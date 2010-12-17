@@ -34,8 +34,6 @@ class ClockModel : public MWidgetModel
     //! The current date and time
     M_MODEL_PROPERTY(QDateTime, time, Time, true, QDateTime::currentDateTime())
 
-    //! Whether to use normal or short time format to display clock
-    M_MODEL_PROPERTY(bool, shortDisplay, ShortDisplay, true, false)
 };
 
 #endif /* CLOCKMODEL_H_ */

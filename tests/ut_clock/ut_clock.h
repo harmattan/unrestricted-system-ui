@@ -56,7 +56,6 @@ private slots:
     void testConstruction();
     void testTimeUpdate();
     void testModelUpdates();
-    void testShortDisplayToggling();
 
 private:
     Clock *m_subject;
