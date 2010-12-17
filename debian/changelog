@@ -1,6 +1,7 @@
 system-ui (0.19.8~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Implemented: SWP#DUI-4443 - Settings plugin to turn the notification private mode on/off.
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 21 Dec 2010 18:16:20 +0200
 

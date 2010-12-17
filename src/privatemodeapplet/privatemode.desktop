@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=ControlPanelApplet
+Name=PrivateMode
+Icon=
+Exec=
+X-logical-id=qtn_noti_settings_private_mode
+X-translation-catalog=notification
+X-Maemo-Service=com.nokia.DuiControlPanel
+X-Maemo-Method=com.nokia.DuiControlPanelIf.appletPage
+X-Maemo-Object-Path=/
+X-Maemo-Fixed-Args=PrivateMode
+
+[DUI]
+X-DUIApplet-Applet=libprivatemodeapplet.so
+
+[DCP]
+Category=qtn_sett_main_notifications
+Order=0
+WidgetType=Toggle
+

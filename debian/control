@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.3
                libqmsystem2-dev, libaegis-crypto-dev, libresourceqt-dev,
                libcontextsubscriber-dev, libngf-dev, libxcomposite-dev, libxext-dev,
                libdbus-1-dev, libdbus-glib-1-dev, libglib2.0-dev,
-               aegis-builder (>= 1.4)
+               aegis-builder (>= 1.4), libduicontrolpanel-dev
 Standards-Version: 3.8.0
 
 Package: system-ui

@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 SUBDIRS = \
     libnotificationsystem \
     systemui \
-    extensions
+    extensions \
+    privatemodeapplet
