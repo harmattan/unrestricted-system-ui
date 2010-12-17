@@ -30,10 +30,7 @@ class ScreenLockWindowStub : public StubBase {
   virtual void ScreenLockWindowConstructor();
   virtual void ScreenLockWindowDestructor();
   virtual void applyStyle();
-  virtual void reset();
   virtual void showEvent(QShowEvent *event);
-  virtual void registerExtension(MApplicationExtensionInterface *interface);
-  virtual void unregisterExtension(MApplicationExtensionInterface *interface);
 };
 
 // 2. IMPLEMENT STUB
@@ -47,29 +44,11 @@ void ScreenLockWindowStub::applyStyle() {
   stubMethodEntered("applyStyle");
 }
 
-void ScreenLockWindowStub::reset() {
-  stubMethodEntered("reset");
-}
-
 void ScreenLockWindowStub::showEvent(QShowEvent *event)
 {
   QList<ParameterBase*> params;
   params.append( new Parameter<QShowEvent * >(event));
   stubMethodEntered("showEvent", params);
-}
-
-void ScreenLockWindowStub::registerExtension(MApplicationExtensionInterface *interface)
-{
-    QList<ParameterBase*> params;
-    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
-    stubMethodEntered("registerExtension", params);
-}
-
-void ScreenLockWindowStub::unregisterExtension(MApplicationExtensionInterface *interface)
-{
-    QList<ParameterBase*> params;
-    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
-    stubMethodEntered("unregisterExtension", params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -78,7 +57,7 @@ ScreenLockWindowStub* gScreenLockWindowStub = &gDefaultScreenLockWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-ScreenLockWindow::ScreenLockWindow(QWidget *)
+ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *, QWidget *)
 {
   gScreenLockWindowStub->ScreenLockWindowConstructor();
 }
@@ -91,23 +70,9 @@ void ScreenLockWindow::applyStyle() {
   gScreenLockWindowStub->applyStyle();
 }
 
-void ScreenLockWindow::reset() {
-  gScreenLockWindowStub->reset();
-}
-
 void ScreenLockWindow::showEvent(QShowEvent *event)
 {
     gScreenLockWindowStub->showEvent(event);
-}
-
-void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *interface)
-{
-    gScreenLockWindowStub->registerExtension(interface);
-}
-
-void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *interface)
-{
-    gScreenLockWindowStub->unregisterExtension(interface);
 }
 
 #endif

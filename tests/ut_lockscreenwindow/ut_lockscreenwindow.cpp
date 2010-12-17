@@ -53,11 +53,6 @@ void MWindow::setPortraitOrientation()
     mWindowOrientation = "portrait";
 }
 
-bool MApplicationExtensionArea::init()
-{
-    return true;
-}
-
 MWindow* appearedWindow = NULL;
 void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
 {
@@ -65,52 +60,22 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
     Q_UNUSED(policy);
 }
 
-ScreenLockExtension::ScreenLockExtension() : widget_(NULL)
-{
-}
-ScreenLockExtension::~ScreenLockExtension()
-{
-}
-bool screenLockExtensionReset = false;
-void ScreenLockExtension::reset()
-{
-    screenLockExtensionReset = true;
-}
-void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInterface &)
-{
-}
-bool ScreenLockExtension::initialize(const QString &)
-{
-    widget_ = new LockScreen;
-    return true;
-}
-QGraphicsWidget *ScreenLockExtension::widget()
-{
-    return widget_;
-}
-QObject *ScreenLockExtension::qObject()
-{
-    return this;
-}
 
 void Ut_LockScreenWindow::initTestCase()
 {
     int   argc = 1;
-    char *argv[] = {(char *) "./Ut_LockScreenWindow", NULL };
+    char *argv[] = {(char *) "./ut_lockscreenwindow", NULL };
     app = new MApplication(argc, argv);
-    notifierSink = new NotifierNotificationSink;
-    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
 }
 
 void Ut_LockScreenWindow::cleanupTestCase()
 {
-    delete notifierSink;
     delete app;
 }
 
 void Ut_LockScreenWindow::init()
 {
-    lockScreenWindow = new ScreenLockWindow;
+    lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
 }
 
 void Ut_LockScreenWindow::cleanup()
@@ -121,16 +86,6 @@ void Ut_LockScreenWindow::cleanup()
     mWindowOrientationLocked = false;
     mWindowOrientation.clear();
     gX11WrapperStub->stubReset();
-    screenLockExtensionReset = false;
-}
-
-void Ut_LockScreenWindow::testWhenExtensionIsRegisteredSignalsAreConnected()
-{
-    ScreenLockExtension screenLockExtension;
-    screenLockExtension.initialize("");
-    lockScreenWindow->registerExtension(&screenLockExtension);
-    QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), lockScreenWindow, SIGNAL(unlocked())));
-    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
 }
 
 void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
@@ -189,18 +144,9 @@ void Ut_LockScreenWindow::testOrientationLocking()
 
     // Create a new window
     delete lockScreenWindow;
-    lockScreenWindow = new ScreenLockWindow;
+    lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
     QCOMPARE(mWindowOrientationLocked, orientationLocked);
     QCOMPARE(mWindowOrientation, expectedOrientation);
-}
-
-void Ut_LockScreenWindow::testReset()
-{
-    ScreenLockExtension screenLockExtension;
-    screenLockExtension.initialize("");
-    lockScreenWindow->registerExtension(&screenLockExtension);
-    lockScreenWindow->reset();
-    QVERIFY(screenLockExtensionReset);
 }
 
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

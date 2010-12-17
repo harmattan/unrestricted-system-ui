@@ -26,8 +26,11 @@
 #include "sysuid_stub.h"
 #include "eventeater_stub.h"
 #include "closeeventeater_stub.h"
+#include "notifiernotificationsink_stub.h"
+#include "notificationsink_stub.h"
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MApplicationExtensionArea>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -51,6 +54,40 @@ void QWidget::raise()
     gQWidgetRaiseCalled = true;
 }
 
+bool MApplicationExtensionArea::init()
+{
+    return true;
+}
+
+ScreenLockExtension::ScreenLockExtension() : widget_(NULL)
+{
+}
+ScreenLockExtension::~ScreenLockExtension()
+{
+}
+bool screenLockExtensionReset = false;
+void ScreenLockExtension::reset()
+{
+    screenLockExtensionReset = true;
+}
+void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInterface &)
+{
+}
+bool ScreenLockExtension::initialize(const QString &)
+{
+    widget_ = new LockScreen;
+    return true;
+}
+QGraphicsWidget *ScreenLockExtension::widget()
+{
+    return widget_;
+}
+QObject *ScreenLockExtension::qObject()
+{
+    return this;
+}
+
+
 void Ut_LockScreenBusinessLogic::init()
 {
     gScreenLockWindowStub->stubReset();
@@ -64,6 +101,7 @@ void Ut_LockScreenBusinessLogic::cleanup()
 {
     gQWidgetRaiseCalled = false;
     gQWidgetVisible.clear();
+    screenLockExtensionReset = false;
 }
 
 void Ut_LockScreenBusinessLogic::initTestCase()
@@ -74,17 +112,24 @@ void Ut_LockScreenBusinessLogic::initTestCase()
     /* XXX: input context caused a crash :-S */
     m_App->setLoadMInputContext (false);
     m_App->setQuitOnLastWindowClosed (false);
+    notifierSink = new NotifierNotificationSink;
+    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
 }
 
 void Ut_LockScreenBusinessLogic::cleanupTestCase()
 {
     m_App->deleteLater ();
+    delete notifierSink;
 }
 
 void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
 {
     ScreenLockBusinessLogic logic;
     QSignalSpy spy(&logic, SIGNAL(screenIsLocked(bool)));
+
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    logic.registerExtension(&screenLockExtension);
 
 #ifdef HAVE_QMSYSTEM
     // First try with display off
@@ -108,7 +153,8 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(gQWidgetRaiseCalled, true);
 
     // The lock screen needs to be reset
-    QCOMPARE(gScreenLockWindowStub->stubCallCount("reset"), 1);
+    QCOMPARE(screenLockExtensionReset, true);
+    screenLockExtensionReset = false;
 
     // Reset the stubs
     gQWidgetVisible[logic.screenLockWindow] = false;
@@ -124,7 +170,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(gQWidgetRaiseCalled, true);
 
     // The lock screen still needs to be reset
-    QCOMPARE(gScreenLockWindowStub->stubCallCount("reset"), 2);
+    QCOMPARE(screenLockExtensionReset, true);
 
     // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
     logic.toggleScreenLockUI(false);
@@ -171,18 +217,48 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
 void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 {
     ScreenLockBusinessLogic logic;
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    logic.registerExtension(&screenLockExtension);
+
     logic.toggleScreenLockUI(true);
 
     // When lock-screen-ui is shown reset should be called on it
-    QCOMPARE(gScreenLockWindowStub->stubCallCount ("reset"), 1);
+    QCOMPARE(screenLockExtensionReset, true);
+    screenLockExtensionReset = false;
 
     logic.displayStateChanged(MeeGo::QmDisplayState::Off);
     logic.displayStateChanged(MeeGo::QmDisplayState::On);
 
     // Also check whether the reset called on the
     // lock-screen-ui (after display turn on)
-    QCOMPARE(gScreenLockWindowStub->stubCallCount ("reset"), 2);
+    QCOMPARE(screenLockExtensionReset, true);
 }
 #endif
+
+
+void Ut_LockScreenBusinessLogic::testReset()
+{
+    ScreenLockBusinessLogic logic;
+
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    logic.registerExtension(&screenLockExtension);
+    logic.reset();
+    QVERIFY(screenLockExtensionReset);
+}
+
+void Ut_LockScreenBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnected()
+{
+    ScreenLockBusinessLogic logic;
+
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    logic.registerExtension(&screenLockExtension);
+
+    QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), &logic, SIGNAL(unlockConfirmed())));
+    QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), &logic, SLOT(unlockScreen())));
+    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
+}
 
 QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)

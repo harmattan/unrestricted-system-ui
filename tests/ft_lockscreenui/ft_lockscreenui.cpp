@@ -26,6 +26,7 @@
 #include <MApplicationWindow>
 #include <MSceneManager>
 #include <MTheme>
+#include <MApplicationExtensionArea>
 
 #define DEBUG
 #include "debug.h"
@@ -426,7 +427,7 @@ void
 Ft_LockScreenUI::createLockScreenUI ()
 {
     if (!m_LockScreenWindow)
-        m_LockScreenWindow = new ScreenLockWindow ();
+        m_LockScreenWindow = new ScreenLockWindow (new MApplicationExtensionArea(""));
 }
 
 void

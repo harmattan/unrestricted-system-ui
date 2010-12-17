@@ -19,31 +19,19 @@
 
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
-#include "screenlockextensioninterface.h"
-#include "sysuid.h"
-#include "notifiernotificationsink.h"
 #include <MApplicationExtensionArea>
 #include <MSceneWindow>
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
 #include "x11wrapper.h"
 
-ScreenLockWindow::ScreenLockWindow(QWidget *parent) :
+ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWidget *parent) :
     MWindow(parent)
 {
     setWindowTitle("Screen Lock");
 
     excludeFromTaskBar();
     applyStyle();
-
-    // Create an extension area for the screen lock
-    MApplicationExtensionArea *extensionArea = new MApplicationExtensionArea("com.meego.core.ScreenLockExtensionInterface/1.0");
-    connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(registerExtension(MApplicationExtensionInterface*)));
-    connect(extensionArea, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), this, SLOT(unregisterExtension(MApplicationExtensionInterface*)));
-    extensionArea->setStyleName("ScreenLockExtensionArea");
-    extensionArea->setInProcessFilter(QRegExp("/sysuid-screenlock.desktop$"));
-    extensionArea->setOutOfProcessFilter(QRegExp("$^"));
-    extensionArea->init();
 
     // Create a layout for the extension area
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -73,31 +61,6 @@ void ScreenLockWindow::applyStyle()
         setOrientationLocked(true);
     } else {
         setOrientationLocked(false);
-    }
-}
-
-void ScreenLockWindow::reset()
-{
-    foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
-        screenLockExtension->reset();
-    }
-}
-
-void ScreenLockWindow::registerExtension(MApplicationExtensionInterface *extension)
-{
-    ScreenLockExtensionInterface *screenLockExtension = static_cast<ScreenLockExtensionInterface *>(extension);
-    screenLockExtensions.append(screenLockExtension);
-    screenLockExtension->setNotificationManagerInterface(Sysuid::instance()->notificationManagerInterface());
-    connect(screenLockExtension->qObject(), SIGNAL(unlocked()), this, SIGNAL(unlocked()));
-    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension->qObject(), SIGNAL(notifierSinkActive(bool)));
-}
-
-void ScreenLockWindow::unregisterExtension(MApplicationExtensionInterface *extension)
-{
-    ScreenLockExtensionInterface *screenLockExtension = dynamic_cast<ScreenLockExtensionInterface *>(extension);
-
-    if (screenLockExtension != NULL) {
-        screenLockExtensions.removeAll(screenLockExtension);
     }
 }
 

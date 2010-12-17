@@ -20,9 +20,46 @@
 #define UT_LOCKSCREENBUSINESSLOGIC_H
 
 #include <QObject>
+#include <QGraphicsWidget>
+#include "screenlockextensioninterface.h"
 
 class MApplication;
 class MApplicationWindow;
+class NotifierNotificationSink;
+
+class LockScreen : public QGraphicsWidget
+{
+    Q_OBJECT
+
+signals:
+    void unlocked();
+};
+
+class ScreenLockExtension : public QObject, public ScreenLockExtensionInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(ScreenLockExtensionInterface MApplicationExtensionInterface)
+
+public:
+    ScreenLockExtension();
+    virtual ~ScreenLockExtension();
+
+    //! Methods derived from ScreenLockExtensionInterface
+    virtual void reset();
+    virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
+    virtual QObject *qObject();
+
+    //! Methods derived from MApplicationExtensionInterface
+    virtual bool initialize(const QString &interface);
+    virtual QGraphicsWidget *widget();
+
+signals:
+    void unlocked();
+    void notifierSinkActive(bool active);
+
+private:
+    QGraphicsWidget *widget_;
+};
 
 class Ut_LockScreenBusinessLogic : public QObject
 {
@@ -41,9 +78,12 @@ private slots:
 #ifdef HAVE_QMSYSTEM
     void testDisplayStateChanged();
 #endif
+    void testWhenExtensionIsRegisteredSignalsAreConnected();
+    void testReset();
 
 private:
-    MApplication             *m_App;
+    MApplication *m_App;
+    NotifierNotificationSink *notifierSink;
 };
 
 #endif

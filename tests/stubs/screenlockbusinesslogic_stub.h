@@ -18,7 +18,10 @@ class ScreenLockBusinessLogicStub : public StubBase {
   virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
   virtual void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
   virtual bool displayIsOn();
-}; 
+  virtual void reset();
+  virtual void registerExtension(MApplicationExtensionInterface *interface);
+  virtual void unregisterExtension(MApplicationExtensionInterface *interface);
+};
 
 // 2. IMPLEMENT STUB
 void ScreenLockBusinessLogicStub::ScreenLockBusinessLogicConstructor(QObject *parent) {
@@ -66,6 +69,24 @@ bool ScreenLockBusinessLogicStub::displayIsOn() {
   return stubReturnValue<bool>("displayIsOn");
 }
 
+void ScreenLockBusinessLogicStub::reset() {
+  stubMethodEntered("reset");
+}
+
+void ScreenLockBusinessLogicStub::registerExtension(MApplicationExtensionInterface *interface)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
+    stubMethodEntered("registerExtension", params);
+}
+
+void ScreenLockBusinessLogicStub::unregisterExtension(MApplicationExtensionInterface *interface)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
+    stubMethodEntered("unregisterExtension", params);
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -108,6 +129,20 @@ void ScreenLockBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmL
 
 bool ScreenLockBusinessLogic::displayIsOn() {
   return gScreenLockBusinessLogicStub->displayIsOn();
+}
+
+void ScreenLockBusinessLogic::reset() {
+  gScreenLockBusinessLogicStub->reset();
+}
+
+void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *interface)
+{
+    gScreenLockBusinessLogicStub->registerExtension(interface);
+}
+
+void ScreenLockBusinessLogic::unregisterExtension(MApplicationExtensionInterface *interface)
+{
+    gScreenLockBusinessLogicStub->unregisterExtension(interface);
 }
 
 

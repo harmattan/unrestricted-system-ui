@@ -28,6 +28,9 @@
 
 class ScreenLockWindow;
 class EventEater;
+class MApplicationExtensionArea;
+class MApplicationExtensionInterface;
+class ScreenLockExtensionInterface;
 
 class ScreenLockBusinessLogic : public QObject
 {
@@ -45,6 +48,18 @@ private slots:
     void unlockScreen();
     void hideEventEater();
 
+
+    //! Registers an screen lock extension
+    void registerExtension(MApplicationExtensionInterface *extension);
+
+    //! Unregisters an screen lock extension
+    void unregisterExtension(MApplicationExtensionInterface *extension);
+
+    /*!
+     * Resets the screen lock to its normal state.
+     */
+    void reset();
+
 #ifdef HAVE_QMSYSTEM
     void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
     void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
@@ -59,7 +74,15 @@ private:
     bool displayIsOn();
 
     ScreenLockWindow *screenLockWindow;
+
+    //! The event eater window
     EventEater *eventEaterWindow;
+
+    //! The extension area containing the screen lock extension
+    MApplicationExtensionArea *extensionArea;
+
+    //! A list of registered screen lock extensions
+    QList<ScreenLockExtensionInterface *> screenLockExtensions;
 
 #ifdef HAVE_QMSYSTEM
     MeeGo::QmDisplayState displayState;

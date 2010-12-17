@@ -22,8 +22,7 @@
 #include <MWindow>
 #include <X11/Xdefs.h>
 
-class MApplicationExtensionInterface;
-class ScreenLockExtensionInterface;
+class MApplicationExtensionArea;
 
 /*!
  * Screen lock window is a window for the screen lock.
@@ -36,36 +35,22 @@ public:
     /*!
      * Creates a screen lock window.
      *
+     * \param extensionArea the application extension area containing the lock screen extension.
+                            The window takes ownership of the extension area.
      * \param parent the parent widget for the window
      */
-    ScreenLockWindow(QWidget *parent = NULL);
+    ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWidget *parent = NULL);
 
     /*!
      * Destroys the screen lock window.
      */
     virtual ~ScreenLockWindow();
 
-    /*!
-     * Resets the screen lock to its normal state.
-     */
-    void reset();
-
 protected:
     /*!
      * Sets the _MEEGO_STACKING_LAYER window property to 2.
      */
     virtual void showEvent(QShowEvent *event);
-
-signals:
-    //! Signal emitted when the screen is unlocked
-    void unlocked();
-
-private slots:
-    //! Registers an screen lock extension
-    void registerExtension(MApplicationExtensionInterface *extension);
-
-    //! Unregisters an screen lock extension
-    void unregisterExtension(MApplicationExtensionInterface *extension);
 
 private:
     //! Set window properties to not show the window in the switcher
@@ -74,9 +59,6 @@ private:
 
     //! Applies the lock screen orientation and locking from the style
     void applyStyle();
-
-    //! A list of registered screen lock extensions
-    QList<ScreenLockExtensionInterface *> screenLockExtensions;
 
 #ifdef UNIT_TEST
     friend class Ut_LockScreenWindow;

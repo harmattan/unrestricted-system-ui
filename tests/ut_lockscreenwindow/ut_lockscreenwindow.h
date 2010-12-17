@@ -19,46 +19,10 @@
 #ifndef UT_LOCKSCREENWINDOW_H
 #define UT_LOCKSCREENWINDOW_H
 
-#include <QGraphicsWidget>
-#include "screenlockextensioninterface.h"
+#include <QObject>
 
 class MApplication;
-class NotifierNotificationSink;
 class ScreenLockWindow;
-
-class LockScreen : public QGraphicsWidget
-{
-    Q_OBJECT
-
-signals:
-    void unlocked();
-};
-
-class ScreenLockExtension : public QObject, public ScreenLockExtensionInterface
-{
-    Q_OBJECT
-    Q_INTERFACES(ScreenLockExtensionInterface MApplicationExtensionInterface)
-
-public:
-    ScreenLockExtension();
-    virtual ~ScreenLockExtension();
-
-    //! Methods derived from ScreenLockExtensionInterface
-    virtual void reset();
-    virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
-    virtual QObject *qObject();
-
-    //! Methods derived from MApplicationExtensionInterface
-    virtual bool initialize(const QString &interface);
-    virtual QGraphicsWidget *widget();
-
-signals:
-    void unlocked();
-    void notifierSinkActive(bool active);
-
-private:
-    QGraphicsWidget *widget_;
-};
 
 class Ut_LockScreenWindow : public QObject
 {
@@ -70,16 +34,13 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testWhenExtensionIsRegisteredSignalsAreConnected();
     void testWhenWindowIsCreatedLockScreenAppears();
     void testWhenWindowIsShownItIsExcludedFromTaskbar();
     void testOrientationLocking_data();
     void testOrientationLocking();
-    void testReset();
 
 private:
     MApplication *app;
-    NotifierNotificationSink *notifierSink;
     ScreenLockWindow *lockScreenWindow;
 };
 
