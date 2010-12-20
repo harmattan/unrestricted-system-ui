@@ -54,9 +54,10 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
 
     // Create the "and more" area
     andMore->setStyleName("AndMore");
+    andMore->setVisible(false);
     //% "And more"
     MLabel *andMoreLabel = new MLabel(qtTrId("qtn_noti_and_more"));
-    andMoreLabel->setObjectName("AndMoreLabel");
+    andMoreLabel->setStyleName("AndMoreLabel");
     QGraphicsLinearLayout *andMoreLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     andMoreLayout->setContentsMargins(0, 0, 0, 0);
     andMoreLayout->setSpacing(0);
@@ -67,7 +68,7 @@ NotificationAreaView::NotificationAreaView(NotificationArea *controller) :
     // Put a clear button into the clear button layout
     clearButtonLayout->setContentsMargins(0, 0, 0, 0);
     clearButtonLayout->setSpacing(0);
-    clearButton->setObjectName("NotificationAreaClearButton");
+    clearButton->setStyleName("NotificationAreaClearButton");
     connect(clearButton, SIGNAL(clicked()), controller, SLOT(removeAllRemovableBanners()));
     clearButtonLayout->addStretch();
     clearButtonLayout->addItem(clearButton);
@@ -119,10 +120,12 @@ void NotificationAreaView::updateLayout()
     }
 
     // If there are more than maximum number of banners to be added show "and more"
-    andMore->setStyleName((style()->maxBanners() >= 0 && model()->banners().count() > style()->maxBanners()) ? "AndMoreVisible" : "AndMore");
+    bool andMoreVisible = style()->maxBanners() >= 0 && model()->banners().count() > style()->maxBanners();
+    andMore->setStyleName(andMoreVisible ? "AndMoreVisible" : "AndMore");
+    andMore->setVisible(andMoreVisible);
 
     // If removable banners exist make the clear button visible
-    clearButton->setObjectName((removableBannersExist && style()->clearButton()) ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");
+    clearButton->setStyleName((removableBannersExist && style()->clearButton()) ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton");
 }
 
 M_REGISTER_VIEW_NEW(NotificationAreaView, NotificationArea)

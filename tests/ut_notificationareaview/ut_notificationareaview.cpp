@@ -107,7 +107,7 @@ void Ut_NotificationAreaView::testAddClearButton()
     notificationArea->model()->setBanners(banners);
 
     QCOMPARE(m_subject->bannerLayout->count(), numRemovableBanners + numNonRemovableBanners);
-    QCOMPARE(m_subject->clearButton->objectName(), clearButtonExists ? QString("NotificationAreaClearButtonVisible") : QString("NotificationAreaClearButton"));
+    QCOMPARE(m_subject->clearButton->styleName(), clearButtonExists ? QString("NotificationAreaClearButtonVisible") : QString("NotificationAreaClearButton"));
 }
 
 void Ut_NotificationAreaView::testRemoveClearButton()
@@ -118,7 +118,7 @@ void Ut_NotificationAreaView::testRemoveClearButton()
     notificationArea->model()->setBanners(banners);
     banners.clear();
     notificationArea->model()->setBanners(banners);
-    QCOMPARE(m_subject->clearButton->objectName(), QString("NotificationAreaClearButton"));
+    QCOMPARE(m_subject->clearButton->styleName(), QString("NotificationAreaClearButton"));
 }
 
 void Ut_NotificationAreaView::testClearButtonStyle_data()
@@ -140,7 +140,7 @@ void Ut_NotificationAreaView::testClearButtonStyle()
     banners << createBanner(true);
 
     notificationArea->model()->setBanners(banners);
-    QCOMPARE(m_subject->clearButton->objectName(), QString(clearButtonEnabled ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton"));
+    QCOMPARE(m_subject->clearButton->styleName(), QString(clearButtonEnabled ? "NotificationAreaClearButtonVisible" : "NotificationAreaClearButton"));
 }
 
 void Ut_NotificationAreaView::testMaxBannersStyle_data()
@@ -168,7 +168,9 @@ void Ut_NotificationAreaView::testMaxBannersStyle()
 
     notificationArea->model()->setBanners(banners);
     QCOMPARE(m_subject->bannerLayout->count(), maxBanners >= 0 ? maxBanners : 10);
-    QCOMPARE(m_subject->andMore->styleName(), QString(maxBanners >= 0 && banners.count() > maxBanners ? "AndMoreVisible" : "AndMore"));
+    bool andMoreVisible = maxBanners >= 0 && banners.count() > maxBanners;
+    QCOMPARE(m_subject->andMore->styleName(), QString(andMoreVisible ? "AndMoreVisible" : "AndMore"));
+    QCOMPARE(m_subject->andMore->isVisible(), andMoreVisible);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaView)
