@@ -1,3 +1,9 @@
+system-ui (0.19.8~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 21 Dec 2010 18:16:20 +0200
+
 system-ui (0.19.7-1) unstable; urgency=low
 
   * Fixes: Volume indicator not according to spec
