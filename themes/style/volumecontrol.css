@@ -1,9 +1,9 @@
 VolumeBarStyle {
     background-color:  black;
 
-    visible-timeout:   3000;
-    fade-duration:     800;
-    move-duration:     300;
+    visible-timeout:   1500;
+    fade-duration:     250;
+    move-duration:     250;
     volumebar-opacity: 0.85;
 
     icon-volume:       "icon-m-music-video-volume";
