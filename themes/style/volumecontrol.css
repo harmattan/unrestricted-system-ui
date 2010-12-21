@@ -16,7 +16,7 @@ VolumeBarStyle {
 
 #FSVolumeBar {
     background-image:   "meegoui-volume-level" 0px 0px 10px 10px;
-    background-opacity: 0.5;
+    background-opacity: 1;
 
     margin-top:         0px;
     margin-left:        0px;
