@@ -6,8 +6,8 @@ VolumeBarStyle {
     move-duration:     300;
     volumebar-opacity: 0.85;
 
-    icon-volume:       "icon-m-toolbar-volume";
-    icon-volume-off:   "icon-m-toolbar-volume-off";
+    icon-volume:       "icon-m-music-video-volume";
+    icon-volume-off:   "icon-m-music-video-volume-off";
     icon-volume-size:  128 128;
 
     minimum-size:      100% 100%;
@@ -15,15 +15,14 @@ VolumeBarStyle {
 }
 
 #FSVolumeBar {
-    background-image:   "meegotouch-slider-elapsed-background-horizontal" 4px 4px 4px 4px;
-    background-opacity: 0.85;
+    background-image:   "meegoui-volume-level" 0px 0px 10px 10px;
+    background-opacity: 0.5;
 
-    margin-top:         20px;
-    margin-left:        20px;
-    margin-right:       20px;
-    margin-bottom:      20px;
+    margin-top:         0px;
+    margin-left:        0px;
+    margin-right:       0px;
+    margin-bottom:      0px;
 
     minimum-size:       0px 0px;
     maximum-size:       100% 100%;
 }
-
