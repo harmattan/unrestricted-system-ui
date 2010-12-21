@@ -97,6 +97,9 @@ private:
     //! A mapping between notification IDs and MBanner widgets
     QHash<uint, MBanner *> notificationIdToMBanner;
 
+    //! Notification group parameters. The key is the group id.
+    QHash<uint, NotificationParameters> notificationGroupParameters;
+
     //! A mapping between group IDs and MBanner widgets
     QHash<uint, MBanner *> groupIdToMBanner;
 
@@ -111,8 +114,15 @@ private:
 
     //! Increases notification count for the group to which this notification belongs by 1
     void increaseNotificationCountOfGroup(const Notification &notification);
-    //! Recreates the banner for group which was clicked and hence lost the banner
-    MBanner* reviveGroupBanner(const Notification &notification);
+
+    /*!
+     * Creates a banner for a notification group.
+     * \param groupId the id of the notification group
+     * \param parameters the notification group parameters
+     * \return a newly created banner for the notification group
+     */
+    MBanner* createGroupBanner(uint groupId, const NotificationParameters &parameters);
+
     //! Adds a notifications to a group specified by the notification's group id
     void addNotificationToGroup(const Notification &notification);
     //! Adds a notification which has no group id or 0 group id

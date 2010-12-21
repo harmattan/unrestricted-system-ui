@@ -29,7 +29,6 @@
 #include "notificationgroup_stub.h"
 #include "notificationmanager_stub.h"
 
-static QSettings *settings;
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
 {
@@ -67,6 +66,8 @@ void MBanner::setTitle(const QString &title)
     } else {
         Ut_NotificationAreaSink::titles.append(title);
     }
+
+    model()->setTitle(title);
 }
 
 void MBanner::setSubtitle(const QString &subtitle)
@@ -136,6 +137,11 @@ QHash<MBanner *, QString> Ut_NotificationAreaSink::prefixTimeStamps;
 QList<MBanner *> Ut_NotificationAreaSink::notifications;
 QList<MBanner *> Ut_NotificationAreaSink::destroyedNotifications;
 
+void MBannerCatcher::mBannerEmitted(MBanner &banner)
+{
+    banners.append(&banner);
+}
+
 // Tests
 void Ut_NotificationAreaSink::initTestCase()
 {
@@ -149,13 +155,11 @@ void Ut_NotificationAreaSink::cleanupTestCase()
 {
     // Destroy MApplication
     delete app;
-    delete settings;
 }
 
 void Ut_NotificationAreaSink::init()
 {
     sink = new NotificationAreaSink();
-    settings = new QSettings();
     connect(this, SIGNAL(addNotification(Notification)), sink, SLOT(addNotification(Notification)));
     connect(this, SIGNAL(removeNotification(uint)), sink, SLOT(removeNotification(uint)));
     connect(this, SIGNAL(addGroup(uint, const NotificationParameters &)), sink, SLOT(addGroup(uint, const NotificationParameters &)));
@@ -349,6 +353,37 @@ void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationAr
     QCOMPARE(updateSpy.count(), 0);
     emit addNotification(Notification(1, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
     QCOMPARE(updateSpy.count(), 1);
+}
+
+void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPreviouslyClearedThenGroupBannerIsConstructedCorrectly()
+{
+    const uint GROUP_ID = 1;
+    const uint NOTIFICATION_ID = 1;
+    const QString GROUP_SUMMARY("groupSummary");
+    const QString GROUP_BODY("groupBody");
+    const QString GROUP_ICON("groupIcon");
+    const QString GROUP_ACTION("groupAction");
+    const QString NOTIFICATION_SUMMARY("notificationSummary");
+    const QString NOTIFICATION_BODY("notificationBody");
+    const QString NOTIFICATION_ICON("notificationIcon");
+    const QString NOTIFICATION_ACTION("notificationAction");
+
+    TestNotificationParameters groupParameters(GROUP_SUMMARY, GROUP_BODY, GROUP_ICON, GROUP_ACTION);
+    emit addGroup(GROUP_ID, groupParameters);
+    TestNotificationParameters notificationParameters(NOTIFICATION_SUMMARY, NOTIFICATION_BODY, NOTIFICATION_ICON, NOTIFICATION_ACTION);
+    emit addNotification(Notification(NOTIFICATION_ID, GROUP_ID, 2, notificationParameters, Notification::ApplicationEvent, 1000));
+
+    emit(removeNotification(NOTIFICATION_ID));
+
+    MBannerCatcher bannerCatcher;
+    connect(sink, SIGNAL(addNotification(MBanner&)), &bannerCatcher, SLOT(mBannerEmitted(MBanner&)));
+
+    emit addNotification(Notification(NOTIFICATION_ID, GROUP_ID, 2, notificationParameters, Notification::ApplicationEvent, 1000));
+
+    QCOMPARE(bannerCatcher.banners.count(), 1);
+    MBanner *banner = bannerCatcher.banners.at(0);
+    // The banner should have the notification group's data
+    QCOMPARE(banner->title(), GROUP_SUMMARY);
 }
 
 void Ut_NotificationAreaSink::testUpdateGroup()

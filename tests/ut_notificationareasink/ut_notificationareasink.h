@@ -31,6 +31,19 @@ class NotificationParameters;
 class NotificationAreaSink;
 class MBanner;
 
+class MBannerCatcher : public QObject
+{
+    Q_OBJECT
+
+public slots:
+    //! A slot that catches an MBanner
+    void mBannerEmitted(MBanner &banner);
+
+public:
+    //! Container for the received MBanners
+    QList<MBanner*> banners;
+};
+
 class Ut_NotificationAreaSink : public QObject
 {
     Q_OBJECT
@@ -75,6 +88,7 @@ private slots:
     void testRemoveNotification();
     void testRemovingNotificationsWhenNoNotificationLeftGroupBannerIsRemoved();
     void testAddNewNotificationToGroupUpdatesNotificationArea();
+    void testWhenAddingNewNotificationToGroupThatHasBeenPreviouslyClearedThenGroupBannerIsConstructedCorrectly();
     void testApplyPrivacySetting_data();
     void testApplyPrivacySetting();
     void testNotificationsFetchedFromNotificationManager();

@@ -96,6 +96,8 @@ void NotificationAreaSink::addGroup(uint groupId, const NotificationParameters &
         setupInfoBanner(infoBanner);
         groupIdToMBanner.insert(groupId, infoBanner);
     }
+
+    notificationGroupParameters[groupId] = parameters;
 }
 
 void NotificationAreaSink::removeGroup(uint groupId)
@@ -113,6 +115,8 @@ void NotificationAreaSink::removeGroup(uint groupId)
         delete infoBanner;
         deleteGroupFromNotificationCountOfGroup(groupId);
     }
+
+    notificationGroupParameters.remove(groupId);
 }
 
 void NotificationAreaSink::removeGroupBanner(uint groupId)
@@ -151,25 +155,27 @@ void NotificationAreaSink::increaseNotificationCountOfGroup(const Notification &
     notificationIdToGroupId.insert(notification.notificationId(), notification.groupId());
 }
 
-MBanner* NotificationAreaSink::reviveGroupBanner(const Notification &notification)
+MBanner* NotificationAreaSink::createGroupBanner(uint groupId, const NotificationParameters &parameters)
 {
-    MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, notification.groupId(), notification.parameters());
+    MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, groupId, parameters);
     setupInfoBanner(infoBanner);
     infoBanner->setParentItem(NULL);
-    groupIdToMBanner.insert(notification.groupId(), infoBanner);
+    groupIdToMBanner.insert(groupId, infoBanner);
     return infoBanner;
 }
 
 void NotificationAreaSink::addNotificationToGroup(const Notification &notification)
 {
-    // Does the group id exist ?
-    if(groupIdToMBanner.contains(notification.groupId())) {
-        // Yes it does, so get the banner associated with this.
-        MBanner *infoBanner = groupIdToMBanner.value(notification.groupId());
+    uint groupId = notification.groupId();
 
-        if(infoBanner == NULL) {
-            // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Revive the banner.
-            infoBanner = reviveGroupBanner(notification);
+    // Does the group id exist ?
+    if(groupIdToMBanner.contains(groupId)) {
+        // Yes it does, so get the banner associated with this.
+        MBanner *infoBanner = groupIdToMBanner.value(groupId);
+
+        if (infoBanner == NULL) {
+            // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Recreate the banner.
+            infoBanner = createGroupBanner(groupId, notificationGroupParameters.value(groupId));
         } else {
             infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
         }
