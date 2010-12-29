@@ -272,7 +272,6 @@ M::OrientationAngle MSceneManager::orientationAngle() const
 void MSceneManager::setOrientationAngle(M::OrientationAngle angle, TransitionMode mode)
 {
     Q_UNUSED(mode);
-    gCurrentOrientationAngle = angle;
     M::Orientation o = (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
 
     emit orientationAboutToChange(o);
