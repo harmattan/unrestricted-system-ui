@@ -1,7 +1,7 @@
 system-ui (0.19.8~1) unstable; urgency=low
 
   * [UNRELEASED]
-  * Implemented: SWP#DUI-4443 - Settings plugin to turn the notification private mode on/off.
+  * Implemented: SWP#DUI-4443 Settings plugin to turn the notification private mode on and off
   * Fixes: NB#202926 - Date&Time is not displayed on touch screen lock screen after device reboot
   * Fixes: NB#212969 - Notifications on lock screen do not match the layout guide
 
