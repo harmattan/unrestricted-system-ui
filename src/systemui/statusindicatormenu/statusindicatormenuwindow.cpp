@@ -30,6 +30,7 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     menuWidget(NULL)
 {
     // Show status bar
+    setSceneManager(new MSceneManager);
     sceneManager()->appearSceneWindowNow(statusBar);
 
     currentLanguage = MLocale().language();

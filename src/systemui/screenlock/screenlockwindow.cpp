@@ -20,6 +20,7 @@
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
 #include <MApplicationExtensionArea>
+#include <MSceneManager>
 #include <MSceneWindow>
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
@@ -29,6 +30,7 @@ ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWi
     MWindow(parent)
 {
     setWindowTitle("Screen Lock");
+    setSceneManager(new MSceneManager);
 
     excludeFromTaskBar();
     applyStyle();

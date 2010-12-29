@@ -62,6 +62,7 @@ void MCompositorNotificationSink::createWindowIfNecessary()
     if (window == NULL) {
         // Set up the window
         window = new MWindow;
+        window->setSceneManager(new MSceneManager);
         window->setTranslucentBackground(true);
         window->setAttribute(Qt::WA_X11DoNotAcceptFocus);
         window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
