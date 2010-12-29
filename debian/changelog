@@ -1,3 +1,9 @@
+system-ui (0.19.9~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 29 Dec 2010 18:26:57 +0200
+
 system-ui (0.19.8-1) unstable; urgency=low
 
   * Fixes: NB#202926 - Date&Time is not displayed on touch screen lock screen after device reboot
