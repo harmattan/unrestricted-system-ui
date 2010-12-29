@@ -12,7 +12,7 @@ class VolumeBarWindowStub : public StubBase {
   virtual void VolumeBarWindowConstructor(VolumeBarLogic *logic, QWidget *parent);
   virtual void VolumeBarWindowDestructor();
   virtual void updateVolume();
-  virtual void volumeBarChanged(int val);
+  virtual void setVolume(qreal percentage);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -28,10 +28,10 @@ void VolumeBarWindowStub::updateVolume() {
   stubMethodEntered("updateVolume");
 }
 
-void VolumeBarWindowStub::volumeBarChanged(int val) {
+void VolumeBarWindowStub::setVolume(qreal percentage) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<int >(val));
-  stubMethodEntered("volumeBarChanged",params);
+  params.append( new Parameter<qreal >(percentage));
+  stubMethodEntered("setVolume",params);
 }
 
 
@@ -54,8 +54,8 @@ void VolumeBarWindow::updateVolume() {
   gVolumeBarWindowStub->updateVolume();
 }
 
-void VolumeBarWindow::volumeBarChanged(int val) {
-  gVolumeBarWindowStub->volumeBarChanged(val);
+void VolumeBarWindow::setVolume(qreal percentage) {
+  gVolumeBarWindowStub->setVolume(percentage);
 }
 
 

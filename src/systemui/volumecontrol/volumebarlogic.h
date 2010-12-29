@@ -57,13 +57,6 @@ public slots:
      */
     void stepsUpdated (quint32 value, quint32 maxvalue);
 
-signals:
-    /*! a signal what is emitted whenever the volume-level and/or the volume-level step-counts are updated
-     * \param value The new volume-level
-     * \param maxvalue The new volume-level stepcount value
-     */
-    void volumeChanged (quint32 value, quint32 maxvalue);
-
 private slots:
     //! an internal method which queries the actual values from PulseAudio
     void initValues ();

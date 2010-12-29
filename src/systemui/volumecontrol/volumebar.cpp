@@ -1,230 +1,178 @@
 /****************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of systemui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of systemui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #include "volumebar.h"
-
 #include <QTimer>
-#include <QDebug>
-#include <QRegion>
-#include <QPointF>
-#include <QSizeF>
 #include <QGraphicsSceneMouseEvent>
 #include <QPropertyAnimation>
-
 #include <MSceneWindow>
 #include <MImageWidget>
 #include <MSceneManager>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
+#include <MScalableImage>
 
-VolumeBar::VolumeBar (QGraphicsItem *parent) :
-    MStylableWidget (parent),
-    slider (0),
-    icon (0),
-    value (0),
-    valueMax (0),
-    animMove (0),
-    animFadeIn (0),
-    animFadeOut (0)
+VolumeBar::VolumeBar(QGraphicsItem *parent) :
+    MStylableWidget(parent),
+    icon(new MImageWidget(this)),
+    currentPercentage_(0),
+    targetPercentage(0),
+    percentageAnimation(new QPropertyAnimation(this, "currentPercentage")),
+    fadeInAnimation(new QPropertyAnimation(this, "opacity")),
+    fadeOutAnimation(new QPropertyAnimation(this, "opacity"))
 {
-    constructUi ();
-    setOpacity (0.0);
-}
+    setOpacity(0);
+    icon->setStyleName("VolumeBarIcon");
 
-VolumeBar::~VolumeBar ()
-{
-}
-
-void VolumeBar::applyStyle ()
-{
-    MStylableWidget::applyStyle ();
-
-    int timeout = style ()->visibleTimeout ();
-    int animDuration = style ()->fadeDuration ();
-    qreal opacity = style ()->volumebarOpacity ();
-
-    if (animDuration * 2 > timeout)
-    { // handle the error:
-        qWarning () << "ERROR in VolumeBars CSS: animDuration * 2 > timeout!";
-        animDuration = timeout / 2;
-    }
-
-    // first fade out animation started and after its finished we emit animationsFinished ()
-    timer.setInterval (timeout - animDuration);
-
-    animFadeIn->setDuration (animDuration);
-    animFadeOut->setDuration (animDuration);
-
-    animFadeIn->setEndValue (opacity);
-}
-
-void VolumeBar::constructUi ()
-{
-    slider = new MStylableWidget (this);
-    slider->setObjectName ("FSVolumeBar");
-
-    icon = new MImageWidget (this);
-
+    // Set up the layout
     MLayout *layout = new MLayout;
-    MLinearLayoutPolicy *landscapePolicy = new MLinearLayoutPolicy (layout, Qt::Horizontal);
-    MLinearLayoutPolicy *portraitPolicy = new MLinearLayoutPolicy (layout, Qt::Vertical);
+    MLinearLayoutPolicy *landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    MLinearLayoutPolicy *portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    landscapePolicy->addStretch();
+    landscapePolicy->addItem(icon);
+    portraitPolicy->addStretch();
+    portraitPolicy->addItem(icon);
+    layout->setLandscapePolicy(landscapePolicy);
+    layout->setPortraitPolicy(portraitPolicy);
+    setLayout(layout);
 
-    landscapePolicy->addStretch (2);
-    landscapePolicy->addItem (icon);
-    landscapePolicy->addStretch (1);
+    // Set up the animations
+    fadeInAnimation->setStartValue(0);
+    fadeInAnimation->setEndValue(1);
+    fadeOutAnimation->setEndValue(0);
+    connect(&visibilityTimer, SIGNAL(timeout()), fadeOutAnimation, SLOT(start()));
+    connect(fadeOutAnimation, SIGNAL(finished()), this, SLOT(finishAnimations()));
+}
 
-    portraitPolicy->addStretch (2);
-    portraitPolicy->addItem (icon);
-    portraitPolicy->addStretch (1);
+VolumeBar::~VolumeBar()
+{
+}
 
-    layout->setLandscapePolicy (landscapePolicy);
-    layout->setPortraitPolicy (portraitPolicy);
+void VolumeBar::applyStyle()
+{
+    MStylableWidget::applyStyle();
 
-    // prepare the fade in & out animations...
-    animFadeIn = new QPropertyAnimation (this, "opacity");
-    animFadeIn->setStartValue (0.0);
+    int fadeDuration = style()->fadeDuration();
+    fadeInAnimation->setDuration(fadeDuration);
+    fadeOutAnimation->setDuration(fadeDuration);
+    visibilityTimer.setInterval(style()->visibleDuration());
+}
 
-    animFadeOut = new QPropertyAnimation (this, "opacity");
-    animFadeOut->setEndValue (0.0);
+void VolumeBar::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *) const
+{
+    QSizeF currentSize = size();
 
-    connect (&timer, SIGNAL(timeout()),
-             animFadeOut, SLOT(start()));
-    connect (animFadeOut, SIGNAL(finished()), SLOT(finishAnimations()));
+    if (currentSize.width() != 0 && currentSize.height() != 0) {
+        if (style()->backgroundColor().isValid()) {
+            // Fill the background with the background opacity
+            painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
+            painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
+        }
 
-    // .. and prepare the movement animation also
-    animMove = new QPropertyAnimation (slider, "geometry");
-
-    setLayout (layout);
+        if (style()->backgroundImage() != NULL) {
+            // Draw the volume bar with the volume bar opacity
+            qreal topHeight = (1 - currentPercentage_) * currentSize.height();
+            qreal bottomHeight = currentPercentage_ * currentSize.height();
+            painter->setOpacity(style()->volumeBarOpacity() * effectiveOpacity());
+            style()->backgroundImage()->draw((qreal)0, topHeight, currentSize.width(), bottomHeight, painter);
+        }
+    }
 }
 
 void VolumeBar::calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event)
 {
-    qreal percentage = 0.0;
-    /*
-     * increase & decrease the volume based on the tap/movement
-     * coordinates...
-     */
-    if (sceneManager()->orientation() == M::Portrait)
-        percentage = (geometry().height() - event->pos().y()) / geometry().height();
-    else
-        percentage = (geometry().width() - event->pos().x()) / geometry().width();
-
-    value = valueMax * percentage;
-
-    if (value >= valueMax)
-        value = valueMax - 1;
-
-    /* emit volumeChanged signal... */
-    emit volumeChanged (value);
-    /* and the update the UI */
-    updateVolume (value, valueMax);
+    // Calculate the new percentage based on the click coordinate
+    setTargetPercentage((geometry().height() - event->pos().y()) / geometry().height());
+    emit percentageChanged(targetPercentage);
 }
 
-void VolumeBar::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
+void VolumeBar::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    MStylableWidget::mouseMoveEvent (event);
-    calculateNewVolumeForEvent(event);
-}
-
-void VolumeBar::mousePressEvent (QGraphicsSceneMouseEvent *event)
-{
-    MStylableWidget::mousePressEvent (event);
+    MStylableWidget::mousePressEvent(event);
     event->accept();
     calculateNewVolumeForEvent(event);
 }
 
-void VolumeBar::updateContents ()
+void VolumeBar::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    MSceneManager *sm = sceneManager ();
-    QSize screen = sm->visibleSceneSize (sm->orientation ());
+    MStylableWidget::mouseMoveEvent(event);
+    calculateNewVolumeForEvent(event);
+}
 
-    QSizeF newSize;
-    QRectF barGeom;
+void VolumeBar::updateContents()
+{
+    QString iconID = (targetPercentage == 0) ? style()->mutedIconId() : style()->iconId();
+    if (icon->imageId() != iconID) {
+        icon->setImage(iconID, style()->iconSize());
+    }
 
-    QString iconID = (value == 0) ?
-                     style ()->iconVolumeOff () :
-                     style ()->iconVolume ();
-    if (icon->imageId () != iconID)
-        icon->setImage (iconID, style ()->iconVolumeSize ());
-
-    /*
-     * update the bar geometry based on current screen size,
-     * and on actual volume-level
-     */
-    if (sm->orientation () == M::Portrait) {
-        newSize.setHeight (screen.height () * value / (valueMax - 1));
-        newSize.setWidth (screen.width ());
-
-        barGeom.setX (0.0);
-        barGeom.setY (screen.height () - newSize.height ());
+    // Set the new percentage value
+    if (!isOnDisplay()) {
+        // Do not animate unnecessarily when we're not on display
+        percentageAnimation->stop();
+        currentPercentage_ = targetPercentage;
+        update();
     } else {
-        newSize.setHeight (screen.height ());
-        newSize.setWidth (screen.width () * value / (valueMax - 1));
-
-        barGeom.setX (screen.width () - newSize.width ());
-        barGeom.setY (0.0);
-    }
-    barGeom.setSize (newSize);
-
-    if (isOnDisplay () == false)
-    {
-        // do not animate unnecessarily when we're not on display
-        slider->setGeometry (barGeom);
-    }
-    else
-    {
-        animMove->setStartValue (slider->geometry ());
-        animMove->setEndValue (barGeom);
-
-        animMove->start ();
+        percentageAnimation->setStartValue(currentPercentage_);
+        percentageAnimation->setEndValue(targetPercentage);
+        percentageAnimation->start();
     }
 }
 
-void VolumeBar::updateVolume (int val, int max)
+void VolumeBar::setTargetPercentage(qreal percentage)
 {
-    timer.stop ();
+    visibilityTimer.stop();
 
-    value = val;
-    valueMax = max;
+    targetPercentage = percentage;
 
-    updateContents ();
+    updateContents();
 
-    if (animFadeOut->state () != QAbstractAnimation::Stopped) {
-        // stop the fade-out animation in case if it is not stopped
-        animFadeOut->stop ();
-        // start the fade-in animation to get the wanted opacity back
-        animFadeIn->start ();
-    } else if (animFadeIn->state () != QAbstractAnimation::Running && (opacity () <= 0.1)) {
+    if (fadeOutAnimation->state() != QAbstractAnimation::Stopped) {
+        // Stop the fade out animation in case if it is not stopped
+        fadeOutAnimation->stop();
+        // Start the fade in animation towards the target opacity
+        fadeInAnimation->start();
+    } else if (fadeInAnimation->state() != QAbstractAnimation::Running && (opacity() <= 0.1)) {
         // start the fade-in animation (only if needed ^^^)
-        animFadeIn->start ();
+        fadeInAnimation->start();
     }
 
-    timer.start ();
+    visibilityTimer.start();
 }
 
-void VolumeBar::finishAnimations ()
+void VolumeBar::finishAnimations()
 {
-    emit animationsFinished ();
+    visibilityTimer.stop();
+    fadeInAnimation->stop();
+    fadeOutAnimation->stop();
 
-    timer.stop ();
-    animFadeIn->stop ();
-    animFadeOut->stop ();
+    setOpacity(0);
 
-    setOpacity (0.0);
+    emit animationsFinished();
 }
 
+qreal VolumeBar::currentPercentage() const
+{
+    return currentPercentage_;
+}
+
+void VolumeBar::setCurrentPercentage(qreal percentage)
+{
+    currentPercentage_ = percentage;
+    update();
+}

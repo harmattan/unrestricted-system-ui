@@ -11,14 +11,16 @@ class VolumeBarStub : public StubBase {
   public:
   virtual void VolumeBarConstructor(QGraphicsItem *parent);
   virtual void VolumeBarDestructor();
-  virtual void updateVolume(int val, int max);
+  virtual void setTargetPercentage(qreal percentage);
   virtual void updateContents();
   virtual void finishAnimations();
   virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
   virtual void applyStyle();
+  virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option);
   virtual void calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event);
-  virtual void constructUi();
+  virtual qreal currentPercentage();
+  virtual void setCurrentPercentage(qreal percentage);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -29,11 +31,10 @@ void VolumeBarStub::VolumeBarConstructor(QGraphicsItem *parent) {
 void VolumeBarStub::VolumeBarDestructor() {
 
 }
-void VolumeBarStub::updateVolume(int val, int max) {
+void VolumeBarStub::setTargetPercentage(qreal percentage) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<int >(val));
-  params.append( new Parameter<int >(max));
-  stubMethodEntered("updateVolume",params);
+  params.append( new Parameter<qreal >(percentage));
+  stubMethodEntered("setTargetPercentage",params);
 }
 
 void VolumeBarStub::updateContents() {
@@ -60,14 +61,29 @@ void VolumeBarStub::applyStyle() {
   stubMethodEntered("applyStyle");
 }
 
+void VolumeBarStub::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<QPainter * >(painter));
+    params.append( new Parameter<const QStyleOptionGraphicsItem * >(option));
+    stubMethodEntered("drawBackground",params);
+}
+
 void VolumeBarStub::calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
   stubMethodEntered("calculateNewVolumeForEvent",params);
 }
 
-void VolumeBarStub::constructUi() {
-  stubMethodEntered("constructUi");
+qreal VolumeBarStub::currentPercentage() {
+  stubMethodEntered("currentPercentage");
+  return stubReturnValue<qreal>("currentPercentage");
+}
+
+void VolumeBarStub::setCurrentPercentage(qreal percentage) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<qreal >(percentage));
+  stubMethodEntered("setCurrentPercentage",params);
 }
 
 
@@ -86,8 +102,8 @@ VolumeBar::~VolumeBar() {
   gVolumeBarStub->VolumeBarDestructor();
 }
 
-void VolumeBar::updateVolume(int val, int max) {
-  gVolumeBarStub->updateVolume(val, max);
+void VolumeBar::setTargetPercentage(qreal percentage) {
+  gVolumeBarStub->setTargetPercentage(percentage);
 }
 
 void VolumeBar::updateContents() {
@@ -110,12 +126,20 @@ void VolumeBar::applyStyle() {
   gVolumeBarStub->applyStyle();
 }
 
+void VolumeBar::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const {
+  gVolumeBarStub->drawBackground(painter, option);
+}
+
 void VolumeBar::calculateNewVolumeForEvent(QGraphicsSceneMouseEvent *event) {
   gVolumeBarStub->calculateNewVolumeForEvent(event);
 }
 
-void VolumeBar::constructUi() {
-  gVolumeBarStub->constructUi();
+qreal VolumeBar::currentPercentage() const {
+  return gVolumeBarStub->currentPercentage();
+}
+
+void VolumeBar::setCurrentPercentage(qreal percentage) {
+  gVolumeBarStub->setCurrentPercentage(percentage);
 }
 
 

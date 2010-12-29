@@ -241,8 +241,6 @@ void VolumeBarLogic::stepsUpdated (quint32 value, quint32 maxvalue)
 {
     currentvolume = value;
     currentmax = maxvalue;
-
-    emit volumeChanged (value, maxvalue);
 }
 
 void VolumeBarLogic::setVolume (quint32 value)

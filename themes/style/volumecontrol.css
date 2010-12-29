@@ -1,28 +1,22 @@
 VolumeBarStyle {
-    background-color:  black;
+    background-color: black;
+    background-image: "meegoui-volume-level" 12px 12px 12px 12px;
+    background-opacity: 0.85;
 
-    visible-timeout:   1500;
-    fade-duration:     250;
-    move-duration:     250;
-    volumebar-opacity: 0.85;
+    visible-duration: 1500;
+    fade-duration: 250;
+    move-duration: 250;
+    volume-bar-opacity: 0.5;
 
-    icon-volume:       "icon-m-music-video-volume";
-    icon-volume-off:   "icon-m-music-video-volume-off";
-    icon-volume-size:  128 128;
+    icon-id: "icon-m-music-video-volume";
+    muted-icon-id: "icon-m-music-video-volume-off";
+    icon-size: 8mm 8mm;
 
-    minimum-size:      100% 100%;
-    maximum-size:      100% 100%;
+    minimum-size: 100% 100%;
+    maximum-size: 100% 100%;
 }
 
-#FSVolumeBar {
-    background-image:   "meegoui-volume-level" 0px 0px 10px 10px;
-    background-opacity: 1;
-
-    margin-top:         0px;
-    margin-left:        0px;
-    margin-right:       0px;
-    margin-bottom:      0px;
-
-    minimum-size:       0px 0px;
-    maximum-size:       100% 100%;
+MImageWidgetStyle#VolumeBarIcon {
+    margin-bottom: 5mm;
 }
+

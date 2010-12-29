@@ -21,7 +21,6 @@
 
 #include <MWindow>
 
-class MOverlay;
 class VolumeBarLogic;
 class VolumeBar;
 
@@ -45,11 +44,11 @@ public:
 
 private slots:
     /*!
-     * Internal slot to handle the VolumeBar changes
+     * Sets the volume to the logic
      *
-     * \param val the new volume level
+     * \param percentage the volume percentage
      */
-    void volumeBarChanged(int val);
+    void setVolume(qreal percentage);
 
 private:
     Q_DISABLE_COPY(VolumeBarWindow)
@@ -59,9 +58,6 @@ private:
 
     //! The VolumeBar widget
     VolumeBar *volumeBar;
-
-    //! An overlay which contains the VolumeBar widget
-    MOverlay *overlay;
 
 #ifdef UNIT_TEST
     friend class Ut_VolumeBarWindow;

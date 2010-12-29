@@ -58,16 +58,16 @@ void Ut_VolumeBarWindow::cleanupTestCase()
 void Ut_VolumeBarWindow::testUpdateVolume()
 {
     gVolumeBarLogicStub->stubSetReturnValue("volume", 1u);
-    gVolumeBarLogicStub->stubSetReturnValue("maxVolume", 2u);
+    gVolumeBarLogicStub->stubSetReturnValue("maxVolume", 3u);
     volumeBarWindow->updateVolume();
-    QCOMPARE(gVolumeBarStub->stubCallCount("updateVolume"), 1);
-    QCOMPARE(gVolumeBarStub->stubLastCallTo("updateVolume").parameter<int>(0), 1);
-    QCOMPARE(gVolumeBarStub->stubLastCallTo("updateVolume").parameter<int>(1), 2);
+    QCOMPARE(gVolumeBarStub->stubCallCount("setTargetPercentage"), 1);
+    QCOMPARE(gVolumeBarStub->stubLastCallTo("setTargetPercentage").parameter<qreal>(0), 0.5);
 }
 
 void Ut_VolumeBarWindow::testVolumeBarChanged()
 {
-    volumeBarWindow->volumeBarChanged(32);
+    gVolumeBarLogicStub->stubSetReturnValue("maxVolume", 65u);
+    volumeBarWindow->setVolume(0.5);
     QCOMPARE(gVolumeBarLogicStub->stubCallCount("setVolume"), 1);
     QCOMPARE(gVolumeBarLogicStub->stubLastCallTo("setVolume").parameter<quint32>(0), 32u);
 }

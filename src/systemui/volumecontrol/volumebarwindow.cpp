@@ -25,34 +25,37 @@
 VolumeBarWindow::VolumeBarWindow(VolumeBarLogic *logic, QWidget *parent) :
     MWindow(parent),
     logic(logic),
-    volumeBar(new VolumeBar),
-    overlay(new MOverlay)
+    volumeBar(new VolumeBar)
 {
-    // Set up the volume bar widget
-    connect(volumeBar, SIGNAL(volumeChanged(int)), SLOT(volumeBarChanged(int)));
-    connect(volumeBar, SIGNAL(animationsFinished()), SLOT(hide()));
-    connect(this, SIGNAL(orientationChangeFinished(M::Orientation)), volumeBar, SLOT(updateContents()));
-    overlay->setWidget(volumeBar);
-    sceneManager()->appearSceneWindowNow(overlay);
-
     // Set the window attributes
+    setSceneManager(new MSceneManager);
     setTranslucentBackground(true);
     setAttribute(Qt::WA_X11NetWmWindowTypeNotification, true);
     setAttribute(Qt::WA_X11DoNotAcceptFocus, true);
     setObjectName("VolumeBarWindow");
     setProperty("followsCurrentApplicationWindowOrientation", true);
+
+    // Set up the volume bar widget
+    connect(volumeBar, SIGNAL(percentageChanged(qreal)), this, SLOT(setVolume(qreal)));
+    connect(volumeBar, SIGNAL(animationsFinished()), this, SLOT(hide()));
+    connect(this, SIGNAL(orientationChangeFinished(M::Orientation)), volumeBar, SLOT(updateContents()));
+
+    // Overlay for the volume bar
+    MOverlay *overlay = new MOverlay;
+    overlay->setWidget(volumeBar);
+    sceneManager()->appearSceneWindowNow(overlay);
 }
 
 VolumeBarWindow::~VolumeBarWindow()
 {
 }
 
-void VolumeBarWindow::volumeBarChanged(int val)
+void VolumeBarWindow::setVolume(qreal percentage)
 {
-    logic->setVolume((quint32) val);
+    logic->setVolume(percentage * (logic->maxVolume() - 1));
 }
 
 void VolumeBarWindow::updateVolume()
 {
-    volumeBar->updateVolume(logic->volume(), logic->maxVolume());
+    volumeBar->setTargetPercentage(logic->volume() / (qreal)(logic->maxVolume() - 1));
 }
