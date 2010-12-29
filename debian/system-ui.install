@@ -4,5 +4,3 @@ usr/share/themes/base/meegotouch/sysuid/style/*.css
 usr/share/meegotouch/notifications/eventtypes/*.conf
 etc/dbus-1/system.d/systemui.conf
 usr/share/themes/base/meegotouch/sysuid/feedbacks
-usr/lib/duicontrolpanel/privatemode.desktop
-usr/lib/duicontrolpanel/applets/libprivatemodeapplet.so
