@@ -48,8 +48,11 @@ void DBusInterfaceNotificationSink::unregisterSink(const QString &service, const
 
 void DBusInterfaceNotificationSink::addNotification(const Notification &notification)
 {
-    foreach (QSharedPointer<DBusInterfaceNotificationSinkProxy> proxy, proxies) {
-        proxy->addNotification(notification);
+    if (notification.type() != Notification::SystemEvent) {
+        // Do not handle system events at all
+        foreach (QSharedPointer<DBusInterfaceNotificationSinkProxy> proxy, proxies) {
+            proxy->addNotification(notification);
+        }
     }
 }
 
@@ -84,7 +87,10 @@ void DBusInterfaceNotificationSink::sendGroupsToProxy(const QList<NotificationGr
 void DBusInterfaceNotificationSink::sendNotificationsToProxy(const QList<Notification> &notifications, const DBusInterface &proxy) const
 {
     foreach(const Notification &notification, notifications) {
-        proxy->addNotification(notification);
+        if (notification.type() != Notification::SystemEvent) {
+            // Do not handle system events at all
+            proxy->addNotification(notification);
+        }
     }
 }
 

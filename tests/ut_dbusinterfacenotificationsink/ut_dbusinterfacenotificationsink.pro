@@ -11,7 +11,8 @@ SOURCES += \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsink.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.cpp \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.cpp \
-    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp
+    $$LIBNOTIFICATIONSRCDIR/notificationparameter.cpp \
+    $$LIBNOTIFICATIONSRCDIR/notification.cpp
 
 # service classes
 SOURCES += \
@@ -24,8 +25,8 @@ HEADERS += \
     $$NOTIFICATIONSRCDIR/dbusinterfacenotificationsinkadaptor.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameters.h \
     $$LIBNOTIFICATIONSRCDIR/notificationparameter.h \
+    $$LIBNOTIFICATIONSRCDIR/notification.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$NOTIFICATIONSRCDIR/notificationmanager.h
-
 
 include(../common_bot.pri)

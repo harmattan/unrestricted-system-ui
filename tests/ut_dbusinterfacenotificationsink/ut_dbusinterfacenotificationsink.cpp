@@ -21,7 +21,7 @@
 #include "dbusinterfacenotificationsinkadaptor.h"
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
-#include "notification_stub.h"
+#include "notification.h"
 #include "notificationgroup.h"
 #include "notificationparameters.h"
 #include "notificationmanager_stub.h"
@@ -264,9 +264,11 @@ QList<NotificationGroup> createGroups()
 
 QList<Notification> createNotifications()
 {
-    Notification n;
+    Notification n1(1, 2, 3, NotificationParameters(), Notification::ApplicationEvent, 4);
+    Notification n2(5, 6, 7, NotificationParameters(), Notification::SystemEvent, 8);
     QList<Notification> ns;
-    ns.append(n);
+    ns.append(n1);
+    ns.append(n2);
     return ns;
 }
 
