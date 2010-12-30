@@ -63,6 +63,13 @@ public:
 
 protected:
     /*!
+     * Calls setStyleName(name) and update() for convenience.
+     *
+     * \param name the style name to set
+     */
+    void setStyleNameAndUpdate(const QString &name = QString());
+
+    /*!
      * Sets the value of the indicator. This will be used by the dynamic
      * indicators to change their appearance based on some value. The type of the value
      * is determined by the indicator type. For indicators that display

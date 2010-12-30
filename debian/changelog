@@ -2,6 +2,7 @@ system-ui (0.19.9~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: Unable to view the font due to its color
+  * Fixes: Presence status indicator is not updated when an IM account is disconnected from the network
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 29 Dec 2010 18:26:57 +0200
 

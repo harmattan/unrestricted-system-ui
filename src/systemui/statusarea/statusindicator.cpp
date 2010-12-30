@@ -66,6 +66,12 @@ void StatusIndicator::updateGeometry()
     MWidgetController::updateGeometry();
 }
 
+void StatusIndicator::setStyleNameAndUpdate(const QString &name)
+{
+    setStyleName(name);
+    update();
+}
+
 void StatusIndicator::setValue(QVariant v)
 {
     currentValue = v;
@@ -123,7 +129,7 @@ ContextItem *StatusIndicator::createContextItem(ApplicationContext& context, con
 PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     signalStrength = createContextItem(context, "Cellular.SignalBars");
     connect(signalStrength, SIGNAL(contentsChanged()), this, SLOT(signalStrengthChanged()));
@@ -144,9 +150,9 @@ void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
 void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
 {
     if(display) {
-        setObjectName(metaObject()->className());
+        setStyleNameAndUpdate(metaObject()->className());
     } else {
-        setObjectName("");
+        setStyleNameAndUpdate();
     }
 }
 
@@ -206,13 +212,13 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
         emit networkAvailabilityChanged(n);
     }
 
-    setObjectName(metaObject()->className() + postFix);
+    setStyleNameAndUpdate(metaObject()->className() + postFix);
 }
 
 BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
+    setStyleName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
 
     batteryLevel = createContextItem(context, "Battery.ChargeBars");
     connect(batteryLevel, SIGNAL(contentsChanged()), this, SLOT(batteryLevelChanged()));
@@ -225,7 +231,7 @@ BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, QGra
 
     // Set the initial power save mode (in case it has been switched on before reboot, etc)
     if (batterySaveMode->value().toBool()) {
-        setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+        setStyleName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
     }
 
     batteryLevelChanged ();
@@ -259,16 +265,16 @@ void BatteryStatusIndicator::batteryChargingChanged()
 {
     if (batteryCharging->value().toBool()) {
         if (batterySaveMode->value().toBool()) {
-            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE_AND_CHARGING);
+            setStyleNameAndUpdate(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE_AND_CHARGING);
         } else {
-            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_CHARGING);
+            setStyleNameAndUpdate(QString(metaObject()->className()) + BATTERY_MODE_CHARGING);
         }
         animateIfPossible = true;
     } else {
         if (batterySaveMode->value().toBool()) {
-            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
+            setStyleNameAndUpdate(QString(metaObject()->className()) + BATTERY_MODE_POWERSAVE);
         } else {
-            setObjectName(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
+            setStyleNameAndUpdate(QString(metaObject()->className()) + BATTERY_MODE_NORMAL);
         }
         animateIfPossible = false;
     }
@@ -280,7 +286,7 @@ void BatteryStatusIndicator::batteryChargingChanged()
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     alarm = createContextItem(context, "Alarm.Present");
     connect(alarm, SIGNAL(contentsChanged()), this, SLOT(alarmChanged()));
@@ -296,16 +302,16 @@ void AlarmStatusIndicator::alarmChanged()
     bool isSet = alarm->value().toBool();
 
     if (isSet) {
-        setObjectName(QString(metaObject()->className()) + "Set");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Set");
     } else {
-        setObjectName(QString(metaObject()->className()));
+        setStyleNameAndUpdate(QString(metaObject()->className()));
     }
 }
 
 BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     bluetoothEnabled = createContextItem(context, "Bluetooth.Enabled");
     connect(bluetoothEnabled, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
@@ -324,19 +330,19 @@ void BluetoothStatusIndicator::bluetoothChanged()
 
     if (enabled) {
         if (connected) {
-            setObjectName(QString(metaObject()->className()) + "Active");
+            setStyleNameAndUpdate(QString(metaObject()->className()) + "Active");
         } else {
-            setObjectName(QString(metaObject()->className()) + "On");
+            setStyleNameAndUpdate(QString(metaObject()->className()) + "On");
         }
     } else {
-        setObjectName(QString(metaObject()->className()));
+        setStyleNameAndUpdate(QString(metaObject()->className()));
     }
 }
 
 PresenceStatusIndicator::PresenceStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     presence = createContextItem(context, "Presence.State");
     connect(presence, SIGNAL(contentsChanged()), this, SLOT(presenceChanged()));
@@ -355,10 +361,10 @@ void PresenceStatusIndicator::presenceChanged()
     if (status == "busy" || status == "available" || status == "away") {
         // Capitalize the status
         status.replace(0, 1, status[0].toUpper());
-        setObjectName(QString(metaObject()->className()) + status);
+        setStyleNameAndUpdate(QString(metaObject()->className()) + status);
     } else if (status == "offline" || status == "") {
         // No presence information is treated as "offline"
-        setObjectName(QString(metaObject()->className()));
+        setStyleNameAndUpdate(QString(metaObject()->className()));
     }
 }
 
@@ -415,7 +421,7 @@ void InternetConnectionStatusIndicator::updateStatus()
         animateIfPossible = false;
     }
 
-    setObjectName(metaObject()->className() + postFix);
+    setStyleNameAndUpdate(metaObject()->className() + postFix);
 
     updateAnimationStatus();
 }
@@ -423,7 +429,7 @@ void InternetConnectionStatusIndicator::updateStatus()
 PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     networkName = createContextItem(context, "Cellular.NetworkName");
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
@@ -484,7 +490,7 @@ void PhoneNetworkStatusIndicator::showVisitorNetworkName() {
 InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 }
 
 InputMethodStatusIndicator::~InputMethodStatusIndicator()
@@ -499,7 +505,7 @@ void InputMethodStatusIndicator::setIconID(const QString &iconID)
 CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     call = createContextItem(context, "Phone.Call");
     connect(call, SIGNAL(contentsChanged()), this, SLOT(callOrMutedChanged()));
@@ -517,15 +523,15 @@ void CallStatusIndicator::callOrMutedChanged()
     QString callState = call->value().toString();
     if (callState == CONTEXT_CALLSTATE_ALERTING
         || callState == CONTEXT_CALLSTATE_KNOCKING) {
-        setObjectName(QString(metaObject()->className()) + "Ringing");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Ringing");
         setValue(0);
         animateIfPossible = true;
     } else if (callState == CONTEXT_CALLSTATE_ACTIVE) {
-        setObjectName(QString(metaObject()->className()) + "Ongoing");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Ongoing");
         setValue(muted->value().toBool() ? 1 : 0);
         animateIfPossible = false;
     } else {
-        setObjectName(metaObject()->className());
+        setStyleNameAndUpdate(metaObject()->className());
         setValue(0);
         animateIfPossible = false;
     }
@@ -536,7 +542,7 @@ void CallStatusIndicator::callOrMutedChanged()
 ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     profile = createContextItem(context, "Profile.Name");
     connect(profile, SIGNAL(contentsChanged()), this, SLOT(profileChanged()));
@@ -549,16 +555,16 @@ ProfileStatusIndicator::~ProfileStatusIndicator()
 void ProfileStatusIndicator::profileChanged()
 {
     if (profile->value().toString() == "silent") {
-        setObjectName(QString(metaObject()->className()) + "Silent");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Silent");
     } else {
-        setObjectName(metaObject()->className());
+        setStyleNameAndUpdate(metaObject()->className());
     }
 }
 
 GPSStatusIndicator::GPSStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setObjectName(metaObject()->className());
+    setStyleName(metaObject()->className());
 
     gpsState = createContextItem(context, "Location.SatPositioningState");
     connect(gpsState, SIGNAL(contentsChanged()), this, SLOT(gpsStateChanged()));
@@ -571,15 +577,15 @@ GPSStatusIndicator::~GPSStatusIndicator()
 void GPSStatusIndicator::gpsStateChanged()
 {
     if (gpsState->value().toString() == "on") {
-        setObjectName(QString(metaObject()->className()) + "On");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "On");
         animateIfPossible = false;
     }
     else if (gpsState->value().toString() == "search") {
-        setObjectName(QString(metaObject()->className()) + "Search");
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Search");
         animateIfPossible = true;
     }
     else {
-        setObjectName(QString(metaObject()->className()));
+        setStyleNameAndUpdate(QString(metaObject()->className()));
         animateIfPossible = false;
     }
     updateAnimationStatus();
@@ -603,13 +609,13 @@ TransferStatusIndicator::~TransferStatusIndicator()
 void TransferStatusIndicator::transferStateChanged(const QString &state)
 {
     if (state == TRANSFER_UI_STATE_LIVE) {
-        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_LIVE);
+        setStyleNameAndUpdate(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_LIVE);
     } else if (state == TRANSFER_UI_STATE_FAIL) {
-        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_FAIL);
+        setStyleNameAndUpdate(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_FAIL);
     } else if (state == TRANSFER_UI_STATE_PENDING) {
-        setStyleName(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_PENDING);
+        setStyleNameAndUpdate(QString(metaObject()->className()) + TRANSFER_UI_SUFFIX_PENDING);
     } else {
-        setStyleName(metaObject()->className());
+        setStyleNameAndUpdate(metaObject()->className());
     }
 
     updateAnimationStatus();

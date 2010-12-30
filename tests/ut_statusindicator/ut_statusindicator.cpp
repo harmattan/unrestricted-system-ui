@@ -183,9 +183,9 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
     QCOMPARE(qRound(statusIndicator->model()->value().toDouble() * 100), 100);
 
-    QVERIFY(statusIndicator->objectName() == "");
+    QVERIFY(statusIndicator->styleName() == "");
     statusIndicator->setDisplay(true);
-    QVERIFY(statusIndicator->objectName() != "");
+    QVERIFY(statusIndicator->styleName() != "");
 }
 
 void Ut_StatusIndicator::testPhoneNetworkTypeObjectName_data()
@@ -220,7 +220,7 @@ void Ut_StatusIndicator::testPhoneNetworkTypeObjectName()
     testContextItems["Cellular.RegistrationStatus"]->setValue(CellularRegistrationStatus);
     testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
 
-    QCOMPARE(m_subject->objectName().contains(ExpectedObjectNamePostfix), QBool(true));
+    QCOMPARE(m_subject->styleName().contains(ExpectedObjectNamePostfix), QBool(true));
 }
 
 void Ut_StatusIndicator::testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted()
@@ -282,10 +282,10 @@ void Ut_StatusIndicator::testBattery()
     QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 0);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Level") >= 0);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Charging") >= 0);
 
     // testing battery level when charging
     values.clear();
@@ -297,24 +297,24 @@ void Ut_StatusIndicator::testBattery()
     // battery not charging and power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("Level") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Level") >= 0);
 
     // battery not charging, but power save on
     testContextItems["Battery.IsCharging"]->setValue(QVariant(false));
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("PowerSave") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("Charging") < 0);
+    QVERIFY(m_subject->styleName().indexOf("PowerSave") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Charging") < 0);
 
     // battery charging, but power save off
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("Charging") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("PowerSave") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Charging") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PowerSave") < 0);
 
     // battery charging and power save on
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     testContextItems["System.PowerSaveMode"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("PowerSaveCharging") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PowerSaveCharging") >= 0);
 }
 
 void Ut_StatusIndicator::testAlarm()
@@ -322,10 +322,10 @@ void Ut_StatusIndicator::testAlarm()
     m_subject = new AlarmStatusIndicator(*testContext);
 
     testContextItems["Alarm.Present"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("Set") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Set") < 0);
 
     testContextItems["Alarm.Present"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("Set") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
 }
 
 void Ut_StatusIndicator::testBluetooth()
@@ -335,23 +335,23 @@ void Ut_StatusIndicator::testBluetooth()
     // !enabled && !connected == BluetoothStatusIndicator
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
     testContextItems["Bluetooth.Connected"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("On") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") < 0);
+    QVERIFY(m_subject->styleName().indexOf("On") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
 
     // enabled && !connected == BluetoothStatusIndicatorOn
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("On") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") < 0);
+    QVERIFY(m_subject->styleName().indexOf("On") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
 
     // enabled && connected == BluetoothStatusIndicatorActice
     testContextItems["Bluetooth.Connected"]->setValue(QVariant(true));
-    QVERIFY(m_subject->objectName().indexOf("On") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("On") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") >= 0);
 
     // !enabled && connected == BluetoothStatusIndicator
     testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
-    QVERIFY(m_subject->objectName().indexOf("On") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") < 0);
+    QVERIFY(m_subject->styleName().indexOf("On") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
 }
 
 void Ut_StatusIndicator::testPresence()
@@ -359,71 +359,71 @@ void Ut_StatusIndicator::testPresence()
     m_subject = new PresenceStatusIndicator(*testContext);
 
     // Offline mode by default
-    QVERIFY(m_subject->objectName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Available") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Away") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 
     // Busy
     testContextItems["Presence.State"]->setValue(QVariant("busy"));
-    QVERIFY(m_subject->objectName().indexOf("Busy") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("Available") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Away") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Busy") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 
     // Available
     testContextItems["Presence.State"]->setValue(QVariant("available"));
-    QVERIFY(m_subject->objectName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Available") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("Away") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Available") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 
     // Away
     testContextItems["Presence.State"]->setValue(QVariant("away"));
-    QVERIFY(m_subject->objectName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Available") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Away") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Away") >= 0);
 
     // Offline (explicitly)
     testContextItems["Presence.State"]->setValue(QVariant("offline"));
-    QVERIFY(m_subject->objectName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Available") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Away") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 }
 
 void Ut_StatusIndicator::testInternetConnection()
 {
     m_subject = new InternetConnectionStatusIndicator(*testContext);
 
-    QVERIFY(m_subject->objectName().indexOf("WLAN") < 0);
-    QVERIFY(m_subject->objectName().indexOf("PacketData") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Connecting") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") < 0);
+    QVERIFY(m_subject->styleName().indexOf("WLAN") < 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketData") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Connecting") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
 
     testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
     testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
-    QVERIFY(m_subject->objectName().indexOf("WLANConnecting") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("WLANConnecting") >= 0);
 
     testContextItems["Internet.NetworkType"]->setValue(QVariant("GPRS"));
-    QVERIFY(m_subject->objectName().indexOf("PacketDataConnecting") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketDataConnecting") >= 0);
 
     testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
-    QVERIFY(m_subject->objectName().indexOf("PacketData") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketData") >= 0);
 
     testContextItems["Internet.TrafficIn"]->setValue(QVariant(1));
-    QVERIFY(m_subject->objectName().indexOf("PacketDataActive") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
 
     testContextItems["Internet.TrafficOut"]->setValue(QVariant(1));
-    QVERIFY(m_subject->objectName().indexOf("PacketDataActive") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
 
     testContextItems["Internet.TrafficIn"]->setValue(QVariant(0));
-    QVERIFY(m_subject->objectName().indexOf("PacketDataActive") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
 
     testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
-    QVERIFY(m_subject->objectName().indexOf("WLAN") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("WLAN") >= 0);
 
     testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
-    QVERIFY(m_subject->objectName().indexOf("WLAN") < 0);
-    QVERIFY(m_subject->objectName().indexOf("PacketData") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Connecting") < 0);
-    QVERIFY(m_subject->objectName().indexOf("Active") < 0);
+    QVERIFY(m_subject->styleName().indexOf("WLAN") < 0);
+    QVERIFY(m_subject->styleName().indexOf("PacketData") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Connecting") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
 }
 
 void Ut_StatusIndicator::testAnimation()
@@ -575,11 +575,11 @@ void Ut_StatusIndicator::testCall()
     QCOMPARE(m_subject->model()->value(), modelValue);
 
     QFETCH(bool, ringingStyleEnabled);
-    QCOMPARE((bool)m_subject->objectName().contains("Ringing"),
+    QCOMPARE((bool)m_subject->styleName().contains("Ringing"),
              ringingStyleEnabled);
 
     QFETCH(bool, ongoingStyleEnabled);
-    QCOMPARE((bool)m_subject->objectName().contains("Ongoing"),
+    QCOMPARE((bool)m_subject->styleName().contains("Ongoing"),
              ongoingStyleEnabled);
 }
 
@@ -588,10 +588,10 @@ void Ut_StatusIndicator::testProfile()
     m_subject = new ProfileStatusIndicator(*testContext);
 
     testContextItems["Profile.Name"]->setValue(QVariant("silent"));
-    QVERIFY(m_subject->objectName().indexOf("Silent") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("Silent") >= 0);
 
     testContextItems["Profile.Name"]->setValue(QVariant("default"));
-    QVERIFY(m_subject->objectName().indexOf("Silent") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Silent") < 0);
 }
 
 void Ut_StatusIndicator::testGPS()
@@ -599,11 +599,11 @@ void Ut_StatusIndicator::testGPS()
     m_subject = new GPSStatusIndicator(*testContext);
 
     testContextItems["Location.SatPositioningState"]->setValue(QVariant("on"));
-    QVERIFY(m_subject->objectName().indexOf("On") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("On") >= 0);
 
     testContextItems["Location.SatPositioningState"]->setValue(QVariant("search"));
-    QVERIFY(m_subject->objectName().indexOf("Search") >= 0);
-    QVERIFY(m_subject->objectName().indexOf("On") < 0);
+    QVERIFY(m_subject->styleName().indexOf("Search") >= 0);
+    QVERIFY(m_subject->styleName().indexOf("On") < 0);
 }
 
 void Ut_StatusIndicator::testTransferStatusIndicatorDBusConnectionCreationInConstructor()
