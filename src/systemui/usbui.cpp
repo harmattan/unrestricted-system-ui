@@ -23,7 +23,7 @@
 #include <MNotification>
 #include <MSceneWindow>
 #include <MWidget>
-#include <MContentItem>
+#include <MBasicListItem>
 #include <MLabel>
 #include <MLocale>
 #include <QTimer>
@@ -86,42 +86,42 @@ void UsbUi::showDialog()
         return;
     }
 
-    if (dialog != NULL) {
-        dialog->appear(MSceneWindow::DestroyWhenDone);
-        return;
+    if (dialog == NULL) {
+        // Create dialog content buttons and put them into a central widget
+        QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+
+        //% "Current state: Charging only"
+        MLabel *label = new MLabel(qtTrId("qtn_usb_charging"));
+        label->setStyleName("CommonBodyTextInverted");
+        label->setAlignment(Qt::AlignCenter);
+        layout->addItem(label);
+
+        MBasicListItem *item = new MBasicListItem(MBasicListItem::SingleTitle);
+        item->setStyleName("CommonBasicListItemInverted");
+        //% "Mass Storage mode"
+        item->setTitle(qtTrId("qtn_usb_mass_storage"));
+        connect(item, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
+        layout->addItem(item);
+
+        item = new MBasicListItem(MBasicListItem::SingleTitle);
+        item->setStyleName("CommonBasicListItemInverted");
+        //% "Ovi Suite mode"
+        item->setTitle(qtTrId("qtn_usb_ovi_suite"));
+        QObject::connect(item, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
+        layout->addItem(item);
+
+        MWidget *centralWidget = new MWidget;
+        centralWidget->setLayout(layout);
+
+        // Create the dialog
+        dialog = new MDialog;
+        dialog->setModal(false);
+        dialog->setSystem(true);
+        dialog->setButtonBoxVisible(false);
+        dialog->setCentralWidget(centralWidget);
+        //% "Connected to USB device"
+        dialog->setTitle(qtTrId("qtn_usb_connected"));
     }
-
-    // Create dialog content buttons and put them into a central widget
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-
-    //% "Current state: Charging only"
-    MLabel *label = new MLabel(qtTrId("qtn_usb_charging"));
-    label->setAlignment(Qt::AlignLeft);
-    layout->addItem(label);
-
-    MContentItem *contentItem = new MContentItem(MContentItem::SingleTextLabel);
-    //% "Mass Storage mode"
-    contentItem->setTitle(qtTrId("qtn_usb_mass_storage"));
-    connect(contentItem, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
-    layout->addItem(contentItem);
-
-    contentItem = new MContentItem(MContentItem::SingleTextLabel);
-    //% "Ovi Suite mode"
-    contentItem->setTitle(qtTrId("qtn_usb_ovi_suite"));
-    QObject::connect(contentItem, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
-    layout->addItem(contentItem);
-
-    MWidget *centralWidget = new MWidget;
-    centralWidget->setLayout(layout);
-
-    // Create the dialog
-    dialog = new MDialog;
-    dialog->setModal(false);
-    dialog->setSystem(true);
-    dialog->setButtonBoxVisible(false);
-    dialog->setCentralWidget(centralWidget);
-    //% "Connected to USB device"
-    dialog->setTitle(qtTrId("qtn_usb_connected"));
 
     // System dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
     dialog->appear(MSceneWindow::DestroyWhenDone);

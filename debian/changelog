@@ -1,6 +1,7 @@
 system-ui (0.19.9~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: Unable to view the font due to its color
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 29 Dec 2010 18:26:57 +0200
 
