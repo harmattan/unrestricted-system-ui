@@ -1,8 +1,8 @@
 system-ui (0.19.9~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#214589 - Status indicators are not always updated when their values change
   * Fixes: Unable to view the font due to its color
-  * Fixes: Presence status indicator is not updated when an IM account is disconnected from the network
   * Fixes: package 'system-ui' is using deprecated QmTime::TimeFormat
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 29 Dec 2010 18:26:57 +0200
