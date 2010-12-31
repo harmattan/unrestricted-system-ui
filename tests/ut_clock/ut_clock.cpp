@@ -24,13 +24,7 @@
 #include "clock.h"
 
 #ifdef HAVE_QMSYSTEM
-Q_DECLARE_METATYPE(MeeGo::QmTime::TimeFormat);
 Q_DECLARE_METATYPE(MeeGo::QmTimeWhatChanged);
-
-MeeGo::QmTime::TimeFormat MeeGo::QmTime::getTimeFormat()
-{
-    return Ut_Clock::expectedTimeFormat;
-}
 #endif
 
 QDateTime QDateTime::currentDateTime()
@@ -50,9 +44,6 @@ void QTimer::stop()
 
 int Ut_Clock::timerTimeout;
 QDateTime Ut_Clock::expectedDateTime;
-#ifdef HAVE_QMSYSTEM
-MeeGo::QmTime::TimeFormat Ut_Clock::expectedTimeFormat;
-#endif
 
 // Called before the first testfunction is executed
 void Ut_Clock::initTestCase()
@@ -68,13 +59,7 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
-#ifdef HAVE_QMSYSTEM
-    expectedTimeFormat = MeeGo::QmTime::format12h;
-#endif
-
     m_subject = new Clock;
-    connect(this, SIGNAL(shortDisplayMode(bool)),
-            m_subject, SLOT(setShortDisplay(bool)));
 
 #ifdef HAVE_QMSYSTEM
     connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),

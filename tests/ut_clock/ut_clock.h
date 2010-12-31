@@ -37,15 +37,11 @@ class Ut_Clock : public QObject
 public:
     static int timerTimeout;
     static QDateTime expectedDateTime;
-#ifdef HAVE_QMSYSTEM
-    static MeeGo::QmTime::TimeFormat expectedTimeFormat;
-#endif
 
 signals:
 #ifdef HAVE_QMSYSTEM
     void timeOrSettingsChanged(MeeGo::QmTimeWhatChanged);
 #endif
-    void shortDisplayMode(bool isSet);
 
 private slots:
     void initTestCase();
