@@ -1,7 +1,7 @@
 system-ui (0.19.10~1) unstable; urgency=low
 
   * [UNRELEASED]
-  * Fixes: Status indicators in status bar aren't top-aligned
+  * Fixes: NB#211496 - Status indicators in status bar aren't top-aligned
   * Fixes: SA battery indication does not animate when battery is almost full
   * Fixes: Battery charging animation on status area is not recognizable enough
 
