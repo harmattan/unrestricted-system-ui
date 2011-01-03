@@ -144,6 +144,8 @@ void Ut_StatusIndicatorAnimationView::init()
     controller = new StatusIndicator;
     m_subject = new TestStatusIndicatorAnimationView(controller);
     m_subject->setModel(controller->model());
+    m_subject->modifiableStyle()->setAnimationDuration(33);
+    m_subject->modifiableStyle()->setUseIconSize(false);
 }
 
 void Ut_StatusIndicatorAnimationView::cleanup()
@@ -154,6 +156,7 @@ void Ut_StatusIndicatorAnimationView::cleanup()
 
 void Ut_StatusIndicatorAnimationView::testSetupModel()
 {
+    m_subject->getModel()->setValue("1 2");
     m_subject->getModel()->setAnimate(true);
     m_subject->setupModel();
     QVERIFY(qTimeLineStartedCalled);
@@ -256,16 +259,17 @@ void Ut_StatusIndicatorAnimationView::testSetAnimationDuration()
     m_subject->modifiableStyle()->setAnimationDuration(33);
     m_subject->executeStyleChanged();
     QCOMPARE(qTimeLineDuration, 33);
-    QCOMPARE(qTimeLineFrameRange, qMakePair(0, 3));
-    QCOMPARE(qTimeLineUpdateInterval, 11);
-    m_subject->setFirstAnimationFrame(1);
-    QCOMPARE(qTimeLineFrameRange, qMakePair(1, 3));
-    QCOMPARE(qTimeLineUpdateInterval, 16);
+    for (int i = 0; i < 3; i++) {
+        m_subject->setFirstAnimationFrame(i);
+        QCOMPARE(qTimeLineFrameRange, qMakePair(i, 3));
+        QCOMPARE(qTimeLineUpdateInterval, 11);
+    }
 }
 
 void Ut_StatusIndicatorAnimationView::testChangingAnimate()
 {
     QCOMPARE(m_subject->getModel()->animate(), false);
+    m_subject->getModel()->setValue("1 2 3");
 
     // Since animate is false by default, resetting it to false shouldn't have any effect
     m_subject->getModel()->setAnimate(false);

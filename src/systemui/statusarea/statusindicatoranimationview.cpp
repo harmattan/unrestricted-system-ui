@@ -82,20 +82,26 @@ void StatusIndicatorAnimationView::applyStyle()
 
 void StatusIndicatorAnimationView::setupAnimationTimeline()
 {
-    animationTimeline->setDuration(style()->animationDuration());
-    animationTimeline->setFrameRange(firstAnimationFrame, images.size());
-    animationTimeline->setUpdateInterval(style()->animationDuration() / (images.size() > 0 ? (images.size() - firstAnimationFrame) : 1));
+    if (!images.isEmpty()) {
+        // The timeline can only be set up properly if there are images
+        int totalImageCount = images.count();
+        int imageCount = totalImageCount - firstAnimationFrame;
+        int duration = style()->animationDuration() * imageCount / totalImageCount;
+        animationTimeline->setDuration(duration);
+        animationTimeline->setFrameRange(firstAnimationFrame, totalImageCount);
+        animationTimeline->setUpdateInterval(duration / imageCount);
+    }
 }
 
 void StatusIndicatorAnimationView::setFirstAnimationFrame(int frame)
 {
-    firstAnimationFrame = qBound(0, frame, images.size() - 1);
+    firstAnimationFrame = qBound(0, frame, images.count() - 1);
     setupAnimationTimeline();
 }
 
 void StatusIndicatorAnimationView::setAnimationFrame(int frame)
 {
-    frame = qBound(0, frame, images.size() - 1);
+    frame = qBound(0, frame, images.count() - 1);
 
     animationFrame = frame;
     loadCurrentFrame();
@@ -105,21 +111,21 @@ void StatusIndicatorAnimationView::setAnimationFrame(int frame)
 
 void StatusIndicatorAnimationView::startAnimation()
 {
-    if (animationTimeline->state() == QTimeLine::NotRunning) {
+    if (animationTimeline->state() == QTimeLine::NotRunning && !images.isEmpty()) {
         animationTimeline->start();
     }
 }
 
 void StatusIndicatorAnimationView::stopAnimation()
 {
-    if (animationTimeline->state() == QTimeLine::Running) {
+    if (animationTimeline->state() == QTimeLine::Running && !images.isEmpty()) {
         animationTimeline->stop();
     }
 }
 
 void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *) const
 {
-    if (animationFrame < images.size() && size().width() > 0 && size().height() > 0) {
+    if (animationFrame < images.count() && size().width() > 0 && size().height() > 0) {
         if (images[animationFrame] != NULL) {
             // Paint the image
             QRect target(QRect(QPoint(0, 0), size().toSize()));
@@ -130,7 +136,7 @@ void StatusIndicatorAnimationView::drawContents(QPainter *painter, const QStyleO
 
 void StatusIndicatorAnimationView::clearImageList()
 {
-    for (int i = 0; i < images.size(); i++) {
+    for (int i = 0; i < images.count(); i++) {
         delete images[i];
     }
 
@@ -163,7 +169,7 @@ void StatusIndicatorAnimationView::setupImageList(const QString &iconIDs)
 
 void StatusIndicatorAnimationView::loadCurrentFrame()
 {
-    if (animationFrame < images.size() && images[animationFrame] == NULL) {
+    if (animationFrame < images.count() && images[animationFrame] == NULL) {
         // Load the image if it has not been loaded yet
         images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame), style()->useIconSize() ? QSize(0, 0) : style()->preferredSize());
 
@@ -184,7 +190,7 @@ QSizeF StatusIndicatorAnimationView::sizeHint(Qt::SizeHint which, const QSizeF &
 {
     QSizeF size(0, 0);
     if (style()->useIconSize()) {
-        if (animationFrame < images.size() && images[animationFrame] != NULL) {
+        if (animationFrame < images.count() && images[animationFrame] != NULL) {
             // Use the image's size if an image exists, otherwise use a zero size
             size = images[animationFrame]->size();
         }
