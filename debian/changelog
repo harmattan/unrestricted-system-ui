@@ -1,6 +1,7 @@
 system-ui (0.19.10~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: Status indicators in status bar aren't top-aligned
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 31 Dec 2010 15:45:14 +0200
 

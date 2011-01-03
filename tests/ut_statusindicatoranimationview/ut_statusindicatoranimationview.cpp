@@ -1,21 +1,21 @@
 /***************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of system-ui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of system-ui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #include <QtTest/QtTest>
 #include <MApplication>
 #include "ut_statusindicatoranimationview.h"
@@ -47,7 +47,7 @@ StatusIndicatorAnimationStyle *TestStatusIndicatorAnimationView::modifiableStyle
 {
     StatusIndicatorAnimationStyleContainer &sc = style();
     const StatusIndicatorAnimationStyle *const_s = sc.operator ->();
-    StatusIndicatorAnimationStyle *s = const_cast<StatusIndicatorAnimationStyle *>(const_s);
+    StatusIndicatorAnimationStyle *s = const_cast<StatusIndicatorAnimationStyle *> (const_s);
     return s;
 }
 
@@ -74,7 +74,7 @@ QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &requestedSize)
 QList<QRectF> qPainterDrawPixmapRects;
 QList<const QPixmap *> qPainterDrawPixmapPixmaps;
 
-void QPainter::drawPixmap ( const QRectF & target, const QPixmap & pixmap, const QRectF & source )
+void QPainter::drawPixmap(const QRectF & target, const QPixmap & pixmap, const QRectF & source)
 {
     Q_UNUSED(source)
     qPainterDrawPixmapPixmaps.append(&pixmap);
@@ -313,7 +313,6 @@ void Ut_StatusIndicatorAnimationView::testSizeHintWhenUsingIconSizes()
     QSizeF imageSize(size, size);
     QRectF imageRect(QPointF(0, 0), imageSize);
 
-
     mThemePixmapSizes[imageKey] = imageSize.toSize();
     QVERIFY(m_subject->modifiableStyle()->useIconSize());
     m_subject->getModel()->setValue(imageKey);
@@ -338,8 +337,15 @@ void Ut_StatusIndicatorAnimationView::testSizeHintWhenUsingIconSizes()
     QCOMPARE(qPainterDrawPixmapRects[0], imageRect);
 }
 
-static const QSize SIZE_FOR_PIXMAP_REQUEST =
-    QSize(10, 10);
+void Ut_StatusIndicatorAnimationView::testSizeHintWhenUsingIconSizesButThereIsNoIcon()
+{
+    m_subject->setModeIcon();
+    m_subject->modifiableStyle()->setUseIconSize(true);
+    m_subject->sizeHint(Qt::PreferredSize, QSizeF());
+    QCOMPARE(m_subject->sizeHint(Qt::PreferredSize, QSizeF()), QSizeF(0, 0));
+}
+
+static const QSize SIZE_FOR_PIXMAP_REQUEST = QSize(10, 10);
 void Ut_StatusIndicatorAnimationView::testFramePixmapRequestWhenUsingIconSizes_data()
 {
     QTest::addColumn<bool>("useIconSize");
@@ -353,8 +359,7 @@ void Ut_StatusIndicatorAnimationView::testFramePixmapRequestWhenUsingIconSizes()
     m_subject->setModeIcon();
     QFETCH(bool, useIconSize);
     m_subject->modifiableStyle()->setUseIconSize(useIconSize);
-    m_subject->modifiableStyle()->setPreferredSize(
-        SIZE_FOR_PIXMAP_REQUEST);
+    m_subject->modifiableStyle()->setPreferredSize(SIZE_FOR_PIXMAP_REQUEST);
     m_subject->getModel()->setValue("1");
     m_subject->setAnimationFrame(0);
     // verify that MTheme::pixmapCopy was called once

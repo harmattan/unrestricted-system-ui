@@ -26,10 +26,16 @@
 
 StatusIndicatorLabelView::StatusIndicatorLabelView(StatusIndicator *controller) :
     MWidgetView(controller),
-    controller(controller)
+    controller(controller),
+    label(new MLabel)
 {
-    label = new MLabel(controller);
-    label->setObjectName("StatusIndicatorLabel");
+    label->setStyleName("StatusIndicatorLabel");
+    label->setAlignment(Qt::AlignLeft);
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addItem(label);
+    controller->setLayout(layout);
 }
 
 StatusIndicatorLabelView::~StatusIndicatorLabelView()

@@ -75,6 +75,7 @@ private slots:
     void testChangingAnimate();
     void testPaintingWhenSizeIsZero();
     void testSizeHintWhenUsingIconSizes();
+    void testSizeHintWhenUsingIconSizesButThereIsNoIcon();
     void testFramePixmapRequestWhenUsingIconSizes_data();
     void testFramePixmapRequestWhenUsingIconSizes();
 private:

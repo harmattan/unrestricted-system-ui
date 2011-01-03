@@ -165,15 +165,9 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
 {
     if (animationFrame < images.size() && images[animationFrame] == NULL) {
         // Load the image if it has not been loaded yet
-        images[animationFrame] =
-            MTheme::pixmapCopy(imageList.at(animationFrame),
-                               style()->useIconSize() ?
-                               QSize(0,0) :
-                               style()->preferredSize());
+        images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame), style()->useIconSize() ? QSize(0, 0) : style()->preferredSize());
 
-        if (not
-            (style()->preferredSize() == style()->minimumSize()
-             && style()->preferredSize() == style()->maximumSize())) {
+        if (!(style()->preferredSize() == style()->minimumSize() && style()->preferredSize() == style()->maximumSize())) {
             qWarning() << "Status indicators don't support cases where preferred size is not equal to minimum and maximum size!";
         }
     }
@@ -181,16 +175,19 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
 
 void StatusIndicatorAnimationView::resizeToCurrentFrameIfNeeded()
 {
-    if (style()->useIconSize() ) {
+    if (style()->useIconSize()) {
         controller->updateGeometry();
     }
 }
 
 QSizeF StatusIndicatorAnimationView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
-    QSizeF size;
-    if (style()->useIconSize() && animationFrame < images.size() && images[animationFrame] != NULL) {
-        size = images[animationFrame]->size();
+    QSizeF size(0, 0);
+    if (style()->useIconSize()) {
+        if (animationFrame < images.size() && images[animationFrame] != NULL) {
+            // Use the image's size if an image exists, otherwise use a zero size
+            size = images[animationFrame]->size();
+        }
     } else {
         size = MWidgetView::sizeHint(which, constraint);
     }
