@@ -244,16 +244,22 @@ BatteryStatusIndicator::~BatteryStatusIndicator()
 void BatteryStatusIndicator::batteryLevelChanged()
 {
     QList<QVariant> chargeBars = batteryLevel->value().toList();
-    if(chargeBars.count() == 2 ) {
-        double remainingBars = chargeBars.at(0).toDouble();
-        double maximumBars = chargeBars.at(1).toDouble();
+    if (chargeBars.count() == 2) {
+        int remainingBars = chargeBars.at(0).toInt();
+        int maximumBars = chargeBars.at(1).toInt();
 
         // Smoke test - check that charge bar values are valid
         if((maximumBars > 0) && (remainingBars >= 0) && (maximumBars >= remainingBars)) {
+            if (batteryCharging->value().toBool() && remainingBars == maximumBars) {
+                // While charging always animate at least one bar
+                remainingBars = maximumBars - 1;
+            }
+
             // imageList contains maximumBars + 2 images
-            double images = maximumBars + 2;
+            int images = maximumBars + 2;
+
             // First icon is for battery empty situation, hence remainingBars + 1
-            setValue((remainingBars + 1) / images);
+            setValue((remainingBars + 1) / (double)images);
         } else {
             // Error situation
             setValue(0.0);
