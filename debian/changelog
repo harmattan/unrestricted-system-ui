@@ -1,11 +1,10 @@
-system-ui (0.19.10~1) unstable; urgency=low
+system-ui (0.19.10-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#211496 - Status indicators in status bar aren't top-aligned
   * Fixes: SA battery indication does not animate when battery is almost full
   * Fixes: Battery charging animation on status area is not recognizable enough
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 31 Dec 2010 15:45:14 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Jan 2011 16:57:14 +0200
 
 system-ui (0.19.9-1) unstable; urgency=low
 
