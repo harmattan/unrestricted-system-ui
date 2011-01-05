@@ -35,8 +35,8 @@ static const QString BATTERY_MODE_POWERSAVE_AND_CHARGING = "PowerSaveCharging";
 static const QString NETWORK_NAME_START_DELIMITER = "(";
 static const QString NETWORK_NAME_END_DELIMITER = ")";
 
-const QString TransferStatusIndicator::TRANSFER_UI_DBUS_PATH="/com/nokia/transferui";
-const QString TransferStatusIndicator::TRANSFER_UI_DBUS_INTERFACE="com.nokia.transferui";
+const QString TransferStatusIndicator::TRANSFER_UI_DBUS_PATH="/com/meego/transferui";
+const QString TransferStatusIndicator::TRANSFER_UI_DBUS_INTERFACE="com.meego.transferui";
 const QString TransferStatusIndicator::TRANSFER_UI_DBUS_SIGNAL="stateChanged";
 const QString TransferStatusIndicator::TRANSFER_UI_STATE_IDLE = "idle";
 const QString TransferStatusIndicator::TRANSFER_UI_STATE_LIVE = "live";
