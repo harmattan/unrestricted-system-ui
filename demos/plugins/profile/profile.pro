@@ -5,7 +5,7 @@ OBJECTS_DIR = .obj
 include(../../../mconfig.pri)
 
 TEMPLATE      = lib
-CONFIG       += plugin gui meegotouch system-ui silent
+CONFIG       += plugin gui meegotouch system-ui
 INCLUDEPATH  += \
     ../../../src/systemui/statusindicatormenu
 

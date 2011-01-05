@@ -1,7 +1,5 @@
 # Load more defines from the m_defines...
 load(meegotouch_defines)
-# Silence the compiler
-CONFIG += silent
 DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
 
 # For profiling with gprof:

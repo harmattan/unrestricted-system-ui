@@ -1,5 +1,5 @@
 TEMPLATE      = lib
-CONFIG       += plugin gui meegotouch silent duicontrolpanel
+CONFIG       += plugin gui meegotouch duicontrolpanel
 
 MOC_DIR	      = .moc
 OBJECTS_DIR   = .objects
