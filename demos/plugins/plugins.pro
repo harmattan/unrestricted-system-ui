@@ -1,6 +1,6 @@
 TEMPLATE=subdirs
-SUBDIRS = \
-    profile
+include(../../shared.pri)
+addSubDirs(profile)
 
 check.target = check
 check.CONFIG = recursive

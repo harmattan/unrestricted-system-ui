@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
+include(../shared.pri)
 
 #
 # Please note that there are several ways to temprorarily disable one or more
@@ -12,14 +13,19 @@ contains(BUILD_FEATURES,coverage) {
     # Sometimes if is faster like this, when you are working on a single unit
     # test for a while.
     #
-    #SUBDIRS = ut_volumecontrolui
-    SUBDIRS = $$system(./unit_tests.sh)
+    subdirs =  $$system(./unit_tests.sh)
+    for(suitename, subdirs):{
+        addSubDirs($${suitename})
+    }
 } else {
-    SUBDIRS = $$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+	subdirs=$$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+	for(suitename, subdirs):{
+		addSubDirs($${suitename})
+	}
 }
 
 contains(BUILD_FEATURES,nocheck) {
-    SUBDIRS = 
+	SUBDIRS =
 }
 
 QMAKE_STRIP = echo

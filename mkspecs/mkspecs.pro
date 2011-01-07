@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = features
+include(../shared.pri)
+addSubDirs(features)

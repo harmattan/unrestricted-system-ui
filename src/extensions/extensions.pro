@@ -1,2 +1,4 @@
 TEMPLATE = subdirs
-SUBDIRS = screenlock screenlock/themes
+include(../../shared.pri)
+addSubDirs(screenlock)
+addSubDirs(screenlock/themes)

@@ -1,2 +1,3 @@
 TEMPLATE = subdirs
-SUBDIRS = plugins
+include(../shared.pri)
+addSubDirs(plugins)

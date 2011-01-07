@@ -1,7 +1,6 @@
-CONFIG += ordered
 TEMPLATE = subdirs
-SUBDIRS = \
-    libnotificationsystem \
-    systemui \
-    extensions \
-    privatemodeapplet
+include(../shared.pri)
+addSubDirs(libnotificationsystem)
+addSubDirs(systemui, libnotificationsystem )
+addSubDirs(extensions, libnotificationsystem )
+addSubDirs(privatemodeapplet)
