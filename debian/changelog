@@ -1,9 +1,8 @@
-system-ui (0.19.11~1) unstable; urgency=low
+system-ui (0.19.11-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#216787 - No status indicator shown for transfers to sharing services
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 05 Jan 2011 14:42:40 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 10 Jan 2011 17:26:40 +0200
 
 system-ui (0.19.10-1) unstable; urgency=low
 
