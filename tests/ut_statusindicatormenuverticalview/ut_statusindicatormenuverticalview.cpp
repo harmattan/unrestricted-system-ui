@@ -236,6 +236,8 @@ void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
 
 void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheControllerAndTheScene()
 {
+    QSKIP("This test is disabled due to bug NB#217876. It's not possible to know which children are created by the view being tested.", SkipSingle);
+
     QList<QGraphicsItem*> itemsFromTestSubject = controller->childItems();
 
     controller->setView(NULL);
