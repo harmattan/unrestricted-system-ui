@@ -1,6 +1,7 @@
 system-ui (0.19.12~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#218233 - systemui 0.19.11 tests compilation errors
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 10 Jan 2011 17:26:36 +0200
 

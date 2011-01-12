@@ -17,6 +17,10 @@ DEFINES += UNIT_TEST
 LIBS += -L../../lib
 QMAKE_LFLAGS_RPATH = -Wl
 
+contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
+    PKGCONFIG += contextsubscriber-1.0
+}
+
 contains(DEFINES, HAVE_LIBNGF) {
     PKGCONFIG += libngf0
 }
