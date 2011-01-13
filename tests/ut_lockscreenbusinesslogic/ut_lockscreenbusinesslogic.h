@@ -80,6 +80,7 @@ private slots:
 #endif
     void testWhenExtensionIsRegisteredSignalsAreConnected();
     void testReset();
+    void testRegisteringAndUnregisteringExtension();
 
 private:
     MApplication *m_App;

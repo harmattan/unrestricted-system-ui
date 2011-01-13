@@ -63,7 +63,7 @@ void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *
 
 void ScreenLockBusinessLogic::unregisterExtension(MApplicationExtensionInterface *extension)
 {
-    ScreenLockExtensionInterface *screenLockExtension = dynamic_cast<ScreenLockExtensionInterface *>(extension);
+    ScreenLockExtensionInterface *screenLockExtension = static_cast<ScreenLockExtensionInterface *>(extension);
 
     if (screenLockExtension != NULL) {
         screenLockExtensions.removeAll(screenLockExtension);

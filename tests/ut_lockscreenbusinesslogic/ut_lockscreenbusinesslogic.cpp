@@ -261,4 +261,16 @@ void Ut_LockScreenBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnecte
     QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
 }
 
+void Ut_LockScreenBusinessLogic::testRegisteringAndUnregisteringExtension()
+{
+    ScreenLockBusinessLogic logic;
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    logic.registerExtension(&screenLockExtension);
+    QCOMPARE(logic.screenLockExtensions.count(), 1);
+
+    logic.unregisterExtension(&screenLockExtension);
+    QCOMPARE(logic.screenLockExtensions.count(), 0);
+}
+
 QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)
