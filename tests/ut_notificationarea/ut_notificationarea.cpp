@@ -67,7 +67,7 @@ void Ut_NotificationArea::testAddNotification()
 {
     MBanner notification;
     emit addNotification(notification);
-    QVERIFY(notification.parentItem() != NULL);
+    QVERIFY(notification.parentItem() == NULL);
     QVERIFY(m_subject->model()->banners().contains(&notification));
 }
 

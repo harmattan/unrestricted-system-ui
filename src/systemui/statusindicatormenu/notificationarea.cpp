@@ -66,7 +66,6 @@ void NotificationArea::moveNotificationToTop(MBanner &notification)
 void NotificationArea::addNotification(MBanner &notification)
 {
     // Put the notification into the model of the notification area
-    notification.setParentItem(this);
     QList<MBanner *> banners(model()->banners());
     banners.push_front(&notification);
     model()->setBanners(banners);
