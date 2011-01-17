@@ -3,6 +3,7 @@ system-ui (0.19.12~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#218233 - systemui 0.19.11 tests compilation errors
   * Fixes: NB#218496 - No packet icon on UI when internet connection is activated via OVI suite
+  * Fixes: NB#214800 - COREWEB: /usr/bin/sysuid 'NotificationArea::setNotificationManagerInterface(NotificationManagerInterface&)
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 10 Jan 2011 17:26:36 +0200
 
@@ -25,7 +26,6 @@ system-ui (0.19.9-1) unstable; urgency=low
   * Fixes: NB#214589 - Status indicators are not always updated when their values change
   * Fixes: Unable to view the font due to its color
   * Fixes: package 'system-ui' is using deprecated QmTime::TimeFormat
-  * Fixes: NB#214800 - COREWEB: /usr/bin/sysuid 'NotificationArea::setNotificationManagerInterface(NotificationManagerInterface&)
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 31 Dec 2010 13:05:27 +0200
 
