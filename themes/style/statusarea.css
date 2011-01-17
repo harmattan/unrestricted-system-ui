@@ -452,17 +452,17 @@ StatusIndicatorIconStyle#GPSStatusIndicator {
 StatusIndicatorIconStyle#GPSStatusIndicatorOn  {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-gps-on";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-gps-searching1 icon-s-status-gps-searching2";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    image-list: "icon-s-status-gps-searching icon-s-status-gps-on";
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
