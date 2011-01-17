@@ -395,42 +395,42 @@ void Ut_StatusIndicator::testPresence()
     QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 }
 
+void Ut_StatusIndicator::testInternetConnection_data()
+{
+    QTest::addColumn<QString>("networkType");
+    QTest::addColumn<QString>("networkState");
+    QTest::addColumn<bool>("packetData");
+    QTest::addColumn<QString>("styleName");
+
+    QTest::newRow("wlan connecting") << "WLAN" << "connecting" << false << "WLANConnecting";
+    QTest::newRow("wlan connecting, packet data") << "WLAN" << "connecting" << true << "PacketDataActive";
+    QTest::newRow("wlan connected") << "WLAN" << "connected" << false << "WLAN";
+    QTest::newRow("wlan connected, packet data") << "WLAN" << "connected" << true << "PacketDataActive";
+
+    QTest::newRow("gprs connecting") << "GPRS" << "connecting" << false << "PacketDataConnecting";
+    QTest::newRow("gprs connecting, packet data") << "GPRS" << "connecting" << true << "PacketDataConnecting";
+    QTest::newRow("gprs connected") << "GPRS" << "connected" << false << "PacketData";
+    QTest::newRow("gprs connected, packet data") << "GPRS" << "connected" << true << "PacketDataActive";
+
+    QTest::newRow("disconnected") << "" << "disconnected" << false << "";
+    QTest::newRow("disconnected, packet data") << "" << "disconnected" << true << "PacketDataActive";
+}
+
+
 void Ut_StatusIndicator::testInternetConnection()
 {
+    QFETCH(QString, networkType);
+    QFETCH(QString, networkState);
+    QFETCH(bool, packetData);
+    QFETCH(QString, styleName);
+
     m_subject = new InternetConnectionStatusIndicator(*testContext);
 
-    QVERIFY(m_subject->styleName().indexOf("WLAN") < 0);
-    QVERIFY(m_subject->styleName().indexOf("PacketData") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Connecting") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
+    testContextItems["Internet.NetworkType"]->setValue(QVariant(networkType));
+    testContextItems["Internet.NetworkState"]->setValue(QVariant(networkState));
+    testContextItems["Cellular.PacketData"]->setValue(QVariant(packetData));
 
-    testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
-    QVERIFY(m_subject->styleName().indexOf("WLANConnecting") >= 0);
-
-    testContextItems["Internet.NetworkType"]->setValue(QVariant("GPRS"));
-    QVERIFY(m_subject->styleName().indexOf("PacketDataConnecting") >= 0);
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
-    QVERIFY(m_subject->styleName().indexOf("PacketData") >= 0);
-
-    testContextItems["Internet.TrafficIn"]->setValue(QVariant(1));
-    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
-
-    testContextItems["Internet.TrafficOut"]->setValue(QVariant(1));
-    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
-
-    testContextItems["Internet.TrafficIn"]->setValue(QVariant(0));
-    QVERIFY(m_subject->styleName().indexOf("PacketDataActive") >= 0);
-
-    testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
-    QVERIFY(m_subject->styleName().indexOf("WLAN") >= 0);
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
-    QVERIFY(m_subject->styleName().indexOf("WLAN") < 0);
-    QVERIFY(m_subject->styleName().indexOf("PacketData") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Connecting") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
+    QCOMPARE(m_subject->styleName(), QString("InternetConnectionStatusIndicator") + styleName);
 }
 
 void Ut_StatusIndicator::testAnimation()

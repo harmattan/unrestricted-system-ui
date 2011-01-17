@@ -356,7 +356,6 @@ StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketDataActive {
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketDataConnecting {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    /* TODO: use the following image list when the icons are available in the theme */
     image-list: "icon-s-status-packetdata1 icon-s-status-packetdata2 icon-s-status-packetdata3 icon-s-status-packetdata4 icon-s-status-packetdata5 icon-s-status-packetdata6 icon-s-status-packetdata7 icon-s-status-packetdata8";
     preferred-size: 2.4mm 1.8mm;
     minimum-size: 2.4mm 1.8mm;
@@ -365,7 +364,6 @@ StatusIndicatorIconStyle#InternetConnectionStatusIndicatorPacketDataConnecting {
 
 StatusIndicatorIconStyle#InternetConnectionStatusIndicatorWLANConnecting {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    /* TODO: use the following image list when the icons are available in the theme */
     image-list: "icon-s-status-wlan1 icon-s-status-wlan2 icon-s-status-wlan3 icon-s-status-wlan4 icon-s-status-wlan5 icon-s-status-wlan6";
     preferred-size: 2.4mm 1.8mm;
     minimum-size: 2.4mm 1.8mm;

@@ -311,8 +311,10 @@ private:
 
 /*!
  * A status indicator for showing the internet connection status.
- * Displays either a WiFi signal strength or a 3G symbol if 3G
- * connection is in use.
+ * Displays either a WiFi or a packet data connection symbol. The
+ * symbol is animated while the connection is being established.
+ * If a packet data connection is active (data is being transfered),
+ * a "packet data connection active" symbol is shown.
  */
 class InternetConnectionStatusIndicator : public StatusIndicator
 {
@@ -330,8 +332,7 @@ private slots:
 private:
     ContextItem *connectionType;
     ContextItem *connectionState;
-    ContextItem *trafficIn;
-    ContextItem *trafficOut;
+    ContextItem *packetData;
 };
 
 /*!

@@ -83,6 +83,7 @@ private slots:
     void testAlarm();
     void testBluetooth();
     void testPresence();
+    void testInternetConnection_data();
     void testInternetConnection();
     void testAnimation();
     void testPhoneNetwork_data();

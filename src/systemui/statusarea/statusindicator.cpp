@@ -383,11 +383,8 @@ InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(Application
     connectionState = createContextItem(context, "Internet.NetworkState");
     connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
-    trafficIn  = createContextItem(context, "Internet.TrafficIn");
-    connect(trafficIn, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
-
-    trafficOut = createContextItem(context, "Internet.TrafficOut");
-    connect(trafficOut, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
+    packetData = createContextItem(context, "Cellular.PacketData");
+    connect(packetData, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
 
     updateStatus();
 }
@@ -402,9 +399,7 @@ void InternetConnectionStatusIndicator::updateStatus()
 
     QString state      = connectionState->value().toString(); // disconnected connecting connected
     QString connection = connectionType->value().toString();  // GPRS WLAN
-
-    uint trafficInPercentage  = trafficIn->value().toInt();
-    uint trafficOutPercentage = trafficOut->value().toInt();
+    bool data = packetData->value().toBool();
 
     setValue(0);
 
@@ -412,9 +407,6 @@ void InternetConnectionStatusIndicator::updateStatus()
         postFix = "WLAN";
     } else if(connection == "GPRS") {
         postFix = "PacketData";
-        if(state == "connected" && (trafficInPercentage > 0 || trafficOutPercentage > 0)) {
-            postFix += "Active";
-        }
     }
 
     if(state == "connecting") {
@@ -425,6 +417,14 @@ void InternetConnectionStatusIndicator::updateStatus()
     } else {
         postFix = "";
         animateIfPossible = false;
+    }
+
+    // If a GPRS connection is in the process of being established,
+    // hide packet data activity. Otherwise, packet data actvity is
+    // show regardless of the network state as it may be a result of
+    // MMS sending or device being used as a GPRS modem.
+    if(data && (connection != "GPRS" || state != "connecting")) {
+        postFix = "PacketDataActive";
     }
 
     setStyleNameAndUpdate(metaObject()->className() + postFix);
