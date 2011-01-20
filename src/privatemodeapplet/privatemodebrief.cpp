@@ -21,7 +21,7 @@
 #include "privatemodebrief.h"
 
 PrivateModeBrief::PrivateModeBrief():
-    privateSetting("/desktop/meego/private/private_lockscreen_notifications")
+    privateSetting("/desktop/meego/privacy/private_lockscreen_notifications")
 {
 }
 
