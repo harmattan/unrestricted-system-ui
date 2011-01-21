@@ -64,6 +64,8 @@ void ScreenLockWindow::applyStyle()
     } else {
         setOrientationLocked(false);
     }
+
+    setTranslucentBackground(style->translucent());
 }
 
 void ScreenLockWindow::showEvent(QShowEvent *event)

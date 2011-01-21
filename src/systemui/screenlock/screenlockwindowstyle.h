@@ -29,6 +29,8 @@ class ScreenLockWindowStyle : public MStyle
 
     // The locked orientation: "landscape", "portrait" or any other value for unlocked
     M_STYLE_ATTRIBUTE(QString, lockedOrientation, LockedOrientation)
+    // Whether the window should be translucent or not
+    M_STYLE_ATTRIBUTE(bool, translucent, Translucent)
 };
 
 class ScreenLockWindowStyleContainer : public MStyleContainer

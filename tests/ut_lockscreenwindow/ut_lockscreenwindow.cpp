@@ -149,4 +149,26 @@ void Ut_LockScreenWindow::testOrientationLocking()
     QCOMPARE(mWindowOrientation, expectedOrientation);
 }
 
+void Ut_LockScreenWindow::testTranslucency_data()
+{
+    QTest::addColumn<bool>("translucent");
+
+    QTest::newRow("Translucent") << true;
+    QTest::newRow("Not translucent") << false;
+}
+
+void Ut_LockScreenWindow::testTranslucency()
+{
+    QFETCH(bool, translucent);
+
+    // Set the style
+    ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL)));
+    style->setTranslucent(translucent);
+
+    // Create a new window
+    delete lockScreenWindow;
+    lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
+    QCOMPARE(lockScreenWindow->testAttribute(Qt::WA_TranslucentBackground), translucent);
+}
+
 QTEST_APPLESS_MAIN(Ut_LockScreenWindow)

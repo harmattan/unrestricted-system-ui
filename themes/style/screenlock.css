@@ -1,5 +1,6 @@
 ScreenLockWindowStyle {
     locked-orientation:;
+    translucent: false;
 }
 
 MSceneWindowStyle#ScreenLockWindow {
@@ -18,7 +19,7 @@ MSceneWindowStyle#ScreenLockWindow {
 
 MApplicationExtensionAreaStyle#ScreenLockExtensionArea {
     background-image:;
-    background-color: #000000;
+    background-color:;
     minimum-size: 100% 100%;
     preferred-size: 100% 100%;
     maximum-size: 100% 100%;
