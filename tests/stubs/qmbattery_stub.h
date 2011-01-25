@@ -38,6 +38,8 @@ public:
     virtual int getRemainingIdleTime (MeeGo::QmBattery::RemainingTimeMode mode);
     virtual int getRemainingCapacityPct ();
     virtual int getMaxBars ();
+    virtual MeeGo::QmBattery::State getState();
+    virtual MeeGo::QmBattery::Level getLevel();
 };
 
 MeeGo::QmBattery::ChargingState
@@ -93,6 +95,18 @@ QmBatteryStub::getMaxBars ()
 {
     stubMethodEntered ("getMaxBars");
     return stubReturnValue<int> ("getMaxBars");
+}
+
+MeeGo::QmBattery::State QmBatteryStub::getState()
+{
+    stubMethodEntered ("getState");
+    return stubReturnValue<MeeGo::QmBattery::State> ("getState");
+}
+
+MeeGo::QmBattery::Level QmBatteryStub::getLevel()
+{
+    stubMethodEntered ("getLevel");
+    return stubReturnValue<MeeGo::QmBattery::Level> ("getLevel");
 }
 
 
@@ -166,6 +180,16 @@ int
 QmBattery::getMaxBars () const
 {
     return gQmBatteryStub->getMaxBars ();
+}
+
+QmBattery::State QmBattery::getState () const
+{
+    return gQmBatteryStub->getState();
+}
+
+QmBattery::Level QmBattery::getLevel() const
+{
+    return gQmBatteryStub->getLevel();
 }
 
 } /* namespace MeeGo */

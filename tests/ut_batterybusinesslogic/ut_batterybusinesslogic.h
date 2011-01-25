@@ -22,7 +22,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-#include "batterybusinesslogic.h"
+class BatteryBusinessLogic;
 
 class Ut_BatteryBusinessLogic : public QObject
 {

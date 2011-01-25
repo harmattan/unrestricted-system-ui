@@ -18,10 +18,13 @@
 ****************************************************************************/
 #include "ut_batterybusinesslogic.h"
 
+#include "batterybusinesslogic.h"
+
 #ifdef HAVE_QMSYSTEM
 #include "qmled_stub.h"
 #include "qmbattery_stub.h"
 #include "qmdevicemode_stub.h"
+#include "qmdisplaystate_stub.h"
 #endif
 
 #include <MNotification>

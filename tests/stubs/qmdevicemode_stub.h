@@ -36,6 +36,8 @@ public:
     virtual void setPSMState (MeeGo::QmDeviceMode::PSMState state);
     virtual int getPSMBatteryMode ();
     virtual void setPSMBatteryMode (int percentages);
+    MeeGo::QmDeviceMode::DeviceMode getMode();
+    bool setMode(MeeGo::QmDeviceMode::DeviceMode mode);
 };
 
 MeeGo::QmDeviceMode::PSMState
@@ -66,6 +68,21 @@ QmDeviceModeStub::setPSMBatteryMode (int percentages)
     QList<ParameterBase*> params;
     params.append (new Parameter<int> (percentages));
     stubMethodEntered ("setPSMBatteryMode", params);
+}
+
+bool QmDeviceModeStub::setMode (MeeGo::QmDeviceMode::DeviceMode mode)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<MeeGo::QmDeviceMode::DeviceMode> (mode));
+    stubMethodEntered ("setMode", params);
+    return stubReturnValue<bool> ("setMode");
+}
+
+MeeGo::QmDeviceMode::DeviceMode
+QmDeviceModeStub::getMode ()
+{
+    stubMethodEntered ("getMode");
+    return stubReturnValue<MeeGo::QmDeviceMode::DeviceMode> ("getMode");
 }
 
 /*
@@ -117,6 +134,16 @@ QmDeviceMode::setPSMBatteryMode (int percentages)
 {
     gQmDeviceModeStub->setPSMBatteryMode (percentages);
     return true;
+}
+
+QmDeviceMode::DeviceMode QmDeviceMode::getMode() const
+{
+    return gQmDeviceModeStub->getMode();
+}
+
+bool QmDeviceMode::setMode(QmDeviceMode::DeviceMode mode)
+{
+    return gQmDeviceModeStub->setMode(mode);
 }
 
 } /* namespace MeeGo */
