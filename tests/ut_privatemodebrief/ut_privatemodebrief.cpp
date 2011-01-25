@@ -66,7 +66,7 @@ void Ut_PrivateModeBrief::cleanup()
 
 void Ut_PrivateModeBrief::testGConfKey()
 {
-    QVERIFY(g_gconf_key == "/desktop/meego/private/private_lockscreen_notifications");
+    QVERIFY(g_gconf_key == "/desktop/meego/privacy/private_lockscreen_notifications");
 
     QSignalSpy changeSpy(m_subject, SIGNAL(valuesChanged()));
 
