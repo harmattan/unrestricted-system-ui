@@ -1,3 +1,9 @@
+system-ui (0.19.14~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 26 Jan 2011 20:26:54 +0200
+
 system-ui (0.19.13-4) unstable; urgency=low
 
   * Fixes: privacy mode settings applet was using the wrong GConf key
