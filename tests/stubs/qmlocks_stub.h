@@ -14,6 +14,8 @@ public:
     virtual bool setState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
     virtual bool setDeviceAutolockTime(int seconds);
     virtual int getDeviceAutolockTime();
+    virtual void connectNotify(const char *signal);
+    virtual void disconnectNotify(const char *signal);
 };
 
 // 2. IMPLEMENT STUB
@@ -52,6 +54,20 @@ int QmLocksStub::getDeviceAutolockTime() {
     return stubReturnValue<int>("getDeviceAutolockTime");
 }
 
+void QmLocksStub::connectNotify(const char *signal)
+{
+  QList<ParameterBase*> params;
+  params.append(new Parameter<const char *>(signal));
+  stubMethodEntered("connectNotify",params);
+}
+
+void QmLocksStub::disconnectNotify(const char *signal)
+{
+  QList<ParameterBase*> params;
+  params.append(new Parameter<const char *>(signal));
+  stubMethodEntered("disconnectNotify",params);
+}
+
 // 3. CREATE A STUB INSTANCE
 QmLocksStub gDefaultQmLocksStub;
 QmLocksStub* gQmLocksStub = &gDefaultQmLocksStub;
@@ -82,6 +98,16 @@ bool QmLocks::setDeviceAutolockTime(int seconds) {
 
 int QmLocks::getDeviceAutolockTime() {
     return gQmLocksStub->getDeviceAutolockTime();
+}
+
+void QmLocks::connectNotify(const char *signal)
+{
+    gQmLocksStub->connectNotify(signal);
+}
+
+void QmLocks::disconnectNotify(const char *signal)
+{
+    gQmLocksStub->disconnectNotify(signal);
 }
 
 }
