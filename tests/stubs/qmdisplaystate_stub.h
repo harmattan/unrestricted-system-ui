@@ -50,6 +50,8 @@ class QmDisplayStateStub : public StubBase {
   virtual void setDisplayDimTimeout(int timeout);
   virtual void setBlankingWhenCharging(bool blanking);
   virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
+  virtual void connectNotify(const char *signal);
+  virtual void disconnectNotify(const char *signal);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -137,6 +139,24 @@ void QmDisplayStateStub::displayStateChanged(MeeGo::QmDisplayState::DisplayState
   stubMethodEntered("displayStateChanged",params);
 }
 
+void QmDisplayStateStub::connectNotify(const char *signal)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const char *>(signal));
+  stubMethodEntered("connectNotify",params);
+}
+
+
+void QmDisplayStateStub::disconnectNotify(const char *signal)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const char *>(signal));
+  stubMethodEntered("disconnectNotify",params);
+}
+
+
+
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -206,9 +226,18 @@ void QmDisplayState::setBlankingWhenCharging(bool blanking) {
   gQmDisplayStateStub->setBlankingWhenCharging(blanking);
 }
 
-//void QmDisplayState::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
-//  gQmDisplayStateStub->displayStateChanged(state);
-//}
+void QmDisplayState::connectNotify(const char *signal)
+{
+	gQmDisplayStateStub->connectNotify(signal);
+}
+void QmDisplayState::disconnectNotify(const char * signal)
+{
+    gQmDisplayStateStub->disconnectNotify(signal);
+}
+
+void QmDisplayState::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
+  gQmDisplayStateStub->displayStateChanged(state);
+}
 
 } //Namespace meego
 
