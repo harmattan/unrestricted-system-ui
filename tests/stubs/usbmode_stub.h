@@ -37,4 +37,10 @@ MeeGo::QmUSBMode::Mode MeeGo::QmUSBMode::getDefaultMode()
     return testDefaultMode;
 }
 
+void MeeGo::QmUSBMode::connectNotify(const char *)
+{
+}
+void MeeGo::QmUSBMode::disconnectNotify(const char *)
+{
+}
 #endif
