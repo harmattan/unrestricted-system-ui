@@ -129,6 +129,7 @@ Sysuid::Sysuid(QObject* parent) :
     // Update the enabled status of compositor notification sink based on screen and device locks
 #ifdef HAVE_QMSYSTEM
     connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
+    connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
 #endif
     updateCompositorNotificationSinkEnabledStatus();
 
@@ -196,6 +197,7 @@ void Sysuid::updateCompositorNotificationSinkEnabledStatus()
 #ifdef HAVE_QMSYSTEM
                                              || qmLocks.getState(MeeGo::QmLocks::Device) == MeeGo::QmLocks::Locked
                                              || qmLocks.getState(MeeGo::QmLocks::TouchAndKeyboard) == MeeGo::QmLocks::Locked
+                                             || displayState.get() == MeeGo::QmDisplayState::Off
 #endif
                                              );
 }

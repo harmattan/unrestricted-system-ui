@@ -1,5 +1,6 @@
 system-ui (0.19.14~1) unstable; urgency=low
 
+  * Fixes: NB#219858 - Sliding notification is displayed for already received message when dimmed screen is turn on
   * [UNRELEASED]
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 26 Jan 2011 20:26:54 +0200

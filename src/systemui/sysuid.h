@@ -27,6 +27,7 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
+#include "qmdisplaystate.h"
 #endif
 
 class UsbUi;
@@ -122,6 +123,9 @@ private:
 #ifdef HAVE_QMSYSTEM
     //! QmSystem watcher for device lock
     MeeGo::QmLocks qmLocks;
+
+    //! Keep track of device display state
+    MeeGo::QmDisplayState displayState;
 #endif
 
 #ifdef UNIT_TEST
