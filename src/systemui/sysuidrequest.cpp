@@ -47,7 +47,7 @@ SysUidRequest::SysUidRequest() :
     }
 
     screenLockBusinessLogic_ = new ScreenLockBusinessLogic(this);
-    new ScreenLockBusinessLogicAdaptor(this, screenLockBusinessLogic_);
+    new ScreenLockBusinessLogicAdaptor(this, *screenLockBusinessLogic_);
 }
 
 void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram)

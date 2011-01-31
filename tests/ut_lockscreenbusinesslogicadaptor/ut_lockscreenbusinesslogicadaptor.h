@@ -19,14 +19,13 @@
 #ifndef _UT_LOCKSCREENBUSINESSLOGICADAPTOR_H
 #define _UT_LOCKSCREENBUSINESSLOGICADAPTOR_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class ScreenLockBusinessLogicAdaptor;
 class ScreenLockBusinessLogic;
 
-class Ut_LockScreenBusinessLogicAdaptor: public QObject {
-Q_OBJECT
+class Ut_LockScreenBusinessLogicAdaptor : public QObject {
+    Q_OBJECT
 
 private slots:
     void initTestCase();
@@ -34,10 +33,10 @@ private slots:
     void init();
     void cleanup();
 
-    void testTklockOpen();
-    void testUnlockConfirmed();
-    void testEventEaterIf();
-    void testUnlockScreenIf();
+    void testTkLockOpen_data();
+    void testTkLockOpen();
+    void testTkLockClose();
+    void testUnlockCallback();
 
 private:
     ScreenLockBusinessLogic *m_logic;
