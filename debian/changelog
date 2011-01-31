@@ -1,4 +1,4 @@
-system-ui (0.19.14~1) unstable; urgency=low
+system-ui (0.20.0~1) unstable; urgency=low
 
   * Fixes: NB#219858 - Sliding notification is displayed for already received message when dimmed screen is turn on
   * [UNRELEASED]

@@ -92,6 +92,13 @@ QObject *ScreenLockExtension::qObject()
 {
     return this;
 }
+bool screenLockExtensionModeSet = false;
+ScreenLockExtensionInterface::ScreenLockMode screenLockExtensionMode;
+void ScreenLockExtension::setMode(ScreenLockExtensionInterface::ScreenLockMode mode)
+{
+    screenLockExtensionModeSet = true;
+    screenLockExtensionMode = mode;
+}
 
 QDBus::CallMode qDbusAbstractInterfaceCallMode;
 QVariant qDbusAbstractInterfaceCallArg1;
@@ -140,6 +147,7 @@ void Ut_LockScreenBusinessLogic::cleanup()
     gQWidgetRaiseCalled = false;
     gQWidgetVisible.clear();
     screenLockExtensionReset = false;
+    screenLockExtensionModeSet = false;
     gScreenLockWindowStub->stubReset();
     gEventEaterStub->stubReset();
 #ifdef HAVE_QMSYSTEM
@@ -318,13 +326,16 @@ void Ut_LockScreenBusinessLogic::testTkLockOpen_data()
     QTest::addColumn<bool>("screenLockWindowVisible");
     QTest::addColumn<bool>("eventEaterWindowVisibilityModified");
     QTest::addColumn<bool>("eventEaterWindowVisible");
+    QTest::addColumn<bool>("screenLockModeSet");
+    QTest::addColumn<int>("screenLockMode");
 
-    QTest::newRow("TkLockModeNone") << (int)ScreenLockBusinessLogic::TkLockModeNone << false << false << false << false;
-    QTest::newRow("TkLockModeEnable") << (int)ScreenLockBusinessLogic::TkLockModeEnable << true << true << true << false;
-    QTest::newRow("TkLockModeHelp") << (int)ScreenLockBusinessLogic::TkLockModeHelp << false << false << false << false;
-    QTest::newRow("TkLockModeSelect") << (int)ScreenLockBusinessLogic::TkLockModeSelect << false << false << false << false;
-    QTest::newRow("TkLockModeOneInput") << (int)ScreenLockBusinessLogic::TkLockModeOneInput << false << false << true << true;
-    QTest::newRow("TkLockEnableVisual") << (int)ScreenLockBusinessLogic::TkLockEnableVisual << true << true << true << false;
+    QTest::newRow("TkLockModeNone") << (int)ScreenLockBusinessLogic::TkLockModeNone << false << false << false << false << false << 0;
+    QTest::newRow("TkLockModeEnable") << (int)ScreenLockBusinessLogic::TkLockModeEnable << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode;
+    QTest::newRow("TkLockModeHelp") << (int)ScreenLockBusinessLogic::TkLockModeHelp << false << false << false << false << false << 0;
+    QTest::newRow("TkLockModeSelect") << (int)ScreenLockBusinessLogic::TkLockModeSelect << false << false << false << false << false << 0;
+    QTest::newRow("TkLockModeOneInput") << (int)ScreenLockBusinessLogic::TkLockModeOneInput << false << false << true << true << false << 0;
+    QTest::newRow("TkLockEnableVisual") << (int)ScreenLockBusinessLogic::TkLockEnableVisual << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode;
+    QTest::newRow("TkLockEnableLowPowerMode") << (int)ScreenLockBusinessLogic::TkLockEnableLowPowerMode << true << true << true << false << true << (int)ScreenLockExtensionInterface::LowPowerMode;
 }
 
 void Ut_LockScreenBusinessLogic::testTkLockOpen()
@@ -334,6 +345,12 @@ void Ut_LockScreenBusinessLogic::testTkLockOpen()
     QFETCH(bool, screenLockWindowVisible);
     QFETCH(bool, eventEaterWindowVisibilityModified);
     QFETCH(bool, eventEaterWindowVisible);
+    QFETCH(bool, screenLockModeSet);
+    QFETCH(int, screenLockMode);
+
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    m_subject->registerExtension(&screenLockExtension);
 
     // Make sure the event eater is visible so that it will be hidden if necessary
     m_subject->showEventEater();
@@ -355,6 +372,11 @@ void Ut_LockScreenBusinessLogic::testTkLockOpen()
     } else {
         QCOMPARE(gEventEaterStub->stubCallCount("show"), 0);
         QCOMPARE(gEventEaterStub->stubCallCount("hide"), 0);
+    }
+
+    QCOMPARE(screenLockExtensionModeSet, screenLockModeSet);
+    if (screenLockModeSet) {
+        QCOMPARE((int)screenLockExtensionMode, screenLockMode);
     }
 }
 

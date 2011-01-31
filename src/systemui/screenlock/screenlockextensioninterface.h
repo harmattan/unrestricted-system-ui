@@ -1,21 +1,21 @@
 /****************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of systemui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of systemui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 
 #ifndef SCREENLOCKEXTENSIONINTERFACE_H
 #define SCREENLOCKEXTENSIONINTERFACE_H
@@ -36,6 +36,12 @@ class NotificationManagerInterface;
 class ScreenLockExtensionInterface : public MApplicationExtensionInterface
 {
 public:
+    //! Screen lock modes
+    enum ScreenLockMode {
+        NormalMode,
+        LowPowerMode
+    };
+
     /*!
      * Destructor.
      */
@@ -59,8 +65,15 @@ public:
      * \return the QObject that implements the interface
      */
     virtual QObject *qObject() = 0;
+
+    /*!
+     * Sets the mode of the screen lock.
+     *
+     * \param mode the screen lock mode
+     */
+    virtual void setMode(ScreenLockMode mode) = 0;
 };
 
-Q_DECLARE_INTERFACE(ScreenLockExtensionInterface, "com.meego.core.ScreenLockExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(ScreenLockExtensionInterface, "com.meego.core.ScreenLockExtensionInterface/0.20")
 
 #endif // SCREENLOCKEXTENSIONINTERFACE_H

@@ -14,6 +14,7 @@ class ScreenLockExtensionStub : public StubBase {
   virtual void reset();
   virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
   virtual QObject * qObject();
+  virtual void setMode(ScreenLockExtension::ScreenLockMode mode);
   virtual bool initialize(const QString &interface);
   virtual QGraphicsWidget * widget();
   virtual ScreenLockExtension * instance();
@@ -40,6 +41,12 @@ void ScreenLockExtensionStub::setNotificationManagerInterface(NotificationManage
 QObject * ScreenLockExtensionStub::qObject() {
   stubMethodEntered("qObject");
   return stubReturnValue<QObject *>("qObject");
+}
+
+void ScreenLockExtensionStub::setMode(ScreenLockExtension::ScreenLockMode mode) {
+  QList<ParameterBase*> params;
+  params.append(new Parameter<ScreenLockExtension::ScreenLockMode >(mode));
+  stubMethodEntered("setMode", params);
 }
 
 bool ScreenLockExtensionStub::initialize(const QString &interface) {
@@ -90,7 +97,12 @@ void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInt
 
 QObject * ScreenLockExtension::qObject()
 {
-    return gScreenLockExtensionStub->qObject();
+  return gScreenLockExtensionStub->qObject();
+}
+
+void ScreenLockExtension::setMode(ScreenLockMode mode)
+{
+  gScreenLockExtensionStub->setMode(mode);
 }
 
 bool ScreenLockExtension::initialize(const QString &interface) {

@@ -3,5 +3,5 @@ Type=X-MeeGoApplicationExtension
 Name=Screen Lock Extension
 
 [X-MeeGoApplicationExtension]
-Interface=com.meego.core.ScreenLockExtensionInterface/1.0
+Interface=com.meego.core.ScreenLockExtensionInterface/0.20
 Extension=libsysuid-screenlock.so

@@ -39,7 +39,7 @@ ScreenLockBusinessLogic::ScreenLockBusinessLogic(QObject* parent) :
 #endif
 
     // Create an extension area for the screen lock
-    extensionArea = new MApplicationExtensionArea("com.meego.core.ScreenLockExtensionInterface/1.0");
+    extensionArea = new MApplicationExtensionArea("com.meego.core.ScreenLockExtensionInterface/0.20");
     extensionArea->setStyleName("ScreenLockExtensionArea");
     extensionArea->setInProcessFilter(QRegExp("/sysuid-screenlock.desktop$"));
     extensionArea->setOutOfProcessFilter(QRegExp("$^"));
@@ -77,8 +77,13 @@ int ScreenLockBusinessLogic::tklock_open(const QString &service, const QString &
         break;
 
     case TkLockEnableVisual:
-        // Display has been turned on, so raise the lock screen window on top if it isn't already
+        // Raise the lock screen window on top if it isn't already
         QTimer::singleShot(0, this, SLOT(showScreenLock()));
+        break;
+
+    case TkLockEnableLowPowerMode:
+        // Enable low power mode and raise the lock screen window on top if it isn't already
+        QTimer::singleShot(0, this, SLOT(showLowPowerMode()));
         break;
 
     default:
@@ -129,6 +134,18 @@ void ScreenLockBusinessLogic::unlockScreen()
 
 void ScreenLockBusinessLogic::showScreenLock()
 {
+    foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
+        screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
+    }
+    toggleScreenLockUI(true);
+    toggleEventEater(false);
+}
+
+void ScreenLockBusinessLogic::showLowPowerMode()
+{
+    foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
+        screenLockExtension->setMode(ScreenLockExtensionInterface::LowPowerMode);
+    }
     toggleScreenLockUI(true);
     toggleEventEater(false);
 }

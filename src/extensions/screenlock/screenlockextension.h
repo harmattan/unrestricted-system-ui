@@ -38,6 +38,7 @@ public:
     virtual void reset();
     virtual void setNotificationManagerInterface(NotificationManagerInterface &notificationManager);
     virtual QObject *qObject();
+    virtual void setMode(ScreenLockMode mode);
 
     //! Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);

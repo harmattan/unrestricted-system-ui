@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <MLibrary>
 #include "screenlockextension.h"
 #include "lockscreen.h"
@@ -59,6 +58,10 @@ void ScreenLockExtension::setNotificationManagerInterface(NotificationManagerInt
 QObject *ScreenLockExtension::qObject()
 {
     return this;
+}
+
+void ScreenLockExtension::setMode(ScreenLockMode)
+{
 }
 
 bool ScreenLockExtension::initialize(const QString &)

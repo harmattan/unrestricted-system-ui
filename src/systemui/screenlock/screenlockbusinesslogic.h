@@ -91,8 +91,11 @@ private slots:
     //! Hides the screen lock window and calls the MCE's unlock callback function.
     void unlockScreen();
 
-    //! Shows the screen lock window and hides the event eater window.
+    //! Shows the screen lock window in normal mode and hides the event eater window.
     void showScreenLock();
+
+    //! Shows the screen lock window in low power mode and hides the event eater window.
+    void showLowPowerMode();
 
     //! Hides the event eater window and the screen lock window.
     void hideScreenLockAndEventEater();
@@ -116,26 +119,27 @@ signals:
     void screenIsLocked(bool locked);
 
 private:
-    enum {
+    enum TkLockReply {
         TkLockReplyFailed = 0,
         TkLockReplyOk
-    } TklockReply;
+    };
 
-    enum {
-        TkLockModeNone,     // Deprecated
-        TkLockModeEnable,   // Show the lock UI in lock mode
-        TkLockModeHelp,     // Deprecated
-        TkLockModeSelect,   // Deprecated
-        TkLockModeOneInput, // Turn the event eater on
-        TkLockEnableVisual  // Show unlock UI
-    } TkLockMode;
+    enum TkLockMode {
+        TkLockModeNone,           // Deprecated
+        TkLockModeEnable,         // Show the lock UI in lock mode
+        TkLockModeHelp,           // Deprecated
+        TkLockModeSelect,         // Deprecated
+        TkLockModeOneInput,       // Turn the event eater on
+        TkLockEnableVisual,       // Show unlock UI
+        TkLockEnableLowPowerMode  // Show low power UI
+    };
 
-    enum {
+    enum TkLockStatus {
         TkLockUnlock = 1,
         TkLockRetry,
         TkLockTimeout,
         TkLockClosed
-    } TkLockStatus;
+    };
 
     //! The screen lock window
     ScreenLockWindow *screenLockWindow;
