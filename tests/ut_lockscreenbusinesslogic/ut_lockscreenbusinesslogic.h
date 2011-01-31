@@ -19,13 +19,12 @@
 #ifndef UT_LOCKSCREENBUSINESSLOGIC_H
 #define UT_LOCKSCREENBUSINESSLOGIC_H
 
-#include <QObject>
 #include <QGraphicsWidget>
 #include "screenlockextensioninterface.h"
 
 class MApplication;
-class MApplicationWindow;
 class NotifierNotificationSink;
+class ScreenLockBusinessLogic;
 
 class LockScreen : public QGraphicsWidget
 {
@@ -81,10 +80,14 @@ private slots:
     void testWhenExtensionIsRegisteredSignalsAreConnected();
     void testReset();
     void testRegisteringAndUnregisteringExtension();
+    void testTkLockOpen_data();
+    void testTkLockOpen();
+    void testTkLockClose();
 
 private:
     MApplication *m_App;
     NotifierNotificationSink *notifierSink;
+    ScreenLockBusinessLogic *m_subject;
 };
 
 #endif

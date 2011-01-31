@@ -43,12 +43,6 @@ public:
     ScreenLockBusinessLogic *screenLockBusinessLogic();
 
 private:
-    /*!
-     * An error printing method. It is implemented so we know what external cause
-     * aborted the sysuid.
-     */
-    void dbusError(QDBusConnection &connection, bool abortProgram = true);
-
     //! The lock screen business logic
     ScreenLockBusinessLogic *screenLockBusinessLogic_;
 };

@@ -31,48 +31,113 @@ class EventEater;
 class MApplicationExtensionArea;
 class MApplicationExtensionInterface;
 class ScreenLockExtensionInterface;
+class QDBusInterface;
 
+/*!
+ * The screen lock business logic is responsible for showing and hiding
+ * the screen lock window and the event eater window when necessary.
+ */
 class ScreenLockBusinessLogic : public QObject
 {
     Q_OBJECT
 
 public:
-    ScreenLockBusinessLogic(QObject* parent = 0);
+    /*!
+     * Constructs a new screen lock business logic.
+     *
+     * \param parent the parent QObject for the logic
+     */
+    ScreenLockBusinessLogic(QObject *parent = NULL);
+
+    /*!
+     * Destroys the screen lock business logic.
+     */
     virtual ~ScreenLockBusinessLogic();
+
+    /*!
+     * Shows the screen lock window or the event eater window.
+     *
+     * \param service DBus service to call when unlock is performed.
+     * \param path DBus path to call when unlock is performed.
+     * \param interface DBus interface to call when unlock is performed.
+     * \param method DBus method to call when unlock is performed.
+     * \param mode The ScreenLockBusinessLogicAdaptor::TkLockMode opcode.
+     * \param silent Whether to show a notification or not (deprecated)
+     * \param flicker Deprecated/not used
+     */
+    int tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool silent, bool flicker);
+
+    /*!
+     * Hides the screen lock.
+     *
+     * \param silent Whether to show notifications or not (deprecated).
+     */
+    int tklock_close(bool silent);
 
 public slots:
     void toggleScreenLockUI(bool toggle);
     void toggleEventEater(bool toggle);
 
 private slots:
-    void unlockScreen();
-    void hideEventEater();
-
-
     //! Registers an screen lock extension
     void registerExtension(MApplicationExtensionInterface *extension);
 
     //! Unregisters an screen lock extension
     void unregisterExtension(MApplicationExtensionInterface *extension);
 
-    /*!
-     * Resets the screen lock to its normal state.
-     */
+    //! Resets the screen lock to its normal state.
     void reset();
 
+    //! Hides the screen lock window and calls the MCE's unlock callback function.
+    void unlockScreen();
+
+    //! Shows the screen lock window and hides the event eater window.
+    void showScreenLock();
+
+    //! Hides the event eater window and the screen lock window.
+    void hideScreenLockAndEventEater();
+
+    //! Shows the event eater window.
+    void showEventEater();
+
+    //! Hides the event eater window.
+    void hideEventEater();
+
 #ifdef HAVE_QMSYSTEM
+    //! Resets the lock screen when the screen is unblanked and the screenlock is visible
     void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
+
+    //! Emits the state of the screenlock onwards through the screenIsLocked() signal
     void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
 
 signals:
-    void updateTime();
-    void unlockConfirmed();
+    //! Emitted when the screen lock state changes
     void screenIsLocked(bool locked);
 
 private:
-    bool displayIsOn();
+    enum {
+        TkLockReplyFailed = 0,
+        TkLockReplyOk
+    } TklockReply;
 
+    enum {
+        TkLockModeNone,     // Deprecated
+        TkLockModeEnable,   // Show the lock UI in lock mode
+        TkLockModeHelp,     // Deprecated
+        TkLockModeSelect,   // Deprecated
+        TkLockModeOneInput, // Turn the event eater on
+        TkLockEnableVisual  // Show unlock UI
+    } TkLockMode;
+
+    enum {
+        TkLockUnlock = 1,
+        TkLockRetry,
+        TkLockTimeout,
+        TkLockClosed
+    } TkLockStatus;
+
+    //! The screen lock window
     ScreenLockWindow *screenLockWindow;
 
     //! The event eater window
@@ -84,8 +149,17 @@ private:
     //! A list of registered screen lock extensions
     QList<ScreenLockExtensionInterface *> screenLockExtensions;
 
+    //! MCE callback D-Bus interface
+    QDBusInterface *callbackInterface;
+
+    //! Name of the MCE callback method
+    QString callbackMethod;
+
 #ifdef HAVE_QMSYSTEM
+    //! For getting the display state
     MeeGo::QmDisplayState displayState;
+
+    //! For getting the lock state
     MeeGo::QmLocks locks;
 #endif
 

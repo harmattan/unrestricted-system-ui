@@ -17,6 +17,8 @@
  **
  ****************************************************************************/
 #include <MApplicationExtensionArea>
+#include <QTimer>
+#include <QDBusInterface>
 #include "screenlockextensioninterface.h"
 #include "screenlockbusinesslogic.h"
 #include "notifiernotificationsink.h"
@@ -28,7 +30,8 @@
 ScreenLockBusinessLogic::ScreenLockBusinessLogic(QObject* parent) :
     QObject(parent),
     screenLockWindow(NULL),
-    eventEaterWindow(NULL)
+    eventEaterWindow(NULL),
+    callbackInterface(NULL)
 {
 #ifdef HAVE_QMSYSTEM
     connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
@@ -51,13 +54,53 @@ ScreenLockBusinessLogic::~ScreenLockBusinessLogic()
     delete eventEaterWindow;
 }
 
+int ScreenLockBusinessLogic::tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool, bool)
+{
+    // Create a D-Bus interface if one doesn't exist or the D-Bus callback details have changed
+    if (callbackInterface == NULL || callbackInterface->service() != service || callbackInterface->path() != path || callbackInterface->interface() != interface) {
+        delete callbackInterface;
+        callbackInterface = new QDBusInterface(service, path, interface, QDBusConnection::systemBus(), this);
+    }
+
+    // Store the callback method name
+    callbackMethod = method;
+
+    // MCE needs a response ASAP, so the actions are executed with single shot timers
+    switch (mode) {
+    case TkLockModeEnable:
+        // Create the lock screen already so that it's readily available
+        QTimer::singleShot(0, this, SLOT(showScreenLock()));
+        break;
+
+    case TkLockModeOneInput:
+        QTimer::singleShot(0, this, SLOT(showEventEater()));
+        break;
+
+    case TkLockEnableVisual:
+        // Display has been turned on, so raise the lock screen window on top if it isn't already
+        QTimer::singleShot(0, this, SLOT(showScreenLock()));
+        break;
+
+    default:
+        break;
+    }
+
+    return TkLockReplyOk;
+}
+
+int ScreenLockBusinessLogic::tklock_close(bool)
+{
+    QTimer::singleShot(0, this, SLOT(hideScreenLockAndEventEater()));
+
+    return TkLockReplyOk;
+}
+
 void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *extension)
 {
     ScreenLockExtensionInterface *screenLockExtension = static_cast<ScreenLockExtensionInterface *>(extension);
     screenLockExtensions.append(screenLockExtension);
     screenLockExtension->setNotificationManagerInterface(Sysuid::instance()->notificationManagerInterface());
     connect(screenLockExtension->qObject(), SIGNAL(unlocked()), this, SLOT(unlockScreen()));
-    connect(screenLockExtension->qObject(), SIGNAL(unlocked()), this, SIGNAL(unlockConfirmed()));
     connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension->qObject(), SIGNAL(notifierSinkActive(bool)));
 }
 
@@ -77,22 +120,29 @@ void ScreenLockBusinessLogic::reset()
     }
 }
 
-
 void ScreenLockBusinessLogic::unlockScreen()
 {
     toggleScreenLockUI(false);
+
+    callbackInterface->call(QDBus::NoBlock, callbackMethod, TkLockUnlock);
 }
 
-#ifdef HAVE_QMSYSTEM
-void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::DisplayState state)
+void ScreenLockBusinessLogic::showScreenLock()
 {
-    // When the screen is unlocked, the screenlock is visible the lock screen needs to be reset
-    if (state == MeeGo::QmDisplayState::On && screenLockWindow != NULL && screenLockWindow->isVisible()) {
-        reset();
-        screenLockWindow->setFocus();
-    }
+    toggleScreenLockUI(true);
+    toggleEventEater(false);
 }
-#endif
+
+void ScreenLockBusinessLogic::hideScreenLockAndEventEater()
+{
+    toggleEventEater(false);
+    toggleScreenLockUI(false);
+}
+
+void ScreenLockBusinessLogic::showEventEater()
+{
+    toggleEventEater(true);
+}
 
 void ScreenLockBusinessLogic::hideEventEater()
 {
@@ -141,16 +191,16 @@ void ScreenLockBusinessLogic::toggleEventEater(bool toggle)
     }
 }
 
-bool ScreenLockBusinessLogic::displayIsOn()
+#ifdef HAVE_QMSYSTEM
+void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::DisplayState state)
 {
-#if !defined(__i386__) && defined(HAVE_QMSYSTEM)
-    return displayState.get() == MeeGo::QmDisplayState::On;
-#else
-    return true;
-#endif
+    // When the screen is unblanked and the screenlock is visible the lock screen needs to be reset
+    if (state == MeeGo::QmDisplayState::On && screenLockWindow != NULL && screenLockWindow->isVisible()) {
+        reset();
+        screenLockWindow->setFocus();
+    }
 }
 
-#ifdef HAVE_QMSYSTEM
 void ScreenLockBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
     if (what == MeeGo::QmLocks::TouchAndKeyboard) {

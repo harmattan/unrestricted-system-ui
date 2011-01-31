@@ -1,4 +1,7 @@
 include(../../mconfig.pri)
+
+system(qdbusxml2cpp screenlockbusinesslogic.xml -a screenlockbusinesslogicadaptor -c ScreenLockBusinessLogicAdaptor -l ScreenLockBusinessLogic -i screenlockbusinesslogic.h -i metatypedeclarations.h)
+
 INCLUDEPATH += screenlock statusarea
 
 STYLE_HEADERS += screenlock/screenlockwindowstyle.h

@@ -15,7 +15,6 @@ SOURCES += \
     $$SRCDIR/usbui.cpp \
     $$SRCDIR/batterybusinesslogic.cpp \
     $$SRCDIR/screenlock/screenlockbusinesslogic.cpp \
-    $$SRCDIR/screenlock/screenlockbusinesslogicadaptor.cpp \
     $$SRCDIR/sysuid.cpp
 
 # service classes
@@ -37,7 +36,6 @@ HEADERS += \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/screenlock/screenlockbusinesslogic.h \
-    $$SRCDIR/screenlock/screenlockbusinesslogicadaptor.h \
     $$SRCDIR/sysuidrequest.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \

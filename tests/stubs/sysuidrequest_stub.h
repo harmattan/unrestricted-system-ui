@@ -28,20 +28,12 @@
 class SysUidRequestStub : public StubBase {
   public:
   virtual void SysUidRequestConstructor();
-  virtual void dbusError(QDBusConnection &connection, bool abortProgram);
   virtual ScreenLockBusinessLogic *screenLockBusinessLogic();
 }; 
 
 // 2. IMPLEMENT STUB
 void SysUidRequestStub::SysUidRequestConstructor() {
 
-}
-
-void SysUidRequestStub::dbusError(QDBusConnection &connection, bool abortProgram) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QDBusConnection & >(connection));
-  params.append( new Parameter<bool >(abortProgram));
-  stubMethodEntered("dbusError",params);
 }
 
 ScreenLockBusinessLogic *SysUidRequestStub::screenLockBusinessLogic()
@@ -60,10 +52,6 @@ SysUidRequestStub* gSysUidRequestStub = &gDefaultSysUidRequestStub;
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 SysUidRequest::SysUidRequest() {
   gSysUidRequestStub->SysUidRequestConstructor();
-}
-
-void SysUidRequest::dbusError(QDBusConnection &connection, bool abortProgram) {
-  gSysUidRequestStub->dbusError(connection, abortProgram);
 }
 
 ScreenLockBusinessLogic *SysUidRequest::screenLockBusinessLogic()
