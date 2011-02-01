@@ -36,8 +36,7 @@ private slots:
     void testInitValues ();
     void testVolumeSetGet ();
     void testVolumeChangeByPa ();
-    void testSignaling ();
-    void testPing ();
+    void testWhenPulseAudioSetsVolumeNewVolumeIsSet();
 #if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
     void testHwKeyEvent();
 #endif

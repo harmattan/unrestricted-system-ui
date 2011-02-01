@@ -342,36 +342,12 @@ void Ut_VolumeBarLogic::testVolumeChangeByPa ()
     QCOMPARE (volumeBarLogic->maxVolume (), stepcount);
 }
 
-void Ut_VolumeBarLogic::testSignaling ()
+void Ut_VolumeBarLogic::testWhenPulseAudioSetsVolumeNewVolumeIsSet()
 {
-    quint32 currentstep = 0;
-    quint32 stepcount   = 13;
-
-    // Whe PulseAudio sends the D-Bus signal about stepcount/currentstep
-    // changes logic should emit itself volumeChanged signal
-    QSignalSpy spy (volumeBarLogic, SIGNAL (volumeChanged (quint32, quint32)));
-
     // Do what PulseAudio do [of course Pa doing this indirectly...]
-    volumeBarLogic->stepsUpdated (currentstep, stepcount);
-
-    QTest::qWait (500); // wait for a little time
-
-    QList<QVariant> arguments = spy.takeFirst ();
-    // Verify the signal parameters
-    QCOMPARE (arguments.at (0).toUInt (), currentstep);
-    QCOMPARE (arguments.at (1).toUInt (), stepcount);
-}
-
-void Ut_VolumeBarLogic::testPing()
-{
-    QSignalSpy spy (volumeBarLogic, SIGNAL (volumeChanged (quint32, quint32)));
-
-    volumeBarLogic->ping();
-
-    QList<QVariant> arguments = spy.takeFirst ();
-
-    QCOMPARE (arguments.at (0).toUInt (), volumeBarLogic->volume ());
-    QCOMPARE (arguments.at (1).toUInt (), volumeBarLogic->maxVolume ());
+    volumeBarLogic->stepsUpdated (10, 100);
+    QCOMPARE(volumeBarLogic->currentvolume, (uint)10);
+    QCOMPARE(volumeBarLogic->currentmax, (uint)100);
 }
 
 void Ut_VolumeBarLogic::resetStubs()
