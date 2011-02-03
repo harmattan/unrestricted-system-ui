@@ -7,13 +7,13 @@ MSceneWindowStyle#shutdownWindow {
 
 MLabelStyle#shutdownTextFirst {
     font: $FONT_XLARGE;
-
+    color: $COLOR_INVERTED_FOREGROUND;
     preferred-size: 100% 50%;
 }
 
 MLabelStyle#shutdownTextSecond {
     font: $FONT_LARGE;
-
+    color: $COLOR_INVERTED_FOREGROUND;
     preferred-size: 100% 50%;
 }
 
