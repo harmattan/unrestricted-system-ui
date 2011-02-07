@@ -76,7 +76,7 @@ clean:
 
 install: build
 	dh_testdir $(EXCLUSIONS)
-	dh_testroot$(EXCLUSIONS)
+	dh_testroot $(EXCLUSIONS)
 	dh_clean -k $(EXCLUSIONS)
 	dh_installdirs $(EXCLUSIONS)
 
