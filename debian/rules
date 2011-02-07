@@ -39,11 +39,18 @@ ifneq (,$(filter parallel=%,$(TMP_BUILD_OPTS)))
     PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
 endif
 
+# Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
+ifneq (,$(findstring nodoc,$(DEB_BUILD_OPTIONS)))
+     EXCLUSIONS += --no-package=system-ui-doc
+else
+     QMAKE_PARAMS += CONFIG+=docs
+endif
+
 QMAKE_OPTIONS = COV_OPTION=off $(QMAKE_PARAMS)
 
 configure: configure-stamp
 configure-stamp:
-	dh_testdir
+	dh_testdir $(EXCLUSIONS)
 
 	qmake -recursive $(QMAKE_OPTIONS)
 
@@ -51,35 +58,30 @@ configure-stamp:
 
 build: build-stamp
 build-stamp: configure-stamp 
-	dh_testdir
+	dh_testdir $(EXCLUSIONS)
 
 	make $(PARALLEL_MAKEFLAGS)
 
 	touch build-stamp
 
 clean:
-	dh_testdir
-	dh_testroot
+	dh_testdir $(EXCLUSIONS)
+	dh_testroot $(EXCLUSIONS)
 
 	rm -f build-stamp configure-stamp
 
 	-@make $(PARALLEL_MAKEFLAGS) clean
 
-	dh_clean 
+	dh_clean $(EXCLUSIONS)
 
 install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k 
-	dh_installdirs
+	dh_testdir $(EXCLUSIONS)
+	dh_testroot$(EXCLUSIONS)
+	dh_clean -k $(EXCLUSIONS)
+	dh_installdirs $(EXCLUSIONS)
 
 	# Add here commands to install the package into debian/tmp
 	INSTALL_ROOT=$(CURDIR)/debian/tmp make  $(PARALLEL_MAKEFLAGS) install
-
-	# duistatusindicatormenu-doc package
-	make  $(PARALLEL_MAKEFLAGS) doc
-	mkdir -p ${CURDIR}/debian/tmp/usr/share/doc/system-ui/html
-	cp -r doc/html/*  ${CURDIR}/debian/tmp/usr/share/doc/system-ui/html/
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -89,21 +91,21 @@ binary-indep: build install
 
 # Build architecture-dependent files here.
 binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_install --sourcedir=debian/tmp
-	dh_link
-	dh_strip --dbg-package=system-ui-dbg
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb --destdir=$(DEBDIR)
+	dh_testdir $(EXCLUSIONS)
+	dh_testroot $(EXCLUSIONS)
+	dh_installchangelogs $(EXCLUSIONS)
+	dh_installdocs $(EXCLUSIONS)
+	dh_install --sourcedir=debian/tmp $(EXCLUSIONS)
+	dh_link $(EXCLUSIONS)
+	dh_strip --dbg-package=system-ui-dbg $(EXCLUSIONS)
+	dh_compress $(EXCLUSIONS)
+	dh_fixperms $(EXCLUSIONS)
+	dh_makeshlibs $(EXCLUSIONS)
+	dh_installdeb $(EXCLUSIONS)
+	dh_shlibdeps $(EXCLUSIONS)
+	dh_gencontrol $(EXCLUSIONS)
+	dh_md5sums $(EXCLUSIONS)
+	dh_builddeb --destdir=$(DEBDIR) $(EXCLUSIONS)
 
 	aegis-deb-add -control debian/system-ui/DEBIAN/control .. debian/system-ui.aegis=_aegis
 

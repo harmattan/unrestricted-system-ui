@@ -9,6 +9,10 @@ addSubDirs(themes)
 addSubDirs(translations)
 addSubDirs(demos)
 addSubDirs(tests)
+CONFIG(docs) {
+    addSubDirs(doc)
+}
+
 
 QMAKE_CLEAN += configure-stamp build-stamp localconfig.pri
 
@@ -22,4 +26,3 @@ contains(BUILD_FEATURES,coverage) {
 		tests/ut_*/selected.cov
 }
 
-include(doc/doc.pri)
