@@ -203,8 +203,6 @@ void Ut_StatusIndicatorMenuVerticalView::testConnections()
     MWidget *container = getContainerFromLayout(controller);
     QVERIFY(container != NULL);
 
-    MWidgetController *settingsItem = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count() - 2));
-    QVERIFY(disconnect(settingsItem, SIGNAL(clicked()), controller, SLOT(launchControlPanelAndHide())));
     QVERIFY(disconnect(mApplicationExtensionAreaInstance, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*))));
     QVERIFY(disconnect(mApplicationExtensionAreaInstance, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), m_subject, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*))));
 }
@@ -212,9 +210,9 @@ void Ut_StatusIndicatorMenuVerticalView::testConnections()
 void Ut_StatusIndicatorMenuVerticalView::testExtensionAreaInitialization()
 {
     QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
-    QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit, QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
+    QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit, QRegExp("/statusindicatormenu-(internetconnection|presence|profile).desktop$"));
     QCOMPARE(mApplicationExtensionAreaOutOfProcessFilterDuringInit, QRegExp("$^"));
-    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
+    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, ((QStringList() << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
 }
 
 void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
