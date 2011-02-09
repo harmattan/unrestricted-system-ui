@@ -28,15 +28,11 @@ endif
 
 TMP_BUILD_OPTS = $(subst $(comma),$(space),$(DEB_BUILD_OPTIONS))
 
-ARCH = $(shell dpkg --print-architecture)
+PARALLEL_MAKEFLAGS +=
 
 ifneq (,$(filter parallel=%,$(TMP_BUILD_OPTS)))
-    ifneq (,$(findstring arm,$(ARCH)))
-        NUMJOBS = 1
-    else
-        NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(TMP_BUILD_OPTS)))
-    endif
-    PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
+         NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(TMP_BUILD_OPTS)))
+         PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
 endif
 
 # Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
