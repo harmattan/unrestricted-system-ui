@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <MSceneManager>
 #include <MScene>
 #include <MLocale>
@@ -106,12 +105,13 @@ void StatusIndicatorMenuWindow::makeVisible()
     }
 #endif
 
-    if (!isOnDisplay()) {
-        // If status indicator window is not visible, then show it
+    // Show the window if it's not visible (from Qt's point of view). Note that isOnDisplay() should NOT be used here: show() means setVisible(true) and the accessor is isVisible().
+    if (!isVisible()) {
         show();
-        // Raise it on top
-        raise();
     }
+
+    // Always raise the window. Even if it's visible (from Qt's point of view) it may not be the topmost window.
+    raise();
 }
 
 #ifdef HAVE_QMSYSTEM

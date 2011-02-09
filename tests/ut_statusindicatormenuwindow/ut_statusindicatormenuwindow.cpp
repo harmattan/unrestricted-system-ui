@@ -140,7 +140,7 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
 
     QTest::newRow("Device locked") << true << false << false << false;
     QTest::newRow("Window not visible") << false << false << true << true;
-    QTest::newRow("Window already visible") << false << true << false << false;
+    QTest::newRow("Window already visible") << false << true << false << true;
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible()
