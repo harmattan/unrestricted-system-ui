@@ -32,7 +32,6 @@ ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWi
     setWindowTitle("Screen Lock");
     setSceneManager(new MSceneManager);
 
-    excludeFromTaskBar();
     applyStyle();
 
     // Create a layout for the extension area
@@ -72,6 +71,7 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
 {
     MWindow::showEvent(event);
 
+    // The window properties cannot be set before the window is shown for the first time, so they're set here.
     // Set the stacking layer
     Display *display = QX11Info::display();
     Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
@@ -79,6 +79,9 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
         long layer = 2;
         X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
+
+    // Exclude the window from the task bar
+    excludeFromTaskBar();
 }
 
 void ScreenLockWindow::excludeFromTaskBar()

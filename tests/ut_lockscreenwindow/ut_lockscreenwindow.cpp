@@ -95,6 +95,9 @@ void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
 
 void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
 {
+    // The stub needs to be reset so that things done at construction time won't affect the test
+    gX11WrapperStub->stubReset();
+
     Display *display = QX11Info::display();
 
     QShowEvent *showEvent = new QShowEvent;
