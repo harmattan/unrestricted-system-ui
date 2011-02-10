@@ -1,11 +1,10 @@
-system-ui (0.20.3~1) unstable; urgency=low
+system-ui (0.20.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#225623 - Taps on short event banner are not recognized reliably
   * Fixes: NB#225633 - Short event banners are not displayed long enough
   * Fixes: NB#226586 - Lock screen visible for a while in recents view
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 08 Feb 2011 15:38:46 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 10 Feb 2011 13:30:02 +0200
 
 system-ui (0.20.2-1) unstable; urgency=low
 
