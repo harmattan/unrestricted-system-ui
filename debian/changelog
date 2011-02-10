@@ -1,3 +1,9 @@
+system-ui (0.20.5~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 10 Feb 2011 16:00:46 +0200
+
 system-ui (0.20.4-1) unstable; urgency=low
 
   * Fixes: NB#208077 - MNotification doesn't show specified image
