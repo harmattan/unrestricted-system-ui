@@ -29,6 +29,32 @@
 // List of event type files
 QStringList eventTypeFilesList;
 
+// QPixmap stubs
+bool gPixmapLoaded;
+bool QPixmap::load(const QString &fileName, const char *format, Qt::ImageConversionFlags flags) {
+    Q_UNUSED(format);
+    Q_UNUSED(flags);
+    if (!fileName.isEmpty()) {
+        gPixmapLoaded = true;
+    } else {
+        gPixmapLoaded = false;
+    }
+    return gPixmapLoaded;
+}
+
+bool QPixmap::isNull() const {
+    return false;
+}
+
+// MBanner stubs
+bool gPixmapSet;
+void MBanner::setPixmap(const QPixmap &pixmap) {
+    Q_UNUSED(pixmap);
+    if (gPixmapLoaded) {
+        gPixmapSet = true;
+    }
+}
+
 class TestWidgetNotificationSink : public WidgetNotificationSink
 {
 public:
@@ -36,7 +62,7 @@ public:
     MBanner *createInfoBanner(Notification::NotificationType, uint groupId, const NotificationParameters &);
     void addNotification(const Notification &);
     void removeNotification(uint);
-    QString determineIconId(const NotificationParameters &);
+    void updateImage(MBanner *infoBanner, const NotificationParameters &);
     void updateActions(MBanner *infoBanner, const Notification &notification);
 };
 
@@ -58,9 +84,9 @@ void TestWidgetNotificationSink::removeNotification(uint)
 {
 }
 
-QString TestWidgetNotificationSink::determineIconId(const NotificationParameters &params)
+void TestWidgetNotificationSink::updateImage(MBanner *infoBanner, const NotificationParameters &params)
 {
-    return WidgetNotificationSink::determineIconId(params);
+    WidgetNotificationSink::updateImage(infoBanner, params);
 }
 
 void TestWidgetNotificationSink::updateActions(MBanner *infoBanner, const Notification &notification)
@@ -186,6 +212,7 @@ void Ut_WidgetNotificationSink::init()
     contents.clear();
     actions.clear();
     actionTriggeredCount = 0;
+    gPixmapSet = false;
     gInstalledTrCatalog = "";
     gInstalledCatalogLocale = NULL;
     gSetDefaultLocale = NULL;
@@ -465,6 +492,36 @@ void Ut_WidgetNotificationSink::testUserRemovablePropertyIsSetWhenBannerIsCreate
     parameters.add(NotificationWidgetParameterFactory::createUserRemovableParameter(false));
     infoBanner.reset(m_subject->createInfoBanner(Notification::ApplicationEvent, 1, parameters));
     QCOMPARE(infoBanner->property(WidgetNotificationSink::USER_REMOVABLE_PROPERTY).toBool(), false);
+}
+
+void Ut_WidgetNotificationSink::testWhenNotificationsCreatedThenImageIsSetCorrectly_data()
+{
+    QTest::addColumn<QString>("iconId");
+    QTest::addColumn<QString>("imageId");
+
+    QTest::addColumn<QString>("verifyImageId");
+    QTest::addColumn<bool>("verifyPixmap");
+
+    QTest::newRow("Only icon id") << "icon-id" << "" << "icon-id" << false;
+    QTest::newRow("Only image id") << "" << "image-id" << "image-id" << false;
+    QTest::newRow("Both image and icon id") << "icon-id" << "image-id" << "image-id" << false;
+    QTest::newRow("Image as path") <<  "" << "/absolute/path/image.png" << "" << true;
+    QTest::newRow("Icon id and image as path") <<  "icon-id" << "/absolute/path/image.png" << "" << true;
+}
+
+void Ut_WidgetNotificationSink::testWhenNotificationsCreatedThenImageIsSetCorrectly()
+{
+    QFETCH(QString, iconId);
+    QFETCH(QString, imageId);
+    QFETCH(QString, verifyImageId);
+    QFETCH(bool, verifyPixmap);
+
+    TestNotificationParameters parameters("", "", iconId);
+    parameters.add(NotificationWidgetParameterFactory::createImageIdParameter(imageId));
+    QScopedPointer<MBanner> infoBanner(m_subject->createInfoBanner(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)));
+    QCOMPARE(infoBanner->iconID(), verifyImageId);
+    QCOMPARE(gPixmapLoaded, verifyPixmap);
+    QCOMPARE(gPixmapSet, verifyPixmap);
 }
 
 void Ut_WidgetNotificationSink::testPrivacySettingValueEmittedWhenHonoringChanges_data()

@@ -121,11 +121,14 @@ private:
     void updateNotification(const Notification &notification);
 
     /*!
-     * Determines preview icon id of a notification based on the given notification parameters.
-     * \param parameters Notification parameters to determine the preview icon id from.
-     * \return Logical icon id as a string
+     * Updates the image of the info banner with the given notification parameters.
+     * If the icon is overridden with an image the image is used. Otherwise the
+     * preview icon ID is used.
+     *
+     * \param infoBanner the MBanner to update
+     * \param parameters the NotificationParameters to get the image or icon from
      */
-    static QString determinePreviewIconId(const NotificationParameters &parameters);
+    void updateImage(MBanner *infoBanner, const NotificationParameters &parameters);
 
     /*!
      * Find the current application window id through a root window property

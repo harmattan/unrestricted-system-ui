@@ -96,9 +96,9 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
          // Create and set up info banner widget
         MBanner *banner = createInfoBanner(notification);
         banner->setStyleName(banner->objectName() == "EventBanner" ? "ShortEventBanner" : "SystemBanner");
-        banner->setIconID(determinePreviewIconId(notification.parameters()));
         banner->setProperty("notificationId", notification.notificationId());
         banner->setProperty("timeout", notification.timeout());
+        updateImage(banner, notification.parameters());
 
         // Connect slots to cleanup disappearing banner and handle next banner when disappeared
         // The banner sends disappear either by timeout or by user clicking on it
@@ -133,11 +133,11 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
         // Update the info banner widget
         banner->setTitle(infoBannerTitleText(notification.parameters()));
         banner->setSubtitle(infoBannerSubtitleText(notification.parameters()));
-        banner->setIconID(determinePreviewIconId(notification.parameters()));
         banner->setProperty("notificationId", notification.notificationId());
         banner->setProperty("timeout", notification.timeout());
 
-        // Update the info banner's actions
+        // Update the info banner's image and actions
+        updateImage(banner, notification.parameters());
         updateActions(banner, notification.parameters());
     }
 }
@@ -256,13 +256,17 @@ void MCompositorNotificationSink::changeNotificationPreviewMode()
     }
 }
 
-QString MCompositorNotificationSink::determinePreviewIconId(const NotificationParameters &parameters)
+void MCompositorNotificationSink::updateImage(MBanner *infoBanner, const NotificationParameters &parameters)
 {
-    QString previewIconID = parameters.value(NotificationWidgetParameterFactory::previewIconIdKey()).toString();
-    if (previewIconID.isEmpty()) {
-        previewIconID = determineIconId(parameters);
+    QString imageId = parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString();
+    QString previewIconId = parameters.value(NotificationWidgetParameterFactory::previewIconIdKey()).toString();
+    if (imageId.isEmpty() && !previewIconId.isEmpty()) {
+        // Icon has not been overridden by an image but there is a preview icon to be used
+        infoBanner->setIconID(previewIconId);
+    } else {
+        // Default behavior: use either image or icon
+        WidgetNotificationSink::updateImage(infoBanner, parameters);
     }
-    return previewIconID;
 }
 
 bool MCompositorNotificationSink::currentApplicationHasPreviewsDisabled()

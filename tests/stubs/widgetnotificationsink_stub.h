@@ -31,10 +31,10 @@ public:
     virtual void WidgetNotificationSinkConstructor();
     virtual void notificationRemovalRequested(uint notificationId);
     virtual void notificationGroupClearingRequested(uint groupId);
-    virtual QString determineIconId(const NotificationParameters &parameters);
     virtual MBanner *createInfoBanner(const Notification &notification);
     virtual MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
     virtual void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
+    virtual void updateImage(MBanner *infoBanner, const NotificationParameters &parameters);
     virtual void infoBannerClicked();
     virtual void setHonorPrivacySetting(bool honor);
     virtual void emitPrivacySettingValue();
@@ -61,14 +61,6 @@ void WidgetNotificationSinkStub::notificationGroupClearingRequested(uint groupId
     stubMethodEntered("notificationGroupClearingRequested", params);
 }
 
-QString WidgetNotificationSinkStub::determineIconId(const NotificationParameters &parameters)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<const NotificationParameters & >(parameters));
-    stubMethodEntered("determineIconId", params);
-    return stubReturnValue<QString>("determineIconId");
-}
-
 MBanner *WidgetNotificationSinkStub::createInfoBanner(const Notification &notification)
 {
     QList<ParameterBase *> params;
@@ -93,6 +85,14 @@ void WidgetNotificationSinkStub::updateActions(MBanner *infoBanner, const Notifi
     params.append(new Parameter<MBanner * >(infoBanner));
     params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("updateActions", params);
+}
+
+void WidgetNotificationSinkStub::updateImage(MBanner *infoBanner, const NotificationParameters &parameters)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<MBanner * >(infoBanner));
+    params.append(new Parameter<const NotificationParameters & >(parameters));
+    stubMethodEntered("updateImage", params);
 }
 
 void WidgetNotificationSinkStub::infoBannerClicked()
@@ -136,11 +136,6 @@ WidgetNotificationSink::WidgetNotificationSink() : NotificationSink()
     gWidgetNotificationSinkStub->WidgetNotificationSinkConstructor();
 }
 
-QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
-{
-    return gWidgetNotificationSinkStub->determineIconId(parameters);
-}
-
 MBanner *WidgetNotificationSink::createInfoBanner(const Notification &notification)
 {
     return gWidgetNotificationSinkStub->createInfoBanner(notification);
@@ -154,6 +149,11 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
 void WidgetNotificationSink::updateActions(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     gWidgetNotificationSinkStub->updateActions(infoBanner, parameters);
+}
+
+void WidgetNotificationSink::updateImage(MBanner *infoBanner, const NotificationParameters &parameters)
+{
+    gWidgetNotificationSinkStub->updateImage(infoBanner, parameters);
 }
 
 void WidgetNotificationSink::infoBannerClicked()

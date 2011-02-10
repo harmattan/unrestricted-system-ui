@@ -89,13 +89,6 @@ signals:
 
 protected:
     /*!
-     * Determines icon id of a notification based on the given notification parameters.
-     * \param parameters Notification parameters to determine the icon id from.
-     * \return Logical icon id as a string
-     */
-    static QString determineIconId(const NotificationParameters &parameters);
-
-    /*!
      * Determines user removability of a notification based on the given notification parameters.
      * \param parameters Notification parameters to determine removability from.
      * \return \c true if the notification should be user removable, \c false otherwise
@@ -134,6 +127,16 @@ protected:
      * \param parameters the NotificationParameters to get the action from
      */
     void updateActions(MBanner *infoBanner, const NotificationParameters &parameters);
+
+    /*!
+     * Updates image for the given info banner
+     * Uses primarily imageId parameter, but if not available, then uses iconId parameter.
+     * imageId and iconId parameters can be absolute paths to image or logical image id's.
+     *
+     * \param infoBanner the MBanner to update
+     * \param parameters the NotificationParameters to get the image or icon from
+     */
+    void updateImage(MBanner *infoBanner, const NotificationParameters &parameters);
 
     /*!
      * Creates a title text string from notification parameters.

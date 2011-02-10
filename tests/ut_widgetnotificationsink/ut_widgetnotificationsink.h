@@ -65,6 +65,8 @@ private slots:
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresent();
     void testInfoBannerCreationWhenPrivacyIsHonoredAndEnabledAndCatalogPresentPlural();
     void testUserRemovablePropertyIsSetWhenBannerIsCreated();
+    void testWhenNotificationsCreatedThenImageIsSetCorrectly_data();
+    void testWhenNotificationsCreatedThenImageIsSetCorrectly();
     void testPrivacySettingValueEmittedWhenHonoringChanges_data();
     void testPrivacySettingValueEmittedWhenHonoringChanges();
     void testPrivacySettingValueEmittedWhenPrivacySettingChanges();

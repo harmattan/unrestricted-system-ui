@@ -23,6 +23,7 @@
 #include <MRemoteAction>
 #include <MLocale>
 #include <MGConfItem>
+#include <QDir>
 
 const char *WidgetNotificationSink::NOTIFICATION_ID_PROPERTY = "notificationId";
 const char *WidgetNotificationSink::GROUP_ID_PROPERTY = "groupId";
@@ -36,11 +37,6 @@ WidgetNotificationSink::WidgetNotificationSink() :
     privacySetting(NULL),
     clickableNotifications(true)
 {
-}
-
-QString WidgetNotificationSink::determineIconId(const NotificationParameters &parameters)
-{
-    return parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
 }
 
 bool WidgetNotificationSink::determineUserRemovability(const NotificationParameters &parameters)
@@ -70,7 +66,7 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(GROUP_ID_PROPERTY, groupId);
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
-    infoBanner->setIconID(determineIconId(parameters));
+    updateImage(infoBanner, parameters);
     updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
 
@@ -119,6 +115,24 @@ void WidgetNotificationSink::updateActions(MBanner *infoBanner, const Notificati
         MRemoteAction *remoteAction = new MRemoteAction(action, infoBanner);
         remoteAction->setVisible(false);
         infoBanner->addAction(remoteAction);
+    }
+}
+
+void WidgetNotificationSink::updateImage(MBanner *infoBanner, const NotificationParameters &parameters)
+{
+    QString imageId(parameters.value(NotificationWidgetParameterFactory::imageIdKey()).toString());
+    if (imageId.isEmpty()) {
+        imageId = parameters.value(NotificationWidgetParameterFactory::iconIdKey()).toString();
+    }
+
+    if (QDir::isAbsolutePath(imageId)) {
+        QPixmap pixmap;
+        pixmap.load(imageId);
+        if (!pixmap.isNull()) {
+            infoBanner->setPixmap(pixmap);
+        }
+    } else {
+        infoBanner->setIconID(imageId);
     }
 }
 

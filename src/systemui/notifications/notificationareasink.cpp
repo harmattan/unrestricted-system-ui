@@ -72,12 +72,12 @@ MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const Not
     infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
-    infoBanner->setIconID(determineIconId(parameters));
     infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
     updatePrefixForNotificationGroupBannerTimestamp(infoBanner, parameters.value("count").toUInt());
 
-    // Update the info banner's titles and actions
+    // Update the info banner's image, titles and actions
+    updateImage(infoBanner, parameters);
     updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
 
