@@ -62,3 +62,7 @@ MLabelStyle#AndMoreLabel {
     color: #ffffff;
 }
 
+MBannerStyle {
+    disappear-timeout: 10000;
+    margin-bottom: 0.9mm;
+}

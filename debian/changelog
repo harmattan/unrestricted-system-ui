@@ -1,6 +1,8 @@
 system-ui (0.20.3~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#225623 - Taps on short event banner are not recognized reliably
+  * Fixes: NB#225633 - Short event banners are not displayed long enough
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 08 Feb 2011 15:38:46 +0200
 
