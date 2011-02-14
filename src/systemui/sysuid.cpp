@@ -20,6 +20,7 @@
 #include <MLocale>
 #include <MTheme>
 #include <MLocale>
+#include <MApplicationExtensionArea>
 #include <QDBusConnection>
 
 #include "usbui.h"
@@ -37,7 +38,6 @@
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "notifiernotificationsink.h"
-#include "volumebarlogic.h"
 #include "closeeventeater.h"
 #include <QX11Info>
 
@@ -133,8 +133,11 @@ Sysuid::Sysuid(QObject* parent) :
 #endif
     updateCompositorNotificationSinkEnabledStatus();
 
-    // Instantiate the volume control logic
-    volumeBarLogic = new VolumeBarLogic(this);
+    // Create an extension area for the volume extension
+    volumeExtensionArea = new MApplicationExtensionArea("com.meego.core.VolumeExtensionInterface/0.20");
+    volumeExtensionArea->setInProcessFilter(QRegExp("/sysuid-volume.desktop$"));
+    volumeExtensionArea->setOutOfProcessFilter(QRegExp("$^"));
+    volumeExtensionArea->init();
 }
 
 Sysuid::~Sysuid()
@@ -144,6 +147,7 @@ Sysuid::~Sysuid()
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;
     delete notificationManager;
+    delete volumeExtensionArea;
     instance_ = 0;
 }
 

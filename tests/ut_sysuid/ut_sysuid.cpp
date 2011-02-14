@@ -46,7 +46,6 @@
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "volumebarlogic_stub.h"
 #include "x11wrapper_stub.h"
 #include "closeeventeater_stub.h"
 #include "notifiernotificationsink_stub.h"

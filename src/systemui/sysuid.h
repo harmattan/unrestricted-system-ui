@@ -43,6 +43,7 @@ class UnlockNotificationSink;
 class NotifierNotificationSink;
 class SysUidRequest;
 class VolumeBarLogic;
+class MApplicationExtensionArea;
 
 class Sysuid : public QObject
 {
@@ -114,8 +115,8 @@ private:
     //! The system-bus adaptor class for unlock-screen interface
     SysUidRequest *sysUidRequest;
 
-    //! The volume control logic
-    VolumeBarLogic *volumeBarLogic;
+    //! The volume extension area
+    MApplicationExtensionArea *volumeExtensionArea;
 
     //! Context item for getting information about video recording status
     QSharedPointer<ContextItem> useMode;

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=X-MeeGoApplicationExtension
+Name=Volume Extension
+
+[X-MeeGoApplicationExtension]
+Interface=com.meego.core.VolumeExtensionInterface/0.20
+Extension=libsysuid-volume.so

@@ -4,23 +4,23 @@ TARGET = ut_volumebarwindow
  
 INCLUDEPATH +=  \
                $$LIBNOTIFICATIONSRCDIR \
-               $$SRCDIR/volumecontrol
+               $$ROOTSRCDIR/extensions/volume
 
 CONFIG += link_pkgconfig
 PKGCONFIG += libresourceqt1
 
-STYLE_HEADERS += $$SRCDIR/volumecontrol/volumebarstyle.h
+STYLE_HEADERS += $$ROOTSRCDIR/extensions/volume/volumebarstyle.h
 
 HEADERS += \
     ut_volumebarwindow.h \
-    $$SRCDIR/volumecontrol/volumebarwindow.h \
-    $$SRCDIR/volumecontrol/volumebarlogic.h \
-    $$SRCDIR/volumecontrol/volumebar.h \
+    $$ROOTSRCDIR/extensions/volume/volumebarwindow.h \
+    $$ROOTSRCDIR/extensions/volume/volumebarlogic.h \
+    $$ROOTSRCDIR/extensions/volume/volumebar.h \
     $$STYLE_HEADERS
 
 SOURCES += \
     ut_volumebarwindow.cpp \
-    $$SRCDIR/volumecontrol/volumebarwindow.cpp \
+    $$ROOTSRCDIR/extensions/volume/volumebarwindow.cpp \
     $$STUBSDIR/stubbase.cpp
 
 include(../common_bot.pri)

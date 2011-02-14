@@ -55,7 +55,6 @@ SOURCES +=                              \
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
-include(volumecontrol/volumecontrol.pri)
 include(screenlock/screenlock.pri)
 include(../../localconfig.pri)
 
@@ -69,10 +68,6 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 
 contains(DEFINES, HAVE_AEGIS_CRYPTO) {
     PKGCONFIG += aegis-crypto
-}
-
-contains(DEFINES, HAVE_LIBRESOURCEQT) {
-    PKGCONFIG += libresourceqt1
 }
 
 contains(DEFINES, HAVE_LIBNGF) {

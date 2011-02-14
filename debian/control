@@ -86,6 +86,14 @@ Provides: system-ui-screenlock
 Conflicts: system-ui-screenlock
 Description: Screen lock extension for system-ui with a padlock
 
+Package: system-ui-volume-fullscreen
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Provides: system-ui-volume
+Conflicts: system-ui-volume
+Description: Volume extension for system-ui with a full screen view
+
 Package: duicontrolpanel-privatemodeapplet
 Architecture: any
 Section: libs
