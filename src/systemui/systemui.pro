@@ -82,5 +82,11 @@ PKGCONFIG += \
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
 
+headers.path = /usr/include/system-ui
+headers.files += \
+    volumeextensioninterface.h \
+    VolumeExtensionInterface
+
 INSTALLS += target \
-            dbus_policy
+            dbus_policy \
+            headers
