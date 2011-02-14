@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <QDebug>
 #include <MLibrary>
 #include "volumeextension.h"
 #include "volumebarlogic.h"
@@ -26,7 +25,6 @@ Q_EXPORT_PLUGIN2(sysuid-volume, VolumeExtension)
 VolumeExtension::VolumeExtension() :
     volumeBarLogic(NULL)
 {
-    qDebug() << "XX VOLUME EXTENSION INSTANTIATION";
 }
 
 VolumeExtension::~VolumeExtension()
@@ -36,7 +34,6 @@ VolumeExtension::~VolumeExtension()
 
 bool VolumeExtension::initialize(const QString &)
 {
-    qDebug() << "XX VOLUME EXTENSION INITIALIZATION";
     volumeBarLogic = new VolumeBarLogic(this);
     return true;
 }
