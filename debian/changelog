@@ -1,8 +1,8 @@
-system-ui (0.20.5~1) unstable; urgency=low
+system-ui (0.20.5-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Separated the volume UI into an application extension
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 10 Feb 2011 16:00:46 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 14 Feb 2011 15:07:26 +0200
 
 system-ui (0.20.4-1) unstable; urgency=low
 
