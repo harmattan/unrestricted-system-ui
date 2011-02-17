@@ -112,6 +112,12 @@ void StatusIndicatorMenuWindow::makeVisible()
 
     // Always raise the window. Even if it's visible (from Qt's point of view) it may not be the topmost window.
     raise();
+
+    // If the menu is closed and opened quickly enough, we might never get the displayEnter signal because the display state
+    // exits with a delay, so displayActive is not called and we need to make the menu widget appear here
+    if(menuWidget->sceneWindowState() == MSceneWindow::Disappeared && isOnDisplay()) {
+        sceneManager()->appearSceneWindow(menuWidget);
+    }
 }
 
 #ifdef HAVE_QMSYSTEM

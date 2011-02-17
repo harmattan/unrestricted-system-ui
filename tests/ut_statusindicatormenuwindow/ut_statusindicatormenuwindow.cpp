@@ -41,9 +41,10 @@ void MWindow::setVisible(bool visible)
     mWindowSetVisible.second = visible;
 }
 
+bool gMWindowIsOnDisplay = false;
 bool MWindow::isOnDisplay() const
 {
-    return testAttribute(Qt::WA_WState_Visible);
+    return gMWindowIsOnDisplay;
 }
 
 QWidget *qWidgetRaise = NULL;
@@ -97,6 +98,7 @@ void Ut_StatusIndicatorMenuWindow::init()
 #ifdef HAVE_QMSYSTEM
     gQmLocksStub->stubSetReturnValue("getState", MeeGo::QmLocks::Unlocked);
 #endif
+    gMWindowIsOnDisplay = false;
 }
 
 void Ut_StatusIndicatorMenuWindow::cleanup()
@@ -163,6 +165,16 @@ void Ut_StatusIndicatorMenuWindow::testMakeVisible()
     QCOMPARE(mWindowSetVisible.first, showCalled ? statusIndicatorMenuWindow : NULL);
     QCOMPARE(mWindowSetVisible.second, showCalled);
     QCOMPARE(qWidgetRaise, raiseCalled ? statusIndicatorMenuWindow : NULL);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenWindowAlreadyOnDisplayThenMenuWidgetAppearsWithoutDisplayEnterSignal()
+{
+    gMWindowIsOnDisplay = true;
+
+    statusIndicatorMenuWindow->makeVisible();
+
+    QVERIFY(gSceneWindowStateMap.contains(statusIndicatorMenuWindow->menuWidget));
+    QCOMPARE(gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget], MSceneWindow::Appeared);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWindowType()
