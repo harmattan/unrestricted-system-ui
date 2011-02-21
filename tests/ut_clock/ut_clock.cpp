@@ -107,20 +107,17 @@ void Ut_Clock::testTimeUpdate()
 
 void Ut_Clock::testModelUpdates()
 {
-    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-
     // The timer should be running by default and the model should contain the current time
     QVERIFY(timerTimeout >= 0);
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 
     // When the application becomes invisible the timer should stop
-    qApp->sendEvent(m_subject, &exitDisplayEvent);
+    m_subject->exitDisplayEvent();
     QCOMPARE(timerTimeout, -1);
 
     // When the application becomes visible the timer should start and the model should be updated to contain the current time
     expectedDateTime = QDateTime(QDate(2001, 1, 1));
-    qApp->sendEvent(m_subject, &enterDisplayEvent);
+    m_subject->enterDisplayEvent();
     QVERIFY(timerTimeout >= 0);
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
