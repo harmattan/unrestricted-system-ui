@@ -1,15 +1,9 @@
-system-ui (0.20.7~1) unstable; urgency=low
-
-  * [UNRELEASED]
-
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Feb 2011 11:36:09 +0200
-
-system-ui (0.20.6-1) unstable; urgency=low
+system-ui (0.20.6-2) unstable; urgency=low
 
   * Fixes: NB#227801 - When opening status menu, homescreen jams often for a while
   * Fixes: NB#227295 - Device will freeze after performing several open-close actions on status menu 
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Feb 2011 11:35:39 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Feb 2011 13:52:44 +0200
 
 system-ui (0.20.5-1) unstable; urgency=low
 
