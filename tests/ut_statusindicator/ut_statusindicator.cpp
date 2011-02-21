@@ -137,20 +137,17 @@ void Ut_StatusIndicator::testModelUpdates()
 
 void Ut_StatusIndicator::testContextItemSubscribe()
 {
-    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
-
     gContextItemStub->stubReset();
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
 
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
-    qApp->sendEvent(m_subject, &exitDisplayEvent);
+    m_subject->exitDisplayEvent();
     QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 3);
 
     // When the application becomes not visible, the context item updates
     // should be subscribed to
-    qApp->sendEvent(m_subject, &enterDisplayEvent);
+    m_subject->enterDisplayEvent();
     QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 3);
 }
 
@@ -435,15 +432,13 @@ void Ut_StatusIndicator::testInternetConnection()
 
 void Ut_StatusIndicator::testAnimation()
 {
-    MOnDisplayChangeEvent exitDisplayEvent(MOnDisplayChangeEvent::FullyOffDisplay, QRectF());
-    MOnDisplayChangeEvent enterDisplayEvent(MOnDisplayChangeEvent::FullyOnDisplay, QRectF());
     StatusIndicator *m_subject = new BatteryStatusIndicator(*testContext);
 
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
-    qApp->sendEvent(m_subject, &exitDisplayEvent);
+    m_subject->exitDisplayEvent();
     QCOMPARE(m_subject->model()->animate(), false);
 
-    qApp->sendEvent(m_subject, &enterDisplayEvent);
+    m_subject->enterDisplayEvent();
     QCOMPARE(m_subject->model()->animate(), true);
     delete m_subject;
 }
