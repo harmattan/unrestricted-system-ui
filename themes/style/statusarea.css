@@ -507,4 +507,17 @@ StatusIndicatorIconStyle#TransferStatusIndicatorPending {
     maximum-size: 1.8mm 1.8mm;
 }
 
+StatusIndicatorIconStyle#CallForwardingStatusIndicator {
+    image-list: "";
+    preferred-size: 0 1.8mm;
+    minimum-size: 0 1.8mm;
+    maximum-size: 0 1.8mm;
+}
+
+StatusIndicatorIconStyle#CallForwardingStatusIndicatorSet {
+    image-list: "icon-s-status-call-diverted";
+    preferred-size: 1.8mm 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 1.8mm 1.8mm;
+}
 

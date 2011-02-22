@@ -464,6 +464,31 @@ private:
     ContextItem *gpsState;
 };
 
+/*!
+ * A status indicator for showing call forwarding is activated.
+ */
+class CallForwardingStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(CallForwardingStatusIndicator)
+
+public:
+    /*!
+     * Constructs a CallForwardingStatusIndicator.
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget
+     */
+    explicit CallForwardingStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
+
+    virtual ~CallForwardingStatusIndicator();
+
+private slots:
+    void callForwardingChanged();
+
+private:
+    ContextItem *callForwarding;
+};
 
 /*!
  * A status indicator for showing the status of transfer.

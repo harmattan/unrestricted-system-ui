@@ -63,6 +63,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
     portraitNotificationIndicator(new NotificationStatusIndicator(controller)),
+    landscapeCallForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
+    portraitCallForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
     landscapeTransferStatusIndicator(new TransferStatusIndicator(controller)),
     portraitTransferStatusIndicator(new TransferStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
@@ -138,6 +140,8 @@ void StatusAreaView::setupTestability()
     portraitNotificationIndicator->setParent(portraitWidget);
     landscapeClock->setParent(landscapeWidget);
     portraitClock->setParent(portraitWidget);
+    landscapeCallForwardingIndicator->setParent(landscapeWidget);
+    portraitCallForwardingIndicator->setParent(portraitWidget);
     landscapeTransferStatusIndicator->setParent(landscapeWidget);
     portraitTransferStatusIndicator->setParent(portraitWidget);
 }
@@ -172,6 +176,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeNotificationIndicator);
     layout->addItem(landscapeTransferStatusIndicator);
     layout->addItem(landscapeInternetConnectionIndicator);
+    layout->addItem(landscapeCallForwardingIndicator);
     layout->addItem(landscapeBluetoothIndicator);
     layout->addItem(landscapeGPSIndicator);
     layout->addItem(landscapePresenceIndicator);
@@ -199,6 +204,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitNotificationIndicator);
     layout->addItem(portraitTransferStatusIndicator);
     layout->addItem(portraitInternetConnectionIndicator);
+    layout->addItem(portraitCallForwardingIndicator);
     layout->addItem(portraitBluetoothIndicator);
     layout->addItem(portraitGPSIndicator);
     layout->addItem(portraitPresenceIndicator);

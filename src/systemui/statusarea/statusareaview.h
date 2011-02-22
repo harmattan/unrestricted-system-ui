@@ -119,6 +119,10 @@ private:
     StatusIndicator *landscapeNotificationIndicator;
     StatusIndicator *portraitNotificationIndicator;
 
+    //! Call forwarding status indicator
+    StatusIndicator *landscapeCallForwardingIndicator;
+    StatusIndicator *portraitCallForwardingIndicator;
+
     //! Transfer status indicator
     StatusIndicator *landscapeTransferStatusIndicator;
     StatusIndicator *portraitTransferStatusIndicator;

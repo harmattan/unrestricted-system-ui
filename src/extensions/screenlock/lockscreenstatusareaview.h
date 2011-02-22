@@ -100,6 +100,9 @@ private:
     //! Notification notifier
     StatusIndicator *notifierIndicator;
 
+    //! Call forwarding indicator
+    StatusIndicator *callForwardingIndicator;
+
     //! Transfer status indicator
     StatusIndicator *transferStatusIndicator;
 

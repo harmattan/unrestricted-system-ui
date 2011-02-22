@@ -640,5 +640,15 @@ void Ut_StatusIndicator::testTransferStatusStateChange()
     QCOMPARE(transferStatusIndicator->styleName(), QString("TransferStatusIndicator") + transferStatusIndicator->TRANSFER_UI_SUFFIX_PENDING);
 }
 
+void Ut_StatusIndicator::testCallForwarding()
+{
+    m_subject = new CallForwardingStatusIndicator(*testContext);
+
+    testContextItems["Phone.CallForwarding"]->setValue(QVariant(false));
+    QVERIFY(m_subject->styleName().indexOf("Set") < 0);
+
+    testContextItems["Phone.CallForwarding"]->setValue(QVariant(true));
+    QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
+}
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)

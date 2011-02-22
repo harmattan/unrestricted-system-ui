@@ -97,6 +97,11 @@ class NotificationStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(NotificationStatusIndicatorModel)
 };
 
+class CallForwardingStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(CallForwardingStatusIndicatorModel)
+};
+
 class TransferStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(TransferStatusIndicatorModel)

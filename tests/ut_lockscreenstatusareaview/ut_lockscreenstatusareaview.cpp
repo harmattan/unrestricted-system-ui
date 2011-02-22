@@ -41,6 +41,7 @@
 #include "inputmethodstatusindicator_stub.h"
 #include "callstatusindicator_stub.h"
 #include "profilestatusindicator_stub.h"
+#include "callforwardingstatusindicator_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
 #include "screenlockextension_stub.h"

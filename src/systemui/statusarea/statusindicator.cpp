@@ -627,3 +627,27 @@ void TransferStatusIndicator::transferStateChanged(const QString &state)
     updateAnimationStatus();
 }
 
+CallForwardingStatusIndicator::CallForwardingStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
+    StatusIndicator(parent)
+{
+    setStyleName(metaObject()->className());
+
+    callForwarding = createContextItem(context, "Phone.CallForwarding");
+    connect(callForwarding, SIGNAL(contentsChanged()), this, SLOT(callForwardingChanged()));
+    callForwardingChanged();
+}
+
+CallForwardingStatusIndicator::~CallForwardingStatusIndicator()
+{
+}
+
+void CallForwardingStatusIndicator::callForwardingChanged()
+{
+    bool isSet = callForwarding->value().toBool();
+
+    if (isSet) {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Set");
+    } else {
+        setStyleNameAndUpdate(QString(metaObject()->className()));
+    }
+}

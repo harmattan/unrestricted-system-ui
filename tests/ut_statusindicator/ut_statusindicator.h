@@ -95,6 +95,7 @@ private slots:
     void testGPS();
     void testTransferStatusIndicatorDBusConnectionCreationInConstructor();
     void testTransferStatusStateChange();
+    void testCallForwarding();
 };
 
 #endif //_UT_STATUSINDICATOR_

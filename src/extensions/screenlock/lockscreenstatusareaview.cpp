@@ -44,6 +44,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     notifierIndicator(new NotificationStatusIndicator(controller)),
+    callForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
     transferStatusIndicator(new TransferStatusIndicator(controller)),
     orientationChangeSignalConnected(false)
 {
@@ -65,6 +66,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addItem(notifierIndicator);
     layout->addItem(transferStatusIndicator);
     layout->addItem(internetConnectionIndicator);
+    layout->addItem(callForwardingIndicator);
     layout->addItem(bluetoothIndicator);
     layout->addItem(gpsIndicator);
     layout->addItem(presenceIndicator);
