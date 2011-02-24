@@ -1,9 +1,8 @@
-system-ui (0.20.7~1) unstable; urgency=low
+system-ui (0.20.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#228153 - MSTATUSBAR_GEOMETRY and ORIENTATION_ANGLE properties on touch screen lock window are wrong
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Feb 2011 13:53:07 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 24 Feb 2011 14:22:07 +0200
 
 system-ui (0.20.6-2) unstable; urgency=low
 
