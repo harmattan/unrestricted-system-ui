@@ -54,6 +54,10 @@ ScreenLockWindow::~ScreenLockWindow()
 void ScreenLockWindow::applyStyle()
 {
     const ScreenLockWindowStyle *style = static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL));
+
+    // This must be set before setting the orientation. See bug #230352.
+    setTranslucentBackground(style->translucent());
+
     if (style->lockedOrientation() == "landscape") {
         setLandscapeOrientation();
         setOrientationLocked(true);
@@ -63,8 +67,6 @@ void ScreenLockWindow::applyStyle()
     } else {
         setOrientationLocked(false);
     }
-
-    setTranslucentBackground(style->translucent());
 }
 
 void ScreenLockWindow::showEvent(QShowEvent *event)
