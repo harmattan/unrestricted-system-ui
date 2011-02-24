@@ -79,7 +79,14 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
     Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
     if (stackingLayerAtom != None) {
         long layer = 2;
-        X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
+        X11Wrapper::XChangeProperty(display, effectiveWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
+    }
+
+    // Set the orientation angle (since it doesn't seem to get set properly for translucent windows, see bug #230352)
+    Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+    if (orientationAngleAtom != None) {
+        M::OrientationAngle angle = sceneManager()->orientationAngle();
+        X11Wrapper::XChangeProperty(display, effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&angle, 1);
     }
 
     // Exclude the window from the task bar
