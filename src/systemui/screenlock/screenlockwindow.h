@@ -61,7 +61,7 @@ private:
     void applyStyle();
 
 #ifdef UNIT_TEST
-    friend class Ut_LockScreenWindow;
+    friend class Ut_ScreenLockWindow;
 #endif
 };
 

@@ -16,8 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_LOCKSCREENBUSINESSLOGIC_H
-#define UT_LOCKSCREENBUSINESSLOGIC_H
+#ifndef UT_SCREENLOCKBUSINESSLOGIC_H
+#define UT_SCREENLOCKBUSINESSLOGIC_H
 
 #include <QGraphicsWidget>
 #include "screenlockextensioninterface.h"
@@ -61,7 +61,7 @@ private:
     QGraphicsWidget *widget_;
 };
 
-class Ut_LockScreenBusinessLogic : public QObject
+class Ut_ScreenLockBusinessLogic : public QObject
 {
     Q_OBJECT
 

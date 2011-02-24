@@ -1,13 +1,13 @@
 include(../coverage.pri)
 include(../common_top.pri)
-TARGET = ut_lockscreenbusinesslogic
+TARGET = ut_screenlockbusinesslogic
 INCLUDEPATH += $$LIBNOTIFICATIONSRCDIR $$SRCDIR/screenlock $$SRCDIR/notifications
 
-SOURCES += ut_lockscreenbusinesslogic.cpp \
+SOURCES += ut_screenlockbusinesslogic.cpp \
     $$SRCDIR/screenlock/screenlockbusinesslogic.cpp \
     $$STUBSDIR/stubbase.cpp
 
-HEADERS += ut_lockscreenbusinesslogic.h \
+HEADERS += ut_screenlockbusinesslogic.h \
     $$SRCDIR/screenlock/screenlockbusinesslogic.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/screenlock/screenlockwindow.h \

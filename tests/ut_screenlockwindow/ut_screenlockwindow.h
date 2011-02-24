@@ -16,15 +16,15 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_LOCKSCREENWINDOW_H
-#define UT_LOCKSCREENWINDOW_H
+#ifndef UT_SCREENLOCKWINDOW_H
+#define UT_SCREENLOCKWINDOW_H
 
 #include <QObject>
 
 class MApplication;
 class ScreenLockWindow;
 
-class Ut_LockScreenWindow : public QObject
+class Ut_ScreenLockWindow : public QObject
 {
     Q_OBJECT
 

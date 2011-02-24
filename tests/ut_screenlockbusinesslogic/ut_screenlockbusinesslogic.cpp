@@ -25,7 +25,7 @@
 #define TEST_INTERFACE QString("com.nokia.mcetest")
 #define TEST_METHOD    QString("testmethod")
 
-#include "ut_lockscreenbusinesslogic.h"
+#include "ut_screenlockbusinesslogic.h"
 #include "screenlockbusinesslogic.h"
 #include "lockscreenwindow_stub.h"
 #include "eventeater_stub.h"
@@ -136,12 +136,12 @@ void QTimer::singleShot(int, QObject *receiver, const char *member)
     QMetaObject::invokeMethod(receiver, modifiedMember, Qt::DirectConnection);
 }
 
-void Ut_LockScreenBusinessLogic::init()
+void Ut_ScreenLockBusinessLogic::init()
 {
     m_subject = new ScreenLockBusinessLogic;
 }
 
-void Ut_LockScreenBusinessLogic::cleanup()
+void Ut_ScreenLockBusinessLogic::cleanup()
 {
     delete m_subject;
     gQWidgetRaiseCalled = false;
@@ -155,10 +155,10 @@ void Ut_LockScreenBusinessLogic::cleanup()
 #endif
 }
 
-void Ut_LockScreenBusinessLogic::initTestCase()
+void Ut_ScreenLockBusinessLogic::initTestCase()
 {
     static int argc = 1;
-    static char *argv = (char *) "./ut_lockscreenbusinesslogic";
+    static char *argv = (char *) "./ut_screenlockbusinesslogic";
     m_App = new MApplication(argc, &argv);
     /* XXX: input context caused a crash :-S */
     m_App->setLoadMInputContext (false);
@@ -167,13 +167,13 @@ void Ut_LockScreenBusinessLogic::initTestCase()
     gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
 }
 
-void Ut_LockScreenBusinessLogic::cleanupTestCase()
+void Ut_ScreenLockBusinessLogic::cleanupTestCase()
 {
     m_App->deleteLater ();
     delete notifierSink;
 }
 
-void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
+void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
 {
     QSignalSpy spy(m_subject, SIGNAL(screenIsLocked(bool)));
 
@@ -227,7 +227,7 @@ void Ut_LockScreenBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(m_subject->screenLockWindow->isVisible(), false);
 }
 
-void Ut_LockScreenBusinessLogic::testToggleEventEater()
+void Ut_ScreenLockBusinessLogic::testToggleEventEater()
 {
     // Make sure the screen locking signals are sent and the eater UI is shown/hidden
     m_subject->toggleEventEater(true);
@@ -237,7 +237,7 @@ void Ut_LockScreenBusinessLogic::testToggleEventEater()
     QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
 }
 
-void Ut_LockScreenBusinessLogic::testUnlockScreen()
+void Ut_ScreenLockBusinessLogic::testUnlockScreen()
 {
     QSignalSpy spy(m_subject, SIGNAL(screenIsLocked(bool)));
 
@@ -259,7 +259,7 @@ void Ut_LockScreenBusinessLogic::testUnlockScreen()
     QCOMPARE(qDbusAbstractInterfaceCallArg1.toInt(), (int)ScreenLockBusinessLogic::TkLockUnlock);
 }
 
-void Ut_LockScreenBusinessLogic::testHideEventEater()
+void Ut_ScreenLockBusinessLogic::testHideEventEater()
 {
     m_subject->showEventEater();
     m_subject->hideEventEater();
@@ -267,7 +267,7 @@ void Ut_LockScreenBusinessLogic::testHideEventEater()
 }
 
 #ifdef HAVE_QMSYSTEM
-void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
+void Ut_ScreenLockBusinessLogic::testDisplayStateChanged()
 {
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
@@ -289,7 +289,7 @@ void Ut_LockScreenBusinessLogic::testDisplayStateChanged()
 #endif
 
 
-void Ut_LockScreenBusinessLogic::testReset()
+void Ut_ScreenLockBusinessLogic::testReset()
 {
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
@@ -298,7 +298,7 @@ void Ut_LockScreenBusinessLogic::testReset()
     QVERIFY(screenLockExtensionReset);
 }
 
-void Ut_LockScreenBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnected()
+void Ut_ScreenLockBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnected()
 {
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
@@ -308,7 +308,7 @@ void Ut_LockScreenBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnecte
     QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
 }
 
-void Ut_LockScreenBusinessLogic::testRegisteringAndUnregisteringExtension()
+void Ut_ScreenLockBusinessLogic::testRegisteringAndUnregisteringExtension()
 {
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
@@ -319,7 +319,7 @@ void Ut_LockScreenBusinessLogic::testRegisteringAndUnregisteringExtension()
     QCOMPARE(m_subject->screenLockExtensions.count(), 0);
 }
 
-void Ut_LockScreenBusinessLogic::testTkLockOpen_data()
+void Ut_ScreenLockBusinessLogic::testTkLockOpen_data()
 {
     QTest::addColumn<int>("mode");
     QTest::addColumn<bool>("screenLockWindowVisibilityModified");
@@ -338,7 +338,7 @@ void Ut_LockScreenBusinessLogic::testTkLockOpen_data()
     QTest::newRow("TkLockEnableLowPowerMode") << (int)ScreenLockBusinessLogic::TkLockEnableLowPowerMode << true << true << true << false << true << (int)ScreenLockExtensionInterface::LowPowerMode;
 }
 
-void Ut_LockScreenBusinessLogic::testTkLockOpen()
+void Ut_ScreenLockBusinessLogic::testTkLockOpen()
 {
     QFETCH(int, mode);
     QFETCH(bool, screenLockWindowVisibilityModified);
@@ -380,7 +380,7 @@ void Ut_LockScreenBusinessLogic::testTkLockOpen()
     }
 }
 
-void Ut_LockScreenBusinessLogic::testTkLockClose()
+void Ut_ScreenLockBusinessLogic::testTkLockClose()
 {
     // Show the screen lock window and the event eater
     m_subject->showScreenLock();
@@ -396,4 +396,4 @@ void Ut_LockScreenBusinessLogic::testTkLockClose()
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
 }
 
-QTEST_APPLESS_MAIN(Ut_LockScreenBusinessLogic)
+QTEST_APPLESS_MAIN(Ut_ScreenLockBusinessLogic)

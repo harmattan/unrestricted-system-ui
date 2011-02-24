@@ -22,7 +22,7 @@
 #include <MSceneWindow>
 #include <MApplicationExtensionArea>
 #include <QShowEvent>
-#include "ut_lockscreenwindow.h"
+#include "ut_screenlockwindow.h"
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
 #include "notifiernotificationsink_stub.h"
@@ -61,24 +61,24 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
 }
 
 
-void Ut_LockScreenWindow::initTestCase()
+void Ut_ScreenLockWindow::initTestCase()
 {
     int   argc = 1;
-    char *argv[] = {(char *) "./ut_lockscreenwindow", NULL };
+    char *argv[] = {(char *) "./ut_screenlockwindow", NULL };
     app = new MApplication(argc, argv);
 }
 
-void Ut_LockScreenWindow::cleanupTestCase()
+void Ut_ScreenLockWindow::cleanupTestCase()
 {
     delete app;
 }
 
-void Ut_LockScreenWindow::init()
+void Ut_ScreenLockWindow::init()
 {
     lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
 }
 
-void Ut_LockScreenWindow::cleanup()
+void Ut_ScreenLockWindow::cleanup()
 {
     delete lockScreenWindow;
     lockScreenWindow = NULL;
@@ -88,12 +88,12 @@ void Ut_LockScreenWindow::cleanup()
     gX11WrapperStub->stubReset();
 }
 
-void Ut_LockScreenWindow::testWhenWindowIsCreatedLockScreenAppears()
+void Ut_ScreenLockWindow::testWhenWindowIsCreatedLockScreenAppears()
 {
     QCOMPARE(appearedWindow, lockScreenWindow);
 }
 
-void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
+void Ut_ScreenLockWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
 {
     // The stub needs to be reset so that things done at construction time won't affect the test
     gX11WrapperStub->stubReset();
@@ -119,7 +119,7 @@ void Ut_LockScreenWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
     delete showEvent;
 }
 
-void Ut_LockScreenWindow::testOrientationLocking_data()
+void Ut_ScreenLockWindow::testOrientationLocking_data()
 {
     QTest::addColumn<QString>("lockedOrientation");
     QTest::addColumn<bool>("orientationLocked");
@@ -131,7 +131,7 @@ void Ut_LockScreenWindow::testOrientationLocking_data()
     QTest::newRow("Locked to something else") << QString("unknown") << false << QString();
 }
 
-void Ut_LockScreenWindow::testOrientationLocking()
+void Ut_ScreenLockWindow::testOrientationLocking()
 {
     QFETCH(QString, lockedOrientation);
     QFETCH(bool, orientationLocked);
@@ -152,7 +152,7 @@ void Ut_LockScreenWindow::testOrientationLocking()
     QCOMPARE(mWindowOrientation, expectedOrientation);
 }
 
-void Ut_LockScreenWindow::testTranslucency_data()
+void Ut_ScreenLockWindow::testTranslucency_data()
 {
     QTest::addColumn<bool>("translucent");
 
@@ -160,7 +160,7 @@ void Ut_LockScreenWindow::testTranslucency_data()
     QTest::newRow("Not translucent") << false;
 }
 
-void Ut_LockScreenWindow::testTranslucency()
+void Ut_ScreenLockWindow::testTranslucency()
 {
     QFETCH(bool, translucent);
 
@@ -174,4 +174,4 @@ void Ut_LockScreenWindow::testTranslucency()
     QCOMPARE(lockScreenWindow->testAttribute(Qt::WA_TranslucentBackground), translucent);
 }
 
-QTEST_APPLESS_MAIN(Ut_LockScreenWindow)
+QTEST_APPLESS_MAIN(Ut_ScreenLockWindow)

@@ -168,7 +168,7 @@ private:
 #endif
 
 #ifdef UNIT_TEST
-    friend class Ut_LockScreenBusinessLogic;
+    friend class Ut_ScreenLockBusinessLogic;
     friend class Ft_LockScreenBusinessLogic;
 #endif
 };
