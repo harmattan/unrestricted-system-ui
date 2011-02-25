@@ -4,11 +4,23 @@ StatusIndicatorMenuStyle {
     notification-area: true;
 }
 
+MSceneLayerEffectDimStyle {
+    opacity: 0.98;
+    easing-curve: inquint;
+    fade-duration: 200;
+}
+
 StatusIndicatorMenu MWidgetSlideAnimationStyle#In {
+    delay: 0;
+    duration: 200;
+    easing-curve: outexpo;
     origin: "top";
 }
 
 StatusIndicatorMenu MWidgetSlideAnimationStyle#Out {
+    delay: 0;
+    duration: 150;
+    easing-curve: inquint;
     origin: "top";
 }
 

@@ -1,6 +1,7 @@
 system-ui (0.20.8~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#216807 - Status menu opens too slowly
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 24 Feb 2011 14:22:54 +0200
 
