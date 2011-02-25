@@ -1,8 +1,8 @@
-system-ui (0.20.9~1) unstable; urgency=low
+system-ui (0.20.9-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes to the status indicators
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 25 Feb 2011 13:20:35 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 25 Feb 2011 16:47:35 +0200
 
 system-ui (0.20.8-1) unstable; urgency=low
 
