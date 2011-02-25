@@ -91,6 +91,7 @@ void StatusIndicator::enterDisplayEvent()
     foreach(ContextItem* item, contextItems) {
         item->subscribe();
     }
+    emit subscriptionMade();
 }
 
 void StatusIndicator::exitDisplayEvent()
@@ -123,6 +124,7 @@ ContextItem *StatusIndicator::createContextItem(ApplicationContext& context, con
 {
     ContextItem *item = context.createContextItem(key);
     contextItems.append(item);
+    connect(this, SIGNAL(subscriptionMade()), item, SIGNAL(contentsChanged()));
     return item;
 }
 

@@ -61,6 +61,10 @@ public:
     virtual void updateGeometry();
     //! \reimp_end
 
+signals:
+    //! Emitted when a subscription to the context items has been made
+    void subscriptionMade();
+
 protected:
     /*!
      * Calls setStyleName(name) and update() for convenience.

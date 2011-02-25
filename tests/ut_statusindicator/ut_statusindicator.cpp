@@ -139,16 +139,23 @@ void Ut_StatusIndicator::testContextItemSubscribe()
 {
     gContextItemStub->stubReset();
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
+    QSignalSpy spy(m_subject, SIGNAL(subscriptionMade()));
+
+    testContextItems["Internet.NetworkType"]->setValue(QVariant());
 
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
     m_subject->exitDisplayEvent();
     QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 4);
 
+    testContextItems["Internet.NetworkType"]->setValue("WLAN");
+
     // When the application becomes not visible, the context item updates
     // should be subscribed to
     m_subject->enterDisplayEvent();
     QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 4);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(m_subject->styleName().contains("WLAN"), QBool(true));
 }
 
 void Ut_StatusIndicator::testContextItemDeletion()
