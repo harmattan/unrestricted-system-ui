@@ -30,6 +30,7 @@ class PhoneNetworkTypeStatusIndicatorStub : public StubBase
 public:
     virtual void PhoneNetworkTypeStatusIndicatorConstructor(ApplicationContext &context, QGraphicsItem *parent);
     virtual void PhoneNetworkTypeStatusIndicatorDestructor();
+    virtual void setNetworkAvailability(bool available);
     virtual void setNetworkType();
 };
 
@@ -44,11 +45,18 @@ void PhoneNetworkTypeStatusIndicatorStub::PhoneNetworkTypeStatusIndicatorDestruc
 {
 
 }
+
+void PhoneNetworkTypeStatusIndicatorStub::setNetworkAvailability(bool available)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QVariant >(available));
+    stubMethodEntered("setNetworkAvailability", params);
+}
+
 void PhoneNetworkTypeStatusIndicatorStub::setNetworkType()
 {
     stubMethodEntered("setNetworkType");
 }
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -67,10 +75,17 @@ PhoneNetworkTypeStatusIndicator::~PhoneNetworkTypeStatusIndicator()
     gPhoneNetworkTypeStatusIndicatorStub->PhoneNetworkTypeStatusIndicatorDestructor();
 }
 
+void PhoneNetworkTypeStatusIndicator::setNetworkAvailability(bool available)
+{
+    gPhoneNetworkTypeStatusIndicatorStub->setNetworkAvailability(available);
+}
+
+
 void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
     gPhoneNetworkTypeStatusIndicatorStub->setNetworkType();
 }
+
 
 
 #endif

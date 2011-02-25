@@ -143,12 +143,12 @@ void Ut_StatusIndicator::testContextItemSubscribe()
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
     m_subject->exitDisplayEvent();
-    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 3);
+    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 4);
 
     // When the application becomes not visible, the context item updates
     // should be subscribed to
     m_subject->enterDisplayEvent();
-    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 3);
+    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 4);
 }
 
 void Ut_StatusIndicator::testContextItemDeletion()
@@ -156,16 +156,16 @@ void Ut_StatusIndicator::testContextItemDeletion()
     gContextItemStub->stubReset();
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext, NULL);
 
-    // There should be a total of two items constructed using the
+    // There should be a total of four items constructed using the
     // StatusIndicator::createContextItem() call
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 3);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 4);
 
     delete m_subject;
     m_subject = NULL;
 
-    // There should be a total of two items deleted by the
+    // There should be a total of four items deleted by the
     // StatusIndicator destructor
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 3);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 4);
 }
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
@@ -176,57 +176,51 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     m_subject = statusIndicator;
 
     testContextItems["Cellular.SignalBars"]->setValue(QVariant(5));
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
 
-    QVERIFY(statusIndicator->model()->value().type() == QVariant::Double);
+    QCOMPARE(statusIndicator->model()->value().type(), QVariant::Double);
     QCOMPARE(qRound(statusIndicator->model()->value().toDouble() * 100), 100);
 
-    QVERIFY(statusIndicator->styleName() == "");
-    statusIndicator->setDisplay(true);
-    QVERIFY(statusIndicator->styleName() != "");
+    QCOMPARE(statusIndicator->styleName(), QString("PhoneNetworkSignalStrengthStatusIndicator"));
 }
 
-void Ut_StatusIndicator::testPhoneNetworkTypeObjectName_data()
+void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName_data()
 {
     QTest::addColumn<bool>("SystemOfflineMode");
     QTest::addColumn<QString>("CellularRegistrationStatus");
-    QTest::addColumn<QString>("CellularDataTechnology");
     QTest::addColumn<QString>("ExpectedObjectNamePostfix");
 
-    QTest::newRow("Offline mode") << true << QString("") << QString("") << QString("Offline");
-    QTest::newRow("No-sim registration status") << false << QString("no-sim") << QString("") << QString("NoSIM");
-    QTest::newRow("Empty registration status") << false << QString("") << QString("") << QString("NoNetwork");
-    QTest::newRow("Offline registration status") << false << QString("offline") << QString("") << QString("NoNetwork");
-    QTest::newRow("Offline registration status") << false << QString("forbidden") << QString("") << QString("NoNetwork");
-    QTest::newRow("Home registration status without data technology") << false << QString("home") << QString("") << QString("NoNetwork");
-    QTest::newRow("Home registration status with gprs data technology") << false << QString("home") << QString("gprs") << QString("2G");
-    QTest::newRow("Home registration status with egprs data technology") << false << QString("home") << QString("egprs") << QString("25G");
-    QTest::newRow("Home registration status with umts data technology") << false << QString("home") << QString("umts") << QString("3G");
-    QTest::newRow("Home registration status with hspa data technology") << false << QString("home") << QString("hspa") << QString("35G");
+    QTest::newRow("Offline mode") << true << QString("") << QString("Offline");
+    QTest::newRow("No-sim registration status") << false << QString("no-sim") << QString("NoSIM");
+    QTest::newRow("Empty registration status") << false << QString("") << QString("NoNetwork");
+    QTest::newRow("Offline registration status") << false << QString("offline") << QString("NoNetwork");
+    QTest::newRow("Forbidden registration status") << false << QString("forbidden") << QString("NoNetwork");
+    QTest::newRow("Home registration status") << false << QString("home") << QString("");
+    QTest::newRow("Roam registration status") << false << QString("roam") << QString("");
 }
 
-void Ut_StatusIndicator::testPhoneNetworkTypeObjectName()
+void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName()
 {
     QFETCH(bool, SystemOfflineMode);
     QFETCH(QString, CellularRegistrationStatus);
-    QFETCH(QString, CellularDataTechnology);
     QFETCH(QString, ExpectedObjectNamePostfix);
 
-    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+    m_subject = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
 
     testContextItems["System.OfflineMode"]->setValue(SystemOfflineMode);
     testContextItems["Cellular.RegistrationStatus"]->setValue(CellularRegistrationStatus);
-    testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
 
     QCOMPARE(m_subject->styleName().contains(ExpectedObjectNamePostfix), QBool(true));
 }
 
 void Ut_StatusIndicator::testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted()
 {
-    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
-    QSignalSpy spy(m_subject, SIGNAL(networkAvailabilityChanged(bool)));
+    m_subject = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
 
+    testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
+
+    QSignalSpy spy(m_subject, SIGNAL(networkAvailabilityChanged(bool)));
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0)[0], QVariant(true));
@@ -234,16 +228,90 @@ void Ut_StatusIndicator::testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted
 
 void Ut_StatusIndicator::testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitted()
 {
-    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+    m_subject = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
 
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("home"));
-    testContextItems["Cellular.DataTechnology"]->setValue(QVariant("gprs"));
 
     QSignalSpy spy(m_subject, SIGNAL(networkAvailabilityChanged(bool)));
     testContextItems["Cellular.RegistrationStatus"]->setValue(QVariant("offline"));
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0)[0], QVariant(false));
+}
+
+void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName_data()
+{
+    QTest::addColumn<bool>("PacketDataActive");
+    QTest::addColumn<QString>("CellularDataTechnology");
+    QTest::addColumn<QString>("InternetConnectionType");
+    QTest::addColumn<QString>("InternetConnectionState");
+    QTest::addColumn<QString>("ExpectedObjectNamePostfix");
+
+    QTest::newRow("gprs connection type and 2g tech not active") << false << QString("gprs") << QString("GPRS") << QString("connected") << QString("2G");
+    QTest::newRow("gprs connection type and 2g tech connecting") << false << QString("gprs") << QString("GPRS") << QString("connecting") << QString("2GConnecting");
+    QTest::newRow("gprs connection type and 2g tech active") << true << QString("gprs") << QString("GPRS") << QString("connected") << QString("2GActive");
+    QTest::newRow("gprs connection type and 25g tech not active") << false << QString("egprs") << QString("GPRS") << QString("connected") << QString("25G");
+    QTest::newRow("gprs connection type and 25g tech connecting") << false << QString("egprs") << QString("GPRS") << QString("connecting") << QString("25GConnecting");
+    QTest::newRow("gprs connection type and 25g tech active") << true << QString("egprs") << QString("GPRS") << QString("connected") << QString("25GActive");
+    QTest::newRow("gprs connection type and 3g tech not active") << false << QString("umts") << QString("GPRS") << QString("connected") << QString("3G");
+    QTest::newRow("gprs connection type and 3g tech connecting") << false << QString("umts") << QString("GPRS") << QString("connecting") << QString("3GConnecting");
+    QTest::newRow("gprs connection type and 3g tech active") << true << QString("umts") << QString("GPRS") << QString("connected") << QString("3GActive");
+    QTest::newRow("gprs connection type and 35g tech not active") << false << QString("hspa") << QString("GPRS") << QString("connected") << QString("35G");
+    QTest::newRow("gprs connection type and 35g tech connecting") << false << QString("hspa") << QString("GPRS") << QString("connecting") << QString("35GConnecting");
+    QTest::newRow("gprs connection type and 35g tech active") << true << QString("hspa") << QString("GPRS") << QString("connected") << QString("35GActive");
+    QTest::newRow("wlan connection type and wlan tech not active") << false << QString("") << QString("WLAN") << QString("connected") << QString("WLAN");
+    QTest::newRow("wlan connection type and wlan tech connecting") << false << QString("") << QString("WLAN") << QString("connecting") << QString("WLANConnecting");
+//    QTest::newRow("wlan connection type and wlan tech active") << true << QString("") << QStringU("WLAN") << QString("connected") << QStringU("WLANActive"); //wlan activity not supported yet
+
+}
+
+void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName()
+{
+    QFETCH(bool, PacketDataActive);
+    QFETCH(QString, CellularDataTechnology);
+    QFETCH(QString, InternetConnectionType);
+    QFETCH(QString, InternetConnectionState);
+    QFETCH(QString, ExpectedObjectNamePostfix);
+
+    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+
+    testContextItems["Cellular.PacketData"]->setValue(PacketDataActive);
+    testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
+    testContextItems["Internet.NetworkType"]->setValue(InternetConnectionType);
+    testContextItems["Internet.NetworkState"]->setValue(InternetConnectionState);
+
+    QCOMPARE(m_subject->styleName(), QString("PhoneNetworkTypeStatusIndicator") + ExpectedObjectNamePostfix);
+}
+
+void Ut_StatusIndicator::testPhoneNetworkAvailabilityChanged()
+{
+    m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
+
+    PhoneNetworkTypeStatusIndicator* networkTypeIndicator = qobject_cast<PhoneNetworkTypeStatusIndicator*>(m_subject);
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
+    networkTypeIndicator->setNetworkAvailability(false);
+    QCOMPARE(networkTypeIndicator->styleName(), QString(""));
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
+    networkTypeIndicator->setNetworkAvailability(false);
+    QVERIFY(networkTypeIndicator->styleName() != QString(""));
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
+    networkTypeIndicator->setNetworkAvailability(false);
+    QVERIFY(networkTypeIndicator->styleName() != QString(""));
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
+    networkTypeIndicator->setNetworkAvailability(true);
+    QCOMPARE(networkTypeIndicator->styleName(), QString(""));
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
+    networkTypeIndicator->setNetworkAvailability(true);
+    QVERIFY(networkTypeIndicator->styleName() != QString(""));
+
+    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
+    networkTypeIndicator->setNetworkAvailability(true);
+    QVERIFY(networkTypeIndicator->styleName() != QString(""));
 }
 
 void Ut_StatusIndicator::testBattery()
@@ -390,44 +458,6 @@ void Ut_StatusIndicator::testPresence()
     QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
     QVERIFY(m_subject->styleName().indexOf("Available") < 0);
     QVERIFY(m_subject->styleName().indexOf("Away") < 0);
-}
-
-void Ut_StatusIndicator::testInternetConnection_data()
-{
-    QTest::addColumn<QString>("networkType");
-    QTest::addColumn<QString>("networkState");
-    QTest::addColumn<bool>("packetData");
-    QTest::addColumn<QString>("styleName");
-
-    QTest::newRow("wlan connecting") << "WLAN" << "connecting" << false << "WLANConnecting";
-    QTest::newRow("wlan connecting, packet data") << "WLAN" << "connecting" << true << "PacketDataActive";
-    QTest::newRow("wlan connected") << "WLAN" << "connected" << false << "WLAN";
-    QTest::newRow("wlan connected, packet data") << "WLAN" << "connected" << true << "PacketDataActive";
-
-    QTest::newRow("gprs connecting") << "GPRS" << "connecting" << false << "PacketDataConnecting";
-    QTest::newRow("gprs connecting, packet data") << "GPRS" << "connecting" << true << "PacketDataConnecting";
-    QTest::newRow("gprs connected") << "GPRS" << "connected" << false << "PacketData";
-    QTest::newRow("gprs connected, packet data") << "GPRS" << "connected" << true << "PacketDataActive";
-
-    QTest::newRow("disconnected") << "" << "disconnected" << false << "";
-    QTest::newRow("disconnected, packet data") << "" << "disconnected" << true << "PacketDataActive";
-}
-
-
-void Ut_StatusIndicator::testInternetConnection()
-{
-    QFETCH(QString, networkType);
-    QFETCH(QString, networkState);
-    QFETCH(bool, packetData);
-    QFETCH(QString, styleName);
-
-    m_subject = new InternetConnectionStatusIndicator(*testContext);
-
-    testContextItems["Internet.NetworkType"]->setValue(QVariant(networkType));
-    testContextItems["Internet.NetworkState"]->setValue(QVariant(networkState));
-    testContextItems["Cellular.PacketData"]->setValue(QVariant(packetData));
-
-    QCOMPARE(m_subject->styleName(), QString("InternetConnectionStatusIndicator") + styleName);
 }
 
 void Ut_StatusIndicator::testAnimation()

@@ -127,15 +127,18 @@ ContextItem *StatusIndicator::createContextItem(ApplicationContext& context, con
 }
 
 PhoneNetworkSignalStrengthStatusIndicator::PhoneNetworkSignalStrengthStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
-    StatusIndicator(parent)
+    StatusIndicator(parent), networkAvailable(false)
 {
-    setStyleName(metaObject()->className());
-
     signalStrength = createContextItem(context, "Cellular.SignalBars");
     connect(signalStrength, SIGNAL(contentsChanged()), this, SLOT(signalStrengthChanged()));
 
-    setValue(0);
-    setDisplay(false);
+    systemOfflineMode = createContextItem(context, "System.OfflineMode");
+    connect(systemOfflineMode, SIGNAL(contentsChanged()), this, SLOT(setNetworkStatus()));
+
+    cellularRegistrationStatus = createContextItem(context, "Cellular.RegistrationStatus");
+    connect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(setNetworkStatus()));
+
+    setNetworkStatus();
 }
 
 PhoneNetworkSignalStrengthStatusIndicator::~PhoneNetworkSignalStrengthStatusIndicator()
@@ -147,27 +150,48 @@ void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
     setValue(signalStrength->value().toDouble() * 0.2f );
 }
 
-void PhoneNetworkSignalStrengthStatusIndicator::setDisplay(bool display)
+void PhoneNetworkSignalStrengthStatusIndicator::setNetworkStatus()
 {
-    if(display) {
-        setStyleNameAndUpdate(metaObject()->className());
-    } else {
-        setStyleNameAndUpdate();
+    QString postFix = "";
+
+    bool offlineMode = systemOfflineMode->value().toBool();
+    QString status = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
+
+    if (offlineMode) {
+        postFix = "Offline";
+    } else if (status == "no-sim") {
+        postFix = "NoSIM";
+    } else if (status == "" || status == "offline" || status == "forbidden") {
+        postFix = "NoNetwork";
     }
+
+    bool networkCurrentlyAvailable = postFix.isEmpty();
+    if (networkCurrentlyAvailable) {
+        signalStrengthChanged();
+    } else {
+        setValue(0);
+    }
+    if (networkAvailable != networkCurrentlyAvailable) {
+        emit networkAvailabilityChanged(networkCurrentlyAvailable);
+        networkAvailable = networkCurrentlyAvailable;
+    }
+    setStyleNameAndUpdate(metaObject()->className() + postFix);
 }
 
-
 PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
-        StatusIndicator(parent), networkAvailable(false)
+        StatusIndicator(parent)
 {
-    systemOfflineMode = createContextItem(context, "System.OfflineMode");
-    connect(systemOfflineMode, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
-
     cellularDataTechnology = createContextItem(context, "Cellular.DataTechnology");
     connect(cellularDataTechnology, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
-    cellularRegistrationStatus = createContextItem(context, "Cellular.RegistrationStatus");
-    connect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+    connectionType = createContextItem(context, "Internet.NetworkType");
+    connect(connectionType, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
+    connectionState = createContextItem(context, "Internet.NetworkState");
+    connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
+    packetData = createContextItem(context, "Cellular.PacketData");
+    connect(packetData, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
     setNetworkType();
 }
@@ -176,43 +200,57 @@ PhoneNetworkTypeStatusIndicator::~PhoneNetworkTypeStatusIndicator()
 {
 }
 
+void PhoneNetworkTypeStatusIndicator::setNetworkAvailability(bool available)
+{
+    QString state = connectionState->value().toString(); // disconnected connecting connected
+    if (!available && (state == "disconnected")) {
+        setStyleNameAndUpdate();
+    } else {
+        setNetworkType();
+    }
+}
+
 void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
-    QString postFix = "NoNetwork";
-
-    bool offlineMode = systemOfflineMode->value().toBool();
-    QString dataTechnology = cellularDataTechnology->value().toString();     // gprs egprs umts hspa
-    QString status         = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
+    QString postFix = "";
+    QString dataTechnology = cellularDataTechnology->value().toString(); // gprs egprs umts hspa
+    QString state = connectionState->value().toString(); // disconnected connecting connected
+    QString connection = connectionType->value().toString(); // GPRS WLAN
+    bool data = packetData->value().toBool();
 
     setValue(0);
 
-    if (offlineMode) {
-        postFix = "Offline";
+    if (state == "disconnected") {
+        setStyleNameAndUpdate(); // hide indicator
+        return; // no further actions needed
+    }
+
+    if (connection == "WLAN") {
+        postFix = "WLAN";
+    } else if (dataTechnology == "gprs") {
+        postFix = "2G";
+    } else if (dataTechnology == "egprs") {
+        postFix = "25G";
+    } else if (dataTechnology == "umts") {
+        postFix = "3G";
+    } else if (dataTechnology == "hspa") {
+        postFix = "35G";
+    }
+
+    if (state == "connecting") {
+        postFix += "Connecting";
+        animateIfPossible = true;
+    } else if (data) { // TODO: when wlan transfer info available from context fw, add here
+        postFix += "Active";
+        animateIfPossible = false;
     } else {
-        if (status == "no-sim") {
-            postFix = "NoSIM";
-        } else if (status == "" || status == "offline" || status == "forbidden") {
-            postFix = "NoNetwork";
-        } else {
-            if (dataTechnology == "gprs") {
-                postFix = "2G";
-            } else if(dataTechnology == "egprs") {
-                postFix = "25G";
-            } else if(dataTechnology == "umts") {
-                postFix = "3G";
-            } else if(dataTechnology == "hspa") {
-                postFix = "35G";
-            }
-        }
+        animateIfPossible = false;
     }
-
-    bool n = !(postFix == "NoNetwork" || postFix == "Offline" || postFix == "NoSIM");
-    if (n != networkAvailable) {
-        networkAvailable = n;
-        emit networkAvailabilityChanged(n);
-    }
-
+    // TODO: add suspended state here when available from context fw  (postFix: Suspended)
+    // TODO: when wlan transfer info available swap with wlan and gprs if both active at the same time
     setStyleNameAndUpdate(metaObject()->className() + postFix);
+
+    updateAnimationStatus();
 }
 
 BatteryStatusIndicator::BatteryStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
@@ -374,68 +412,10 @@ void PresenceStatusIndicator::presenceChanged()
     }
 }
 
-InternetConnectionStatusIndicator::InternetConnectionStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
-    StatusIndicator(parent)
-{
-    connectionType = createContextItem(context, "Internet.NetworkType");
-    connect(connectionType, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
-
-    connectionState = createContextItem(context, "Internet.NetworkState");
-    connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
-
-    packetData = createContextItem(context, "Cellular.PacketData");
-    connect(packetData, SIGNAL(contentsChanged()), this, SLOT(updateStatus()));
-
-    updateStatus();
-}
-
-InternetConnectionStatusIndicator::~InternetConnectionStatusIndicator()
-{
-}
-
-void InternetConnectionStatusIndicator::updateStatus()
-{
-    QString postFix = "";
-
-    QString state      = connectionState->value().toString(); // disconnected connecting connected
-    QString connection = connectionType->value().toString();  // GPRS WLAN
-    bool data = packetData->value().toBool();
-
-    setValue(0);
-
-    if(connection == "WLAN") {
-        postFix = "WLAN";
-    } else if(connection == "GPRS") {
-        postFix = "PacketData";
-    }
-
-    if(state == "connecting") {
-        postFix += "Connecting";
-        animateIfPossible = true;
-    } else if(state == "connected") {
-        animateIfPossible = false;
-    } else {
-        postFix = "";
-        animateIfPossible = false;
-    }
-
-    // If a GPRS connection is in the process of being established,
-    // hide packet data activity. Otherwise, packet data actvity is
-    // show regardless of the network state as it may be a result of
-    // MMS sending or device being used as a GPRS modem.
-    if(data && (connection != "GPRS" || state != "connecting")) {
-        postFix = "PacketDataActive";
-    }
-
-    setStyleNameAndUpdate(metaObject()->className() + postFix);
-
-    updateAnimationStatus();
-}
-
 PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setStyleName(metaObject()->className());
+    setStyleNameAndUpdate(metaObject()->className());
 
     networkName = createContextItem(context, "Cellular.NetworkName");
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));

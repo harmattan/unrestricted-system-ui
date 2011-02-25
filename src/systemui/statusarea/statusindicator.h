@@ -150,19 +150,34 @@ public:
 
     virtual ~PhoneNetworkSignalStrengthStatusIndicator();
 
+signals:
+    void networkAvailabilityChanged(bool available);
+
 private slots:
     void signalStrengthChanged();
-
-public slots:
-    void setDisplay(bool display);
+    void setNetworkStatus();
 
 private:
     ContextItem *signalStrength;
+    ContextItem *systemOfflineMode;
+    ContextItem *cellularRegistrationStatus;
+
+    bool networkAvailable;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
 };
 
 /*!
- * A status indicator for showing the phone network type
+ * A status indicator for showing the phone network type and
+ * the internet connection status.
+ * Displays either a WiFi or a packet data connection symbol. The
+ * symbol is animated while the connection is being established.
+ * If a packet data connection is active (data is being transfered),
+ * a "packet data connection active" symbol is shown.
  */
+
 class PhoneNetworkTypeStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
@@ -179,18 +194,23 @@ public:
 
     virtual ~PhoneNetworkTypeStatusIndicator();
 
-signals:
-    void networkAvailabilityChanged(bool available);
+public slots:
+    void setNetworkAvailability(bool availability);
 
 private slots:
     void setNetworkType();
 
 private:
-    ContextItem *systemOfflineMode;
-    ContextItem *cellularDataTechnology;
-    ContextItem *cellularRegistrationStatus;
 
-    bool networkAvailable;
+    ContextItem *cellularDataTechnology;
+    ContextItem *connectionType;
+    ContextItem *connectionState;
+    ContextItem *packetData;
+
+#ifdef UNIT_TEST
+    friend class Ut_StatusIndicator;
+#endif
+
 };
 
 /*!
@@ -309,31 +329,6 @@ private:
     ContextItem *presence;
 };
 
-/*!
- * A status indicator for showing the internet connection status.
- * Displays either a WiFi or a packet data connection symbol. The
- * symbol is animated while the connection is being established.
- * If a packet data connection is active (data is being transfered),
- * a "packet data connection active" symbol is shown.
- */
-class InternetConnectionStatusIndicator : public StatusIndicator
-{
-    Q_OBJECT
-    M_CONTROLLER(InternetConnectionStatusIndicator)
-
-public:
-    explicit InternetConnectionStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
-
-    virtual ~InternetConnectionStatusIndicator();
-
-private slots:
-    void updateStatus();
-
-private:
-    ContextItem *connectionType;
-    ContextItem *connectionState;
-    ContextItem *packetData;
-};
 
 /*!
  * A status indicator for showing the used phone network name.

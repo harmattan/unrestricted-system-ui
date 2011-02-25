@@ -48,8 +48,6 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
-    landscapeInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
-    portraitInternetConnectionIndicator(new InternetConnectionStatusIndicator(contextFrameworkContext, controller)),
     landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
     landscapeGPSIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
@@ -71,8 +69,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitClock(new Clock(controller))
 {
     // Connect related phone network indicators
-    connect(portraitPhoneNetworkTypeIndicator,  SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
-    connect(landscapePhoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
+    connect(portraitPhoneSignalStrengthIndicator, SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneNetworkTypeIndicator, SLOT(setNetworkAvailability(bool)));
+    connect(landscapePhoneSignalStrengthIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneNetworkTypeIndicator, SLOT(setNetworkAvailability(bool)));
 
     // Set up the clock styles
     landscapeClock->setObjectName("StatusAreaLandscapeClock");
@@ -123,8 +121,6 @@ void StatusAreaView::setupTestability()
     portraitPhoneSignalStrengthIndicator->setParent(portraitWidget);
     landscapePhoneNetworkTypeIndicator->setParent(landscapeWidget);
     portraitPhoneNetworkTypeIndicator->setParent(portraitWidget);
-    landscapeInternetConnectionIndicator->setParent(landscapeWidget);
-    portraitInternetConnectionIndicator->setParent(portraitWidget);
     landscapeBluetoothIndicator->setParent(landscapeWidget);
     portraitBluetoothIndicator->setParent(portraitWidget);
     landscapeGPSIndicator->setParent(landscapeWidget);
@@ -170,12 +166,11 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     // Put indicators into the layout
     layout->addItem(landscapeBatteryIndicator);
     layout->addItem(landscapePhoneSignalStrengthIndicator);
-    layout->addItem(landscapePhoneNetworkTypeIndicator);
     layout->addItem(landscapePhoneNetworkIndicator);
+    layout->addItem(landscapePhoneNetworkTypeIndicator);
     layout->addStretch();
     layout->addItem(landscapeNotificationIndicator);
     layout->addItem(landscapeTransferStatusIndicator);
-    layout->addItem(landscapeInternetConnectionIndicator);
     layout->addItem(landscapeCallForwardingIndicator);
     layout->addItem(landscapeBluetoothIndicator);
     layout->addItem(landscapeGPSIndicator);
@@ -198,12 +193,11 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     // Put indicators into the layout
     layout->addItem(portraitBatteryIndicator);
     layout->addItem(portraitPhoneSignalStrengthIndicator);
-    layout->addItem(portraitPhoneNetworkTypeIndicator);
     layout->addItem(portraitPhoneNetworkIndicator);
+    layout->addItem(portraitPhoneNetworkTypeIndicator);
     layout->addStretch();
     layout->addItem(portraitNotificationIndicator);
     layout->addItem(portraitTransferStatusIndicator);
-    layout->addItem(portraitInternetConnectionIndicator);
     layout->addItem(portraitCallForwardingIndicator);
     layout->addItem(portraitBluetoothIndicator);
     layout->addItem(portraitGPSIndicator);

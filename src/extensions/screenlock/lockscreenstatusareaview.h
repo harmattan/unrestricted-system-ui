@@ -64,7 +64,7 @@ private:
     //! The controller instance
     StatusArea *controller;
 
-    //! Phone network indicator
+    //! Phone network and Internet connection indicator
     StatusIndicator *phoneNetworkIndicator;
 
     //! Battery indicator
@@ -75,9 +75,6 @@ private:
 
     //! Phone network type indicator
     StatusIndicator *phoneNetworkTypeIndicator;
-
-    //! Internet connection indicator
-    StatusIndicator *internetConnectionIndicator;
 
     //! Bluetooth indicator
     StatusIndicator *bluetoothIndicator;

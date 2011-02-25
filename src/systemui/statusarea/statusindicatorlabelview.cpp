@@ -60,7 +60,7 @@ void StatusIndicatorLabelView::updateData(const QList<const char *>& modificatio
         } else if (strcmp(member, MWidgetModel::StyleName) == 0) {
             if (controller->styleName().contains("Landscape")) {
                 label->setStyleName("StatusIndicatorLabelLandscape");
-            } else {
+            } else if (controller->styleName().contains("Portrait")) {
                 label->setStyleName("StatusIndicatorLabelPortrait");
             }
         }
