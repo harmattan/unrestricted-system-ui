@@ -51,6 +51,8 @@ public:
     static int XUnmapWindow(Display *display, Window w);
     static int XStoreName(Display *display, Window w, char *window_name);
     static int XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time);
+    static int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
+                              int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
 };
 
 #endif /* X11WRAPPER_H_ */

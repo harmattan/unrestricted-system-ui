@@ -141,12 +141,22 @@ void Ut_EventEater::testShow()
 
     QCOMPARE(gX11WrapperStub->stubCallCount("XGrabKeyboard"), 1);
     MethodCall &xgk = gX11WrapperStub->stubLastCallTo("XGrabKeyboard");
-
     QCOMPARE(xgk.parameter<Window>(1), WINDOW_ID);
     QCOMPARE(xgk.parameter<Bool>(2), False);
     QCOMPARE(xgk.parameter<int>(3), (int)GrabModeAsync);
     QCOMPARE(xgk.parameter<int>(4), (int)GrabModeAsync);
     QCOMPARE(xgk.parameter<Time>(5), (Time)CurrentTime);
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XGrabPointer"), 1);
+    MethodCall &xgp = gX11WrapperStub->stubLastCallTo("XGrabPointer");
+    QCOMPARE(xgp.parameter<Window>(1), WINDOW_ID);
+    QCOMPARE(xgp.parameter<Bool>(2), False);
+    QCOMPARE(xgp.parameter<int>(3), (int)ButtonPressMask);
+    QCOMPARE(xgp.parameter<int>(4), (int)GrabModeAsync);
+    QCOMPARE(xgp.parameter<int>(5), (int)GrabModeAsync);
+    QCOMPARE(xgp.parameter<Window>(6), (Window)None);
+    QCOMPARE(xgp.parameter<Cursor>(7), (Cursor)None);
+    QCOMPARE(xgp.parameter<Time>(8), (Time)CurrentTime);
 
     int xmr_i = 0, xgk_i = 0;
 

@@ -1,6 +1,7 @@
 system-ui (0.20.10~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#227871 - User input that unblanks the screen is passed through
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 25 Feb 2011 16:48:08 +0200
 

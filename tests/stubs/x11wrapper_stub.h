@@ -48,6 +48,8 @@ public:
     virtual int XUnmapWindow(Display *display, Window w);
     virtual int XStoreName(Display *display, Window w, char *window_name);
     virtual int XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time);
+    virtual int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
+                              int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
 };
 
 // 2. IMPLEMENT STUB
@@ -274,6 +276,23 @@ int X11WrapperStub::XGrabKeyboard(Display *display, Window grab_window, Bool own
     return stubReturnValue<int>("XGrabKeyboard");
 }
 
+int X11WrapperStub::XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
+                              int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<Display *>(display));
+    params.append(new Parameter<Window>(grab_window));
+    params.append(new Parameter<Bool>(owner_events));
+    params.append(new Parameter<int>(event_mask));
+    params.append(new Parameter<int>(pointer_mode));
+    params.append(new Parameter<int>(keyboard_mode));
+    params.append(new Parameter<Window>(confine_to));
+    params.append(new Parameter<Cursor>(cursor));
+    params.append(new Parameter<Time>(time));
+    stubMethodEntered("XGrabPointer", params);
+    return stubReturnValue<int>("XGrabPointer");
+}
+
 // 3. CREATE A STUB INSTANCE
 X11WrapperStub gDefaultX11WrapperStub;
 X11WrapperStub *gX11WrapperStub = &gDefaultX11WrapperStub;
@@ -380,4 +399,10 @@ int X11Wrapper::XGrabKeyboard(Display *display, Window grab_window, Bool owner_e
     return gX11WrapperStub->XGrabKeyboard(display, grab_window, owner_events, pointer_mode, keyboard_mode, time);
 }
 
+int X11Wrapper::XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
+                              int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time)
+{
+    return gX11WrapperStub->XGrabPointer(display, grab_window, owner_events, event_mask,
+                                         pointer_mode, keyboard_mode, confine_to, cursor, time);
+}
 #endif

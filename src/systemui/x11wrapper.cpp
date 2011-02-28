@@ -128,3 +128,9 @@ int X11Wrapper::XGrabKeyboard(Display *display, Window grab_window, Bool owner_e
 {
     return ::XGrabKeyboard(display, grab_window, owner_events, pointer_mode, keyboard_mode, time);
 }
+
+int X11Wrapper::XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
+                              int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time)
+{
+    return ::XGrabPointer(display, grab_window, owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time);
+}

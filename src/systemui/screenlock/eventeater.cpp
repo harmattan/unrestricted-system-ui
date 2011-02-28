@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "eventeater.h"
 
 // Event eater instance that listens input events
@@ -88,8 +87,9 @@ void EventEater::show()
 
     X11Wrapper::XMapRaised(dpy, window);
 
-    // Grab is released automatically at unmap
+    // Grabs are released automatically at unmap
     X11Wrapper::XGrabKeyboard(dpy, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
+    X11Wrapper::XGrabPointer(dpy, window, False, ButtonPressMask, GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 }
 
 void EventEater::hide()
@@ -101,9 +101,7 @@ bool EventEater::eventFilter(XEvent *event)
 {
     bool handled = false;
 
-    if ((event->xany.window == window) &&
-        (event->type == ButtonPress || event->type == KeyPress)) {
-
+    if ((event->xany.window == window) && (event->type == ButtonPress || event->type == KeyPress)) {
         handled = true;
         emit inputEventReceived();
     }
