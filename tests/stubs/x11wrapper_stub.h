@@ -50,6 +50,7 @@ public:
     virtual int XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time);
     virtual int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
                               int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
+    virtual int XDeleteProperty(Display *display, Window w, Atom property);
 };
 
 // 2. IMPLEMENT STUB
@@ -293,6 +294,16 @@ int X11WrapperStub::XGrabPointer(Display *display, Window grab_window, Bool owne
     return stubReturnValue<int>("XGrabPointer");
 }
 
+int X11WrapperStub::XDeleteProperty(Display *display, Window w, Atom property)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<Display *>(display));
+    params.append(new Parameter<Window>(w));
+    params.append(new Parameter<Atom>(property));
+    stubMethodEntered("XDeleteProperty", params);
+    return stubReturnValue<int>("XDeleteProperty");
+}
+
 // 3. CREATE A STUB INSTANCE
 X11WrapperStub gDefaultX11WrapperStub;
 X11WrapperStub *gX11WrapperStub = &gDefaultX11WrapperStub;
@@ -405,4 +416,9 @@ int X11Wrapper::XGrabPointer(Display *display, Window grab_window, Bool owner_ev
     return gX11WrapperStub->XGrabPointer(display, grab_window, owner_events, event_mask,
                                          pointer_mode, keyboard_mode, confine_to, cursor, time);
 }
+
+int X11Wrapper::XDeleteProperty(Display *display, Window w, Atom property) {
+    return gX11WrapperStub->XDeleteProperty(display, w, property);
+}
+
 #endif

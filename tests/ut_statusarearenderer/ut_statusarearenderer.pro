@@ -10,8 +10,7 @@ QT += meegographicssystemhelper
 # unit test and unit classes
 SOURCES += \
     ut_statusarearenderer.cpp \
-    $$SRCDIR/statusarea/statusarearenderer.cpp \
-    $$SRCDIR/x11wrapper.cpp \
+    $$SRCDIR/statusarea/statusarearenderer.cpp
 
 # service classes
 SOURCES += \
@@ -20,6 +19,7 @@ SOURCES += \
 
 # unit test and unit classes
 HEADERS += \
+    $$STUBSDIR/stubbase.h \
     ut_statusarearenderer.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/statusarea/statusarea.h \

@@ -20,6 +20,7 @@ class StatusAreaRendererStub : public StubBase {
   virtual uint sharedPixmapHandle();
   virtual bool createSharedPixmapHandle();
   virtual void setSizeFromStyle();
+  virtual void setSharedPixmapHandleToRootWindowProperty();
 };
 
 // 2. IMPLEMENT STUB
@@ -67,6 +68,9 @@ void StatusAreaRendererStub::renderAccumulatedRegion() {
   stubMethodEntered("renderAccumulatedRegion");
 }
 
+void StatusAreaRendererStub::setSharedPixmapHandleToRootWindowProperty() {
+  stubMethodEntered("setSharedPixmapHandleToRootWindowProperty");
+}
 
 // 3. CREATE A STUB INSTANCE
 StatusAreaRendererStub gDefaultStatusAreaRendererStub;
@@ -113,5 +117,8 @@ void StatusAreaRenderer::renderAccumulatedRegion() {
   gStatusAreaRendererStub->renderAccumulatedRegion();
 }
 
+void StatusAreaRenderer::setSharedPixmapHandleToRootWindowProperty() {
+  gStatusAreaRendererStub->setSharedPixmapHandleToRootWindowProperty();
+}
 
 #endif

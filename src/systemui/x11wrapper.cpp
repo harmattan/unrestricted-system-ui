@@ -134,3 +134,8 @@ int X11Wrapper::XGrabPointer(Display *display, Window grab_window, Bool owner_ev
 {
     return ::XGrabPointer(display, grab_window, owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time);
 }
+
+int X11Wrapper::XDeleteProperty(Display *display, Window w, Atom property)
+{
+    return ::XDeleteProperty(display, w, property);
+}

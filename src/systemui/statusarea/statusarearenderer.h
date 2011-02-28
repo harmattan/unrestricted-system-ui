@@ -83,6 +83,10 @@ signals:
     void statusIndicatorMenuVisibilityChanged(bool visible);
 
 private:
+
+    //! Sets handle of status area pixmap to a root window property
+    void setSharedPixmapHandleToRootWindowProperty();
+
     //! Scene which is rendererd
     QGraphicsScene *scene;
 

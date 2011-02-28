@@ -53,6 +53,7 @@ public:
     static int XGrabKeyboard(Display *display, Window grab_window, Bool owner_events, int pointer_mode, int keyboard_mode, Time time);
     static int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
                               int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
+    static int XDeleteProperty(Display *display, Window w, Atom property);
 };
 
 #endif /* X11WRAPPER_H_ */

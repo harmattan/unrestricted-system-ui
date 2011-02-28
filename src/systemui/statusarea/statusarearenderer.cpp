@@ -61,6 +61,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     setSizeFromStyle();
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
+    } else {
+        setSharedPixmapHandleToRootWindowProperty();
     }
 
     connect(&accumulationTimer, SIGNAL(timeout()), this, SLOT(renderAccumulatedRegion()));
@@ -121,6 +123,25 @@ uint StatusAreaRenderer::sharedPixmapHandle()
     return static_cast<quint32> (statusAreaPixmap.handle());
 }
 
+void StatusAreaRenderer::setSharedPixmapHandleToRootWindowProperty()
+{
+    // Create atom for pixmap handle property
+    Atom pixmapHandleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False);
+    // Get handle to root window
+    Window rootWindow = QX11Info::appRootWindow(QX11Info::appScreen());
+
+    unsigned int handle = sharedPixmapHandle();
+
+    X11Wrapper::XChangeProperty(QX11Info::display(),    //display
+                    rootWindow,                         //window
+                    pixmapHandleAtom,                   //property
+                    XA_PIXMAP,                          //type
+                    32,                                 //format
+                    PropModeReplace,                    //mode
+                    (unsigned char*)&handle,            //data
+                    1);                                 //nelements
+}
+
 StatusAreaRenderer::~StatusAreaRenderer()
 {
     scene->removeItem(statusArea);
@@ -136,6 +157,10 @@ StatusAreaRenderer::~StatusAreaRenderer()
             X11Wrapper::XFreePixmap(QX11Info::display(), pixmap);
         }
     }
+
+    X11Wrapper::XDeleteProperty(QX11Info::display(),
+                    QX11Info::appRootWindow(QX11Info::appScreen()),
+                    X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", True));
 
 #ifdef HAVE_QMSYSTEM
     delete displayState;
