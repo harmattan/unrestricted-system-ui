@@ -32,9 +32,9 @@ releaseout.path = $$SYSTEMUI_THEMES_DIR/feedbacks/release-outside-dragndrop-drop
 # Power-off feedback
 
 poweroff.files = \
-    power-off/*
+    priority1_power_off/*
 
-poweroff.path = $$SYSTEMUI_THEMES_DIR/feedbacks/power-off
+poweroff.path = $$SYSTEMUI_THEMES_DIR/feedbacks/priority1_power_off
 
 INSTALLS += \
     startdnd \
