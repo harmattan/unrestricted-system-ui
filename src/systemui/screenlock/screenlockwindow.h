@@ -46,12 +46,23 @@ public:
      */
     virtual ~ScreenLockWindow();
 
+    /*!
+     * Sets the low power mode property of the window to enable or isable compositor
+     * painting even in low power mode state
+     * \param enable if true, enables the low power state
+     */
+    void setLowPowerMode(bool enable);
+
 protected:
     /*!
      * Sets the _MEEGO_STACKING_LAYER window property to 5. For incoming call feature
      * this needs to be at least higher than call-ui's value (currently 2).
      */
     virtual void showEvent(QShowEvent *event);
+
+    //! \reimp
+    virtual void paintEvent(QPaintEvent *event);
+    //! \reimp_end
 
 private:
     //! Set window properties to not show the window in the switcher
@@ -60,6 +71,9 @@ private:
 
     //! Applies the lock screen orientation and locking from the style
     void applyStyle();
+
+    //! Low power mode of the window
+    bool lowPowerMode;
 
 #ifdef UNIT_TEST
     friend class Ut_ScreenLockWindow;

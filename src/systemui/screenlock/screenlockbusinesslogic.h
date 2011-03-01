@@ -97,6 +97,9 @@ private slots:
     //! Shows the screen lock window in low power mode and hides the event eater window.
     void showLowPowerMode();
 
+    //! Sets the screen lock extensions into display off state
+    void setDisplayOffMode();
+
     //! Hides the event eater window and the screen lock window.
     void hideScreenLockAndEventEater();
 
@@ -131,7 +134,8 @@ private:
         TkLockModeSelect,         // Deprecated
         TkLockModeOneInput,       // Turn the event eater on
         TkLockEnableVisual,       // Show unlock UI
-        TkLockEnableLowPowerMode  // Show low power UI
+        TkLockEnableLowPowerMode, // Show low power UI
+        TkLockRealBlankMode       // Display completely off
     };
 
     enum TkLockStatus {

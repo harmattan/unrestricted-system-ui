@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
 #include <MApplicationExtensionArea>
@@ -27,7 +26,7 @@
 #include "x11wrapper.h"
 
 ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWidget *parent) :
-    MWindow(parent)
+    MWindow(parent), lowPowerMode(false)
 {
     setWindowTitle("Screen Lock");
     setSceneManager(new MSceneManager);
@@ -91,7 +90,32 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
 
     // Exclude the window from the task bar
     excludeFromTaskBar();
+
+    // Set the current low power mode
+    setLowPowerMode(lowPowerMode);
 }
+
+void ScreenLockWindow::setLowPowerMode(bool enable)
+{
+    lowPowerMode = enable;
+
+    // Set the low power mode X property if needed to make compositor paint the window even when the display state is off,
+    // so the low power mode view can update itself
+    Display *display = QX11Info::display();
+    Atom lowPowerModeAtom = X11Wrapper::XInternAtom(display, "_MEEGO_LOW_POWER_MODE", False);
+    if (lowPowerModeAtom != None) {
+        long mode = enable ? 1 : 0;
+        X11Wrapper::XChangeProperty(display, internalWinId(), lowPowerModeAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&mode, 1);
+    }
+}
+
+void ScreenLockWindow::paintEvent(QPaintEvent *event)
+{
+    // Avoid running MWindow's paintEvent, because it stops painting when
+    // display is off, but we need to paint the low power mode view even in that state
+    QGraphicsView::paintEvent(event);
+}
+
 
 void ScreenLockWindow::excludeFromTaskBar()
 {

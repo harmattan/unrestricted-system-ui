@@ -86,6 +86,10 @@ int ScreenLockBusinessLogic::tklock_open(const QString &service, const QString &
         QTimer::singleShot(0, this, SLOT(showLowPowerMode()));
         break;
 
+    case TkLockRealBlankMode:
+        QTimer::singleShot(0, this, SLOT(setDisplayOffMode()));
+        break;
+
     default:
         break;
     }
@@ -138,6 +142,7 @@ void ScreenLockBusinessLogic::showScreenLock()
         screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
     }
     toggleScreenLockUI(true);
+    screenLockWindow->setLowPowerMode(false);
     toggleEventEater(false);
 }
 
@@ -147,6 +152,17 @@ void ScreenLockBusinessLogic::showLowPowerMode()
         screenLockExtension->setMode(ScreenLockExtensionInterface::LowPowerMode);
     }
     toggleScreenLockUI(true);
+    screenLockWindow->setLowPowerMode(true);
+    toggleEventEater(false);
+}
+
+void ScreenLockBusinessLogic::setDisplayOffMode()
+{
+    foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
+        screenLockExtension->setMode(ScreenLockExtensionInterface::DisplayOffMode);
+    }
+    toggleScreenLockUI(true);
+    screenLockWindow->setLowPowerMode(false);
     toggleEventEater(false);
 }
 
@@ -185,6 +201,7 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
         screenLockWindow->raise();
     } else {
         if (screenLockWindow != NULL && screenLockWindow->isVisible()) {
+            screenLockWindow->setLowPowerMode(false);
             screenLockWindow->hide();
         }
     }

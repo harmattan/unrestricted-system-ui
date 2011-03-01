@@ -1,6 +1,7 @@
 system-ui (0.20.12~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#230034 - Low power mode ui is static and burn display
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 15:04:37 +0200
 

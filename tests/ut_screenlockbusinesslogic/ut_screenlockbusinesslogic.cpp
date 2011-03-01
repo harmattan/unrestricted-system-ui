@@ -328,14 +328,16 @@ void Ut_ScreenLockBusinessLogic::testTkLockOpen_data()
     QTest::addColumn<bool>("eventEaterWindowVisible");
     QTest::addColumn<bool>("screenLockModeSet");
     QTest::addColumn<int>("screenLockMode");
+    QTest::addColumn<bool>("lowPowerModeWindow");
 
-    QTest::newRow("TkLockModeNone") << (int)ScreenLockBusinessLogic::TkLockModeNone << false << false << false << false << false << 0;
-    QTest::newRow("TkLockModeEnable") << (int)ScreenLockBusinessLogic::TkLockModeEnable << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode;
-    QTest::newRow("TkLockModeHelp") << (int)ScreenLockBusinessLogic::TkLockModeHelp << false << false << false << false << false << 0;
-    QTest::newRow("TkLockModeSelect") << (int)ScreenLockBusinessLogic::TkLockModeSelect << false << false << false << false << false << 0;
-    QTest::newRow("TkLockModeOneInput") << (int)ScreenLockBusinessLogic::TkLockModeOneInput << false << false << true << true << false << 0;
-    QTest::newRow("TkLockEnableVisual") << (int)ScreenLockBusinessLogic::TkLockEnableVisual << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode;
-    QTest::newRow("TkLockEnableLowPowerMode") << (int)ScreenLockBusinessLogic::TkLockEnableLowPowerMode << true << true << true << false << true << (int)ScreenLockExtensionInterface::LowPowerMode;
+    QTest::newRow("TkLockModeNone") << (int)ScreenLockBusinessLogic::TkLockModeNone << false << false << false << false << false << 0 << false;
+    QTest::newRow("TkLockModeEnable") << (int)ScreenLockBusinessLogic::TkLockModeEnable << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode << false;
+    QTest::newRow("TkLockModeHelp") << (int)ScreenLockBusinessLogic::TkLockModeHelp << false << false << false << false << false << 0 << false;
+    QTest::newRow("TkLockModeSelect") << (int)ScreenLockBusinessLogic::TkLockModeSelect << false << false << false << false << false << 0 << false;
+    QTest::newRow("TkLockModeOneInput") << (int)ScreenLockBusinessLogic::TkLockModeOneInput << false << false << true << true << false << 0 << false;
+    QTest::newRow("TkLockEnableVisual") << (int)ScreenLockBusinessLogic::TkLockEnableVisual << true << true << true << false << true << (int)ScreenLockExtensionInterface::NormalMode << false;
+    QTest::newRow("TkLockEnableLowPowerMode") << (int)ScreenLockBusinessLogic::TkLockEnableLowPowerMode << true << true << true << false << true << (int)ScreenLockExtensionInterface::LowPowerMode << true;
+    QTest::newRow("TkLockRealBlankMode") << (int)ScreenLockBusinessLogic::TkLockRealBlankMode << true << true << true << false << true << (int)ScreenLockExtensionInterface::DisplayOffMode << false;
 }
 
 void Ut_ScreenLockBusinessLogic::testTkLockOpen()
@@ -347,6 +349,7 @@ void Ut_ScreenLockBusinessLogic::testTkLockOpen()
     QFETCH(bool, eventEaterWindowVisible);
     QFETCH(bool, screenLockModeSet);
     QFETCH(int, screenLockMode);
+    QFETCH(bool, lowPowerModeWindow);
 
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
@@ -377,6 +380,10 @@ void Ut_ScreenLockBusinessLogic::testTkLockOpen()
     QCOMPARE(screenLockExtensionModeSet, screenLockModeSet);
     if (screenLockModeSet) {
         QCOMPARE((int)screenLockExtensionMode, screenLockMode);
+    }
+
+    if(screenLockMode >= ScreenLockBusinessLogic::TkLockEnableVisual && screenLockMode <= ScreenLockBusinessLogic::TkLockRealBlankMode) {
+        QCOMPARE(gScreenLockWindowStub->stubLastCallTo("setLowPowerMode").parameter<bool>(0), lowPowerModeWindow);
     }
 }
 

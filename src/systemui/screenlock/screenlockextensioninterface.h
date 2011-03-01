@@ -39,7 +39,8 @@ public:
     //! Screen lock modes
     enum ScreenLockMode {
         NormalMode,
-        LowPowerMode
+        LowPowerMode,
+        DisplayOffMode
     };
 
     /*!
