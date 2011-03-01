@@ -1,11 +1,10 @@
-system-ui (0.20.10~1) unstable; urgency=low
+system-ui (0.20.10-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#229695 - [TASK] screen lock needs to change its window priority
   * Fixes: NB#231290 - Feedback "power-off" should be renamed to "priority1_power_off"
   * Fixes: NB#227871 - User input that unblanks the screen is passed through
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 25 Feb 2011 16:48:08 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 12:13:31 +0200
 
 system-ui (0.20.9-1) unstable; urgency=low
 
