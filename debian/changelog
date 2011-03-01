@@ -1,3 +1,9 @@
+system-ui (0.20.11~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 12:13:58 +0200
+
 system-ui (0.20.10-1) unstable; urgency=low
 
   * Fixes: NB#229695 - [TASK] screen lock needs to change its window priority
