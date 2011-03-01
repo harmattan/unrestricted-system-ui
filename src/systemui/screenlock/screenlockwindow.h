@@ -48,7 +48,8 @@ public:
 
 protected:
     /*!
-     * Sets the _MEEGO_STACKING_LAYER window property to 2.
+     * Sets the _MEEGO_STACKING_LAYER window property to 5. For incoming call feature
+     * this needs to be at least higher than call-ui's value (currently 2).
      */
     virtual void showEvent(QShowEvent *event);
 

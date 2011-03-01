@@ -78,7 +78,7 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
     Display *display = QX11Info::display();
     Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
     if (stackingLayerAtom != None) {
-        long layer = 2;
+        long layer = 5;
         X11Wrapper::XChangeProperty(display, effectiveWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
 
