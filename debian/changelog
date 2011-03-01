@@ -1,7 +1,7 @@
 system-ui (0.20.10~1) unstable; urgency=low
 
   * [UNRELEASED]
-  * Fixes: NB#229695 - [TASK] screen lock needs to change its window priority for the incoming-call-in-screen-lock feature
+  * Fixes: NB#229695 - [TASK] screen lock needs to change its window priority
   * Fixes: NB#231290 - Feedback "power-off" should be renamed to "priority1_power_off"
   * Fixes: NB#227871 - User input that unblanks the screen is passed through
 
