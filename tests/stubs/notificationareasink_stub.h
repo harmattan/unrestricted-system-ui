@@ -36,8 +36,8 @@ public:
     virtual void removeNotification(uint notificationId);
     virtual void addNotification(MBanner &notification);
     virtual void removeNotification(MBanner &notification);
-    virtual void setupInfoBanner(MBanner *infoBanner);
-    virtual MBanner *updateNotification(MBanner *dn, const NotificationParameters &parameters);
+    virtual void setupInfoBanner(MBanner *infoBanner, const NotificationParameters &parameters);
+    virtual void updateNotification(MBanner *dn, const NotificationParameters &parameters);
     virtual void removeGroupBanner(uint groupId);
     virtual void applyPrivacySetting(bool privacyEnabled);
     virtual void updateCurrentNotifications(NotificationManagerInterface &notificationManagerInterface);
@@ -95,20 +95,20 @@ void NotificationAreaSinkStub::removeNotification(MBanner &notification)
     stubMethodEntered("removeNotification", params);
 }
 
-void NotificationAreaSinkStub::setupInfoBanner(MBanner *infoBanner)
+void NotificationAreaSinkStub::setupInfoBanner(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<MBanner * >(infoBanner));
+    params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("setupInfoBanner", params);
 }
 
-MBanner *NotificationAreaSinkStub::updateNotification(MBanner *dn, const NotificationParameters &parameters)
+void NotificationAreaSinkStub::updateNotification(MBanner *dn, const NotificationParameters &parameters)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<MBanner * >(dn));
     params.append(new Parameter<const NotificationParameters & >(parameters));
     stubMethodEntered("updateNotification", params);
-    return stubReturnValue<MBanner *>("updateNotification");
 }
 
 void NotificationAreaSinkStub::removeGroupBanner(uint groupId)
@@ -169,14 +169,14 @@ void NotificationAreaSink::removeNotification(uint notificationId)
     gNotificationAreaSinkStub->removeNotification(notificationId);
 }
 
-void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
+void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner, const NotificationParameters &parameters)
 {
-    gNotificationAreaSinkStub->setupInfoBanner(infoBanner);
+    gNotificationAreaSinkStub->setupInfoBanner(infoBanner, parameters);
 }
 
-MBanner *NotificationAreaSink::updateNotification(MBanner *dn, const NotificationParameters &parameters)
+void NotificationAreaSink::updateNotification(MBanner *dn, const NotificationParameters &parameters)
 {
-    return gNotificationAreaSinkStub->updateNotification(dn, parameters);
+    gNotificationAreaSinkStub->updateNotification(dn, parameters);
 }
 
 void NotificationAreaSink::removeGroupBanner(uint groupId)

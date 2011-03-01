@@ -53,7 +53,7 @@ void NotificationAreaSink::updateCurrentNotifications(NotificationManagerInterfa
     }
 }
 
-void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
+void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner, const NotificationParameters &parameters)
 {
     // Don't allow the scene manager to destroy the banner
     infoBanner->setManagedManually(true);
@@ -61,15 +61,20 @@ void NotificationAreaSink::setupInfoBanner(MBanner *infoBanner)
     // Since the notification area only shows event banners, set the style name
     infoBanner->setStyleName("FullEventBanner");
 
+    // In the full event banners the order of the title and the subtitle needs to be reversed
+    infoBanner->setProperty(TITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
+    infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
+    updateTitles(infoBanner);
+
     // Catch clicks and send signal that a banner was clicked.
     connect(infoBanner, SIGNAL(clicked()), this, SIGNAL(bannerClicked()), Qt::QueuedConnection);
 }
 
-MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const NotificationParameters &parameters)
+void NotificationAreaSink::updateNotification(MBanner *infoBanner, const NotificationParameters &parameters)
 {
-    // Update the info banner widget
-    infoBanner->setProperty(TITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
-    infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
+    // Update the info banner widget. In the full event banners the order of the title and the subtitle needs to be reversed.
+    infoBanner->setProperty(TITLE_TEXT_PROPERTY, infoBannerSubtitleText(parameters));
+    infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
     infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
@@ -80,8 +85,6 @@ MBanner *NotificationAreaSink::updateNotification(MBanner *infoBanner, const Not
     updateImage(infoBanner, parameters);
     updateTitles(infoBanner);
     updateActions(infoBanner, parameters);
-
-    return infoBanner;
 }
 
 void NotificationAreaSink::addGroup(uint groupId, const NotificationParameters &parameters)
@@ -93,7 +96,7 @@ void NotificationAreaSink::addGroup(uint groupId, const NotificationParameters &
     } else {
         // Keep track of the mapping between IDs and info banners
         MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, groupId, parameters);
-        setupInfoBanner(infoBanner);
+        setupInfoBanner(infoBanner, parameters);
         groupIdToMBanner.insert(groupId, infoBanner);
     }
 
@@ -158,7 +161,7 @@ void NotificationAreaSink::increaseNotificationCountOfGroup(const Notification &
 MBanner* NotificationAreaSink::createGroupBanner(uint groupId, const NotificationParameters &parameters)
 {
     MBanner *infoBanner = createInfoBanner(Notification::ApplicationEvent, groupId, parameters);
-    setupInfoBanner(infoBanner);
+    setupInfoBanner(infoBanner, parameters);
     infoBanner->setParentItem(NULL);
     groupIdToMBanner.insert(groupId, infoBanner);
     return infoBanner;
@@ -199,7 +202,7 @@ void NotificationAreaSink::addStandAloneNotification(const Notification &notific
         updateNotification(infoBanner, notification.parameters());
     } else {
         infoBanner = createInfoBanner(notification);
-        setupInfoBanner(infoBanner);
+        setupInfoBanner(infoBanner, notification.parameters());
         notificationIdToMBanner.insert(notification.notificationId(), infoBanner);
         // Add to the notification area
         emit addNotification(*infoBanner);

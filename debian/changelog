@@ -1,6 +1,7 @@
 system-ui (0.20.11~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: 227635 - Strings in Full event banner are in wrong order
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 12:13:58 +0200
 

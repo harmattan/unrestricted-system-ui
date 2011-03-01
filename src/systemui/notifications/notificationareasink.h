@@ -90,9 +90,10 @@ signals:
 
 private:
     //! Sets up the info banner can connects its signals
-    void setupInfoBanner(MBanner *infoBanner);
+    void setupInfoBanner(MBanner *infoBanner, const NotificationParameters &parameters);
+
     //! Updates a notification widget
-    MBanner *updateNotification(MBanner *dn, const NotificationParameters &parameters);
+    void updateNotification(MBanner *infoBanner, const NotificationParameters &parameters);
 
     //! A mapping between notification IDs and MBanner widgets
     QHash<uint, MBanner *> notificationIdToMBanner;

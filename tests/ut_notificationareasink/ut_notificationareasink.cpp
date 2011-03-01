@@ -383,7 +383,7 @@ void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPre
     QCOMPARE(bannerCatcher.banners.count(), 1);
     MBanner *banner = bannerCatcher.banners.at(0);
     // The banner should have the notification group's data
-    QCOMPARE(banner->title(), GROUP_SUMMARY);
+    QCOMPARE(banner->title(), GROUP_BODY);
 }
 
 void Ut_NotificationAreaSink::testUpdateGroup()
@@ -393,10 +393,11 @@ void Ut_NotificationAreaSink::testUpdateGroup()
     TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1", 123456);
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
-    QCOMPARE(titles.length(), 1);
-    QCOMPARE(titles[0], QString("title0"));
-    QCOMPARE(subtitles.length(), 1);
-    QCOMPARE(subtitles[0], QString("subtitle0"));
+    // The titles and subtitles get set twice and the second one is the relevant one
+    QCOMPARE(titles.length(), 2);
+    QCOMPARE(titles[1], QString("subtitle0"));
+    QCOMPARE(subtitles.length(), 2);
+    QCOMPARE(subtitles[1], QString("title0"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon0"));
     QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
@@ -405,10 +406,11 @@ void Ut_NotificationAreaSink::testUpdateGroup()
 
     emit addGroup(1, parameters1);
 
-    QCOMPARE(titles.length(), 1);
-    QCOMPARE(titles[0], QString("title1"));
-    QCOMPARE(subtitles.length(), 1);
-    QCOMPARE(subtitles[0], QString("subtitle1"));
+    // The stub is now aware of the banner so updates go to the first occurrence of the banner
+    QCOMPARE(titles.length(), 2);
+    QCOMPARE(titles[0], QString("subtitle1"));
+    QCOMPARE(subtitles.length(), 2);
+    QCOMPARE(subtitles[0], QString("title1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
     QCOMPARE(timestamps[0].toTime_t(), (uint)123456);
@@ -426,9 +428,9 @@ void Ut_NotificationAreaSink::testApplyPrivacySetting_data()
     QTest::addColumn<QString>("subtitle");
 
     QTest::newRow("Privacy enabled and honored") << true << true << "test0" << QString();
-    QTest::newRow("Privacy disabled and honored") << true << false << "title0" << "subtitle0";
-    QTest::newRow("Privacy enabled but not honored") << false << true << "title0" << "subtitle0";
-    QTest::newRow("Privacy disabled and not honored") << false << false << "title0" << "subtitle0";
+    QTest::newRow("Privacy disabled and honored") << true << false << "subtitle0" << "title0";
+    QTest::newRow("Privacy enabled but not honored") << false << true << "subtitle0" << "title0";
+    QTest::newRow("Privacy disabled and not honored") << false << false << "subtitle0" << "title0";
 }
 
 void Ut_NotificationAreaSink::testApplyPrivacySetting()
@@ -452,18 +454,18 @@ void Ut_NotificationAreaSink::testApplyPrivacySetting()
     emit privacySettingChanged(privacyEnabled);
 
     // The titles should be as expected
-    QCOMPARE(titles.length(), 1);
-    QCOMPARE(titles[0], title);
-    QCOMPARE(subtitles.length(), 1);
-    QCOMPARE(subtitles[0], subtitle);
+    QCOMPARE(titles.length(), 2);
+    QCOMPARE(titles[1], title);
+    QCOMPARE(subtitles.length(), 2);
+    QCOMPARE(subtitles[1], subtitle);
 
     // Update the notification
     emit addNotification(Notification(0, 0, 2, parameters0, Notification::ApplicationEvent, 1000));
 
-    // The titles should still be as expected
-    QCOMPARE(titles.length(), 1);
+    // The titles should still be as expected. The stub is now aware of the banner so updates go to the first occurrence of the banner.
+    QCOMPARE(titles.length(), 2);
     QCOMPARE(titles[0], title);
-    QCOMPARE(subtitles.length(), 1);
+    QCOMPARE(subtitles.length(), 2);
     QCOMPARE(subtitles[0], subtitle);
 }
 
