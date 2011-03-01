@@ -138,11 +138,16 @@ void ScreenLockBusinessLogic::unlockScreen()
 
 void ScreenLockBusinessLogic::showScreenLock()
 {
+    // When the low power mode is switched off, it must be done before updating the window contents.
+    // If the window does not yet exist, the window is created to be in the non-low power mode.
+    if (screenLockWindow != NULL) {
+        screenLockWindow->setLowPowerMode(false);
+    }
+
     foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
         screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
     }
     toggleScreenLockUI(true);
-    screenLockWindow->setLowPowerMode(false);
     toggleEventEater(false);
 }
 
@@ -152,17 +157,24 @@ void ScreenLockBusinessLogic::showLowPowerMode()
         screenLockExtension->setMode(ScreenLockExtensionInterface::LowPowerMode);
     }
     toggleScreenLockUI(true);
-    screenLockWindow->setLowPowerMode(true);
     toggleEventEater(false);
+
+    // When the low power mode is switched on, it must be done after updating the window contents
+    screenLockWindow->setLowPowerMode(true);
 }
 
 void ScreenLockBusinessLogic::setDisplayOffMode()
 {
+    // When the low power mode is switched off, it must be done before updating the window contents.
+    // If the window does not yet exist, the window is created to be in the non-low power mode.
+    if (screenLockWindow != NULL) {
+        screenLockWindow->setLowPowerMode(false);
+    }
+
     foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
         screenLockExtension->setMode(ScreenLockExtensionInterface::DisplayOffMode);
     }
     toggleScreenLockUI(true);
-    screenLockWindow->setLowPowerMode(false);
     toggleEventEater(false);
 }
 
