@@ -70,7 +70,7 @@ void ShutdownUI::realize()
 
     // Initialize non-graphical feedback
     feedback = new MFeedback(this);
-    feedback->setName("power-off");
+    feedback->setName("priority1_power_off");
 
     //% "Shutting down"
     label1 = new MLabel(qtTrId("qtn_shut_down"));
