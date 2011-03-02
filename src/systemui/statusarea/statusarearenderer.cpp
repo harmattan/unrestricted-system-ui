@@ -30,12 +30,17 @@
 #include <QDebug>
 #include <QX11Info>
 #include "x11wrapper.h"
+#include <QMeeGoLivePixmap>
+#include <QMeeGoGraphicsSystemHelper>
+
+// Update the pixmap 5 times per second at most
+static const int ACCUMULATION_INTERVAL = 200;
 
 StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
     scene(new QGraphicsScene),
     statusArea(new StatusArea),
-    statusAreaPixmap(NULL),
+    statusAreaLivePixmap(NULL),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
 #endif
@@ -48,15 +53,17 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     connect(this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
 
     // Get signaled when the scene changes
-    connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+    connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(accumulateSceneChanges(QList<QRectF>)));
 #ifdef HAVE_QMSYSTEM
     connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
     setSceneRender(displayState->get());
 #endif
     setSizeFromStyle();
-    if(!createSharedPixmapHandle()) {
+    if(!createSharedPixmapHandle() || !createBackPixmap()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
     }
+
+    connect(&accumulationTimer, SIGNAL(timeout()), this, SLOT(renderAccumulatedRegion()));
 }
 
 void StatusAreaRenderer::setSizeFromStyle()
@@ -75,11 +82,34 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
 
     Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
                                               statusAreaWidth, 2*statusAreaHeight, QX11Info::appDepth());
-    QApplication::syncX();
-    statusAreaPixmap = new QPixmap();
-    *statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
 
-    if (!statusAreaPixmap->isNull()) {
+    statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
+
+    if (!statusAreaPixmap.isNull()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool StatusAreaRenderer::createBackPixmap()
+{
+    if (statusAreaLivePixmap) {
+        delete statusAreaLivePixmap;
+        statusAreaLivePixmap = NULL;
+    }
+
+    if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+        // FIXME: Round up to the nearest multiple of eight until NB#231246 is fixed
+        int livePixmapWidth = (statusAreaWidth / 8 + 1) * 8;
+
+        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight*2, QMeeGoLivePixmap::Format_ARGB32_Premultiplied);
+        backPixmap = QPixmap::fromX11Pixmap(statusAreaLivePixmap->handle(), QPixmap::ExplicitlyShared);
+    } else {
+        backPixmap = QPixmap(statusAreaWidth, statusAreaHeight*2);
+    }
+
+    if (!backPixmap.isNull()) {
         return true;
     } else {
         return false;
@@ -88,7 +118,7 @@ bool StatusAreaRenderer::createSharedPixmapHandle()
 
 uint StatusAreaRenderer::sharedPixmapHandle()
 {
-    return static_cast<quint32> (statusAreaPixmap->handle());
+    return static_cast<quint32> (statusAreaPixmap.handle());
 }
 
 StatusAreaRenderer::~StatusAreaRenderer()
@@ -96,9 +126,12 @@ StatusAreaRenderer::~StatusAreaRenderer()
     scene->removeItem(statusArea);
     delete statusArea;
 
-    if (statusAreaPixmap != NULL) {
-        Pixmap pixmap = statusAreaPixmap->handle();
-        delete statusAreaPixmap;
+    if (statusAreaLivePixmap != NULL) {
+        delete statusAreaLivePixmap;
+    }
+
+    if (!statusAreaPixmap.isNull()) {
+        Pixmap pixmap = statusAreaPixmap.handle();
         if (pixmap != 0) {
             X11Wrapper::XFreePixmap(QX11Info::display(), pixmap);
         }
@@ -109,25 +142,63 @@ StatusAreaRenderer::~StatusAreaRenderer()
 #endif
 }
 
-void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region)
+void StatusAreaRenderer::accumulateSceneChanges(const QList<QRectF> &region)
 {
-    if (!region.empty() && !statusAreaPixmap->isNull() && renderScene) {
-        QPainter painter(statusAreaPixmap);
-        QRectF changeRect(0,0,0,0);
-        foreach(const QRectF & r, region) {
-            changeRect = changeRect.united(r);
+    foreach(const QRectF & r, region) {
+        accumulatedRegion = accumulatedRegion.united(r);
+    }
+
+    if (renderScene && !accumulationTimer.isActive()) {
+        accumulationTimer.setSingleShot(true);
+        accumulationTimer.start(ACCUMULATION_INTERVAL);
+    }
+}
+
+void StatusAreaRenderer::renderAccumulatedRegion()
+{
+    if (!accumulatedRegion.isEmpty() && !statusAreaPixmap.isNull() && !backPixmap.isNull()) {
+
+        if (statusAreaLivePixmap && !QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
+            QMeeGoGraphicsSystemHelper::switchToMeeGo();
         }
 
         // Don't draw areas that are outside the pixmap
-        if(changeRect.intersects(statusAreaPixmap->rect())) {
-            QRectF sourceRect = changeRect.intersected(statusAreaPixmap->rect());
-            if (painter.isActive()) {
+        if(accumulatedRegion.intersects(statusAreaPixmap.rect())) {
+            QPainter painter;
+            QRectF sourceRect = accumulatedRegion.intersected(statusAreaPixmap.rect());
+            QImage *image = NULL;
+
+            if (statusAreaLivePixmap) {
+                image = statusAreaLivePixmap->lock();
+
+                // FIXME: This shouldn't be needed after NB#231260 is fixed
+                if (image->isNull()) {
+                    createBackPixmap();
+                    image = statusAreaLivePixmap->lock();
+                }
+
+                painter.begin(image);
+            } else {
+                painter.begin(&backPixmap);
+            }
+
+            if(painter.isActive()) {
                 painter.fillRect(sourceRect, QColor(Qt::black));
                 scene->render(&painter, sourceRect, sourceRect);
-                QApplication::syncX();
             }
+            painter.end();
+
+            if (statusAreaLivePixmap) {
+                statusAreaLivePixmap->release(image);
+            }
+
+            painter.begin(&statusAreaPixmap);
+            painter.drawPixmap(sourceRect, backPixmap, sourceRect);
+            painter.end();
         }
     }
+
+    accumulatedRegion = QRectF(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 #ifdef HAVE_QMSYSTEM

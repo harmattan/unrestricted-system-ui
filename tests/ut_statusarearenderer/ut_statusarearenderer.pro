@@ -5,6 +5,8 @@ INCLUDEPATH += $$SRCDIR/statusarea
 PKGCONFIG += xcomposite 
 PKGCONFIG += glib-2.0
 
+QT += meegographicssystemhelper
+
 # unit test and unit classes
 SOURCES += \
     ut_statusarearenderer.cpp \

@@ -13,7 +13,7 @@ target.path = /usr/bin
 CONFIG += meegotouch \
           link_pkgconfig
 
-QT += dbus gui
+QT += dbus gui meegographicssystemhelper
 
 INCLUDEPATH += ../libnotificationsystem
 QMAKE_LIBDIR += ../../lib

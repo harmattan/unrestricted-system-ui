@@ -21,6 +21,7 @@
 #define STATUSAREARENDERER_H_
 
 #include <MNamespace>
+#include <QTimer>
 
 #ifdef HAVE_QMSYSTEM
 #include "qmdisplaystate.h"
@@ -28,6 +29,7 @@
 
 class QGraphicsScene;
 class StatusArea;
+class QMeeGoLivePixmap;
 
 /*!
  *  StatusAreaRenderer renders the contents of the scene to a shared pixmap which is then shown by libmeegotouch.
@@ -57,9 +59,14 @@ public:
 
 private slots:
    /*!
-    * \brief A slot for notifying that the scene has changed and needs to be painted
+    * \brief Combine the given regions into one and start a timer to draw the region
     */
-    virtual void sceneChanged(const QList<QRectF> &region);
+    virtual void accumulateSceneChanges(const QList<QRectF> &region);
+
+   /*!
+    * \brief Render the changed region of the status area
+    */
+    void renderAccumulatedRegion();
 
 #ifdef HAVE_QMSYSTEM
     /*!
@@ -83,10 +90,17 @@ private:
     StatusArea *statusArea;
 
     //! Shared Pixmap between libmeegotouch and systemui for the status area.
-    QPixmap* statusAreaPixmap;
+    QPixmap statusAreaPixmap;
+    //! Back buffer pixmap - the content is first rendered here and then copied to the shared pixmap
+    QPixmap backPixmap;
+    // Used for better performance if MeeGo graphics system is available, wrapped by backPixmap
+    QMeeGoLivePixmap* statusAreaLivePixmap;
 
     //! Creates a shared pixmap for status area
     bool createSharedPixmapHandle();
+
+    //! Creates the back buffer pixmap
+    bool createBackPixmap();
 
     //! set the status bar size with information from style
     void setSizeFromStyle();
@@ -102,6 +116,11 @@ private:
 
     //! Keep track whether scene should render or not
     bool renderScene;
+
+    //! A single shot timer started when the scene changes
+    QTimer accumulationTimer;
+    //! Changes in the scene are combined to this rect
+    QRectF accumulatedRegion;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaRenderer;

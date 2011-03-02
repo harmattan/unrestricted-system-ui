@@ -1,6 +1,8 @@
 TEMPLATE = subdirs
 include(../shared.pri)
 
+QT += meegographicssystemhelper
+
 #
 # Please note that there are several ways to temprorarily disable one or more
 # tests. Using the new XML generator script it is possible to put a 'disabled'

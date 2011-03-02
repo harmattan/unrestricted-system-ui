@@ -54,6 +54,12 @@ private slots:
     void testSceneChanged();
     // Test shared pixmap handle
     void testSharedPixmapHandle();
+
+    void testAccumulationTimer();
+
+    void testRenderingWithMeeGo();
+    void testRenderingWithoutMeeGo();
+
 #ifdef HAVE_QMSYSTEM
     // Test rendering happens when display state is on
     void testSceneRenderControlDisplayStateOn();

@@ -11,7 +11,9 @@ class StatusAreaRendererStub : public StubBase {
   public:
   virtual void StatusAreaRendererConstructor(QObject *parent);
   virtual void StatusAreaRendererDestructor();
-  virtual void sceneChanged(const QList<QRectF> &region);
+  virtual void accumulateSceneChanges(const QList<QRectF> &region);
+  virtual void renderAccumulatedRegion();
+  virtual bool createBackPixmap();
 #ifdef HAVE_QMSYSTEM
   virtual void setSceneRender(MeeGo::QmDisplayState::DisplayState state);
 #endif
@@ -28,10 +30,10 @@ void StatusAreaRendererStub::StatusAreaRendererConstructor(QObject *parent) {
 void StatusAreaRendererStub::StatusAreaRendererDestructor() {
 
 }
-void StatusAreaRendererStub::sceneChanged(const QList<QRectF> &region) {
+void StatusAreaRendererStub::accumulateSceneChanges(const QList<QRectF> &region) {
   QList<ParameterBase*> params;
   params.append( new Parameter<const QList<QRectF> & >(region));
-  stubMethodEntered("sceneChanged",params);
+  stubMethodEntered("accumulateSceneChanges",params);
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -52,10 +54,18 @@ bool StatusAreaRendererStub::createSharedPixmapHandle() {
   return stubReturnValue<bool>("createSharedPixmapHandle");
 }
 
+bool StatusAreaRendererStub::createBackPixmap() {
+  stubMethodEntered("createBackPixmap");
+  return stubReturnValue<bool>("createBackPixmap");
+}
+
 void StatusAreaRendererStub::setSizeFromStyle() {
   stubMethodEntered("setSizeFromStyle");
 }
 
+void StatusAreaRendererStub::renderAccumulatedRegion() {
+  stubMethodEntered("renderAccumulatedRegion");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -72,8 +82,8 @@ StatusAreaRenderer::~StatusAreaRenderer() {
   gStatusAreaRendererStub->StatusAreaRendererDestructor();
 }
 
-void StatusAreaRenderer::sceneChanged(const QList<QRectF> &region) {
-  gStatusAreaRendererStub->sceneChanged(region);
+void StatusAreaRenderer::accumulateSceneChanges(const QList<QRectF> &region) {
+  gStatusAreaRendererStub->accumulateSceneChanges(region);
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -91,8 +101,16 @@ bool StatusAreaRenderer::createSharedPixmapHandle() {
   return gStatusAreaRendererStub->createSharedPixmapHandle();
 }
 
+bool StatusAreaRenderer::createBackPixmap() {
+  return gStatusAreaRendererStub->createBackPixmap();
+}
+
 void StatusAreaRenderer::setSizeFromStyle() {
   gStatusAreaRendererStub->setSizeFromStyle();
+}
+
+void StatusAreaRenderer::renderAccumulatedRegion() {
+  gStatusAreaRendererStub->renderAccumulatedRegion();
 }
 
 
