@@ -268,7 +268,10 @@ void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName_data(
     QTest::newRow("gprs connection type and 35g tech active") << true << QString("hspa") << QString("GPRS") << QString("connected") << QString("35GActive");
     QTest::newRow("wlan connection type and wlan tech not active") << false << QString("") << QString("WLAN") << QString("connected") << QString("WLAN");
     QTest::newRow("wlan connection type and wlan tech connecting") << false << QString("") << QString("WLAN") << QString("connecting") << QString("WLANConnecting");
-//    QTest::newRow("wlan connection type and wlan tech active") << true << QString("") << QStringU("WLAN") << QString("connected") << QStringU("WLANActive"); //wlan activity not supported yet
+    QTest::newRow("wlan connected and 2g packet data active") << true << QString("gprs") << QString("WLAN") << QString("connected") << QString("WLAN2GActive");
+    QTest::newRow("wlan connected and 25g packet data active") << true << QString("egprs") << QString("WLAN") << QString("connected") << QString("WLAN25GActive");
+    QTest::newRow("wlan connected and 3g packet data active") << true << QString("umts") << QString("WLAN") << QString("connected") << QString("WLAN3GActive");
+    QTest::newRow("wlan connected and 35g packet data active") << true << QString("hspa") << QString("WLAN") << QString("connected") << QString("WLAN35GActive");
 
 }
 

@@ -328,29 +328,29 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35GConnecting {
     maximum-size: 1.8mm 1.8mm;
 }
 
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2GWLAN {
-    image-list: "icon-s-status-gsm icon-s-status-wlan-active";
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN2GActive {
+    image-list: "icon-s-status-gsm-active icon-s-status-wlan";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
 }
 
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25GWLAN {
-    image-list: "icon-s-status-25g icon-s-status-wlan-active";
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN25GActive {
+    image-list: "icon-s-status-25g-active icon-s-status-wlan";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
 }
 
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3GWLAN {
-    image-list: "icon-s-status-3g icon-s-status-wlan-active";
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN3GActive {
+    image-list: "icon-s-status-3g-active icon-s-status-wlan";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
 }
 
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35GWLAN {
-    image-list: "icon-s-status-35g icon-s-status-wlan-active";
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN35GActive {
+    image-list: "icon-s-status-35g-active icon-s-status-wlan";
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;

@@ -215,6 +215,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkAvailability(bool available)
 void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
     QString postFix = "";
+    QString postFixPacketData = "";
     QString dataTechnology = cellularDataTechnology->value().toString(); // gprs egprs umts hspa
     QString state = connectionState->value().toString(); // disconnected connecting connected
     QString connection = connectionType->value().toString(); // GPRS WLAN
@@ -229,27 +230,34 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
 
     if (connection == "WLAN") {
         postFix = "WLAN";
-    } else if (dataTechnology == "gprs") {
-        postFix = "2G";
+    }
+    if (dataTechnology == "gprs") {
+        postFixPacketData = "2G";
     } else if (dataTechnology == "egprs") {
-        postFix = "25G";
+        postFixPacketData = "25G";
     } else if (dataTechnology == "umts") {
-        postFix = "3G";
+        postFixPacketData = "3G";
     } else if (dataTechnology == "hspa") {
-        postFix = "35G";
+        postFixPacketData = "35G";
     }
 
-    if (state == "connecting") {
-        postFix += "Connecting";
-        animateIfPossible = true;
-    } else if (data) { // TODO: when wlan transfer info available from context fw, add here
+    // if wlan connected and packet data active e.g. when sending mms
+    if (data) {
+        postFix += postFixPacketData;
         postFix += "Active";
-        animateIfPossible = false;
+        animateIfPossible = (connection == "WLAN");
     } else {
-        animateIfPossible = false;
+        if (postFix.isEmpty()) {
+            postFix = postFixPacketData;
+        }
+        if (state == "connecting") {
+            postFix += "Connecting";
+            animateIfPossible = true;
+        } else {
+            animateIfPossible = false;
+        }
     }
-    // TODO: add suspended state here when available from context fw  (postFix: Suspended)
-    // TODO: when wlan transfer info available swap with wlan and gprs if both active at the same time
+
     setStyleNameAndUpdate(metaObject()->className() + postFix);
 
     updateAnimationStatus();
