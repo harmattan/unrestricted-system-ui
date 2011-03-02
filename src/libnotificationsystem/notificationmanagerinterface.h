@@ -146,6 +146,15 @@ public:
     virtual QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId) = 0;
 
     /*!
+     * Returns amount of notifications in a given group
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param groupId the group ID
+     * \return amount of notifications in given group
+     */
+    virtual uint notificationCountInGroup(uint notificationUserId, uint groupId) = 0;
+
+    /*!
      * Returns the qObject that implements the manager for signal connections.
      *
      * \return the qObject that implements the manager

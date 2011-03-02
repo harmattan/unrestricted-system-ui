@@ -108,6 +108,11 @@ uint DBusInterfaceNotificationSourceAdaptor::notificationUserId()
     return 1;
 }
 
+uint DBusInterfaceNotificationSourceAdaptor::notificationCountInGroup(uint, uint)
+{
+    return 1;
+}
+
 QList<uint> DBusInterfaceNotificationSourceAdaptor::notificationIdList(uint notificationUserId)
 {
     QList<uint> tmp;
@@ -456,6 +461,12 @@ void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithEmptyStrings()
     QCOMPARE(params.value(NotificationWidgetParameterFactory::bodyKey()), QVariant(""));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant(""));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::actionKey()), QVariant(""));
+}
+
+void Ut_DBusInterfaceNotificationSource::testNotificationCountInGroup()
+{
+    source->notificationCountInGroup(1, 1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationCountInGroup"), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSource)

@@ -66,6 +66,7 @@ class NotificationManagerStub : public StubBase {
   virtual QList<Notification> notifications();
   virtual QList<NotificationGroup> groups();
   virtual void doRemoveGroup(uint groupId);
+  virtual uint notificationCountInGroup(uint notificationUserId, uint groupId);
 };
 
 // 2. IMPLEMENT STUB
@@ -283,6 +284,15 @@ void NotificationManagerStub::doRemoveGroup(uint groupId)
     stubMethodEntered("doRemoveGroup");
 }
 
+uint NotificationManagerStub::notificationCountInGroup(uint notificationUserId, uint groupId)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<uint>(notificationUserId));
+    params.append(new Parameter<uint>(groupId));
+    stubMethodEntered("notificationCountInGroup");
+    return stubReturnValue<uint>("notificationCountInGroup");
+}
+
 // 3. CREATE A STUB INSTANCE
 NotificationManagerStub gDefaultNotificationManagerStub;
 NotificationManagerStub* gNotificationManagerStub = &gDefaultNotificationManagerStub;
@@ -428,6 +438,11 @@ QObject *NotificationManager::qObject()
 void NotificationManager::doRemoveGroup(uint groupId)
 {
     gNotificationManagerStub->doRemoveGroup(groupId);
+}
+
+uint NotificationManager::notificationCountInGroup(uint notificationUserId, uint groupId)
+{
+    return gNotificationManagerStub->notificationCountInGroup(notificationUserId, groupId);
 }
 
 #endif

@@ -62,6 +62,7 @@ public:
 
     QList<Notification> notifications() const;
     QList<NotificationGroup> groups() const;
+    uint notificationCountInGroup(uint notificationUserId, uint groupId);
 
     uint nextAvailableNotificationID;
     QList<Notification> notificationContainer;

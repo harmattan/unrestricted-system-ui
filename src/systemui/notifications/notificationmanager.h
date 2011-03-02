@@ -96,6 +96,7 @@ public slots:
     QList<Notification> notificationListWithIdentifiers(uint notificationUserId);
     QList<NotificationGroup> notificationGroupList(uint notificationUserId);
     QList<NotificationGroup> notificationGroupListWithIdentifiers(uint notificationUserId);
+    uint notificationCountInGroup(uint notificationUserId, uint groupId);
     //! \reimp_end
 
     /*!

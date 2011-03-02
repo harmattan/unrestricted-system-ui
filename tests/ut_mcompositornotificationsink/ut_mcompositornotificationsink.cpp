@@ -167,6 +167,11 @@ QList<NotificationGroup> MockNotificationManager::groups() const
     return tmp;
 }
 
+uint MockNotificationManager::notificationCountInGroup(uint, uint)
+{
+    return 0;
+}
+
 QObject* MockNotificationManager::qObject()
 {
     return NULL;

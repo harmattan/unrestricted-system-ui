@@ -70,6 +70,7 @@ private slots:
     void testNotificationGroupListWithIdentifiers();
     //Test updating group with empty strings
     void testUpdateGroupWithEmptyStrings();
+    void testNotificationCountInGroup();
 
 private:
     // Notification manager interface used by the test subject

@@ -622,3 +622,14 @@ QObject *NotificationManager::qObject()
 {
     return this;
 }
+
+uint NotificationManager::notificationCountInGroup(uint notificationUserId, uint groupId)
+{
+    uint amount = 0;
+    foreach(const Notification & notification, notificationContainer.values()) {
+        if (notification.groupId() == groupId && notification.userId() == notificationUserId) {
+            amount++;
+        }
+    }
+    return amount;
+}

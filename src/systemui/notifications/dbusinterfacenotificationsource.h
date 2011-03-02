@@ -277,6 +277,15 @@ public:
      * \return list of notification groups with associated identifiers that belong to notificationUserId
      */
     QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+
+    /*!
+     * Returns amount of notifications in a given group
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param groupId the group ID
+     * \return amount of notifications in given group
+     */
+    uint notificationCountInGroup(uint notificationUserId, uint groupId);
 };
 
 #endif // DBUSINTERFACENOTIFICATIONSOURCE_H

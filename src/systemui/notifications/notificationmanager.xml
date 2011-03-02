@@ -152,5 +152,10 @@
        <arg name="result" type="a(usssssus)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupWithIdentifierProxy &gt; "/>
     </method>
+    <method name="notificationCountInGroup">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="groupId" type="u" direction="in"/>
+       <arg name="result" type="u" direction="out"/>
+    </method>
   </interface>
 </node>

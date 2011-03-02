@@ -1553,4 +1553,19 @@ void Ut_NotificationManager::testGetNotifications()
     QCOMPARE(notifications.at(1).notificationId(), id1);
 }
 
+void Ut_NotificationManager::testNotificationCountInGroup()
+{
+    uint groupId1 = manager->addGroup(0, NotificationParameters());
+    uint groupId2 = manager->addGroup(0, NotificationParameters());
+
+    // Add two notifications to 1st group
+    manager->addNotification(0, NotificationParameters(), groupId1);
+    manager->addNotification(0, NotificationParameters(), groupId1);
+
+    // Add a notification to 2nd group
+    manager->addNotification(0, NotificationParameters(), groupId2);
+
+    QCOMPARE(manager->notificationCountInGroup(0, groupId1), (uint)2);
+}
+
 QTEST_MAIN(Ut_NotificationManager)

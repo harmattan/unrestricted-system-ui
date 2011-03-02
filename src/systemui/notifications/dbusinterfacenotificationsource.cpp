@@ -173,3 +173,8 @@ QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSource::no
 
     return userGroups;
 }
+
+uint DBusInterfaceNotificationSource::notificationCountInGroup(uint notificationUserId, uint groupId)
+{
+    return manager.notificationCountInGroup(notificationUserId, groupId);
+}

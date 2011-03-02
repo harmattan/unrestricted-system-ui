@@ -150,6 +150,8 @@ private slots:
 
     void testNotificationIsUpdatedWhenEventTypeIsUpdated();
 
+    void testNotificationCountInGroup();
+
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H
