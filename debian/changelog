@@ -1,6 +1,7 @@
 system-ui (0.20.13~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#229338 - Status menu doesn't load Bluetooth plugin
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 18:13:08 +0200
 
