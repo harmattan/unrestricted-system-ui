@@ -81,6 +81,11 @@ MBanner *WidgetNotificationSink::createInfoBanner(Notification::NotificationType
     return infoBanner;
 }
 
+bool WidgetNotificationSink::containsText(const Notification &notification)
+{
+    return !(infoBannerTitleText(notification.parameters()).isEmpty() && infoBannerGenericText(notification.parameters()).isEmpty());
+}
+
 void WidgetNotificationSink::updateTitles(MBanner *infoBanner)
 {
     if (privacySetting != NULL && privacySetting->value().toBool()) {

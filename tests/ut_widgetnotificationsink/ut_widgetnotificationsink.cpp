@@ -571,4 +571,14 @@ void Ut_WidgetNotificationSink::testWhenNotificationsCreatedAreNotClickableWhenC
     QCOMPARE(ret, false);
 }
 
+void Ut_WidgetNotificationSink::testNotificationShownOnlyIfItContainsText()
+{
+    TestNotificationParameters parameters("", "", "");
+    bool ret1( m_subject->containsText(Notification(3, 1, 0, parameters, Notification::ApplicationEvent, 1020)) );
+    QCOMPARE(false, ret1);
+    TestNotificationParameters parameters2("title", "subtitle", "buttonicon1");
+    bool ret2( m_subject->containsText(Notification(3, 1, 0, parameters2, Notification::ApplicationEvent, 1020)) );
+    QCOMPARE(true, ret2);
+}
+
 QTEST_APPLESS_MAIN(Ut_WidgetNotificationSink)

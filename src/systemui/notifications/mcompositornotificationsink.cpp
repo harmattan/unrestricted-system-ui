@@ -79,7 +79,7 @@ void MCompositorNotificationSink::createWindowIfNecessary()
 
 void MCompositorNotificationSink::addNotification(const Notification &notification)
 {
-    if (!canAddNotification(notification)) {
+    if (!canAddNotification(notification) || !containsText(notification)) {
         return;
     }
 

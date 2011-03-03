@@ -113,6 +113,13 @@ protected:
     MBanner *createInfoBanner(Notification::NotificationType type, uint groupId, const NotificationParameters &parameters);
 
     /*!
+     * Check whether the notification contains text.
+     * \param notification The notification object to represent with the MBanner.
+     * \return \c true if the notification contains text, \c false otherwise
+     */
+    bool containsText(const Notification &notification);
+
+    /*!
      * Updates the titles in a banner based on the current privacy mode.
      *
      * \param infoBanner the MBanner to update

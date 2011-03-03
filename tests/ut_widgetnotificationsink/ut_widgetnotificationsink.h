@@ -71,6 +71,7 @@ private slots:
     void testPrivacySettingValueEmittedWhenHonoringChanges();
     void testPrivacySettingValueEmittedWhenPrivacySettingChanges();
     void testWhenNotificationsCreatedAreNotClickableWhenClickingThemDoesNotWork();
+    void testNotificationShownOnlyIfItContainsText();
 
 private:
     // Helper for the "test clicking when not user removable" cases
