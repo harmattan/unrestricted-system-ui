@@ -67,4 +67,13 @@ void StatusIndicatorLabelView::updateData(const QList<const char *>& modificatio
     }
 }
 
+void StatusIndicatorLabelView::applyStyle()
+{
+    MWidgetView::applyStyle();
+
+    label->setTextElide(style()->textElide());
+    label->setWordWrap(style()->wordWrap());
+    label->setSizePolicy(QSizePolicy::Preferred, style()->wordWrap() ? QSizePolicy::MinimumExpanding : QSizePolicy::Preferred, QSizePolicy::Label);
+}
+
 M_REGISTER_VIEW_NEW(StatusIndicatorLabelView, StatusIndicator)

@@ -22,7 +22,6 @@
 #include <MTheme>
 #include <QGraphicsLinearLayout>
 #include <QTimeLine>
-#include <QDebug>
 
 StatusIndicatorAnimationView::StatusIndicatorAnimationView(StatusIndicator *controller) :
     MWidgetView(controller),
@@ -172,10 +171,6 @@ void StatusIndicatorAnimationView::loadCurrentFrame()
     if (animationFrame < images.count() && images[animationFrame] == NULL) {
         // Load the image if it has not been loaded yet
         images[animationFrame] = MTheme::pixmapCopy(imageList.at(animationFrame), style()->useIconSize() ? QSize(0, 0) : style()->preferredSize());
-
-        if (!(style()->preferredSize() == style()->minimumSize() && style()->preferredSize() == style()->maximumSize())) {
-            qWarning() << "Status indicators don't support cases where preferred size is not equal to minimum and maximum size!";
-        }
     }
 }
 

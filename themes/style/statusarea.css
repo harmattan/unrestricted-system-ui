@@ -56,8 +56,8 @@ ClockStyle:twelve-hour {
 MLabelStyle#StatusAreaLandscapeClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 0.3mm;
+    margin-right: 0.1mm;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -71,8 +71,8 @@ MLabelStyle#StatusAreaLandscapeClockLabel {
 MLabelStyle#StatusAreaPortraitClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 0.3mm;
+    margin-right: 0.1mm;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -104,7 +104,7 @@ StatusIndicatorAnimationStyle {
     maximum-size: 0 1.8mm;
     /* The number of milliseconds in which the images in imageList are animated */
     animation-duration: 3000;
-    use-icon-size: false;
+    use-icon-size: true;
 }
 
 StatusIndicatorAnimationStyle:icon {
@@ -136,6 +136,8 @@ StatusIndicatorLabelStyle {
     preferred-size: -1 3.6mm;
     minimum-size: 0 3.6mm;
     maximum-size: -1 3.6mm;
+    text-elide: true;
+    word-wrap: false;
 }
 
 MLabelStyle#StatusIndicatorLabel {
@@ -184,169 +186,141 @@ MLabelStyle#StatusIndicatorLabelPortrait {
     padding-bottom: 0;
     preferred-size: -1 3.6mm;
     minimum-size: 0 3.6mm;
-    maximum-size: 17.0mm 3.6mm;
+    maximum-size: 30.0mm 3.6mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator when signal strength is available, separated by spaces */
     image-list: "icon-s-status-network0 icon-s-status-network1 icon-s-status-network2 icon-s-status-network3 icon-s-status-network4 icon-s-status-network5";
-    preferred-size: 1.4mm 1.8mm;
-    minimum-size: 1.4mm 1.8mm;
-    maximum-size: 1.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicatorNoSIM {
     image-list: "icon-s-status-no-simcard";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicatorNoNetwork {
     image-list: "icon-s-status-no-gsm-connection";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicatorOffline {
     image-list: "icon-s-status-offline";
-    preferred-size: 2.1mm 1.8mm;
-    minimum-size: 2.1mm 1.8mm;
-    maximum-size: 2.1mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2G {
     image-list: "icon-s-status-gsm";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25G {
     image-list: "icon-s-status-25g";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3G {
     image-list: "icon-s-status-3g";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35G {
     image-list: "icon-s-status-35g";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2GActive {
     image-list: "icon-s-status-gsm-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25GActive {
     image-list: "icon-s-status-25g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3GActive {
     image-list: "icon-s-status-3g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35GActive {
     image-list: "icon-s-status-35g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
-}
-
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2GSuspended {
-    image-list: "icon-s-status-gsm-suspended";
-    preferred-size: 1.8mm 1.8mm;
-    minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
-}
-
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25GSuspended {
-    image-list: "icon-s-status-25g-suspended";
-    preferred-size: 1.8mm 1.8mm;
-    minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
-}
-
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3GSuspended {
-    image-list: "icon-s-status-3g-suspended";
-    preferred-size: 1.8mm 1.8mm;
-    minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
-}
-
-StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35GSuspended {
-    image-list: "icon-s-status-35g-suspended";
-    preferred-size: 1.8mm 1.8mm;
-    minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator2GConnecting {
     image-list: "icon-s-status-gsm icon-s-status-gsm-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator25GConnecting {
     image-list: "icon-s-status-25g icon-s-status-25g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator3GConnecting {
     image-list: "icon-s-status-3g icon-s-status-3g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicator35GConnecting {
     image-list: "icon-s-status-35g icon-s-status-35g-active";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN2GActive {
     image-list: "icon-s-status-gsm-active icon-s-status-wlan";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN25GActive {
     image-list: "icon-s-status-25g-active icon-s-status-wlan";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN3GActive {
     image-list: "icon-s-status-3g-active icon-s-status-wlan";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN35GActive {
@@ -359,58 +333,58 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN35GActive {
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANActive {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan-active";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANConnecting {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan icon-s-status-wlan-active";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
-    preferred-size: 2.9mm 1.8mm;
-    minimum-size: 2.9mm 1.8mm;
-    maximum-size: 2.9mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
-    preferred-size: 2.9mm 1.8mm;
-    minimum-size: 2.9mm 1.8mm;
-    maximum-size: 2.9mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
     animation-duration: 10000;
 }
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSave {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
-    preferred-size: 2.9mm 1.8mm;
-    minimum-size: 2.9mm 1.8mm;
-    maximum-size: 2.9mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSaveCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
-    preferred-size: 2.9mm 1.8mm;
-    minimum-size: 2.9mm 1.8mm;
-    maximum-size: 2.9mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
     animation-duration: 10000;
 }
 
@@ -425,9 +399,9 @@ StatusIndicatorIconStyle#AlarmStatusIndicator {
 StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-alarm";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
     padding-top: 0.1mm;
     padding-bottom: 0.1mm;
     margin-top: 0;
@@ -445,17 +419,17 @@ StatusIndicatorIconStyle#BluetoothStatusIndicator {
 StatusIndicatorIconStyle#BluetoothStatusIndicatorOn {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-bluetooth";
-    preferred-size: 1.4mm 1.8mm;
-    minimum-size: 1.4mm 1.8mm;
-    maximum-size: 1.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#BluetoothStatusIndicatorActive {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-bluetooth-active";
-    preferred-size: 1.4mm 1.8mm;
-    minimum-size: 1.4mm 1.8mm;
-    maximum-size: 1.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#CallStatusIndicator {
@@ -469,17 +443,17 @@ StatusIndicatorIconStyle#CallStatusIndicator {
 StatusIndicatorIconStyle#CallStatusIndicatorRinging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-call-initiating1 icon-s-status-call-initiating2";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#CallStatusIndicatorOngoing {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-cellular icon-s-status-ongoing-muted";
-    preferred-size: 2.4mm 1.8mm;
-    minimum-size: 2.4mm 1.8mm;
-    maximum-size: 2.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#ProfileStatusIndicator {
@@ -493,9 +467,9 @@ StatusIndicatorIconStyle#ProfileStatusIndicator {
 StatusIndicatorIconStyle#ProfileStatusIndicatorSilent {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-silent";
-    preferred-size: 1.4mm 1.8mm;
-    minimum-size: 1.4mm 1.8mm;
-    maximum-size: 1.4mm 1.8mm;
+    preferred-size: -1 1.8mm;
+    minimum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 /* "Offline" presence, no indicator */
@@ -509,23 +483,23 @@ StatusIndicatorIconStyle#PresenceStatusIndicator {
 
 StatusIndicatorIconStyle#PresenceStatusIndicatorAvailable {
     image-list: "icon-s-status-presence-online";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PresenceStatusIndicatorBusy {
     image-list: "icon-s-status-presence-busy";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#PresenceStatusIndicatorAway {
     image-list: "icon-s-status-presence-away";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#GPSStatusIndicator {
@@ -539,24 +513,24 @@ StatusIndicatorIconStyle#GPSStatusIndicator {
 StatusIndicatorIconStyle#GPSStatusIndicatorOn  {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-gps-on";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-gps-searching icon-s-status-gps-on";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
     image-list: "icon-s-status-notifier";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#NotificationStatusIndicator {
@@ -575,23 +549,23 @@ StatusIndicatorIconStyle#TransferStatusIndicator {
 
 StatusIndicatorIconStyle#TransferStatusIndicatorLive {
     image-list: "icon-s-status-transfer-content";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#TransferStatusIndicatorFail {
     image-list: "icon-s-status-transfer-error";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#TransferStatusIndicatorPending {
     image-list: "icon-s-status-transfer-pending";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 
 StatusIndicatorIconStyle#CallForwardingStatusIndicator {
@@ -603,8 +577,8 @@ StatusIndicatorIconStyle#CallForwardingStatusIndicator {
 
 StatusIndicatorIconStyle#CallForwardingStatusIndicatorSet {
     image-list: "icon-s-status-call-diverted";
-    preferred-size: 1.8mm 1.8mm;
+    preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
-    maximum-size: 1.8mm 1.8mm;
+    maximum-size: 5.0mm 1.8mm;
 }
 

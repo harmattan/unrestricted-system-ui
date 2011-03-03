@@ -178,8 +178,8 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeProfileIndicator);
     layout->addItem(landscapeInputMethodIndicator);
     layout->addItem(landscapeCallIndicator);
-    layout->addItem(landscapeClock);
     layout->addItem(landscapeAlarmIndicator);
+    layout->addItem(landscapeClock);
 
     return layout;
 }
@@ -204,8 +204,8 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitPresenceIndicator);
     layout->addItem(portraitProfileIndicator);
     layout->addItem(portraitCallIndicator);
-    layout->addItem(portraitClock);
     layout->addItem(portraitAlarmIndicator);
+    layout->addItem(portraitClock);
 
     return layout;
 }

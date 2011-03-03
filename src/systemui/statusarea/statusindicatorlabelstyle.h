@@ -27,6 +27,11 @@ class StatusIndicatorLabelStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(StatusIndicatorLabelStyle)
+
+    //! Text eliding
+    M_STYLE_ATTRIBUTE(bool, textElide, TextElide)
+    //! Word wrapping
+    M_STYLE_ATTRIBUTE(bool, wordWrap, WordWrap)
 };
 
 class StatusIndicatorLabelStyleContainer : public MWidgetStyleContainer
