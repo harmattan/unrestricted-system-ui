@@ -370,7 +370,7 @@ void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPre
 
     TestNotificationParameters groupParameters(GROUP_SUMMARY, GROUP_BODY, GROUP_ICON, GROUP_ACTION);
     emit addGroup(GROUP_ID, groupParameters);
-    TestNotificationParameters notificationParameters(NOTIFICATION_SUMMARY, NOTIFICATION_BODY, NOTIFICATION_ICON, NOTIFICATION_ACTION);
+    TestNotificationParameters notificationParameters(NOTIFICATION_SUMMARY, NOTIFICATION_BODY, NOTIFICATION_ICON, NOTIFICATION_ACTION, 12345);
     emit addNotification(Notification(NOTIFICATION_ID, GROUP_ID, 2, notificationParameters, Notification::ApplicationEvent, 1000));
 
     emit(removeNotification(NOTIFICATION_ID));
@@ -384,6 +384,8 @@ void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPre
     MBanner *banner = bannerCatcher.banners.at(0);
     // The banner should have the notification group's data
     QCOMPARE(banner->title(), GROUP_BODY);
+    // The banner should have the timestamp of the previous notification
+    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
 }
 
 void Ut_NotificationAreaSink::testUpdateGroup()

@@ -179,9 +179,8 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
         if (infoBanner == NULL) {
             // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Recreate the banner.
             infoBanner = createGroupBanner(groupId, notificationGroupParameters.value(groupId));
-        } else {
-            infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
         }
+        infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
 
         if (infoBanner != NULL && infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group

@@ -4,6 +4,7 @@ system-ui (0.20.13~1) unstable; urgency=low
   * Fixes: NB#229338 - Status menu doesn't load Bluetooth plugin
   * Fixes: NB#231595 - The wlan status indicator icon looks stretched
   * Fixes: NB#231918 - Notification is shown even if no summary or body given.
+  * Fixes: NB#232091 - Notification group's timestamp wrong in given scenario
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 18:13:08 +0200
 
