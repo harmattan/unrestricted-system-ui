@@ -74,6 +74,9 @@ signals:
 
 private slots:
 
+    //! Hides window and sends visibilityChanged signal
+    void hideWindow();
+
     //! Slot when window becomes top window
     void displayActive();
 

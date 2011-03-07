@@ -21,6 +21,7 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void resetMenuWidget();
   virtual void mousePressEvent(QMouseEvent*);
   virtual void mouseReleaseEvent(QMouseEvent*);
+  virtual void hideWindow();
 #ifdef HAVE_QMSYSTEM
   virtual void setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
@@ -79,6 +80,10 @@ void StatusIndicatorMenuWindowStub::setWindowStateAccordingToDeviceLockState(Mee
 }
 #endif
 
+void StatusIndicatorMenuWindowStub::hideWindow() {
+  stubMethodEntered("hideWindow");
+}
+
 // 3. CREATE A STUB INSTANCE
 StatusIndicatorMenuWindowStub gDefaultStatusIndicatorMenuWindowStub;
 StatusIndicatorMenuWindowStub* gStatusIndicatorMenuWindowStub = &gDefaultStatusIndicatorMenuWindowStub;
@@ -126,5 +131,9 @@ void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(MeeGo::
   gStatusIndicatorMenuWindowStub->setWindowStateAccordingToDeviceLockState(what, how);
 }
 #endif
+
+void StatusIndicatorMenuWindow::hideWindow() {
+  gStatusIndicatorMenuWindowStub->hideWindow();
+}
 
 #endif

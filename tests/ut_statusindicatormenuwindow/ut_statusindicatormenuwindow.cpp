@@ -130,7 +130,7 @@ void Ut_StatusIndicatorMenuWindow::testInitialization()
 
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(showRequested()), statusIndicatorMenuWindow, SLOT(makeVisible())));
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow->menuWidget, SLOT(disappear())));
-    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(disappeared()), statusIndicatorMenuWindow, SLOT(hide())));
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(disappeared()), statusIndicatorMenuWindow, SLOT(hideWindow())));
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()
@@ -252,6 +252,17 @@ void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuIsClosedWhenStatusBarI
     statusIndicatorMenuWindow->mouseReleaseEvent(&releaseInside);
 
     QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Disappeared);
+}
+
+void Ut_StatusIndicatorMenuWindow::testWhenStatusIndicatorMenuIsDisappearedThenWindowIsHidden()
+{
+    QSignalSpy spy(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)));
+    QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(disappeared()), statusIndicatorMenuWindow, SLOT(hideWindow())));
+    statusIndicatorMenuWindow->hideWindow();
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+    QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
 }
 
 #ifdef HAVE_QMSYSTEM

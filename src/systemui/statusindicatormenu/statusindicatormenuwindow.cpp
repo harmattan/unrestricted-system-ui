@@ -73,7 +73,13 @@ void StatusIndicatorMenuWindow::resetMenuWidget()
 
     connect(menuWidget, SIGNAL(showRequested()), this, SLOT(makeVisible()));
     connect(menuWidget, SIGNAL(hideRequested()), menuWidget, SLOT(disappear()));
-    connect(menuWidget, SIGNAL(disappeared()), this, SLOT(hide()));
+    connect(menuWidget, SIGNAL(disappeared()), this, SLOT(hideWindow()));
+}
+
+void StatusIndicatorMenuWindow::hideWindow()
+{
+    hide();
+    emit visibilityChanged(false);
 }
 
 void StatusIndicatorMenuWindow::displayActive()
@@ -84,8 +90,6 @@ void StatusIndicatorMenuWindow::displayActive()
 
 void StatusIndicatorMenuWindow::displayInActive()
 {
-    emit visibilityChanged(false);
-
     if (menuWidget && menuWidget->sceneWindowState() != MSceneWindow::Disappeared) {
         sceneManager()->disappearSceneWindowNow(menuWidget);
     }
@@ -94,7 +98,7 @@ void StatusIndicatorMenuWindow::displayInActive()
     // Note: Dialogs and notifications won't close it anyways,
     // as they are not supposed to be full screen and don't completely
     // obstruct the status menu window fully.
-    hide();
+    hideWindow();
 }
 
 void StatusIndicatorMenuWindow::makeVisible()

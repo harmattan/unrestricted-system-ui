@@ -58,6 +58,7 @@ private slots:
     void testStatusIndicatorMenuAppearsAfterEnteringDisplay();
     void testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped();
     void testWhenWindowAlreadyOnDisplayThenMenuWidgetAppearsWithoutDisplayEnterSignal();
+    void testWhenStatusIndicatorMenuIsDisappearedThenWindowIsHidden();
 
 #ifdef HAVE_QMSYSTEM
     void testQmLocksSignalConnectionWhenDeviceLocked();
