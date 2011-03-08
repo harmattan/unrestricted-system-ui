@@ -369,10 +369,10 @@ void Ut_StatusIndicatorMenuDropDownView::testPannableAreaBackgroundWidget()
 void Ut_StatusIndicatorMenuDropDownView::testTopRowInitialization()
 {
     foreach (const MApplicationExtensionAreaProperties &props, gMApplicationExtensionAreaProperties) {
-        if (props.mInProcessFilter == QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$")) {
+        if (props.mInProcessFilter == QRegExp("/statusindicatormenu-(volume|alarms|internetconnection|presence|profile).desktop$")) {
             QCOMPARE(props.mInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
             QCOMPARE(props.mOutOfProcessFilter, QRegExp("$^"));
-            QCOMPARE(props.mOrder, ((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
+            QCOMPARE(props.mOrder, ((QStringList() << "statusindicatormenu-volume.desktop" << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop")));
             return;
         }
     }

@@ -119,9 +119,9 @@ QGraphicsWidget* StatusIndicatorMenuDropDownView::createTopRow()
     settingsPluginsExtensionArea = new MApplicationExtensionArea("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0");
     connect(settingsPluginsExtensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
     settingsPluginsExtensionArea->setObjectName("StatusIndicatorMenuTopRowExtensionArea");
-    settingsPluginsExtensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(alarms|internetconnection|presence|profile).desktop$"));
+    settingsPluginsExtensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(volume|alarms|internetconnection|presence|profile).desktop$"));
     settingsPluginsExtensionArea->setOutOfProcessFilter(QRegExp("$^"));
-    settingsPluginsExtensionArea->setOrder((QStringList() << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
+    settingsPluginsExtensionArea->setOrder((QStringList()  << "statusindicatormenu-volume.desktop" << "statusindicatormenu-alarms.desktop" << "statusindicatormenu-internetconnection.desktop" << "statusindicatormenu-presence.desktop" << "statusindicatormenu-profile.desktop"));
 
     // Create a button for accessing the full settings
     //% "Settings"
