@@ -1,6 +1,5 @@
-system-ui (0.20.13~1) unstable; urgency=low
+system-ui (0.20.13-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#229338 - Status menu doesn't load Bluetooth plugin
   * Fixes: NB#231595 - The wlan status indicator icon looks stretched
   * Fixes: NB#231918 - Notification is shown even if no summary or body given.
@@ -8,7 +7,7 @@ system-ui (0.20.13~1) unstable; urgency=low
   * Fixes: NB#223556 - Impossible to detect cleared notification groups
   * Fixes: NB#208457 - Pop-up notification for new message is not displayed on device
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 01 Mar 2011 18:13:08 +0200
+ -- Jarkko Markkanen <ext-jarkko.3.markkanen@nokia.com>  Wed, 09 Mar 2011 09:00:00 +0200
 
 system-ui (0.20.12-1) unstable; urgency=low
 
