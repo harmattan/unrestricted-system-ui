@@ -40,6 +40,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
     scene(new QGraphicsScene),
     statusArea(new StatusArea),
+    statusAreaPixmap(QPixmap()),
     statusAreaLivePixmap(NULL),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
