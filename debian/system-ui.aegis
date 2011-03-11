@@ -1,9 +1,4 @@
 <aegis>
-  <provide>
-    <credential name="SystemNotificationUse" />
-    <credential name="NotificationLock" />
-    <credential name="HWKeyboardInputModePublish" />
-  </provide>
   <request>
     <credential name="usb-moded::USBControl" />
     <for path="/usr/bin/sysuid" />
