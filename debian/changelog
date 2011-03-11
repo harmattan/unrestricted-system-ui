@@ -1,6 +1,7 @@
 system-ui (0.20.14~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#235181 - Not displaying Notification banner when MNotification summary is empty
 
  -- Jarkko Markkanen <ext-jarkko.3.markkanen@nokia.com>  Wed, 09 Mar 2011 10:01:45 +0200
 
