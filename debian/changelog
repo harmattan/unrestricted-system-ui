@@ -1,3 +1,9 @@
+system-ui (0.20.15~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Juha Juutinen <juha.juutinen@ixonos.com>  Sat, 12 Mar 2011 09:47:24 +0200
+
 system-ui (0.20.14-1) unstable; urgency=low
 
   * Fixes: NB#235181 - Not displaying Notification banner when MNotification summary is empty
