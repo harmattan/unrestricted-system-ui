@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include <assert.h>
 #include "stubbase.h"
 #include "methodcall.h"
@@ -35,9 +36,24 @@ void StubBase::stubReset() const
         delete p;
     }
 
+    foreach(QList<ParameterBase *> valueList, _stubReturnValueLists) {
+        foreach(ParameterBase *p, valueList) {
+            delete p;
+        }
+    }
+
+    _stubReturnValueLists.clear();
+    _stubReturnValueListCurrentIndex.clear();
     _stubReturnValues.clear();
     _stubCallCounts.clear();
     _stubCallHistory.clear();
+}
+
+void StubBase::stubResetReturnValueListIndex(const QString &methodName) const
+{
+    if (_stubReturnValueListCurrentIndex.contains(methodName)) {
+        _stubReturnValueListCurrentIndex[methodName] = -1;
+    }
 }
 
 int StubBase::stubCallCount(const QString &method) const
@@ -62,9 +78,17 @@ void StubBase::stubMethodEntered(const QString &methodName) const
 ParameterBase *StubBase::stubReturnValue(const QString &methodName) const
 {
     ParameterBase *retVal = NULL;
+    if (_stubReturnValueLists.contains(methodName) && !_stubReturnValueLists[methodName].isEmpty()) {
+        _stubReturnValueListCurrentIndex[methodName]++;
+        // List has been iterated to end, start from beginning
+        if (_stubReturnValueListCurrentIndex[methodName] >= _stubReturnValueLists[methodName].count()) {
+            _stubReturnValueListCurrentIndex[methodName] = 0;
+        }
 
-    if (_stubReturnValues.contains(methodName))
+        retVal = _stubReturnValueLists[methodName].at(_stubReturnValueListCurrentIndex[methodName]);
+    } else if (_stubReturnValues.contains(methodName)) {
         retVal = _stubReturnValues[methodName];
+    }
 
     return retVal;
 }
@@ -81,12 +105,31 @@ MethodCall &StubBase::stubLastCall() const
 
 MethodCall &StubBase::stubLastCallTo(const QString &method) const
 {
-    for (int i = _stubCallHistory.count() - 1; i >= 0; i--) {
+    int i = _stubCallHistory.count() - 1;
+    bool found = false;
+
+    for (; i >= 0; i--) {
         if (_stubCallHistory.at(i)->name() == method) {
-            return *(_stubCallHistory.at(i));
+            found = true;
+            break;
         }
     }
-    qDebug() << "StubBase::lastCallTo: call not found to:" << method;
-    return *((MethodCall *)0);
+
+    if (!found) {
+        QString msg = QString("StubBase::") + __func__ + ": no calls found to '" + method + "'";
+        qFatal("%s", qPrintable(msg));
+    }
+
+    return *(_stubCallHistory.at(i));
 }
 
+QList<MethodCall *> StubBase::stubCallsTo(const QString &method) const
+{
+    QList<MethodCall *> calls;
+    for (int i = 0; i < _stubCallHistory.count(); i++) {
+        if (_stubCallHistory.at(i)->name() == method) {
+            calls.append(_stubCallHistory.at(i));
+        }
+    }
+    return calls;
+}

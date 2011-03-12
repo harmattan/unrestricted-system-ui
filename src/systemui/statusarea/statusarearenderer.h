@@ -84,8 +84,14 @@ signals:
 
 private:
 
-    //! Sets handle of status area pixmap to a root window property
-    void setSharedPixmapHandleToRootWindowProperty();
+    //! Creates a window for sharing shared pixmap handle.
+    void createStatusAreaPropertyWindow();
+
+    //! Sets the status area property window id to root window property.
+    void setStatusAreaPropertyWindowIdToRootWindowProperty();
+
+    //! Sets handle of status area pixmap to a status area property window property
+    void setSharedPixmapHandleToWindowProperty();
 
     //! Scene which is rendererd
     QGraphicsScene *scene;
@@ -108,6 +114,10 @@ private:
 
     //! set the status bar size with information from style
     void setSizeFromStyle();
+
+    // TODO: resolve why #include <X11/Xlib.h> in header results in compilation error
+    //! Window id for the status area property window.
+    ulong statusAreaPropertyWindow;
 
     //! Status Area dimensions.
     uint statusAreaHeight;

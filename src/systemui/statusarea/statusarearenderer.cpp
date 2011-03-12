@@ -17,17 +17,12 @@
 **
 ****************************************************************************/
 
-#include <MOrientationChangeEvent>
-#include <MOnDisplayChangeEvent>
-#include <MDeviceProfile>
+#include <QDebug>
 #include "statusarearenderer.h"
 #include "statusarea.h"
+#include <MOnDisplayChangeEvent>
 #include <MStyle>
 #include "statusareastyle.h"
-#include <QFile>
-#include <QDir>
-#include <QApplication>
-#include <QDebug>
 #include <QX11Info>
 #include "x11wrapper.h"
 #include <QMeeGoLivePixmap>
@@ -41,6 +36,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     scene(new QGraphicsScene),
     statusArea(new StatusArea),
     statusAreaLivePixmap(NULL),
+    statusAreaPropertyWindow(0),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
 #endif
@@ -62,7 +58,9 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
     } else {
-        setSharedPixmapHandleToRootWindowProperty();
+        createStatusAreaPropertyWindow();
+        setSharedPixmapHandleToWindowProperty();
+        setStatusAreaPropertyWindowIdToRootWindowProperty();
     }
 
     connect(&accumulationTimer, SIGNAL(timeout()), this, SLOT(renderAccumulatedRegion()));
@@ -123,17 +121,52 @@ uint StatusAreaRenderer::sharedPixmapHandle()
     return static_cast<quint32> (statusAreaPixmap.handle());
 }
 
-void StatusAreaRenderer::setSharedPixmapHandleToRootWindowProperty()
+void StatusAreaRenderer::createStatusAreaPropertyWindow()
 {
-    // Create atom for pixmap handle property
-    Atom pixmapHandleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False);
-    // Get handle to root window
-    Window rootWindow = QX11Info::appRootWindow(QX11Info::appScreen());
+    Display *dpy = QX11Info::display();
+    XSetWindowAttributes attr;
+    statusAreaPropertyWindow = X11Wrapper::XCreateWindow(dpy, DefaultRootWindow(dpy),
+                                       0, 0,
+                                       2, 2,
+                                       0,
+                                       None,
+                                       InputOnly,
+                                       None,
+                                       None,
+                                       &attr);
+}
 
-    unsigned int handle = sharedPixmapHandle();
+void StatusAreaRenderer::setStatusAreaPropertyWindowIdToRootWindowProperty()
+{
+    if (statusAreaPropertyWindow == 0) {
+        return;
+    }
+
+    /* Set the property window id to root window property */
+    Atom propertyWindowAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW", False);
+    Window rootWindow = QX11Info::appRootWindow(QX11Info::appScreen());
 
     X11Wrapper::XChangeProperty(QX11Info::display(),    //display
                     rootWindow,                         //window
+                    propertyWindowAtom,                 //property
+                    XA_WINDOW,                          //type
+                    32,                                 //format
+                    PropModeReplace,
+                    (unsigned char*)&statusAreaPropertyWindow,  //data
+                    1);
+}
+
+void StatusAreaRenderer::setSharedPixmapHandleToWindowProperty()
+{
+    if (statusAreaPropertyWindow == 0) {
+        return;
+    }
+    // Create atom for pixmap handle property
+    Atom pixmapHandleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False);
+    unsigned int handle = sharedPixmapHandle();
+
+    X11Wrapper::XChangeProperty(QX11Info::display(),    //display
+                    statusAreaPropertyWindow,           //window
                     pixmapHandleAtom,                   //property
                     XA_PIXMAP,                          //type
                     32,                                 //format
@@ -151,16 +184,22 @@ StatusAreaRenderer::~StatusAreaRenderer()
         delete statusAreaLivePixmap;
     }
 
+    if (statusAreaPropertyWindow != 0) {
+        X11Wrapper::XDeleteProperty(QX11Info::display(),
+                        QX11Info::appRootWindow(QX11Info::appScreen()),
+                        X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW", False));
+
+        X11Wrapper::XDeleteProperty(QX11Info::display(),
+                        statusAreaPropertyWindow,
+                        X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", False));
+    }
+
     if (!statusAreaPixmap.isNull()) {
         Pixmap pixmap = statusAreaPixmap.handle();
         if (pixmap != 0) {
             X11Wrapper::XFreePixmap(QX11Info::display(), pixmap);
         }
     }
-
-    X11Wrapper::XDeleteProperty(QX11Info::display(),
-                    QX11Info::appRootWindow(QX11Info::appScreen()),
-                    X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_PIXMAP", True));
 
 #ifdef HAVE_QMSYSTEM
     delete displayState;

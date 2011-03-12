@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #ifndef STUBBASE_H
 #define STUBBASE_H
 
@@ -43,6 +44,9 @@ public:
     // Access parameters of the last method call
     MethodCall &stubLastCallTo(const QString &method) const;
 
+    // Return a list of calls to a particular method call
+    QList<MethodCall *> stubCallsTo(const QString &method) const;
+
     // Return the number of times a method has been called
     int stubCallCount(const QString &method) const;
 
@@ -50,15 +54,16 @@ public:
     template <typename T>
     void stubSetReturnValue(const QString &methodName, T value) const;
 
-    // Return the return value set for methodName or the default constructed value if no value has been set
+    // Set the return value list for methodName calls
     template <typename T>
-    T &stubReturnValue(const QString &methodName) const;
+    void stubSetReturnValueList(const QString &methodName, QList<T> valueList) const;
 
     // Return the return value set for methodName
     template <typename T>
+    T &stubReturnValue(const QString &methodName) const;
+
+    template <typename T>
     T &stubReturnValueNoDefault(const QString &methodName) const;
-
-
 
     // For use by stubs
     virtual ~StubBase();
@@ -66,9 +71,12 @@ public:
     ParameterBase *stubReturnValue(const QString &methodName) const;
     void stubMethodEntered(const QString &methodName, QList<ParameterBase *> params) const;
     void stubMethodEntered(const QString &methodName) const;
+    void stubResetReturnValueListIndex(const QString &methodName) const;
 
 private:
     mutable QMap<QString, ParameterBase *> _stubReturnValues;
+    mutable QMap<QString, QList<ParameterBase *> > _stubReturnValueLists;
+    mutable QMap<QString, int> _stubReturnValueListCurrentIndex;
     mutable QMap<QString, int> _stubCallCounts;
     mutable QList<MethodCall *> _stubCallHistory;
 
@@ -82,38 +90,61 @@ void StubBase::stubSetReturnValue(const QString &methodName, T value) const
 }
 
 template <typename T>
-T &StubBase::stubReturnValue(const QString &methodName) const
+void StubBase::stubSetReturnValueList(const QString &methodName, QList<T> valueList) const
 {
-    if (!_stubReturnValues.contains(methodName)) {
-        stubSetReturnValue<T>(methodName, T());
+    QList<ParameterBase *> newValueList;
+    foreach(T value, valueList) {
+        Parameter<T>* param = new Parameter<T>(value);
+        newValueList.append(param);
     }
-
-    ParameterBase *base = _stubReturnValues[methodName];
-    Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
-    if (!param) {
-        QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
-        qFatal(qPrintable(msg));
-    }
-    return param->data;
-
+    _stubReturnValueLists[methodName] = newValueList;
+    _stubReturnValueListCurrentIndex[methodName] = -1;
 }
 
 template <typename T>
 T &StubBase::stubReturnValueNoDefault(const QString &methodName) const
 {
-    if (!_stubReturnValues.contains(methodName)) {
-        QString msg = QString("StubBase::") + __func__ + ": return value for method '" + methodName + "' not found; check that you have used stubSetReturnValue(" + methodName + ")";
-        qFatal(qPrintable(msg));
+    ParameterBase *base;
+    if (_stubReturnValueLists.contains(methodName) && !_stubReturnValueLists[methodName].isEmpty() && _stubReturnValueListCurrentIndex[methodName] > -1) {
+        base = _stubReturnValueLists[methodName].at(_stubReturnValueListCurrentIndex[methodName]);
+    } else {
+        if (! _stubReturnValues.contains(methodName)) {
+            QString msg = QString("StubBase::") + __func__ + ": return value for method '" + methodName + "' not found; check that you have used stubSetReturnValue(" + methodName + ")";
+            qFatal(qPrintable(msg));
+        }
+
+        base = _stubReturnValues[methodName];
     }
 
-    ParameterBase *base = _stubReturnValues[methodName];
     Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
     if (!param) {
         QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
-        qFatal(qPrintable(msg));
+        qFatal("%s", qPrintable(msg));
     }
     return param->data;
+}
 
+
+template <typename T>
+T &StubBase::stubReturnValue(const QString &methodName) const
+{
+    ParameterBase *base;
+    if (_stubReturnValueLists.contains(methodName) && !_stubReturnValueLists[methodName].isEmpty() && _stubReturnValueListCurrentIndex[methodName] > -1) {
+        base = _stubReturnValueLists[methodName].at(_stubReturnValueListCurrentIndex[methodName]);
+    } else {
+        if (! _stubReturnValues.contains(methodName)) {
+            stubSetReturnValue<T>(methodName, T());
+        }
+
+        base = _stubReturnValues[methodName];
+    }
+
+    Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
+    if (!param) {
+        QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
+        qFatal("%s", qPrintable(msg));
+    }
+    return param->data;
 }
 
 template <typename T>

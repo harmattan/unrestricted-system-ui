@@ -20,7 +20,9 @@ class StatusAreaRendererStub : public StubBase {
   virtual uint sharedPixmapHandle();
   virtual bool createSharedPixmapHandle();
   virtual void setSizeFromStyle();
-  virtual void setSharedPixmapHandleToRootWindowProperty();
+  virtual void createStatusAreaPropertyWindow();
+  virtual void setStatusAreaPropertyWindowIdToRootWindowProperty();
+  virtual void setSharedPixmapHandleToWindowProperty();
 };
 
 // 2. IMPLEMENT STUB
@@ -68,8 +70,16 @@ void StatusAreaRendererStub::renderAccumulatedRegion() {
   stubMethodEntered("renderAccumulatedRegion");
 }
 
-void StatusAreaRendererStub::setSharedPixmapHandleToRootWindowProperty() {
-  stubMethodEntered("setSharedPixmapHandleToRootWindowProperty");
+void StatusAreaRendererStub::createStatusAreaPropertyWindow() {
+  stubMethodEntered("createStatusAreaPropertyWindow");
+}
+
+void StatusAreaRendererStub::setStatusAreaPropertyWindowIdToRootWindowProperty() {
+  stubMethodEntered("setStatusAreaPropertyWindowIdToRootWindowProperty");
+}
+
+void StatusAreaRendererStub::setSharedPixmapHandleToWindowProperty() {
+  stubMethodEntered("setSharedPixmapHandleToWindowProperty");
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -117,8 +127,16 @@ void StatusAreaRenderer::renderAccumulatedRegion() {
   gStatusAreaRendererStub->renderAccumulatedRegion();
 }
 
-void StatusAreaRenderer::setSharedPixmapHandleToRootWindowProperty() {
-  gStatusAreaRendererStub->setSharedPixmapHandleToRootWindowProperty();
+void StatusAreaRenderer::createStatusAreaPropertyWindow() {
+  gStatusAreaRendererStub->createStatusAreaPropertyWindow();
+}
+
+void StatusAreaRenderer::setStatusAreaPropertyWindowIdToRootWindowProperty() {
+  gStatusAreaRendererStub->setStatusAreaPropertyWindowIdToRootWindowProperty();
+}
+
+void StatusAreaRenderer::setSharedPixmapHandleToWindowProperty() {
+  gStatusAreaRendererStub->setSharedPixmapHandleToWindowProperty();
 }
 
 #endif

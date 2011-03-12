@@ -23,8 +23,11 @@
 #include "statusareastyle.h"
 #include <QMeeGoGraphicsSystemHelper>
 #include "x11wrapper_stub.h"
+#include <QX11Info>
 
+const static Window MEEGOTOUCH_STATUSBAR_WINDOW_ID = 1;
 #define ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP 0x00000001
+#define ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY 0x00000002
 
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
 bool Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
@@ -219,7 +222,8 @@ void Ut_StatusAreaRenderer::init()
     gGraphicsSystemName = QLatin1String("meego");
 
     gX11WrapperStub->stubReset();
-    gX11WrapperStub->stubSetReturnValue("XInternAtom", ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
+    gX11WrapperStub->stubSetReturnValue("XCreateWindow", MEEGOTOUCH_STATUSBAR_WINDOW_ID);
+
     statusAreaRenderer = new StatusAreaRenderer();
 }
 
@@ -383,6 +387,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlWhenInitialDisplayStateOff()
 void Ut_StatusAreaRenderer::testSharedPixmapHandle()
 {
     uint handle = static_cast<quint32> (statusAreaRenderer->statusAreaPixmap.handle());
+    QVERIFY(handle != 0);
     QCOMPARE(handle, statusAreaRenderer->sharedPixmapHandle());
 }
 
@@ -439,25 +444,44 @@ void Ut_StatusAreaRenderer::testRenderingWithoutMeeGo()
     QCOMPARE(gPainterSourcePixmap, &statusAreaRenderer->backPixmap);
 }
 
-void Ut_StatusAreaRenderer::testStatusBarPixmapAtomIsCreatedAndPropertyIsSetToRootWindow()
+void Ut_StatusAreaRenderer::testStatusBarPropertyWindowCreation()
 {
-    QCOMPARE(gX11WrapperStub->stubCallCount("XInternAtom"), 1);
-    QCOMPARE(gX11WrapperStub->stubLastCallTo("XInternAtom").parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
+    Window rootWindow = DefaultRootWindow(QX11Info::display());
 
-    // Check that XChangeProperty tries to change the just created atom
-    QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 1);
-    QCOMPARE((int)gX11WrapperStub->stubLastCallTo("XChangeProperty").parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
+    QCOMPARE(gX11WrapperStub->stubCallCount("XCreateWindow"), 1);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XCreateWindow").parameter<Window>(1), rootWindow);
+    QCOMPARE((int)gX11WrapperStub->stubLastCallTo("XCreateWindow").parameter<unsigned int>(8), InputOnly);
 }
 
-void Ut_StatusAreaRenderer::testStatusBarPixmapRootWindowPropertyIsDeletedInDestructor()
+void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreSetCorrectly()
+{
+    Window rootWindow = DefaultRootWindow(QX11Info::display());
+
+    QCOMPARE(gX11WrapperStub->stubCallCount("XInternAtom"), 2);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(0)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(1)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
+    QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 2);
+
+    // Verify setting pixmap property
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Window>(1), MEEGOTOUCH_STATUSBAR_WINDOW_ID);
+    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
+    QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(3), XA_PIXMAP);
+
+    // Verify setting property window property
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Window>(1), rootWindow);
+    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY);
+    QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(3), XA_WINDOW);
+}
+
+void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreDeletedInDestructor()
 {
     delete statusAreaRenderer;
     statusAreaRenderer = NULL;
 
     // Check XDeleteProperty deletes the correct property
-    QCOMPARE(gX11WrapperStub->stubCallCount("XDeleteProperty"), 1);
-    QCOMPARE(gX11WrapperStub->stubCallCount("XInternAtom"), 2);
-    QCOMPARE((int)gX11WrapperStub->stubLastCallTo("XDeleteProperty").parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
+    QCOMPARE(gX11WrapperStub->stubCallCount("XDeleteProperty"), 2);
+    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XDeleteProperty").at(0)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY);
+    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XDeleteProperty").at(1)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
 }
 
 QTEST_MAIN(Ut_StatusAreaRenderer)

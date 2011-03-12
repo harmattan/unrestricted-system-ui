@@ -60,6 +60,10 @@ private slots:
     void testRenderingWithMeeGo();
     void testRenderingWithoutMeeGo();
 
+    void testStatusBarPropertyWindowCreation();
+    void testStatusBarPixmapPropertiesAreSetCorrectly();
+    void testStatusBarPixmapPropertiesAreDeletedInDestructor();
+
 #ifdef HAVE_QMSYSTEM
     // Test rendering happens when display state is on
     void testSceneRenderControlDisplayStateOn();
@@ -71,10 +75,6 @@ private slots:
     void testMOnDisplayChangeEvent();
     // Test that scene is not rendered if initial display state is off
     void testSceneRenderControlWhenInitialDisplayStateOff();
-    // Test that statusbar pixmap atom is created and set to root window property
-    void testStatusBarPixmapAtomIsCreatedAndPropertyIsSetToRootWindow();
-    // Test that status bar pixmap property is deleted in destructor
-    void testStatusBarPixmapRootWindowPropertyIsDeletedInDestructor();
 #endif
 };
 
