@@ -1,6 +1,7 @@
 system-ui (0.20.15~1) unstable; urgency=low
 
   * [UNRELEASED] 
+  * Fixes: NB#230760 - Coreweb crash in WidgetNotificationSink::updateTitles(MBanner*)
 
  -- Juha Juutinen <juha.juutinen@ixonos.com>  Sat, 12 Mar 2011 10:10:00 +0200
 

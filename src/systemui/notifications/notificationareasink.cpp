@@ -263,7 +263,9 @@ void NotificationAreaSink::applyPrivacySetting(bool)
         updateTitles(banner);
     }
     foreach (MBanner *banner, groupIdToMBanner) {
-        updateTitles(banner);
+        if (banner != NULL) {
+            updateTitles(banner);
+        }
     }
 }
 
