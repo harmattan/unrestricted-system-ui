@@ -1,4 +1,4 @@
-system-ui (0.20.15~1) unstable; urgency=low
+system-ui (0.20.15-1) unstable; urgency=low
 
   * Fixes: NB#230760 - Coreweb crash in WidgetNotificationSink::updateTitles(MBanner*)
   * Fixes: NB#236897 - system-ui package does not compile in staging
