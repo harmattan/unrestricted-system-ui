@@ -4,7 +4,7 @@ system-ui (0.20.16~1) unstable; urgency=low
 
  -- Otto Kopra <otto.kopra@nokia.com>  Wed, 16 Mar 2011 12:02:00 +0200
 
-system-ui (0.20.15~1) unstable; urgency=low
+system-ui (0.20.15-1) unstable; urgency=low
 
   * Fixes: NB#230760 - Coreweb crash in WidgetNotificationSink::updateTitles(MBanner*)
   * Fixes: NB#236897 - system-ui package does not compile in staging
