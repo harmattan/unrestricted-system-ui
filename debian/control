@@ -1,7 +1,7 @@
 Source: system-ui
 Section: devel
 Priority: optional
-Maintainer: Tuomas Järvensivu <tuomas.jarvensivu@nokia.com>
+Maintainer: Vesa Halttunen <vesa.halttunen@nokia.com>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.37),
                libqmsystem2-dev, libaegis-crypto-dev, libresourceqt-dev,
                libcontextsubscriber-dev, libngf-dev, libxcomposite-dev, libxext-dev,
