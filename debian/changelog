@@ -1,3 +1,9 @@
+system-ui (0.20.17~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Thu, 17 Mar 2011 17:12:59 +0200
+
 system-ui (0.20.16-1) unstable; urgency=low
  
   * Status area shared pixmap to be shared through a new input only window instead of root window
