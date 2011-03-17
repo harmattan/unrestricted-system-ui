@@ -1,6 +1,6 @@
-system-ui (0.20.16~1) unstable; urgency=low
+system-ui (0.20.16-1) unstable; urgency=low
  
-  * [UNRELEASED]
+  * Status area shared pixmap to be shared through a new input only window instead of root window
 
  -- Otto Kopra <otto.kopra@nokia.com>  Wed, 16 Mar 2011 12:02:00 +0200
 
