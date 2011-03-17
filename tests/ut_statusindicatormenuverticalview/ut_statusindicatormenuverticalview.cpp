@@ -197,9 +197,9 @@ void Ut_StatusIndicatorMenuVerticalView::testExtensionAreaInitialization()
 {
     QCOMPARE(mApplicationExtensionAreaInterface, QString("com.meego.core.MStatusIndicatorMenuExtensionInterface/1.0"));
     QCOMPARE(mApplicationExtensionAreaInProcessFilterDuringInit,
-             QRegExp("/statusindicatormenu-(profile|call|internetconnection|bluetooth|presence|transfer).desktop$"));
+             QRegExp("/statusindicatormenu-(volume|call|internetconnection|bluetooth|presence|transfer).desktop$"));
     QCOMPARE(mApplicationExtensionAreaOutOfProcessFilterDuringInit, QRegExp("$^"));
-    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, (QStringList() << "statusindicatormenu-profile.desktop"
+    QCOMPARE(mApplicationExtensionAreaOrderDuringInit, (QStringList() << "statusindicatormenu-volume.desktop"
                              << "statusindicatormenu-call.desktop"
                              << "statusindicatormenu-internetconnection.desktop"
                              << "statusindicatormenu-bluetooth.desktop"

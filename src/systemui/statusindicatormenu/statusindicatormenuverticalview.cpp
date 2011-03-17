@@ -38,9 +38,9 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*)));
     extensionArea->setObjectName("StatusIndicatorMenuExtensionArea");
-    extensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(profile|call|internetconnection|bluetooth|presence|transfer).desktop$"));
+    extensionArea->setInProcessFilter(QRegExp("/statusindicatormenu-(volume|call|internetconnection|bluetooth|presence|transfer).desktop$"));
     extensionArea->setOutOfProcessFilter(QRegExp("$^"));
-    extensionArea->setOrder((QStringList() << "statusindicatormenu-profile.desktop"
+    extensionArea->setOrder((QStringList() << "statusindicatormenu-volume.desktop"
                              << "statusindicatormenu-call.desktop"
                              << "statusindicatormenu-internetconnection.desktop"
                              << "statusindicatormenu-bluetooth.desktop"
