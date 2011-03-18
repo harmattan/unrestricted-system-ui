@@ -1,3 +1,9 @@
+system-ui (0.20.18~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 18 Mar 2011 13:33:04 +0200
+
 system-ui (0.20.17-1) unstable; urgency=low
 
   * Fixes: NB#229952 - Dimming layer is almost opaque
