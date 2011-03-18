@@ -1,10 +1,9 @@
-system-ui (0.20.17~1) unstable; urgency=low
+system-ui (0.20.17-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#229952 - Dimming layer is almost opaque
   * Fixes: NB#237193 - Deprecated enum MeeGo::QmTimeWhatChanged is used
 
- -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Thu, 17 Mar 2011 17:12:59 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 18 Mar 2011 13:32:22 +0200
 
 system-ui (0.20.16-1) unstable; urgency=low
  
