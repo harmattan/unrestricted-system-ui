@@ -171,7 +171,7 @@ void aegis::storage::remove_file(const char *pathname)
     Q_UNUSED(pathname);
 }
 
-bool aegis::storage::commit()
+void aegis::storage::commit()
 {
 }
 
