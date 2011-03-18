@@ -40,7 +40,7 @@ public:
 
 signals:
 #ifdef HAVE_QMSYSTEM
-    void timeOrSettingsChanged(MeeGo::QmTimeWhatChanged);
+    void timeOrSettingsChanged(MeeGo::QmTime::WhatChanged);
 #endif
 
 private slots:

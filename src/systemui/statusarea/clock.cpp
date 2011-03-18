@@ -25,8 +25,8 @@ Clock::Clock(QGraphicsItem *parent) :
 {
 #ifdef HAVE_QMSYSTEM
     // Be interested in changes to system time
-    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
-            this, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
+    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
+            this, SLOT(updateSettings(MeeGo::QmTime::WhatChanged)));
 #endif
 
     // Configure the timer
@@ -56,9 +56,9 @@ void Clock::updateModelAndSetupTimer()
 }
 
 #ifdef HAVE_QMSYSTEM
-void Clock::updateSettings(MeeGo::QmTimeWhatChanged whatChanged)
+void Clock::updateSettings(MeeGo::QmTime::WhatChanged whatChanged)
 {
-    if (whatChanged == MeeGo::QmTimeTimeChanged) {
+    if (whatChanged == MeeGo::QmTime::TimeChanged) {
         // Set the time when it was changed (set by the user)
         updateModelAndSetupTimer();
     }

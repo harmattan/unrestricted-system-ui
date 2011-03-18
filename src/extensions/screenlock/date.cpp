@@ -39,8 +39,8 @@ Date::Date(QGraphicsItem *parent) :
 
 #ifdef HAVE_QMSYSTEM
     // Listen for changes in time settings
-    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
-            this, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
+    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
+            this, SLOT(updateSettings(MeeGo::QmTime::WhatChanged)));
 #endif
 
     // Listen the changes in the system locale settings
@@ -85,9 +85,9 @@ void Date::updateDate()
 }
 
 #ifdef HAVE_QMSYSTEM
-void Date::updateSettings(MeeGo::QmTimeWhatChanged whatChanged)
+void Date::updateSettings(MeeGo::QmTime::WhatChanged whatChanged)
 {
-    if(whatChanged == MeeGo::QmTimeTimeChanged) {
+    if(whatChanged == MeeGo::QmTime::TimeChanged) {
         updateDate();
     }
 }

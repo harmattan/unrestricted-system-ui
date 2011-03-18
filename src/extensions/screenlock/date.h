@@ -63,7 +63,7 @@ private slots:
     /*!
      * Updates the labels if the time was changed in settings
      */
-    void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
+    void updateSettings(MeeGo::QmTime::WhatChanged whatChanged);
 #endif
 
 private:

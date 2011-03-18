@@ -24,7 +24,7 @@
 #include "clock.h"
 
 #ifdef HAVE_QMSYSTEM
-Q_DECLARE_METATYPE(MeeGo::QmTimeWhatChanged);
+Q_DECLARE_METATYPE(MeeGo::QmTime::WhatChanged);
 #endif
 
 QDateTime QDateTime::currentDateTime()
@@ -62,8 +62,8 @@ void Ut_Clock::init()
     m_subject = new Clock;
 
 #ifdef HAVE_QMSYSTEM
-    connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
-            m_subject, SLOT(updateSettings(MeeGo::QmTimeWhatChanged)));
+    connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
+            m_subject, SLOT(updateSettings(MeeGo::QmTime::WhatChanged)));
 #endif
 }
 
@@ -77,9 +77,9 @@ void Ut_Clock::testConstruction()
 {
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&m_subject->qmTime,
-                       SIGNAL(timeOrSettingsChanged(MeeGo::QmTimeWhatChanged)),
+                       SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
                        m_subject,
-                       SLOT(updateSettings(MeeGo::QmTimeWhatChanged))));
+                       SLOT(updateSettings(MeeGo::QmTime::WhatChanged))));
 #endif
     QVERIFY(disconnect(&m_subject->timer,
                        SIGNAL(timeout()),
@@ -100,7 +100,7 @@ void Ut_Clock::testTimeUpdate()
 #ifdef HAVE_QMSYSTEM
     // If qmsystem notifies up that time changed, model should be updated accordingly
     expectedDateTime = QDateTime(QDate(2010, 1, 1));
-    emit timeOrSettingsChanged(MeeGo::QmTimeTimeChanged);
+    emit timeOrSettingsChanged(MeeGo::QmTime::TimeChanged);
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 #endif
 }

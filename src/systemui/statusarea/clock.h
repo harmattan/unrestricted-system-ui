@@ -57,7 +57,7 @@ private slots:
     /*!
      * \brief Updates the clock if the system time has been adjusted
      */
-    void updateSettings(MeeGo::QmTimeWhatChanged whatChanged);
+    void updateSettings(MeeGo::QmTime::WhatChanged whatChanged);
 #endif
 
 private:
