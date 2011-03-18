@@ -59,12 +59,17 @@ void ScreenLockWindow::applyStyle()
 
     if (style->lockedOrientation() == "landscape") {
         setLandscapeOrientation();
+        setOrientationAngle(M::Angle0);
         setOrientationLocked(true);
+        setOrientationAngleLocked(true);
     } else if (style->lockedOrientation() == "portrait") {
         setPortraitOrientation();
+        setOrientationAngle(M::Angle270);
         setOrientationLocked(true);
+        setOrientationAngleLocked(true);
     } else {
         setOrientationLocked(false);
+        setOrientationAngleLocked(false);
     }
 }
 

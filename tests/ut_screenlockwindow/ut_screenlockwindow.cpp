@@ -42,6 +42,12 @@ void MWindow::setOrientationLocked(bool locked)
     mWindowOrientationLocked = locked;
 }
 
+bool mWindowOrientationAngleLocked = false;
+void MWindow::setOrientationAngleLocked(bool locked)
+{
+    mWindowOrientationAngleLocked = locked;
+}
+
 QString mWindowOrientation;
 void MWindow::setLandscapeOrientation()
 {
@@ -51,6 +57,12 @@ void MWindow::setLandscapeOrientation()
 void MWindow::setPortraitOrientation()
 {
     mWindowOrientation = "portrait";
+}
+
+M::OrientationAngle mWindowOrientationAngle;
+void MWindow::setOrientationAngle(M::OrientationAngle angle)
+{
+    mWindowOrientationAngle = angle;
 }
 
 MWindow* appearedWindow = NULL;
@@ -84,7 +96,9 @@ void Ut_ScreenLockWindow::cleanup()
     lockScreenWindow = NULL;
     appearedWindow = NULL;
     mWindowOrientationLocked = false;
+    mWindowOrientationAngleLocked = false;
     mWindowOrientation.clear();
+    mWindowOrientationAngle = M::Angle180;
     gX11WrapperStub->stubReset();
 }
 
@@ -124,11 +138,12 @@ void Ut_ScreenLockWindow::testOrientationLocking_data()
     QTest::addColumn<QString>("lockedOrientation");
     QTest::addColumn<bool>("orientationLocked");
     QTest::addColumn<QString>("expectedOrientation");
+    QTest::addColumn<int>("expectedOrientationAngle");
 
-    QTest::newRow("No locking") << QString() << false << QString();
-    QTest::newRow("Locked to landscape") << QString("landscape") << true << QString("landscape");
-    QTest::newRow("Locked to portrait") << QString("portrait") << true << QString("portrait");
-    QTest::newRow("Locked to something else") << QString("unknown") << false << QString();
+    QTest::newRow("No locking") << QString() << false << QString() << (int)M::Angle180;
+    QTest::newRow("Locked to landscape") << QString("landscape") << true << QString("landscape") << (int)M::Angle0;
+    QTest::newRow("Locked to portrait") << QString("portrait") << true << QString("portrait") << (int)M::Angle270;
+    QTest::newRow("Locked to something else") << QString("unknown") << false << QString() << (int)M::Angle180;
 }
 
 void Ut_ScreenLockWindow::testOrientationLocking()
@@ -136,10 +151,12 @@ void Ut_ScreenLockWindow::testOrientationLocking()
     QFETCH(QString, lockedOrientation);
     QFETCH(bool, orientationLocked);
     QFETCH(QString, expectedOrientation);
+    QFETCH(int, expectedOrientationAngle);
 
     // Reset the stubs
     mWindowOrientationLocked = false;
     mWindowOrientation = QString();
+    mWindowOrientationAngle = M::Angle180;
 
     // Set the style
     ScreenLockWindowStyle *style = const_cast<ScreenLockWindowStyle *>(static_cast<const ScreenLockWindowStyle *>(MTheme::style("ScreenLockWindowStyle", "", "", "", M::Landscape, NULL)));
@@ -149,7 +166,9 @@ void Ut_ScreenLockWindow::testOrientationLocking()
     delete lockScreenWindow;
     lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
     QCOMPARE(mWindowOrientationLocked, orientationLocked);
+    QCOMPARE(mWindowOrientationAngleLocked, orientationLocked);
     QCOMPARE(mWindowOrientation, expectedOrientation);
+    QCOMPARE(mWindowOrientationAngle, (M::OrientationAngle)expectedOrientationAngle);
 }
 
 void Ut_ScreenLockWindow::testTranslucency_data()
