@@ -5,7 +5,7 @@ StatusIndicatorMenuStyle {
 }
 
 MSceneLayerEffectDimStyle {
-    opacity: 0.98;
+    opacity: 0.9;
     easing-curve: inquint;
     fade-duration: 200;
 }
