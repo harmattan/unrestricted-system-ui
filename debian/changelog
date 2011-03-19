@@ -2,6 +2,7 @@ system-ui (0.20.18~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#229423 - Red box displayed as an icon for the system banner message, Charging not started... 
+  * Fixes: NB#231566 - The first opening of status menu after boot is slow
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 18 Mar 2011 13:33:04 +0200
 

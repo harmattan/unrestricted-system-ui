@@ -46,22 +46,11 @@ void Ut_StatusIndicatorMenuBusinessLogic::cleanup()
     delete m_subject;
 }
 
-void Ut_StatusIndicatorMenuBusinessLogic::testShowStatusIndicatorMenu()
+void Ut_StatusIndicatorMenuBusinessLogic::testStatusIndicatorMenuInitialization()
 {
-    // There should not be a window by default
-    QCOMPARE(m_subject->statusIndicatorMenuWindow, (StatusIndicatorMenuWindow *)NULL);
-
-    // Calling for the first time should create the window and make the window visible
-    m_subject->showStatusIndicatorMenu();
-    QVERIFY(m_subject->statusIndicatorMenuWindow != NULL);
     QVERIFY(disconnect(m_subject->statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), m_subject, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
     QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("StatusIndicatorMenuWindow"), 1);
-    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 1);
-
-    // Calling again should not create a new window but make the window visible
-    m_subject->showStatusIndicatorMenu();
-    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("StatusIndicatorMenuWindow"), 1);
-    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 2);
+    QCOMPARE(gStatusIndicatorMenuWindowStub->stubCallCount("makeVisible"), 0);
 }
 
 void Ut_StatusIndicatorMenuBusinessLogic::testIsStatusIndicatorMenuVisible()

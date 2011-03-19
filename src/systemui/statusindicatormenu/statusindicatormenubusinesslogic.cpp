@@ -16,15 +16,16 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "statusindicatormenubusinesslogic.h"
 #include "statusindicatormenuwindow.h"
 #include "closeeventeater.h"
 
 StatusIndicatorMenuBusinessLogic::StatusIndicatorMenuBusinessLogic(QObject *parent) :
     QObject(parent),
-    statusIndicatorMenuWindow(NULL)
+    statusIndicatorMenuWindow(new StatusIndicatorMenuWindow)
 {
+    statusIndicatorMenuWindow->installEventFilter(new CloseEventEater(this));
+    connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
 }
 
 StatusIndicatorMenuBusinessLogic::~StatusIndicatorMenuBusinessLogic()
@@ -34,16 +35,10 @@ StatusIndicatorMenuBusinessLogic::~StatusIndicatorMenuBusinessLogic()
 
 void StatusIndicatorMenuBusinessLogic::showStatusIndicatorMenu()
 {
-    if (statusIndicatorMenuWindow == NULL) {
-        statusIndicatorMenuWindow = new StatusIndicatorMenuWindow;
-        statusIndicatorMenuWindow->installEventFilter(new CloseEventEater(this));
-        connect(statusIndicatorMenuWindow, SIGNAL(visibilityChanged(bool)), this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
-    }
-
     statusIndicatorMenuWindow->makeVisible();
 }
 
 bool StatusIndicatorMenuBusinessLogic::isStatusIndicatorMenuVisible() const
 {
-    return statusIndicatorMenuWindow != NULL ? statusIndicatorMenuWindow->isVisible() : false;
+    return statusIndicatorMenuWindow->isVisible();
 }

@@ -40,7 +40,7 @@ private slots:
     void cleanup();
 
     // Test cases
-    void testShowStatusIndicatorMenu();
+    void testStatusIndicatorMenuInitialization();
     void testIsStatusIndicatorMenuVisible();
 
 private:
