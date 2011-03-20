@@ -31,7 +31,7 @@ class EventEaterStub : public StubBase {
   virtual void EventEaterDestructor();
   virtual void show();
   virtual void hide();
-  virtual bool eventFilter(XEvent *event);
+  virtual bool xEventFilter(const XEvent &event);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -48,9 +48,9 @@ void EventEaterStub::hide() {
   stubMethodEntered("hide");
 }
 
-bool EventEaterStub::eventFilter(XEvent *event) {
+bool EventEaterStub::xEventFilter(const XEvent &event) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<XEvent * >(event));
+  params.append( new Parameter<XEvent>(event));
   stubMethodEntered("eventFilter",params);
   return stubReturnValue<XEvent *>("eventFilter");
 }
@@ -76,8 +76,8 @@ void EventEater::hide() {
   gEventEaterStub->hide();
 }
 
-bool EventEater::eventFilter(XEvent *event) {
-    return gEventEaterStub->eventFilter(event);
+bool EventEater::xEventFilter(const XEvent &event) {
+    return gEventEaterStub->xEventFilter(event);
 }
 
 #endif

@@ -17,6 +17,7 @@ SOURCES += ft_lockscreenbusinesslogic.cpp \
     $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.cpp \
     $$STUBSDIR/stubbase.cpp \
     $$SRCDIR/x11wrapper.cpp \
+    $$SRCDIR/xeventlistener.cpp \
     $$SRCDIR/closeeventeater.cpp
 
 HEADERS += ft_lockscreenbusinesslogic.h \
@@ -31,6 +32,7 @@ HEADERS += ft_lockscreenbusinesslogic.h \
     $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/x11wrapper.h \
+    $$SRCDIR/xeventlistener.h \
     $$SRCDIR/closeeventeater.h
 
 include(../common_bot.pri)

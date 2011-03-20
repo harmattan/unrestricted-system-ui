@@ -25,12 +25,15 @@
 #include <MWindow>
 #include <QWidget>
 #include "x11wrapper_stub.h"
+#include "xeventlistener_stub.h"
 
 // QWidget stubs
 static const Window WINDOW_ID = 69;
 
 void Ut_EventEater::init()
 {
+    gXEventListenerStub->stubReset();
+
     gX11WrapperStub->stubReset();
     gX11WrapperStub->stubSetReturnValue("XCreateWindow", WINDOW_ID);
 
@@ -74,7 +77,7 @@ void Ut_EventEater::testButtonEvents()
     event.xany.window = winId;
 
     QSignalSpy spy(m_subject, SIGNAL(inputEventReceived()));
-    QAbstractEventDispatcher::instance()->filterEvent(&event);
+    m_subject->xEventFilter(event);
 
     QCOMPARE(spy.count(), verifyButtonEventSpyCount);
 }
@@ -99,12 +102,20 @@ void Ut_EventEater::testWindowIsCreatedProperly()
     QCOMPARE(gX11WrapperStub->stubCallCount("XSelectInput"), 1);
     MethodCall &xsi = gX11WrapperStub->stubLastCallTo("XSelectInput");
     QCOMPARE(xsi.parameter<Window>(1), WINDOW_ID);
-    QCOMPARE(xsi.parameter<long>(2), (long)(ButtonPressMask|ButtonReleaseMask|KeyPressMask));
+    QCOMPARE(xsi.parameter<long>(2), (long)(ButtonPressMask|KeyPressMask));
 
     QCOMPARE(gX11WrapperStub->stubCallCount("XStoreName"), 1);
     MethodCall &xsn = gX11WrapperStub->stubLastCallTo("XStoreName");
     QCOMPARE(xsn.parameter<Window>(1), WINDOW_ID);
     QCOMPARE(QString(xsn.parameter<char*>(2)), QString("EventEater"));
+
+    // Verify registering to x input events
+    QCOMPARE(gXEventListenerStub->stubCallCount("registerEventFilter"), 1);
+    XEventListenerFilterInterface *registeredFilter =
+            gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0);
+    long registeredMask = gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1);
+    QCOMPARE(registeredFilter, static_cast<XEventListenerFilterInterface *>(m_subject));
+    QCOMPARE(registeredMask, ButtonPressMask|KeyPressMask);
 }
 
 void Ut_EventEater::testStackingLayerPropertyIsSet()
@@ -129,6 +140,9 @@ void Ut_EventEater::testWindowIsDestroyed()
     QCOMPARE(gX11WrapperStub->stubCallCount("XDestroyWindow"), 1);
     MethodCall &xdw = gX11WrapperStub->stubLastCallTo("XDestroyWindow");
     QCOMPARE(xdw.parameter<Window>(1), WINDOW_ID);
+
+    // Verify unregistering from x input events
+    QCOMPARE(gXEventListenerStub->stubCallCount("unregisterEventFilter"), 1);
 }
 
 void Ut_EventEater::testShow()

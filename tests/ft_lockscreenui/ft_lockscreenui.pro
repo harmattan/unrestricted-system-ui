@@ -19,7 +19,8 @@ SOURCES += ft_lockscreenui.cpp \
     $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.cpp \
     $$COMMONDIR/xchecker.cpp \
     $$SRCDIR/x11wrapper.cpp \
-    $$STUBSDIR/stubbase.cpp \
+    $$SRCDIR/xeventlistener.cpp \
+    $$STUBSDIR/stubbase.cpp
 
 HEADERS += ft_lockscreenui.h \
     $$SRCDIR/screenlock/screenlockwindow.h \
@@ -31,7 +32,8 @@ HEADERS += ft_lockscreenui.h \
     $$ROOTSRCDIR/extensions/screenlock/unlocknotifications.h \
     $$SRCDIR/sysuid.h \
     $$COMMONDIR/xchecker.h \
-    $$SRCDIR/x11wrapper.h
+    $$SRCDIR/x11wrapper.h \
+    $$SRCDIR/xeventlistener.h
 
 include(../common_bot.pri)
 

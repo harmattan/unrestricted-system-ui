@@ -19,6 +19,7 @@
 #ifndef EVENTEATER_H
 #define EVENTEATER_H
 
+#include "xeventlistener.h"
 #include <QObject>
 #include <QAbstractEventDispatcher>
 #include <QX11Info>
@@ -26,30 +27,25 @@
 
 /*!
  * An EventEater window interrupts X pointer and key press events. On event received EventEater hides its window.
- *
- * When creating an EventEater instance, it becomes the effective EventEater instance. Only effective instance interrupts
- * events. There can be only one effective instance, so when EventEater is created any previous instances become obsolete
- * and don't interrupt events any more.
  */
-class EventEater : public QObject {
+class EventEater : public QObject, XEventListenerFilterInterface {
     Q_OBJECT
 public:
 
-    //! Creates a new EventEater instance and its window. This EventEater becomes the effective instance.
+    //! Creates a new EventEater instance and its window.
     EventEater();
 
     //! Destroys the EventEater and its window.
     virtual ~EventEater();
-
-    /*! Event filter method to handle input events.
-     */
-    bool eventFilter(XEvent *event);
 
     /*! Show the event eater window */
     void show();
 
     /*! Hide the event eater window */
     void hide();
+
+    //! Handles x input events
+    bool xEventFilter(const XEvent &event);
 
 private:
 

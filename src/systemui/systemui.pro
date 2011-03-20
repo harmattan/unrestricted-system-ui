@@ -38,7 +38,8 @@ HEADERS +=                              \
     usbui.h                             \
     contextframeworkcontext.h           \
     applicationcontext.h                \
-    x11wrapper.h
+    x11wrapper.h                        \
+    xeventlistener.h
 
 SOURCES +=                              \
     main.cpp                            \
@@ -50,7 +51,8 @@ SOURCES +=                              \
     shutdownbusinesslogic.cpp           \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
-    x11wrapper.cpp
+    x11wrapper.cpp                      \
+    xeventlistener.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)

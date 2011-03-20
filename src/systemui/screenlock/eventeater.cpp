@@ -16,30 +16,11 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include "eventeater.h"
-
-// Event eater instance that listens input events
-static EventEater *eventEaterListenerInstance = NULL;
-// Previous event filter
-QAbstractEventDispatcher::EventFilter  previousEventFilter = NULL;
-
-static bool eventEaterEventFilter(void *message)
-{
-    bool handled = false;
-    XEvent *event = static_cast<XEvent *>(message);
-    handled = eventEaterListenerInstance->eventFilter(event);
-
-    if (!handled && previousEventFilter && previousEventFilter != eventEaterEventFilter) {
-        handled = previousEventFilter(message);
-    }
-    return handled;
-}
 
 EventEater::EventEater()
 {
-    if (previousEventFilter == NULL)
-        previousEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(eventEaterEventFilter);
-
     Display *dpy = QX11Info::display();
     int scr = DefaultScreen(dpy);
 
@@ -56,7 +37,9 @@ EventEater::EventEater()
                                        CWOverrideRedirect,
                                        &attr);
 
-    X11Wrapper::XSelectInput(dpy, window, ButtonPressMask|ButtonReleaseMask|KeyPressMask);
+    long inputMask = ButtonPressMask|KeyPressMask;
+    XEventListener::registerEventFilter(this, inputMask);
+    X11Wrapper::XSelectInput(dpy, window, inputMask);
     X11Wrapper::XStoreName(dpy, window, const_cast<char*>("EventEater"));
 
     // Set the stacking layer
@@ -65,20 +48,13 @@ EventEater::EventEater()
         long layer = 6;
         X11Wrapper::XChangeProperty(dpy, window, stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*) &layer, 1);
     }
-
-    eventEaterListenerInstance = this;
 }
 
 EventEater::~EventEater()
 {
-    X11Wrapper::XDestroyWindow(QX11Info::display(), window);
+    XEventListener::unregisterEventFilter(this);
 
-    // If destroying effective instance, then set static instance and filter pointers to NULL and restore previous event filter
-    if (this == eventEaterListenerInstance) {
-        eventEaterListenerInstance = NULL;
-        QAbstractEventDispatcher::instance()->setEventFilter(previousEventFilter);
-        previousEventFilter = NULL;
-    }
+    X11Wrapper::XDestroyWindow(QX11Info::display(), window);
 }
 
 void EventEater::show()
@@ -97,11 +73,11 @@ void EventEater::hide()
     X11Wrapper::XUnmapWindow(QX11Info::display(), window);
 }
 
-bool EventEater::eventFilter(XEvent *event)
+bool EventEater::xEventFilter(const XEvent &event)
 {
     bool handled = false;
 
-    if ((event->xany.window == window) && (event->type == ButtonPress || event->type == KeyPress)) {
+    if ((event.xany.window == window) && (event.type == ButtonPress || event.type == KeyPress)) {
         handled = true;
         emit inputEventReceived();
     }
