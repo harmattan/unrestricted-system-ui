@@ -49,6 +49,7 @@ private slots:
     void testWithoutEventTypeOrFeedbackId();
     void testWithEventTypeAndFeedbackId();
     void testWithoutEventTypeWithFeedbackId();
+    void testUpdateNotificationIsNotPossible();
 
 private:
     // MApplication

@@ -124,4 +124,23 @@ void Ut_NGFNotificationSink::testWithoutEventTypeWithFeedbackId()
     QCOMPARE(gNGFAdapterStub->stubLastCallTo("play").parameter<QString>(0), QString("feedback"));
 }
 
+void Ut_NGFNotificationSink::testUpdateNotificationIsNotPossible()
+{
+    // Create a notification
+    NotificationParameters parameters1;
+    parameters1.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback1"));
+    Notification notification(0, 0, 0, parameters1, Notification::ApplicationEvent, 1000);
+    emit addNotification(notification);
+
+    // Update the notification
+    NotificationParameters parameters2;
+    parameters2.add(FeedbackParameterFactory::createFeedbackIdParameter("feedback2"));
+    notification.setParameters(parameters2);
+    emit addNotification(notification);
+
+    // Check that NGFAdapter::play() was only called for the first feedback
+    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
+    QCOMPARE(gNGFAdapterStub->stubLastCallTo("play").parameter<QString>(0), QString("feedback1"));
+}
+
 QTEST_APPLESS_MAIN(Ut_NGFNotificationSink)

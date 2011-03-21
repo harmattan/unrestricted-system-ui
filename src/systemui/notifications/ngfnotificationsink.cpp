@@ -39,7 +39,7 @@ QString NGFNotificationSink::determineFeedbackId(const NotificationParameters &p
 
 void NGFNotificationSink::addNotification(const Notification &notification)
 {
-    if (canAddNotification(notification)) {
+    if (canAddNotification(notification) && !idToEventId.contains(notification.notificationId())) {
         QString feedbackId = determineFeedbackId(notification.parameters());
         if (!feedbackId.isEmpty()) {
             uint eventId = adapter->play(feedbackId);
