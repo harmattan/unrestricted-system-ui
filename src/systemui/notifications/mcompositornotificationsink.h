@@ -21,6 +21,7 @@
 #define MCOMPOSITORNOTIFICATIONSINK_H_
 
 #include <QHash>
+#include <QSet>
 #include <QTimer>
 #include "widgetnotificationsink.h"
 #include <X11/X.h>
@@ -137,6 +138,8 @@ private:
      */
     bool currentApplicationHasPreviewsDisabled();
 
+    //! The set of all notification IDs known by this sink. Needed to know also about those notifications which do not have banners anymore.
+    QSet<uint> notificationIds;
 
     //! A mapping between notification IDs and info banners
     QHash<uint, MBanner *> idToBanner;

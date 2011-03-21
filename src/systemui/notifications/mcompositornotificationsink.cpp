@@ -83,17 +83,19 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if ( ((currentApplicationHasPreviewsDisabled() || sinkDisabled) && notification.type() != Notification::SystemEvent)
-         || allPreviewsDisabled) {
+    if (((currentApplicationHasPreviewsDisabled() || sinkDisabled) && notification.type() != Notification::SystemEvent) || allPreviewsDisabled) {
         emit notificationAdded(notification);
         return;
     }
 
-    if (idToBanner.contains(notification.notificationId())) {
+    if (notificationIds.contains(notification.notificationId())) {
         // The notification already exists so update it
         updateNotification(notification);
     } else {
-         // Create and set up info banner widget
+        // Store the ID of the notification
+        notificationIds.insert(notification.notificationId());
+
+        // Create and set up info banner widget
         MBanner *banner = createInfoBanner(notification);
         banner->setStyleName(banner->objectName() == "EventBanner" ? "ShortEventBanner" : "SystemBanner");
         banner->setProperty("notificationId", notification.notificationId());
@@ -104,7 +106,7 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         // The banner sends disappear either by timeout or by user clicking on it
         connect(banner, SIGNAL(disappeared()), this, SLOT(currentBannerDone()));
 
-        // Keep track of the mapping between IDs and private notification information classes
+        // Keep track of the mapping between IDs and banners
         idToBanner.insert(notification.notificationId(), banner);
         bannerQueue.append(banner);
         emit notificationAdded(notification);
@@ -115,8 +117,8 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         if (!window->isVisible()) {
             window->show();
 
-            // Calling hide() causes the ondisplay property of the window to change with delay,
-            // so if show() is called fast enough after hiding, ondisplay is never changed to false and we
+            // Calling hide() causes the onDisplay property of the window to change with delay,
+            // so if show() is called fast enough after hiding, onDisplay is never changed to false and we
             // never get a new displayEntered signal, so go to the slot immediately in that case.
             if(window->isOnDisplay()) {
                 addOldestBannerToWindow();
@@ -129,8 +131,8 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
 {
     MBanner *banner = idToBanner.value(notification.notificationId());
 
-    if (banner) {
-        // Update the info banner widget
+    if (banner != NULL) {
+        // If the notification maps to a banner, update it
         banner->setTitle(infoBannerTitleText(notification.parameters()));
         banner->setSubtitle(infoBannerSubtitleText(notification.parameters()));
         banner->setProperty("notificationId", notification.notificationId());
@@ -144,9 +146,10 @@ void MCompositorNotificationSink::updateNotification(const Notification &notific
 
 void MCompositorNotificationSink::removeNotification(uint notificationId)
 {
-    MBanner *banner = idToBanner.take(notificationId);
+    notificationIds.remove(notificationId);
 
-    if (banner) {
+    MBanner *banner = idToBanner.take(notificationId);
+    if (banner != NULL) {
         if(currentBanner == banner) {
             // The banner is on the screen, so make it disappear
             bannerTimer.stop();

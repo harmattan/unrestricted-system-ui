@@ -845,5 +845,21 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabledForApplicat
     QCOMPARE(gXAllocs.count(), 0);
 }
 
+void Ut_MCompositorNotificationSink::updateNotificationDoesNotCreateWindowIfBannerNotOnDisplay()
+{
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0);
+    emitDisplayEntered();
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    // At this point the window has disappeared and updating the notification should not bring it back
+    TestNotificationParameters parameters1( "title1", "subtitle1", "buttonicon1", "content1 1 1 1");
+    notificationManager->addNotification(0, parameters1);
+    QCOMPARE(mWindowSetVisibleValue, false);
+}
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)
