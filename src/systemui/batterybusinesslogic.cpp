@@ -24,14 +24,9 @@
 #include <MNotification>
 #include <MFeedback>
 
-/*
- * TODO List
- * -) Connect sounds with notifications
- */
-
 namespace {
-    const int   LowBatteryActiveInterval = 30 * 60 * 1000; //30 mins
-    const int   LowBatteryInactiveInterval = 2 * 60 * 60 * 1000; //2 hours
+    const int   LowBatteryActiveInterval = 5 * 60 * 1000; // 5 mins
+    const int   LowBatteryInactiveInterval = 30 * 60 * 1000; // 30 mins
     const int   ChargingAnimationRateUSB = 800; // 800 ms
     const int   ChargingAnimationRateWall = 400; // 400 ms
 }
