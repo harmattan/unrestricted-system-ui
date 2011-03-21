@@ -11,10 +11,6 @@ STYLE_HEADERS += $$SRCDIR/screenlock/screenlockwindowstyle.h
 # unit test and unit classes
 SOURCES += \
     ut_sysuid.cpp \
-    $$SRCDIR/shutdownui.cpp \
-    $$SRCDIR/usbui.cpp \
-    $$SRCDIR/batterybusinesslogic.cpp \
-    $$SRCDIR/screenlock/screenlockbusinesslogic.cpp \
     $$SRCDIR/sysuid.cpp
 
 # service classes

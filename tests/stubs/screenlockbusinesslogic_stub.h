@@ -11,17 +11,23 @@ class ScreenLockBusinessLogicStub : public StubBase {
   public:
   virtual void ScreenLockBusinessLogicConstructor(QObject *parent);
   virtual void ScreenLockBusinessLogicDestructor();
+  virtual int tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool silent, bool flicker);
+  virtual int tklock_close(bool silent);
   virtual void toggleScreenLockUI(bool toggle);
   virtual void toggleEventEater(bool toggle);
+  virtual void registerExtension(MApplicationExtensionInterface *extension);
+  virtual void unregisterExtension(MApplicationExtensionInterface *extension);
+  virtual void reset();
   virtual void unlockScreen();
+  virtual void showScreenLock();
+  virtual void showLowPowerMode();
+  virtual void setDisplayOffMode();
+  virtual void hideScreenLockAndEventEater();
+  virtual void showEventEater();
   virtual void hideEventEater();
   virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
   virtual void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
-  virtual bool displayIsOn();
-  virtual void reset();
-  virtual void registerExtension(MApplicationExtensionInterface *interface);
-  virtual void unregisterExtension(MApplicationExtensionInterface *interface);
-};
+}; 
 
 // 2. IMPLEMENT STUB
 void ScreenLockBusinessLogicStub::ScreenLockBusinessLogicConstructor(QObject *parent) {
@@ -31,6 +37,26 @@ void ScreenLockBusinessLogicStub::ScreenLockBusinessLogicConstructor(QObject *pa
 void ScreenLockBusinessLogicStub::ScreenLockBusinessLogicDestructor() {
 
 }
+int ScreenLockBusinessLogicStub::tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool silent, bool flicker) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QString & >(service));
+  params.append( new Parameter<const QString & >(path));
+  params.append( new Parameter<const QString & >(interface));
+  params.append( new Parameter<const QString & >(method));
+  params.append( new Parameter<uint >(mode));
+  params.append( new Parameter<bool >(silent));
+  params.append( new Parameter<bool >(flicker));
+  stubMethodEntered("tklock_open",params);
+  return stubReturnValue<int>("tklock_open");
+}
+
+int ScreenLockBusinessLogicStub::tklock_close(bool silent) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(silent));
+  stubMethodEntered("tklock_close",params);
+  return stubReturnValue<int>("tklock_close");
+}
+
 void ScreenLockBusinessLogicStub::toggleScreenLockUI(bool toggle) {
   QList<ParameterBase*> params;
   params.append( new Parameter<bool >(toggle));
@@ -43,8 +69,44 @@ void ScreenLockBusinessLogicStub::toggleEventEater(bool toggle) {
   stubMethodEntered("toggleEventEater",params);
 }
 
+void ScreenLockBusinessLogicStub::registerExtension(MApplicationExtensionInterface *extension) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<MApplicationExtensionInterface * >(extension));
+  stubMethodEntered("registerExtension",params);
+}
+
+void ScreenLockBusinessLogicStub::unregisterExtension(MApplicationExtensionInterface *extension) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<MApplicationExtensionInterface * >(extension));
+  stubMethodEntered("unregisterExtension",params);
+}
+
+void ScreenLockBusinessLogicStub::reset() {
+  stubMethodEntered("reset");
+}
+
 void ScreenLockBusinessLogicStub::unlockScreen() {
   stubMethodEntered("unlockScreen");
+}
+
+void ScreenLockBusinessLogicStub::showScreenLock() {
+  stubMethodEntered("showScreenLock");
+}
+
+void ScreenLockBusinessLogicStub::showLowPowerMode() {
+  stubMethodEntered("showLowPowerMode");
+}
+
+void ScreenLockBusinessLogicStub::setDisplayOffMode() {
+  stubMethodEntered("setDisplayOffMode");
+}
+
+void ScreenLockBusinessLogicStub::hideScreenLockAndEventEater() {
+  stubMethodEntered("hideScreenLockAndEventEater");
+}
+
+void ScreenLockBusinessLogicStub::showEventEater() {
+  stubMethodEntered("showEventEater");
 }
 
 void ScreenLockBusinessLogicStub::hideEventEater() {
@@ -64,29 +126,6 @@ void ScreenLockBusinessLogicStub::locksChanged(MeeGo::QmLocks::Lock what, MeeGo:
   stubMethodEntered("locksChanged",params);
 }
 
-bool ScreenLockBusinessLogicStub::displayIsOn() {
-  stubMethodEntered("displayIsOn");
-  return stubReturnValue<bool>("displayIsOn");
-}
-
-void ScreenLockBusinessLogicStub::reset() {
-  stubMethodEntered("reset");
-}
-
-void ScreenLockBusinessLogicStub::registerExtension(MApplicationExtensionInterface *interface)
-{
-    QList<ParameterBase*> params;
-    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
-    stubMethodEntered("registerExtension", params);
-}
-
-void ScreenLockBusinessLogicStub::unregisterExtension(MApplicationExtensionInterface *interface)
-{
-    QList<ParameterBase*> params;
-    params.append( new Parameter<MApplicationExtensionInterface * >(interface));
-    stubMethodEntered("unregisterExtension", params);
-}
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -103,6 +142,14 @@ ScreenLockBusinessLogic::~ScreenLockBusinessLogic() {
   gScreenLockBusinessLogicStub->ScreenLockBusinessLogicDestructor();
 }
 
+int ScreenLockBusinessLogic::tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool silent, bool flicker) {
+  return gScreenLockBusinessLogicStub->tklock_open(service, path, interface, method, mode, silent, flicker);
+}
+
+int ScreenLockBusinessLogic::tklock_close(bool silent) {
+  return gScreenLockBusinessLogicStub->tklock_close(silent);
+}
+
 void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle) {
   gScreenLockBusinessLogicStub->toggleScreenLockUI(toggle);
 }
@@ -111,8 +158,40 @@ void ScreenLockBusinessLogic::toggleEventEater(bool toggle) {
   gScreenLockBusinessLogicStub->toggleEventEater(toggle);
 }
 
+void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *extension) {
+  gScreenLockBusinessLogicStub->registerExtension(extension);
+}
+
+void ScreenLockBusinessLogic::unregisterExtension(MApplicationExtensionInterface *extension) {
+  gScreenLockBusinessLogicStub->unregisterExtension(extension);
+}
+
+void ScreenLockBusinessLogic::reset() {
+  gScreenLockBusinessLogicStub->reset();
+}
+
 void ScreenLockBusinessLogic::unlockScreen() {
   gScreenLockBusinessLogicStub->unlockScreen();
+}
+
+void ScreenLockBusinessLogic::showScreenLock() {
+  gScreenLockBusinessLogicStub->showScreenLock();
+}
+
+void ScreenLockBusinessLogic::showLowPowerMode() {
+  gScreenLockBusinessLogicStub->showLowPowerMode();
+}
+
+void ScreenLockBusinessLogic::setDisplayOffMode() {
+  gScreenLockBusinessLogicStub->setDisplayOffMode();
+}
+
+void ScreenLockBusinessLogic::hideScreenLockAndEventEater() {
+  gScreenLockBusinessLogicStub->hideScreenLockAndEventEater();
+}
+
+void ScreenLockBusinessLogic::showEventEater() {
+  gScreenLockBusinessLogicStub->showEventEater();
 }
 
 void ScreenLockBusinessLogic::hideEventEater() {
@@ -125,24 +204,6 @@ void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::Display
 
 void ScreenLockBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
   gScreenLockBusinessLogicStub->locksChanged(what, how);
-}
-
-bool ScreenLockBusinessLogic::displayIsOn() {
-  return gScreenLockBusinessLogicStub->displayIsOn();
-}
-
-void ScreenLockBusinessLogic::reset() {
-  gScreenLockBusinessLogicStub->reset();
-}
-
-void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *interface)
-{
-    gScreenLockBusinessLogicStub->registerExtension(interface);
-}
-
-void ScreenLockBusinessLogic::unregisterExtension(MApplicationExtensionInterface *interface)
-{
-    gScreenLockBusinessLogicStub->unregisterExtension(interface);
 }
 
 

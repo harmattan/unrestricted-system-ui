@@ -25,9 +25,10 @@
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
 #include "sysuid.h"
-#include "lockscreenwindow_stub.h"
 #include "lockscreen_stub.h"
-#include "eventeater_stub.h"
+#include "lowbatterynotifier_stub.h"
+#include "batterybusinesslogic_stub.h"
+#include "screenlockbusinesslogic_stub.h"
 #include "contextframeworkitem_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "eventtypestore_stub.h"
@@ -46,10 +47,13 @@
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "x11wrapper_stub.h"
-#include "closeeventeater_stub.h"
 #include "notifiernotificationsink_stub.h"
-
+#include "shutdownui_stub.h"
+#include "usbui_stub.h"
+#include "lockscreenwindow_stub.h"
+#include "x11wrapper_stub.h"
+#include "eventeater_stub.h"
+#include "closeeventeater_stub.h"
 
 bool gQmLocksDeviceLock = false;
 bool gQmLocksScreenLock = false;
@@ -99,7 +103,7 @@ NotificationParameters::~NotificationParameters()
 }
 
 // NotificationSink stubs (used by MCompositorNotificationSink)
-NotificationSink::NotificationSink(QObject *parent)
+NotificationSink::NotificationSink(QObject *)
 {
 }
 

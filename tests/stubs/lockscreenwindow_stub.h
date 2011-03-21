@@ -32,6 +32,7 @@ class ScreenLockWindowStub : public StubBase {
   virtual void applyStyle();
   virtual void showEvent(QShowEvent *event);
   virtual void setLowPowerMode(bool enable);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 // 2. IMPLEMENT STUB
@@ -57,6 +58,13 @@ void ScreenLockWindowStub::setLowPowerMode(bool enable)
     QList<ParameterBase*> params;
     params.append( new Parameter<bool>(enable));
     stubMethodEntered("setLowPowerMode", params);
+}
+
+void ScreenLockWindowStub::paintEvent(QPaintEvent *event)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QPaintEvent * >(event));
+  stubMethodEntered("paintEvent", params);
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -90,6 +98,7 @@ void ScreenLockWindow::setLowPowerMode(bool enable)
 
 void ScreenLockWindow::paintEvent(QPaintEvent *event)
 {
+    gScreenLockWindowStub->paintEvent(event);
 }
 
 #endif
