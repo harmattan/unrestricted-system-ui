@@ -24,6 +24,11 @@
 #include "closeeventeater_stub.h"
 #include "ut_statusindicatormenubusinesslogic.h"
 
+// QWidget stub for not actually showing the status indicator menu window
+void QWidget::setVisible(bool visible) {
+    setAttribute(Qt::WA_WState_Visible, visible);
+}
+
 void Ut_StatusIndicatorMenuBusinessLogic::initTestCase()
 {
     static int argc = 1;
