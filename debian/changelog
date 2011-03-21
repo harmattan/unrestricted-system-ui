@@ -1,9 +1,8 @@
-system-ui (0.20.21~1) unstable; urgency=low
+system-ui (0.20.21-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#238606 - Updating a notification for which the preview has already been shown causes the preview to be shown and the feedback to be played again
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 15:36:57 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 18:23:27 +0200
 
 system-ui (0.20.20-1) unstable; urgency=low
 
