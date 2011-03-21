@@ -56,19 +56,17 @@ MFeedback::play () const
  *  [XXX: we need to know first, how to play those correctly...]
  */
 
-bool
-MNotification::publish ()
+QList<MNotification*> gMNotificationPublish;
+bool MNotification::publish ()
 {
-/*
- * XXX: We don't want to show real notifications
- * in unit-test:
- */
+    gMNotificationPublish.append(this);
     return false;
 }
 
-bool
-MNotification::remove ()
+QList<QString> gMNotificationRemoveEventType;
+bool MNotification::remove ()
 {
+    gMNotificationRemoveEventType.append(eventType());
     return false;
 }
 
@@ -99,6 +97,8 @@ Ut_BatteryBusinessLogic::cleanup ()
     /* Testcase deinitialization... */
     delete m_logic;
     m_logic = NULL;
+    gMNotificationPublish.clear();
+    gMNotificationRemoveEventType.clear();
 }
 
 void
@@ -393,5 +393,16 @@ Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
     QVERIFY (m_logic->m_LowBatteryNotifier == 0);
 #endif
 }
+
+void Ut_BatteryBusinessLogic::testWhenChargingStopsThenNotificationRemoved()
+{
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
+    QVERIFY(gMNotificationPublish.count() > 0);
+    QCOMPARE(gMNotificationPublish.last()->eventType(), QString("x-nokia.battery"));
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
+    QVERIFY(gMNotificationRemoveEventType.count() > 0);
+    QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery"));
+}
+
 
 QTEST_MAIN(Ut_BatteryBusinessLogic)

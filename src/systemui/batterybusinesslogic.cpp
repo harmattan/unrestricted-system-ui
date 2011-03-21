@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 #include "batterybusinesslogic.h"
-
 #include <MLocale>
 #include <QTimer>
 
@@ -226,6 +225,7 @@ BatteryBusinessLogic::chargingStateChanged (
             break;
 
         case MeeGo::QmBattery::StateNotCharging:
+            removeNotification("x-nokia.battery");
             utiliseLED (false, QString ("PatternBatteryCharging"));
             break;
 
@@ -430,6 +430,15 @@ BatteryBusinessLogic::sendNotification (
     if (!icon.isEmpty())
         m_notification->setImage (icon);
     m_notification->publish ();
+}
+
+void BatteryBusinessLogic::removeNotification(const QString &eventType)
+{
+    if (m_notification != 0 && m_notification->eventType() == eventType) {
+        m_notification->remove();
+        delete m_notification;
+        m_notification = 0;
+    }
 }
 
 QString
