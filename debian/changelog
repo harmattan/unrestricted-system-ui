@@ -1,9 +1,8 @@
-system-ui (0.20.19~1) unstable; urgency=low
+system-ui (0.20.19-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#236732 - Accessory_(dis)connected sounds are not played
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 14:19:18 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 14:21:18 +0200
 
 system-ui (0.20.18-1) unstable; urgency=low
 
