@@ -1,3 +1,9 @@
+system-ui (0.20.19~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 14:19:18 +0200
+
 system-ui (0.20.18-1) unstable; urgency=low
 
   * Fixes: NB#229423 - Red box displayed as an icon for the system banner message, Charging not started... 
