@@ -1,9 +1,8 @@
-system-ui (0.20.20~1) unstable; urgency=low
+system-ui (0.20.20-1) unstable; urgency=low
 
-  * [URNELEASED]
   * Fixes: NB#229132 - battery low notification every 30 minutes under active use is just too late/slow
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 14:21:24 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 15:36:34 +0200
 
 system-ui (0.20.19-1) unstable; urgency=low
 
