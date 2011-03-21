@@ -24,7 +24,7 @@
 #include <MApplication>
 #include <MWindow>
 #include <QWidget>
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 #include "xeventlistener_stub.h"
 
 // QWidget stubs

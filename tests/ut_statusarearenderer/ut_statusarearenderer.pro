@@ -23,6 +23,7 @@ HEADERS += \
     ut_statusarearenderer.h \
     $$SRCDIR/statusarea/statusarearenderer.h \
     $$SRCDIR/statusarea/statusarea.h \
-    $$SRCDIR/x11wrapper.h
+    $$SRCDIR/x11wrapper.h \
+    $$SRCDIR/xeventlistener.h
 
 include(../common_bot.pri)

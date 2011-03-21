@@ -20,7 +20,7 @@
 #include <QtTest/QtTest>
 #include "ut_shutdownui.h"
 #include "shutdownui.h"
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 
 #include <MApplication>
 #include <MWindow>

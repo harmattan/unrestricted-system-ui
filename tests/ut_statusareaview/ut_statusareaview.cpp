@@ -44,7 +44,7 @@
 #include "notifiernotificationsink_stub.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
 #include "sysuid_stub.h"
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 #include <MApplication>
 
 // Called before the first testfunction is executed

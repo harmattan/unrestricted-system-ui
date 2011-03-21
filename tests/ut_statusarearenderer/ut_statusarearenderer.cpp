@@ -22,12 +22,12 @@
 #include "statusarea_stub.h"
 #include "statusareastyle.h"
 #include <QMeeGoGraphicsSystemHelper>
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 #include <QX11Info>
+#include "xeventlistener_stub.h"
 
 const static Window MEEGOTOUCH_STATUSBAR_WINDOW_ID = 1;
-#define ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP 0x00000001
-#define ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY 0x00000002
+const static Window MEEGOTOUCH_WM_WINDOW_ID = 2;
 
 bool Ut_StatusAreaRenderer_Scene_Render_Called = false;
 bool Ut_StatusAreaRenderer_Scene_SendEvent_Called = false;
@@ -209,6 +209,25 @@ Pixmap X11Wrapper::XCreatePixmap(Display *display, Drawable drawable, unsigned i
     return ::XCreatePixmap(display, drawable, width, height, depth);
 }
 
+bool wmPropertyStatusBarVisibleXGetReturnValue;
+void Ut_StatusAreaRenderer::setupXGetPropertiesToDefault()
+{
+    wmPropertyStatusBarVisibleXGetReturnValue = true;
+
+    XGetWindowPropertyDataReturnValueData returnData;
+    returnData.type = XA_WINDOW;
+    returnData.format = 32;
+    returnData.data = (unsigned char*)&MEEGOTOUCH_WM_WINDOW_ID;
+    gX11WrapperStub->stubSetXGetWindowPropertyDataReturnValues(QX11Info::appRootWindow(), returnData);
+
+    returnData.type = XA_CARDINAL;
+    returnData.format = 32;
+    returnData.data = (unsigned char *)&wmPropertyStatusBarVisibleXGetReturnValue;
+    gX11WrapperStub->stubSetXGetWindowPropertyDataReturnValues(MEEGOTOUCH_WM_WINDOW_ID, returnData);
+
+    gX11WrapperStub->stubSetReturnValue("XGetWindowProperty", Success);
+}
+
 void Ut_StatusAreaRenderer::init()
 {
     gTimerStopped = false;
@@ -224,6 +243,9 @@ void Ut_StatusAreaRenderer::init()
     gX11WrapperStub->stubReset();
     gX11WrapperStub->stubSetReturnValue("XCreateWindow", MEEGOTOUCH_STATUSBAR_WINDOW_ID);
 
+    gXEventListenerStub->stubReset();
+
+    setupXGetPropertiesToDefault();
     statusAreaRenderer = new StatusAreaRenderer();
 }
 
@@ -249,6 +271,71 @@ void Ut_StatusAreaRenderer::initTestCase()
 
 void Ut_StatusAreaRenderer::cleanupTestCase()
 {
+}
+
+void Ut_StatusAreaRenderer::testSetupStatusBarVisiblePropertyListening()
+{
+    QCOMPARE(statusAreaRenderer->windowManagerWindow, MEEGOTOUCH_WM_WINDOW_ID);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XFree").at(0)->parameter<void *>(0), (void *)&MEEGOTOUCH_WM_WINDOW_ID);
+
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XFree").at(1)->parameter<void *>(0), (void *)&wmPropertyStatusBarVisibleXGetReturnValue);
+
+    // Verify x event listening
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<Window>(1), MEEGOTOUCH_WM_WINDOW_ID);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask);
+    QCOMPARE(gXEventListenerStub->stubCallCount("registerEventFilter"), 1);
+    QCOMPARE(
+            gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0),
+            (XEventListenerFilterInterface *)statusAreaRenderer);
+    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask);
+}
+
+void Ut_StatusAreaRenderer::testWhenStatusBarVisiblePropertySetupUnsuccessfulThenAssumingStatusBarVisible()
+{
+    delete statusAreaRenderer;
+    gX11WrapperStub->stubSetReturnValue("XGetWindowProperty", BadWindow);
+    statusAreaRenderer = new StatusAreaRenderer;
+
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+}
+
+void Ut_StatusAreaRenderer::testStatusBarInvisibleStopsRendering()
+{
+    // "Turn" _MEEGOTOUCH_STATUSBAR_VISIBLE off
+    wmPropertyStatusBarVisibleXGetReturnValue = false;
+    XEvent event;
+    event.xproperty.window = MEEGOTOUCH_WM_WINDOW_ID;
+    event.xproperty.atom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
+    statusAreaRenderer->xEventFilter(event);
+    QCOMPARE(statusAreaRenderer->statusBarVisible, false);
+
+    // Verify we are not rendering
+    QList<QRectF> rectList;
+    QRectF rect1(0,0,30,80);
+    rectList.append(rect1);
+    statusAreaRenderer->accumulateSceneChanges(rectList);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
+
+
+    // "Turn" _MEEGOTOUCH_STATUSBAR_VISIBLE on
+    wmPropertyStatusBarVisibleXGetReturnValue = true;
+    event.xproperty.window = MEEGOTOUCH_WM_WINDOW_ID;
+    event.xproperty.atom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
+    statusAreaRenderer->xEventFilter(event);
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+
+    // Verify we are rendering again
+    statusAreaRenderer->accumulateSceneChanges(rectList);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
+}
+
+void Ut_StatusAreaRenderer::testUnregisteringEventFilterWhenDestroyed()
+{
+    delete statusAreaRenderer;
+    statusAreaRenderer = NULL;
+
+    QCOMPARE(gXEventListenerStub->stubCallCount("unregisterEventFilter"), 1);
 }
 
 void Ut_StatusAreaRenderer::testSceneChanged()
@@ -378,6 +465,7 @@ void Ut_StatusAreaRenderer::testSceneRenderControlWhenInitialDisplayStateOff()
     QCOMPARE(statusAreaRenderer->renderScene, true);
     delete statusAreaRenderer;
     displayState = MeeGo::QmDisplayState::Off;
+    setupXGetPropertiesToDefault();
     statusAreaRenderer = new StatusAreaRenderer;
     QCOMPARE(statusAreaRenderer->renderScene, false);
 }
@@ -429,6 +517,7 @@ void Ut_StatusAreaRenderer::testRenderingWithoutMeeGo()
 {
     delete statusAreaRenderer;
     gGraphicsSystemName = QLatin1String("not_meego");
+    setupXGetPropertiesToDefault();
     statusAreaRenderer = new StatusAreaRenderer;
 
     QCOMPARE(statusAreaRenderer->statusAreaLivePixmap, static_cast<QMeeGoLivePixmap*>(0) );
@@ -457,31 +546,29 @@ void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreSetCorrectly()
 {
     Window rootWindow = DefaultRootWindow(QX11Info::display());
 
-    QCOMPARE(gX11WrapperStub->stubCallCount("XInternAtom"), 2);
-    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(0)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
-    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(1)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
     QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 2);
-
     // Verify setting pixmap property
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(2)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Window>(1), MEEGOTOUCH_STATUSBAR_WINDOW_ID);
-    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
     QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(3), XA_PIXMAP);
 
     // Verify setting property window property
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(3)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Window>(1), rootWindow);
-    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY);
     QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(3), XA_WINDOW);
 }
 
 void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreDeletedInDestructor()
 {
+    gX11WrapperStub->stubReset();
+
     delete statusAreaRenderer;
     statusAreaRenderer = NULL;
 
     // Check XDeleteProperty deletes the correct property
     QCOMPARE(gX11WrapperStub->stubCallCount("XDeleteProperty"), 2);
-    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XDeleteProperty").at(0)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_WINDOW_PROPERTY);
-    QCOMPARE((int)gX11WrapperStub->stubCallsTo("XDeleteProperty").at(1)->parameter<Atom>(2), ATOM_MEEGOTOUCH_STATUSBAR_PIXMAP);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(0)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(1)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
 }
 
 QTEST_MAIN(Ut_StatusAreaRenderer)
