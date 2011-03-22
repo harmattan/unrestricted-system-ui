@@ -128,6 +128,13 @@ void Ut_ShutdownUI::testShowWindow()
     m_subject->showWindow("text1", "text2", 2000);
 
     QVERIFY(m_subject->realized);
+
+    // Swiping should be disabled for this window
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XChangeProperty").parameter<Window>(1), m_subject->winId());
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XChangeProperty").parameter<Atom>(2), X11Wrapper::XInternAtom(0, "_MEEGOTOUCH_CUSTOM_REGION", 0));
+
+    unsigned int region[] = { m_subject->rect().x(), m_subject->rect().y(), m_subject->rect().width(), m_subject->rect().height() };
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XChangeProperty").parameter<QByteArray>(6), QByteArray(reinterpret_cast<const char *>(&region[0]), sizeof(region)));
 }
 
 QTEST_APPLESS_MAIN(Ut_ShutdownUI)

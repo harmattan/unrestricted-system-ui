@@ -1,6 +1,7 @@
 system-ui (0.20.23~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#229758 - Reset and clear device UI can be minimized.
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 22 Mar 2011 11:59:03 +0200
 

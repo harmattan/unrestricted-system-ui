@@ -103,6 +103,17 @@ void ShutdownUI::realize()
     realized = true;
 }
 
+void disableCompositorSwipeRect(QWidget *window, const QRectF &rect)
+{
+    if (window != NULL) {
+        unsigned int customRegion[] = { rect.x(), rect.y(), rect.width(), rect.height() };
+        Display *dpy = QX11Info::display();
+        Atom customRegionAtom = X11Wrapper::XInternAtom(dpy, "_MEEGOTOUCH_CUSTOM_REGION", False);
+        X11Wrapper::XChangeProperty(dpy, window->winId(), customRegionAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<unsigned char *>(&customRegion[0]), 4);
+        X11Wrapper::XSync(dpy, False);
+    }
+}
+
 void ShutdownUI::showWindow(const QString &text1, const QString &text2, int timeout)
 {
     // If the widgets are not created create them now
@@ -131,6 +142,7 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
 
     show();
     raise();
+    disableCompositorSwipeRect(this, rect());
 
     feedback->play();
 
