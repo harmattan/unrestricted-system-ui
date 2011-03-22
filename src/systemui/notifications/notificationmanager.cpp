@@ -30,6 +30,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <mfiledatastore.h>
+#include <QFile>
 
 //! Directory in which the persistent data files are located
 static const QString PERSISTENT_DATA_PATH = QDir::homePath() + QString("/.config/sysuid/notificationmanager/");
@@ -55,9 +56,6 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
     persistentDataRestored(false)
-#ifdef HAVE_AEGIS_CRYPTO
-    , persistentStorage(new aegis::storage("com.meego.core.MNotificationManager", aegis::storage::vis_private, aegis::storage::prot_encrypted))
-#endif
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
     dBusSink = new DBusInterfaceNotificationSink(this);
@@ -108,74 +106,55 @@ bool NotificationManager::ensurePersistentDataPath()
 
 void NotificationManager::saveStateData()
 {
-#ifdef HAVE_AEGIS_CRYPTO
     if (ensurePersistentDataPath()) {
-        QBuffer buffer;
-        buffer.open(QIODevice::WriteOnly);
-        QDataStream stream(&buffer);
+        QFile file(STATE_DATA_FILE_NAME);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            QDataStream stream;
+            stream.setDevice(&file);
 
-        stream << lastUsedNotificationUserId;
+            stream << lastUsedNotificationUserId;
 
-        foreach(const NotificationGroup & group, groupContainer) {
-            stream << group;
+            foreach(const NotificationGroup & group, groupContainer) {
+                stream << group;
+            }
+            file.close();
         }
-
-        persistentStorage->put_file(STATE_DATA_FILE_NAME.toAscii(),
-                                    (unsigned char *)buffer.data().data(),
-                                    buffer.data().length());
-
-        persistentStorage->commit();
     }
-#endif
 }
 
 
 void NotificationManager::saveNotifications()
 {
-#ifdef HAVE_AEGIS_CRYPTO
     if (ensurePersistentDataPath()) {
         if (notificationContainer.size()) {
-            QBuffer buffer;
-            buffer.open(QIODevice::WriteOnly);
-            QDataStream stream(&buffer);
+            QFile file(NOTIFICATIONS_FILE_NAME);
+            if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                QDataStream stream;
+                stream.setDevice(&file);
 
-            foreach(const Notification &notification, notificationContainer) {
-                stream << notification;
+                foreach(const Notification &notification, notificationContainer) {
+                    stream << notification;
+                }
+                file.close();
             }
-
-            persistentStorage->put_file(NOTIFICATIONS_FILE_NAME.toAscii(),
-                                        (unsigned char *)buffer.data().data(),
-                                        buffer.data().length());
         } else {
-            persistentStorage->remove_file(NOTIFICATIONS_FILE_NAME.toAscii());
+            QFile::remove(NOTIFICATIONS_FILE_NAME);
         }
-        persistentStorage->commit();
     }
-#endif
 }
-
 
 void NotificationManager::restoreData()
 {
-#ifdef HAVE_AEGIS_CRYPTO
     if (!persistentDataRestored && ensurePersistentDataPath()) {
-        RAWDATA_PTR data;
-        size_t dataLength;
-
-        // The persistent storage automatically verifies the data.
         // If the data is corrupted or tampered with, the previous state
         // is lost and there's nothing we can do.
         persistentDataRestored = true;
 
-        if (persistentStorage->contains_file(STATE_DATA_FILE_NAME.toAscii()) &&
-                persistentStorage->get_file(STATE_DATA_FILE_NAME.toAscii(), &data, &dataLength) == 0) {
+        QFile stateFile(STATE_DATA_FILE_NAME);
 
-            QBuffer buffer;
-            buffer.setData((char *)data, dataLength);
-            buffer.open(QIODevice::ReadOnly);
-            persistentStorage->release_buffer(data);
-
-            QDataStream stream(&buffer);
+        if (stateFile.open(QIODevice::ReadOnly)) {
+            QDataStream stream;
+            stream.setDevice(&stateFile);
 
             stream >> lastUsedNotificationUserId;
 
@@ -186,17 +165,14 @@ void NotificationManager::restoreData()
                 groupContainer.insert(group.groupId(), group);
                 emit groupUpdated(group.groupId(), group.parameters());
             }
+            stateFile.close();
         }
 
-        if (persistentStorage->contains_file(NOTIFICATIONS_FILE_NAME.toAscii()) &&
-                persistentStorage->get_file(NOTIFICATIONS_FILE_NAME.toAscii(), &data, &dataLength) == 0) {
+        QFile notificationFile(NOTIFICATIONS_FILE_NAME);
 
-            QBuffer buffer;
-            buffer.setData((char *)data, dataLength);
-            buffer.open(QIODevice::ReadOnly);
-            persistentStorage->release_buffer(data);
-
-            QDataStream stream(&buffer);
+        if (notificationFile.open(QIODevice::ReadOnly)) {
+            QDataStream stream;
+            stream.setDevice(&notificationFile);
 
             Notification notification;
 
@@ -205,9 +181,9 @@ void NotificationManager::restoreData()
                 notificationContainer.insert(notification.notificationId(), notification);
                 emit notificationRestored(notification);
             }
+            notificationFile.close();
         }
     }
-#endif
 }
 
 
@@ -608,7 +584,7 @@ void NotificationManager::removeUnseenFlags(bool ignore)
     }
 }
 
- QList<Notification> NotificationManager::notifications() const
+QList<Notification> NotificationManager::notifications() const
 {
      return notificationContainer.values();
 }

@@ -124,68 +124,50 @@ uint QDateTime::toTime_t () const
     return qDateTimeToTime_t;
 }
 
-#ifdef HAVE_AEGIS_CRYPTO
-// aegis crypto stubs
-int aegis::storage::get_file(const char* pathname, RAWDATA_RPTR to_buf, size_t* bytes)
-{
-    if (QString(pathname).contains("state.data")) {
-        *to_buf = (RAWDATA_PTR)gStateBuffer.buffer().data();
-        *bytes = gStateBuffer.buffer().size();
-    } else if (QString(pathname).contains("notifications.data")) {
-        *to_buf = (RAWDATA_PTR)gNotificationBuffer.buffer().data();
-        *bytes = gNotificationBuffer.buffer().size();
-    }
+QString gFileName;
 
-    return 0;
+// QFile & QIODevice stubs for file handling
+QFile::QFile(const QString & name) {
+    gFileName = name;
 }
 
-int aegis::storage::put_file(const char* pathname, RAWDATA_PTR data, size_t bytes)
-{
-    if (QString(pathname).contains("state.data")) {
-        gStateBuffer.close();
-        gStateBuffer.setData((char *)data, bytes);
-    } else if (QString(pathname).contains("notifications.data")) {
-        gNotificationBuffer.close();
-        gNotificationBuffer.setData((char *)data, bytes);
-    }
-
-    return 0;
-}
-
-void aegis::storage::release_buffer(RAWDATA_PTR data)
-{
-    Q_UNUSED(data);
-    gNotificationBuffer.close();
-    gStateBuffer.close();
-}
-
-bool aegis::storage::contains_file(const char *pathname)
-{
-    Q_UNUSED(pathname);
-
+bool QFile::remove(const QString & name) {
+    Q_UNUSED(name)
     return true;
 }
 
-void aegis::storage::remove_file(const char *pathname)
-{
-    Q_UNUSED(pathname);
+bool QFile::open(OpenMode mode) {
+    if (gFileName.contains("state.data")) {
+        gStateBuffer.open(mode);
+    } else if (gFileName.contains("notifications.data")) {
+        gNotificationBuffer.open(mode);
+    } else {
+        Q_ASSERT(0);
+    }
+    return true;
 }
 
-bool aegis::storage::commit()
-{
+void QFile::close() {
+    if (gFileName.contains("state.data")) {
+        gStateBuffer.close();
+    } else if (gFileName.contains("notifications.data")) {
+        gNotificationBuffer.close();
+    } else {
+        Q_ASSERT(0);
+    }
 }
 
-aegis::storage::storage(const char *name, aegis::storage::visibility_t visibility, aegis::storage::protection_t protection)
+void QDataStream::setDevice(QIODevice *d)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(visibility);
-    Q_UNUSED(protection);
+    Q_UNUSED(d)
+    if (gFileName.contains("state.data")) {
+        dev = &gStateBuffer;
+    } else if (gFileName.contains("notifications.data")) {
+        dev = &gNotificationBuffer;
+    } else {
+        Q_ASSERT(0);
+    }
 }
-
-aegis::storage::~storage()
-{
-}
-#endif
 
 // EventTypeStore stubs
 QHash<QString, QHash<QString, QString> > gEventTypeSettings;
@@ -227,11 +209,8 @@ void EventTypeStore::loadSettings(const QString &)
 void loadStateData()
 {
     gStateBuffer.open(QIODevice::ReadOnly);
-    QDataStream gds;
-    gds.setDevice(&gStateBuffer);
-
+    QDataStream gds(&gStateBuffer);
     gGroupList.clear();
-
     gStateBuffer.seek(0);
 
     gds >> gLastUserId;
@@ -266,8 +245,6 @@ void loadNotifications()
     }
 }
 
-
-
 // QTimer stubs (used by NotificationManager)
 void QTimer::start(int msec)
 {
@@ -279,7 +256,7 @@ void QTimer::start(int msec)
 // QDir stubs (used by NotificationManager)
 bool QDir::exists(const QString &) const
 {
-    return gTestingPersistent;
+    return true;
 }
 
 bool QDir::mkpath(const QString &) const
@@ -305,8 +282,8 @@ void Ut_NotificationManager::init()
     timerTimeouts.clear();
     catchTimerTimeouts = false;
 
-    gStateBuffer.open(QIODevice::ReadWrite);
-    gNotificationBuffer.open(QIODevice::ReadWrite);
+    gStateBuffer.open(QIODevice::ReadWrite | QIODevice::Truncate);
+    gNotificationBuffer.open(QIODevice::ReadWrite| QIODevice::Truncate);
     gEventTypeSettings.clear();
     qDateTimeToTime_t = 0;
 }
@@ -320,13 +297,13 @@ void Ut_NotificationManager::testNotificationUserId()
 {
     uint id1 = manager->notificationUserId();
     uint id2 = manager->notificationUserId();
+
     QVERIFY(id1 != 0);
     QVERIFY(id2 != 0);
     QVERIFY(id1 != id2);
 
     delete manager;
 
-#ifdef HAVE_AEGIS_CRYPTO
     gTestingPersistent = true;
     manager = new TestNotificationManager(0);
 
@@ -344,7 +321,7 @@ void Ut_NotificationManager::testNotificationUserId()
     gStateBuffer.buffer().clear();
 
     delete manager;
-#endif
+    // new instance for cleanup delete..
     manager = new TestNotificationManager(0);
 }
 
@@ -1304,7 +1281,6 @@ void Ut_NotificationManager::testNotificationGroupListWithIdentifiers()
     QCOMPARE(list.size(), 0);
 }
 
-#ifdef HAVE_AEGIS_CRYPTO
 void Ut_NotificationManager::testGroupInfoStorage()
 {
     gTestingPersistent = true;
@@ -1464,7 +1440,6 @@ void Ut_NotificationManager::testNotificationRestoration()
 
     gTestingPersistent = false;
 }
-#endif //HAVE_AEGIS_CRYPTO
 
 void Ut_NotificationManager::testRemovingNotificationsWithEventType()
 {

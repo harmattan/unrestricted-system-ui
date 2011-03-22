@@ -32,10 +32,6 @@
 #include <QSharedPointer>
 #include <QBuffer>
 
-#ifdef HAVE_AEGIS_CRYPTO
-#include <aegis_storage.h>
-#endif
-
 class ApplicationContext;
 class DBusInterfaceNotificationSource;
 class DBusInterfaceNotificationSink;
@@ -321,11 +317,6 @@ private:
 
     //! Flag to determine if the persistent data has been restored yet
     bool persistentDataRestored;
-
-#ifdef HAVE_AEGIS_CRYPTO
-    //! Secure storage object for storing persistent data
-    QSharedPointer<aegis::storage> persistentStorage;
-#endif
 
 #ifdef UNIT_TEST
     friend class Ut_NotificationManager;

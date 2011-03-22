@@ -126,14 +126,12 @@ private slots:
     void testNotificationGroupList();
     // Test querying the notification group data with identifier
     void testNotificationGroupListWithIdentifiers();
-#ifdef HAVE_AEGIS_CRYPTO
     // Test that the group info is saved to the persistent storage
     void testGroupInfoStorage();
     // Test that the persistent notifications are saved to the persistent storage
     void tesNotificationStorage();
     // Test that the persistent notifications are restored from the persistent storage
     void testNotificationRestoration();
-#endif
     // Test the removal of notifications based on event type
     void testRemovingNotificationsWithEventType();
     // Test the removal of groups based on event type

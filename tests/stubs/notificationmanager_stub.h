@@ -22,12 +22,6 @@
 #include "notificationmanager.h"
 #include <stubbase.h>
 
-#ifdef HAVE_AEGIS_CRYPTO
-aegis::storage::~storage()
-{
-}
-#endif
-
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
 class NotificationManagerStub : public StubBase {
