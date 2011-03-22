@@ -213,8 +213,10 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // Lock the screen again
     m_subject->toggleScreenLockUI(true);
 
-    // Showing and raising should happen
-    QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], true);
+    // show() should not be called
+    QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
+
+    // Raising should happen
     QCOMPARE(gQWidgetRaiseCalled, true);
 
     // The lock screen still needs to be reset
