@@ -2,6 +2,7 @@ system-ui (0.20.22~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#231428 - "Charging" displayed after the USB cable is removed
+  * Fixes: NB#236941 - Lock screen does not appear
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Mar 2011 18:23:50 +0200
 

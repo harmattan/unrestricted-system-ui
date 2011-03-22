@@ -206,10 +206,8 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
         // Whenever we're showing the lock screen we need to reset its state
         reset();
 
-        if (!screenLockWindow->isVisible()) {
-            screenLockWindow->show();
-        }
-
+        // Show the window even if it's already visible since for some reason sometimes isVisible() returns true even though the window is not mapped: see bug #236941. TODO: figure out why and file a bug.
+        screenLockWindow->show();
         screenLockWindow->raise();
     } else {
         if (screenLockWindow != NULL && screenLockWindow->isVisible()) {
