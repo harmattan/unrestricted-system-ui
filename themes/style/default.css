@@ -2,6 +2,8 @@
 @import "statusarea.css";
 @import "statusindicatormenu.css";
 @import "screenlock.css";
-@import "volumecontrol.css";
 @import "shutdownscreen.css";
 
+MWidgetSlideAnimationStyle#In {
+    delay: 0;
+}
