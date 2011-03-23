@@ -1,6 +1,7 @@
 system-ui (0.20.24~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#230525 - Presence status Busy is shown as Away, Away should be never shown in status area.
 
  -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Tue, 22 Mar 2011 17:15:41 +0200
 

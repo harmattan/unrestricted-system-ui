@@ -412,7 +412,7 @@ void PresenceStatusIndicator::presenceChanged()
     QString status = presence->value().toString();
     QString suffix;
 
-    if (status == "busy" || status == "available" || status == "away") {
+    if (status == "busy" || status == "available") {
         // Capitalize the status
         status.replace(0, 1, status[0].toUpper());
         setStyleNameAndUpdate(QString(metaObject()->className()) + status);

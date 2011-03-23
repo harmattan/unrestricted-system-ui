@@ -443,31 +443,21 @@ void Ut_StatusIndicator::testPresence()
     // Offline mode by default
     QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
     QVERIFY(m_subject->styleName().indexOf("Available") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 
     // Busy
     testContextItems["Presence.State"]->setValue(QVariant("busy"));
     QVERIFY(m_subject->styleName().indexOf("Busy") >= 0);
     QVERIFY(m_subject->styleName().indexOf("Available") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 
     // Available
     testContextItems["Presence.State"]->setValue(QVariant("available"));
     QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
     QVERIFY(m_subject->styleName().indexOf("Available") >= 0);
-    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
-
-    // Away
-    testContextItems["Presence.State"]->setValue(QVariant("away"));
-    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Away") >= 0);
 
     // Offline (explicitly)
     testContextItems["Presence.State"]->setValue(QVariant("offline"));
     QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
     QVERIFY(m_subject->styleName().indexOf("Available") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Away") < 0);
 }
 
 void Ut_StatusIndicator::testAnimation()
