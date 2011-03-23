@@ -1,10 +1,9 @@
-system-ui (0.20.24~1) unstable; urgency=low
+system-ui (0.20.24-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#234943 - Device UI screen goes black in few seconds regardless of screen saver settings
   * Fixes: NB#230525 - Presence status Busy is shown as Away, Away should be never shown in status area.
 
- -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Tue, 22 Mar 2011 17:15:41 +0200
+ -- Jarkko Markkanen <ext-jarkko.3.markkanen@nokia.com>  Wed, 23 Mar 2011 12:20:41 +0200
 
 system-ui (0.20.23-1) unstable; urgency=low
 
