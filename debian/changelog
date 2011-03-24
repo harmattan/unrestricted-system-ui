@@ -1,8 +1,8 @@
-system-ui (0.20.27~1) unstable; urgency=low
+system-ui (0.20.27-1) unstable; urgency=low
 
   * Fixes: NB#231615 - Status indicators are updated when display is on but the frontmost window does not contain a status area
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 24 Mar 2011 13:48:53 +0200
+ -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Thu, 24 Mar 2011 15:29:13 +0200
 
 system-ui (0.20.26-1) unstable; urgency=low
 
