@@ -35,7 +35,6 @@ ScreenLockBusinessLogic::ScreenLockBusinessLogic(QObject* parent) :
 {
 #ifdef HAVE_QMSYSTEM
     connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
-    connect(&locks, SIGNAL(stateChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(locksChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)));
 #endif
 
     // Create an extension area for the screen lock
@@ -131,9 +130,13 @@ void ScreenLockBusinessLogic::reset()
 
 void ScreenLockBusinessLogic::unlockScreen()
 {
-    toggleScreenLockUI(false);
+    if (screenLockWindow != NULL && screenLockWindow->isVisible()) {
+        toggleScreenLockUI(false);
 
-    callbackInterface->call(QDBus::NoBlock, callbackMethod, TkLockUnlock);
+        if (callbackInterface != NULL && !callbackMethod.isEmpty()) {
+            callbackInterface->call(QDBus::NoBlock, callbackMethod, TkLockUnlock);
+        }
+    }
 }
 
 void ScreenLockBusinessLogic::showScreenLock()
@@ -244,20 +247,6 @@ void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::Display
     if (state == MeeGo::QmDisplayState::On && screenLockWindow != NULL && screenLockWindow->isVisible()) {
         reset();
         screenLockWindow->setFocus();
-    }
-}
-
-void ScreenLockBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
-{
-    if (what == MeeGo::QmLocks::TouchAndKeyboard) {
-        switch (how) {
-        case MeeGo::QmLocks::Locked:
-            emit screenIsLocked(true);
-            break;
-        default:
-            emit screenIsLocked(false);
-            break;
-        }
     }
 }
 #endif

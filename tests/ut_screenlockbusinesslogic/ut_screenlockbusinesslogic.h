@@ -73,7 +73,8 @@ private slots:
 
     void testToggleScreenLockUI();
     void testToggleEventEater();
-    void testUnlockScreen();
+    void testUnlockScreenWhenLocked();
+    void testUnlockScreenWhenNotLocked();
     void testHideEventEater();
 #ifdef HAVE_QMSYSTEM
     void testDisplayStateChanged();

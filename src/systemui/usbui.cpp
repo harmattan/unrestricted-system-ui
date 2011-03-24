@@ -29,15 +29,17 @@
 #include <QTimer>
 #include <QDateTime>
 
+#ifdef HAVE_QMSYSTEM
+#include <qmlocks.h>
+#endif
+
 UsbUi::UsbUi(QObject *parent) : QObject(parent),
 #ifdef HAVE_QMSYSTEM
     usbMode(new MeeGo::QmUSBMode(this)),
     requestedUSBMode(MeeGo::QmUSBMode::Undefined),
 #endif
     notification(0),
-    dialog(0),
-    disabled(false),
-    shouldShowDialog(false)
+    dialog(0)
 {
 #ifdef HAVE_QMSYSTEM
     connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
@@ -59,33 +61,8 @@ void UsbUi::applyCurrentUSBMode()
 }
 #endif
 
-void UsbUi::setDisabled(bool disable)
-{
-    disabled = disable;
-
-    if (disable) {
-        // Hide the mode selection dialog if it was visible
-        if (dialog != NULL && dialog->isVisible()) {
-            shouldShowDialog = true;
-            hideDialog(false);
-        }
-    } else {
-        // Show the mode selection dialog if it should be shown
-        if (shouldShowDialog) {
-            shouldShowDialog = false;
-            showDialog();
-        }
-    }
-}
-
 void UsbUi::showDialog()
 {
-    if (disabled) {
-        // Do not show the dialog when it is disabled
-        shouldShowDialog = true;
-        return;
-    }
-
     if (dialog == NULL) {
         // Create dialog content buttons and put them into a central widget
         QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -125,6 +102,9 @@ void UsbUi::showDialog()
 
     // System dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
     dialog->appear(MSceneWindow::DestroyWhenDone);
+
+    // Tell interested parties that the dialog is now being shown
+    emit dialogShown();
 }
 
 void UsbUi::hideDialog(bool accept)
@@ -176,8 +156,6 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         showDialog();
         break;
     case MeeGo::QmUSBMode::Disconnected:
-        shouldShowDialog = false;
-
         // remove the previous notification
         hideNotification();
 
@@ -201,9 +179,6 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
 
 void UsbUi::showNotification(int id)
 {
-    if (disabled)
-        return;
-
     // Remove previous notification
     hideNotification();
 
@@ -239,12 +214,10 @@ void UsbUi::hideNotification()
 
 void UsbUi::showError(const QString &error)
 {
-    if (!disabled) {
-        // Remove previous notification
-        hideNotification();
+    // Remove previous notification
+    hideNotification();
 
-        //% "USB connection error occurred"
-        notification = new MNotification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
-        notification->publish();
-    }
+    //% "USB connection error occurred"
+    notification = new MNotification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
+    notification->publish();
 }

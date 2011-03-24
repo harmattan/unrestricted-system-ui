@@ -144,6 +144,11 @@ void Ut_ScreenLockBusinessLogic::init()
 void Ut_ScreenLockBusinessLogic::cleanup()
 {
     delete m_subject;
+    qDbusAbstractInterfaceCallArg1.clear();
+    qDbusAbstractInterfaceCallMethod.clear();
+    qDbusAbstractInterfaceCallPath.clear();
+    qDbusAbstractInterfaceCallService.clear();
+    qDbusAbstractInterfaceCallInterface.clear();
     gQWidgetRaiseCalled = false;
     gQWidgetVisible.clear();
     screenLockExtensionReset = false;
@@ -175,8 +180,6 @@ void Ut_ScreenLockBusinessLogic::cleanupTestCase()
 
 void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
 {
-    QSignalSpy spy(m_subject, SIGNAL(screenIsLocked(bool)));
-
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
     m_subject->registerExtension(&screenLockExtension);
@@ -184,17 +187,10 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
 #ifdef HAVE_QMSYSTEM
     // First try with display off
     qmDisplayState = MeeGo::QmDisplayState::Off;
-    m_subject->locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Locked);
 #endif
 
-    // When the lock is toggled on, make sure the screen locking signals are sent and the lock UI is shown
+    // When the lock is toggled on, make sure the lock UI is shown
     m_subject->toggleScreenLockUI(true);
-#ifdef HAVE_QMSYSTEM
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), true);
-#else
-    spy.clear ();
-#endif
 
     // The lock screen should now be visible
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], true);
@@ -222,7 +218,7 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // The lock screen still needs to be reset
     QCOMPARE(screenLockExtensionReset, true);
 
-    // When the lock is toggled off, make sure the screen locking signals are sent and the lock UI is hidden
+    // When the lock is toggled off, make sure the lock UI is hidden
     m_subject->toggleScreenLockUI(false);
     QCOMPARE(m_subject->screenLockWindow->isVisible(), false);
 }
@@ -237,26 +233,29 @@ void Ut_ScreenLockBusinessLogic::testToggleEventEater()
     QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
 }
 
-void Ut_ScreenLockBusinessLogic::testUnlockScreen()
+void Ut_ScreenLockBusinessLogic::testUnlockScreenWhenLocked()
 {
-    QSignalSpy spy(m_subject, SIGNAL(screenIsLocked(bool)));
-
     m_subject->tklock_open(TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD, ScreenLockBusinessLogic::TkLockModeNone, false, false);
+    m_subject->toggleScreenLockUI(true);
     m_subject->unlockScreen();
 
-#ifdef HAVE_QMSYSTEM
-    m_subject->locksChanged (MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Unlocked);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).toBool(), false);
-#endif
-
-    QCOMPARE(m_subject->screenLockWindow, (ScreenLockWindow *)NULL);
+    QVERIFY(m_subject->screenLockWindow != NULL);
     QCOMPARE(qDbusAbstractInterfaceCallMethod, TEST_METHOD);
     QCOMPARE(qDbusAbstractInterfaceCallPath, TEST_PATH);
     QCOMPARE(qDbusAbstractInterfaceCallService, TEST_SERVICE);
     QCOMPARE(qDbusAbstractInterfaceCallInterface, TEST_INTERFACE);
     QCOMPARE(qDbusAbstractInterfaceCallMode, QDBus::NoBlock);
     QCOMPARE(qDbusAbstractInterfaceCallArg1.toInt(), (int)ScreenLockBusinessLogic::TkLockUnlock);
+}
+
+void Ut_ScreenLockBusinessLogic::testUnlockScreenWhenNotLocked()
+{
+    m_subject->unlockScreen();
+
+    QCOMPARE(qDbusAbstractInterfaceCallMethod.isEmpty(), true);
+    QCOMPARE(qDbusAbstractInterfaceCallPath.isEmpty(), true);
+    QCOMPARE(qDbusAbstractInterfaceCallService.isEmpty(), true);
+    QCOMPARE(qDbusAbstractInterfaceCallInterface.isEmpty(), true);
 }
 
 void Ut_ScreenLockBusinessLogic::testHideEventEater()

@@ -25,6 +25,7 @@
 
 #include "ut_usbui.h"
 #include "usbmode_stub.h"
+#include "qmlocks_stub.h"
 
 bool MNotification::publish()
 {
@@ -89,29 +90,32 @@ void Ut_UsbUi::testConnections()
 void Ut_UsbUi::testShowHideDialog()
 {
     dialog_visible = false;
+    gQmLocksStub->stubSetReturnValue("getState", MeeGo::QmLocks::Locked);
+
     // Set mode to ask
     m_subject->usbMode->setDefaultMode(MeeGo::QmUSBMode::Ask);
 
     // Emit the ask signal...
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Ask);
-
     QCOMPARE(dialog_visible, true);
     QVERIFY(!m_subject->dialog->isModal());
     QVERIFY(m_subject->dialog->isSystem());
+    QCOMPARE(gQmLocksStub->stubCallCount("setState"), 1);
+    QCOMPARE(gQmLocksStub->stubLastCallTo("setState").parameter<MeeGo::QmLocks::Lock>(0), MeeGo::QmLocks::TouchAndKeyboard);
+    QCOMPARE(gQmLocksStub->stubLastCallTo("setState").parameter<MeeGo::QmLocks::State>(1), MeeGo::QmLocks::Unlocked);
 
     // Emit the disconnect signal
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
-
     QCOMPARE(dialog_visible, false);
 
     // Emit the moderequest signal
+    gQmLocksStub->stubSetReturnValue("getState", MeeGo::QmLocks::Unlocked);
     m_subject->applyUSBMode(MeeGo::QmUSBMode::ModeRequest);
-
     QCOMPARE(dialog_visible, true);
+    QCOMPARE(gQmLocksStub->stubCallCount("setState"), 1);
 
     // Emit the disconnect signal
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
-
     QCOMPARE(dialog_visible, false);
 }
 

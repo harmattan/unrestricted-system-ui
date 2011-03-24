@@ -26,7 +26,6 @@ class ScreenLockBusinessLogicStub : public StubBase {
   virtual void showEventEater();
   virtual void hideEventEater();
   virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
-  virtual void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -119,13 +118,6 @@ void ScreenLockBusinessLogicStub::displayStateChanged(MeeGo::QmDisplayState::Dis
   stubMethodEntered("displayStateChanged",params);
 }
 
-void ScreenLockBusinessLogicStub::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<MeeGo::QmLocks::Lock >(what));
-  params.append( new Parameter<MeeGo::QmLocks::State >(how));
-  stubMethodEntered("locksChanged",params);
-}
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -200,10 +192,6 @@ void ScreenLockBusinessLogic::hideEventEater() {
 
 void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
   gScreenLockBusinessLogicStub->displayStateChanged(state);
-}
-
-void ScreenLockBusinessLogic::locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how) {
-  gScreenLockBusinessLogicStub->locksChanged(what, how);
 }
 
 

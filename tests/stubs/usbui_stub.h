@@ -17,7 +17,6 @@ class UsbUiStub : public StubBase {
   virtual void setOviSuiteMode();
   virtual void setMassStorageMode();
   virtual void showDialog();
-  virtual void setDisabled(bool disable);
   virtual void showError(const QString &error);
   virtual void showNotification(int id);
   virtual void hideNotification();
@@ -56,12 +55,6 @@ void UsbUiStub::setMassStorageMode() {
 
 void UsbUiStub::showDialog() {
   stubMethodEntered("showDialog");
-}
-
-void UsbUiStub::setDisabled(bool disable) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<bool >(disable));
-  stubMethodEntered("setDisabled",params);
 }
 
 void UsbUiStub::showError(const QString &error) {
@@ -124,10 +117,6 @@ void UsbUi::setMassStorageMode() {
 
 void UsbUi::showDialog() {
   gUsbUiStub->showDialog();
-}
-
-void UsbUi::setDisabled(bool disable) {
-  gUsbUiStub->setDisabled(disable);
 }
 
 void UsbUi::showError(const QString &error) {

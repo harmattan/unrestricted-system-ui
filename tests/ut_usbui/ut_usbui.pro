@@ -10,12 +10,11 @@ contains(DEFINES, HAVE_QMSYSTEM) {
 # unit test and unit
 SOURCES += \
     $$SRCDIR/usbui.cpp \
-    $$STUBSDIR/locksstub.cpp \
+    $$STUBSDIR/stubbase.cpp \
     ut_usbui.cpp
 
 HEADERS += \
     $$SRCDIR/usbui.h \
-    $$STUBSDIR/locksstub.h \
     ut_usbui.h
 
 include(../common_bot.pri)

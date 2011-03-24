@@ -46,6 +46,10 @@ public:
      */
     virtual ~UsbUi();
 
+signals:
+    //! Signaled when the USB mode dialog is shown.
+    void dialogShown();
+
 private slots:
 #ifdef HAVE_QMSYSTEM
     /*!
@@ -81,13 +85,6 @@ private slots:
     void showDialog();
 
     /*!
-     * Enables or disables the USB UIs.
-     *
-     * \param disable \c true if the USB UIs should be disabled, \c false otherwise
-     */
-    void setDisabled(bool disable);
-
-    /*!
      * Shows an error string.
      *
      * \param error the translation ID of the error to show
@@ -110,8 +107,6 @@ private:
 #endif
     MNotification *notification;
     QPointer<MDialog> dialog;
-    bool disabled;
-    bool shouldShowDialog;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

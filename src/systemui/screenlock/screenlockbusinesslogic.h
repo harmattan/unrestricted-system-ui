@@ -22,7 +22,6 @@
 #include <QObject>
 
 #ifdef HAVE_QMSYSTEM
-#include <qmlocks.h>
 #include <qmdisplaystate.h>
 #endif
 
@@ -75,10 +74,16 @@ public:
     int tklock_close(bool silent);
 
 public slots:
-    void toggleScreenLockUI(bool toggle);
-    void toggleEventEater(bool toggle);
+    //! Hides the screen lock window and calls the MCE's unlock callback function.
+    void unlockScreen();
 
 private slots:
+    //! Shows or hides the screen lock window
+    void toggleScreenLockUI(bool toggle);
+
+    //! Shows or hides the event eater window
+    void toggleEventEater(bool toggle);
+
     //! Registers an screen lock extension
     void registerExtension(MApplicationExtensionInterface *extension);
 
@@ -87,9 +92,6 @@ private slots:
 
     //! Resets the screen lock to its normal state.
     void reset();
-
-    //! Hides the screen lock window and calls the MCE's unlock callback function.
-    void unlockScreen();
 
     //! Shows the screen lock window in normal mode and hides the event eater window.
     void showScreenLock();
@@ -112,9 +114,6 @@ private slots:
 #ifdef HAVE_QMSYSTEM
     //! Resets the lock screen when the screen is unblanked and the screenlock is visible
     void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
-
-    //! Emits the state of the screenlock onwards through the screenIsLocked() signal
-    void locksChanged(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how);
 #endif
 
 signals:
@@ -166,9 +165,6 @@ private:
 #ifdef HAVE_QMSYSTEM
     //! For getting the display state
     MeeGo::QmDisplayState displayState;
-
-    //! For getting the lock state
-    MeeGo::QmLocks locks;
 #endif
 
 #ifdef UNIT_TEST

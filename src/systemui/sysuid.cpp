@@ -123,7 +123,8 @@ Sysuid::Sysuid(QObject* parent) :
      */
     sysUidRequest = new SysUidRequest;
     if (sysUidRequest->screenLockBusinessLogic() != NULL) {
-        connect(sysUidRequest->screenLockBusinessLogic(), SIGNAL(screenIsLocked(bool)), usbUi, SLOT(setDisabled(bool)));
+        // Unlock the touch screen lock when displaying the USB dialog
+        connect(usbUi, SIGNAL(dialogShown()), sysUidRequest->screenLockBusinessLogic(), SLOT(unlockScreen()));
     }
 
     // Update the enabled status of compositor notification sink based on screen and device locks
