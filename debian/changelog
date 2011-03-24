@@ -1,6 +1,7 @@
 system-ui (0.20.25~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#239535 - Notification event banner is not appearing
 
  -- Jarkko Markkanen <ext-jarkko.3.markkanen@nokia.com>  Wed, 23 Mar 2011 12:23:58 +0200
 

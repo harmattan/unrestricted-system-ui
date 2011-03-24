@@ -5,5 +5,5 @@
 @import "shutdownscreen.css";
 
 MWidgetSlideAnimationStyle#In {
-    delay: 0;
+    delay: 1;
 }
