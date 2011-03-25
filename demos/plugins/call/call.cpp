@@ -19,54 +19,51 @@
 
 #include "call.h"
 #include "callplugin.h"
-#include <MLabel>
-#include <MButton>
 #include <QGraphicsLinearLayout>
-#include <MLayout>
-#include <MLinearLayoutPolicy>
-#include <MDialog>
+#include <MBasicListItem>
+#include <MImageWidget>
+#include <QTimer>
 
 Call::Call(CallPlugin *callPlugin, QGraphicsItem *parent) :
     MWidget(parent),
-    plugin(callPlugin)
+    plugin(callPlugin),
+    item(new MBasicListItem(MBasicListItem::IconWithTitleAndSubtitle))
 {
-    // Create a layout for the button
-    MLayout *mainLayout = new MLayout();
+    // Create a layout for the plugin
+    QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
     setLayout(mainLayout);
-    MLinearLayoutPolicy *linearPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Horizontal);
 
-    // Place the button into the layout
-    linearPolicy->addItem(new MLabel("Ongoing Call"));
-    linearPolicy->addStretch();
-    MButton *button = new MButton("Options");
-    connect(button, SIGNAL(clicked()), this, SLOT(showCallDialog()));
-    linearPolicy->addItem(button);
+    // Set up an item for the call
+    item->setTitle("Ongoing call");
+    item->setSubtitle("00:52");
+    item->imageWidget()->setImage("icon-m-status-menu-settings");
+    item->setStyleName("CommonBasicListItemInverted");
+    connect(item, SIGNAL(clicked()), this, SLOT(hideItem()));
+    mainLayout->addItem(item);
+
+    hideItem();
 }
 
 Call::~Call()
 {
 }
 
-void Call::showCallDialog()
+QSizeF Call::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
-    // Create a dialog for choosing the call
-    MDialog* dialog = new MDialog("Call", M::NoStandardButton);
-    MWidget *centralWidget = new MWidget;
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    centralWidget->setLayout(layout);
-    dialog->setCentralWidget(centralWidget);
+    return item->isVisible() ? MWidget::sizeHint(which, constraint) : QSizeF(0, 0);
+}
 
-    // Place the buttons in the button group and in the layout
-    MButton *button;
-    button = new MButton("End Call");
-    connect(button, SIGNAL(clicked()), dialog, SLOT(accept()));
-    layout->addItem(button);
+void Call::hideItem()
+{
+    item->hide();
+    updateGeometry();
+    QTimer::singleShot(10000, this, SLOT(showItem()));
+}
 
-    // Show the dialog
-    dialog->exec();
-
-    // Hide the status indicator menu
-    if(MStatusIndicatorMenuInterface *menu = plugin->statusIndicatorMenuInterface()) {
-        menu->hideStatusIndicatorMenu();
-    }
+void Call::showItem()
+{
+    item->show();
+    updateGeometry();
 }

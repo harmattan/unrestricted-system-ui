@@ -22,8 +22,7 @@
 
 #include <MWidget>
 
-class MStatusIndicatorMenuInterface;
-class MButton;
+class MBasicListItem;
 class CallPlugin;
 
 /*!
@@ -37,16 +36,16 @@ class Call : public MWidget
 public:
     Call(CallPlugin *callPlugin, QGraphicsItem *parent = NULL);
     virtual ~Call();
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
 private slots:
-    /*!
-     * \brief Shows the call dialog
-     */
-    void showCallDialog();
+    void hideItem();
+    void showItem();
 
 private:
     //! The call plugin for accessing the status indicator menu
     CallPlugin *plugin;
+    MBasicListItem *item;
 };
 
 #endif // CALL_H
