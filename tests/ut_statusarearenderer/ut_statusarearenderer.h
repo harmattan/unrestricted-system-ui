@@ -32,8 +32,6 @@ class Ut_StatusAreaRenderer : public QObject
     Q_OBJECT
 
 private:
-    void setupXGetPropertiesToDefault();
-
     StatusAreaRenderer *statusAreaRenderer;
 
 signals:
@@ -52,11 +50,6 @@ private slots:
     void initTestCase();
     // Executed once after last test case
     void cleanupTestCase();
-    // Test setuping status bar visible property listening
-    void testSetupStatusBarVisiblePropertyListening();
-    void testWhenStatusBarVisiblePropertySetupUnsuccessfulThenAssumingStatusBarVisible();
-    void testStatusBarInvisibleStopsRendering();
-    void testUnregisteringEventFilterWhenDestroyed();
     // Test scene changed events render the scene
     void testSceneChanged();
     // Test shared pixmap handle

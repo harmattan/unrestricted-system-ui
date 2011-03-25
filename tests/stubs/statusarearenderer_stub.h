@@ -23,9 +23,6 @@ class StatusAreaRendererStub : public StubBase {
   virtual void createStatusAreaPropertyWindow();
   virtual void setStatusAreaPropertyWindowIdToRootWindowProperty();
   virtual void setSharedPixmapHandleToWindowProperty();
-  virtual void setupStatusBarVisibleListener();
-  virtual bool getStatusBarVisibleProperty();
-  virtual bool xEventFilter(const XEvent &event);
 };
 
 // 2. IMPLEMENT STUB
@@ -85,23 +82,6 @@ void StatusAreaRendererStub::setSharedPixmapHandleToWindowProperty() {
   stubMethodEntered("setSharedPixmapHandleToWindowProperty");
 }
 
-void StatusAreaRendererStub::setupStatusBarVisibleListener() {
-  stubMethodEntered("setupStatusBarVisibleListener");
-}
-
-bool StatusAreaRendererStub::getStatusBarVisibleProperty() {
-  stubMethodEntered("getStatusBarVisibleProperty");
-  return stubReturnValue<bool>("getStatusBarVisibleProperty");
-}
-
-
-bool StatusAreaRendererStub::xEventFilter(const XEvent &event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<XEvent>(event));
-  stubMethodEntered("xEventFilter");
-  return stubReturnValue<bool>("xEventFilter");
-}
-
 // 3. CREATE A STUB INSTANCE
 StatusAreaRendererStub gDefaultStatusAreaRendererStub;
 StatusAreaRendererStub* gStatusAreaRendererStub = &gDefaultStatusAreaRendererStub;
@@ -157,18 +137,6 @@ void StatusAreaRenderer::setStatusAreaPropertyWindowIdToRootWindowProperty() {
 
 void StatusAreaRenderer::setSharedPixmapHandleToWindowProperty() {
   gStatusAreaRendererStub->setSharedPixmapHandleToWindowProperty();
-}
-
-void StatusAreaRenderer::setupStatusBarVisibleListener() {
-  gStatusAreaRendererStub->setupStatusBarVisibleListener();
-}
-
-bool StatusAreaRenderer::getStatusBarVisibleProperty() {
-  return gStatusAreaRendererStub->getStatusBarVisibleProperty();
-}
-
-bool StatusAreaRenderer::xEventFilter(const XEvent &event) {
-  return gStatusAreaRendererStub->xEventFilter(event);
 }
 
 #endif

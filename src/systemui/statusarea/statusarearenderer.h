@@ -22,9 +22,6 @@
 
 #include <MNamespace>
 #include <QTimer>
-#include <MOnDisplayChangeEvent>
-#include "statusarea.h"
-#include "xeventlistener.h"
 
 #ifdef HAVE_QMSYSTEM
 #include "qmdisplaystate.h"
@@ -37,7 +34,7 @@ class QMeeGoLivePixmap;
 /*!
  *  StatusAreaRenderer renders the contents of the scene to a shared pixmap which is then shown by libmeegotouch.
  */
-class StatusAreaRenderer : public QObject, XEventListenerFilterInterface
+class StatusAreaRenderer : public QObject
 {
     Q_OBJECT
 
@@ -60,14 +57,8 @@ public:
      */
     uint sharedPixmapHandle();
 
-    /*!
-     * X event filter for _MEEGOTOUCH_STATUSBAR_VISIBLE changes
-     */
-    bool xEventFilter(const XEvent &event);
-
 private slots:
-
-    /*!
+   /*!
     * \brief Combine the given regions into one and start a timer to draw the region
     */
     virtual void accumulateSceneChanges(const QList<QRectF> &region);
@@ -92,11 +83,6 @@ signals:
     void statusIndicatorMenuVisibilityChanged(bool visible);
 
 private:
-    //! Setups listening of statusbar visibility from WM window property
-    void setupStatusBarVisibleListener();
-
-    //! Fetches the _MEEGOTOUCH_STATUSBAR_VISIBLE value from WM window property
-    bool getStatusBarVisibleProperty();
 
     //! Creates a window for sharing shared pixmap handle.
     void createStatusAreaPropertyWindow();
@@ -117,7 +103,7 @@ private:
     QPixmap statusAreaPixmap;
     //! Back buffer pixmap - the content is first rendered here and then copied to the shared pixmap
     QPixmap backPixmap;
-    //! Used for better performance if MeeGo graphics system is available, wrapped by backPixmap
+    // Used for better performance if MeeGo graphics system is available, wrapped by backPixmap
     QMeeGoLivePixmap* statusAreaLivePixmap;
 
     //! Creates a shared pixmap for status area
@@ -129,17 +115,13 @@ private:
     //! set the status bar size with information from style
     void setSizeFromStyle();
 
+    // TODO: resolve why #include <X11/Xlib.h> in header results in compilation error
     //! Window id for the status area property window.
-    Window statusAreaPropertyWindow;
-    //! Window id of the window manager window
-    Window windowManagerWindow;
+    ulong statusAreaPropertyWindow;
 
     //! Status Area dimensions.
     uint statusAreaHeight;
     uint statusAreaWidth;
-
-    //! Whether status bar is currently visible according to compositor
-    bool statusBarVisible;
 
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
@@ -153,11 +135,6 @@ private:
     QTimer accumulationTimer;
     //! Changes in the scene are combined to this rect
     QRectF accumulatedRegion;
-
-    //! _MEEGOTOUCH_STATUSBAR_VISIBLE atom
-    Atom statusBarVisibleAtom;
-    //! _NET_SUPPORTING_WM_CHECK atom
-    Atom windowManagerWindowAtom;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaRenderer;
