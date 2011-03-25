@@ -14,7 +14,7 @@ X-Maemo-Fixed-Args=PrivateMode
 X-DUIApplet-Applet=libprivatemodeapplet.so
 
 [DCP]
-Category=qtn_sett_main_notifications
+Category=qtn_noti_settings_title
 Order=0
 WidgetType=Toggle
 
