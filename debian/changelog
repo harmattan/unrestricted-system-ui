@@ -1,3 +1,9 @@
+system-ui (0.20.32~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 28 Mar 2011 16:06:54 +0300
+
 system-ui (0.20.31-1) unstable; urgency=low
 
   * Fixes: NB#240864 - After a status indicator is hidden it will leave a small "hole" in the status area
