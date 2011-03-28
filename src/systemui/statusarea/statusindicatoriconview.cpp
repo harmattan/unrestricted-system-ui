@@ -48,9 +48,11 @@ void StatusIndicatorIconView::updateData(const QList<const char *>& modification
 
 void StatusIndicatorIconView::applyStyle()
 {
-    StatusIndicatorAnimationView::applyStyle();
-
+    // Take the image list defined in the style into use. Note: since setupImageList() sets the style mode, this MUST be done before calling the base class implementation of applyStyle(), which actually takes the style mode into use.
     setupImageList(style()->imageList());
+
+    // Take the styles of the base classes into use. Note: in order to apply the style mode set in setupImageList(), this MUST be called after setupImageList().
+    StatusIndicatorAnimationView::applyStyle();
 
     // Update the animation frame after the image list changed
     QList<const char *> modifications;
