@@ -171,6 +171,7 @@ void Sysuid::loadTranslations()
     locale.installTrCatalog("status");
     locale.installTrCatalog("notification");
     locale.installTrCatalog("connectivity");
+    locale.installTrCatalog("volume");
 
     // and the engineering english ones
     locale.installTrCatalog("systemui");
