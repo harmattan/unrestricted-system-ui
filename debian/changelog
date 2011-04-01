@@ -1,9 +1,8 @@
-system-ui (0.20.33~1) unstable; urgency=low
+system-ui (0.20.33-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: The status indicator margins were not as in the UI specification
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 01 Apr 2011 11:11:53 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 01 Apr 2011 16:29:21 +0300
 
 system-ui (0.20.32-1) unstable; urgency=low
 
