@@ -37,8 +37,8 @@ MWidgetStyle#StatusBarPortraitWidget {
 }
 
 ClockStyle {
-    margin-left: 0.6mm;
-    margin-right: 0.6mm;
+    margin-left: 0;
+    margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -56,8 +56,8 @@ ClockStyle:twelve-hour {
 MLabelStyle#StatusAreaLandscapeClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
-    margin-left: 0.3mm;
-    margin-right: 0.1mm;
+    margin-left: 0.6mm;
+    margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -71,8 +71,8 @@ MLabelStyle#StatusAreaLandscapeClockLabel {
 MLabelStyle#StatusAreaPortraitClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
-    margin-left: 0.3mm;
-    margin-right: 0.1mm;
+    margin-left: 0.6mm;
+    margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
     padding-left: 0;
@@ -109,8 +109,7 @@ StatusIndicatorAnimationStyle {
 
 StatusIndicatorAnimationStyle:icon {
     /* This style is used when there is an icon ID defined (width is 18) */
-    margin-left: 0.3mm;
-    margin-right: 0.3mm;
+    margin-left: 0.6mm;
     preferred-size: 1.8mm 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 1.8mm 1.8mm;
@@ -123,9 +122,8 @@ StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
     maximum-size: -1 -1;
 }
 
-
 StatusIndicatorLabelStyle {
-    margin-left: 0;
+    margin-left: 0.6mm;
     margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
@@ -171,7 +169,6 @@ MLabelStyle#StatusIndicatorLabelLandscape {
     minimum-size: 0 3.6mm;
     maximum-size: 55.0mm 3.6mm;
 }
-
 
 MLabelStyle#StatusIndicatorLabelPortrait {
     font: $FONT_SMALL;
@@ -357,6 +354,7 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANConnecting {
 StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
+    margin-left: 0;
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
@@ -365,6 +363,7 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorLevel {
 StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-battery-verylow icon-s-status-battery-low icon-s-status-battery1 icon-s-status-battery2 icon-s-status-battery3 icon-s-status-battery4 icon-s-status-battery5 icon-s-status-battery6 icon-s-status-battery7 icon-s-status-battery8";
+    margin-left: 0;
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
@@ -374,6 +373,7 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorCharging {
 StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSave {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
+    margin-left: 0;
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
@@ -382,6 +382,7 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSave {
 StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSaveCharging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-powersave-verylow icon-s-status-powersave-low icon-s-status-powersave1 icon-s-status-powersave2 icon-s-status-powersave3 icon-s-status-powersave4 icon-s-status-powersave5 icon-s-status-powersave6 icon-s-status-powersave7 icon-s-status-powersave8";
+    margin-left: 0;
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
@@ -442,7 +443,7 @@ StatusIndicatorIconStyle#CallStatusIndicator {
 
 StatusIndicatorIconStyle#CallStatusIndicatorRinging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-cellular icon-s-status-call-initiating1";
+    image-list: "icon-s-status-call-initiating1 icon-s-status-call-initiating2";
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
@@ -574,4 +575,3 @@ StatusIndicatorIconStyle#CallForwardingStatusIndicatorSet {
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
 }
-
