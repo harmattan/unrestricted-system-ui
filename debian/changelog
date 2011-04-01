@@ -1,9 +1,8 @@
-system-ui (0.20.32~1) unstable; urgency=low
+system-ui (0.20.32-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#242365 - Incorrect icons used in incoming call animation
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 28 Mar 2011 16:06:54 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 01 Apr 2011 11:10:24 +0300
 
 system-ui (0.20.31-1) unstable; urgency=low
 
