@@ -279,21 +279,25 @@ void StatusAreaRenderer::setupStatusBarVisibleListener()
     unsigned long length, after;
     uchar *data = 0;
 
-    bool success = false;
+    bool windowSuccess = false;
+    windowManagerWindow = 0;
     if (X11Wrapper::XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), windowManagerWindowAtom,
                            0, 1024, False, XA_WINDOW, &type, &format, &length, &after, &data) == Success) {
         if (type == XA_WINDOW && format == 32) {
             windowManagerWindow = *((Window*) data);
             X11Wrapper::XFree(data);
 
-            success = getStatusBarVisibleProperty();
+            getStatusBarVisibleProperty();
+
+            windowSuccess = true;
         }
     }
 
-    if (success) {
+    if (windowSuccess) {
+        X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, PropertyChangeMask);
         XEventListener::registerEventFilter(this, PropertyChangeMask);
     } else {
-        // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
+        // Assume status bar is visible when WM window is not available
         statusBarVisible = true;
         XEventListener::unregisterEventFilter(this);
     }
@@ -312,10 +316,14 @@ bool StatusAreaRenderer::getStatusBarVisibleProperty()
         if (type == XA_CARDINAL) {
             statusBarVisible = *data;
             X11Wrapper::XFree(data);
-            X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, PropertyChangeMask);
+
             success = true;
+        } else {
+            // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
+            statusBarVisible = true;
         }
     }
+
     return success;
 }
 
