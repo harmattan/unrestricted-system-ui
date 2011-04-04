@@ -1,3 +1,9 @@
+system-ui (0.20.35~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Mon, 04 Apr 2011 16:54:37 +0300
+
 system-ui (0.20.34-1) unstable; urgency=low
 
   * Fixes: NB#231615 - Status indicators are updated when display is on but the frontmost window does not contain a status area
