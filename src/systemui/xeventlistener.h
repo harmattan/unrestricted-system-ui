@@ -22,8 +22,7 @@
 #include <QHash>
 #include <QObject>
 #include <QAbstractEventDispatcher>
-#include <QX11Info>
-#include "x11wrapper.h"
+#include <X11/Xlib.h>
 
 /*!
  * An interface for classes registering to XEventListener.

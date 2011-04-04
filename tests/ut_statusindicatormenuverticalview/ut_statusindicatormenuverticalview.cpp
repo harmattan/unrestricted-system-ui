@@ -30,7 +30,7 @@
 #include <QGraphicsLinearLayout>
 #include <QEvent>
 #include <QGraphicsSceneMouseEvent>
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 
 #ifdef HAVE_QMSYSTEM
 #include "qmlocks_stub.h"

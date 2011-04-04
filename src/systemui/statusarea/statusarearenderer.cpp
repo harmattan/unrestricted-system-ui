@@ -19,14 +19,12 @@
 
 #include <QDebug>
 #include "statusarearenderer.h"
-#include "statusarea.h"
-#include <MOnDisplayChangeEvent>
 #include <MStyle>
 #include "statusareastyle.h"
-#include <QX11Info>
-#include "x11wrapper.h"
 #include <QMeeGoLivePixmap>
 #include <QMeeGoGraphicsSystemHelper>
+#include <QX11Info>
+#include "x11wrapper.h"
 
 // Update the pixmap 5 times per second at most
 static const int ACCUMULATION_INTERVAL = 200;
@@ -37,6 +35,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     statusArea(new StatusArea),
     statusAreaLivePixmap(NULL),
     statusAreaPropertyWindow(0),
+    windowManagerWindow(0),
+    statusBarVisible(false),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
 #endif
@@ -54,6 +54,10 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
     setSceneRender(displayState->get());
 #endif
+
+    statusBarVisibleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
+    windowManagerWindowAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTING_WM_CHECK", False);
+
     setSizeFromStyle();
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
         qWarning() << "Shared Pixmap was not created. Status area will not render";
@@ -61,6 +65,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
         createStatusAreaPropertyWindow();
         setSharedPixmapHandleToWindowProperty();
         setStatusAreaPropertyWindowIdToRootWindowProperty();
+
+        setupStatusBarVisibleListener();
     }
 
     connect(&accumulationTimer, SIGNAL(timeout()), this, SLOT(renderAccumulatedRegion()));
@@ -177,6 +183,8 @@ void StatusAreaRenderer::setSharedPixmapHandleToWindowProperty()
 
 StatusAreaRenderer::~StatusAreaRenderer()
 {
+    XEventListener::unregisterEventFilter(this);
+
     scene->removeItem(statusArea);
     delete statusArea;
 
@@ -212,7 +220,7 @@ void StatusAreaRenderer::accumulateSceneChanges(const QList<QRectF> &region)
         accumulatedRegion = accumulatedRegion.united(r);
     }
 
-    if (renderScene && !accumulationTimer.isActive()) {
+    if (statusBarVisible && renderScene && !accumulationTimer.isActive()) {
         accumulationTimer.setSingleShot(true);
         accumulationTimer.start(ACCUMULATION_INTERVAL);
     }
@@ -221,7 +229,6 @@ void StatusAreaRenderer::accumulateSceneChanges(const QList<QRectF> &region)
 void StatusAreaRenderer::renderAccumulatedRegion()
 {
     if (!accumulatedRegion.isEmpty() && !statusAreaPixmap.isNull() && !backPixmap.isNull()) {
-
         if (statusAreaLivePixmap && !QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
             QMeeGoGraphicsSystemHelper::switchToMeeGo();
         }
@@ -260,9 +267,67 @@ void StatusAreaRenderer::renderAccumulatedRegion()
             painter.drawPixmap(sourceRect, backPixmap, sourceRect);
             painter.end();
         }
+        accumulatedRegion = QRectF(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+}
+
+
+void StatusAreaRenderer::setupStatusBarVisibleListener()
+{
+    Atom type;
+    int format;
+    unsigned long length, after;
+    uchar *data = 0;
+
+    bool success = false;
+    if (X11Wrapper::XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), windowManagerWindowAtom,
+                           0, 1024, False, XA_WINDOW, &type, &format, &length, &after, &data) == Success) {
+        if (type == XA_WINDOW && format == 32) {
+            windowManagerWindow = *((Window*) data);
+            X11Wrapper::XFree(data);
+
+            success = getStatusBarVisibleProperty();
+        }
     }
 
-    accumulatedRegion = QRectF(0.0f, 0.0f, 0.0f, 0.0f);
+    if (success) {
+        XEventListener::registerEventFilter(this, PropertyChangeMask);
+    } else {
+        // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
+        statusBarVisible = true;
+        XEventListener::unregisterEventFilter(this);
+    }
+}
+
+bool StatusAreaRenderer::getStatusBarVisibleProperty()
+{
+    Atom type;
+    int format;
+    unsigned long length, after;
+    uchar *data = 0;
+
+    bool success = false;
+    if (X11Wrapper::XGetWindowProperty(QX11Info::display(), windowManagerWindow, statusBarVisibleAtom,
+                           0, 1024, False, XA_CARDINAL, &type, &format, &length, &after, &data) == Success) {
+        if (type == XA_CARDINAL) {
+            statusBarVisible = *data;
+            X11Wrapper::XFree(data);
+            X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, PropertyChangeMask);
+            success = true;
+        }
+    }
+    return success;
+}
+
+bool StatusAreaRenderer::xEventFilter(const XEvent &event)
+{
+    if (event.xproperty.window == windowManagerWindow && event.xproperty.atom == statusBarVisibleAtom) {
+        if (!getStatusBarVisibleProperty()) {
+            // Fetching property failed so try setuping the window and property again
+            setupStatusBarVisibleListener();
+        }
+    }
+    return false;
 }
 
 #ifdef HAVE_QMSYSTEM

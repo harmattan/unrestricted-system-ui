@@ -29,7 +29,7 @@
 #include "notificationsink_stub.h"
 #include "sysuid_stub.h"
 #include <X11/Xutil.h>
-#include "x11wrapper_stub.h"
+#include "x11wrapper_modified_stub.h"
 
 // X stubs to avoid crashes
 void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)

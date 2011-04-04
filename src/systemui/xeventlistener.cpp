@@ -19,6 +19,7 @@
 #include "xeventlistener.h"
 
 #include <QSharedPointer>
+#include <X11/X.h>
 
 static long maskMap[LASTEvent];
 

@@ -22,6 +22,7 @@
 #include "x11wrapper.h"
 #include <stubbase.h>
 
+struct XGetWindowPropertyDataReturnValueData;
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
@@ -51,6 +52,8 @@ public:
     virtual int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
                               int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
     virtual int XDeleteProperty(Display *display, Window w, Atom property);
+
+    virtual void stubSetXGetWindowPropertyDataReturnValues(Window window, XGetWindowPropertyDataReturnValueData data);
 };
 
 // 2. IMPLEMENT STUB
@@ -91,6 +94,17 @@ Status X11WrapperStub::XGetWindowAttributes(Display *display, Window w, XWindowA
     return stubReturnValue<Status>("XGetWindowAttributes");
 }
 
+struct XGetWindowPropertyDataReturnValueData {
+    Atom type;
+    int format;
+    unsigned char* data;
+};
+QHash<Window, XGetWindowPropertyDataReturnValueData> xGetWindowPropertyDataReturnValueHash;
+void X11WrapperStub::stubSetXGetWindowPropertyDataReturnValues(Window window, XGetWindowPropertyDataReturnValueData data)
+{
+    xGetWindowPropertyDataReturnValueHash.insert(window, data);
+}
+
 int X11WrapperStub::XGetWindowProperty(Display *display, Window w, Atom property, long long_offset, long long_length, Bool del, Atom req_type, Atom *actual_type_return, int *actual_format_return, unsigned long *nitems_return, unsigned long *bytes_after_return, unsigned char **prop_return)
 {
     QList<ParameterBase *> params;
@@ -107,6 +121,12 @@ int X11WrapperStub::XGetWindowProperty(Display *display, Window w, Atom property
     params.append(new Parameter<unsigned long * >(bytes_after_return));
     params.append(new Parameter<unsigned char ** >(prop_return));
     stubMethodEntered("XGetWindowProperty", params);
+
+    XGetWindowPropertyDataReturnValueData data = xGetWindowPropertyDataReturnValueHash.value(w);
+    *actual_type_return = data.type;
+    *actual_format_return = data.format;
+    *prop_return = data.data;
+
     return stubReturnValue<int>("XGetWindowProperty");
 }
 

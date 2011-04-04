@@ -17,6 +17,7 @@
  **
  ****************************************************************************/
 
+
 #include <MLocale>
 #include <MTheme>
 #include <MLocale>
@@ -27,10 +28,10 @@
 #include "sysuid.h"
 #include "sysuidrequest.h"
 #include "batterybusinesslogic.h"
+#include "statusarearendereradaptor.h"
 #include "screenlockbusinesslogic.h"
 #include "shutdownbusinesslogic.h"
 #include "statusarearenderer.h"
-#include "statusarearendereradaptor.h"
 #include "statusindicatormenubusinesslogic.h"
 #include "statusindicatormenuadaptor.h"
 #include "notificationmanager.h"
