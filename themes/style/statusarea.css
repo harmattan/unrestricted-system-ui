@@ -443,7 +443,7 @@ StatusIndicatorIconStyle#CallStatusIndicator {
 
 StatusIndicatorIconStyle#CallStatusIndicatorRinging {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-call-initiating1 icon-s-status-call-initiating2";
+    image-list: "icon-s-status-cellular icon-s-status-call-initiating1";
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
