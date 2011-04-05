@@ -92,6 +92,9 @@ signals:
     void statusIndicatorMenuVisibilityChanged(bool visible);
 
 private:
+    //! Handles situation when WM window gets unavailable
+    void wmWindowUnavailable();
+
     //! Setups listening of statusbar visibility from WM window property
     void setupStatusBarVisibleListener();
 
@@ -158,6 +161,9 @@ private:
     Atom statusBarVisibleAtom;
     //! _NET_SUPPORTING_WM_CHECK atom
     Atom windowManagerWindowAtom;
+
+    //! Root window property mask that was set before XSelectInput
+    long previousRootWindowEventMask;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaRenderer;

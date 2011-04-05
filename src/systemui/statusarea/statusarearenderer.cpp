@@ -40,7 +40,8 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
 #endif
-    renderScene(true)
+    renderScene(true),
+    previousRootWindowEventMask(0)
 {
     scene->setParent(this);
     scene->setObjectName("statusareascene");
@@ -271,7 +272,6 @@ void StatusAreaRenderer::renderAccumulatedRegion()
     }
 }
 
-
 void StatusAreaRenderer::setupStatusBarVisibleListener()
 {
     Atom type;
@@ -280,7 +280,6 @@ void StatusAreaRenderer::setupStatusBarVisibleListener()
     uchar *data = 0;
 
     bool windowSuccess = false;
-    windowManagerWindow = 0;
     if (X11Wrapper::XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), windowManagerWindowAtom,
                            0, 1024, False, XA_WINDOW, &type, &format, &length, &after, &data) == Success) {
         if (type == XA_WINDOW && format == 32) {
@@ -294,12 +293,11 @@ void StatusAreaRenderer::setupStatusBarVisibleListener()
     }
 
     if (windowSuccess) {
-        X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, PropertyChangeMask);
-        XEventListener::registerEventFilter(this, PropertyChangeMask);
+        long wmWindowInputMask = PropertyChangeMask | StructureNotifyMask;
+        X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, wmWindowInputMask);
+        XEventListener::registerEventFilter(this, wmWindowInputMask);
     } else {
-        // Assume status bar is visible when WM window is not available
-        statusBarVisible = true;
-        XEventListener::unregisterEventFilter(this);
+        wmWindowUnavailable();
     }
 }
 
@@ -334,8 +332,36 @@ bool StatusAreaRenderer::xEventFilter(const XEvent &event)
             // Fetching property failed so try setuping the window and property again
             setupStatusBarVisibleListener();
         }
+    } else if (event.xproperty.window == QX11Info::appRootWindow() && event.xproperty.atom == windowManagerWindowAtom) {
+        // Window manager window available so unregister the root window filter and restore the previous input mask
+        XEventListener::unregisterEventFilter(this);
+        X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask);
+
+        setupStatusBarVisibleListener();
+
+    } else if (event.type == DestroyNotify && event.xdestroywindow.window == windowManagerWindow) {
+        wmWindowUnavailable();
     }
+
     return false;
+}
+
+void StatusAreaRenderer::wmWindowUnavailable()
+{
+    windowManagerWindow = 0;
+
+    // Assume status bar is visible when WM window is not available
+    statusBarVisible = true;
+    XEventListener::unregisterEventFilter(this);
+
+    // Start listening root window property changes to be notified when wm window is available again
+    XWindowAttributes attributes;
+    previousRootWindowEventMask = 0;
+    if (X11Wrapper::XGetWindowAttributes(QX11Info::display(), QX11Info::appRootWindow(), &attributes) == Success) {
+        previousRootWindowEventMask = attributes.your_event_mask;
+    }
+    X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask | PropertyChangeMask);
+    XEventListener::registerEventFilter(this, PropertyChangeMask);
 }
 
 #ifdef HAVE_QMSYSTEM

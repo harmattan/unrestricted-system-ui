@@ -71,6 +71,10 @@ private slots:
     void testStatusBarPixmapPropertiesAreSetCorrectly();
     void testStatusBarPixmapPropertiesAreDeletedInDestructor();
 
+    void testWMWindowUnvailableInStartUp();
+    void testWMWindowBecomingUnvailable();
+    void testWMWindowBecomingAvailable();
+
 #ifdef HAVE_QMSYSTEM
     // Test rendering happens when display state is on
     void testSceneRenderControlDisplayStateOn();

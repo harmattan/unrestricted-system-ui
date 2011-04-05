@@ -283,12 +283,12 @@ void Ut_StatusAreaRenderer::testSetupStatusBarVisiblePropertyListening()
 
     // Verify x event listening
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<Window>(1), MEEGOTOUCH_WM_WINDOW_ID);
-    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask | StructureNotifyMask);
     QCOMPARE(gXEventListenerStub->stubCallCount("registerEventFilter"), 1);
     QCOMPARE(
             gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0),
             (XEventListenerFilterInterface *)statusAreaRenderer);
-    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask);
+    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask | StructureNotifyMask);
 }
 
 void Ut_StatusAreaRenderer::testWhenStatusBarVisiblePropertySetupUnsuccessfulThenAssumingStatusBarVisible()
@@ -569,6 +569,80 @@ void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreDeletedInDestructor(
     QCOMPARE(gX11WrapperStub->stubCallCount("XDeleteProperty"), 2);
     QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(0)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(1)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
+}
+
+void Ut_StatusAreaRenderer::testWMWindowUnvailableInStartUp()
+{
+    gX11WrapperStub->stubReset();
+    gXEventListenerStub->stubReset();
+    delete statusAreaRenderer;
+    statusAreaRenderer = NULL;
+
+    gX11WrapperStub->stubSetReturnValue("XGetWindowProperty", BadMatch);
+    gX11WrapperStub->stubSetReturnValue("XGetWindowAttributes", 1);
+
+    statusAreaRenderer = new StatusAreaRenderer;
+
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+    // Verify registering the root window filter
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<Window>(1), DefaultRootWindow(QX11Info::display()));
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask);
+    QCOMPARE(
+            gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0),
+            (XEventListenerFilterInterface *)statusAreaRenderer);
+    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask);
+}
+
+void Ut_StatusAreaRenderer::testWMWindowBecomingUnvailable()
+{
+    gX11WrapperStub->stubSetReturnValue("XGetWindowAttributes", 1);
+
+    // WM window becomes unavailable
+    XEvent event;
+    event.type = DestroyNotify;
+    event.xdestroywindow.window = MEEGOTOUCH_WM_WINDOW_ID;
+    statusAreaRenderer->xEventFilter(event);
+
+    QCOMPARE(statusAreaRenderer->windowManagerWindow, Window(0));
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+    // Verify unregistering the wm window filter
+    QCOMPARE(
+            gXEventListenerStub->stubLastCallTo("unregisterEventFilter").parameter<XEventListenerFilterInterface *>(0),
+            (XEventListenerFilterInterface *)statusAreaRenderer);
+    // Verify registering the root window filter
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<Window>(1), DefaultRootWindow(QX11Info::display()));
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask);
+    QCOMPARE(
+            gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0),
+            (XEventListenerFilterInterface *)statusAreaRenderer);
+    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask);
+}
+
+void Ut_StatusAreaRenderer::testWMWindowBecomingAvailable()
+{
+    // WM window becomes unavailable
+    XEvent event;
+    event.type = DestroyNotify;
+    event.xdestroywindow.window = MEEGOTOUCH_WM_WINDOW_ID;
+    statusAreaRenderer->xEventFilter(event);
+
+    // WM window available again
+    setupXGetPropertiesToDefault();
+    gX11WrapperStub->stubSetReturnValue("XGetWindowAttributes", 1);
+    XEvent propertyChangeEvent;
+    propertyChangeEvent.xproperty.atom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTING_WM_CHECK", False);
+    propertyChangeEvent.xproperty.window = DefaultRootWindow(QX11Info::display());
+    statusAreaRenderer->xEventFilter(propertyChangeEvent);
+
+    QCOMPARE(statusAreaRenderer->statusBarVisible, true);
+    QCOMPARE(statusAreaRenderer->windowManagerWindow, MEEGOTOUCH_WM_WINDOW_ID);
+    // Verify registering the wm window filter
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<Window>(1), MEEGOTOUCH_WM_WINDOW_ID);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSelectInput").parameter<long>(2), PropertyChangeMask | StructureNotifyMask);
+    QCOMPARE(
+            gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<XEventListenerFilterInterface *>(0),
+            (XEventListenerFilterInterface *)statusAreaRenderer);
+    QCOMPARE(gXEventListenerStub->stubLastCallTo("registerEventFilter").parameter<long>(1), PropertyChangeMask | StructureNotifyMask);
 }
 
 QTEST_MAIN(Ut_StatusAreaRenderer)
