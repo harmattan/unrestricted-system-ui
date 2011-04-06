@@ -1,6 +1,7 @@
 system-ui (0.20.37~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: The status area pixmap was twice as big as it should have been
 
  -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Tue, 05 Apr 2011 14:02:32 +0300
 
