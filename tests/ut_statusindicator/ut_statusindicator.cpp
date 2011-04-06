@@ -19,6 +19,7 @@
 
 #include <QtTest/QtTest>
 #include <MOnDisplayChangeEvent>
+#include <MLocale>
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
 #include "statusindicatoranimationview.h"
@@ -86,12 +87,19 @@ void QTimer::stop()
     timerStarted = false;
 }
 
+QString gMLocaleLanguage;
+QString MLocale::language() const
+{
+    return gMLocaleLanguage;
+}
+
 void Ut_StatusIndicator::init()
 {
     m_subject = NULL;
     testContext = new TestContext();
     testContextItems.clear();
     gModelValue.clear();
+    gMLocaleLanguage = "";
 }
 
 void Ut_StatusIndicator::cleanup()
@@ -477,16 +485,21 @@ void Ut_StatusIndicator::testPhoneNetwork_data() {
     QTest::addColumn<QString>("netstring");
     QTest::addColumn<QString>("home");
     QTest::addColumn<QString>("visitor");
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("extnetstring");
 
-    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString();
-    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar";
-    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString();
-    QTest::newRow("MissingBoth") << QString() << QString() << QString();
-    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo";
-    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString();
-    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString();
-    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar";
-    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()";
+    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString() << "" << "";
+    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar" << "" << "";
+    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString() << "" << "";
+    QTest::newRow("MissingBoth") << QString() << QString() << QString() << "" << "";
+    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo" << "" << "";
+    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString() << "" << "";
+    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString() << "" << "";
+    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar" << "" << "";
+    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()" << "" << "";
+    QTest::newRow("ChineseLocale") << "foo" << "bar" << "" << "zh" << "bar";
+    QTest::newRow("ChineseLocaleNoExtNetString") << "foo" << "foo" << "" << "zh" << "";
+    QTest::newRow("ChineseLocaleVisitor") << "foo" << "bar" << "meh" << "zh" << "bar (meh)";
 }
 
 void Ut_StatusIndicator::testPhoneNetwork()
@@ -494,10 +507,15 @@ void Ut_StatusIndicator::testPhoneNetwork()
     QFETCH(QString, netstring);
     QFETCH(QString, home);
     QFETCH(QString, visitor);
+    QFETCH(QString, language);
+    QFETCH(QString, extnetstring);
+
+    gMLocaleLanguage = language;
 
     StatusIndicator *m_subject = new PhoneNetworkStatusIndicator(*testContext);
 
     testContextItems["Cellular.NetworkName"]->setValue(QVariant(netstring));
+    testContextItems["Cellular.ExtendedNetworkName"]->setValue(QVariant(extnetstring));
     PhoneNetworkStatusIndicator* indicator = qobject_cast<PhoneNetworkStatusIndicator*>(m_subject);
 
     // reconnect timer timeout and check that reconnection fails i.e. is already connected

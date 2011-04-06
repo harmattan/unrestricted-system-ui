@@ -16,8 +16,8 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <MApplication>
+#include <MLocale>
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
 #include "applicationcontext.h"
@@ -428,15 +428,31 @@ PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &con
     setStyleNameAndUpdate(metaObject()->className());
 
     networkName = createContextItem(context, "Cellular.NetworkName");
+    extendedNetworkName = createContextItem(context, "Cellular.ExtendedNetworkName");
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+    connect(extendedNetworkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
     connect(&networkChangeShowVisitorTimer, SIGNAL(timeout()), this, SLOT(showVisitorNetworkName()));
     networkChangeShowVisitorTimer.setSingleShot(true);
-    networkChangeShowVisitorTimer.setInterval(3*1000);
+    networkChangeShowVisitorTimer.setInterval(3 * 1000);
     phoneNetworkChanged();
 }
 
-QString PhoneNetworkStatusIndicator::homeNetwork() const {
-    QStringList netNames(QString(networkName->value().toString()).split(NETWORK_NAME_START_DELIMITER));
+QString PhoneNetworkStatusIndicator::localizedNetwork() const
+{
+    MLocale locale;
+    QString name = extendedNetworkName->value().toString();
+
+    if(locale.language() != QLatin1String("zh") || name.isEmpty()) {
+       name = networkName->value().toString();
+    }
+
+    return name;
+}
+
+QString PhoneNetworkStatusIndicator::homeNetwork() const
+{
+    QStringList netNames(localizedNetwork().split(NETWORK_NAME_START_DELIMITER));
+
     if (netNames.count() >= 1) {
         return netNames.first().trimmed();
     } else {
@@ -444,8 +460,10 @@ QString PhoneNetworkStatusIndicator::homeNetwork() const {
     }
 }
 
-QString PhoneNetworkStatusIndicator::visitorNetwork() const {
-    QString networkString = networkName->value().toString().trimmed();
+QString PhoneNetworkStatusIndicator::visitorNetwork() const
+{
+    QString networkString = localizedNetwork().trimmed();
+
     if (networkString.contains(NETWORK_NAME_START_DELIMITER) &&
         networkString.endsWith(NETWORK_NAME_END_DELIMITER)) {
         // separates networkString into pieces divided by "("
@@ -474,6 +492,7 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
     QString home(homeNetwork());
     QString visitor(visitorNetwork());
     setValue(home);
+
     if (!visitor.isEmpty() && !home.isEmpty() && (home != visitor)) {
         networkChangeShowVisitorTimer.start();
     }

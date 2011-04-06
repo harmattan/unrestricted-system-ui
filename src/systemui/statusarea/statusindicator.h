@@ -362,8 +362,10 @@ private slots:
 private:
     QString homeNetwork() const;
     QString visitorNetwork() const;
+    QString localizedNetwork() const;
 
     ContextItem *networkName;
+    ContextItem *extendedNetworkName;
     QTimer networkChangeShowVisitorTimer;
 
 #ifdef UNIT_TEST
