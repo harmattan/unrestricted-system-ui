@@ -43,20 +43,13 @@ void QApplication::syncX()
     Ut_StatusAreaRenderer_syncX_Called = true;
 }
 
-const MStyle* MTheme::style(const char *styleClassName,
-                            const QString &objectName,
-                            const QString &mode,
-                            const QString &type,
-                            M::Orientation orientation,
-                            const MWidgetController *parent)
+const MStyle* MTheme::style(const char *, const QString &)
 {
-    Q_UNUSED(styleClassName);
-    Q_UNUSED(objectName);
-    Q_UNUSED(mode);
-    Q_UNUSED(type);
-    Q_UNUSED(orientation);
-    Q_UNUSED(parent);
     return new MStyle;
+}
+
+void MTheme::releaseStyle(const MStyle *)
+{
 }
 
 MStyle::MStyle()
@@ -506,7 +499,7 @@ void Ut_StatusAreaRenderer::testRenderingWithMeeGo()
     emit changed(*rectList);
 
     QCOMPARE(statusAreaRenderer->backPixmap.handle(), statusAreaRenderer->statusAreaLivePixmap->handle());
-    QCOMPARE(statusAreaRenderer->backPixmap.size().height(), gStatusAreaSize.height() * 2);
+    QCOMPARE(statusAreaRenderer->backPixmap.size().height(), gStatusAreaSize.height());
 
     QCOMPARE(gPainterPaintDevices.at(0), gLivePixmapLockedImage);
     QCOMPARE(gPainterPaintDevices.at(1), &statusAreaRenderer->statusAreaPixmap);
@@ -522,7 +515,7 @@ void Ut_StatusAreaRenderer::testRenderingWithoutMeeGo()
 
     QCOMPARE(statusAreaRenderer->statusAreaLivePixmap, static_cast<QMeeGoLivePixmap*>(0) );
     QCOMPARE(statusAreaRenderer->backPixmap.size().width(), gStatusAreaSize.width());
-    QCOMPARE(statusAreaRenderer->backPixmap.size().height(), gStatusAreaSize.height() * 2);
+    QCOMPARE(statusAreaRenderer->backPixmap.size().height(), gStatusAreaSize.height());
 
     RenderTestsHelper helper;
     QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);

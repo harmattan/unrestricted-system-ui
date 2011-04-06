@@ -75,21 +75,17 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 
 void StatusAreaRenderer::setSizeFromStyle()
 {
-    const StatusAreaStyle *style = static_cast<const StatusAreaStyle *> (MTheme::style("StatusAreaStyle", "", "", "", M::Landscape, NULL));
-    if(style) {
+    const StatusAreaStyle *style = static_cast<const StatusAreaStyle *>(MTheme::style("StatusAreaStyle"));
+    if (style != NULL) {
         statusAreaHeight = style->preferredSize().height();
         statusAreaWidth = style->preferredSize().width();
+        MTheme::releaseStyle(style);
     }
 }
 
 bool StatusAreaRenderer::createSharedPixmapHandle()
 {
-    // Create a pixmap in which top portion TopLeft(0,0) BottomRight(status area width,status area height) is landscpae.
-    // Bottom portion TopLeft(0,status area height) BottomRight(status area portrait width,2*status area height) is portrait. unused portion is portrait is not drawn when in portrait
-
-    Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(),
-                                              statusAreaWidth, 2*statusAreaHeight, QX11Info::appDepth());
-
+    Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), statusAreaWidth, statusAreaHeight, QX11Info::appDepth());
     statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
 
     if (!statusAreaPixmap.isNull()) {
@@ -110,10 +106,10 @@ bool StatusAreaRenderer::createBackPixmap()
         // FIXME: Round up to the nearest multiple of eight until NB#231246 is fixed
         int livePixmapWidth = (statusAreaWidth / 8 + 1) * 8;
 
-        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight*2, QMeeGoLivePixmap::Format_ARGB32_Premultiplied);
+        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight, QMeeGoLivePixmap::Format_ARGB32_Premultiplied);
         backPixmap = QPixmap::fromX11Pixmap(statusAreaLivePixmap->handle(), QPixmap::ExplicitlyShared);
     } else {
-        backPixmap = QPixmap(statusAreaWidth, statusAreaHeight*2);
+        backPixmap = QPixmap(statusAreaWidth, statusAreaHeight);
     }
 
     if (!backPixmap.isNull()) {
