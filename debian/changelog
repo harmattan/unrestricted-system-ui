@@ -1,9 +1,8 @@
-system-ui (0.20.38~1) unstable; urgency=low
+system-ui (0.20.38-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#219442 - [TASK] Operator name display not in Chinese but "CMCC" or " CHN-UNICOM " in English
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 06 Apr 2011 16:17:32 +0300
+ -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Thu, 07 Apr 2011 14:02:00 +0300
 
 system-ui (0.20.37-1) unstable; urgency=low
 
