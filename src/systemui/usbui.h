@@ -28,6 +28,9 @@
 #endif
 
 class MNotification;
+namespace MeeGo {
+    class QmLocks;
+}
 
 /*!
  * The USB UI takes care of USB related user interfaces.
@@ -104,6 +107,7 @@ private:
 #ifdef HAVE_QMSYSTEM
     MeeGo::QmUSBMode *usbMode;
     MeeGo::QmUSBMode::Mode requestedUSBMode;
+    MeeGo::QmLocks *locks;
 #endif
     MNotification *notification;
     QPointer<MDialog> dialog;

@@ -37,6 +37,7 @@ UsbUi::UsbUi(QObject *parent) : QObject(parent),
 #ifdef HAVE_QMSYSTEM
     usbMode(new MeeGo::QmUSBMode(this)),
     requestedUSBMode(MeeGo::QmUSBMode::Undefined),
+    locks(new MeeGo::QmLocks(this)),
 #endif
     notification(0),
     dialog(0)
@@ -151,6 +152,12 @@ void UsbUi::setRequestedUSBMode()
 void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
 {
     switch (mode) {
+    case MeeGo::QmUSBMode::Connected:
+        if (locks->getState(MeeGo::QmLocks::Device) == MeeGo::QmLocks::Locked) {
+            // When the device lock is on and USB is connected, always pretend that the USB mode selection dialog is shown to unlock the touch screen lock
+            emit dialogShown();
+        }
+        break;
     case MeeGo::QmUSBMode::Ask:
     case MeeGo::QmUSBMode::ModeRequest:
         showDialog();

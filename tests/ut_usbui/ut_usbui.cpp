@@ -150,6 +150,25 @@ void Ut_UsbUi::testDialogButtons()
 
     QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::MassStorage);
 }
+
+void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data()
+{
+    QTest::addColumn<int>("deviceLocked");
+    QTest::addColumn<int>("dialogShownCount");
+    QTest::newRow("Device locked") << (int)MeeGo::QmLocks::Locked << 1;
+    QTest::newRow("Device not locked") << (int)MeeGo::QmLocks::Unlocked << 0;
+}
+
+void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown()
+{
+    QFETCH(int, deviceLocked);
+    QFETCH(int, dialogShownCount);
+
+    QSignalSpy spy(m_subject, SIGNAL(dialogShown()));
+    gQmLocksStub->stubSetReturnValue("getState", (MeeGo::QmLocks::State)deviceLocked);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
+    QCOMPARE(spy.count(), dialogShownCount);
+}
 #endif
 
 void Ut_UsbUi::testShowError()
@@ -161,4 +180,3 @@ void Ut_UsbUi::testShowError()
 }
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)
-

@@ -1,6 +1,7 @@
 system-ui (0.20.39~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#231557 - USB dialog does not automatically unlock the screen
 
  -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Thu, 07 Apr 2011 14:05:42 +0300
 

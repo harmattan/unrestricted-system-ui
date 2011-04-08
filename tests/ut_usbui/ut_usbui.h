@@ -46,8 +46,10 @@ private slots:
     void testShowHideDialog();
     void testUSBNotifications();
     void testDialogButtons();
-    void testShowError();
+    void testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data();
+    void testConnectingUSBWhenDeviceIsLockedEmitsDialogShown();
 #endif
+    void testShowError();
 
 private:
     MApplication *m_App;
