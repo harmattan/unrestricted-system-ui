@@ -1,9 +1,8 @@
-system-ui (0.20.39~1) unstable; urgency=low
+system-ui (0.20.39-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#231557 - USB dialog does not automatically unlock the screen
 
- -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Thu, 07 Apr 2011 14:05:42 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 08 Apr 2011 16:42:12 +0300
 
 system-ui (0.20.38-1) unstable; urgency=low
 
