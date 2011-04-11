@@ -1,3 +1,9 @@
+system-ui (0.20.41~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 11 Apr 2011 18:07:57 +0300
+
 system-ui (0.20.40-1) unstable; urgency=low
 
   * Fixes: NB#232485 - Coverity testrun around 2. March 2011 - meegotouch-systemui
