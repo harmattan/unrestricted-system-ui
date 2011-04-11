@@ -82,7 +82,7 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
 }
 
 // DBusInterfaceNotificationSink stubs
-DBusInterfaceNotificationSink::DBusInterfaceNotificationSink(NotificationManagerInterface *)
+DBusInterfaceNotificationSink::DBusInterfaceNotificationSink(NotificationManagerInterface *notificationManager) : notificationManager(notificationManager)
 {
 }
 

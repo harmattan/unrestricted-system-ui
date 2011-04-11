@@ -129,7 +129,7 @@ void NotificationSink::setApplicationEventsEnabled(bool enabled)
 
 // NGFNotificationSink stubs (used by Sysuid)
 NGFNotificationSink *mNGFNotificationSink = 0;
-NGFNotificationSink::NGFNotificationSink(QObject *parent) : NotificationSink(parent)
+NGFNotificationSink::NGFNotificationSink(QObject *parent) : NotificationSink(parent), adapter(NULL)
 {
     mNGFNotificationSink = this;
 }

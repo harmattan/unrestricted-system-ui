@@ -78,7 +78,7 @@ namespace ResourcePolicy
  */
 namespace MeeGo
 {
-    QmKeys::QmKeys(QObject *parent)
+    QmKeys::QmKeys(QObject *parent) : priv(NULL)
     {
         Q_UNUSED(parent);
     }
@@ -258,7 +258,7 @@ void MWindow::setVisible(bool)
 {
 }
 
-MGConfItem::MGConfItem(const QString &, QObject *parent) : QObject(parent)
+MGConfItem::MGConfItem(const QString &, QObject *parent) : QObject(parent), priv(NULL)
 {
 }
 

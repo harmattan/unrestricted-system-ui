@@ -27,7 +27,10 @@
 
 #include "mnotificationproxy.h"
 
-MNotificationProxy::MNotificationProxy()
+MNotificationProxy::MNotificationProxy() :
+    notificationId(0),
+    groupId(0),
+    count(0)
 {
 }
 
@@ -143,7 +146,9 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationWith
 }
 
 
-MNotificationGroupProxy::MNotificationGroupProxy()
+MNotificationGroupProxy::MNotificationGroupProxy() :
+        groupId(0),
+        count(0)
 {
 }
 

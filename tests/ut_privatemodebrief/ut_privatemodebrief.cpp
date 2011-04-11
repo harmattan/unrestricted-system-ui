@@ -25,9 +25,8 @@
 QString g_gconf_key;
 QVariant g_gconf_value;
 
-MGConfItem::MGConfItem(const QString &key, QObject *parent)
+MGConfItem::MGConfItem(const QString &key, QObject *parent) : QObject(parent), priv(NULL)
 {
-    Q_UNUSED(parent);
     g_gconf_key = key;
 }
 
