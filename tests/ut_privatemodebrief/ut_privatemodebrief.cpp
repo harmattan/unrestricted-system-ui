@@ -65,7 +65,7 @@ void Ut_PrivateModeBrief::cleanup()
 
 void Ut_PrivateModeBrief::testGConfKey()
 {
-    QVERIFY(g_gconf_key == "/desktop/meego/privacy/private_lockscreen_notifications");
+    QCOMPARE(g_gconf_key, QString("/desktop/meego/privacy/private_lockscreen_notifications"));
 
     QSignalSpy changeSpy(m_subject, SIGNAL(valuesChanged()));
 
@@ -78,6 +78,11 @@ void Ut_PrivateModeBrief::testGConfKey()
     QCOMPARE(changeSpy.count(), 2);
     QCOMPARE(g_gconf_value.toBool(), (bool)false);
     QCOMPARE(m_subject->toggle(), (bool)false);
+}
+
+void Ut_PrivateModeBrief::testHelpId()
+{
+    QCOMPARE(m_subject->helpId(), QString("CTX_IDUG_MEEGO_PRIVACY.html"));
 }
 
 QTEST_APPLESS_MAIN(Ut_PrivateModeBrief)

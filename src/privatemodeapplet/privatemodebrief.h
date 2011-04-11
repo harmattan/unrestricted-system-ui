@@ -31,6 +31,7 @@ public:
     virtual bool toggle() const;
     virtual void setToggle (bool toggle);
     virtual int widgetTypeID() const;
+    virtual QString helpId() const;
 
 private:
 

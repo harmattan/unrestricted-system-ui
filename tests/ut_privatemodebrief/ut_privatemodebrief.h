@@ -41,6 +41,7 @@ private slots:
 
     // Test cases
     void testGConfKey();
+    void testHelpId();
 
 private:
     // The object being tested

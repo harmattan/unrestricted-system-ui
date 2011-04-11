@@ -41,3 +41,7 @@ int PrivateModeBrief::widgetTypeID() const
     return DcpWidgetType::Toggle;
 }
 
+QString PrivateModeBrief::helpId() const
+{
+    return "CTX_IDUG_MEEGO_PRIVACY.html";
+}
