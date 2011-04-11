@@ -1,10 +1,9 @@
-system-ui (0.20.40~1) unstable; urgency=low
+system-ui (0.20.40-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#232485 - Coverity testrun around 2. March 2011 - meegotouch-systemui
   * Fixes: NB#240160 - Access to context specific help is missing from "Privacy mode" switch for notifications
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 08 Apr 2011 16:43:53 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 11 Apr 2011 18:07:36 +0300
 
 system-ui (0.20.39-1) unstable; urgency=low
 
