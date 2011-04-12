@@ -1,8 +1,8 @@
-system-ui (0.20.41~1) unstable; urgency=low
+system-ui (0.20.41-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#222612 - Status area's pressed down state is not working when status menu is already open 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 11 Apr 2011 18:07:57 +0300
+
+ -- Pankaj Saharan <pankaj.saharan@nokia.com>  Mon, 12 Apr 2011 15:37:57 +0300
 
 system-ui (0.20.40-1) unstable; urgency=low
 
