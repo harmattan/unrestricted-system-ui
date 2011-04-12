@@ -403,10 +403,6 @@ StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
     preferred-size: -1 1.8mm;
     minimum-size: 1.8mm 1.8mm;
     maximum-size: 5.0mm 1.8mm;
-    padding-top: 0.1mm;
-    padding-bottom: 0.1mm;
-    margin-top: 0;
-    margin-left: 0;
 }
 
 StatusIndicatorIconStyle#BluetoothStatusIndicator {

@@ -1,6 +1,7 @@
 system-ui (0.20.42~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#246227 - Alarm status indicator has no spacing on the left and appears glued to the next status indicator
 
  -- Pankaj Saharan <pankaj.saharan@nokia.com>  Tue, 12 Apr 2011 15:36:25 +0300
 
