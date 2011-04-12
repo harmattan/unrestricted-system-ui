@@ -42,6 +42,10 @@ MWidgetStyle#StatusIndicatorMenuWindowBackground {
     maximum-size: 100% 0;
 }
 
+MStatusBarStyle#StatusIndicatorMenuWindowStatusBar {
+    enable-status-indicator-menu: false;
+}
+
 MButtonIconStyle#StatusIndicatorMenuTopRowExtensionButton {
     font: $FONT_XSMALL;
     text-color: $COLOR_FOREGROUND;

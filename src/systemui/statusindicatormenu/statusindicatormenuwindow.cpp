@@ -31,8 +31,9 @@ StatusIndicatorMenuWindow::StatusIndicatorMenuWindow(QWidget *parent) :
     // Show status bar
     setSceneManager(new MSceneManager);
     sceneManager()->appearSceneWindowNow(statusBar);
-
     currentLanguage = MLocale().language();
+
+    statusBar->setStyleName("StatusIndicatorMenuWindowStatusBar");
 
     // Set the X window type, so that the window does not appear in the switcher and
     // home screen can provide the correct UI flow
@@ -159,18 +160,14 @@ bool StatusIndicatorMenuWindow::event(QEvent *event)
 void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent * event)
 {
     mousePressPosition = event->pos();
-
-    // Don't pass the event to the status bar
-    if (itemAt(mousePressPosition) != statusBar) {
-        MWindow::mousePressEvent(event);
-    }
+    MWindow::mousePressEvent(event);
 }
 
 void StatusIndicatorMenuWindow::mouseReleaseEvent(QMouseEvent * event)
 {
     if (itemAt(mousePressPosition) == statusBar && menuWidget) {
         menuWidget->disappear();
-    } else {
-        MWindow::mouseReleaseEvent(event);
     }
+    // pass mouse release to status bar as well, else it will remain in pressed state if press happened on it
+    MWindow::mouseReleaseEvent(event);
 }
