@@ -214,8 +214,6 @@ void PhoneNetworkTypeStatusIndicator::setNetworkAvailability(bool available)
 
 void PhoneNetworkTypeStatusIndicator::setNetworkType()
 {
-    QString postFix = "";
-    QString postFixPacketData = "";
     QString dataTechnology = cellularDataTechnology->value().toString(); // gprs egprs umts hspa
     QString state = connectionState->value().toString(); // disconnected connecting connected
     QString connection = connectionType->value().toString(); // GPRS WLAN
@@ -223,12 +221,15 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
 
     setValue(0);
 
-    if (state == "disconnected") {
-        setStyleNameAndUpdate(); // hide indicator
+    if ((state == "disconnected") && !data) {
+        setStyleNameAndUpdate(); // hide indicator if in disconnected state and no packet data traffic
         return; // no further actions needed
     }
 
-    if (connection == "WLAN") {
+    QString postFix = "";
+    QString postFixPacketData = "";
+
+    if ((connection == "WLAN") && (state != "disconnected")) {
         postFix = "WLAN";
     }
     if (dataTechnology == "gprs") {
@@ -245,7 +246,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     if (data) {
         postFix += postFixPacketData;
         postFix += "Active";
-        animateIfPossible = (connection == "WLAN");
+        animateIfPossible = ((connection == "WLAN") && (state != "disconnected"));
     } else {
         if (postFix.isEmpty()) {
             postFix = postFixPacketData;
