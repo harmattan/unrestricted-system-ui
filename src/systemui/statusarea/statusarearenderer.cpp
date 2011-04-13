@@ -113,10 +113,7 @@ bool StatusAreaRenderer::createBackPixmap()
     }
 
     if (QMeeGoGraphicsSystemHelper::isRunningMeeGo()) {
-        // FIXME: Round up to the nearest multiple of eight until NB#231246 is fixed
-        int livePixmapWidth = (statusAreaWidth / 8 + 1) * 8;
-
-        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight, QMeeGoLivePixmap::Format_RGB16);
+        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(statusAreaWidth, statusAreaHeight, QMeeGoLivePixmap::Format_RGB16);
         backPixmap = QPixmap::fromX11Pixmap(statusAreaLivePixmap->handle(), QPixmap::ExplicitlyShared);
     } else {
         backPixmap = QPixmap(statusAreaWidth, statusAreaHeight);
@@ -248,13 +245,6 @@ void StatusAreaRenderer::renderAccumulatedRegion()
 
             if (statusAreaLivePixmap) {
                 image = statusAreaLivePixmap->lock();
-
-                // FIXME: This shouldn't be needed after NB#231260 is fixed
-                if (image->isNull()) {
-                    createBackPixmap();
-                    image = statusAreaLivePixmap->lock();
-                }
-
                 painter.begin(image);
             } else {
                 painter.begin(&backPixmap);
