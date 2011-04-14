@@ -1,10 +1,9 @@
-system-ui (0.20.43~1) unstable; urgency=low
+system-ui (0.20.43-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#212658 - FT_GEN: No indication of packet data attachment when sending/receiving MMS
   * Fixes: NB#246646 - Notification banners appear on top of the low power mode
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 12 Apr 2011 16:55:01 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 14 Apr 2011 14:50:25 +0300
 
 system-ui (0.20.42-1) unstable; urgency=low
 
