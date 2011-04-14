@@ -65,8 +65,18 @@ protected:
     //! \reimp_end
 
 private:
-    //! Set window properties to not show the window in the switcher
-    void excludeFromTaskBar();
+    //! Sets the _MEEGO_LOW_POWER_MODE window property if needed to make compositor paint the window even when the display state is off, so the low power mode view can update itself
+    void setLowPowerModeProperty();
+
+    //! Set the _MEEGO_STACKING_LAYER window property based on the current mode
+    void setStackingLayerProperty();
+
+    //! Set the _MEEGOTOUCH_ORIENTATION_ANGLE window property based on the current orientation (since it doesn't seem to get set properly for translucent windows, see bug #230352)
+    void setOrientationAngleProperty();
+
+    //! Set the _NET_WM_STATE window property to _NET_WM_STATE_SKIP_TASKBAR window to not show the window in the switcher
+    void setSkipTaskbarProperty();
+
     void changeNetWmState(bool set, Atom one, Atom two = 0);
 
     //! Applies the lock screen orientation and locking from the style

@@ -78,25 +78,8 @@ void ScreenLockWindow::showEvent(QShowEvent *event)
     MWindow::showEvent(event);
 
     // The window properties cannot be set before the window is shown for the first time, so they're set here.
-    // Set the stacking layer
-    Display *display = QX11Info::display();
-    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
-    if (stackingLayerAtom != None) {
-        long layer = 5;
-        X11Wrapper::XChangeProperty(display, effectiveWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
-    }
-
-    // Set the orientation angle (since it doesn't seem to get set properly for translucent windows, see bug #230352)
-    Atom orientationAngleAtom = XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
-    if (orientationAngleAtom != None) {
-        M::OrientationAngle angle = sceneManager()->orientationAngle();
-        X11Wrapper::XChangeProperty(display, effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&angle, 1);
-    }
-
-    // Exclude the window from the task bar
-    excludeFromTaskBar();
-
-    // Set the current low power mode
+    setSkipTaskbarProperty();
+    setOrientationAngleProperty();
     setLowPowerMode(lowPowerMode);
 }
 
@@ -104,14 +87,9 @@ void ScreenLockWindow::setLowPowerMode(bool enable)
 {
     lowPowerMode = enable;
 
-    // Set the low power mode X property if needed to make compositor paint the window even when the display state is off,
-    // so the low power mode view can update itself
-    Display *display = QX11Info::display();
-    Atom lowPowerModeAtom = X11Wrapper::XInternAtom(display, "_MEEGO_LOW_POWER_MODE", False);
-    if (lowPowerModeAtom != None) {
-        long mode = enable ? 1 : 0;
-        X11Wrapper::XChangeProperty(display, internalWinId(), lowPowerModeAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&mode, 1);
-    }
+    // Both the low power mode property and the stacking layer change when the low power mode changes
+    setLowPowerModeProperty();
+    setStackingLayerProperty();
 }
 
 void ScreenLockWindow::paintEvent(QPaintEvent *event)
@@ -121,16 +99,44 @@ void ScreenLockWindow::paintEvent(QPaintEvent *event)
     QGraphicsView::paintEvent(event);
 }
 
-
-void ScreenLockWindow::excludeFromTaskBar()
+void ScreenLockWindow::setLowPowerModeProperty()
 {
-    // Tell the window to not to be shown in the switcher
+    Display *display = QX11Info::display();
+    Atom lowPowerModeAtom = X11Wrapper::XInternAtom(display, "_MEEGO_LOW_POWER_MODE", False);
+    if (lowPowerModeAtom != None) {
+        long mode = lowPowerMode ? 1 : 0;
+        X11Wrapper::XChangeProperty(display, effectiveWinId(), lowPowerModeAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&mode, 1);
+    }
+}
+
+void ScreenLockWindow::setStackingLayerProperty()
+{
+    Display *display = QX11Info::display();
+    Atom stackingLayerAtom = X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False);
+    if (stackingLayerAtom != None) {
+        long layer = lowPowerMode ? 7 : 5;
+        X11Wrapper::XChangeProperty(display, effectiveWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
+    }
+}
+
+void ScreenLockWindow::setOrientationAngleProperty()
+{
+    Display *display = QX11Info::display();
+    Atom orientationAngleAtom = X11Wrapper::XInternAtom(display, "_MEEGOTOUCH_ORIENTATION_ANGLE", False);
+    if (orientationAngleAtom != None) {
+        M::OrientationAngle angle = sceneManager()->orientationAngle();
+        X11Wrapper::XChangeProperty(display, effectiveWinId(), orientationAngleAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&angle, 1);
+    }
+}
+
+void ScreenLockWindow::setSkipTaskbarProperty()
+{
     Display *display = QX11Info::display();
     XEvent e;
     memset(&e, 0, sizeof(XEvent));
     e.xclient.type = ClientMessage;
     e.xclient.display = display;
-    e.xclient.window = internalWinId();
+    e.xclient.window = effectiveWinId();
     e.xclient.message_type = X11Wrapper::XInternAtom(display, "_NET_WM_STATE", False);
     e.xclient.format = 32;
     e.xclient.data.l[0] = 1;

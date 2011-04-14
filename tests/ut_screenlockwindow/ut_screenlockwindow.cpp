@@ -125,7 +125,7 @@ void Ut_ScreenLockWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
     XEvent event = gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<XEvent>(4);
     QCOMPARE(event.xclient.type, ClientMessage);
     QCOMPARE(event.xclient.display, display);
-    QCOMPARE(event.xclient.window, lockScreenWindow->internalWinId());
+    QCOMPARE(event.xclient.window, lockScreenWindow->effectiveWinId());
     QCOMPARE(event.xclient.message_type, X11Wrapper::XInternAtom(display, "_NET_WM_STATE", False));
     QCOMPARE(event.xclient.format, 32);
     QCOMPARE(event.xclient.data.l[0], (long)1);
@@ -191,6 +191,44 @@ void Ut_ScreenLockWindow::testTranslucency()
     delete lockScreenWindow;
     lockScreenWindow = new ScreenLockWindow(new MApplicationExtensionArea(""));
     QCOMPARE(lockScreenWindow->testAttribute(Qt::WA_TranslucentBackground), translucent);
+}
+
+void Ut_ScreenLockWindow::testLowPowerMode_data()
+{
+    QTest::addColumn<bool>("lowPowerModeEnabled");
+    QTest::addColumn<int>("lowPowerModeProperty");
+    QTest::addColumn<int>("stackingLayerProperty");
+
+    QTest::newRow("Low power mode enabled") << true << 1 << 7;
+    QTest::newRow("Low power mode disabled") << false << 0 << 5;
+}
+
+void Ut_ScreenLockWindow::testLowPowerMode()
+{
+    QFETCH(bool, lowPowerModeEnabled);
+    QFETCH(int, lowPowerModeProperty);
+    QFETCH(int, stackingLayerProperty);
+
+    lockScreenWindow->setLowPowerMode(lowPowerModeEnabled);
+
+    Display *display = QX11Info::display();
+    QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 2);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Display *>(0), display);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Window>(1), lockScreenWindow->effectiveWinId());
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(2), X11Wrapper::XInternAtom(display, "_MEEGO_LOW_POWER_MODE", False));
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(3), XA_CARDINAL);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<int>(4), 32);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<int>(5), PropModeReplace);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<QByteArray>(6).constData()[0], (char)lowPowerModeProperty);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<int>(7), 1);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Display *>(0), display);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Window>(1), lockScreenWindow->effectiveWinId());
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(2), X11Wrapper::XInternAtom(display, "_MEEGO_STACKING_LAYER", False));
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(3), XA_CARDINAL);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<int>(4), 32);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<int>(5), PropModeReplace);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<QByteArray>(6).constData()[0], (char)stackingLayerProperty);
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<int>(7), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_ScreenLockWindow)

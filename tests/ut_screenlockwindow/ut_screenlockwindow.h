@@ -40,6 +40,8 @@ private slots:
     void testOrientationLocking();
     void testTranslucency_data();
     void testTranslucency();
+    void testLowPowerMode_data();
+    void testLowPowerMode();
 
 private:
     MApplication *app;
