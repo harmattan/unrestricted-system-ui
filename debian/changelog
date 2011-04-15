@@ -1,6 +1,7 @@
 system-ui (0.20.44~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#247643 - Lock screen behavior on power key double click
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 14 Apr 2011 14:50:51 +0300
 

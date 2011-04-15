@@ -7,3 +7,8 @@
 MWidgetSlideAnimationStyle#In {
     delay: 1;
 }
+
+MWindowStyle {
+    x11-startup-pixmap: ;
+    startup-fill-color: black;
+}
