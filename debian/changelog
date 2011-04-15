@@ -1,3 +1,9 @@
+system-ui (0.20.46~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 15 Apr 2011 13:46:17 +0300
+
 system-ui (0.20.45-1) unstable; urgency=low
 
   * Fixes: NB#247257 - Time does not update in applications view
