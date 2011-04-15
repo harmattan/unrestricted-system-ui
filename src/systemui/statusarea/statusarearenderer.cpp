@@ -304,6 +304,7 @@ bool StatusAreaRenderer::getStatusBarVisibleProperty()
     unsigned long length, after;
     uchar *data = 0;
 
+    bool oldStatusBarVisible = statusBarVisible;
     bool success = false;
     if (X11Wrapper::XGetWindowProperty(QX11Info::display(), windowManagerWindow, statusBarVisibleAtom,
                            0, 1024, False, XA_CARDINAL, &type, &format, &length, &after, &data) == Success) {
@@ -316,6 +317,11 @@ bool StatusAreaRenderer::getStatusBarVisibleProperty()
             // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
             statusBarVisible = true;
         }
+    }
+
+    if (statusBarVisible && !oldStatusBarVisible) {
+        // Render any changes that have accumulated while the status bar was not visible
+        renderAccumulatedRegion();
     }
 
     return success;
@@ -384,6 +390,11 @@ void StatusAreaRenderer::setSceneRender(MeeGo::QmDisplayState::DisplayState stat
         MOnDisplayChangeEvent event(state, QRectF());
         foreach(QGraphicsItem *item, scene->items()) {
             scene->sendEvent(item, &event);
+        }
+
+        if (renderScene) {
+            // Render any changes that have accumulated while the display was off
+            renderAccumulatedRegion();
         }
     }
 }

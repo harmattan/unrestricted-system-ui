@@ -33,6 +33,7 @@ class Ut_StatusAreaRenderer : public QObject
 
 private:
     void setupXGetPropertiesToDefault();
+    void setStatusBarVisibility(bool visible);
 
     StatusAreaRenderer *statusAreaRenderer;
 
@@ -56,6 +57,7 @@ private slots:
     void testSetupStatusBarVisiblePropertyListening();
     void testWhenStatusBarVisiblePropertySetupUnsuccessfulThenAssumingStatusBarVisible();
     void testStatusBarInvisibleStopsRendering();
+    void testWhenStatusBarBecomesVisibleRenderAccumulatedChanges();
     void testUnregisteringEventFilterWhenDestroyed();
     // Test scene changed events render the scene
     void testSceneChanged();
@@ -86,6 +88,7 @@ private slots:
     void testMOnDisplayChangeEvent();
     // Test that scene is not rendered if initial display state is off
     void testSceneRenderControlWhenInitialDisplayStateOff();
+    void testWhenDisplaySwitchedOnRenderAccumulatedChanges();
 #endif
 };
 

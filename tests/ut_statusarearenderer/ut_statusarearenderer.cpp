@@ -293,14 +293,19 @@ void Ut_StatusAreaRenderer::testWhenStatusBarVisiblePropertySetupUnsuccessfulThe
     QCOMPARE(statusAreaRenderer->statusBarVisible, true);
 }
 
-void Ut_StatusAreaRenderer::testStatusBarInvisibleStopsRendering()
+void Ut_StatusAreaRenderer::setStatusBarVisibility(bool visible)
 {
-    // "Turn" _MEEGOTOUCH_STATUSBAR_VISIBLE off
-    wmPropertyStatusBarVisibleXGetReturnValue = false;
+    wmPropertyStatusBarVisibleXGetReturnValue = visible;
     XEvent event;
     event.xproperty.window = MEEGOTOUCH_WM_WINDOW_ID;
     event.xproperty.atom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
     statusAreaRenderer->xEventFilter(event);
+}
+
+void Ut_StatusAreaRenderer::testStatusBarInvisibleStopsRendering()
+{
+    // "Turn" _MEEGOTOUCH_STATUSBAR_VISIBLE off
+    setStatusBarVisibility(false);
     QCOMPARE(statusAreaRenderer->statusBarVisible, false);
 
     // Verify we are not rendering
@@ -310,16 +315,23 @@ void Ut_StatusAreaRenderer::testStatusBarInvisibleStopsRendering()
     statusAreaRenderer->accumulateSceneChanges(rectList);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
 
-
     // "Turn" _MEEGOTOUCH_STATUSBAR_VISIBLE on
-    wmPropertyStatusBarVisibleXGetReturnValue = true;
-    event.xproperty.window = MEEGOTOUCH_WM_WINDOW_ID;
-    event.xproperty.atom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
-    statusAreaRenderer->xEventFilter(event);
+    setStatusBarVisibility(true);
     QCOMPARE(statusAreaRenderer->statusBarVisible, true);
 
     // Verify we are rendering again
     statusAreaRenderer->accumulateSceneChanges(rectList);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
+}
+
+void Ut_StatusAreaRenderer::testWhenStatusBarBecomesVisibleRenderAccumulatedChanges()
+{
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
+    setStatusBarVisibility(false);
+    emit changed(*rectList);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, false);
+    setStatusBarVisibility(true);
     QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
 }
 
@@ -461,6 +473,16 @@ void Ut_StatusAreaRenderer::testSceneRenderControlWhenInitialDisplayStateOff()
     setupXGetPropertiesToDefault();
     statusAreaRenderer = new StatusAreaRenderer;
     QCOMPARE(statusAreaRenderer->renderScene, false);
+}
+
+void Ut_StatusAreaRenderer::testWhenDisplaySwitchedOnRenderAccumulatedChanges()
+{
+    RenderTestsHelper helper;
+    QList<QRectF>* rectList = helper.setupRenderTests(this, statusAreaRenderer);
+    emit displayStateChanged(MeeGo::QmDisplayState::Off);
+    emit changed(*rectList);
+    emit displayStateChanged(MeeGo::QmDisplayState::On);
+    QCOMPARE(Ut_StatusAreaRenderer_Scene_Render_Called, true);
 }
 
 #endif
