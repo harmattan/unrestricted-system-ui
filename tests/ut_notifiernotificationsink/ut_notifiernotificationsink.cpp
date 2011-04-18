@@ -27,15 +27,6 @@
 #define UNSEEN GenericNotificationParameterFactory::unseenKey()
 #define COUNT  GenericNotificationParameterFactory::countKey()
 
-#ifdef HAVE_QMSYSTEM
-// MeeGo::QmDisplayState stub
-static MeeGo::QmDisplayState::DisplayState meeGoQmDisplayState;
-MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
-{
-    return meeGoQmDisplayState;
-}
-#endif
-
 void Ut_NotifierNotificationSink::initTestCase()
 {
 }
@@ -233,38 +224,5 @@ void Ut_NotifierNotificationSink::testThatNotifierIsActiveOnlyWhenThereIsNotific
     emit removeNotification(2);
     QCOMPARE(m_subject->notifierEnabled, false);
 }
-
-#ifdef HAVE_QMSYSTEM
-void Ut_NotifierNotificationSink::testSignalConnections()
-{
-    QVERIFY(disconnect(&m_subject->displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), m_subject, SLOT(updateStatusOfLedFeedback())));
-}
-
-void Ut_NotifierNotificationSink::testLedFeedbackStatus()
-{
-    // Display off, notifier disabled: no feedbacks
-    m_subject->setNotifierEnabled(false);
-    meeGoQmDisplayState = MeeGo::QmDisplayState::Off;
-    m_subject->updateStatusOfLedFeedback();
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 0);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
-
-    // Display off, notifier enabled: feedback played
-    m_subject->setNotifierEnabled(true);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
-
-    // Updating the status of the led feedback again should not play a feedback again
-    m_subject->updateStatusOfLedFeedback();
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 0);
-
-    // Display on, notifier enabled: feedback stopped
-    meeGoQmDisplayState = MeeGo::QmDisplayState::On;
-    m_subject->updateStatusOfLedFeedback();
-    QCOMPARE(gNGFAdapterStub->stubCallCount("play"), 1);
-    QCOMPARE(gNGFAdapterStub->stubCallCount("stop"), 1);
-}
-#endif //HAVE_QMSYSTEM
 
 QTEST_APPLESS_MAIN(Ut_NotifierNotificationSink)

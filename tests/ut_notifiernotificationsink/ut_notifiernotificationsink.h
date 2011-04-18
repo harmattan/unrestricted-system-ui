@@ -50,10 +50,6 @@ private slots:
     void testSeenNotificationAddedThenNotifierNotUpdated();
     void testWhenAddSystemNotificationNotificationIdIsNotStored();
     void testThatNotifierIsActiveOnlyWhenThereIsNotifications();
-#ifdef HAVE_QMSYSTEM
-    void testSignalConnections();
-    void testLedFeedbackStatus();
-#endif
 
 signals:
     void addNotification(const Notification &notification);

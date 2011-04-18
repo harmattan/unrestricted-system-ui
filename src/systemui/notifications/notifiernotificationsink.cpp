@@ -30,10 +30,6 @@ NotifierNotificationSink::NotifierNotificationSink(QObject *parent) :
     ngfEventId(0),
     notifierEnabled(false)
 {
-#ifdef HAVE_QMSYSTEM
-    connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)),
-        this, SLOT(updateStatusOfLedFeedback()));
-#endif
 }
 
 NotifierNotificationSink::~NotifierNotificationSink()
@@ -81,25 +77,4 @@ void NotifierNotificationSink::setNotifierEnabled(bool enabled)
 {
     emit notifierSinkActive(enabled);
     notifierEnabled = enabled;
-    updateStatusOfLedFeedback();
-}
-
-void NotifierNotificationSink::updateStatusOfLedFeedback()
-{
-#ifdef HAVE_QMSYSTEM
-    if (displayState.get() == MeeGo::QmDisplayState::Off && notifierEnabled) {
-        // Display is off and notifier is enabled, feedback should be playing
-        if (ngfEventId == 0) {
-            // However, only play feedback if not already playing
-            ngfEventId = ngfAdapter->play(NOTIFIER_NGF_ID);
-        }
-    } else {
-        // Display is on or notifier is disabled, feedback should be playing
-        if (ngfEventId != 0) {
-            // However, only stop feedback if it is playing
-            ngfAdapter->stop(ngfEventId);
-            ngfEventId = 0;
-        }
-    }
-#endif
 }

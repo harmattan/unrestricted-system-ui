@@ -23,10 +23,6 @@
 #include "notificationsink.h"
 #include <QSet>
 
-#ifdef HAVE_QMSYSTEM
-#include <qmdisplaystate.h>
-#endif
-
 class NGFAdapter;
 
 /*!
@@ -76,12 +72,6 @@ private slots:
     virtual void removeNotification(uint notificationId);
     //! \reimp_end
 
-    /*!
-     * Updates status of notifier's LED feedback to playing or stopped.
-     * Play is set only when notifier is enabled and display is off.
-     */
-    void updateStatusOfLedFeedback();
-
 private:
     /*!
      * Sets notifier enabled or disabled.
@@ -109,11 +99,6 @@ private:
 
     //! Represents the state of the notifier
     bool notifierEnabled;
-
-#ifdef HAVE_QMSYSTEM
-    //! Display state of the device. Needed for LED feedback.
-    MeeGo::QmDisplayState displayState;
-#endif
 
 #ifdef UNIT_TEST
     friend class Ut_NotifierNotificationSink;
