@@ -1,9 +1,8 @@
-system-ui (0.20.49~1) unstable; urgency=low
+system-ui (0.20.49-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#246324 - Context properties provided by resource policy will be renamed
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 18 Apr 2011 17:26:10 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 18 Apr 2011 18:47:10 +0300
 
 system-ui (0.20.48-1) unstable; urgency=low
 
