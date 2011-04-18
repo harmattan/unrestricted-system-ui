@@ -111,7 +111,7 @@ Sysuid::Sysuid(QObject* parent) :
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;
-    useMode = QSharedPointer<ContextItem> (context.createContextItem("com.nokia.policy.camera"));
+    useMode = QSharedPointer<ContextItem> (context.createContextItem("/com/nokia/policy/camera"));
     connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
     applyUseMode();
 
