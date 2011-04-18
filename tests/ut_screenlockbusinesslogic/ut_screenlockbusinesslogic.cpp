@@ -40,6 +40,8 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
+#include <qmsystemstate.h>
+
 MeeGo::QmDisplayState::DisplayState qmDisplayState;
 MeeGo::QmDisplayState::DisplayState MeeGo::QmDisplayState::get() const
 {
@@ -274,19 +276,46 @@ void Ut_ScreenLockBusinessLogic::testDisplayStateChanged()
 
     m_subject->toggleScreenLockUI(true);
 
-    // When lock-screen-ui is shown reset should be called on it
+    // When lock screen UI is shown it should be reset
     QCOMPARE(screenLockExtensionReset, true);
     screenLockExtensionReset = false;
 
     m_subject->displayStateChanged(MeeGo::QmDisplayState::Off);
     m_subject->displayStateChanged(MeeGo::QmDisplayState::On);
 
-    // Also check whether the reset called on the
-    // lock-screen-ui (after display turn on)
+    // It should also be reset after turning the display on
     QCOMPARE(screenLockExtensionReset, true);
 }
-#endif
 
+void Ut_ScreenLockBusinessLogic::testSystemStateChanged()
+{
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    m_subject->registerExtension(&screenLockExtension);
+
+    // Show the screen lock window and the event eater
+    m_subject->showScreenLock();
+    m_subject->showEventEater();
+
+    // When system shuts down the window should be hidden
+    m_subject->systemStateChanged(MeeGo::QmSystemState::Shutdown);
+
+    // Both windows should be hidden
+    QCOMPARE(gQWidgetVisible.contains(m_subject->screenLockWindow), true);
+    QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
+    QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
+
+    // Extension mode should be set to normal mode,
+    QCOMPARE(screenLockExtensionModeSet, true);
+    QCOMPARE(screenLockExtensionMode, ScreenLockExtensionInterface::NormalMode);
+
+    // Further tklock_opens should be ignored
+    screenLockExtensionModeSet = false;
+    m_subject->tklock_open(TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD, ScreenLockBusinessLogic::TkLockEnableLowPowerMode, false, false);
+    QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
+    QCOMPARE(screenLockExtensionModeSet, false);
+}
+#endif
 
 void Ut_ScreenLockBusinessLogic::testReset()
 {

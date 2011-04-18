@@ -31,10 +31,12 @@ ScreenLockBusinessLogic::ScreenLockBusinessLogic(QObject* parent) :
     QObject(parent),
     screenLockWindow(NULL),
     eventEaterWindow(NULL),
-    callbackInterface(NULL)
+    callbackInterface(NULL),
+    shuttingDown(false)
 {
 #ifdef HAVE_QMSYSTEM
     connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
+    connect(&systemState, SIGNAL(systemStateChanged(MeeGo::QmSystemState::StateIndication)), this, SLOT(systemStateChanged(MeeGo::QmSystemState::StateIndication)));
 #endif
 
     // Create an extension area for the screen lock
@@ -55,6 +57,11 @@ ScreenLockBusinessLogic::~ScreenLockBusinessLogic()
 
 int ScreenLockBusinessLogic::tklock_open(const QString &service, const QString &path, const QString &interface, const QString &method, uint mode, bool, bool)
 {
+    if (shuttingDown) {
+        // Don't show the touch screen lock while shutting down
+        return TkLockReplyOk;
+    }
+
     // Create a D-Bus interface if one doesn't exist or the D-Bus callback details have changed
     if (callbackInterface == NULL || callbackInterface->service() != service || callbackInterface->path() != path || callbackInterface->interface() != interface) {
         delete callbackInterface;
@@ -247,6 +254,22 @@ void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::Display
     if (state == MeeGo::QmDisplayState::On && screenLockWindow != NULL && screenLockWindow->isVisible()) {
         reset();
         screenLockWindow->setFocus();
+    }
+}
+
+void ScreenLockBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndication what)
+{
+    switch (what) {
+        case MeeGo::QmSystemState::Shutdown:
+            // Hide the lock screen and disable low power mode on shutdown
+            hideScreenLockAndEventEater();
+            foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
+                screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
+            }
+            shuttingDown = true;
+            break;
+        default:
+            break;
     }
 }
 #endif

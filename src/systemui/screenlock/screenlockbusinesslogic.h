@@ -23,6 +23,7 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
+#include <qmsystemstate.h>
 #endif
 
 class ScreenLockWindow;
@@ -114,6 +115,9 @@ private slots:
 #ifdef HAVE_QMSYSTEM
     //! Resets the lock screen when the screen is unblanked and the screenlock is visible
     void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
+
+    //! Unlocks the touch screen lock on system shutdown
+    void systemStateChanged(MeeGo::QmSystemState::StateIndication what);
 #endif
 
 signals:
@@ -162,9 +166,15 @@ private:
     //! Name of the MCE callback method
     QString callbackMethod;
 
+    //! Whether the system is shutting down or not
+    bool shuttingDown;
+
 #ifdef HAVE_QMSYSTEM
     //! For getting the display state
     MeeGo::QmDisplayState displayState;
+
+    //! For getting the system state
+    MeeGo::QmSystemState systemState;
 #endif
 
 #ifdef UNIT_TEST

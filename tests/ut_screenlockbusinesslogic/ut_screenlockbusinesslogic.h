@@ -78,6 +78,7 @@ private slots:
     void testHideEventEater();
 #ifdef HAVE_QMSYSTEM
     void testDisplayStateChanged();
+    void testSystemStateChanged();
 #endif
     void testWhenExtensionIsRegisteredSignalsAreConnected();
     void testReset();

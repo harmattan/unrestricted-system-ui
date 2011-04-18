@@ -25,7 +25,10 @@ class ScreenLockBusinessLogicStub : public StubBase {
   virtual void hideScreenLockAndEventEater();
   virtual void showEventEater();
   virtual void hideEventEater();
+#ifdef HAVE_QMSYSTEM
   virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
+  virtual void systemStateChanged(MeeGo::QmSystemState::StateIndication what);
+#endif
 }; 
 
 // 2. IMPLEMENT STUB
@@ -112,11 +115,19 @@ void ScreenLockBusinessLogicStub::hideEventEater() {
   stubMethodEntered("hideEventEater");
 }
 
+#ifdef HAVE_QMSYSTEM
 void ScreenLockBusinessLogicStub::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
   QList<ParameterBase*> params;
   params.append( new Parameter<MeeGo::QmDisplayState::DisplayState >(state));
   stubMethodEntered("displayStateChanged",params);
 }
+
+void ScreenLockBusinessLogicStub::systemStateChanged(MeeGo::QmSystemState::StateIndication what) {
+    QList<ParameterBase*> params;
+    params.append( new Parameter<MeeGo::QmSystemState::StateIndication >(what));
+    stubMethodEntered("systemStateChanged",params);
+}
+#endif
 
 
 
@@ -190,9 +201,15 @@ void ScreenLockBusinessLogic::hideEventEater() {
   gScreenLockBusinessLogicStub->hideEventEater();
 }
 
+#ifdef HAVE_QMSYSTEM
 void ScreenLockBusinessLogic::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
   gScreenLockBusinessLogicStub->displayStateChanged(state);
 }
+
+void ScreenLockBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndication what) {
+  gScreenLockBusinessLogicStub->systemStateChanged(what);
+}
+#endif
 
 
 #endif

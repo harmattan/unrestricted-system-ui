@@ -1,6 +1,7 @@
 system-ui (0.20.48~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#247568 - Display stays in low power mode when shutting down while in low power mode
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 18 Apr 2011 15:32:06 +0300
 
