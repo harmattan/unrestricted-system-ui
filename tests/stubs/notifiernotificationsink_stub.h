@@ -34,7 +34,6 @@ class NotifierNotificationSinkStub : public StubBase {
   virtual void addNotification(const Notification &notification);
   virtual void removeNotification(uint notificationId);
   virtual void setNotifierEnabled(bool active);
-  virtual void updateStatusOfLedFeedback();
 
   void clearSink();
   void disableNotificationAdditions(bool disable);
@@ -91,11 +90,6 @@ void NotifierNotificationSinkStub::setNotifierEnabled(bool enabled)
   stubMethodEntered("setNotifierEnabled", params);
 }
 
-void NotifierNotificationSinkStub::updateStatusOfLedFeedback()
-{
-  stubMethodEntered("updateStatusOfLedFeedback");
-}
-
 // 3. CREATE A STUB INSTANCE
 NotifierNotificationSinkStub gDefaultNotifierNotificationSinkStub;
 NotifierNotificationSinkStub* gNotifierNotificationSinkStub = &gDefaultNotifierNotificationSinkStub;
@@ -130,11 +124,6 @@ void NotifierNotificationSink::disableNotificationAdditions(bool disable)
 void NotifierNotificationSink::setNotifierEnabled(bool enabled)
 {
     gNotifierNotificationSinkStub->setNotifierEnabled(enabled);
-}
-
-void NotifierNotificationSink::updateStatusOfLedFeedback()
-{
-    gNotifierNotificationSinkStub->updateStatusOfLedFeedback();
 }
 
 #endif
