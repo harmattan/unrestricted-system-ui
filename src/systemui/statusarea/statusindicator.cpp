@@ -642,7 +642,7 @@ CallForwardingStatusIndicator::CallForwardingStatusIndicator(ApplicationContext 
 {
     setStyleName(metaObject()->className());
 
-    callForwarding = createContextItem(context, "Phone.CallForwarding");
+    callForwarding = createContextItem(context, "Cellular.CallForwardUncond");
     connect(callForwarding, SIGNAL(contentsChanged()), this, SLOT(callForwardingChanged()));
     callForwardingChanged();
 }

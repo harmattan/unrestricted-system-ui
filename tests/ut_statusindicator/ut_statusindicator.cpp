@@ -704,10 +704,10 @@ void Ut_StatusIndicator::testCallForwarding()
 {
     m_subject = new CallForwardingStatusIndicator(*testContext);
 
-    testContextItems["Phone.CallForwarding"]->setValue(QVariant(false));
+    testContextItems["Cellular.CallForwardUncond"]->setValue(QVariant(false));
     QVERIFY(m_subject->styleName().indexOf("Set") < 0);
 
-    testContextItems["Phone.CallForwarding"]->setValue(QVariant(true));
+    testContextItems["Cellular.CallForwardUncond"]->setValue(QVariant(true));
     QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
 }
 

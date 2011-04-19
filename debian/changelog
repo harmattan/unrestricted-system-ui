@@ -1,6 +1,7 @@
 system-ui (0.20.51~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#241258 - (AcceptID-1106841) [FEA] Call forwarding indication
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 19 Apr 2011 12:03:03 +0300
 
