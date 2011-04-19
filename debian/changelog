@@ -1,9 +1,8 @@
-system-ui (0.20.50~1) unstable; urgency=low
+system-ui (0.20.50-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#243877 - Status bar area moves up on app opening/swiping
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 18 Apr 2011 18:47:34 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 19 Apr 2011 12:02:37 +0300
 
 system-ui (0.20.49-1) unstable; urgency=low
 
