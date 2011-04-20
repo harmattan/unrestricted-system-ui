@@ -1,3 +1,9 @@
+system-ui (0.20.53~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Wed, 20 Apr 2011 15:03:52 +0300
+
 system-ui (0.20.52-1) unstable; urgency=low
 
   * Implemented: SWP#DUI-5042 Change the shutdown message to nokia logo
