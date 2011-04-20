@@ -25,6 +25,8 @@
 #include <MApplication>
 #include <MWindow>
 #include <MNotification>
+#include <MStylableWidget>
+#include <QGraphicsLinearLayout>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -75,6 +77,12 @@ void QTimer::singleShot(int msec, QObject *receiver, const char * member)
     qTimerSingleShotParams[receiver] = params;
 }
 
+bool gTimerStarted;
+void QTimer::start()
+{
+    gTimerStarted = true;
+}
+
 void Ut_ShutdownUI::initTestCase()
 {
     static int argc = 1;
@@ -91,6 +99,8 @@ void Ut_ShutdownUI::cleanupTestCase()
 void Ut_ShutdownUI::init()
 {
     m_subject = new ShutdownUI;
+
+    gTimerStarted = false;
 }
 
 void Ut_ShutdownUI::cleanup()
@@ -135,6 +145,16 @@ void Ut_ShutdownUI::testShowWindow()
 
     unsigned int region[] = { m_subject->rect().x(), m_subject->rect().y(), m_subject->rect().width(), m_subject->rect().height() };
     QCOMPARE(gX11WrapperStub->stubLastCallTo("XChangeProperty").parameter<QByteArray>(6), QByteArray(reinterpret_cast<const char *>(&region[0]), sizeof(region)));
+}
+
+void Ut_ShutdownUI::testShowWindowWithEmptyStrings()
+{
+    // Check that calling showWindow() will realize the widget and show logo
+    m_subject->showWindow("", "", 2000);
+
+    QVERIFY(m_subject->realized);
+    QVERIFY(m_subject->layout->itemAt(0) == m_subject->logo);
+    QCOMPARE(gTimerStarted, false);
 }
 
 QTEST_APPLESS_MAIN(Ut_ShutdownUI)

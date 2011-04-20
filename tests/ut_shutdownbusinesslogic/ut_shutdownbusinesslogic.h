@@ -36,6 +36,7 @@ class ShutdownUI : public QObject
 public:
     ShutdownUI ();
     bool showWindow (const QString &text1, const QString &text2, int delay);
+    void showLogo();
 
     QString m_Text1;
     QString m_Text2;

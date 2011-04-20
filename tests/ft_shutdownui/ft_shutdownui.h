@@ -39,6 +39,7 @@ private slots:
 
     void testConstructDestruct ();
     void testShutdownUIShowHide ();
+    void testShutdownUIShowOnlyLogo();
 
 private:
     XChecker                   m_XChecker;

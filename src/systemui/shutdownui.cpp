@@ -119,6 +119,8 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
     // If the widgets are not created create them now
     realize();
 
+    timer->stop();
+
     if (!(text1.isEmpty() && text2.isEmpty())) {
         // Set the labels to show the text strings that we got only if they exist
         if (label1 != NULL) {
@@ -136,18 +138,17 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
                 label2->setText(text2);
             }
         }
+        // Set the interval and start the timer to the next phase: hiding the labels and showing the logo
+        timer->start(timeout);
+    } else {
+        showLogo();
     }
-
-    timer->stop();
 
     show();
     raise();
     disableCompositorSwipeRect(this, rect());
 
     feedback->play();
-
-    // Set the interval and start the timer to the next phase: hiding the labels and showing the logo
-    timer->start(timeout);
 }
 
 void ShutdownUI::showLogo()

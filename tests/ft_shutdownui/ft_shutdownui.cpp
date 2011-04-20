@@ -167,4 +167,11 @@ Ft_ShutdownUI::testShutdownUIShowHide ()
     QVERIFY(m_XChecker.turnOnDisplay ());
 }
 
+void Ft_ShutdownUI::testShutdownUIShowOnlyLogo()
+{
+    m_ShutDownUI = new ShutdownUI;
+    m_ShutDownUI->showWindow("", "", 2000);
+    QVERIFY (m_ShutDownUI->logo != 0 &&
+            m_ShutDownUI->logo->isVisible());
+}
 QTEST_APPLESS_MAIN(Ft_ShutdownUI)

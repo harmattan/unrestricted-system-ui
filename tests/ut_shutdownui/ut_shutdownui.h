@@ -37,6 +37,7 @@ private slots:
     void testInitialization();
     void testRealize();
     void testShowWindow();
+    void testShowWindowWithEmptyStrings();
     
 private:
     MApplication *app;
