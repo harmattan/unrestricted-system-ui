@@ -1,6 +1,7 @@
 system-ui (0.20.54~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#236174 - Shutdown screen is shown in landscape mode
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 20 Apr 2011 15:29:45 +0300
 

@@ -21,8 +21,11 @@ HEADERS += ft_shutdownbusinesslogic.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/shutdownui.h \
+    $$SRCDIR/shutdownwindowstyle.h \
     $$SRCDIR/xeventlistener.h \
     $$SRCDIR/x11wrapper.h
+
+STYLE_HEADERS += $$SRCDIR/shutdownwindowstyle.h
 
 include(../common_bot.pri)
 

@@ -17,16 +17,16 @@
  **
  ****************************************************************************/
 #include "shutdownui.h"
+#include "shutdownwindowstyle.h"
 #include "sysuid.h"
 
+#include <MTheme>
 #include <MLabel>
 #include <MFeedback>
-#include <MApplication>
+#include <MStylableWidget>
+#include <MSceneWindow>
 #include <QTimer>
 #include <QGraphicsLinearLayout>
-#include <MSceneManager>
-#include <MStylableWidget>
-#include <MLocale>
 #include <QX11Info>
 #include "x11wrapper.h"
 
@@ -50,6 +50,8 @@ ShutdownUI::ShutdownUI() :
 {
     setWindowTitle("ShutdownUI");
     setObjectName("ShutdownUIWindow");
+
+    applyStyle();
 
     // Pre-create/load the shutdown UI content to show it quickly when requested
     QTimer::singleShot(5000, this, SLOT(realize()));
@@ -206,4 +208,26 @@ void ShutdownUI::showEvent(QShowEvent *event)
         long layer = 6;
         X11Wrapper::XChangeProperty(display, internalWinId(), stackingLayerAtom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&layer, 1);
     }
+}
+
+void ShutdownUI::applyStyle()
+{
+    const ShutdownWindowStyle *style = static_cast<const ShutdownWindowStyle *>(MTheme::style("ShutdownWindowStyle"));
+
+    if (style->lockedOrientation() == "landscape") {
+        setLandscapeOrientation();
+        setOrientationAngle(M::Angle0);
+        setOrientationLocked(true);
+        setOrientationAngleLocked(true);
+    } else if (style->lockedOrientation() == "portrait") {
+        setPortraitOrientation();
+        setOrientationAngle(M::Angle270);
+        setOrientationLocked(true);
+        setOrientationAngleLocked(true);
+    } else {
+        setOrientationLocked(false);
+        setOrientationAngleLocked(false);
+    }
+
+    MTheme::releaseStyle(style);
 }

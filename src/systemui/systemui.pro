@@ -28,12 +28,15 @@ contains(cov, true) {
     QMAKE_LFLAGS += --coverage
 }
 
+STYLE_HEADERS += shutdownwindowstyle.h
+
 HEADERS +=                              \
     closeeventeater.h                   \
     sysuidrequest.h                     \
     batterybusinesslogic.h              \
     sysuid.h                            \
     shutdownui.h                        \
+    shutdownwindowstyle.h               \
     shutdownbusinesslogic.h             \
     usbui.h                             \
     contextframeworkcontext.h           \

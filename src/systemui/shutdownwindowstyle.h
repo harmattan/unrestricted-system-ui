@@ -16,35 +16,24 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_SHUTDOWNUI_H
-#define UT_SHUTDOWNUI_H
 
-#include <QObject>
+#ifndef SHUTDOWNWINDOWSTYLE_H
+#define SHUTDOWNWINDOWSTYLE_H
 
-class MApplication;
-class ShutdownUI;
+#include <MStyle>
 
-class Ut_ShutdownUI : public QObject
+class ShutdownWindowStyle : public MStyle
 {
     Q_OBJECT
+    M_STYLE(ShutdownWindowStyle)
 
-private slots:
-    void init();
-    void cleanup();
-    void initTestCase();
-    void cleanupTestCase();
-    
-    void testInitialization();
-    void testRealize();
-    void testShowWindow();
-    void testShowWindowWithEmptyStrings();
-    void testOrientationLocking_data();
-    void testOrientationLocking();
-    
-private:
-    MApplication *app;
-    ShutdownUI *m_subject;
+    // The locked orientation: "landscape", "portrait" or any other value for unlocked
+    M_STYLE_ATTRIBUTE(QString, lockedOrientation, LockedOrientation)
+};
+
+class ShutdownWindowStyleContainer : public MStyleContainer
+{
+    M_STYLE_CONTAINER(ShutdownWindowStyle)
 };
 
 #endif
-

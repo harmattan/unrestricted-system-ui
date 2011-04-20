@@ -19,67 +19,66 @@
 #ifndef SHUTDOWNUI_H
 #define SHUTDOWNUI_H
 
-#include <MApplicationPage>
+#include <MWindow>
 
-class QTimer;
+class MSceneWindow;
 class MLabel;
 class MFeedback;
 class MStylableWidget;
 class QGraphicsLinearLayout;
+class QTimer;
 
 /*!
  * A full screen window that is shown when the device is shutting down. The
- * window first shows a two line text, then---after a time period---it shows a
- * logo image. After the second time period the touch screen is going to be
- * turned off.
+ * window shows two lines of text if defined and then a logo after the defined
+ * time period. After the second time period the touch screen is turned off.
  */
 class ShutdownUI : public MWindow
 {
     Q_OBJECT
 
 public:
-    ShutdownUI ();
-    virtual ~ShutdownUI ();
+    /*!
+     * Creates a shutdown window.
+     */
+    ShutdownUI();
 
     /*!
-     * Shows a full screen window with two lines of text, then waits for the
-     * specified amount of time and will hide the text lines and show an image.
-     * After the image image shown for some time will dim the screen.
+     * Destroys the shutdown window.
+     */
+    virtual ~ShutdownUI();
+
+    /*!
+     * Shows the shutdown window. If text1 and text2 are given, these texts
+     * are shown for the specified amount of time. After the texts have been
+     * visible for the given period of time (or immediately if there are no
+     * texts to be shown), a logo image is shown.
      *
      * \param text1 The text of the primary message line
      * \param text2 The text of the secondary message line
-     * \param timeout After this timeout we will hide the texts and show the logo
+     * \param timeout the number of milliseconds to show the texts for
      */
     void showWindow(const QString &text1, const QString &text2, int timeout);
 
 protected:
     //! \reimp
-    void showEvent (QShowEvent *event);
+    void showEvent(QShowEvent *event);
     //! \reimp_end
 
 private slots:
-    /*!
-     * Hides the labels, shows the logo image and starts up a timer to turn off the
-     * screen.
-     */
-    void showLogo ();
+    //! Hides the labels, shows the logo image and starts up a timer to turn off the screen
+    void showLogo();
 
-    /*!
-     * We need to turn off the screen so that the user will not see the actual
-     * shutdown on the GUI. We could show a black screen but we might be prematurely
-     * killed, so this window will be removed early. Turning off the screen is an
-     * excellent way to solve this issue... except that we might be killed even
-     * sooner.
-     */
-    void turnOffScreen ();
+    //! Switches the display off and fills the window with black if that failed
+    void turnOffScreen();
 
-    /*!
-     * Here we create the widgets that we use, and we put them into the layout that
-     * we use. The logo will not be shown yet.
-     */
-    void realize ();
+    //! Creates the widgets and the layout for the shutdown screen
+    void realize();
 
 private:
+    //! Applies the window orientation and locking from the style
+    void applyStyle();
+
     bool realized;
     MSceneWindow *sceneWindow;
     QTimer *timer;

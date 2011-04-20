@@ -15,7 +15,10 @@ HEADERS += ft_shutdownui.h \
     $$COMMONDIR/xchecker.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/shutdownui.h \
+    $$SRCDIR/shutdownwindowstyle.h \
     $$SRCDIR/x11wrapper.h
+
+STYLE_HEADERS += $$SRCDIR/shutdownwindowstyle.h
 
 include(../common_bot.pri)
 

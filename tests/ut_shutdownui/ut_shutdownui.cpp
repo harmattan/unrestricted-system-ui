@@ -20,6 +20,7 @@
 #include <QtTest/QtTest>
 #include "ut_shutdownui.h"
 #include "shutdownui.h"
+#include "shutdownwindowstyle.h"
 #include "x11wrapper_modified_stub.h"
 
 #include <MApplication>
@@ -81,6 +82,35 @@ bool gTimerStarted;
 void QTimer::start()
 {
     gTimerStarted = true;
+}
+
+bool mWindowOrientationLocked = false;
+void MWindow::setOrientationLocked(bool locked)
+{
+    mWindowOrientationLocked = locked;
+}
+
+bool mWindowOrientationAngleLocked = false;
+void MWindow::setOrientationAngleLocked(bool locked)
+{
+    mWindowOrientationAngleLocked = locked;
+}
+
+QString mWindowOrientation;
+void MWindow::setLandscapeOrientation()
+{
+    mWindowOrientation = "landscape";
+}
+
+void MWindow::setPortraitOrientation()
+{
+    mWindowOrientation = "portrait";
+}
+
+M::OrientationAngle mWindowOrientationAngle;
+void MWindow::setOrientationAngle(M::OrientationAngle angle)
+{
+    mWindowOrientationAngle = angle;
 }
 
 void Ut_ShutdownUI::initTestCase()
@@ -157,5 +187,42 @@ void Ut_ShutdownUI::testShowWindowWithEmptyStrings()
     QCOMPARE(gTimerStarted, false);
 }
 
-QTEST_APPLESS_MAIN(Ut_ShutdownUI)
+void Ut_ShutdownUI::testOrientationLocking_data()
+{
+    QTest::addColumn<QString>("lockedOrientation");
+    QTest::addColumn<bool>("orientationLocked");
+    QTest::addColumn<QString>("expectedOrientation");
+    QTest::addColumn<int>("expectedOrientationAngle");
 
+    QTest::newRow("No locking") << QString() << false << QString() << (int)M::Angle180;
+    QTest::newRow("Locked to landscape") << QString("landscape") << true << QString("landscape") << (int)M::Angle0;
+    QTest::newRow("Locked to portrait") << QString("portrait") << true << QString("portrait") << (int)M::Angle270;
+    QTest::newRow("Locked to something else") << QString("unknown") << false << QString() << (int)M::Angle180;
+}
+
+void Ut_ShutdownUI::testOrientationLocking()
+{
+    QFETCH(QString, lockedOrientation);
+    QFETCH(bool, orientationLocked);
+    QFETCH(QString, expectedOrientation);
+    QFETCH(int, expectedOrientationAngle);
+
+    // Reset the stubs
+    mWindowOrientationLocked = false;
+    mWindowOrientation = QString();
+    mWindowOrientationAngle = M::Angle180;
+
+    // Set the style
+    ShutdownWindowStyle *style = const_cast<ShutdownWindowStyle *>(static_cast<const ShutdownWindowStyle *>(MTheme::style("ShutdownWindowStyle", "", "", "", M::Landscape, NULL)));
+    style->setLockedOrientation(lockedOrientation);
+
+    // Create a new window
+    delete m_subject;
+    m_subject = new ShutdownUI;
+    QCOMPARE(mWindowOrientationLocked, orientationLocked);
+    QCOMPARE(mWindowOrientationAngleLocked, orientationLocked);
+    QCOMPARE(mWindowOrientation, expectedOrientation);
+    QCOMPARE(mWindowOrientationAngle, (M::OrientationAngle)expectedOrientationAngle);
+}
+
+QTEST_APPLESS_MAIN(Ut_ShutdownUI)

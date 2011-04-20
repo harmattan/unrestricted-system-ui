@@ -1,8 +1,8 @@
+ShutdownWindowStyle {
+    locked-orientation: "portrait";
+}
+
 MSceneWindowStyle#shutdownWindow {
-    /*
-     * The shutdown-screen window
-     * can be customized here
-     */
 }
 
 MLabelStyle#shutdownTextFirst {
@@ -40,4 +40,3 @@ MWidgetStyle#shutdownLogo.Portrait {
     preferred-size: 100% 100%;
     maximum-size: 100% 100%;
 }
-
