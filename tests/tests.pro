@@ -20,7 +20,7 @@ contains(BUILD_FEATURES,coverage) {
         addSubDirs($${suitename})
     }
 } else {
-	subdirs=$$system(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | sed 's!/.*!!')
+	subdirs=$$system(ls -1d ut_*/*.pro 2>/dev/null | sed 's!/.*!!')
 	for(suitename, subdirs):{
 		addSubDirs($${suitename})
 	}

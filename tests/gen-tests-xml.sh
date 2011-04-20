@@ -12,7 +12,7 @@ BINARY_DIR="/usr/lib/system-ui-tests"
 #
 # The code. These lines should not contain configuration values.
 #
-ALLTESTS=$(ls -1d ut_*/*.pro ft_*/*.pro 2>/dev/null | \
+ALLTESTS=$(ls -1d ut_*/*.pro 2>/dev/null | \
 grep -v ut_template | sed 's!/.*!!')
 
 #

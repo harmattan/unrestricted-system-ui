@@ -108,7 +108,6 @@ foreach $key ( @keys ) {
 # set the maximum length of the directories
 if ( $opts{ "a" } ) {
     push @allDirs, <ut_*>;
-    push @allDirs, <ft_*>;
     foreach ( @allDirs ) {
         setMaxLen( "D", length( $_ ) );
         $tested{ $_ } = 0;
