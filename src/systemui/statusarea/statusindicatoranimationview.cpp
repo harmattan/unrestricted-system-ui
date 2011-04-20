@@ -117,7 +117,7 @@ void StatusIndicatorAnimationView::startAnimation()
 
 void StatusIndicatorAnimationView::stopAnimation()
 {
-    if (animationTimeline->state() == QTimeLine::Running && !images.isEmpty()) {
+    if (animationTimeline->state() == QTimeLine::Running) {
         animationTimeline->stop();
     }
 }

@@ -287,6 +287,8 @@ void Ut_StatusIndicatorAnimationView::testChangingAnimate()
     QCOMPARE(qTimeLineStartedCalled, false);
     QCOMPARE(qTimeLineStoppedCalled, false);
 
+    // Stopping should work even if the list is empty
+    m_subject->getModel()->setValue(QString());
     m_subject->getModel()->setAnimate(false);
     QCOMPARE(qTimeLineStartedCalled, false);
     QCOMPARE(qTimeLineStoppedCalled, true);
