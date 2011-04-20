@@ -1,9 +1,3 @@
-system-ui (0.20.54~1) unstable; urgency=low
-
-  * [UNRELEASED]
-
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 20 Apr 2011 15:18:52 +0300
-
 system-ui (0.20.53-1) unstable; urgency=low
 
   * Fixes: NB#243762 - Ongoing call view: In the status area Muted icon keeps blinking even though call wasn't muted
@@ -13,6 +7,7 @@ system-ui (0.20.53-1) unstable; urgency=low
 system-ui (0.20.52-1) unstable; urgency=low
 
   * Implemented: SWP#DUI-5042 Change the shutdown message to nokia logo
+  * Fixes: NB#249255 - Shutdown screen to show only Nokia logo on normal shutdown
 
  -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Wed, 20 Apr 2011 15:01:08 +0300
 
