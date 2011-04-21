@@ -49,6 +49,7 @@ private slots:
     void init();
     void cleanup();
 
+    void testConstruction_data();
     void testConstruction();
     void testTimeUpdate();
     void testModelUpdates();

@@ -27,6 +27,12 @@
 Q_DECLARE_METATYPE(MeeGo::QmTime::WhatChanged);
 #endif
 
+bool mWidgetIsOnDisplay = true;
+bool MWidget::isOnDisplay() const
+{
+    return mWidgetIsOnDisplay;
+}
+
 QDateTime QDateTime::currentDateTime()
 {
     return Ut_Clock::expectedDateTime;
@@ -42,7 +48,7 @@ void QTimer::stop()
     Ut_Clock::timerTimeout = -1;
 }
 
-int Ut_Clock::timerTimeout;
+int Ut_Clock::timerTimeout = -1;
 QDateTime Ut_Clock::expectedDateTime;
 
 // Called before the first testfunction is executed
@@ -71,10 +77,27 @@ void Ut_Clock::init()
 void Ut_Clock::cleanup()
 {
     delete m_subject;
+    mWidgetIsOnDisplay = true;
+    timerTimeout = -1;
+}
+
+void Ut_Clock::testConstruction_data()
+{
+    QTest::addColumn<bool>("isOnDisplay");
+
+    QTest::newRow("Is on display") << true;
+    QTest::newRow("Is not on display") << false;
 }
 
 void Ut_Clock::testConstruction()
 {
+    QFETCH(bool, isOnDisplay);
+
+    cleanup();
+
+    mWidgetIsOnDisplay = isOnDisplay;
+    m_subject = new Clock;
+
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&m_subject->qmTime,
                        SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
@@ -89,7 +112,11 @@ void Ut_Clock::testConstruction()
     QTime time = nextUpdateTime.time();
     time.setHMS(time.hour(), time.minute(), 0);
     nextUpdateTime.setTime(time);
-    QVERIFY(timerTimeout > expectedDateTime.msecsTo(nextUpdateTime));
+    if (isOnDisplay) {
+        QVERIFY(timerTimeout > expectedDateTime.msecsTo(nextUpdateTime));
+    } else {
+        QCOMPARE(timerTimeout, -1);
+    }
 }
 
 void Ut_Clock::testTimeUpdate()

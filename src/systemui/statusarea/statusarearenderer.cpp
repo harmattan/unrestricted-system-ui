@@ -51,9 +51,19 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(accumulateSceneChanges(QList<QRectF>)));
+
 #ifdef HAVE_QMSYSTEM
+    // Switch rendering on and off based on the display state
     connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setSceneRender(MeeGo::QmDisplayState::DisplayState)));
-    setSceneRender(displayState->get());
+
+    // The following part is important so that widgets will know from the very beginning whether they are on display or not
+    MeeGo::QmDisplayState::DisplayState state = displayState->get();
+    if (state != MeeGo::QmDisplayState::Off) {
+        // Set rendering state off to make all widgets think they are not on display
+        setSceneRender(MeeGo::QmDisplayState::Off);
+    }
+    // Let the widgets know whether they are actually on display or not
+    setSceneRender(state);
 #endif
 
     statusBarVisibleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);

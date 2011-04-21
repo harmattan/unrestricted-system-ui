@@ -32,7 +32,11 @@ Clock::Clock(QGraphicsItem *parent) :
     // Configure the timer
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateModelAndSetupTimer()));
-    updateModelAndSetupTimer();
+
+    if (isOnDisplay()) {
+        // Start updating the time if the clock is already on display, otherwise start updating on the first enterDisplayEvent()
+        updateModelAndSetupTimer();
+    }
 }
 
 Clock::~Clock()
