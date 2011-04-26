@@ -139,6 +139,7 @@ void ScreenLockBusinessLogic::unlockScreen()
 {
     if (screenLockWindow != NULL && screenLockWindow->isVisible()) {
         toggleScreenLockUI(false);
+        toggleEventEater(false);
 
         if (callbackInterface != NULL && !callbackMethod.isEmpty()) {
             callbackInterface->call(QDBus::NoBlock, callbackMethod, TkLockUnlock);
@@ -190,8 +191,8 @@ void ScreenLockBusinessLogic::setDisplayOffMode()
 
 void ScreenLockBusinessLogic::hideScreenLockAndEventEater()
 {
-    toggleEventEater(false);
     toggleScreenLockUI(false);
+    toggleEventEater(false);
 }
 
 void ScreenLockBusinessLogic::showEventEater()
@@ -222,6 +223,11 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
 
         screenLockWindow->raise();
     } else {
+        // Always switch the low power mode off before hiding the screen lock window
+        foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
+            screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
+        }
+
         if (screenLockWindow != NULL && screenLockWindow->isVisible()) {
             screenLockWindow->setLowPowerMode(false);
             screenLockWindow->hide();
@@ -261,11 +267,8 @@ void ScreenLockBusinessLogic::systemStateChanged(MeeGo::QmSystemState::StateIndi
 {
     switch (what) {
         case MeeGo::QmSystemState::Shutdown:
-            // Hide the lock screen and disable low power mode on shutdown
+            // The lock screen should be disabled during shutdown
             hideScreenLockAndEventEater();
-            foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
-                screenLockExtension->setMode(ScreenLockExtensionInterface::NormalMode);
-            }
             shuttingDown = true;
             break;
         default:

@@ -223,6 +223,10 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // When the lock is toggled off, make sure the lock UI is hidden
     m_subject->toggleScreenLockUI(false);
     QCOMPARE(m_subject->screenLockWindow->isVisible(), false);
+
+    // Extension mode should be set to normal mode
+    QCOMPARE(screenLockExtensionModeSet, true);
+    QCOMPARE(screenLockExtensionMode, ScreenLockExtensionInterface::NormalMode);
 }
 
 void Ut_ScreenLockBusinessLogic::testToggleEventEater()
@@ -239,9 +243,13 @@ void Ut_ScreenLockBusinessLogic::testUnlockScreenWhenLocked()
 {
     m_subject->tklock_open(TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD, ScreenLockBusinessLogic::TkLockModeNone, false, false);
     m_subject->toggleScreenLockUI(true);
+    m_subject->toggleEventEater(true);
     m_subject->unlockScreen();
 
     QVERIFY(m_subject->screenLockWindow != NULL);
+    QCOMPARE(m_subject->screenLockWindow->isVisible(), false);
+    QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
+
     QCOMPARE(qDbusAbstractInterfaceCallMethod, TEST_METHOD);
     QCOMPARE(qDbusAbstractInterfaceCallPath, TEST_PATH);
     QCOMPARE(qDbusAbstractInterfaceCallService, TEST_SERVICE);
@@ -305,7 +313,7 @@ void Ut_ScreenLockBusinessLogic::testSystemStateChanged()
     QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
 
-    // Extension mode should be set to normal mode,
+    // Extension mode should be set to normal mode
     QCOMPARE(screenLockExtensionModeSet, true);
     QCOMPARE(screenLockExtensionMode, ScreenLockExtensionInterface::NormalMode);
 
