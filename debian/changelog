@@ -1,3 +1,9 @@
+system-ui (0.20.56~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Apr 2011 12:27:25 +0300
+
 system-ui (0.20.55-1) unstable; urgency=low
 
   * Fixes: NB#249364 - sysuid generates xdamages in idle
