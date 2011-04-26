@@ -116,7 +116,7 @@ bool StatusAreaRenderer::createBackPixmap()
         // FIXME: Round up to the nearest multiple of eight until NB#231246 is fixed
         int livePixmapWidth = (statusAreaWidth / 8 + 1) * 8;
 
-        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight, QMeeGoLivePixmap::Format_ARGB32_Premultiplied);
+        statusAreaLivePixmap = QMeeGoLivePixmap::livePixmapWithSize(livePixmapWidth, statusAreaHeight, QMeeGoLivePixmap::Format_RGB16);
         backPixmap = QPixmap::fromX11Pixmap(statusAreaLivePixmap->handle(), QPixmap::ExplicitlyShared);
     } else {
         backPixmap = QPixmap(statusAreaWidth, statusAreaHeight);

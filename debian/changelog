@@ -1,6 +1,7 @@
 system-ui (0.20.56~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#249629 - Status bar live pixmap should be changed to 16bit
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Apr 2011 12:27:25 +0300
 
