@@ -39,7 +39,9 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();
     connect(notificationPreviewMode, SIGNAL(valueChanged()), this, SLOT(changeNotificationPreviewMode()));
-
+#ifdef HAVE_QMSYSTEM
+    connect(&displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(changeNotificationPreviewMode()));
+#endif
     // Setup the timer which makes the banner disappear
     connect(&bannerTimer, SIGNAL(timeout()), this, SLOT(disappearCurrentBanner()));
     bannerTimer.setSingleShot(true);
@@ -203,7 +205,7 @@ void MCompositorNotificationSink::addOldestBannerToWindow()
     }
 }
 
-void MCompositorNotificationSink::setDisabled(bool disabled)
+void MCompositorNotificationSink::setApplicationEventsDisabled(bool disabled)
 {
     sinkDisabled = disabled;
 }
@@ -257,6 +259,11 @@ void MCompositorNotificationSink::changeNotificationPreviewMode()
     if (gconfValue.isValid() && (gconfValue.type() == QVariant::Bool)) {
         allPreviewsDisabled = !gconfValue.toBool();
     }
+
+#ifdef HAVE_QMSYSTEM
+    // Always disable all previews when the display is off
+    allPreviewsDisabled |= (displayState.get() == MeeGo::QmDisplayState::Off);
+#endif
 }
 
 void MCompositorNotificationSink::updateImage(MBanner *infoBanner, const NotificationParameters &parameters)

@@ -26,6 +26,10 @@
 #include "widgetnotificationsink.h"
 #include <X11/X.h>
 
+#ifdef HAVE_QMSYSTEM
+#include "qmdisplaystate.h"
+#endif
+
 class MBanner;
 class MGConfItem;
 
@@ -60,10 +64,10 @@ signals:
 
 public:
     /*!
-     * Disables or enables the sink (no notifications generated when disabled, they are just transferred).
+     * Disables or enables the sink for application event notifications, when disabled, they are just transferred.
      * \param disabled if true, the sink is disabled, otherwise it's enabled
      */
-    void setDisabled(bool disabled);
+    void setApplicationEventsDisabled(bool disabled);
 
 private slots:
     //! \reimp
@@ -170,6 +174,11 @@ private:
 
     //! The atom identifier for _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED
     Atom notificationPreviewsDisabledAtom;
+
+#ifdef HAVE_QMSYSTEM
+    //! Keep track of device display state
+    MeeGo::QmDisplayState displayState;
+#endif
 
 #ifdef UNIT_TEST
     friend class Ut_MCompositorNotificationSink;

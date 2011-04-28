@@ -50,7 +50,6 @@ private slots:
     void testLocaleContainsNotificationCatalog();
     void testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled_data();
     void testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompositorSinkIsDisabled();
-    void testCompositorSinkDisablingWhenScreenDisplayStateChanges();
 };
 
 #endif //_UT_STATUSBAR_

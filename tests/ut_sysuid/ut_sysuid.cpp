@@ -83,14 +83,6 @@ bool QmLocks::setDeviceAutolockTime(int) {
 int QmLocks::getDeviceAutolockTime() {
     return 0;
 }
-
-QmDisplayState::DisplayState QmDisplayState::get() const {
-    return gQmDisplayStateOff ? QmDisplayState::Off : QmDisplayState::On;
-}
-
-bool QmDisplayState::set(QmDisplayState::DisplayState) {
-    return false;
-}
 }
 #endif
 
@@ -271,21 +263,8 @@ void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompo
     gQmLocksScreenLock = state & 4;
 
     sysuid->updateCompositorNotificationSinkEnabledStatus();
-    QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setDisabled"), 1);
-    QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setDisabled").parameter<bool>(0), sinkDisabled);
-}
-
-void Ut_Sysuid::testCompositorSinkDisablingWhenScreenDisplayStateChanges()
-{
-    gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", false);
-    sysuid->updateCompositorNotificationSinkEnabledStatus();
-    QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setDisabled"), 1);
-    QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setDisabled").parameter<bool>(0), false);
-
-    gQmDisplayStateOff = true;
-    sysuid->updateCompositorNotificationSinkEnabledStatus();
-    QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setDisabled"), 2);
-    QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setDisabled").parameter<bool>(0), true);
+    QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setApplicationEventsDisabled"), 1);
+    QCOMPARE(gMCompositorNotificationSinkStub->stubLastCallTo("setApplicationEventsDisabled").parameter<bool>(0), sinkDisabled);
 }
 
 QTEST_APPLESS_MAIN(Ut_Sysuid)

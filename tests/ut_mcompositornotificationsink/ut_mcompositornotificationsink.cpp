@@ -28,6 +28,10 @@
 #include <MGConfItem>
 #include "x11wrapper.h"
 
+#ifdef HAVE_QMSYSTEM
+#include <qmdisplaystate.h>
+#endif
+
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
 
 static QList<MSceneWindow*> gMSceneWindowsAppeared;
@@ -243,6 +247,21 @@ void MGConfItem::unset() {
     gconfValue = QVariant();
 }
 
+bool gQmDisplayStateOff = false;
+
+#ifdef HAVE_QMSYSTEM
+namespace MeeGo
+{
+QmDisplayState::DisplayState QmDisplayState::get() const {
+    return gQmDisplayStateOff ? QmDisplayState::Off : QmDisplayState::On;
+}
+
+bool QmDisplayState::set(QmDisplayState::DisplayState) {
+    return false;
+}
+}
+#endif
+
 QList<QGraphicsItem *> QGraphicsScene::items () const
 {
     QList<QGraphicsItem*> items;
@@ -421,7 +440,7 @@ void Ut_MCompositorNotificationSink::emitDisplayEntered()
 
 NotificationParameters Ut_MCompositorNotificationSink::setupSinkDisabledTests(bool isSystemEvent)
 {
-    sink->setDisabled(true);
+    sink->setApplicationEventsDisabled(true);
     // Create notification
     TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
     if (isSystemEvent) {
@@ -672,7 +691,7 @@ void Ut_MCompositorNotificationSink::testWhenSinkDisableTrueNoBannerCreated()
 {
     NotificationParameters parameters = setupSinkDisabledTests();
     QCOMPARE(mWindowSetVisibleValue, false);
-    sink->setDisabled(false);
+    sink->setApplicationEventsDisabled(false);
     notificationManager->addNotification(0, parameters);
     QCOMPARE(mWindowSetVisibleValue, true);
 }
@@ -686,13 +705,18 @@ void Ut_MCompositorNotificationSink::testWhenSinkIsSetToDisabledSystemNotificati
 
 void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled_data()
 {
+    QTest::addColumn<bool>("displayOff");
     QTest::addColumn<QVariant>("value");
-    QTest::addColumn<bool>("windowshown");
+    QTest::addColumn<bool>("notificationshown");
 
-    QTest::newRow("key not set, notification shown") << QVariant() << true;
-    QTest::newRow("key has garbage value, notification shown") << QVariant(QString("Garbage")) << true;
-    QTest::newRow("key has has previews enabled, window shown") << QVariant(true) << true;
-    QTest::newRow("key has has previews disabled, window not shown") << QVariant(false) << false;
+    QTest::newRow("display off, key not set, notification not shown") << true << QVariant() << false;
+    QTest::newRow("display off, key has garbage value, notification not shown") << true << QVariant(QString("Garbage")) << false;
+    QTest::newRow("display off, key has has previews enabled, notification not shown") << true << QVariant(true) << false;
+    QTest::newRow("display off, key has has previews disabled, notification not shown") << true << QVariant(false) << false;
+    QTest::newRow("display on, key not set, notification shown") << false << QVariant() << true;
+    QTest::newRow("display on, key has garbage value, notification shown") << false << QVariant(QString("Garbage")) << true;
+    QTest::newRow("display on, key has has previews enabled, window shown") << false << QVariant(true) << true;
+    QTest::newRow("display on, key has has previews disabled, window not shown") << false << QVariant(false) << false;
 }
 
 
@@ -704,11 +728,13 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
     // Check that window is following right gconf key
     QVERIFY (sink->notificationPreviewMode->key() == NOTIFICATION_PREVIEW_ENABLED);
 
+    QFETCH(bool, displayOff);
     QFETCH(QVariant, value);
-    QFETCH(bool, windowshown);
+    QFETCH(bool, notificationshown);
 
-    // Set value from test data to gconf key
+    // Set value from test data to gconf key and qm variable
     sink->notificationPreviewMode->set(value);
+    gQmDisplayStateOff = displayOff;
     sink->changeNotificationPreviewMode();
 
     // Create normal notification
@@ -716,14 +742,14 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
 
     // Check that notification is shown/not shown according to test data parameter
     notificationManager->addNotification(0, parameters);
-    QCOMPARE(mWindowSetVisibleValue, windowshown);
+    QCOMPARE(mWindowSetVisibleValue, notificationshown);
 
     // Create system notification
     parameters.add(GenericNotificationParameterFactory::classKey(), "system");
     notificationManager->addNotification(0, parameters);
 
     // Check that notification is not shown
-    QCOMPARE(mWindowSetVisibleValue, windowshown);
+    QCOMPARE(mWindowSetVisibleValue, notificationshown);
 }
 
 void Ut_MCompositorNotificationSink::testWindowMasking_data()

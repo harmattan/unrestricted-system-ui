@@ -33,7 +33,7 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void addNotification(const Notification &notification);
   virtual void removeNotification(uint notificationId);
   virtual void disappearCurrentBanner();
-  virtual void setDisabled(bool disabled);
+  virtual void setApplicationEventsDisabled(bool disabled);
   virtual void updateNotification(const Notification &notification);
   virtual void currentBannerDone();
   virtual void addOldestBannerToWindow();
@@ -65,10 +65,10 @@ void MCompositorNotificationSinkStub::disappearCurrentBanner() {
   stubMethodEntered("disappearCurrentBanner");
 }
 
-void MCompositorNotificationSinkStub::setDisabled(bool disabled) {
+void MCompositorNotificationSinkStub::setApplicationEventsDisabled(bool disabled) {
   QList<ParameterBase*> params;
   params.append( new Parameter<bool >(disabled));
-  stubMethodEntered("setDisabled",params);
+  stubMethodEntered("setApplicationEventsDisabled",params);
 }
 
 void MCompositorNotificationSinkStub::addOldestBannerToWindow() {
@@ -121,8 +121,8 @@ void MCompositorNotificationSink::disappearCurrentBanner() {
   gMCompositorNotificationSinkStub->disappearCurrentBanner();
 }
 
-void MCompositorNotificationSink::setDisabled(bool disabled) {
-  gMCompositorNotificationSinkStub->setDisabled(disabled);
+void MCompositorNotificationSink::setApplicationEventsDisabled(bool disabled) {
+  gMCompositorNotificationSinkStub->setApplicationEventsDisabled(disabled);
 }
 
 void MCompositorNotificationSink::updateNotification(const Notification &notification) {
