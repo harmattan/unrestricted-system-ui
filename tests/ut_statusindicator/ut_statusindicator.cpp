@@ -541,6 +541,12 @@ void Ut_StatusIndicator::testPhoneNetwork()
     // check if home network is visible at first
     QCOMPARE(m_subject->model()->value(), QVariant(QString(home)));
 
+    if (home.isEmpty() && visitor.isEmpty() ) {
+        QVERIFY(((bool)m_subject->styleName().contains("Disabled")));
+    } else {
+        QVERIFY(!((bool)m_subject->styleName().contains("Disabled")));
+    }
+
     if (home.isEmpty() || visitor.isEmpty() || (home == visitor)) {
         // check if home or visitor empty or same, timer is not started
         QCOMPARE(timerStarted, false);

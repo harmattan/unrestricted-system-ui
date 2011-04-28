@@ -494,8 +494,14 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
     QString visitor(visitorNetwork());
     setValue(home);
 
-    if (!visitor.isEmpty() && !home.isEmpty() && (home != visitor)) {
-        networkChangeShowVisitorTimer.start();
+    if(visitor.isEmpty() && home.isEmpty()) {
+        setStyleNameAndUpdate(metaObject()->className()+QString("Disabled"));
+    } else {
+        setStyleNameAndUpdate(metaObject()->className());
+        if (!visitor.isEmpty() && !home.isEmpty() && (home != visitor)) {
+            setStyleNameAndUpdate(metaObject()->className());
+            networkChangeShowVisitorTimer.start();
+        }
     }
 }
 

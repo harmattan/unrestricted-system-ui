@@ -186,6 +186,10 @@ MLabelStyle#StatusIndicatorLabelPortrait {
     maximum-size: 30.0mm 3.6mm;
 }
 
+StatusIndicatorLabelStyle#PhoneNetworkStatusIndicatorDisabled {
+    margin-left: 0;
+}
+
 StatusIndicatorIconStyle#PhoneNetworkSignalStrengthStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator when signal strength is available, separated by spaces */
     image-list: "icon-s-status-network0 icon-s-status-network1 icon-s-status-network2 icon-s-status-network3 icon-s-status-network4 icon-s-status-network5";
