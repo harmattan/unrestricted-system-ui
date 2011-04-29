@@ -1,8 +1,8 @@
-system-ui (0.20.58~1) unstable; urgency=low
+system-ui (0.20.58-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#248289 - In Flight mode there is a gap between the Offline
 
- -- Otto Kopra <otto.kopra@nokia.com>  Fri, 29 Apr 2011 11:15:30 +0300
+ -- Otto Kopra <otto.kopra@nokia.com>  Fri, 29 Apr 2011 11:17:30 +0300
 
 system-ui (0.20.57-1) unstable; urgency=low
 
