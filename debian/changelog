@@ -1,9 +1,10 @@
-system-ui (0.20.57~1) unstable; urgency=low
+system-ui (0.20.57-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#249364 - sysuid generates xdamages in idle
+  * Fixes: NB#251116 - Status area icons are of incorrect height
+  * Fixes: NB#251107 - Margins between adjacent status area icons needs to be decreased
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 26 Apr 2011 14:15:50 +0300
+ -- Otto Kopra <otto.kopra@nokia.com>  Fri, 29 Apr 2011 11:05:30 +0300
 
 system-ui (0.20.56-1) unstable; urgency=low
 
