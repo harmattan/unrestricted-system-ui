@@ -29,6 +29,11 @@
 #include <qmdevicemode_stub.h>
 #endif
 
+bool MWidget::isOnDisplay() const
+{
+    return true;
+}
+
 // QDBusConnection::connect stub
 static QHash<QString, QString> qDBusConnectionConnectParameters;
 bool QDBusConnection::connect ( const QString & service, const QString & path, const QString & interface, const QString & name, QObject * receiver, const char * slot )
