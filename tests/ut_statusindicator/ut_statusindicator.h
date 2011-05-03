@@ -25,27 +25,7 @@
 #include <mapplication.h>
 #include <mwidget.h>
 #include "statusindicator.h"
-#include "statusindicatoriconview.h"
 #include "applicationcontext.h"
-
-class TestStatusIndicatorIconView : public StatusIndicatorIconView
-{
-    Q_OBJECT
-    M_VIEW(StatusIndicatorModel, StatusIndicatorIconStyle)
-
-public:
-    TestStatusIndicatorIconView(StatusIndicator *controller);
-
-protected slots:
-    virtual void updateData(const QList<const char *>& modifications);
-};
-
-class TestStatusIndicatorLabelView : public StatusIndicatorIconView
-{
-public:
-    TestStatusIndicatorLabelView(StatusIndicator *controller);
-};
-
 
 class TestContext;
 

@@ -60,27 +60,6 @@ public:
     }
 };
 
-// Stubs for status indicator views
-
-QVariant gModelValue;
-
-TestStatusIndicatorIconView::TestStatusIndicatorIconView(StatusIndicator *controller) :
-    StatusIndicatorIconView(controller)
-{
-}
-
-void TestStatusIndicatorIconView::updateData(const QList<const char *>& modifications)
-{
-    MWidgetView::updateData(modifications);
-    const char *member;
-    foreach(member, modifications) {
-        if (member == StatusIndicatorModel::Value) {
-            gModelValue = model()->value();
-        }
-    }
-}
-
-
 bool timerStarted = false;
 void QTimer::start()
 {
@@ -103,7 +82,6 @@ void Ut_StatusIndicator::init()
     m_subject = NULL;
     testContext = new TestContext();
     testContextItems.clear();
-    gModelValue.clear();
     gMLocaleLanguage = "";
 }
 
@@ -190,9 +168,7 @@ void Ut_StatusIndicator::testContextItemDeletion()
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
 {
-    PhoneNetworkSignalStrengthStatusIndicator* statusIndicator =
-        new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
-    statusIndicator->setView(new TestStatusIndicatorIconView(statusIndicator));
+    PhoneNetworkSignalStrengthStatusIndicator* statusIndicator = new PhoneNetworkSignalStrengthStatusIndicator(*testContext);
     m_subject = statusIndicator;
 
     testContextItems["Cellular.SignalBars"]->setValue(QVariant(5));
