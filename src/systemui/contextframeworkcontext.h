@@ -74,6 +74,9 @@ private:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     //! The context property being tracked by this item
     ContextProperty property;
+
+    //! Whether the subscription has been done
+    mutable bool subscribed;
 #endif
 };
 

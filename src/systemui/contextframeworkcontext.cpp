@@ -22,9 +22,8 @@
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
 ContextFrameworkItem::ContextFrameworkItem(const QString &key)
-    : property(key)
+    : property(key), subscribed(false)
 {
-    connect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
 }
 
 QVariant ContextFrameworkItem::value() const
@@ -34,12 +33,20 @@ QVariant ContextFrameworkItem::value() const
 
 void ContextFrameworkItem::subscribe() const
 {
-    property.subscribe();
+    if (!subscribed) {
+        connect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
+        property.subscribe();
+        subscribed = true;
+    }
 }
 
 void ContextFrameworkItem::unsubscribe() const
 {
-    property.unsubscribe();
+    if (subscribed) {
+        property.unsubscribe();
+        disconnect(&property, SIGNAL(valueChanged()), this, SIGNAL(contentsChanged()));
+        subscribed = false;
+    }
 }
 #else
 ContextFrameworkItem::ContextFrameworkItem(const QString &)

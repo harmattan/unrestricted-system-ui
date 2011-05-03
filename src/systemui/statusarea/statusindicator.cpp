@@ -49,7 +49,7 @@ const QString TransferStatusIndicator::TRANSFER_UI_SUFFIX_PENDING = "Pending";
 StatusIndicator::StatusIndicator(QGraphicsItem *parent) :
     MWidgetController(new StatusIndicatorModel, parent),
     animateIfPossible(false),
-    modelUpdatesEnabled(true),
+    modelUpdatesEnabled(isOnDisplay()),
     currentValue(QVariant())
 {
 }
@@ -154,7 +154,7 @@ void PhoneNetworkSignalStrengthStatusIndicator::signalStrengthChanged()
 
 void PhoneNetworkSignalStrengthStatusIndicator::setNetworkStatus()
 {
-    QString postFix = "";
+    QString postFix;
 
     bool offlineMode = systemOfflineMode->value().toBool();
     QString status = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
@@ -226,8 +226,8 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
         return; // no further actions needed
     }
 
-    QString postFix = "";
-    QString postFixPacketData = "";
+    QString postFix;
+    QString postFixPacketData;
 
     if ((connection == "WLAN") && (state != "disconnected")) {
         postFix = "WLAN";
