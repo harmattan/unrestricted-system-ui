@@ -1,3 +1,9 @@
+system-ui (0.20.60~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 03 May 2011 14:18:04 +0300
+
 system-ui (0.20.59-1) unstable; urgency=low
 
   * Fixes: NB#251234 - sysuid load cpu all the time during idle
