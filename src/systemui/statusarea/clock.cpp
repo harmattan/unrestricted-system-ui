@@ -25,8 +25,7 @@ Clock::Clock(QGraphicsItem *parent) :
 {
 #ifdef HAVE_QMSYSTEM
     // Be interested in changes to system time
-    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
-            this, SLOT(updateSettings(MeeGo::QmTime::WhatChanged)));
+    connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)), this, SLOT(updateModelAndSetupTimer()));
 #endif
 
     // Configure the timer
@@ -58,16 +57,6 @@ void Clock::updateModelAndSetupTimer()
     // Set the time of the next update and start the timer. The extra one second is used for rounding up to make sure that we always hit the next minute, not the current one.
     timer.start((currentTime.secsTo(nextUpdateTime) + 1) * 1000);
 }
-
-#ifdef HAVE_QMSYSTEM
-void Clock::updateSettings(MeeGo::QmTime::WhatChanged whatChanged)
-{
-    if (whatChanged == MeeGo::QmTime::TimeChanged) {
-        // Set the time when it was changed (set by the user)
-        updateModelAndSetupTimer();
-    }
-}
-#endif
 
 void Clock::enterDisplayEvent()
 {

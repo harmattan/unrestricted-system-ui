@@ -1,6 +1,7 @@
 system-ui (0.20.60~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#245271 - Value of local time shown to the user is not changing after time zone change
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 03 May 2011 14:18:04 +0300
 

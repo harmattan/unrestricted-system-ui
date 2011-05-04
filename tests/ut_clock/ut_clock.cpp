@@ -20,6 +20,9 @@
 #include <QtTest/QtTest>
 #include <MOnDisplayChangeEvent>
 #include <QScopedPointer>
+#ifdef HAVE_QMSYSTEM
+#include <qmtime.h>
+#endif
 #include "ut_clock.h"
 #include "clock.h"
 
@@ -66,11 +69,6 @@ void Ut_Clock::cleanupTestCase()
 void Ut_Clock::init()
 {
     m_subject = new Clock;
-
-#ifdef HAVE_QMSYSTEM
-    connect(this, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
-            m_subject, SLOT(updateSettings(MeeGo::QmTime::WhatChanged)));
-#endif
 }
 
 // Called after every testfunction
@@ -98,12 +96,6 @@ void Ut_Clock::testConstruction()
     mWidgetIsOnDisplay = isOnDisplay;
     m_subject = new Clock;
 
-#ifdef HAVE_QMSYSTEM
-    QVERIFY(disconnect(&m_subject->qmTime,
-                       SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)),
-                       m_subject,
-                       SLOT(updateSettings(MeeGo::QmTime::WhatChanged))));
-#endif
     QVERIFY(disconnect(&m_subject->timer,
                        SIGNAL(timeout()),
                        m_subject, SLOT(updateModelAndSetupTimer())));
@@ -121,14 +113,8 @@ void Ut_Clock::testConstruction()
 
 void Ut_Clock::testTimeUpdate()
 {
-    // Check that time was initialized correctly
-    QCOMPARE(m_subject->model()->time(), expectedDateTime);
-
 #ifdef HAVE_QMSYSTEM
-    // If qmsystem notifies up that time changed, model should be updated accordingly
-    expectedDateTime = QDateTime(QDate(2010, 1, 1));
-    emit timeOrSettingsChanged(MeeGo::QmTime::TimeChanged);
-    QCOMPARE(m_subject->model()->time(), expectedDateTime);
+    QVERIFY(disconnect(&m_subject->qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)), m_subject, SLOT(updateModelAndSetupTimer())));
 #endif
 }
 

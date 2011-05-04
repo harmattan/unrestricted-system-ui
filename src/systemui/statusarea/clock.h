@@ -53,13 +53,6 @@ private slots:
      */
     void updateModelAndSetupTimer();
 
-#ifdef HAVE_QMSYSTEM
-    /*!
-     * \brief Updates the clock if the system time has been adjusted
-     */
-    void updateSettings(MeeGo::QmTime::WhatChanged whatChanged);
-#endif
-
 private:
     //! \reimp
     virtual void enterDisplayEvent();

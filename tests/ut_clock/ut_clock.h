@@ -24,10 +24,6 @@
 #include <QDateTime>
 #include "clock.h"
 
-#ifdef HAVE_QMSYSTEM
-#include <qmtime.h>
-#endif
-
 class TestContext;
 
 class Ut_Clock : public QObject
@@ -37,11 +33,6 @@ class Ut_Clock : public QObject
 public:
     static int timerTimeout;
     static QDateTime expectedDateTime;
-
-signals:
-#ifdef HAVE_QMSYSTEM
-    void timeOrSettingsChanged(MeeGo::QmTime::WhatChanged);
-#endif
 
 private slots:
     void initTestCase();

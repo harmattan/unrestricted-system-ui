@@ -30,9 +30,6 @@ class ClockStub : public StubBase {
   virtual void ClockConstructor(QGraphicsItem *parent);
   virtual void ClockDestructor();
   virtual void updateModelAndSetupTimer();
-#ifdef HAVE_QMSYSTEM
-  virtual void updateSettings(MeeGo::QmTime::WhatChanged whatChanged);
-#endif
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
 };
@@ -48,14 +45,6 @@ void ClockStub::ClockDestructor() {
 void ClockStub::updateModelAndSetupTimer() {
   stubMethodEntered("updateModelAndSetupTimer");
 }
-
-#ifdef HAVE_QMSYSTEM
-void ClockStub::updateSettings(MeeGo::QmTime::WhatChanged whatChanged) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<MeeGo::QmTime::WhatChanged >(whatChanged));
-  stubMethodEntered("updateSettings",params);
-}
-#endif
 
 void ClockStub::enterDisplayEvent() {
   stubMethodEntered("enterDisplayEvent");
@@ -83,12 +72,6 @@ Clock::~Clock() {
 void Clock::updateModelAndSetupTimer() {
   gClockStub->updateModelAndSetupTimer();
 }
-
-#ifdef HAVE_QMSYSTEM
-void Clock::updateSettings(MeeGo::QmTime::WhatChanged whatChanged) {
-  gClockStub->updateSettings(whatChanged);
-}
-#endif
 
 void Clock::enterDisplayEvent() {
   gClockStub->enterDisplayEvent();
