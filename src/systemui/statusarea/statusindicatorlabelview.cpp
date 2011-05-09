@@ -30,7 +30,8 @@ StatusIndicatorLabelView::StatusIndicatorLabelView(StatusIndicator *controller) 
     label(new MLabel)
 {
     label->setStyleName("StatusIndicatorLabel");
-    label->setAlignment(Qt::AlignLeft);
+    label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->setContentsMargins(0, 0, 0, 0);

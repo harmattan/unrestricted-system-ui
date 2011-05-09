@@ -58,30 +58,24 @@ MLabelStyle#StatusAreaLandscapeClockLabel {
     color: #FFFFFF;
     margin-left: 0.6mm;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: -1 3.6mm;
-    maximum-size: -1 3.6mm;
 }
 MLabelStyle#StatusAreaPortraitClockLabel {
     font: $FONT_SMALL;
     color: #FFFFFF;
     margin-left: 0.6mm;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: -1 3.6mm;
-    maximum-size: -1 3.6mm;
 }
 
 StatusIndicatorIconStyle {
@@ -125,15 +119,12 @@ StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
 StatusIndicatorLabelStyle {
     margin-left: 0.6mm;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: 0 3.6mm;
-    maximum-size: -1 3.6mm;
     text-elide: true;
     word-wrap: false;
 }
@@ -143,15 +134,13 @@ MLabelStyle#StatusIndicatorLabel {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: 0 3.6mm;
-    maximum-size: 13.0mm 3.6mm;
+    maximum-size: 13.0mm -1;
 }
 
 MLabelStyle#StatusIndicatorLabelLandscape {
@@ -159,15 +148,13 @@ MLabelStyle#StatusIndicatorLabelLandscape {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: 0 3.6mm;
-    maximum-size: 55.0mm 3.6mm;
+    maximum-size: 55.0mm -1;
 }
 
 MLabelStyle#StatusIndicatorLabelPortrait {
@@ -175,15 +162,13 @@ MLabelStyle#StatusIndicatorLabelPortrait {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.2mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    preferred-size: -1 3.6mm;
-    minimum-size: 0 3.6mm;
-    maximum-size: 30.0mm 3.6mm;
+    maximum-size: 30.0mm -1;
 }
 
 StatusIndicatorLabelStyle#PhoneNetworkStatusIndicatorDisabled {
