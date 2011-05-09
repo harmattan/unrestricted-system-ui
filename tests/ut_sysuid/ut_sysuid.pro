@@ -51,7 +51,8 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenubusinesslogic.h \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
     $$SRCDIR/x11wrapper.h \
-    $$SRCDIR/closeeventeater.h
+    $$SRCDIR/closeeventeater.h \
+    $$SRCDIR/diskspacenotifier.h
 
 # service classes
 HEADERS += \

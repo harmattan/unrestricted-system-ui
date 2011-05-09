@@ -40,6 +40,7 @@
 #include "contextframeworkcontext.h"
 #include "notifiernotificationsink.h"
 #include "closeeventeater.h"
+#include "diskspacenotifier.h"
 #include <QX11Info>
 
 Sysuid* Sysuid::instance_ = NULL;
@@ -139,6 +140,9 @@ Sysuid::Sysuid(QObject* parent) :
     volumeExtensionArea->setInProcessFilter(QRegExp("/sysuid-volume.desktop$"));
     volumeExtensionArea->setOutOfProcessFilter(QRegExp("$^"));
     volumeExtensionArea->init();
+
+    // Create the disk space notification
+    new DiskSpaceNotifier(this);
 }
 
 Sysuid::~Sysuid()
@@ -172,6 +176,7 @@ void Sysuid::loadTranslations()
     locale.installTrCatalog("notification");
     locale.installTrCatalog("connectivity");
     locale.installTrCatalog("volume");
+    locale.installTrCatalog("memory-usage");
 
     // and the engineering english ones
     locale.installTrCatalog("systemui");

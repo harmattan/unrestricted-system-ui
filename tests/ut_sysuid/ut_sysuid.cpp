@@ -54,6 +54,7 @@
 #include "x11wrapper_modified_stub.h"
 #include "eventeater_stub.h"
 #include "closeeventeater_stub.h"
+#include "diskspacenotifier_stub.h"
 
 bool gQmLocksDeviceLock = false;
 bool gQmLocksScreenLock = false;

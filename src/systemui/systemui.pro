@@ -42,7 +42,8 @@ HEADERS +=                              \
     contextframeworkcontext.h           \
     applicationcontext.h                \
     x11wrapper.h                        \
-    xeventlistener.h
+    xeventlistener.h                    \
+    diskspacenotifier.h
 
 SOURCES +=                              \
     main.cpp                            \
@@ -55,7 +56,8 @@ SOURCES +=                              \
     usbui.cpp                           \
     contextframeworkcontext.cpp         \
     x11wrapper.cpp                      \
-    xeventlistener.cpp
+    xeventlistener.cpp                  \
+    diskspacenotifier.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
