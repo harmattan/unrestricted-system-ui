@@ -1,10 +1,9 @@
-system-ui (0.20.62~1) unstable; urgency=low
+system-ui (0.20.62-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#241795 - (AcceptID-1304183) [FEA] Low storage: notification on home running low on disk space
   * Fixes: NB#233289 - StatusAreaRenderer contains a couple of workarounds for bugs in meego graphics system
 
- -- Otto Kopra <otto.kopra@nokia.com>  Mon, 08 May 2011 12:17:12 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 10 May 2011 14:10:10 +0300
 
 system-ui (0.20.61-1) unstable; urgency=low
 
