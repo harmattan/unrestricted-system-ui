@@ -53,9 +53,6 @@ private slots:
     void handleDiskSpaceChange(const QString &path, int percentage);
 
 private:
-    //! Paths notifications are to be sent for
-    QSet<QString> relevantPaths;
-
     //! Notifications sent for each path. The first bool in the pair is whether the threshold notification was sent, second whether the 100% notification was sent.
     QMap<QString, QPair<bool, bool> > notificationsSentForPath;
 

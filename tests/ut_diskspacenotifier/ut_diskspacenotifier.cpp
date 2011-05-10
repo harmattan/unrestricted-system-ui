@@ -111,7 +111,6 @@ void Ut_DiskSpaceNotifier::testNotifications_data()
     QTest::addColumn<int>("notificationsCreated");
     QTest::addColumn<int>("notificationsDestroyed");
 
-    QTest::newRow("Disk space of an uninteresting path changed") << "/test1" << 100 << "/test2" << 90 << 0 << 0;
     QTest::newRow("Disk space of / reached threshold but not 100%") << "/" << 90 << "/" << 99 << 1 << 0;
     QTest::newRow("Disk space of / reached threshold and then 100%") << "/" << 90 << "/" << 100 << 2 << 1;
     QTest::newRow("Disk space of / reached 100% twice") << "/" << 100 << "/" << 100 << 1 << 0;

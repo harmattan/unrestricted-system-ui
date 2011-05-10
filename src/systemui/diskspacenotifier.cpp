@@ -25,10 +25,6 @@ DiskSpaceNotifier::DiskSpaceNotifier(QObject *parent) : QObject(parent),
     notification(NULL)
 {
     QDBusConnection::systemBus().connect(QString(), "/com/nokia/diskmonitor/signal", "com.nokia.diskmonitor.signal", "disk_space_change_ind", this, SLOT(handleDiskSpaceChange(QString, int)));
-
-    relevantPaths.insert("/");
-    relevantPaths.insert("/home");
-    relevantPaths.insert("/home/user/MyDocs");
 }
 
 DiskSpaceNotifier::~DiskSpaceNotifier()
@@ -41,35 +37,33 @@ DiskSpaceNotifier::~DiskSpaceNotifier()
 
 void DiskSpaceNotifier::handleDiskSpaceChange(const QString &path, int percentage)
 {
-    if (relevantPaths.contains(path)) {
-        bool notificationShouldBeVisible = false;
+    bool notificationShouldBeVisible = false;
 
-        if (percentage == 100) {
-            // Disk space usage for path is 100%
-            if (!notificationsSentForPath[path].second) {
-                notificationShouldBeVisible = true;
-                notificationsSentForPath[path].second = true;
-            }
-        } else {
-            // Disk space usage for path is above the notification threshold
-            if (!notificationsSentForPath[path].first) {
-                notificationShouldBeVisible = true;
-                notificationsSentForPath[path].first = true;
-            }
+    if (percentage == 100) {
+        // Disk space usage for path is 100%
+        if (!notificationsSentForPath[path].second) {
+            notificationShouldBeVisible = true;
+            notificationsSentForPath[path].second = true;
+        }
+    } else {
+        // Disk space usage for path is above the notification threshold
+        if (!notificationsSentForPath[path].first) {
+            notificationShouldBeVisible = true;
+            notificationsSentForPath[path].first = true;
+        }
+    }
+
+    if (notificationShouldBeVisible) {
+        if (notification != NULL) {
+            // Destroy any previous notification
+            notification->remove();
+            delete notification;
         }
 
-        if (notificationShouldBeVisible) {
-            if (notification != NULL) {
-                // Destroy any previous notification
-                notification->remove();
-                delete notification;
-            }
-
-            // Show a notification
-            //% "Getting low with storage. Please check."
-            notification = new MNotification("x-nokia.system-memusage", "", qtTrId("qtn_memu_memlow_notification_src"));
-            notification->setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "qtn_memu_appname"));
-            notification->publish();
-        }
+        // Show a notification
+        //% "Getting low with storage. Please check."
+        notification = new MNotification("x-nokia.system-memusage", "", qtTrId("qtn_memu_memlow_notification_src"));
+        notification->setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "qtn_memu_appname"));
+        notification->publish();
     }
 }
