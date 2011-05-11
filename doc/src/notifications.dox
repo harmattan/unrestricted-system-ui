@@ -59,6 +59,7 @@ userRemovable=false
 class=system
 genericTextId=qtn_something_happened
 genericTextCatalogue=events
+persistent=false
 \endverbatim
 
 The \c iconId key can be used to define the ID of the icon displayed in the visual notifications of the given type. If the notification sink does not display any visual notifications it can ignore this key. As an example all classes derived from \c WidgetNotificationSink will use the \c iconId to show the icon in the notification banner.
@@ -72,6 +73,8 @@ The \c userRemovable key can be used to define whether a notification of given t
 The \c class key can be used to define whether a notification of given type is a system notification or an application notification. If class equals system the notification is a system notification. It class equals application or the key is missing the notification is an application notification. System notifications may be treated differently by the notification sinks. For instance, system notifications are not displayed by the \c NotificationAreaSink. They may also have a higher priority than the application notifications.
 
 The \c genericTextId key and the \c genericTextCatalogue key can be used to define the translation ID and the translation catalogue of a generic text for the visual notifications of the given type. This generic text can replace the notification content when showing the content is not desired, for instance when the device is locked and privacy is of concern. Both keys are needed to define the generic text. Otherwise the generic text is considered to be empty. The translated string is retrieved from the provided catalogue in either singular or plural form depending on the cardinality of the particular notification. Once the translated string is retrieved the escape sequences "%n" and "%Ln" of the returned string are replaced with the cardinality of the notification. For more information on how translations are provided refer to "internationalisation" in libmeegotouch documentation.
+
+Setting the \c persistent key to false will discard notification of given event type when device is rebooted. Defaults to true if left out.
 
 \section links Links
 

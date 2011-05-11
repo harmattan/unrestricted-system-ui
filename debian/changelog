@@ -2,6 +2,7 @@ system-ui (0.20.63~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#253928 - Status area should NOT force status indicators to have certain height and/or width
+  * Fixes: NB#252840 - Non persistent notifications are shown on notification area after reboot
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 10 May 2011 14:10:34 +0300
 

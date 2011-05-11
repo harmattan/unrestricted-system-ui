@@ -145,10 +145,9 @@ private slots:
     void testGetNotificationGroups();
     // Test getting notifications
     void testGetNotifications();
-
     void testNotificationIsUpdatedWhenEventTypeIsUpdated();
-
     void testNotificationCountInGroup();
+    void testPruningNonPersistentNotificationsOnBoot();
 
 };
 

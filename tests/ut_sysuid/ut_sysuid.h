@@ -45,6 +45,7 @@ private slots:
     void cleanupTestCase();
 
     // Test cases
+    void testInitialization();
     void testSignalConnections();
     void testUseMode();
     void testLocaleContainsNotificationCatalog();

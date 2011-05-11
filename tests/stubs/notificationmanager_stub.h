@@ -61,6 +61,8 @@ class NotificationManagerStub : public StubBase {
   virtual QList<NotificationGroup> groups();
   virtual void doRemoveGroup(uint groupId);
   virtual uint notificationCountInGroup(uint notificationUserId, uint groupId);
+  virtual bool isPersistent(const NotificationParameters &parameters);
+  virtual void initializeStore();
 };
 
 // 2. IMPLEMENT STUB
@@ -283,8 +285,21 @@ uint NotificationManagerStub::notificationCountInGroup(uint notificationUserId, 
     QList<ParameterBase*> params;
     params.append(new Parameter<uint>(notificationUserId));
     params.append(new Parameter<uint>(groupId));
-    stubMethodEntered("notificationCountInGroup");
+    stubMethodEntered("notificationCountInGroup", params);
     return stubReturnValue<uint>("notificationCountInGroup");
+}
+
+bool NotificationManagerStub::isPersistent(const NotificationParameters &parameters)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const NotificationParameters & >(parameters));
+    stubMethodEntered("isPersistent", params);
+    return stubReturnValue<bool>("isPersistent");
+}
+
+void NotificationManagerStub::initializeStore()
+{
+    stubMethodEntered("initializeStore");
 }
 
 // 3. CREATE A STUB INSTANCE
@@ -437,6 +452,16 @@ void NotificationManager::doRemoveGroup(uint groupId)
 uint NotificationManager::notificationCountInGroup(uint notificationUserId, uint groupId)
 {
     return gNotificationManagerStub->notificationCountInGroup(notificationUserId, groupId);
+}
+
+bool NotificationManager::isPersistent(const NotificationParameters &parameters)
+{
+    return gNotificationManagerStub->isPersistent(parameters);
+}
+
+void NotificationManager::initializeStore()
+{
+    gNotificationManagerStub->initializeStore();
 }
 
 #endif

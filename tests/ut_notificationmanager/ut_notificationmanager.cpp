@@ -33,6 +33,8 @@
 #include "genericnotificationparameterfactory.h"
 #include "notificationwidgetparameterfactory.h"
 #include "notificationsink_stub.h"
+#include <QFile>
+#include <QStringList>
 
 bool Ut_NotificationManager::catchTimerTimeouts;
 QList<int> Ut_NotificationManager::timerTimeouts;
@@ -43,7 +45,6 @@ QList<NotificationGroup> gGroupListWithIdentifiers;
 QList<Notification> gNotificationList;
 QList<Notification> gNotificationListWithIdentifiers;
 quint32 gLastUserId;
-bool gTestingPersistent;
 
 #define EVENT_TYPE GenericNotificationParameterFactory::eventTypeKey()
 #define COUNT      GenericNotificationParameterFactory::countKey()
@@ -124,11 +125,12 @@ uint QDateTime::toTime_t () const
     return qDateTimeToTime_t;
 }
 
-QString gFileName;
-
 // QFile & QIODevice stubs for file handling
+QHash<QString, const QFile *> gFileInstances;
+QString gLastFileName;
 QFile::QFile(const QString & name) {
-    gFileName = name;
+    gFileInstances.insert(name, this);
+    gLastFileName = name;
 }
 
 bool QFile::remove(const QString & name) {
@@ -136,11 +138,15 @@ bool QFile::remove(const QString & name) {
     return true;
 }
 
+QFile::OpenMode gBootFileOpenedMode;
 bool QFile::open(OpenMode mode) {
-    if (gFileName.contains("state.data")) {
+    QString fileName = gFileInstances.key(this);
+    if (fileName.contains("state.data")) {
         gStateBuffer.open(mode);
-    } else if (gFileName.contains("notifications.data")) {
+    } else if (fileName.contains("notifications.data")) {
         gNotificationBuffer.open(mode);
+    } else if (fileName.contains(QDir::tempPath() + "/sysuid_boot")) {
+        gBootFileOpenedMode = mode;
     } else {
         Q_ASSERT(0);
     }
@@ -148,21 +154,38 @@ bool QFile::open(OpenMode mode) {
 }
 
 void QFile::close() {
-    if (gFileName.contains("state.data")) {
+    QString fileName = gFileInstances.key(this);
+    if (fileName.contains("state.data")) {
         gStateBuffer.close();
-    } else if (gFileName.contains("notifications.data")) {
+    } else if (fileName.contains("notifications.data")) {
         gNotificationBuffer.close();
     } else {
         Q_ASSERT(0);
     }
 }
 
+bool gBootFileExists;
+bool QFile::exists() const
+{
+    bool exists = false;
+    QString fileName = gFileInstances.key(this);
+    if (!fileName.isNull()) {
+        if (fileName.contains("sysuid_boot") && !gBootFileExists) {
+            exists = false;
+        } else {
+            exists = true;
+        }
+    }
+
+    return exists;
+}
+
 void QDataStream::setDevice(QIODevice *d)
 {
     Q_UNUSED(d)
-    if (gFileName.contains("state.data")) {
+    if (gLastFileName.contains("state.data")) {
         dev = &gStateBuffer;
-    } else if (gFileName.contains("notifications.data")) {
+    } else if (gLastFileName.contains("notifications.data")) {
         dev = &gNotificationBuffer;
     } else {
         Q_ASSERT(0);
@@ -281,6 +304,9 @@ void Ut_NotificationManager::init()
     manager = new TestNotificationManager(0);
     timerTimeouts.clear();
     catchTimerTimeouts = false;
+    gBootFileExists = true;
+    gLastFileName.clear();
+    gBootFileOpenedMode = QIODevice::NotOpen;
 
     gStateBuffer.open(QIODevice::ReadWrite | QIODevice::Truncate);
     gNotificationBuffer.open(QIODevice::ReadWrite| QIODevice::Truncate);
@@ -290,6 +316,8 @@ void Ut_NotificationManager::init()
 
 void Ut_NotificationManager::cleanup()
 {
+    gFileInstances.clear();
+
     delete manager;
 }
 
@@ -304,8 +332,8 @@ void Ut_NotificationManager::testNotificationUserId()
 
     delete manager;
 
-    gTestingPersistent = true;
     manager = new TestNotificationManager(0);
+    manager->initializeStore();
 
     uint id3 = manager->notificationUserId();
     QVERIFY(id3 != id1);
@@ -314,8 +342,6 @@ void Ut_NotificationManager::testNotificationUserId()
     loadStateData();
 
     QVERIFY(id3 == gLastUserId);
-
-    gTestingPersistent = false;
 
     gNotificationBuffer.buffer().clear();
     gStateBuffer.buffer().clear();
@@ -1283,8 +1309,6 @@ void Ut_NotificationManager::testNotificationGroupListWithIdentifiers()
 
 void Ut_NotificationManager::testGroupInfoStorage()
 {
-    gTestingPersistent = true;
-
     gNotificationBuffer.buffer().clear();
     gStateBuffer.buffer().clear();
 
@@ -1383,8 +1407,6 @@ void Ut_NotificationManager::testNotificationRestoration()
 {
     delete manager;
 
-    gTestingPersistent = true;
-
     gNotificationBuffer.buffer().clear();
     gNotificationBuffer.open(QIODevice::WriteOnly);
     QDataStream stream(&gNotificationBuffer);
@@ -1437,8 +1459,6 @@ void Ut_NotificationManager::testNotificationRestoration()
     QCOMPARE(n.parameters().value(ICON).toString(), QString("buttonicon2"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 2000);
-
-    gTestingPersistent = false;
 }
 
 void Ut_NotificationManager::testRemovingNotificationsWithEventType()
@@ -1541,6 +1561,36 @@ void Ut_NotificationManager::testNotificationCountInGroup()
     manager->addNotification(0, NotificationParameters(), groupId2);
 
     QCOMPARE(manager->notificationCountInGroup(0, groupId1), (uint)2);
+}
+
+void Ut_NotificationManager::testPruningNonPersistentNotificationsOnBoot()
+{
+    delete manager;
+    gNotificationBuffer.buffer().clear();
+    gNotificationBuffer.open(QIODevice::WriteOnly);
+    QDataStream stream(&gNotificationBuffer);
+    manager = new TestNotificationManager(0);
+    QSignalSpy spy(manager, SIGNAL(notificationRestored(Notification)));
+
+    // Create a persistent and a non-persistent notification
+    NotificationParameters parameters0;
+    parameters0.add(PERSISTENT, "false");
+    stream << Notification(0, 3, 0, parameters0, Notification::ApplicationEvent, 0);
+    NotificationParameters parameters1;
+    parameters1.add(PERSISTENT, "true");
+    stream << Notification(1, 4, 0, parameters1, Notification::SystemEvent, 1000);
+    gNotificationBuffer.close();
+
+    gBootFileExists = false;
+
+    manager->initializeStore();
+
+    // Verify that boot file was created
+    QVERIFY(gFileInstances.keys().contains(QDir::tempPath() + "/sysuid_boot"));
+    QCOMPARE(gBootFileOpenedMode, QIODevice::WriteOnly);
+
+    // Verify that only persistent notification was restored
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_MAIN(Ut_NotificationManager)

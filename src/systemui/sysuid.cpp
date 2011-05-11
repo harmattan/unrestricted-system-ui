@@ -116,9 +116,6 @@ Sysuid::Sysuid(QObject* parent) :
     connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
     applyUseMode();
 
-    // Restore persistent notifications after all the signal connections are made to the notification sinks
-    notificationManager->restoreData();
-
     /*
      * The screen locking is implemented in this separate class, because it is
      * bound to the system bus (MCE wants to contact us on the system bus).
@@ -134,6 +131,9 @@ Sysuid::Sysuid(QObject* parent) :
     connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
 #endif
     updateCompositorNotificationSinkEnabledStatus();
+
+    // Initialize notifications store after all the signal connections are made to the notification sinks
+    notificationManager->initializeStore();
 
     // Create an extension area for the volume extension
     volumeExtensionArea = new MApplicationExtensionArea("com.meego.core.VolumeExtensionInterface/0.20");

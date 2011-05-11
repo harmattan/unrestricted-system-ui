@@ -64,6 +64,12 @@ public:
      */
     virtual ~NotificationManager();
 
+    /*! Initializes notification store. Store needs to be always initialized before usage
+     * and after all the needed signals are connected to notification manager.
+     *
+     * Restores notifications, prunes non-persistent notifications when called first time after a boot and saves remaining notifications.
+     */
+    void initializeStore();
 
     /*!
      * Restores data.
@@ -203,7 +209,6 @@ private slots:
     void doRemoveGroup(uint groupId);
 
 private:
-
     /*!
      * Determines the type of a notification from the notification parameters.
      *
@@ -279,6 +284,14 @@ private:
      */
     void saveNotifications();
 
+    /*!
+     * Determines persistence of a notification from the notification parameters.
+     *
+     * \param parameters NotificationParameters to determine the persistence from
+     * \return \c true if the notification is persistent, \c false otherwise.
+     */
+    bool isPersistent(const NotificationParameters &parameters);
+
     //! Hash of all notifications keyed by notification IDs
     QHash<uint, Notification> notificationContainer;
 
@@ -317,6 +330,9 @@ private:
 
     //! Flag to determine if the persistent data has been restored yet
     bool persistentDataRestored;
+
+    //! Whether store initialization is subsequent after initialization in boot
+    bool isSubsequentStart;
 
 #ifdef UNIT_TEST
     friend class Ut_NotificationManager;

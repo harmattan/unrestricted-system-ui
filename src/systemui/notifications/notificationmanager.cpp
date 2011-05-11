@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include <QDBusMetaType>
 #include "metatypedeclarations.h"
 #include "notificationmanager.h"
@@ -47,6 +48,8 @@ static const QString NOTIFICATIONS_FILE_NAME = PERSISTENT_DATA_PATH + QString("n
 //! System notifications are identified with 'system' string literal
 static const QString SYSTEM_EVENT_ID = "system";
 
+static const QString BOOT_FILE = "/sysuid_boot";
+
 NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSize) :
     notificationContainer(),
     groupContainer(),
@@ -55,7 +58,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     relayInterval(relayInterval),
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
-    persistentDataRestored(false)
+    isSubsequentStart(false)
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
     dBusSink = new DBusInterfaceNotificationSink(this);
@@ -73,11 +76,6 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     waitQueueTimer.setSingleShot(true);
     connect(&waitQueueTimer, SIGNAL(timeout()), this, SLOT(relayNextNotification()));
 
-    if (!QDir::root().exists(PERSISTENT_DATA_PATH)) {
-        // No data to restore exists yet
-        persistentDataRestored = true;
-    }
-
     //Initialize the event type store
     initializeEventTypeStore();
 
@@ -85,6 +83,13 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     QDBusConnection::sessionBus().registerService("com.meego.core.MNotificationManager");
     QDBusConnection::sessionBus().registerObject("/notificationmanager", dBusSource);
     QDBusConnection::sessionBus().registerObject("/notificationsinkmanager", dBusSink);
+}
+
+void NotificationManager::initializeStore()
+{
+    // Prune the non-persistent notifications on first boot by restoring persistent notifications and saving the remaining notifications
+    restoreData();
+    saveNotifications();
 }
 
 NotificationManager::~NotificationManager()
@@ -145,10 +150,13 @@ void NotificationManager::saveNotifications()
 
 void NotificationManager::restoreData()
 {
-    if (!persistentDataRestored && ensurePersistentDataPath()) {
-        // If the data is corrupted or tampered with, the previous state
-        // is lost and there's nothing we can do.
-        persistentDataRestored = true;
+    if (ensurePersistentDataPath()) {
+        if (!isSubsequentStart) {
+            QFile bootFile(QDir::tempPath() + BOOT_FILE);
+            if (!bootFile.exists()) {
+                bootFile.open(QIODevice::WriteOnly);
+            }
+        }
 
         QFile stateFile(STATE_DATA_FILE_NAME);
 
@@ -178,14 +186,18 @@ void NotificationManager::restoreData()
 
             while (!stream.atEnd()) {
                 stream >> notification;
-                notificationContainer.insert(notification.notificationId(), notification);
-                emit notificationRestored(notification);
+                // When starting on boot add only the persistent notifications
+                if (isSubsequentStart || (!isSubsequentStart && isPersistent(notification.parameters()))) {
+                    notificationContainer.insert(notification.notificationId(), notification);
+                    emit notificationRestored(notification);
+                }
             }
             notificationFile.close();
         }
+
+        isSubsequentStart = true;
     }
 }
-
 
 void NotificationManager::initializeEventTypeStore()
 {
@@ -230,8 +242,6 @@ void NotificationManager::updateNotificationsWithEventType(const QString &eventT
 
 uint NotificationManager::addNotification(uint notificationUserId, const NotificationParameters &parameters, uint groupId)
 {
-    restoreData();
-
     if (groupId == 0 || groupContainer.contains(groupId)) {
         uint notificationId = nextAvailableNotificationID();
 
@@ -255,8 +265,6 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
                                              const NotificationParameters &parameters)
 {
     Q_UNUSED(notificationUserId);
-
-    restoreData();
 
     QHash<uint, Notification>::iterator ni = notificationContainer.find(notificationId);
 
@@ -295,8 +303,6 @@ bool NotificationManager::removeNotification(uint notificationUserId, uint notif
 
 bool NotificationManager::removeNotification(uint notificationId)
 {
-    restoreData();
-
     if (notificationContainer.contains(notificationId)) {
         // Mark the notification unused
         notificationContainer.take(notificationId);
@@ -336,8 +342,6 @@ bool NotificationManager::removeNotificationsInGroup(uint groupId)
 
 uint NotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters)
 {
-    restoreData();
-
     NotificationParameters fullParameters(appendEventTypeParameters(parameters));
     fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
 
@@ -355,8 +359,6 @@ uint NotificationManager::addGroup(uint notificationUserId, const NotificationPa
 bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters)
 {
     Q_UNUSED(notificationUserId);
-
-    restoreData();
 
     QHash<uint, NotificationGroup>::iterator gi = groupContainer.find(groupId);
 
@@ -379,8 +381,6 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
 bool NotificationManager::removeGroup(uint notificationUserId, uint groupId)
 {
     Q_UNUSED(notificationUserId)
-
-    restoreData();
 
     if (groupContainer.contains(groupId)) {
         emit queuedGroupRemove(groupId);
@@ -418,8 +418,6 @@ NotificationParameters NotificationManager::appendEventTypeParameters(const Noti
 
 uint NotificationManager::notificationUserId()
 {
-    restoreData();
-
     lastUsedNotificationUserId++;
     saveStateData();
 
@@ -608,4 +606,24 @@ uint NotificationManager::notificationCountInGroup(uint notificationUserId, uint
         }
     }
     return amount;
+}
+
+bool NotificationManager::isPersistent(const NotificationParameters &parameters)
+{
+    bool isPersistent = true;
+
+    QVariant persistentVariant = parameters.value(GenericNotificationParameterFactory::persistentKey());
+    if (persistentVariant.isValid()) {
+        isPersistent = persistentVariant.toBool();
+    } else {
+        QVariant eventTypeVariant = parameters.value(GenericNotificationParameterFactory::eventTypeKey());
+        if (eventTypeVariant.isValid()) {
+            QString eventType = eventTypeVariant.toString();
+            if (notificationEventTypeStore->contains(eventType, GenericNotificationParameterFactory::persistentKey())) {
+                isPersistent = QVariant(notificationEventTypeStore->value(eventType, GenericNotificationParameterFactory::persistentKey())).toBool();
+            }
+        }
+    }
+
+    return isPersistent;
 }

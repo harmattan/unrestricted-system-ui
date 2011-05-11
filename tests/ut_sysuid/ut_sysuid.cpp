@@ -199,6 +199,11 @@ void Ut_Sysuid::cleanup()
     gStatusIndicatorMenuBusinessLogicStub->stubReset();
 }
 
+void Ut_Sysuid::testInitialization()
+{
+    QCOMPARE(gNotificationManagerStub->stubCallCount("initializeStore"), 1);
+}
+
 void Ut_Sysuid::testSignalConnections()
 {
     QVERIFY(disconnect(sysuid->statusIndicatorMenuBusinessLogic, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), sysuid->statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool))));
