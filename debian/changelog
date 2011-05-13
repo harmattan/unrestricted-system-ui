@@ -1,3 +1,9 @@
+system-ui (0.20.65~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Ran Nyman <ran.nyman@nokia.com>  Thu, 13 May 2011 14:24:56 +0300
+
 system-ui (0.20.64-1) unstable; urgency=low
 
   * Fixes: NB#252840 - Non persistent notifications are shown on notification area after reboot
