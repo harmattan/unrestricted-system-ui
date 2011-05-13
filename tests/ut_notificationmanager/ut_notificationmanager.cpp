@@ -164,7 +164,7 @@ void QFile::close() {
     }
 }
 
-bool gBootFileExists;
+static bool gBootFileExists;
 bool QFile::exists() const
 {
     bool exists = false;
@@ -1414,6 +1414,7 @@ void Ut_NotificationManager::testNotificationRestoration()
     // Create three notifications
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
+    parameters0.add(PERSISTENT, "false");
     stream << Notification(0, 3, 0, parameters0, Notification::ApplicationEvent, 0);
 
     NotificationParameters parameters1;

@@ -58,7 +58,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     relayInterval(relayInterval),
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
-    isSubsequentStart(false)
+    subsequentStart(false)
 {
     dBusSource = new DBusInterfaceNotificationSource(*this);
     dBusSink = new DBusInterfaceNotificationSink(this);
@@ -87,7 +87,8 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
 
 void NotificationManager::initializeStore()
 {
-    // Prune the non-persistent notifications on first boot by restoring persistent notifications and saving the remaining notifications
+    // Prune the non-persistent notifications on first boot by
+    // restoring persistent notifications and saving the remaining notifications
     restoreData();
     saveNotifications();
 }
@@ -151,52 +152,66 @@ void NotificationManager::saveNotifications()
 void NotificationManager::restoreData()
 {
     if (ensurePersistentDataPath()) {
-        if (!isSubsequentStart) {
-            QFile bootFile(QDir::tempPath() + BOOT_FILE);
-            if (!bootFile.exists()) {
-                bootFile.open(QIODevice::WriteOnly);
-            }
-        }
-
-        QFile stateFile(STATE_DATA_FILE_NAME);
-
-        if (stateFile.open(QIODevice::ReadOnly)) {
-            QDataStream stream;
-            stream.setDevice(&stateFile);
-
-            stream >> lastUsedNotificationUserId;
-
-            NotificationGroup group;
-
-            while (!stream.atEnd()) {
-                stream >> group;
-                groupContainer.insert(group.groupId(), group);
-                emit groupUpdated(group.groupId(), group.parameters());
-            }
-            stateFile.close();
-        }
-
-        QFile notificationFile(NOTIFICATIONS_FILE_NAME);
-
-        if (notificationFile.open(QIODevice::ReadOnly)) {
-            QDataStream stream;
-            stream.setDevice(&notificationFile);
-
-            Notification notification;
-
-            while (!stream.atEnd()) {
-                stream >> notification;
-                // When starting on boot add only the persistent notifications
-                if (isSubsequentStart || (!isSubsequentStart && isPersistent(notification.parameters()))) {
-                    notificationContainer.insert(notification.notificationId(), notification);
-                    emit notificationRestored(notification);
-                }
-            }
-            notificationFile.close();
-        }
-
-        isSubsequentStart = true;
+        restoreState();
+        restoreNotifications();
     }
+}
+
+void NotificationManager::restoreState()
+{
+    QFile stateFile(STATE_DATA_FILE_NAME);
+
+    if (stateFile.open(QIODevice::ReadOnly)) {
+        QDataStream stream;
+        stream.setDevice(&stateFile);
+
+        stream >> lastUsedNotificationUserId;
+
+        NotificationGroup group;
+
+        while (!stream.atEnd()) {
+            stream >> group;
+            groupContainer.insert(group.groupId(), group);
+            emit groupUpdated(group.groupId(), group.parameters());
+        }
+        stateFile.close();
+    }
+}
+
+void NotificationManager::restoreNotifications()
+{
+    QFile notificationFile(NOTIFICATIONS_FILE_NAME);
+
+    if (notificationFile.open(QIODevice::ReadOnly)) {
+        QDataStream stream;
+        stream.setDevice(&notificationFile);
+
+        Notification notification;
+
+        bool restoreAllNotifications = isSubsequentStart();
+        while (!stream.atEnd()) {
+            stream >> notification;
+            // When starting on boot add only the persistent notifications
+            if (restoreAllNotifications || isPersistent(notification.parameters())) {
+                notificationContainer.insert(notification.notificationId(), notification);
+                emit notificationRestored(notification);
+            }
+        }
+        notificationFile.close();
+    }
+}
+
+bool NotificationManager::isSubsequentStart()
+{
+    if (!subsequentStart) {
+        subsequentStart = true;
+        QFile bootFile(QDir::tempPath() + BOOT_FILE);
+        if (!bootFile.exists()) {
+            bootFile.open(QIODevice::WriteOnly);
+            return false;
+        }
+    }
+    return true;
 }
 
 void NotificationManager::initializeEventTypeStore()

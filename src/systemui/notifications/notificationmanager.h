@@ -284,6 +284,11 @@ private:
      */
     void saveNotifications();
 
+    bool isSubsequentStart();
+
+    void restoreState();
+    void restoreNotifications();
+
     /*!
      * Determines persistence of a notification from the notification parameters.
      *
@@ -332,7 +337,7 @@ private:
     bool persistentDataRestored;
 
     //! Whether store initialization is subsequent after initialization in boot
-    bool isSubsequentStart;
+    bool subsequentStart;
 
 #ifdef UNIT_TEST
     friend class Ut_NotificationManager;
