@@ -1,9 +1,8 @@
-system-ui (0.20.65~1) unstable; urgency=low
+system-ui (0.20.65-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#254431 - Visual notification is displayed for incoming message while recording video clip
 
- -- Ran Nyman <ran.nyman@nokia.com>  Thu, 13 May 2011 14:24:56 +0300
+ -- Pankaj Saharan <pankaj.saharan@nokia.com>  Mon, 16 May 2011 16:01:56 +0300
 
 system-ui (0.20.64-1) unstable; urgency=low
 
