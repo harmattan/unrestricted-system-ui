@@ -123,13 +123,13 @@ void Ut_UsbUi::testUSBNotifications()
     m_subject->applyUSBMode(MeeGo::QmUSBMode::OviSuite);
 
     QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_info_connected").arg(qtTrId("qtn_usb_ovi_suite")));
+    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_sync_active"));
     QCOMPARE(m_subject->notification->isPublished(), true);
 
     m_subject->applyUSBMode(MeeGo::QmUSBMode::MassStorage);
 
     QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_info_connected").arg(qtTrId("qtn_usb_mass_storage")));
+    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_storage_active"));
     QCOMPARE(m_subject->notification->isPublished(), true);
 }
 

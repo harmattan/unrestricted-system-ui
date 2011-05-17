@@ -193,20 +193,19 @@ void UsbUi::showNotification(int id)
     switch (id) {
 #ifdef HAVE_QMSYSTEM
     case MeeGo::QmUSBMode::OviSuite:
-        //% "Ovi Suite mode"
-        mode_text = qtTrId("qtn_usb_ovi_suite");
+        //% "Sync and connect in use"
+        mode_text = qtTrId("qtn_usb_sync_active");
         break;
     case MeeGo::QmUSBMode::MassStorage:
-        //% "Mass Storage mode"
-        mode_text = qtTrId("qtn_usb_mass_storage");
+        //% "Mass storage in use"
+        mode_text = qtTrId("qtn_usb_storage_active");
         break;
 #endif
     default:
         return;
     }
 
-    //% "USB connected.<br />%1"
-    notification = new MNotification(MNotification::DeviceAddedEvent, "", qtTrId("qtn_usb_info_connected").arg(mode_text));
+    notification = new MNotification(MNotification::DeviceAddedEvent, "", mode_text);
     notification->publish();
 }
 
