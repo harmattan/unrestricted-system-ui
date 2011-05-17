@@ -110,10 +110,17 @@ StatusIndicatorAnimationStyle:icon {
 }
 
 StatusIndicatorAnimationStyle#InputMethodStatusIndicator {
-    use-icon-size: true;
+    margin-left: 0.4mm;
     preferred-size: -1 -1;
     minimum-size: -1 -1;
     maximum-size: -1 -1;
+}
+
+StatusIndicatorAnimationStyle#InputMethodStatusIndicatorDisabled {
+    margin-left: 0;
+    preferred-size: 0 -1;
+    minimum-size: 0 -1;
+    maximum-size: 0 -1;
 }
 
 StatusIndicatorLabelStyle {

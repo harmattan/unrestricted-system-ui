@@ -495,7 +495,7 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
     setValue(home);
 
     if(visitor.isEmpty() && home.isEmpty()) {
-        setStyleNameAndUpdate(metaObject()->className()+QString("Disabled"));
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Disabled");
     } else {
         setStyleNameAndUpdate(metaObject()->className());
         if (!visitor.isEmpty() && !home.isEmpty() && (home != visitor)) {
@@ -512,7 +512,7 @@ void PhoneNetworkStatusIndicator::showVisitorNetworkName() {
 InputMethodStatusIndicator::InputMethodStatusIndicator(QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
-    setStyleName(metaObject()->className());
+    setIconID(QString());
 }
 
 InputMethodStatusIndicator::~InputMethodStatusIndicator()
@@ -522,6 +522,12 @@ InputMethodStatusIndicator::~InputMethodStatusIndicator()
 void InputMethodStatusIndicator::setIconID(const QString &iconID)
 {
     setValue(iconID);
+
+    if (iconID.isEmpty()) {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Disabled");
+    } else {
+        setStyleNameAndUpdate(metaObject()->className());
+    }
 }
 
 CallStatusIndicator::CallStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :

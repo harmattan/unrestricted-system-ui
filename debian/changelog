@@ -1,6 +1,7 @@
 system-ui (0.20.67~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#248290 - The keyboard mode status indicator has no spacing to the next status indicator on the left
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 17 May 2011 14:18:58 +0300
 

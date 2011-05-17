@@ -555,10 +555,15 @@ void Ut_StatusIndicator::testInputMethod()
 {
     InputMethodStatusIndicator *statusIndicator = new InputMethodStatusIndicator;
     m_subject = statusIndicator;
+    QCOMPARE(m_subject->styleName().contains("Disabled"), QBool(true));
 
     statusIndicator->setIconID("test");
     QVERIFY(statusIndicator->model()->value().type() == QVariant::String);
     QCOMPARE(statusIndicator->model()->value(), QVariant("test"));
+    QCOMPARE(m_subject->styleName().contains("Disabled"), QBool(false));
+
+    statusIndicator->setIconID(QString());
+    QCOMPARE(m_subject->styleName().contains("Disabled"), QBool(true));
 }
 
 // keep these in sync with the context framework!
