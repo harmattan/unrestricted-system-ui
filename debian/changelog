@@ -1,3 +1,9 @@
+system-ui (0.20.67~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 17 May 2011 14:18:58 +0300
+
 system-ui (0.20.66-1) unstable; urgency=low
 
   * Fixes: NB#250778 - USB connectivity mode strings incorrect
