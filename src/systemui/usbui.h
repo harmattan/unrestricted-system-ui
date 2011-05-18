@@ -32,6 +32,8 @@ namespace MeeGo {
     class QmLocks;
 }
 
+class MGConfItem;
+
 /*!
  * The USB UI takes care of USB related user interfaces.
  */
@@ -83,6 +85,11 @@ private slots:
     void setMassStorageMode();
 
     /*!
+     * Sets the USB mode to SDK.
+     */
+    void setSDKMode();
+
+    /*!
      * Shows the mode selection dialog.
      */
     void showDialog();
@@ -101,7 +108,11 @@ private:
      * \param id an usb_modes enum value for the notification
      */
     void showNotification(int id);
+
+    //! Hides the currently active notification
     void hideNotification();
+
+    //! Hides the mode selection dialog if it exists, accepting or rejecting it
     void hideDialog(bool accept);
 
 #ifdef HAVE_QMSYSTEM
@@ -109,8 +120,15 @@ private:
     MeeGo::QmUSBMode::Mode requestedUSBMode;
     MeeGo::QmLocks *locks;
 #endif
+
+    //! The currently active notification
     MNotification *notification;
+
+    //! Mode selection dialog
     QPointer<MDialog> dialog;
+
+    //! GConf item which tracks if developer mode is enabled
+    MGConfItem *developerMode;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

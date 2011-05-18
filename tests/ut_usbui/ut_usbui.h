@@ -47,6 +47,7 @@ private slots:
     void testShowDialog();
     void testHideDialog_data();
     void testHideDialog();
+    void testUSBNotifications_data();
     void testUSBNotifications();
     void testDialogButtons();
     void testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data();

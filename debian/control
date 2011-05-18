@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Vesa Halttunen <vesa.halttunen@nokia.com>
 Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.37),
-               libqmsystem2-dev, libresourceqt-dev, libcontextsubscriber-dev,
+               libqmsystem2-dev (>= 1.2.0), libresourceqt-dev, libcontextsubscriber-dev,
                libngf-dev, libxcomposite-dev, libxext-dev,
                libdbus-1-dev, libdbus-glib-1-dev, libglib2.0-dev,
                aegis-builder (>= 1.4), libduicontrolpanel-dev,

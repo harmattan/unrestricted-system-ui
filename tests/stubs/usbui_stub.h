@@ -16,6 +16,7 @@ class UsbUiStub : public StubBase {
   virtual void setRequestedUSBMode();
   virtual void setOviSuiteMode();
   virtual void setMassStorageMode();
+  virtual void setSDKMode();
   virtual void showDialog();
   virtual void showError(const QString &error);
   virtual void showNotification(int id);
@@ -51,6 +52,10 @@ void UsbUiStub::setOviSuiteMode() {
 
 void UsbUiStub::setMassStorageMode() {
   stubMethodEntered("setMassStorageMode");
+}
+
+void UsbUiStub::setSDKMode() {
+  stubMethodEntered("setSDKMode");
 }
 
 void UsbUiStub::showDialog() {
@@ -113,6 +118,10 @@ void UsbUi::setOviSuiteMode() {
 
 void UsbUi::setMassStorageMode() {
   gUsbUiStub->setMassStorageMode();
+}
+
+void UsbUi::setSDKMode() {
+  gUsbUiStub->setSDKMode();
 }
 
 void UsbUi::showDialog() {

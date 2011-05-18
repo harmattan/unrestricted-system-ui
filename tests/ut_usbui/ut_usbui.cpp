@@ -115,6 +115,7 @@ void Ut_UsbUi::testHideDialog_data()
     QTest::newRow("Disconnected") << (int)MeeGo::QmUSBMode::Disconnected;
     QTest::newRow("Ovi Suite") << (int)MeeGo::QmUSBMode::OviSuite;
     QTest::newRow("Mass Storage") << (int)MeeGo::QmUSBMode::MassStorage;
+    QTest::newRow("SDK") << (int)MeeGo::QmUSBMode::SDK;
 }
 
 void Ut_UsbUi::testHideDialog()
@@ -127,38 +128,42 @@ void Ut_UsbUi::testHideDialog()
     QCOMPARE(dialog_visible, false);
 }
 
+void Ut_UsbUi::testUSBNotifications_data()
+{
+    QTest::addColumn<int>("mode");
+    QTest::addColumn<QString>("body");
+
+    QTest::newRow("Ovi Suite") << (int)MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
+    QTest::newRow("Mass Storage") << (int)MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
+    QTest::newRow("SDK") << (int)MeeGo::QmUSBMode::SDK << "SDK mode in use";
+}
+
 void Ut_UsbUi::testUSBNotifications()
 {
-    // Init to some known state ...
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::OviSuite);
+    QFETCH(int, mode);
+    QFETCH(QString, body);
 
+    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
     QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_sync_active"));
-    QCOMPARE(m_subject->notification->isPublished(), true);
-
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::MassStorage);
-
-    QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), qtTrId("qtn_usb_storage_active"));
+    QCOMPARE(m_subject->notification->body(), body);
     QCOMPARE(m_subject->notification->isPublished(), true);
 }
 
 void Ut_UsbUi::testDialogButtons()
 {
-    // Go to connected state...
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
 
-    // Call the Ovi Suite callback function...
     m_subject->setOviSuiteMode();
     m_subject->setRequestedUSBMode();
-
     QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::OviSuite);
 
-    // Call the Mass Storage callback function...
     m_subject->setMassStorageMode();
     m_subject->setRequestedUSBMode();
-
     QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::MassStorage);
+
+    m_subject->setSDKMode();
+    m_subject->setRequestedUSBMode();
+    QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::SDK);
 }
 
 void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data()

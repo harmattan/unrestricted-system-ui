@@ -26,6 +26,7 @@
 #include <MBasicListItem>
 #include <MLabel>
 #include <MLocale>
+#include <MGConfItem>
 #include <QTimer>
 #include <QDateTime>
 
@@ -39,8 +40,9 @@ UsbUi::UsbUi(QObject *parent) : QObject(parent),
     requestedUSBMode(MeeGo::QmUSBMode::Undefined),
     locks(new MeeGo::QmLocks(this)),
 #endif
-    notification(0),
-    dialog(0)
+    notification(NULL),
+    dialog(NULL),
+    developerMode(new MGConfItem("/Meego/System/DeveloperMode", this))
 {
 #ifdef HAVE_QMSYSTEM
     connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
@@ -87,6 +89,16 @@ void UsbUi::showDialog()
         item->setTitle(qtTrId("qtn_usb_ovi_suite"));
         QObject::connect(item, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
         layout->addItem(item);
+
+        if (developerMode->value().toBool()) {
+            // Developer mode is enabled, so show the SDK option
+            item = new MBasicListItem(MBasicListItem::SingleTitle);
+            item->setStyleName("CommonBasicListItemInverted");
+            // TODO: should this be localizable?
+            item->setTitle("SDK");
+            QObject::connect(item, SIGNAL(clicked()), this, SLOT(setSDKMode()));
+            layout->addItem(item);
+        }
 
         MWidget *centralWidget = new MWidget;
         centralWidget->setLayout(layout);
@@ -140,6 +152,16 @@ void UsbUi::setMassStorageMode()
 #endif
 }
 
+void UsbUi::setSDKMode()
+{
+    hideDialog(true);
+
+#ifdef HAVE_QMSYSTEM
+    requestedUSBMode = MeeGo::QmUSBMode::SDK;
+    QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
+#endif
+}
+
 #ifdef HAVE_QMSYSTEM
 void UsbUi::setRequestedUSBMode()
 {
@@ -169,6 +191,7 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         break;
     case MeeGo::QmUSBMode::OviSuite:
     case MeeGo::QmUSBMode::MassStorage:
+    case MeeGo::QmUSBMode::SDK:
         // Hide the mode selection dialog and show a notification
         hideDialog(false);
         showNotification((int)mode);
@@ -197,6 +220,10 @@ void UsbUi::showNotification(int id)
     case MeeGo::QmUSBMode::MassStorage:
         //% "Mass storage in use"
         mode_text = qtTrId("qtn_usb_storage_active");
+        break;
+    case MeeGo::QmUSBMode::SDK:
+        // TODO: should this be localizable?
+        mode_text = "SDK mode in use";
         break;
 #endif
     default:
