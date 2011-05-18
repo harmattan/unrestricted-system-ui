@@ -1,3 +1,9 @@
+system-ui (0.20.69~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 18 May 2011 16:49:08 +0300
+
 system-ui (0.20.68-1) unstable; urgency=low
 
   * Fixes: NB#257065 - Dialog not destroyed when mode is set through automatic trigger
