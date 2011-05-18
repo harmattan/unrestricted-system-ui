@@ -110,7 +110,7 @@ void UsbUi::showDialog()
 
 void UsbUi::hideDialog(bool accept)
 {
-    if (dialog != NULL) {
+    if (dialog != NULL && dialog->isVisible()) {
         if (accept) {
             dialog->accept();
         } else {
@@ -163,16 +163,14 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         showDialog();
         break;
     case MeeGo::QmUSBMode::Disconnected:
-        // remove the previous notification
+        // Remove any previous notification and hide the dialog (if any)
         hideNotification();
-
-        // Hide the mode-selection dialog
-        if (dialog && dialog->isVisible()) {
-            hideDialog(false);
-        }
+        hideDialog(false);
         break;
     case MeeGo::QmUSBMode::OviSuite:
     case MeeGo::QmUSBMode::MassStorage:
+        // Hide the mode selection dialog and show a notification
+        hideDialog(false);
         showNotification((int)mode);
         break;
     case MeeGo::QmUSBMode::ChargingOnly:

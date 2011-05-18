@@ -27,6 +27,18 @@
 #include "usbmode_stub.h"
 #include "qmlocks_stub.h"
 
+static bool dialog_visible = false;
+
+void MDialog::appear(MSceneWindow::DeletionPolicy)
+{
+    dialog_visible = true;
+}
+
+void MSceneWindow::disappear()
+{
+    dialog_visible = false;
+}
+
 bool MNotification::publish()
 {
     return true;
@@ -66,18 +78,6 @@ void Ut_UsbUi::init()
 void Ut_UsbUi::cleanup()
 {
     delete m_subject;
-}
-
-static bool dialog_visible;
-
-void MDialog::appear(MSceneWindow::DeletionPolicy policy)
-{
-    Q_UNUSED (policy);
-    dialog_visible = true;
-}
-
-void MSceneWindow::disappear()
-{
     dialog_visible = false;
 }
 
@@ -87,33 +87,43 @@ void Ut_UsbUi::testConnections()
     QVERIFY(disconnect(m_subject->usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), m_subject, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode))));
 }
 
-void Ut_UsbUi::testShowHideDialog()
+void Ut_UsbUi::testShowDialog_data()
 {
+    QTest::addColumn<int>("mode");
+
+    QTest::newRow("Ask") << (int)MeeGo::QmUSBMode::Ask;
+    QTest::newRow("Mode request") << (int)MeeGo::QmUSBMode::ModeRequest;
+}
+
+void Ut_UsbUi::testShowDialog()
+{
+    QFETCH(int, mode);
+
     QSignalSpy spy(m_subject, SIGNAL(dialogShown()));
-
-    dialog_visible = false;
-
-    // Set mode to ask
-    m_subject->usbMode->setDefaultMode(MeeGo::QmUSBMode::Ask);
-
-    // Emit the ask signal...
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::Ask);
+    m_subject->usbMode->setDefaultMode((MeeGo::QmUSBMode::Mode)mode);
+    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
     QCOMPARE(dialog_visible, true);
     QVERIFY(!m_subject->dialog->isModal());
     QVERIFY(m_subject->dialog->isSystem());
     QCOMPARE(spy.count(), 1);
+}
 
-    // Emit the disconnect signal
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
-    QCOMPARE(dialog_visible, false);
+void Ut_UsbUi::testHideDialog_data()
+{
+    QTest::addColumn<int>("mode");
 
-    // Emit the moderequest signal
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::ModeRequest);
-    QCOMPARE(dialog_visible, true);
-    QCOMPARE(spy.count(), 2);
+    QTest::newRow("Disconnected") << (int)MeeGo::QmUSBMode::Disconnected;
+    QTest::newRow("Ovi Suite") << (int)MeeGo::QmUSBMode::OviSuite;
+    QTest::newRow("Mass Storage") << (int)MeeGo::QmUSBMode::MassStorage;
+}
 
-    // Emit the disconnect signal
-    m_subject->applyUSBMode(MeeGo::QmUSBMode::Disconnected);
+void Ut_UsbUi::testHideDialog()
+{
+    QFETCH(int, mode);
+
+    m_subject->usbMode->setDefaultMode(MeeGo::QmUSBMode::Ask);
+    m_subject->applyUSBMode(MeeGo::QmUSBMode::Ask);
+    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
     QCOMPARE(dialog_visible, false);
 }
 

@@ -43,7 +43,10 @@ private slots:
     // Test cases
 #ifdef HAVE_QMSYSTEM
     void testConnections();
-    void testShowHideDialog();
+    void testShowDialog_data();
+    void testShowDialog();
+    void testHideDialog_data();
+    void testHideDialog();
     void testUSBNotifications();
     void testDialogButtons();
     void testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data();
