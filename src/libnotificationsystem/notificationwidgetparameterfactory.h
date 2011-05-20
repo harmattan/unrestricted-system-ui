@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 
-
 #ifndef NOTIFICATIONWIDGETPARAMETERFACTORY_H_
 #define NOTIFICATIONWIDGETPARAMETERFACTORY_H_
 
@@ -29,7 +28,6 @@
 class NotificationWidgetParameterFactory
 {
 public:
-
     /*!
      * Returns the keyname of the icon id parameter
      */
@@ -43,7 +41,6 @@ public:
     static QString previewIconIdKey() {
         return QString("previewIconId");
     }
-
 
     /*!
      * Returns the keyname of the summary parameter
@@ -111,7 +108,7 @@ public:
      * \return the related NotificationParameter
      */
     static NotificationParameter createPreviewIconIdParameter(const QString &previewIconId) {
-        return NotificationParameter(iconIdKey(), QVariant(previewIconId));
+        return NotificationParameter(previewIconIdKey(), QVariant(previewIconId));
     }
 
     /*!
