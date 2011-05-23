@@ -1,6 +1,5 @@
-system-ui (0.20.71~1) unstable; urgency=low
+system-ui (0.20.71-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#256529 - Touch screen lock problem
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 23 May 2011 11:57:12 +0300
