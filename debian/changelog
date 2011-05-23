@@ -1,9 +1,8 @@
-system-ui (0.20.70~1) unstable; urgency=low
+system-ui (0.20.70-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#251111 - Operator name on status area is not vertically aligned with the other indicators next to it
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 19 May 2011 11:27:01 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 23 May 2011 11:56:49 +0300
 
 system-ui (0.20.69-1) unstable; urgency=low
 
