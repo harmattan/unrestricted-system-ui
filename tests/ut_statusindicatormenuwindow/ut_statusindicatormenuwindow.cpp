@@ -312,6 +312,12 @@ void Ut_StatusIndicatorMenuWindow::testWhenDeviceLockStateChangesFromUnlockedToL
     QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
 }
 
+void Ut_StatusIndicatorMenuWindow::testWhenTouchScreenLockedMenuIsHidden()
+{
+    statusIndicatorMenuWindow->makeVisible();
+    statusIndicatorMenuWindow->setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::TouchAndKeyboard, MeeGo::QmLocks::Locked);
+    QCOMPARE(statusIndicatorMenuWindow->isVisible(), false);
+}
 #endif
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuWindow)

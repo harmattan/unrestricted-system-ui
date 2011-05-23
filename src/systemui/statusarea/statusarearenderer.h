@@ -85,12 +85,6 @@ private slots:
     void setSceneRender(MeeGo::QmDisplayState::DisplayState state);
 #endif
 
-signals:
-    /*!
-     * Signal that status indicator menu is visible
-     */
-    void statusIndicatorMenuVisibilityChanged(bool visible);
-
 private:
     //! Handles situation when WM window gets unavailable
     void wmWindowUnavailable();

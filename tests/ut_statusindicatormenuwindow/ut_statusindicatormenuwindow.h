@@ -66,6 +66,7 @@ private slots:
     void testWhenDeviceUnlockedMenuIsVisible();
     void testWhenDeviceLockStateChangesFromLockedToUnlockedWindowActivates();
     void testWhenDeviceLockStateChangesFromUnlockedToLockedWindowDeactivates();
+    void testWhenTouchScreenLockedMenuIsHidden();
 #endif
 };
 

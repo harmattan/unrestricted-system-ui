@@ -128,15 +128,24 @@ void StatusIndicatorMenuWindow::makeVisible()
 #ifdef HAVE_QMSYSTEM
 void StatusIndicatorMenuWindow::setWindowStateAccordingToDeviceLockState(MeeGo::QmLocks::Lock what, MeeGo::QmLocks::State how)
 {
-    if (what == MeeGo::QmLocks::Device) {
+    switch (what) {
+    case MeeGo::QmLocks::Device:
         if (how == MeeGo::QmLocks::Unlocked) {
             deviceLocked = false;
         } else {
             deviceLocked = true;
             if (isVisible()) {
-                hide();
+                hideWindow();
             }
         }
+        break;
+    case MeeGo::QmLocks::TouchAndKeyboard:
+        if (how == MeeGo::QmLocks::Locked && isVisible()) {
+            hideWindow();
+        }
+        break;
+    default:
+        break;
     }
 }
 

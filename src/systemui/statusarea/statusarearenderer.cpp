@@ -47,7 +47,6 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     scene->setObjectName("statusareascene");
     scene->addItem(statusArea);
     statusArea->setObjectName("statusarea");
-    connect(this, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusArea, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
 
     // Get signaled when the scene changes
     connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(accumulateSceneChanges(QList<QRectF>)));

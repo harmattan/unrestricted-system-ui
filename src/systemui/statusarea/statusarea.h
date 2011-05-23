@@ -45,10 +45,6 @@ public:
      */
     virtual ~StatusArea();
 
-signals:
-    //! Signal for status indicator menu visibility changes
-    void statusIndicatorMenuVisibilityChanged(bool);
-
 private:
 #ifdef UNIT_TEST
     friend class Ut_StatusArea;

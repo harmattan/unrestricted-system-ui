@@ -87,7 +87,6 @@ Sysuid::Sysuid(QObject* parent) :
 
     // Create a status indicator menu
     statusIndicatorMenuBusinessLogic = new StatusIndicatorMenuBusinessLogic(this);
-    connect(statusIndicatorMenuBusinessLogic, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), statusAreaRenderer, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)));
     connect(statusIndicatorMenuBusinessLogic, SIGNAL(statusIndicatorMenuVisibilityChanged(bool)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
     new StatusIndicatorMenuAdaptor(statusIndicatorMenuBusinessLogic);
     bus.registerService("com.meego.core.MStatusIndicatorMenu");
