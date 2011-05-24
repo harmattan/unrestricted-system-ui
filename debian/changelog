@@ -1,3 +1,9 @@
+system-ui (0.20.74~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Tue, 24 May 2011 14:40:06 +0300
+
 system-ui (0.20.73-1) unstable; urgency=low
 
   * Fixes: NB#253865 - Weirdly behaving system banners in call-ui
