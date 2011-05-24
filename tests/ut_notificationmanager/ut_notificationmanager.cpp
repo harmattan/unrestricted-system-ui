@@ -1041,6 +1041,59 @@ void Ut_NotificationManager::testWaitQueueTimer()
     QCOMPARE(timerTimeouts.count(), 2);
 }
 
+void Ut_NotificationManager::testRemoveNotificationRelaysNotificationFromWaitQueue()
+{
+    // Create notification manager with relay interval
+    delete manager;
+    manager = new TestNotificationManager(3000);
+
+    // Create signal spy to fake a notification sink
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+    QSignalSpy removedSpy(manager, SIGNAL(notificationRemoved(uint)));
+
+    catchTimerTimeouts = true;
+
+    // Add two notifications to the notification manager.
+    // First notification should pass through.
+    // Second is left in wait queue
+    NotificationParameters parameters0;
+    parameters0.add(IMAGE, "icon0");
+    uint id0 = manager->addNotification(0, parameters0);
+
+    NotificationParameters parameters1;
+    parameters1.add(BODY, "body1");
+    uint id1 = manager->addNotification(0, parameters1);
+
+    // Check that notification sink was signaled with first notification.
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), id0);
+
+    // Check that timer was started.
+    QCOMPARE(timerTimeouts.count(), 1);
+    QCOMPARE(timerTimeouts.at(0), 3000);
+
+    // Remove current notification
+    manager->removeNotification(id0);
+
+    // Check that the notification was removed
+    QCOMPARE(removedSpy.count(), 1);
+    QCOMPARE(qvariant_cast<uint>(removedSpy.takeFirst().at(0)), id0);
+
+    // Check that notification sink was signaled with second notification.
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), id1);
+
+    // Check that timer was started again.
+    QCOMPARE(timerTimeouts.count(), 2);
+    QCOMPARE(timerTimeouts.at(1), 3000);
+
+}
+
+
 void Ut_NotificationManager::testRemoveNotificationsInGroup()
 {
     QSignalSpy removeSpy(manager, SIGNAL(notificationRemoved(uint)));

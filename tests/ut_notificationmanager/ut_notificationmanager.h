@@ -110,6 +110,8 @@ private slots:
     void testDroppingNotificationsIfQueueIsFull();
     // Test that wait queue timer relays notifications from the wait queue
     void testWaitQueueTimer();
+    // Test that removing the current notification relays notifications from the wait queue
+    void testRemoveNotificationRelaysNotificationFromWaitQueue();
     // Test removing notifications in a group
     void testRemoveNotificationsInGroup();
     // Test querying notification ids

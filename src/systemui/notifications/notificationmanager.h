@@ -315,6 +315,9 @@ private:
     //! Indicator whether notification is currently being processed by sinks or not
     bool notificationInProgress;
 
+    //! The id of the notification currently being processed
+    uint notificationIdInProgress;
+
     //! Time interval in milliseconds between sending notifications from this NotificationManager
     int relayInterval;
 

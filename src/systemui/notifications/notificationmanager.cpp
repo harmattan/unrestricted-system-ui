@@ -55,6 +55,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     groupContainer(),
     maxWaitQueueSize(maxWaitQueueSize),
     notificationInProgress(false),
+    notificationIdInProgress(0),
     relayInterval(relayInterval),
     context(new ContextFrameworkContext()),
     lastUsedNotificationUserId(0),
@@ -330,6 +331,14 @@ bool NotificationManager::removeNotification(uint notificationId)
         } else {
             // Inform the sinks about the removal
             emit notificationRemoved(notificationId);
+
+            if (notificationInProgress && notificationId == notificationIdInProgress) {
+                // The notification being removed is currently displayed
+                // cancel the notification relay timeout and relay the next
+                // notification
+                waitQueueTimer.stop();
+                relayNextNotification();
+            }
         }
 
         return true;
@@ -540,6 +549,7 @@ void NotificationManager::submitNotification(const Notification &notification)
 
         if (relayInterval != 0) {
             notificationInProgress = true;
+            notificationIdInProgress = notification.notificationId();
             if (relayInterval > 0) {
                 waitQueueTimer.start(relayInterval);
             }

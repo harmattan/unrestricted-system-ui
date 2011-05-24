@@ -888,4 +888,29 @@ void Ut_MCompositorNotificationSink::updateNotificationDoesNotCreateWindowIfBann
     QCOMPARE(mWindowSetVisibleValue, false);
 }
 
+void Ut_MCompositorNotificationSink::testCurrentBannerDoneDoesntRemoveOtherBanners()
+{
+    // Add a notification and display its banner
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0);
+    emitDisplayEntered();
+    MBanner* banner = static_cast<MBanner*>(gMSceneWindowsAppeared.at(0));
+
+    // Simulate a case when a new banner with the same id is created
+    // before the previous banner disappears
+    sink->idToBanner.take(0);
+    sink->notificationIds.remove(0);
+    notificationManager->nextAvailableNotificationID = 0;
+    notificationManager->addNotification(0, parameters0);
+
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(banner);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    // Verify that the initial banner disappeared but the new one was
+    // not removed from the "id to banner" mapping.
+    QVERIFY(sink->idToBanner.value(0) != NULL);
+}
+
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

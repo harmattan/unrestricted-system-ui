@@ -134,6 +134,7 @@ private slots:
     void testNotificationPreviewsDisabledForApplication_data();
     void testNotificationPreviewsDisabledForApplication();
     void updateNotificationDoesNotCreateWindowIfBannerNotOnDisplay();
+    void testCurrentBannerDoneDoesntRemoveOtherBanners();
 
 private:
     const QRegion calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window);

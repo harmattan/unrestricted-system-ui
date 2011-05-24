@@ -176,8 +176,14 @@ void MCompositorNotificationSink::disappearCurrentBanner()
 void MCompositorNotificationSink::currentBannerDone()
 {
     if (currentBanner != NULL) {
-        int id = currentBanner->property("notificationId").toInt();
-        idToBanner.remove(id);
+        // Do not use the notification id associated with the banner
+        // to remove the banner from "id to banner mapping" since the
+        // original notification may have already been removed and a
+        // new notification with the same id may have already been added.
+        int id = idToBanner.key(currentBanner, -1);
+        if (id != -1) {
+            idToBanner.remove(id);
+        }
         currentBanner = NULL;
     }
 
