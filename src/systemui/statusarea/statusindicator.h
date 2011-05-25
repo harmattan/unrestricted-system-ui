@@ -210,6 +210,7 @@ private:
     ContextItem *connectionType;
     ContextItem *connectionState;
     ContextItem *packetData;
+    ContextItem *wlanEnabled;
 
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicator;

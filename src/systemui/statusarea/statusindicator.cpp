@@ -195,6 +195,9 @@ PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationCont
     packetData = createContextItem(context, "Cellular.PacketData");
     connect(packetData, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
+    wlanEnabled = createContextItem(context, "System.WlanEnabled");
+    connect(wlanEnabled, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
     setNetworkType();
 }
 
@@ -206,7 +209,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkAvailability(bool available)
 {
     QString state = connectionState->value().toString(); // disconnected connecting connected
     if (!available && (state == "disconnected")) {
-        setStyleNameAndUpdate();
+        setStyleNameAndUpdate(metaObject()->className());
     } else {
         setNetworkType();
     }
@@ -218,18 +221,19 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     QString state = connectionState->value().toString(); // disconnected connecting connected
     QString connection = connectionType->value().toString(); // GPRS WLAN
     bool data = packetData->value().toBool();
+    bool wlanOn = wlanEnabled->value().toBool();
 
     setValue(0);
 
     if ((state == "disconnected") && !data) {
-        setStyleNameAndUpdate(); // hide indicator if in disconnected state and no packet data traffic
+        setStyleNameAndUpdate(metaObject()->className()); // hide indicator if in disconnected state and no packet data traffic
         return; // no further actions needed
     }
 
     QString postFix;
     QString postFixPacketData;
 
-    if ((connection == "WLAN") && (state != "disconnected")) {
+    if ((connection == "WLAN") && (state != "disconnected") && wlanOn) {
         postFix = "WLAN";
     }
     if (dataTechnology == "gprs") {
@@ -245,21 +249,26 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     // if wlan connected and packet data active e.g. when sending mms
     if (data) {
         postFix += postFixPacketData;
-        postFix += "Active";
-        animateIfPossible = ((connection == "WLAN") && (state != "disconnected"));
+        if (!postFix.isEmpty()) {
+            postFix += "Active";
+        }
+        animateIfPossible = ((connection == "WLAN") && (state != "disconnected") && wlanOn);
     } else {
         if (postFix.isEmpty()) {
             postFix = postFixPacketData;
         }
-        if (state == "connecting") {
+        if (state == "connecting" && !postFix.isEmpty()) {
             postFix += "Connecting";
             animateIfPossible = true;
         } else {
             animateIfPossible = false;
         }
     }
-
-    setStyleNameAndUpdate(metaObject()->className() + postFix);
+    if (!postFix.isEmpty()) {
+        setStyleNameAndUpdate(metaObject()->className() + postFix);
+    } else {
+        setStyleNameAndUpdate(metaObject()->className());
+    }
 
     updateAnimationStatus();
 }

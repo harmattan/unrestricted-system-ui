@@ -61,6 +61,7 @@ private slots:
     void testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitted();
     void testPhoneNetworkTypeStyleNameWhenSystemOnlineName_data();
     void testPhoneNetworkTypeStyleNameWhenSystemOnlineName();
+    void testPhoneNetworkAvailabilityChanged_data();
     void testPhoneNetworkAvailabilityChanged();
     void testBattery();
     void testAlarm();

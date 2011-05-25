@@ -137,14 +137,15 @@ void Ut_StatusIndicator::testContextItemSubscribe()
     // When the application becomes not visible, the context item updates
     // should be unsubscribed from
     m_subject->exitDisplayEvent();
-    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 4);
+    QCOMPARE(gContextItemStub->stubCallCount("unsubscribe"), 5);
 
     testContextItems["Internet.NetworkType"]->setValue("WLAN");
+    testContextItems["System.WlanEnabled"]->setValue(true);
 
     // When the application becomes not visible, the context item updates
     // should be subscribed to
     m_subject->enterDisplayEvent();
-    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 4);
+    QCOMPARE(gContextItemStub->stubCallCount("subscribe"), 5);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(m_subject->styleName().contains("WLAN"), QBool(true));
 }
@@ -156,14 +157,14 @@ void Ut_StatusIndicator::testContextItemDeletion()
 
     // There should be a total of four items constructed using the
     // StatusIndicator::createContextItem() call
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 4);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemConstructor"), 5);
 
     delete m_subject;
     m_subject = NULL;
 
     // There should be a total of four items deleted by the
     // StatusIndicator destructor
-    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 4);
+    QCOMPARE(gContextItemStub->stubCallCount("ContextItemDestructor"), 5);
 }
 
 void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
@@ -238,43 +239,71 @@ void Ut_StatusIndicator::testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitt
 void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName_data()
 {
     QTest::addColumn<bool>("PacketDataActive");
+    QTest::addColumn<bool>("WlanEnabled");
     QTest::addColumn<QString>("CellularDataTechnology");
     QTest::addColumn<QString>("InternetConnectionType");
     QTest::addColumn<QString>("InternetConnectionState");
     QTest::addColumn<QString>("ExpectedObjectNamePostfix");
 
-    QTest::newRow("gprs connection type and 2g tech not active") << false << QString("gprs") << QString("GPRS") << QString("connected") << QString("2G");
-    QTest::newRow("gprs connection type and 2g tech connecting") << false << QString("gprs") << QString("GPRS") << QString("connecting") << QString("2GConnecting");
-    QTest::newRow("gprs connection type and 2g tech active") << true << QString("gprs") << QString("GPRS") << QString("connected") << QString("2GActive");
-    QTest::newRow("gprs connection type and 2g tech active, internet disconnected") << true << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("2GActive");
-    QTest::newRow("gprs connection type and 2g tech not active, internet disconnected") << false << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("");
-    QTest::newRow("gprs connection type and 25g tech not active") << false << QString("egprs") << QString("GPRS") << QString("connected") << QString("25G");
-    QTest::newRow("gprs connection type and 25g tech connecting") << false << QString("egprs") << QString("GPRS") << QString("connecting") << QString("25GConnecting");
-    QTest::newRow("gprs connection type and 25g tech active") << true << QString("egprs") << QString("GPRS") << QString("connected") << QString("25GActive");
-    QTest::newRow("gprs connection type and 25g tech active, internet disconnected") << true << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("25GActive");
-    QTest::newRow("gprs connection type and 25g tech not active, internet disconnected") << false << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("");
-    QTest::newRow("gprs connection type and 3g tech not active") << false << QString("umts") << QString("GPRS") << QString("connected") << QString("3G");
-    QTest::newRow("gprs connection type and 3g tech connecting") << false << QString("umts") << QString("GPRS") << QString("connecting") << QString("3GConnecting");
-    QTest::newRow("gprs connection type and 3g tech active") << true << QString("umts") << QString("GPRS") << QString("connected") << QString("3GActive");
-    QTest::newRow("gprs connection type and 3g tech active, internet disconnected") << true << QString("umts") << QString("GPRS") << QString("disconnected") << QString("3GActive");
-    QTest::newRow("gprs connection type and 3g tech not active, internet disconnected") << false << QString("umts") << QString("GPRS") << QString("disconnected") << QString("");
-    QTest::newRow("gprs connection type and 35g tech not active") << false << QString("hspa") << QString("GPRS") << QString("connected") << QString("35G");
-    QTest::newRow("gprs connection type and 35g tech connecting") << false << QString("hspa") << QString("GPRS") << QString("connecting") << QString("35GConnecting");
-    QTest::newRow("gprs connection type and 35g tech active") << true << QString("hspa") << QString("GPRS") << QString("connected") << QString("35GActive");
-    QTest::newRow("gprs connection type and 35g tech active, internet disconnected") << true << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("35GActive");
-    QTest::newRow("gprs connection type and 35g tech not active, internet disconnected") << false << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("");
-    QTest::newRow("wlan connection type and wlan tech not active") << false << QString("") << QString("WLAN") << QString("connected") << QString("WLAN");
-    QTest::newRow("wlan connection type and wlan tech connecting") << false << QString("") << QString("WLAN") << QString("connecting") << QString("WLANConnecting");
-    QTest::newRow("wlan connected and 2g packet data active") << true << QString("gprs") << QString("WLAN") << QString("connected") << QString("WLAN2GActive");
-    QTest::newRow("wlan connected and 25g packet data active") << true << QString("egprs") << QString("WLAN") << QString("connected") << QString("WLAN25GActive");
-    QTest::newRow("wlan connected and 3g packet data active") << true << QString("umts") << QString("WLAN") << QString("connected") << QString("WLAN3GActive");
-    QTest::newRow("wlan connected and 35g packet data active") << true << QString("hspa") << QString("WLAN") << QString("connected") << QString("WLAN35GActive");
+    QTest::newRow("gprs connection type and 2g tech not active, wlan disabled") << false << false << QString("gprs") << QString("GPRS") << QString("connected") << QString("2G");
+    QTest::newRow("gprs connection type and 2g tech connecting, wlan disabled") << false << false << QString("gprs") << QString("GPRS") << QString("connecting") << QString("2GConnecting");
+    QTest::newRow("gprs connection type and 2g tech active, wlan disabled") << true << false << QString("gprs") << QString("GPRS") << QString("connected") << QString("2GActive");
+    QTest::newRow("gprs connection type and 2g tech active, internet disconnected, wlan disabled") << true << false << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("2GActive");
+    QTest::newRow("gprs connection type and 2g tech not active, internet disconnected, wlan disabled") << false << false << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 25g tech not active, wlan disabled") << false << false << QString("egprs") << QString("GPRS") << QString("connected") << QString("25G");
+    QTest::newRow("gprs connection type and 25g tech connecting, wlan disabled") << false << false << QString("egprs") << QString("GPRS") << QString("connecting") << QString("25GConnecting");
+    QTest::newRow("gprs connection type and 25g tech active, wlan disabled") << true << false << QString("egprs") << QString("GPRS") << QString("connected") << QString("25GActive");
+    QTest::newRow("gprs connection type and 25g tech active, internet disconnected, wlan disabled") << true << false << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("25GActive");
+    QTest::newRow("gprs connection type and 25g tech not active, internet disconnected, wlan disabled") << false << false << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 3g tech not active, wlan disabled") << false << false << QString("umts") << QString("GPRS") << QString("connected") << QString("3G");
+    QTest::newRow("gprs connection type and 3g tech connecting, wlan disabled") << false << false << QString("umts") << QString("GPRS") << QString("connecting") << QString("3GConnecting");
+    QTest::newRow("gprs connection type and 3g tech active, wlan disabled") << true << false << QString("umts") << QString("GPRS") << QString("connected") << QString("3GActive");
+    QTest::newRow("gprs connection type and 3g tech active, internet disconnected, wlan disabled") << true << false << QString("umts") << QString("GPRS") << QString("disconnected") << QString("3GActive");
+    QTest::newRow("gprs connection type and 3g tech not active, internet disconnected, wlan disabled") << false << false << QString("umts") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 35g tech not active, wlan disabled") << false << false << QString("hspa") << QString("GPRS") << QString("connected") << QString("35G");
+    QTest::newRow("gprs connection type and 35g tech connecting, wlan disabled") << false << false << QString("hspa") << QString("GPRS") << QString("connecting") << QString("35GConnecting");
+    QTest::newRow("gprs connection type and 35g tech active, wlan disabled") << true << false << QString("hspa") << QString("GPRS") << QString("connected") << QString("35GActive");
+    QTest::newRow("gprs connection type and 35g tech active, internet disconnected, wlan disabled") << true << false << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("35GActive");
+    QTest::newRow("gprs connection type and 35g tech not active, internet disconnected, wlan disabled") << false << false << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("wlan connection type and wlan tech not active, wlan disabled") << false << false << QString("") << QString("WLAN") << QString("connected") << QString("");
+    QTest::newRow("wlan connection type and wlan tech connecting, wlan disabled") << false << false << QString("") << QString("WLAN") << QString("connecting") << QString("");
+    QTest::newRow("wlan connected and 2g packet data active, wlan disabled") << true << false << QString("gprs") << QString("WLAN") << QString("connected") << QString("2GActive");
+    QTest::newRow("wlan connected and 25g packet data active, wlan disabled") << true << false << QString("egprs") << QString("WLAN") << QString("connected") << QString("25GActive");
+    QTest::newRow("wlan connected and 3g packet data active, wlan disabled") << true << false << QString("umts") << QString("WLAN") << QString("connected") << QString("3GActive");
+    QTest::newRow("wlan connected and 35g packet data active, wlan disabled") << true << false << QString("hspa") << QString("WLAN") << QString("connected") << QString("35GActive");
 
+    QTest::newRow("gprs connection type and 2g tech not active, wlan enabled") << false << true << QString("gprs") << QString("GPRS") << QString("connected") << QString("2G");
+    QTest::newRow("gprs connection type and 2g tech connecting, wlan enabled") << false << true << QString("gprs") << QString("GPRS") << QString("connecting") << QString("2GConnecting");
+    QTest::newRow("gprs connection type and 2g tech active, wlan enabled") << true << true << QString("gprs") << QString("GPRS") << QString("connected") << QString("2GActive");
+    QTest::newRow("gprs connection type and 2g tech active, internet disconnected, wlan enabled") << true << true << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("2GActive");
+    QTest::newRow("gprs connection type and 2g tech not active, internet disconnected, wlan enabled") << false << true << QString("gprs") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 25g tech not active, wlan enabled") << false << true << QString("egprs") << QString("GPRS") << QString("connected") << QString("25G");
+    QTest::newRow("gprs connection type and 25g tech connecting, wlan enabled") << false << true << QString("egprs") << QString("GPRS") << QString("connecting") << QString("25GConnecting");
+    QTest::newRow("gprs connection type and 25g tech active, wlan enabled") << true << true << QString("egprs") << QString("GPRS") << QString("connected") << QString("25GActive");
+    QTest::newRow("gprs connection type and 25g tech active, internet disconnected, wlan enabled") << true << true << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("25GActive");
+    QTest::newRow("gprs connection type and 25g tech not active, internet disconnected, wlan enabled") << false << true << QString("egprs") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 3g tech not active, wlan enabled") << false << true << QString("umts") << QString("GPRS") << QString("connected") << QString("3G");
+    QTest::newRow("gprs connection type and 3g tech connecting, wlan enabled") << false << true << QString("umts") << QString("GPRS") << QString("connecting") << QString("3GConnecting");
+    QTest::newRow("gprs connection type and 3g tech active, wlan enabled") << true << true << QString("umts") << QString("GPRS") << QString("connected") << QString("3GActive");
+    QTest::newRow("gprs connection type and 3g tech active, internet disconnected, wlan enabled") << true << true << QString("umts") << QString("GPRS") << QString("disconnected") << QString("3GActive");
+    QTest::newRow("gprs connection type and 3g tech not active, internet disconnected, wlan enabled") << false << true << QString("umts") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("gprs connection type and 35g tech not active, wlan enabled") << false << true << QString("hspa") << QString("GPRS") << QString("connected") << QString("35G");
+    QTest::newRow("gprs connection type and 35g tech connecting, wlan enabled") << false << true << QString("hspa") << QString("GPRS") << QString("connecting") << QString("35GConnecting");
+    QTest::newRow("gprs connection type and 35g tech active, wlan enabled") << true << true << QString("hspa") << QString("GPRS") << QString("connected") << QString("35GActive");
+    QTest::newRow("gprs connection type and 35g tech active, internet disconnected, wlan enabled") << true << true << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("35GActive");
+    QTest::newRow("gprs connection type and 35g tech not active, internet disconnected, wlan enabled") << false << true << QString("hspa") << QString("GPRS") << QString("disconnected") << QString("");
+    QTest::newRow("wlan connection type and wlan tech not active, wlan enabled") << false << true << QString("") << QString("WLAN") << QString("connected") << QString("WLAN");
+    QTest::newRow("wlan connection type and wlan tech connecting, wlan enabled") << false << true << QString("") << QString("WLAN") << QString("connecting") << QString("WLANConnecting");
+    QTest::newRow("wlan connected and 2g packet data active, wlan enabled") << true << true << QString("gprs") << QString("WLAN") << QString("connected") << QString("WLAN2GActive");
+    QTest::newRow("wlan connected and 25g packet data active, wlan enabled") << true << true << QString("egprs") << QString("WLAN") << QString("connected") << QString("WLAN25GActive");
+    QTest::newRow("wlan connected and 3g packet data active, wlan enabled") << true << true << QString("umts") << QString("WLAN") << QString("connected") << QString("WLAN3GActive");
+    QTest::newRow("wlan connected and 35g packet data active, wlan enabled") << true << true << QString("hspa") << QString("WLAN") << QString("connected") << QString("WLAN35GActive");
 }
 
 void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName()
 {
     QFETCH(bool, PacketDataActive);
+    QFETCH(bool, WlanEnabled);
     QFETCH(QString, CellularDataTechnology);
     QFETCH(QString, InternetConnectionType);
     QFETCH(QString, InternetConnectionState);
@@ -286,43 +315,53 @@ void Ut_StatusIndicator::testPhoneNetworkTypeStyleNameWhenSystemOnlineName()
     testContextItems["Cellular.DataTechnology"]->setValue(CellularDataTechnology);
     testContextItems["Internet.NetworkType"]->setValue(InternetConnectionType);
     testContextItems["Internet.NetworkState"]->setValue(InternetConnectionState);
+    testContextItems["System.WlanEnabled"]->setValue(WlanEnabled);
 
     if (!ExpectedObjectNamePostfix.isEmpty()) {
-        QCOMPARE(m_subject->styleName(), QString("PhoneNetworkTypeStatusIndicator") + ExpectedObjectNamePostfix);
+        QCOMPARE(m_subject->styleName(), QString(m_subject->metaObject()->className() + ExpectedObjectNamePostfix));
     } else {
-        QCOMPARE(m_subject->styleName(), ExpectedObjectNamePostfix);
+        QCOMPARE(m_subject->styleName(), QString(m_subject->metaObject()->className()));
     }
+}
+
+void Ut_StatusIndicator::testPhoneNetworkAvailabilityChanged_data()
+{
+    QTest::addColumn<QString>("NetworkState");
+    QTest::addColumn<bool>("WlanEnabled");
+    QTest::addColumn<bool>("NetworkAvailability");
+    QTest::addColumn<bool>("StyleNameEmpty");
+
+    QTest::newRow("network disconnected, wlan enabled, network changed unavailable") << QString("disconnected") << true << false << true;
+    QTest::newRow("network connected, wlan enabled, network changed unavailable") << QString("connected") << true << false << false;
+    QTest::newRow("network connecting, wlan enabled, network changed unavailable") << QString("connecting") << true << false << false;
+    QTest::newRow("network disconnected, wlan enabled, network changed available") << QString("disconnected") << true << true << true;
+    QTest::newRow("network connected, wlan enabled, network changed available") << QString("connected") << true << true << false;
+    QTest::newRow("network connecting, wlan enabled, network changed available") << QString("connecting") << true << true << false;
+
+    QTest::newRow("network disconnected, wlan disabled, network changed unavailable") << QString("disconnected") << false << false << true;
+    QTest::newRow("network connected, wlan disabled, network changed unavailable") << QString("connected") << false << false << true;
+    QTest::newRow("network connecting, wlan disabled, network changed unavailable") << QString("connecting") << false << false << true;
+    QTest::newRow("network disconnected, wlan disabled, network changed available") << QString("disconnected") << false << true << true;
+    QTest::newRow("network connected, wlan disabled, network changed available") << QString("connected") << false << true << true;
+    QTest::newRow("network connecting, wlan disabled, network changed available") << QString("connecting") << false << true << true;
 }
 
 void Ut_StatusIndicator::testPhoneNetworkAvailabilityChanged()
 {
+    QFETCH(QString, NetworkState);
+    QFETCH(bool, WlanEnabled);
+    QFETCH(bool, NetworkAvailability);
+    QFETCH(bool, StyleNameEmpty);
+
     m_subject = new PhoneNetworkTypeStatusIndicator(*testContext);
 
     PhoneNetworkTypeStatusIndicator* networkTypeIndicator = qobject_cast<PhoneNetworkTypeStatusIndicator*>(m_subject);
 
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
-    networkTypeIndicator->setNetworkAvailability(false);
-    QCOMPARE(networkTypeIndicator->styleName(), QString(""));
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
-    networkTypeIndicator->setNetworkAvailability(false);
-    QVERIFY(networkTypeIndicator->styleName() != QString(""));
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
-    networkTypeIndicator->setNetworkAvailability(false);
-    QVERIFY(networkTypeIndicator->styleName() != QString(""));
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("disconnected"));
-    networkTypeIndicator->setNetworkAvailability(true);
-    QCOMPARE(networkTypeIndicator->styleName(), QString(""));
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connected"));
-    networkTypeIndicator->setNetworkAvailability(true);
-    QVERIFY(networkTypeIndicator->styleName() != QString(""));
-
-    testContextItems["Internet.NetworkState"]->setValue(QVariant("connecting"));
-    networkTypeIndicator->setNetworkAvailability(true);
-    QVERIFY(networkTypeIndicator->styleName() != QString(""));
+    testContextItems["Internet.NetworkState"]->setValue(QVariant(NetworkState));
+    testContextItems["System.WlanEnabled"]->setValue(QVariant(WlanEnabled));
+    testContextItems["Internet.NetworkType"]->setValue(QVariant("WLAN"));
+    networkTypeIndicator->setNetworkAvailability(NetworkAvailability);
+    QVERIFY((networkTypeIndicator->styleName() == networkTypeIndicator->metaObject()->className()) == StyleNameEmpty);
 }
 
 void Ut_StatusIndicator::testBattery()

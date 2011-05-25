@@ -72,11 +72,6 @@ class PresenceStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(PresenceStatusIndicatorModel)
 };
 
-class InternetConnectionStatusIndicatorModel : public StatusIndicatorModel
-{
-    M_MODEL(InternetConnectionStatusIndicatorModel)
-};
-
 class InputMethodStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(InputMethodStatusIndicatorModel)
