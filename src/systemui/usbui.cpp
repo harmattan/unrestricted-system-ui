@@ -185,10 +185,6 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         showDialog();
         break;
     case MeeGo::QmUSBMode::Disconnected:
-        // Remove any previous notification and hide the dialog (if any)
-        hideNotification();
-        hideDialog(false);
-        break;
     case MeeGo::QmUSBMode::OviSuite:
     case MeeGo::QmUSBMode::MassStorage:
     case MeeGo::QmUSBMode::SDK:
@@ -224,6 +220,10 @@ void UsbUi::showNotification(int id)
     case MeeGo::QmUSBMode::SDK:
         // TODO: should this be localizable?
         mode_text = "SDK mode in use";
+        break;
+    case MeeGo::QmUSBMode::Disconnected:
+        //% "USB cable disconnected"
+        mode_text = qtTrId("qtn_usb_disconnected");
         break;
 #endif
     default:

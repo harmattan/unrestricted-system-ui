@@ -87,21 +87,23 @@ void Ut_UsbUi::testConnections()
     QVERIFY(disconnect(m_subject->usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), m_subject, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode))));
 }
 
+Q_DECLARE_METATYPE(MeeGo::QmUSBMode::Mode)
+
 void Ut_UsbUi::testShowDialog_data()
 {
-    QTest::addColumn<int>("mode");
+    QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
 
-    QTest::newRow("Ask") << (int)MeeGo::QmUSBMode::Ask;
-    QTest::newRow("Mode request") << (int)MeeGo::QmUSBMode::ModeRequest;
+    QTest::newRow("Ask") << MeeGo::QmUSBMode::Ask;
+    QTest::newRow("Mode request") << MeeGo::QmUSBMode::ModeRequest;
 }
 
 void Ut_UsbUi::testShowDialog()
 {
-    QFETCH(int, mode);
+    QFETCH(MeeGo::QmUSBMode::Mode, mode);
 
     QSignalSpy spy(m_subject, SIGNAL(dialogShown()));
-    m_subject->usbMode->setDefaultMode((MeeGo::QmUSBMode::Mode)mode);
-    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
+    m_subject->usbMode->setDefaultMode(mode);
+    m_subject->applyUSBMode(mode);
     QCOMPARE(dialog_visible, true);
     QVERIFY(!m_subject->dialog->isModal());
     QVERIFY(m_subject->dialog->isSystem());
@@ -110,40 +112,41 @@ void Ut_UsbUi::testShowDialog()
 
 void Ut_UsbUi::testHideDialog_data()
 {
-    QTest::addColumn<int>("mode");
+    QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
 
-    QTest::newRow("Disconnected") << (int)MeeGo::QmUSBMode::Disconnected;
-    QTest::newRow("Ovi Suite") << (int)MeeGo::QmUSBMode::OviSuite;
-    QTest::newRow("Mass Storage") << (int)MeeGo::QmUSBMode::MassStorage;
-    QTest::newRow("SDK") << (int)MeeGo::QmUSBMode::SDK;
+    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected;
+    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite;
+    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage;
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK;
 }
 
 void Ut_UsbUi::testHideDialog()
 {
-    QFETCH(int, mode);
+    QFETCH(MeeGo::QmUSBMode::Mode, mode);
 
     m_subject->usbMode->setDefaultMode(MeeGo::QmUSBMode::Ask);
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Ask);
-    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
+    m_subject->applyUSBMode(mode);
     QCOMPARE(dialog_visible, false);
 }
 
 void Ut_UsbUi::testUSBNotifications_data()
 {
-    QTest::addColumn<int>("mode");
+    QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
     QTest::addColumn<QString>("body");
 
-    QTest::newRow("Ovi Suite") << (int)MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
-    QTest::newRow("Mass Storage") << (int)MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
-    QTest::newRow("SDK") << (int)MeeGo::QmUSBMode::SDK << "SDK mode in use";
+    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << qtTrId("qtn_usb_disconnected");
+    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
+    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << "SDK mode in use";
 }
 
 void Ut_UsbUi::testUSBNotifications()
 {
-    QFETCH(int, mode);
+    QFETCH(MeeGo::QmUSBMode::Mode, mode);
     QFETCH(QString, body);
 
-    m_subject->applyUSBMode((MeeGo::QmUSBMode::Mode)mode);
+    m_subject->applyUSBMode(mode);
     QVERIFY(m_subject->notification != NULL);
     QCOMPARE(m_subject->notification->body(), body);
     QCOMPARE(m_subject->notification->isPublished(), true);
@@ -166,21 +169,23 @@ void Ut_UsbUi::testDialogButtons()
     QCOMPARE(m_subject->usbMode->getMode(), MeeGo::QmUSBMode::SDK);
 }
 
+Q_DECLARE_METATYPE(MeeGo::QmLocks::State)
+
 void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown_data()
 {
-    QTest::addColumn<int>("deviceLocked");
+    QTest::addColumn<MeeGo::QmLocks::State>("deviceLocked");
     QTest::addColumn<int>("dialogShownCount");
-    QTest::newRow("Device locked") << (int)MeeGo::QmLocks::Locked << 1;
-    QTest::newRow("Device not locked") << (int)MeeGo::QmLocks::Unlocked << 0;
+    QTest::newRow("Device locked") << MeeGo::QmLocks::Locked << 1;
+    QTest::newRow("Device not locked") << MeeGo::QmLocks::Unlocked << 0;
 }
 
 void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown()
 {
-    QFETCH(int, deviceLocked);
+    QFETCH(MeeGo::QmLocks::State, deviceLocked);
     QFETCH(int, dialogShownCount);
 
     QSignalSpy spy(m_subject, SIGNAL(dialogShown()));
-    gQmLocksStub->stubSetReturnValue("getState", (MeeGo::QmLocks::State)deviceLocked);
+    gQmLocksStub->stubSetReturnValue("getState", deviceLocked);
     m_subject->applyUSBMode(MeeGo::QmUSBMode::Connected);
     QCOMPARE(spy.count(), dialogShownCount);
 }

@@ -1,6 +1,7 @@
 system-ui (0.20.74~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#259427 - USB: Info banner with string §qtn_usb_disconnected§ does not come up
 
  -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Tue, 24 May 2011 14:40:06 +0300
 
