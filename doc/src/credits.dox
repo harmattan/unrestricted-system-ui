@@ -5,22 +5,25 @@ The following people have contributed code to the System UI or otherwise helped 
 <pre>
 Current authors/maintainers:
  Vesa Halttunen
- Artem Egorkine
- Sachin Kundu
- Eetu Lehmusvuo
- Pankaj Saharan
- Pauli Lehtinen 
  Tuomas Järvensivu
- Mikko Levonmaa
- Aki Koskinen
- Ville Voutilainen
- Janne Sakko
+ Pauli Lehtinen 
+ Eetu Lehmusvuo
  Matti Vuorela
+ Sachin Kundu
+ Pankaj Saharan
+ Artem Egorkine
+ Mikko Levonmaa
+ Janne Sakko
+ Ville Voutilainen
  Jarkko Markkanen
- Laszlo Pere
- David Kedves
+ Otto Kopra
+ Aki Koskinen
+ Urho Konttori
+ Juha Vartiainen
 
-Original authors:
+Previous authors:
+ David Kedves
+ Laszlo Pere
  Ossi Jormakka
  Matti Katila
  Carita Kautto
@@ -29,6 +32,6 @@ Original authors:
  Telle-Tiia Pitkanen
 </pre>
 
-Did we forget about you? <a href="mailto:tuomas.jarvensivu@nokia.com">Drop us a line</a>!
+Did we forget about you? <a href="mailto:vesa.halttunen@nokia.com">Drop us a line</a>!
 
 */
