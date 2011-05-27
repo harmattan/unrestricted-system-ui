@@ -1,3 +1,9 @@
+system-ui (0.20.76~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 May 2011 12:15:47 +0300
+
 system-ui (0.20.75-1) unstable; urgency=low
 
   * Fixes: NB#245685 - Indicator blinks during offline mode and confuses end user
