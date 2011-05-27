@@ -1,6 +1,7 @@
 system-ui (0.20.76~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#260486 - Notification preview banners and system banners should be drawn when screen is off but not locked
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 May 2011 12:15:47 +0300
 

@@ -30,6 +30,7 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
+#include <qmlocks.h>
 #endif
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
@@ -247,9 +248,10 @@ void MGConfItem::unset() {
     gconfValue = QVariant();
 }
 
-bool gQmDisplayStateOff = false;
-
 #ifdef HAVE_QMSYSTEM
+bool gQmDisplayStateOff = false;
+MeeGo::QmLocks::State gQmLocksState = MeeGo::QmLocks::Unlocked;
+
 namespace MeeGo
 {
 QmDisplayState::DisplayState QmDisplayState::get() const {
@@ -258,6 +260,10 @@ QmDisplayState::DisplayState QmDisplayState::get() const {
 
 bool QmDisplayState::set(QmDisplayState::DisplayState) {
     return false;
+}
+
+QmLocks::State QmLocks::getState(QmLocks::Lock) const {
+    return gQmLocksState;
 }
 }
 #endif
@@ -706,17 +712,22 @@ void Ut_MCompositorNotificationSink::testWhenSinkIsSetToDisabledSystemNotificati
 void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled_data()
 {
     QTest::addColumn<bool>("displayOff");
+    QTest::addColumn<bool>("touchScreenLocked");
     QTest::addColumn<QVariant>("value");
     QTest::addColumn<bool>("notificationshown");
 
-    QTest::newRow("display off, key not set, notification not shown") << true << QVariant() << false;
-    QTest::newRow("display off, key has garbage value, notification not shown") << true << QVariant(QString("Garbage")) << false;
-    QTest::newRow("display off, key has has previews enabled, notification not shown") << true << QVariant(true) << false;
-    QTest::newRow("display off, key has has previews disabled, notification not shown") << true << QVariant(false) << false;
-    QTest::newRow("display on, key not set, notification shown") << false << QVariant() << true;
-    QTest::newRow("display on, key has garbage value, notification shown") << false << QVariant(QString("Garbage")) << true;
-    QTest::newRow("display on, key has has previews enabled, window shown") << false << QVariant(true) << true;
-    QTest::newRow("display on, key has has previews disabled, window not shown") << false << QVariant(false) << false;
+    QTest::newRow("display off, touch screen locked, key not set, notification not shown") << true << true << QVariant() << false;
+    QTest::newRow("display off, touch screen locked, key has garbage value, notification not shown") << true << true << QVariant(QString("Garbage")) << false;
+    QTest::newRow("display off, touch screen locked, key has has previews enabled, notification not shown") << true << true << QVariant(true) << false;
+    QTest::newRow("display off, touch screen locked, key has has previews disabled, notification not shown") << true << true << QVariant(false) << false;
+    QTest::newRow("display off, touch screen unlocked, key not set, notification shown") << true << false << QVariant() << true;
+    QTest::newRow("display off, touch screen unlocked, key has garbage value, notification shown") << true << false << QVariant(QString("Garbage")) << true;
+    QTest::newRow("display off, touch screen unlocked, key has has previews enabled, notification shown") << true << false << QVariant(true) << true;
+    QTest::newRow("display off, touch screen unlocked, key has has previews disabled, notification not shown") << true << false << QVariant(false) << false;
+    QTest::newRow("display on, touch screen locked, key not set, notification shown") << false << true << QVariant() << true;
+    QTest::newRow("display on, touch screen locked, key has garbage value, notification shown") << false << true << QVariant(QString("Garbage")) << true;
+    QTest::newRow("display on, touch screen locked, key has has previews enabled, window shown") << false << true << QVariant(true) << true;
+    QTest::newRow("display on, touch screen locked, key has has previews disabled, window not shown") << false << true << QVariant(false) << false;
 }
 
 
@@ -729,12 +740,16 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
     QVERIFY (sink->notificationPreviewMode->key() == NOTIFICATION_PREVIEW_ENABLED);
 
     QFETCH(bool, displayOff);
+    QFETCH(bool, touchScreenLocked);
     QFETCH(QVariant, value);
     QFETCH(bool, notificationshown);
 
     // Set value from test data to gconf key and qm variable
     sink->notificationPreviewMode->set(value);
+#ifdef HAVE_QMSYSTEM
     gQmDisplayStateOff = displayOff;
+    gQmLocksState = touchScreenLocked ? MeeGo::QmLocks::Locked : MeeGo::QmLocks::Unlocked;
+#endif
     sink->changeNotificationPreviewMode();
 
     // Create normal notification

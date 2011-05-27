@@ -27,7 +27,8 @@
 #include <X11/X.h>
 
 #ifdef HAVE_QMSYSTEM
-#include "qmdisplaystate.h"
+#include <qmdisplaystate.h>
+#include <qmlocks.h>
 #endif
 
 class MBanner;
@@ -178,6 +179,9 @@ private:
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
     MeeGo::QmDisplayState displayState;
+
+    //! Keep track of touch screen lock state
+    MeeGo::QmLocks qmLocks;
 #endif
 
 #ifdef UNIT_TEST
