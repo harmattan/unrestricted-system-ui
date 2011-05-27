@@ -130,26 +130,30 @@ void Ut_UsbUi::testHideDialog()
     QCOMPARE(dialog_visible, false);
 }
 
+Q_DECLARE_METATYPE(UsbUi::NotificationCategory)
+
 void Ut_UsbUi::testUSBNotifications_data()
 {
     QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
+    QTest::addColumn<UsbUi::NotificationCategory>("category");
     QTest::addColumn<QString>("body");
 
-    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << qtTrId("qtn_usb_disconnected");
-    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
-    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
-    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << "SDK mode in use";
+    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << UsbUi::Mode << qtTrId("qtn_usb_disconnected");
+    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << UsbUi::Mode << qtTrId("qtn_usb_sync_active");
+    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << UsbUi::Mode << qtTrId("qtn_usb_storage_active");
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << UsbUi::Mode << "SDK mode in use";
 }
 
 void Ut_UsbUi::testUSBNotifications()
 {
     QFETCH(MeeGo::QmUSBMode::Mode, mode);
+    QFETCH(UsbUi::NotificationCategory, category);
     QFETCH(QString, body);
 
     m_subject->applyUSBMode(mode);
-    QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), body);
-    QCOMPARE(m_subject->notification->isPublished(), true);
+    QCOMPARE(m_subject->notifications.contains(category), true);
+    QCOMPARE(m_subject->notifications[category].body(), body);
+    QCOMPARE(m_subject->notifications[category].isPublished(), true);
 }
 
 void Ut_UsbUi::testDialogButtons()
@@ -194,9 +198,9 @@ void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown()
 void Ut_UsbUi::testShowError()
 {
     m_subject->showError("test");
-    QVERIFY(m_subject->notification != NULL);
-    QCOMPARE(m_subject->notification->body(), qtTrId("test"));
-    QCOMPARE(m_subject->notification->isPublished(), true);
+    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
+    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("test"));
+    QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
 }
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)

@@ -22,12 +22,12 @@
 #include <QObject>
 #include <QPointer>
 #include <MDialog>
+#include <MNotification>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmusbmode.h>
 #endif
 
-class MNotification;
 namespace MeeGo {
     class QmLocks;
 }
@@ -50,6 +50,11 @@ public:
      * Destroys the USB UI.
      */
     virtual ~UsbUi();
+
+    enum NotificationCategory {
+        Mode = 0,
+        Error
+    };
 
 signals:
     //! Signaled when the USB mode dialog is shown.
@@ -102,15 +107,18 @@ private slots:
     void showError(const QString &error);
 
 private:
+#ifdef HAVE_QMSYSTEM
     /*!
      * Shows a notification.
      *
-     * \param id an usb_modes enum value for the notification
+     * \param category the category of the notification (Mode/Error)
+     * \param mode the USB mode for the notification
      */
-    void showNotification(int id);
+    void showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mode mode);
+#endif
 
-    //! Hides the currently active notification
-    void hideNotification();
+    //! Hides the currently active notification from the given category
+    void hideNotification(NotificationCategory category);
 
     //! Hides the mode selection dialog if it exists, accepting or rejecting it
     void hideDialog(bool accept);
@@ -121,8 +129,8 @@ private:
     MeeGo::QmLocks *locks;
 #endif
 
-    //! The currently active notification
-    MNotification *notification;
+    //! Currently active notifications
+    QMap<NotificationCategory, MNotification> notifications;
 
     //! Mode selection dialog
     QPointer<MDialog> dialog;

@@ -40,7 +40,6 @@ UsbUi::UsbUi(QObject *parent) : QObject(parent),
     requestedUSBMode(MeeGo::QmUSBMode::Undefined),
     locks(new MeeGo::QmLocks(this)),
 #endif
-    notification(NULL),
     dialog(NULL),
     developerMode(new MGConfItem("/Meego/System/DeveloperMode", this))
 {
@@ -49,12 +48,15 @@ UsbUi::UsbUi(QObject *parent) : QObject(parent),
     connect(usbMode, SIGNAL(error(const QString &)), this, SLOT(showError(const QString &)));
 
     // Lazy initialize to improve startup time
-    QTimer::singleShot(5000, this, SLOT(applyCurrentUSBMode()));
+    QTimer::singleShot(2000, this, SLOT(applyCurrentUSBMode()));
 #endif
 }
 
 UsbUi::~UsbUi()
 {
+    foreach (const NotificationCategory &category, notifications.keys()) {
+        notifications[category].remove();
+    }
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -184,13 +186,18 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
     case MeeGo::QmUSBMode::ModeRequest:
         showDialog();
         break;
+    case MeeGo::QmUSBMode::DataInUse:
+        // Hide the mode selection dialog and show an error notification
+        hideDialog(false);
+        showNotification(Error, mode);
+        break;
     case MeeGo::QmUSBMode::Disconnected:
     case MeeGo::QmUSBMode::OviSuite:
     case MeeGo::QmUSBMode::MassStorage:
     case MeeGo::QmUSBMode::SDK:
-        // Hide the mode selection dialog and show a notification
+        // Hide the mode selection dialog and show a mode notification
         hideDialog(false);
-        showNotification((int)mode);
+        showNotification(Mode, mode);
         break;
     case MeeGo::QmUSBMode::ChargingOnly:
         // no-op
@@ -199,56 +206,59 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         break;
     }
 }
-#endif
 
-void UsbUi::showNotification(int id)
+void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mode mode)
 {
-    // Remove previous notification
-    hideNotification();
+    // Remove previous notification from the category
+    hideNotification(category);
 
-    QString mode_text;
-    switch (id) {
-#ifdef HAVE_QMSYSTEM
+    QString body;
+    switch (mode) {
+    case MeeGo::QmUSBMode::DataInUse:
+        //% "Cannot export the filesystem over USB since the filesystem is in use."
+        body = qtTrId("qtn_usb_filessystem_inuse");
+        break;
     case MeeGo::QmUSBMode::OviSuite:
         //% "Sync and connect in use"
-        mode_text = qtTrId("qtn_usb_sync_active");
+        body = qtTrId("qtn_usb_sync_active");
         break;
     case MeeGo::QmUSBMode::MassStorage:
         //% "Mass storage in use"
-        mode_text = qtTrId("qtn_usb_storage_active");
+        body = qtTrId("qtn_usb_storage_active");
         break;
     case MeeGo::QmUSBMode::SDK:
         // TODO: should this be localizable?
-        mode_text = "SDK mode in use";
+        body = "SDK mode in use";
         break;
     case MeeGo::QmUSBMode::Disconnected:
         //% "USB cable disconnected"
-        mode_text = qtTrId("qtn_usb_disconnected");
+        body = qtTrId("qtn_usb_disconnected");
         break;
-#endif
     default:
         return;
     }
 
-    notification = new MNotification(MNotification::DeviceAddedEvent, "", mode_text);
-    notification->publish();
+    MNotification notification(MNotification::DeviceAddedEvent, "", body);
+    notification.publish();
+    notifications.insert(category, notification);
 }
+#endif
 
-void UsbUi::hideNotification()
+void UsbUi::hideNotification(NotificationCategory category)
 {
-    if (notification != NULL) {
-        notification->remove();
-        delete notification;
-        notification = NULL;
+    if (notifications.contains(category)) {
+        notifications[category].remove();
+        notifications.remove(category);
     }
 }
 
 void UsbUi::showError(const QString &error)
 {
     // Remove previous notification
-    hideNotification();
+    hideNotification(Error);
 
     //% "USB connection error occurred"
-    notification = new MNotification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
-    notification->publish();
+    MNotification notification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
+    notification.publish();
+    notifications.insert(Error, notification);
 }
