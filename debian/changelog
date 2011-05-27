@@ -1,9 +1,8 @@
-system-ui (0.20.77~1) unstable; urgency=low
+system-ui (0.20.77-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#260406 - §qtn_usb_filessystem_inuse§ does not appear when connecting USB
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 May 2011 14:15:13 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 May 2011 16:18:24 +0300
 
 system-ui (0.20.76-1) unstable; urgency=low
 
