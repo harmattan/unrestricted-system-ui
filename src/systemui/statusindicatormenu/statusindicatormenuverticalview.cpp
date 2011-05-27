@@ -72,6 +72,12 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     hlayout->addItem(containerWidget);
     hlayout->addStretch();
 
+    // Add a separator line on the right of the menu
+    MStylableWidget *rightSeparator = new MStylableWidget;
+    rightSeparator->setStyleName("StatusIndicatorMenuRightSeparator");
+    rightSeparator->setLayoutPosition(M::HorizontalLeftPosition);
+    hlayout->addItem(rightSeparator);
+
     controller->setLayout(hlayout);
 }
 
