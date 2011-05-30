@@ -19,7 +19,8 @@
 #include <MApplication>
 #include <MSceneWindow>
 #include <MNotification>
-#include <MDialog>
+#include <MLabel>
+#include <MBasicListItem>
 #include <QtTest/QtTest>
 #include <usbui.h>
 
@@ -105,8 +106,8 @@ void Ut_UsbUi::testShowDialog()
     m_subject->usbMode->setDefaultMode(mode);
     m_subject->applyUSBMode(mode);
     QCOMPARE(dialog_visible, true);
-    QVERIFY(!m_subject->dialog->isModal());
-    QVERIFY(m_subject->dialog->isSystem());
+    QVERIFY(!m_subject->isModal());
+    QVERIFY(m_subject->isSystem());
     QCOMPARE(spy.count(), 1);
 }
 
@@ -201,6 +202,19 @@ void Ut_UsbUi::testShowError()
     QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
     QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("test"));
     QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
+}
+
+void Ut_UsbUi::testRetranslateUi()
+{
+    m_subject->setTitle(QString());
+    m_subject->chargingLabel->setText(QString());
+    m_subject->massStorageItem->setTitle(QString());
+    m_subject->oviSuiteItem->setTitle(QString());
+    m_subject->retranslateUi();
+    QCOMPARE(m_subject->title(), qtTrId("qtn_usb_connected"));
+    QCOMPARE(m_subject->chargingLabel->text(), qtTrId("qtn_usb_charging"));
+    QCOMPARE(m_subject->massStorageItem->title(), qtTrId("qtn_usb_mass_storage"));
+    QCOMPARE(m_subject->oviSuiteItem->title(), qtTrId("qtn_usb_ovi_suite"));
 }
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)

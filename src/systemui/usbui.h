@@ -33,11 +33,13 @@ namespace MeeGo {
 }
 
 class MGConfItem;
+class MLabel;
+class MBasicListItem;
 
 /*!
  * The USB UI takes care of USB related user interfaces.
  */
-class UsbUi : public QObject {
+class UsbUi : public MDialog {
     Q_OBJECT
 
 public:
@@ -61,6 +63,10 @@ signals:
     void dialogShown();
 
 private slots:
+    //! \reimp
+    virtual void retranslateUi();
+    //! \reimp_end
+
 #ifdef HAVE_QMSYSTEM
     /*!
      * Shows the USB dialog/banners based on the current USB mode.
@@ -121,7 +127,7 @@ private:
     void hideNotification(NotificationCategory category);
 
     //! Hides the mode selection dialog if it exists, accepting or rejecting it
-    void hideDialog(bool accept);
+    void hideDialog(bool acceptDialog);
 
 #ifdef HAVE_QMSYSTEM
     MeeGo::QmUSBMode *usbMode;
@@ -132,11 +138,20 @@ private:
     //! Currently active notifications
     QMap<NotificationCategory, MNotification> notifications;
 
-    //! Mode selection dialog
-    QPointer<MDialog> dialog;
-
     //! GConf item which tracks if developer mode is enabled
     MGConfItem *developerMode;
+
+    //! Current state: charging label
+    MLabel *chargingLabel;
+
+    //! Mass storage mode list item
+    MBasicListItem *massStorageItem;
+
+    //! Ovi Suite mode list item
+    MBasicListItem *oviSuiteItem;
+
+    //! SDK mode list item
+    MBasicListItem *sdkItem;
 
 #ifdef UNIT_TEST
     friend class Ut_UsbUi;

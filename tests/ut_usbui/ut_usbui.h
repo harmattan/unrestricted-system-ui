@@ -54,6 +54,7 @@ private slots:
     void testConnectingUSBWhenDeviceIsLockedEmitsDialogShown();
 #endif
     void testShowError();
+    void testRetranslateUi();
 
 private:
     MApplication *m_App;

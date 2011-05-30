@@ -26,6 +26,7 @@ class UsbUiStub : public StubBase {
 #endif
   virtual void hideNotification(UsbUi::NotificationCategory category);
   virtual void hideDialog(bool accept);
+  virtual void retranslateUi();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -95,7 +96,9 @@ void UsbUiStub::hideDialog(bool accept) {
   stubMethodEntered("hideDialog",params);
 }
 
-
+void UsbUiStub::retranslateUi() {
+  stubMethodEntered("retranslateUi");
+}
 
 // 3. CREATE A STUB INSTANCE
 UsbUiStub gDefaultUsbUiStub;
@@ -159,5 +162,8 @@ void UsbUi::hideDialog(bool accept) {
   gUsbUiStub->hideDialog(accept);
 }
 
+void UsbUi::retranslateUi() {
+  gUsbUiStub->retranslateUi();
+}
 
 #endif

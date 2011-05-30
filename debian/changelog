@@ -1,6 +1,7 @@
 system-ui (0.20.78~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#250425 - usb dialog does not change language
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 May 2011 16:18:48 +0300
 

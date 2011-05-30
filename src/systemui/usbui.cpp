@@ -34,15 +34,53 @@
 #include <qmlocks.h>
 #endif
 
-UsbUi::UsbUi(QObject *parent) : QObject(parent),
+UsbUi::UsbUi(QObject *parent) : MDialog(),
 #ifdef HAVE_QMSYSTEM
     usbMode(new MeeGo::QmUSBMode(this)),
     requestedUSBMode(MeeGo::QmUSBMode::Undefined),
     locks(new MeeGo::QmLocks(this)),
 #endif
-    dialog(NULL),
-    developerMode(new MGConfItem("/Meego/System/DeveloperMode", this))
+    developerMode(new MGConfItem("/Meego/System/DeveloperMode", this)),
+    chargingLabel(new MLabel),
+    massStorageItem(new MBasicListItem(MBasicListItem::SingleTitle)),
+    oviSuiteItem(new MBasicListItem(MBasicListItem::SingleTitle)),
+    sdkItem(NULL)
 {
+    setParent(parent);
+    setModal(false);
+    setSystem(true);
+    setButtonBoxVisible(false);
+
+    // Create dialog content buttons and put them into a central widget
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+
+    chargingLabel->setStyleName("CommonBodyTextInverted");
+    chargingLabel->setAlignment(Qt::AlignCenter);
+    layout->addItem(chargingLabel);
+
+    massStorageItem->setStyleName("CommonBasicListItemInverted");
+    connect(massStorageItem, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
+    layout->addItem(massStorageItem);
+
+    oviSuiteItem->setStyleName("CommonBasicListItemInverted");
+    connect(oviSuiteItem, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
+    layout->addItem(oviSuiteItem);
+
+    if (developerMode->value().toBool()) {
+        // Developer mode is enabled, so show the SDK option
+        sdkItem = new MBasicListItem(MBasicListItem::SingleTitle);
+        sdkItem->setStyleName("CommonBasicListItemInverted");
+        connect(sdkItem, SIGNAL(clicked()), this, SLOT(setSDKMode()));
+        layout->addItem(sdkItem);
+    }
+
+    MWidget *centralWidget = new MWidget;
+    centralWidget->setLayout(layout);
+    setCentralWidget(centralWidget);
+
+    connect(qApp, SIGNAL(localeSettingsChanged()), this, SLOT(retranslateUi()));
+    retranslateUi();
+
 #ifdef HAVE_QMSYSTEM
     connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
     connect(usbMode, SIGNAL(error(const QString &)), this, SLOT(showError(const QString &)));
@@ -68,69 +106,22 @@ void UsbUi::applyCurrentUSBMode()
 
 void UsbUi::showDialog()
 {
-    if (dialog == NULL) {
-        // Create dialog content buttons and put them into a central widget
-        QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-
-        //% "Current state: Charging only"
-        MLabel *label = new MLabel(qtTrId("qtn_usb_charging"));
-        label->setStyleName("CommonBodyTextInverted");
-        label->setAlignment(Qt::AlignCenter);
-        layout->addItem(label);
-
-        MBasicListItem *item = new MBasicListItem(MBasicListItem::SingleTitle);
-        item->setStyleName("CommonBasicListItemInverted");
-        //% "Mass Storage mode"
-        item->setTitle(qtTrId("qtn_usb_mass_storage"));
-        connect(item, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
-        layout->addItem(item);
-
-        item = new MBasicListItem(MBasicListItem::SingleTitle);
-        item->setStyleName("CommonBasicListItemInverted");
-        //% "Ovi Suite mode"
-        item->setTitle(qtTrId("qtn_usb_ovi_suite"));
-        QObject::connect(item, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
-        layout->addItem(item);
-
-        if (developerMode->value().toBool()) {
-            // Developer mode is enabled, so show the SDK option
-            item = new MBasicListItem(MBasicListItem::SingleTitle);
-            item->setStyleName("CommonBasicListItemInverted");
-            // TODO: should this be localizable?
-            item->setTitle("SDK");
-            QObject::connect(item, SIGNAL(clicked()), this, SLOT(setSDKMode()));
-            layout->addItem(item);
-        }
-
-        MWidget *centralWidget = new MWidget;
-        centralWidget->setLayout(layout);
-
-        // Create the dialog
-        dialog = new MDialog;
-        dialog->setModal(false);
-        dialog->setSystem(true);
-        dialog->setButtonBoxVisible(false);
-        dialog->setCentralWidget(centralWidget);
-        //% "Connected to USB device"
-        dialog->setTitle(qtTrId("qtn_usb_connected"));
-    }
-
     // System dialogs always create a new top level window and a scene manager so no need to worry about registering to a specific scene manager here
-    dialog->appear(MSceneWindow::DestroyWhenDone);
+    appear(MSceneWindow::KeepWhenDone);
 
     // Tell interested parties that the dialog is now being shown
     emit dialogShown();
 }
 
-void UsbUi::hideDialog(bool accept)
+void UsbUi::hideDialog(bool acceptDialog)
 {
-    if (dialog != NULL && dialog->isVisible()) {
-        if (accept) {
-            dialog->accept();
+    if (isVisible()) {
+        if (acceptDialog) {
+            accept();
         } else {
-            dialog->reject();
+            reject();
         }
-        dialog->disappear();
+        disappear();
     }
 }
 
@@ -261,4 +252,22 @@ void UsbUi::showError(const QString &error)
     MNotification notification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
     notification.publish();
     notifications.insert(Error, notification);
+}
+
+void UsbUi::retranslateUi()
+{
+    //% "Connected to USB device"
+    setTitle(qtTrId("qtn_usb_connected"));
+
+    //% "Current state: Charging only"
+    chargingLabel->setText(qtTrId("qtn_usb_charging"));
+    //% "Mass Storage mode"
+    massStorageItem->setTitle(qtTrId("qtn_usb_mass_storage"));
+    //% "Ovi Suite mode"
+    oviSuiteItem->setTitle(qtTrId("qtn_usb_ovi_suite"));
+
+    if (sdkItem != NULL) {
+        // TODO: should this be localizable?
+        sdkItem->setTitle("SDK");
+    }
 }
