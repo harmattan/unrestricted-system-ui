@@ -92,9 +92,6 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
 
 UsbUi::~UsbUi()
 {
-    foreach (const NotificationCategory &category, notifications.keys()) {
-        notifications[category].remove();
-    }
 }
 
 #ifdef HAVE_QMSYSTEM

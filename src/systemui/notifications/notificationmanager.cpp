@@ -263,7 +263,12 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
 
         NotificationParameters fullParameters(appendEventTypeParameters(parameters));
         fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
-        Notification notification(notificationId, groupId, notificationUserId, fullParameters, determineType(fullParameters), relayInterval);
+        Notification::NotificationType notificationType = determineType(fullParameters);
+        if (notificationType == Notification::SystemEvent) {
+            // Consider all system notifications not to be persistent
+            fullParameters.add(GenericNotificationParameterFactory::persistentKey(), false);
+        }
+        Notification notification(notificationId, groupId, notificationUserId, fullParameters, notificationType, relayInterval);
 
         // Mark the notification used
         notificationContainer.insert(notificationId, notification);
