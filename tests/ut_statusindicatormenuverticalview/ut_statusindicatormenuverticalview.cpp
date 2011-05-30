@@ -178,7 +178,7 @@ MWidget *getContainerFromLayout(MWidgetController *controller)
 {
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(controller->layout());
     if (layout != NULL && layout->count() > 0) {
-        return static_cast<MWidget *>(layout->itemAt(layout->count() - 1));
+        return static_cast<MWidget *>(layout->itemAt(layout->count() - 2));
     } else {
         return NULL;
     }
@@ -218,7 +218,7 @@ void Ut_StatusIndicatorMenuVerticalView::testLayoutPositions()
 
     // Locate the divider at the bottom of the container widget layout
     MWidget *container = getContainerFromLayout(controller);
-    MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count()-1));
+    MWidgetController *divider = static_cast<MWidgetController*>(container->layout()->itemAt(container->layout()->count() - 1));
 
     // It should have the bottom position set
     QCOMPARE(divider->layoutPosition(), M::VerticalTopPosition);
