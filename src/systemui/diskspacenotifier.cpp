@@ -63,7 +63,7 @@ void DiskSpaceNotifier::handleDiskSpaceChange(const QString &path, int percentag
         // Show a notification
         //% "Getting low with storage. Please check."
         notification = new MNotification("x-nokia.system-memusage", "", qtTrId("qtn_memu_memlow_notification_src"));
-        notification->setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "qtn_memu_appname"));
+        notification->setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "Mass Storage Usage"));
         notification->publish();
     }
 }
