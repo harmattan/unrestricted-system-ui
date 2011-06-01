@@ -62,6 +62,12 @@ void QWidget::raise()
     gQWidgetRaiseCalled = true;
 }
 
+bool gQWidgetRepaintCalled = false;
+void QWidget::repaint()
+{
+    gQWidgetRepaintCalled = true;
+}
+
 bool MApplicationExtensionArea::init()
 {
     return true;
@@ -153,6 +159,7 @@ void Ut_ScreenLockBusinessLogic::cleanup()
     qDbusAbstractInterfaceCallInterface.clear();
     gQWidgetRaiseCalled = false;
     gQWidgetVisible.clear();
+    gQWidgetRepaintCalled = false;
     screenLockExtensionReset = false;
     screenLockExtensionModeSet = false;
     gScreenLockWindowStub->stubReset();
@@ -437,6 +444,19 @@ void Ut_ScreenLockBusinessLogic::testTkLockClose()
     QCOMPARE(gQWidgetVisible.contains(m_subject->screenLockWindow), true);
     QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
+}
+
+
+void Ut_ScreenLockBusinessLogic::testSettingLowPowerModePaintsScreenLockWindowBlack()
+{
+    ScreenLockExtension screenLockExtension;
+    screenLockExtension.initialize("");
+    m_subject->registerExtension(&screenLockExtension);
+
+    m_subject->tklock_open(TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD, ScreenLockBusinessLogic::TkLockEnableLowPowerMode, false, false);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount("blacken"), 1);
+    QCOMPARE(gScreenLockWindowStub->stubCallCount("unblacken"), 1);
+    QCOMPARE(gQWidgetRepaintCalled, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_ScreenLockBusinessLogic)

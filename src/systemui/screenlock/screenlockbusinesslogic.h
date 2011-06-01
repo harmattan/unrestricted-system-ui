@@ -148,6 +148,9 @@ private:
         TkLockClosed
     };
 
+    //! Creates the lock screen window if it doesn't exist yet
+    void ensureScreenLockWindowExists();
+
     //! The screen lock window
     ScreenLockWindow *screenLockWindow;
 

@@ -164,14 +164,28 @@ void ScreenLockBusinessLogic::showScreenLock()
 
 void ScreenLockBusinessLogic::showLowPowerMode()
 {
+    ensureScreenLockWindowExists();
+
+    // Set X window properties for low power mode.
+    screenLockWindow->setLowPowerMode(true);
+
+    // Paints screenLockWindow black to prevent that switching to low power mode
+    // is not incorrectly seen on lockscreen
+    screenLockWindow->blacken();
+
+    // Immediately paints screenLockWindow to black
+    screenLockWindow->repaint();
+
+    // When the low power mode is switched on, it must be done after updating the window contents
     foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
         screenLockExtension->setMode(ScreenLockExtensionInterface::LowPowerMode);
     }
+
     toggleScreenLockUI(true);
     toggleEventEater(false);
 
-    // When the low power mode is switched on, it must be done after updating the window contents
-    screenLockWindow->setLowPowerMode(true);
+    // When low power mode is activated screenLockWindow should be shown
+    screenLockWindow->unblacken();
 }
 
 void ScreenLockBusinessLogic::setDisplayOffMode()
@@ -207,13 +221,9 @@ void ScreenLockBusinessLogic::hideEventEater()
 
 void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
 {
-    if (toggle) {
-        if (screenLockWindow == NULL) {
-            // Create the lock screen window if it doesn't exist yet
-            screenLockWindow = new ScreenLockWindow(extensionArea);
-            screenLockWindow->installEventFilter(new CloseEventEater(this));
-        }
 
+    if (toggle) {
+        ensureScreenLockWindowExists();
         // Whenever we're showing the lock screen we need to reset its state
         reset();
 
@@ -250,6 +260,14 @@ void ScreenLockBusinessLogic::toggleEventEater(bool toggle)
         if (eventEaterWindow != NULL) {
             eventEaterWindow->hide();
         }
+    }
+}
+
+void ScreenLockBusinessLogic::ensureScreenLockWindowExists()
+{
+    if (screenLockWindow == NULL) {
+        screenLockWindow = new ScreenLockWindow(extensionArea);
+        screenLockWindow->installEventFilter(new CloseEventEater(this));
     }
 }
 
