@@ -174,11 +174,6 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
     case MeeGo::QmUSBMode::ModeRequest:
         showDialog();
         break;
-    case MeeGo::QmUSBMode::DataInUse:
-        // Hide the mode selection dialog and show an error notification
-        hideDialog(false);
-        showNotification(Error, mode);
-        break;
     case MeeGo::QmUSBMode::Disconnected:
     case MeeGo::QmUSBMode::OviSuite:
     case MeeGo::QmUSBMode::MassStorage:
@@ -202,10 +197,6 @@ void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mo
 
     QString body;
     switch (mode) {
-    case MeeGo::QmUSBMode::DataInUse:
-        //% "Cannot export the filesystem over USB since the filesystem is in use."
-        body = qtTrId("qtn_usb_filessystem_inuse");
-        break;
     case MeeGo::QmUSBMode::OviSuite:
         //% "Sync and connect in use"
         body = qtTrId("qtn_usb_sync_active");
