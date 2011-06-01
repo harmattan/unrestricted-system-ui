@@ -341,7 +341,7 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == "x-nokia.battery.enterpsm");
     QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_ent_psnote"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId());
 
     spy.clear ();
 
@@ -353,7 +353,7 @@ Ut_BatteryBusinessLogic::testPSMStateChanged ()
     arguments = spy.takeFirst ();
     QVERIFY (arguments.at (0).toString () == "x-nokia.battery.exitpsm");
     QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_exit_psnote"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId());
 #endif
 }
 

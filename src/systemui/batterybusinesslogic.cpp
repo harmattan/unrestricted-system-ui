@@ -312,13 +312,13 @@ void BatteryBusinessLogic::sendNotification(BatteryBusinessLogic::NotificationID
     case NotificationEnteringPSM:
         sendNotification("x-nokia.battery.enterpsm",
                 //% "Entering power save mode"
-                qtTrId("qtn_ener_ent_psnote"));
+                qtTrId("qtn_ener_ent_psnote"), chargingImageId());
         break;
 
     case NotificationExitingPSM:
         sendNotification("x-nokia.battery.exitpsm",
                 //% "Exiting power save mode"
-                qtTrId("qtn_ener_exit_psnote"));
+                qtTrId("qtn_ener_exit_psnote"), chargingImageId());
         break;
 
     case NotificationLowBattery:
