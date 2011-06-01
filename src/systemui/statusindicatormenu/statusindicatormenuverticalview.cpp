@@ -22,6 +22,8 @@
 #include <MBasicListItem>
 #include <MImageWidget>
 #include <MStylableWidget>
+#include <MPannableViewport>
+#include <MPositionIndicator>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <mscenewindowview.h>
@@ -47,12 +49,20 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
                              << "statusindicatormenu-presence.desktop"
                              << "statusindicatormenu-transfer.desktop"));
     extensionArea->init();
+    extensionArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    // Add panning to the expension area
+    MPannableViewport* viewport = new MPannableViewport();
+    viewport->setWidget(extensionArea);
+    viewport->setVerticalPanningPolicy(MPannableWidget::PanningAsNeeded);
+    viewport->setStyleName("StatusIndicatorMenuViewport");
+    viewport->positionIndicator()->setStyleName("CommonPositionIndicatorInverted");
 
     // Put the extension area to a horizontal layout
     QGraphicsLinearLayout *vlayout = new QGraphicsLinearLayout(Qt::Vertical);
     vlayout->setContentsMargins(0, 0, 0, 0);
     vlayout->setSpacing(0);
-    vlayout->addItem(extensionArea);
+    vlayout->addItem(viewport);
 
     // Add a separator line on the bottom of the menu
     MStylableWidget *bottomSeparator = new MStylableWidget;
