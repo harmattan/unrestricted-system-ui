@@ -1,3 +1,9 @@
+system-ui (1.0.2~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 01 Jun 2011 13:48:57 +0300
+
 system-ui (1.0.1-1) unstable; urgency=low
 
   * Fixes: NB#260183 - Status menu does not become properly pannable when content does not fit
