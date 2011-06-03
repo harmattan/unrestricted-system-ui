@@ -76,8 +76,8 @@ void StatusIndicatorMenuWindow::resetMenuWidget()
     connect(menuWidget, SIGNAL(hideRequested()), menuWidget, SLOT(disappear()));
     connect(menuWidget, SIGNAL(disappeared()), this, SLOT(hideWindow()));
 
-    // Lazy initialize to improve startup time
-    QTimer::singleShot(1000, this, SLOT(initializeMenuWidget()));
+    // Initialize the status indicator menu after the first USB banner has been shown
+    QTimer::singleShot(7000, this, SLOT(initializeMenuWidget()));
 }
 
 

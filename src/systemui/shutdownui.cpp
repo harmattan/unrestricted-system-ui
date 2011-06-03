@@ -53,8 +53,8 @@ ShutdownUI::ShutdownUI() :
 
     applyStyle();
 
-    // Pre-create/load the shutdown UI content to show it quickly when requested
-    QTimer::singleShot(5000, this, SLOT(realize()));
+    // Precreate the shutdown UI content to show it quickly when requested but only after the status indicator menu has been created
+    QTimer::singleShot(12000, this, SLOT(realize()));
 
     connect(timer, SIGNAL(timeout()), this, SLOT(showLogo()));
 }
