@@ -204,8 +204,8 @@ void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mo
         body = qtTrId("qtn_usb_storage_active");
         break;
     case MeeGo::QmUSBMode::SDK:
-        // TODO: should this be localizable?
-        body = "SDK mode in use";
+        //% "SDK mode in use"
+        body = qtTrId("qtn_usb_sdk_active");
         break;
     case MeeGo::QmUSBMode::Disconnected:
         //% "USB cable disconnected"
@@ -251,8 +251,8 @@ void UsbUi::retranslateUi()
     massStorageItem->setTitle(qtTrId("qtn_usb_mass_storage"));
     //% "Ovi Suite mode"
     oviSuiteItem->setTitle(qtTrId("qtn_usb_ovi_suite"));
-    // TODO: should this be localizable?
-    sdkItem->setTitle("SDK");
+    //% "SDK mode"
+    sdkItem->setTitle(qtTrId("qtn_usb_sdk_mode"));
 }
 
 void UsbUi::updateSDKItemVisibility()

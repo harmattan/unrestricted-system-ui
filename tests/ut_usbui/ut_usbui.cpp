@@ -151,7 +151,7 @@ void Ut_UsbUi::testUSBNotifications_data()
     QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << UsbUi::Mode << qtTrId("qtn_usb_disconnected");
     QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << UsbUi::Mode << qtTrId("qtn_usb_sync_active");
     QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << UsbUi::Mode << qtTrId("qtn_usb_storage_active");
-    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << UsbUi::Mode << "SDK mode in use";
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << UsbUi::Mode << qtTrId("qtn_usb_sdk_active");
 }
 
 void Ut_UsbUi::testUSBNotifications()
@@ -219,11 +219,13 @@ void Ut_UsbUi::testRetranslateUi()
     m_subject->chargingLabel->setText(QString());
     m_subject->massStorageItem->setTitle(QString());
     m_subject->oviSuiteItem->setTitle(QString());
+    m_subject->sdkItem->setTitle(QString());
     m_subject->retranslateUi();
     QCOMPARE(m_subject->title(), qtTrId("qtn_usb_connected"));
     QCOMPARE(m_subject->chargingLabel->text(), qtTrId("qtn_usb_charging"));
     QCOMPARE(m_subject->massStorageItem->title(), qtTrId("qtn_usb_mass_storage"));
     QCOMPARE(m_subject->oviSuiteItem->title(), qtTrId("qtn_usb_ovi_suite"));
+    QCOMPARE(m_subject->sdkItem->title(), qtTrId("qtn_usb_sdk_mode"));
 }
 
 void Ut_UsbUi::testSDKItemVisibleOnlyWhenDeveloperModeEnabled()
