@@ -1,3 +1,9 @@
+system-ui (1.0.5~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 03 Jun 2011 15:34:35 +0300
+
 system-ui (1.0.4-1) unstable; urgency=low
 
   * Fixes: NB#262384 - Status menu takes ages to appear after boot
