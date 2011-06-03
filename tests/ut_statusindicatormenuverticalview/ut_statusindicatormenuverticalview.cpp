@@ -146,6 +146,18 @@ QObject *findChildItemByObjectName(QGraphicsItem* root, const QString &name) {
     return NULL;
 }
 
+QObject* filterObject = NULL;
+void QObject::installEventFilter(QObject *filterObj)
+{
+    filterObject = filterObj;
+}
+
+bool QObject::eventFilter(QObject *o, QEvent *e)
+{
+    Q_UNUSED(o);
+    Q_UNUSED(e);
+    return false;
+}
 
 void Ut_StatusIndicatorMenuVerticalView::init()
 {
@@ -160,6 +172,7 @@ void Ut_StatusIndicatorMenuVerticalView::cleanup()
 {
     delete controller;
     mApplicationExtensionAreaInstance = NULL;
+    filterObject = NULL;
 }
 
 void Ut_StatusIndicatorMenuVerticalView::initTestCase()
@@ -240,6 +253,31 @@ void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheContro
 
     // All the SceneWindows should be gone as well
     QCOMPARE(g_visibleSceneWindows.count(), 0);
+}
+
+void Ut_StatusIndicatorMenuVerticalView::testViewIsEventFilterForController()
+{
+    QCOMPARE(filterObject, m_subject);
+}
+
+void Ut_StatusIndicatorMenuVerticalView::testMouseClickAndDoubleClickAndMouseReleaseOnExtensionAreaIsIgnored()
+{
+    QScopedPointer<StatusIndicatorMenu> area(new StatusIndicatorMenu);
+    QEvent event(QEvent::GraphicsSceneMousePress);
+    bool ret = m_subject->eventFilter(area.data(), &event);
+    QCOMPARE(ret, true);
+
+    QEvent event2(QEvent::GraphicsSceneMouseDoubleClick);
+    ret = m_subject->eventFilter(area.data(), &event2);
+    QCOMPARE(ret, true);
+
+    QEvent event3(QEvent::GraphicsSceneDragEnter);
+    ret = m_subject->eventFilter(area.data(), &event3);
+    QCOMPARE(ret, false);
+
+    QEvent event4(QEvent::GraphicsSceneMouseRelease);
+    ret = m_subject->eventFilter(area.data(), &event4);
+    QCOMPARE(ret, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuVerticalView)

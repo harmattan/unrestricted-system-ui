@@ -58,6 +58,10 @@ public:
      */
     virtual ~StatusIndicatorMenuVerticalView();
 
+    //! \reimp
+    virtual bool eventFilter(QObject *watched, QEvent *event);
+    //! \reimp_end
+
 private:
     //! Controller for the view
     StatusIndicatorMenu *controller;
