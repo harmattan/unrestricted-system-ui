@@ -144,7 +144,7 @@ void Ut_ShutdownUI::testInitialization()
     // Check that the constructor calls realize() with a single shot timer
     QVERIFY(qTimerSingleShotParams.contains(m_subject));
     const QTimerSingleShotParams &params(qTimerSingleShotParams.value(m_subject));
-    QCOMPARE(params.msec, 5000);
+    QCOMPARE(params.msec, 12000);
     QCOMPARE(params.receiver, m_subject);
     QString timedSlotName(params.member);
     QVERIFY2(timedSlotName.endsWith(QString("realize()")), qPrintable(QString("Actual timed slot name was: ") + timedSlotName));
