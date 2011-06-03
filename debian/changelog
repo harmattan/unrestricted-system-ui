@@ -1,9 +1,8 @@
-system-ui (1.0.3~1) unstable; urgency=low
+system-ui (1.0.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#262004 - Reboot required for SDK option in the USB selection dialog to be displayed after developer mode is enabled
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 03 Jun 2011 10:37:40 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 03 Jun 2011 13:07:20 +0300
 
 system-ui (1.0.2-1) unstable; urgency=low
 
