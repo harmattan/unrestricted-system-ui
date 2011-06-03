@@ -33,6 +33,7 @@ namespace MeeGo {
 }
 
 class MGConfItem;
+class QGraphicsLinearLayout;
 class MLabel;
 class MBasicListItem;
 
@@ -112,6 +113,9 @@ private slots:
      */
     void showError(const QString &error);
 
+    //! Shows or hides the SDK item from the dialog based on whether developer mode is enabled or not
+    void updateSDKItemVisibility();
+
 private:
 #ifdef HAVE_QMSYSTEM
     /*!
@@ -140,6 +144,9 @@ private:
 
     //! GConf item which tracks if developer mode is enabled
     MGConfItem *developerMode;
+
+    //! Layout for the dialog
+    QGraphicsLinearLayout *layout;
 
     //! Current state: charging label
     MLabel *chargingLabel;

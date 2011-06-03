@@ -41,18 +41,16 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     locks(new MeeGo::QmLocks(this)),
 #endif
     developerMode(new MGConfItem("/Meego/System/DeveloperMode", this)),
+    layout(new QGraphicsLinearLayout(Qt::Vertical)),
     chargingLabel(new MLabel),
     massStorageItem(new MBasicListItem(MBasicListItem::SingleTitle)),
     oviSuiteItem(new MBasicListItem(MBasicListItem::SingleTitle)),
-    sdkItem(NULL)
+    sdkItem(new MBasicListItem(MBasicListItem::SingleTitle))
 {
     setParent(parent);
     setModal(false);
     setSystem(true);
     setButtonBoxVisible(false);
-
-    // Create dialog content buttons and put them into a central widget
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
 
     chargingLabel->setStyleName("CommonBodyTextInverted");
     chargingLabel->setAlignment(Qt::AlignCenter);
@@ -66,13 +64,10 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     connect(oviSuiteItem, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
     layout->addItem(oviSuiteItem);
 
-    if (developerMode->value().toBool()) {
-        // Developer mode is enabled, so show the SDK option
-        sdkItem = new MBasicListItem(MBasicListItem::SingleTitle);
-        sdkItem->setStyleName("CommonBasicListItemInverted");
-        connect(sdkItem, SIGNAL(clicked()), this, SLOT(setSDKMode()));
-        layout->addItem(sdkItem);
-    }
+    sdkItem->setStyleName("CommonBasicListItemInverted");
+    connect(sdkItem, SIGNAL(clicked()), this, SLOT(setSDKMode()));
+    connect(developerMode, SIGNAL(valueChanged()), this, SLOT(updateSDKItemVisibility()));
+    updateSDKItemVisibility();
 
     MWidget *centralWidget = new MWidget;
     centralWidget->setLayout(layout);
@@ -92,6 +87,9 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
 
 UsbUi::~UsbUi()
 {
+    if (sdkItem->parentLayoutItem() == NULL) {
+        delete sdkItem;
+    }
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -253,9 +251,22 @@ void UsbUi::retranslateUi()
     massStorageItem->setTitle(qtTrId("qtn_usb_mass_storage"));
     //% "Ovi Suite mode"
     oviSuiteItem->setTitle(qtTrId("qtn_usb_ovi_suite"));
+    // TODO: should this be localizable?
+    sdkItem->setTitle("SDK");
+}
 
-    if (sdkItem != NULL) {
-        // TODO: should this be localizable?
-        sdkItem->setTitle("SDK");
+void UsbUi::updateSDKItemVisibility()
+{
+    if (developerMode->value().toBool()) {
+        if (sdkItem->parentLayoutItem() == NULL) {
+            layout->addItem(sdkItem);
+        }
+    } else {
+        if (sdkItem->parentLayoutItem() != NULL) {
+            layout->removeItem(sdkItem);
+            if (sdkItem->scene() != NULL) {
+                sdkItem->scene()->removeItem(sdkItem);
+            }
+        }
     }
 }

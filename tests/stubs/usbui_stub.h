@@ -27,6 +27,7 @@ class UsbUiStub : public StubBase {
   virtual void hideNotification(UsbUi::NotificationCategory category);
   virtual void hideDialog(bool accept);
   virtual void retranslateUi();
+  virtual void updateSDKItemVisibility();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -100,6 +101,10 @@ void UsbUiStub::retranslateUi() {
   stubMethodEntered("retranslateUi");
 }
 
+void UsbUiStub::updateSDKItemVisibility() {
+  stubMethodEntered("updateSDKItemVisibility");
+}
+
 // 3. CREATE A STUB INSTANCE
 UsbUiStub gDefaultUsbUiStub;
 UsbUiStub* gUsbUiStub = &gDefaultUsbUiStub;
@@ -164,6 +169,10 @@ void UsbUi::hideDialog(bool accept) {
 
 void UsbUi::retranslateUi() {
   gUsbUiStub->retranslateUi();
+}
+
+void UsbUi::updateSDKItemVisibility() {
+  gUsbUiStub->updateSDKItemVisibility();
 }
 
 #endif

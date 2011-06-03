@@ -21,6 +21,8 @@
 #include <MNotification>
 #include <MLabel>
 #include <MBasicListItem>
+#include <MGConfItem>
+#include <QGraphicsLinearLayout>
 #include <QtTest/QtTest>
 #include <usbui.h>
 
@@ -55,6 +57,12 @@ bool MNotification::remove()
     return true;
 }
 
+QVariant mGConfItemValue(false);
+QVariant MGConfItem::value() const
+{
+    return mGConfItemValue;
+}
+
 int argc = 1;
 char *argv[] = { (char *) "./ut_usbui", NULL };
 
@@ -80,6 +88,7 @@ void Ut_UsbUi::cleanup()
 {
     delete m_subject;
     dialog_visible = false;
+    mGConfItemValue = QVariant(false);
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -215,6 +224,22 @@ void Ut_UsbUi::testRetranslateUi()
     QCOMPARE(m_subject->chargingLabel->text(), qtTrId("qtn_usb_charging"));
     QCOMPARE(m_subject->massStorageItem->title(), qtTrId("qtn_usb_mass_storage"));
     QCOMPARE(m_subject->oviSuiteItem->title(), qtTrId("qtn_usb_ovi_suite"));
+}
+
+void Ut_UsbUi::testSDKItemVisibleOnlyWhenDeveloperModeEnabled()
+{
+    QVERIFY(disconnect(m_subject->developerMode, SIGNAL(valueChanged()), m_subject, SLOT(updateSDKItemVisibility())));
+    delete m_subject;
+
+    mGConfItemValue = QVariant(true);
+    m_subject = new UsbUi;
+    QCOMPARE(m_subject->layout->count(), 4);
+    QCOMPARE(m_subject->sdkItem->parentLayoutItem(), m_subject->layout);
+
+    mGConfItemValue = QVariant(false);
+    m_subject->updateSDKItemVisibility();
+    QCOMPARE(m_subject->layout->count(), 3);
+    QCOMPARE(m_subject->sdkItem->parentLayoutItem(), (QGraphicsLayoutItem *)NULL);
 }
 
 QTEST_APPLESS_MAIN (Ut_UsbUi)

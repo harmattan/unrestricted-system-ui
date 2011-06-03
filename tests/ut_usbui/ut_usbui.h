@@ -55,6 +55,7 @@ private slots:
 #endif
     void testShowError();
     void testRetranslateUi();
+    void testSDKItemVisibleOnlyWhenDeveloperModeEnabled();
 
 private:
     MApplication *m_App;
