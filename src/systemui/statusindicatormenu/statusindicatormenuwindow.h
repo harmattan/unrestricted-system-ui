@@ -83,6 +83,9 @@ private slots:
     //! Slot when window is no longer top window
     void displayInActive();
 
+    //! Initializes the menu by briefly making it visible so that the view is loaded
+    void initializeMenuWidget();
+
 #ifdef HAVE_QMSYSTEM
     /*!
      * \brief Slot for receiving device lock status changes

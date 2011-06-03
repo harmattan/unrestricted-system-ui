@@ -81,7 +81,7 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     connect(usbMode, SIGNAL(error(const QString &)), this, SLOT(showError(const QString &)));
 
     // Lazy initialize to improve startup time
-    QTimer::singleShot(2000, this, SLOT(applyCurrentUSBMode()));
+    QTimer::singleShot(500, this, SLOT(applyCurrentUSBMode()));
 #endif
 }
 
@@ -125,6 +125,7 @@ void UsbUi::setOviSuiteMode()
     hideDialog(true);
 
 #ifdef HAVE_QMSYSTEM
+    // Set the USB mode after a small delay to allow the dialog to close smoothly
     requestedUSBMode = MeeGo::QmUSBMode::OviSuite;
     QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
 #endif
@@ -135,6 +136,7 @@ void UsbUi::setMassStorageMode()
     hideDialog(true);
 
 #ifdef HAVE_QMSYSTEM
+    // Set the USB mode after a small delay to allow the dialog to close smoothly
     requestedUSBMode = MeeGo::QmUSBMode::MassStorage;
     QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
 #endif
@@ -145,6 +147,7 @@ void UsbUi::setSDKMode()
     hideDialog(true);
 
 #ifdef HAVE_QMSYSTEM
+    // Set the USB mode after a small delay to allow the dialog to close smoothly
     requestedUSBMode = MeeGo::QmUSBMode::SDK;
     QTimer::singleShot(100, this, SLOT(setRequestedUSBMode()));
 #endif

@@ -19,6 +19,7 @@ class StatusIndicatorMenuWindowStub : public StubBase {
   virtual void displayInActive();
   virtual bool event(QEvent *);
   virtual void resetMenuWidget();
+  virtual void initializeMenuWidget();
   virtual void mousePressEvent(QMouseEvent*);
   virtual void mouseReleaseEvent(QMouseEvent*);
   virtual void hideWindow();
@@ -57,6 +58,10 @@ bool StatusIndicatorMenuWindowStub::event(QEvent *event) {
 
 void StatusIndicatorMenuWindowStub::resetMenuWidget() {
   stubMethodEntered("resetMenuWidget");
+}
+
+void StatusIndicatorMenuWindowStub::initializeMenuWidget() {
+  stubMethodEntered("initializeMenuWidget");
 }
 
 void StatusIndicatorMenuWindowStub::mousePressEvent(QMouseEvent *event) {
@@ -116,6 +121,10 @@ bool StatusIndicatorMenuWindow::event(QEvent *event) {
 
 void StatusIndicatorMenuWindow::resetMenuWidget() {
   gStatusIndicatorMenuWindowStub->resetMenuWidget();
+}
+
+void StatusIndicatorMenuWindow::initializeMenuWidget() {
+  gStatusIndicatorMenuWindowStub->initializeMenuWidget();
 }
 
 void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent *event) {

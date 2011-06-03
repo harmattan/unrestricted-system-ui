@@ -90,6 +90,16 @@ MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
     return gSceneWindowStateMap[this];
 }
 
+void QTimer::singleShot(int, QObject *receiver, const char *member)
+{
+    // The "member" string is of form "1member()", so remove the trailing 1 and the ()
+    int memberLength = strlen(member) - 3;
+    char modifiedMember[memberLength + 1];
+    strncpy(modifiedMember, member + 1, memberLength);
+    modifiedMember[memberLength] = 0;
+    QMetaObject::invokeMethod(receiver, modifiedMember, Qt::DirectConnection);
+}
+
 void Ut_StatusIndicatorMenuWindow::init()
 {
     gStatusIndicatorMenuStub->stubReset();
@@ -131,6 +141,9 @@ void Ut_StatusIndicatorMenuWindow::testInitialization()
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(showRequested()), statusIndicatorMenuWindow, SLOT(makeVisible())));
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(hideRequested()), statusIndicatorMenuWindow->menuWidget, SLOT(disappear())));
     QVERIFY(disconnect(statusIndicatorMenuWindow->menuWidget, SIGNAL(disappeared()), statusIndicatorMenuWindow, SLOT(hideWindow())));
+
+    QVERIFY(gSceneWindowStateMap.contains(statusIndicatorMenuWindow->menuWidget));
+    QCOMPARE(gSceneWindowStateMap[statusIndicatorMenuWindow->menuWidget], MSceneWindow::Disappeared);
 }
 
 void Ut_StatusIndicatorMenuWindow::testMakeVisible_data()

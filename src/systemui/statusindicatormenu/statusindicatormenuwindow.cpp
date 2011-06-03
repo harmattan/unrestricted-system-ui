@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QTimer>
 #include <MSceneManager>
 #include <MScene>
 #include <MLocale>
@@ -71,10 +72,19 @@ void StatusIndicatorMenuWindow::resetMenuWidget()
     delete menuWidget;
 
     menuWidget = new StatusIndicatorMenu();
-
     connect(menuWidget, SIGNAL(showRequested()), this, SLOT(makeVisible()));
     connect(menuWidget, SIGNAL(hideRequested()), menuWidget, SLOT(disappear()));
     connect(menuWidget, SIGNAL(disappeared()), this, SLOT(hideWindow()));
+
+    // Lazy initialize to improve startup time
+    QTimer::singleShot(1000, this, SLOT(initializeMenuWidget()));
+}
+
+
+void StatusIndicatorMenuWindow::initializeMenuWidget()
+{
+    sceneManager()->appearSceneWindow(menuWidget);
+    sceneManager()->disappearSceneWindowNow(menuWidget);
 }
 
 void StatusIndicatorMenuWindow::hideWindow()
