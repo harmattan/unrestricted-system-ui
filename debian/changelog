@@ -1,6 +1,7 @@
 system-ui (1.0.8~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#255350 - [TASK] Ongoing call indication change for status bar
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 07 Jun 2011 16:11:06 +0300
 

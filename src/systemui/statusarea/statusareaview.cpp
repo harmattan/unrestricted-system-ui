@@ -66,8 +66,14 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeTransferStatusIndicator(new TransferStatusIndicator(controller)),
     portraitTransferStatusIndicator(new TransferStatusIndicator(controller)),
     landscapeClock(new Clock(controller)),
-    portraitClock(new Clock(controller))
+    portraitClock(new Clock(controller)),
+    callContextItem(contextFrameworkContext.createContextItem("Phone.Call"))
 {
+    // Set the style names of the landscape and portrait widgets when the call state changes
+    setStyleNames();
+    connect(callContextItem, SIGNAL(contentsChanged()), this, SLOT(setStyleNames()));
+    callContextItem->subscribe();
+
     // Connect related phone network indicators
     connect(portraitPhoneSignalStrengthIndicator, SIGNAL(networkAvailabilityChanged(bool)), portraitPhoneNetworkTypeIndicator, SLOT(setNetworkAvailability(bool)));
     connect(landscapePhoneSignalStrengthIndicator, SIGNAL(networkAvailabilityChanged(bool)), landscapePhoneNetworkTypeIndicator, SLOT(setNetworkAvailability(bool)));
@@ -77,10 +83,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitClock->setObjectName("StatusAreaPortraitClock");
 
     // Set up landscape and portrait widgets and anchor them on top of each other
-    landscapeWidget->setStyleName("StatusBarLandscapeWidget");
     landscapeWidget->setLayout(createLandscapeLayout());
     landscapeWidget->setParent(controller);
-    portraitWidget->setStyleName("StatusBarPortraitWidget");
     portraitWidget->setLayout(createPortraitLayout());
     portraitWidget->setParent(controller);
     QGraphicsAnchorLayout *compositeLayout = new QGraphicsAnchorLayout;
@@ -144,6 +148,7 @@ void StatusAreaView::setupTestability()
 
 StatusAreaView::~StatusAreaView()
 {
+    delete callContextItem;
 }
 
 void StatusAreaView::setGeometry(const QRectF &rect)
@@ -208,6 +213,18 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitClock);
 
     return layout;
+}
+
+void StatusAreaView::setStyleNames()
+{
+    // Set the style based on the call state
+    if (callContextItem->value().toString() == "active") {
+        landscapeWidget->setStyleName("StatusBarLandscapeWidgetCall");
+        portraitWidget->setStyleName("StatusBarPortraitWidgetCall");
+    } else {
+        landscapeWidget->setStyleName("StatusBarLandscapeWidget");
+        portraitWidget->setStyleName("StatusBarPortraitWidget");
+    }
 }
 
 M_REGISTER_VIEW_NEW(StatusAreaView, StatusArea)

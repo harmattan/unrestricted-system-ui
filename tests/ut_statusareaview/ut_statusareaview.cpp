@@ -23,6 +23,7 @@
 #include "statusarea.h"
 #include "clock_stub.h"
 #include "statusindicator_stub.h"
+#include "contextframeworkitem_stub.h"
 #include "contextframeworkcontext_stub.h"
 #include "alarmstatusindicator_stub.h"
 #include "batterystatusindicator_stub.h"
@@ -67,6 +68,7 @@ void Ut_StatusAreaView::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_StatusAreaView::init()
 {
+    gContextFrameworkContextStub->stubSetReturnValue("createContextItem", static_cast<ContextItem *>(new ContextFrameworkItem(QString())));
     statusArea = new StatusArea;
     m_subject = new StatusAreaView(statusArea);
     statusArea->setView(m_subject);
@@ -77,12 +79,29 @@ void Ut_StatusAreaView::cleanup()
 {
     delete statusArea;
     statusArea = NULL;
+    gContextFrameworkContextStub->stubReset();
+    gContextFrameworkItemStub->stubReset();
 }
 
 void Ut_StatusAreaView::testSignalConnections()
 {
     QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->landscapeNotificationIndicator, SLOT(setActive(bool))));
     QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->portraitNotificationIndicator, SLOT(setActive(bool))));
+}
+
+void Ut_StatusAreaView::testStyleNamesFollowCallState()
+{
+    QVERIFY(disconnect(m_subject->callContextItem, SIGNAL(contentsChanged()), m_subject, SLOT(setStyleNames())));
+    QCOMPARE(gContextFrameworkItemStub->stubCallCount("subscribe"), 1);
+
+    QCOMPARE(m_subject->landscapeWidget->styleName(), QString("StatusBarLandscapeWidget"));
+    QCOMPARE(m_subject->portraitWidget->styleName(), QString("StatusBarPortraitWidget"));
+
+    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant("active"));
+    m_subject->setStyleNames();
+
+    QCOMPARE(m_subject->landscapeWidget->styleName(), QString("StatusBarLandscapeWidgetCall"));
+    QCOMPARE(m_subject->portraitWidget->styleName(), QString("StatusBarPortraitWidgetCall"));
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusAreaView)

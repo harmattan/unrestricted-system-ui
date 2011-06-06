@@ -26,6 +26,7 @@
 #include "contextframeworkcontext.h"
 
 class Clock;
+class ContextItem;
 class StatusArea;
 class StatusIndicator;
 class InputMethodStatusIndicator;
@@ -60,6 +61,13 @@ protected:
     //! Widgets for the landscape and portrait areas
     MWidgetController *landscapeWidget;
     MWidgetController *portraitWidget;
+
+private slots:
+    /*!
+     * Sets the style name of the landscape and portrait widgets
+     * based on whether a call is active or not.
+     */
+    void setStyleNames();
 
 private:
     //! Context framework application context for the indicators
@@ -126,6 +134,9 @@ private:
     //! Clock
     Clock *landscapeClock;
     Clock *portraitClock;
+
+    //! Call state context framework key
+    ContextItem *callContextItem;
 
     //! Create the layout for status area in landscape mode
     QGraphicsLinearLayout *createLandscapeLayout();
