@@ -37,7 +37,6 @@ private slots:
     void cleanup();
 
     void testSignalConnections();
-    void testStyleNamesFollowCallState();
 
 private:
     MApplication *app;

@@ -30,8 +30,6 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/applicationcontext.h \
-    $$SRCDIR/contextframeworkcontext.h \
     $$SRCDIR/statusarea/inputmethodstatusindicatoradaptor.h
 
 include(../common_bot.pri)

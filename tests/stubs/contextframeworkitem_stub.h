@@ -19,6 +19,13 @@
 #ifndef CONTEXTFRAMEWORKITEM_STUB
 #define CONTEXTFRAMEWORKITEM_STUB
 
+// A kludgy way to stub ContextFrameworkItem so that a ContextProperty
+// member is not included since the latter does not have a default
+// constructor defined.
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#undef HAVE_CONTEXTSUBSCRIBER
+#endif
+
 #include "contextframeworkcontext.h"
 #include <stubbase.h>
 
@@ -64,7 +71,7 @@ ContextFrameworkItemStub *gContextFrameworkItemStub = &gDefaultContextFrameworkI
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-ContextFrameworkItem::ContextFrameworkItem(const QString& key) : property("")
+ContextFrameworkItem::ContextFrameworkItem(const QString& key)
 {
     gContextFrameworkItemStub->ContextFrameworkItemConstructor(key);
 }
