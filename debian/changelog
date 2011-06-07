@@ -1,9 +1,8 @@
-system-ui (1.0.6~1) unstable; urgency=low
+system-ui (1.0.6-1) unstable; urgency=high
 
-  * [UNRELEASED]
   * Fixes: NB#263130 - Status menu can not be closed in portrait by tap outside anymore
 
- -- Sachin Kundu <ext-sachin.kundu@nokia.com>  Mon, 06 Jun 2011 10:42:00 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 07 Jun 2011 11:39:20 +0300
 
 system-ui (1.0.5-1) unstable; urgency=low
 
