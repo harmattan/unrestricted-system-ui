@@ -1,9 +1,8 @@
-system-ui (1.0.7~1) unstable; urgency=low
+system-ui (1.0.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#261420 - A banner with the string 'mount_failed' is shown after unplugging the USB cable when the file system could not be mounted
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 07 Jun 2011 11:39:41 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 07 Jun 2011 16:10:41 +0300
 
 system-ui (1.0.6-1) unstable; urgency=high
 
