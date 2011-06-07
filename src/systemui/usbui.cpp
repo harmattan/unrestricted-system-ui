@@ -34,6 +34,8 @@
 #include <qmlocks.h>
 #endif
 
+QMap<QString, QString> UsbUi::errorCodeToTranslationID;
+
 UsbUi::UsbUi(QObject *parent) : MDialog(),
 #ifdef HAVE_QMSYSTEM
     usbMode(new MeeGo::QmUSBMode(this)),
@@ -75,6 +77,11 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
 
     connect(qApp, SIGNAL(localeSettingsChanged()), this, SLOT(retranslateUi()));
     retranslateUi();
+
+    if (errorCodeToTranslationID.isEmpty()) {
+        errorCodeToTranslationID.insert("qtn_usb_filessystem_inuse", "qtn_usb_filessystem_inuse");
+        errorCodeToTranslationID.insert("mount_failed", "qtn_usb_mount_failed");
+    }
 
 #ifdef HAVE_QMSYSTEM
     connect(usbMode, SIGNAL(modeChanged(MeeGo::QmUSBMode::Mode)), this, SLOT(applyUSBMode(MeeGo::QmUSBMode::Mode)));
@@ -232,15 +239,17 @@ void UsbUi::hideNotification(NotificationCategory category)
     }
 }
 
-void UsbUi::showError(const QString &error)
+void UsbUi::showError(const QString &errorCode)
 {
-    // Remove previous notification
-    hideNotification(Error);
+    if (errorCodeToTranslationID.contains(errorCode)) {
+        // Remove previous notification
+        hideNotification(Error);
 
-    //% "USB connection error occurred"
-    MNotification notification(MNotification::DeviceErrorEvent, "", qtTrId(error.toUtf8().constData()));
-    notification.publish();
-    notifications.insert(Error, notification);
+        //% "USB connection error occurred"
+        MNotification notification(MNotification::DeviceErrorEvent, "", qtTrId(errorCodeToTranslationID.value(errorCode).toUtf8().constData()));
+        notification.publish();
+        notifications.insert(Error, notification);
+    }
 }
 
 void UsbUi::retranslateUi()

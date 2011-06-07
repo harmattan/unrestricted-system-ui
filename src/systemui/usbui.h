@@ -107,11 +107,11 @@ private slots:
     void showDialog();
 
     /*!
-     * Shows an error string.
+     * Shows an error string matching the given error code, if any.
      *
-     * \param error the translation ID of the error to show
+     * \param errorCode the error code of the error to be shown
      */
-    void showError(const QString &error);
+    void showError(const QString &errorCode);
 
     //! Shows or hides the SDK item from the dialog based on whether developer mode is enabled or not
     void updateSDKItemVisibility();
@@ -138,6 +138,9 @@ private:
     MeeGo::QmUSBMode::Mode requestedUSBMode;
     MeeGo::QmLocks *locks;
 #endif
+
+    //! MeeGo::QmUSBMode::error() error code to translation ID mapping
+    static QMap<QString, QString> errorCodeToTranslationID;
 
     //! Currently active notifications
     QMap<NotificationCategory, MNotification> notifications;

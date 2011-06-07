@@ -208,8 +208,16 @@ void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown()
 void Ut_UsbUi::testShowError()
 {
     m_subject->showError("test");
+    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), false);
+
+    m_subject->showError("qtn_usb_filessystem_inuse");
     QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
-    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("test"));
+    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("qtn_usb_filessystem_inuse"));
+    QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
+
+    m_subject->showError("mount_failed");
+    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
+    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("qtn_usb_mount_failed"));
     QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
 }
 
