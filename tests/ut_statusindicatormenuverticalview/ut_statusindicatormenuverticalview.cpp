@@ -1,4 +1,3 @@
-
 /****************************************************************************
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
@@ -26,7 +25,7 @@
 #include <MApplicationExtensionArea>
 #include "statusindicatormenustyle.h"
 #include <MSceneManager>
-#include <MButton>
+#include <MStylableWidget>
 #include <QGraphicsLinearLayout>
 #include <QEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -146,10 +145,12 @@ QObject *findChildItemByObjectName(QGraphicsItem* root, const QString &name) {
     return NULL;
 }
 
-QObject* filterObject = NULL;
-void QObject::installEventFilter(QObject *filterObj)
+QObject* filteredObject = NULL;
+QObject* filteringObject = NULL;
+void QObject::installEventFilter(QObject *filteringObj)
 {
-    filterObject = filterObj;
+    filteredObject = this;
+    filteringObject = filteringObj;
 }
 
 bool QObject::eventFilter(QObject *o, QEvent *e)
@@ -172,7 +173,8 @@ void Ut_StatusIndicatorMenuVerticalView::cleanup()
 {
     delete controller;
     mApplicationExtensionAreaInstance = NULL;
-    filterObject = NULL;
+    filteredObject = NULL;
+    filteringObject = NULL;
 }
 
 void Ut_StatusIndicatorMenuVerticalView::initTestCase()
@@ -257,27 +259,34 @@ void Ut_StatusIndicatorMenuVerticalView::testCreatedItemsAreRemovedFromTheContro
 
 void Ut_StatusIndicatorMenuVerticalView::testViewIsEventFilterForController()
 {
-    QCOMPARE(filterObject, m_subject);
+    QCOMPARE(filteredObject, m_subject->containerWidget);
+    QCOMPARE(filteringObject, m_subject);
 }
 
 void Ut_StatusIndicatorMenuVerticalView::testMouseClickAndDoubleClickAndMouseReleaseOnExtensionAreaIsIgnored()
 {
-    QScopedPointer<StatusIndicatorMenu> area(new StatusIndicatorMenu);
+    QScopedPointer<MStylableWidget> stylableWidget(new MStylableWidget);
+    QScopedPointer<MWidget> otherWidget(new MWidget);
+
     QEvent event(QEvent::GraphicsSceneMousePress);
-    bool ret = m_subject->eventFilter(area.data(), &event);
+    bool ret = m_subject->eventFilter(stylableWidget.data(), &event);
     QCOMPARE(ret, true);
 
     QEvent event2(QEvent::GraphicsSceneMouseDoubleClick);
-    ret = m_subject->eventFilter(area.data(), &event2);
+    ret = m_subject->eventFilter(stylableWidget.data(), &event2);
     QCOMPARE(ret, true);
 
     QEvent event3(QEvent::GraphicsSceneDragEnter);
-    ret = m_subject->eventFilter(area.data(), &event3);
+    ret = m_subject->eventFilter(stylableWidget.data(), &event3);
     QCOMPARE(ret, false);
 
     QEvent event4(QEvent::GraphicsSceneMouseRelease);
-    ret = m_subject->eventFilter(area.data(), &event4);
+    ret = m_subject->eventFilter(stylableWidget.data(), &event4);
     QCOMPARE(ret, true);
+
+    QEvent event5(QEvent::GraphicsSceneMousePress);
+    ret = m_subject->eventFilter(otherWidget.data(), &event);
+    QCOMPARE(ret, false);
 }
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorMenuVerticalView)

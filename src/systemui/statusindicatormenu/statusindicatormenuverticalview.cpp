@@ -89,16 +89,14 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     hlayout->addItem(rightSeparator);
 
     controller->setLayout(hlayout);
-    controller->installEventFilter(this);
+    containerWidget->installEventFilter(this);
 }
 
 bool StatusIndicatorMenuVerticalView::eventFilter(QObject *obj, QEvent *event)
 {
-    StatusIndicatorMenu* menu = dynamic_cast<StatusIndicatorMenu*> (obj);
+    MStylableWidget *widget = dynamic_cast<MStylableWidget *> (obj);
 
-    if(menu && (event->type() == QEvent::GraphicsSceneMousePress ||
-                event->type() == QEvent::GraphicsSceneMouseDoubleClick ||
-                event->type() == QEvent::GraphicsSceneMouseRelease)) {
+    if (widget != NULL && (event->type() == QEvent::GraphicsSceneMousePress || event->type() == QEvent::GraphicsSceneMouseDoubleClick || event->type() == QEvent::GraphicsSceneMouseRelease)) {
         return true;
     } else {
         return QObject::eventFilter(obj, event);
