@@ -1,5 +1,7 @@
 <aegis>
   <request>
+    <credential name="UID::user" />
+    <credential name="GID::users" />
     <credential name="usb-moded::USBControl" />
     <for path="/usr/bin/sysuid" />
   </request>
