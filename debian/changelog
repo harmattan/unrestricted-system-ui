@@ -1,9 +1,8 @@
-system-ui (1.0.9~1) unstable; urgency=low
+system-ui (1.0.9-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#260155 - LPM can be activated when lock screen is visible.
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 08 Jun 2011 15:16:29 +0300
+ -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Wed, 08 Jun 2011 17:50:00 +0300
 
 system-ui (1.0.8-1) unstable; urgency=low
 
