@@ -19,12 +19,11 @@
 #ifndef UT_LOCKSCREENVIEW_H
 #define UT_LOCKSCREENVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include <MSceneWindow>
-#include "lockscreenview.h"
 
 class MApplication;
+class MWidgetController;
+class LockScreenView;
 
 class Ut_LockScreenView : public QObject
 {

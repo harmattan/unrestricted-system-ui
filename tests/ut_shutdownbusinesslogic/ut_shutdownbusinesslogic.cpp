@@ -17,18 +17,17 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_shutdownbusinesslogic.h"
 #include "shutdownbusinesslogic.h"
-#include <signal.h>
 #include <MApplication>
-#include <MWindow>
 #include <MNotification>
 
 void restoreSignalHandlers()
 {
 }
 
-// Stubbed version of th ShutdownUI class.
+// Stubbed version of the ShutdownUI class.
 ShutdownUI::ShutdownUI()
 {
     m_Delay = 0;

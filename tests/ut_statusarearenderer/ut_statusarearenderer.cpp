@@ -16,6 +16,7 @@
 ** of this file .
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 #include "ut_statusarearenderer.h"
 #include <MOnDisplayChangeEvent>
 #include "statusarearenderer.h"

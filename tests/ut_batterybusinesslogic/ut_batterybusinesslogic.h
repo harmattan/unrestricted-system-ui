@@ -19,7 +19,6 @@
 #ifndef UT_BATTERYBUSINESSLOGIC_H
 #define UT_BATTERYBUSINESSLOGIC_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class BatteryBusinessLogic;
@@ -29,22 +28,22 @@ class Ut_BatteryBusinessLogic : public QObject
     Q_OBJECT
 
 private slots:
-    void init ();
-    void cleanup ();
-    void initTestCase ();
-    void cleanupTestCase ();
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
-    void testInitBattery ();
-    void testLowBatteryAlert ();
-    void testBatteryStateChanged ();
-    void testChargingStateChanged ();
-    void testBatteryChargerEvent ();
-    void testPSMStateChanged ();
-    void testLowBatteryNotifierConnection ();
+    void testInitBattery();
+    void testLowBatteryAlert();
+    void testBatteryStateChanged();
+    void testChargingStateChanged();
+    void testBatteryChargerEvent();
+    void testPSMStateChanged();
+    void testLowBatteryNotifierConnection();
     void testWhenChargingStopsThenNotificationRemoved();
 
 private:
-    BatteryBusinessLogic*   m_logic;
+    BatteryBusinessLogic *m_logic;
 };
 
 #endif

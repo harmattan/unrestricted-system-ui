@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <MApplication>
+#include <QtTest/QtTest>
 #include <QByteArray>
 #include "qdbusargument_fake.h"
 #include "ut_notification.h"

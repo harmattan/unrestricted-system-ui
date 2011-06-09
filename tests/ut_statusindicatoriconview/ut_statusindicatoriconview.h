@@ -20,7 +20,6 @@
 #ifndef UT_STATUSINDICATORICONVIEW_H
 #define UT_STATUSINDICATORICONVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 #include "statusindicatoriconview.h"

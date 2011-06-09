@@ -16,61 +16,60 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 #include "ut_unlockarea.h"
-#include <MTheme>
 #include <MApplication>
 #include <unlockarea.h>
-#include <MImageWidget>
 
 int   argc = 1;
 char *argv[] = {
-    (char *) "./ut_unlockarea",
+   (char *) "./ut_unlockarea",
     NULL };
 
 MApplication    *m_App;
 
-void ut_unlockarea::initTestCase ()
+void Ut_UnlockArea::initTestCase()
 {
     m_App = new MApplication(argc, argv);
 }
 
-void ut_unlockarea::cleanupTestCase ()
+void Ut_UnlockArea::cleanupTestCase()
 {
     m_App->deleteLater();
 }
 
-void ut_unlockarea::init ()
+void Ut_UnlockArea::init()
 {
 
 }
 
-void ut_unlockarea::cleanup ()
+void Ut_UnlockArea::cleanup()
 {
 
 }
 
-void ut_unlockarea::test_unlock_area ()
+void Ut_UnlockArea::testUnlockArea()
 {
-    UnlockArea  *area = new UnlockArea;
+    UnlockArea *area = new UnlockArea;
 
     MWidget *icon = area->m_unlock_icon;
 
-    QVERIFY (icon != 0);
+    QVERIFY(icon != 0);
 
-    area->setEnabled (false);
+    area->setEnabled(false);
 
-    QVERIFY (area->objectName () == "LockLandArea");
+    QCOMPARE(area->objectName(), QString("LockLandArea"));
 
-    area->setEnabled (true);
+    area->setEnabled(true);
 
-    QVERIFY (area->objectName () == "LockLandAreaDragged");
+    QCOMPARE(area->objectName(), QString("LockLandAreaDragged"));
 
-    area->setActive (true);
+    area->setActive(true);
 
-    QVERIFY (area->objectName () == "LockLandAreaActive");
+    QCOMPARE(area->objectName(), QString("LockLandAreaActive"));
 
     delete area;
 }
 
-QTEST_APPLESS_MAIN (ut_unlockarea)
+QTEST_APPLESS_MAIN(Ut_UnlockArea)
 

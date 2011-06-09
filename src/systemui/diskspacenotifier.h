@@ -20,8 +20,9 @@
 #ifndef DISKSPACENOTIFIER_H_
 #define DISKSPACENOTIFIER_H_
 
-#include <QSet>
+#include <QObject>
 #include <QMap>
+#include <QPair>
 
 class MNotification;
 

@@ -16,8 +16,13 @@
 ** of this file.
 **
 ****************************************************************************/
-#include "ut_batterybusinesslogic.h"
 
+/*
+ * TODO:
+ *  - test the feedback playing also
+ *  [XXX: we need to know first, how to play those correctly...]
+ */
+#include "ut_batterybusinesslogic.h"
 #include "batterybusinesslogic.h"
 
 #ifdef HAVE_QMSYSTEM
@@ -27,34 +32,21 @@
 #include "qmdisplaystate_stub.h"
 #endif
 
+#include <QtTest/QtTest>
 #include <MNotification>
 #include <MFeedback>
 
-/******************************************************************************
- * The stub for MFeedback class.
- */
+// MFeedback stub
 static QString nameOfLastFeedback;
-
-MFeedback::MFeedback (
-		const QString &name, 
-		QObject *parent) :
-	d_ptr (0)
+MFeedback::MFeedback(const QString &name, QObject *) :
+    d_ptr(NULL)
 {
-    Q_UNUSED (parent);
-
     nameOfLastFeedback = name;
 }
 
-void
-MFeedback::play () const 
+void MFeedback::play () const
 {
 }
-
-/*
- * TODO:
- *  - test the feedback playing also
- *  [XXX: we need to know first, how to play those correctly...]
- */
 
 QList<MNotification*> gMNotificationPublish;
 bool MNotification::publish ()
@@ -70,327 +62,293 @@ bool MNotification::remove ()
     return false;
 }
 
-
-void
-Ut_BatteryBusinessLogic::initTestCase ()
+void Ut_BatteryBusinessLogic::initTestCase()
 {
-    /* Add testsuite initialization here */
 }
 
-void
-Ut_BatteryBusinessLogic::cleanupTestCase ()
+void Ut_BatteryBusinessLogic::cleanupTestCase()
 {
-    /* Add testsuite deinitialization here */
 }
 
-
-void
-Ut_BatteryBusinessLogic::init ()
+void Ut_BatteryBusinessLogic::init()
 {
-    /* Testcase initialization... */
     m_logic = new BatteryBusinessLogic;
 }
 
-void
-Ut_BatteryBusinessLogic::cleanup ()
+void Ut_BatteryBusinessLogic::cleanup()
 {
-    /* Testcase deinitialization... */
     delete m_logic;
     m_logic = NULL;
     gMNotificationPublish.clear();
     gMNotificationRemoveEventType.clear();
 }
 
-void
-Ut_BatteryBusinessLogic::testInitBattery ()
+void Ut_BatteryBusinessLogic::testInitBattery()
 {
 #ifdef HAVE_QMSYSTEM
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
-    /* Set some ret. values for stubs */
-    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
-        "getChargingState", MeeGo::QmBattery::StateNotCharging);
-    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::BatteryState> (
-        "getBatteryState", MeeGo::QmBattery::StateOK);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::BatteryState>("getBatteryState", MeeGo::QmBattery::StateOK);
 
-    /* no notification should be shown,
-     * and battery-charging pattern should be deactivated:
-     */
-    m_logic->initBattery ();
-    /* wait for signals... if any... */
-    QTest::qWait (10);
+    // no notification should be shown and battery charging pattern should be deactivated
+    m_logic->initBattery();
+    QTest::qWait(10);
 
-    QCOMPARE (spy.count (), 0);
-    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0)
-             == QString ("PatternBatteryCharging"));
+    QCOMPARE(spy.count(), 0);
+    QCOMPARE(gQmLEDStub->stubLastCallTo("deactivate").parameter<QString>(0), QString("PatternBatteryCharging"));
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testLowBatteryAlert ()
+void Ut_BatteryBusinessLogic::testLowBatteryAlert()
 {
 #ifdef HAVE_QMSYSTEM
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
-    m_logic->lowBatteryAlert ();
+    m_logic->lowBatteryAlert();
 
-    QTest::qWait (10);
+    QTest::qWait(10);
 
-    QCOMPARE (spy.count (), 1);
+    QCOMPARE(spy.count(), 1);
 
-    QList<QVariant> arguments = spy.takeFirst ();
+    QList<QVariant> arguments = spy.takeFirst();
 
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.lowbattery"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_lowbatt"));
+    QCOMPARE(arguments.at(2).toString(), QString());
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testBatteryStateChanged ()
+void Ut_BatteryBusinessLogic::testBatteryStateChanged()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
-    gQmBatteryStub->stubReset ();
-    gQmLEDStub->stubReset ();
+    gQmBatteryStub->stubReset();
+    gQmLEDStub->stubReset();
 
     /* StateFull */
-    spy.clear ();
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateFull);
+    spy.clear();
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateFull);
 
-    QTest::qWait (10);
+    QTest::qWait(10);
 
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.chargingcomplete");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_charcomp"));
-    QVERIFY (arguments.at (2).toString () == "");
-    QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
-             == QString ("PatternBatteryFull"));
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.chargingcomplete"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_charcomp"));
+    QCOMPARE(arguments.at(2).toString(), QString());
+    QCOMPARE(gQmLEDStub->stubLastCallTo("activate").parameter<QString>(0), QString("PatternBatteryFull"));
 
     /* StateOK */
-    spy.clear ();
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateOK);
+    spy.clear();
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateOK);
 
-    QTest::qWait (10);
+    QTest::qWait(10);
     /* no signals/notifications should come, just silently no-op */
-    QCOMPARE (spy.count (), 0);
+    QCOMPARE(spy.count(), 0);
 
     /* StateEmpty */
-    spy.clear ();
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateEmpty);
+    spy.clear();
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateEmpty);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.recharge");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_rebatt"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.recharge"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_rebatt"));
+    QCOMPARE(arguments.at(2).toString(), QString());
 
     /* StateError */
-    spy.clear ();
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateError);
+    spy.clear();
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateError);
 
-    QTest::qWait (10);
+    QTest::qWait(10);
     /* no signals/notifications should come, just silently no-op */
-    QCOMPARE (spy.count (), 0);
+    QCOMPARE(spy.count(), 0);
 
     /* StateLow and charging */
-    spy.clear ();
-    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
-        "getChargingState", MeeGo::QmBattery::StateCharging);
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
+    spy.clear();
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateCharging);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
 
-    QTest::qWait (10);
+    QTest::qWait(10);
     /* no signals/notifications should come, because battery is charging... */
-    QCOMPARE (spy.count (), 0);
+    QCOMPARE(spy.count(), 0);
 
     /* StateLow and not charging */
-    spy.clear ();
-    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
-        "getChargingState", MeeGo::QmBattery::StateNotCharging);
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
+    spy.clear();
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
 
-    QTest::qWait (10);
+    QTest::qWait(10);
 
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.lowbattery"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_lowbatt"));
+    QCOMPARE(arguments.at(2).toString(), QString());
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testChargingStateChanged ()
+void Ut_BatteryBusinessLogic::testChargingStateChanged()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
-    gQmBatteryStub->stubReset ();
-    gQmLEDStub->stubReset ();
+    gQmBatteryStub->stubReset();
+    gQmLEDStub->stubReset();
 
-    gQmBatteryStub->stubSetReturnValue (
-        "getChargerType", MeeGo::QmBattery::Wall);
+    gQmBatteryStub->stubSetReturnValue("getChargerType", MeeGo::QmBattery::Wall);
 
-    for (int i = 0; i <= 100; i += 5)
-    {
-      /* StateCharging */
-      gQmBatteryStub->stubSetReturnValue<int> ("getRemainingCapacityPct", i);
-      m_logic->chargingStateChanged (MeeGo::QmBattery::StateCharging);
+    for(int i = 0; i <= 100; i += 5) {
+        /* StateCharging */
+        gQmBatteryStub->stubSetReturnValue<int>("getRemainingCapacityPct", i);
+        m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
 
-      QTest::qWait (1);
-      QCOMPARE (spy.count (), 1);
-      arguments = spy.takeFirst ();
-      QVERIFY (arguments.at (0).toString () == "x-nokia.battery");
-      QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_charging"));
-      QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId ());
-      QVERIFY (gQmLEDStub->stubLastCallTo ("activate").parameter<QString>(0)
-               == QString ("PatternBatteryCharging"));
-      spy.clear ();
+        QTest::qWait(1);
+        QCOMPARE(spy.count(), 1);
+        arguments = spy.takeFirst();
+        QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery"));
+        QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_charging"));
+        QCOMPARE(arguments.at(2).toString(), m_logic->chargingImageId());
+        QCOMPARE(gQmLEDStub->stubLastCallTo("activate").parameter<QString>(0), QString("PatternBatteryCharging"));
+        spy.clear();
     }
 
     /* StateNotCharging */
-    m_logic->chargingStateChanged (MeeGo::QmBattery::StateNotCharging);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 0);
-    QVERIFY (gQmLEDStub->stubLastCallTo ("deactivate").parameter<QString>(0)
-             == QString ("PatternBatteryCharging"));
-    spy.clear ();
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 0);
+    QCOMPARE(gQmLEDStub->stubLastCallTo("deactivate").parameter<QString>(0), QString("PatternBatteryCharging"));
+    spy.clear();
 
     /* StateChargingFailed */
-    m_logic->chargingStateChanged (MeeGo::QmBattery::StateChargingFailed);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateChargingFailed);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.chargingnotstarted");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_repcharger"));
-    QVERIFY (arguments.at (2).toString () == "");
-    spy.clear ();
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.chargingnotstarted"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_repcharger"));
+    QCOMPARE(arguments.at(2).toString(), QString());
+    spy.clear();
 
     /* Test "not enough power to charge" situation... */
-    gQmBatteryStub->stubSetReturnValue (
-        "getChargerType", MeeGo::QmBattery::USB_100mA);
-    m_logic->chargingStateChanged (MeeGo::QmBattery::StateCharging);
+    gQmBatteryStub->stubSetReturnValue("getChargerType", MeeGo::QmBattery::USB_100mA);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.notenoughpower");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_nopowcharge"));
-    QVERIFY (arguments.at (2).toString () == "icon-m-energy-management-insufficient-power");
-    spy.clear ();
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.notenoughpower"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_nopowcharge"));
+    QCOMPARE(arguments.at(2).toString(), QString("icon-m-energy-management-insufficient-power"));
+    spy.clear();
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testBatteryChargerEvent ()
+void Ut_BatteryBusinessLogic::testBatteryChargerEvent()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
     /* Wall charger */
-    m_logic->batteryChargerEvent (MeeGo::QmBattery::Wall);
-    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::Wall);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::Wall);
+    QCOMPARE(m_logic->m_ChargerType, MeeGo::QmBattery::Wall);
 
     /* Plug out : charger type = none */
-    m_logic->batteryChargerEvent (MeeGo::QmBattery::None);
-    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::None);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::None);
+    QCOMPARE(m_logic->m_ChargerType, MeeGo::QmBattery::None);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
     /* Look for the notification: "Disconnect the charger from..." */
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.removecharger");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_remcha"));
-    QVERIFY (arguments.at (2).toString () == "");
-    spy.clear ();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.removecharger"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_remcha"));
+    QCOMPARE(arguments.at(2).toString(), QString());
+    spy.clear();
 
     /* USB 500mA */
-    m_logic->batteryChargerEvent (MeeGo::QmBattery::USB_500mA);
-    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::USB_500mA);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::USB_500mA);
+    QCOMPARE(m_logic->m_ChargerType, MeeGo::QmBattery::USB_500mA);
 
     /* USB 100mA */
-    m_logic->batteryChargerEvent (MeeGo::QmBattery::USB_100mA);
-    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::USB_100mA);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::USB_100mA);
+    QCOMPARE(m_logic->m_ChargerType, MeeGo::QmBattery::USB_100mA);
 
     /* Unknown */
-    m_logic->batteryChargerEvent (MeeGo::QmBattery::Unknown);
-    QCOMPARE (m_logic->m_ChargerType, MeeGo::QmBattery::Unknown);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::Unknown);
+    QCOMPARE(m_logic->m_ChargerType, MeeGo::QmBattery::Unknown);
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testPSMStateChanged ()
+void Ut_BatteryBusinessLogic::testPSMStateChanged()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
     /* Entering to power-save mode */
-    m_logic->devicePSMStateChanged (MeeGo::QmDeviceMode::PSMStateOn);
+    m_logic->devicePSMStateChanged(MeeGo::QmDeviceMode::PSMStateOn);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.enterpsm");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_ent_psnote"));
-    QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId());
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.enterpsm"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_ent_psnote"));
+    QCOMPARE(arguments.at(2).toString(), m_logic->chargingImageId());
 
-    spy.clear ();
+    spy.clear();
 
     /* Exiting from power-save mode */
-    m_logic->devicePSMStateChanged (MeeGo::QmDeviceMode::PSMStateOff);
+    m_logic->devicePSMStateChanged(MeeGo::QmDeviceMode::PSMStateOff);
 
-    QTest::qWait (10);
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.exitpsm");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_exit_psnote"));
-    QVERIFY (arguments.at (2).toString () == m_logic->chargingImageId());
+    QTest::qWait(10);
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.exitpsm"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_exit_psnote"));
+    QCOMPARE(arguments.at(2).toString(), m_logic->chargingImageId());
 #endif
 }
 
-void
-Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection ()
+void Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy (m_logic, SIGNAL (notificationSent (QString, QString, QString)));
+    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
-    gQmBatteryStub->stubSetReturnValue (
-        "getChargerType", MeeGo::QmBattery::USB_500mA);
+    gQmBatteryStub->stubSetReturnValue("getChargerType", MeeGo::QmBattery::USB_500mA);
 
     /* LowBatteryNotifier shouldn't be instantiated at first */
-    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+    QCOMPARE(m_logic->m_LowBatteryNotifier, (LowBatteryNotifier *)NULL);
 
     /* Simulate battery-state-low change */
-    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState> (
-        "getChargingState", MeeGo::QmBattery::StateNotCharging);
-    m_logic->batteryStateChanged (MeeGo::QmBattery::StateLow);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
 
     /* LowBatteryNotifier should be exists now... */
-    QVERIFY (m_logic->m_LowBatteryNotifier != 0);
-    QTest::qWait (10);
+    QVERIFY(m_logic->m_LowBatteryNotifier != NULL);
+    QTest::qWait(10);
 
     /* And should send a low-battery notification */
-    QCOMPARE (spy.count (), 1);
-    arguments = spy.takeFirst ();
-    QVERIFY (arguments.at (0).toString () == "x-nokia.battery.lowbattery");
-    QVERIFY (arguments.at (1).toString () == qtTrId ("qtn_ener_lowbatt"));
-    QVERIFY (arguments.at (2).toString () == "");
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.lowbattery"));
+    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_lowbatt"));
+    QCOMPARE(arguments.at(2).toString(), QString());
 
     /* Simulate now a charging event */
-    m_logic->chargingStateChanged (MeeGo::QmBattery::StateCharging);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
 
     /* After this call LowBatteryNotifier should be destroyed */
-    QVERIFY (m_logic->m_LowBatteryNotifier == 0);
+    QCOMPARE(m_logic->m_LowBatteryNotifier, (LowBatteryNotifier *)NULL);
 #endif
 }
 
@@ -403,6 +361,5 @@ void Ut_BatteryBusinessLogic::testWhenChargingStopsThenNotificationRemoved()
     QVERIFY(gMNotificationRemoveEventType.count() > 0);
     QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery"));
 }
-
 
 QTEST_MAIN(Ut_BatteryBusinessLogic)

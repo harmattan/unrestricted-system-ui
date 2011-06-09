@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <MRemoteAction>
 #include "ut_widgetnotificationsink.h"
 #include "widgetnotificationsink.h"

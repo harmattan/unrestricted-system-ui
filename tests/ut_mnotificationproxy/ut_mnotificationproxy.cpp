@@ -19,6 +19,7 @@
 
 #include <QtTest/QtTest>
 #include <QtDBus/QtDBus>
+#include <MApplication>
 #include "ut_mnotificationproxy.h"
 #include "notification.h"
 #include "notificationparameters.h"
@@ -54,7 +55,6 @@ void Ut_MNotificationProxy::cleanup()
 
 void Ut_MNotificationProxy::initTestCase()
 {
-    // MApplications must be created manually these days due to theme system changes
     static int argc = 1;
     static char *app_name = (char *)"./ut_statusindicator";
     app = new MApplication(argc, &app_name);
@@ -62,7 +62,6 @@ void Ut_MNotificationProxy::initTestCase()
 
 void Ut_MNotificationProxy::cleanupTestCase()
 {
-    // Destroy the MApplication
     delete app;
 }
 
@@ -92,8 +91,7 @@ void Ut_MNotificationProxy::testMNotificationProxy()
     QCOMPARE(n1.parameters().value(COUNT).toUInt(), proxy.count);
 
     // Check the DBus argument signature
-    QString signature =
-        QDBusMetaType::typeToSignature(qMetaTypeId<MNotificationProxy>());
+    QString signature = QDBusMetaType::typeToSignature(qMetaTypeId<MNotificationProxy>());
     QCOMPARE(QString("(uusssssu)"), signature);
 }
 
@@ -122,8 +120,7 @@ void Ut_MNotificationProxy::testMNotificationGroupProxy()
     QCOMPARE(g1.parameters().value(COUNT).toUInt(), proxy.count);
 
     // Check the DBus argument signature
-    QString signature =
-        QDBusMetaType::typeToSignature(qMetaTypeId<MNotificationGroupProxy>());
+    QString signature = QDBusMetaType::typeToSignature(qMetaTypeId<MNotificationGroupProxy>());
     QCOMPARE(QString("(usssssu)"), signature);
 }
 

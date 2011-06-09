@@ -16,12 +16,13 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef UT_MEVENTTYPESTORE_H
-#define UT_MEVENTTYPESTORE_H
+#ifndef UT_EVENTTYPESTORE_H
+#define UT_EVENTTYPESTORE_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include "eventtypestore.h"
+#include <QMetaType>
+
+class EventTypeStore;
 
 Q_DECLARE_METATYPE(EventTypeStore *);
 

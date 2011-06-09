@@ -19,7 +19,6 @@
 #ifndef UT_XEVENTLISTENER_H
 #define UT_XEVENTLISTENER_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 #include "xeventlistener.h"
 

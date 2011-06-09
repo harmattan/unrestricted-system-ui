@@ -19,10 +19,9 @@
 #ifndef _UT_NGFADAPTER_
 #define _UT_NGFADAPTER_
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-#include "ngfadapter.h"
+class NGFAdapter;
 
 class Ut_NGFAdapter : public QObject
 {
@@ -43,7 +42,7 @@ private slots:
 
 private:
     //! The test subject
-    NGFAdapter* adapter;
-
+    NGFAdapter *adapter;
 };
+
 #endif //_UT_NGFADAPTER_

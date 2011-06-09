@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <QByteArray>
 #include "qdbusargument_fake.h"
 #include "ut_notificationgroup.h"
@@ -125,8 +126,6 @@ void Ut_NotificationGroup::testDBusSerialization()
              n2.parameters().value("action"));
     QCOMPARE(n1.parameters().value("count"),
              n2.parameters().value("count"));
-
 }
-
 
 QTEST_MAIN(Ut_NotificationGroup)

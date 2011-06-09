@@ -22,7 +22,6 @@
 
 #include <QObject>
 
-class MApplication;
 class PrivateModeBrief;
 
 class Ut_PrivateModeBrief : public QObject

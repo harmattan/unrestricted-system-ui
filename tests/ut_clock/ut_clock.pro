@@ -4,7 +4,6 @@ TARGET = ut_clock
 
 INCLUDEPATH += $$SRCDIR/statusarea
 
-STYLE_HEADERS += $$SRCDIR/statusarea/clockstyle.h
 MODEL_HEADERS += $$SRCDIR/statusarea/clockmodel.h
 
 # unit test and unit
@@ -16,7 +15,6 @@ SOURCES += \
 HEADERS += \
     ut_clock.h \
     $$SRCDIR/statusarea/clock.h \
-    $$SRCDIR/statusarea/clockstyle.h \
     $$SRCDIR/statusarea/clockmodel.h
 
 include(../common_bot.pri)

@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
+#include <MApplication>
 #include <MOnDisplayChangeEvent>
 #include <MLocale>
 #include "ut_statusindicator.h"

@@ -32,13 +32,11 @@ class ShutdownUI;
  * \brief Business logic for the shutdown subsystem. 
  *
  * This class connects the systemStateChanged() signal of the QmSystem library
- * and notify the user about the state changes. The class does nothing else.
- * The messages are sent, when:
+ * and notify the user about the state changes. The messages are sent, when:
  * 1) Shutdown is happening.
  * 2) Thermal emergency shutdown is happening.
  * 3) Battery low shutdown is happening.
  * 4) The shutdown is aborted because the USB is connected.
- *
  */
 class ShutdownBusinessLogic : public QObject
 {
@@ -46,16 +44,16 @@ class ShutdownBusinessLogic : public QObject
 
 public:
     ShutdownBusinessLogic(QObject *parent = 0);
-    virtual ~ShutdownBusinessLogic ();
+    virtual ~ShutdownBusinessLogic();
 
-    void showUI(QString text1 = QString (""), QString text2 = QString (""), int timeout = 2000);
+    void showUI(QString text1 = QString(), QString text2 = QString(), int timeout = 2000);
 
 public slots:
 #ifdef HAVE_QMSYSTEM
     /*!
      * This function is called when the QmSystem reports a state change.
      */
-    void systemStateChanged (MeeGo::QmSystemState::StateIndication what);
+    void systemStateChanged(MeeGo::QmSystemState::StateIndication what);
 #endif
 
 private:
@@ -69,7 +67,7 @@ private:
     ShutdownUI *shutdownUi;
 
 #ifdef HAVE_QMSYSTEM
-    MeeGo::QmSystemState   *m_State;
+    MeeGo::QmSystemState *m_State;
 #endif
 
 #ifdef UNIT_TEST
@@ -84,12 +82,10 @@ class ShutdownBusinessLogicAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "com.nokia.systemui.shutdownui")
 
 public:
-    ShutdownBusinessLogicAdaptor (
-            QObject                  *parent,
-            ShutdownBusinessLogic    *logic);
+    ShutdownBusinessLogicAdaptor(QObject *parent, ShutdownBusinessLogic *logic);
 
 public slots:
-    Q_NOREPLY void showScreen (QString text1, QString text2, int timeout);
+    Q_NOREPLY void showScreen(QString text1, QString text2, int timeout);
 
 private:
     ShutdownBusinessLogic *shutdownBusinessLogic;

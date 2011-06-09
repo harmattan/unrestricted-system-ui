@@ -17,8 +17,10 @@
 **
 ****************************************************************************/
 
-#include "ut_notificationstatusindicator.h"
+#include <QtTest/QtTest>
 #include <MApplication>
+#include "ut_notificationstatusindicator.h"
+#include "notificationstatusindicator.h"
 
 void Ut_NotificationStatusIndicator::init()
 {

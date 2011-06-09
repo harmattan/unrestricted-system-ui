@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "lockscreen.h"
 #include "ut_lockscreen.h"
 #include <MApplication>
@@ -56,10 +57,7 @@ void Ut_LockScreen::cleanupTestCase()
 void Ut_LockScreen::testConstruction()
 {
     // Verify that the MApplication's minimized slot is tracked
-    QVERIFY(disconnect(MApplication::instance(),
-                       SIGNAL(minimized()),
-                       lockScreen,
-                       SLOT(unlock())));
+    QVERIFY(disconnect(MApplication::instance(), SIGNAL(minimized()), lockScreen, SLOT(unlock())));
 }
 
 void Ut_LockScreen::testUnlock_data()

@@ -16,13 +16,11 @@
 ** of this file.
 **
 ****************************************************************************/
-#ifndef Ut_EventEater_H
-#define Ut_EventEater_H
+#ifndef UT_EVENTEATER_H
+#define UT_EVENTEATER_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-class MApplication;
 class EventEater;
 
 class Ut_EventEater : public QObject
@@ -44,7 +42,7 @@ private slots:
     void testHide();
 
 private:
-    EventEater          *m_subject;
+    EventEater *m_subject;
 };
 
 #endif

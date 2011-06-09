@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-
+#include <QtTest/QtTest>
 #include "ut_ngfnotificationsink.h"
 #include <MApplication>
 #include "ngfnotificationsink.h"

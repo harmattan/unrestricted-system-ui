@@ -19,6 +19,7 @@
 
 #include "ut_sysuid.h"
 
+#include <QtTest/QtTest>
 #include <QDBusConnection>
 #include <MApplication>
 #include <MLocale>

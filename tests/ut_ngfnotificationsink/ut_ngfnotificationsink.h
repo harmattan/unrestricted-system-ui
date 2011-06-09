@@ -20,9 +20,7 @@
 #ifndef UT_NGFNOTIFICATIONSINK_H
 #define UT_NGFNOTIFICATIONSINK_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include <QList>
 #include "notification.h"
 
 class MApplication;

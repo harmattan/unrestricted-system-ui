@@ -18,8 +18,6 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <MOnDisplayChangeEvent>
-#include <QScopedPointer>
 #ifdef HAVE_QMSYSTEM
 #include <qmtime.h>
 #endif
@@ -96,9 +94,7 @@ void Ut_Clock::testConstruction()
     mWidgetIsOnDisplay = isOnDisplay;
     m_subject = new Clock;
 
-    QVERIFY(disconnect(&m_subject->timer,
-                       SIGNAL(timeout()),
-                       m_subject, SLOT(updateModelAndSetupTimer())));
+    QVERIFY(disconnect(&m_subject->timer, SIGNAL(timeout()), m_subject, SLOT(updateModelAndSetupTimer())));
     QVERIFY(m_subject->timer.isSingleShot());
     QDateTime nextUpdateTime = expectedDateTime.addSecs(60);
     QTime time = nextUpdateTime.time();

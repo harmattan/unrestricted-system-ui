@@ -19,7 +19,6 @@
 #ifndef UT_CLOCKVIEW_H
 #define UT_CLOCKVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 #include "clockstyle.h"
 #include "clockview.h"

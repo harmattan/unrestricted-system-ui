@@ -1,21 +1,21 @@
 /****************************************************************************
-**
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary (-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (directui@nokia.com)
-**
-** This file is part of systemui.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at directui@nokia.com.
-**
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation
-** and appearing in the file LICENSE.LGPL included in the packaging
-** of this file.
-**
-****************************************************************************/
+ **
+ ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary (-ies).
+ ** All rights reserved.
+ ** Contact: Nokia Corporation (directui@nokia.com)
+ **
+ ** This file is part of systemui.
+ **
+ ** If you have questions regarding the use of this file, please contact
+ ** Nokia at directui@nokia.com.
+ **
+ ** This library is free software; you can redistribute it and/or
+ ** modify it under the terms of the GNU Lesser General Public
+ ** License version 2.1 as published by the Free Software Foundation
+ ** and appearing in the file LICENSE.LGPL included in the packaging
+ ** of this file.
+ **
+ ****************************************************************************/
 #ifndef BATTERYBUSINESSLOGIC_H
 #define BATTERYBUSINESSLOGIC_H
 
@@ -23,10 +23,10 @@
 #include <QTime>
 
 #ifdef HAVE_QMSYSTEM
-  #include <qmled.h>
-  #include <qmbattery.h>
-  #include <qmdevicemode.h>
-  #include <qmdisplaystate.h>
+#include <qmled.h>
+#include <qmbattery.h>
+#include <qmdevicemode.h>
+#include <qmdisplaystate.h>
 #endif
 
 class QTimer;
@@ -38,16 +38,15 @@ class MNotification;
  * not generate new notifications. The BatteryBusinessLogic will connect to this
  * signal and handle the notifications.
  */
-class LowBatteryNotifier : public QObject
-{
+class LowBatteryNotifier: public QObject {
     Q_OBJECT
 
 public:
-    LowBatteryNotifier (QObject* parent = 0);
-    virtual ~LowBatteryNotifier ();
+    LowBatteryNotifier(QObject* parent = 0);
+    virtual ~LowBatteryNotifier();
 
 public slots:
-    void showLowBatteryNotification ();
+    void showLowBatteryNotification();
 
 private slots:
 #ifdef HAVE_QMSYSTEM
@@ -55,17 +54,17 @@ private slots:
 #endif
 
 signals:
-    void lowBatteryAlert ();
+    void lowBatteryAlert();
 
 private:
 #ifdef HAVE_QMSYSTEM
-    MeeGo::QmDisplayState       *m_Display;
+    MeeGo::QmDisplayState *m_Display;
 #endif
-    QTimer                      *m_Timer;
-    QTime                        m_Time;
-    bool                         m_Sleep;
-    int                          m_ActiveInterval;
-    int                          m_InactiveInterval;
+    QTimer *m_Timer;
+    QTime m_Time;
+    bool m_Sleep;
+    int m_ActiveInterval;
+    int m_InactiveInterval;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;
@@ -75,13 +74,12 @@ private:
 /*!
  * Implements the configuration and state for the battery, the power save mode.
  */
-class BatteryBusinessLogic : public QObject
-{
+class BatteryBusinessLogic : public QObject {
     Q_OBJECT
 
 public:
-    BatteryBusinessLogic (QObject* parent = 0);
-    virtual ~BatteryBusinessLogic ();
+    BatteryBusinessLogic(QObject* parent = 0);
+    virtual ~BatteryBusinessLogic();
 
     typedef enum {
         NotificationCharging,
@@ -92,7 +90,7 @@ public:
         NotificationEnteringPSM,
         NotificationExitingPSM,
         NotificationLowBattery,
-        NotificationNoEnoughPower,
+        NotificationNoEnoughPower
     } NotificationID;
 
 signals:
@@ -100,14 +98,11 @@ signals:
      * To simplify the test case we use this signal that we can catch. See 
      * NB#171466 for further details.
      */
-    void notificationSent (
-            QString      eventType,
-            QString      text,
-            QString      icon);
+    void notificationSent(QString eventType, QString text, QString icon);
 
 public slots:
-    void initBattery ();
-    void lowBatteryAlert ();
+    void initBattery();
+    void lowBatteryAlert();
 
 private slots:
 #ifdef HAVE_QMSYSTEM
@@ -116,24 +111,21 @@ private slots:
     void batteryChargerEvent (MeeGo::QmBattery::ChargerType type);
     void devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState PSMState);
 #endif
-    void utiliseLED (bool activate, const QString &pattern);
+    void utiliseLED(bool activate, const QString &pattern);
 
 private:
-    void sendNotification (BatteryBusinessLogic::NotificationID id); 
-    void sendNotification (
-            const QString &eventType, 
-            const QString &text,
-            const QString &icon = QString(""));
+    void sendNotification(BatteryBusinessLogic::NotificationID id);
+    void sendNotification(const QString &eventType, const QString &text, const QString &icon = QString(""));
     void removeNotification(const QString &eventType);
-    QString chargingImageId ();
+    QString chargingImageId();
 
-    LowBatteryNotifier              *m_LowBatteryNotifier;
-    MNotification                   *m_notification;
+    LowBatteryNotifier *m_LowBatteryNotifier;
+    MNotification *m_notification;
 #ifdef HAVE_QMSYSTEM
-    MeeGo::QmBattery                *m_Battery;
-    MeeGo::QmDeviceMode             *m_DeviceMode;
-    MeeGo::QmLED                    *m_Led;
-    MeeGo::QmBattery::ChargerType    m_ChargerType;
+    MeeGo::QmBattery *m_Battery;
+    MeeGo::QmDeviceMode *m_DeviceMode;
+    MeeGo::QmLED *m_Led;
+    MeeGo::QmBattery::ChargerType m_ChargerType;
 #endif
 
 #ifdef UNIT_TEST
@@ -142,6 +134,4 @@ private:
 #endif
 };
 
-
 #endif
-

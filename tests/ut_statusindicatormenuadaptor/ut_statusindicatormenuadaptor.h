@@ -19,7 +19,6 @@
 #ifndef _UT_STATUSINDICATORMENUADAPTOR_
 #define _UT_STATUSINDICATORMENUADAPTOR_
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class MApplication;
@@ -31,7 +30,7 @@ class Ut_StatusIndicatorMenuAdaptor : public QObject
     Q_OBJECT
 
 private:
-    MApplication  *app;
+    MApplication *app;
     StatusIndicatorMenuBusinessLogic *menuBusinessLogic;
     StatusIndicatorMenuAdaptor *menuAdaptor;
 

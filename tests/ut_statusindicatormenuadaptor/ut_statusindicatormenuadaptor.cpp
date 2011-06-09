@@ -17,11 +17,9 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_statusindicatormenuadaptor.h"
-
 #include <MApplication>
-#include <MApplicationPage>
-#include <MEscapeButtonPanel>
 #include "statusindicatormenuadaptor.h"
 #include "statusindicatormenubusinesslogic_stub.h"
 

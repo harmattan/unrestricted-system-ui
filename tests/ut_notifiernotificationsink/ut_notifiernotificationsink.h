@@ -20,7 +20,6 @@
 #ifndef UT_NOTIFIERNOTIFICATIONSINK_H
 #define UT_NOTIFIERNOTIFICATIONSINK_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class NotifierNotificationSink;

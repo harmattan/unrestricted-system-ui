@@ -29,10 +29,10 @@ class Ut_UnlockNotificationSink : public QObject
     Q_OBJECT
 
 private slots:
-    void init ();
-    void cleanup ();
-    void initTestCase ();
-    void cleanupTestCase ();
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
     void testAddNotification();
     void testWhenPrivacyModeOffThenSummaryIsFromNotification();
@@ -41,7 +41,7 @@ private slots:
     void testEnableDisableLocking();
 
 private:
-    MApplication           *app;
+    MApplication *app;
     UnlockNotificationSink *sink;
 };
 

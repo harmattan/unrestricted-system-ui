@@ -20,7 +20,6 @@
 #ifndef UT_WIDGETNOTIFICATIONSINK_H
 #define UT_WIDGETNOTIFICATIONSINK_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 #include "notification.h"
 

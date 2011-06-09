@@ -19,9 +19,7 @@
 #ifndef UT_LOCKSCREEN_H
 #define UT_LOCKSCREEN_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include <QPointer>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -51,7 +49,7 @@ private slots:
 private:
     MApplication *app;
     MWindow *parent;
-    LockScreen  *lockScreen;
+    LockScreen *lockScreen;
 };
 
 #endif

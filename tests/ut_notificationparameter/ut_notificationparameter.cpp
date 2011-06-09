@@ -17,10 +17,9 @@
 **
 ****************************************************************************/
 
-#include <MApplication>
+#include <QtTest/QtTest>
 #include "ut_notificationparameter.h"
 #include "notificationparameter.h"
-
 
 void Ut_NotificationParameter::initTestCase()
 {

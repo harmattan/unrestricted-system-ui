@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_notifiernotificationsink.h"
 #include "notifiernotificationsink.h"
 #include "notification.h"

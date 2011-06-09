@@ -41,8 +41,6 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
-    void checkNextUpdate();
-
     void testInitialState();
     void testDateUpdates();
     void testTimeSettingChanged();
@@ -50,13 +48,14 @@ private slots:
     void testEmptyDateFormat();
 
 private:
+    void checkNextUpdate();
     DateStyle *style();
+
     MApplication *app;
+    MLocale *locale;
 
     // The object being tested
     Date *m_subject;
-
-    MLocale *locale;
 };
 
 #endif

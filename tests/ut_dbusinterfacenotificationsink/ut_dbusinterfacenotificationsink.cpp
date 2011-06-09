@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 #include "ut_dbusinterfacenotificationsink.h"
 #include "dbusinterfacenotificationsink.h"
 #include "dbusinterfacenotificationsinkadaptor.h"
@@ -322,6 +323,5 @@ void Ut_DBusInterfaceNotificationSink::testManagerNotDefined()
     QCOMPARE(gNotificationManagerStub->stubCallCount("groups"), 0);
     QCOMPARE(gNotificationManagerStub->stubCallCount("notifications"), 0);
 }
-
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSink)

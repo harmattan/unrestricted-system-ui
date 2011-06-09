@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_xeventlistener.h"
 
 QHash<int, int> gCalledDummyXEventFilters;

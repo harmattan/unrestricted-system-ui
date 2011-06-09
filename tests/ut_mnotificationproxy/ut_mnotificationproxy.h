@@ -19,8 +19,9 @@
 #ifndef _UT_MNOTIFICATIONPROXY_
 #define _UT_MNOTIFICATIONPROXY_
 
-#include <QtTest/QtTest>
-#include <mapplication.h>
+#include <QObject>
+
+class MApplication;
 
 class Ut_MNotificationProxy : public QObject
 {

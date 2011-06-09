@@ -20,7 +20,6 @@
 #ifndef UT_DBUSINTERFACENOTIFICATIONSINK_H
 #define UT_DBUSINTERFACENOTIFICATIONSINK_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 #include "notification.h"
 
@@ -81,7 +80,7 @@ signals:
 private:
     // The object being tested
     DBusInterfaceNotificationSink *sink;
-    //Stubbed manager
+    // Stubbed manager
     NotificationManager *manager;
 };
 

@@ -16,8 +16,9 @@
 ** of this file.
 **
 ****************************************************************************/
-#include <QObject>
+#include <QtTest/QtTest>
 #include "ut_eventtypestore.h"
+#include "eventtypestore.h"
 
 // List of event type files
 QStringList eventTypeFilesList;

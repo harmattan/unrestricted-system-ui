@@ -20,8 +20,6 @@
 #define _UT_STATUSINDICATORMENUWINDOW_
 
 #include <QObject>
-#include <QGraphicsSceneMouseEvent>
-#include "statusindicatormenuwindow.h"
 
 class StatusIndicatorMenuWindow;
 class MApplication;

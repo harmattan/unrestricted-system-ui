@@ -20,7 +20,6 @@
 #ifndef UT_STATUSINDICATORLABELVIEW_H
 #define UT_STATUSINDICATORLABELVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 #include "statusindicatorlabelview.h"

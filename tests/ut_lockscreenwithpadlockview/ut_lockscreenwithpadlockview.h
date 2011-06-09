@@ -19,13 +19,13 @@
 #ifndef UT_LOCKSCREENWITHPADLOCKVIEW_H
 #define UT_LOCKSCREENWITHPADLOCKVIEW_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class MApplication;
 class LockScreenWithPadlockView;
 class LockScreen;
 class NotificationManagerInterface;
+class QPointF;
 
 class Ut_LockScreenWithPadlockView : public QObject
 {
@@ -37,8 +37,6 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void checkOverlayPos(const QPointF &eventPos);
-
     void testInitialState();
     void testDraggableIconMovement_data();
     void testDraggableIconMovement();
@@ -46,6 +44,8 @@ private slots:
     void testCreatedItemsAreRemovedFromTheControllerAndTheScene();
 
 private:
+    void checkOverlayPos(const QPointF &eventPos);
+
     LockScreenWithPadlockView *m_subject;
     MApplication *app;
     NotificationManagerInterface *notificationManager;

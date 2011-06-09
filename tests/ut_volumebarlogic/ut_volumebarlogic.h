@@ -26,16 +26,16 @@ class VolumeBarLogic;
 
 class Ut_VolumeBarLogic : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 private slots:
-    void init ();
-    void cleanup ();
-    void initTestCase ();
-    void cleanupTestCase ();
-    void testInitValues ();
-    void testVolumeSetGet ();
-    void testVolumeChangeByPa ();
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
+    void testInitValues();
+    void testVolumeSetGet();
+    void testVolumeChangeByPa();
     void testWhenPulseAudioSetsVolumeNewVolumeIsSet();
 #if (HAVE_LIBRESOURCEQT && HAVE_QMSYSTEM)
     void testHwKeyEvent();
@@ -44,7 +44,7 @@ private slots:
 private:
     MApplication *app;
     VolumeBarLogic *volumeBarLogic;
-    void resetStubs ();
+    void resetStubs();
 
 public:
     static bool dbus_message_new_method_call;

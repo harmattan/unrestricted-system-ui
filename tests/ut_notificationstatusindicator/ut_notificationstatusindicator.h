@@ -19,18 +19,17 @@
 #ifndef _UT_NOTIFICATIONSTATUSINDICATOR_
 #define _UT_NOTIFICATIONSTATUSINDICATOR_
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include "notificationstatusindicator.h"
 
 class MApplication;
+class NotificationStatusIndicator;
 
 class Ut_NotificationStatusIndicator : public QObject
 {
     Q_OBJECT
 
 private:
-    MApplication  *app;
+    MApplication *app;
     NotificationStatusIndicator *m_subject;
 
 signals:

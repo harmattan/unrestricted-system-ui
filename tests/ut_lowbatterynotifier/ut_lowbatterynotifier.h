@@ -19,21 +19,17 @@
 #ifndef UT_LOWBATTERYNOTIFIER_H
 #define UT_LOWBATTERYNOTIFIER_H
 
-#include <QtTest/QtTest>
 #include <QObject>
+#include <QTime>
 
-#include "batterybusinesslogic.h"
-
-class QTime;
+class LowBatteryNotifier;
 
 class LowBatteryHelper : public QObject
 {
     Q_OBJECT
 
 public:
-    LowBatteryHelper() : QObject() {
-        ;
-    }
+    LowBatteryHelper() : QObject() { }
     void start();
     QList<int> notificationTimes();
 
@@ -43,7 +39,6 @@ public slots:
 private: // attributes
     QList<int> times;
     QTime time;
-
 };
 
 class Ut_LowBatteryNotifier : public QObject

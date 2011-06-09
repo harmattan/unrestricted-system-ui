@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_statusindicatorlabelview.h"
 #include "statusindicatorlabelview.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"

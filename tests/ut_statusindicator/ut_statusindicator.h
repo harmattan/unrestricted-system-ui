@@ -19,15 +19,11 @@
 #ifndef _UT_STATUSINDICATOR_
 #define _UT_STATUSINDICATOR_
 
-#include <QtGui>
-#include <QtTest/QtTest>
 #include <QObject>
-#include <mapplication.h>
-#include <mwidget.h>
-#include "statusindicator.h"
-#include "applicationcontext.h"
 
+class MApplication;
 class TestContext;
+class StatusIndicator;
 
 class Ut_StatusIndicator : public QObject
 {

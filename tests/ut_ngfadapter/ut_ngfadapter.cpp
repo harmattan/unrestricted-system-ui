@@ -16,8 +16,10 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 #include <stdint.h>
 #include "ut_ngfadapter.h"
+#include "ngfadapter.h"
 
 static uint32_t g_ngf_play_id = 0;
 static bool g_ngf_play_called = false;

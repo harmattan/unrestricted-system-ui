@@ -47,12 +47,12 @@ public:
 private:
     void updateState();
 
-    MWidget         *m_unlock_icon;
-    bool             m_enabled;
-    bool             m_active;
+    MWidget *m_unlock_icon;
+    bool m_enabled;
+    bool m_active;
 
 #ifdef UNIT_TEST
-    friend class ut_unlockarea;
+    friend class Ut_UnlockArea;
 #endif
 };
 

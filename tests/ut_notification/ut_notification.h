@@ -20,11 +20,9 @@
 #ifndef UT_NOTIFICATION_H
 #define UT_NOTIFICATION_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
-
-class Ut_Notification: public QObject
+class Ut_Notification : public QObject
 {
     Q_OBJECT
 

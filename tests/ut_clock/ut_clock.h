@@ -22,9 +22,8 @@
 
 #include <QObject>
 #include <QDateTime>
-#include "clock.h"
 
-class TestContext;
+class Clock;
 
 class Ut_Clock : public QObject
 {

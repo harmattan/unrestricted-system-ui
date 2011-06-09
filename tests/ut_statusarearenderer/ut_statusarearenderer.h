@@ -19,7 +19,8 @@
 #ifndef _UT_STATUSAREARENDERER_
 #define _UT_STATUSAREARENDERER_
 
-#include <QtTest/QtTest>
+#include <QObject>
+#include <QRectF>
 
 #ifdef HAVE_QMSYSTEM
 #include "qmdisplaystate.h"

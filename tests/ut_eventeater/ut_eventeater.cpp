@@ -17,17 +17,14 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "ut_eventeater.h"
 #include "eventeater.h"
 #include <QEvent>
 #include <QShowEvent>
-#include <MApplication>
-#include <MWindow>
-#include <QWidget>
 #include "x11wrapper_modified_stub.h"
 #include "xeventlistener_stub.h"
 
-// QWidget stubs
 static const Window WINDOW_ID = 69;
 
 void Ut_EventEater::init()

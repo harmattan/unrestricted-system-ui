@@ -20,7 +20,6 @@
 #ifndef UT_NOTIFICATIONPARAMETERS_H
 #define UT_NOTIFICATIONPARAMETERS_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
 class NotificationParameters;

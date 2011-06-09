@@ -20,9 +20,7 @@
 #ifndef UT_NOTIFICATIONAREA_H
 #define UT_NOTIFICATIONAREA_H
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include "notificationareamodel.h"
 
 class MApplication;
 class NotificationArea;

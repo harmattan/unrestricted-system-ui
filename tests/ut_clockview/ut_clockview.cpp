@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+#include <QtTest/QtTest>
 #include "ut_clockview.h"
 #include "clockview.h"
 #include "clock_stub.h"

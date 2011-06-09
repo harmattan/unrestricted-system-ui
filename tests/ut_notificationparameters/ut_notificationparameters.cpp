@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <MApplication>
+#include <QtTest/QtTest>
 #include <QByteArray>
 #include "ut_notificationparameters.h"
 #include "notificationparameters.h"

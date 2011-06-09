@@ -17,11 +17,13 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include <MApplication>
 #include <MGConfItem>
 #include <MSceneManager>
 #include "lockscreenheader_stub.h"
 #include "ut_lockscreenview.h"
+#include "lockscreenview.h"
 
 QStringList qPixmapLoadFilenames;
 QList<QPixmap *> qPixmapLoadPixmaps;

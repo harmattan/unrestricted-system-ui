@@ -19,9 +19,7 @@
 #ifndef _UT_SYSUID_
 #define _UT_SYSUID_
 
-#include <QtTest/QtTest>
 #include <QObject>
-#include <QPointF>
 
 class MApplication;
 class Sysuid;
