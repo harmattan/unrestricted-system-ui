@@ -475,7 +475,7 @@ StatusIndicatorIconStyle#CallStatusIndicatorRinging {
 
 StatusIndicatorIconStyle#CallStatusIndicatorOngoing {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
-    image-list: "icon-s-status-call-initiating1 icon-s-status-ongoing-muted";
+    image-list: "icon-s-status-cellular icon-s-status-ongoing-muted";
     preferred-size: -1 -1;
     minimum-size: -1 -1;
     maximum-size: -1 -1;
