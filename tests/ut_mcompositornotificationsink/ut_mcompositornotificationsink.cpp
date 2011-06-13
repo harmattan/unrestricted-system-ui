@@ -737,7 +737,7 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
     sink->allPreviewsDisabled = false;
 
     // Check that window is following right gconf key
-    QVERIFY (sink->notificationPreviewMode->key() == NOTIFICATION_PREVIEW_ENABLED);
+    QCOMPARE(sink->notificationPreviewMode->key(), NOTIFICATION_PREVIEW_ENABLED);
 
     QFETCH(bool, displayOff);
     QFETCH(bool, touchScreenLocked);
@@ -926,6 +926,37 @@ void Ut_MCompositorNotificationSink::testCurrentBannerDoneDoesntRemoveOtherBanne
     // Verify that the initial banner disappeared but the new one was
     // not removed from the "id to banner" mapping.
     QVERIFY(sink->idToBanner.value(0) != NULL);
+}
+
+void Ut_MCompositorNotificationSink::testSystemNotificationIsRemovedWhenPreviewsAreDisabled()
+{
+    sink->notificationPreviewMode->set(false);
+    sink->changeNotificationPreviewMode();
+
+    QSignalSpy spy(sink, SIGNAL(notificationRemovalRequested(uint)));
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    uint id = notificationManager->addNotification(0, parameters);
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.last().at(0).toUInt(), id);
+}
+
+void Ut_MCompositorNotificationSink::testSystemNotificationIsRemovedWhenBannerHasBeenShown()
+{
+    QSignalSpy spy(sink, SIGNAL(notificationRemovalRequested(uint)));
+    TestNotificationParameters parameters("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    parameters.add(GenericNotificationParameterFactory::classKey(), "system");
+    uint id = notificationManager->addNotification(0, parameters);
+    emitDisplayEntered();
+
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(static_cast<MBanner*>(gMSceneWindowsAppeared.at(0)));
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.last().at(0).toUInt(), id);
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

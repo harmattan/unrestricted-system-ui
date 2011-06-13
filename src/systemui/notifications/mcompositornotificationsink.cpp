@@ -86,8 +86,15 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if (((currentApplicationHasPreviewsDisabled() || sinkDisabled) && notification.type() != Notification::SystemEvent) || allPreviewsDisabled) {
-        emit notificationAdded(notification);
+    if (allPreviewsDisabled || (notification.type() != Notification::SystemEvent && (sinkDisabled || currentApplicationHasPreviewsDisabled()))) {
+        // Notification previews are disabled
+        if (notification.type() != Notification::SystemEvent) {
+            // Transfer the notification onwards immediately
+            emit notificationAdded(notification);
+        } else {
+            // System notifications need to be removed after they've been shown to avoid leaking and here they can be considered to be "shown"
+            emit notificationRemovalRequested(notification.notificationId());
+        }
         return;
     }
 
@@ -184,6 +191,11 @@ void MCompositorNotificationSink::currentBannerDone()
         int id = idToBanner.key(currentBanner, -1);
         if (id != -1) {
             idToBanner.remove(id);
+
+            if (currentBanner->styleName() == "SystemBanner") {
+                // System notifications need to be removed after they've been shown to avoid leaking
+                emit notificationRemovalRequested(id);
+            }
         }
         currentBanner = NULL;
     }
