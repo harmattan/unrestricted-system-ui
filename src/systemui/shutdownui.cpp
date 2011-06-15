@@ -70,6 +70,8 @@ void ShutdownUI::realize()
         return;
     }
 
+    setBackgroundBrush(Qt::black);
+
     // Initialize non-graphical feedback
     feedback = new MFeedback(this);
     feedback->setName("priority1_power_off");
