@@ -49,7 +49,6 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
                              << "statusindicatormenu-presence.desktop"
                              << "statusindicatormenu-transfer.desktop"));
     extensionArea->init();
-    extensionArea->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     // Add panning to the expension area
     MPannableViewport* viewport = new MPannableViewport();
