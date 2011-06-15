@@ -4,22 +4,29 @@ StatusIndicatorMenuStyle {
     notification-area: true;
 }
 
-MSceneLayerEffectDimStyle {
-    easing-curve: inquint;
-    fade-duration: 200;
+StatusIndicatorMenu MWidgetFadeAnimationStyle#In {
+    delay: 0;
+    easing-curve: inoutquint;
+    duration: 350;
+}
+
+StatusIndicatorMenu MWidgetFadeAnimationStyle#Out {
+    delay: 0;
+    easing-curve: inoutquint;
+    duration: 350;
 }
 
 StatusIndicatorMenu MWidgetSlideAnimationStyle#In {
     delay: 0;
-    duration: 200;
-    easing-curve: outexpo;
+    duration: 350;
+    easing-curve: inoutquint;
     origin: "top";
 }
 
 StatusIndicatorMenu MWidgetSlideAnimationStyle#Out {
     delay: 0;
-    duration: 150;
-    easing-curve: inquint;
+    duration: 350;
+    easing-curve: inoutquint;
     origin: "top";
 }
 

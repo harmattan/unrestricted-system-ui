@@ -3,6 +3,7 @@ system-ui (1.1.0~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#254724 - sysuid is missing capabilities
   * Fixes: NB#264744 - During device update (SSU) tens of empty notification banners with different icons are shown
+  * Fixes: NB#255218 - Status Menu open/close transition is incorrect
 
  -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Wed, 08 Jun 2011 17:52:12 +0300
 
