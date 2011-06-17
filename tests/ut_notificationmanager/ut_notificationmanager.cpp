@@ -52,6 +52,7 @@ quint32 gLastUserId;
 #define PERSISTENT GenericNotificationParameterFactory::persistentKey()
 #define UNSEEN     GenericNotificationParameterFactory::unseenKey()
 #define IDENTIFIER GenericNotificationParameterFactory::identifierKey()
+#define TIMESTAMP  GenericNotificationParameterFactory::timestampKey()
 
 #define SUMMARY    NotificationWidgetParameterFactory::summaryKey()
 #define BODY       NotificationWidgetParameterFactory::bodyKey()
@@ -118,6 +119,7 @@ void DBusInterfaceNotificationSink::removeGroup(uint)
 void DBusInterfaceNotificationSink::sendCurrentNotifications(const DBusInterface&) const
 {
 }
+
 // QDateTime stub
 static uint qDateTimeToTime_t = 0;
 uint QDateTime::toTime_t () const
@@ -366,7 +368,6 @@ void Ut_NotificationManager::testAddNotification()
     // Create three notifications - two with a content link and one without
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
-    qDateTimeToTime_t = 123;
     uint id0 = manager->addNotification(0, parameters0);
 
     NotificationParameters parameters1;
@@ -377,7 +378,6 @@ void Ut_NotificationManager::testAddNotification()
     NotificationParameters parameters2;
 
     parameters2.add(ICON, "buttonicon2");
-    qDateTimeToTime_t = 12345;
     uint id2 = manager->addNotification(0, parameters2);
 
     // Verify that timer was not started
@@ -398,7 +398,6 @@ void Ut_NotificationManager::testAddNotification()
     QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
-    QCOMPARE(n.parameters().value("timestamp").toUInt(), (uint)123);
 
     arguments = spy.takeFirst();
     n = qvariant_cast<Notification>(arguments.at(0));
@@ -414,7 +413,6 @@ void Ut_NotificationManager::testAddNotification()
     QCOMPARE(n.groupId(), (uint)0);
     QCOMPARE(n.parameters().value(ICON).toString(), QString("buttonicon2"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
-    QCOMPARE(n.parameters().value("timestamp").toUInt(), (uint)12345);
     QCOMPARE(n.timeout(), 0);
 
     // Verify that the IDs are unique
@@ -455,7 +453,6 @@ void Ut_NotificationManager::testNotificationsAndGroupsAreUpdatedWhenEventTypeIs
     parameters.add(EVENT_TYPE, "testType");
     manager->addNotification(0, parameters);
 
-    qDateTimeToTime_t = 123;
     uint groupId = manager->addGroup(0, parameters);
 
     // Create a notification and a group of a different notification type.
@@ -496,20 +493,17 @@ void Ut_NotificationManager::testUpdateNotification()
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
 
-    qDateTimeToTime_t = 123;
     uint id0 = manager->addNotification(0, parameters0);
 
     // Update the notification
     NotificationParameters parameters1;
     parameters1.add(BODY, "body1");
-    qDateTimeToTime_t = 12345;
     manager->updateNotification(0, id0, parameters1);
 
     // Test that the relevant signals are sent
     QCOMPARE(spy.count(), 2);
     QList<QVariant> arguments = spy.takeFirst();
     Notification n = qvariant_cast<Notification>(arguments.at(0));
-    QCOMPARE(n.parameters().value("timestamp").toUInt(), (uint)123);
 
     arguments = spy.takeFirst();
     n = qvariant_cast<Notification>(arguments.at(0));
@@ -518,7 +512,6 @@ void Ut_NotificationManager::testUpdateNotification()
     QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
-    QCOMPARE(n.parameters().value("timestamp").toUInt(), (uint)12345);
 
 }
 
@@ -593,12 +586,10 @@ void Ut_NotificationManager::testAddGroup()
 
     NotificationParameters inParameters1;
     inParameters1.add(IMAGE, "icon1");
-    qDateTimeToTime_t = 123;
     uint id1 = manager->addGroup(0, inParameters1);
 
     NotificationParameters inParameters2;
     inParameters2.add(BODY, "body2");
-    qDateTimeToTime_t = 12345;
     uint id2 = manager->addGroup(0, inParameters2);
 
     // Check that we didn't get invalid numbers
@@ -615,13 +606,11 @@ void Ut_NotificationManager::testAddGroup()
     QCOMPARE(arguments.at(0).toUInt(), id1);
     NotificationParameters outParameters1 = arguments.at(1).value<NotificationParameters>();
     QCOMPARE(outParameters1.value(IMAGE).toString(), QString("icon1"));
-    QCOMPARE(outParameters1.value("timestamp").toUInt(), (uint)123);
 
     arguments = addGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id2);
     NotificationParameters outParameters2 = arguments.at(1).value<NotificationParameters>();
     QCOMPARE(outParameters2.value(BODY).toString(), QString("body2"));
-    QCOMPARE(outParameters2.value("timestamp").toUInt(), (uint)12345);
 }
 
 void Ut_NotificationManager::testWhenNotificationGroupIsAddedThenTheNotificationGroupIsFilledWithEventTypeData()
@@ -648,13 +637,10 @@ void Ut_NotificationManager::testUpdateGroup()
 
     NotificationParameters inParameters1;
     inParameters1.add(IMAGE, "icon1");
-    qDateTimeToTime_t = 123;
     uint id1 = manager->addGroup(0, inParameters1);
-
 
     NotificationParameters inParameters2;
     inParameters2.add(BODY, "body2");
-    qDateTimeToTime_t = 12345;
     manager->updateGroup(0, id1, inParameters2);
 
     QCOMPARE(updateGroupSpy.count(), 2);
@@ -662,15 +648,12 @@ void Ut_NotificationManager::testUpdateGroup()
     QList<QVariant> arguments = updateGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
     NotificationParameters outParameters = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters.value("timestamp").toUInt(), (uint)123);
 
     arguments = updateGroupSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
     outParameters = arguments.at(1).value<NotificationParameters>();
     QCOMPARE(outParameters.value(BODY).toString(), QString("body2"));
     QCOMPARE(outParameters.value(IMAGE).toString(), QString("icon1"));
-    QVERIFY(outParameters.value("timestamp").toUInt() > 0);
-    QCOMPARE(outParameters.value("timestamp").toUInt(), (uint)12345);
 }
 
 void Ut_NotificationManager::testUpdateNonexistingGroup()
@@ -775,19 +758,16 @@ void Ut_NotificationManager::testAddNotificationInGroup()
 
     NotificationParameters gparameters1;
     gparameters1.add(IMAGE, "gicon1");
-    qDateTimeToTime_t = 123;
     uint groupId = manager->addGroup(0, gparameters1);
 
     QCOMPARE(groupSpy.count(), 1);
     QList<QVariant> arguments = groupSpy.takeFirst();
     NotificationParameters outParameters = arguments.at(1).value<NotificationParameters>();
-    QCOMPARE(outParameters.value("timestamp").toUInt(), (uint)123);
 
     QSignalSpy addSpy(manager, SIGNAL(notificationUpdated(Notification)));
 
     NotificationParameters parameters0;
     parameters0.add(IMAGE, "icon0");
-    qDateTimeToTime_t = 12345;
     uint id0 = manager->addNotification(0, parameters0, groupId);
 
     QCOMPARE(addSpy.count(), 1);
@@ -796,7 +776,6 @@ void Ut_NotificationManager::testAddNotificationInGroup()
     QCOMPARE(n.notificationId(), id0);
     QCOMPARE(n.groupId(), groupId);
     QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
-    QCOMPARE(n.parameters().value("timestamp").toUInt(), (uint)12345);
 }
 
 void Ut_NotificationManager::testAddNotificationInNonexistingGroup()
@@ -1818,6 +1797,107 @@ void Ut_NotificationManager::testSystemBannersWhenQueuedMaintainTheirOrder()
     arguments = spy.takeFirst();
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), idsystem2);
+}
+
+void Ut_NotificationManager::testAddNotificationWithAndWithoutTimestamp()
+{
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    uint userId = 1;
+    uint timestamp = 12345678;
+    qDateTimeToTime_t = 123;
+    NotificationParameters params;
+    params.add(TIMESTAMP, timestamp);
+    manager->addNotification(userId, params);
+    manager->addNotification(userId, NotificationParameters());
+
+    QCOMPARE(spy.count(), 2);
+
+    // First notification has timestamp in NotificationParameters
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification notification = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(notification.parameters().value(TIMESTAMP).toUInt(), timestamp);
+
+    // Second notification has a zero timestamp in NotificatinParameters,
+    // so current time is used as a timestamp
+    arguments = spy.takeFirst();
+    notification = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(notification.parameters().value(TIMESTAMP).toUInt(), qDateTimeToTime_t);
+}
+
+void Ut_NotificationManager::testThatTimestampOfNotificationIsUpdatedWhenNotificationUpdates()
+{
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    uint timestamp = 12345678;
+    qDateTimeToTime_t = 123;
+
+    uint notificationId = manager->addNotification(0, NotificationParameters());
+
+    NotificationParameters params;
+    params.add(TIMESTAMP, timestamp);
+    manager->updateNotification(0, notificationId, params);
+
+    QCOMPARE(spy.count(), 2);
+
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification notification = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(notification.parameters().value(TIMESTAMP).toUInt(), qDateTimeToTime_t);
+    QCOMPARE(notification.notificationId(), notificationId);
+
+    arguments = spy.takeFirst();
+    notification = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(notification.parameters().value(TIMESTAMP).toUInt(), timestamp);
+    QCOMPARE(notification.notificationId(), notificationId);
+}
+
+void Ut_NotificationManager::testAddGroupWithAndWithoutTimestamp()
+{
+    QSignalSpy spy(manager, SIGNAL(groupUpdated(uint, const NotificationParameters&)));
+
+    uint userId = 1;
+    uint timestamp = 12345678;
+    qDateTimeToTime_t = 123;
+    NotificationParameters params;
+    params.add(TIMESTAMP, timestamp);
+    manager->addGroup(userId, params);
+    manager->addGroup(userId, NotificationParameters());
+
+    QCOMPARE(spy.count(), 2);
+
+    // First notification has timestamp in NotificationParameters
+    QList<QVariant> arguments = spy.takeFirst();
+    NotificationParameters notificationParams = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(notificationParams.value(TIMESTAMP).toUInt(), timestamp);
+
+    // Second notification has a zero timestamp in NotificationParameters,
+    // so current time is used as a timestamp
+    arguments = spy.takeFirst();
+    notificationParams = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(notificationParams.value(TIMESTAMP).toUInt(), qDateTimeToTime_t);
+}
+
+void Ut_NotificationManager::testThatTimestampOfGroupIsUpdatedWhenGroupIsUpdated()
+{
+    QSignalSpy spy(manager, SIGNAL(groupUpdated(uint, const NotificationParameters&)));
+
+    uint timestamp = 12345678;
+    qDateTimeToTime_t = 123;
+
+    uint groupId = manager->addGroup(0, NotificationParameters());
+
+    NotificationParameters params;
+    params.add(TIMESTAMP, timestamp);
+    manager->updateGroup(0, groupId, params);
+
+    QCOMPARE(spy.count(), 2);
+
+    QList<QVariant> arguments = spy.takeFirst();
+    QCOMPARE(arguments.at(0).toUInt(), groupId);
+
+    arguments = spy.takeFirst();
+    QCOMPARE(qvariant_cast<NotificationParameters>(arguments.at(1)).value(TIMESTAMP).toUInt(), timestamp);
+    QCOMPARE(arguments.at(0).toUInt(), groupId);
 }
 
 QTEST_MAIN(Ut_NotificationManager)

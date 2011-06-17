@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <QDBusArgument>
 
 #include "notification.h"
@@ -256,3 +255,66 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGrou
     return argument;
 }
 
+
+MNotificationProxyWithParameters::MNotificationProxyWithParameters()
+:   notificationId(0),
+    groupId(0),
+    parameters(NotificationParameters())
+{
+}
+
+MNotificationProxyWithParameters::MNotificationProxyWithParameters(const Notification &notification)
+{
+    notificationId  = notification.notificationId();
+    groupId = notification.groupId();
+    parameters = notification.parameters();
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationProxyWithParameters &notification)
+{
+    argument.beginStructure();
+    argument << notification.notificationId;
+    argument << notification.groupId;
+    argument << notification.parameters;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationProxyWithParameters &notification)
+{
+    argument.beginStructure();
+    argument >> notification.notificationId;
+    argument >> notification.groupId;
+    argument >> notification.parameters;
+    argument.endStructure();
+    return argument;
+}
+MNotificationGroupProxyWithParameters::MNotificationGroupProxyWithParameters()
+:   groupId(0),
+    parameters(NotificationParameters())
+{
+}
+
+MNotificationGroupProxyWithParameters::MNotificationGroupProxyWithParameters(const NotificationGroup &group)
+{
+    groupId = group.groupId();
+    parameters = group.parameters();
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroupProxyWithParameters &group)
+{
+    argument.beginStructure();
+    argument << group.groupId;
+    argument << group.parameters;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGroupProxyWithParameters &group)
+{
+    argument.beginStructure();
+    argument >> group.groupId;
+    argument >> group.parameters;
+    argument.endStructure();
+    return argument;
+}

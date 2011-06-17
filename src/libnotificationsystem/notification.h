@@ -123,7 +123,6 @@ public:
      */
     int timeout() const;
 
-
     friend QDataStream &operator<<(QDataStream &, const Notification &);
     friend QDataStream &operator>>(QDataStream &, Notification &);
 

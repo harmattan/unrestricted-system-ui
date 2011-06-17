@@ -176,4 +176,59 @@ public:
 QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroupWithIdentifierProxy &);
 const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroupWithIdentifierProxy &);
 
+/*!
+ * \brief A proxy class for serializing Notification as MNotification
+ */
+class MNotificationProxyWithParameters
+{
+public:
+    /*!
+     * Empty constructor. Initializes the values to defaults.
+     */
+    MNotificationProxyWithParameters();
+
+    /*!
+     * Constructor.
+     *
+     * \param notification A Notification object to initialize the data from
+     */
+    MNotificationProxyWithParameters(const Notification &notification);
+
+    // The id of the notification
+    uint notificationId;
+    // The group id of notification.
+    uint groupId;
+    // Parameters of notification.
+    NotificationParameters parameters;
+};
+
+QDBusArgument &operator<<(QDBusArgument &, const MNotificationProxyWithParameters &);
+const QDBusArgument &operator>>(const QDBusArgument &, MNotificationProxyWithParameters &);
+
+/*!
+ * \brief A proxy class for serializing NotificationGorup as MNotificationGroup
+ */
+class MNotificationGroupProxyWithParameters
+{
+public:
+    /*!
+     * Empty constructor. Initializes the values to defaults.
+     */
+    MNotificationGroupProxyWithParameters();
+
+    /*!
+     * Constructor.
+     *
+     * \param notification A Notification object to initialize the data from
+     */
+    MNotificationGroupProxyWithParameters(const NotificationGroup &notification);
+
+    // Id of the group
+    uint groupId;
+    // Parameters of group.
+    NotificationParameters parameters;
+};
+
+QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroupProxyWithParameters &);
+const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroupProxyWithParameters &);
 #endif

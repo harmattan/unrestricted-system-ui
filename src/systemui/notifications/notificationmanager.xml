@@ -8,6 +8,7 @@
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="eventType" type="s" direction="in"/>
       <arg name="groupId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="addGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -18,6 +19,7 @@
       <arg name="imageURI" type="s" direction="in"/>
       <arg name="count" type="u" direction="in"/>
       <arg name="groupId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="addGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -29,12 +31,14 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="identifier" type="s" direction="in"/>
       <arg name="groupId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="groupId" type="u" direction="in"/>
       <arg name="eventType" type="s" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -46,6 +50,7 @@
       <arg name="imageURI" type="s" direction="in"/>
       <arg name="count" type="u" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -58,6 +63,7 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="identifier" type="s" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="removeGroup">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -69,6 +75,7 @@
       <arg name="groupId" type="u" direction="in"/>
       <arg name="eventType" type="s" direction="in"/>
       <arg name="notificationId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="addNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -80,6 +87,7 @@
       <arg name="imageURI" type="s" direction="in"/>
       <arg name="count" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="addNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -92,12 +100,14 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="identifier" type="s" direction="in"/>
       <arg name="notificationId" type="u" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
       <arg name="notificationId" type="u" direction="in"/>
       <arg name="eventType" type="s" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -109,6 +119,7 @@
       <arg name="imageURI" type="s" direction="in"/>
       <arg name="count" type="u" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="updateNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -121,6 +132,7 @@
       <arg name="count" type="u" direction="in"/>
       <arg name="identifier" type="s" direction="in"/>
       <arg name="result" type="b" direction="out"/>
+      <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="removeNotification">
       <arg name="notificationUserId" type="u" direction="in"/>
@@ -136,26 +148,67 @@
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(uusssssu)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationProxy &gt; "/>
+       <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="notificationListWithIdentifiers">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(uusssssus)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationWithIdentifierProxy &gt; "/>
+       <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="notificationGroupList">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(usssssu)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupProxy &gt; "/>
+       <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="notificationGroupListWithIdentifiers">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="result" type="a(usssssus)" direction="out"/>
        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupWithIdentifierProxy &gt; "/>
+       <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
     </method>
     <method name="notificationCountInGroup">
        <arg name="notificationUserId" type="u" direction="in"/>
        <arg name="groupId" type="u" direction="in"/>
        <arg name="result" type="u" direction="out"/>
     </method>
-  </interface>
+    <method name="addGroup">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
+      <arg name="groupId" type="u" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="NotificationParameters"/>
+    </method>
+    <method name="updateGroup">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="groupId" type="u" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="NotificationParameters"/>
+    </method>
+    <method name="addNotification">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="groupId" type="u" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
+      <arg name="notificationId" type="u" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="NotificationParameters"/>
+    </method>
+    <method name="updateNotification">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="notificationId" type="u" direction="in"/>
+      <arg name="parameters" type="a{sv}" direction="in"/>
+      <arg name="result" type="b" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In2" value="NotificationParameters"/>
+    </method>
+    <method name="notificationListWithNotificationParameters">
+      <arg name="notificationUserId" type="u" direction="in"/>
+      <arg name="result" type="a(uua{sv})" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationProxyWithParameters &gt; "/>
+    </method>
+    <method name="notificationGroupListWithNotificationParameters">
+       <arg name="notificationUserId" type="u" direction="in"/>
+       <arg name="result" type="a(ua{sv})" direction="out"/>
+       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList &lt; MNotificationGroupProxyWithParameters &gt; "/>
+    </method>
+</interface>
 </node>

@@ -157,6 +157,14 @@ private slots:
     void testNotificationsAndGroupsAreUpdatedWhenEventTypeIsUpdated();
     void testNotificationCountInGroup();
     void testPruningNonPersistentNotificationsOnBoot();
+    // Test adding notification with and without user specified timestamp
+    void testAddNotificationWithAndWithoutTimestamp();
+    // Test that timestamp of notification is updated
+    void testThatTimestampOfNotificationIsUpdatedWhenNotificationUpdates();
+    // Test adding group with and without user specified timestamp
+    void testAddGroupWithAndWithoutTimestamp();
+    // Test that timestamp of group is updated when group is updated
+    void testThatTimestampOfGroupIsUpdatedWhenGroupIsUpdated();
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H

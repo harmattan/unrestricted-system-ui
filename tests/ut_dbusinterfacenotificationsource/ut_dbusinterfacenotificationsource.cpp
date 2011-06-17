@@ -144,6 +144,38 @@ QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSourceAdap
     return l;
 }
 
+
+uint DBusInterfaceNotificationSourceAdaptor::addGroup(uint, NotificationParameters)
+{
+    return 1;
+}
+uint DBusInterfaceNotificationSourceAdaptor::addNotification(uint, uint, NotificationParameters)
+{
+    return 1;
+}
+
+bool DBusInterfaceNotificationSourceAdaptor::updateGroup(uint, uint, NotificationParameters)
+{
+    return true;
+}
+
+bool DBusInterfaceNotificationSourceAdaptor::updateNotification(uint, uint, NotificationParameters)
+{
+    return true;
+}
+
+QList < MNotificationProxyWithParameters >  DBusInterfaceNotificationSourceAdaptor::notificationListWithNotificationParameters(uint notificationUserId)
+{
+    Q_UNUSED(notificationUserId);
+    return QList<MNotificationProxyWithParameters>();
+}
+
+QList < MNotificationGroupProxyWithParameters>  DBusInterfaceNotificationSourceAdaptor::notificationGroupListWithNotificationParameters(uint notificationUserId)
+{
+    Q_UNUSED(notificationUserId);
+    return QList<MNotificationGroupProxyWithParameters>();
+}
+
 void Ut_DBusInterfaceNotificationSource::initTestCase()
 {
 }
@@ -186,6 +218,8 @@ const bool CALL_TO_NOTIFICATION_MANAGER_DOES_NOT_SUCCEED = false;
 const uint NEW_NOTIFICATION_ID = 9;
 const uint NEW_GROUP_ID = 11;
 
+const uint TIMESTAMP = 123456789;
+
 void Ut_DBusInterfaceNotificationSource::testAddNotification()
 {
     source->addNotification(1, 2, "event");
@@ -205,7 +239,7 @@ void Ut_DBusInterfaceNotificationSource::testAddNotification()
     QCOMPARE(params.value(NotificationWidgetParameterFactory::imageIdKey()), QVariant("imageURI"));
     QCOMPARE(params.value(NotificationWidgetParameterFactory::actionKey()), QVariant("action"));
 
-    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42);
+    source->addNotification(5, 6, "event", "summary", "body", "action", "imageURI", 42, 0);
     QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<uint>(0), (uint)5);
     QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<uint>(2), (uint)6);
     params = gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<NotificationParameters>(1);
@@ -248,7 +282,7 @@ void Ut_DBusInterfaceNotificationSource::testUpdateNotificationWithIdentifier()
     gDefaultNotificationManagerStub.stubSetReturnValue("addNotification", NEW_NOTIFICATION_ID);
     gDefaultNotificationManagerStub.stubSetReturnValue("updateNotification", CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
-    uint id = source->addNotification(USER_ID, NOTIFICATION_GROUP_ID1, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT);
+    uint id = source->addNotification(USER_ID, NOTIFICATION_GROUP_ID1, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, 0);
     QCOMPARE(source->updateNotification(USER_ID, id, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
     NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("updateNotification").parameter<NotificationParameters>(2);
@@ -322,7 +356,7 @@ void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithIdentifier()
     gDefaultNotificationManagerStub.stubSetReturnValue("addGroup", NEW_GROUP_ID);
     gDefaultNotificationManagerStub.stubSetReturnValue("updateGroup", CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
-    uint id = source->addGroup(USER_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT);
+    uint id = source->addGroup(USER_ID, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, 0);
     QCOMPARE(source->updateGroup(USER_ID, id, EVENT, SUMMARY, BODY, ACTION, IMAGE, COUNT, IDENTIFIER), CALL_TO_NOTIFICATION_MANAGER_SUCCEEDS);
 
     NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<NotificationParameters>(2);
@@ -449,11 +483,11 @@ void Ut_DBusInterfaceNotificationSource::testNotificationGroupListWithIdentifier
 
 void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithEmptyStrings()
 {
-    source->updateGroup(3, 4, "event", "summary", "body", "action", "imageURI", 42);
+    source->updateGroup(3, 4, "event", "summary", "body", "action", "imageURI", 42, 0);
     NotificationParameters params = gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<NotificationParameters>(2);
     QCOMPARE(params.value(NotificationWidgetParameterFactory::summaryKey()), QVariant("summary"));
 
-    source->updateGroup(3, 4, "event", "", "", "", "", 42);
+    source->updateGroup(3, 4, "event", "", "", "", "", 42, 0);
     params = gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<NotificationParameters>(2);
     QCOMPARE(params.value(GenericNotificationParameterFactory::eventTypeKey()), QVariant("event"));
     QCOMPARE(params.value(GenericNotificationParameterFactory::countKey()), QVariant("42"));
@@ -467,6 +501,161 @@ void Ut_DBusInterfaceNotificationSource::testNotificationCountInGroup()
 {
     source->notificationCountInGroup(1, 1);
     QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationCountInGroup"), 1);
+}
+
+NotificationParameters createDefaultNotificationParameters()
+{
+    NotificationParameters parameters;
+    parameters.add(GenericNotificationParameterFactory::createEventTypeParameter(EVENT));
+    parameters.add(NotificationWidgetParameterFactory::createSummaryParameter(SUMMARY));
+    parameters.add(NotificationWidgetParameterFactory::createBodyParameter(BODY));
+    parameters.add(NotificationWidgetParameterFactory::createActionParameter(ACTION));
+    parameters.add(NotificationWidgetParameterFactory::createImageIdParameter(IMAGE));
+    parameters.add(GenericNotificationParameterFactory::createCountParameter(COUNT));
+    parameters.add(GenericNotificationParameterFactory::createIdentifierParameter(IDENTIFIER));
+    parameters.add(GenericNotificationParameterFactory::createTimestampParameter(TIMESTAMP));
+    return parameters;
+}
+
+void Ut_DBusInterfaceNotificationSource::testAddNotificationWithNotificationParameters()
+{
+    source->addNotification(USER_ID, NOTIFICATION_GROUP_ID1, createDefaultNotificationParameters());
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<uint>(0), USER_ID);
+    NotificationParameters parametersGivenToManager = gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<NotificationParameters>(1);
+
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::bodyKey()).toString(), BODY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::actionKey()).toString(), ACTION);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::imageIdKey()).toString(), IMAGE);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::countKey()).toUInt(), COUNT);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::identifierKey()).toString(), IDENTIFIER);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::timestampKey()).toUInt(), TIMESTAMP);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addNotification").parameter<uint>(2), NOTIFICATION_GROUP_ID1);
+}
+
+void Ut_DBusInterfaceNotificationSource::testUpdateNotificationWithNotificationParameters()
+{
+    source->updateNotification(USER_ID, NOTIFICATION_ID1, createDefaultNotificationParameters());
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("updateNotification").parameter<uint>(0), USER_ID);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("updateNotification").parameter<uint>(1), NOTIFICATION_ID1);
+
+    NotificationParameters parametersGivenToManager = gDefaultNotificationManagerStub.stubLastCallTo("updateNotification").parameter<NotificationParameters>(2);
+
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::bodyKey()).toString(), BODY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::actionKey()).toString(), ACTION);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::imageIdKey()).toString(), IMAGE);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::countKey()).toUInt(), COUNT);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::identifierKey()).toString(), IDENTIFIER);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::timestampKey()).toUInt(), TIMESTAMP);
+}
+
+void Ut_DBusInterfaceNotificationSource::testRemoveNotificationWithNotificationParameters()
+{
+    source->removeNotification(USER_ID, NOTIFICATION_ID1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("removeNotification").parameter<uint>(0), USER_ID);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("removeNotification").parameter<uint>(1), NOTIFICATION_ID1);
+}
+
+void Ut_DBusInterfaceNotificationSource::testAddGroupWithNotificationParameters()
+{
+    source->addGroup(USER_ID, createDefaultNotificationParameters());
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("addGroup").parameter<uint>(0), USER_ID);
+
+    NotificationParameters parametersGivenToManager = gDefaultNotificationManagerStub.stubLastCallTo("addGroup").parameter<NotificationParameters>(1);
+
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::bodyKey()).toString(), BODY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::actionKey()).toString(), ACTION);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::imageIdKey()).toString(), IMAGE);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::countKey()).toUInt(), COUNT);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::identifierKey()).toString(), IDENTIFIER);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::timestampKey()).toUInt(), TIMESTAMP);
+}
+
+void Ut_DBusInterfaceNotificationSource::testUpdateGroupWithNotificationParameters()
+{
+    source->updateGroup(USER_ID, NOTIFICATION_GROUP_ID1, createDefaultNotificationParameters());
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<uint>(0), USER_ID);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<uint>(1), NOTIFICATION_GROUP_ID1);
+
+    NotificationParameters parametersGivenToManager = gDefaultNotificationManagerStub.stubLastCallTo("updateGroup").parameter<NotificationParameters>(2);
+
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::bodyKey()).toString(), BODY);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::actionKey()).toString(), ACTION);
+    QCOMPARE(parametersGivenToManager.value(NotificationWidgetParameterFactory::imageIdKey()).toString(), IMAGE);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::countKey()).toUInt(), COUNT);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::identifierKey()).toString(), IDENTIFIER);
+    QCOMPARE(parametersGivenToManager.value(GenericNotificationParameterFactory::timestampKey()).toUInt(), TIMESTAMP);
+}
+
+void Ut_DBusInterfaceNotificationSource::testRemoveGroupWithNotificationParameters()
+{
+    source->removeGroup(USER_ID, NOTIFICATION_GROUP_ID1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("removeGroup").parameter<uint>(0), USER_ID);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("removeGroup").parameter<uint>(1), NOTIFICATION_GROUP_ID1);
+}
+
+void Ut_DBusInterfaceNotificationSource::testReturningNotificationsWithNotificationParameters()
+{
+    QList<Notification> expectedResults;
+    NotificationParameters params = createDefaultNotificationParameters();
+    expectedResults.append(Notification(NOTIFICATION_ID1, NOTIFICATION_GROUP_ID1, USER_ID, params, Notification::ApplicationEvent, 0));
+    expectedResults.append(Notification(NOTIFICATION_ID2, NOTIFICATION_GROUP_ID2, USER_ID, params, Notification::ApplicationEvent, 0));
+    gNotificationManagerStub->stubSetReturnValue("notificationList", expectedResults);
+
+    QList<MNotificationProxyWithParameters> receivedResults = source->notificationListWithNotificationParameters(USER_ID);
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationList"), 1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationList").parameter<uint>(0), USER_ID);
+    QCOMPARE(receivedResults.count(), 2);
+
+    MNotificationProxyWithParameters notification1 = receivedResults.at(0);
+    QCOMPARE(notification1.notificationId, NOTIFICATION_ID1);
+    QCOMPARE(notification1.groupId, NOTIFICATION_GROUP_ID1);
+    QCOMPARE(notification1.parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(notification1.parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+
+
+    MNotificationProxyWithParameters notification2 = receivedResults.at(1);
+    QCOMPARE(notification2.notificationId, NOTIFICATION_ID2);
+    QCOMPARE(notification2.groupId, NOTIFICATION_GROUP_ID2);
+    QCOMPARE(notification2.parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(notification2.parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+}
+
+void Ut_DBusInterfaceNotificationSource::testReturningNotificationGroupsWithNotificationParameters()
+{
+    QList<NotificationGroup> expectedResults;
+    NotificationParameters params = createDefaultNotificationParameters();
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID1, USER_ID, params));
+    expectedResults.append(NotificationGroup(NOTIFICATION_GROUP_ID2, USER_ID, params));
+    gNotificationManagerStub->stubSetReturnValue("notificationGroupList", expectedResults);
+
+    QList<MNotificationGroupProxyWithParameters> receivedResults = source->notificationGroupListWithNotificationParameters(USER_ID);
+
+    QCOMPARE(gDefaultNotificationManagerStub.stubCallCount("notificationGroupList"), 1);
+    QCOMPARE(gDefaultNotificationManagerStub.stubLastCallTo("notificationGroupList").parameter<uint>(0), USER_ID);
+    QCOMPARE(receivedResults.count(), 2);
+
+    MNotificationGroupProxyWithParameters notification1 = receivedResults.at(0);
+    QCOMPARE(notification1.groupId, NOTIFICATION_GROUP_ID1);
+    QCOMPARE(notification1.parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(notification1.parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
+
+    MNotificationGroupProxyWithParameters notification2 = receivedResults.at(1);
+    QCOMPARE(notification2.groupId, NOTIFICATION_GROUP_ID2);
+    QCOMPARE(notification2.parameters.value(GenericNotificationParameterFactory::eventTypeKey()).toString(), EVENT);
+    QCOMPARE(notification2.parameters.value(NotificationWidgetParameterFactory::summaryKey()).toString(), SUMMARY);
 }
 
 QTEST_APPLESS_MAIN(Ut_DBusInterfaceNotificationSource)

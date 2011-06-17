@@ -72,6 +72,13 @@ public:
     }
 
     /*!
+     * Returns keyname of the timestamp parameter
+     */
+    static QString timestampKey() {
+        return QString("timestamp");
+    }
+
+    /*!
      * Creates a NotificationParameter with the given event type.
      *
      * \param eventType the event type of the notification
@@ -129,6 +136,16 @@ public:
      */
     static NotificationParameter createIdentifierParameter(const QString &identifier) {
         return NotificationParameter(identifierKey(), QVariant(identifier));
+    }
+
+    /*!
+     * Creates a NotificationParameter with timestamp value
+     *
+     * \param timestamp timestamp parameter of notification
+     * \return the related NotificationParameter
+     */
+    static NotificationParameter createTimestampParameter(uint timestamp) {
+        return NotificationParameter(timestampKey(), QVariant(timestamp));
     }
 };
 

@@ -71,6 +71,21 @@ private slots:
     //Test updating group with empty strings
     void testUpdateGroupWithEmptyStrings();
     void testNotificationCountInGroup();
+    // Test addNotification with NotificationParameters
+    void testAddNotificationWithNotificationParameters();
+    // Test addUpdateNotification with NotificationParameters
+    void testUpdateNotificationWithNotificationParameters();
+    // Test addRemoveNotification with NotificationParameters
+    void testRemoveNotificationWithNotificationParameters();
+    // Test addGroup with NotificationParameters
+    void testAddGroupWithNotificationParameters();
+    // Test updateGroup with NotificationParameters
+    void testUpdateGroupWithNotificationParameters();
+    // Test removeGroup  with NotificationParameters
+    void testRemoveGroupWithNotificationParameters();
+    // Test the query of notifications
+    void testReturningNotificationsWithNotificationParameters();
+    void testReturningNotificationGroupsWithNotificationParameters();
 
 private:
     // Notification manager interface used by the test subject

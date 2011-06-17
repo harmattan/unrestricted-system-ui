@@ -20,6 +20,8 @@
 #include "dbusinterfacenotificationsource.h"
 #include "dbusinterfacenotificationsourceadaptor.h"
 #include "mnotificationproxy.h"
+#include "notificationwidgetparameterfactory.h"
+#include "genericnotificationparameterfactory.h"
 
 Q_DECLARE_METATYPE(MNotificationProxy)
 Q_DECLARE_METATYPE(MNotificationWithIdentifierProxy)
@@ -29,6 +31,11 @@ Q_DECLARE_METATYPE(QList<MNotificationProxy>)
 Q_DECLARE_METATYPE(QList<MNotificationWithIdentifierProxy>)
 Q_DECLARE_METATYPE(QList<MNotificationGroupProxy>)
 Q_DECLARE_METATYPE(QList<MNotificationGroupWithIdentifierProxy>)
+Q_DECLARE_METATYPE(QList<NotificationParameters>)
+Q_DECLARE_METATYPE(MNotificationProxyWithParameters)
+Q_DECLARE_METATYPE(QList<MNotificationProxyWithParameters>)
+Q_DECLARE_METATYPE(MNotificationGroupProxyWithParameters)
+Q_DECLARE_METATYPE(QList<MNotificationGroupProxyWithParameters>)
 
 DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationManagerInterface &interface)
     : NotificationSource(interface)
@@ -46,6 +53,11 @@ DBusInterfaceNotificationSource::DBusInterfaceNotificationSource(NotificationMan
     qDBusRegisterMetaType<QList<MNotificationGroupProxy> >();
     qDBusRegisterMetaType<MNotificationGroupWithIdentifierProxy>();
     qDBusRegisterMetaType<QList<MNotificationGroupWithIdentifierProxy> >();
+    qDBusRegisterMetaType<QList<NotificationParameters> >();
+    qDBusRegisterMetaType<MNotificationProxyWithParameters>();
+    qDBusRegisterMetaType<QList<MNotificationProxyWithParameters> >();
+    qDBusRegisterMetaType<MNotificationGroupProxyWithParameters>();
+    qDBusRegisterMetaType<QList<MNotificationGroupProxyWithParameters> >();
 
     new DBusInterfaceNotificationSourceAdaptor(this);
 }
@@ -177,4 +189,46 @@ QList<MNotificationGroupWithIdentifierProxy> DBusInterfaceNotificationSource::no
 uint DBusInterfaceNotificationSource::notificationCountInGroup(uint notificationUserId, uint groupId)
 {
     return manager.notificationCountInGroup(notificationUserId, groupId);
+}
+
+uint DBusInterfaceNotificationSource::addNotification(uint notificationUserId, uint groupId, const NotificationParameters &parameters)
+{
+    return manager.addNotification(notificationUserId, parameters, groupId);
+}
+
+bool DBusInterfaceNotificationSource::updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters)
+{
+    return manager.updateNotification(notificationUserId, notificationId, parameters);
+}
+
+uint DBusInterfaceNotificationSource::addGroup(uint notificationUserId, const NotificationParameters &parameters)
+{
+    return manager.addGroup(notificationUserId, parameters);
+}
+
+bool DBusInterfaceNotificationSource::updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters)
+{
+    return manager.updateGroup(notificationUserId, groupId, parameters);
+}
+
+QList<MNotificationProxyWithParameters> DBusInterfaceNotificationSource::notificationListWithNotificationParameters(uint notificationUserId)
+{
+    QList<MNotificationProxyWithParameters> userNotifications;
+
+    foreach (const Notification &notification, manager.notificationList(notificationUserId)) {
+        userNotifications.append(MNotificationProxyWithParameters(notification));
+    }
+
+    return userNotifications;
+}
+
+QList<MNotificationGroupProxyWithParameters> DBusInterfaceNotificationSource::notificationGroupListWithNotificationParameters(uint notificationUserId)
+{
+    QList<MNotificationGroupProxyWithParameters> userGroups;
+
+    foreach (const NotificationGroup &group, manager.notificationGroupList(notificationUserId)) {
+        userGroups.append(MNotificationGroupProxyWithParameters(group));
+    }
+
+    return userGroups;
 }

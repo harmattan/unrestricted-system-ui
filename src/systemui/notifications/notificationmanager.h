@@ -295,6 +295,16 @@ private:
      */
     bool isPersistent(const NotificationParameters &parameters);
 
+    /*!
+     * Extracts timestamp information of notification from the notification parameters.
+     * If there is not timestamp information or timestamp is 0 current local time is
+     * used as a timestamp
+     *
+     * \param parameters NotificationParameters
+     * \return timestamp in UNIX time
+     */
+    uint timestamp(const NotificationParameters &parameters);
+
     //! Hash of all notifications keyed by notification IDs
     QHash<uint, Notification> notificationContainer;
 

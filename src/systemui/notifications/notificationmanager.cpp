@@ -270,7 +270,7 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
         uint notificationId = nextAvailableNotificationID();
 
         NotificationParameters fullParameters(appendEventTypeParameters(parameters));
-        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+        fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
         Notification::NotificationType notificationType = determineType(fullParameters);
         if (notificationType == Notification::SystemEvent) {
             // Consider all system notifications not to be persistent
@@ -299,7 +299,7 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
 
     if (ni != notificationContainer.end()) {
         NotificationParameters fullParameters(parameters);
-        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+        fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
         (*ni).updateParameters(fullParameters);
 
         saveNotifications();
@@ -379,7 +379,7 @@ bool NotificationManager::removeNotificationsInGroup(uint groupId)
 uint NotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters)
 {
     NotificationParameters fullParameters(appendEventTypeParameters(parameters));
-    fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
+    fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
 
     uint groupID = nextAvailableGroupID();
     NotificationGroup group(groupID, notificationUserId, fullParameters);
@@ -400,8 +400,7 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
 
     if (gi != groupContainer.end()) {
         NotificationParameters fullParameters(parameters);
-        fullParameters.add("timestamp", QDateTime::currentDateTimeUtc().toTime_t());
-
+        fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
         gi->updateParameters(fullParameters);
 
         saveStateData();
@@ -667,3 +666,10 @@ bool NotificationManager::isPersistent(const NotificationParameters &parameters)
 
     return isPersistent;
 }
+
+uint NotificationManager::timestamp(const NotificationParameters &parameters)
+{
+    uint timestamp = parameters.value(GenericNotificationParameterFactory::timestampKey()).toUInt();
+    return timestamp == 0 ? QDateTime::currentDateTimeUtc().toTime_t() : timestamp;
+}
+

@@ -66,8 +66,10 @@ public:
      * \param groupId the ID of the notification group to put the notification in
      * \param eventType the event type of the notification
      * \return the ID of the new notification
+     *
+     * \deprecated This method is deprecated, you should use addNotification(NotificationParameters parameters) instead
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType);
+    uint Q_DECL_DEPRECATED addNotification(uint notificationUserId, uint groupId, const QString &eventType);
 
     /*!
      * Adds a new notification.
@@ -81,8 +83,10 @@ public:
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
      * \return the ID of the new notification
+     *
+     * \deprecated This method is deprecated, you should use addNotification(NotificationParameters parameters) instead
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    uint Q_DECL_DEPRECATED addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Adds a new notification.
@@ -97,8 +101,10 @@ public:
      * \param count the number of items inside this notification
      * \param identifier the user supplied identifier
      * \return the ID of the new notification
+     *
+     * \deprecated This method is deprecated, you should use addNotification(NotificationParameters parameters) instead
      */
-    uint addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
+    uint Q_DECL_DEPRECATED addNotification(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
 
     /*!
      * Updates an existing notification.
@@ -107,8 +113,10 @@ public:
      * \param notificationId the ID of the notification to be updated
      * \param eventType the event type of the notification
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateNotification(NotificationParameters parameters) instead
      */
-    bool updateNotification(uint notificationUserId, uint notificationId, const QString &eventType);
+    bool Q_DECL_DEPRECATED updateNotification(uint notificationUserId, uint notificationId, const QString &eventType);
 
     /*!
      * Updates an existing notification.
@@ -122,8 +130,10 @@ public:
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateNotification(NotificationParameters parameters) instead
      */
-    bool updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    bool Q_DECL_DEPRECATED updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Updates an existing notification.
@@ -138,8 +148,10 @@ public:
      * \param count the number of items inside this notification
      * \param identifier the user supplied identifier
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateNotification(NotificationParameters parameters) instead
      */
-    bool updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
+    bool Q_DECL_DEPRECATED updateNotification(uint notificationUserId, uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
 
     /*!
      * Removes a notification.
@@ -156,8 +168,10 @@ public:
      * \param notificationUserId the ID of the user of notifications
      * \param eventType the event type of the notification
      * \return the ID of the new notification group
+     *
+     * \deprecated This method is deprecated, you should use addGroup(NotificationParameters parameters) instead
      */
-    uint addGroup(uint notificationUserId, const QString &eventType);
+    uint Q_DECL_DEPRECATED addGroup(uint notificationUserId, const QString &eventType);
 
     /*!
      * Adds a new notification group.
@@ -170,8 +184,10 @@ public:
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
      * \return the ID of the new notification group
+     *
+     * \deprecated This method is deprecated, you should use addGroup(NotificationParameters parameters) instead
      */
-    uint addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    uint Q_DECL_DEPRECATED addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Adds a new notification group.
@@ -185,8 +201,10 @@ public:
      * \param count the number of items inside this group
      * \param identifier the user supplied identifier
      * \return the ID of the new notification group
+     *
+     * \deprecated This method is deprecated, you should use addGroup(NotificationParameters parameters) instead
      */
-    uint addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
+    uint Q_DECL_DEPRECATED addGroup(uint notificationUserId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
 
     /*!
      * Updates an existing notification group.
@@ -195,8 +213,10 @@ public:
      * \param groupId the ID of the notification group to be updated
      * \param eventType the event type of the notification
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateGroup(NotificationParameters parameters) instead
      */
-    bool updateGroup(uint notificationUserId, uint groupId, const QString &eventType);
+    bool Q_DECL_DEPRECATED updateGroup(uint notificationUserId, uint groupId, const QString &eventType);
 
     /*!
      * Updates an existing notification group.
@@ -210,8 +230,10 @@ public:
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateGroup(NotificationParameters parameters) instead
      */
-    bool updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    bool Q_DECL_DEPRECATED updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Updates an existing notification group.
@@ -226,8 +248,10 @@ public:
      * \param count the number of items inside this group
      * \param identifier the user supplied identifier
      * \return true if the update succeeded, false otherwise
+     *
+     * \deprecated This method is deprecated, you should use updateGroup(NotificationParameters parameters) instead
      */
-    bool updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
+    bool Q_DECL_DEPRECATED updateGroup(uint notificationUserId, uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier);
 
     /*!
      * Removes a notification group and all notifications in the group.
@@ -251,32 +275,40 @@ public:
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications that belong to notificationUserId
+     *
+     * \deprecated This method is deprecated, you should use notificationListWithNotificationParameters(uint notificationUserId) instead
      */
-    QList<MNotificationProxy> notificationList(uint notificationUserId);
+    QList<MNotificationProxy> Q_DECL_DEPRECATED notificationList(uint notificationUserId);
 
     /*!
      * Returns list of notifications with associated identifiers by user id
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notifications with associated identifiers that belong to notificationUserId
+     *
+     * \deprecated This method is deprecated, you should use notificationListWithNotificationParameters(uint notificationUserId) instead
      */
-    QList<MNotificationWithIdentifierProxy> notificationListWithIdentifiers(uint notificationUserId);
+    QList<MNotificationWithIdentifierProxy> Q_DECL_DEPRECATED notificationListWithIdentifiers(uint notificationUserId);
 
     /*!
      * Returns list of notification groups by user id
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups that belong to notificationUserId
+     *
+     * \deprecated This method is deprecated, you should use notificationGroupListAsNotificationParameters(uint notificationUserId) instead
      */
-    QList<MNotificationGroupProxy> notificationGroupList(uint notificationUserId);
+    QList<MNotificationGroupProxy> Q_DECL_DEPRECATED notificationGroupList(uint notificationUserId);
 
     /*!
      * Returns list of notification groups with associated identifiers by user id
      *
      * \param notificationUserId the ID of the user of notifications
      * \return list of notification groups with associated identifiers that belong to notificationUserId
+     *
+     * \deprecated This method is deprecated, you should use notificationGroupListAsNotificationParameters(uint notificationUserId) instead
      */
-    QList<MNotificationGroupWithIdentifierProxy> notificationGroupListWithIdentifiers(uint notificationUserId);
+    QList<MNotificationGroupWithIdentifierProxy> Q_DECL_DEPRECATED notificationGroupListWithIdentifiers(uint notificationUserId);
 
     /*!
      * Returns amount of notifications in a given group
@@ -286,6 +318,77 @@ public:
      * \return amount of notifications in given group
      */
     uint notificationCountInGroup(uint notificationUserId, uint groupId);
+
+    /*!
+     * Adds a new notification.
+     *
+     * Notification is created with NotificationParametes, a hash of key-value pairs
+     * that represents the information the notification holds.
+     *
+     * Notification can be added to group if groupId key is supplied.
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param groupId the group ID
+     * \param parameters hash of key-value pairs that's used to create notification
+     * \return the ID of the new notification
+     */
+    uint addNotification(uint notificationUserId, uint groupId, const NotificationParameters &parameters);
+
+    /*!
+     * Updates an existing notification.
+     *
+     * Notification is updated with NotificationParameters.
+     * Keys that are specified are replaced and others are not changed.
+     * Except of timestamp key that is changed to set to system's current time if not specified.
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param notificationId the ID of the notification to be updated
+     * \param parameters a hash of key-value pairs that's used to update notification
+     * \return true if the update succeeded, false otherwise
+     */
+    bool updateNotification(uint notificationUserId, uint notificationId, const NotificationParameters &parameters);
+
+    /*!
+     * Adds a new notification group.
+     *
+     * NotificationGroup is created with NotificationParametes, a hash of key-value pairs
+     * that represents the information the notification group holds.
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param parameters a hash of key-value pairs that's used to create notification group
+     * \return the ID of the new notification group
+     */
+    uint addGroup(uint notificationUserId, const NotificationParameters &parameters);
+
+    /*!
+     * Updates an existing notification group.
+     *
+     * NotificationGorup is updated with NotificationParameters.
+     * Keys that are specified are replaced and others are not changed.
+     * Except of timestamp key that is changed to set to system's current time if not specified.
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \param groupId the group ID
+     * \param parameters a hash of key-value pairts that's used to update group
+     * \return true if the update succeeded, false otherwise
+     */
+    bool updateGroup(uint notificationUserId, uint groupId, const NotificationParameters &parameters);
+
+    /*!
+     * Returns list of notifications by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notifications as  that belong to notificationUserId
+     */
+    QList<MNotificationProxyWithParameters> notificationListWithNotificationParameters(uint notificationUserId);
+
+    /*!
+     * Returns list of notification groups by user id
+     *
+     * \param notificationUserId the ID of the user of notifications
+     * \return list of notification groups that belong to notificationUserId
+     */
+    QList<MNotificationGroupProxyWithParameters> notificationGroupListWithNotificationParameters(uint notificationUserId);
 };
 
 #endif // DBUSINTERFACENOTIFICATIONSOURCE_H

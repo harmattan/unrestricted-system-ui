@@ -86,7 +86,6 @@ int Notification::timeout() const
     return timeout_;
 }
 
-
 QDataStream &operator<<(QDataStream &datastream, const Notification &notification)
 {
     datastream << notification.notificationId_;

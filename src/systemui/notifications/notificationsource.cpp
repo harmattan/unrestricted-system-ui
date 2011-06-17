@@ -26,7 +26,7 @@ NotificationSource::NotificationSource(NotificationManagerInterface &m)
 {
 }
 
-NotificationParameters NotificationSource::notificationParameters(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier)
+NotificationParameters NotificationSource::notificationParameters(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, const QString &identifier, uint timestamp)
 {
     NotificationParameters parameters;
     parameters.add(GenericNotificationParameterFactory::createEventTypeParameter(eventType));
@@ -47,6 +47,7 @@ NotificationParameters NotificationSource::notificationParameters(const QString 
     if (!identifier.isEmpty()) {
         parameters.add(GenericNotificationParameterFactory::createIdentifierParameter(identifier));
     }
+    parameters.add(GenericNotificationParameterFactory::createTimestampParameter(timestamp));
 
     return parameters;
 }
