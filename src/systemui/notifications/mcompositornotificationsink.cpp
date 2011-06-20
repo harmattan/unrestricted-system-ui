@@ -86,9 +86,13 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         return;
     }
 
-    if (allPreviewsDisabled || (notification.type() != Notification::SystemEvent && (sinkDisabled || currentApplicationHasPreviewsDisabled()))) {
+    // Check whether notification previews are disabled in current conditions
+    PreviewMode previewMode = currentApplicationPreviewMode();
+    if (allPreviewsDisabled ||
+        (notification.type() == Notification::ApplicationEvent && (sinkDisabled || (previewMode & ApplicationEventsDisabled) != 0)) ||
+        (notification.type() == Notification::SystemEvent && (previewMode & SystemEventsDisabled) != 0)) {
         // Notification previews are disabled
-        if (notification.type() != Notification::SystemEvent) {
+        if (notification.type() == Notification::ApplicationEvent) {
             // Transfer the notification onwards immediately
             emit notificationAdded(notification);
         } else {
@@ -298,13 +302,13 @@ void MCompositorNotificationSink::updateImage(MBanner *infoBanner, const Notific
     }
 }
 
-bool MCompositorNotificationSink::currentApplicationHasPreviewsDisabled()
+MCompositorNotificationSink::PreviewMode MCompositorNotificationSink::currentApplicationPreviewMode()
 {
     Atom actualType;
     int actualFormat;
     unsigned long numItemsReturn, bytesLeft;
     unsigned char *data = NULL;
-    bool previewsDisabled = false;
+    PreviewMode previewMode = AllEventsEnabled;
 
     Display *display = QX11Info::display();
 
@@ -319,10 +323,10 @@ bool MCompositorNotificationSink::currentApplicationHasPreviewsDisabled()
                                                 notificationPreviewsDisabledAtom, 0L, 1L, False, XA_INTEGER,
                                                 &actualType, &actualFormat, &numItemsReturn, &bytesLeft, &data);
         if (result == Success && numItemsReturn) {
-            previewsDisabled = *(int *)data != 0;
+            previewMode = (PreviewMode)(*(int *)data);
             X11Wrapper::XFree(data);
         }
     }
 
-    return previewsDisabled;
+    return previewMode;
 }

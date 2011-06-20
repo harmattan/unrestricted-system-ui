@@ -45,6 +45,14 @@ class MCompositorNotificationSink : public WidgetNotificationSink
     Q_OBJECT
 
 public:
+    //! Supported preview modes
+    enum PreviewMode {
+        AllEventsEnabled = 0,
+        ApplicationEventsDisabled,
+        SystemEventsDisabled,
+        AllEventsDisabled
+    };
+
     /*!
      * Constructs a new MCompositorNotificationSink.
      */
@@ -138,10 +146,12 @@ private:
 
     /*!
      * Find the current application window id through a root window property
-     * and then check a property on that window to determine whether
-     * notifications should be shown on that window or not.
+     * and then check a property on that window to determine whether different
+     * kinds of notifications should be shown on that window or not.
+     *
+     * \return the preview mode for the current application
      */
-    bool currentApplicationHasPreviewsDisabled();
+    PreviewMode currentApplicationPreviewMode();
 
     //! The set of all notification IDs known by this sink. Needed to know also about those notifications which do not have banners anymore.
     QSet<uint> notificationIds;

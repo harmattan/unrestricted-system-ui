@@ -849,10 +849,16 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabledForApplicat
     QTest::addColumn<bool>("system");
     QTest::addColumn<bool>("windowshown");
 
-    QTest::newRow("property not set, window shown") << false << 0 << false << true;
-    QTest::newRow("property set to zero, window shown") << true << 0 <<  false << true;
-    QTest::newRow("property set to non-zero, window not shown") << true << 1 << false << false;
-    QTest::newRow("property set to non-zero, window shown for system notification") << true << 1 << true << true;
+    QTest::newRow("property not set, window shown for application notification") << false << 0 << false << true;
+    QTest::newRow("property not set, window shown for system notification") << false << 0 << true << true;
+    QTest::newRow("property set to 0, window shown for application notification") << true << 0 <<  false << true;
+    QTest::newRow("property set to 0, window shown for system notification") << true << 0 <<  true << true;
+    QTest::newRow("property set to 1, window not shown for application notification") << true << 1 <<  false << false;
+    QTest::newRow("property set to 1, window shown for system notification") << true << 1 <<  true << true;
+    QTest::newRow("property set to 2, window shown for application notification") << true << 2 <<  false << true;
+    QTest::newRow("property set to 2, window not shown for system notification") << true << 2 <<  true << false;
+    QTest::newRow("property set to 3, window not shown for application notification") << true << 3 <<  false << false;
+    QTest::newRow("property set to 3, window not shown for system notification") << true << 3 <<  true << false;
 }
 
 void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabledForApplication()

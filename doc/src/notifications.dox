@@ -35,14 +35,21 @@ This sink will create a transparent window of type \b _NET_WM_TYPE_NOTIFICATION 
 
 \subsubsection disabling_previews Disabling notification previews
 MCompositorNotificationSink can be prevented from showing its window and the banners in two ways:
-- Globally, by setting the GConf key /desktop/meego/notifications/previews_enabled to false. This disables previews for both application and system notifications.
-- On a per window basis, by setting the _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED window property to a non-zero value e.g.
+- Globally, by setting the GConf key /desktop/meego/notifications/previews_enabled to false. This disables previews for both application and system notifications and is only to be used for testing purposes.
+- On a per window basis, by setting the _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED window property to one of the supported values:
+ - 0: all previews enabled
+ - 1: application notification previews disabled
+ - 2: system notification previews disabled
+ - 3: application and system notification previews disabled
+
+The code to disable the previews on a per window basis is as follows:
+
 \code
 MWindow win;
 unsigned char data = 1;
-XChangeProperty(QX11Info::display(), win.internalWindId(), XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False),
+XChangeProperty(QX11Info::display(), win.effectiveWinId(), XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED", False),
                 XA_INTEGER, 8, PropModeReplace, &data, 1);
-\endcode \note Previews for system notifications can not be disabled this way.
+\endcode
 
 \subsection NGFNotificationSink
 \c NGFNotificationSink (Non Graphical Notification Sink) integrates to the low level notification framework libngf to produce the required notification sound, vibrations, led indications etc. The \c NGFNotificationSink uses the \c feedbackId key from the event type to determine which feedback to request from the \c libngf.
