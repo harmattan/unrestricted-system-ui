@@ -151,20 +151,3 @@ void ScreenLockWindow::setSkipTaskbarProperty()
     X11Wrapper::XSendEvent(display, RootWindow(display, x11Info().screen()), False, (SubstructureNotifyMask | SubstructureRedirectMask), &e);
     X11Wrapper::XSync(display, False);
 }
-
-void ScreenLockWindow::blacken()
-{
-    QBrush brush;
-    brush.setStyle(Qt::SolidPattern);
-    brush.setColor(Qt::black);
-    setForegroundBrush(brush);
-    update();
-}
-
-void ScreenLockWindow::unblacken()
-{
-    QBrush brush;
-    brush.setStyle(Qt::NoBrush);
-    setForegroundBrush(brush);
-    update();
-}

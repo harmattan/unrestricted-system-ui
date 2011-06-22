@@ -8,6 +8,7 @@ system-ui (1.1.0~1) unstable; urgency=low
   * Fixes: NB#263307 - Button §qtn_tui_clear§ is clipped in notification toolbar in Russian Language
   * Fixes: NB#234652 - System banners should be blocked during video recording
   * Fixes: NB#257065 - Dialog not destroyed when mode is set through automatic trigger
+  * Fixes: NB#265053 - The screen flickers when the touch screen lock transitions to the standby screen
 
  -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Wed, 08 Jun 2011 17:52:12 +0300
 

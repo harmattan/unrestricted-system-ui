@@ -53,16 +53,6 @@ public:
      */
     void setLowPowerMode(bool enable);
 
-    /*!
-     * Sets window's foreground brush to black.
-     */
-    void blacken();
-
-    /*!
-     * Sets window's foreground brush to Qt::NoBrush
-     */
-    void unblacken();
-
 protected:
     /*!
      * Sets the _MEEGO_STACKING_LAYER window property to 5. For incoming call feature

@@ -33,9 +33,6 @@ class ScreenLockWindowStub : public StubBase {
   virtual void showEvent(QShowEvent *event);
   virtual void setLowPowerMode(bool enable);
   virtual void paintEvent(QPaintEvent *event);
-  virtual void blacken();
-  virtual void unblacken();
-
 };
 
 // 2. IMPLEMENT STUB
@@ -71,17 +68,6 @@ void ScreenLockWindowStub::paintEvent(QPaintEvent *event)
 }
 
 
-void ScreenLockWindowStub::blacken()
-{
-  stubMethodEntered("blacken");
-}
-
-void ScreenLockWindowStub::unblacken()
-{
-  stubMethodEntered("unblacken");
-}
-
-
 // 3. CREATE A STUB INSTANCE
 ScreenLockWindowStub gDefaultScreenLockWindowStub;
 ScreenLockWindowStub* gScreenLockWindowStub = &gDefaultScreenLockWindowStub;
@@ -114,15 +100,6 @@ void ScreenLockWindow::setLowPowerMode(bool enable)
 void ScreenLockWindow::paintEvent(QPaintEvent *event)
 {
     gScreenLockWindowStub->paintEvent(event);
-}
-
-void ScreenLockWindow::blacken()
-{
-    gScreenLockWindowStub->blacken();
-}
-void ScreenLockWindow::unblacken()
-{
-    gScreenLockWindowStub->unblacken();
 }
 
 #endif

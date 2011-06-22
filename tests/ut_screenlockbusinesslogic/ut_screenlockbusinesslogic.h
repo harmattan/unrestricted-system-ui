@@ -86,7 +86,6 @@ private slots:
     void testTkLockOpen_data();
     void testTkLockOpen();
     void testTkLockClose();
-    void testSettingLowPowerModePaintsScreenLockWindowBlack();
 
 private:
     MApplication *m_App;

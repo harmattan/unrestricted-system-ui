@@ -204,8 +204,8 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // The lock screen should now be visible
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], true);
 
-    // Raising should happen
-    QCOMPARE(gQWidgetRaiseCalled, true);
+    // Raising should not happen
+    QCOMPARE(gQWidgetRaiseCalled, false);
 
     // The lock screen needs to be reset
     QCOMPARE(screenLockExtensionReset, true);
@@ -213,7 +213,6 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
 
     // Reset the stubs
     gQWidgetVisible[m_subject->screenLockWindow] = false;
-    gQWidgetRaiseCalled = false;
 
     // Lock the screen again
     m_subject->toggleScreenLockUI(true);
@@ -221,8 +220,8 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // show() should not be called
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
 
-    // Raising should happen
-    QCOMPARE(gQWidgetRaiseCalled, true);
+    // Raising should not happen
+    QCOMPARE(gQWidgetRaiseCalled, false);
 
     // The lock screen still needs to be reset
     QCOMPARE(screenLockExtensionReset, true);
@@ -444,19 +443,6 @@ void Ut_ScreenLockBusinessLogic::testTkLockClose()
     QCOMPARE(gQWidgetVisible.contains(m_subject->screenLockWindow), true);
     QCOMPARE(gEventEaterStub->stubCallCount("hide"), 1);
     QCOMPARE(gQWidgetVisible[m_subject->screenLockWindow], false);
-}
-
-
-void Ut_ScreenLockBusinessLogic::testSettingLowPowerModePaintsScreenLockWindowBlack()
-{
-    ScreenLockExtension screenLockExtension;
-    screenLockExtension.initialize("");
-    m_subject->registerExtension(&screenLockExtension);
-
-    m_subject->tklock_open(TEST_SERVICE, TEST_PATH, TEST_INTERFACE, TEST_METHOD, ScreenLockBusinessLogic::TkLockEnableLowPowerMode, false, false);
-    QCOMPARE(gScreenLockWindowStub->stubCallCount("blacken"), 1);
-    QCOMPARE(gScreenLockWindowStub->stubCallCount("unblacken"), 1);
-    QCOMPARE(gQWidgetRepaintCalled, true);
 }
 
 QTEST_APPLESS_MAIN(Ut_ScreenLockBusinessLogic)

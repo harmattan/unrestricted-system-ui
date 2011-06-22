@@ -166,16 +166,6 @@ void ScreenLockBusinessLogic::showLowPowerMode()
 {
     ensureScreenLockWindowExists();
 
-    // Set X window properties for low power mode.
-    screenLockWindow->setLowPowerMode(true);
-
-    // Paints screenLockWindow black to prevent that switching to low power mode
-    // is not incorrectly seen on lockscreen
-    screenLockWindow->blacken();
-
-    // Immediately paints screenLockWindow to black
-    screenLockWindow->repaint();
-
     // When the low power mode is switched on, it must be done after updating the window contents
     foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
         screenLockExtension->setMode(ScreenLockExtensionInterface::LowPowerMode);
@@ -184,8 +174,8 @@ void ScreenLockBusinessLogic::showLowPowerMode()
     toggleScreenLockUI(true);
     toggleEventEater(false);
 
-    // When low power mode is activated screenLockWindow should be shown
-    screenLockWindow->unblacken();
+    // When the low power mode is switched on, it must be done after updating the window contents
+    screenLockWindow->setLowPowerMode(true);
 }
 
 void ScreenLockBusinessLogic::setDisplayOffMode()
@@ -230,8 +220,6 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
         if (!screenLockWindow->isVisible()) {
             screenLockWindow->show();
         }
-
-        screenLockWindow->raise();
     } else {
         // Always switch the low power mode off before hiding the screen lock window
         foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
