@@ -194,6 +194,8 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
         // no-op
         break;
     default:
+        // Hide the mode selection dialog
+        hideDialog(false);
         break;
     }
 }

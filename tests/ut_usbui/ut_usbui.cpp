@@ -128,6 +128,7 @@ void Ut_UsbUi::testHideDialog_data()
     QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite;
     QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage;
     QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK;
+    QTest::newRow("Undefined") << MeeGo::QmUSBMode::Undefined;
 }
 
 void Ut_UsbUi::testHideDialog()
