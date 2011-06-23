@@ -220,6 +220,8 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
         if (!screenLockWindow->isVisible()) {
             screenLockWindow->show();
         }
+
+        screenLockWindow->raise();
     } else {
         // Always switch the low power mode off before hiding the screen lock window
         foreach (ScreenLockExtensionInterface *screenLockExtension, screenLockExtensions) {
