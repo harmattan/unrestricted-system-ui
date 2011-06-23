@@ -131,7 +131,7 @@ public slots:
      *
      * \param eventType the event type of the notifications to update
      */
-    void updateNotificationsWithEventType(const QString &eventType);
+    void updateNotificationsAndGroupsWithEventType(const QString &eventType);
 
 signals:
     /*!

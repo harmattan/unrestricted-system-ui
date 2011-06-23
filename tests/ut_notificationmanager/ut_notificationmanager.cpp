@@ -435,26 +435,51 @@ void Ut_NotificationManager::testWhenNotificationIsAddedThenTheNotificationIsFil
     QCOMPARE(notification.parameters().value(PERSISTENT).toBool(), true);
 }
 
-void Ut_NotificationManager::testNotificationIsUpdatedWhenEventTypeIsUpdated()
+void Ut_NotificationManager::testNotificationsAndGroupsAreUpdatedWhenEventTypeIsUpdated()
 {
     connect(this, SIGNAL(eventTypeModified(QString)),
-            manager, SLOT(updateNotificationsWithEventType(QString)));
-    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+            manager, SLOT(updateNotificationsAndGroupsWithEventType(QString)));
+    QSignalSpy notificationSpy(manager, SIGNAL(notificationUpdated(Notification)));
+    QSignalSpy groupSpy(manager, SIGNAL(groupUpdated(uint, const NotificationParameters)));
 
+    // Create a notification and a group of a specific type
     gEventTypeSettings["testType"][IMAGE] = "iconId";
 
     NotificationParameters parameters;
     parameters.add(EVENT_TYPE, "testType");
     manager->addNotification(0, parameters);
 
+    qDateTimeToTime_t = 123;
+    uint groupId = manager->addGroup(0, parameters);
+
+    // Create a notification and a group of a different notification type.
+    // These should be unaffected by changed to "testType" notification type.
+    NotificationParameters parameters1;
+    parameters.add(EVENT_TYPE, "otherType");
+    manager->addNotification(0, parameters1);
+    manager->addGroup(0, parameters1);
+
+    // Reset signal spies
+    notificationSpy.clear();
+    groupSpy.clear();
+
+    // Updating event type should emit notificationUpdated and groupUpdated signals
+    // for the notifications and groups of this particular notification type
     gEventTypeSettings["testType"][IMAGE] = "modified-iconId";
     emit eventTypeModified("testType");
 
-    QCOMPARE(spy.count(), 2);
-    QList<QVariant> arguments = spy.takeFirst();
-    arguments = spy.takeFirst();
+    // Check that notificationUpdated signal was emitted correctly
+    QCOMPARE(notificationSpy.count(), 1);
+    QList<QVariant> arguments = notificationSpy.takeFirst();
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.parameters().value(IMAGE).toString(), QString("modified-iconId"));
+
+    // Check that groupUpdated signal was emitted correctly
+    QCOMPARE(groupSpy.count(), 1);
+    arguments = groupSpy.takeFirst();
+    QCOMPARE(qvariant_cast<uint>(arguments.at(0)), groupId);
+    parameters = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(parameters.value(IMAGE).toString(), QString("modified-iconId"));
 }
 
 void Ut_NotificationManager::testUpdateNotification()

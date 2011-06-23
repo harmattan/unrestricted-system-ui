@@ -1,6 +1,7 @@
 system-ui (1.1.0~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#257758 - Updating a notification event type's iconId does not update notification group icons
   * Fixes: NB#254724 - sysuid is missing capabilities
   * Fixes: NB#264744 - During device update (SSU) tens of empty notification banners with different icons are shown
   * Fixes: NB#255218 - Status Menu open/close transition is incorrect

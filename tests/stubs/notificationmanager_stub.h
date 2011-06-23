@@ -44,7 +44,7 @@ class NotificationManagerStub : public StubBase {
   virtual bool removeNotification(uint notificationId);
   virtual bool removeNotificationsInGroup(uint groupId);
   virtual void removeNotificationsAndGroupsWithEventType(const QString &eventType);
-  virtual void updateNotificationsWithEventType(const QString &eventType);
+  virtual void updateNotificationsAndGroupsWithEventType(const QString &eventType);
   virtual void relayNextNotification();
   virtual Notification::NotificationType determineType(const NotificationParameters &parameters);
   virtual void submitNotification(const Notification &notification);
@@ -193,10 +193,10 @@ void NotificationManagerStub::removeNotificationsAndGroupsWithEventType(const QS
   stubMethodEntered("removeNotificationsAndGroupsWithEventType",params);
 }
 
-void NotificationManagerStub::updateNotificationsWithEventType(const QString &eventType) {
+void NotificationManagerStub::updateNotificationsAndGroupsWithEventType(const QString &eventType) {
   QList<ParameterBase*> params;
   params.append( new Parameter<const QString & >(eventType));
-  stubMethodEntered("updateNotificationsWithEventType",params);
+  stubMethodEntered("updateNotificationsAndGroupsWithEventType",params);
 }
 
 void NotificationManagerStub::relayNextNotification() {
@@ -380,8 +380,8 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
   gNotificationManagerStub->removeNotificationsAndGroupsWithEventType(eventType);
 }
 
-void NotificationManager::updateNotificationsWithEventType(const QString &eventType) {
-  gNotificationManagerStub->updateNotificationsWithEventType(eventType);
+void NotificationManager::updateNotificationsAndGroupsWithEventType(const QString &eventType) {
+  gNotificationManagerStub->updateNotificationsAndGroupsWithEventType(eventType);
 }
 
 void NotificationManager::relayNextNotification() {
