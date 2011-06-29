@@ -211,7 +211,6 @@ void ScreenLockBusinessLogic::hideEventEater()
 
 void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
 {
-
     if (toggle) {
         ensureScreenLockWindowExists();
         // Whenever we're showing the lock screen we need to reset its state
@@ -233,6 +232,8 @@ void ScreenLockBusinessLogic::toggleScreenLockUI(bool toggle)
             screenLockWindow->hide();
         }
     }
+
+    emit screenIsLocked(toggle);
 }
 
 void ScreenLockBusinessLogic::toggleEventEater(bool toggle)
@@ -259,6 +260,11 @@ void ScreenLockBusinessLogic::ensureScreenLockWindowExists()
         screenLockWindow = new ScreenLockWindow(extensionArea);
         screenLockWindow->installEventFilter(new CloseEventEater(this));
     }
+}
+
+bool ScreenLockBusinessLogic::isScreenLocked() const
+{
+    return screenLockWindow != NULL && screenLockWindow->isVisible();
 }
 
 #ifdef HAVE_QMSYSTEM

@@ -74,6 +74,13 @@ public:
      */
     int tklock_close(bool silent);
 
+    /*!
+     * Retuns the screen lock state.
+     *
+     * \return \c true if the screen is locked, \c false otherwise
+     */
+    bool isScreenLocked() const;
+
 public slots:
     //! Hides the screen lock window and calls the MCE's unlock callback function.
     void unlockScreen();

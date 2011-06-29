@@ -32,6 +32,7 @@
 #include "statusarearendereradaptor_stub.h"
 #include "batterybusinesslogic_stub.h"
 #include "screenlockbusinesslogic_stub.h"
+#include "screenlockbusinesslogicadaptor_stub.h"
 #include "contextframeworkitem_stub.h"
 #include "widgetnotificationsink_stub.h"
 #include "eventtypestore_stub.h"
@@ -39,7 +40,7 @@
 #include "notification_stub.h"
 #include "notificationgroup_stub.h"
 #include "unlockarea_stub.h"
-#include "sysuidrequest_stub.h"
+#include "screenlockbusinesslogic_stub.h"
 #include "shutdownbusinesslogic_stub.h"
 #include "shutdownbusinesslogicadaptor_stub.h"
 #include "statusindicatormenubusinesslogic_stub.h"
@@ -217,6 +218,10 @@ void Ut_Sysuid::testSignalConnections()
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager, SLOT(removeUnseenFlags(bool))));
+    QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
+    QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid->mCompositorNotificationSink, SLOT(setTouchScreenLockActive(bool))));
+    QVERIFY(disconnect(sysuid->usbUi, SIGNAL(dialogShown()), sysuid->screenLockBusinessLogic, SLOT(unlockScreen())));
+
 #ifdef HAVE_QMSYSTEM
     QVERIFY(disconnect(&sysuid->qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
 #endif
@@ -260,13 +265,9 @@ void Ut_Sysuid::testWhenLockStateOrStatusIndicatorMenuVisibilityChangesThenCompo
     QFETCH(int, state);
     QFETCH(bool, sinkDisabled);
 
-    if(state & 1) {
-        gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", true);
-    } else {
-        gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", false);
-    }
+    gStatusIndicatorMenuBusinessLogicStub->stubSetReturnValue("isStatusIndicatorMenuVisible", (state & 1) != 0);
     gQmLocksDeviceLock = state & 2;
-    gQmLocksScreenLock = state & 4;
+    gScreenLockBusinessLogicStub->stubSetReturnValue("isScreenLocked", (state & 4) != 0);
 
     sysuid->updateCompositorNotificationSinkEnabledStatus();
     QCOMPARE(gMCompositorNotificationSinkStub->stubCallCount("setApplicationEventsDisabled"), 1);

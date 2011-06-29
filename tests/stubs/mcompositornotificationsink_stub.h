@@ -39,6 +39,7 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void addOldestBannerToWindow();
   virtual void changeNotificationPreviewMode();
   virtual void updateWindowMask();
+  virtual void setTouchScreenLockActive(bool active);
 };
 
 // 2. IMPLEMENT STUB
@@ -89,10 +90,15 @@ void MCompositorNotificationSinkStub::currentBannerDone() {
   stubMethodEntered("currentBannerDone");
 }
 
-void MCompositorNotificationSinkStub::updateWindowMask()
-{
+void MCompositorNotificationSinkStub::updateWindowMask() {
   stubMethodEntered("updateWindowMask");
 }
+
+void MCompositorNotificationSinkStub::setTouchScreenLockActive(bool active) {
+    QList<ParameterBase*> params;
+    params.append( new Parameter<bool >(active));
+    stubMethodEntered("setTouchScreenLockActive",params);
+  }
 
 
 // 3. CREATE A STUB INSTANCE
@@ -147,9 +153,12 @@ void MCompositorNotificationSink::updateWindowMask(MBanner*) {
 void MCompositorNotificationSink::clearWindowMask() {
 }
 
-void MCompositorNotificationSink::updateWindowMask()
-{
+void MCompositorNotificationSink::updateWindowMask() {
     gMCompositorNotificationSinkStub->updateWindowMask();
+}
+
+void MCompositorNotificationSink::setTouchScreenLockActive(bool active) {
+    gMCompositorNotificationSinkStub->setTouchScreenLockActive(active);
 }
 
 #endif

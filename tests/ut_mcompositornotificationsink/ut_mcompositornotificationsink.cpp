@@ -30,7 +30,6 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
-#include <qmlocks.h>
 #endif
 
 static const QString NOTIFICATION_PREVIEW_ENABLED = "/desktop/meego/notifications/previews_enabled";
@@ -250,7 +249,6 @@ void MGConfItem::unset() {
 
 #ifdef HAVE_QMSYSTEM
 bool gQmDisplayStateOff = false;
-MeeGo::QmLocks::State gQmLocksState = MeeGo::QmLocks::Unlocked;
 
 namespace MeeGo
 {
@@ -260,10 +258,6 @@ QmDisplayState::DisplayState QmDisplayState::get() const {
 
 bool QmDisplayState::set(QmDisplayState::DisplayState) {
     return false;
-}
-
-QmLocks::State QmLocks::getState(QmLocks::Lock) const {
-    return gQmLocksState;
 }
 }
 #endif
@@ -748,8 +742,8 @@ void Ut_MCompositorNotificationSink::testNotificationPreviewsDisabled()
     sink->notificationPreviewMode->set(value);
 #ifdef HAVE_QMSYSTEM
     gQmDisplayStateOff = displayOff;
-    gQmLocksState = touchScreenLocked ? MeeGo::QmLocks::Locked : MeeGo::QmLocks::Unlocked;
 #endif
+    sink->setTouchScreenLockActive(touchScreenLocked);
     sink->changeNotificationPreviewMode();
 
     // Create normal notification

@@ -17,7 +17,6 @@
  **
  ****************************************************************************/
 
-
 #include <MLocale>
 #include <MTheme>
 #include <MLocale>
@@ -26,7 +25,8 @@
 
 #include "usbui.h"
 #include "sysuid.h"
-#include "sysuidrequest.h"
+#include "screenlockbusinesslogic.h"
+#include "screenlockbusinesslogicadaptor.h"
 #include "batterybusinesslogic.h"
 #include "statusarearendereradaptor.h"
 #include "screenlockbusinesslogic.h"
@@ -45,8 +45,10 @@
 
 Sysuid* Sysuid::instance_ = NULL;
 
-static const QString DBUS_SERVICE = "com.nokia.systemui";
-static const QString DBUS_PATH = "/";
+static const char *SYSTEMUI_DBUS_SERVICE = "com.nokia.systemui";
+static const char *SYSTEMUI_DBUS_PATH = "/";
+static const char *SCREENLOCK_DBUS_SERVICE = "com.nokia.system_ui";
+static const char *SCREENLOCK_DBUS_PATH = "/com/nokia/system_ui/request";
 static int NOTIFICATION_RELAY_INTERVAL = 5000;
 
 Sysuid::Sysuid(QObject* parent) :
@@ -70,12 +72,12 @@ Sysuid::Sysuid(QObject* parent) :
     new ShutdownBusinessLogicAdaptor(this, shutdownBusinessLogic);
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (!bus.registerService(DBUS_SERVICE)) {
-        qCritical() << Q_FUNC_INFO << "failed to register dbus service";
+    if (!bus.registerService(SYSTEMUI_DBUS_SERVICE)) {
+        qCritical("Unable to register system-ui D-Bus service %s: %s", SYSTEMUI_DBUS_SERVICE, bus.lastError().message().toUtf8().constData());
         abort();
     }
-    if (!bus.registerObject(DBUS_PATH, instance())) {
-        qCritical() << Q_FUNC_INFO << "failed to register dbus object";
+    if (!bus.registerObject(SYSTEMUI_DBUS_PATH, instance())) {
+        qCritical("Unable to register system-ui object at path %s: %s", SYSTEMUI_DBUS_PATH, bus.lastError().message().toUtf8().constData());
         abort();
     }
 
@@ -116,15 +118,23 @@ Sysuid::Sysuid(QObject* parent) :
     connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
     applyUseMode();
 
-    /*
-     * The screen locking is implemented in this separate class, because it is
-     * bound to the system bus (MCE wants to contact us on the system bus).
-     */
-    sysUidRequest = new SysUidRequest;
-    if (sysUidRequest->screenLockBusinessLogic() != NULL) {
-        // Unlock the touch screen lock when displaying the USB dialog
-        connect(usbUi, SIGNAL(dialogShown()), sysUidRequest->screenLockBusinessLogic(), SLOT(unlockScreen()));
+    // Create screen lock business logic
+    screenLockBusinessLogic = new ScreenLockBusinessLogic(this);
+    new ScreenLockBusinessLogicAdaptor(screenLockBusinessLogic);
+    connect(screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
+    connect(screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), mCompositorNotificationSink, SLOT(setTouchScreenLockActive(bool)));
+
+    // MCE expects the service to be registered on the system bus
+    QDBusConnection systemBus = QDBusConnection::systemBus();
+    if (!systemBus.registerService(SCREENLOCK_DBUS_SERVICE)) {
+        qWarning("Unable to register screen lock D-Bus service %s: %s", SCREENLOCK_DBUS_SERVICE, systemBus.lastError().message().toUtf8().constData());
     }
+    if (!systemBus.registerObject(SCREENLOCK_DBUS_PATH, screenLockBusinessLogic)) {
+        qWarning("Unable to register screen lock object at path %s: %s", SCREENLOCK_DBUS_PATH, systemBus.lastError().message().toUtf8().constData());
+    }
+
+    // Unlock the touch screen lock when displaying the USB dialog
+    connect(usbUi, SIGNAL(dialogShown()), screenLockBusinessLogic, SLOT(unlockScreen()));
 
     // Update the enabled status of compositor notification sink based on screen and device locks
 #ifdef HAVE_QMSYSTEM
@@ -147,7 +157,6 @@ Sysuid::Sysuid(QObject* parent) :
 
 Sysuid::~Sysuid()
 {
-    delete sysUidRequest;
     delete notifierNotificationSink_;
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;
@@ -204,11 +213,9 @@ void Sysuid::applyUseMode()
 
 void Sysuid::updateCompositorNotificationSinkEnabledStatus()
 {
-    mCompositorNotificationSink->setApplicationEventsDisabled(statusIndicatorMenuBusinessLogic->isStatusIndicatorMenuVisible()
-
+    mCompositorNotificationSink->setApplicationEventsDisabled(statusIndicatorMenuBusinessLogic->isStatusIndicatorMenuVisible() || screenLockBusinessLogic->isScreenLocked()
 #ifdef HAVE_QMSYSTEM
                                              || qmLocks.getState(MeeGo::QmLocks::Device) == MeeGo::QmLocks::Locked
-                                             || qmLocks.getState(MeeGo::QmLocks::TouchAndKeyboard) == MeeGo::QmLocks::Locked
 #endif
                                              );
 }

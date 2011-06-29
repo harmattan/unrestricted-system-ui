@@ -27,7 +27,6 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
-#include "qmdisplaystate.h"
 #endif
 
 class UsbUi;
@@ -41,7 +40,7 @@ class MCompositorNotificationSink;
 class NGFNotificationSink;
 class UnlockNotificationSink;
 class NotifierNotificationSink;
-class SysUidRequest;
+class ScreenLockBusinessLogic;
 class VolumeBarLogic;
 class MApplicationExtensionArea;
 
@@ -112,8 +111,8 @@ private:
     //! Notification sink for showing unread notifications
     NotifierNotificationSink *notifierNotificationSink_;
 
-    //! The system-bus adaptor class for unlock-screen interface
-    SysUidRequest *sysUidRequest;
+    //! The lock screen business logic
+    ScreenLockBusinessLogic *screenLockBusinessLogic;
 
     //! The volume extension area
     MApplicationExtensionArea *volumeExtensionArea;

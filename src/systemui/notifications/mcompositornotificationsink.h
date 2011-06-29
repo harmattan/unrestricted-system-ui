@@ -28,7 +28,6 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
-#include <qmlocks.h>
 #endif
 
 class MBanner;
@@ -63,6 +62,12 @@ public:
      */
     virtual ~MCompositorNotificationSink();
 
+    /*!
+     * Disables or enables the sink for application event notifications, when disabled, they are just transferred.
+     * \param disabled if true, the sink is disabled, otherwise it's enabled
+     */
+    void setApplicationEventsDisabled(bool disabled);
+
 signals:
     /*!
      * Transfers a notification to another sink.
@@ -71,12 +76,13 @@ signals:
      */
     void notificationAdded(const Notification &notification);
 
-public:
+public slots:
     /*!
-     * Disables or enables the sink for application event notifications, when disabled, they are just transferred.
-     * \param disabled if true, the sink is disabled, otherwise it's enabled
+     * Sets the touch screen lock active state so notifications can be enabled/disabled based on that.
+     *
+     * \param active \c true if the touch screen lock is active, \c false otherwise
      */
-    void setApplicationEventsDisabled(bool disabled);
+    void setTouchScreenLockActive(bool active);
 
 private slots:
     //! \reimp
@@ -186,12 +192,12 @@ private:
     //! The atom identifier for _MEEGOTOUCH_NOTIFICATION_PREVIEWS_DISABLED
     Atom notificationPreviewsDisabledAtom;
 
+    //! Whether the touch screen lock is active or not
+    bool touchScreenLockActive;
+
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
     MeeGo::QmDisplayState displayState;
-
-    //! Keep track of touch screen lock state
-    MeeGo::QmLocks qmLocks;
 #endif
 
 #ifdef UNIT_TEST

@@ -31,7 +31,7 @@ HEADERS += \
     $$SRCDIR/shutdownbusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/screenlock/screenlockbusinesslogic.h \
-    $$SRCDIR/sysuidrequest.h \
+    $$SRCDIR/screenlock/screenlockbusinesslogicadaptor.h \
     $$SRCDIR/sysuid.h \
     $$SRCDIR/contextframeworkcontext.h \
     $$NOTIFICATIONSRCDIR/eventtypestore.h \

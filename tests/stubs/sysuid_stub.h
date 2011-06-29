@@ -86,7 +86,7 @@ Sysuid::Sysuid(QObject* parent) :
     batteryBusinessLogic (0), shutdownBusinessLogic (0),
     usbUi (0), statusAreaRenderer (0), statusIndicatorMenuBusinessLogic (0), notificationManager (0),
     mCompositorNotificationSink (0), ngfNotificationSink (0),
-    notifierNotificationSink_(0), sysUidRequest (0),
+    notifierNotificationSink_(0), screenLockBusinessLogic(0),
     volumeExtensionArea (0)
 {
   gSysuidStub->SysuidConstructor(parent);

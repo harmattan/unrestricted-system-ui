@@ -189,6 +189,8 @@ void Ut_ScreenLockBusinessLogic::cleanupTestCase()
 
 void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
 {
+    QSignalSpy spy(m_subject, SIGNAL(screenIsLocked(bool)));
+
     ScreenLockExtension screenLockExtension;
     screenLockExtension.initialize("");
     m_subject->registerExtension(&screenLockExtension);
@@ -211,6 +213,11 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     QCOMPARE(screenLockExtensionReset, true);
     screenLockExtensionReset = false;
 
+    // Locked state should be set
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.last().at(0).toBool(), true);
+    QCOMPARE(m_subject->isScreenLocked(), true);
+
     // Reset the stubs
     gQWidgetVisible[m_subject->screenLockWindow] = false;
     gQWidgetRaiseCalled = false;
@@ -227,6 +234,11 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // The lock screen still needs to be reset
     QCOMPARE(screenLockExtensionReset, true);
 
+    // Locked state should be set
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.last().at(0).toBool(), true);
+    QCOMPARE(m_subject->isScreenLocked(), true);
+
     // When the lock is toggled off, make sure the lock UI is hidden
     m_subject->toggleScreenLockUI(false);
     QCOMPARE(m_subject->screenLockWindow->isVisible(), false);
@@ -234,6 +246,11 @@ void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
     // Extension mode should be set to normal mode
     QCOMPARE(screenLockExtensionModeSet, true);
     QCOMPARE(screenLockExtensionMode, ScreenLockExtensionInterface::NormalMode);
+
+    // Locked state should not be set
+    QCOMPARE(spy.count(), 3);
+    QCOMPARE(spy.last().at(0).toBool(), false);
+    QCOMPARE(m_subject->isScreenLocked(), false);
 }
 
 void Ut_ScreenLockBusinessLogic::testToggleEventEater()
