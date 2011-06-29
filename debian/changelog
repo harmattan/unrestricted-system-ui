@@ -10,6 +10,7 @@ system-ui (1.1.0~1) unstable; urgency=low
   * Fixes: NB#257065 - Dialog not destroyed when mode is set through automatic trigger
   * Fixes: NB#265053 - The screen flickers when the touch screen lock transitions to the standby screen
   * Fixes: NB#268139 - Unable to lock the device and time is not displayed in lock mode
+  * Fixes: NB#265081 - System banners are drawn too high on the screen
 
  -- Janne Sakko <ext-janne.2.sakko@nokia.com>  Wed, 08 Jun 2011 17:52:12 +0300
 
