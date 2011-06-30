@@ -112,7 +112,6 @@ private slots:
     void devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState PSMState);
 #endif
     void utiliseLED(bool activate, const QString &pattern);
-    void publishNotification();
 
 private:
     void sendNotification(BatteryBusinessLogic::NotificationID id);

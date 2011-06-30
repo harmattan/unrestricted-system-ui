@@ -84,8 +84,10 @@ void LowBatteryNotifier::displayStateChanged(MeeGo::QmDisplayState::DisplayState
         case MeeGo::QmDisplayState::On:
             if (!m_Sleep)
                 break;
-
-            showLowBatteryNotification();
+            if (m_Time.elapsed() < m_ActiveInterval)
+                m_Timer->setInterval(m_ActiveInterval - m_Time.elapsed());
+            else
+                showLowBatteryNotification();
             m_Sleep = false;
             break;
 
@@ -351,13 +353,6 @@ void BatteryBusinessLogic::sendNotification(const QString &eventType, const QStr
     if (!icon.isEmpty()) {
         m_notification->setImage(icon);
     }
-    //Single-shot timer will publish notification after an event-loop iteration,
-    //so that we can assure that we don't try to show notification too early when display state changes.
-    QTimer::singleShot(0, this, SLOT(publishNotification()));
-}
-
-void BatteryBusinessLogic::publishNotification()
-{
     m_notification->publish();
 }
 
