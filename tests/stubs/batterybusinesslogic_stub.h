@@ -21,6 +21,7 @@ class BatteryBusinessLogicStub : public StubBase {
   virtual void sendNotification(BatteryBusinessLogic::NotificationID id);
   virtual void sendNotification(const QString &eventType, const QString &text, const QString &icon);
   virtual QString chargingImageId();
+  virtual void publishNotification();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -89,6 +90,9 @@ QString BatteryBusinessLogicStub::chargingImageId() {
   return stubReturnValue<QString>("chargingImageId");
 }
 
+void BatteryBusinessLogicStub::publishNotification() {
+  stubMethodEntered("publishNotification");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -145,5 +149,8 @@ QString BatteryBusinessLogic::chargingImageId() {
   return gBatteryBusinessLogicStub->chargingImageId();
 }
 
+void BatteryBusinessLogic::publishNotification() {
+  return gBatteryBusinessLogicStub->publishNotification();
+}
 
 #endif

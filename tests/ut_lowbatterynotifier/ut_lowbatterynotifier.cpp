@@ -218,7 +218,8 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
      5) Waiting [Inactive timeout - Active timeout /2 + 50]
      6) Verify that 3 notifications were sent
      - First was sent right away
-     - Second and third were sent at [Inactive timeout]
+     - Second was sent at [Inactive timeout]
+     - Third was sent at turnDisplay(true)
      */
     turnDisplay (false);
     m_helper->start ();
@@ -229,20 +230,10 @@ void Ut_LowBatteryNotifier::testShowNotificationInInactiveUse ()
     QTest::qWait (Inact - Act / 2 + 50);
 
     QCOMPARE(m_helper->notificationTimes ().count (), 3);
-    for (int i = 0; i < m_helper->notificationTimes ().count (); ++i) {
-        qDebug() <<
-        __func__ <<
-        "Notification " << i << " shown after " <<
-        m_helper->notificationTimes ().at (i) << "uSec";
-
-        if (i > 0) {
-            QVERIFY(m_helper->notificationTimes ().at (i) <= Inact + aDelay);
-            QVERIFY(m_helper->notificationTimes ().at (i) >= Inact);
-        } else {
-            QVERIFY(m_helper->notificationTimes ().at (i) <= aDelay);
-            QVERIFY(m_helper->notificationTimes ().at (i) >= 0);
-        }
-    }
+    QVERIFY(m_helper->notificationTimes().at(0) <= aDelay);
+    QVERIFY(m_helper->notificationTimes().at(1) <= Inact + aDelay);
+    QVERIFY(m_helper->notificationTimes().at(1) >= Inact);
+    QVERIFY(m_helper->notificationTimes().at(2) <= Inact + aDelay);
 }
 #endif
 

@@ -62,6 +62,23 @@ bool MNotification::remove ()
     return false;
 }
 
+struct QTimerSingleShotParams
+{
+    int msec;
+    QObject *receiver;
+    QString member;
+};
+
+QHash<QObject*, QTimerSingleShotParams> qTimerSingleShotParams;
+void QTimer::singleShot(int msec, QObject *receiver, const char * member)
+{
+    QTimerSingleShotParams params;
+    params.msec = msec;
+    params.receiver = receiver;
+    params.member = member;
+    qTimerSingleShotParams[receiver] = params;
+}
+
 void Ut_BatteryBusinessLogic::initTestCase()
 {
 }
@@ -81,6 +98,7 @@ void Ut_BatteryBusinessLogic::cleanup()
     m_logic = NULL;
     gMNotificationPublish.clear();
     gMNotificationRemoveEventType.clear();
+    qTimerSingleShotParams.clear();
 }
 
 void Ut_BatteryBusinessLogic::testInitBattery()
@@ -108,7 +126,6 @@ void Ut_BatteryBusinessLogic::testLowBatteryAlert()
     m_logic->lowBatteryAlert();
 
     QTest::qWait(10);
-
     QCOMPARE(spy.count(), 1);
 
     QList<QVariant> arguments = spy.takeFirst();
@@ -355,6 +372,17 @@ void Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection()
 void Ut_BatteryBusinessLogic::testWhenChargingStopsThenNotificationRemoved()
 {
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
+
+    //Test that the single-shot timer is called for publishing notification
+    QVERIFY(qTimerSingleShotParams.contains(m_logic));
+    const QTimerSingleShotParams &params(qTimerSingleShotParams.value(m_logic));
+    QCOMPARE(params.msec, 0);
+    QCOMPARE(params.receiver, m_logic);
+    QString timedSlotName(params.member);
+    QVERIFY2(timedSlotName.endsWith(QString("publishNotification()")), qPrintable(QString("Actual timed slot name was: ") + timedSlotName));
+
+    m_logic->publishNotification();
+
     QVERIFY(gMNotificationPublish.count() > 0);
     QCOMPARE(gMNotificationPublish.last()->eventType(), QString("x-nokia.battery"));
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
