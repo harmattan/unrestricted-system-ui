@@ -188,7 +188,7 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
     case MeeGo::QmUSBMode::SDK:
         // Hide the mode selection dialog and show a mode notification
         hideDialog(false);
-        showNotification(Mode, mode);
+        showNotification(mode);
         break;
     case MeeGo::QmUSBMode::ChargingOnly:
         // no-op
@@ -200,11 +200,8 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
     }
 }
 
-void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mode mode)
+void UsbUi::showNotification(MeeGo::QmUSBMode::Mode mode)
 {
-    // Remove previous notification from the category
-    hideNotification(category);
-
     QString body;
     switch (mode) {
     case MeeGo::QmUSBMode::OviSuite:
@@ -229,28 +226,15 @@ void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mo
 
     MNotification notification(MNotification::DeviceAddedEvent, "", body);
     notification.publish();
-    notifications.insert(category, notification);
 }
 #endif
-
-void UsbUi::hideNotification(NotificationCategory category)
-{
-    if (notifications.contains(category)) {
-        notifications[category].remove();
-        notifications.remove(category);
-    }
-}
 
 void UsbUi::showError(const QString &errorCode)
 {
     if (errorCodeToTranslationID.contains(errorCode)) {
-        // Remove previous notification
-        hideNotification(Error);
-
         //% "USB connection error occurred"
         MNotification notification(MNotification::DeviceErrorEvent, "", qtTrId(errorCodeToTranslationID.value(errorCode).toUtf8().constData()));
         notification.publish();
-        notifications.insert(Error, notification);
     }
 }
 

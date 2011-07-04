@@ -126,6 +126,9 @@ BatteryBusinessLogic::BatteryBusinessLogic(QObject *parent) :
 
     // Init battery values delayed...
     initBattery();
+
+    notificationTimer.setInterval(5000);
+    notificationTimer.setSingleShot(true);
 }
 
 BatteryBusinessLogic::~BatteryBusinessLogic()
@@ -338,7 +341,6 @@ void BatteryBusinessLogic::sendNotification(BatteryBusinessLogic::NotificationID
 void BatteryBusinessLogic::sendNotification(const QString &eventType, const QString &text, const QString &icon)
 {
     if (m_notification != 0) {
-        m_notification->remove();
         delete m_notification;
         m_notification = 0;
     }
@@ -354,11 +356,12 @@ void BatteryBusinessLogic::sendNotification(const QString &eventType, const QStr
         m_notification->setImage(icon);
     }
     m_notification->publish();
+    notificationTimer.start();
 }
 
 void BatteryBusinessLogic::removeNotification(const QString &eventType)
 {
-    if (m_notification != 0 && m_notification->eventType() == eventType) {
+    if (m_notification != 0 && m_notification->eventType() == eventType && notificationTimer.isActive()) {
         m_notification->remove();
         delete m_notification;
         m_notification = 0;

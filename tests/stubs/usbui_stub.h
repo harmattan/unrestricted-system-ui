@@ -22,9 +22,8 @@ class UsbUiStub : public StubBase {
   virtual void showDialog();
   virtual void showError(const QString &error);
 #ifdef HAVE_QMSYSTEM
-  virtual void showNotification(UsbUi::NotificationCategory category, MeeGo::QmUSBMode::Mode mode);
+  virtual void showNotification(MeeGo::QmUSBMode::Mode mode);
 #endif
-  virtual void hideNotification(UsbUi::NotificationCategory category);
   virtual void hideDialog(bool accept);
   virtual void retranslateUi();
   virtual void updateSDKItemVisibility();
@@ -77,19 +76,12 @@ void UsbUiStub::showError(const QString &error) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void UsbUiStub::showNotification(UsbUi::NotificationCategory category, MeeGo::QmUSBMode::Mode mode) {
+void UsbUiStub::showNotification(MeeGo::QmUSBMode::Mode mode) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<UsbUi::NotificationCategory >(category));
   params.append( new Parameter<MeeGo::QmUSBMode::Mode >(mode));
   stubMethodEntered("showNotification",params);
 }
 #endif
-
-void UsbUiStub::hideNotification(UsbUi::NotificationCategory category) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<UsbUi::NotificationCategory >(category));
-  stubMethodEntered("hideNotification",params);
-}
 
 void UsbUiStub::hideDialog(bool accept) {
   QList<ParameterBase*> params;
@@ -154,14 +146,10 @@ void UsbUi::showError(const QString &error) {
 }
 
 #ifdef HAVE_QMSYSTEM
-void UsbUi::showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mode mode) {
-  gUsbUiStub->showNotification(category, mode);
+void UsbUi::showNotification(MeeGo::QmUSBMode::Mode mode) {
+  gUsbUiStub->showNotification(mode);
 }
 #endif
-
-void UsbUi::hideNotification(NotificationCategory category) {
-  gUsbUiStub->hideNotification(category);
-}
 
 void UsbUi::hideDialog(bool accept) {
   gUsbUiStub->hideDialog(accept);

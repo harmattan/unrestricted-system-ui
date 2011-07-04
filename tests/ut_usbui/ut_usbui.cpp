@@ -42,8 +42,10 @@ void MSceneWindow::disappear()
     dialog_visible = false;
 }
 
+QStringList mNotificationBodies;
 bool MNotification::publish()
 {
+    mNotificationBodies.append(body());
     return true;
 }
 
@@ -89,6 +91,7 @@ void Ut_UsbUi::cleanup()
     delete m_subject;
     dialog_visible = false;
     mGConfItemValue = QVariant(false);
+    mNotificationBodies.clear();
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -141,30 +144,24 @@ void Ut_UsbUi::testHideDialog()
     QCOMPARE(dialog_visible, false);
 }
 
-Q_DECLARE_METATYPE(UsbUi::NotificationCategory)
-
 void Ut_UsbUi::testUSBNotifications_data()
 {
     QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
-    QTest::addColumn<UsbUi::NotificationCategory>("category");
     QTest::addColumn<QString>("body");
 
-    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << UsbUi::Mode << qtTrId("qtn_usb_disconnected");
-    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << UsbUi::Mode << qtTrId("qtn_usb_sync_active");
-    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << UsbUi::Mode << qtTrId("qtn_usb_storage_active");
-    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << UsbUi::Mode << qtTrId("qtn_usb_sdk_active");
+    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << qtTrId("qtn_usb_disconnected");
+    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
+    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << qtTrId("qtn_usb_sdk_active");
 }
 
 void Ut_UsbUi::testUSBNotifications()
 {
     QFETCH(MeeGo::QmUSBMode::Mode, mode);
-    QFETCH(UsbUi::NotificationCategory, category);
     QFETCH(QString, body);
 
     m_subject->applyUSBMode(mode);
-    QCOMPARE(m_subject->notifications.contains(category), true);
-    QCOMPARE(m_subject->notifications[category].body(), body);
-    QCOMPARE(m_subject->notifications[category].isPublished(), true);
+    QCOMPARE(mNotificationBodies.last(), body);
 }
 
 void Ut_UsbUi::testDialogButtons()
@@ -209,17 +206,13 @@ void Ut_UsbUi::testConnectingUSBWhenDeviceIsLockedEmitsDialogShown()
 void Ut_UsbUi::testShowError()
 {
     m_subject->showError("test");
-    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), false);
+    QCOMPARE(mNotificationBodies.isEmpty(), true);
 
     m_subject->showError("qtn_usb_filessystem_inuse");
-    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
-    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("qtn_usb_filessystem_inuse"));
-    QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
+    QCOMPARE(mNotificationBodies.last(), qtTrId("qtn_usb_filessystem_inuse"));
 
     m_subject->showError("mount_failed");
-    QCOMPARE(m_subject->notifications.contains(UsbUi::Error), true);
-    QCOMPARE(m_subject->notifications[UsbUi::Error].body(), qtTrId("qtn_usb_mount_failed"));
-    QCOMPARE(m_subject->notifications[UsbUi::Error].isPublished(), true);
+    QCOMPARE(mNotificationBodies.last(), qtTrId("qtn_usb_mount_failed"));
 }
 
 void Ut_UsbUi::testRetranslateUi()

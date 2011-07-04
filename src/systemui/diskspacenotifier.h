@@ -24,8 +24,6 @@
 #include <QMap>
 #include <QPair>
 
-class MNotification;
-
 /*!
  * Disk space notifier sends disk space notifications when the disk is full.
  */
@@ -56,9 +54,6 @@ private slots:
 private:
     //! Notifications sent for each path. The first bool in the pair is whether the threshold notification was sent, second whether the 100% notification was sent.
     QMap<QString, QPair<bool, bool> > notificationsSentForPath;
-
-    //! The disk space notification
-    MNotification *notification;
 
 #ifdef UNIT_TEST
     friend class Ut_DiskSpaceNotifier;

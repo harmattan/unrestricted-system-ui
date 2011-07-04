@@ -22,7 +22,6 @@
 #include <QObject>
 #include <QPointer>
 #include <MDialog>
-#include <MNotification>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmusbmode.h>
@@ -53,11 +52,6 @@ public:
      * Destroys the USB UI.
      */
     virtual ~UsbUi();
-
-    enum NotificationCategory {
-        Mode = 0,
-        Error
-    };
 
 signals:
     //! Signaled when the USB mode dialog is shown.
@@ -121,14 +115,10 @@ private:
     /*!
      * Shows a notification.
      *
-     * \param category the category of the notification (Mode/Error)
      * \param mode the USB mode for the notification
      */
-    void showNotification(NotificationCategory category, MeeGo::QmUSBMode::Mode mode);
+    void showNotification(MeeGo::QmUSBMode::Mode mode);
 #endif
-
-    //! Hides the currently active notification from the given category
-    void hideNotification(NotificationCategory category);
 
     //! Hides the mode selection dialog if it exists, accepting or rejecting it
     void hideDialog(bool acceptDialog);
@@ -141,9 +131,6 @@ private:
 
     //! MeeGo::QmUSBMode::error() error code to translation ID mapping
     static QMap<QString, QString> errorCodeToTranslationID;
-
-    //! Currently active notifications
-    QMap<NotificationCategory, MNotification> notifications;
 
     //! GConf item which tracks if developer mode is enabled
     MGConfItem *developerMode;
