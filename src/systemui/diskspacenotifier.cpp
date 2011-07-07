@@ -21,13 +21,25 @@
 #include <MNotification>
 #include "diskspacenotifier.h"
 
-DiskSpaceNotifier::DiskSpaceNotifier(QObject *parent) : QObject(parent)
+DiskSpaceNotifier::DiskSpaceNotifier(QObject *parent) : QObject(parent),
+    notification(NULL)
 {
     QDBusConnection::systemBus().connect(QString(), "/com/nokia/diskmonitor/signal", "com.nokia.diskmonitor.signal", "disk_space_change_ind", this, SLOT(handleDiskSpaceChange(QString, int)));
+
+    // Destroy any previous disk space notifications
+    foreach (MNotification *notification, MNotification::notifications()) {
+        if (notification->eventType() == "x-nokia.system-memusage") {
+            notification->remove();
+        }
+        delete notification;
+    }
 }
 
 DiskSpaceNotifier::~DiskSpaceNotifier()
 {
+    if (notification != NULL) {
+        delete notification;
+    }
 }
 
 void DiskSpaceNotifier::handleDiskSpaceChange(const QString &path, int percentage)
@@ -49,10 +61,16 @@ void DiskSpaceNotifier::handleDiskSpaceChange(const QString &path, int percentag
     }
 
     if (notificationShouldBeVisible) {
+        if (notification != NULL) {
+            // Destroy any previous notification
+            notification->remove();
+            delete notification;
+        }
+
         // Show a notification
         //% "Getting low with storage. Please check."
-        MNotification notification("x-nokia.system-memusage", "", qtTrId("qtn_memu_memlow_notification_src"));
-        notification.setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "Mass Storage Usage"));
-        notification.publish();
+        notification = new MNotification("x-nokia.system-memusage", "", qtTrId("qtn_memu_memlow_notification_src"));
+        notification->setAction(MRemoteAction("com.nokia.DuiControlPanel", "/", "com.nokia.DuiControlPanelIf", "appletPage", QList<QVariant>() << "Mass Storage Usage"));
+        notification->publish();
     }
 }

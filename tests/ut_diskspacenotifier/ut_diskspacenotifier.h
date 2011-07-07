@@ -42,6 +42,7 @@ private slots:
     void testSystemBusConnection();
     void testNotifications_data();
     void testNotifications();
+    void testConstruction();
     void testDestruction();
 
 private:

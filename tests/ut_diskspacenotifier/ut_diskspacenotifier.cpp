@@ -40,11 +40,48 @@ bool QDBusConnection::connect(const QString &service, const QString &path, const
     return true;
 }
 
-int mNotificationsPublished = 0;
+int mNotificationsCreated = 0;
+MNotification::MNotification(const QString &, const QString &, const QString &)
+{
+    mNotificationsCreated++;
+}
+
+int mNotificationsDestroyed = 0;
+MNotification::~MNotification()
+{
+    mNotificationsDestroyed++;
+}
+
+void MNotification::setAction(const MRemoteAction &)
+{
+}
+
+int mNotificationsRemoved = 0;
+bool MNotification::remove()
+{
+    mNotificationsRemoved++;
+    return true;
+}
+
 bool MNotification::publish()
 {
-    mNotificationsPublished++;
     return true;
+}
+
+QString mNotificationEventType;
+QString MNotification::eventType() const
+{
+    return mNotificationEventType;
+}
+
+int mNotificationNotificationsCount = 0;
+QList<MNotification *> MNotification::notifications()
+{
+    QList<MNotification *> notifications;
+    for (int i = 0; i < mNotificationNotificationsCount; i++) {
+        notifications << new MNotification("", "", "");
+    }
+    return notifications;
 }
 
 void Ut_DiskSpaceNotifier::initTestCase()
@@ -69,7 +106,10 @@ void Ut_DiskSpaceNotifier::cleanup()
     qDBusConnectionConnectName.clear();
     qDBusConnectionConnectReceiver = NULL;
     qDBusConnectionConnectSlot.clear();
-    mNotificationsPublished = 0;
+    mNotificationsCreated = 0;
+    mNotificationsDestroyed = 0;
+    mNotificationsRemoved = 0;
+    mNotificationNotificationsCount = 0;
 }
 
 void Ut_DiskSpaceNotifier::testSystemBusConnection()
@@ -88,13 +128,14 @@ void Ut_DiskSpaceNotifier::testNotifications_data()
     QTest::addColumn<int>("diskSpaceChangePercentage1");
     QTest::addColumn<QString>("diskSpaceChangePath2");
     QTest::addColumn<int>("diskSpaceChangePercentage2");
-    QTest::addColumn<int>("notificationsPublished");
+    QTest::addColumn<int>("notificationsCreated");
+    QTest::addColumn<int>("notificationsDestroyed");
 
-    QTest::newRow("Disk space of / reached threshold but not 100%") << "/" << 90 << "/" << 99 << 1;
-    QTest::newRow("Disk space of / reached threshold and then 100%") << "/" << 90 << "/" << 100 << 2;
-    QTest::newRow("Disk space of / reached 100% twice") << "/" << 100 << "/" << 100 << 1;
-    QTest::newRow("Disk space of / and /home reached threshold") << "/" << 90 << "/home" << 90 << 2;
-    QTest::newRow("Disk space of /home and /home/user/MyDocs reached 100%") << "/home" << 100 << "/home/user/MyDocs" << 100 << 2;
+    QTest::newRow("Disk space of / reached threshold but not 100%") << "/" << 90 << "/" << 99 << 1 << 0;
+    QTest::newRow("Disk space of / reached threshold and then 100%") << "/" << 90 << "/" << 100 << 2 << 1;
+    QTest::newRow("Disk space of / reached 100% twice") << "/" << 100 << "/" << 100 << 1 << 0;
+    QTest::newRow("Disk space of / and /home reached threshold") << "/" << 90 << "/home" << 90 << 2 << 1;
+    QTest::newRow("Disk space of /home and /home/user/MyDocs reached 100%") << "/home" << 100 << "/home/user/MyDocs" << 100 << 2 << 1;
 }
 
 void Ut_DiskSpaceNotifier::testNotifications()
@@ -103,12 +144,36 @@ void Ut_DiskSpaceNotifier::testNotifications()
     QFETCH(int, diskSpaceChangePercentage1);
     QFETCH(QString, diskSpaceChangePath2);
     QFETCH(int, diskSpaceChangePercentage2);
-    QFETCH(int, notificationsPublished);
+    QFETCH(int, notificationsCreated);
+    QFETCH(int, notificationsDestroyed);
 
     m_subject->handleDiskSpaceChange(diskSpaceChangePath1, diskSpaceChangePercentage1);
     m_subject->handleDiskSpaceChange(diskSpaceChangePath2, diskSpaceChangePercentage2);
 
-    QCOMPARE(mNotificationsPublished, notificationsPublished);
+    QCOMPARE(mNotificationsCreated, notificationsCreated);
+    QCOMPARE(mNotificationsRemoved, notificationsDestroyed);
+    QCOMPARE(mNotificationsDestroyed, notificationsDestroyed);
+}
+
+void Ut_DiskSpaceNotifier::testConstruction()
+{
+    delete m_subject;
+
+    // Check that the constructor destroys only any previous notifications of type x-nokia.system-memusage
+    mNotificationNotificationsCount = 5;
+    m_subject = new DiskSpaceNotifier();
+    QCOMPARE(mNotificationsCreated, mNotificationNotificationsCount);
+    QCOMPARE(mNotificationsRemoved, 0);
+    QCOMPARE(mNotificationsDestroyed, mNotificationNotificationsCount);
+    delete m_subject;
+
+    mNotificationsCreated = 0;
+    mNotificationsDestroyed = 0;
+    mNotificationEventType = "x-nokia.system-memusage";
+    m_subject = new DiskSpaceNotifier();
+    QCOMPARE(mNotificationsCreated, mNotificationNotificationsCount);
+    QCOMPARE(mNotificationsRemoved, mNotificationNotificationsCount);
+    QCOMPARE(mNotificationsDestroyed, mNotificationNotificationsCount);
 }
 
 void Ut_DiskSpaceNotifier::testDestruction()
@@ -117,6 +182,8 @@ void Ut_DiskSpaceNotifier::testDestruction()
 
     delete m_subject;
     m_subject = NULL;
+
+    QCOMPARE(mNotificationsDestroyed, mNotificationsCreated);
 }
 
 QTEST_APPLESS_MAIN(Ut_DiskSpaceNotifier)
