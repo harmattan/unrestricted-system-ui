@@ -41,6 +41,7 @@ private slots:
     void testPSMStateChanged();
     void testLowBatteryNotifierConnection();
     void testWhenChargingStopsThenNotificationRemoved();
+    void testWhenChargingStopsWhenConnectedToWallChargerThenNotificationRemoved();
     void testWhenChargingStopsMoreThanNSecondAfterBeingStartedThenNotificationNotRemoved();
 
 private:

@@ -359,20 +359,36 @@ void Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection()
 
 void Ut_BatteryBusinessLogic::testWhenChargingStopsThenNotificationRemoved()
 {
+#ifdef HAVE_QMSYSTEM
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
     QVERIFY(gMNotificationPublish.count() > 0);
     QCOMPARE(gMNotificationPublish.last()->eventType(), QString("x-nokia.battery"));
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
     QVERIFY(gMNotificationRemoveEventType.count() > 0);
     QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery"));
+    QCOMPARE(m_logic->notificationTimer.isActive(), false);
+#endif
+}
+
+void Ut_BatteryBusinessLogic::testWhenChargingStopsWhenConnectedToWallChargerThenNotificationRemoved()
+{
+#ifdef HAVE_QMSYSTEM
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::Wall);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
+    m_logic->batteryChargerEvent (MeeGo::QmBattery::None);
+    QVERIFY(gMNotificationRemoveEventType.count() > 0);
+    QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery"));
+#endif
 }
 
 void Ut_BatteryBusinessLogic::testWhenChargingStopsMoreThanNSecondAfterBeingStartedThenNotificationNotRemoved()
 {
+#ifdef HAVE_QMSYSTEM
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
     m_logic->notificationTimer.stop();
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
     QCOMPARE(gMNotificationRemoveEventType.count(), 0);
+#endif
 }
 
 QTEST_MAIN(Ut_BatteryBusinessLogic)

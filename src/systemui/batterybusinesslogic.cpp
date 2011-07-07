@@ -232,6 +232,7 @@ void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType typ
          * charging the device.
          */
         if (m_ChargerType == MeeGo::QmBattery::Wall) {
+            removeNotification("x-nokia.battery");
             sendNotification(NotificationRemoveCharger);
         }
         break;
@@ -365,6 +366,7 @@ void BatteryBusinessLogic::removeNotification(const QString &eventType)
         m_notification->remove();
         delete m_notification;
         m_notification = 0;
+        notificationTimer.stop();
     }
 }
 
