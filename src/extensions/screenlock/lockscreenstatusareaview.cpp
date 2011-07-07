@@ -22,7 +22,6 @@
 #include "statusindicator.h"
 #include "contextframeworkcontext.h"
 #include "x11wrapper.h"
-#include "notificationstatusindicator.h"
 #include "screenlockextension.h"
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
@@ -42,7 +41,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
-    notifierIndicator(new NotificationStatusIndicator(controller)),
+    notificationStatusIndicator(new NotificationStatusIndicator(controller)),
     callForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
     transferStatusIndicator(new TransferStatusIndicator(controller)),
     orientationChangeSignalConnected(false)
@@ -51,7 +50,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     connect(phoneNetworkTypeIndicator, SIGNAL(networkAvailabilityChanged(bool)), phoneSignalStrengthIndicator, SLOT(setDisplay(bool)));
 
     // Connect notification signals
-    connect(ScreenLockExtension::instance(), SIGNAL(notifierSinkActive(bool)), notifierIndicator, SLOT(setActive(bool)));
+    connect(ScreenLockExtension::instance(), SIGNAL(notificationStatusIndicatorIconIdChanged(QString)), notificationStatusIndicator, SLOT(setIconID(QString)));
 
     // Put indicators into the layout
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -62,7 +61,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addItem(phoneNetworkIndicator);
     layout->addItem(phoneNetworkTypeIndicator);
     layout->addStretch();
-    layout->addItem(notifierIndicator);
+    layout->addItem(notificationStatusIndicator);
     layout->addItem(transferStatusIndicator);
     layout->addItem(callForwardingIndicator);
     layout->addItem(bluetoothIndicator);

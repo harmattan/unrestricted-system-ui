@@ -39,7 +39,7 @@ class NotificationManagerInterface;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
 class UnlockNotificationSink;
-class NotifierNotificationSink;
+class NotificationStatusIndicatorSink;
 class ScreenLockBusinessLogic;
 class VolumeBarLogic;
 class MApplicationExtensionArea;
@@ -65,7 +65,7 @@ public:
      *
      * \return a reference to the notifier notification sink
      */
-    NotifierNotificationSink& notifierNotificationSink();
+    NotificationStatusIndicatorSink& notificationStatusIndicatorSink();
 
 signals:
     /*!
@@ -108,8 +108,8 @@ private:
     //! Notification sink for presenting the notification as a feedback
     NGFNotificationSink *ngfNotificationSink;
 
-    //! Notification sink for showing unread notifications
-    NotifierNotificationSink *notifierNotificationSink_;
+    //! Notification sink for the notification status indicator
+    NotificationStatusIndicatorSink *notificationStatusIndicatorSink_;
 
     //! The lock screen business logic
     ScreenLockBusinessLogic *screenLockBusinessLogic;

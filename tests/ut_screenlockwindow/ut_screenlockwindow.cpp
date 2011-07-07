@@ -25,7 +25,7 @@
 #include "ut_screenlockwindow.h"
 #include "screenlockwindow.h"
 #include "screenlockwindowstyle.h"
-#include "notifiernotificationsink_stub.h"
+#include "notificationstatusindicatorsink_stub.h"
 #include "notificationsink_stub.h"
 #include "sysuid_stub.h"
 #include <X11/Xutil.h>

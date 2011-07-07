@@ -13,7 +13,7 @@ HEADERS += ut_screenlockbusinesslogic.h \
     $$SRCDIR/screenlock/screenlockwindow.h \
     $$SRCDIR/screenlock/eventeater.h \
     $$SRCDIR/closeeventeater.h \
-    $$SRCDIR/notifications/notifiernotificationsink.h \
+    $$SRCDIR/notifications/notificationstatusindicatorsink.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h
 
 include(../common_bot.pri)

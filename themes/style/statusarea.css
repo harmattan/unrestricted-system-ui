@@ -544,15 +544,13 @@ StatusIndicatorIconStyle#GPSStatusIndicatorSearch  {
     maximum-size: -1 -1;
 }
 
-StatusIndicatorIconStyle#NotificationStatusIndicatorOn {
-    image-list: "icon-s-status-notifier";
+StatusIndicatorIconStyle#NotificationStatusIndicator {
     preferred-size: -1 -1;
     minimum-size: -1 -1;
     maximum-size: -1 -1;
 }
 
-StatusIndicatorIconStyle#NotificationStatusIndicator {
-    image-list: "";
+StatusIndicatorIconStyle#NotificationStatusIndicatorDisabled {
     preferred-size: 0 -1;
     minimum-size: 0 -1;
     maximum-size: 0 -1;

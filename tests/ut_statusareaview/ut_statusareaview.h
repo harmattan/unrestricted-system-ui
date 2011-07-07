@@ -22,7 +22,7 @@
 #include <QObject>
 
 class MApplication;
-class NotifierNotificationSink;
+class NotificationStatusIndicatorSink;
 class StatusAreaView;
 class StatusArea;
 
@@ -41,7 +41,7 @@ private slots:
 
 private:
     MApplication *app;
-    NotifierNotificationSink *notifierNotificationSink;
+    NotificationStatusIndicatorSink *notificationStatusIndicatorSink;
     StatusAreaView *m_subject;
     StatusArea *statusArea;
 };

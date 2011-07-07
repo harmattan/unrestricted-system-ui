@@ -74,6 +74,7 @@ private slots:
     void testTransferStatusIndicatorDBusConnectionCreationInConstructor();
     void testTransferStatusStateChange();
     void testCallForwarding();
+    void testNotification();
 };
 
 #endif //_UT_STATUSINDICATOR_

@@ -14,7 +14,7 @@ HEADERS += ut_screenlockwindow.h \
     $$SRCDIR/screenlock/screenlockwindow.h \
     $$SRCDIR/screenlock/screenlockwindowstyle.h \
     $$SRCDIR/sysuid.h \
-    $$SRCDIR/notifications/notifiernotificationsink.h \
+    $$SRCDIR/notifications/notificationstatusindicatorsink.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$SRCDIR/x11wrapper.h
 

@@ -1,7 +1,7 @@
 #ifndef NOTIFICATIONSTATUSINDICATOR_STUB
 #define NOTIFICATIONSTATUSINDICATOR_STUB
 
-#include "notificationstatusindicator.h"
+#include "statusindicator.h"
 #include <stubbase.h>
 
 
@@ -11,7 +11,7 @@ class NotificationStatusIndicatorStub : public StubBase {
   public:
   virtual void NotificationStatusIndicatorConstructor(QGraphicsItem *parent);
   virtual void NotificationStatusIndicatorDestructor();
-  virtual void setActive(bool active);
+  virtual void setIconID(const QString &iconID);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -21,10 +21,10 @@ void NotificationStatusIndicatorStub::NotificationStatusIndicatorDestructor() {
 
 }
 
-void NotificationStatusIndicatorStub::setActive(bool active) {
+void NotificationStatusIndicatorStub::setIconID(const QString &iconID) {
     QList<ParameterBase*> params;
-    params.append( new Parameter<bool >(active));
-    stubMethodEntered("setActive",params);
+    params.append( new Parameter<QString >(iconID));
+    stubMethodEntered("setIconID",params);
 }
 
 
@@ -43,8 +43,8 @@ NotificationStatusIndicator::~NotificationStatusIndicator() {
   gNotificationStatusIndicatorStub->NotificationStatusIndicatorDestructor();
 }
 
-void NotificationStatusIndicator::setActive(bool active) {
-  gNotificationStatusIndicatorStub->setActive(active);
+void NotificationStatusIndicator::setIconID(const QString &iconID) {
+  gNotificationStatusIndicatorStub->setIconID(iconID);
 }
 
 

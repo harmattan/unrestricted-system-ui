@@ -68,7 +68,6 @@ HEADERS += ../../systemui/contextframeworkcontext.h \
            ../../systemui/statusarea/clock.h \
            ../../systemui/statusarea/clockmodel.h \
            ../../systemui/statusarea/statusarea.h \
-           ../../systemui/statusarea/notificationstatusindicator.h \
            ../../systemui/statusindicatormenu/notificationarea.h \
            ../../systemui/statusindicatormenu/notificationareamodel.h \
            ../../systemui/notifications/notificationareasink.h \
@@ -79,7 +78,6 @@ SOURCES += ../../systemui/contextframeworkcontext.cpp \
            ../../systemui/statusarea/statusindicator.cpp \
            ../../systemui/statusarea/clock.cpp \
            ../../systemui/statusarea/statusarea.cpp \
-           ../../systemui/statusarea/notificationstatusindicator.cpp \
            ../../systemui/statusindicatormenu/notificationarea.cpp \
            ../../systemui/notifications/notificationareasink.cpp \
            ../../systemui/notifications/widgetnotificationsink.cpp \

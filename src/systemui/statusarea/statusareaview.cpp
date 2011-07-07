@@ -22,8 +22,7 @@
 #include "statusindicator.h"
 #include "clock.h"
 #include "contextframeworkcontext.h"
-#include "notificationstatusindicator.h"
-#include "notifiernotificationsink.h"
+#include "notificationstatusindicatorsink.h"
 #include "inputmethodstatusindicatoradaptor.h"
 #include "sysuid.h"
 #include <QGraphicsLinearLayout>
@@ -107,8 +106,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitPhoneNetworkIndicator->setStyleName(QString(portraitPhoneNetworkIndicator->metaObject()->className()) + "Portrait");
 
     // Connect notification signals
-    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), landscapeNotificationIndicator, SLOT(setActive(bool)));
-    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), portraitNotificationIndicator, SLOT(setActive(bool)));
+    connect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), landscapeNotificationIndicator, SLOT(setIconID(QString)));
+    connect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), portraitNotificationIndicator, SLOT(setIconID(QString)));
 
     // Set up the class for functional testing
     setupTestability();

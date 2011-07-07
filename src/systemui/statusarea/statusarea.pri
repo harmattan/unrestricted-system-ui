@@ -10,7 +10,6 @@ SOURCES += statusarea/statusarea.cpp \
     statusarea/statusindicatoranimationview.cpp \
     statusarea/statusindicatoriconview.cpp \
     statusarea/statusindicator.cpp \
-    statusarea/notificationstatusindicator.cpp \
     statusarea/inputmethodstatusindicatoradaptor.cpp \
     statusarea/statusarearendereradaptor.cpp
 HEADERS += statusarea/statusarea.h \
@@ -30,7 +29,6 @@ HEADERS += statusarea/statusarea.h \
     statusarea/statusindicatoriconview.h \
     statusarea/statusindicatoriconstyle.h \
     statusarea/statusindicator.h \
-    statusarea/notificationstatusindicator.h \
     statusarea/inputmethodstatusindicatoradaptor.h \
     statusarea/statusarearendereradaptor.h
 MODEL_HEADERS += statusarea/statusareamodel.h \

@@ -23,7 +23,7 @@
 #include "screenlockextensioninterface.h"
 
 class MApplication;
-class NotifierNotificationSink;
+class NotificationStatusIndicatorSink;
 class ScreenLockBusinessLogic;
 
 class LockScreen : public QGraphicsWidget
@@ -55,7 +55,7 @@ public:
 
 signals:
     void unlocked();
-    void notifierSinkActive(bool active);
+    void notificationStatusIndicatorIconIdChanged(QString iconId);
 
 private:
     QGraphicsWidget *widget_;
@@ -89,7 +89,7 @@ private slots:
 
 private:
     MApplication *m_App;
-    NotifierNotificationSink *notifierSink;
+    NotificationStatusIndicatorSink *notificationStatusIndicatorSink;
     ScreenLockBusinessLogic *m_subject;
 };
 

@@ -38,7 +38,7 @@
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
 #include "contextframeworkcontext.h"
-#include "notifiernotificationsink.h"
+#include "notificationstatusindicatorsink.h"
 #include "closeeventeater.h"
 #include "diskspacenotifier.h"
 #include <QX11Info>
@@ -51,26 +51,14 @@ static const char *SCREENLOCK_DBUS_SERVICE = "com.nokia.system_ui";
 static const char *SCREENLOCK_DBUS_PATH = "/com/nokia/system_ui/request";
 static int NOTIFICATION_RELAY_INTERVAL = 5000;
 
-Sysuid::Sysuid(QObject* parent) :
-        QObject(parent)
+Sysuid::Sysuid(QObject* parent) : QObject(parent)
 {
     instance_ = this;
 
     // Load translations of System-UI
     loadTranslations();
 
-    shutdownBusinessLogic = new ShutdownBusinessLogic(this);
-    batteryBusinessLogic = new BatteryBusinessLogic(this);
-    usbUi = new UsbUi(this);
-
-    notificationManager = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
-    mCompositorNotificationSink = new MCompositorNotificationSink;
-    ngfNotificationSink = new NGFNotificationSink;
-    notifierNotificationSink_ = new NotifierNotificationSink;
-
-    // D-Bus registration and stuff
-    new ShutdownBusinessLogicAdaptor(this, shutdownBusinessLogic);
-
+    // D-Bus registration
     QDBusConnection bus = QDBusConnection::sessionBus();
     if (!bus.registerService(SYSTEMUI_DBUS_SERVICE)) {
         qCritical("Unable to register system-ui D-Bus service %s: %s", SYSTEMUI_DBUS_SERVICE, bus.lastError().message().toUtf8().constData());
@@ -80,6 +68,37 @@ Sysuid::Sysuid(QObject* parent) :
         qCritical("Unable to register system-ui object at path %s: %s", SYSTEMUI_DBUS_PATH, bus.lastError().message().toUtf8().constData());
         abort();
     }
+
+    // Initialize notification system
+    notificationManager = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
+    mCompositorNotificationSink = new MCompositorNotificationSink;
+    ngfNotificationSink = new NGFNotificationSink;
+    notificationStatusIndicatorSink_ = new NotificationStatusIndicatorSink;
+
+    // Connect the notification signals for the compositor notification sink
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), mCompositorNotificationSink, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), mCompositorNotificationSink, SLOT(removeNotification(uint)));
+    connect(mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
+
+    // Connect the notification signals for the feedback notification sink
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), ngfNotificationSink, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
+
+    // Connect the notification signals for the notification status indicator sink
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationStatusIndicatorSink_, SLOT(removeNotification(uint)));
+    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &)));
+
+    // Subscribe to a context property for getting information about the video recording status
+    ContextFrameworkContext context;
+    useMode = QSharedPointer<ContextItem>(context.createContextItem("/com/nokia/policy/camera"));
+    useMode.data()->subscribe();
+    connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
+    applyUseMode();
+
+    // Create shut down UI
+    shutdownBusinessLogic = new ShutdownBusinessLogic(this);
+    new ShutdownBusinessLogicAdaptor(this, shutdownBusinessLogic);
 
     // Create a status area renderer for rendering the shared status area pixmap
     statusAreaRenderer = new StatusAreaRenderer(this);
@@ -93,30 +112,6 @@ Sysuid::Sysuid(QObject* parent) :
     new StatusIndicatorMenuAdaptor(statusIndicatorMenuBusinessLogic);
     bus.registerService("com.meego.core.MStatusIndicatorMenu");
     bus.registerObject("/statusindicatormenu", statusIndicatorMenuBusinessLogic);
-
-    // Connect the notification signals for the compositor notification sink
-    connect (notificationManager, SIGNAL(notificationUpdated (const Notification &)),
-            mCompositorNotificationSink, SLOT(addNotification (const Notification &)));
-    connect(notificationManager, SIGNAL(notificationRemoved(uint)), mCompositorNotificationSink, SLOT(removeNotification(uint)));
-    connect(mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), notificationManager, SLOT(removeNotification(uint)));
-
-    // Connect the notification signals for the feedback notification sink
-    connect (notificationManager, SIGNAL(notificationUpdated (const Notification &)),
-            ngfNotificationSink, SLOT(addNotification (const Notification &)));
-    connect(notificationManager, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
-
-    // Connect the notification signals for the notifier notification sink
-    connect(mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
-    connect(notificationManager, SIGNAL(notificationRemoved(uint)), notifierNotificationSink_, SLOT(removeNotification(uint)));
-    connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notifierNotificationSink_, SLOT(addNotification(const Notification &)));
-    connect(notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), notificationManager, SLOT(removeUnseenFlags(bool)));
-
-    // Subscribe to a context property for getting information about the video recording status
-    ContextFrameworkContext context;
-    useMode = QSharedPointer<ContextItem> (context.createContextItem("/com/nokia/policy/camera"));
-    useMode.data()->subscribe();
-    connect(useMode.data(), SIGNAL(contentsChanged()), this, SLOT(applyUseMode()));
-    applyUseMode();
 
     // Create screen lock business logic
     screenLockBusinessLogic = new ScreenLockBusinessLogic(this);
@@ -133,17 +128,11 @@ Sysuid::Sysuid(QObject* parent) :
         qWarning("Unable to register screen lock object at path %s: %s", SCREENLOCK_DBUS_PATH, systemBus.lastError().message().toUtf8().constData());
     }
 
-    // Unlock the touch screen lock when displaying the USB dialog
-    connect(usbUi, SIGNAL(dialogShown()), screenLockBusinessLogic, SLOT(unlockScreen()));
-
     // Update the enabled status of compositor notification sink based on screen and device locks
 #ifdef HAVE_QMSYSTEM
-    connect (&qmLocks, SIGNAL(stateChanged (MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
+    connect(&qmLocks, SIGNAL(stateChanged(MeeGo::QmLocks::Lock, MeeGo::QmLocks::State)), this, SLOT(updateCompositorNotificationSinkEnabledStatus()));
 #endif
     updateCompositorNotificationSinkEnabledStatus();
-
-    // Initialize notifications store after all the signal connections are made to the notification sinks
-    notificationManager->initializeStore();
 
     // Create an extension area for the volume extension
     volumeExtensionArea = new MApplicationExtensionArea("com.meego.core.VolumeExtensionInterface/0.20");
@@ -151,13 +140,21 @@ Sysuid::Sysuid(QObject* parent) :
     volumeExtensionArea->setOutOfProcessFilter(QRegExp("$^"));
     volumeExtensionArea->init();
 
-    // Create the disk space notification
+    // Initialize notifications store after all the signal connections are made to the notification sinks but before any components that may send/remove notifications
+    notificationManager->initializeStore();
+
+    // Create components that may create or remove notifications
+    batteryBusinessLogic = new BatteryBusinessLogic(this);
+    usbUi = new UsbUi(this);
     new DiskSpaceNotifier(this);
+
+    // Unlock the touch screen lock when displaying the USB dialog
+    connect(usbUi, SIGNAL(dialogShown()), screenLockBusinessLogic, SLOT(unlockScreen()));
 }
 
 Sysuid::~Sysuid()
 {
-    delete notifierNotificationSink_;
+    delete notificationStatusIndicatorSink_;
     delete ngfNotificationSink;
     delete mCompositorNotificationSink;
     delete notificationManager;
@@ -198,9 +195,9 @@ NotificationManagerInterface &Sysuid::notificationManagerInterface()
     return *notificationManager;
 }
 
-NotifierNotificationSink& Sysuid::notifierNotificationSink()
+NotificationStatusIndicatorSink& Sysuid::notificationStatusIndicatorSink()
 {
-    return *notifierNotificationSink_;
+    return *notificationStatusIndicatorSink_;
 }
 
 void Sysuid::applyUseMode()

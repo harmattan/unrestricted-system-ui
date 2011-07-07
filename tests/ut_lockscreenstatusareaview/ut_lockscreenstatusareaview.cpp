@@ -197,7 +197,7 @@ void Ut_LockScreenStatusAreaView::cleanup()
 
 void Ut_LockScreenStatusAreaView::testSignalConnections()
 {
-    QVERIFY(disconnect(extension, SIGNAL(notifierSinkActive(bool)), m_subject->notifierIndicator, SLOT(setActive(bool))));
+    QVERIFY(disconnect(extension, SIGNAL(notificationStatusIndicatorIconIdChanged(QString)), m_subject->notificationStatusIndicator, SLOT(setIconID(QString))));
 }
 
 void Ut_LockScreenStatusAreaView::testStatusBarGeometryProperty()

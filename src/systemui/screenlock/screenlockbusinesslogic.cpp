@@ -21,7 +21,7 @@
 #include <QDBusInterface>
 #include "screenlockextensioninterface.h"
 #include "screenlockbusinesslogic.h"
-#include "notifiernotificationsink.h"
+#include "notificationstatusindicatorsink.h"
 #include "screenlockwindow.h"
 #include "eventeater.h"
 #include "closeeventeater.h"
@@ -116,7 +116,7 @@ void ScreenLockBusinessLogic::registerExtension(MApplicationExtensionInterface *
     screenLockExtensions.append(screenLockExtension);
     screenLockExtension->setNotificationManagerInterface(Sysuid::instance()->notificationManagerInterface());
     connect(screenLockExtension->qObject(), SIGNAL(unlocked()), this, SLOT(unlockScreen()));
-    connect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension->qObject(), SIGNAL(notifierSinkActive(bool)));
+    connect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), screenLockExtension->qObject(), SIGNAL(notificationStatusIndicatorIconIdChanged(QString)));
 }
 
 void ScreenLockBusinessLogic::unregisterExtension(MApplicationExtensionInterface *extension)

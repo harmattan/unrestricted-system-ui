@@ -32,7 +32,7 @@
 #include "sysuid_stub.h"
 #include "eventeater_stub.h"
 #include "closeeventeater_stub.h"
-#include "notifiernotificationsink_stub.h"
+#include "notificationstatusindicatorsink_stub.h"
 #include "notificationsink_stub.h"
 #include <MApplication>
 #include <MApplicationWindow>
@@ -177,14 +177,14 @@ void Ut_ScreenLockBusinessLogic::initTestCase()
     /* XXX: input context caused a crash :-S */
     m_App->setLoadMInputContext (false);
     m_App->setQuitOnLastWindowClosed (false);
-    notifierSink = new NotifierNotificationSink;
-    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierSink);
+    notificationStatusIndicatorSink = new NotificationStatusIndicatorSink;
+    gSysuidStub->stubSetReturnValue("notificationStatusIndicatorSink", notificationStatusIndicatorSink);
 }
 
 void Ut_ScreenLockBusinessLogic::cleanupTestCase()
 {
     m_App->deleteLater ();
-    delete notifierSink;
+    delete notificationStatusIndicatorSink;
 }
 
 void Ut_ScreenLockBusinessLogic::testToggleScreenLockUI()
@@ -365,7 +365,7 @@ void Ut_ScreenLockBusinessLogic::testWhenExtensionIsRegisteredSignalsAreConnecte
     m_subject->registerExtension(&screenLockExtension);
 
     QVERIFY(disconnect(screenLockExtension.qObject(), SIGNAL(unlocked()), m_subject, SLOT(unlockScreen())));
-    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), screenLockExtension.qObject(), SIGNAL(notifierSinkActive(bool))));
+    QVERIFY(disconnect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), screenLockExtension.qObject(), SIGNAL(notificationStatusIndicatorIconIdChanged(QString))));
 }
 
 void Ut_ScreenLockBusinessLogic::testRegisteringAndUnregisteringExtension()

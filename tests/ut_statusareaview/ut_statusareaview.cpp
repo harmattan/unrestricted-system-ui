@@ -42,7 +42,7 @@
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "notificationsink_stub.h"
-#include "notifiernotificationsink_stub.h"
+#include "notificationstatusindicatorsink_stub.h"
 #include "inputmethodstatusindicatoradaptor_stub.h"
 #include "sysuid_stub.h"
 #include "x11wrapper_modified_stub.h"
@@ -54,14 +54,14 @@ void Ut_StatusAreaView::initTestCase()
     int argc = 1;
     static char *app_name = (char *)"./ut_lockscreenstatusareaview";
     app = new MApplication(argc, &app_name);
-    notifierNotificationSink = new NotifierNotificationSink;
-    gSysuidStub->stubSetReturnValue("notifierNotificationSink", notifierNotificationSink);
+    notificationStatusIndicatorSink = new NotificationStatusIndicatorSink;
+    gSysuidStub->stubSetReturnValue("notificationStatusIndicatorSink", notificationStatusIndicatorSink);
 }
 
 // Called after the last testfunction was executed
 void Ut_StatusAreaView::cleanupTestCase()
 {
-    delete notifierNotificationSink;
+    delete notificationStatusIndicatorSink;
     delete app;
 }
 
@@ -85,8 +85,8 @@ void Ut_StatusAreaView::cleanup()
 
 void Ut_StatusAreaView::testSignalConnections()
 {
-    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->landscapeNotificationIndicator, SLOT(setActive(bool))));
-    QVERIFY(disconnect(&Sysuid::instance()->notifierNotificationSink(), SIGNAL(notifierSinkActive(bool)), m_subject->portraitNotificationIndicator, SLOT(setActive(bool))));
+    QVERIFY(disconnect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), m_subject->landscapeNotificationIndicator, SLOT(setIconID(QString))));
+    QVERIFY(disconnect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), m_subject->portraitNotificationIndicator, SLOT(setIconID(QString))));
 }
 
 void Ut_StatusAreaView::testStyleNamesFollowCallState()

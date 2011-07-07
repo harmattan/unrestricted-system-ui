@@ -49,7 +49,7 @@
 #include "unlocknotifications_stub.h"
 #include "unlockmissedevents_stub.h"
 #include "unlocknotificationsinkstub.h"
-#include "notifiernotificationsink_stub.h"
+#include "notificationstatusindicatorsink_stub.h"
 #include "shutdownui_stub.h"
 #include "usbui_stub.h"
 #include "lockscreenwindow_stub.h"
@@ -214,10 +214,9 @@ void Ut_Sysuid::testSignalConnections()
     QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationRemovalRequested(uint)), sysuid->notificationManager, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated (const Notification &)), sysuid->ngfNotificationSink, SLOT(addNotification (const Notification &))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->ngfNotificationSink, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->mCompositorNotificationSink, SIGNAL(notificationAdded(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
-    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->notifierNotificationSink_, SLOT(removeNotification(uint))));
-    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRestored(const Notification &)), sysuid->notifierNotificationSink_, SLOT(addNotification(const Notification &))));
-    QVERIFY(disconnect(sysuid->notifierNotificationSink_, SIGNAL(notifierSinkActive(bool)), sysuid->notificationManager, SLOT(removeUnseenFlags(bool))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated(const Notification &)), sysuid->notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->notificationStatusIndicatorSink_, SLOT(removeNotification(uint))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRestored(const Notification &)), sysuid->notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
     QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid->mCompositorNotificationSink, SLOT(setTouchScreenLockActive(bool))));
     QVERIFY(disconnect(sysuid->usbUi, SIGNAL(dialogShown()), sysuid->screenLockBusinessLogic, SLOT(unlockScreen())));

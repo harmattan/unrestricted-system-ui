@@ -94,8 +94,8 @@ private:
     //! Alarm indicator
     StatusIndicator *alarmIndicator;
 
-    //! Notification notifier
-    StatusIndicator *notifierIndicator;
+    //! Notification indicator
+    StatusIndicator *notificationStatusIndicator;
 
     //! Call forwarding indicator
     StatusIndicator *callForwardingIndicator;

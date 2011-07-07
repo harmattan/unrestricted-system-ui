@@ -31,7 +31,7 @@ class SysuidStub : public StubBase {
   virtual void SysuidDestructor();
   virtual Sysuid * sysuid();
   virtual NotificationManagerInterface & notificationManagerInterface();
-  virtual NotifierNotificationSink & notifierNotificationSink();
+  virtual NotificationStatusIndicatorSink & notificationStatusIndicatorSink();
   virtual void loadTranslations();
   virtual void applyUseMode();
   virtual void updateCompositorNotificationSinkEnabledStatus();
@@ -57,9 +57,9 @@ NotificationManagerInterface & SysuidStub::notificationManagerInterface() {
   return *stubReturnValue<NotificationManagerInterface *>("notificationManagerInterface");
 }
 
-NotifierNotificationSink & SysuidStub::notifierNotificationSink() {
-  stubMethodEntered("notifierNotificationSink");
-  return *stubReturnValue<NotifierNotificationSink *>("notifierNotificationSink");
+NotificationStatusIndicatorSink & SysuidStub::notificationStatusIndicatorSink() {
+  stubMethodEntered("notificationStatusIndicatorSink");
+  return *stubReturnValue<NotificationStatusIndicatorSink *>("notificationStatusIndicatorSink");
 }
 
 void SysuidStub::loadTranslations() {
@@ -86,7 +86,7 @@ Sysuid::Sysuid(QObject* parent) :
     batteryBusinessLogic (0), shutdownBusinessLogic (0),
     usbUi (0), statusAreaRenderer (0), statusIndicatorMenuBusinessLogic (0), notificationManager (0),
     mCompositorNotificationSink (0), ngfNotificationSink (0),
-    notifierNotificationSink_(0), screenLockBusinessLogic(0),
+    notificationStatusIndicatorSink_(0), screenLockBusinessLogic(0),
     volumeExtensionArea (0)
 {
   gSysuidStub->SysuidConstructor(parent);
@@ -104,8 +104,8 @@ NotificationManagerInterface & Sysuid::notificationManagerInterface() {
   return gSysuidStub->notificationManagerInterface();
 }
 
-NotifierNotificationSink & Sysuid::notifierNotificationSink() {
-  return gSysuidStub->notifierNotificationSink();
+NotificationStatusIndicatorSink & Sysuid::notificationStatusIndicatorSink() {
+  return gSysuidStub->notificationStatusIndicatorSink();
 }
 
 void Sysuid::loadTranslations() {

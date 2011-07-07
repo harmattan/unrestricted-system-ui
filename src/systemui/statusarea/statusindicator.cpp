@@ -682,3 +682,24 @@ void CallForwardingStatusIndicator::callForwardingChanged()
         setStyleNameAndUpdate(QString(metaObject()->className()));
     }
 }
+
+NotificationStatusIndicator::NotificationStatusIndicator(QGraphicsItem *parent) :
+    StatusIndicator(parent)
+{
+    setIconID(QString());
+}
+
+NotificationStatusIndicator::~NotificationStatusIndicator()
+{
+}
+
+void NotificationStatusIndicator::setIconID(const QString &iconID)
+{
+    setValue(iconID);
+
+    if (iconID.isEmpty()) {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Disabled");
+    } else {
+        setStyleNameAndUpdate(metaObject()->className());
+    }
+}

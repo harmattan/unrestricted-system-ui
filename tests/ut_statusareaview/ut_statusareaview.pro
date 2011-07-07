@@ -26,7 +26,7 @@ HEADERS += \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$SRCDIR/statusarea/notificationstatusindicator.h \
-    $$NOTIFICATIONSRCDIR/notifiernotificationsink.h \
+    $$NOTIFICATIONSRCDIR/notificationstatusindicatorsink.h \
     $$SRCDIR/statusindicatormenu/notificationarea.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
     $$SRCDIR/sysuid.h \

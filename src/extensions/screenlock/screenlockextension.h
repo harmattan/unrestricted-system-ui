@@ -51,8 +51,8 @@ public:
     NotificationManagerInterface *notificationManagerInterface();
 
 signals:
-    //! Signal for relaying notifier sink activity
-    void notifierSinkActive(bool active);
+    //! Signal for relaying notification status indicator sink activity
+    void notificationStatusIndicatorIconIdChanged(QString iconId);
 
     //! Signal for relaying unlocking
     void unlocked();
