@@ -26,7 +26,6 @@ HEADERS += \
     $$SRCDIR/statusarea/clock.h \
     $$SRCDIR/statusarea/statusindicator.h \
     $$LIBNOTIFICATIONSRCDIR/notificationsink.h \
-    $$SRCDIR/statusarea/notificationstatusindicator.h \
     $$ROOTSRCDIR/extensions/screenlock/screenlockextension.h \
     $$SRCDIR/x11wrapper.h
 
