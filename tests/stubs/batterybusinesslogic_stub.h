@@ -21,6 +21,7 @@ class BatteryBusinessLogicStub : public StubBase {
   virtual void sendNotification(BatteryBusinessLogic::NotificationID id);
   virtual void sendNotification(const QString &eventType, const QString &text, const QString &icon);
   virtual QString chargingImageId();
+  virtual void setTouchScreenLockActive(bool active);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -89,6 +90,12 @@ QString BatteryBusinessLogicStub::chargingImageId() {
   return stubReturnValue<QString>("chargingImageId");
 }
 
+void BatteryBusinessLogicStub::setTouchScreenLockActive(bool active) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(active));
+  stubMethodEntered("setTouchScreenLockActive",params);
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -145,5 +152,8 @@ QString BatteryBusinessLogic::chargingImageId() {
   return gBatteryBusinessLogicStub->chargingImageId();
 }
 
+void BatteryBusinessLogic::setTouchScreenLockActive(bool active) {
+  gBatteryBusinessLogicStub->setTouchScreenLockActive(active);
+}
 
 #endif

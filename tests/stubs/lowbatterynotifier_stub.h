@@ -1,7 +1,7 @@
 #ifndef LOWBATTERYNOTIFIER_STUB
 #define LOWBATTERYNOTIFIER_STUB
 
-#include "batterybusinesslogic.h"
+#include "lowbatterynotifier.h"
 #include <stubbase.h>
 
 
@@ -11,8 +11,9 @@ class LowBatteryNotifierStub : public StubBase {
   public:
   virtual void LowBatteryNotifierConstructor(QObject *parent);
   virtual void LowBatteryNotifierDestructor();
-  virtual void showLowBatteryNotification();
-  virtual void displayStateChanged(MeeGo::QmDisplayState::DisplayState state);
+  virtual void sendLowBatteryAlert();
+  virtual void setNotificationInterval();
+  virtual void setTouchScreenLockActive(bool active);
 }; 
 
 // 2. IMPLEMENT STUB
@@ -23,16 +24,19 @@ void LowBatteryNotifierStub::LowBatteryNotifierConstructor(QObject *parent) {
 void LowBatteryNotifierStub::LowBatteryNotifierDestructor() {
 
 }
-void LowBatteryNotifierStub::showLowBatteryNotification() {
-  stubMethodEntered("showLowBatteryNotification");
+void LowBatteryNotifierStub::sendLowBatteryAlert() {
+  stubMethodEntered("sendLowBatteryAlert");
 }
 
-void LowBatteryNotifierStub::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
+void LowBatteryNotifierStub::setNotificationInterval() {
+  stubMethodEntered("setNotificationInterval");
+}
+
+void LowBatteryNotifierStub::setTouchScreenLockActive(bool active) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<MeeGo::QmDisplayState::DisplayState >(state));
-  stubMethodEntered("displayStateChanged",params);
+  params.append( new Parameter<bool >(active));
+  stubMethodEntered("setTouchScreenLockActive",params);
 }
-
 
 
 // 3. CREATE A STUB INSTANCE
@@ -49,13 +53,16 @@ LowBatteryNotifier::~LowBatteryNotifier() {
   gLowBatteryNotifierStub->LowBatteryNotifierDestructor();
 }
 
-void LowBatteryNotifier::showLowBatteryNotification() {
-  gLowBatteryNotifierStub->showLowBatteryNotification();
+void LowBatteryNotifier::sendLowBatteryAlert() {
+  gLowBatteryNotifierStub->sendLowBatteryAlert();
 }
 
-void LowBatteryNotifier::displayStateChanged(MeeGo::QmDisplayState::DisplayState state) {
-  gLowBatteryNotifierStub->displayStateChanged(state);
+void LowBatteryNotifier::setNotificationInterval() {
+  gLowBatteryNotifierStub->setNotificationInterval();
 }
 
+void LowBatteryNotifier::setTouchScreenLockActive(bool active) {
+  gLowBatteryNotifierStub->setTouchScreenLockActive(active);
+}
 
 #endif

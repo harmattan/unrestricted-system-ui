@@ -17,98 +17,12 @@
  **
  ****************************************************************************/
 #include "batterybusinesslogic.h"
-#include <MLocale>
+#include "lowbatterynotifier.h"
 #include <QTimer>
-
 #include <MNotification>
-#include <MFeedback>
-
-namespace {
-    const int LowBatteryActiveInterval = 5 * 60 * 1000; // 5 mins
-    const int LowBatteryInactiveInterval = 30 * 60 * 1000; // 30 mins
-    const int ChargingAnimationRateUSB = 800; // 800 ms
-    const int ChargingAnimationRateWall = 400; // 400 ms
-}
-
-LowBatteryNotifier::LowBatteryNotifier(QObject *parent) :
-    QObject(parent),
-    m_Timer(new QTimer(this)),
-    m_Sleep(false)
-{
-    m_ActiveInterval = LowBatteryActiveInterval;
-    m_InactiveInterval = LowBatteryInactiveInterval;
-    m_Time.start();
-
-#ifdef HAVE_QMSYSTEM
-    m_Display = new MeeGo::QmDisplayState;
-    m_Sleep = m_Display->get() == MeeGo::QmDisplayState::Off;
-    connect(m_Display, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(displayStateChanged(MeeGo::QmDisplayState::DisplayState)));
-#endif
-
-    connect(m_Timer, SIGNAL(timeout()), this, SLOT(showLowBatteryNotification()));
-}
-
-LowBatteryNotifier::~LowBatteryNotifier()
-{
-}
-
-void LowBatteryNotifier::showLowBatteryNotification()
-{
-    emit lowBatteryAlert();
-
-    m_Time.start(); //restart time
-
-#ifdef HAVE_QMSYSTEM
-    switch(m_Display->get()) {
-        case MeeGo::QmDisplayState::On:
-        case MeeGo::QmDisplayState::Dimmed:
-            m_Sleep = false;
-            m_Timer->start(m_ActiveInterval);
-            break;
-
-        case MeeGo::QmDisplayState::Off:
-            m_Sleep = true;
-            m_Timer->start(m_InactiveInterval);
-            break;
-
-        default:
-            break;
-    }
-#endif
-}
-
-#ifdef HAVE_QMSYSTEM
-void LowBatteryNotifier::displayStateChanged(MeeGo::QmDisplayState::DisplayState state)
-{
-    switch(state) {
-        case MeeGo::QmDisplayState::On:
-            if (!m_Sleep)
-                break;
-            if (m_Time.elapsed() < m_ActiveInterval)
-                m_Timer->setInterval(m_ActiveInterval - m_Time.elapsed());
-            else
-                showLowBatteryNotification();
-            m_Sleep = false;
-            break;
-
-        case MeeGo::QmDisplayState::Dimmed:
-            m_Sleep = false;
-            break;
-
-        case MeeGo::QmDisplayState::Off:
-            m_Timer->setInterval(m_InactiveInterval - m_Time.elapsed());
-            m_Sleep = true;
-            break;
-
-        default:
-            // FIXME: what about the other states [Unknown]?
-            break;
-    }
-}
-#endif
 
 BatteryBusinessLogic::BatteryBusinessLogic(QObject *parent) :
-    QObject(parent), m_LowBatteryNotifier(0), m_notification(0)
+    QObject(parent), m_LowBatteryNotifier(0), m_notification(0), touchScreenLockActive(false)
 #ifdef HAVE_QMSYSTEM
     ,m_Battery(new MeeGo::QmBattery),
     m_DeviceMode(new MeeGo::QmDeviceMode),
@@ -205,9 +119,10 @@ void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState st
             if (m_LowBatteryNotifier == 0) {
                 m_LowBatteryNotifier = new LowBatteryNotifier();
                 connect(m_LowBatteryNotifier, SIGNAL(lowBatteryAlert()), this, SLOT(lowBatteryAlert()));
+                m_LowBatteryNotifier->setTouchScreenLockActive(touchScreenLockActive);
             }
 
-            m_LowBatteryNotifier->showLowBatteryNotification();
+            m_LowBatteryNotifier->sendLowBatteryAlert();
         }
         break;
 
@@ -396,3 +311,10 @@ QString BatteryBusinessLogic::chargingImageId()
     return QString("icon-m-energy-management-charging-low");
 }
 
+void BatteryBusinessLogic::setTouchScreenLockActive(bool active)
+{
+    touchScreenLockActive = active;
+    if (m_LowBatteryNotifier != NULL) {
+        m_LowBatteryNotifier->setTouchScreenLockActive(active);
+    }
+}

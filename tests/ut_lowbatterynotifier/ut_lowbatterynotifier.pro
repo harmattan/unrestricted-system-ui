@@ -4,10 +4,11 @@ TARGET = ut_lowbatterynotifier
 
 SOURCES += \
     ut_lowbatterynotifier.cpp \
-    $$SRCDIR/batterybusinesslogic.cpp
+    $$SRCDIR/lowbatterynotifier.cpp \
+    stubbase.cpp
 
 HEADERS += \
     ut_lowbatterynotifier.h \
-    $$SRCDIR/batterybusinesslogic.h
+    $$SRCDIR/lowbatterynotifier.h
 
 include(../common_bot.pri)

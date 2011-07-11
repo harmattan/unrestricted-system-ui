@@ -24,6 +24,7 @@
  */
 #include "ut_batterybusinesslogic.h"
 #include "batterybusinesslogic.h"
+#include "lowbatterynotifier_stub.h"
 
 #ifdef HAVE_QMSYSTEM
 #include "qmled_stub.h"
@@ -86,6 +87,7 @@ void Ut_BatteryBusinessLogic::cleanup()
     m_logic = NULL;
     gMNotificationPublish.clear();
     gMNotificationRemoveEventType.clear();
+    gLowBatteryNotifierStub->stubReset();
 }
 
 void Ut_BatteryBusinessLogic::testInitBattery()
@@ -185,15 +187,12 @@ void Ut_BatteryBusinessLogic::testBatteryStateChanged()
     /* StateLow and not charging */
     spy.clear();
     gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->setTouchScreenLockActive(true);
     m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
 
-    QTest::qWait(10);
-
-    QCOMPARE(spy.count(), 1);
-    arguments = spy.takeFirst();
-    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.lowbattery"));
-    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_lowbatt"));
-    QCOMPARE(arguments.at(2).toString(), QString());
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 1);
+    QCOMPARE(gLowBatteryNotifierStub->stubLastCallTo("setTouchScreenLockActive").parameter<bool>(0), true);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("sendLowBatteryAlert"), 1);
 #endif
 }
 
@@ -336,18 +335,16 @@ void Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection()
 
     /* Simulate battery-state-low change */
     gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->setTouchScreenLockActive(true);
     m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
 
     /* LowBatteryNotifier should be exists now... */
     QVERIFY(m_logic->m_LowBatteryNotifier != NULL);
-    QTest::qWait(10);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 1);
+    QCOMPARE(gLowBatteryNotifierStub->stubLastCallTo("setTouchScreenLockActive").parameter<bool>(0), true);
 
     /* And should send a low-battery notification */
-    QCOMPARE(spy.count(), 1);
-    arguments = spy.takeFirst();
-    QCOMPARE(arguments.at(0).toString(), QString("x-nokia.battery.lowbattery"));
-    QCOMPARE(arguments.at(1).toString(), qtTrId("qtn_ener_lowbatt"));
-    QCOMPARE(arguments.at(2).toString(), QString());
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("sendLowBatteryAlert"), 1);
 
     /* Simulate now a charging event */
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
@@ -388,6 +385,28 @@ void Ut_BatteryBusinessLogic::testWhenChargingStopsMoreThanNSecondAfterBeingStar
     m_logic->notificationTimer.stop();
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateNotCharging);
     QCOMPARE(gMNotificationRemoveEventType.count(), 0);
+#endif
+}
+
+void Ut_BatteryBusinessLogic::testSetTouchScreenLockActive()
+{
+    m_logic->setTouchScreenLockActive(true);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 0);
+
+#ifdef HAVE_QMSYSTEM
+    gQmBatteryStub->stubSetReturnValue("getChargerType", MeeGo::QmBattery::USB_500mA);
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::ChargingState>("getChargingState", MeeGo::QmBattery::StateNotCharging);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 1);
+    QCOMPARE(gLowBatteryNotifierStub->stubLastCallTo("setTouchScreenLockActive").parameter<bool>(0), true);
+
+    m_logic->setTouchScreenLockActive(false);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 2);
+    QCOMPARE(gLowBatteryNotifierStub->stubLastCallTo("setTouchScreenLockActive").parameter<bool>(0), false);
+
+    m_logic->setTouchScreenLockActive(true);
+    QCOMPARE(gLowBatteryNotifierStub->stubCallCount("setTouchScreenLockActive"), 3);
+    QCOMPARE(gLowBatteryNotifierStub->stubLastCallTo("setTouchScreenLockActive").parameter<bool>(0), true);
 #endif
 }
 

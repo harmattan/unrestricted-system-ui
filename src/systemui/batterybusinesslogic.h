@@ -20,57 +20,16 @@
 #define BATTERYBUSINESSLOGIC_H
 
 #include <QObject>
-#include <QTime>
 #include <QTimer>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmled.h>
 #include <qmbattery.h>
 #include <qmdevicemode.h>
-#include <qmdisplaystate.h>
 #endif
 
-class QTimer;
+class LowBatteryNotifier;
 class MNotification;
-
-/*!
- * Please note that this class will emit the lowBatteryAlert() when the user
- * needed to be alerted about the low battery condition, that is this class will
- * not generate new notifications. The BatteryBusinessLogic will connect to this
- * signal and handle the notifications.
- */
-class LowBatteryNotifier: public QObject {
-    Q_OBJECT
-
-public:
-    LowBatteryNotifier(QObject* parent = 0);
-    virtual ~LowBatteryNotifier();
-
-public slots:
-    void showLowBatteryNotification();
-
-private slots:
-#ifdef HAVE_QMSYSTEM
-    void displayStateChanged (MeeGo::QmDisplayState::DisplayState state);
-#endif
-
-signals:
-    void lowBatteryAlert();
-
-private:
-#ifdef HAVE_QMSYSTEM
-    MeeGo::QmDisplayState *m_Display;
-#endif
-    QTimer *m_Timer;
-    QTime m_Time;
-    bool m_Sleep;
-    int m_ActiveInterval;
-    int m_InactiveInterval;
-
-#ifdef UNIT_TEST
-    friend class Ut_LowBatteryNotifier;
-#endif
-};
 
 /*!
  * Implements the configuration and state for the battery, the power save mode.
@@ -105,6 +64,13 @@ public slots:
     void initBattery();
     void lowBatteryAlert();
 
+    /*!
+     * Sets the touch screen lock active state so notifications can be enabled/disabled based on that.
+     *
+     * \param active \c true if the touch screen lock is active, \c false otherwise
+     */
+    void setTouchScreenLockActive(bool active);
+
 private slots:
 #ifdef HAVE_QMSYSTEM
     void batteryStateChanged (MeeGo::QmBattery::BatteryState state);
@@ -123,6 +89,10 @@ private:
     LowBatteryNotifier *m_LowBatteryNotifier;
     MNotification *m_notification;
     QTimer notificationTimer;
+
+    //! Whether the touch screen lock is active or not
+    bool touchScreenLockActive;
+
 #ifdef HAVE_QMSYSTEM
     MeeGo::QmBattery *m_Battery;
     MeeGo::QmDeviceMode *m_DeviceMode;

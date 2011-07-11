@@ -145,7 +145,10 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
 
     // Create components that may create or remove notifications
     batteryBusinessLogic = new BatteryBusinessLogic(this);
+    connect(screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), batteryBusinessLogic, SLOT(setTouchScreenLockActive(bool)));
+
     usbUi = new UsbUi(this);
+
     new DiskSpaceNotifier(this);
 
     // Unlock the touch screen lock when displaying the USB dialog

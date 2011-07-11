@@ -33,6 +33,7 @@ STYLE_HEADERS += shutdownwindowstyle.h
 HEADERS +=                              \
     closeeventeater.h                   \
     batterybusinesslogic.h              \
+    lowbatterynotifier.h                \
     sysuid.h                            \
     shutdownui.h                        \
     shutdownwindowstyle.h               \
@@ -48,6 +49,7 @@ SOURCES +=                              \
     main.cpp                            \
     closeeventeater.cpp                 \
     batterybusinesslogic.cpp            \
+    lowbatterynotifier.cpp              \
     sysuid.cpp                          \
     shutdownui.cpp                      \
     shutdownbusinesslogic.cpp           \

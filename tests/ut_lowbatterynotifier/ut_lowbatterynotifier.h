@@ -20,26 +20,8 @@
 #define UT_LOWBATTERYNOTIFIER_H
 
 #include <QObject>
-#include <QTime>
 
 class LowBatteryNotifier;
-
-class LowBatteryHelper : public QObject
-{
-    Q_OBJECT
-
-public:
-    LowBatteryHelper() : QObject() { }
-    void start();
-    QList<int> notificationTimes();
-
-public slots:
-    void notificationShown();
-
-private: // attributes
-    QList<int> times;
-    QTime time;
-};
 
 class Ut_LowBatteryNotifier : public QObject
 {
@@ -50,22 +32,14 @@ private slots:
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
-
-#ifdef HAVE_QMSYSTEM
-    void testShowNotificationInActiveUse();
-    void testShowNotificationInDiverseUse();
-    void testShowNotificationInInactiveUse();
-#endif
+    void testSignalConnections();
+    void testSendLowBatteryAlert_data();
+    void testSendLowBatteryAlert();
+    void testSetNotificationInterval_data();
+    void testSetNotificationInterval();
 
 private:
-#ifdef HAVE_QMSYSTEM
-    void turnDisplay (bool On);
-#endif
-
-    LowBatteryNotifier  *m_subject;
-    LowBatteryHelper    *m_helper;
-    QTime time;
-    int shown;
+    LowBatteryNotifier *m_subject;
 };
 
 #endif
