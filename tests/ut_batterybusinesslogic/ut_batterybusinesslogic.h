@@ -43,6 +43,8 @@ private slots:
     void testWhenChargingStopsThenNotificationRemoved();
     void testWhenChargingStopsWhenConnectedToWallChargerThenNotificationRemoved();
     void testWhenChargingStopsMoreThanNSecondAfterBeingStartedThenNotificationNotRemoved();
+    void testWhenChargingStartsWhenRemoveChargerNotifiedThenNotificationRemoved();
+    void testWhenBatteryFullWhenChargingNotifiedThenNotificationRemoved();
     void testSetTouchScreenLockActive();
 
 private:

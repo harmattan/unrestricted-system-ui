@@ -88,12 +88,13 @@ void BatteryBusinessLogic::chargingStateChanged(MeeGo::QmBattery::ChargingState 
                 m_LowBatteryNotifier = 0;
             }
 
+            removeNotification(QStringList() << "x-nokia.battery.removecharger" << "x-nokia.battery.chargingcomplete");
             sendNotification(NotificationCharging);
         }
         break;
 
     case MeeGo::QmBattery::StateNotCharging:
-        removeNotification("x-nokia.battery");
+        removeNotification(QStringList() << "x-nokia.battery");
         utiliseLED(false, QString("PatternBatteryCharging"));
         break;
 
@@ -107,6 +108,7 @@ void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState st
 {
     switch(state) {
     case MeeGo::QmBattery::StateFull:
+        removeNotification(QStringList() << "x-nokia.battery");
         sendNotification(NotificationChargingComplete);
         break;
 
@@ -147,7 +149,7 @@ void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType typ
          * charging the device.
          */
         if (m_ChargerType == MeeGo::QmBattery::Wall) {
-            removeNotification("x-nokia.battery");
+            removeNotification(QStringList() << "x-nokia.battery" << "x-nokia.battery.chargingcomplete");
             sendNotification(NotificationRemoveCharger);
         }
         break;
@@ -275,9 +277,9 @@ void BatteryBusinessLogic::sendNotification(const QString &eventType, const QStr
     notificationTimer.start();
 }
 
-void BatteryBusinessLogic::removeNotification(const QString &eventType)
+void BatteryBusinessLogic::removeNotification(const QStringList &eventTypes)
 {
-    if (m_notification != 0 && m_notification->eventType() == eventType && notificationTimer.isActive()) {
+    if (m_notification != 0 && eventTypes.contains(m_notification->eventType()) && notificationTimer.isActive()) {
         m_notification->remove();
         delete m_notification;
         m_notification = 0;
