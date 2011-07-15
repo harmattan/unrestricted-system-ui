@@ -313,11 +313,16 @@ void BatteryStatusIndicator::batteryLevelChanged()
                 remainingBars = maximumBars - 1;
             }
 
-            // imageList contains maximumBars + 2 images
+            // imageList contains maximumBars + 2 images (maximumBars is zero inclusive so +1 and then the "battery empty" image)
             int images = maximumBars + 2;
 
-            // First icon is for battery empty situation, hence remainingBars + 1
-            setValue((remainingBars + 1) / (double)images);
+            if (batteryCharging->value().toBool()) {
+                // While charging don't use the "battery empty" image, so skip it with remainingBars + 1
+                setValue((remainingBars + 1) / (double)images);
+            } else {
+                // While not charging use the "battery empty" icon when 0 bars remaining, otherwise skip it with remainingBars + 1
+                setValue((remainingBars == 0 ? 0 : (remainingBars + 1)) / (double)images);
+            }
         } else {
             // Error situation
             setValue(0.0);

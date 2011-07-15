@@ -381,7 +381,14 @@ void Ut_StatusIndicator::testBattery()
     values << QVariant(0) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
     QVERIFY(m_subject->model()->value().type() == QVariant::Double);
-    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 1);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 0);
+
+    // testing first non-empty battery level
+    values.clear();
+    values << QVariant(1) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 2);
 
     // testing battery somewhere between empty and full
     values.clear();
@@ -403,7 +410,14 @@ void Ut_StatusIndicator::testBattery()
     testContextItems["Battery.IsCharging"]->setValue(QVariant(true));
     QVERIFY(m_subject->styleName().indexOf("Charging") >= 0);
 
-    // testing battery level when charging
+    // testing battery level when charging and battery empty
+    values.clear();
+    values << QVariant(0) << QVariant(8);
+    testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
+    QVERIFY(m_subject->model()->value().type() == QVariant::Double);
+    QCOMPARE(qRound(m_subject->model()->value().toDouble() * 10), 1);
+
+    // testing battery level when charging and battery non-empty
     values.clear();
     values << QVariant(6) << QVariant(8);
     testContextItems["Battery.ChargeBars"]->setValue(QVariant(values));
