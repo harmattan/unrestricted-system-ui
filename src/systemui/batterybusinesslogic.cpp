@@ -22,20 +22,20 @@
 #include <MNotification>
 
 BatteryBusinessLogic::BatteryBusinessLogic(QObject *parent) :
-    QObject(parent), m_LowBatteryNotifier(0), m_notification(0), touchScreenLockActive(false)
+    QObject(parent), lowBatteryNotifier(0), notification(0), touchScreenLockActive(false)
 #ifdef HAVE_QMSYSTEM
-    ,m_Battery(new MeeGo::QmBattery),
-    m_DeviceMode(new MeeGo::QmDeviceMode),
-    m_Led(new MeeGo::QmLED),
-    m_ChargerType(MeeGo::QmBattery::Unknown)
+    ,qmBattery(new MeeGo::QmBattery),
+    qmDeviceMode(new MeeGo::QmDeviceMode),
+    qmLed(new MeeGo::QmLED),
+    chargerType(MeeGo::QmBattery::Unknown)
 #endif
 {
 #ifdef HAVE_QMSYSTEM
-    connect(m_Battery, SIGNAL(batteryStateChanged(MeeGo::QmBattery::BatteryState)), this, SLOT(batteryStateChanged(MeeGo::QmBattery::BatteryState)));
-    connect(m_Battery, SIGNAL(chargingStateChanged(MeeGo::QmBattery::ChargingState)), this, SLOT(chargingStateChanged(MeeGo::QmBattery::ChargingState)));
-    connect(m_Battery, SIGNAL(chargerEvent(MeeGo::QmBattery::ChargerType)), this, SLOT(batteryChargerEvent(MeeGo::QmBattery::ChargerType)));
+    connect(qmBattery, SIGNAL(batteryStateChanged(MeeGo::QmBattery::BatteryState)), this, SLOT(batteryStateChanged(MeeGo::QmBattery::BatteryState)));
+    connect(qmBattery, SIGNAL(chargingStateChanged(MeeGo::QmBattery::ChargingState)), this, SLOT(chargingStateChanged(MeeGo::QmBattery::ChargingState)));
+    connect(qmBattery, SIGNAL(chargerEvent(MeeGo::QmBattery::ChargerType)), this, SLOT(batteryChargerEvent(MeeGo::QmBattery::ChargerType)));
 
-    connect(m_DeviceMode, SIGNAL(devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState)), this, SLOT(devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState)));
+    connect(qmDeviceMode, SIGNAL(devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState)), this, SLOT(devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState)));
 #endif
 
     // Init battery values delayed...
@@ -48,27 +48,20 @@ BatteryBusinessLogic::BatteryBusinessLogic(QObject *parent) :
 BatteryBusinessLogic::~BatteryBusinessLogic()
 {
 #ifdef HAVE_QMSYSTEM
-    delete m_Battery;
-    delete m_DeviceMode;
-    delete m_Led;
+    delete qmBattery;
+    delete qmDeviceMode;
+    delete qmLed;
 #endif
 }
 
-// This method should be called also when the device is returned from sleep mode
 void BatteryBusinessLogic::initBattery()
 {
 #ifdef HAVE_QMSYSTEM
-    //init the charging status
-    chargingStateChanged(m_Battery->getChargingState());
-
-    //init the battery level
-    batteryStateChanged(m_Battery->getBatteryState());
+    chargingStateChanged(qmBattery->getChargingState());
+    batteryStateChanged(qmBattery->getBatteryState());
 #endif
 }
 
-/*!
- * This slot is called by the low battery notifier to send the notifications.
- */
 void BatteryBusinessLogic::lowBatteryAlert()
 {
     sendNotification(NotificationLowBattery);
@@ -79,13 +72,13 @@ void BatteryBusinessLogic::chargingStateChanged(MeeGo::QmBattery::ChargingState 
 {
     switch(state) {
     case MeeGo::QmBattery::StateCharging:
-        if (m_Battery->getChargerType() == MeeGo::QmBattery::USB_100mA) {
+        if (qmBattery->getChargerType() == MeeGo::QmBattery::USB_100mA) {
             sendNotification(NotificationNoEnoughPower);
         } else {
             // The low battery notifications should not be sent when the battery is actually charging.
-            if (m_LowBatteryNotifier != 0) {
-                delete m_LowBatteryNotifier;
-                m_LowBatteryNotifier = 0;
+            if (lowBatteryNotifier != 0) {
+                delete lowBatteryNotifier;
+                lowBatteryNotifier = 0;
             }
 
             removeNotification(QStringList() << "x-nokia.battery.removecharger" << "x-nokia.battery.chargingcomplete");
@@ -117,14 +110,14 @@ void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState st
         break;
 
     case MeeGo::QmBattery::StateLow:
-        if (m_Battery->getChargingState() != MeeGo::QmBattery::StateCharging) {
-            if (m_LowBatteryNotifier == 0) {
-                m_LowBatteryNotifier = new LowBatteryNotifier();
-                connect(m_LowBatteryNotifier, SIGNAL(lowBatteryAlert()), this, SLOT(lowBatteryAlert()));
-                m_LowBatteryNotifier->setTouchScreenLockActive(touchScreenLockActive);
+        if (qmBattery->getChargingState() != MeeGo::QmBattery::StateCharging) {
+            if (lowBatteryNotifier == 0) {
+                lowBatteryNotifier = new LowBatteryNotifier();
+                connect(lowBatteryNotifier, SIGNAL(lowBatteryAlert()), this, SLOT(lowBatteryAlert()));
+                lowBatteryNotifier->setTouchScreenLockActive(touchScreenLockActive);
             }
 
-            m_LowBatteryNotifier->sendLowBatteryAlert();
+            lowBatteryNotifier->sendLowBatteryAlert();
         }
         break;
 
@@ -148,7 +141,7 @@ void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType typ
          * notification should not be shown in case if USB cable is used for
          * charging the device.
          */
-        if (m_ChargerType == MeeGo::QmBattery::Wall) {
+        if (chargerType == MeeGo::QmBattery::Wall) {
             removeNotification(QStringList() << "x-nokia.battery" << "x-nokia.battery.chargingcomplete");
             sendNotification(NotificationRemoveCharger);
         }
@@ -170,7 +163,7 @@ void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType typ
         break;
     }
 
-    m_ChargerType = type;
+    chargerType = type;
 }
 
 void BatteryBusinessLogic::devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState PSMState)
@@ -187,9 +180,9 @@ void BatteryBusinessLogic::utiliseLED(bool activate, const QString &pattern)
 {
 #ifdef HAVE_QMSYSTEM
     if (activate) {
-        m_Led->activate(pattern);
+        qmLed->activate(pattern);
     } else {
-        m_Led->deactivate(pattern);
+        qmLed->deactivate(pattern);
     }
 #endif
 }
@@ -258,31 +251,25 @@ void BatteryBusinessLogic::sendNotification(BatteryBusinessLogic::NotificationID
 
 void BatteryBusinessLogic::sendNotification(const QString &eventType, const QString &text, const QString &icon)
 {
-    if (m_notification != 0) {
-        delete m_notification;
-        m_notification = 0;
+    if (notification != 0) {
+        delete notification;
+        notification = 0;
     }
 
-    /*
-     * We send this signal before the actual notification so it will arrive as
-     * soon as possible.
-     */
-    emit notificationSent(eventType, text, icon);
-
-    m_notification = new MNotification(eventType, "", text);
+    notification = new MNotification(eventType, "", text);
     if (!icon.isEmpty()) {
-        m_notification->setImage(icon);
+        notification->setImage(icon);
     }
-    m_notification->publish();
+    notification->publish();
     notificationTimer.start();
 }
 
 void BatteryBusinessLogic::removeNotification(const QStringList &eventTypes)
 {
-    if (m_notification != 0 && eventTypes.contains(m_notification->eventType()) && notificationTimer.isActive()) {
-        m_notification->remove();
-        delete m_notification;
-        m_notification = 0;
+    if (notification != 0 && eventTypes.contains(notification->eventType()) && notificationTimer.isActive()) {
+        notification->remove();
+        delete notification;
+        notification = 0;
         notificationTimer.stop();
     }
 }
@@ -290,7 +277,7 @@ void BatteryBusinessLogic::removeNotification(const QStringList &eventTypes)
 QString BatteryBusinessLogic::chargingImageId()
 {
 #ifdef HAVE_QMSYSTEM
-    int percentage = m_Battery->getRemainingCapacityPct();
+    int percentage = qmBattery->getRemainingCapacityPct();
 
     if (percentage >= 84) {
         return QString("icon-m-energy-management-charging8");
@@ -316,7 +303,7 @@ QString BatteryBusinessLogic::chargingImageId()
 void BatteryBusinessLogic::setTouchScreenLockActive(bool active)
 {
     touchScreenLockActive = active;
-    if (m_LowBatteryNotifier != NULL) {
-        m_LowBatteryNotifier->setTouchScreenLockActive(active);
+    if (lowBatteryNotifier != NULL) {
+        lowBatteryNotifier->setTouchScreenLockActive(active);
     }
 }

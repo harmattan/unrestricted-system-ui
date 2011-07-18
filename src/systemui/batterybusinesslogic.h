@@ -38,7 +38,16 @@ class BatteryBusinessLogic : public QObject {
     Q_OBJECT
 
 public:
-    BatteryBusinessLogic(QObject* parent = 0);
+    /*!
+     * Creates a new battery business logic.
+     *
+     * \param the parent QObject
+     */
+    BatteryBusinessLogic(QObject *parent = NULL);
+
+    /*!
+     * Destroys the battery business logic.
+     */
     virtual ~BatteryBusinessLogic();
 
     typedef enum {
@@ -53,15 +62,11 @@ public:
         NotificationNoEnoughPower
     } NotificationID;
 
-signals:
-    /*
-     * To simplify the test case we use this signal that we can catch. See 
-     * NB#171466 for further details.
-     */
-    void notificationSent(QString eventType, QString text, QString icon);
-
 public slots:
+    //! Initializes the battery status from the current values given by QmBattery
     void initBattery();
+
+    //! Sends a low battery notification
     void lowBatteryAlert();
 
     /*!
@@ -73,36 +78,54 @@ public slots:
 
 private slots:
 #ifdef HAVE_QMSYSTEM
-    void batteryStateChanged (MeeGo::QmBattery::BatteryState state);
-    void chargingStateChanged (MeeGo::QmBattery::ChargingState state);
-    void batteryChargerEvent (MeeGo::QmBattery::ChargerType type);
-    void devicePSMStateChanged (MeeGo::QmDeviceMode::PSMState PSMState);
+    void batteryStateChanged(MeeGo::QmBattery::BatteryState state);
+    void chargingStateChanged(MeeGo::QmBattery::ChargingState state);
+    void batteryChargerEvent(MeeGo::QmBattery::ChargerType type);
+    void devicePSMStateChanged(MeeGo::QmDeviceMode::PSMState PSMState);
 #endif
     void utiliseLED(bool activate, const QString &pattern);
 
 private:
+    //! Sends a notification based on the notification ID
     void sendNotification(BatteryBusinessLogic::NotificationID id);
+
+    //! Sends a notification
     void sendNotification(const QString &eventType, const QString &text, const QString &icon = QString(""));
+
+    //! Removes the current notification if its type is one listed in eventTypes
     void removeNotification(const QStringList &eventTypes);
+
+    //! Returns the charging image ID based on the current battery level
     QString chargingImageId();
 
-    LowBatteryNotifier *m_LowBatteryNotifier;
-    MNotification *m_notification;
+    //! Low battery notifier for getting notifications about low battery state
+    LowBatteryNotifier *lowBatteryNotifier;
+
+    //! The current notification
+    MNotification *notification;
+
+    //! Timer for checking whether the current notification can be removed or not
     QTimer notificationTimer;
 
     //! Whether the touch screen lock is active or not
     bool touchScreenLockActive;
 
 #ifdef HAVE_QMSYSTEM
-    MeeGo::QmBattery *m_Battery;
-    MeeGo::QmDeviceMode *m_DeviceMode;
-    MeeGo::QmLED *m_Led;
-    MeeGo::QmBattery::ChargerType m_ChargerType;
+    //! For getting battery state
+    MeeGo::QmBattery *qmBattery;
+
+    //! For getting device mode
+    MeeGo::QmDeviceMode *qmDeviceMode;
+
+    //! For controlling the LED
+    MeeGo::QmLED *qmLed;
+
+    //! The current charger type
+    MeeGo::QmBattery::ChargerType chargerType;
 #endif
 
 #ifdef UNIT_TEST
     friend class Ut_BatteryBusinessLogic;
-    friend class Ft_BatteryBusinessLogic;
 #endif
 };
 

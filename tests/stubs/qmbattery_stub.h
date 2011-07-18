@@ -19,6 +19,7 @@
 #ifndef QMBATTERY_STUB
 #define QMBATTERY_STUB
 
+#include <qmbattery.h>
 #include "stubbase.h"
 /*
  * XXX: This stub contains only those methods which are 
