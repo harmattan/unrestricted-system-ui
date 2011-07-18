@@ -26,6 +26,7 @@
 
 #ifdef HAVE_QMSYSTEM
 #include <qmtime.h>
+#include <qmheartbeat.h>
 #endif
 
 /*!
@@ -59,12 +60,14 @@ private:
     virtual void exitDisplayEvent();
     //! \reimp_end
 
+#ifdef HAVE_QMSYSTEM
+    //! QmHeartbeat object for time updates
+    MeeGo::QmHeartbeat qmHeartbeat;
+    //! QmTime object to get the time format
+    MeeGo::QmTime qmTime;
+#else
     //! Update timer
     QTimer timer;
-
-#ifdef HAVE_QMSYSTEM
-    //! QmTime object to get the time format is
-    MeeGo::QmTime qmTime;
 #endif
 
 #ifdef UNIT_TEST

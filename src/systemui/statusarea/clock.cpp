@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "clock.h"
 #include <MLocale>
 
@@ -26,11 +25,15 @@ Clock::Clock(QGraphicsItem *parent) :
 #ifdef HAVE_QMSYSTEM
     // Be interested in changes to system time
     connect(&qmTime, SIGNAL(timeOrSettingsChanged(MeeGo::QmTime::WhatChanged)), this, SLOT(updateModelAndSetupTimer()));
-#endif
 
+    // Configure the heartbeat
+    qmHeartbeat.open(MeeGo::QmHeartbeat::SignalNeeded);
+    connect(&qmHeartbeat, SIGNAL(wakeUp(QTime)), this, SLOT(updateModelAndSetupTimer()));
+#else
     // Configure the timer
     timer.setSingleShot(true);
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateModelAndSetupTimer()));
+#endif
 
     if (isOnDisplay()) {
         // Start updating the time if the clock is already on display, otherwise start updating on the first enterDisplayEvent()
@@ -54,17 +57,31 @@ void Clock::updateModelAndSetupTimer()
     time.setHMS(time.hour(), time.minute(), 0);
     nextUpdateTime.setTime(time);
 
+#ifdef HAVE_QMSYSTEM
+    qmHeartbeat.wait(currentTime.secsTo(nextUpdateTime) + 1,
+                     currentTime.secsTo(nextUpdateTime) + 2,
+                     MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
+#else
     // Set the time of the next update and start the timer. The extra one second is used for rounding up to make sure that we always hit the next minute, not the current one.
     timer.start((currentTime.secsTo(nextUpdateTime) + 1) * 1000);
+#endif
 }
 
 void Clock::enterDisplayEvent()
 {
+#ifdef HAVE_QMSYSTEM
+    qmHeartbeat.IWokeUp();
+#else
     timer.stop();
+#endif
     updateModelAndSetupTimer();
 }
 
 void Clock::exitDisplayEvent()
 {
+#ifdef HAVE_QMSYSTEM
+    qmHeartbeat.IWokeUp();
+#else
     timer.stop();
+#endif
 }

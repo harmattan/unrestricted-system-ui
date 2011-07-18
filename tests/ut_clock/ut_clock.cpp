@@ -20,6 +20,7 @@
 #include <QtTest/QtTest>
 #ifdef HAVE_QMSYSTEM
 #include <qmtime.h>
+#include <qmheartbeat.h>
 #endif
 #include "ut_clock.h"
 #include "clock.h"
@@ -49,6 +50,31 @@ void QTimer::stop()
     Ut_Clock::timerTimeout = -1;
 }
 
+#ifdef HAVE_QMSYSTEM
+int gMintime, gMaxtime;
+bool gHeartBeatServiceOpened = false;
+MeeGo::QmHeartbeat::SignalNeed gSignalNeed;
+bool MeeGo::QmHeartbeat::open(MeeGo::QmHeartbeat::SignalNeed signalNeed) {
+    gSignalNeed = signalNeed;
+    return gHeartBeatServiceOpened = true;
+}
+
+bool gWakeUp = false;
+bool MeeGo::QmHeartbeat::IWokeUp(void)
+{
+   return gWakeUp = true;
+}
+
+MeeGo::QmHeartbeat::WaitMode gWaitMode;
+QTime MeeGo::QmHeartbeat::wait(unsigned short mintime, unsigned short maxtime, QmHeartbeat::WaitMode wait)
+{
+   gMintime = mintime;
+   gMaxtime = maxtime;
+   gWaitMode = wait;
+   return QTime();
+}
+#endif
+
 int Ut_Clock::timerTimeout = -1;
 QDateTime Ut_Clock::expectedDateTime;
 
@@ -66,6 +92,14 @@ void Ut_Clock::cleanupTestCase()
 // Called before each testfunction is executed
 void Ut_Clock::init()
 {
+#ifdef HAVE_QMSYSTEM
+    gMintime = 0;
+    gMaxtime = 0;
+    gWakeUp = false;
+    gWaitMode = MeeGo::QmHeartbeat::WaitHeartbeat;
+    gSignalNeed = MeeGo::QmHeartbeat::NoSignalNeeded;
+    gHeartBeatServiceOpened = false;
+#endif
     m_subject = new Clock;
 }
 
@@ -94,14 +128,28 @@ void Ut_Clock::testConstruction()
     mWidgetIsOnDisplay = isOnDisplay;
     m_subject = new Clock;
 
+#ifdef HAVE_QMSYSTEM
+    QCOMPARE(gHeartBeatServiceOpened, true);
+    QCOMPARE(gSignalNeed, MeeGo::QmHeartbeat::SignalNeeded);
+    QVERIFY(disconnect(&m_subject->qmHeartbeat, SIGNAL(wakeUp(QTime)), m_subject, SLOT(updateModelAndSetupTimer())));
+#else
     QVERIFY(disconnect(&m_subject->timer, SIGNAL(timeout()), m_subject, SLOT(updateModelAndSetupTimer())));
     QVERIFY(m_subject->timer.isSingleShot());
+#endif
+
     QDateTime nextUpdateTime = expectedDateTime.addSecs(60);
     QTime time = nextUpdateTime.time();
     time.setHMS(time.hour(), time.minute(), 0);
     nextUpdateTime.setTime(time);
+
     if (isOnDisplay) {
+#ifdef HAVE_QMSYSTEM
+        QCOMPARE(gMintime, expectedDateTime.secsTo(nextUpdateTime) + 1);
+        QCOMPARE(gMaxtime, expectedDateTime.secsTo(nextUpdateTime) + 2);
+        QCOMPARE(gWaitMode, MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
+#else
         QVERIFY(timerTimeout > expectedDateTime.msecsTo(nextUpdateTime));
+#endif
     } else {
         QCOMPARE(timerTimeout, -1);
     }
@@ -116,18 +164,44 @@ void Ut_Clock::testTimeUpdate()
 
 void Ut_Clock::testModelUpdates()
 {
-    // The timer should be running by default and the model should contain the current time
-    QVERIFY(timerTimeout >= 0);
+#ifdef HAVE_QMSYSTEM
+    // qmHeartbeat.wait() is called with proper parameters
+    // Seconds to next update time should be 60
+    QCOMPARE(gMintime, 60 + 1);
+    QCOMPARE(gMaxtime, 60 + 2);
+    QCOMPARE(gWaitMode, MeeGo::QmHeartbeat::DoNotWaitHeartbeat);
+#else
+    // Check if the timer is running
+    QVERIFY(timerTimeout >=0);
+#endif
+    // The model should contain the current time
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 
-    // When the application becomes invisible the timer should stop
+    // Check when the application becomes invisible
     m_subject->exitDisplayEvent();
+#ifdef HAVE_QMSYSTEM
+    // qmHeartbeat IWokeUp() is called
+    QCOMPARE(gWakeUp, true);
+#else
+    // The timer should stop
     QCOMPARE(timerTimeout, -1);
+#endif
 
-    // When the application becomes visible the timer should start and the model should be updated to contain the current time
+    // Check when the application becomes visible
+#ifdef HAVE_QMSYSTEM
+    gWakeUp = false;
+#endif
     expectedDateTime = QDateTime(QDate(2001, 1, 1));
     m_subject->enterDisplayEvent();
-    QVERIFY(timerTimeout >= 0);
+
+#ifdef HAVE_QMSYSTEM
+    // qmHeartbeat IWokeUp() is called
+    QCOMPARE(gWakeUp, true);
+#else
+    // The timer should start
+    QVERIFY(timerTimeout >=0);
+#endif
+    //The model should be updated to contain the current time
     QCOMPARE(m_subject->model()->time(), expectedDateTime);
 }
 
