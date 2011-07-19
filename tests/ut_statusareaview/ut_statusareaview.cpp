@@ -89,6 +89,12 @@ void Ut_StatusAreaView::testSignalConnections()
     QVERIFY(disconnect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), m_subject->portraitNotificationIndicator, SLOT(setIconID(QString))));
 }
 
+void Ut_StatusAreaView::testObjectNames()
+{
+    QCOMPARE(m_subject->landscapePhoneNetworkIndicator->objectName(), QString("PhoneNetworkStatusIndicatorLandscape"));
+    QCOMPARE(m_subject->portraitPhoneNetworkIndicator->objectName(), QString("PhoneNetworkStatusIndicatorPortrait"));
+}
+
 void Ut_StatusAreaView::testStyleNamesFollowCallState()
 {
     QVERIFY(disconnect(m_subject->callContextItem, SIGNAL(contentsChanged()), m_subject, SLOT(setStyleNames())));

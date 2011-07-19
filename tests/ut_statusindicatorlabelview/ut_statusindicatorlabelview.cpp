@@ -35,12 +35,6 @@ StatusIndicatorModel *TestStatusIndicatorLabelView::getModel()
     return model();
 }
 
-QString gMLabelText;
-void MLabel::setText(const QString &text)
-{
-    gMLabelText = text;
-}
-
 void Ut_StatusIndicatorLabelView::initTestCase()
 {
     static int argc = 1;
@@ -58,8 +52,6 @@ void Ut_StatusIndicatorLabelView::init()
     controller = new StatusIndicator;
     m_subject = new TestStatusIndicatorLabelView(controller);
     controller->setView(m_subject);
-
-    gMLabelText.clear();
 }
 
 void Ut_StatusIndicatorLabelView::cleanup()
@@ -70,16 +62,36 @@ void Ut_StatusIndicatorLabelView::cleanup()
 void Ut_StatusIndicatorLabelView::testLabelChanged()
 {
     m_subject->getModel()->setValue("newValue");
-    QCOMPARE(gMLabelText, QString("newValue"));
+    QCOMPARE(m_subject->label->text(), QString("newValue"));
+}
+
+void Ut_StatusIndicatorLabelView::testStylePostfixChanged()
+{
+    controller->setObjectName("Test");
+    m_subject->getModel()->setStylePostfix("Postfix1");
+    QCOMPARE(m_subject->label->styleName(), QString("StatusIndicatorLabelPostfix1"));
+
+    controller->setObjectName("TestPortrait");
+    m_subject->getModel()->setStylePostfix("Postfix2");
+    QCOMPARE(m_subject->label->styleName(), QString("StatusIndicatorLabelPortraitPostfix2"));
 }
 
 void Ut_StatusIndicatorLabelView::testModelChanged()
 {
+    controller->setObjectName("TestLandscape");
     StatusIndicatorModel *m = new StatusIndicatorModel;
     m->setValue("newValue");
     m_subject->setModel(m);
-    QCOMPARE(gMLabelText, QString("newValue"));
-}
+    QCOMPARE(m_subject->label->text(), QString("newValue"));
+    QCOMPARE(m_subject->label->styleName(), QString("StatusIndicatorLabelLandscape"));
 
+    controller->setObjectName("TestPortrait");
+    m = new StatusIndicatorModel;
+    m->setValue("anotherValue");
+    m->setStylePostfix("TestPostfix");
+    m_subject->setModel(m);
+    QCOMPARE(m_subject->label->text(), QString("anotherValue"));
+    QCOMPARE(m_subject->label->styleName(), QString("StatusIndicatorLabelPortraitTestPostfix"));
+}
 
 QTEST_APPLESS_MAIN(Ut_StatusIndicatorLabelView)

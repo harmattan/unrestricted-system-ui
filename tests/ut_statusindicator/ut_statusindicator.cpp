@@ -21,6 +21,7 @@
 #include <MApplication>
 #include <MOnDisplayChangeEvent>
 #include <MLocale>
+#include <MGConfItem>
 #include "ut_statusindicator.h"
 #include "statusindicator.h"
 #include "statusindicatoranimationview.h"
@@ -65,17 +66,30 @@ bool timerStarted = false;
 void QTimer::start()
 {
     timerStarted = true;
+    id = 1;
 }
 
 void QTimer::stop()
 {
     timerStarted = false;
+    id = -1;
 }
 
 QString gMLocaleLanguage;
 QString MLocale::language() const
 {
     return gMLocaleLanguage;
+}
+
+// MGConfItem stubs
+QVariant mGConfItemValueForDisplayLimitedServiceState;
+QVariant MGConfItem::value(const QVariant &def) const
+{
+    if (key() == "/desktop/meego/status_area/display_limited_service_state") {
+        return QVariant(mGConfItemValueForDisplayLimitedServiceState.isNull() ? def : mGConfItemValueForDisplayLimitedServiceState);
+    }
+
+    return QVariant();
 }
 
 void Ut_StatusIndicator::init()
@@ -90,6 +104,7 @@ void Ut_StatusIndicator::cleanup()
 {
     delete m_subject;
     delete testContext;
+    mGConfItemValueForDisplayLimitedServiceState = QVariant();
 }
 
 void Ut_StatusIndicator::initTestCase()
@@ -193,6 +208,7 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName_data()
     QTest::newRow("Empty registration status") << false << QString("") << QString("NoNetwork");
     QTest::newRow("Offline registration status") << false << QString("offline") << QString("NoNetwork");
     QTest::newRow("Forbidden registration status") << false << QString("forbidden") << QString("NoNetwork");
+    QTest::newRow("No-service registration status") << false << QString("no-service") << QString("NoNetwork");
     QTest::newRow("Home registration status") << false << QString("home") << QString("");
     QTest::newRow("Roam registration status") << false << QString("roam") << QString("");
 }
@@ -534,19 +550,27 @@ void Ut_StatusIndicator::testPhoneNetwork_data() {
     QTest::addColumn<QString>("visitor");
     QTest::addColumn<QString>("language");
     QTest::addColumn<QString>("extnetstring");
+    QTest::addColumn<QString>("servicestatus");
+    QTest::addColumn<QVariant>("displayLimitedServiceState");
+    QTest::addColumn<QString>("stylePostfix");
 
-    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString() << "" << "";
-    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar" << "" << "";
-    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString() << "" << "";
-    QTest::newRow("MissingBoth") << QString() << QString() << QString() << "" << "";
-    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo" << "" << "";
-    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString() << "" << "";
-    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString() << "" << "";
-    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar" << "" << "";
-    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()" << "" << "";
-    QTest::newRow("ChineseLocale") << "foo" << "bar" << "" << "zh" << "bar";
-    QTest::newRow("ChineseLocaleNoExtNetString") << "foo" << "foo" << "" << "zh" << "";
-    QTest::newRow("ChineseLocaleVisitor") << "foo" << "bar" << "meh" << "zh" << "bar (meh)";
+    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar" << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("MissingBoth") << QString() << QString() << QString() << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo" << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar" << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()" << "" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocale") << "foo" << "bar" << "" << "zh" << "bar" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocaleNoExtNetString") << "foo" << "foo" << "" << "zh" << "" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocaleVisitor") << "foo" << "bar" << "meh" << "zh" << "bar (meh)" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("EmptyServiceStatus") << "F!o" << "F!o" << QString() << "" << "" << "" << QVariant(true) << QString();
+    QTest::newRow("NoCoverageServiceStatus") << "F!o" << "F!o" << QString() << "" << "" << "NoCoverage" << QVariant(true) << QString();
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayEnabled") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "LimitedService" << QVariant(true) << "LimitedService";
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayNotSet") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "LimitedService" << QVariant() << "LimitedService";
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayDisabled") << "F!o" << "F!o" << QString() << "" << "" << "LimitedService" << QVariant(false) << QString();
 }
 
 void Ut_StatusIndicator::testPhoneNetwork()
@@ -556,31 +580,33 @@ void Ut_StatusIndicator::testPhoneNetwork()
     QFETCH(QString, visitor);
     QFETCH(QString, language);
     QFETCH(QString, extnetstring);
+    QFETCH(QString, servicestatus);
+    QFETCH(QVariant, displayLimitedServiceState);
+    QFETCH(QString, stylePostfix);
 
     gMLocaleLanguage = language;
+    mGConfItemValueForDisplayLimitedServiceState = displayLimitedServiceState;
 
     StatusIndicator *m_subject = new PhoneNetworkStatusIndicator(*testContext);
 
     testContextItems["Cellular.NetworkName"]->setValue(QVariant(netstring));
     testContextItems["Cellular.ExtendedNetworkName"]->setValue(QVariant(extnetstring));
+    testContextItems["Cellular.ServiceStatus"]->setValue(QVariant(servicestatus));
     PhoneNetworkStatusIndicator* indicator = qobject_cast<PhoneNetworkStatusIndicator*>(m_subject);
 
-    // reconnect timer timeout and check that reconnection fails i.e. is already connected
-    bool disconnectSuccess = disconnect(&indicator->networkChangeShowVisitorTimer, SIGNAL(timeout()), indicator, SLOT(showVisitorNetworkName()));
-    QCOMPARE(disconnectSuccess, true);
+    // Check that the network change timer is connected
+    QCOMPARE(disconnect(&indicator->networkChangeShowVisitorTimer, SIGNAL(timeout()), indicator, SLOT(showVisitorNetworkName())), true);
 
-    // test methods
-    QCOMPARE(indicator->homeNetwork(), home);
-    QCOMPARE(indicator->visitorNetwork(), visitor);
+    // Check that registration status changes are interesting if limited service state display is enabled
+    QCOMPARE(disconnect(indicator->cellularServiceStatus, SIGNAL(contentsChanged()), indicator, SLOT(phoneNetworkChanged())), displayLimitedServiceState.isNull() ? true : displayLimitedServiceState.toBool());
+
+    // Check style postfix
+    QCOMPARE(m_subject->model()->stylePostfix(), stylePostfix);
 
     // check if home network is visible at first
     QCOMPARE(m_subject->model()->value(), QVariant(QString(home)));
 
-    if (home.isEmpty() && visitor.isEmpty() ) {
-        QVERIFY(((bool)m_subject->styleName().contains("Disabled")));
-    } else {
-        QVERIFY(!((bool)m_subject->styleName().contains("Disabled")));
-    }
+    QCOMPARE(((bool)m_subject->styleName().contains("Disabled")), home.isEmpty() && visitor.isEmpty());
 
     if (home.isEmpty() || visitor.isEmpty() || (home == visitor)) {
         // check if home or visitor empty or same, timer is not started

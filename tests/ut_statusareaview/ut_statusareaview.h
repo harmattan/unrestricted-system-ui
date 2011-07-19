@@ -37,6 +37,7 @@ private slots:
     void cleanup();
 
     void testSignalConnections();
+    void testObjectNames();
     void testStyleNamesFollowCallState();
 
 private:

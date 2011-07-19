@@ -47,7 +47,7 @@ void StatusIndicatorLabelView::setupModel()
 {
     MWidgetView::setupModel();
 
-    label->setText(model()->value().toString());
+    updateData(QList<const char *>() << StatusIndicatorModel::Value << StatusIndicatorModel::StylePostfix);
 }
 
 void StatusIndicatorLabelView::updateData(const QList<const char *>& modifications)
@@ -58,12 +58,16 @@ void StatusIndicatorLabelView::updateData(const QList<const char *>& modificatio
     foreach(member, modifications) {
         if (strcmp(member, StatusIndicatorModel::Value) == 0) {
             label->setText(model()->value().toString());
-        } else if (strcmp(member, MWidgetModel::StyleName) == 0) {
-            if (controller->styleName().contains("Landscape")) {
-                label->setStyleName("StatusIndicatorLabelLandscape");
-            } else if (controller->styleName().contains("Portrait")) {
-                label->setStyleName("StatusIndicatorLabelPortrait");
+        } else if (strcmp(member, StatusIndicatorModel::StylePostfix) == 0) {
+            QString prefix;
+            if (controller->objectName().contains("Landscape")) {
+                prefix = "StatusIndicatorLabelLandscape";
+            } else if (controller->objectName().contains("Portrait")) {
+                prefix = "StatusIndicatorLabelPortrait";
+            } else {
+                prefix = "StatusIndicatorLabel";
             }
+            label->setStyleName(prefix + model()->stylePostfix());
         }
     }
 }

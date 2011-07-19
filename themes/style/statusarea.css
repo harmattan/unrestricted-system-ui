@@ -171,7 +171,7 @@ MLabelStyle#StatusIndicatorLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    maximum-size: 13.0mm -1;
+    maximum-size: 30.0mm -1;
 }
 
 MLabelStyle#StatusIndicatorLabelLandscape {
@@ -194,6 +194,48 @@ MLabelStyle#StatusIndicatorLabelPortrait {
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    maximum-size: 30.0mm -1;
+}
+
+MLabelStyle#StatusIndicatorLabelLimitedService {
+    font: $FONT_FAMILY normal 1.4mm;
+    color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0.3mm;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    maximum-size: 30.0mm -1;
+}
+
+MLabelStyle#StatusIndicatorLabelLandscapeLimitedService {
+    font: $FONT_FAMILY normal 1.4mm;
+    color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0.3mm;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    maximum-size: 55.0mm -1;
+}
+
+MLabelStyle#StatusIndicatorLabelPortraitLimitedService {
+    font: $FONT_FAMILY normal 1.4mm;
+    color: #FFFFFF;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0.3mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;

@@ -31,6 +31,7 @@
 
 class ApplicationContext;
 class ContextItem;
+class MGConfItem;
 
 /*!
  * StatusIndicator is a widget for displaying either image or text based status
@@ -367,6 +368,8 @@ private:
 
     ContextItem *networkName;
     ContextItem *extendedNetworkName;
+    ContextItem *cellularServiceStatus;
+    MGConfItem *displayLimitedServiceState;
     QTimer networkChangeShowVisitorTimer;
 
 #ifdef UNIT_TEST

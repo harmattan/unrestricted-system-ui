@@ -55,6 +55,7 @@ private slots:
 
     // Test cases
     void testLabelChanged();
+    void testStylePostfixChanged();
     void testModelChanged();
 
 private:

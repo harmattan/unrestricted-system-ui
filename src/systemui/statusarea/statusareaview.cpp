@@ -101,9 +101,9 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     QDBusConnection::sessionBus().registerService("com.meego.core.MInputMethodStatusIndicator");
     QDBusConnection::sessionBus().registerObject("/inputmethodstatusindicator", landscapeInputMethodIndicator);
 
-    // Set different style names to PhoneNetworkStatusIndicator in landscape and portrait
-    landscapePhoneNetworkIndicator->setStyleName(QString(landscapePhoneNetworkIndicator->metaObject()->className()) + "Landscape");
-    portraitPhoneNetworkIndicator->setStyleName(QString(portraitPhoneNetworkIndicator->metaObject()->className()) + "Portrait");
+    // Set different object names to PhoneNetworkStatusIndicator in landscape and portrait
+    landscapePhoneNetworkIndicator->setObjectName(QString(landscapePhoneNetworkIndicator->metaObject()->className()) + "Landscape");
+    portraitPhoneNetworkIndicator->setObjectName(QString(portraitPhoneNetworkIndicator->metaObject()->className()) + "Portrait");
 
     // Connect notification signals
     connect(&Sysuid::instance()->notificationStatusIndicatorSink(), SIGNAL(iconIdChanged(QString)), landscapeNotificationIndicator, SLOT(setIconID(QString)));

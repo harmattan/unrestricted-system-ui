@@ -30,6 +30,7 @@ class StatusIndicatorModel : public MWidgetModel
     M_MODEL(StatusIndicatorModel)
     M_MODEL_PROPERTY(QVariant, value, Value, true, QVariant())
     M_MODEL_PROPERTY(bool, animate, Animate, true, false)
+    M_MODEL_PROPERTY(QString, stylePostfix, StylePostfix, true, QString())
 };
 
 class PhoneNetworkSignalStrengthStatusIndicatorModel : public StatusIndicatorModel

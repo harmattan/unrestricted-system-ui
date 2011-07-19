@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include <MApplication>
 #include <MLocale>
+#include <MGConfItem>
 #include "statusindicator.h"
 #include "statusindicatormodel.h"
 #include "applicationcontext.h"
@@ -157,13 +158,13 @@ void PhoneNetworkSignalStrengthStatusIndicator::setNetworkStatus()
     QString postFix;
 
     bool offlineMode = systemOfflineMode->value().toBool();
-    QString status = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden
+    QString status = cellularRegistrationStatus->value().toString(); // home roam no-sim offline forbidden no-service
 
     if (offlineMode) {
         postFix = "Offline";
     } else if (status == "no-sim") {
         postFix = "NoSIM";
-    } else if (status == "" || status == "offline" || status == "forbidden") {
+    } else if (status == "" || status == "offline" || status == "forbidden" || status == "no-service") {
         postFix = "NoNetwork";
     }
 
@@ -444,8 +445,11 @@ PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &con
 
     networkName = createContextItem(context, "Cellular.NetworkName");
     extendedNetworkName = createContextItem(context, "Cellular.ExtendedNetworkName");
+    cellularServiceStatus = createContextItem(context, "Cellular.ServiceStatus");
+    displayLimitedServiceState = new MGConfItem("/desktop/meego/status_area/display_limited_service_state", this);
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
     connect(extendedNetworkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+    connect(displayLimitedServiceState, SIGNAL(valueChanged()), this, SLOT(phoneNetworkChanged()));
     connect(&networkChangeShowVisitorTimer, SIGNAL(timeout()), this, SLOT(showVisitorNetworkName()));
     networkChangeShowVisitorTimer.setSingleShot(true);
     networkChangeShowVisitorTimer.setInterval(3 * 1000);
@@ -504,11 +508,34 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
     if (networkChangeShowVisitorTimer.isActive()) {
         networkChangeShowVisitorTimer.stop();
     }
-    QString home(homeNetwork());
-    QString visitor(visitorNetwork());
+
+    // Check whether limited service state displaying is enabled
+    bool limitedService = false;
+    bool displayLimitedServiceStateEnabled = displayLimitedServiceState->value(true).toBool();
+    if (displayLimitedServiceStateEnabled) {
+        // Limited service state should be displayed: Changes in the cellular service status are interesting
+        connect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()), Qt::UniqueConnection);
+
+        // Check if there is limited service
+        limitedService = cellularServiceStatus->value().toString() == "LimitedService";
+    } else {
+        // Limited service state should be displayed: Changes in the cellular service status are not interesting
+        disconnect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+    }
+
+    QString home;
+    QString visitor;
+    if (limitedService) {
+        home = qtTrId("qtn_cell_emergency_calls_only");
+        model()->setStylePostfix("LimitedService");
+    } else {
+        home = homeNetwork();
+        visitor = visitorNetwork();
+        model()->setStylePostfix("");
+    }
     setValue(home);
 
-    if(visitor.isEmpty() && home.isEmpty()) {
+    if (visitor.isEmpty() && home.isEmpty()) {
         setStyleNameAndUpdate(QString(metaObject()->className()) + "Disabled");
     } else {
         setStyleNameAndUpdate(metaObject()->className());
