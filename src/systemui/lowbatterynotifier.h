@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <QTime>
+#include "contextframeworkcontext.h"
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -71,17 +72,29 @@ private:
     MeeGo::QmDisplayState *displayState;
 #endif
 
+    //! Context framework application context
+    ContextFrameworkContext contextFrameworkContext;
+
+    //! Call state context framework key
+    ContextItem *callContextItem;
+
     //! Timer for sending low battery alerts
     QTimer *notificationTimer;
 
     //! Time of the previous notification
     QTime previousNotificationTime;
 
+    //! Notification interval in milliseconds based on the device and call state
+    int notificationInterval;
+
     //! Whether the device is currently inactive or not
     bool deviceInactive;
 
     //! Whether the touch screen lock is active or not
     bool touchScreenLockActive;
+
+    //! Whether a call is in progress or not
+    bool callActive;
 
 #ifdef UNIT_TEST
     friend class Ut_LowBatteryNotifier;

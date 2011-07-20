@@ -19,28 +19,38 @@
 #include "lowbatterynotifier.h"
 #include <QTimer>
 
-static const int DEVICE_ACTIVE_NOTIFICATION_INTERVAL = 5 * 60 * 1000; // 5 mins
-static const int DEVICE_INACTIVE_NOTIFICATION_INTERVAL = 30 * 60 * 1000; // 30 mins
+static const int CALL_ACTIVE_NOTIFICATION_INTERVAL = 2 * 60 * 1000;
+static const int DEVICE_ACTIVE_NOTIFICATION_INTERVAL = 5 * 60 * 1000;
+static const int DEVICE_INACTIVE_NOTIFICATION_INTERVAL = 30 * 60 * 1000;
 
 LowBatteryNotifier::LowBatteryNotifier(QObject *parent) :
     QObject(parent),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState(this)),
 #endif
+    callContextItem(contextFrameworkContext.createContextItem("Phone.Call")),
     notificationTimer(new QTimer(this)),
     previousNotificationTime(QTime::currentTime()),
+    notificationInterval(DEVICE_ACTIVE_NOTIFICATION_INTERVAL),
     deviceInactive(false),
-    touchScreenLockActive(false)
+    touchScreenLockActive(false),
+    callActive(false)
 {
+    connect(notificationTimer, SIGNAL(timeout()), this, SLOT(sendLowBatteryAlert()));
+
+    setNotificationInterval();
+
 #ifdef HAVE_QMSYSTEM
     connect(displayState, SIGNAL(displayStateChanged(MeeGo::QmDisplayState::DisplayState)), this, SLOT(setNotificationInterval()));
 #endif
-    connect(notificationTimer, SIGNAL(timeout()), this, SLOT(sendLowBatteryAlert()));
-    setNotificationInterval();
+
+    connect(callContextItem, SIGNAL(contentsChanged()), this, SLOT(setNotificationInterval()));
+    callContextItem->subscribe();
 }
 
 LowBatteryNotifier::~LowBatteryNotifier()
 {
+    delete callContextItem;
 }
 
 void LowBatteryNotifier::sendLowBatteryAlert()
@@ -48,33 +58,37 @@ void LowBatteryNotifier::sendLowBatteryAlert()
     emit lowBatteryAlert();
 
     previousNotificationTime.start();
-    notificationTimer->start(deviceInactive ? DEVICE_INACTIVE_NOTIFICATION_INTERVAL : DEVICE_ACTIVE_NOTIFICATION_INTERVAL);
+    notificationTimer->start(notificationInterval);
 }
 
 void LowBatteryNotifier::setNotificationInterval()
 {
     bool deviceCurrentlyInactive = touchScreenLockActive;
+    bool callCurrentlyActive = callContextItem->value().toBool();
 
 #ifdef HAVE_QMSYSTEM
     // Device can be considered inactive only if the touch screen lock is active AND the display is off
     deviceCurrentlyInactive &= displayState->get() == MeeGo::QmDisplayState::Off;
 #endif
 
-    if (deviceCurrentlyInactive != deviceInactive) {
+    if (deviceCurrentlyInactive != deviceInactive || callCurrentlyActive != callActive) {
+        // Device activity or call activity has changed
         deviceInactive = deviceCurrentlyInactive;
+        callActive = callCurrentlyActive;
 
-        if (deviceInactive) {
-            // Device inactive interval is longer than the active interval, so even if the timer is already running the interval can be increased
-            notificationTimer->setInterval(DEVICE_INACTIVE_NOTIFICATION_INTERVAL - previousNotificationTime.elapsed());
+        // Set the new notification interval based on the device and call state
+        if (callActive) {
+            notificationInterval = CALL_ACTIVE_NOTIFICATION_INTERVAL;
         } else {
-            // Device active interval is shorter than the inactive interval, so the elapsed time must be checked
-            if (previousNotificationTime.elapsed() < DEVICE_ACTIVE_NOTIFICATION_INTERVAL) {
-                // Elapsed time has not reached the active interval so just decrease the interval
-                notificationTimer->setInterval(DEVICE_ACTIVE_NOTIFICATION_INTERVAL - previousNotificationTime.elapsed());
-            } else {
-                // Elapsed time has reached the active interval, so send the notification immediately
-                sendLowBatteryAlert();
-            }
+            notificationInterval = deviceInactive ? DEVICE_INACTIVE_NOTIFICATION_INTERVAL : DEVICE_ACTIVE_NOTIFICATION_INTERVAL;
+        }
+
+        if (previousNotificationTime.elapsed() < notificationInterval) {
+            // Elapsed time has not reached the notification interval so just set the new interval
+            notificationTimer->setInterval(notificationInterval - previousNotificationTime.elapsed());
+        } else {
+            // Elapsed time has reached the notification interval, so send the notification immediately (which will also set the new interval)
+            sendLowBatteryAlert();
         }
     }
 }

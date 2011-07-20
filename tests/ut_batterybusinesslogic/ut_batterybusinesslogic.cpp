@@ -21,6 +21,8 @@
 #include <MNotification>
 
 #include "lowbatterynotifier_stub.h"
+#include "contextframeworkcontext_stub.h"
+#include "contextframeworkitem_stub.h"
 #ifdef HAVE_QMSYSTEM
 #include "qmled_stub.h"
 #include "qmbattery_stub.h"

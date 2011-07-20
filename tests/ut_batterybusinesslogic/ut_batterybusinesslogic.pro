@@ -6,6 +6,8 @@ HEADERS += \
     ut_batterybusinesslogic.h \
     $$SRCDIR/batterybusinesslogic.h \
     $$SRCDIR/lowbatterynotifier.h \
+    $$SRCDIR/contextframeworkcontext.h \
+    $$SRCDIR/applicationcontext.h \
     $$STUBSDIR/qmled_stub.h \
     $$STUBSDIR/qmbattery_stub.h \
     $$STUBSDIR/qmdevicemode_stub.h \

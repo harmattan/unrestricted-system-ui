@@ -9,6 +9,8 @@ SOURCES += \
 
 HEADERS += \
     ut_lowbatterynotifier.h \
-    $$SRCDIR/lowbatterynotifier.h
+    $$SRCDIR/lowbatterynotifier.h \
+    $$SRCDIR/contextframeworkcontext.h \
+    $$SRCDIR/applicationcontext.h
 
 include(../common_bot.pri)
