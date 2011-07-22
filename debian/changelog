@@ -1,11 +1,10 @@
-system-ui (1.1.1~1) unstable; urgency=low
+system-ui (1.1.1-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#272983 - Dismiss "Unplug charger..." notification immediately and show "Charging" when charger is plugged in
   * Fixes: NB#272626 - [TASK] proper indication of "battery low" state on status area
   * Fixes: NB#272833 - [TASK] when the call is active and battery is low, alert user at every 2 min interval regardless of display states
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 12 Jul 2011 11:50:06 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 22 Jul 2011 12:09:56 +0300
 
 system-ui (1.1.0-1) unstable; urgency=low
 
