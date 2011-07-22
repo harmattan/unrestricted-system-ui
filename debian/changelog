@@ -1,3 +1,9 @@
+system-ui (1.1.2~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 22 Jul 2011 12:10:23 +0300
+
 system-ui (1.1.1-1) unstable; urgency=low
 
   * Fixes: NB#272983 - Dismiss "Unplug charger..." notification immediately and show "Charging" when charger is plugged in
