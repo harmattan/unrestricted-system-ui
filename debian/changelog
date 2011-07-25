@@ -1,6 +1,7 @@
 system-ui (1.1.2~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#272599 - System banners should be prioritized over short event banners (a.k.a. notification previews)
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 25 Jul 2011 15:03:45 +0300
 

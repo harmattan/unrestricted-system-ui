@@ -554,6 +554,24 @@ Notification::NotificationType NotificationManager::determineType(const Notifica
     return classStr == SYSTEM_EVENT_ID ? Notification::SystemEvent : Notification::ApplicationEvent;
 }
 
+int NotificationManager::insertPosition(const Notification &notification)
+{
+    int pos = 0;
+    const NotificationParameters parameters = notification.parameters();
+    if(parameters.value("class") != QString("system")) {
+        return waitQueue.size();
+    } else {
+        for(pos = 0; pos < waitQueue.count(); ++pos) {
+            if (waitQueue.at(pos).parameters().value("class") == QString("system")) {
+                continue;
+            } else {
+                return pos;
+            }
+        }
+        return pos;
+    }
+}
+
 void NotificationManager::submitNotification(const Notification &notification)
 {
     if (!notificationInProgress) {
@@ -570,7 +588,7 @@ void NotificationManager::submitNotification(const Notification &notification)
     } else {
         // Store new notification in the notification wait queue
         if ((uint)waitQueue.size() < maxWaitQueueSize) {
-            waitQueue.append(notification);
+            waitQueue.insert(insertPosition(notification), notification);
         }
     }
 }

@@ -342,6 +342,9 @@ private:
     //! Whether store initialization is subsequent after initialization in boot
     bool subsequentStart;
 
+    //! Returns the position where notification should be inserted in the queue, depending upon type of notification
+    int insertPosition(const Notification &notification);
+
 #ifdef UNIT_TEST
     friend class Ut_NotificationManager;
 #endif

@@ -140,6 +140,10 @@ private slots:
     void testRemovingGroupsWithEventType();
     // Test removal of unseen flags from notifications
     void testRemovalOfUnseenFlags();
+    // Test that system notifications are input always at the front of the queue
+    void testSytemNotificationArePrepended();
+    // Test when system banners are queued, they follow the order in which they are added
+    void testSystemBannersWhenQueuedMaintainTheirOrder();
 
     // Test that relevant signals are connected to the DBus sink
     void testDBusNotificationSinkConnections();

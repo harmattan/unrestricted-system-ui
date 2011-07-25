@@ -1672,4 +1672,79 @@ void Ut_NotificationManager::testPruningNonPersistentNotificationsOnBoot()
     QCOMPARE(spy.count(), 1);
 }
 
+
+void Ut_NotificationManager::testSytemNotificationArePrepended()
+{
+    delete manager;
+    manager = new TestNotificationManager(-1);
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    NotificationParameters parameters0;
+    parameters0.add(IMAGE, "icon0");
+    uint idnotification = manager->addNotification(0, parameters0);
+
+    NotificationParameters parameters1;
+    parameters1.add(BODY, "body1");
+    manager->addNotification(0, parameters1);
+
+    NotificationParameters parameters2;
+    parameters2.add(CLASS, "system");
+    uint idsystem = manager->addNotification(0, parameters2);
+
+    // Check that notification sink was signaled with one notification.
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), idnotification);
+
+    // Relay next notification
+    manager->relayNextNotification();
+
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    n = qvariant_cast<Notification>(arguments.at(0));
+    // Inserting in order, application application system and expecting in order application system application
+    QCOMPARE(n.notificationId(), idsystem);
+}
+
+void Ut_NotificationManager::testSystemBannersWhenQueuedMaintainTheirOrder()
+{
+    delete manager;
+    manager = new TestNotificationManager(-1);
+    QSignalSpy spy(manager, SIGNAL(notificationUpdated(Notification)));
+
+    NotificationParameters parameters0;
+    parameters0.add(CLASS, "system");
+    uint idsystem0 = manager->addNotification(0, parameters0);
+
+    NotificationParameters parameters1;
+    parameters1.add(CLASS, "system");
+    uint idsystem1 = manager->addNotification(0, parameters1);
+
+    NotificationParameters parameters2;
+    parameters2.add(CLASS, "system");
+    uint idsystem2 = manager->addNotification(0, parameters2);
+
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    Notification n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), idsystem0);
+
+    // Relay next notification
+    manager->relayNextNotification();
+
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), idsystem1);
+
+    // Relay next notification
+    manager->relayNextNotification();
+
+    QCOMPARE(spy.count(), 1);
+    arguments = spy.takeFirst();
+    n = qvariant_cast<Notification>(arguments.at(0));
+    QCOMPARE(n.notificationId(), idsystem2);
+}
+
 QTEST_MAIN(Ut_NotificationManager)
