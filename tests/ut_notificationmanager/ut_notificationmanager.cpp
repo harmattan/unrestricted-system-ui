@@ -139,11 +139,16 @@ bool QFile::remove(const QString & name) {
 }
 
 QFile::OpenMode gBootFileOpenedMode;
+static bool gNotificationFileExists;
 bool QFile::open(OpenMode mode) {
     QString fileName = gFileInstances.key(this);
     if (fileName.contains("state.data")) {
         gStateBuffer.open(mode);
     } else if (fileName.contains("notifications.data")) {
+        if (!gNotificationFileExists) {
+            // Simulate missing notification file
+            return false;
+        }
         gNotificationBuffer.open(mode);
     } else if (fileName.contains(QDir::tempPath() + "/sysuid_boot")) {
         gBootFileOpenedMode = mode;
@@ -305,6 +310,7 @@ void Ut_NotificationManager::init()
     timerTimeouts.clear();
     catchTimerTimeouts = false;
     gBootFileExists = true;
+    gNotificationFileExists = true;
     gLastFileName.clear();
     gBootFileOpenedMode = QIODevice::NotOpen;
 
@@ -572,10 +578,10 @@ void Ut_NotificationManager::testRemoveNotification()
     NotificationParameters parameters2;
     addNotification(&parameters2, "2", 3);
 
-    //Remove middle one
+    // Remove middle one
     manager->removeNotification(id1);
 
-    //Check that it is removed
+    // Check that it is removed
     QCOMPARE(removeSpy.count(), 1);
     QList<QVariant> arguments = removeSpy.takeFirst();
     QCOMPARE(arguments.at(0).toUInt(), id1);
@@ -1409,7 +1415,7 @@ void Ut_NotificationManager::testGroupInfoStorage()
     ng = gGroupList.at(1);
     QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
-    //Remove group and check that it is removed
+    // Remove group and check that it is removed
     manager->doRemoveGroup(id0);
     loadStateData();
     QCOMPARE((uint)gGroupList.count(), (uint)1);
@@ -1417,7 +1423,7 @@ void Ut_NotificationManager::testGroupInfoStorage()
     ng = gGroupList.at(0);
     QCOMPARE(ng.parameters().value(BODY).toString(), QString("body1"));
 
-    //Update group and verify that it is updated
+    // Update group and verify that it is updated
     manager->updateGroup(0, id1, parameters0);
     loadStateData();
     QCOMPARE((uint)gGroupList.count(), (uint)1);
@@ -1454,7 +1460,7 @@ void Ut_NotificationManager::tesNotificationStorage()
     parameters2.add(ICON, "buttonicon2");
     manager->addNotification(0, parameters2, gid1);
 
-    //Load notifications and check that they are restored
+    // Load notifications and check that they are restored
     loadNotifications();
     QCOMPARE((uint)gNotificationList.count(), (uint)3);
     Notification notification = gNotificationList.at(0);
@@ -1464,7 +1470,7 @@ void Ut_NotificationManager::tesNotificationStorage()
     notification = gNotificationList.at(2);
     QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
-    //Remove one notification and check that it is removed from persistent storage
+    // Remove one notification and check that it is removed from persistent storage
     manager->removeNotification(id0);
     loadNotifications();
     QCOMPARE((uint)gNotificationList.count(), (uint)2);
@@ -1473,7 +1479,7 @@ void Ut_NotificationManager::tesNotificationStorage()
     notification = gNotificationList.at(1);
     QCOMPARE(notification.parameters().value(ICON).toString(), QString("buttonicon2"));
 
-    //Verify that persistent storage notifications can be updated
+    // Verify that persistent storage notifications can be updated
     manager->updateNotification(0, id1, parameters0);
     loadNotifications();
     QCOMPARE((uint)gNotificationList.count(), (uint)2);
@@ -1670,6 +1676,25 @@ void Ut_NotificationManager::testPruningNonPersistentNotificationsOnBoot()
 
     // Verify that only persistent notification was restored
     QCOMPARE(spy.count(), 1);
+}
+
+void Ut_NotificationManager::testSystemStartupFileCreatedAfterFirstBoot()
+{
+    delete manager;
+    gNotificationBuffer.buffer().clear();
+    manager = new TestNotificationManager(0);
+    QSignalSpy spy(manager, SIGNAL(notificationRestored(Notification)));
+    gBootFileExists = false;
+    gNotificationFileExists = false;
+
+    manager->initializeStore();
+
+    // Verify that boot file was created
+    QVERIFY(gFileInstances.keys().contains(QDir::tempPath() + "/sysuid_boot"));
+    QCOMPARE(gBootFileOpenedMode, QIODevice::WriteOnly);
+
+    // Verify that no notifications were restored
+    QCOMPARE(spy.count(), 0);
 }
 
 

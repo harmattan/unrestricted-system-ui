@@ -142,6 +142,8 @@ private slots:
     void testRemovalOfUnseenFlags();
     // Test that system notifications are input always at the front of the queue
     void testSytemNotificationArePrepended();
+    // Startup file should be created even when there are no notifications
+    void testSystemStartupFileCreatedAfterFirstBoot();
     // Test when system banners are queued, they follow the order in which they are added
     void testSystemBannersWhenQueuedMaintainTheirOrder();
 

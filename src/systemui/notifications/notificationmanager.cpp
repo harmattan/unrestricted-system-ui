@@ -181,15 +181,14 @@ void NotificationManager::restoreState()
 
 void NotificationManager::restoreNotifications()
 {
+    // Startup status must be initilized always
+    bool restoreAllNotifications = isSubsequentStart();
     QFile notificationFile(NOTIFICATIONS_FILE_NAME);
-
     if (notificationFile.open(QIODevice::ReadOnly)) {
         QDataStream stream;
         stream.setDevice(&notificationFile);
 
         Notification notification;
-
-        bool restoreAllNotifications = isSubsequentStart();
         while (!stream.atEnd()) {
             stream >> notification;
             // When starting on boot add only the persistent notifications
