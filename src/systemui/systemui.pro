@@ -43,7 +43,8 @@ HEADERS +=                              \
     applicationcontext.h                \
     x11wrapper.h                        \
     xeventlistener.h                    \
-    diskspacenotifier.h
+    diskspacenotifier.h                 \
+    lowmemorynotifier.h
 
 SOURCES +=                              \
     main.cpp                            \
@@ -57,7 +58,8 @@ SOURCES +=                              \
     contextframeworkcontext.cpp         \
     x11wrapper.cpp                      \
     xeventlistener.cpp                  \
-    diskspacenotifier.cpp
+    diskspacenotifier.cpp               \
+    lowmemorynotifier.cpp
 
 include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
@@ -84,10 +86,14 @@ contains(DEFINES, HAVE_LIBNGF) {
 PKGCONFIG += \
     dbus-1 \
     dbus-glib-1 \
-    xcomposite
+    xcomposite \
+    libmemnotifyqt
 
 dbus_policy.files += systemui.conf
 dbus_policy.path = $$(DEBIAN_DESTDIR)/etc/dbus-1/system.d
+
+memnotify_config.files += sysuid.mn
+memnotify_config.path = $$(DEBIAN_DESTDIR)/etc/memnotify
 
 headers.path = /usr/include/system-ui
 headers.files += \
@@ -96,4 +102,5 @@ headers.files += \
 
 INSTALLS += target \
             dbus_policy \
+            memnotify_config \
             headers

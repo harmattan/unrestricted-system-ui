@@ -3,6 +3,7 @@ system-ui (1.1.5~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#273060 - Connect charger to an already low battery sleeping device, show only charging notification when display turns on
   * Fixes: NB#262034 - Accessory connected sound played when disconnecting USB cable
+  * Fixes: NB#275357 - [TASK] Low memory notification dialog
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 03 Aug 2011 14:39:16 +0300
 

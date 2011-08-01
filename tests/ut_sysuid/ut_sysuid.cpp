@@ -53,6 +53,7 @@
 #include "eventeater_stub.h"
 #include "closeeventeater_stub.h"
 #include "diskspacenotifier_stub.h"
+#include "lowmemorynotifier_stub.h"
 #include "ngfnotificationsink.h"
 #include "testcontextitem.h"
 #include "sysuid.h"
