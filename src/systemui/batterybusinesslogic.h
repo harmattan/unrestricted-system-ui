@@ -98,6 +98,12 @@ private:
     //! Returns the charging image ID based on the current battery level
     QString chargingImageId();
 
+    //! Starts the low battery notifier if not already started
+    void startLowBatteryNotifier();
+
+    //! Stops the low battery notifier if not already stopped
+    void stopLowBatteryNotifier();
+
     //! Low battery notifier for getting notifications about low battery state
     LowBatteryNotifier *lowBatteryNotifier;
 

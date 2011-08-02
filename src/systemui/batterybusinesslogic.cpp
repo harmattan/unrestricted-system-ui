@@ -75,11 +75,8 @@ void BatteryBusinessLogic::chargingStateChanged(MeeGo::QmBattery::ChargingState 
         if (qmBattery->getChargerType() == MeeGo::QmBattery::USB_100mA) {
             sendNotification(NotificationNoEnoughPower);
         } else {
-            // The low battery notifications should not be sent when the battery is actually charging.
-            if (lowBatteryNotifier != 0) {
-                delete lowBatteryNotifier;
-                lowBatteryNotifier = 0;
-            }
+            // The low battery notifications should not be sent when the battery is charging
+            stopLowBatteryNotifier();
 
             removeNotification(QStringList() << "x-nokia.battery.removecharger" << "x-nokia.battery.chargingcomplete");
             sendNotification(NotificationCharging);
@@ -101,23 +98,19 @@ void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState st
 {
     switch(state) {
     case MeeGo::QmBattery::StateFull:
+        stopLowBatteryNotifier();
         removeNotification(QStringList() << "x-nokia.battery");
         sendNotification(NotificationChargingComplete);
         break;
 
     case MeeGo::QmBattery::StateOK:
-        /* no-operation here... */
+        stopLowBatteryNotifier();
         break;
 
     case MeeGo::QmBattery::StateLow:
-        if (qmBattery->getChargingState() != MeeGo::QmBattery::StateCharging) {
-            if (lowBatteryNotifier == 0) {
-                lowBatteryNotifier = new LowBatteryNotifier();
-                connect(lowBatteryNotifier, SIGNAL(lowBatteryAlert()), this, SLOT(lowBatteryAlert()));
-                lowBatteryNotifier->setTouchScreenLockActive(touchScreenLockActive);
-            }
-
-            lowBatteryNotifier->sendLowBatteryAlert();
+        if (m_Battery->getChargingState() != MeeGo::QmBattery::StateCharging) {
+            // The low battery notifications should be sent only if the battery is not charging
+            startLowBatteryNotifier();
         }
         break;
 
@@ -305,5 +298,24 @@ void BatteryBusinessLogic::setTouchScreenLockActive(bool active)
     touchScreenLockActive = active;
     if (lowBatteryNotifier != NULL) {
         lowBatteryNotifier->setTouchScreenLockActive(active);
+    }
+}
+
+void BatteryBusinessLogic::startLowBatteryNotifier()
+{
+    if (lowBatteryNotifier == NULL) {
+        lowBatteryNotifier = new LowBatteryNotifier();
+        connect(lowBatteryNotifier, SIGNAL(lowBatteryAlert()), this, SLOT(lowBatteryAlert()));
+    }
+
+    lowBatteryNotifier->setTouchScreenLockActive(touchScreenLockActive);
+    lowBatteryNotifier->sendLowBatteryAlert();
+}
+
+void BatteryBusinessLogic::stopLowBatteryNotifier()
+{
+    if (lowBatteryNotifier != NULL) {
+        delete lowBatteryNotifier;
+        lowBatteryNotifier = NULL;
     }
 }

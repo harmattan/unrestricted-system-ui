@@ -314,6 +314,16 @@ void Ut_BatteryBusinessLogic::testLowBatteryNotifierConnection()
 
     /* After this call LowBatteryNotifier should be destroyed */
     QCOMPARE(m_logic->lowBatteryNotifier, (LowBatteryNotifier *)NULL);
+
+    /* State OK should stop notifications */
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateOK);
+    QCOMPARE(m_logic->lowBatteryNotifier, (LowBatteryNotifier *)NULL);
+
+    /* State Full should stop notifications */
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateLow);
+    m_logic->batteryStateChanged(MeeGo::QmBattery::StateFull);
+    QCOMPARE(m_logic->lowBatteryNotifier, (LowBatteryNotifier *)NULL);
 #endif
 }
 
