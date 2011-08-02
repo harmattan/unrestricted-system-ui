@@ -1,3 +1,9 @@
+system-ui (1.1.4~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 02 Aug 2011 16:51:31 +0300
+
 system-ui (1.1.3-1) unstable; urgency=low
 
   * Fixes: NB#272833 - [TASK] when the call is active and battery is low, alert user at every 2 min interval regardless of display states
