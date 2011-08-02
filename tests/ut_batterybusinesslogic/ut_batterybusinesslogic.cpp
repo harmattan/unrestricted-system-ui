@@ -85,6 +85,7 @@ void Ut_BatteryBusinessLogic::cleanup()
     mNotificationImages.clear();
     gMNotificationRemoveEventType.clear();
     gLowBatteryNotifierStub->stubReset();
+    gQmBatteryStub->stubReset();
 }
 
 void Ut_BatteryBusinessLogic::testInitBattery()
@@ -264,7 +265,6 @@ void Ut_BatteryBusinessLogic::testPSMStateChanged()
 {
 #ifdef HAVE_QMSYSTEM
     QList<QVariant> arguments;
-    QSignalSpy spy(m_logic, SIGNAL(notificationSent(QString, QString, QString)));
 
     /* Entering to power-save mode */
     m_logic->devicePSMStateChanged(MeeGo::QmDeviceMode::PSMStateOn);
@@ -381,6 +381,16 @@ void Ut_BatteryBusinessLogic::testWhenChargingStartsWhenRemoveChargerNotifiedThe
     m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
     QVERIFY(gMNotificationRemoveEventType.count() > 0);
     QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery.removecharger"));
+#endif
+}
+
+void Ut_BatteryBusinessLogic::testWhenChargingStopsAndBatteryIsLowNotifierIsCreated()
+{
+#ifdef HAVE_QMSYSTEM
+    gQmBatteryStub->stubSetReturnValue<MeeGo::QmBattery::BatteryState>("getBatteryState", MeeGo::QmBattery::StateLow);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::Wall);
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::None);
+    QVERIFY(m_logic->lowBatteryNotifier != NULL);
 #endif
 }
 

@@ -138,6 +138,11 @@ void BatteryBusinessLogic::batteryChargerEvent(MeeGo::QmBattery::ChargerType typ
             removeNotification(QStringList() << "x-nokia.battery" << "x-nokia.battery.chargingcomplete");
             sendNotification(NotificationRemoveCharger);
         }
+
+        if (chargerType != MeeGo::QmBattery::None && chargerType != MeeGo::QmBattery::USB_100mA && qmBattery->getBatteryState() == MeeGo::QmBattery::StateLow && qmBattery->getChargingState() != MeeGo::QmBattery::StateCharging) {
+            // A charger was connected but is no longer connected and the battery is low, so start low battery notifier
+            startLowBatteryNotifier();
+        }
         break;
 
     case MeeGo::QmBattery::Wall:
