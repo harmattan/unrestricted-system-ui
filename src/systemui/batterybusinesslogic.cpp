@@ -108,7 +108,7 @@ void BatteryBusinessLogic::batteryStateChanged(MeeGo::QmBattery::BatteryState st
         break;
 
     case MeeGo::QmBattery::StateLow:
-        if (m_Battery->getChargingState() != MeeGo::QmBattery::StateCharging) {
+        if (qmBattery->getChargingState() != MeeGo::QmBattery::StateCharging) {
             // The low battery notifications should be sent only if the battery is not charging
             startLowBatteryNotifier();
         }
