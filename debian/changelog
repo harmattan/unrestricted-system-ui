@@ -1,3 +1,9 @@
+system-ui (1.1.5~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 03 Aug 2011 14:39:16 +0300
+
 system-ui (1.1.4-1) unstable; urgency=low
 
   * Fixes: NB#273889 - [TASK] Operator name should be replaced with "Emergency calls only" when in limited service state and there is a network available
