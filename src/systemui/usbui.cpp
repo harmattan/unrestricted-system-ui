@@ -202,6 +202,7 @@ void UsbUi::applyUSBMode(MeeGo::QmUSBMode::Mode mode)
 
 void UsbUi::showNotification(MeeGo::QmUSBMode::Mode mode)
 {
+    QString eventType = MNotification::DeviceAddedEvent;
     QString body;
     switch (mode) {
     case MeeGo::QmUSBMode::OviSuite:
@@ -217,6 +218,7 @@ void UsbUi::showNotification(MeeGo::QmUSBMode::Mode mode)
         body = qtTrId("qtn_usb_sdk_active");
         break;
     case MeeGo::QmUSBMode::Disconnected:
+        eventType = MNotification::DeviceRemovedEvent;
         //% "USB cable disconnected"
         body = qtTrId("qtn_usb_disconnected");
         break;
@@ -224,7 +226,7 @@ void UsbUi::showNotification(MeeGo::QmUSBMode::Mode mode)
         return;
     }
 
-    MNotification notification(MNotification::DeviceAddedEvent, "", body);
+    MNotification notification(eventType, "", body);
     notification.publish();
 }
 #endif

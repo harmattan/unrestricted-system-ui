@@ -42,9 +42,11 @@ void MSceneWindow::disappear()
     dialog_visible = false;
 }
 
+QStringList mNotificationEventTypes;
 QStringList mNotificationBodies;
 bool MNotification::publish()
 {
+    mNotificationEventTypes.append(eventType());
     mNotificationBodies.append(body());
     return true;
 }
@@ -91,6 +93,7 @@ void Ut_UsbUi::cleanup()
     delete m_subject;
     dialog_visible = false;
     mGConfItemValue = QVariant(false);
+    mNotificationEventTypes.clear();
     mNotificationBodies.clear();
 }
 
@@ -147,20 +150,23 @@ void Ut_UsbUi::testHideDialog()
 void Ut_UsbUi::testUSBNotifications_data()
 {
     QTest::addColumn<MeeGo::QmUSBMode::Mode>("mode");
+    QTest::addColumn<QString>("eventType");
     QTest::addColumn<QString>("body");
 
-    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << qtTrId("qtn_usb_disconnected");
-    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << qtTrId("qtn_usb_sync_active");
-    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << qtTrId("qtn_usb_storage_active");
-    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << qtTrId("qtn_usb_sdk_active");
+    QTest::newRow("Disconnected") << MeeGo::QmUSBMode::Disconnected << MNotification::DeviceRemovedEvent << qtTrId("qtn_usb_disconnected");
+    QTest::newRow("Ovi Suite") << MeeGo::QmUSBMode::OviSuite << MNotification::DeviceAddedEvent << qtTrId("qtn_usb_sync_active");
+    QTest::newRow("Mass Storage") << MeeGo::QmUSBMode::MassStorage << MNotification::DeviceAddedEvent << qtTrId("qtn_usb_storage_active");
+    QTest::newRow("SDK") << MeeGo::QmUSBMode::SDK << MNotification::DeviceAddedEvent << qtTrId("qtn_usb_sdk_active");
 }
 
 void Ut_UsbUi::testUSBNotifications()
 {
     QFETCH(MeeGo::QmUSBMode::Mode, mode);
+    QFETCH(QString, eventType);
     QFETCH(QString, body);
 
     m_subject->applyUSBMode(mode);
+    QCOMPARE(mNotificationEventTypes.last(), eventType);
     QCOMPARE(mNotificationBodies.last(), body);
 }
 
