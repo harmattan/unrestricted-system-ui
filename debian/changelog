@@ -1,6 +1,7 @@
 system-ui (1.1.4~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#273889 - [TASK] Operator name should be replaced with "Emergency calls only" when in limited service state and there is a network available
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 02 Aug 2011 16:51:31 +0300
 
@@ -13,7 +14,6 @@ system-ui (1.1.3-1) unstable; urgency=low
 system-ui (1.1.2-1) unstable; urgency=low
 
   * Fixes: System banners should be prioritized over short event banners (a.k.a. notification previews)
-  * Fixes: NB#273889 - [TASK] Operator name should be replaced with "Emergency calls only" when in limited service state and there is a network available
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 28 Jul 2011 13:31:31 +0300
 

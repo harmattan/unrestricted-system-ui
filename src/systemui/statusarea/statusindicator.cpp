@@ -517,7 +517,7 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
         connect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()), Qt::UniqueConnection);
 
         // Check if there is limited service
-        limitedService = cellularServiceStatus->value().toString() == "LimitedService";
+        limitedService = cellularServiceStatus->value().toString() == "limited-service";
     } else {
         // Limited service state should be displayed: Changes in the cellular service status are not interesting
         disconnect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));

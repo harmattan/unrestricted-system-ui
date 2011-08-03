@@ -554,23 +554,23 @@ void Ut_StatusIndicator::testPhoneNetwork_data() {
     QTest::addColumn<QVariant>("displayLimitedServiceState");
     QTest::addColumn<QString>("stylePostfix");
 
-    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar" << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("MissingBoth") << QString() << QString() << QString() << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo" << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString() << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar" << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()" << "" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("ChineseLocale") << "foo" << "bar" << "" << "zh" << "bar" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("ChineseLocaleNoExtNetString") << "foo" << "foo" << "" << "zh" << "" << "FullService" << QVariant(true) << QString();
-    QTest::newRow("ChineseLocaleVisitor") << "foo" << "bar" << "meh" << "zh" << "bar (meh)" << "FullService" << QVariant(true) << QString();
+    QTest::newRow("NoRoaming") << "F!o" << "F!o" << QString() << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("RoamingIdeal") << "foo (bar)" << "foo" << "bar" << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("MissingVisitor") << "F!o()" << "F!o" << QString() << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("MissingBoth") << QString() << QString() << QString() << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("HomeAndVisitorSame") << "foo (foo)" << "foo" << "foo" << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("NoStartDelimiter") << "foo bar)" << "foo bar)" << QString() << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("NoEndDelimiter") << "FoO(BaR1!" << "FoO" << QString() << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("RoamingExtraSpaces") << " f1o (bar) " << "f1o" << "bar" << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("RoamingExtraDelimiters") << "foo (()bar())" << "foo" << "()bar()" << "" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocale") << "foo" << "bar" << "" << "zh" << "bar" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocaleNoExtNetString") << "foo" << "foo" << "" << "zh" << "" << "full-service" << QVariant(true) << QString();
+    QTest::newRow("ChineseLocaleVisitor") << "foo" << "bar" << "meh" << "zh" << "bar (meh)" << "full-service" << QVariant(true) << QString();
     QTest::newRow("EmptyServiceStatus") << "F!o" << "F!o" << QString() << "" << "" << "" << QVariant(true) << QString();
-    QTest::newRow("NoCoverageServiceStatus") << "F!o" << "F!o" << QString() << "" << "" << "NoCoverage" << QVariant(true) << QString();
-    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayEnabled") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "LimitedService" << QVariant(true) << "LimitedService";
-    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayNotSet") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "LimitedService" << QVariant() << "LimitedService";
-    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayDisabled") << "F!o" << "F!o" << QString() << "" << "" << "LimitedService" << QVariant(false) << QString();
+    QTest::newRow("NoCoverageServiceStatus") << "F!o" << "F!o" << QString() << "" << "" << "no-coverage" << QVariant(true) << QString();
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayEnabled") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "limited-service" << QVariant(true) << "LimitedService";
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayNotSet") << "foo (bar)" << qtTrId("qtn_cell_emergency_calls_only") << QString() << "" << "" << "limited-service" << QVariant() << "LimitedService";
+    QTest::newRow("LimitedServiceServiceStatusLimitedServiceStateDisplayDisabled") << "F!o" << "F!o" << QString() << "" << "" << "limited-service" << QVariant(false) << QString();
 }
 
 void Ut_StatusIndicator::testPhoneNetwork()
