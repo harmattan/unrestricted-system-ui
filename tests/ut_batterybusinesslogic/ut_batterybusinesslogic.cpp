@@ -394,6 +394,17 @@ void Ut_BatteryBusinessLogic::testWhenChargingStopsAndBatteryIsLowNotifierIsCrea
 #endif
 }
 
+void Ut_BatteryBusinessLogic::testWhenStateChargingLowBatteryNotificationRemoved()
+{
+#ifdef HAVE_QMSYSTEM
+    m_logic->lowBatteryAlert();
+    m_logic->batteryChargerEvent(MeeGo::QmBattery::Wall);
+    m_logic->chargingStateChanged(MeeGo::QmBattery::StateCharging);
+    QVERIFY(gMNotificationRemoveEventType.count() > 0);
+    QCOMPARE(gMNotificationRemoveEventType.last(), QString("x-nokia.battery.lowbattery"));
+#endif
+}
+
 void Ut_BatteryBusinessLogic::testWhenBatteryFullWhenChargingNotifiedThenNotificationRemoved()
 {
 #ifdef HAVE_QMSYSTEM

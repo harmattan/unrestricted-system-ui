@@ -47,6 +47,7 @@ private slots:
     void testWhenChargingStopsAndBatteryIsLowNotifierIsCreated();
     void testWhenBatteryFullWhenChargingNotifiedThenNotificationRemoved();
     void testSetTouchScreenLockActive();
+    void testWhenStateChargingLowBatteryNotificationRemoved();
 
 private:
     BatteryBusinessLogic *m_logic;

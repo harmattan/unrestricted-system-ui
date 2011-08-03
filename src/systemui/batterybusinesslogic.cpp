@@ -78,7 +78,7 @@ void BatteryBusinessLogic::chargingStateChanged(MeeGo::QmBattery::ChargingState 
             // The low battery notifications should not be sent when the battery is charging
             stopLowBatteryNotifier();
 
-            removeNotification(QStringList() << "x-nokia.battery.removecharger" << "x-nokia.battery.chargingcomplete");
+            removeNotification(QStringList() << "x-nokia.battery.removecharger" << "x-nokia.battery.chargingcomplete" << "x-nokia.battery.lowbattery");
             sendNotification(NotificationCharging);
         }
         break;
