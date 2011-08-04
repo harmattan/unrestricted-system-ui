@@ -1,3 +1,9 @@
+system-ui (1.1.6~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Aug 2011 17:17:02 +0300
+
 system-ui (1.1.5-1) unstable; urgency=low
 
   * Fixes: NB#273060 - Connect charger to an already low battery sleeping device, show only charging notification when display turns on
