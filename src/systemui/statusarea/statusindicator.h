@@ -369,6 +369,7 @@ private:
     ContextItem *networkName;
     ContextItem *extendedNetworkName;
     ContextItem *cellularServiceStatus;
+    ContextItem *cellularRegistrationStatus;
     MGConfItem *displayLimitedServiceState;
     QTimer networkChangeShowVisitorTimer;
 

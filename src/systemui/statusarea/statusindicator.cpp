@@ -446,6 +446,7 @@ PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &con
     networkName = createContextItem(context, "Cellular.NetworkName");
     extendedNetworkName = createContextItem(context, "Cellular.ExtendedNetworkName");
     cellularServiceStatus = createContextItem(context, "Cellular.ServiceStatus");
+    cellularRegistrationStatus = createContextItem(context, "Cellular.RegistrationStatus");
     displayLimitedServiceState = new MGConfItem("/desktop/meego/status_area/display_limited_service_state", this);
     connect(networkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
     connect(extendedNetworkName, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
@@ -511,22 +512,31 @@ void PhoneNetworkStatusIndicator::phoneNetworkChanged()
 
     // Check whether limited service state displaying is enabled
     bool limitedService = false;
+    bool noCoverage = false;
     bool displayLimitedServiceStateEnabled = displayLimitedServiceState->value(true).toBool();
     if (displayLimitedServiceStateEnabled) {
-        // Limited service state should be displayed: Changes in the cellular service status are interesting
+        // Limited service state should be displayed: Changes in the cellular service status and registration status are interesting
         connect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()), Qt::UniqueConnection);
+        connect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()), Qt::UniqueConnection);
 
         // Check if there is limited service
         limitedService = cellularServiceStatus->value().toString() == "limited-service";
+
+        // Check if there is no coverage and the device is not in offline mode
+        noCoverage = cellularServiceStatus->value().toString() == "no-coverage" && cellularRegistrationStatus->value().toString() != "offline";
     } else {
-        // Limited service state should be displayed: Changes in the cellular service status are not interesting
+        // Limited service state should be displayed: Changes in the cellular service status and registration status are not interesting
         disconnect(cellularServiceStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
+        disconnect(cellularRegistrationStatus, SIGNAL(contentsChanged()), this, SLOT(phoneNetworkChanged()));
     }
 
     QString home;
     QString visitor;
     if (limitedService) {
         home = qtTrId("qtn_cell_emergency_calls_only");
+        model()->setStylePostfix("LimitedService");
+    } else if (noCoverage) {
+        home = qtTrId("qtn_stat_no_coverage");
         model()->setStylePostfix("LimitedService");
     } else {
         home = homeNetwork();
