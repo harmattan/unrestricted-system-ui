@@ -89,6 +89,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), notificationStatusIndicatorSink_, SLOT(removeNotification(uint)));
     connect(notificationManager, SIGNAL(notificationRestored(const Notification &)), notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), notificationStatusIndicatorSink_, SLOT(addGroup(uint, const NotificationParameters &)));
 
     // Subscribe to a context property for getting information about the video recording status
     ContextFrameworkContext context;

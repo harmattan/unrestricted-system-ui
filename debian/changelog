@@ -1,6 +1,7 @@
 system-ui (1.2.0~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#249391 - [TASK] Notifier improvement
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Aug 2011 17:17:02 +0300
 

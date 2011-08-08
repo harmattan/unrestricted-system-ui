@@ -217,6 +217,7 @@ void Ut_Sysuid::testSignalConnections()
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationUpdated(const Notification &)), sysuid->notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRemoved(uint)), sysuid->notificationStatusIndicatorSink_, SLOT(removeNotification(uint))));
     QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(notificationRestored(const Notification &)), sysuid->notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &))));
+    QVERIFY(disconnect(sysuid->notificationManager, SIGNAL(groupUpdated(uint, const NotificationParameters &)), sysuid->notificationStatusIndicatorSink_, SLOT(addGroup(uint, const NotificationParameters &))));
     QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid, SLOT(updateCompositorNotificationSinkEnabledStatus())));
     QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid->mCompositorNotificationSink, SLOT(setTouchScreenLockActive(bool))));
     QVERIFY(disconnect(sysuid->screenLockBusinessLogic, SIGNAL(screenIsLocked(bool)), sysuid->batteryBusinessLogic, SLOT(setTouchScreenLockActive(bool))));
