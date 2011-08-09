@@ -13,6 +13,7 @@ class LowMemoryNotifierStub : public StubBase {
   virtual void LowMemoryNotifierConstructor(QObject *parent);
   virtual void LowMemoryNotifierDestructor();
   virtual void handleLowMemoryNotification(const QString &name, const bool state);
+  virtual void retranslateUi();
 }; 
 
 // 2. IMPLEMENT STUB
@@ -28,6 +29,10 @@ void LowMemoryNotifierStub::handleLowMemoryNotification(const QString &name, con
   params.append( new Parameter<const QString & >(name));
   params.append( new Parameter<const bool >(state));
   stubMethodEntered("handleLowMemoryNotification",params);
+}
+
+void LowMemoryNotifierStub::retranslateUi() {
+  stubMethodEntered("retranslateUi");
 }
 
 
@@ -48,6 +53,10 @@ LowMemoryNotifier::~LowMemoryNotifier() {
 
 void LowMemoryNotifier::handleLowMemoryNotification(const QString &name, const bool state) {
   gLowMemoryNotifierStub->handleLowMemoryNotification(name, state);
+}
+
+void LowMemoryNotifier::retranslateUi() {
+  gLowMemoryNotifierStub->retranslateUi();
 }
 
 
