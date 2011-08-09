@@ -92,6 +92,7 @@ void Ut_LowMemoryNotifier::testInitialization()
     QCOMPARE(disconnect(&m_subject->memoryNotification, SIGNAL(notified(const QString&, const bool)), m_subject, SLOT(handleLowMemoryNotification(const QString&, const bool))), true);
     QCOMPARE(m_subject->messageBox->isSystem(), true);
     QCOMPARE(m_subject->messageBox->iconId(), QString("icon-m-bootloader-warning"));
+    QCOMPARE(disconnect(qApp, SIGNAL(localeSettingsChanged()), m_subject, SLOT(retranslateUi())), true);
 }
 
 void Ut_LowMemoryNotifier::testHandleLowMemoryNotification()
@@ -101,6 +102,15 @@ void Ut_LowMemoryNotifier::testHandleLowMemoryNotification()
 
     m_subject->handleLowMemoryNotification(QString(), false);
     QCOMPARE(mSceneWindowDisappearCalled, true);
+}
+
+void Ut_LowMemoryNotifier::testRetranslateUi()
+{
+    m_subject->messageBox->setTitle(QString());
+    m_subject->messageBox->setText(QString());
+    m_subject->retranslateUi();
+    QCOMPARE(m_subject->messageBox->title(), qtTrId("qtn_comm_memory_low"));
+    QCOMPARE(m_subject->messageBox->text(), qtTrId("qtn_comm_memory_low_body"));
 }
 
 QTEST_APPLESS_MAIN(Ut_LowMemoryNotifier)

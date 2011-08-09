@@ -55,6 +55,11 @@ private slots:
      */
     void handleLowMemoryNotification(const QString &name, const bool state);
 
+    /*!
+     * Sets the title and text of the message box using the current translations.
+     */
+    void retranslateUi();
+
 private:
     //! Low memory notifier
     MEMNOTIFY::MemoryNotification &memoryNotification;

@@ -42,6 +42,7 @@ private slots:
     // Test cases
     void testInitialization();
     void testHandleLowMemoryNotification();
+    void testRetranslateUi();
 
 private:
     // MApplication
