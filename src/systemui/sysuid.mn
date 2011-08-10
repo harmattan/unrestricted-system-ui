@@ -2,5 +2,5 @@
 type=cgroups
 control=/syspart/system/applications/cgroup.event_control
 limit=/syspart/system/applications/memory.limit_in_bytes
-used=90%
+used=85%
 sensor=/syspart/system/applications/memory.memsw.usage_in_bytes
