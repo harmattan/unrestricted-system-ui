@@ -39,6 +39,10 @@ const MWidgetModel *MWidgetController::model() const
 }
 
 // MLabel stub
+MLabel::MLabel(QGraphicsItem *, MLabelModel *)
+{
+}
+
 void MLabel::setAlignment(Qt::Alignment alignment)
 {
     Ut_ClockView::alignment = alignment;
