@@ -4,6 +4,7 @@ system-ui (1.2.0~1) unstable; urgency=low
   * Fixes: NB#249391 - [TASK] Notifier improvement
   * Fixes: NB#276034 - [TASK] Operator name should be replaced with "No coverage" when in limited service state and there is no network available
   * Fixes: NB#275357 - [TASK] Low memory notification dialog
+  * Fixes: NB#262034 - Accessory connected sound played when disconnecting USB cable
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Aug 2011 17:17:02 +0300
 
