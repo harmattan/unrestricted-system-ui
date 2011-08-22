@@ -156,6 +156,7 @@ StatusIndicatorLabelStyle {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    minimum-size: 0, -1;
     text-elide: true;
     word-wrap: false;
 }
@@ -171,6 +172,7 @@ MLabelStyle#StatusIndicatorLabel {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    minimum-size: 0, -1;
     maximum-size: 30.0mm -1;
 }
 
@@ -185,6 +187,7 @@ MLabelStyle#StatusIndicatorLabelLandscape {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    minimum-size: 0, -1;
     maximum-size: 55.0mm -1;
 }
 
@@ -199,6 +202,7 @@ MLabelStyle#StatusIndicatorLabelPortrait {
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    minimum-size: 0, -1;
     maximum-size: 30.0mm -1;
 }
 
