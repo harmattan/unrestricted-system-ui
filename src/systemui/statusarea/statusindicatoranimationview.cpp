@@ -58,6 +58,7 @@ void StatusIndicatorAnimationView::updateData(const QList<const char *>& modific
         if (strcmp(member, StatusIndicatorModel::Value) == 0) {
             if (model()->value().type() == QVariant::String) {
                 setupImageList(model()->value().toString());
+                firstAnimationFrame = qBound(0, firstAnimationFrame, images.count() - 1);
                 setAnimationFrame(firstAnimationFrame);
                 setupAnimationTimeline();
             }
@@ -75,7 +76,7 @@ void StatusIndicatorAnimationView::applyStyle()
 {
     MWidgetView::applyStyle();
 
-    setupAnimationTimeline();
+    setFirstAnimationFrame(firstAnimationFrame);
     controller->update();
 }
 
