@@ -41,7 +41,6 @@
 #include "notificationstatusindicatorsink.h"
 #include "closeeventeater.h"
 #include "diskspacenotifier.h"
-#include "lowmemorynotifier.h"
 #include <QX11Info>
 
 Sysuid* Sysuid::instance_ = NULL;
@@ -151,9 +150,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
 
     usbUi = new UsbUi(this);
 
-    // Create the notifiers
     new DiskSpaceNotifier(this);
-    new LowMemoryNotifier(this);
 
     // Unlock the touch screen lock when displaying the USB dialog
     connect(usbUi, SIGNAL(dialogShown()), screenLockBusinessLogic, SLOT(unlockScreen()));

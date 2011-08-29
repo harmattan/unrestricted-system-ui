@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.20.3
                libngf-dev, libxcomposite-dev, libxext-dev,
                libdbus-1-dev, libdbus-glib-1-dev, libglib2.0-dev,
                aegis-builder (>= 1.4), libduicontrolpanel-dev,
-               libqt4-meegographicssystemhelper-dev, libmemnotifyqt-dev
+               libqt4-meegographicssystemhelper-dev
 Standards-Version: 3.8.0
 
 Package: system-ui

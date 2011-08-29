@@ -3,5 +3,4 @@ usr/share/themes/base/meegotouch/sysuid/*.conf
 usr/share/themes/base/meegotouch/sysuid/style/*.css
 usr/share/meegotouch/notifications/eventtypes/*.conf
 etc/dbus-1/system.d/systemui.conf
-etc/memnotify/sysuid.mn
 usr/share/themes/base/meegotouch/sysuid/feedbacks

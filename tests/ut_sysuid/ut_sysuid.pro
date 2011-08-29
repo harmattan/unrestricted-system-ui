@@ -4,7 +4,7 @@ TARGET = ut_sysuid
 INCLUDEPATH += $$SRCDIR/statusarea $$LIBNOTIFICATIONSRCDIR $$NOTIFICATIONSRCDIR $$SRCDIR/statusindicatormenu $$SRCDIR/volumecontrol $$SRCDIR/screenlock $$ROOTSRCDIR/extensions/screenlock
 INCLUDEPATH += /usr/include/contextsubscriber /usr/include/resource/qt4
 
-PKGCONFIG += dbus-1 libmemnotifyqt
+PKGCONFIG += dbus-1
 
 STYLE_HEADERS += $$SRCDIR/screenlock/screenlockwindowstyle.h
 
@@ -52,8 +52,7 @@ HEADERS += \
     $$SRCDIR/statusindicatormenu/statusindicatormenuadaptor.h \
     $$SRCDIR/x11wrapper.h \
     $$SRCDIR/closeeventeater.h \
-    $$SRCDIR/diskspacenotifier.h \
-    $$SRCDIR/lowmemorynotifier.h
+    $$SRCDIR/diskspacenotifier.h
 
 # service classes
 HEADERS += \

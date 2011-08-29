@@ -7,6 +7,7 @@ system-ui (1.2.0~1) unstable; urgency=low
   * Fixes: NB#275357 - [TASK] Low memory notification dialog
   * Fixes: NB#262034 - Accessory connected sound played when disconnecting USB cable
   * Fixes: NB#277582 - While no operator name is displayed but WLAN is active there's a gap between the signal strength and network type indicator
+  * Fixes: NB#278885 - Disable low memory notification for PR1.1 & later
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Aug 2011 17:17:02 +0300
 
