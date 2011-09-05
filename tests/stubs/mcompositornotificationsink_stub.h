@@ -40,6 +40,8 @@ class MCompositorNotificationSinkStub : public StubBase {
   virtual void changeNotificationPreviewMode();
   virtual void updateWindowMask();
   virtual void setTouchScreenLockActive(bool active);
+  virtual void updateWindowOrientationIfWindowHidden();
+  virtual void updateWindowOrientation();
 };
 
 // 2. IMPLEMENT STUB
@@ -98,7 +100,15 @@ void MCompositorNotificationSinkStub::setTouchScreenLockActive(bool active) {
     QList<ParameterBase*> params;
     params.append( new Parameter<bool >(active));
     stubMethodEntered("setTouchScreenLockActive",params);
-  }
+}
+
+void MCompositorNotificationSinkStub::updateWindowOrientationIfWindowHidden() {
+    stubMethodEntered("updateWindowOrientationIfWindowHidden");
+}
+
+void MCompositorNotificationSinkStub::updateWindowOrientation() {
+    stubMethodEntered("updateWindowOrientation");
+}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -150,15 +160,20 @@ void MCompositorNotificationSink::changeNotificationPreviewMode() {
 void MCompositorNotificationSink::updateWindowMask(MBanner*) {
 }
 
-void MCompositorNotificationSink::clearWindowMask() {
-}
-
 void MCompositorNotificationSink::updateWindowMask() {
     gMCompositorNotificationSinkStub->updateWindowMask();
 }
 
 void MCompositorNotificationSink::setTouchScreenLockActive(bool active) {
     gMCompositorNotificationSinkStub->setTouchScreenLockActive(active);
+}
+
+void MCompositorNotificationSink::updateWindowOrientationIfWindowHidden() {
+    gMCompositorNotificationSinkStub->updateWindowOrientationIfWindowHidden();
+}
+
+void MCompositorNotificationSink::updateWindowOrientation() {
+    gMCompositorNotificationSinkStub->updateWindowOrientation();
 }
 
 #endif

@@ -1,6 +1,7 @@
 system-ui (1.2.0~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#265870 - Randomly when a notification comes, the window underneatch is changed to show something for 1s
   * Fixes: NB#278398 - COREWEB: /usr/bin/sysuid '__aeabi_ldiv0 StatusIndicatorAnimationView::setupAnimationTimeline StatusIndicatorAnimationView::applyStyle StatusIndicatorIconView::applyStyle'
   * Fixes: NB#249391 - [TASK] Notifier improvement
   * Fixes: NB#276034 - [TASK] Operator name should be replaced with "No coverage" when in limited service state and there is no network available

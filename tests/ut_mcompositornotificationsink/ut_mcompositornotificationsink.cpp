@@ -27,6 +27,7 @@
 #include "genericnotificationparameterfactory.h"
 #include <MGConfItem>
 #include "x11wrapper.h"
+#include <contextproperty.h>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmdisplaystate.h>
@@ -298,7 +299,6 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle, TransitionMod
     Q_UNUSED(mode);
     M::Orientation o = (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
 
-    emit orientationAboutToChange(o);
     emit orientationChangeFinished(o);
 }
 
@@ -385,6 +385,28 @@ int X11Wrapper::XFree(void *data)
     return Success;
 }
 
+M::OrientationAngle gOrientationAngleContextPropertyValue;
+QVariant ContextProperty::value() const
+{
+    return QVariant(gOrientationAngleContextPropertyValue);
+}
+
+M::Orientation gSetWindowOrientation;
+void MWindow::setPortraitOrientation()
+{
+    gSetWindowOrientation = M::Portrait;
+}
+
+void MWindow::setLandscapeOrientation()
+{
+    gSetWindowOrientation = M::Landscape;
+}
+
+M::Orientation MWindow::orientation() const
+{
+    return gSetWindowOrientation;
+}
+
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
@@ -423,6 +445,8 @@ void Ut_MCompositorNotificationSink::init()
 
     gWindowPropertyMap.clear();
     gXAllocs.clear();
+    gOrientationAngleContextPropertyValue = M::Angle0;
+    gSetWindowOrientation = M::Landscape;
 }
 
 void Ut_MCompositorNotificationSink::cleanup()
@@ -794,27 +818,10 @@ void Ut_MCompositorNotificationSink::testWindowMasking()
     notificationManager->addNotification(0, parameters0, 0);
     emitDisplayEntered();
 
-    MSceneWindow* window = gMSceneWindowsAppeared.at(0);
+    QCOMPARE(gQWidgetClearMaskCalled, true);
 
+    MSceneWindow* window = gMSceneWindowsAppeared.at(0);
     QRegion region = calculateTargetMaskRegion(angle, window);
-    QCOMPARE(mWindowMaskRegion, region);
-}
-
-void Ut_MCompositorNotificationSink::testWindowMaskingWhenOrientationChangeSignalsEmitted()
-{
-    qQTimerEmitTimeoutImmediately = false;
-
-    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
-    notificationManager->addNotification(0, parameters0);
-    emitDisplayEntered();
-    int newAngle = sink->window->sceneManager()->orientationAngle() + M::Angle90;
-    gCurrentOrientationAngle = (M::OrientationAngle)newAngle;
-
-    sink->window->sceneManager()->setOrientationAngle(gCurrentOrientationAngle, MSceneManager::ImmediateTransition);
-    QVERIFY(gQWidgetClearMaskCalled);
-
-    MSceneWindow* window = gMSceneWindowsAppeared.at(0);
-    QRegion region = calculateTargetMaskRegion(gCurrentOrientationAngle, window);
     QCOMPARE(mWindowMaskRegion, region);
 }
 
@@ -957,6 +964,81 @@ void Ut_MCompositorNotificationSink::testSystemNotificationIsRemovedWhenBannerHa
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.last().at(0).toUInt(), id);
+}
+
+void Ut_MCompositorNotificationSink::testOrientationChanges()
+{
+    sink->createWindowIfNecessary();
+
+    // Rotate to portrait
+    gOrientationAngleContextPropertyValue = M::Angle90;
+    sink->updateWindowOrientation();
+    QCOMPARE(gSetWindowOrientation, M::Portrait);
+
+    // Rotate back to landscape
+    gOrientationAngleContextPropertyValue = M::Angle0;
+    sink->updateWindowOrientation();
+    QCOMPARE(gSetWindowOrientation, M::Landscape);
+}
+
+void Ut_MCompositorNotificationSink::testOrientationUpdatedWhenBannerShown()
+{
+    // Rotate to portrait
+    gOrientationAngleContextPropertyValue = M::Angle90;
+
+    // Add a notification and display its banner
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    notificationManager->addNotification(0, parameters0);
+    emitDisplayEntered();
+
+    QCOMPARE(gSetWindowOrientation, M::Portrait);
+}
+
+void Ut_MCompositorNotificationSink::testOrientationUpdatedWhenWindowHidden()
+{
+    // Create window but don't add any banners
+    sink->createWindowIfNecessary();
+
+    // Rotate to portrait
+    gOrientationAngleContextPropertyValue = M::Angle90;
+
+    // Hide the window as there are no banners
+    sink->addOldestBannerToWindow();
+
+    QCOMPARE(gSetWindowOrientation, M::Portrait);
+}
+
+void Ut_MCompositorNotificationSink::testOrientationUpdatedWhenOrientationChangesAndWindowHidden()
+{
+    sink->createWindowIfNecessary();
+    sink->window->hide();
+
+    // Rotate to portrait while showing banner
+    gOrientationAngleContextPropertyValue = M::Angle90;
+
+    QVERIFY(disconnect(sink->currentWindowAngleProperty, SIGNAL(valueChanged()), sink, SLOT(updateWindowOrientationIfWindowHidden())));
+    sink->updateWindowOrientationIfWindowHidden();
+    QCOMPARE(gSetWindowOrientation, M::Portrait);
+}
+
+void Ut_MCompositorNotificationSink::testMaskUpdatedWhenOrientationChanges()
+{
+    qQTimerEmitTimeoutImmediately = false;
+
+    sink->createWindowIfNecessary();
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    sink->currentBanner = sink->createInfoBanner(Notification::ApplicationEvent, 0, parameters0);
+
+    // Rotate to portrait
+    gOrientationAngleContextPropertyValue = M::Angle90;
+    gCurrentOrientationAngle = M::Angle90;
+    // Invalidate expected mask
+    mWindowMaskRegion = QRegion();
+    sink->updateWindowOrientation();
+
+    // Verify that mask was cleared and updated
+    QCOMPARE(gQWidgetClearMaskCalled, true);
+    QCOMPARE(mWindowMaskRegion.isEmpty(), false);
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)

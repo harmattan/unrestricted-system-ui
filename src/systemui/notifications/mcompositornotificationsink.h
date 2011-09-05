@@ -30,6 +30,10 @@
 #include <qmdisplaystate.h>
 #endif
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+#include <contextproperty.h>
+#endif
+
 class MBanner;
 class MGConfItem;
 
@@ -117,15 +121,16 @@ private slots:
     void updateWindowMask(MBanner* banner);
 
     /*!
-     * Clears the window mask
-     */
-    void clearWindowMask();
-
-    /*!
      * When current banner starts to disappear, this should be called to remove references
      * to the banner.
      */
     void currentBannerDone();
+
+    //! Updates notification windows orientation if window is currently hidden
+    void updateWindowOrientationIfWindowHidden();
+
+    //! Updates notification windows orientation according to topmost window orientation
+    void updateWindowOrientation();
 
 private:
     /*!
@@ -194,6 +199,10 @@ private:
 
     //! Whether the touch screen lock is active or not
     bool touchScreenLockActive;
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    ContextProperty *currentWindowAngleProperty;
+#endif
 
 #ifdef HAVE_QMSYSTEM
     //! Keep track of device display state
