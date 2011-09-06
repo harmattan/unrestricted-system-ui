@@ -4,13 +4,14 @@ StatusIndicatorMenuStyle {
     notification-area: true;
 }
 
-StatusIndicatorMenu MWidgetFadeAnimationStyle#In {
+MSceneLayerEffect#MenuSceneLayerEffect MWidgetFadeAnimationStyle#In {
     delay: 0;
-    easing-curve: inoutquint;
-    duration: 350;
+    /* Using outquint and 200 instead of inoutquint and 350 here despite the specification since those values just feel way too slow in practice */
+    easing-curve: outquint;
+    duration: 200;
 }
 
-StatusIndicatorMenu MWidgetFadeAnimationStyle#Out {
+MSceneLayerEffect#MenuSceneLayerEffect MWidgetFadeAnimationStyle#Out {
     delay: 0;
     easing-curve: inoutquint;
     duration: 350;
@@ -18,8 +19,9 @@ StatusIndicatorMenu MWidgetFadeAnimationStyle#Out {
 
 StatusIndicatorMenu MWidgetSlideAnimationStyle#In {
     delay: 0;
-    duration: 350;
-    easing-curve: inoutquint;
+    /* Using outquint and 200 instead of inoutquint and 350 here despite the specification since those values just feel way too slow in practice */
+    duration: 200;
+    easing-curve: outquint;
     origin: "top";
 }
 
