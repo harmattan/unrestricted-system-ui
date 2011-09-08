@@ -1,19 +1,63 @@
-system-ui (1.2.0~1) unstable; urgency=low
+system-ui (1.2.0-1) unstable; urgency=low
 
-  * [UNRELEASED]
-  * Fixes: NB#265870 - Randomly when a notification comes, the window underneatch is changed to show something for 1s
-  * Fixes: NB#278398 - COREWEB: /usr/bin/sysuid '__aeabi_ldiv0 StatusIndicatorAnimationView::setupAnimationTimeline StatusIndicatorAnimationView::applyStyle StatusIndicatorIconView::applyStyle'
-  * Fixes: NB#249391 - [TASK] Notifier improvement
-  * Fixes: NB#276034 - [TASK] Operator name should be replaced with "No coverage" when in limited service state and there is no network available
-  * Fixes: NB#275357 - [TASK] Low memory notification dialog
-  * Fixes: NB#262034 - Accessory connected sound played when disconnecting USB cable
-  * Fixes: NB#277582 - While no operator name is displayed but WLAN is active there's a gap between the signal strength and network type indicator
-  * Fixes: NB#278885 - Disable low memory notification for PR1.1 & later
   * Fixes: NB#277582 - While no operator name is displayed but WLAN is active there's a gap between the signal strength and network type indicators
-  * Fixes: NB#255218 - Status Menu open/close transition is incorrect
   * Fixes: NB#280304 - wrong feedback for exiting power save mode
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 04 Aug 2011 17:17:02 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 08 Sep 2011 12:29:25 +0300
+
+system-ui (1.1.14-1) unstable; urgency=low
+
+  * Fixes: NB#255218 - Status Menu open/close transition is incorrect
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 06 Sep 2011 17:24:55 +0300
+
+system-ui (1.1.13-1) unstable; urgency=low
+
+  * Fixes: NB#265870 - Randomly when a notification comes, the window underneatch is changed to show something for 1s
+
+ -- Eetu Lehmusvuo <ext-eetu.6.lehmusvuo@nokia.com>  Fri, 2 Sep 2011 15:51:22 +0300
+
+system-ui (1.1.12-1) unstable; urgency=low
+
+  * Fixes: NB#278885 - Disable low memory notification for PR1.1 & later
+
+ -- Pankaj Saharan <pankaj.saharan@nokia.com>  Wed, 30 Aug 2011 12:00:21 +0300
+
+system-ui (1.1.11-1) unstable; urgency=low
+
+  * Fixes: NB#278398 - COREWEB: /usr/bin/sysuid '__aeabi_ldiv0 StatusIndicatorAnimationView::setupAnimationTimeline StatusIndicatorAnimationView::applyStyle StatusIndicatorIconView::applyStyle'
+
+ -- Pankaj Saharan <pankaj.saharan@nokia.com>  Tue, 23 Aug 2011 15:30:05 +0300
+
+system-ui (1.1.10-1) unstable; urgency=low
+
+  * Fixes: NB#262034 - Accessory connected sound played when disconnecting USB cable
+
+ -- Pauli Lehtinen <pauli.lehtinen@nokia.com>  Fri, 19 Aug 2011 16:02:02 +0300
+
+system-ui (1.1.9-1) unstable; urgency=low
+
+  * Fixes: NB#275357 - [TASK] Low memory notification dialog
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 09 Aug 2011 13:02:25 +0300
+
+system-ui (1.1.8-1) unstable; urgency=low
+
+  * Fixes: NB#275357 - [TASK] Low memory notification dialog
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 08 Aug 2011 20:54:18 +0300
+
+system-ui (1.1.7-1) unstable; urgency=low
+
+  * Fixes: NB#276034 - [TASK] Operator name should be replaced with "No coverage" when in limited service state and there is no network available
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 08 Aug 2011 17:27:17 +0300
+
+system-ui (1.1.6-1) unstable; urgency=low
+
+  * Fixes: NB#249391 - [TASK] Notifier improvement
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 08 Aug 2011 14:49:50 +0300
 
 system-ui (1.1.5-1) unstable; urgency=low
 
