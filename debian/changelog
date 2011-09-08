@@ -1,3 +1,9 @@
+system-ui (1.2.1~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 08 Sep 2011 12:30:03 +0300
+
 system-ui (1.2.0-1) unstable; urgency=low
 
   * Fixes: NB#277582 - While no operator name is displayed but WLAN is active there's a gap between the signal strength and network type indicators
