@@ -82,6 +82,9 @@ void MCompositorNotificationSink::createWindowIfNecessary()
         window->setWindowTitle("Notification");
         window->setOrientationLocked(true);
 
+        // This fixes bug #281758. For some reason the window is not transparent by default.
+        XSetWindowBackground(QX11Info::display(), window->effectiveWinId(), 0);
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
         connect(currentWindowAngleProperty, SIGNAL(valueChanged()), this, SLOT(updateWindowOrientationIfWindowHidden()));
 #endif
