@@ -280,32 +280,35 @@ private:
 };
 
 /*!
- * A status indicator for showing whether the bluetooth connection
- * is activated.
+ * A status indicator for showing short distance network activity.
+ * It shows whether the bluetooth connection is established or activated,
+ * or if NFC is activated.
+ * If both are active at the same time indication of NFC will be shown
  */
-class BluetoothStatusIndicator : public StatusIndicator
+class ShortDistanceNetworkStatusIndicator : public StatusIndicator
 {
     Q_OBJECT
-    M_CONTROLLER(BluetoothStatusIndicator)
+    M_CONTROLLER(ShortDistanceNetworkStatusIndicator)
 
 public:
     /*!
-     * Constructs a BluetoothStatusIndicator.
+     * Constructs a ShortDistanceNetworkStatusIndicator.
      *
      * \param context the application context to get status information from
      * \param parent parent MWidget
      */
-    explicit BluetoothStatusIndicator(ApplicationContext &context,
+    explicit ShortDistanceNetworkStatusIndicator(ApplicationContext &context,
                                       QGraphicsItem *parent = NULL);
 
-    virtual ~BluetoothStatusIndicator();
+    virtual ~ShortDistanceNetworkStatusIndicator();
 
 private slots:
-    void bluetoothChanged();
+    void activityChanged();
 
 private:
     ContextItem *bluetoothEnabled;
     ContextItem *bluetoothConnected;
+    ContextItem *nfcActivated;
 };
 
 /*!

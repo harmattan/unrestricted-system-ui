@@ -76,8 +76,8 @@ private:
     //! Phone network type indicator
     StatusIndicator *phoneNetworkTypeIndicator;
 
-    //! Bluetooth indicator
-    StatusIndicator *bluetoothIndicator;
+    //! Short distance network indicator
+    StatusIndicator *shortDistanceNetworkIndicator;
 
     //! GPS indicator
     StatusIndicator *gpsIndicator;

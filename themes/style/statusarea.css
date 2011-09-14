@@ -479,7 +479,7 @@ StatusIndicatorIconStyle#AlarmStatusIndicatorSet {
     maximum-size: -1 -1;
 }
 
-StatusIndicatorIconStyle#BluetoothStatusIndicator {
+StatusIndicatorIconStyle#ShortDistanceNetworkStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";
     preferred-size: 0 -1;
@@ -487,7 +487,7 @@ StatusIndicatorIconStyle#BluetoothStatusIndicator {
     maximum-size: 0 -1;
 }
 
-StatusIndicatorIconStyle#BluetoothStatusIndicatorOn {
+StatusIndicatorIconStyle#ShortDistanceNetworkStatusIndicatorBluetoothOn {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-bluetooth";
     preferred-size: -1 -1;
@@ -495,9 +495,17 @@ StatusIndicatorIconStyle#BluetoothStatusIndicatorOn {
     maximum-size: -1 -1;
 }
 
-StatusIndicatorIconStyle#BluetoothStatusIndicatorActive {
+StatusIndicatorIconStyle#ShortDistanceNetworkStatusIndicatorBluetoothActive {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-bluetooth-active";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#ShortDistanceNetworkStatusIndicatorNfcActive {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-nfc";
     preferred-size: -1 -1;
     minimum-size: -1 -1;
     maximum-size: -1 -1;

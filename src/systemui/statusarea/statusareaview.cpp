@@ -47,8 +47,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
-    landscapeBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
-    portraitBluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    landscapeShortDistanceNetworkIndicator(new ShortDistanceNetworkStatusIndicator(contextFrameworkContext, controller)),
+    portraitShortDistanceNetworkIndicator(new ShortDistanceNetworkStatusIndicator(contextFrameworkContext, controller)),
     landscapeGPSIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
     portraitGPSIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
     landscapePresenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
@@ -124,8 +124,8 @@ void StatusAreaView::setupTestability()
     portraitPhoneSignalStrengthIndicator->setParent(portraitWidget);
     landscapePhoneNetworkTypeIndicator->setParent(landscapeWidget);
     portraitPhoneNetworkTypeIndicator->setParent(portraitWidget);
-    landscapeBluetoothIndicator->setParent(landscapeWidget);
-    portraitBluetoothIndicator->setParent(portraitWidget);
+    landscapeShortDistanceNetworkIndicator->setParent(landscapeWidget);
+    portraitShortDistanceNetworkIndicator->setParent(portraitWidget);
     landscapeGPSIndicator->setParent(landscapeWidget);
     portraitGPSIndicator->setParent(portraitWidget);
     landscapePresenceIndicator->setParent(landscapeWidget);
@@ -176,7 +176,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapeNotificationIndicator);
     layout->addItem(landscapeTransferStatusIndicator);
     layout->addItem(landscapeCallForwardingIndicator);
-    layout->addItem(landscapeBluetoothIndicator);
+    layout->addItem(landscapeShortDistanceNetworkIndicator);
     layout->addItem(landscapeGPSIndicator);
     layout->addItem(landscapePresenceIndicator);
     layout->addItem(landscapeProfileIndicator);
@@ -203,7 +203,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addItem(portraitNotificationIndicator);
     layout->addItem(portraitTransferStatusIndicator);
     layout->addItem(portraitCallForwardingIndicator);
-    layout->addItem(portraitBluetoothIndicator);
+    layout->addItem(portraitShortDistanceNetworkIndicator);
     layout->addItem(portraitGPSIndicator);
     layout->addItem(portraitPresenceIndicator);
     layout->addItem(portraitProfileIndicator);

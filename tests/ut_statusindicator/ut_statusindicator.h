@@ -51,8 +51,8 @@ private slots:
     void testContextItemSubscribe();
     void testContextItemDeletion();
     void testPhoneNetworkSignalStrength();
-    void testPhoneNetworkSignalStrenghtStyleName_data();
-    void testPhoneNetworkSignalStrenghtStyleName();
+    void testPhoneNetworkSignalStrengthStyleName_data();
+    void testPhoneNetworkSignalStrengthStyleName();
     void testWhenPhoneNetworkBecomesAvailableThenSignalIsEmitted();
     void testWhenPhoneNetworkBecomesUnavailableThenSignalIsEmitted();
     void testPhoneNetworkTypeStyleNameWhenSystemOnlineName_data();
@@ -61,7 +61,8 @@ private slots:
     void testPhoneNetworkAvailabilityChanged();
     void testBattery();
     void testAlarm();
-    void testBluetooth();
+    void testShortDistanceNetwork_data();
+    void testShortDistanceNetwork();
     void testPresence();
     void testAnimation();
     void testPhoneNetwork_data();

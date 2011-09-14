@@ -197,7 +197,7 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrength()
     QCOMPARE(statusIndicator->styleName(), QString("PhoneNetworkSignalStrengthStatusIndicator"));
 }
 
-void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName_data()
+void Ut_StatusIndicator::testPhoneNetworkSignalStrengthStyleName_data()
 {
     QTest::addColumn<bool>("SystemOfflineMode");
     QTest::addColumn<QString>("CellularRegistrationStatus");
@@ -213,7 +213,7 @@ void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName_data()
     QTest::newRow("Roam registration status") << false << QString("roam") << QString("");
 }
 
-void Ut_StatusIndicator::testPhoneNetworkSignalStrenghtStyleName()
+void Ut_StatusIndicator::testPhoneNetworkSignalStrengthStyleName()
 {
     QFETCH(bool, SystemOfflineMode);
     QFETCH(QString, CellularRegistrationStatus);
@@ -481,30 +481,36 @@ void Ut_StatusIndicator::testAlarm()
     QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
 }
 
-void Ut_StatusIndicator::testBluetooth()
+void Ut_StatusIndicator::testShortDistanceNetwork_data()
 {
-    m_subject = new BluetoothStatusIndicator(*testContext);
+    QTest::addColumn<bool>("BluetoothEnabled");
+    QTest::addColumn<bool>("BluetoothActive");
+    QTest::addColumn<bool>("NfcActive");
+    QTest::addColumn<QString>("styleName");
 
-    // !enabled && !connected == BluetoothStatusIndicator
-    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
-    testContextItems["Bluetooth.Connected"]->setValue(QVariant(false));
-    QVERIFY(m_subject->styleName().indexOf("On") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
+    QTest::newRow("!bteEnabled && !btConnected && !ncfActive") << false << false << false << QString("ShortDistanceNetworkStatusIndicator");
+    QTest::newRow("bteEnabled && !btConnected && !ncfActive") << true << false << false << QString("ShortDistanceNetworkStatusIndicatorBluetoothOn");
+    QTest::newRow("bteEnabled && btConnected && !ncfActive") << true << true << false << QString("ShortDistanceNetworkStatusIndicatorBluetoothActive");
+    QTest::newRow("!bteEnabled && btConnected && !ncfActive") << false << true << false << QString("ShortDistanceNetworkStatusIndicator");
+    QTest::newRow("!bteEnabled && !btConnected && ncfActive") << false << false << true << QString("ShortDistanceNetworkStatusIndicatorNfcActive");
+    QTest::newRow("bteEnabled && !btConnected && ncfActive") << true << false << true << QString("ShortDistanceNetworkStatusIndicatorNfcActive");
+    QTest::newRow("bteEnabled && btConnected && ncfActive") << true << true << true << QString("ShortDistanceNetworkStatusIndicatorNfcActive");
+    QTest::newRow("!bteEnabled && btConnected && ncfActive") << false << true << true << QString("ShortDistanceNetworkStatusIndicatorNfcActive");
+}
 
-    // enabled && !connected == BluetoothStatusIndicatorOn
-    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(true));
-    QVERIFY(m_subject->styleName().indexOf("On") >= 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
+void Ut_StatusIndicator::testShortDistanceNetwork()
+{
+    QFETCH(bool, BluetoothEnabled);
+    QFETCH(bool, BluetoothActive);
+    QFETCH(bool, NfcActive);
+    QFETCH(QString, styleName);
 
-    // enabled && connected == BluetoothStatusIndicatorActice
-    testContextItems["Bluetooth.Connected"]->setValue(QVariant(true));
-    QVERIFY(m_subject->styleName().indexOf("On") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") >= 0);
+    m_subject = new ShortDistanceNetworkStatusIndicator(*testContext);
 
-    // !enabled && connected == BluetoothStatusIndicator
-    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(false));
-    QVERIFY(m_subject->styleName().indexOf("On") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Active") < 0);
+    testContextItems["Bluetooth.Enabled"]->setValue(QVariant(BluetoothEnabled));
+    testContextItems["Bluetooth.Connected"]->setValue(QVariant(BluetoothActive));
+    testContextItems["/com/nokia/bt_ui/nfcTransferStatus"]->setValue(QVariant(NfcActive));
+    QVERIFY(m_subject->styleName() == styleName);
 }
 
 void Ut_StatusIndicator::testPresence()

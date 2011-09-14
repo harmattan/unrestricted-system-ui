@@ -378,31 +378,36 @@ void AlarmStatusIndicator::alarmChanged()
     }
 }
 
-BluetoothStatusIndicator::BluetoothStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
+ShortDistanceNetworkStatusIndicator::ShortDistanceNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {
     setStyleName(metaObject()->className());
 
     bluetoothEnabled = createContextItem(context, "Bluetooth.Enabled");
-    connect(bluetoothEnabled, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
+    connect(bluetoothEnabled, SIGNAL(contentsChanged()), this, SLOT(activityChanged()));
     bluetoothConnected = createContextItem(context, "Bluetooth.Connected");
-    connect(bluetoothConnected, SIGNAL(contentsChanged()), this, SLOT(bluetoothChanged()));
+    connect(bluetoothConnected, SIGNAL(contentsChanged()), this, SLOT(activityChanged()));
+    nfcActivated = createContextItem(context, "/com/nokia/bt_ui/nfcTransferStatus");
+    connect(nfcActivated, SIGNAL(contentsChanged()), this, SLOT(activityChanged()));
 }
 
-BluetoothStatusIndicator::~BluetoothStatusIndicator()
+ShortDistanceNetworkStatusIndicator::~ShortDistanceNetworkStatusIndicator()
 {
 }
 
-void BluetoothStatusIndicator::bluetoothChanged()
+void ShortDistanceNetworkStatusIndicator::activityChanged()
 {
-    bool enabled = bluetoothEnabled->value().toBool();
-    bool connected = bluetoothConnected->value().toBool();
+    bool btEnabled = bluetoothEnabled->value().toBool();
+    bool btConnected = bluetoothConnected->value().toBool();
+    bool nfcActive = nfcActivated->value().toBool();
 
-    if (enabled) {
-        if (connected) {
-            setStyleNameAndUpdate(QString(metaObject()->className()) + "Active");
+    if (nfcActive) {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "NfcActive");
+    } else if (btEnabled) {
+        if (btConnected) {
+            setStyleNameAndUpdate(QString(metaObject()->className()) + "BluetoothActive");
         } else {
-            setStyleNameAndUpdate(QString(metaObject()->className()) + "On");
+            setStyleNameAndUpdate(QString(metaObject()->className()) + "BluetoothOn");
         }
     } else {
         setStyleNameAndUpdate(QString(metaObject()->className()));

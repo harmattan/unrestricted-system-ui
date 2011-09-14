@@ -58,9 +58,9 @@ class AlarmStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(AlarmStatusIndicatorModel)
 };
 
-class BluetoothStatusIndicatorModel : public StatusIndicatorModel
+class ShortDistanceNetworkStatusIndicatorModel : public StatusIndicatorModel
 {
-    M_MODEL(BluetoothStatusIndicatorModel)
+    M_MODEL(ShortDistanceNetworkStatusIndicatorModel)
 };
 
 class GPSStatusIndicatorModel : public StatusIndicatorModel

@@ -1,6 +1,7 @@
 system-ui (1.2.1~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#259430 - NFC Status bar icon is not shown during NFC intiated transfer
   * Fixes: NB#281758 - There is a black bar on top of the Nokia ripple animation and/or PIN query dialog during boot
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 08 Sep 2011 12:30:03 +0300

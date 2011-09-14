@@ -35,7 +35,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     batteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     phoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     phoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
-    bluetoothIndicator(new BluetoothStatusIndicator(contextFrameworkContext, controller)),
+    shortDistanceNetworkIndicator(new ShortDistanceNetworkStatusIndicator(contextFrameworkContext, controller)),
     gpsIndicator(new GPSStatusIndicator(contextFrameworkContext, controller)),
     presenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
@@ -64,7 +64,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addItem(notificationStatusIndicator);
     layout->addItem(transferStatusIndicator);
     layout->addItem(callForwardingIndicator);
-    layout->addItem(bluetoothIndicator);
+    layout->addItem(shortDistanceNetworkIndicator);
     layout->addItem(gpsIndicator);
     layout->addItem(presenceIndicator);
     layout->addItem(profileIndicator);

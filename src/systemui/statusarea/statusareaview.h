@@ -96,9 +96,9 @@ private:
     StatusIndicator *landscapePhoneNetworkTypeIndicator;
     StatusIndicator *portraitPhoneNetworkTypeIndicator;
 
-    //! Bluetooth indicator
-    StatusIndicator *landscapeBluetoothIndicator;
-    StatusIndicator *portraitBluetoothIndicator;
+    //! Short distance network indicator
+    StatusIndicator *landscapeShortDistanceNetworkIndicator;
+    StatusIndicator *portraitShortDistanceNetworkIndicator;
 
     //! GPS indicator
     StatusIndicator *landscapeGPSIndicator;
