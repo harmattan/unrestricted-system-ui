@@ -21,6 +21,8 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QScopedPointer>
+#include <MNotification>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmled.h>
@@ -108,7 +110,7 @@ private:
     LowBatteryNotifier *lowBatteryNotifier;
 
     //! The current notification
-    MNotification *notification;
+    QScopedPointer<MNotification> notification;
 
     //! Timer for checking whether the current notification can be removed or not
     QTimer notificationTimer;

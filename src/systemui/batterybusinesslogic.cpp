@@ -249,12 +249,7 @@ void BatteryBusinessLogic::sendNotification(BatteryBusinessLogic::NotificationID
 
 void BatteryBusinessLogic::sendNotification(const QString &eventType, const QString &text, const QString &icon)
 {
-    if (notification != 0) {
-        delete notification;
-        notification = 0;
-    }
-
-    notification = new MNotification(eventType, "", text);
+    notification.reset(new MNotification(eventType, "", text));
     if (!icon.isEmpty()) {
         notification->setImage(icon);
     }
@@ -264,10 +259,9 @@ void BatteryBusinessLogic::sendNotification(const QString &eventType, const QStr
 
 void BatteryBusinessLogic::removeNotification(const QStringList &eventTypes)
 {
-    if (notification != 0 && eventTypes.contains(notification->eventType()) && notificationTimer.isActive()) {
+    if (notification && eventTypes.contains(notification->eventType()) && notificationTimer.isActive()) {
         notification->remove();
-        delete notification;
-        notification = 0;
+        notification.reset();
         notificationTimer.stop();
     }
 }
