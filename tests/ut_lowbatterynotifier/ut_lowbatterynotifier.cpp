@@ -50,7 +50,7 @@ void Ut_LowBatteryNotifier::init()
 {
     contextItem = new ContextFrameworkItem(QString());
     gContextFrameworkContextStub->stubSetReturnValue("createContextItem", static_cast<ContextItem *>(contextItem));
-    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(false));
+    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant("inactive"));
     m_subject = new LowBatteryNotifier;
 }
 
@@ -138,7 +138,7 @@ void Ut_LowBatteryNotifier::testSetNotificationInterval()
 #ifdef HAVE_QMSYSTEM
     gQmDisplayStateStub->stubSetReturnValue("get", displayState == MeeGo::QmDisplayState::On ? MeeGo::QmDisplayState::Off : MeeGo::QmDisplayState::On);
 #endif
-    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(!callActive));
+    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(callActive ? "inactive" : "active"));
     m_subject->setTouchScreenLockActive(!touchScreenLockActive);
 
     // Set the values according to the test data and verify
@@ -146,7 +146,7 @@ void Ut_LowBatteryNotifier::testSetNotificationInterval()
 #ifdef HAVE_QMSYSTEM
     gQmDisplayStateStub->stubSetReturnValue("get", displayState);
 #endif
-    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(callActive));
+    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(callActive ? "active" : "inactive"));
     qTimeElapsed = timeSincePreviousNotification;
     m_subject->setTouchScreenLockActive(touchScreenLockActive);
     QCOMPARE(m_subject->notificationTimer->interval(), notificationTimerInterval);
@@ -159,7 +159,7 @@ void Ut_LowBatteryNotifier::testSetNotificationIntervalDoesNothingWhenStateDoesN
 #ifdef HAVE_QMSYSTEM
     gQmDisplayStateStub->stubSetReturnValue("get", MeeGo::QmDisplayState::On);
 #endif
-    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant(false));
+    gContextFrameworkItemStub->stubSetReturnValue("value", QVariant("inactive"));
     qTimeElapsed = 0;
     m_subject->setTouchScreenLockActive(false);
 

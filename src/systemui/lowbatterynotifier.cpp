@@ -64,7 +64,7 @@ void LowBatteryNotifier::sendLowBatteryAlert()
 void LowBatteryNotifier::setNotificationInterval()
 {
     bool deviceCurrentlyInactive = touchScreenLockActive;
-    bool callCurrentlyActive = callContextItem->value().toBool();
+    bool callCurrentlyActive = callContextItem->value().toString() == "active";
 
 #ifdef HAVE_QMSYSTEM
     // Device can be considered inactive only if the touch screen lock is active AND the display is off
