@@ -1,11 +1,9 @@
-system-ui (1.2.1~1) unstable; urgency=low
+system-ui (1.2.1-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#259430 - NFC Status bar icon is not shown during NFC intiated transfer
-  * Fixes: NB#281758 - There is a black bar on top of the Nokia ripple animation and/or PIN query dialog during boot
   * Fixes: NB#269048 - Endurance: Sysuid memory leak
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 08 Sep 2011 12:30:03 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 19 Sep 2011 12:24:11 +0300
 
 system-ui (1.2.0-1) unstable; urgency=low
 
