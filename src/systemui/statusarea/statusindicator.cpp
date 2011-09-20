@@ -251,9 +251,15 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     if (data) {
         postFix += postFixPacketData;
         if (!postFix.isEmpty()) {
-            postFix += "Active";
+            if (state == "connecting" && connection == "GPRS") {
+                // if gprs is connecting while packet data is active, connecting animation is shown
+                postFix += "Connecting";
+            } else {
+                // else packet data active icon is shown
+                postFix += "Active";
+            }
         }
-        animateIfPossible = ((connection == "WLAN") && (state != "disconnected") && wlanOn);
+        animateIfPossible = ((connection == "WLAN" && state != "disconnected" && wlanOn) || postFix.contains("Connecting"));
     } else {
         if (postFix.isEmpty()) {
             postFix = postFixPacketData;
