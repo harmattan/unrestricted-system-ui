@@ -63,6 +63,7 @@ private slots:
     void testAlarm();
     void testShortDistanceNetwork_data();
     void testShortDistanceNetwork();
+    void testPresence_data();
     void testPresence();
     void testAnimation();
     void testPhoneNetwork_data();

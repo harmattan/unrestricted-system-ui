@@ -521,28 +521,32 @@ void Ut_StatusIndicator::testShortDistanceNetwork()
     QVERIFY(m_subject->styleName() == styleName);
 }
 
+void Ut_StatusIndicator::testPresence_data()
+{
+    QTest::addColumn<QString>("state");
+    QTest::addColumn<QString>("styleNameSuffix");
+    QTest::addColumn<bool>("defaultValue");
+    QTest::newRow("default, offline") << "" << "" << true;
+    QTest::newRow("busy") << "busy" << "Busy" << false;
+    QTest::newRow("available") << "available" << "Available" << false;
+    QTest::newRow("offline") << "offline" << "" << false;
+    QTest::newRow("connecting") << "connecting" << "Connecting" << false;
+}
+
 void Ut_StatusIndicator::testPresence()
 {
+    QFETCH(QString, state);
+    QFETCH(QString, styleNameSuffix);
+    QFETCH(bool, defaultValue);
+
     m_subject = new PresenceStatusIndicator(*testContext);
 
     // Offline mode by default
-    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    if (!defaultValue) {
+        testContextItems["Presence.State"]->setValue(QVariant(state));
+    }
 
-    // Busy
-    testContextItems["Presence.State"]->setValue(QVariant("busy"));
-    QVERIFY(m_subject->styleName().indexOf("Busy") >= 0);
-    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
-
-    // Available
-    testContextItems["Presence.State"]->setValue(QVariant("available"));
-    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Available") >= 0);
-
-    // Offline (explicitly)
-    testContextItems["Presence.State"]->setValue(QVariant("offline"));
-    QVERIFY(m_subject->styleName().indexOf("Busy") < 0);
-    QVERIFY(m_subject->styleName().indexOf("Available") < 0);
+    QVERIFY(m_subject->styleName() == QString(m_subject->metaObject()->className()) + styleNameSuffix);
 }
 
 void Ut_StatusIndicator::testAnimation()

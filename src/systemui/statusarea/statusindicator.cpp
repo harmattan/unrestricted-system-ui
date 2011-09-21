@@ -437,16 +437,23 @@ PresenceStatusIndicator::~PresenceStatusIndicator()
 void PresenceStatusIndicator::presenceChanged()
 {
     QString status = presence->value().toString();
-    QString suffix;
 
     if (status == "busy" || status == "available") {
         // Capitalize the status
         status.replace(0, 1, status[0].toUpper());
         setStyleNameAndUpdate(QString(metaObject()->className()) + status);
+        animateIfPossible = false;
+    } else if (status == "connecting") {
+        // Capitalize the status
+        status.replace(0, 1, status[0].toUpper());
+        setStyleNameAndUpdate(QString(metaObject()->className()) + status);
+        animateIfPossible = true;
     } else if (status == "offline" || status == "") {
         // No presence information is treated as "offline"
         setStyleNameAndUpdate(QString(metaObject()->className()));
+        animateIfPossible = false;
     }
+    updateAnimationStatus();
 }
 
 PhoneNetworkStatusIndicator::PhoneNetworkStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :

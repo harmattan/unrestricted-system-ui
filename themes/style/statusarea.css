@@ -574,6 +574,13 @@ StatusIndicatorIconStyle#PresenceStatusIndicatorBusy {
     maximum-size: -1 -1;
 }
 
+StatusIndicatorIconStyle#PresenceStatusIndicatorConnecting {
+    image-list: "icon-s-status-presence-online icon-s-status-presence-offline";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
 StatusIndicatorIconStyle#GPSStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";
