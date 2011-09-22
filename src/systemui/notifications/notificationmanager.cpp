@@ -86,8 +86,7 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
 
 void NotificationManager::initializeStore()
 {
-    // Prune the non-persistent notifications on first boot by
-    // restoring persistent notifications and saving the remaining notifications
+    // Non-persistent notifications are pruned during reboot by saving notifications after restoring only persistent notifications
     restoreData();
     saveNotifications();
 }
