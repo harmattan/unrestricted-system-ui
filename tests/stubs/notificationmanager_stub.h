@@ -56,7 +56,6 @@ class NotificationManagerStub : public StubBase {
   virtual bool ensurePersistentDataPath();
   virtual void saveStateData();
   virtual void saveNotifications();
-  virtual void removeUnseenFlags(bool ignore);
   virtual QList<Notification> notifications();
   virtual QList<NotificationGroup> groups();
   virtual void doRemoveGroup(uint groupId);
@@ -254,13 +253,6 @@ void NotificationManagerStub::saveNotifications() {
   stubMethodEntered("saveNotifications");
 }
 
-void NotificationManagerStub::removeUnseenFlags(bool ignore)
-{
-    QList<ParameterBase*> params;
-    params.append(new Parameter<bool>(ignore));
-    return stubMethodEntered("removeUnseenFlags", params);
-}
-
 QList<Notification> NotificationManagerStub::notifications()
 {
     stubMethodEntered("notifications");
@@ -422,11 +414,6 @@ bool NotificationManager::ensurePersistentDataPath() {
 
 void NotificationManager::saveStateData() {
   gNotificationManagerStub->saveStateData();
-}
-
-void NotificationManager::removeUnseenFlags(bool ignore)
-{
-    gNotificationManagerStub->removeUnseenFlags(ignore);
 }
 
 QList<Notification> NotificationManager::notifications() const
