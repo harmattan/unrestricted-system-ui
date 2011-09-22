@@ -195,11 +195,6 @@ protected slots:
      * of this object and invoke any entity connected to this NotificationManager.
      */
     void relayNextNotification();
-    /*!
-      * Slot for setting unseen flags of all notifications to false.
-      * \param ignore  \c true if ignore the call \c false to remove the flags
-      */
-    void removeUnseenFlags(bool ignore);
 
 private slots:
     /*!

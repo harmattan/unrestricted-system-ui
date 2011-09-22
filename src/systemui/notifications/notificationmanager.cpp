@@ -48,16 +48,15 @@ static const QString NOTIFICATIONS_FILE_NAME = PERSISTENT_DATA_PATH + QString("n
 //! System notifications are identified with 'system' string literal
 static const QString SYSTEM_EVENT_ID = "system";
 
+//! Name of the file to determine whether the system was booted or whether it had crashed
 static const QString BOOT_FILE = "/sysuid_boot";
 
 NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSize) :
-    notificationContainer(),
-    groupContainer(),
     maxWaitQueueSize(maxWaitQueueSize),
     notificationInProgress(false),
     notificationIdInProgress(0),
     relayInterval(relayInterval),
-    context(new ContextFrameworkContext()),
+    context(new ContextFrameworkContext),
     lastUsedNotificationUserId(0),
     subsequentStart(false)
 {
@@ -77,7 +76,6 @@ NotificationManager::NotificationManager(int relayInterval, uint maxWaitQueueSiz
     waitQueueTimer.setSingleShot(true);
     connect(&waitQueueTimer, SIGNAL(timeout()), this, SLOT(relayNextNotification()));
 
-    //Initialize the event type store
     initializeEventTypeStore();
 
     // Connect to D-Bus and register the DBus source as an object
@@ -181,7 +179,7 @@ void NotificationManager::restoreState()
 
 void NotificationManager::restoreNotifications()
 {
-    // Startup status must be initilized always
+    // Startup status must be initialized always
     bool restoreAllNotifications = isSubsequentStart();
     QFile notificationFile(NOTIFICATIONS_FILE_NAME);
     if (notificationFile.open(QIODevice::ReadOnly)) {
@@ -221,24 +219,20 @@ void NotificationManager::initializeEventTypeStore()
     }
     notificationEventTypeStore = QSharedPointer<EventTypeStore> (new EventTypeStore(NOTIFICATIONS_EVENT_TYPES, MAX_EVENT_TYPE_CONF_FILES));
 
-    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeUninstalled(QString)),
-            this, SLOT(removeNotificationsAndGroupsWithEventType(QString)));
-    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeModified(QString)),
-            this, SLOT(updateNotificationsAndGroupsWithEventType(QString)));
+    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeUninstalled(QString)), this, SLOT(removeNotificationsAndGroupsWithEventType(QString)));
+    connect(notificationEventTypeStore.data(), SIGNAL(eventTypeModified(QString)), this, SLOT(updateNotificationsAndGroupsWithEventType(QString)));
 }
 
 void NotificationManager::removeNotificationsAndGroupsWithEventType(const QString &eventType)
 {
     foreach(const Notification &notification, notificationContainer) {
-        if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
-           toString() == eventType) {
+        if (notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString() == eventType) {
             removeNotification(notification.notificationId());
         }
     }
 
     foreach(const NotificationGroup &group, groupContainer) {
-        if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
-           toString() == eventType) {
+        if (group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString() == eventType) {
             doRemoveGroup(group.groupId());
         }
     }
@@ -247,16 +241,14 @@ void NotificationManager::removeNotificationsAndGroupsWithEventType(const QStrin
 void NotificationManager::updateNotificationsAndGroupsWithEventType(const QString &eventType)
 {
     foreach(Notification notification, notificationContainer) {
-        if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
-           toString() == eventType) {
+        if(notification.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString() == eventType) {
             notification.updateParameters(appendEventTypeParameters(notification.parameters()));
             updateNotification(notification.userId(), notification.notificationId(), notification.parameters());
         }
     }
 
     foreach(NotificationGroup group, groupContainer) {
-        if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).
-           toString() == eventType) {
+        if(group.parameters().value(GenericNotificationParameterFactory::eventTypeKey()).toString() == eventType) {
             group.updateParameters(appendEventTypeParameters(group.parameters()));
             updateGroup(group.userId(), group.groupId(), group.parameters());
         }
@@ -321,8 +313,7 @@ bool NotificationManager::removeNotification(uint notificationUserId, uint notif
 {
     Q_UNUSED(notificationUserId);
 
-    if (notificationContainer.contains(notificationId))
-    {
+    if (notificationContainer.contains(notificationId)) {
         emit queuedNotificationRemove(notificationId);
         return true;
     }
@@ -620,21 +611,6 @@ uint NotificationManager::nextAvailableGroupID()
         ++i;
     }
     return i;
-}
-
-void NotificationManager::removeUnseenFlags(bool ignore)
-{
-    if (!ignore) {
-        QHash<uint, Notification>::iterator it = notificationContainer.begin();
-        while (it != notificationContainer.end()) {
-            NotificationParameters newParameters = (*it).parameters();
-            newParameters.add(GenericNotificationParameterFactory::unseenKey(), QVariant(false));
-            (*it).setParameters(newParameters);
-            ++it;
-        }
-        // Change the states in the filestore
-        saveNotifications();
-    }
 }
 
 QList<Notification> NotificationManager::notifications() const
