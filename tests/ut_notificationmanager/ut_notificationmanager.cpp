@@ -1124,7 +1124,6 @@ void Ut_NotificationManager::testRemoveNotificationRelaysNotificationFromWaitQue
 
 }
 
-
 void Ut_NotificationManager::testRemoveNotificationsInGroup()
 {
     QSignalSpy removeSpy(manager, SIGNAL(notificationRemoved(uint)));
@@ -1580,19 +1579,6 @@ void Ut_NotificationManager::testRemovingGroupsWithEventType()
     manager->removeNotificationsAndGroupsWithEventType("sms");
     QCOMPARE(groupRemovedSpy.count(), 1);
     QCOMPARE(groupRemovedSpy.takeFirst()[0].toUInt(), id1);
-}
-
-void Ut_NotificationManager::testRemovalOfUnseenFlags()
-{
-    // Create a notification with "unseen" parameter set
-    NotificationParameters param;
-    param.add(UNSEEN, true);
-    uint id = manager->addNotification(0, param);
-
-    connect(this, SIGNAL(notifierSinkActive(bool)), manager, SLOT(removeUnseenFlags(bool)));
-    emit notifierSinkActive(false);
-
-    QCOMPARE(manager->notificationContainer.value(id).parameters().value(UNSEEN).toBool(), false);
 }
 
 void Ut_NotificationManager::testDBusNotificationSinkConnections()
