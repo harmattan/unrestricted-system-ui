@@ -3,6 +3,7 @@ system-ui (1.2.2~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#282786 - Animation on status area's internet indication starts really late when connecting to packet data
   * Fixes: NB#263863 - [TASK] Status area should show animation of presence going to online
+  * Fixes: NB#267919 - Notifications are not updated if event type changes when sysuid is not running
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 19 Sep 2011 17:09:41 +0300
 

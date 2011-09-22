@@ -124,12 +124,14 @@ public slots:
     void removeNotificationsAndGroupsWithEventType(const QString &eventType);
 
     /*!
-     * \brief Update event type data of all notifications with the specified event type
+     * Update event type data of all notifications and groups with the
+     * specified event type
      *
-     * Sends a notificationUpdated(Notification &) signal for all notifications of specified type
-     * so that sinks can update the event type data from the event type store
+     * Sends notificationUpdated() and groupUpdated() signals for all
+     * notifications and groups of specified type so that sinks can update
+     * the event type data from the event type store
      *
-     * \param eventType the event type of the notifications to update
+     * \param eventType the event type of the notifications and groups to update
      */
     void updateNotificationsAndGroupsWithEventType(const QString &eventType);
 
@@ -279,6 +281,7 @@ private:
      */
     void saveNotifications();
 
+    //! Returns \c true if sysuid was previously started after system boot, \c false otherwise
     bool isSubsequentStart();
 
     void restoreState();

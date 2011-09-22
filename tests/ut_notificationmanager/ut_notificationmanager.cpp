@@ -1431,6 +1431,63 @@ void Ut_NotificationManager::testGroupInfoStorage()
     QCOMPARE(ng.parameters().value(IMAGE).toString(), QString("image0"));
 }
 
+void Ut_NotificationManager::testGroupInfoRestoration()
+{
+    delete manager;
+
+    gStateBuffer.buffer().clear();
+    gStateBuffer.open(QIODevice::WriteOnly);
+    QDataStream stream(&gStateBuffer);
+
+    quint32 lastUsedNotificationId = 5;
+    stream << lastUsedNotificationId;
+
+    // Create three notification groups
+    NotificationParameters parameters0;
+    parameters0.add(EVENT_TYPE, "testType");
+    parameters0.add(IMAGE, "icon0");
+    stream << NotificationGroup(0, 0, parameters0);
+
+    NotificationParameters parameters1;
+    parameters1.add(EVENT_TYPE, "testType");
+    parameters1.add(BODY, "body1");
+    stream << NotificationGroup(1, 0, parameters1);
+
+    NotificationParameters parameters2;
+    parameters2.add(ICON, "buttonicon2");
+    stream << NotificationGroup(2, 0, parameters2);
+
+    gStateBuffer.close();
+
+    gEventTypeSettings["testType"][IMAGE] = "iconId";
+    manager = new TestNotificationManager(0);
+    QSignalSpy spy(manager, SIGNAL(groupUpdated(uint, NotificationParameters)));
+    manager->restoreData();
+
+    // Check that three notification groups were created with the given parameters
+    QCOMPARE(spy.count(), 3);
+
+    QList<QVariant> arguments = spy.takeFirst();
+    uint groupId = qvariant_cast<uint>(arguments.at(0));
+    NotificationParameters parameters = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(groupId, (uint)0);
+    QCOMPARE(parameters.value(IMAGE).toString(), QString("iconId"));
+
+    arguments = spy.takeFirst();
+    groupId = qvariant_cast<uint>(arguments.at(0));
+    parameters = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(groupId, (uint)1);
+    QCOMPARE(parameters.value(IMAGE).toString(), QString("iconId"));
+    QCOMPARE(parameters.value(BODY).toString(), QString("body1"));
+
+    arguments = spy.takeFirst();
+    groupId = qvariant_cast<uint>(arguments.at(0));
+    parameters = qvariant_cast<NotificationParameters>(arguments.at(1));
+    QCOMPARE(groupId, (uint)2);
+    QCOMPARE(parameters.value(IMAGE).toString(), QString());
+    QCOMPARE(parameters.value(ICON).toString(), QString("buttonicon2"));
+}
+
 void Ut_NotificationManager::tesNotificationStorage()
 {
     gEventTypeSettings["persistent"][PERSISTENT] = "true";
@@ -1496,11 +1553,13 @@ void Ut_NotificationManager::testNotificationRestoration()
 
     // Create three notifications
     NotificationParameters parameters0;
+    parameters0.add(EVENT_TYPE, "testType");
     parameters0.add(IMAGE, "icon0");
     parameters0.add(PERSISTENT, "false");
     stream << Notification(0, 3, 0, parameters0, Notification::ApplicationEvent, 0);
 
     NotificationParameters parameters1;
+    parameters1.add(EVENT_TYPE, "testType");
     parameters1.add(BODY, "body1");
     stream << Notification(1, 4, 0, parameters1, Notification::SystemEvent, 1000);
 
@@ -1510,6 +1569,7 @@ void Ut_NotificationManager::testNotificationRestoration()
 
     gNotificationBuffer.close();
 
+    gEventTypeSettings["testType"][IMAGE] = "iconId";
     manager = new TestNotificationManager(0);
     QSignalSpy spy(manager, SIGNAL(notificationRestored(Notification)));
     manager->restoreData();
@@ -1524,7 +1584,7 @@ void Ut_NotificationManager::testNotificationRestoration()
     Notification n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)0);
     QCOMPARE(n.groupId(), (uint)3);
-    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("icon0"));
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("iconId"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 0);
 
@@ -1532,6 +1592,7 @@ void Ut_NotificationManager::testNotificationRestoration()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)1);
     QCOMPARE(n.groupId(), (uint)4);
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString("iconId"));
     QCOMPARE(n.parameters().value(BODY).toString(), QString("body1"));
     QCOMPARE(n.type(), Notification::SystemEvent);
     QCOMPARE(n.timeout(), 1000);
@@ -1540,6 +1601,7 @@ void Ut_NotificationManager::testNotificationRestoration()
     n = qvariant_cast<Notification>(arguments.at(0));
     QCOMPARE(n.notificationId(), (uint)2);
     QCOMPARE(n.groupId(), (uint)5);
+    QCOMPARE(n.parameters().value(IMAGE).toString(), QString());
     QCOMPARE(n.parameters().value(ICON).toString(), QString("buttonicon2"));
     QCOMPARE(n.type(), Notification::ApplicationEvent);
     QCOMPARE(n.timeout(), 2000);

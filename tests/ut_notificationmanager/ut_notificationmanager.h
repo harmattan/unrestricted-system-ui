@@ -130,6 +130,8 @@ private slots:
     void testNotificationGroupListWithIdentifiers();
     // Test that the group info is saved to the persistent storage
     void testGroupInfoStorage();
+    // Test that the group info is restored from the persistent storage
+    void testGroupInfoRestoration();
     // Test that the persistent notifications are saved to the persistent storage
     void tesNotificationStorage();
     // Test that the persistent notifications are restored from the persistent storage

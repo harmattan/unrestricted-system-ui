@@ -126,7 +126,6 @@ void NotificationManager::saveStateData()
     }
 }
 
-
 void NotificationManager::saveNotifications()
 {
     if (ensurePersistentDataPath()) {
@@ -166,9 +165,14 @@ void NotificationManager::restoreState()
         stream >> lastUsedNotificationUserId;
 
         NotificationGroup group;
-
         while (!stream.atEnd()) {
+            // Restore each notification group
             stream >> group;
+
+            // Update the group from the event type parameters to make sure changes in the event type definition are taken into effect
+            group.updateParameters(appendEventTypeParameters(group.parameters()));
+
+            // Let the sinks know about the group
             groupContainer.insert(group.groupId(), group);
             emit groupUpdated(group.groupId(), group.parameters());
         }
@@ -187,9 +191,15 @@ void NotificationManager::restoreNotifications()
 
         Notification notification;
         while (!stream.atEnd()) {
+            // Restore each notification
             stream >> notification;
+
             // When starting on boot add only the persistent notifications
             if (restoreAllNotifications || isPersistent(notification.parameters())) {
+                // Update the notification from the event type parameters to make sure changes in the event type definition are taken into effect
+                notification.updateParameters(appendEventTypeParameters(notification.parameters()));
+
+                // Let the sinks know about the notification
                 notificationContainer.insert(notification.notificationId(), notification);
                 emit notificationRestored(notification);
             }
