@@ -1,3 +1,9 @@
+system-ui (1.2.3~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 23 Sep 2011 12:38:43 +0300
+
 system-ui (1.2.2-1) unstable; urgency=low
 
   * Fixes: NB#282786 - Animation on status area's internet indication starts really late when connecting to packet data
