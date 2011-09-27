@@ -16,7 +16,7 @@ Conflicts: duistatusindicatormenu
 Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
 Recommends: pulseaudio-module-meego-mainvolume
-Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, duicontrolpanel-privatemodeapplet,
+Depends: ${shlibs:Depends}, ${misc:Depends}, systemui-l10n-engineering-english, duicontrolpanel-privatemodeapplet, ui-fonts (>=5.6),
          usb-moded [armel]
 Description: Various system user interfaces.
   System user interface package contains various user interfaces, e.g:
