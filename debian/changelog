@@ -1,6 +1,7 @@
 system-ui (1.2.3~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#284160 - Incorrectly detected taps on status area when status menu is open
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 23 Sep 2011 12:38:43 +0300
 

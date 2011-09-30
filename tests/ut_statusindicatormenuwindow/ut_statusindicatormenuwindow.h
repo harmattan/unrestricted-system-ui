@@ -54,6 +54,7 @@ private slots:
     void testWhenLanguageChangesThenMenuWidgetIsResetted();
     void testWhenLanguageChangeEventWithoutLanguageChangingThenMenuWidgetIsNotResetted();
     void testStatusIndicatorMenuAppearsAfterEnteringDisplay();
+    void testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped_data();
     void testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped();
     void testWhenWindowAlreadyOnDisplayThenMenuWidgetAppearsWithoutDisplayEnterSignal();
     void testWhenStatusIndicatorMenuIsDisappearedThenWindowIsHidden();

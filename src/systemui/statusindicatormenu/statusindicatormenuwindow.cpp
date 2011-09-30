@@ -176,17 +176,19 @@ bool StatusIndicatorMenuWindow::event(QEvent *event)
     return windowIsHandlingEvent;
 }
 
-void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent * event)
+void StatusIndicatorMenuWindow::mousePressEvent(QMouseEvent *event)
 {
     mousePressPosition = event->pos();
     MWindow::mousePressEvent(event);
 }
 
-void StatusIndicatorMenuWindow::mouseReleaseEvent(QMouseEvent * event)
+void StatusIndicatorMenuWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (itemAt(mousePressPosition) == statusBar && menuWidget) {
+    if (itemAt(mousePressPosition) == statusBar && itemAt(event->pos()) == statusBar && menuWidget) {
+        // If the mouse was pressed AND released on top of the status bar, hide the status indicator menu
         menuWidget->disappear();
     }
+
     // pass mouse release to status bar as well, else it will remain in pressed state if press happened on it
     MWindow::mouseReleaseEvent(event);
 }

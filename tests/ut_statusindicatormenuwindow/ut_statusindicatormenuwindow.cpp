@@ -235,36 +235,50 @@ void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuAppearsAfterEnteringDi
     QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Appeared);
 }
 
+void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped_data()
+{
+    QTest::addColumn<bool>("pressInside");
+    QTest::addColumn<bool>("releaseInside");
+    QTest::addColumn<MSceneWindow::SceneWindowState>("sceneWindowState");
+
+    QTest::newRow("Press outside, release outside") << false << false << MSceneWindow::Appeared;
+    QTest::newRow("Press outside, release inside") << false << true << MSceneWindow::Appeared;
+    QTest::newRow("Press inside, release outside") << true << false << MSceneWindow::Appeared;
+    QTest::newRow("Press inside, release inside") << true << true << MSceneWindow::Disappeared;
+}
 
 void Ut_StatusIndicatorMenuWindow::testStatusIndicatorMenuIsClosedWhenStatusBarIsTapped()
 {
+    QFETCH(bool, pressInside);
+    QFETCH(bool, releaseInside);
+    QFETCH(MSceneWindow::SceneWindowState, sceneWindowState);
+
     statusIndicatorMenuWindow->displayActive();
 
     // Map the bounding rect to the scene
-    QRectF statusBarGeo(statusIndicatorMenuWindow->statusBar->sceneBoundingRect());
+    QRectF statusBarGeometry(statusIndicatorMenuWindow->statusBar->sceneBoundingRect());
+    QPoint pressPoint(statusBarGeometry.x(), statusBarGeometry.y());
+    QPoint releasePoint(statusBarGeometry.x(), statusBarGeometry.y());
 
-    QPoint inside(statusBarGeo.x()+statusBarGeo.width()/2,
-                  statusBarGeo.y()+statusBarGeo.height()/2);
+    if (!pressInside) {
+        pressPoint += QPoint(-1, -1);
+    }
 
-    // Then map a point inside it to the viewport
-    inside = statusIndicatorMenuWindow->mapFromScene(inside);
+    if (!releaseInside) {
+        releasePoint += QPoint(-1, -1);
+    }
 
-    QMouseEvent pressInside(QEvent::MouseButtonPress,
-                             inside,
-                             Qt::LeftButton,
-                             Qt::MouseButtons(Qt::LeftButton),
-                             Qt::KeyboardModifiers(Qt::NoModifier));
+    // Then map the press point to the viewport
+    pressPoint = statusIndicatorMenuWindow->mapFromScene(pressPoint);
+    releasePoint = statusIndicatorMenuWindow->mapFromScene(releasePoint);
 
-    QMouseEvent releaseInside(QEvent::MouseButtonRelease,
-                              inside,
-                              Qt::LeftButton,
-                              Qt::MouseButtons(Qt::LeftButton),
-                              Qt::KeyboardModifiers(Qt::NoModifier));
+    QMouseEvent pressEvent(QEvent::MouseButtonPress, pressPoint, Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::KeyboardModifiers(Qt::NoModifier));
+    QMouseEvent releaseEvent(QEvent::MouseButtonRelease, releasePoint, Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::KeyboardModifiers(Qt::NoModifier));
 
-    statusIndicatorMenuWindow->mousePressEvent(&pressInside);
-    statusIndicatorMenuWindow->mouseReleaseEvent(&releaseInside);
+    statusIndicatorMenuWindow->mousePressEvent(&pressEvent);
+    statusIndicatorMenuWindow->mouseReleaseEvent(&releaseEvent);
 
-    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(statusIndicatorMenuWindow->menuWidget->sceneWindowState(), sceneWindowState);
 }
 
 void Ut_StatusIndicatorMenuWindow::testWhenStatusIndicatorMenuIsDisappearedThenWindowIsHidden()
