@@ -37,6 +37,7 @@
 #include "inputmethodstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
 #include "callstatusindicator_stub.h"
+#include "tetheringstatusindicator_stub.h"
 #include "profilestatusindicator_stub.h"
 #include "callforwardingstatusindicator_stub.h"
 #include "notificationarea_stub.h"

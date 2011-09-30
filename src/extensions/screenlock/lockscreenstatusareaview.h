@@ -91,6 +91,9 @@ private:
     //! Call indicator
     StatusIndicator *callIndicator;
 
+    //! Tethering indicator
+    StatusIndicator *tetheringIndicator;
+
     //! Alarm indicator
     StatusIndicator *alarmIndicator;
 

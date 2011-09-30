@@ -741,6 +741,17 @@ void Ut_StatusIndicator::testCall()
              ongoingStyleEnabled);
 }
 
+void Ut_StatusIndicator::testTethering()
+{
+    m_subject = new TetheringStatusIndicator(*testContext);
+
+    testContextItems["com.nokia.joikusoft.tethering"]->setValue(QVariant(false));
+    QCOMPARE(m_subject->styleName().indexOf("Set"), -1);
+
+    testContextItems["com.nokia.joikusoft.tethering"]->setValue(QVariant(true));
+    QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
+}
+
 void Ut_StatusIndicator::testProfile()
 {
     m_subject = new ProfileStatusIndicator(*testContext);

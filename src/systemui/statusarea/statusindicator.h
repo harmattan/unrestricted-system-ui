@@ -427,6 +427,32 @@ private:
 };
 
 /*!
+ * A status indicator for showing when tethering is active.
+ */
+class TetheringStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(TetheringStatusIndicator)
+
+public:
+    /*!
+     * Constructs a TetheringStatusIndicator.
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget
+     */
+    explicit TetheringStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
+
+    virtual ~TetheringStatusIndicator();
+
+private slots:
+    void tetheringChanged();
+
+private:
+    ContextItem *tethering;
+};
+
+/*!
  * A status indicator for showing the current profile.
  * Displayed only when the profile is silent.
  */

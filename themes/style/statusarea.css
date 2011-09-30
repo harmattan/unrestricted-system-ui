@@ -535,6 +535,20 @@ StatusIndicatorIconStyle#CallStatusIndicatorOngoing {
     maximum-size: -1 -1;
 }
 
+StatusIndicatorIconStyle#TetheringStatusIndicator {
+    image-list: "";
+    preferred-size: 0 -1;
+    minimum-size: 0 -1;
+    maximum-size: 0 -1;
+}
+
+StatusIndicatorIconStyle#TetheringStatusIndicatorSet {
+    image-list: "icon-s-status-tethering";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
 StatusIndicatorIconStyle#ProfileStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";

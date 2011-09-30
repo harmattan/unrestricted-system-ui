@@ -40,6 +40,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     presenceIndicator(new PresenceStatusIndicator(contextFrameworkContext, controller)),
     profileIndicator(new ProfileStatusIndicator(contextFrameworkContext, controller)),
     callIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
+    tetheringIndicator(new TetheringStatusIndicator(contextFrameworkContext, controller)),
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     notificationStatusIndicator(new NotificationStatusIndicator(controller)),
     callForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
@@ -63,6 +64,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addStretch();
     layout->addItem(notificationStatusIndicator);
     layout->addItem(transferStatusIndicator);
+    layout->addItem(tetheringIndicator);
     layout->addItem(callForwardingIndicator);
     layout->addItem(shortDistanceNetworkIndicator);
     layout->addItem(gpsIndicator);

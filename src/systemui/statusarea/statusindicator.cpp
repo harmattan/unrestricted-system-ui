@@ -636,6 +636,29 @@ void CallStatusIndicator::callOrMutedChanged()
     updateAnimationStatus();
 }
 
+TetheringStatusIndicator::TetheringStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
+    StatusIndicator(parent)
+{
+    setStyleName(metaObject()->className());
+
+    tethering = createContextItem(context, "com.nokia.joikusoft.tethering");
+    connect(tethering, SIGNAL(contentsChanged()), this, SLOT(tetheringChanged()));
+    tetheringChanged();
+}
+
+TetheringStatusIndicator::~TetheringStatusIndicator()
+{
+}
+
+void TetheringStatusIndicator::tetheringChanged()
+{
+    if (tethering->value().toBool()) {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Set");
+    } else {
+        setStyleNameAndUpdate(QString(metaObject()->className()));
+    }
+}
+
 ProfileStatusIndicator::ProfileStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {

@@ -58,6 +58,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     landscapeInputMethodIndicator(new InputMethodStatusIndicator(controller)),
     landscapeCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
     portraitCallIndicator(new CallStatusIndicator(contextFrameworkContext, controller)),
+    landscapeTetheringIndicator(new TetheringStatusIndicator(contextFrameworkContext, controller)),
+    portraitTetheringIndicator(new TetheringStatusIndicator(contextFrameworkContext, controller)),
     landscapeNotificationIndicator(new NotificationStatusIndicator(controller)),
     portraitNotificationIndicator(new NotificationStatusIndicator(controller)),
     landscapeCallForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
@@ -135,6 +137,8 @@ void StatusAreaView::setupTestability()
     landscapeInputMethodIndicator->setParent(landscapeWidget);
     landscapeCallIndicator->setParent(landscapeWidget);
     portraitCallIndicator->setParent(portraitWidget);
+    landscapeTetheringIndicator->setParent(landscapeWidget);
+    portraitTetheringIndicator->setParent(portraitWidget);
     landscapeNotificationIndicator->setParent(landscapeWidget);
     portraitNotificationIndicator->setParent(portraitWidget);
     landscapeClock->setParent(landscapeWidget);
@@ -175,6 +179,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addStretch();
     layout->addItem(landscapeNotificationIndicator);
     layout->addItem(landscapeTransferStatusIndicator);
+    layout->addItem(landscapeTetheringIndicator);
     layout->addItem(landscapeCallForwardingIndicator);
     layout->addItem(landscapeShortDistanceNetworkIndicator);
     layout->addItem(landscapeGPSIndicator);
@@ -202,6 +207,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addStretch();
     layout->addItem(portraitNotificationIndicator);
     layout->addItem(portraitTransferStatusIndicator);
+    layout->addItem(portraitTetheringIndicator);
     layout->addItem(portraitCallForwardingIndicator);
     layout->addItem(portraitShortDistanceNetworkIndicator);
     layout->addItem(portraitGPSIndicator);

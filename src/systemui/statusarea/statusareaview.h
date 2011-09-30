@@ -119,6 +119,10 @@ private:
     StatusIndicator *landscapeCallIndicator;
     StatusIndicator *portraitCallIndicator;
 
+    //! Tethering indicator
+    StatusIndicator *landscapeTetheringIndicator;
+    StatusIndicator *portraitTetheringIndicator;
+
     //! Notification notifier
     StatusIndicator *landscapeNotificationIndicator;
     StatusIndicator *portraitNotificationIndicator;

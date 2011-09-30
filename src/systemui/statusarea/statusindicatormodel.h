@@ -83,6 +83,11 @@ class CallStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(CallStatusIndicatorModel)
 };
 
+class TetheringStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(TetheringStatusIndicatorModel)
+};
+
 class ProfileStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(ProfileStatusIndicatorModel)
