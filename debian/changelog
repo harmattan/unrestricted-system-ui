@@ -1,3 +1,9 @@
+system-ui (1.2.5~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Oct 2011 10:24:46 +0300
+
 system-ui (1.2.4-1) unstable; urgency=low
 
   * Fixes: NB#257101 - [TASK] [FEA] Tethering indicator
