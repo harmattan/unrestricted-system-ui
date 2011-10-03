@@ -179,6 +179,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addStretch();
     layout->addItem(landscapeNotificationIndicator);
     layout->addItem(landscapeTransferStatusIndicator);
+    layout->addItem(landscapeCallIndicator);
     layout->addItem(landscapeTetheringIndicator);
     layout->addItem(landscapeCallForwardingIndicator);
     layout->addItem(landscapeShortDistanceNetworkIndicator);
@@ -186,7 +187,6 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
     layout->addItem(landscapePresenceIndicator);
     layout->addItem(landscapeProfileIndicator);
     layout->addItem(landscapeInputMethodIndicator);
-    layout->addItem(landscapeCallIndicator);
     layout->addItem(landscapeAlarmIndicator);
     layout->addItem(landscapeClock);
 
@@ -207,13 +207,13 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
     layout->addStretch();
     layout->addItem(portraitNotificationIndicator);
     layout->addItem(portraitTransferStatusIndicator);
+    layout->addItem(portraitCallIndicator);
     layout->addItem(portraitTetheringIndicator);
     layout->addItem(portraitCallForwardingIndicator);
     layout->addItem(portraitShortDistanceNetworkIndicator);
     layout->addItem(portraitGPSIndicator);
     layout->addItem(portraitPresenceIndicator);
     layout->addItem(portraitProfileIndicator);
-    layout->addItem(portraitCallIndicator);
     layout->addItem(portraitAlarmIndicator);
     layout->addItem(portraitClock);
 
