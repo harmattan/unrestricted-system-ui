@@ -1,10 +1,9 @@
-system-ui (1.2.4~1) unstable; urgency=low
+system-ui (1.2.4-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#257101 - [TASK] [FEA] Tethering indicator
   * Fixes: Call indicator on status area is mislocated
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 30 Sep 2011 15:00:49 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Oct 2011 10:24:22 +0300
 
 system-ui (1.2.3-1) unstable; urgency=low
 
