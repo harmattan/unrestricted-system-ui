@@ -3,7 +3,7 @@ system-ui (1.2.5-1) unstable; urgency=low
   * Fixes: libnotificationsystem-dev has missing package dependency
   * Fixes: NB#284448 - [TASK] Move away from hardcoded font in launcherbutton
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Oct 2011 10:24:46 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Oct 2011 16:06:02 +0300
 
 system-ui (1.2.4-1) unstable; urgency=low
 
