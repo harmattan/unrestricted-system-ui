@@ -63,7 +63,7 @@ Description: Notification System Library
 Package: libnotificationsystem-dev
 Architecture: any
 Section: libdevel
-Depends: libnotificationsystem0 (= ${binary:Version})
+Depends: libnotificationsystem0 (= ${binary:Version}), libqt4-dev (>= 4.7.0)
 Description: Notification System Library development files
 
 Package: system-ui-doc
