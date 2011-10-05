@@ -1,3 +1,9 @@
+system-ui (1.2.7~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 05 Oct 2011 13:57:21 +0300
+
 system-ui (1.2.6-1) unstable; urgency=low
 
   * Fixes: NB#283768 - Media Sharing status menu item should be loaded to status menu.
