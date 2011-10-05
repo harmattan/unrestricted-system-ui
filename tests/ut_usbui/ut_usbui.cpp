@@ -243,12 +243,14 @@ void Ut_UsbUi::testSDKItemVisibleOnlyWhenDeveloperModeEnabled()
 
     mGConfItemValue = QVariant(true);
     m_subject = new UsbUi;
-    QCOMPARE(m_subject->layout->count(), 4);
+    // Current state items (3) + 3 list items
+    QCOMPARE(m_subject->layout->count(), 6);
     QCOMPARE(m_subject->sdkItem->parentLayoutItem(), m_subject->layout);
 
     mGConfItemValue = QVariant(false);
     m_subject->updateSDKItemVisibility();
-    QCOMPARE(m_subject->layout->count(), 3);
+    // Current state items (3) + 2 list items
+    QCOMPARE(m_subject->layout->count(), 5);
     QCOMPARE(m_subject->sdkItem->parentLayoutItem(), (QGraphicsLayoutItem *)NULL);
 }
 

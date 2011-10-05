@@ -2,6 +2,7 @@ system-ui (1.2.6~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#283768 - Media Sharing status menu item should be loaded to status menu.
+  * Fixes: NB#274279 - 'Current state: Charging only' (§qtn_usb_charging§) alignment and font are incorrect in the USB mode selection dialog
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 03 Oct 2011 16:06:22 +0300
 

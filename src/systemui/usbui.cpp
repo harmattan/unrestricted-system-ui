@@ -29,6 +29,9 @@
 #include <MGConfItem>
 #include <QTimer>
 #include <QDateTime>
+#include <MStylableWidget>
+#include <MContainer>
+#include <MImageWidget>
 
 #ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
@@ -44,7 +47,7 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
 #endif
     developerMode(new MGConfItem("/Meego/System/DeveloperMode", this)),
     layout(new QGraphicsLinearLayout(Qt::Vertical)),
-    chargingLabel(new MLabel),
+    chargingLabel(new MLabel()),
     massStorageItem(new MBasicListItem(MBasicListItem::SingleTitle)),
     oviSuiteItem(new MBasicListItem(MBasicListItem::SingleTitle)),
     sdkItem(new MBasicListItem(MBasicListItem::SingleTitle))
@@ -54,19 +57,44 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     setSystem(true);
     setButtonBoxVisible(false);
 
-    chargingLabel->setStyleName("CommonBodyTextInverted");
-    chargingLabel->setAlignment(Qt::AlignCenter);
-    layout->addItem(chargingLabel);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    massStorageItem->setStyleName("CommonBasicListItemInverted");
+    MStylableWidget* topSpacer = new MStylableWidget;
+    topSpacer->setStyleName("CommonSpacer");
+    layout->addItem(topSpacer);
+
+    MContainer* frame = new MContainer;
+    frame->setHeaderVisible(false);
+    frame->setStyleName("CommonTextFrameInverted");
+
+    chargingLabel->setStyleName("CommonSingleTitleInverted");
+    chargingLabel->setTextElide(true);
+
+    MImageWidget* icon = new MImageWidget("icon-m-common-usb");
+    icon->setStyleName("CommonSmallMainIcon");
+
+    QGraphicsLinearLayout* currentStateLayout = new QGraphicsLinearLayout(Qt::Horizontal, frame->centralWidget());
+    currentStateLayout->setContentsMargins(0, 0, 0, 0);
+    currentStateLayout->setSpacing(0);
+    currentStateLayout->addItem(icon);
+    currentStateLayout->setAlignment(icon, Qt::AlignCenter);
+    currentStateLayout->addItem(chargingLabel);
+    layout->addItem(frame);
+
+    MStylableWidget* bottomSpacer = new MStylableWidget;
+    bottomSpacer->setStyleName("CommonSpacer");
+    layout->addItem(bottomSpacer);
+
+    massStorageItem->setStyleName("CommonSmallPanelInverted");
     connect(massStorageItem, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
     layout->addItem(massStorageItem);
 
-    oviSuiteItem->setStyleName("CommonBasicListItemInverted");
+    oviSuiteItem->setStyleName("CommonSmallPanelInverted");
     connect(oviSuiteItem, SIGNAL(clicked()), this, SLOT(setOviSuiteMode()));
     layout->addItem(oviSuiteItem);
 
-    sdkItem->setStyleName("CommonBasicListItemInverted");
+    sdkItem->setStyleName("CommonSmallPanelInverted");
     connect(sdkItem, SIGNAL(clicked()), this, SLOT(setSDKMode()));
     connect(developerMode, SIGNAL(valueChanged()), this, SLOT(updateSDKItemVisibility()));
     updateSDKItemVisibility();
