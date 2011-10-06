@@ -139,7 +139,7 @@ private slots:
     void testSystemNotificationIsRemovedWhenBannerHasBeenShown();
 
 private:
-    const QRegion calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window);
+    void testWindowShapeRegion(M::OrientationAngle angle, MSceneWindow* window);
 };
 
 #endif // UT_MCOMPOSITORNOTIFICATIONSINK_H

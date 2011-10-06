@@ -24,6 +24,7 @@
 #include <MGConfItem>
 #include <QTimer>
 #include <QX11Info>
+#include <X11/extensions/shape.h>
 #include "x11wrapper.h"
 
 #undef Bool
@@ -268,14 +269,26 @@ void MCompositorNotificationSink::updateWindowMask(MBanner* banner)
             origin = banner->pos().toPoint();
             break;
         }
-        window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
+
+        Display *dpy = QX11Info::display();
+        XRectangle rect;
+        rect.x = origin.x();
+        rect.y = origin.y();
+        rect.width = size.width();
+        rect.height = size.height();
+        XserverRegion shapeRegion = X11Wrapper::XFixesCreateRegion(dpy, &rect, 1);
+        X11Wrapper::XFixesSetWindowShapeRegion(dpy, window->winId(), ShapeInput, 0, 0, shapeRegion);
+        X11Wrapper::XFixesDestroyRegion(dpy, shapeRegion);
+        X11Wrapper::XSync(dpy, False);
     }
 }
 
 void MCompositorNotificationSink::clearWindowMask()
 {
     if (window != NULL) {
-        window->clearMask();
+        Display *dpy = QX11Info::display();
+        X11Wrapper::XFixesSetWindowShapeRegion(dpy, window->winId(), ShapeInput, 0, 0, 0);
+        X11Wrapper::XSync(dpy, False);
     }
 }
 

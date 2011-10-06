@@ -26,6 +26,7 @@
 #include "testnotificationparameters.h"
 #include "genericnotificationparameterfactory.h"
 #include <MGConfItem>
+#include <X11/extensions/shape.h>
 #include "x11wrapper.h"
 
 #ifdef HAVE_QMSYSTEM
@@ -206,21 +207,6 @@ void MWindow::setVisible(bool visible)
     setAttribute(visible ? Qt::WA_WState_Visible : Qt::WA_WState_Hidden);
 }
 
-// QWidget stubs (used by MCompositorNotificationSink)
-QRegion mWindowMaskRegion;
-void QWidget::setMask(const QRegion &region)
-{
-    MWindow *window = dynamic_cast<MWindow *>(this);
-    if (window != NULL) {
-        mWindowMaskRegion = region;
-    }
-}
-static bool gQWidgetClearMaskCalled = false;
-void QWidget::clearMask()
-{
-    gQWidgetClearMaskCalled = true;
-}
-
 // MGConfItem stub
 QVariant gconfValue = QVariant();
 
@@ -385,6 +371,42 @@ int X11Wrapper::XFree(void *data)
     return Success;
 }
 
+QList<XRectangle> xFixesCreateRegionRectangles;
+XserverRegion X11Wrapper::XFixesCreateRegion(Display *, XRectangle *rectangles, int nrectangles)
+{
+    for (int i = 0; i < nrectangles; i++) {
+        xFixesCreateRegionRectangles.append(rectangles[i]);
+    }
+    return 1;
+}
+
+QList<Window> xFixesSetWindowShapeRegionWindow;
+QList<int> xFixesSetWindowShapeRegionShapeKind;
+QList<int> xFixesSetWindowShapeRegionXOff;
+QList<int> xFixesSetWindowShapeRegionYOff;
+QList<XserverRegion> xFixesSetWindowShapeRegionRegion;
+void X11Wrapper::XFixesSetWindowShapeRegion(Display *, Window win, int shape_kind, int x_off, int y_off, XserverRegion region)
+{
+    xFixesSetWindowShapeRegionWindow.append(win);
+    xFixesSetWindowShapeRegionShapeKind.append(shape_kind);
+    xFixesSetWindowShapeRegionXOff.append(x_off);
+    xFixesSetWindowShapeRegionYOff.append(y_off);
+    xFixesSetWindowShapeRegionRegion.append(region);
+}
+
+QList<XserverRegion> xFixesDestroyRegionRegion;
+void X11Wrapper::XFixesDestroyRegion(Display *, XserverRegion region)
+{
+    xFixesDestroyRegionRegion.append(region);
+}
+
+bool xSyncCalled = false;
+int X11Wrapper::XSync(Display *, int)
+{
+    xSyncCalled = true;
+    return 0;
+}
+
 // Tests
 void Ut_MCompositorNotificationSink::initTestCase()
 {
@@ -408,7 +430,6 @@ void Ut_MCompositorNotificationSink::init()
     gCurrentOrientationAngle = M::Angle0;
     mWindowSetVisibleValue = false;
     mWindowSetVisibleWidget = NULL;
-    gQWidgetClearMaskCalled = false;
     gMSceneWindowsAppeared.clear();
     gMSceneWindowDeletionPolicies.clear();
 
@@ -418,7 +439,6 @@ void Ut_MCompositorNotificationSink::init()
     mSceneManagerDisappearSceneWindowWindow = NULL;
     windowEventFilterCalled = false;
     windowEventFilterBlock = false;
-    mWindowMaskRegion = QRegion();
     gMWindowIsOnDisplay = false;
 
     gWindowPropertyMap.clear();
@@ -429,6 +449,14 @@ void Ut_MCompositorNotificationSink::cleanup()
 {
     delete sink;
     delete notificationManager;
+    xFixesCreateRegionRectangles.clear();
+    xFixesSetWindowShapeRegionWindow.clear();
+    xFixesSetWindowShapeRegionShapeKind.clear();
+    xFixesSetWindowShapeRegionXOff.clear();
+    xFixesSetWindowShapeRegionYOff.clear();
+    xFixesSetWindowShapeRegionRegion.clear();
+    xFixesDestroyRegionRegion.clear();
+    xSyncCalled = false;
 }
 
 void Ut_MCompositorNotificationSink::emitDisplayEntered()
@@ -770,18 +798,30 @@ void Ut_MCompositorNotificationSink::testWindowMasking_data()
     QTest::newRow("270") << M::Angle270;
 }
 
-const QRegion Ut_MCompositorNotificationSink::calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window)
+void Ut_MCompositorNotificationSink::testWindowShapeRegion(M::OrientationAngle angle, MSceneWindow* window)
 {
-    QRect maskRect;
+    QRect rect;
     switch(angle) {
-    case M::Angle0:   maskRect = QRect(0, 0, window->preferredWidth(), window->preferredHeight()); break;
-    case M::Angle90:  maskRect = QRect(sink->window->width() - window->preferredHeight(), 0, window->preferredHeight(), window->preferredWidth()); break;
-    case M::Angle180: maskRect = QRect(0, sink->window->height() - window->preferredHeight(), window->preferredWidth(), window->preferredHeight()); break;
-    case M::Angle270: maskRect = QRect(0, 0, window->preferredHeight(), window->preferredWidth()); break;
+    case M::Angle0:   rect = QRect(0, 0, window->preferredWidth(), window->preferredHeight()); break;
+    case M::Angle90:  rect = QRect(sink->window->width() - window->preferredHeight(), 0, window->preferredHeight(), window->preferredWidth()); break;
+    case M::Angle180: rect = QRect(0, sink->window->height() - window->preferredHeight(), window->preferredWidth(), window->preferredHeight()); break;
+    case M::Angle270: rect = QRect(0, 0, window->preferredHeight(), window->preferredWidth()); break;
     }
 
-    QRegion region(maskRect, QRegion::Rectangle);
-    return region;
+    QCOMPARE(xFixesCreateRegionRectangles.isEmpty(), false);
+    QCOMPARE(xFixesCreateRegionRectangles.last().x, (short)rect.x());
+    QCOMPARE(xFixesCreateRegionRectangles.last().y, (short)rect.y());
+    QCOMPARE(xFixesCreateRegionRectangles.last().width, (unsigned short)rect.width());
+    QCOMPARE(xFixesCreateRegionRectangles.last().height, (unsigned short)rect.height());
+    QCOMPARE(xFixesSetWindowShapeRegionWindow.isEmpty(), false);
+    QCOMPARE(xFixesSetWindowShapeRegionWindow.last(), sink->window->winId());
+    QCOMPARE(xFixesSetWindowShapeRegionShapeKind.last(), ShapeInput);
+    QCOMPARE(xFixesSetWindowShapeRegionXOff.last(), 0);
+    QCOMPARE(xFixesSetWindowShapeRegionYOff.last(), 0);
+    QCOMPARE(xFixesSetWindowShapeRegionRegion.last(), (XserverRegion)1);
+    QCOMPARE(xFixesDestroyRegionRegion.isEmpty(), false);
+    QCOMPARE(xFixesDestroyRegionRegion.last(), (XserverRegion)1);
+    QCOMPARE(xSyncCalled, true);
 }
 
 void Ut_MCompositorNotificationSink::testWindowMasking()
@@ -796,8 +836,7 @@ void Ut_MCompositorNotificationSink::testWindowMasking()
 
     MSceneWindow* window = gMSceneWindowsAppeared.at(0);
 
-    QRegion region = calculateTargetMaskRegion(angle, window);
-    QCOMPARE(mWindowMaskRegion, region);
+    testWindowShapeRegion(angle, window);
 }
 
 void Ut_MCompositorNotificationSink::testWindowMaskingWhenOrientationChangeSignalsEmitted()
@@ -811,11 +850,17 @@ void Ut_MCompositorNotificationSink::testWindowMaskingWhenOrientationChangeSigna
     gCurrentOrientationAngle = (M::OrientationAngle)newAngle;
 
     sink->window->sceneManager()->setOrientationAngle(gCurrentOrientationAngle, MSceneManager::ImmediateTransition);
-    QVERIFY(gQWidgetClearMaskCalled);
+    QVERIFY(xFixesSetWindowShapeRegionWindow.count() > 1);
+    int secondLast = xFixesSetWindowShapeRegionWindow.count() - 2;
+    QCOMPARE(xFixesSetWindowShapeRegionWindow.at(secondLast), sink->window->winId());
+    QCOMPARE(xFixesSetWindowShapeRegionShapeKind.at(secondLast), ShapeInput);
+    QCOMPARE(xFixesSetWindowShapeRegionXOff.at(secondLast), 0);
+    QCOMPARE(xFixesSetWindowShapeRegionYOff.at(secondLast), 0);
+    QCOMPARE(xFixesSetWindowShapeRegionRegion.at(secondLast), (XserverRegion)0);
+    QCOMPARE(xSyncCalled, true);
 
     MSceneWindow* window = gMSceneWindowsAppeared.at(0);
-    QRegion region = calculateTargetMaskRegion(gCurrentOrientationAngle, window);
-    QCOMPARE(mWindowMaskRegion, region);
+    testWindowShapeRegion(gCurrentOrientationAngle, window);
 }
 
 void Ut_MCompositorNotificationSink::testPreviewIconId()

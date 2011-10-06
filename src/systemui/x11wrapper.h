@@ -25,6 +25,7 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xdamage.h>
+#include <X11/extensions/Xfixes.h>
 
 class X11Wrapper
 {
@@ -54,6 +55,9 @@ public:
     static int XGrabPointer(Display *display, Window grab_window, Bool owner_events, unsigned int event_mask,
                               int pointer_mode, int keyboard_mode, Window confine_to, Cursor cursor, Time time);
     static int XDeleteProperty(Display *display, Window w, Atom property);
+    static XserverRegion XFixesCreateRegion(Display *dpy, XRectangle *rectangles, int nrectangles);
+    static void XFixesSetWindowShapeRegion(Display *dpy, Window win, int shape_kind, int x_off, int y_off, XserverRegion region);
+    static void XFixesDestroyRegion(Display *dpy, XserverRegion region);
 };
 
 #endif /* X11WRAPPER_H_ */
