@@ -129,6 +129,7 @@ private slots:
     void testNotificationPreviewsDisabled();
     void testWindowMasking_data();
     void testWindowMasking();
+    void testWindowMaskingWhenOrientationChangeSignalsEmitted();
     void testPreviewIconId();
     void testNotificationPreviewsDisabledForApplication_data();
     void testNotificationPreviewsDisabledForApplication();
@@ -136,11 +137,6 @@ private slots:
     void testCurrentBannerDoneDoesntRemoveOtherBanners();
     void testSystemNotificationIsRemovedWhenPreviewsAreDisabled();
     void testSystemNotificationIsRemovedWhenBannerHasBeenShown();
-    void testOrientationChanges();
-    void testOrientationUpdatedWhenBannerShown();
-    void testOrientationUpdatedWhenWindowHidden();
-    void testOrientationUpdatedWhenOrientationChangesAndWindowHidden();
-    void testMaskUpdatedWhenOrientationChanges();
 
 private:
     const QRegion calculateTargetMaskRegion(M::OrientationAngle angle, MSceneWindow* window);

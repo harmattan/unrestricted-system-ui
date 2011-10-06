@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include "mcompositornotificationsink.h"
 #include "notificationwidgetparameterfactory.h"
 #include <MSceneManager>
@@ -26,7 +25,6 @@
 #include <QTimer>
 #include <QX11Info>
 #include "x11wrapper.h"
-#include "mdeviceprofile.h"
 
 #undef Bool
 
@@ -38,9 +36,6 @@ MCompositorNotificationSink::MCompositorNotificationSink() :
         window(NULL),
         currentBanner(NULL),
         touchScreenLockActive(false)
-#ifdef HAVE_CONTEXTSUBSCRIBER
-        , currentWindowAngleProperty(new ContextProperty("/Screen/CurrentWindow/OrientationAngle"))
-#endif
 {
     notificationPreviewMode = new MGConfItem(NOTIFICATION_PREVIEW_ENABLED, this);
     changeNotificationPreviewMode();
@@ -63,10 +58,6 @@ MCompositorNotificationSink::~MCompositorNotificationSink()
         delete banner;
     }
     delete window;
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    delete currentWindowAngleProperty;
-#endif
 }
 
 void MCompositorNotificationSink::createWindowIfNecessary()
@@ -80,14 +71,14 @@ void MCompositorNotificationSink::createWindowIfNecessary()
         window->setAttribute(Qt::WA_X11NetWmWindowTypeNotification);
         window->setObjectName("MCompositorNotificationSinkWindow");
         window->setWindowTitle("Notification");
-        window->setOrientationLocked(true);
+        window->setProperty("followsCurrentApplicationWindowOrientation", true);
 
         // This fixes bug #281758. For some reason the window is not transparent by default.
         XSetWindowBackground(QX11Info::display(), window->effectiveWinId(), 0);
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
-        connect(currentWindowAngleProperty, SIGNAL(valueChanged()), this, SLOT(updateWindowOrientationIfWindowHidden()));
-#endif
+        // Clear the mask for the duration of orientation change, because the mask is not rotated along with the notification
+        connect(window->sceneManager(), SIGNAL(orientationAboutToChange(M::Orientation)), this, SLOT(clearWindowMask()));
+        connect(window->sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(updateWindowMask()));
         connect(window, SIGNAL(displayEntered()), this, SLOT(addOldestBannerToWindow()));
     }
 }
@@ -226,53 +217,18 @@ void MCompositorNotificationSink::addOldestBannerToWindow()
         if (!bannerQueue.isEmpty()) {
             // The oldest banner should be shown
             currentBanner = bannerQueue.takeFirst();
-            updateWindowOrientation();
-
             if (window != NULL) {
                 window->sceneManager()->appearSceneWindow(currentBanner, MSceneWindow::DestroyWhenDone);
             }
             bannerTimer.start(currentBanner->property("timeout").toInt());
-            updateWindowMask();
+            updateWindowMask(currentBanner);
         } else {
             // No more banners exist to be shown -> hide the window
             if (window != NULL) {
-                // When window is hidden check whether orientation was been changed during last preview banner
-                updateWindowOrientation();
                 window->hide();
             }
         }
     }
-}
-
-void MCompositorNotificationSink::updateWindowOrientationIfWindowHidden()
-{
-    if (window != NULL && !window->isVisible()) {
-        updateWindowOrientation();
-    }
-}
-
-void MCompositorNotificationSink::updateWindowOrientation()
-{
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    if (window == NULL) {
-        return;
-    }
-    QVariant currentWindowAngleVariant = currentWindowAngleProperty->value();
-    if (currentWindowAngleVariant.isNull() || !currentWindowAngleVariant.isValid()) {
-        return;
-    }
-    M::OrientationAngle angle = static_cast<M::OrientationAngle>(currentWindowAngleVariant.toInt());
-    M::Orientation topmostAppOrientation = MDeviceProfile::instance()->orientationFromAngle(angle);
-    if (topmostAppOrientation != window->orientation()) {
-        window->sceneManager()->setOrientationAngle(angle, MSceneManager::ImmediateTransition);
-        if (topmostAppOrientation == M::Portrait) {
-            window->setPortraitOrientation();
-        } else {
-            window->setLandscapeOrientation();
-        }
-        updateWindowMask();
-    }
-#endif
 }
 
 void MCompositorNotificationSink::setApplicationEventsDisabled(bool disabled)
@@ -290,7 +246,6 @@ void MCompositorNotificationSink::updateWindowMask()
 void MCompositorNotificationSink::updateWindowMask(MBanner* banner)
 {
     if (window != NULL) {
-        window->clearMask();
         QSize size = banner->preferredSize().toSize();
         QPoint origin;
 
@@ -314,6 +269,13 @@ void MCompositorNotificationSink::updateWindowMask(MBanner* banner)
             break;
         }
         window->setMask(QRegion(QRect(origin, size), QRegion::Rectangle));
+    }
+}
+
+void MCompositorNotificationSink::clearWindowMask()
+{
+    if (window != NULL) {
+        window->clearMask();
     }
 }
 
