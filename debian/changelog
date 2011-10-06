@@ -1,9 +1,8 @@
-system-ui (1.2.7~1) unstable; urgency=low
+system-ui (1.2.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#280772 - Notification preview banner does not rotate when foreground application changes orientation
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 05 Oct 2011 13:57:21 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 06 Oct 2011 14:17:21 +0300
 
 system-ui (1.2.6-1) unstable; urgency=low
 
