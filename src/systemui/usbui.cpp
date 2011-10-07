@@ -69,7 +69,7 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     frame->setStyleName("CommonTextFrameInverted");
 
     chargingLabel->setStyleName("CommonSingleTitleInverted");
-    chargingLabel->setTextElide(true);
+    chargingLabel->setWordWrap(true);
 
     MImageWidget* icon = new MImageWidget("icon-m-common-usb");
     icon->setStyleName("CommonSmallMainIcon");

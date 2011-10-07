@@ -12,3 +12,8 @@ MWindowStyle {
     x11-startup-pixmap: ;
     startup-fill-color: black;
 }
+
+#CommonTextFrameInverted {
+    margin-left: 0;
+    margin-right: 0;
+}
