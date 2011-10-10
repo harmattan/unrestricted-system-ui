@@ -1,3 +1,9 @@
+system-ui (1.2.10~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 10 Oct 2011 15:40:00 +0300
+
 system-ui (1.2.9-1) unstable; urgency=low
 
   * Fixes: NB#276863 - [TASK] Notifications timestamps and sorting in lock screen.
