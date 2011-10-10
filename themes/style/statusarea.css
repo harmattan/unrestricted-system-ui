@@ -211,7 +211,7 @@ MLabelStyle#StatusIndicatorLabelLimitedService {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.3mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
@@ -225,7 +225,7 @@ MLabelStyle#StatusIndicatorLabelLandscapeLimitedService {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.3mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
@@ -239,7 +239,7 @@ MLabelStyle#StatusIndicatorLabelPortraitLimitedService {
     color: #FFFFFF;
     margin-left: 0;
     margin-right: 0;
-    margin-top: 0;
+    margin-top: 0.3mm;
     margin-bottom: 0;
     padding-left: 0;
     padding-right: 0;
