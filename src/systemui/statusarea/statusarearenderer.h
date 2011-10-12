@@ -65,6 +65,14 @@ public:
      */
     bool xEventFilter(const XEvent &event);
 
+signals:
+    /*!
+     * Emitted when _NET_SUPPORTED property on root window changes,
+     * notifying interested parties that Qt will reset the PropertyChangeMask
+     * on the root window input mask.
+     */
+    void netSupportedPropertyChanged();
+
 private slots:
 
     /*!
@@ -85,15 +93,33 @@ private slots:
     void setSceneRender(MeeGo::QmDisplayState::DisplayState state);
 #endif
 
-private:
     //! Handles situation when WM window gets unavailable
     void wmWindowUnavailable();
 
-    //! Setups listening of statusbar visibility from WM window property
-    void setupStatusBarVisibleListener();
+private:
+    //! Start tracking root window property changes
+    void startTrackingRootWindowProperties();
 
-    //! Fetches the _MEEGOTOUCH_STATUSBAR_VISIBLE value from WM window property
-    bool getStatusBarVisibleProperty();
+    //! Stop tracking root window property changes
+    void stopTrackingRootWindowProperties();
+
+    /*!
+     * Set up listening to the status bar visibility property changes on the
+     * WM window.
+     *
+     * \return true if the WM window was found and subscribing to property
+     * changes succeeded. false otherwise.
+     */
+    bool setupStatusBarVisibleListener();
+
+    /*!
+     * Fetch the _MEEGOTOUCH_STATUSBAR_VISIBLE property values from the WM
+     * window.
+     *
+     * \return true if the WM window was found and subscribing to property
+     * changes succeeded. false otherwise.
+     */
+    bool updateStatusBarVisibleProperty();
 
     //! Creates a window for sharing shared pixmap handle.
     void createStatusAreaPropertyWindow();
@@ -155,9 +181,25 @@ private:
     Atom statusBarVisibleAtom;
     //! _NET_SUPPORTING_WM_CHECK atom
     Atom windowManagerWindowAtom;
+    //! _NET_SUPPORTED atom
+    Atom netSupportedAtom;
 
     //! Root window property mask that was set before XSelectInput
     long previousRootWindowEventMask;
+
+    //! An custom X error handler to collect error coders of asynchronous errors
+    static int handleXError(Display* dpy, XErrorEvent *event);
+
+    //! The error code of the last trapped X error
+    static unsigned char xErrorCode;
+    //! The previous X error handler
+    static XErrorHandler oldXErrorHandler;
+
+    //! Install X error handler to collect error codes
+    void trapXErrors();
+
+    //! Remove X error handler
+    void untrapXErrors();
 
 #ifdef UNIT_TEST
     friend class Ut_StatusAreaRenderer;

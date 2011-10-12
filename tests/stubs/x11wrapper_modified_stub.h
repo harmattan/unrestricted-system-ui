@@ -54,6 +54,7 @@ public:
     virtual int XDeleteProperty(Display *display, Window w, Atom property);
 
     virtual void stubSetXGetWindowPropertyDataReturnValues(Window window, XGetWindowPropertyDataReturnValueData data);
+    virtual void stubReset() const;
 };
 
 // 2. IMPLEMENT STUB
@@ -98,6 +99,7 @@ struct XGetWindowPropertyDataReturnValueData {
     Atom type;
     int format;
     unsigned char* data;
+    int return_value;
 };
 QHash<Window, XGetWindowPropertyDataReturnValueData> xGetWindowPropertyDataReturnValueHash;
 void X11WrapperStub::stubSetXGetWindowPropertyDataReturnValues(Window window, XGetWindowPropertyDataReturnValueData data)
@@ -122,12 +124,17 @@ int X11WrapperStub::XGetWindowProperty(Display *display, Window w, Atom property
     params.append(new Parameter<unsigned char ** >(prop_return));
     stubMethodEntered("XGetWindowProperty", params);
 
-    XGetWindowPropertyDataReturnValueData data = xGetWindowPropertyDataReturnValueHash.value(w);
-    *actual_type_return = data.type;
-    *actual_format_return = data.format;
-    *prop_return = data.data;
+    int return_value = stubReturnValue<int>("XGetWindowProperty");
 
-    return stubReturnValue<int>("XGetWindowProperty");
+    if(xGetWindowPropertyDataReturnValueHash.contains(w)) {
+        XGetWindowPropertyDataReturnValueData data = xGetWindowPropertyDataReturnValueHash.value(w);
+        *actual_type_return = data.type;
+        *actual_format_return = data.format;
+        *prop_return = data.data;
+        return_value = data.return_value;
+    }
+
+    return return_value;
 }
 
 int X11WrapperStub::XFree(void *data)
@@ -322,6 +329,12 @@ int X11WrapperStub::XDeleteProperty(Display *display, Window w, Atom property)
     params.append(new Parameter<Atom>(property));
     stubMethodEntered("XDeleteProperty", params);
     return stubReturnValue<int>("XDeleteProperty");
+}
+
+void X11WrapperStub::stubReset() const
+{
+    StubBase::stubReset();
+    xGetWindowPropertyDataReturnValueHash.clear();
 }
 
 // 3. CREATE A STUB INSTANCE

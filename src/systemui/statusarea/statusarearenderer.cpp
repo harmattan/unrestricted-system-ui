@@ -29,6 +29,9 @@
 // Update the pixmap 5 times per second at most
 static const int ACCUMULATION_INTERVAL = 200;
 
+unsigned char StatusAreaRenderer::xErrorCode = Success;
+XErrorHandler StatusAreaRenderer::oldXErrorHandler = NULL;
+
 StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     QObject(parent),
     scene(new QGraphicsScene),
@@ -67,6 +70,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 
     statusBarVisibleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
     windowManagerWindowAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTING_WM_CHECK", False);
+    netSupportedAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTED", False);
 
     setSizeFromStyle();
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
@@ -76,7 +80,19 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
         setSharedPixmapHandleToWindowProperty();
         setStatusAreaPropertyWindowIdToRootWindowProperty();
 
-        setupStatusBarVisibleListener();
+        if(setupStatusBarVisibleListener()) {
+            updateStatusBarVisibleProperty();
+        } else {
+            wmWindowUnavailable();
+        }
+
+        // Work around bug 285985 - When mcompositor restarts and sets the
+        // _NET_SUPPORTED atom on the root window, Qt will kill our
+        // ProprtyChangeMask bit. Let the X event loop handler finish
+        // and restart out quest for WM availability
+        connect(this, SIGNAL(netSupportedPropertyChanged()),
+                this, SLOT(wmWindowUnavailable()),
+                Qt::QueuedConnection);
     }
 
     connect(&accumulationTimer, SIGNAL(timeout()), this, SLOT(renderAccumulatedRegion()));
@@ -267,36 +283,42 @@ void StatusAreaRenderer::renderAccumulatedRegion()
     }
 }
 
-void StatusAreaRenderer::setupStatusBarVisibleListener()
+bool StatusAreaRenderer::setupStatusBarVisibleListener()
 {
     Atom type;
     int format;
     unsigned long length, after;
     uchar *data = 0;
 
-    bool windowSuccess = false;
+    windowManagerWindow = 0;
     if (X11Wrapper::XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), windowManagerWindowAtom,
                            0, 1024, False, XA_WINDOW, &type, &format, &length, &after, &data) == Success) {
         if (type == XA_WINDOW && format == 32) {
             windowManagerWindow = *((Window*) data);
-            X11Wrapper::XFree(data);
+        }
+        X11Wrapper::XFree(data);
+    }
 
-            getStatusBarVisibleProperty();
+    if (windowManagerWindow != 0) {
+        long wmWindowInputMask = PropertyChangeMask | StructureNotifyMask;
+        trapXErrors();
+        X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, wmWindowInputMask);
+        X11Wrapper::XSync(QX11Info::display(), False);
+        untrapXErrors();
 
-            windowSuccess = true;
+        if (xErrorCode == Success) {
+            XEventListener::registerEventFilter(this, wmWindowInputMask);
+        } else {
+            // XSelectInput failed, meaning that the window manager window
+            // property on the root window is stale
+            windowManagerWindow = 0;
         }
     }
 
-    if (windowSuccess) {
-        long wmWindowInputMask = PropertyChangeMask | StructureNotifyMask;
-        X11Wrapper::XSelectInput(QX11Info::display(), windowManagerWindow, wmWindowInputMask);
-        XEventListener::registerEventFilter(this, wmWindowInputMask);
-    } else {
-        wmWindowUnavailable();
-    }
+    return (windowManagerWindow != 0);
 }
 
-bool StatusAreaRenderer::getStatusBarVisibleProperty()
+bool StatusAreaRenderer::updateStatusBarVisibleProperty()
 {
     Atom type;
     int format;
@@ -309,13 +331,14 @@ bool StatusAreaRenderer::getStatusBarVisibleProperty()
                            0, 1024, False, XA_CARDINAL, &type, &format, &length, &after, &data) == Success) {
         if (type == XA_CARDINAL) {
             statusBarVisible = *data;
-            X11Wrapper::XFree(data);
-
             success = true;
-        } else {
-            // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
-            statusBarVisible = true;
         }
+        X11Wrapper::XFree(data);
+    }
+
+    if(!success) {
+        // Assume status bar is visible when WM window or _MEEGOTOUCH_STATUSBAR_VISIBLE property are not available
+        statusBarVisible = true;
     }
 
     if (statusBarVisible && !oldStatusBarVisible) {
@@ -328,23 +351,50 @@ bool StatusAreaRenderer::getStatusBarVisibleProperty()
 
 bool StatusAreaRenderer::xEventFilter(const XEvent &event)
 {
+    bool propertyReadSuccess = true;
+
     if (event.xproperty.window == windowManagerWindow && event.xproperty.atom == statusBarVisibleAtom) {
-        if (!getStatusBarVisibleProperty()) {
-            // Fetching property failed so try setuping the window and property again
-            setupStatusBarVisibleListener();
-        }
+        // Status bar visibility property changed, get new visibility value
+        propertyReadSuccess = updateStatusBarVisibleProperty();
     } else if (event.xproperty.window == QX11Info::appRootWindow() && event.xproperty.atom == windowManagerWindowAtom) {
-        // Window manager window available so unregister the root window filter and restore the previous input mask
-        XEventListener::unregisterEventFilter(this);
-        X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask);
-
-        setupStatusBarVisibleListener();
-
+        // Window manager window available, stop tracking root window properties
+        stopTrackingRootWindowProperties();
+        propertyReadSuccess = setupStatusBarVisibleListener();
+        if(propertyReadSuccess) {
+            updateStatusBarVisibleProperty();
+        }
+    } else if (event.xproperty.window == QX11Info::appRootWindow() && event.xproperty.atom == netSupportedAtom) {
+        // _NET_SUPPORTED atom change detected, notify interested parties
+        emit netSupportedPropertyChanged();
     } else if (event.type == DestroyNotify && event.xdestroywindow.window == windowManagerWindow) {
+        // Window manager window destroyed - window manager is unavailable
+        propertyReadSuccess = false;
+    }
+
+    // If getting the visibility atom failed anywhere above, consider the
+    // window manager (still) unavailable
+    if(!propertyReadSuccess) {
         wmWindowUnavailable();
     }
 
     return false;
+}
+
+void StatusAreaRenderer::startTrackingRootWindowProperties()
+{
+    // Start listening root window property changes to be notified when wm window is available
+    XWindowAttributes attributes;
+    previousRootWindowEventMask = 0;
+    if (X11Wrapper::XGetWindowAttributes(QX11Info::display(), QX11Info::appRootWindow(), &attributes) == Success) {
+        previousRootWindowEventMask = attributes.your_event_mask;
+    }
+    X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask | PropertyChangeMask);
+    XEventListener::registerEventFilter(this, PropertyChangeMask);
+}
+
+void StatusAreaRenderer::stopTrackingRootWindowProperties()
+{
+    X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask);
 }
 
 void StatusAreaRenderer::wmWindowUnavailable()
@@ -353,16 +403,13 @@ void StatusAreaRenderer::wmWindowUnavailable()
 
     // Assume status bar is visible when WM window is not available
     statusBarVisible = true;
-    XEventListener::unregisterEventFilter(this);
 
-    // Start listening root window property changes to be notified when wm window is available again
-    XWindowAttributes attributes;
-    previousRootWindowEventMask = 0;
-    if (X11Wrapper::XGetWindowAttributes(QX11Info::display(), QX11Info::appRootWindow(), &attributes) == Success) {
-        previousRootWindowEventMask = attributes.your_event_mask;
+    startTrackingRootWindowProperties();
+
+    // Check if the WM is already available
+    if(setupStatusBarVisibleListener() && updateStatusBarVisibleProperty()) {
+        stopTrackingRootWindowProperties();
     }
-    X11Wrapper::XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), previousRootWindowEventMask | PropertyChangeMask);
-    XEventListener::registerEventFilter(this, PropertyChangeMask);
 }
 
 #ifdef HAVE_QMSYSTEM
@@ -398,3 +445,20 @@ void StatusAreaRenderer::setSceneRender(MeeGo::QmDisplayState::DisplayState stat
     }
 }
 #endif
+
+int StatusAreaRenderer::handleXError(Display* dpy, XErrorEvent *event)
+{
+    xErrorCode = event->error_code;
+    return oldXErrorHandler ? oldXErrorHandler(dpy, event) : 0;
+}
+
+void StatusAreaRenderer::trapXErrors()
+{
+    xErrorCode = Success;
+    oldXErrorHandler = X11Wrapper::XSetErrorHandler(handleXError);
+}
+
+void StatusAreaRenderer::untrapXErrors()
+{
+    X11Wrapper::XSetErrorHandler(oldXErrorHandler);
+}

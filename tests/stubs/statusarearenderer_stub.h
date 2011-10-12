@@ -23,8 +23,13 @@ class StatusAreaRendererStub : public StubBase {
   virtual void createStatusAreaPropertyWindow();
   virtual void setStatusAreaPropertyWindowIdToRootWindowProperty();
   virtual void setSharedPixmapHandleToWindowProperty();
-  virtual void setupStatusBarVisibleListener();
-  virtual bool getStatusBarVisibleProperty();
+  virtual void startTrackingRootWindowProperties();
+  virtual void stopTrackingRootWindowProperties();
+  virtual bool setupStatusBarVisibleListener();
+  virtual bool updateStatusBarVisibleProperty();
+  virtual void wmWindowUnavailable();
+  virtual void trapXErrors();
+  virtual void untrapXErrors();
   virtual bool xEventFilter(const XEvent &event);
 };
 
@@ -85,14 +90,36 @@ void StatusAreaRendererStub::setSharedPixmapHandleToWindowProperty() {
   stubMethodEntered("setSharedPixmapHandleToWindowProperty");
 }
 
-void StatusAreaRendererStub::setupStatusBarVisibleListener() {
-  stubMethodEntered("setupStatusBarVisibleListener");
+void StatusAreaRendererStub::startTrackingRootWindowProperties() {
+  stubMethodEntered("startTrackingRootWindowProperties");
 }
 
-bool StatusAreaRendererStub::getStatusBarVisibleProperty() {
-  stubMethodEntered("getStatusBarVisibleProperty");
-  return stubReturnValue<bool>("getStatusBarVisibleProperty");
+void StatusAreaRendererStub::stopTrackingRootWindowProperties() {
+  stubMethodEntered("stopTrackingRootWindowProperties");
 }
+
+bool StatusAreaRendererStub::setupStatusBarVisibleListener() {
+  stubMethodEntered("setupStatusBarVisibleListener");
+  return stubReturnValue<bool>("setupStatusBarVisibleListener");
+}
+
+bool StatusAreaRendererStub::updateStatusBarVisibleProperty() {
+  stubMethodEntered("updateStatusBarVisibleProperty");
+  return stubReturnValue<bool>("updateStatusBarVisibleProperty");
+}
+
+void StatusAreaRendererStub::wmWindowUnavailable() {
+  stubMethodEntered("wmWindowUnavailable");
+}
+
+void StatusAreaRendererStub::trapXErrors() {
+  stubMethodEntered("trapXErrors");
+}
+
+void StatusAreaRendererStub::untrapXErrors() {
+  stubMethodEntered("untrapXErrors");
+}
+
 
 
 bool StatusAreaRendererStub::xEventFilter(const XEvent &event) {
@@ -159,12 +186,32 @@ void StatusAreaRenderer::setSharedPixmapHandleToWindowProperty() {
   gStatusAreaRendererStub->setSharedPixmapHandleToWindowProperty();
 }
 
-void StatusAreaRenderer::setupStatusBarVisibleListener() {
-  gStatusAreaRendererStub->setupStatusBarVisibleListener();
+void StatusAreaRenderer::startTrackingRootWindowProperties() {
+  gStatusAreaRendererStub->startTrackingRootWindowProperties();
 }
 
-bool StatusAreaRenderer::getStatusBarVisibleProperty() {
-  return gStatusAreaRendererStub->getStatusBarVisibleProperty();
+void StatusAreaRenderer::stopTrackingRootWindowProperties() {
+  gStatusAreaRendererStub->stopTrackingRootWindowProperties();
+}
+
+bool StatusAreaRenderer::setupStatusBarVisibleListener() {
+  return gStatusAreaRendererStub->setupStatusBarVisibleListener();
+}
+
+bool StatusAreaRenderer::updateStatusBarVisibleProperty() {
+  return gStatusAreaRendererStub->updateStatusBarVisibleProperty();
+}
+
+void StatusAreaRenderer::wmWindowUnavailable() {
+  gStatusAreaRendererStub->wmWindowUnavailable();
+}
+
+void StatusAreaRenderer::trapXErrors() {
+  gStatusAreaRendererStub->trapXErrors();
+}
+
+void StatusAreaRenderer::untrapXErrors() {
+  gStatusAreaRendererStub->untrapXErrors();
 }
 
 bool StatusAreaRenderer::xEventFilter(const XEvent &event) {

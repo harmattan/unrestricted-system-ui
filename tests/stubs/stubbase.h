@@ -67,7 +67,7 @@ public:
 
     // For use by stubs
     virtual ~StubBase();
-    void stubReset() const;
+    virtual void stubReset() const;
     ParameterBase *stubReturnValue(const QString &methodName) const;
     void stubMethodEntered(const QString &methodName, QList<ParameterBase *> params) const;
     void stubMethodEntered(const QString &methodName) const;
