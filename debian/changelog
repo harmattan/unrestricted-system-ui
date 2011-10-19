@@ -4,9 +4,15 @@ system-ui (1.2.11~1) unstable; urgency=low
 
  -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Wed, 19 Oct 2011 10:52:48 +0300
 
+system-ui (1.2.10-2) unstable; urgency=low
+
+  * Changelog fixed.
+
+ -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Wed, 19 Oct 2011 11:05:14 +0300
+
 system-ui (1.2.10-1) unstable; urgency=low
 
-  * Fixes: NB280350 - when compositor is restarted _MEEGOTOUCH_STATUSBAR_VISIBLE is no more taken into account
+  * Fixes: NB#280350 - when compositor is restarted _MEEGOTOUCH_STATUSBAR_VISIBLE is no more taken into account
 
  -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Wed, 19 Oct 2011 10:50:59 +0300
 
