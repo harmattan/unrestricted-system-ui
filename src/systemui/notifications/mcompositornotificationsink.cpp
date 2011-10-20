@@ -110,6 +110,13 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         // The notification already exists so update it
         updateNotification(notification);
     } else {
+#ifdef HAVE_QMSYSTEM
+        if (notification.type() == Notification::SystemEvent && window != NULL && displayState.get() == MeeGo::QmDisplayState::Off) {
+            // When a system banner comes in while the display is off, remove any other system banners from the queue
+            removeSystemBannersFromQueue();
+        }
+#endif
+
         // Store the ID of the notification
         notificationIds.insert(notification.notificationId());
 
@@ -191,24 +198,29 @@ void MCompositorNotificationSink::disappearCurrentBanner()
 
 void MCompositorNotificationSink::currentBannerDone()
 {
-    if (currentBanner != NULL) {
+    bannerDone(currentBanner);
+    currentBanner = NULL;
+
+    addOldestBannerToWindow();
+}
+
+void MCompositorNotificationSink::bannerDone(MBanner *banner)
+{
+    if (banner != NULL) {
         // Do not use the notification id associated with the banner
         // to remove the banner from "id to banner mapping" since the
         // original notification may have already been removed and a
         // new notification with the same id may have already been added.
-        int id = idToBanner.key(currentBanner, -1);
+        int id = idToBanner.key(banner, -1);
         if (id != -1) {
             idToBanner.remove(id);
 
-            if (currentBanner->styleName() == "SystemBanner") {
+            if (banner->styleName() == "SystemBanner") {
                 // System notifications need to be removed after they've been shown to avoid leaking
                 emit notificationRemovalRequested(id);
             }
         }
-        currentBanner = NULL;
     }
-
-    addOldestBannerToWindow();
 }
 
 void MCompositorNotificationSink::addOldestBannerToWindow()
@@ -351,4 +363,27 @@ void MCompositorNotificationSink::setTouchScreenLockActive(bool active)
 {
     touchScreenLockActive = active;
     changeNotificationPreviewMode();
+}
+
+void MCompositorNotificationSink::removeSystemBannersFromQueue()
+{
+    // Remove references to all system banners
+    QList<MBanner *> doneBanners;
+    foreach (MBanner *banner, bannerQueue) {
+        if (banner->styleName() == "SystemBanner") {
+            bannerDone(banner);
+            doneBanners.append(banner);
+        }
+    }
+
+    // Remove system banners from the banner queue
+    foreach (MBanner *banner, doneBanners) {
+        bannerQueue.removeAll(banner);
+        delete banner;
+    }
+
+    if (currentBanner != NULL && currentBanner->styleName() == "SystemBanner") {
+        // Disappear any system banner currently being displayed
+        window->sceneManager()->disappearSceneWindowNow(currentBanner);
+    }
 }

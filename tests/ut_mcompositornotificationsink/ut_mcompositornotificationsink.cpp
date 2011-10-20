@@ -267,10 +267,20 @@ void MSceneManager::appearSceneWindow(MSceneWindow *sceneWindow, MSceneWindow::D
     bridge.setSceneWindowState(MSceneWindow::Appeared);
 }
 
-MSceneWindow *mSceneManagerDisappearSceneWindowWindow= NULL;
+MSceneWindow *mSceneManagerDisappearSceneWindowWindow = NULL;
 void MSceneManager::disappearSceneWindow(MSceneWindow *sceneWindow)
 {
     mSceneManagerDisappearSceneWindowWindow = sceneWindow;
+}
+
+void MSceneManager::disappearSceneWindowNow(MSceneWindow *sceneWindow)
+{
+    mSceneManagerDisappearSceneWindowWindow = sceneWindow;
+
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(sceneWindow);
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
 }
 
 M::OrientationAngle gCurrentOrientationAngle;
@@ -1002,6 +1012,46 @@ void Ut_MCompositorNotificationSink::testSystemNotificationIsRemovedWhenBannerHa
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.last().at(0).toUInt(), id);
+}
+
+void Ut_MCompositorNotificationSink::testWhenDisplayIsOffAndSystemNotificationIsReceivedSystemNotificationsAreRemovedFromQueue()
+{
+    qQTimerEmitTimeoutImmediately = false;
+
+    TestNotificationParameters parameters0("title0", "subtitle0", "buttonicon0", "content0 0 0 0");
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 1 1 1");
+    TestNotificationParameters parameters2("title2", "subtitle2", "buttonicon2", "content2 2 2 2");
+    TestNotificationParameters parameters3("title3", "subtitle3", "buttonicon3", "content3 3 3 3");
+    TestNotificationParameters parameters4("title4", "subtitle4", "buttonicon3", "content4 4 4 4");
+    parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
+    parameters1.add(GenericNotificationParameterFactory::classKey(), "system");
+    parameters3.add(GenericNotificationParameterFactory::classKey(), "system");
+    parameters4.add(GenericNotificationParameterFactory::classKey(), "system");
+    notificationManager->addNotification(0, parameters0, 0);
+    notificationManager->addNotification(0, parameters1, 0);
+    notificationManager->addNotification(0, parameters2, 0);
+    notificationManager->addNotification(0, parameters3, 0);
+    emitDisplayEntered();
+
+#ifdef HAVE_QMSYSTEM
+    gQmDisplayStateOff = true;
+    notificationManager->addNotification(0, parameters4, 0);
+
+    // The system banner that was on screen should disappear
+    QCOMPARE(mSceneManagerDisappearSceneWindowWindow, gMSceneWindowsAppeared.at(0));
+
+    // Non-system notifications should not disappear from the queue but appear on the screen
+    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1))->styleName(), QString("ShortEventBanner"));
+
+    // The queue should now contain only the latest system banner
+    MSceneWindowBridge bridge;
+    bridge.setObjectName("_m_testBridge");
+    bridge.setParent(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1)));
+    bridge.setSceneWindowState(MSceneWindow::Disappeared);
+    QCOMPARE(gMSceneWindowsAppeared.count(), 3);
+    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(2))->styleName(), QString("SystemBanner"));
+    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(2))->title(), QString("subtitle4"));
+#endif
 }
 
 QTEST_APPLESS_MAIN(Ut_MCompositorNotificationSink)
