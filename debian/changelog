@@ -1,6 +1,7 @@
 system-ui (1.2.14~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#287151 - §qtn_noti_and_more§ is not retranslated when the language is changed on first boot
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 25 Oct 2011 15:23:36 +0300
 

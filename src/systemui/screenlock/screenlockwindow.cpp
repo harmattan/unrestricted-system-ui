@@ -23,6 +23,7 @@
 #include <MSceneWindow>
 #include <QGraphicsLinearLayout>
 #include <QX11Info>
+#include <QApplication>
 #include "x11wrapper.h"
 
 ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWidget *parent) :
@@ -44,6 +45,11 @@ ScreenLockWindow::ScreenLockWindow(MApplicationExtensionArea *extensionArea, QWi
     screenLockWindow->setStyleName("ScreenLockWindow");
     screenLockWindow->setLayout(layout);
     screenLockWindow->appear(this);
+
+    // The language may have changed before the window was created,
+    // retranslate the UI
+    QEvent event(QEvent::LanguageChange);
+    QApplication::sendEvent(this, &event);
 }
 
 ScreenLockWindow::~ScreenLockWindow()

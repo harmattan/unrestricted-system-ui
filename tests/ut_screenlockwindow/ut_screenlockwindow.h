@@ -35,6 +35,7 @@ private slots:
     void cleanupTestCase();
 
     void testWhenWindowIsCreatedLockScreenAppears();
+    void testWhenWindowIsCreatedLanguageChangeEventIsSent();
     void testWhenWindowIsShownItIsExcludedFromTaskbar();
     void testOrientationLocking_data();
     void testOrientationLocking();

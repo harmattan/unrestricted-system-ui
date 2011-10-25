@@ -21,6 +21,7 @@
 #include <MApplication>
 #include <MSceneWindow>
 #include <MApplicationExtensionArea>
+#include <MFileDataStore>
 #include <QShowEvent>
 #include "ut_screenlockwindow.h"
 #include "screenlockwindow.h"
@@ -72,6 +73,14 @@ void MSceneWindow::appear(MWindow* window, MSceneWindow::DeletionPolicy policy)
     Q_UNUSED(policy);
 }
 
+int languageChangeEventSendCount = 0;
+bool MWindow::event(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange) {
+        languageChangeEventSendCount++;
+    }
+    return false;
+}
 
 void Ut_ScreenLockWindow::initTestCase()
 {
@@ -100,11 +109,17 @@ void Ut_ScreenLockWindow::cleanup()
     mWindowOrientation.clear();
     mWindowOrientationAngle = M::Angle180;
     gX11WrapperStub->stubReset();
+    languageChangeEventSendCount = 0;
 }
 
 void Ut_ScreenLockWindow::testWhenWindowIsCreatedLockScreenAppears()
 {
     QCOMPARE(appearedWindow, lockScreenWindow);
+}
+
+void Ut_ScreenLockWindow::testWhenWindowIsCreatedLanguageChangeEventIsSent()
+{
+    QCOMPARE(languageChangeEventSendCount, 1);
 }
 
 void Ut_ScreenLockWindow::testWhenWindowIsShownItIsExcludedFromTaskbar()
