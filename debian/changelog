@@ -1,9 +1,8 @@
-system-ui (1.2.12~1) unstable; urgency=low
+system-ui (1.2.12-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#283977 - Battery low warnings produced during IHF call are displayed in a bunch after the call
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 21 Oct 2011 11:36:10 +0300
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 25 Oct 2011 14:14:49 +0300
 
 system-ui (1.2.11-1) unstable; urgency=low
 
