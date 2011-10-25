@@ -60,32 +60,34 @@ UsbUi::UsbUi(QObject *parent) : MDialog(),
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    MStylableWidget* topSpacer = new MStylableWidget;
+    // Spacer above the current state
+    MStylableWidget *topSpacer = new MStylableWidget;
     topSpacer->setStyleName("CommonSpacer");
     layout->addItem(topSpacer);
 
-    MContainer* frame = new MContainer;
-    frame->setHeaderVisible(false);
-    frame->setStyleName("CommonTextFrameInverted");
+    // Current state: charging frame
+    MImageWidget *chargingIcon = new MImageWidget("icon-m-common-usb");
+    chargingIcon->setStyleName("CommonSmallMainIcon");
 
     chargingLabel->setStyleName("CommonSingleTitleInverted");
     chargingLabel->setWordWrap(true);
 
-    MImageWidget* icon = new MImageWidget("icon-m-common-usb");
-    icon->setStyleName("CommonSmallMainIcon");
+    MStylableWidget *chargingFrame = new MStylableWidget;
+    chargingFrame->setStyleName("CommonTextFrameInverted");
+    QGraphicsLinearLayout *chargingLayout = new QGraphicsLinearLayout(Qt::Horizontal, chargingFrame);
+    chargingLayout->setContentsMargins(0, 0, 0, 0);
+    chargingLayout->setSpacing(0);
+    chargingLayout->addItem(chargingIcon);
+    chargingLayout->setAlignment(chargingIcon, Qt::AlignCenter);
+    chargingLayout->addItem(chargingLabel);
+    layout->addItem(chargingFrame);
 
-    QGraphicsLinearLayout* currentStateLayout = new QGraphicsLinearLayout(Qt::Horizontal, frame->centralWidget());
-    currentStateLayout->setContentsMargins(0, 0, 0, 0);
-    currentStateLayout->setSpacing(0);
-    currentStateLayout->addItem(icon);
-    currentStateLayout->setAlignment(icon, Qt::AlignCenter);
-    currentStateLayout->addItem(chargingLabel);
-    layout->addItem(frame);
-
-    MStylableWidget* bottomSpacer = new MStylableWidget;
+    // Spacer below the current state
+    MStylableWidget *bottomSpacer = new MStylableWidget;
     bottomSpacer->setStyleName("CommonSpacer");
     layout->addItem(bottomSpacer);
 
+    // The mode items
     massStorageItem->setStyleName("CommonSmallPanelInverted");
     connect(massStorageItem, SIGNAL(clicked()), this, SLOT(setMassStorageMode()));
     layout->addItem(massStorageItem);

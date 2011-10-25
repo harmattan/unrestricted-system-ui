@@ -1,6 +1,7 @@
 system-ui (1.2.13~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#274279 - 'Current state: Charging only' (§qtn_usb_charging§) alignment and font are incorrect in the USB mode selection dialog
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 25 Oct 2011 14:16:37 +0300
 

@@ -16,4 +16,11 @@ MWindowStyle {
 #CommonTextFrameInverted {
     margin-left: 0;
     margin-right: 0;
+    padding-top: $MARGIN_LARGE;
+    padding-bottom: $MARGIN_LARGE;
+}                     
+                                  
+#CommonSmallMainIcon {            
+    margin-top: 0;                
+    margin-bottom: 0;             
 }
