@@ -162,8 +162,8 @@ private:
     //! Removes references to a banner
     void bannerDone(MBanner *banner);
 
-    //! Removes system banners from the queue and disappears any system banner currently being displayed
-    void removeSystemBannersFromQueue();
+    //! Removes banners from the queue and disappears any banner currently being displayed
+    void removeBannersFromQueue();
 
     //! The set of all notification IDs known by this sink. Needed to know also about those notifications which do not have banners anymore.
     QSet<uint> notificationIds;

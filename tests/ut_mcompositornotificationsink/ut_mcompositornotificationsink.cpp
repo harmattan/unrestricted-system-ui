@@ -204,7 +204,8 @@ void MWindow::setVisible(bool visible)
     mWindowSetVisibleValue = visible;
     mWindowSetVisibleWidget = this;
 
-    setAttribute(visible ? Qt::WA_WState_Visible : Qt::WA_WState_Hidden);
+    setAttribute(Qt::WA_WState_Visible, visible);
+    setAttribute(Qt::WA_WState_Hidden, !visible);
 }
 
 // MGConfItem stub
@@ -953,8 +954,8 @@ void Ut_MCompositorNotificationSink::updateNotificationDoesNotCreateWindowIfBann
     bridge.setSceneWindowState(MSceneWindow::Disappeared);
 
     // At this point the window has disappeared and updating the notification should not bring it back
-    TestNotificationParameters parameters1( "title1", "subtitle1", "buttonicon1", "content1 1 1 1");
-    notificationManager->addNotification(0, parameters1);
+    TestNotificationParameters parameters1("title1", "subtitle1", "buttonicon1", "content1 1 1 1");
+    notificationManager->updateNotification(0, 0, parameters1);
     QCOMPARE(mWindowSetVisibleValue, false);
 }
 
@@ -1014,7 +1015,7 @@ void Ut_MCompositorNotificationSink::testSystemNotificationIsRemovedWhenBannerHa
     QCOMPARE(spy.last().at(0).toUInt(), id);
 }
 
-void Ut_MCompositorNotificationSink::testWhenDisplayIsOffAndSystemNotificationIsReceivedSystemNotificationsAreRemovedFromQueue()
+void Ut_MCompositorNotificationSink::testWhenDisplayIsOffAndNotificationIsReceivedBannersAreRemovedFromQueue()
 {
     qQTimerEmitTimeoutImmediately = false;
 
@@ -1025,7 +1026,6 @@ void Ut_MCompositorNotificationSink::testWhenDisplayIsOffAndSystemNotificationIs
     TestNotificationParameters parameters4("title4", "subtitle4", "buttonicon3", "content4 4 4 4");
     parameters0.add(GenericNotificationParameterFactory::classKey(), "system");
     parameters1.add(GenericNotificationParameterFactory::classKey(), "system");
-    parameters3.add(GenericNotificationParameterFactory::classKey(), "system");
     parameters4.add(GenericNotificationParameterFactory::classKey(), "system");
     notificationManager->addNotification(0, parameters0, 0);
     notificationManager->addNotification(0, parameters1, 0);
@@ -1037,20 +1037,15 @@ void Ut_MCompositorNotificationSink::testWhenDisplayIsOffAndSystemNotificationIs
     gQmDisplayStateOff = true;
     notificationManager->addNotification(0, parameters4, 0);
 
-    // The system banner that was on screen should disappear
+    // The banner that was on screen should disappear and the queue should be emptied
     QCOMPARE(mSceneManagerDisappearSceneWindowWindow, gMSceneWindowsAppeared.at(0));
+    QCOMPARE(gMSceneWindowsAppeared.count(), 1);
 
-    // Non-system notifications should not disappear from the queue but appear on the screen
-    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1))->styleName(), QString("ShortEventBanner"));
-
-    // The queue should now contain only the latest system banner
-    MSceneWindowBridge bridge;
-    bridge.setObjectName("_m_testBridge");
-    bridge.setParent(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1)));
-    bridge.setSceneWindowState(MSceneWindow::Disappeared);
-    QCOMPARE(gMSceneWindowsAppeared.count(), 3);
-    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(2))->styleName(), QString("SystemBanner"));
-    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(2))->title(), QString("subtitle4"));
+    // When the window is opened again the latest banner should appear
+    emitDisplayEntered();
+    QCOMPARE(gMSceneWindowsAppeared.count(), 2);
+    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1))->styleName(), QString("SystemBanner"));
+    QCOMPARE(static_cast<MBanner*>(gMSceneWindowsAppeared.at(1))->title(), QString("subtitle4"));
 #endif
 }
 

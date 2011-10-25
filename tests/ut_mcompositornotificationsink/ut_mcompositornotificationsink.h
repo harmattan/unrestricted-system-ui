@@ -137,7 +137,7 @@ private slots:
     void testCurrentBannerDoneDoesntRemoveOtherBanners();
     void testSystemNotificationIsRemovedWhenPreviewsAreDisabled();
     void testSystemNotificationIsRemovedWhenBannerHasBeenShown();
-    void testWhenDisplayIsOffAndSystemNotificationIsReceivedSystemNotificationsAreRemovedFromQueue();
+    void testWhenDisplayIsOffAndNotificationIsReceivedBannersAreRemovedFromQueue();
 
 private:
     void testWindowShapeRegion(M::OrientationAngle angle, MSceneWindow* window);

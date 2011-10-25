@@ -111,9 +111,9 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         updateNotification(notification);
     } else {
 #ifdef HAVE_QMSYSTEM
-        if (notification.type() == Notification::SystemEvent && window != NULL && displayState.get() == MeeGo::QmDisplayState::Off) {
-            // When a system banner comes in while the display is off, remove any other system banners from the queue
-            removeSystemBannersFromQueue();
+        if (window != NULL && displayState.get() == MeeGo::QmDisplayState::Off) {
+            // When a notification comes in while the display is off, remove any other banners from the queue
+            removeBannersFromQueue();
         }
 #endif
 
@@ -365,25 +365,17 @@ void MCompositorNotificationSink::setTouchScreenLockActive(bool active)
     changeNotificationPreviewMode();
 }
 
-void MCompositorNotificationSink::removeSystemBannersFromQueue()
+void MCompositorNotificationSink::removeBannersFromQueue()
 {
-    // Remove references to all system banners
-    QList<MBanner *> doneBanners;
+    // Remove references to all banners
     foreach (MBanner *banner, bannerQueue) {
-        if (banner->styleName() == "SystemBanner") {
-            bannerDone(banner);
-            doneBanners.append(banner);
-        }
-    }
-
-    // Remove system banners from the banner queue
-    foreach (MBanner *banner, doneBanners) {
-        bannerQueue.removeAll(banner);
+        bannerDone(banner);
         delete banner;
     }
+    bannerQueue.clear();
 
-    if (currentBanner != NULL && currentBanner->styleName() == "SystemBanner") {
-        // Disappear any system banner currently being displayed
+    if (currentBanner != NULL) {
+        // Disappear any banner currently being displayed
         window->sceneManager()->disappearSceneWindowNow(currentBanner);
     }
 }
