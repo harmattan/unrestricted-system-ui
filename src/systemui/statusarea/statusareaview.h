@@ -131,6 +131,10 @@ private:
     StatusIndicator *landscapeCallForwardingIndicator;
     StatusIndicator *portraitCallForwardingIndicator;
 
+    //! DLNA status indicator
+    StatusIndicator *landscapeDLNAIndicator;
+    StatusIndicator *portraitDLNAIndicator;
+
     //! Transfer status indicator
     StatusIndicator *landscapeTransferStatusIndicator;
     StatusIndicator *portraitTransferStatusIndicator;

@@ -108,4 +108,9 @@ class TransferStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(TransferStatusIndicatorModel)
 };
 
+class DLNAStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(DLNAStatusIndicatorModel)
+};
+
 #endif /* STATUSINDICATORMODEL_H_ */

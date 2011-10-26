@@ -786,3 +786,20 @@ void NotificationStatusIndicator::setIconID(const QString &iconID)
         setStyleNameAndUpdate(metaObject()->className());
     }
 }
+
+DLNAStatusIndicator::DLNAStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
+    StatusIndicator(parent),
+    dlnaEnabled(createContextItem(context, "/com/nokia/dlna/dlnaEnabled"))
+{
+    connect(dlnaEnabled, SIGNAL(contentsChanged()), this, SLOT(dlnaEnabledChanged()));
+    dlnaEnabledChanged();
+}
+
+DLNAStatusIndicator::~DLNAStatusIndicator()
+{
+}
+
+void DLNAStatusIndicator::dlnaEnabledChanged()
+{
+    setStyleNameAndUpdate(QString(metaObject()->className()) + (dlnaEnabled->value().toBool() ? "Set" : ""));
+}

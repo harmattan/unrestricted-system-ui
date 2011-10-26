@@ -40,6 +40,7 @@
 #include "tetheringstatusindicator_stub.h"
 #include "profilestatusindicator_stub.h"
 #include "callforwardingstatusindicator_stub.h"
+#include "dlnastatusindicator_stub.h"
 #include "notificationarea_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "notificationsink_stub.h"

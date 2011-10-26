@@ -44,6 +44,7 @@
 #include "callforwardingstatusindicator_stub.h"
 #include "notificationstatusindicator_stub.h"
 #include "transferstatusindicator_stub.h"
+#include "dlnastatusindicator_stub.h"
 #include "screenlockextension_stub.h"
 #include "x11wrapper.h"
 #include "notificationsink_stub.h"

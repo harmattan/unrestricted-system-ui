@@ -78,6 +78,7 @@ private slots:
     void testTransferStatusStateChange();
     void testCallForwarding();
     void testNotification();
+    void testDLNA();
 };
 
 #endif //_UT_STATUSINDICATOR_

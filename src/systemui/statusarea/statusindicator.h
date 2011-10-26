@@ -612,4 +612,30 @@ public slots:
     void setIconID(const QString &iconID);
 };
 
+/*!
+ * A status indicator for showing whether DLNA sharing is enabled.
+ */
+class DLNAStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(DLNAStatusIndicator)
+
+public:
+    /*!
+     * Constructs a DLNAStatusIndicator.
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget
+     */
+    explicit DLNAStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
+
+    virtual ~DLNAStatusIndicator();
+
+private slots:
+    void dlnaEnabledChanged();
+
+private:
+    ContextItem *dlnaEnabled;
+};
+
 #endif // STATUSINDICATOR_H

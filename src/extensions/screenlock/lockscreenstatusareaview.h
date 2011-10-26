@@ -103,6 +103,9 @@ private:
     //! Call forwarding indicator
     StatusIndicator *callForwardingIndicator;
 
+    //! DLNA indicator
+    StatusIndicator *dlnaIndicator;
+
     //! Transfer status indicator
     StatusIndicator *transferStatusIndicator;
 

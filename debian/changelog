@@ -1,6 +1,7 @@
 system-ui (1.2.15~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#284386 - [TASK] DLNA indicator on status area
 
  -- Artem Egorkine <ext-artem.egorkine@nokia.com>  Wed, 26 Oct 2011 10:29:20 +0300
 

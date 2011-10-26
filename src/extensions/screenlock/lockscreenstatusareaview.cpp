@@ -44,6 +44,7 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     alarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     notificationStatusIndicator(new NotificationStatusIndicator(controller)),
     callForwardingIndicator(new CallForwardingStatusIndicator(contextFrameworkContext, controller)),
+    dlnaIndicator(new DLNAStatusIndicator(contextFrameworkContext, controller)),
     transferStatusIndicator(new TransferStatusIndicator(controller)),
     orientationChangeSignalConnected(false)
 {
@@ -64,13 +65,14 @@ LockScreenStatusAreaView::LockScreenStatusAreaView(StatusArea *controller) :
     layout->addStretch();
     layout->addItem(notificationStatusIndicator);
     layout->addItem(transferStatusIndicator);
+    layout->addItem(callIndicator);
     layout->addItem(tetheringIndicator);
     layout->addItem(callForwardingIndicator);
+    layout->addItem(dlnaIndicator);
     layout->addItem(shortDistanceNetworkIndicator);
     layout->addItem(gpsIndicator);
     layout->addItem(presenceIndicator);
     layout->addItem(profileIndicator);
-    layout->addItem(callIndicator);
     layout->addItem(alarmIndicator);
     controller->setLayout(layout);
 }

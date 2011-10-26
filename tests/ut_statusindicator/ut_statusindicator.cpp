@@ -833,4 +833,15 @@ void Ut_StatusIndicator::testNotification()
     QCOMPARE(m_subject->styleName().contains("Disabled"), QBool(true));
 }
 
+void Ut_StatusIndicator::testDLNA()
+{
+    m_subject = new DLNAStatusIndicator(*testContext);
+
+    testContextItems["/com/nokia/dlna/dlnaEnabled"]->setValue(QVariant(false));
+    QCOMPARE(m_subject->styleName(), QString("DLNAStatusIndicator"));
+
+    testContextItems["/com/nokia/dlna/dlnaEnabled"]->setValue(QVariant(true));
+    QCOMPARE(m_subject->styleName(), QString("DLNAStatusIndicatorSet"));
+}
+
 QTEST_APPLESS_MAIN(Ut_StatusIndicator)
