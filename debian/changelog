@@ -1,3 +1,9 @@
+system-ui (1.2.16~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 26 Oct 2011 14:25:37 +0300
+
 system-ui (1.2.15-1) unstable; urgency=low
 
   * Fixes: NB#284386 - [TASK] DLNA indicator on status area
