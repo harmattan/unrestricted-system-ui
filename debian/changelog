@@ -1,6 +1,7 @@
 system-ui (1.2.16~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#288573 - Change some icons used for battery banners
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 26 Oct 2011 14:25:37 +0300
 
