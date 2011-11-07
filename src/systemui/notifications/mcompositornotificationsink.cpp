@@ -142,6 +142,9 @@ void MCompositorNotificationSink::addNotification(const Notification &notificati
         if (!window->isVisible()) {
             window->show();
 
+            // This fixes bug #289583. For some reason the window is not transparent after opening it when MeeGo graphics system is forced.
+            window->repaint();
+
             // Calling hide() causes the onDisplay property of the window to change with delay,
             // so if show() is called fast enough after hiding, onDisplay is never changed to false and we
             // never get a new displayEntered signal, so go to the slot immediately in that case.
