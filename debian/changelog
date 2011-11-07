@@ -1,3 +1,9 @@
+system-ui (1.2.18~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 07 Nov 2011 18:40:23 +0200
+
 system-ui (1.2.17-1) unstable; urgency=low
 
   * Fixes: NB#289583 - Lock screen flashes quickly when a banner or notification is shown on home
