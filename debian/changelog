@@ -125,6 +125,30 @@ system-ui (1.2.0-1) unstable; urgency=low
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 08 Sep 2011 12:29:25 +0300
 
+system-ui (1.1.18-1) unstable; urgency=low
+
+  * Fixes: NB#284231 - [TASK] Move away from hardcoded font in launcherbutton
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 28 Sep 2011 12:00:45 +0300
+
+system-ui (1.1.17-1) unstable; urgency=high
+
+  * Fixes: NB#272833 - [TASK] when the call is active and battery is low, alert user at every 2 min interval regardless of display states
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 19 Sep 2011 12:02:29 +0300
+
+system-ui (1.1.16-1) unstable; urgency=low
+
+  * Fixes: NB#281758 - There is a black bar on top of the Nokia ripple animation and/or PIN query dialog during boot
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 12 Sep 2011 15:42:41 +0200
+
+system-ui (1.1.15-1) unstable; urgency=low
+
+  * Fixes: NB#280501 - Inconsistent placement of information banners and system banners when status area is not visible
+
+ -- Adrian Yanes <ext-adrian.yanes@nokia.com>  Fri, 09 Sep 2011 10:34:45 +0200
+
 system-ui (1.1.14-1) unstable; urgency=low
 
   * Fixes: NB#255218 - Status Menu open/close transition is incorrect
