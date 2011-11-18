@@ -26,7 +26,7 @@
 #include <MApplication>
 #include <MWindow>
 #include <MNotification>
-#include <MStylableWidget>
+#include <MImageWidget>
 #include <QGraphicsLinearLayout>
 
 #ifdef HAVE_QMSYSTEM
@@ -152,14 +152,14 @@ void Ut_ShutdownUI::testInitialization()
 
 void Ut_ShutdownUI::testRealize()
 {
-    // Check that calling realize() will realize the widget
+    // Check that calling realize() will realize other widgets except the logo
     m_subject->realize();
-    QVERIFY (m_subject->realized);
-    QVERIFY (m_subject->feedback);
-    QVERIFY (m_subject->label1);
-    QVERIFY (m_subject->label2);
-    QVERIFY (m_subject->logo);
-    QVERIFY (m_subject->sceneWindow);
+    QVERIFY(m_subject->realized);
+    QVERIFY(m_subject->feedback);
+    QVERIFY(m_subject->label1);
+    QVERIFY(m_subject->label2);
+    QVERIFY(m_subject->sceneWindow);
+    QCOMPARE(m_subject->logo, (MImageWidget*)NULL);
 }
 
 void Ut_ShutdownUI::testShowWindow()
@@ -179,12 +179,19 @@ void Ut_ShutdownUI::testShowWindow()
 
 void Ut_ShutdownUI::testShowWindowWithEmptyStrings()
 {
+    // Set the style
+    ShutdownWindowStyle *style = const_cast<ShutdownWindowStyle *>(static_cast<const ShutdownWindowStyle *>(MTheme::style("ShutdownWindowStyle", "", "", "", M::Landscape, NULL)));
+    style->setImage("test");
+
     // Check that calling showWindow() will realize the widget and show logo
     m_subject->showWindow("", "", 2000);
 
-    QVERIFY(m_subject->realized);
-    QVERIFY(m_subject->layout->itemAt(0) == m_subject->logo);
+    QCOMPARE(m_subject->realized, true);
+    QVERIFY(m_subject->logo != NULL);
+    QCOMPARE(m_subject->layout->itemAt(0), m_subject->logo);
+    QCOMPARE(m_subject->logo->imageId(), style->image());
     QCOMPARE(gTimerStarted, false);
+    MTheme::releaseStyle(style);
 }
 
 void Ut_ShutdownUI::testOrientationLocking_data()
@@ -223,6 +230,7 @@ void Ut_ShutdownUI::testOrientationLocking()
     QCOMPARE(mWindowOrientationAngleLocked, orientationLocked);
     QCOMPARE(mWindowOrientation, expectedOrientation);
     QCOMPARE(mWindowOrientationAngle, (M::OrientationAngle)expectedOrientationAngle);
+    MTheme::releaseStyle(style);
 }
 
 QTEST_APPLESS_MAIN(Ut_ShutdownUI)

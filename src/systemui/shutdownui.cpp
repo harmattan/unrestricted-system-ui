@@ -23,7 +23,7 @@
 #include <MTheme>
 #include <MLabel>
 #include <MFeedback>
-#include <MStylableWidget>
+#include <MImageWidget>
 #include <MSceneWindow>
 #include <QTimer>
 #include <QGraphicsLinearLayout>
@@ -86,14 +86,9 @@ void ShutdownUI::realize()
     label2->setAlignment(Qt::AlignCenter);
     label2->setObjectName("shutdownTextSecond");
 
-    // A full screen logo shown when the labels are already gone
-    logo = new MStylableWidget;
-    logo->setObjectName("shutdownLogo");
-
     layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-
     layout->addItem(label1);
     layout->addItem(label2);
 
@@ -123,28 +118,22 @@ void ShutdownUI::showWindow(const QString &text1, const QString &text2, int time
     // If the widgets are not created create them now
     realize();
 
+    // If the widgets have been created once but the labels are NULL the logo has already been shown so do nothing
+    if (label1 == NULL || label2 == NULL) {
+        return;
+    }
+
     timer->stop();
 
     if (!(text1.isEmpty() && text2.isEmpty())) {
-        // Set the labels to show the text strings that we got only if they exist
-        if (label1 != NULL) {
-            if (text1.startsWith("qtn")) {
-                label1->setText(qtTrId(text1.toLatin1().constData()));
-            } else {
-                label1->setText(text1);
-            }
-        }
+        // Set the labels to show the received text strings
+        label1->setText(text1.startsWith("qtn") ? qtTrId(text1.toLatin1().constData()) : text1);
+        label2->setText(text2.startsWith("qtn") ? qtTrId(text2.toLatin1().constData()) : text2);
 
-        if (label2 != NULL) {
-            if (text2.startsWith("qtn")) {
-                label2->setText(qtTrId(text2.toLatin1().constData()));
-            } else {
-                label2->setText(text2);
-            }
-        }
         // Set the interval and start the timer to the next phase: hiding the labels and showing the logo
         timer->start(timeout);
     } else {
+        // No text to show so show the logo immediately
         showLogo();
     }
 
@@ -159,16 +148,25 @@ void ShutdownUI::showLogo()
 {
     timer->stop();
 
-    // Hide the labels and show the image
-    for (int i = layout->count(); i > 0; i--) {
-        layout->removeAt(0);
-    }
-    layout->addItem(logo);
+    // Create the logo and make it invisible until it's in the correct position
+    const ShutdownWindowStyle *style = static_cast<const ShutdownWindowStyle *>(MTheme::style("ShutdownWindowStyle"));
+    logo = new MImageWidget(style->image());
+    logo->setZoomFactor(1);
+    logo->hide();
+    MTheme::releaseStyle(style);
 
-    delete label1;
+    // Destroy the labels (which will also remove them from the layout), lower one first
     delete label2;
+    delete label1;
     label1 = NULL;
     label2 = NULL;
+
+    // Make sure the logo is laid out to the correct position before showing it
+    layout->addStretch();
+    layout->addItem(logo);
+    layout->addStretch();
+    layout->activate();
+    logo->show();
 
     QTimer::singleShot(2000, this, SLOT(turnOffScreen()));
 }

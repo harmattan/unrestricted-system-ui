@@ -29,6 +29,9 @@ class ShutdownWindowStyle : public MStyle
 
     // The locked orientation: "landscape", "portrait" or any other value for unlocked
     M_STYLE_ATTRIBUTE(QString, lockedOrientation, LockedOrientation)
+
+    //! The ID of the image to be shown in the shutdown window
+    M_STYLE_ATTRIBUTE(QString, image, Image)
 };
 
 class ShutdownWindowStyleContainer : public MStyleContainer

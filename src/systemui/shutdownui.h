@@ -24,7 +24,7 @@
 class MSceneWindow;
 class MLabel;
 class MFeedback;
-class MStylableWidget;
+class MImageWidget;
 class QGraphicsLinearLayout;
 class QTimer;
 
@@ -84,7 +84,7 @@ private:
     QTimer *timer;
     MLabel *label1;
     MLabel *label2;
-    MStylableWidget *logo;
+    MImageWidget *logo;
     QGraphicsLinearLayout *layout;
     MFeedback *feedback;
 
