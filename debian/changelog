@@ -1,3 +1,9 @@
+system-ui (1.2.19~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 18 Nov 2011 15:16:16 +0200
+
 system-ui (1.2.18-1) unstable; urgency=low
 
   * Fixes: NB#291715 - Shutdown screen uses 1585kB of extra memory for no reason
