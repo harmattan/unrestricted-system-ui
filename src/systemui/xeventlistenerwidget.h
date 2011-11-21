@@ -42,7 +42,7 @@ public:
     /*!
      * Destroys the XEventListenerWidget.
      */
-    ~XEventListenerWidget();
+    virtual ~XEventListenerWidget();
 
 protected:
     //! \reimp
