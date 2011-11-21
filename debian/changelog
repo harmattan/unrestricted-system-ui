@@ -1,9 +1,8 @@
-system-ui (1.2.19~1) unstable; urgency=low
+system-ui (1.2.19-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#289336 - time is not in sync on status bar with lock screen
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 18 Nov 2011 15:16:16 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Nov 2011 17:17:00 +0200
 
 system-ui (1.2.18-1) unstable; urgency=low
 
