@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#include <QDebug>
 #include "statusarearenderer.h"
+#include "xeventlistenerwidget.h"
 #include <MStyle>
 #include "statusareastyle.h"
 #include <QMeeGoLivePixmap>
@@ -39,6 +39,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     statusAreaLivePixmap(NULL),
     statusAreaPropertyWindow(0),
     windowManagerWindow(0),
+    windowManagerWindowWidget(NULL),
     statusBarVisible(false),
 #ifdef HAVE_QMSYSTEM
     displayState(new MeeGo::QmDisplayState()),
@@ -74,7 +75,7 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
 
     setSizeFromStyle();
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
-        qWarning() << "Shared Pixmap was not created. Status area will not render";
+        qWarning("Shared Pixmap was not created. Status area will not render");
     } else {
         createStatusAreaPropertyWindow();
         setSharedPixmapHandleToWindowProperty();
@@ -228,6 +229,8 @@ StatusAreaRenderer::~StatusAreaRenderer()
         }
     }
 
+    delete windowManagerWindowWidget;
+
 #ifdef HAVE_QMSYSTEM
     delete displayState;
 #endif
@@ -291,6 +294,8 @@ bool StatusAreaRenderer::setupStatusBarVisibleListener()
     uchar *data = 0;
 
     windowManagerWindow = 0;
+    delete windowManagerWindowWidget;
+    windowManagerWindowWidget = NULL;
     if (X11Wrapper::XGetWindowProperty(QX11Info::display(), QX11Info::appRootWindow(), windowManagerWindowAtom,
                            0, 1024, False, XA_WINDOW, &type, &format, &length, &after, &data) == Success) {
         if (type == XA_WINDOW && format == 32) {
@@ -313,6 +318,10 @@ bool StatusAreaRenderer::setupStatusBarVisibleListener()
             // property on the root window is stale
             windowManagerWindow = 0;
         }
+    }
+
+    if (windowManagerWindow != 0) {
+        windowManagerWindowWidget = new XEventListenerWidget(NULL, windowManagerWindow);
     }
 
     return (windowManagerWindow != 0);
@@ -400,6 +409,8 @@ void StatusAreaRenderer::stopTrackingRootWindowProperties()
 void StatusAreaRenderer::wmWindowUnavailable()
 {
     windowManagerWindow = 0;
+    delete windowManagerWindowWidget;
+    windowManagerWindowWidget = NULL;
 
     // Assume status bar is visible when WM window is not available
     statusBarVisible = true;

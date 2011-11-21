@@ -156,6 +156,8 @@ private:
     Window statusAreaPropertyWindow;
     //! Window id of the window manager window
     Window windowManagerWindow;
+    //! Widget representing the window manager window
+    QWidget *windowManagerWindowWidget;
 
     //! Status Area dimensions.
     uint statusAreaHeight;

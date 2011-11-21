@@ -26,6 +26,7 @@
 #include "x11wrapper_modified_stub.h"
 #include <QX11Info>
 #include "xeventlistener_stub.h"
+#include "xeventlistenerwidget_stub.h"
 
 #define ROOT_WINDOW_ID (QX11Info::appRootWindow())
 const static Window MEEGOTOUCH_STATUSBAR_WINDOW_ID = 1;
