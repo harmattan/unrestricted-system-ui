@@ -1,9 +1,8 @@
-system-ui (1.2.20~1) unstable; urgency=low
+system-ui (1.2.20-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#292581 - Audible alert should not be played when exiting Power Save mode
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 21 Nov 2011 17:17:41 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 29 Nov 2011 14:24:43 +0200
 
 system-ui (1.2.19-1) unstable; urgency=low
 
