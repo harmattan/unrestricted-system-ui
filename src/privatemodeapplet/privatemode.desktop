@@ -17,4 +17,4 @@ X-DUIApplet-Applet=libprivatemodeapplet.so
 Category=qtn_noti_settings_title
 Order=0
 WidgetType=Toggle
-
+HelpId=CTX_IDUG_MEEGO_PRIVACY.html
