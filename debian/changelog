@@ -1,9 +1,9 @@
-system-ui (1.2.21~1) unstable; urgency=low
+system-ui (1.3.0~1) unstable; urgency=low
 
   * [UNRELEASED]
   * Fixes: NB#293261 - private mode applet's help button appears delayed
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 29 Nov 2011 14:25:31 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Dec, 01 Nov 2011 13:25:55 +0200
 
 system-ui (1.2.20-1) unstable; urgency=low
 
