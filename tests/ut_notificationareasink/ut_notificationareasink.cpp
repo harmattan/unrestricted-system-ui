@@ -29,10 +29,13 @@
 #include "notificationgroup_stub.h"
 #include "notificationmanager_stub.h"
 
+
+static char *gAppName = (char *)"./ut_notificationareasink";
+
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
 {
-    return QStringList();
+    return QStringList(gAppName);
 }
 
 // MGConfItem stubs
@@ -147,8 +150,7 @@ void Ut_NotificationAreaSink::initTestCase()
 {
     // Create a MAapplication
     static int argc = 1;
-    static char *app_name = (char *)"./ut_notificationareasink";
-    app = new MApplication(argc, &app_name);
+    app = new MApplication(argc, &gAppName);
 }
 
 void Ut_NotificationAreaSink::cleanupTestCase()

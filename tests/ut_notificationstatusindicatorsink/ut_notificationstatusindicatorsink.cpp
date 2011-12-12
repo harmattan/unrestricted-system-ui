@@ -32,10 +32,12 @@ TestNotificationParameters::TestNotificationParameters(const QString &image, con
     }
 }
 
+static char *gAppName = (char *)"./ut_notificationstatusindicatorsink";
+
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
 {
-    return QStringList();
+    return QStringList(gAppName);
 }
 
 // Tests
@@ -43,8 +45,7 @@ void Ut_NotificationStatusIndicatorSink::initTestCase()
 {
     // Create a MAapplication
     static int argc = 1;
-    static char *app_name = (char *)"./ut_notificationstatusindicatorsink";
-    app = new MApplication(argc, &app_name);
+    app = new MApplication(argc, &gAppName);
 }
 
 void Ut_NotificationStatusIndicatorSink::cleanupTestCase()
