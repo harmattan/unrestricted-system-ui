@@ -193,6 +193,9 @@ PhoneNetworkTypeStatusIndicator::PhoneNetworkTypeStatusIndicator(ApplicationCont
     connectionState = createContextItem(context, "Internet.NetworkState");
     connect(connectionState, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
+    connectionAdhoc = createContextItem(context, "Internet.NetworkWlanAdhoc");
+    connect(connectionAdhoc, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
+
     packetData = createContextItem(context, "Cellular.PacketData");
     connect(packetData, SIGNAL(contentsChanged()), this, SLOT(setNetworkType()));
 
@@ -221,6 +224,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     QString dataTechnology = cellularDataTechnology->value().toString(); // gprs egprs umts hspa
     QString state = connectionState->value().toString(); // disconnected connecting connected
     QString connection = connectionType->value().toString(); // GPRS WLAN
+    bool adhoc = connectionAdhoc->value().toBool();
     bool data = packetData->value().toBool();
     bool wlanOn = wlanEnabled->value().toBool();
 
@@ -235,7 +239,7 @@ void PhoneNetworkTypeStatusIndicator::setNetworkType()
     QString postFixPacketData;
 
     if ((connection == "WLAN") && (state != "disconnected") && wlanOn) {
-        postFix = "WLAN";
+        postFix = adhoc ? "WLANAdhoc" : "WLAN";
     }
     if (dataTechnology == "gprs") {
         postFixPacketData = "2G";

@@ -402,7 +402,6 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN35GActive {
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN {
-    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan";
     preferred-size: -1 -1;
     minimum-size: -1 -1;
@@ -410,7 +409,6 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLAN {
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANActive {
-    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan-active";
     preferred-size: -1 -1;
     minimum-size: -1 -1;
@@ -418,8 +416,56 @@ StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANActive {
 }
 
 StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANConnecting {
-    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "icon-s-status-wlan icon-s-status-wlan-active";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhoc2GActive {
+    image-list: "icon-s-status-gsm-active icon-s-status-adhoc-wlan";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhoc25GActive {
+    image-list: "icon-s-status-25g-active icon-s-status-adhoc-wlan";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhoc3GActive {
+    image-list: "icon-s-status-3g-active icon-s-status-adhoc-wlan";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhoc35GActive {
+    image-list: "icon-s-status-35g-active icon-s-status-adhoc-wlan";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhoc {
+    image-list: "icon-s-status-adhoc-wlan";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhocActive {
+    image-list: "icon-s-status-adhoc-wlan-active";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
+StatusIndicatorIconStyle#PhoneNetworkTypeStatusIndicatorWLANAdhocConnecting {
+    image-list: "icon-s-status-adhoc-wlan icon-s-status-adhoc-wlan-active";
     preferred-size: -1 -1;
     minimum-size: -1 -1;
     maximum-size: -1 -1;

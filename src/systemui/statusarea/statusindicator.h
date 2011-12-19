@@ -210,6 +210,7 @@ private:
     ContextItem *cellularDataTechnology;
     ContextItem *connectionType;
     ContextItem *connectionState;
+    ContextItem *connectionAdhoc;
     ContextItem *packetData;
     ContextItem *wlanEnabled;
 
