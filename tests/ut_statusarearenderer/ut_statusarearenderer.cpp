@@ -625,14 +625,16 @@ void Ut_StatusAreaRenderer::testStatusBarPropertyWindowCreation()
 
 void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreSetCorrectly()
 {
+    QCOMPARE(gX11WrapperStub->stubCallCount("XInternAtom"), 6);
     QCOMPARE(gX11WrapperStub->stubCallCount("XChangeProperty"), 2);
+
     // Verify setting pixmap property
-    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(3)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(4)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Window>(1), MEEGOTOUCH_STATUSBAR_WINDOW_ID);
     QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(0)->parameter<Atom>(3), XA_PIXMAP);
 
     // Verify setting property window property
-    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(4)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
+    QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(5)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Window>(1), ROOT_WINDOW_ID);
     QCOMPARE((ulong)gX11WrapperStub->stubCallsTo("XChangeProperty").at(1)->parameter<Atom>(3), XA_WINDOW);
 }
@@ -648,6 +650,23 @@ void Ut_StatusAreaRenderer::testStatusBarPixmapPropertiesAreDeletedInDestructor(
     QCOMPARE(gX11WrapperStub->stubCallCount("XDeleteProperty"), 2);
     QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(0)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PROPERTY_WINDOW");
     QCOMPARE(gX11WrapperStub->stubCallsTo("XInternAtom").at(1)->parameter<const char*>(1), "_MEEGOTOUCH_STATUSBAR_PIXMAP");
+}
+
+void Ut_StatusAreaRenderer::testStatusBarPixmapSharingIsAllowed()
+{
+    QCOMPARE(gX11WrapperStub->stubCallCount("XSendEvent"), 1);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Display *>(0), QX11Info::display());
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Window>(1), DefaultRootWindow(QX11Info::display()));
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<Bool>(2), False);
+    QCOMPARE(gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<long>(3), (long)0);
+
+    XEvent event = gX11WrapperStub->stubLastCallTo("XSendEvent").parameter<XEvent>(4);
+    XClientMessageEvent *clientMessageEvent = (XClientMessageEvent *)&event;
+    QCOMPARE(clientMessageEvent->type, ClientMessage);
+    QCOMPARE(clientMessageEvent->window, (unsigned long)statusAreaRenderer->sharedPixmapHandle());
+    QCOMPARE(clientMessageEvent->message_type, X11Wrapper::XInternAtom(QX11Info::display(), "XSERVER_SECURITY_POLICY_SHARE_DRAWABLE", False));
+    QCOMPARE(clientMessageEvent->format, 8);
+    QCOMPARE(clientMessageEvent->data.b[0], (char)True);
 }
 
 void Ut_StatusAreaRenderer::testWMWindowUnavailableInStartUp()

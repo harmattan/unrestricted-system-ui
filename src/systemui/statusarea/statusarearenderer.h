@@ -185,6 +185,8 @@ private:
     Atom windowManagerWindowAtom;
     //! _NET_SUPPORTED atom
     Atom netSupportedAtom;
+    //! XSERVER_SECURITY_POLICY_SHARE_DRAWABLE atom
+    Atom shareDrawableAtom;
 
     //! Root window property mask that was set before XSelectInput
     long previousRootWindowEventMask;

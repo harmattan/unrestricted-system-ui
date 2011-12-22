@@ -73,6 +73,7 @@ private slots:
     void testStatusBarPropertyWindowCreation();
     void testStatusBarPixmapPropertiesAreSetCorrectly();
     void testStatusBarPixmapPropertiesAreDeletedInDestructor();
+    void testStatusBarPixmapSharingIsAllowed();
 
     void testWMWindowUnavailableInStartUp();
     void testWMWindowBecomingUnavailable();

@@ -3,6 +3,7 @@ system-ui (1.3.0~1) unstable; urgency=low
   * [UNRELEASED]
   * Fixes: NB#293261 - private mode applet's help button appears delayed
   * Fixes: NB#289939 - [TASK] Different icons shown on status area for "ad-hoc" wlan
+  * Fixes: NB#290848 - sysuid needs to share X drawables in a secure manner
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Dec, 01 Nov 2011 13:25:55 +0200
 

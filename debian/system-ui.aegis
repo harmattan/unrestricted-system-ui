@@ -3,6 +3,7 @@
     <credential name="UID::user" />
     <credential name="GID::users" />
     <credential name="usb-moded::USBControl" />
+    <credential name="xserver-security-policy::capture-drawables" />
     <for path="/usr/bin/sysuid" />
   </request>
 </aegis>

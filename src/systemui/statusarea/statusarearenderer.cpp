@@ -69,9 +69,12 @@ StatusAreaRenderer::StatusAreaRenderer(QObject *parent) :
     setSceneRender(state);
 #endif
 
-    statusBarVisibleAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
-    windowManagerWindowAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTING_WM_CHECK", False);
-    netSupportedAtom = X11Wrapper::XInternAtom(QX11Info::display(), "_NET_SUPPORTED", False);
+    // Get the required X atoms
+    Display *display = QX11Info::display();
+    statusBarVisibleAtom = X11Wrapper::XInternAtom(display, "_MEEGOTOUCH_STATUSBAR_VISIBLE", False);
+    windowManagerWindowAtom = X11Wrapper::XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
+    netSupportedAtom = X11Wrapper::XInternAtom(display, "_NET_SUPPORTED", False);
+    shareDrawableAtom = X11Wrapper::XInternAtom(display, "XSERVER_SECURITY_POLICY_SHARE_DRAWABLE", True);
 
     setSizeFromStyle();
     if(!createSharedPixmapHandle() || !createBackPixmap()) {
@@ -111,10 +114,22 @@ void StatusAreaRenderer::setSizeFromStyle()
 
 bool StatusAreaRenderer::createSharedPixmapHandle()
 {
-    Pixmap pixmap = X11Wrapper::XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), statusAreaWidth, statusAreaHeight, QX11Info::appDepth());
+    Display *display = QX11Info::display();
+    Pixmap pixmap = X11Wrapper::XCreatePixmap(display, QX11Info::appRootWindow(), statusAreaWidth, statusAreaHeight, QX11Info::appDepth());
     statusAreaPixmap = QPixmap::fromX11Pixmap(pixmap, QPixmap::ExplicitlyShared);
 
     if (!statusAreaPixmap.isNull()) {
+        if (shareDrawableAtom != None) {
+            // Allow sharing the pixmap even if the X security module is loaded
+            XClientMessageEvent event;
+            memset(&event, 0, sizeof(XClientMessageEvent));
+            event.type = ClientMessage;
+            event.window = statusAreaPixmap.handle();
+            event.message_type = shareDrawableAtom;
+            event.format = 8;
+            event.data.b[0] = True;
+            X11Wrapper::XSendEvent(display, DefaultRootWindow(display), False, 0, (XEvent *)&event);
+        }
         return true;
     } else {
         return false;
