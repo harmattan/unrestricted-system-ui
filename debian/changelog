@@ -6,6 +6,18 @@ system-ui (1.3.0~1) unstable; urgency=low
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Dec, 01 Nov 2011 13:25:55 +0200
 
+system-ui (1.2.23-1) unstable; urgency=low
+
+  * Fixes: NB#290848 - sysuid needs to share X drawables in a secure manner
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 05 Jan 2012 15:07:30 +0200
+
+system-ui (1.2.22-1) unstable; urgency=low
+
+  * Fixes: NB#290848 - sysuid needs to share X drawables in a secure manner
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 05 Jan 2012 11:24:17 +0200
+
 system-ui (1.2.21-1) unstable; urgency=low
 
   * Fixes: NB#293261 - private mode applet's help button appears delayed
