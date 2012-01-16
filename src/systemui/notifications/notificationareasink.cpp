@@ -77,7 +77,6 @@ void NotificationAreaSink::updateNotification(MBanner *infoBanner, const Notific
     infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
-    infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
     updatePrefixForNotificationGroupBannerTimestamp(infoBanner, parameters.value("count").toUInt());
 
@@ -199,6 +198,7 @@ void NotificationAreaSink::addStandAloneNotification(const Notification &notific
     if (infoBanner != NULL) {
         // If the notification is already in the map, only update it
         updateNotification(infoBanner, notification.parameters());
+        infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
     } else {
         infoBanner = createInfoBanner(notification);
         setupInfoBanner(infoBanner, notification.parameters());

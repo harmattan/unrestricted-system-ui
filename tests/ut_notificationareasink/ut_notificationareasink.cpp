@@ -410,14 +410,14 @@ void Ut_NotificationAreaSink::testUpdateGroup()
 
     emit addGroup(1, parameters1);
 
-    // The stub is now aware of the banner so updates go to the first occurrence of the banner
+    // The stub is now aware of the banner so updates go to the first occurrence of the banner. Timestamp should not get set.
     QCOMPARE(titles.length(), 2);
     QCOMPARE(titles[0], QString("subtitle1"));
     QCOMPARE(subtitles.length(), 2);
     QCOMPARE(subtitles[0], QString("title1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
-    QCOMPARE(timestamps[0].toTime_t(), (uint)123456);
+    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
     // TODO: even though contents.length is 2, there's only 1 action in the mnotification
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);
