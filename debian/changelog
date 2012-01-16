@@ -1,9 +1,8 @@
-system-ui (1.3.0~1) unstable; urgency=low
+system-ui (1.3.0-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#296811 - Updating a notification group clears the user set time stamp
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Dec, 01 Nov 2011 13:25:55 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Mon, 16 Jan 2012 14:07:19 +0200
 
 system-ui (1.2.23-1) unstable; urgency=low
 
