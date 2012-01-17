@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ -n "`initctl status xsession/sysuid | grep running`" ]
+then
+  initctl restart xsession/sysuid
+fi
