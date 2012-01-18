@@ -285,6 +285,8 @@ uint NotificationManager::addNotification(uint notificationUserId, const Notific
 
         submitNotification(notification);
 
+        updateGroupTimestampFromNotifications(groupId);
+
         return notificationId;
     }
     return 0;
@@ -312,6 +314,8 @@ bool NotificationManager::updateNotification(uint notificationUserId, uint notif
             emit notificationUpdated(notificationContainer.value(notificationId));
         }
 
+        updateGroupTimestampFromNotifications((*ni).groupId());
+
         return true;
     } else {
         return false;
@@ -333,7 +337,7 @@ bool NotificationManager::removeNotification(uint notificationId)
 {
     if (notificationContainer.contains(notificationId)) {
         // Mark the notification unused
-        notificationContainer.take(notificationId);
+        const Notification removedNotification = notificationContainer.take(notificationId);
 
         saveNotifications();
 
@@ -352,6 +356,8 @@ bool NotificationManager::removeNotification(uint notificationId)
                 relayNextNotification();
             }
         }
+
+        updateGroupTimestampFromNotifications(removedNotification.groupId());
 
         return true;
     } else {
@@ -373,13 +379,13 @@ bool NotificationManager::removeNotificationsInGroup(uint groupId)
     foreach(uint notificationId, notificationIds) {
         result &= removeNotification(notificationId);
     }
+
     return result;
 }
 
 uint NotificationManager::addGroup(uint notificationUserId, const NotificationParameters &parameters)
 {
     NotificationParameters fullParameters(appendEventTypeParameters(parameters));
-    fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
 
     uint groupID = nextAvailableGroupID();
     NotificationGroup group(groupID, notificationUserId, fullParameters);
@@ -399,9 +405,7 @@ bool NotificationManager::updateGroup(uint notificationUserId, uint groupId, con
     QHash<uint, NotificationGroup>::iterator gi = groupContainer.find(groupId);
 
     if (gi != groupContainer.end()) {
-        NotificationParameters fullParameters(parameters);
-        fullParameters.add(GenericNotificationParameterFactory::timestampKey(), timestamp(parameters));
-        gi->updateParameters(fullParameters);
+        gi->updateParameters(parameters);
 
         saveStateData();
 
@@ -673,3 +677,30 @@ uint NotificationManager::timestamp(const NotificationParameters &parameters)
     return timestamp == 0 ? QDateTime::currentDateTimeUtc().toTime_t() : timestamp;
 }
 
+void NotificationManager::updateGroupTimestampFromNotifications(uint groupId)
+{
+    if (groupId != 0 && groupContainer.contains(groupId)) {
+        NotificationGroup group = groupContainer.value(groupId);
+        NotificationParameters groupParameters = group.parameters();
+        uint oldGroupTimestamp = groupParameters.value(GenericNotificationParameterFactory::timestampKey()).toUInt();
+
+        // Check the latest notification timestamp of the group's notifications
+        uint newGroupTimestamp = 0;
+        QHash<uint, Notification>::const_iterator notificationIterator;
+        for (notificationIterator = notificationContainer.begin(); notificationIterator != notificationContainer.end(); notificationIterator++) {
+            if ((*notificationIterator).groupId() == groupId) {
+                uint notificationTimestamp = (*notificationIterator).parameters().value(GenericNotificationParameterFactory::timestampKey()).toUInt();
+                if (newGroupTimestamp < notificationTimestamp) {
+                    newGroupTimestamp = notificationTimestamp;
+                }
+            }
+        }
+
+        if (oldGroupTimestamp != newGroupTimestamp) {
+            // Update the group timestamp
+            groupParameters.add(GenericNotificationParameterFactory::timestampKey(), newGroupTimestamp);
+            group.updateParameters(groupParameters);
+            updateGroup(group.userId(), group.groupId(), group.parameters());
+        }
+    }
+}

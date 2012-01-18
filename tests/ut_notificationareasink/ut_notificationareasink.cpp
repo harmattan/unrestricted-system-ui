@@ -340,9 +340,10 @@ void Ut_NotificationAreaSink::testAddNotificationToGroup()
     TestNotificationParameters parameters1("title1", "subtitle1", "icon1", "content1", 12345);
     emit addNotification(Notification(0, 1, 2, parameters1, Notification::ApplicationEvent, 1000));
 
-    QCOMPARE(timestamps[1].toTime_t(), (uint)12345);
     QCOMPARE(addSpy.count(), 1);
     QCOMPARE(notifications.count(), 1);
+    // Group timestamp shouldn't change in sink when notification added (that is handled in notification manager)
+    QCOMPARE(timestamps.count(), 1);
 }
 
 void Ut_NotificationAreaSink::testAddNewNotificationToGroupUpdatesNotificationArea()
@@ -370,7 +371,7 @@ void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPre
     const QString NOTIFICATION_ICON("notificationIcon");
     const QString NOTIFICATION_ACTION("notificationAction");
 
-    TestNotificationParameters groupParameters(GROUP_SUMMARY, GROUP_BODY, GROUP_ICON, GROUP_ACTION);
+    TestNotificationParameters groupParameters(GROUP_SUMMARY, GROUP_BODY, GROUP_ICON, GROUP_ACTION, 123);
     emit addGroup(GROUP_ID, groupParameters);
     TestNotificationParameters notificationParameters(NOTIFICATION_SUMMARY, NOTIFICATION_BODY, NOTIFICATION_ICON, NOTIFICATION_ACTION, 12345);
     emit addNotification(Notification(NOTIFICATION_ID, GROUP_ID, 2, notificationParameters, Notification::ApplicationEvent, 1000));
@@ -386,8 +387,8 @@ void Ut_NotificationAreaSink::testWhenAddingNewNotificationToGroupThatHasBeenPre
     MBanner *banner = bannerCatcher.banners.at(0);
     // The banner should have the notification group's data
     QCOMPARE(banner->title(), GROUP_BODY);
-    // The banner should have the timestamp of the previous notification
-    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
+    // The banner should have the timestamp of the group
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123);
 }
 
 void Ut_NotificationAreaSink::testUpdateGroup()
@@ -410,14 +411,14 @@ void Ut_NotificationAreaSink::testUpdateGroup()
 
     emit addGroup(1, parameters1);
 
-    // The stub is now aware of the banner so updates go to the first occurrence of the banner. Timestamp should not get set.
+    // The stub is now aware of the banner so updates go to the first occurrence of the banner. Timestamp should get updated.
     QCOMPARE(titles.length(), 2);
     QCOMPARE(titles[0], QString("subtitle1"));
     QCOMPARE(subtitles.length(), 2);
     QCOMPARE(subtitles[0], QString("title1"));
     QCOMPARE(buttonIcons.length(), 1);
     QCOMPARE(buttonIcons[0], QString("buttonicon1"));
-    QCOMPARE(timestamps[0].toTime_t(), (uint)12345);
+    QCOMPARE(timestamps[0].toTime_t(), (uint)123456);
     // TODO: even though contents.length is 2, there's only 1 action in the mnotification
     // clearing of the actions should be stubbed somehow...
     QCOMPARE(contents.length(), 2);

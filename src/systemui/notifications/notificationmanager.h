@@ -305,6 +305,12 @@ private:
      */
     uint timestamp(const NotificationParameters &parameters);
 
+    /*! Updates the given group's timestamp according to the latest timestamp of group's notifications.
+     *
+     * \param groupId The id of the group of which timestamp should be updated
+     */
+    void updateGroupTimestampFromNotifications(uint groupId);
+
     //! Hash of all notifications keyed by notification IDs
     QHash<uint, Notification> notificationContainer;
 

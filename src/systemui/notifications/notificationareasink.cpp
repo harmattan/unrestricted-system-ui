@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include "notificationareasink.h"
 #include "notificationwidgetparameterfactory.h"
 #include "notificationmanagerinterface.h"
@@ -77,6 +78,7 @@ void NotificationAreaSink::updateNotification(MBanner *infoBanner, const Notific
     infoBanner->setProperty(SUBTITLE_TEXT_PROPERTY, infoBannerTitleText(parameters));
     infoBanner->setProperty(GENERIC_TEXT_PROPERTY, infoBannerGenericText(parameters));
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
+    infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
     updatePrefixForNotificationGroupBannerTimestamp(infoBanner, parameters.value("count").toUInt());
 
@@ -179,7 +181,6 @@ void NotificationAreaSink::addNotificationToGroup(const Notification &notificati
             // Seems like the infoBanner is NULL. So it means that the group banner was removed, but group is alive. Recreate the banner.
             infoBanner = createGroupBanner(groupId, notificationGroupParameters.value(groupId));
         }
-        infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
 
         if (infoBanner != NULL && infoBanner->parentItem() == NULL) {
             // Add the group to the notification area if this is the first notification to the group
@@ -198,7 +199,6 @@ void NotificationAreaSink::addStandAloneNotification(const Notification &notific
     if (infoBanner != NULL) {
         // If the notification is already in the map, only update it
         updateNotification(infoBanner, notification.parameters());
-        infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(notification.parameters().value("timestamp").toUInt()));
     } else {
         infoBanner = createInfoBanner(notification);
         setupInfoBanner(infoBanner, notification.parameters());

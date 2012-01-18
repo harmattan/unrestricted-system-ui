@@ -133,7 +133,7 @@ private slots:
     // Test that the group info is restored from the persistent storage
     void testGroupInfoRestoration();
     // Test that the persistent notifications are saved to the persistent storage
-    void tesNotificationStorage();
+    void testNotificationStorage();
     // Test that the persistent notifications are restored from the persistent storage
     void testNotificationRestoration();
     // Test the removal of notifications based on event type
@@ -162,9 +162,17 @@ private slots:
     // Test that timestamp of notification is updated
     void testThatTimestampOfNotificationIsUpdatedWhenNotificationUpdates();
     // Test adding group with and without user specified timestamp
-    void testAddGroupWithAndWithoutTimestamp();
+    void testAddGroupWithoutAndWithTimestamp();
     // Test that timestamp of group is updated when group is updated
     void testThatTimestampOfGroupIsUpdatedWhenGroupIsUpdated();
+    void testAddNotificationToGroupWithTimestamp();
+    void testUpdateGroupTimestampWhenNewerNotificationAddedToGroup();
+    void testNotUpdatingGroupTimestampWhenAddingNotificationsWithOlderTimestamp();
+    void testNotUpdatingGroupTimestampWhenUpdatingNotificationsWithOlderTimestamp();
+    void testUpdateNotificationInGroupWithTimestamp_data();
+    void testUpdateNotificationInGroupWithTimestamp();
+    void testUpdatingGroupTimestampWhenRemovingNotifications();
+    void testUpdatingGroupTimestampWhenGroupIsCleared();
 };
 
 #endif // UT_NOTIFICATIONMANAGER_H
