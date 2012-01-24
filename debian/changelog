@@ -1,3 +1,9 @@
+system-ui (1.3.2~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Tue, 24 Jan 2012 15:51:53 +0200
+
 system-ui (1.3.1-1) unstable; urgency=low
 
   * Fixes: NB#297482 - Device shows OS update message after SSU from PR1 40-4 to PR2 50-5
