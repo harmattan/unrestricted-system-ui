@@ -1,10 +1,10 @@
-system-ui (1.3.0-1) unstable; urgency=low
+system-ui (1.3.0-2) unstable; urgency=low
 
   * Fixes: NB#296811 - Updating a notification group clears the user set time stamp
   * Fixes: NB#297482 - Device shows OS update message after SSU from PR1 40-4 to PR2 50-5
   * Fixes: NB#297027 - Notification group does not show the real latest timestamp
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 25 Jan 2012 15:56:46 +0200
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Wed, 25 Jan 2012 16:12:18 +0200
 
 system-ui (1.2.23-1) unstable; urgency=low
 
