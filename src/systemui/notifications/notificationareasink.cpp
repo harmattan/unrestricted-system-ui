@@ -80,8 +80,6 @@ void NotificationAreaSink::updateNotification(MBanner *infoBanner, const Notific
     infoBanner->setProperty(USER_REMOVABLE_PROPERTY, determineUserRemovability(parameters));
     infoBanner->setBannerTimeStamp(QDateTime::fromTime_t(parameters.value("timestamp").toUInt()));
 
-    updatePrefixForNotificationGroupBannerTimestamp(infoBanner, parameters.value("count").toUInt());
-
     // Update the info banner's image, titles and actions
     updateImage(infoBanner, parameters);
     updateTitles(infoBanner);
@@ -245,13 +243,17 @@ void NotificationAreaSink::removeNotification(uint notificationId)
         if(decreaseNotificationCountOfGroup(groupid) == 0) {
             removeGroupBanner(groupid);
         }
+        notificationIdToGroupId.remove(notificationId);
     }
 }
 
 uint NotificationAreaSink::decreaseNotificationCountOfGroup(uint groupId)
 {
     uint notificationIdsCount = notificationCountOfGroup.value(groupId);
-    notificationCountOfGroup.insert(groupId, --notificationIdsCount);
+    if (notificationIdsCount > 0) {
+        notificationIdsCount--;
+    }
+    notificationCountOfGroup.insert(groupId, notificationIdsCount);
     updatePrefixForNotificationGroupBannerTimestamp(groupIdToMBanner.value(groupId),
         notificationCountOfGroup.value(groupId));
     return  notificationIdsCount;

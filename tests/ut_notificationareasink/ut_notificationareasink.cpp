@@ -329,6 +329,7 @@ void Ut_NotificationAreaSink::testRemovingNotificationsWhenNoNotificationLeftGro
     // Last notification in group removed, so banner will be removed
     emit(removeNotification(1));
     QCOMPARE(remSpy.count(), 1);
+    QCOMPARE(sink->notificationIdToGroupId.isEmpty(), true);
 }
 
 void Ut_NotificationAreaSink::testAddNotificationToGroup()
@@ -510,6 +511,19 @@ void Ut_NotificationAreaSink::testSetPrefixForNotificationGroupBannerWhenThereIs
 
     removeNotification(0);
     QCOMPARE(prefixTimeStamps.value(notifications.at(0)).isEmpty(), true);
+}
+
+void Ut_NotificationAreaSink::testNotUpdatingGroupBannerTimestampPrefixWhenBannerUpdated()
+{
+    emit addGroup(1, TestNotificationParameters());
+    emit addNotification(Notification(0, 1, 2, TestNotificationParameters(), Notification::ApplicationEvent, 1000));
+
+    QCOMPARE(prefixTimeStamps.count(), 1);
+
+    TestNotificationParameters groupParameters;
+    groupParameters.add(NotificationParameter("count", 2));
+    sink->updateNotification(notifications.at(0), groupParameters);
+    QCOMPARE(prefixTimeStamps.count(), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_NotificationAreaSink)

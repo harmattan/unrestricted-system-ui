@@ -93,6 +93,7 @@ private slots:
     void testApplyPrivacySetting();
     void testNotificationsFetchedFromNotificationManager();
     void testSetPrefixForNotificationGroupBannerWhenThereIsMoreThanOneNotificationInAGroup();
+    void testNotUpdatingGroupBannerTimestampPrefixWhenBannerUpdated();
 
 signals:
     void addGroup(uint groupId, const NotificationParameters &parameters);

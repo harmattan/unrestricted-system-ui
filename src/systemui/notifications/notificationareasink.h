@@ -134,6 +134,10 @@ private:
     uint decreaseNotificationCountOfGroup(uint groupId);
     //! Updates the latest prefix for notification group timestamp.
     void updatePrefixForNotificationGroupBannerTimestamp(MBanner *infoBanner, uint count);
+
+#ifdef UNIT_TEST
+    friend class Ut_NotificationAreaSink;
+#endif
 };
 
 #endif /* NOTIFICATIONAREASINK_H_ */
