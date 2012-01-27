@@ -1,7 +1,12 @@
+system-ui (1.3.2~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 Jan 2012 13:38:22 +0200
+
 system-ui (1.3.1-1) unstable; urgency=low
 
-  * Fixes: NB#296811 - Updating a notification group clears the user set time stamp
-  * Fixes: NB#289939 - [TASK] Different icons shown on status area for "ad-hoc" wlan
+  * Fixes: NB#297410 - Notification group timestamp prefix is incorrect after removing a notification from the group and adding a new one
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 Jan 2012 13:37:25 +0200
 
