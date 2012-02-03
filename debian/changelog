@@ -1,6 +1,7 @@
 system-ui (1.3.2~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#296376 - Feature Request: Icon for "Beep"-profile in lock screen
 
  -- Vesa Halttunen <vesa.halttunen@nokia.com>  Fri, 27 Jan 2012 13:38:22 +0200
 

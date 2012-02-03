@@ -72,6 +72,7 @@ private slots:
     void testCall_data();
     void testCall();
     void testTethering();
+    void testProfile_data();
     void testProfile();
     void testGPS();
     void testTransferStatusIndicatorDBusConnectionCreationInConstructor();

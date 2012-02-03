@@ -680,6 +680,8 @@ void ProfileStatusIndicator::profileChanged()
 {
     if (profile->value().toString() == "silent") {
         setStyleNameAndUpdate(QString(metaObject()->className()) + "Silent");
+    } else if (profile->value().toString() == "meeting") {
+        setStyleNameAndUpdate(QString(metaObject()->className()) + "Beep");
     } else {
         setStyleNameAndUpdate(metaObject()->className());
     }

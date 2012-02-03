@@ -611,6 +611,14 @@ StatusIndicatorIconStyle#ProfileStatusIndicatorSilent {
     maximum-size: -1 -1;
 }
 
+StatusIndicatorIconStyle#ProfileStatusIndicatorBeep {
+    /* The list of IDs of the images to be shown in the status indicator separated by spaces */
+    image-list: "icon-s-status-beep";
+    preferred-size: -1 -1;
+    minimum-size: -1 -1;
+    maximum-size: -1 -1;
+}
+
 /* "Offline" presence, no indicator */
 StatusIndicatorIconStyle#PresenceStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */

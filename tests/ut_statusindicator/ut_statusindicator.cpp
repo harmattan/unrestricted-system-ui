@@ -765,15 +765,25 @@ void Ut_StatusIndicator::testTethering()
     QVERIFY(m_subject->styleName().indexOf("Set") >= 0);
 }
 
+void Ut_StatusIndicator::testProfile_data()
+{
+    QTest::addColumn<QString>("profileName");
+    QTest::addColumn<QString>("styleName");
+
+    QTest::newRow("Default") << QString("default") << QString("ProfileStatusIndicator");
+    QTest::newRow("Silent") << QString("silent") << QString("ProfileStatusIndicatorSilent");
+    QTest::newRow("Meeting (Beep)") << QString("meeting") << QString("ProfileStatusIndicatorBeep");
+}
+
 void Ut_StatusIndicator::testProfile()
 {
+    QFETCH(QString, profileName);
+    QFETCH(QString, styleName);
+
     m_subject = new ProfileStatusIndicator(*testContext);
 
-    testContextItems["Profile.Name"]->setValue(QVariant("silent"));
-    QVERIFY(m_subject->styleName().indexOf("Silent") >= 0);
-
-    testContextItems["Profile.Name"]->setValue(QVariant("default"));
-    QVERIFY(m_subject->styleName().indexOf("Silent") < 0);
+    testContextItems["Profile.Name"]->setValue(profileName);
+    QCOMPARE(m_subject->styleName(), styleName);
 }
 
 void Ut_StatusIndicator::testGPS()
