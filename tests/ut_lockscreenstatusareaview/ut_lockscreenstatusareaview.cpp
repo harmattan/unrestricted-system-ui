@@ -49,6 +49,11 @@
 #include "x11wrapper.h"
 #include "notificationsink_stub.h"
 
+// X stubs to avoid crashes
+void XSetWMProperties(Display *, Window, XTextProperty *, XTextProperty *, char **, int, XSizeHints *, XWMHints *, XClassHint *)
+{
+}
+
 WId qWidgetWinId = 0xdeadbeef;
 WId QWidget::winId() const
 {
