@@ -41,14 +41,8 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*)));
     extensionArea->setObjectName("StatusIndicatorMenuExtensionArea");
     extensionArea->setInProcessFilter(QRegExp());
-    extensionArea->setOutOfProcessFilter(QRegExp();
-    extensionArea->setOrder((QStringList() << "statusindicatormenu-volume.desktop"
-                             << "statusindicatormenu-call.desktop"
-                             << "statusindicatormenu-internetconnection.desktop"
-                             << "statusindicatormenu-bluetooth.desktop"
-                             << "statusindicatormenu-dlna.desktop"
-                             << "statusindicatormenu-presence.desktop"
-                             << "statusindicatormenu-transfer.desktop"));
+    extensionArea->setOutOfProcessFilter(QRegExp());
+    extensionArea->setOrder(getOrderList());
     extensionArea->init();
 
     // Add panning to the expension area
@@ -115,6 +109,43 @@ void StatusIndicatorMenuVerticalView::setExtensionLayoutPosition(MApplicationExt
 StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
 {
     delete containerWidget;
+}
+
+QStringList StatusIndicatorMenuVerticalView::getOrderList()
+{
+    QFile configFile("/etc/status-menu-items-order.conf");
+    if (!configFile.exists()) {
+        QStringList list;
+        list << "statusindicatormenu-volume.desktop"
+             << "statusindicatormenu-call.desktop"
+             << "statusindicatormenu-internetconnection.desktop"
+             << "statusindicatormenu-bluetooth.desktop"
+             << "statusindicatormenu-dlna.desktop"
+             << "statusindicatormenu-presence.desktop"
+             << "statusindicatormenu-transfer.desktop";
+        return list;
+    };
+
+    configFile.open(QIODevice::ReadOnly);
+    QString orderListString = configFile.readAll();
+    configFile.close();
+    QStringList orderList = orderListString.split("\n");
+
+    QDir pluginDir("/usr/share/meegotouch/applicationextensions");
+    // It should, but do it the right way anyway...
+    if (pluginDir.exists()) {
+        QStringList filters;
+        filters << "statusindicatormenu*.desktop";
+        QStringList pluginNames = pluginDir.entryList(filters);
+        foreach (QString plugin, orderList) {
+            if (pluginNames.contains(plugin))
+                pluginNames.removeAll(plugin);
+        }
+
+        orderList.append(pluginNames);
+    }
+
+    return orderList;
 }
 
 M_REGISTER_VIEW_NEW(StatusIndicatorMenuVerticalView, StatusIndicatorMenu)

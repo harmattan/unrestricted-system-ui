@@ -21,6 +21,7 @@
 #define STATUSINDICATORMENUVERTICALVIEW_H_
 
 #include <mscenewindowview.h>
+#include <QDir>
 #include "statusindicatormenustyle.h"
 
 class QGraphicsLinearLayout;
@@ -75,6 +76,12 @@ private:
 #ifdef UNIT_TEST
     friend class Ut_StatusIndicatorMenuVerticalView;
 #endif
+
+private:
+    /*!
+     * Returns the order of plugins from a config file
+     */
+    QStringList getOrderList();
 };
 
 #endif /* STATUSINDICATORMENUVERTICALVIEW_H_ */
