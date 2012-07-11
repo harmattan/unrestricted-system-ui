@@ -1,3 +1,9 @@
+system-ui (1.3.2-1+0m8) unstable; urgency=low
+
+  * Using PR1.3 version number
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Wed, 11 Jul 2012 18:18:58 +0300
+
 system-ui (1.4.0~1) unstable; urgency=low
 
   * [UNRELEASED]

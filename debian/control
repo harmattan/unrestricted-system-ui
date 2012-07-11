@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 5), doxygen (>=1.5.9), libmeegotouch-dev (>= 0.24.7
 Standards-Version: 3.8.0
 
 Package: system-ui
-Provides: duistatusindicatormenu
+Provides: duistatusindicatormenu, unrestricted-system-ui
 Conflicts: duistatusindicatormenu
 Replaces: duistatusindicatormenu, cellular-ui
 Architecture: any
