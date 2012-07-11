@@ -92,6 +92,7 @@ binary-arch: build install
 	dh_installchangelogs $(EXCLUSIONS)
 	dh_installdocs $(EXCLUSIONS)
 	dh_install --sourcedir=debian/tmp $(EXCLUSIONS)
+	cp data/status-menu-items-order.conf debian/system-ui/etc/
 	dh_link $(EXCLUSIONS)
 	dh_strip --dbg-package=system-ui-dbg $(EXCLUSIONS)
 	dh_compress $(EXCLUSIONS)
