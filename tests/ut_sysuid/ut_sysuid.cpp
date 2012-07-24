@@ -54,6 +54,7 @@
 #include "closeeventeater_stub.h"
 #include "diskspacenotifier_stub.h"
 #include "ngfnotificationsink.h"
+#include "lednotificationsink.h"
 #include "testcontextitem.h"
 #include "sysuid.h"
 
@@ -137,6 +138,29 @@ void NGFNotificationSink::addNotification(const Notification &)
 }
 
 void NGFNotificationSink::removeNotification(uint)
+{
+}
+
+// LEDNotificationSink stubs (used by Sysuid)
+LEDNotificationSink *mLEDNotificationSink = 0;
+LEDNotificationSink::LEDNotificationSink(QObject *parent) : NotificationSink(parent)
+{
+    mLEDNotificationSink = this;
+}
+
+LEDNotificationSink::~LEDNotificationSink()
+{
+}
+
+void LEDNotificationSink::addNotification(const Notification &)
+{
+}
+
+void LEDNotificationSink::removeNotification(uint)
+{
+}
+
+void LEDNotificationSink::updateStatusOfLedFeedback()
 {
 }
 
