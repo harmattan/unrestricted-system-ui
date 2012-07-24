@@ -37,6 +37,7 @@
 #include "notificationmanager.h"
 #include "mcompositornotificationsink.h"
 #include "ngfnotificationsink.h"
+#include "lednotificationsink.h"
 #include "contextframeworkcontext.h"
 #include "notificationstatusindicatorsink.h"
 #include "closeeventeater.h"
@@ -73,6 +74,7 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     notificationManager = new NotificationManager(NOTIFICATION_RELAY_INTERVAL);
     mCompositorNotificationSink = new MCompositorNotificationSink;
     ngfNotificationSink = new NGFNotificationSink;
+    ledNotificationSink = new LEDNotificationSink;
     notificationStatusIndicatorSink_ = new NotificationStatusIndicatorSink;
 
     // Connect the notification signals for the compositor notification sink
@@ -83,6 +85,10 @@ Sysuid::Sysuid(QObject* parent) : QObject(parent)
     // Connect the notification signals for the feedback notification sink
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), ngfNotificationSink, SLOT(addNotification(const Notification &)));
     connect(notificationManager, SIGNAL(notificationRemoved(uint)), ngfNotificationSink, SLOT(removeNotification(uint)));
+
+    // Connect the notification signals for the LED notification sink
+    connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), ledNotificationSink, SLOT(addNotification(const Notification &)));
+    connect(notificationManager, SIGNAL(notificationRemoved(uint)), ledNotificationSink, SLOT(removeNotification(uint)));
 
     // Connect the notification signals for the notification status indicator sink
     connect(notificationManager, SIGNAL(notificationUpdated(const Notification &)), notificationStatusIndicatorSink_, SLOT(addNotification(const Notification &)));
@@ -160,6 +166,7 @@ Sysuid::~Sysuid()
 {
     delete notificationStatusIndicatorSink_;
     delete ngfNotificationSink;
+    delete ledNotificationSink;
     delete mCompositorNotificationSink;
     delete notificationManager;
     delete volumeExtensionArea;

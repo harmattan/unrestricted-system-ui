@@ -40,6 +40,7 @@ class NotificationManager;
 class NotificationManagerInterface;
 class MCompositorNotificationSink;
 class NGFNotificationSink;
+class LEDNotificationSink;
 class UnlockNotificationSink;
 class NotificationStatusIndicatorSink;
 class ScreenLockBusinessLogic;
@@ -109,6 +110,9 @@ private:
 
     //! Notification sink for presenting the notification as a feedback
     NGFNotificationSink *ngfNotificationSink;
+
+    //! Notification sink for presenting the notification through LED
+    LEDNotificationSink *ledNotificationSink;
 
     //! Notification sink for the notification status indicator
     NotificationStatusIndicatorSink *notificationStatusIndicatorSink_;
