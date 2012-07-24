@@ -4,7 +4,7 @@ CONFIG       += plugin meegotouch system-ui
 
 INCLUDEPATH  += /usr/include/meegotouch
 INCLUDEPATH  += /usr/include/system-ui
-
+INCLUDEPATH  += ../statusindicatormenu
 TARGET        = statusindicatormenu-safemode
 
 OTHER_FILES += \
