@@ -13,6 +13,7 @@ HEADERS +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationareasink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/widgetnotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mcompositornotificationsink.h \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/lednotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfnotificationsink.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfadapter.h \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicatorsink.h \
@@ -30,6 +31,7 @@ SOURCES +=  \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationareasink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/widgetnotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/mcompositornotificationsink.cpp \
+    $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/lednotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfnotificationsink.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/ngfadapter.cpp \
     $$SYSTEMUI_NOTIFICATIONS_SRC_DIR/notificationstatusindicatorsink.cpp \
