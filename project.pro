@@ -9,6 +9,7 @@ addSubDirs(themes)
 addSubDirs(translations)
 addSubDirs(demos)
 addSubDirs(tests)
+addSubDirs(src/systemui/safemodeapplet)
 CONFIG(docs) {
     addSubDirs(doc)
 }

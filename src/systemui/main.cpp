@@ -21,7 +21,9 @@
 #include <MApplicationService>
 #include <signal.h>
 #include <dlfcn.h>
+#include <QFile>
 #include <cstdio>
+#include <fcntl.h>
 
 sighandler_t originalSigIntHandler = NULL;
 sighandler_t originalSigTermHandler = NULL;
@@ -45,6 +47,27 @@ void restoreSignalHandlers()
     signal(SIGTERM, originalSigTermHandler);
 }
 
+void safeModeSignalHandler(int sig)
+{
+    if (sig == SIGSEGV || sig == SIGABRT) {
+        int fd = open("/tmp/system-ui-crashed", O_CREAT);
+        close(fd);
+
+        exit(EXIT_FAILURE);
+    }
+}
+
+void installSafeModeSignalHandlers()
+{
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(struct sigaction));
+    sa.sa_handler = safeModeSignalHandler;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGSEGV, &sa, NULL);
+    sigaction(SIGABRT, &sa, NULL);
+}
+
 class SystemUIservice : public MApplicationService
 {
 public:
@@ -61,6 +84,7 @@ public:
 int main(int argc, char** argv)
 {
     installSignalHandlers();
+    installSafeModeSignalHandlers();
 
     MApplication app(argc, argv, new SystemUIservice);
     app.setQuitOnLastWindowClosed(false);

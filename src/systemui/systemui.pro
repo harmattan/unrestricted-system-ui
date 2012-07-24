@@ -65,6 +65,7 @@ include(statusindicatormenu/statusindicatormenu.pri)
 include(statusarea/statusarea.pri)
 include(notifications/notifications.pri)
 include(screenlock/screenlock.pri)
+#include(safemodeapplet/safemodeapplet.pri)
 include(../../localconfig.pri)
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {

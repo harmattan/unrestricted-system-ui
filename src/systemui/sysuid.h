@@ -25,6 +25,8 @@
 #include <QSharedPointer>
 #include "applicationcontext.h"
 
+#define CRASH_FILE "/tmp/system-ui-crashed"
+
 #ifdef HAVE_QMSYSTEM
 #include <qmlocks.h>
 #endif

@@ -40,8 +40,7 @@ StatusIndicatorMenuVerticalView::StatusIndicatorMenuVerticalView(StatusIndicator
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setStatusIndicatorMenuInterface(MApplicationExtensionInterface*)));
     connect(extensionArea, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), this, SLOT(setExtensionLayoutPosition(MApplicationExtensionInterface*)));
     extensionArea->setObjectName("StatusIndicatorMenuExtensionArea");
-    extensionArea->setInProcessFilter(QRegExp());
-    extensionArea->setOutOfProcessFilter(QRegExp());
+    setSafeMode(extensionArea, QFile(CRASH_FILE).exists());
     extensionArea->setOrder(getOrderList());
     extensionArea->init();
 
@@ -111,6 +110,48 @@ StatusIndicatorMenuVerticalView::~StatusIndicatorMenuVerticalView()
     delete containerWidget;
 }
 
+void StatusIndicatorMenuVerticalView::setSafeMode(MApplicationExtensionArea *extensionArea, bool enabled)
+{
+    QRegExp inProcessFilterRegExp;
+    QRegExp outOfProcessFilterRegExp;
+
+    if (enabled) {
+        inProcessFilterRegExp = QRegExp("/statusindicatormenu-(volume|call|internetconnection|safemode|bluetooth|dlna|presence|transfer).desktop$");
+        outOfProcessFilterRegExp = QRegExp("$^");
+    } else {
+        QString string = "/statusindicatormenu-(" + pluginNameString() + ").desktop$";
+        inProcessFilterRegExp = QRegExp(string);
+        outOfProcessFilterRegExp = QRegExp();
+    }
+
+    extensionArea->setInProcessFilter(inProcessFilterRegExp);
+    extensionArea->setOutOfProcessFilter(outOfProcessFilterRegExp);
+}
+
+QString StatusIndicatorMenuVerticalView::pluginNameString()
+{
+    // Hacky, but oh well
+    QDir dir = QDir(EXTENSIONS_DIR);
+    // Panic?
+    if (!dir.exists()) {
+        return "volume|call|internetconnection|bluetooth|dlna|presence|transfer";
+    } else {
+        QStringList filters;
+        filters << "statusindicatormenu*.desktop";
+        QStringList fileNames = dir.entryList(filters);
+        QStringList modifiedFileNameList;
+        foreach (QString string, fileNames) {
+            string.remove("statusindicatormenu-");
+            string.remove(".desktop");
+            if (!string.contains("safemode"))
+                modifiedFileNameList.append(string);
+        }
+        fileNames.clear();
+
+        return modifiedFileNameList.join("|");
+    }
+}
+
 QStringList StatusIndicatorMenuVerticalView::getOrderList()
 {
     QFile configFile("/etc/status-menu-items-order.conf");
@@ -131,7 +172,7 @@ QStringList StatusIndicatorMenuVerticalView::getOrderList()
     configFile.close();
     QStringList orderList = orderListString.split("\n");
 
-    QDir pluginDir("/usr/share/meegotouch/applicationextensions");
+    QDir pluginDir(EXTENSIONS_DIR);
     // It should, but do it the right way anyway...
     if (pluginDir.exists()) {
         QStringList filters;

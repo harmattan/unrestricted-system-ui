@@ -24,6 +24,9 @@
 #include <QDir>
 #include "statusindicatormenustyle.h"
 
+#define EXTENSIONS_DIR "/usr/share/meegotouch/applicationextensions"
+#define CRASH_FILE "/tmp/system-ui-crashed"
+
 class QGraphicsLinearLayout;
 class MApplicationExtensionArea;
 class MApplicationExtensionInterface;
@@ -82,6 +85,16 @@ private:
      * Returns the order of plugins from a config file
      */
     QStringList getOrderList();
+
+    /*!
+     * Sets whether or not non-official plugins will be loaded
+     */
+    void setSafeMode(MApplicationExtensionArea *extensionArea, bool enabled);
+
+    /*!
+     * Returns a |-separated string of plugin names for use in a QRegExp
+     */
+    QString pluginNameString();
 };
 
 #endif /* STATUSINDICATORMENUVERTICALVIEW_H_ */
