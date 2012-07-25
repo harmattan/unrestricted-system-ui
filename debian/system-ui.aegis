@@ -3,6 +3,7 @@
     <credential name="UID::user" />
     <credential name="GID::users" />
     <credential name="usb-moded::USBControl" />
+    <credential name="mce::LEDControl" />
     <credential match="xserver-security-policy::capture-drawables" />
     <credential match="xserver-security-policy::record-input" />
     <for path="/usr/bin/sysuid" />
