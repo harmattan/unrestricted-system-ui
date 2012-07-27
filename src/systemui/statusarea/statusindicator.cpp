@@ -363,6 +363,39 @@ void BatteryStatusIndicator::batteryChargingChanged()
     batteryLevelChanged ();
 }
 
+BatteryPercentageStatusIndicator::BatteryPercentageStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
+    StatusIndicator(parent)
+{
+    setStyleNameAndUpdate(metaObject()->className());
+
+    batteryPercentage = createContextItem(context, "Battery.ChargePercentage");
+    connect(batteryPercentage, SIGNAL(contentsChanged()), this, SLOT(batteryPercentageChanged()));
+    
+    displayPercentage = new MGConfItem("/desktop/meego/status_area/display_percentage", this);
+    connect(displayPercentage, SIGNAL(valueChanged()), this, SLOT(batteryPercentageChanged()));
+}
+
+BatteryPercentageStatusIndicator::~BatteryPercentageStatusIndicator()
+{
+}
+
+void BatteryPercentageStatusIndicator::batteryPercentageChanged()
+{
+    bool displayPercentageEnabled = displayPercentage->value(false).toBool();
+    if(displayPercentageEnabled) {
+        setStyleNameAndUpdate(QString(metaObject()->className()));
+        connect(batteryPercentage, SIGNAL(contentsChanged()), this, SLOT(batteryPercentageChanged()), Qt::UniqueConnection);
+    }else {
+        setStyleNameAndUpdate(QString(metaObject()->className())+"Disabled");
+        disconnect(batteryPercentage, SIGNAL(contentsChanged()), this, SLOT(batteryPercentageChanged()));
+    }
+
+    QString percentage = batteryPercentage->value().toString();
+    percentage.append("%");
+
+    setValue(percentage);
+}
+
 AlarmStatusIndicator::AlarmStatusIndicator(ApplicationContext &context, QGraphicsItem *parent) :
     StatusIndicator(parent)
 {

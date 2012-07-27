@@ -53,6 +53,11 @@ class BatteryStatusIndicatorModel : public StatusIndicatorModel
     M_MODEL(BatteryStatusIndicatorModel)
 };
 
+class BatteryPercentageStatusIndicatorModel : public StatusIndicatorModel
+{
+    M_MODEL(BatteryPercentageStatusIndicatorModel)
+};
+
 class AlarmStatusIndicatorModel : public StatusIndicatorModel
 {
     M_MODEL(AlarmStatusIndicatorModel)

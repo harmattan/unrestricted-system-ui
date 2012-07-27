@@ -509,6 +509,12 @@ StatusIndicatorIconStyle#BatteryStatusIndicatorPowerSaveCharging {
     animation-duration: 10000;
 }
 
+StatusIndicatorLabelStyle#BatteryPercentageStatusIndicatorDisabled {
+    preferred-size: 0 -1;
+    minimum-size: 0 -1;
+    maximum-size: 0 -1;
+}
+
 StatusIndicatorIconStyle#AlarmStatusIndicator {
     /* The list of IDs of the images to be shown in the status indicator separated by spaces */
     image-list: "";

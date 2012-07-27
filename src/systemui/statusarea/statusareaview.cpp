@@ -43,6 +43,8 @@ StatusAreaView::StatusAreaView(StatusArea *controller) :
     portraitAlarmIndicator(new AlarmStatusIndicator(contextFrameworkContext, controller)),
     landscapeBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
     portraitBatteryIndicator(new BatteryStatusIndicator(contextFrameworkContext, controller)),
+    landscapeBatteryPercentageIndicator(new BatteryPercentageStatusIndicator(contextFrameworkContext, controller)),
+    portraitBatteryPercentageIndicator(new BatteryPercentageStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     portraitPhoneSignalStrengthIndicator(new PhoneNetworkSignalStrengthStatusIndicator(contextFrameworkContext, controller)),
     landscapePhoneNetworkTypeIndicator(new PhoneNetworkTypeStatusIndicator(contextFrameworkContext, controller)),
@@ -177,6 +179,7 @@ QGraphicsLinearLayout* StatusAreaView::createLandscapeLayout()
 
     // Put indicators into the layout
     layout->addItem(landscapeBatteryIndicator);
+    layout->addItem(landscapeBatteryPercentageIndicator);
     layout->addItem(landscapePhoneSignalStrengthIndicator);
     layout->addItem(landscapePhoneNetworkIndicator);
     layout->addItem(landscapePhoneNetworkTypeIndicator);
@@ -206,6 +209,7 @@ QGraphicsLinearLayout* StatusAreaView::createPortraitLayout()
 
     // Put indicators into the layout
     layout->addItem(portraitBatteryIndicator);
+    layout->addItem(portraitBatteryPercentageIndicator);
     layout->addItem(portraitPhoneSignalStrengthIndicator);
     layout->addItem(portraitPhoneNetworkIndicator);
     layout->addItem(portraitPhoneNetworkTypeIndicator);

@@ -27,6 +27,7 @@
 #include "contextframeworkcontext_stub.h"
 #include "alarmstatusindicator_stub.h"
 #include "batterystatusindicator_stub.h"
+#include "batterypercentagestatusindicator_stub.h"
 #include "phonenetworksignalstrengthstatusindicator_stub.h"
 #include "phonenetworktypestatusindicator_stub.h"
 #include "shortdistancenetworkstatusindicator_stub.h"

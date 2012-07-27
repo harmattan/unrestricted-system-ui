@@ -87,6 +87,10 @@ private:
     //! Battery indicator
     StatusIndicator *landscapeBatteryIndicator;
     StatusIndicator *portraitBatteryIndicator;
+    
+    //! Battery percentage indicator
+    StatusIndicator *landscapeBatteryPercentageIndicator;
+    StatusIndicator *portraitBatteryPercentageIndicator;
 
     //! Phone signal strength indicator
     StatusIndicator *landscapePhoneSignalStrengthIndicator;

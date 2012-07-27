@@ -255,6 +255,33 @@ private:
 };
 
 /*!
+ * A status indicator for showing the remaining battery charge.
+ */
+class BatteryPercentageStatusIndicator : public StatusIndicator
+{
+    Q_OBJECT
+    M_CONTROLLER(BatteryPercentageStatusIndicator)
+
+public:
+    /*!
+     * Constructs a BatteryPercentageStatusIndicator.
+     *
+     * \param context the application context to get status information from
+     * \param parent parent MWidget. If parent is NULL, the creating client must take the responsibility to delete the indicator.
+     */
+    explicit BatteryPercentageStatusIndicator(ApplicationContext &context, QGraphicsItem *parent = NULL);
+
+    virtual ~BatteryPercentageStatusIndicator();
+
+private slots:
+    void batteryPercentageChanged();
+
+private:
+    ContextItem *batteryPercentage;
+    MGConfItem *displayPercentage;
+};
+
+/*!
  * A status indicator for showing whether a clock alarm has been set.
  */
 class AlarmStatusIndicator : public StatusIndicator
