@@ -381,7 +381,7 @@ BatteryPercentageStatusIndicator::~BatteryPercentageStatusIndicator()
 
 void BatteryPercentageStatusIndicator::batteryPercentageChanged()
 {
-    bool displayPercentageEnabled = displayPercentage->value(true).toBool();
+    bool displayPercentageEnabled = displayPercentage->value(false).toBool();
     if(displayPercentageEnabled) {
         setStyleNameAndUpdate(QString(metaObject()->className()));
         connect(batteryPercentage, SIGNAL(contentsChanged()), this, SLOT(batteryPercentageChanged()), Qt::UniqueConnection);
